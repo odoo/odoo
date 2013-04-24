@@ -27,6 +27,7 @@ from contextlib import contextmanager
 import logging
 import threading
 
+from openerp import SUPERUSER_ID
 import openerp.sql_db
 import openerp.osv.orm
 import openerp.tools
@@ -136,8 +137,9 @@ class Registry(Mapping):
                 models_to_load.append(model._name)
 
         # call hook after models have been instantiated
-        for model in self.models.itervalues():
-            model.after_create_instance()
+        with openerp.osv.scope.Scope(cr, SUPERUSER_ID, None):
+            for model in self.models.itervalues():
+                model.after_create_instance()
 
         return [self.models[m] for m in models_to_load]
 

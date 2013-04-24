@@ -47,7 +47,9 @@ class res_partner(models.Model):
 
     children_count = fields.Integer(compute='compute_children_count', store=False)
 
-    @api.depends('child_ids')
+    # Note: we introduce this weird dependency in order to catch changes on both
+    # fields 'child_ids' and 'parent_id'
+    @api.depends('child_ids.parent_id')
     def compute_children_count(self):
         self.children_count = len(self.child_ids)
 

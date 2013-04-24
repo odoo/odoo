@@ -746,6 +746,20 @@ class BaseModel(object):
                 field.set_model_name(cls._name, attr)
                 setattr(cls, attr, field)           # for record field access
                 cls._fields[attr] = field           # for model reflection
+                if field.compute:
+                    # retrieve field dependencies
+                    compute_method = getattr(cls, field.compute)
+                    field.depends = getattr(compute_method, '_depends', ())
+
+        # triggers to recompute stored function fields on other models
+        #   cls._recompute = {trigger_field: [(model, field, path), ...], ...}
+        #
+        # where:
+        #  - 'trigger_field' is a field in the current model,
+        #  - 'model', 'field' specify which field to recompute, and
+        #  - 'path' is a dot-separated sequence of fields from 'model' to 'self'
+        #
+        cls._recompute = defaultdict(set)
 
         if not getattr(cls, '_original_module', None):
             cls._original_module = cls._module
@@ -754,7 +768,7 @@ class BaseModel(object):
 
         # check for name clashes between member and field names
         for attr in sorted(set(dir(obj)) & set(obj._all_columns)):
-            _logger.warning("Model %s has both a field and a member named %r" % (obj, attr))
+            _logger.warning("Model %s has both a field and a member named %r", obj, attr)
 
         return obj
 
@@ -3335,6 +3349,34 @@ class BaseModel(object):
                         cinfo.inverses.update(cinfo2.equivalents)
                         break
 
+        # determine triggers to recompute function fields
+        def add_recompute_trigger(model, fname, path, dep_model, dep_fname):
+            """ add trigger on dep_model/dep_fname to recompute model/fname """
+            path_str = '.'.join(path) if path else 'id'
+            dep_model._recompute[dep_fname].add((model._name, fname, path_str))
+            _logger.debug("Add trigger on field %s.%s to recompute field %s.%s",
+                          dep_model._name, dep_fname, model._name, fname)
+
+        for fname, field in self._fields.iteritems():
+            for dependency in field.depends:
+                fs = dependency.split('.')      # sequence of field names
+                inst = self.null()              # null instance that represents a model
+                path = []                       # field sequence from 'self' to 'inst'
+
+                # traverse all fields in sequence but last
+                for f in fs[:-1]:
+                    add_recompute_trigger(self, fname, path, inst, f)
+                    # move on to the next instance
+                    inst = inst[f].null()
+                    path.append(f)
+
+                # add trigger on last field(s) in sequence
+                if fs[-1] == '*':
+                    for f in inst._all_columns:
+                        add_recompute_trigger(self, fname, path, inst, f)
+                else:
+                    add_recompute_trigger(self, fname, path, inst, fs[-1])
+
     def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
         """ Return the definition of each field.
 
@@ -3873,6 +3915,10 @@ class BaseModel(object):
 
         result_store = self._store_get_values(cr, uid, ids, self._all_columns.keys(), context)
 
+        # for recomputing new-style fields
+        recs = self.recordset(ids)
+        recompute_spec = recs.recompute_spec(self._all_columns)
+
         self._check_concurrency(cr, ids, context)
 
         self.check_access_rights(cr, uid, 'unlink')
@@ -3926,6 +3972,9 @@ class BaseModel(object):
                 rids = map(lambda x: x[0], cr.fetchall())
                 if rids:
                     obj._store_set_values(cr, uid, rids, fields, context)
+
+        # recompute new-style fields
+        recs.recompute(recompute_spec)
 
         return True
 
@@ -4018,6 +4067,10 @@ class BaseModel(object):
         self.check_access_rights(cr, user, 'write')
 
         result = self._store_get_values(cr, user, ids, vals.keys(), context) or []
+
+        # for recomputing new-style fields
+        recs = self.recordset(ids)
+        recompute_spec = recs.recompute_spec(vals)
 
         # No direct update of parent_left/right
         vals.pop('parent_left', None)
@@ -4192,6 +4245,9 @@ class BaseModel(object):
         result += self._store_get_values(cr, user, ids, vals.keys(), context)
         result.sort()
 
+        # for recomputing new-style fields
+        recompute_spec = recs.recompute_spec(vals, recompute_spec)
+
         done = {}
         for order, model_name, ids_to_update, fields_to_recompute in result:
             key = (model_name, tuple(fields_to_recompute))
@@ -4203,6 +4259,9 @@ class BaseModel(object):
                     done[key][id] = True
                     todo.append(id)
             self.pool[model_name]._store_set_values(cr, user, todo, fields_to_recompute, context)
+
+        # recompute new-style fields
+        recs.recompute(recompute_spec)
 
         self.step_workflow(cr, user, ids, context=context)
         return True
@@ -4416,6 +4475,10 @@ class BaseModel(object):
                 if not (model_name, ids, fields2) in done:
                     self.pool[model_name]._store_set_values(cr, user, ids, fields2, context)
                     done.append((model_name, ids, fields2))
+
+            # recompute new-style fields
+            recs = self.recordset([id_new])
+            recs.recompute(recs.recompute_spec(vals))
 
         if self._log_create and not (context and context.get('no_store_function', False)):
             message = self._description + \
@@ -5570,7 +5633,7 @@ class BaseModel(object):
         """ Invalidate the record caches after some records have been modified.
 
             :param fields: the list of modified fields, or ``None`` for all fields
-            :param fields: the list of modified record ids, or ``None`` for all
+            :param ids: the list of modified record ids, or ``None`` for all
         """
         if fields is None:
             scope_proxy.invalidate_cache()
@@ -5590,6 +5653,61 @@ class BaseModel(object):
             spec.append((m, model_fields[m], None))
 
         scope_proxy.invalidate_cache(spec)
+
+    @api.recordset
+    def recompute_spec(self, modified_fields, spec=None):
+        """ Return a data structure that specifies which records and fields to
+            recompute (for new-style fields only).
+
+            :param modified_fields: iterable of field names that have been
+                modified in records `self`
+            :param spec: optional list of triples (`model_name`, `field_names`,
+                `record_ids`) to recompute
+            :return: spec
+        """
+        # target = {model_name: {field_name: set(ids), ...}, ...}
+        target = defaultdict(lambda: defaultdict(set))
+        for m, fs, ids in (spec or []):
+            for f in fs:
+                target[m][f].update(ids)
+
+        # add targets
+        for field in modified_fields:
+            for model_name, field_name, path in self._recompute[field]:
+                # find which records in model have to be recomputed
+                recs = self.pool[model_name].search([(path, 'in', self._ids)])
+                target[model_name][field_name].update(recs._ids)
+
+        # return spec
+        return [(m, [f], list(ids))
+            for m, field_ids in target.iteritems()
+                for f, ids in field_ids.iteritems()
+        ]
+
+    def recompute(self, spec):
+        """ Recompute fields given by `spec`.
+
+            :param spec: list of triples (`model_name`, `field_names`, `record_ids`)
+        """
+        # first invalidate the cache of the fields to recompute
+        scope_proxy.invalidate_cache(spec)
+
+        # determine model and compute methods to call
+        model_compute = defaultdict(lambda: defaultdict(set))
+        for m, fs, ids in spec:
+            model = self.pool[m]
+            for f in fs:
+                field = model._fields[f]
+                if field.store:
+                    model_compute[model][field.compute].update(ids)
+
+        # invoke the compute methods on the given records
+        # TODO: one should order recomputations using dependencies!
+        with scope_proxy.SUDO():
+            for model, compute_ids in model_compute.iteritems():
+                for compute, ids in compute_ids.iteritems():
+                    recs = model.recordset(ids)
+                    getattr(recs, compute)()
 
 
 # for instance checking

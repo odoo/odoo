@@ -74,8 +74,7 @@ __all__ = [
     'model', 'record', 'recordset',
     'cr', 'cr_context', 'cr_uid', 'cr_uid_context',
     'cr_uid_id', 'cr_uid_id_context', 'cr_uid_ids', 'cr_uid_ids_context',
-    'returns',
-    'depends',
+    'depends', 'returns',
 ]
 
 from functools import wraps
@@ -119,8 +118,12 @@ class Meta(type):
 
 
 def depends(*args):
-    """ Return a decorator for "compute" methods (function fields) that specify
-        its field dependencies.
+    """ Return a decorator that specifies the field dependencies of a "compute"
+        method (for new-style function fields).
+
+        Each argument must be a string that consists in a dot-separated sequence
+        of field names. One may use ``*`` as the last field name in the sequence
+        to mean "all fields of the corresponding model".
     """
     def decorate(method):
         method._depends = args
@@ -224,7 +227,7 @@ def _make_wrapper(method, old_api, new_api):
             return new_api(self, *args, **kwargs)
 
     # propagate some openerp attributes to the wrapper
-    for attr in ('_api', '_returns', 'clear_cache'):
+    for attr in ('_api', '_depends', '_returns', 'clear_cache'):
         if hasattr(method, attr):
             setattr(wrapper, attr, getattr(method, attr))
     wrapper._orig = method
