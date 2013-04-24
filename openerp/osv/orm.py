@@ -2065,11 +2065,10 @@ class BaseModel(object):
             if view_ref_res:
                 view_id = view_ref_res[0]
 
-        root_view_id = View.get_root_ancestor(
-            cr, user, view_id, self._name, view_type, context=context)
-        root_view = View.read_combined(cr, user, root_view_id, fields=[
-            'id', 'name', 'field_parent', 'type', 'model', 'arch'
-        ], model=self._name, context=context)
+        root_view = View.read_combined(
+            cr, user, view_id, view_type, self._name, fields=[
+                'id', 'name', 'field_parent', 'type', 'model', 'arch'
+            ], context=context)
         if root_view:
             result.update(
                 arch=root_view['arch'],

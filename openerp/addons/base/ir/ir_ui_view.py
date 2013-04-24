@@ -165,34 +165,47 @@ class view(osv.osv):
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_ui_view_model_type_inherit_id ON ir_ui_view (model, inherit_id)')
 
-    def read_combined(self, cr, uid, view_id, fields=None, model=None, context=None):
+    def read_combined(self, cr, uid, view_id, view_type, model,
+                      fields=None, context=None):
         """
-        Reads the specified view and returns it after applying all inheriting
-        views upon it (essentially reads the "currently final" view)
+        Utility function stringing together all method calls necessary to get
+        a full, final view:
 
-        Returns `False` if the provided id is not a valid view, or if `False`
-        is provided as an id.
+        * Gets the default view if no view_id is provided
+        * Gets the top of the view tree if a sub-view is requested
+        * Applies all inherited archs on the root view
+        * Applies post-processing both generic (ir.ui.view) and specific
+          (ir.ui.view.$type)
+        * Returns the view with all requested fields
 
-        The `arch` of the view is always read (regardless of its presence in
-        `fields`), and is returned as an lxml tree
+          .. note:: ``arch`` is always added to the fields list even if not
+                    requested (similar to ``id``)
 
-        :param list(str) fields: same as in BaseModel.read()
-        :param str model:
+        If no view is available (no view_id or invalid view_id provided, or
+        no view stored for (model, view_type)) a view record will be fetched
+        from the ``defaults`` mapping.
         """
+        if not view_id:
+            view_id = self.default_view(cr, uid, model, view_type, context=context)
+        root_id = self.root_ancestor(cr, uid, view_id, context=context)
+
         if fields and 'arch' not in fields:
             fields = list(itertools.chain(['arch'], fields))
-        if not view_id: return False
-        views = self.read(cr, uid, [view_id], fields=fields, context=context)
-        if not views: return False
 
-        base_arch = views[0]['arch']
-        base_arch = base_arch.encode('utf-8') if isinstance(base_arch, unicode) else base_arch
-        return dict(views[0], arch=reduce(
-            lambda current_arch, descendant: self.apply_inheritance_specs(
-                cr, uid, model, view_id, current_arch, *descendant, context=context),
-            self.iter(cr, uid, view_id, model, exclude_base=True, context=context),
-            etree.fromstring(base_arch)
-        ))
+        [view] = self.read(cr, uid, [root_id], fields=fields, context=context)
+
+        arch_tree = etree.fromstring(
+            view['arch'].encode('utf-8') if isinstance(view['arch'], unicode)
+            else view['arch'])
+        descendants = self.iter(
+            cr, uid, view['id'], model, exclude_base=True, context=context)
+        arch = self.apply_inherited_archs(
+            cr, uid, arch_tree, descendants,
+            model, view['id'], context=context)
+
+        # TODO: post-processing
+
+        return dict(view, arch=arch)#etree.tostring(arch, 'utf-8'))
 
     def locate_node(self, arch, spec):
         """ Locate a node in a source (parent) architecture.
@@ -262,18 +275,18 @@ class view(osv.osv):
                 if not (view.groups_id and user_groups.isdisjoint(view.groups_id))]
 
     def iter(self, cr, uid, view_id, model, exclude_base=False, context=None):
-        """ iterates on all of `view_id`'s descendants tree depth-first.
+        """ iterates on all of ``view_id``'s descendants tree depth-first.
 
-        If `exclude_base` is `False`, also yields `view_id` itself. It is
-        `False` by default to match the behavior of etree's Element.iter.
+        If ``exclude_base`` is ``False``, also yields ``view_id`` itself. It is
+        ``False`` by default to match the behavior of etree's Element.iter.
 
         :param int view_id: database id of the root view
         :param str model: name of the view's related model (for filtering)
-        :param boolean exclude_base: whether `view_id` should be excluded from the iteration
-        :param context:
-        :return: iterator of (database_id, arch_field) pairs for all
-                 descendants of `view_id` (including `view_id` itself if
-                 `exclude_base` is `False`, the default)
+        :param bool exclude_base: whether ``view_id`` should be excluded
+                                  from the iteration
+        :return: iterator of (database_id, arch_string) pairs for all
+                 descendants of ``view_id`` (including ``view_id`` itself if
+                 ``exclude_base`` is ``False``, the default)
         """
         if not exclude_base:
             base = self.browse(cr, uid, view_id, context=context)
@@ -286,36 +299,32 @@ class view(osv.osv):
                     cr, uid, id, model, exclude_base=True, context=None):
                 yield info
 
-    def get_root_ancestor(self, cr, uid, view_id=None,
-                          model=None, view_type=None, context=None):
+    def default_view(self, cr, uid, model, view_type, context=None):
+        """ Fetches the default view for the provided (model, view_type) pair:
+         view with no parent (inherit_id=Fase) with the lowest priority.
+
+        :param str model:
+        :param int view_type:
+        :return: id of the default view for the (model, view_type) pair
+        :rtype: int
         """
-        Fetches the id of the root of the view tree specified by the id or
-        (type, model) parameters.
+        return self.search(cr, uid, [
+            ['model', '=', model],
+            ['type', '=', view_type],
+            ['inherit_id', '=', False],
+        ], limit=1, order='priority', context=context)[0]
+
+    def root_ancestor(self, cr, uid, view_id, context=None):
+        """
+        Fetches the id of the root of the view tree of which view_id is part
 
         If view_id is specified, view_type and model aren't needed (and the
         other way around)
 
         :param view_id: id of view to search the root ancestor of
-        :param str model: model to use the view for
-        :param str view_type: expected view type
         :return: id of the root view for the tree
         """
-        assert view_id or (model and view_type),\
-            "caller must provide either a view_id or a model and a view_type"\
-            " to be able to fetch a root view"
-
-        if not view_id:
-            ids = self.search(cr, uid, [
-                ['model', '=', model],
-                ['type', '=', view_type],
-                ['inherit_id', '=', False],
-            ], limit=1, order='priority', context=context)[:1]
-            if not ids: return False
-            [view_id] = ids
-
         view = self.browse(cr, uid, view_id, context=context)
-        if not view.exists():
-            return False
 
         # Search for a root (i.e. without any parent) view.
         while view.inherit_id:
@@ -323,6 +332,25 @@ class view(osv.osv):
 
         return view.id
 
+    def apply_inherited_archs(self, cr, uid, source, descendants,
+                              model, source_view_id, context=None):
+        """ Applies descendants to the ``source`` view, returns the result of
+        the application.
+
+        :param Element source: source arch to apply descendant on
+        :param descendants: iterable of (id, arch_string) pairs of all
+                            descendants in the view tree, depth-first,
+                            excluding the base view
+        :type descendants: iter((int, str))
+        :return: new architecture etree produced by applying all descendants
+                 on ``source``
+        :rtype: Element
+        """
+        return reduce(
+            lambda current_arch, descendant: self.apply_inheritance_specs(
+                cr, uid, model, source_view_id, current_arch,
+                *descendant, context=context),
+            descendants, source)
 
     def raise_view_error(self, cr, uid, model, error_msg, view_id, child_view_id, context=None):
         view, child_view = self.browse(cr, uid, [view_id, child_view_id], context)
@@ -337,11 +365,11 @@ class view(osv.osv):
         describing where and what changes to apply to some parent
         architecture) given by an inheriting view.
 
-        :param source: a parent architecture to modify
+        :param Element source: a parent architecture to modify
         :param descendant_id: the database id of the descendant
         :param specs_arch: a modifying architecture in an inheriting view
         :return: a modified source where the specs are applied
-
+        :rtype: Element
         """
         if isinstance(specs_arch, unicode):
             specs_arch = specs_arch.encode('utf-8')

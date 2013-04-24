@@ -2,6 +2,7 @@ from lxml import etree as ET
 from lxml.builder import E
 
 from . import common
+import unittest2
 
 Field = E.field
 
@@ -96,14 +97,14 @@ class TestNodeLocator(common.BaseCase):
         self.assertIsNone(node)
 
 class TestViewInheritance(common.TransactionCase):
-    def view_for(self, name):
-        return ET.tostring(ET.Element('form', string=name))
+    def arch_for(self, name, view_type='form'):
+        return ET.tostring(ET.Element(view_type, string=name))
 
-    def makeView(self, name, parent=None):
+    def makeView(self, name, parent=None, arch=None):
         view_id = self.View.create(self.cr, self.uid, {
             'model': self.model,
             'name': name,
-            'arch': self.view_for(name),
+            'arch': arch or self.arch_for(name),
             'inherit_id': parent,
         })
         self.ids[name] = view_id
@@ -128,15 +129,20 @@ class TestViewInheritance(common.TransactionCase):
         a22 = self.makeView("A22", a2)
         self.makeView("A221", a22)
 
+        b = self.makeView('B', arch=self.arch_for("B", 'tree'))
+        self.makeView('B1', b, arch=self.arch_for("B1", 'tree'))
+        c = self.makeView('C', arch=self.arch_for("C", 'tree'))
+        self.View.write(self.cr, self.uid, c, {'priority': 1})
+
     def tearDown(self):
         self.View.pool._init = self._init
         super(TestViewInheritance, self).tearDown()
 
-    def test_get_children(self):
+    def test_get_inheriting_views_arch(self):
         self.assertEqual(self.View.get_inheriting_views_arch(
             self.cr, self.uid, self.ids['A'], self.model), [
-            (self.view_for('A1'), self.ids['A1']),
-            (self.view_for('A2'), self.ids['A2']),
+            (self.arch_for('A1'), self.ids['A1']),
+            (self.arch_for('A2'), self.ids['A2']),
         ])
 
         self.assertEqual(self.View.get_inheriting_views_arch(
@@ -145,49 +151,69 @@ class TestViewInheritance(common.TransactionCase):
 
         self.assertEqual(self.View.get_inheriting_views_arch(
             self.cr, self.uid, self.ids['A11'], self.model),
-            [(self.view_for('A111'), self.ids['A111'])])
+            [(self.arch_for('A111'), self.ids['A111'])])
 
-    def test_iterate_descendents(self):
+    def test_iter(self):
         descendents = list(self.View.iter(self.cr, self.uid, self.ids['A1'], self.model))
         self.assertEqual(descendents, [
-            (self.ids[name], self.view_for(name))
+            (self.ids[name], self.arch_for(name))
             for name in ['A1', 'A11', 'A111', 'A12']
         ])
         descendents = list(self.View.iter(
             self.cr, self.uid, self.ids['A2'], self.model, exclude_base=True))
         self.assertEqual(descendents, [
-            (self.ids[name], self.view_for(name))
+            (self.ids[name], self.arch_for(name))
             for name in ['A21', 'A22', 'A221']
         ])
 
-    def test_find_root(self):
+    def test_root_ancestor(self):
         A_id = self.ids['A']
-        root_id = self.View.get_root_ancestor(self.cr, self.uid, view_id=A_id)
+        root_id = self.View.root_ancestor(self.cr, self.uid, view_id=A_id)
         self.assertEqual(root_id, A_id,
              "when given a root view, operation should be id")
 
-        root_id = self.View.get_root_ancestor(
+        root_id = self.View.root_ancestor(
             self.cr, self.uid, view_id=self.ids['A11'])
         self.assertEqual(root_id, A_id)
 
-        root_id = self.View.get_root_ancestor(
+        root_id = self.View.root_ancestor(
             self.cr, self.uid, view_id=self.ids['A221'])
         self.assertEqual(root_id, A_id)
 
-        # search by model
-        root_id = self.View.get_root_ancestor(
-            self.cr, self.uid, model=self.model, view_type='form')
-        self.assertEqual(root_id, A_id)
+        root_id = self.View.root_ancestor(
+            self.cr, self.uid, view_id=self.ids['B1'])
+        self.assertEqual(root_id, self.ids['B'])
 
-    def test_no_root(self):
-        root = self.View.get_root_ancestor(
-            self.cr, self.uid, model='does.not.exist', view_type='form')
-        self.assertFalse(root)
-
-        root = self.View.get_root_ancestor(
-            self.cr, self.uid, model=self.model, view_type='tree')
-        self.assertFalse(root)
-
-        root = self.View.get_root_ancestor(
+    @unittest2.skip("What should the behavior be when no ancestor is found "
+                    "because view_id is invalid?")
+    def test_no_root_ancestor(self):
+        root = self.View.root_ancestor(
             self.cr, self.uid, view_id=12345678)
         self.assertFalse(root)
+
+    def test_default_view(self):
+        default = self.View.default_view(
+            self.cr, self.uid, model=self.model, view_type='form')
+        self.assertEqual(default, self.ids['A'])
+
+        default_tree = self.View.default_view(
+            self.cr, self.uid, model=self.model, view_type='tree')
+        self.assertEqual(default_tree, self.ids['C'])
+
+    @unittest2.skip("What should the behavior be when no default is found "
+                    "because model does not exist or no view for model?")
+    def test_no_default_view(self):
+        default = self.View.default_view(
+            self.cr, self.uid, model='does.not.exist', view_type='form')
+        self.assertFalse(default)
+
+        default = self.View.default_view(
+            self.cr, self.uid, model=self.model, view_type='graph')
+        self.assertFalse(default)
+
+class TestViewCombined(common.TransactionCase):
+    """
+    Test fallback operations of View.read_combined:
+    * defaults mapping
+    * ?
+    """
