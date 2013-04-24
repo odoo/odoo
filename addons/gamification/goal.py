@@ -258,7 +258,7 @@ class gamification_goal(osv.Model):
                             subtype='mail.mt_comment')
 
             elif goal.type_id.computation_mode == 'python':
-                values = {'cr': cr, 'uid': uid, 'context': context, 'self': self.pool.get('gamification.goal.type')}
+                values = {'cr': cr, 'uid': goal.user_id.id, 'context': context, 'self': self.pool.get('gamification.goal.type')}
                 result = safe_eval(goal.type_id.compute_code, values, {})
 
                 if type(result) == float or type(result) == int:

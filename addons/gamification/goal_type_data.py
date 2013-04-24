@@ -50,10 +50,18 @@ class gamification_goal_type_data(osv.Model):
         delta = relativedelta(years=user.create_date.year - today.year, months=user.create_date.month - today.month)
         return delta.years*12 + delta.months
 
-    def number_mail_groups(self, cr, uid, context=None):
-        """Return the number of mail group the user has joined
-        For example purpose, similar goal could be done with a 'count' goal.
+    def number_following(self, cr, uid, xml_id="mail.thread", context=None):
+        """Return the number of 'xml_id' objects the user is following
+
+        'message_is_follower' is a non-stored field so could not be in a search
+        domain with a 'count' goal type
+        The object must inherit from mail.thread
         """
         if context is None: context = {}
-        mail_group_ids = self.pool.get('mail.group').search(cr, uid, [('message_is_follower', '=', True)], context=context)
-        return len(mail_group_ids)
+        ref_obj = self.pool.get(xml_id)
+        obj_ids = ref_obj.search(cr, uid, [], context=context)
+        following_count = 0
+        for obj in ref_obj.browse(cr, uid, obj_ids, context=context):
+            if obj.message_is_follower:
+                following_count += 1
+        return following_count

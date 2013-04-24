@@ -68,6 +68,13 @@
             <field name="action_id" eval="ref('action_new_simplified_res_users')" />
         </record>
 
+        <record model="gamification.goal.type" id="type_nbr_following">
+            <field name="name"># Mail Group Following</field>
+            <field name="description">Follow mail groups to receive news</field>
+            <field name="computation_mode">python</field>
+            <field name="compute_code">self.number_following(cr, uid, 'mail.group')</field>
+            <field name="action_id" eval="ref('mail.action_view_groups')" />
+        </record>
 
 
         <!-- plans -->

@@ -22,7 +22,11 @@
     	                <td>${idx+1}</td>
     	                <td>${goal.user_id.name}</td>
     	                <td>${goal.completeness}%</td>
-    	                <td>${goal.current}/${goal.target_goal} ${goal.type_suffix}</td>
+    	                <td>${goal.current}/${goal.target_goal}
+                        % if goal.type_suffix:
+                            ${goal.type_suffix}
+                        % endif
+                        </td>
     	            </tr>
                 % endif
 	        % endfor

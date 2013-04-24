@@ -14,8 +14,16 @@
             % endif
             >
             <td>${goal.type_id.name}</td>
-            <td>${goal.target_goal} ${goal.type_suffix}</td>
-            <td>${goal.current} ${goal.type_suffix}</td>
+            <td>${goal.target_goal}
+            % if goal.type_suffix:
+                ${goal.type_suffix}
+            % endif
+            </td>
+            <td>${goal.current}
+            % if goal.type_suffix:
+                ${goal.type_suffix}
+            % endif
+            </td>
             <td>${goal.completeness} %</td>
         </tr>
     % endfor
