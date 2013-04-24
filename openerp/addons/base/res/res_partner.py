@@ -433,7 +433,7 @@ class res_partner(osv.osv, format_address):
             commercial_fields = self._commercial_fields(cr, uid, context=context)
             sync_vals = self._update_fields_values(cr, uid, partner.commercial_partner_id,
                                                         commercial_fields, context=context)
-            return self.write(cr, uid, partner.id, sync_vals, context=context)
+            partner.write(sync_vals)
 
     def _commercial_sync_to_children(self, cr, uid, partner, context=None):
         """ Handle sync of commercial fields to descendants """
@@ -459,7 +459,7 @@ class res_partner(osv.osv, format_address):
                                                       use_parent_address=partner.use_parent_address,
                                                       parent_id=partner.parent_id.id,
                                                       context=context).get('value', {})
-                self.update_address(cr, uid, partner.id, onchange_vals, context=context)
+                partner.update_address(onchange_vals)
 
         # 2. To DOWNSTREAM: sync children 
         if partner.child_ids:
