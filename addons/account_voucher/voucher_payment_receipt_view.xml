@@ -374,7 +374,7 @@
                                 <group>
                                     <field name="narration" colspan="2" nolabel="1"/>
                                 </group>
-                                <group col="4" attrs="{'invisible':[('currency_id','=',False),('is_multi_currency','=',False)]}">
+                                <group col="4" attrs="{'invisible':[('is_multi_currency','=',False)]}">
                                     <field name="is_multi_currency" invisible="1"/>
                                     <field name="payment_rate" required="1" on_change="onchange_rate(payment_rate, amount, currency_id, payment_rate_currency_id, company_id, context)" colspan="3"/>
                                     <field name="payment_rate_currency_id" colspan="1" nolabel="1" on_change="onchange_payment_rate_currency(currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context)" groups="base.group_multi_currency"/>
@@ -472,7 +472,7 @@
                                 <group>
                                     <field name="narration" colspan="2" nolabel="1"/>
                                 </group>
-                                <group col="4" attrs="{'invisible':[('currency_id','=',False),('is_multi_currency','=',False)]}">
+                                <group col="4" attrs="{'invisible':[('is_multi_currency','=',False)]}">
                                     <field name="is_multi_currency" invisible="1"/>
                                     <field name="payment_rate" required="1" on_change="onchange_rate(payment_rate, amount, currency_id, payment_rate_currency_id, company_id, context)" colspan="3"/>
                                     <field name="payment_rate_currency_id" colspan="1" nolabel="1" on_change="onchange_payment_rate_currency(currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context)" groups="base.group_multi_currency"/>
