@@ -560,7 +560,7 @@ class view(osv.osv):
         children = True
 
         modifiers = {}
-        Model = self.pool[model]
+        Model = self.pool.get(model)
 
         def encode(s):
             if isinstance(s, unicode):
@@ -577,19 +577,17 @@ class view(osv.osv):
 
                :return: True if field should be included in the result of fields_view_get
             """
-            if node.tag == 'field' and node.get('name') in Model._all_columns:
+            if Model and node.tag == 'field' and node.get('name') in Model._all_columns:
                 column = Model._all_columns[node.get('name')].column
-                if column.groups and not self.user_has_groups(cr, user,
-                                                              groups=column.groups,
-                                                              context=context):
+                if column.groups and not self.user_has_groups(
+                        cr, user, groups=column.groups, context=context):
                     node.getparent().remove(node)
                     fields.pop(node.get('name'), None)
                     # no point processing view-level ``groups`` anymore, return
                     return False
             if node.get('groups'):
-                can_see = self.user_has_groups(cr, user,
-                                               groups=node.get('groups'),
-                                               context=context)
+                can_see = self.user_has_groups(
+                    cr, user, groups=node.get('groups'), context=context)
                 if not can_see:
                     node.set('invisible', '1')
                     modifiers['invisible'] = True
@@ -728,7 +726,7 @@ class view(osv.osv):
 
     def _disable_workflow_buttons(self, cr, user, model, node):
         """ Set the buttons in node to readonly if the user can't activate them. """
-        if user == 1:
+        if model is None or user == 1:
             # admin user can always activate workflow buttons
             return node
 
@@ -763,7 +761,8 @@ class view(osv.osv):
 
         """
         fields = {}
-        Model = self.pool[model]
+        Model = self.pool.get(model)
+
         if node.tag == 'diagram':
             if node.getchildren()[0].tag == 'node':
                 node_model = self.pool[node.getchildren()[0].get('object')]
@@ -774,8 +773,9 @@ class view(osv.osv):
             if node.getchildren()[1].tag == 'arrow':
                 arrow_fields = self.pool[node.getchildren()[1].get('object')].fields_get(cr, user, None, context)
                 fields.update(arrow_fields)
-        else:
+        elif Model:
             fields = Model.fields_get(cr, user, None, context)
+
         fields_def = self.__view_look_dom(cr, user, model, node, view_id, False, fields, context=context)
         node = self._disable_workflow_buttons(cr, user, model, node)
         if node.tag in ('kanban', 'tree', 'form', 'gantt'):

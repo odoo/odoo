@@ -1,5 +1,6 @@
+# -*- encoding: utf-8 -*-
 from lxml import etree as ET
-from lxml.builder import E
+from lxml.builder import E, ElementMaker
 
 from openerp.tests import common
 import unittest2
@@ -220,3 +221,72 @@ class TestViewCombined(common.TransactionCase):
     * defaults mapping
     * ?
     """
+
+class TestNoModel(common.TransactionCase):
+    def test_create_view_nomodel(self):
+        View = self.registry('ir.ui.view')
+        view_id = View.create(self.cr, self.uid, {
+            'name': 'dummy',
+            'arch': '<form/>',
+            'inherit_id': False
+        })
+        [view] = View.read(self.cr, self.uid, [view_id])
+        self.assertEqual(view, {
+            'id': view_id,
+            'name': 'dummy',
+            'arch': '<form/>',
+            'type': 'form',
+            'priority': 16,
+            'inherit_id': False,
+            'field_parent': False,
+            'groups_id': [],
+            'xml_id': '',
+            'model_ids': [],
+            'model': '',
+        })
+
+    arch = E.body(
+        E.div(
+            E.h1("Title"),
+            id="header"),
+        E.p("Welcome!"),
+        E.div(
+            E.hr(),
+            E.p("Copyright copyrighter", {'class': 'legalese'}),
+            id="footer"),
+        {'class': "index"},)
+    def test_fields_mess(self):
+        """
+        Try to call __view_look_dom_arch without a model provided, will need
+        to be altered once it's broken up into sane components
+        """
+        View = self.registry('ir.ui.view')
+
+        sarch, fields = View._view__view_look_dom_arch(
+            self.cr, self.uid, None, self.arch, None)
+
+        self.assertEqual(sarch, ET.tostring(self.arch, encoding='utf-8'))
+        self.assertEqual(fields, {})
+
+    def test_mess_translation(self):
+        """
+        Test if translations work correctly without a model
+        """
+        View = self.registry('ir.ui.view')
+        self.registry('res.lang').load_lang(self.cr, self.uid, 'fr_FR')
+        self.registry('ir.translation').create(self.cr, self.uid, {
+            'name': '',
+            'type': 'view',
+            'lang': 'fr_FR',
+            'src': 'Copyright copyrighter',
+            'value': u"Copyrighter, tous droits réservés",
+        })
+        sarch, fields = View._view__view_look_dom_arch(
+            self.cr, self.uid, None,self.arch, None, {'lang': 'fr_FR'})
+        self.assertEqual(
+            sarch,
+            ET.tostring(self.arch, encoding='utf-8')
+                .replace('Copyright copyrighter',
+                         'Copyrighter, tous droits réservés'))
+        self.assertEqual(fields, {})
+
