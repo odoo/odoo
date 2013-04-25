@@ -32,13 +32,12 @@ class TestNewFields(common.TransactionCase):
     def test_non_stored(self):
         """ test non-stored fields """
         # find partners with children
-        partners = self.Partner.search([('child_ids.name', '!=', False)])
+        alpha, beta, gamma = self.Partner.search([('child_ids.name', '!=', False)], limit=3)
 
         # check definition of the field
-        for partner in partners:
-            self.assertEqual(partner.children_count, len(partner.child_ids))
-
-        alpha, beta, gamma = partners[:3]
+        self.assertEqual(alpha.children_count, len(alpha.child_ids))
+        self.assertEqual(beta.children_count, len(beta.child_ids))
+        self.assertEqual(gamma.children_count, len(gamma.child_ids))
 
         # check recomputation after children are deleted
         alpha_count = alpha.children_count
