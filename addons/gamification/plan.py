@@ -201,7 +201,7 @@ class gamification_goal_plan(osv.Model):
         'reward_failure': False,
     }
 
-    _sort = 'end_date start_date name'
+    _sort = 'end_date, start_date, name'
 
     def write(self, cr, uid, ids, vals, context=None):
         """Overwrite the write method to add the user of groups"""

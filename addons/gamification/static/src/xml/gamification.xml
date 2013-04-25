@@ -11,65 +11,53 @@
             </div>
 
             <t t-if="plan.visibility_mode == 'progressbar'">
-
                 <ul class="oe_goals_list">
-                    <li t-foreach="plan.goals" t-as="goal" t-attf-class="#{goal.state == 'reached' ? 'oe_goal_reached' : ''}">
+                    <li t-foreach="plan.goals" t-as="goal" t-attf-class="#{goal.state == 'reached' ? 'oe_goal_reached' : ''} #{goal.type_display != 'progress' ? 'oe_no_progress' : ''}">
+                        <t t-if="goal.type_display == 'progress'"><span class="oe_goal_current"><t t-esc="goal.current" /></span></t>
                         <div class="oe_goal_outer_box">
                             <t t-if="goal.type_display == 'progress'">
                                 <div class="oe_goal_progress_background"></div>
                                 <div class="oe_goal_progress" t-attf-style="#{goal.type_display == 'progress' ? 'width: '+goal.completeness+'%;' : 'width:0;'}"></div>
                             </t>
-                            <div class="oe_goal_inner_box">
+                            <div t-attf-class="oe_goal_inner_box #{goal.type_display != 'progress' ? 'oe_no_progress' : ''}">
                                 <t t-if="goal.computation_mode != 'manually' and !goal.type_action">
                                     <span t-att-title="goal.type_description"><t t-esc="goal.type_name" /></span>
                                 </t>
-                                <t t-if="goal.type_action">
+                                <t t-if="goal.type_action or goal.computation_mode == 'manually'">
                                     <span t-att-title="goal.type_description"><a class="oe_goal_action" t-att-id="goal.id"><t t-esc="goal.type_name" /></a></span>
-                                </t>
-                                <t t-if="goal.computation_mode == 'manually' and !goal.type_action">
-                                    <span t-att-title="goal.type_description"><t t-esc="goal.type_name" /></span>
-                                    <a class="oe_goal_action oe_e" t-att-id="goal.id">&amp;</a>
                                 </t>
                                 <t t-if="goal.type_display == 'progress'">
                                     <t t-if="goal.type_condition == 'higher'">
-                                            <t t-esc="goal.current" />/<span t-attf-class="#{goal.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="goal.target_goal"/></span>
-                                            <t t-if="goal.type_unit"><t t-esc="goal.type_unit"/></t>
+                                            (target:
                                     </t>
                                     <t t-if="goal.type_condition == 'lower'">
-                                        
-                                            <t t-esc="goal.current" /> (less than 
-                                                <span t-attf-class="#{goal.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="goal.target_goal"/></span>
-                                                <t t-if="goal.type_unit"><t t-esc="goal.type_unit"/></t>
-                                            )
-                                        
+                                            (target less than:
                                     </t>
+                                    <span t-attf-class="#{goal.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="goal.target_goal"/></span>
+                                    <t t-if="goal.type_unit"><t t-esc="goal.type_unit"/></t>)
                                 </t>
                             </div>
                         </div>
                     </li>
                 </ul>
             </t>
+
             <t t-if="plan.visibility_mode == 'board'">
                 <table t-foreach="plan.planlines" t-as="planline" class="oe_goals_list">
                     <thead>
                     <tr>
                         <th colspan="3" t-attf-title="#{planline.type_description ? planline.type_description : ''}">
-                            <t t-if="planline.computation_mode != 'manually' and !planline.type_action">
-                                <strong><t t-esc="planline.type_name"/></strong>
-                            </t>
-                            <t t-if="planline.type_action">
-                                <strong><a class="oe_goal_action" t-att-id="planline.own_goal_id"><t t-esc="planline.type_name"/></a></strong>
-                            </t>
+                            <strong><t t-esc="planline.type_name"/></strong>
+
                             <t t-if="planline.computation_mode == 'manually' and !planline.type_action">
                                 <strong><t t-esc="planline.type_name"/></strong>
                                 <a class="oe_goal_action oe_e" t-att-id="planline.own_goal_id">&amp;</a>
                             </t>
-                            <br/>
                             <t t-if="planline.type_condition == 'higher'">
-                                (Goal: max
+                                Target:
                             </t>
                             <t t-if="planline.type_condition == 'lower'">
-                                (Goal: min
+                                Target (less than):
                             </t>
                             <span t-attf-class="#{planline.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="planline.target_goal" /></span><t t-if="planline.type_unit"> <t t-esc="planline.type_unit"/></t>)
                         </th>
@@ -88,7 +76,14 @@
                                     </t>
                                     <div class="oe_goal_inner_box">
                                         <t t-esc="goal.user_name"/><br/>
-                                        <span t-attf-class="#{planline.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="goal.current" /></span><t t-if="planline.type_unit"> <t t-esc="planline.type_unit"/></t>
+                                        <t t-if="goal.id != planline.own_goal_id or (planline.computation_mode != 'manually' and !planline.type_action)">
+                                            <span t-attf-class="#{planline.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="goal.current" /></span><t t-if="planline.type_unit"> <t t-esc="planline.type_unit"/></t>
+                                        </t>
+                                        <t t-if="goal.id == planline.own_goal_id and (planline.type_action or planline.computation_mode == 'manually')">
+                                            <a class="oe_goal_action" t-att-id="planline.own_goal_id">
+                                                <span t-attf-class="#{planline.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="goal.current" /></span><t t-if="planline.type_unit"> <t t-esc="planline.type_unit"/></t>
+                                            </a>
+                                        </t>
                                     </div>
                                 </div>
                             </td>
@@ -101,12 +96,14 @@
     </t>
 
     <t t-name="gamification.challenge_suggestions">
-        <h3>Suggestions</h3>
-        <ul t-foreach="widget.challenge_suggestions.info" t-as="challenge" class="oe_goals_list">
-            <li>
-                <strong><a class="oe_challenge_reply" t-attf-title="#{challenge.description.value ? challenge.description.value : ''}" t-attf-id="{challenge.id}" title="more details..."><t t-esc="challenge.name"/></a></strong>
-            </li>
-        </ul>
+        <div class="oe_goal">
+            <h3>Suggestions</h3>
+            <ul t-foreach="widget.challenge_suggestions.info" t-as="challenge" class="oe_goals_list">
+                <li>
+                    <strong><a class="oe_challenge_reply" t-attf-title="#{challenge.description.value ? challenge.description.value : ''}" t-attf-id="{challenge.id}" title="more details..."><t t-esc="challenge.name"/></a></strong>
+                </li>
+            </ul>
+        </div>
     </t>
 
 </templates>
