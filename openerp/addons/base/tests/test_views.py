@@ -230,7 +230,8 @@ class TestNoModel(common.TransactionCase):
             'arch': '<form/>',
             'inherit_id': False
         })
-        [view] = View.read(self.cr, self.uid, [view_id])
+        fields = ['name', 'arch', 'type', 'priority', 'inherit_id', 'model']
+        [view] = View.read(self.cr, self.uid, [view_id], fields)
         self.assertEqual(view, {
             'id': view_id,
             'name': 'dummy',
@@ -238,10 +239,6 @@ class TestNoModel(common.TransactionCase):
             'type': 'form',
             'priority': 16,
             'inherit_id': False,
-            'field_parent': False,
-            'groups_id': [],
-            'xml_id': '',
-            'model_ids': [],
             'model': '',
         })
 
