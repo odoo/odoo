@@ -104,6 +104,7 @@ class survey(osv.osv):
         'response_ids': fields.one2many('survey.response', 'survey_id', 'Responses', readonly=1),
         'public_url': fields.function(_get_public_url, string="Public web link", type="char"),
         'token': fields.char('Public token', size=8, required=1),
+        'email_template_id': fields.many2one('email.template', 'Email Template', ondelete='set null'),
     }
     _defaults = {
         'state': "draft",
@@ -269,6 +270,15 @@ class survey(osv.osv):
             'target': 'new',
             'context': ctx,
         }
+
+    def unlink(self, cr, uid, ids, context=None):
+        email_template_ids = list()
+        for survey in self.browse(cr, uid, ids, context=context):
+            email_template_ids.append(survey.email_template_id.id)
+        if email_template_ids:
+            self.pool.get('email.template').unlink(cr, uid, email_template_ids, context=context)
+        return super(survey, self).unlink(cr, uid, ids, context=context)
+
 
 class survey_page(osv.osv):
     _name = 'survey.page'
