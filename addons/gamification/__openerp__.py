@@ -53,7 +53,7 @@ Both goals and badges are flexibles and can be adapted to a large range of modul
     'installable': True,
     'application': True,
     'auto_install': True,
-    'css': ['static/src/css/goal.css'],
+    'css': ['static/src/css/gamification.css'],
     'js': [
         'static/src/js/gamification.js',
         'static/src/js/justgage.js',
