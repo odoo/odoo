@@ -45,7 +45,13 @@ from openerp import api, scope, models, fields
 class res_partner(models.Model):
     _inherit = 'res.partner'
 
-    children_count = fields.Integer(compute='compute_children_count', store=False)
+    name_size = fields.Integer(compute='compute_name_size', store=False)
+    children_count = fields.Integer(compute='compute_children_count', store=True)
+
+    @api.record
+    @api.depends('name')
+    def compute_name_size(self):
+        self.name_size = len(self.name)
 
     # Note: we introduce this weird dependency in order to catch changes on both
     # fields 'child_ids' and 'parent_id'

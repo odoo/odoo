@@ -29,6 +29,7 @@ __all__ = [
 ]
 
 from collections import defaultdict
+from contextlib import contextmanager
 from werkzeug.local import Local, release_local
 
 # werkzeug "context" variable to store the stack of scopes
@@ -37,6 +38,8 @@ _local = Local()
 
 class ScopeProxy(object):
     """ This a proxy object to the current scope. """
+    _recompute_target = None
+
     @property
     def root(self):
         stack = getattr(_local, 'scope_stack', None)
@@ -74,6 +77,30 @@ class ScopeProxy(object):
         """
         for s in getattr(_local, 'scope_list', ()):
             s.cache.invalidate(spec)
+
+    @contextmanager
+    def recomputing_manager(self, spec):
+        """ Create a context manager for recomputing fields.
+            See :meth:`RecordCache.invalidate` for the parameter `spec`.
+        """
+        # recompute_target = {model_name: {field_name: set(ids), ...}, ...}
+        recompute_target = defaultdict(lambda: defaultdict(set))
+        for m, fs, ids in spec:
+            assert ids is not None
+            for f in fs:
+                recompute_target[m][f].update(ids)
+
+        try:
+            self._recompute_target = recompute_target
+            yield
+        finally:
+            self._recompute_target = None
+
+    def recomputing(self, model_name):
+        """ Return a dictionary associating field names to record ids being
+            recomputed for `model_name`.
+        """
+        return self._recompute_target[model_name] if self._recompute_target else {}
 
 proxy = ScopeProxy()
 

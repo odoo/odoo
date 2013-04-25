@@ -732,22 +732,30 @@ class BaseModel(object):
             # _patch_method() on all instances of the model in this pool only
             nattr = {
                 '_register': False,
+                '_columns': dict(getattr(cls, '_columns', {})),
                 '_local_constraints': cls.__dict__.get('_constraints', []),
                 '_local_sql_constraints': cls.__dict__.get('_sql_constraints', []),
             }
             cls = type(cls._name, (cls,), nattr)
 
-        # copy all new-style fields in cls to avoid clashes with inheritance
+        # duplicate all new-style fields to avoid clashes with inheritance
         cls._fields = {}
         for attr in dir(cls):
             value = getattr(cls, attr)
             if isinstance(value, Field):
                 field = copy.copy(value)
                 field.set_model_name(cls._name, attr)
-                setattr(cls, attr, field)           # for record field access
-                cls._fields[attr] = field           # for model reflection
+
+                # add field as an attribute and in _fields (for reflection)
+                setattr(cls, attr, field)
+                cls._fields[attr] = field
+
+                # if stored, add a corresponding column in cls._columns
+                if field.store:
+                    cls._columns[attr] = field.make_column()
+
+                # retrieve field dependencies
                 if field.compute:
-                    # retrieve field dependencies
                     compute_method = getattr(cls, field.compute)
                     field.depends = getattr(compute_method, '_depends', ())
 
@@ -2833,6 +2841,7 @@ class BaseModel(object):
         if context is None:
             context = {}
         store_compute = False
+        stored_fields = []              # new-style stored fields with compute
         todo_end = []
         update_custom_fields = context.get('update_custom_fields', False)
         self._field_create(cr, context=context)
@@ -3040,6 +3049,10 @@ class BaseModel(object):
                                     order = f.store[f.store.keys()[0]][2]
                                 todo_end.append((order, self._update_store, (f, k)))
 
+                            # remember new-style stored fields with compute method
+                            if k in self._fields and self._fields[k].compute:
+                                stored_fields.append(k)
+
                             # and add constraints if needed
                             if isinstance(f, fields.many2one):
                                 if f._obj not in self.pool:
@@ -3079,6 +3092,15 @@ class BaseModel(object):
         if store_compute:
             self._parent_store_compute(cr)
             cr.commit()
+
+        if stored_fields:
+            # trigger computation of stored fields that have a compute method
+            def func(cr):
+                _logger.info("Storing computed values of %s fields %s", self._name, ', '.join(stored_fields))
+                ids = self.search(cr, SUPERUSER_ID, [], context={'active_test': False})
+                self.recompute([(self._name, stored_fields, ids)])
+
+            todo_end.append((1000, func, ()))
 
         return todo_end
 
@@ -5037,6 +5059,7 @@ class BaseModel(object):
         self.copy_translations(cr, uid, id, new_id, context)
         return new_id
 
+    @api.returns('self')
     def exists(self, cr, uid, ids, context=None):
         """Checks whether the given id or ids exist in this model,
            and return the list of ids that do. This is simple to use for
@@ -5455,6 +5478,7 @@ class BaseModel(object):
 
         with self.scope:
             model_cache = self.scope.cache[self._name]
+            recomputing = scope_proxy.recomputing(self._name)
 
             # handle the case of new-style fields
             field = self._fields.get(field_name)
@@ -5467,8 +5491,16 @@ class BaseModel(object):
                     return field.cache_to_record(value)
 
                 if not field.store:
+                    # a "pure" function field, simply evaluate it on self
                     assert field.compute
                     getattr(self, field.compute)()
+                    value = model_cache[field_name][self._id]
+                    return field.cache_to_record(value)
+
+                if field.compute and self._id in recomputing.get(field_name, ()):
+                    # field is stored and must be recomputed (in batch!)
+                    recs = self.recordset(recomputing[field_name]).exists()
+                    getattr(recs, field.compute)()
                     value = model_cache[field_name][self._id]
                     return field.cache_to_record(value)
 
@@ -5481,33 +5513,38 @@ class BaseModel(object):
                 return browse_function(self, column, False)
 
             if self._id not in model_cache[field_name]:
-                # determine which fields to fetch
-                if column._prefetch and not self.pool._init:
-                    # Note: do not prefetch fields when self.pool._init is True,
-                    # because some columns may be missing from the database!
-                    #
-                    # fetch all classic and many2one fields
-                    field_names = [
-                        fname for fname, cinfo in self._all_columns.iteritems()
-                        if cinfo.column._classic_write
-                    ]
-
-                elif isinstance(column, fields.function) and not column.store:
-                    # simply evaluate the function field for that record
+                # a pure function field: simply evaluate it for self
+                if isinstance(column, fields.function) and not column.store:
                     value = self.read([field_name], load="_classic_write")[field_name]
                     if column._type == 'many2one':
                         value = _clean_one(value)
                     return browse_function(self, column, value)
 
-                else:
-                    # otherwise fetch only that field
-                    field_names = [field_name]
+                # determine which fields to fetch
+                fetch_fields = set((field_name,))
+                if column._prefetch and not self.pool._init:
+                    # Note: do not prefetch fields when self.pool._init is True,
+                    # because some columns may be missing from the database!
+                    for fname, cinfo in self._all_columns.iteritems():
+                        # prefetch all classic and many2one fields
+                        if cinfo.column._classic_write:
+                            fetch_fields.add(fname)
 
-                # fetch the records in the same model that don't have the field yet
+                # determine which records to fetch: take the records in the same
+                # model that don't have the field yet in cache
                 model_cache.ids.add(self._id)
-                ids = list(model_cache.ids - set(model_cache[field_name]))
+                fetch_ids = model_cache.ids - set(model_cache[field_name])
 
-                self._fetch_record_fields(field_names, ids)
+                # check whether fields have to be recomputed
+                for fname in list(fetch_fields):
+                    recompute_ids = recomputing.get(fname, set())
+                    if self._id in recompute_ids:
+                        fetch_fields.discard(fname)     # do not fetch that field at all
+                    else:
+                        fetch_ids -= recompute_ids      # do not fetch those records
+
+                assert field_name in fetch_fields and self._id in fetch_ids
+                self._fetch_record_fields(list(fetch_fields), list(fetch_ids))
 
             if self._id not in model_cache[field_name]:
                 # How did this happen? Could be a missing model due to custom fields used too soon.
@@ -5685,27 +5722,28 @@ class BaseModel(object):
     def recompute(self, spec):
         """ Recompute fields given by `spec`.
 
-            :param spec: list of triples (`model_name`, `field_names`, `record_ids`)
+            :param spec: list of triples (`model`, `fields`, `ids`), where
+                `model` is a model name, `fields` is a list of field names, and
+                `ids` is a list of record ids.
         """
+        if not spec:
+            return
+
         # first invalidate the cache of the fields to recompute
         scope_proxy.invalidate_cache(spec)
 
-        # determine model and compute methods to call
-        model_compute = defaultdict(lambda: defaultdict(set))
-        for m, fs, ids in spec:
-            model = self.pool[m]
-            for f in fs:
-                field = model._fields[f]
-                if field.store:
-                    model_compute[model][field.compute].update(ids)
-
-        # invoke the compute methods on the given records
-        # TODO: one should order recomputations using dependencies!
-        with scope_proxy.SUDO():
-            for model, compute_ids in model_compute.iteritems():
-                for compute, ids in compute_ids.iteritems():
-                    recs = model.recordset(ids)
-                    getattr(recs, compute)()
+        with scope_proxy.recomputing_manager(spec):
+            # simply evaluate the fields to recompute on their records;
+            # the method _get_record_field() will do the job!
+            for m, fs, ids in spec:
+                model = self.pool[m]
+                # recompute stored fields only
+                fs = [f for f in fs if model._fields[f].store]
+                if fs:
+                    # filter out deleted records (this happens with unlink)
+                    for rec in model.recordset(ids).exists():
+                        for f in fs:
+                            rec[f]
 
 
 # for instance checking

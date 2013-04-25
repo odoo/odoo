@@ -28,6 +28,7 @@ import sys
 import types
 import zipimport
 
+import openerp
 import openerp.tools as tools
 import openerp.tools.osutil as osutil
 from openerp.tools.safe_eval import safe_eval as eval
@@ -310,22 +311,23 @@ def init_module_models(cr, module_name, obj_list):
     TODO better explanation of _auto_init and init.
 
     """
-    _logger.info('module %s: creating or updating database tables', module_name)
-    todo = []
-    for obj in obj_list:
-        result = obj._auto_init(cr, {'module': module_name})
-        if result:
-            todo += result
-        if hasattr(obj, 'init'):
-            obj.init(cr)
+    with openerp.osv.scope.Scope(cr, openerp.SUPERUSER_ID, None):
+        _logger.info('module %s: creating or updating database tables', module_name)
+        todo = []
+        for obj in obj_list:
+            result = obj._auto_init(cr, {'module': module_name})
+            if result:
+                todo += result
+            if hasattr(obj, 'init'):
+                obj.init(cr)
+            cr.commit()
+        for obj in obj_list:
+            obj._auto_end(cr, {'module': module_name})
+            cr.commit()
+        todo.sort(key=lambda x: x[0])
+        for t in todo:
+            t[1](cr, *t[2])
         cr.commit()
-    for obj in obj_list:
-        obj._auto_end(cr, {'module': module_name})
-        cr.commit()
-    todo.sort(key=lambda x: x[0])
-    for t in todo:
-        t[1](cr, *t[2])
-    cr.commit()
 
 def load_openerp_module(module_name):
     """ Load an OpenERP module, if not already loaded.

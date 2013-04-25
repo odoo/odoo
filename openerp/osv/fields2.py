@@ -64,9 +64,10 @@ class Field(object):
         """ set the value of field `self` for the record `instance` """
         assert instance.is_record() and instance._name == self.model
         value = self.record_to_cache(value)
-        scope.cache[self.model][self.name][instance._id] = value
         if self.store:
             instance.write({self.name: value})
+        # store into cache here, since method write() invalidates the cache!
+        scope.cache[self.model][self.name][instance._id] = value
 
     def cache_to_record(self, value):
         """ convert `value` from the cache level to the record level """

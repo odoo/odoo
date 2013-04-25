@@ -31,6 +31,23 @@ class TestNewFields(common.TransactionCase):
 
     def test_non_stored(self):
         """ test non-stored fields """
+        # find partners
+        alpha, beta, gamma = self.Partner.search([], limit=3)
+
+        # check definition of the field
+        self.assertEqual(alpha.name_size, len(alpha.name))
+        self.assertEqual(beta.name_size, len(beta.name))
+        self.assertEqual(gamma.name_size, len(gamma.name))
+
+        # check recomputation after record is modified
+        alpha_name = alpha.name
+        alpha_size = len(alpha_name)
+        for n in xrange(10):
+            alpha.write({'name': alpha_name + ("!" * n)})
+            self.assertEqual(alpha.name_size, alpha_size + n)
+
+    def test_stored(self):
+        """ test stored fields """
         # find partners with children
         alpha, beta, gamma = self.Partner.search([('child_ids.name', '!=', False)], limit=3)
 
