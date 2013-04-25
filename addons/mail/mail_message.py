@@ -362,7 +362,12 @@ class mail_message(osv.Model):
         has_voted = uid in [user.id for user in message.vote_user_ids]
 
         try:
-            body_short = html_email_clean(message.body, remove_unwanted=True, use_max_length=True, max_length=50)
+            if parent_id:
+                max_length = 300
+            else:
+                max_length = 100
+            body_short = html_email_clean(message.body, remove=False, shorten=True, max_length=max_length)
+
         except Exception:
             body_short = '<p><b>Encoding Error : </b><br/>Unable to convert this message (id: %s).</p>' % message.id
             _logger.exception(Exception)
