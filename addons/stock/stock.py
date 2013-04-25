@@ -2423,14 +2423,14 @@ class stock_move(osv.osv):
         # or if it's the same as that of the secondary amount being posted.
         account_obj = self.pool.get('account.account')
         src_acct, dest_acct = account_obj.browse(cr, uid, [src_account_id, dest_account_id], context=context)
-        src_main_currency_id = src_acct.company_id.currency_id.id
-        dest_main_currency_id = dest_acct.company_id.currency_id.id
+        src_main_currency_id = src_acct.currency_id and src_acct.currency_id.id or src_acct.company_id.currency_id.id
+        dest_main_currency_id = dest_acct.currency_id and dest_acct.currency_id.id or dest_acct.company_id.currency_id.id
         cur_obj = self.pool.get('res.currency')
         if reference_currency_id != src_main_currency_id:
             # fix credit line:
             credit_line_vals['credit'] = cur_obj.compute(cr, uid, reference_currency_id, src_main_currency_id, reference_amount, context=context)
             if (not src_acct.currency_id) or src_acct.currency_id.id == reference_currency_id:
-                credit_line_vals.update(currency_id=reference_currency_id, amount_currency=reference_amount)
+                credit_line_vals.update(currency_id=reference_currency_id, amount_currency=-reference_amount)
         if reference_currency_id != dest_main_currency_id:
             # fix debit line:
             debit_line_vals['debit'] = cur_obj.compute(cr, uid, reference_currency_id, dest_main_currency_id, reference_amount, context=context)
