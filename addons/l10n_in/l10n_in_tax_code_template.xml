@@ -48,7 +48,7 @@
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_rec_exice_salebase">
-            <field name="name">Excise Duty - (12% + 2% +1%) Sales</field>
+            <field name="name">Excise Duty 12.36% - Sales</field>
             <field name="parent_id" ref="vat_code_tax_rec"/>
         </record>
 
@@ -58,7 +58,7 @@
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_pay_ic_st_purbase">
-            <field name="name">Input Credit - Service Tax (12% + 2% + 1%) Purchase</field>
+            <field name="name">Input Credit - Service Tax 12.36% - Purchase</field>
             <field name="parent_id" ref="vat_code_payable"/>
         </record>
 
@@ -98,7 +98,7 @@
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_pay_ic_st_base">
-            <field name="name">Input Credit - Service Tax (12% + 2% + 1%)</field>
+            <field name="name">Input Credit - Service Tax 12.36%</field>
             <field name="parent_id" ref="vat_code_payable"/>
         </record>
 
@@ -403,7 +403,7 @@
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_rec_st_salebase">
-            <field name="name">Service Tax (12% + 2% + 1%) Sales</field>
+            <field name="name">Service Tax 12.36% - Sales</field>
             <field name="parent_id" ref="vat_code_tax_rec"/>
         </record>
 
@@ -420,6 +420,11 @@
         <record model="account.tax.code.template" id="vat_code_tax_rec_st1">
             <field name="name">Service Tax 1% - Sales</field>
             <field name="parent_id" ref="vat_code_tax_rec_st_salebase"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_sale_ser12">
+            <field name="name">Service Tax 12% - Sales</field>
+            <field name="parent_id" ref="vat_code_base_tax_sale"/>
         </record>
 
     </data>
