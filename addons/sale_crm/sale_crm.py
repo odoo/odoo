@@ -118,7 +118,7 @@ class crm_case_section(osv.osv):
             domain=[('state', 'not in', ['draft', 'cancel'])]),
 
         'forecast': fields.integer(string='Total forecast'),
-        'target_invoice': fields.integer(string='Target Invoicing'),
+        'target_invoice': fields.integer(string='Invoicing Target'),
         'created_quotation_per_duration': fields.function(_get_created_quotation_per_duration, string='Rate of created quotation per duration', type="string", readonly=True),
         'validate_saleorder_per_duration': fields.function(_get_validate_saleorder_per_duration, string='Rate of validate sales orders per duration', type="string", readonly=True),
         'sent_invoice_per_duration': fields.function(_get_sent_invoice_per_duration, string='Rate of sent invoices per duration', type="string", readonly=True),

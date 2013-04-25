@@ -44,10 +44,10 @@ AVAILABLE_PRIORITIES = [
 ]
 
 DURATION_TXT = {
-    "monthly": _("this month"),
-    "semesterly": _("this semester"),
-    "semiannually": _("this semi"),
-    "annually": _("this year")
+    "monthly": _("month"),
+    "semesterly": _("semester"),
+    "semiannually": _("semi"),
+    "annually": _("year")
 }
 
 MONTHS = {
@@ -191,13 +191,13 @@ class crm_case_section(osv.osv):
             help="This enables the management of leads in the sales team. Otherwise the sales team manages only opportunities."),
 
         'target_duration': fields.selection([("monthly", "Monthly"), ("semesterly", "Semesterly"), ("semiannually", "Semiannually"), ("annually", "Annually")],
-            string='Report duration view', required=True),
+            string='Report Duration View', required=True),
         'target_duration_txt': fields.function(_get_target_duration_txt,
             string='Duration',
             type="string", readonly=True),
 
         'open_lead_per_duration': fields.function(_get_open_lead_per_duration, string='Open Leads per duration', type="string", readonly=True),
-        'won_opportunity_per_duration': fields.function(_get_won_opportunity_per_duration, string='Rate of opporunities whon per duration', type="string", readonly=True)
+        'won_opportunity_per_duration': fields.function(_get_won_opportunity_per_duration, string='Revenue of opporunities whon per duration', type="string", readonly=True)
     }
 
     def _get_stage_common(self, cr, uid, context):
