@@ -213,15 +213,19 @@ class res_partner(osv.osv, format_address):
     _commercial_partner_id = lambda self, *args, **kwargs: self._commercial_partner_compute(*args, **kwargs)
     _display_name = lambda self, *args, **kwargs: self._display_name_compute(*args, **kwargs)
 
-    _commercial_partner_store_triggers = { 
+    _commercial_partner_store_triggers = {
         'res.partner': (lambda self,cr,uid,ids,context=None: self.search(cr, uid, [('id','child_of',ids)]),
                         ['parent_id', 'is_company'], 10) 
-    }   
+    }
+    _display_name_store_triggers = {
+        'res.partner': (lambda self,cr,uid,ids,context=None: self.search(cr, uid, [('id','child_of',ids)]),
+                        ['parent_id', 'is_company', 'name'], 10) 
+    }
 
     _order = "display_name"
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
-        'display_name': fields.function(_display_name, type='char', string='Name', store=_commercial_partner_store_triggers),
+        'display_name': fields.function(_display_name, type='char', string='Name', store=_display_name_store_triggers),
         'date': fields.date('Date', select=1),
         'title': fields.many2one('res.partner.title', 'Title'),
         'parent_id': fields.many2one('res.partner', 'Related Company'),
@@ -442,7 +446,7 @@ class res_partner(osv.osv, format_address):
             commercial_fields = self._commercial_fields(cr, uid, context=context)
             sync_vals = self._update_fields_values(cr, uid, partner.commercial_partner_id,
                                                         commercial_fields, context=context)
-            return self.write(cr, uid, partner.id, sync_vals, context=context)
+            partner.write(sync_vals)
 
     def _commercial_sync_to_children(self, cr, uid, partner, context=None):
         """ Handle sync of commercial fields to descendants """
@@ -468,7 +472,7 @@ class res_partner(osv.osv, format_address):
                                                       use_parent_address=partner.use_parent_address,
                                                       parent_id=partner.parent_id.id,
                                                       context=context).get('value', {})
-                self.update_address(cr, uid, partner.id, onchange_vals, context=context)
+                partner.update_address(onchange_vals)
 
         # 2. To DOWNSTREAM: sync children 
         if partner.child_ids:
