@@ -32,18 +32,18 @@ openerp.crm = function(openerp) {
                             ],
                         });
 
+                        var flag_open = false;
                         if ($el.data('action')) {
                             $el.click(function (event) {
                                 event.stopPropagation();
+                                flag_open = false;
                                 if (!self.view.is_action_enabled('edit')) {
                                     return;
                                 }
-                                if ($el.find(".oe_justgage_edit").size()) {
-                                    $el.find(".oe_justgage_edit").remove();
-                                } else {
+                                if (!$el.find(".oe_justgage_edit").size()) {
                                     var $svg = $el.find('svg');
-                                    $div = $('<div class="oe_justgage_edit" style="z-index: 1; position: absolute; width: ' + $svg.width() + 'px; top: ' + ($svg.height()/2-5) + 'px;"/>');
-                                    $input = $('<input style="text-align: center; width: ' + ($svg.width()-40) + 'px; margin: auto;"/>').val($el.data('value'));
+                                    $div = $('<div class="oe_justgage_edit" style="text-align: center; z-index: 1; position: absolute; width: ' + $svg.outerWidth() + 'px; top: ' + ($svg.outerHeight()/2-5) + 'px;"/>');
+                                    $input = $('<input style="text-align: center; width: ' + ($svg.outerWidth()-40) + 'px; margin: auto;"/>').val($el.data('value'));
                                     $div.append($input);
                                     $el.prepend($div)
                                     $input.focus()
@@ -59,8 +59,21 @@ openerp.crm = function(openerp) {
                                                 }
                                             }
                                         })
-                                        .click(function (event) {event.stopPropagation();});
+                                        .click(function (event) {
+                                            event.stopPropagation();
+                                            flag_open = false;
+                                        })
+                                        .blur(function (event) {
+                                            if(!flag_open) {
+                                                $el.find(".oe_justgage_edit").remove();
+                                            } else {
+                                                flag_open = false;
+                                                setTimeout(function () {$input.focus();}, 0);
+                                            }
+                                        });
                                 }
+                            }).mousedown(function () {
+                                flag_open = true;
                             });
                         }
                     });
