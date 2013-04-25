@@ -11,7 +11,7 @@
                     <field name="date"/>
                     <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                     <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
-                    <field name="partner_id" string="Customer"/>
+                    <field name="partner_id" string="Customer" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="journal_id" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/>
                     <field name="period_id"/>
                     <group expand="0" string="Group By...">
@@ -34,7 +34,7 @@
                     <field name="date"/>
                     <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                     <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
-                    <field name="partner_id" string="Supplier"/>
+                    <field name="partner_id" string="Supplier" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="journal_id" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/>
                     <field name="period_id"/>
                     <group expand="0" string="Group By...">
@@ -126,7 +126,7 @@
                 <form string="Voucher Payment" version="7.0">
                 <header>
                     <button name="proforma_voucher" string="Validate" states="draft" invisible="context.get('line_type', False)" class="oe_highlight"/>
-                    <button name="cancel_voucher" string="Cancel" states="draft,proforma"  invisible="context.get('line_type', False)"/>
+                    <button name="cancel_voucher" string="Cancel Voucher" states="draft,proforma"  invisible="context.get('line_type', False)"/>
                     <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" invisible="context.get('line_type', False)" confirm="Are you sure to unreconcile and cancel this record ?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" invisible="context.get('line_type', False)"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
@@ -157,7 +157,7 @@
                     <notebook>
                         <page string="Payment Information">
                         	<label for="line_dr_ids"/>
-                            <field name="line_dr_ids" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}">
+                            <field name="line_dr_ids" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, type, context)">
                                 <tree string="Supplier Invoices and Outstanding transactions" editable="bottom" colors="gray:amount==0">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
@@ -173,7 +173,7 @@
                                 </tree>
                             </field>
                             <label for="line_cr_ids" attrs="{'invisible': [('pre_line','=',False)]}"/>
-                            <field name="line_cr_ids" attrs="{'invisible': [('pre_line','=',False)]}" context="{'journal_id':journal_id, 'partner_id':partner_id}">
+                            <field name="line_cr_ids" attrs="{'invisible': [('pre_line','=',False)]}" context="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, type, context)">
                                 <tree string="Credits" editable="bottom" colors="gray:amount==0">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
@@ -193,7 +193,7 @@
                                     <field name="narration" colspan="2" nolabel="1"/>
                                 </group>
                                 <group>
-                                    <group col="4" attrs="{'invisible':[('currency_id','=',False),('is_multi_currency','=',False)]}">
+                                    <group col="4" attrs="{'invisible':[('is_multi_currency','=',False)]}">
                                         <separator string="Currency Options" colspan="4"/>
                                         <field name="is_multi_currency" invisible="1"/>
                                         <field name="payment_rate" required="1" on_change="onchange_rate(payment_rate, amount, currency_id, payment_rate_currency_id, company_id, context)" colspan="3"/>
@@ -305,10 +305,12 @@
                                 on_change="onchange_journal(journal_id, line_cr_ids, False, partner_id, date, amount, type, company_id, context)"
                                 string="Payment Method"/>
                         </group>
+                        
                         <group>
                             <field name="date" invisible="context.get('line_type', False)" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/>
+                            <field name="period_id"/>
                             <field name="reference" invisible="context.get('line_type', False)" string="Payment Ref" placeholder="e.g. 003/10"/>
-                            <field name="name" colspan="2" invisible="context.get('line_type', False)" placeholder="e.g. Invoice SAJ/0042"/>
+                            <field name="name" invisible="context.get('line_type', False)" placeholder="e.g. Invoice SAJ/0042"/>
                             <field name="company_id" widget="selection" groups="base.group_multi_company"/>
 
                             <field name="account_id"
@@ -316,6 +318,21 @@
                                 invisible="True"/>
                             <field name="pre_line" invisible="1"/>
                             <field name="type" invisible="True"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                                <field name="writeoff_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="payment_option" required="1"/>
+                                <field name="writeoff_acc_id"
+                                        attrs="{'invisible':[('payment_option','!=','with_writeoff')], 'required':[('payment_option','=','with_writeoff')]}"
+                                        domain="[('type','=','other')]"/>
+                                <field name="comment"
+                                        attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
+                                <field name="analytic_id"
+                                        groups="analytic.group_analytic_accounting"/>
+                            </group>
+                            <group>
                         </group>
                     </group>
                     <notebook invisible="1">
@@ -357,22 +374,11 @@
                                 <group>
                                     <field name="narration" colspan="2" nolabel="1"/>
                                 </group>
-                                <group col="4" attrs="{'invisible':[('currency_id','=',False),('is_multi_currency','=',False)]}">
+                                <group col="4" attrs="{'invisible':[('is_multi_currency','=',False)]}">
                                     <field name="is_multi_currency" invisible="1"/>
                                     <field name="payment_rate" required="1" on_change="onchange_rate(payment_rate, amount, currency_id, payment_rate_currency_id, company_id, context)" colspan="3"/>
                                     <field name="payment_rate_currency_id" colspan="1" nolabel="1" on_change="onchange_payment_rate_currency(currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context)" groups="base.group_multi_currency"/>
                                     <field name="paid_amount_in_company_currency" colspan="4" invisible="1"/>
-                                </group>
-                                <group>
-                                    <field name="writeoff_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                    <field name="payment_option" required="1"/>
-                                    <field name="writeoff_acc_id"
-                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')], 'required':[('payment_option','=','with_writeoff')]}"
-                                           domain="[('type','=','other')]"/>
-                                    <field name="comment"
-                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
-                                    <field name="analytic_id"
-                                           groups="analytic.group_analytic_accounting"/>
                                 </group>
                             </group>
                         </page>
@@ -393,7 +399,7 @@
                 <form string="Receipt" version="7.0">
                 <header invisible="context.get('line_type', False)">
                     <button name="proforma_voucher" string="Validate" states="draft" class="oe_highlight"/>
-                    <button name="cancel_voucher" string="Cancel" states="draft,proforma"/>
+                    <button name="cancel_voucher" string="Cancel Receipt" states="draft,proforma"/>
                     <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" confirm="Are you sure to unreconcile and cancel this record ?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
@@ -466,7 +472,7 @@
                                 <group>
                                     <field name="narration" colspan="2" nolabel="1"/>
                                 </group>
-                                <group col="4" attrs="{'invisible':[('currency_id','=',False),('is_multi_currency','=',False)]}">
+                                <group col="4" attrs="{'invisible':[('is_multi_currency','=',False)]}">
                                     <field name="is_multi_currency" invisible="1"/>
                                     <field name="payment_rate" required="1" on_change="onchange_rate(payment_rate, amount, currency_id, payment_rate_currency_id, company_id, context)" colspan="3"/>
                                     <field name="payment_rate_currency_id" colspan="1" nolabel="1" on_change="onchange_payment_rate_currency(currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context)" groups="base.group_multi_currency"/>

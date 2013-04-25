@@ -6,20 +6,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-02-05 01:04+0000\n"
-"Last-Translator: Ahmet Altınışık <Unknown>\n"
+"POT-Creation-Date: 2013-03-07 08:39+0000\n"
+"PO-Revision-Date: 2013-04-13 23:40+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-05 05:23+0000\n"
-"X-Generator: Launchpad (build 16468)\n"
+"X-Launchpad-Export-Date: 2013-04-14 05:50+0000\n"
+"X-Generator: Launchpad (build 16564)\n"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
 msgid "Is used to know to which company the pickings and moves belong."
 msgstr ""
+"Teslimatların ve hareketlerin hangi şirkete ait olduğunun bilinmesi için "
+"kullanılır"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -70,10 +72,15 @@ msgid "Location used by Destination Location to supply"
 msgstr "Gönderilecek Hedef Konumu tarafından kullanılan konum"
 
 #. module: stock_location
+#: view:product.product:0
+msgid "When receiving at location X, move to location Y"
+msgstr "X konumunda alırken,Y konumuna taşı"
+
+#. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Internal"
-msgstr "Dahili"
+msgstr "İç"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:98
@@ -88,7 +95,7 @@ msgstr ""
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location
 msgid "Location"
-msgstr "Lokasyon"
+msgstr "Yer"
 
 #. module: stock_location
 #: field:product.pulled.flow,invoice_state:0
@@ -183,13 +190,13 @@ msgstr "Sipariş Yapma"
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Stock"
-msgstr "Stokla Yapma"
+msgstr "Stoktan Al"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:118
 #, python-format
 msgid "Pulled from another location."
-msgstr ""
+msgstr "farklı bir konumdan alındı"
 
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
@@ -252,9 +259,9 @@ msgid ""
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
 msgstr ""
-"'Stokla': Gerektiğinde stoktan alın ya da tekrar tedarik edilinceye kadar "
-"bekleyin. 'Sipariş Ver': Gerektiğinde, satın alın ya da satınalma talebi "
-"oluşturun."
+"Stoktan Al: Gerektiğinde ürün stoktan alınacaktır ya da yeniden tedarik "
+"edilmesi beklenecektir. Sipariş Ver: Gerektiğinde ürün, tedarik isteği "
+"üzerine satınalınır ya da üretilir."
 
 #. module: stock_location
 #: help:product.pulled.flow,location_id:0
@@ -339,6 +346,11 @@ msgstr "Otomatik Hareket"
 #: selection:stock.location.path,picking_type:0
 msgid "Getting Goods"
 msgstr "Mal Alımı"
+
+#. module: stock_location
+#: view:product.product:0
+msgid "Fulfill needs on location X from location Y "
+msgstr "Y konumundaki X konumunda Tamamlama gerektirir "
 
 #. module: stock_location
 #: view:product.product:0

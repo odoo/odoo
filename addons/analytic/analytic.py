@@ -171,9 +171,9 @@ class account_analytic_account(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('Account/Contract Name', size=128, required=True),
+        'name': fields.char('Account/Contract Name', size=128, required=True, track_visibility='onchange'),
         'complete_name': fields.function(_get_full_name, type='char', string='Full Name'),
-        'code': fields.char('Reference', select=True),
+        'code': fields.char('Reference', select=True, track_visibility='onchange'),
         'type': fields.selection([('view','Analytic View'), ('normal','Analytic Account'),('contract','Contract or Project'),('template','Template of Contract')], 'Type of Account', required=True,
                                  help="If you select the View Type, it means you won\'t allow to create journal entries using that account.\n"\
                                   "The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"\
@@ -191,12 +191,12 @@ class account_analytic_account(osv.osv):
         'quantity': fields.function(_debit_credit_bal_qtty, type='float', string='Quantity', multi='debit_credit_bal_qtty'),
         'quantity_max': fields.float('Prepaid Service Units', help='Sets the higher limit of time to work on the contract, based on the timesheet. (for instance, number of hours in a limited support contract.)'),
         'partner_id': fields.many2one('res.partner', 'Customer'),
-        'user_id': fields.many2one('res.users', 'Project Manager'),
-        'manager_id': fields.many2one('res.users', 'Account Manager'),
+        'user_id': fields.many2one('res.users', 'Project Manager', track_visibility='onchange'),
+        'manager_id': fields.many2one('res.users', 'Account Manager', track_visibility='onchange'),
         'date_start': fields.date('Start Date'),
-        'date': fields.date('Date End', select=True),
+        'date': fields.date('End Date', select=True, track_visibility='onchange'),
         'company_id': fields.many2one('res.company', 'Company', required=False), #not required because we want to allow different companies to use the same chart of account, except for leaf accounts.
-        'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','To Renew'),('close','Closed')], 'Status', required=True, track_visibility='onchange'),
+        'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'),('pending','To Renew'),('close','Closed'),('cancelled', 'Cancelled')], 'Status', required=True, track_visibility='onchange'),
         'currency_id': fields.function(_currency, fnct_inv=_set_company_currency, #the currency_id field is readonly except if it's a view account and if there is no company
             store = {
                 'res.company': (_get_analytic_account, ['currency_id'], 10),
@@ -257,6 +257,9 @@ class account_analytic_account(osv.osv):
     _constraints = [
         (check_recursion, 'Error! You cannot create recursive analytic accounts.', ['parent_id']),
     ]
+
+    def name_create(self, cr, uid, name, context=None):
+        raise osv.except_osv(_('Warning'), _("Quick account creation disallowed."))
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
@@ -348,7 +351,5 @@ class account_analytic_line(osv.osv):
     _constraints = [
         (_check_no_view, 'You cannot create analytic line on view account.', ['account_id']),
     ]
-
-account_analytic_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

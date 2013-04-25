@@ -161,14 +161,12 @@ class res_users(osv.Model):
     def _get_state(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for user in self.browse(cr, uid, ids, context):
-            res[user.id] = ('reset' if user.signup_valid else
-                            'active' if user.login_date else
-                            'new')
+            res[user.id] = ('active' if user.login_date else 'new')
         return res
 
     _columns = {
         'state': fields.function(_get_state, string='Status', type='selection',
-                    selection=[('new', 'New'), ('active', 'Active'), ('reset', 'Resetting Password')]),
+                    selection=[('new', 'Never Connected'), ('active', 'Activated')]),
     }
 
     def signup(self, cr, uid, values, token=None, context=None):
@@ -202,6 +200,9 @@ class res_users(osv.Model):
                     'partner_id': partner.id,
                     'email': values.get('email') or values.get('login'),
                 })
+                if partner.company_id:
+                    values['company_id'] = partner.company_id.id
+                    values['company_ids'] = [(6,0,[partner.company_id.id])]
                 self._signup_create_user(cr, uid, values, context=context)
         else:
             # no token, sign up an external user
@@ -268,16 +269,7 @@ class res_users(osv.Model):
             if mail_state and mail_state['state'] == 'exception':
                 raise osv.except_osv(_("Cannot send email: no outgoing email server configured.\nYou can configure it under Settings/General Settings."), user.name)
             else:
-                return {
-                    'type': 'ir.actions.client',
-                    'name': '_(Server Notification)',
-                    'tag': 'action_notify',
-                    'params': {
-                        'title': 'Mail Sent to: %s' % user.name,
-                        'text': 'You can reset the password by yourself using this <a href=%s>link</a>' % user.partner_id.signup_url,
-                        'sticky': True,
-                    }
-                }
+                return True
 
     def create(self, cr, uid, values, context=None):
         # overridden to automatically invite user to sign up

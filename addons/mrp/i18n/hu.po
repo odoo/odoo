@@ -7,22 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-05 21:59+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-10 20:33+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:54+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
-
-#. module: mrp
-#: help:mrp.bom,message_unread:0
-#: help:mrp.production,message_unread:0
-#: help:mrp.production.workcenter.line,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
+"X-Launchpad-Export-Date: 2013-03-28 05:49+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -96,7 +89,7 @@ msgstr "Selejt termék"
 #. module: mrp
 #: view:mrp.workcenter:0
 msgid "Mrp Workcenter"
-msgstr "Mrp munkaközpont"
+msgstr "Mrp munkaállomás"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
@@ -113,6 +106,13 @@ msgstr "Anyagjegyzék keresése"
 #: model:process.node,note:mrp.process_node_stockproduct1
 msgid "For stockable products and consumables"
 msgstr "Raktározható és felhasználható termékekhez"
+
+#. module: mrp
+#: help:mrp.bom,message_unread:0
+#: help:mrp.production,message_unread:0
+#: help:mrp.production.workcenter.line,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Ha be van jelölve akkor figyelje az új üzeneteket"
 
 #. module: mrp
 #: help:mrp.routing.workcenter,cycle_nbr:0
@@ -432,7 +432,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.workcenter,product_id:0
 msgid "Work Center Product"
-msgstr "Munkaállomás-termék"
+msgstr "Munkaállomás termék"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -884,7 +884,7 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Kattintson munka állomás hozzáadásához.\n"
+"                Kattintson munkaállomás hozzáadásához.\n"
 "              </p><p>\n"
 "                Munka állomás lehetővé teszi a gyártási egységek "
 "létrehozását és\n"
@@ -1181,7 +1181,6 @@ msgstr "Inaktív"
 #: view:mrp.config.settings:0
 #: view:mrp.product.produce:0
 #: view:mrp.product_price:0
-#: view:mrp.production:0
 #: view:mrp.workcenter.load:0
 msgid "Cancel"
 msgstr "Mégsem"
@@ -1293,9 +1292,9 @@ msgid ""
 "Number of operations this Work Center can do in parallel. If this Work "
 "Center represents a team of 5 workers, the capacity per cycle is 5."
 msgstr ""
-"Ez a Munka Állomás ennyi párhuzamos műveletet tud végrehajtani. Ha ez a Munk "
-"Állomás 5 munkavállalót magában foglaló csoportot képvisel, akkor a "
-"kapacitása per ciklus az 5."
+"Ez a Munkaállomás ennyi párhuzamos műveletet tud végrehajtani. Ha ez a "
+"Munkaállomás 5 munkavállalót magában foglaló csoportot képvisel, akkor a "
+"kapacitása az 5 per ciklus."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action3
@@ -1355,7 +1354,7 @@ msgid ""
 "Time in hours for this Work Center to achieve the operation of the specified "
 "routing."
 msgstr ""
-"Ennek a Munka Állomásnak a meghatározott útvonal végrehajtás ideje órákban "
+"Ennek a Munkaállomásnak a meghatározott útvonal végrehajtás ideje órákban "
 "megadva."
 
 #. module: mrp
@@ -1445,7 +1444,7 @@ msgid ""
 "will be automatically pre-completed."
 msgstr ""
 "Az útvonal az összes használatban lévő Munka Állomást, futási idejét és/agy "
-"ciklusai mutatja. Ha az útvonal ki van jelezve akkor a munka megbízásnál "
+"ciklusai mutatja. Ha az útvonal ki van jelezve akkor a gyártási megbízásnál "
 "(Munka Állomás) a harmadik  fül automatikusan újra ki lesz előre töltve."
 
 #. module: mrp
@@ -1569,7 +1568,7 @@ msgstr "Gyártási munkaállomások"
 #. module: mrp
 #: view:mrp.workcenter:0
 msgid "Search for mrp workcenter"
-msgstr "Munkaállomás keresése"
+msgstr "MRP munkaállomás keresése"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -1625,8 +1624,8 @@ msgid ""
 msgstr ""
 "Az irányítás lehetővé teszi a gyártás végrehajtás létrehozását és "
 "vezérlését, melyet nyomon kell követni\n"
-"                a munkaállomásokon keresztül, ha egy terméket szeretnénk "
-"létrehozni. Egy olyan darabjegyzékhez lesz kapcsolva,\n"
+"                a munkaállomásokon keresztül, egy termék létrehozásához. Egy "
+"olyan darabjegyzékhez lesz kapcsolva,\n"
 "               mely meghatározza az alapanyag igényeket."
 
 #. module: mrp
@@ -2012,6 +2011,11 @@ msgstr "Alapértelmezett mértékegység"
 #: field:mrp.workcenter,time_cycle:0
 msgid "Time for 1 cycle (hour)"
 msgstr "Ciklusidő (óra)"
+
+#. module: mrp
+#: view:mrp.production:0
+msgid "Cancel Production"
+msgstr "Termelés visszavonása"
 
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.report_mrp_production_report

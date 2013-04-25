@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-04-11 22:23+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:33+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-04-12 06:05+0000\n"
+"X-Generator: Launchpad (build 16564)\n"
 
 #. module: account_followup
 #: model:email.template,subject:account_followup.email_template_account_followup_default
@@ -23,12 +23,12 @@ msgstr ""
 #: model:email.template,subject:account_followup.email_template_account_followup_level1
 #: model:email.template,subject:account_followup.email_template_account_followup_level2
 msgid "${user.company_id.name} Payment Reminder"
-msgstr ""
+msgstr "${user.company_id.name} Fizetési felszólítás"
 
 #. module: account_followup
 #: help:res.partner,latest_followup_level_id:0
 msgid "The maximum follow-up level"
-msgstr ""
+msgstr "Fizetési-emlékeztető szint maximuma"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -44,33 +44,28 @@ msgstr "Fizetési emlékeztető"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(date)s"
-msgstr ""
+msgstr "%(date)s"
 
 #. module: account_followup
 #: field:res.partner,payment_next_action_date:0
 msgid "Next Action Date"
-msgstr ""
+msgstr "Következő művelet időpontja"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 #: field:account_followup.followup.line,manual_action:0
 msgid "Manual Action"
-msgstr ""
+msgstr "Kézi művelet"
 
 #. module: account_followup
 #: field:account_followup.sending.results,needprinting:0
 msgid "Needs Printing"
-msgstr ""
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "⇾ Mark as Done"
-msgstr ""
+msgstr "Nyomtatás szükséges"
 
 #. module: account_followup
 #: field:account_followup.followup.line,manual_action_note:0
 msgid "Action To Do"
-msgstr ""
+msgstr "Elvégzendő művelet"
 
 #. module: account_followup
 #: field:account_followup.followup,company_id:0
@@ -82,6 +77,8 @@ msgstr "Vállalat"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
+#: code:addons/account_followup/account_followup.py:259
+#, python-format
 msgid "Invoice Date"
 msgstr "Számla kelte"
 
@@ -93,32 +90,43 @@ msgstr "E-mail tárgya"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(user_signature)s"
-msgstr ""
+msgstr "%(user_signature)s"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "days overdue, do the following actions:"
-msgstr ""
+msgstr "a határidő napján, a következő műveleteket hajtsa végre:"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Follow-up Steps"
-msgstr ""
+msgstr "Fizetési-emlékezetető lépései"
 
 #. module: account_followup
-#: field:account_followup.print,email_body:0
-msgid "Email Body"
-msgstr ""
+#: code:addons/account_followup/account_followup.py:262
+#, python-format
+msgid "Due Date"
+msgstr "Fizetési határidő"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_print
 msgid "Send Follow-Ups"
-msgstr ""
+msgstr "Fizetési-emlékezető küldése"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:313
+#: code:addons/account_followup/account_followup.py:319
+#: code:addons/account_followup/report/account_followup_print.py:86
+#, python-format
+msgid "Error!"
+msgstr "Hiba!"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
+#: code:addons/account_followup/account_followup.py:263
+#, python-format
 msgid "Amount"
-msgstr ""
+msgstr "Összeg"
 
 #. module: account_followup
 #: help:res.partner,payment_next_action:0
@@ -126,11 +134,14 @@ msgid ""
 "This is the next action to be taken.  It will automatically be set when the "
 "partner gets a follow-up level that requires a manual action. "
 msgstr ""
+"Ez a következő elvégezni kívánt művelet.  Ez automatikusan beállított  amint "
+"a partner elér egy olyan fizetési-emlékeztető szintet, ami kézi beavatkozást "
+"igényel. "
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "No Responsible"
-msgstr ""
+msgstr "Nincs felelős"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -155,6 +166,24 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Tisztelt %(partner_name)s,\n"
+"\n"
+"Csalódottan vettük tudomásul, és ezért fizetési-emlékeztetőt vagyunk "
+"kénytelenek küldeni, mivel a számlája már régebben esedékessé vált.\n"
+"\n"
+"Fontos, hogy azonnal fizessenek, egyéb esetben kénytelenek vagyunk elbírálni "
+"a számlájuk lezárását, ami azzal jár, hogy nem leszünk képesek időben "
+"szállítani az Önök vállalakozásának (termékeket/szolgáltatásokat).\n"
+"Kérjük Önöket a fizetés 8 napon belüli pontos teljesítésére.\n"
+"\n"
+"Ha a fizetéssel kapcsolatban probléma merült fel, amit mi nem vettünk "
+"figyelembe, akkor kérjük vegyék fel a könyvelési csoportunkkal a "
+"kapcsolatot, hogy elháríthassuk azt amilyen gyorsan csak lehet.\n"
+"\n"
+"A lejárt számlák részleteit lentebb találják.\n"
+"\n"
+"Üdvözlettel,\n"
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level0
@@ -192,6 +221,45 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"\n"
+"    <p>Tisztelt ${object.name},</p>\n"
+"    <p>\n"
+"    Ha időközben kiegyenlítésre került, vagy a mi hibánkból adódóan téves, "
+"akkor tárgytalan, \n"
+"de adataink szerint a következő tétel kifizetés nélkül maradt. \n"
+"Kérjük Önöket a fizetés 8 napon belüli pontos teljesítésére.\n"
+"\n"
+"Ha a levél elküldése előtt a fizetés már megtörtént akkor kérjük tekintsék "
+"ezt tárgytalannak. Kérjük vegyék fel a kapcsolatot  könyvelési "
+"csoportunkkal.  \n"
+"\n"
+"    </p>\n"
+"<br/>\n"
+"Üdvözlettel,\n"
+"<br/>\n"
+"   <br/>\n"
+"${user.name}\n"
+"\n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"    <br/>\n"
+"\n"
+"</div>\n"
+"            "
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:261
+#, python-format
+msgid "Reference"
+msgstr "Hivatkozás"
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
@@ -206,17 +274,17 @@ msgstr "Tartozik összesen"
 #. module: account_followup
 #: field:res.partner,payment_next_action:0
 msgid "Next Action"
-msgstr ""
+msgstr "Következő művelet"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid ": Partner Name"
-msgstr ""
+msgstr ": Partner neve"
 
 #. module: account_followup
 #: field:account_followup.followup.line,manual_action_responsible_id:0
 msgid "Assign a Responsible"
-msgstr ""
+msgstr "Jelöljön ki egy felelőst"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -239,6 +307,11 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: account_followup
+#: field:account_followup.print,email_body:0
+msgid "Email Body"
+msgstr "E-mail szövege"
+
+#. module: account_followup
 #: view:account_followup.followup:0
 msgid ""
 "To remind customers of paying their invoices, you can\n"
@@ -252,6 +325,16 @@ msgid ""
 "                        same customer, the actions of the most \n"
 "                        overdue invoice will be executed."
 msgstr ""
+"Egy vevő kifizetetlen számlájának emlékeztetésére,\n"
+"                        meghatározhat különböző műveleteket a vevő késedel-\n"
+"                        métől függően. Ezek a műveletek fizetési-emlékeztető "
+"szintekbe\n"
+"                        csoportosítottak, melyek a számla fizetési határidő "
+"dátumától\n"
+"                        számított bizonyos napokon lesznek kapcsolva.\n"
+"                        Ha több lejárt számlája is van ugyanannak a  \n"
+"                        vevőnek, akkor a leghosszabb nappal lejárt művelet \n"
+"                        lesz elvégezve."
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -266,7 +349,7 @@ msgstr "Partnerek"
 #. module: account_followup
 #: sql_constraint:account_followup.followup:0
 msgid "Only one follow-up per company is allowed"
-msgstr ""
+msgstr "Vállalatonként csak egy fizetési-emlékeztető engedélyezett"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:254
@@ -277,12 +360,12 @@ msgstr "Fizetési emlékeztető"
 #. module: account_followup
 #: help:account_followup.followup.line,send_letter:0
 msgid "When processing, it will print a letter"
-msgstr ""
+msgstr "Ha el lesz végeve, akkor levelet fog nyomtatni"
 
 #. module: account_followup
 #: field:res.partner,payment_earliest_due_date:0
 msgid "Worst Due Date"
-msgstr ""
+msgstr "Legroszabb leghoszabb lejárati idő"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -292,17 +375,17 @@ msgstr "Nem peresített"
 #. module: account_followup
 #: view:account_followup.print:0
 msgid "Send emails and generate letters"
-msgstr ""
+msgstr "Küldjön e-mail-t és hozzon létre levelet"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_customer_followup
 msgid "Manual Follow-Ups"
-msgstr ""
+msgstr "Kézi fizetési-emlékeztető"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(partner_name)s"
-msgstr ""
+msgstr "%(partner_name)s"
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level1
@@ -344,6 +427,40 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"    \n"
+"    <p>Dear ${object.name},</p>\n"
+"   <p>\n"
+"    Csalódottan vettük tudomásul, és ezért fizetési-emlékeztetőt vagyunk "
+"kénytelenek küldeni, mivel a számlája már régebben esedékessé vált.Fontos, "
+"hogy azonnal fizessenek, egyéb esetben kénytelenek vagyunk elbírálni a "
+"számlájuk lezárását, ami azzal jár, hogy nem leszünk képesek időben "
+"szállítani az Önök vállalakozásának (termékeket/szolgáltatásokat).\n"
+"Kérjük Önöket a fizetés 8 napon belüli pontos teljesítésére.\n"
+"Ha a fizetéssel kapcsolatban probléma merült fel, amit mi nem vettünk "
+"figyelembe, akkor kérjük vegyék fel a könyvelési csoportunkkal a "
+"kapcsolatot, hogy elháríthassuk azt amilyen gyorsan csak lehet.\n"
+"A lejárt számlák részleteit lentebb találják.\n"
+" </p>\n"
+"<br/>\n"
+"Üdvözlettel,\n"
+"    \n"
+"<br/>\n"
+"<br/>\n"
+"${user.name}\n"
+"    \n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"    <br/>\n"
+"\n"
+"</div>\n"
+"            "
 
 #. module: account_followup
 #: field:account_followup.stat,debit:0
@@ -353,49 +470,59 @@ msgstr "Tartozik"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat
 msgid "Follow-up Statistics"
-msgstr ""
+msgstr "Fizetési-emlékeztető statisztikák"
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "Send Overdue Email"
-msgstr ""
+msgstr "Lejárt dátumú fizetésről e-mail emlékeztető küldése"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-up Criteria"
-msgstr ""
+msgstr "Fizetési-emlékeztető kritériom"
 
 #. module: account_followup
 #: help:account_followup.followup.line,sequence:0
 msgid "Gives the sequence order when displaying a list of follow-up lines."
-msgstr "Megadja a fizetési emlékeztető sorok listázási sorrendjét."
+msgstr "Megadja a fizetési-emlékeztető sorok listázási sorrendjét."
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:166
 #, python-format
 msgid " will be sent"
-msgstr ""
+msgstr " el lesz küldve"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid ": User's Company Name"
-msgstr ""
+msgstr ": Felhasználó vállalata neve"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 #: field:account_followup.followup.line,send_letter:0
 msgid "Send a Letter"
-msgstr ""
+msgstr "Levél küldése"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
 msgid "Payment Follow-ups"
+msgstr "fizetési-emlékeztetők kifizetése"
+
+#. module: account_followup
+#: code:addons/account_followup/report/account_followup_print.py:86
+#, python-format
+msgid ""
+"The followup plan defined for the current company does not have any followup "
+"action."
 msgstr ""
+"A jelenlegi vállalathoz meghatározott fizetési felszólításnak nincs "
+"semmilyen következménye."
 
 #. module: account_followup
 #: field:account_followup.followup.line,delay:0
 msgid "Due Days"
-msgstr ""
+msgstr "Határidő túllépése napokban"
 
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
@@ -409,15 +536,14 @@ msgid "Latest followup"
 msgstr "Legutolsó fizetési emlékeztető"
 
 #. module: account_followup
-#: model:ir.actions.act_window,name:account_followup.action_account_manual_reconcile_receivable
 #: model:ir.ui.menu,name:account_followup.menu_manual_reconcile_followup
 msgid "Reconcile Invoices & Payments"
-msgstr ""
+msgstr "Számlák & Fizetések párosítása"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_s
 msgid "Do Manual Follow-Ups"
-msgstr ""
+msgstr "Kézi fizetési-emlékeztető elvégzése"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -427,17 +553,17 @@ msgstr "P."
 #. module: account_followup
 #: field:account_followup.print,email_conf:0
 msgid "Send Email Confirmation"
-msgstr ""
+msgstr "E-mail megerősítés küldése"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow-up Entries with period in current year"
-msgstr ""
+msgstr "Fizetési-emlékeztető bejegyzések a tárgyi évben"
 
 #. module: account_followup
 #: field:account_followup.stat.by.partner,date_followup:0
 msgid "Latest follow-up"
-msgstr ""
+msgstr "Legutóbbi fizetési-emlékeztető"
 
 #. module: account_followup
 #: field:account_followup.print,partner_lang:0
@@ -448,12 +574,12 @@ msgstr "E-mail küldése a partner nyelvén"
 #: code:addons/account_followup/wizard/account_followup_print.py:169
 #, python-format
 msgid " email(s) sent"
-msgstr ""
+msgstr " e-mail(ek) elküldve"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_print
 msgid "Print Follow-up & Send Mail to Customers"
-msgstr ""
+msgstr "Fizetési-emlékeztető nyomtatása & E-mail küldése a vevők részére"
 
 #. module: account_followup
 #: field:account_followup.followup.line,description:0
@@ -461,15 +587,20 @@ msgid "Printed Message"
 msgstr "Kinyomtatott üzenet"
 
 #. module: account_followup
+#: view:res.partner:0
+msgid "Responsible of credit collection"
+msgstr "A követelés behajtás felelőse"
+
+#. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:155
 #, python-format
 msgid "Anybody"
-msgstr ""
+msgstr "Bárki"
 
 #. module: account_followup
 #: help:account_followup.followup.line,send_email:0
 msgid "When processing, it will send an email"
-msgstr ""
+msgstr "végrehajtáskor egy e-mailt fog küldeni"
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
@@ -479,7 +610,7 @@ msgstr "Emlékeztetendő partner"
 #. module: account_followup
 #: view:res.partner:0
 msgid "Print Overdue Payments"
-msgstr ""
+msgstr "Határidőn túli fizetések nyomtatása"
 
 #. module: account_followup
 #: field:account_followup.followup.line,followup_id:0
@@ -492,11 +623,12 @@ msgstr "Fizetési emlékeztetők"
 #, python-format
 msgid "Email not sent because of email address of partner not filled in"
 msgstr ""
+"E-mail nem lett elküldve, mert a partner e-mail címe nem lett kitöltve"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
 msgid "Account Follow-up"
-msgstr ""
+msgstr "Fizetési-emlékeztető könyvelés"
 
 #. module: account_followup
 #: help:res.partner,payment_responsible_id:0
@@ -504,11 +636,18 @@ msgid ""
 "Optionally you can assign a user to this field, which will make him "
 "responsible for the action."
 msgstr ""
+"Választhat felhasználót is erre a mezőre, ami felelőssé teszi erre a "
+"műveletre."
+
+#. module: account_followup
+#: view:res.partner:0
+msgid "Partners with Overdue Credits"
+msgstr "Lejárt fizetési hitelekkel rendelkező partnerek"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_sending_results
 msgid "Results from the sending of the different letters and emails"
-msgstr ""
+msgstr "A különböző levelek és e-mailek küldéséből származó eredmény"
 
 #. module: account_followup
 #: constraint:account_followup.followup.line:0
@@ -516,65 +655,79 @@ msgid ""
 "Your description is invalid, use the right legend or %% if you want to use "
 "the percent character."
 msgstr ""
+"A leírása érvénytelen, használja a jobb oldali feliratot vagy %% ha akarja a "
+"százalék karaktert használja."
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:172
 #, python-format
 msgid " manual action(s) assigned:"
-msgstr ""
+msgstr " kézi művelet(ek) hozzárendelve:"
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "Search Partner"
-msgstr ""
+msgstr "Partner keresés"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_print_menu
 msgid "Send Letters and Emails"
-msgstr ""
+msgstr "Levelek és E-mailek küldése"
 
 #. module: account_followup
 #: view:account_followup.followup:0
 msgid "Search Follow-up"
+msgstr "Fizetési-emlékeztető keresése"
+
+#. module: account_followup
+#: view:res.partner:0
+msgid ""
+"He said the problem was temporary and promised to pay 50% before 15th of "
+"May, balance before 1st of July."
 msgstr ""
+"Azt monda, hogy a probléma időleges és megigérte, hogy Május 15-éig kifizeti "
+"at 50%-ot, a különbözetet pedig Július 1-ig."
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "Account Move line"
-msgstr ""
+msgstr "Könyvelési sor mozgás"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:237
 #, python-format
 msgid "Send Letters and Emails: Actions Summary"
-msgstr ""
+msgstr "Levelek és E-mailek küldése: Műveletek összegzése"
 
 #. module: account_followup
 #: view:account_followup.print:0
 msgid "or"
-msgstr ""
+msgstr "vagy"
 
 #. module: account_followup
-#: view:res.partner:0
-msgid ""
-"If not specified by the latest follow-up level, it will send from the "
-"default email template"
-msgstr ""
+#: field:account_followup.stat,blocked:0
+msgid "Blocked"
+msgstr "Zárolt"
 
 #. module: account_followup
 #: sql_constraint:account_followup.followup.line:0
 msgid "Days of the follow-up levels must be different"
-msgstr ""
+msgstr "A fizetési-emlékeztető szintek napjainak különbözőeknek kell lenniük"
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "Click to mark the action as done."
-msgstr ""
+msgstr "Kattintson a művelet elvégzésének jelülésére."
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
 msgid "Follow-Ups Analysis"
-msgstr ""
+msgstr "Fizetési-emlékeztető elemzések"
+
+#. module: account_followup
+#: view:res.partner:0
+msgid "Action to be taken e.g. Give a phonecall, Check if it's paid, ..."
+msgstr "Elvégzendő művelet pl. Hívja fel, Nézze meg, hogy fizetett-e, ..."
 
 #. module: account_followup
 #: help:res.partner,payment_next_action_date:0
@@ -584,11 +737,16 @@ msgid ""
 "action. Can be practical to set manually e.g. to see if he keeps his "
 "promises."
 msgstr ""
+"Ez az amikor kézi fizetési-emlékeztető szükséges. A mai nap lesz beállítva, "
+"ha a partner egy olyan fizetési-emlékeztető szintet kap ami kézi "
+"beavatkozást igényel. Praktikus lehet kézire állítani pl. megfigyelni, hogy "
+"betartja-e a szavát."
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "Print overdue payments report independent of follow-up line"
 msgstr ""
+"fizetési-emlékeztető soroktól független lejárt fizetési tételek nyomtatása"
 
 #. module: account_followup
 #: help:account_followup.print,date:0
@@ -604,9 +762,10 @@ msgid "Follow-up Sending Date"
 msgstr "Fizetési emlékeztető küldés időpontja"
 
 #. module: account_followup
+#: view:res.partner:0
 #: field:res.partner,payment_responsible_id:0
 msgid "Follow-up Responsible"
-msgstr ""
+msgstr "Fizetési-emlékeztető felelőse"
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level2
@@ -643,6 +802,37 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"    \n"
+"    <p>Dear ${object.name},</p>\n"
+"    <p>\n"
+"    A többszörös fizetési-emlékeztető ellenére, még mindig nem történt meg a "
+"számla kiegyenlítése.\n"
+"Ha nem történik meg a kiegyenlítés 8 napon belül, törvényes úton vagyunk "
+"kénytelenek az adósságot behajtani, minden további felszólítás nélkül.\n"
+"Úgy gondoljuk, hogy ez nem lesz szükséges lépés a lenti részletekkel "
+"kapcsolatban.\n"
+"Az üggyel kapcsolatban felmerült kérdésekben, kérjük vegyék fel a "
+"kapcsolatot a könyvelési csoportunkkal.\n"
+"</p>\n"
+"<br/>\n"
+"Tisztelttel,\n"
+"<br/>\n"
+"<br/>\n"
+"${user.name}\n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"    <br/>\n"
+"\n"
+"</div>\n"
+"            "
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -652,7 +842,7 @@ msgstr "Bizonylat: vevő folyószámla kivonat"
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_menu
 msgid "Follow-up Levels"
-msgstr ""
+msgstr "Fizetési-emlékeztető szintek"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line4
@@ -675,40 +865,63 @@ msgid ""
 "Best Regards,\n"
 "            "
 msgstr ""
+"\n"
+"Tisztelt %(partner_name)s,\n"
+"\n"
+"A többszörös fizetési-emlékeztető ellenére, még mindig nem történt meg a "
+"számla kiegyenlítése.\n"
+"Ha nem történik meg a kiegyenlítés 8 napon belül, törvényes úton vagyunk "
+"kénytelenek az adósságot behajtani, minden további felszólítás nélkül.\n"
+"Úgy gondoljuk, hogy ez nem lesz szükséges lépés a lenti részletekkel "
+"kapcsolatban.\n"
+"Az üggyel kapcsolatban felmerült kérdésekben, kérjük vegyék fel a "
+"kapcsolatot a könyvelési csoportunkkal.\n"
+"\n"
+"Üdvözlettel,\n"
+"            "
 
 #. module: account_followup
 #: field:res.partner,payment_amount_due:0
 msgid "Amount Due"
-msgstr ""
+msgstr "Esedékes összeg"
 
 #. module: account_followup
 #: field:account.move.line,followup_date:0
 msgid "Latest Follow-up"
-msgstr "Legutolsó fizetési emlékeztető"
+msgstr "Legutobbi fizetési emlékeztető"
 
 #. module: account_followup
 #: view:account_followup.sending.results:0
 msgid "Download Letters"
-msgstr ""
+msgstr "Levelek letöltése"
 
 #. module: account_followup
 #: field:account_followup.print,company_id:0
 #: field:res.partner,unreconciled_aml_ids:0
 msgid "unknown"
-msgstr ""
+msgstr "ismeretlen"
 
 #. module: account_followup
-#: code:addons/account_followup/account_followup.py:283
+#: code:addons/account_followup/account_followup.py:314
 #, python-format
 msgid "Printed overdue payments report"
+msgstr "Lejárt fizetési tételek jelentésének nyomtatása"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:291
+#, python-format
+msgid ""
+"You became responsible to do the next action for the payment follow-up of"
 msgstr ""
+"Felelős lett azért, hogy megtegye a következő műveletés ennek a fizetési "
+"felszólításnak"
 
 #. module: account_followup
 #: help:account_followup.followup.line,manual_action:0
 msgid ""
 "When processing, it will set the manual action to be taken for that "
 "customer. "
-msgstr ""
+msgstr "Végrehajtáskor, a vevőhöz a kézi műveletet fogja beállítani. "
 
 #. module: account_followup
 #: view:res.partner:0
@@ -718,18 +931,17 @@ msgid ""
 "                            order to exclude it from the next follow-up "
 "actions."
 msgstr ""
+"Alább a vevő ügyleteinek története.\n"
+"                            Ellenőrizheti a \"Nincs fizetési-emlékeztető\" "
+"soron\n"
+"                            a következő fizetési-emlékeztető műveletekből "
+"való kizárását."
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:171
 #, python-format
 msgid " email(s) should have been sent, but "
-msgstr ""
-
-#. module: account_followup
-#: help:account_followup.print,test_print:0
-msgid ""
-"Check if you want to print follow-ups without changing follow-ups level."
-msgstr ""
+msgstr " ki kellett volna küldeni az e-mail(ek)t, de "
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
@@ -737,14 +949,20 @@ msgid "Journal Items"
 msgstr "Könyvelési tételsorok"
 
 #. module: account_followup
+#: code:addons/account_followup/account_followup.py:281
+#, python-format
+msgid "Amount due"
+msgstr "Esedékes összeg"
+
+#. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Total:"
-msgstr ""
+msgstr "Összesen:"
 
 #. module: account_followup
 #: field:account_followup.followup.line,email_template_id:0
 msgid "Email Template"
-msgstr ""
+msgstr "E-mail sablon"
 
 #. module: account_followup
 #: field:account_followup.print,summary:0
@@ -755,7 +973,7 @@ msgstr "Összegzés"
 #: view:account_followup.followup.line:0
 #: field:account_followup.followup.line,send_email:0
 msgid "Send an Email"
-msgstr ""
+msgstr "Egy E-amil küldése"
 
 #. module: account_followup
 #: field:account_followup.stat,credit:0
@@ -765,6 +983,12 @@ msgstr "Követel"
 #. module: account_followup
 #: field:res.partner,payment_amount_overdue:0
 msgid "Amount Overdue"
+msgstr "Lejárt összeg"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:264
+#, python-format
+msgid "Lit."
 msgstr ""
 
 #. module: account_followup
@@ -773,12 +997,14 @@ msgid ""
 "The maximum follow-up level without taking into account the account move "
 "lines with litigation"
 msgstr ""
+"A maximum fizetési-emlékeztető szint ami megtehető anélkül, hogy az ne "
+"kerüljön peres eléjárásra"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 #: field:res.partner,latest_followup_date:0
 msgid "Latest Follow-up Date"
-msgstr ""
+msgstr "Legutóbbi fizetési-emlékeztető dátuma."
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_default
@@ -811,6 +1037,34 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"    \n"
+"    <p>Tisztelt ${object.name},</p>\n"
+"    <p>\n"
+"      Ha időközben kiegyenlítésre került, vagy a mi hibánkból adódóan téves, "
+"akkor tárgytalan, \n"
+"de adataink szerint a következő tétel kifizetés nélkül maradt. \n"
+"Kérjük Önöket a fizetés 8 napon belüli pontos teljesítésére.\n"
+"Ha a levél elküldése előtt a fizetés már megtörtént akkor kérjük tekintsék "
+"ezt tárgytalannak. Kérjük vegyék fel a kapcsolatot  könyvelési "
+"csoportunkkal.  \n"
+"    </p>\n"
+"<br/>\n"
+"Üdvözlettel,\n"
+"<br/>\n"
+"<br/>\n"
+"${user.name}\n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"<br/>\n"
+"</div>\n"
+"            "
 
 #. module: account_followup
 #: field:account.move.line,result:0
@@ -823,17 +1077,17 @@ msgstr "Egyenleg"
 #. module: account_followup
 #: help:res.partner,payment_note:0
 msgid "Payment Note"
-msgstr ""
+msgstr "Megjegyzés a fizetéshez"
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "My Follow-ups"
-msgstr ""
+msgstr "Fizetési-emlékeztetőim"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(company_name)s"
-msgstr ""
+msgstr "%(company_name)s"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line1
@@ -851,6 +1105,18 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Dear %(partner_name)s,\n"
+"\n"
+" Ha időközben kiegyenlítésre került, vagy a mi hibánkból adódóan téves, "
+"akkor tárgytalan, de adataink szerint a következő tétel kifizetés nélkül "
+"maradt. Kérjük Önöket a fizetés 8 napon belüli pontos teljesítésére.\n"
+"\n"
+"Ha a levél elküldése előtt a fizetés már megtörtént akkor kérjük tekintsék "
+"ezt tárgytalannak. Kérjük vegyék fel a kapcsolatot  könyvelési "
+"csoportunkkal.  \n"
+"\n"
+"Üdvözlettel,\n"
 
 #. module: account_followup
 #: field:account_followup.stat,date_move_last:0
@@ -867,12 +1133,12 @@ msgstr "Időszak"
 #: code:addons/account_followup/wizard/account_followup_print.py:228
 #, python-format
 msgid "%s partners have no credits and as such the action is cleared"
-msgstr ""
+msgstr "%s a partnernek nincs hitele azért a művelet törölve lett"
 
 #. module: account_followup
 #: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
 msgid "Follow-up Report"
-msgstr ""
+msgstr "Fizetési-emlékeztető jelentés"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -880,6 +1146,8 @@ msgid ""
 ", the latest payment follow-up\n"
 "                            was:"
 msgstr ""
+", a legutóbbi fizetési-emlékeztető kifizetés\n"
+"                            ez volt:"
 
 #. module: account_followup
 #: view:account_followup.print:0
@@ -889,7 +1157,7 @@ msgstr "Mégse"
 #. module: account_followup
 #: view:account_followup.sending.results:0
 msgid "Close"
-msgstr ""
+msgstr "Lezár"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -905,23 +1173,26 @@ msgstr "Maximális fizetési emlékeztető szint"
 #: code:addons/account_followup/wizard/account_followup_print.py:171
 #, python-format
 msgid " had unknown email address(es)"
-msgstr ""
+msgstr " ismeretlen e-mail címe(i) van(nak)"
 
 #. module: account_followup
-#: view:res.partner:0
-msgid "Responsible"
+#: help:account_followup.print,test_print:0
+msgid ""
+"Check if you want to print follow-ups without changing follow-up level."
 msgstr ""
+"Jelölje be, ha ki szeretné nyomtatni a fizetési értesítőket azok szintjének "
+"változtatása nélkül."
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_finance_followup
 #: view:res.partner:0
 msgid "Payment Follow-up"
-msgstr ""
+msgstr "Fizetési-emlékeztető kifizetés"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid ": Current Date"
-msgstr ""
+msgstr ": Jelenlegi dátum"
 
 #. module: account_followup
 #: view:account_followup.print:0
@@ -930,27 +1201,33 @@ msgid ""
 "                        set the manual actions per customer, according to "
 "the follow-up levels defined."
 msgstr ""
+"Ez a művelet fizetési-emlékeztető e-mail küldéseket indít, levelet nyomtat "
+"és\n"
+"                        beállítja a vevőnkénti kézi műveletet, a fizetési-"
+"emlékeztető szintek beállításának megfelelően."
 
 #. module: account_followup
 #: field:account_followup.followup.line,name:0
 msgid "Follow-Up Action"
-msgstr ""
+msgstr "Fizetési-emlékeztető művelet"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Including journal entries marked as a litigation"
-msgstr ""
+msgstr "Beleértve a peres megjelölésű jelentés bejegyzéseket"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 #: field:account_followup.sending.results,description:0
+#: code:addons/account_followup/account_followup.py:260
+#, python-format
 msgid "Description"
 msgstr "Megjegyzés"
 
 #. module: account_followup
 #: view:account_followup.sending.results:0
 msgid "Summary of actions"
-msgstr ""
+msgstr "Műveletek összegzése"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -960,7 +1237,7 @@ msgstr "Hiv."
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "After"
-msgstr ""
+msgstr "Utána"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -970,16 +1247,12 @@ msgstr "Tárgyév"
 #. module: account_followup
 #: field:res.partner,latest_followup_level_id_without_lit:0
 msgid "Latest Follow-up Level without litigation"
-msgstr ""
+msgstr "Legitóbbi per nélküli fizetési-emlékeztetőt szint"
 
 #. module: account_followup
-#: model:ir.actions.act_window,help:account_followup.action_account_manual_reconcile_receivable
-msgid ""
-"<p>\n"
-"                    No journal items found.\n"
-"                </p>\n"
-"            "
-msgstr ""
+#: view:res.partner:0
+msgid "⇾ Mark as Done"
+msgstr "⇾ Jelölje elvégzettnek"
 
 #. module: account_followup
 #: view:account.move.line:0
@@ -987,9 +1260,14 @@ msgid "Partner entries"
 msgstr "Partner tételek"
 
 #. module: account_followup
+#: view:account_followup.followup.line:0
+msgid "e.g. Call the customer, check if it's paid, ..."
+msgstr "pl. Vevő felhívása, ellenőrizni, hogy már kiegyenlésre került, ..."
+
+#. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow-up lines"
-msgstr ""
+msgstr "Fizetési emlékeztető sorok"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line3
@@ -1010,6 +1288,21 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Tisztelt %(partner_name)s,\n"
+"\n"
+" A többszörös fizetési-emlékeztető ellenére, még mindig nem történt meg a "
+"számla kiegyenlítése.\n"
+"Ha nem történik meg a kiegyenlítés 8 napon belül, törvényes úton vagyunk "
+"kénytelenek az adósságot behajtani, minden további felszólítás nélkül.\n"
+"\n"
+"Úgy gondoljuk, hogy ez nem lesz szükséges lépés a lenti részletekkel "
+"kapcsolatban.\n"
+"\n"
+"Az üggyel kapcsolatban felmerült kérdésekben, kérjük vegyék fel a "
+"kapcsolatot a könyvelési csoportunkkal.\n"
+"\n"
+"Üdvözlettel,\n"
 
 #. module: account_followup
 #: help:account_followup.print,partner_lang:0
@@ -1031,6 +1324,13 @@ msgid ""
 "installed\n"
 "                            using to top right icon."
 msgstr ""
+"Írja ide ennek a levélnek a levél bemutatását,\n"
+"                            a fizetési-emlékeztető szint szerint. "
+"Használhatóak a\n"
+"                            következő kulcsszavak a szövegben. Meg kell "
+"lennie\n"
+"                            az összes jobb felső ikon szerinti nyelv "
+"fordításban is!"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -1046,7 +1346,7 @@ msgstr "Név"
 #. module: account_followup
 #: field:res.partner,latest_followup_level_id:0
 msgid "Latest Follow-up Level"
-msgstr ""
+msgstr "Legitóbbi fizetési-emlékeztető szint"
 
 #. module: account_followup
 #: field:account_followup.stat,date_move:0
@@ -1057,23 +1357,24 @@ msgstr "Első tétel"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
 msgid "Follow-up Statistics by Partner"
-msgstr ""
+msgstr "Fizetési-emlékeztető partnerenkénti statisztika"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:172
 #, python-format
 msgid " letter(s) in report"
-msgstr ""
+msgstr " level(ek) a jelentésben"
 
 #. module: account_followup
-#: view:res.partner:0
-msgid "Partners with Overdue Credits"
-msgstr ""
+#: model:ir.actions.act_window,name:account_followup.action_customer_my_followup
+#: model:ir.ui.menu,name:account_followup.menu_sale_followup
+msgid "My Follow-Ups"
+msgstr "Fizetési felszólításaim"
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "Customer Followup"
-msgstr ""
+msgstr "Vevői fizetési-emlékeztető"
 
 #. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_account_followup_definition_form
@@ -1089,27 +1390,48 @@ msgid ""
 "              </p>\n"
 "          "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson a fizetési-emlékeztető szint és műveletének "
+"létrehozásához.\n"
+"              </p><p>\n"
+"                Minden lépéshez, határozza meg a műveletet amit a lejárat "
+"után annyi nappal el fog végezni.\n"
+"                Lehetséges nyomtatás és e-mail sablon használatával egy "
+"üzenet eljuttatása a vevő\n"
+"                részére.\n"
+"              </p>\n"
+"          "
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:166
 #, python-format
 msgid "Follow-up letter of "
-msgstr ""
+msgstr "Fizetési-emlékeztető levél ide "
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "The"
-msgstr ""
+msgstr "A"
 
 #. module: account_followup
 #: view:account_followup.print:0
 msgid "Send follow-ups"
-msgstr ""
+msgstr "Fizetési-emlékeztető küldése"
 
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Total credit"
 msgstr "Követel összesen"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:313
+#, python-format
+msgid ""
+"The partner does not have any accounting entries to print in the overdue "
+"report for the current company."
+msgstr ""
+"A partnernek nincs egyetlen számlával kapcsolatos belyegyzése a nyomtatáshoz "
+"ami kapcsolódna a vállalat fizetési felszólítás jelentéshez."
 
 #. module: account_followup
 #: field:account_followup.followup.line,sequence:0
@@ -1119,7 +1441,7 @@ msgstr "Sorszám"
 #. module: account_followup
 #: view:res.partner:0
 msgid "Follow-ups To Do"
-msgstr ""
+msgstr "Még végrehejtandó fizetési-emlékeztető"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -1138,33 +1460,68 @@ msgid ""
 "the reminder.  Could be negative if you want to send a polite alert "
 "beforehand."
 msgstr ""
+"A számla lejárati dátuma utáni napok száma, amíg várakozik a felszólítás "
+"küldése előtt. Negatív is lehet, ha egy udvarias levelet szeretne küldeni a "
+"lejárati dátumra vonatkozólag."
 
 #. module: account_followup
 #: help:res.partner,latest_followup_date:0
 msgid "Latest date that the follow-up level of the partner was changed"
 msgstr ""
+"Legutóbbi dátum amikor a vevőnek a fizetési-emlékeztető szintje változott"
 
 #. module: account_followup
 #: field:account_followup.print,test_print:0
 msgid "Test Print"
-msgstr ""
+msgstr "Nyomtatás teszt"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid ": User Name"
-msgstr ""
+msgstr ": Felhasználó neve"
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "Accounting"
-msgstr ""
+msgstr "Könyvelés"
 
 #. module: account_followup
-#: field:account_followup.stat,blocked:0
-msgid "Blocked"
-msgstr "Zárolt"
+#: view:res.partner:0
+msgid ""
+"If not specified by the latest follow-up level, it will send from the "
+"default email template"
+msgstr ""
+"Ha nincs meghatározva a legutóbbi fizetési-emlékeztető szinttel, akkor az "
+"alapértelmezett e-mail sablonnal lesz elküldve"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:319
+#, python-format
+msgid "There is no followup plan defined for the current company."
+msgstr ""
+"A jelenlegi vállalathoz nem lett fizetési felszólító terv meghatározva."
 
 #. module: account_followup
 #: field:res.partner,payment_note:0
 msgid "Customer Payment Promise"
-msgstr ""
+msgstr "Vevő fizetésre vonatkozó igérete"
+
+#~ msgid ""
+#~ "Check if you want to print follow-ups without changing follow-ups level."
+#~ msgstr ""
+#~ "Ellenőrizze, hogy a fizetési-emlékeztető szintek változtatása nélkül "
+#~ "szeretné a fizetési-emlékeztetők nyomtatást."
+
+#~ msgid "Responsible"
+#~ msgstr "Felelős"
+
+#~ msgid ""
+#~ "<p>\n"
+#~ "                    No journal items found.\n"
+#~ "                </p>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<p>\n"
+#~ "                    Nem talált jelentés tartalmat.\n"
+#~ "                </p>\n"
+#~ "            "

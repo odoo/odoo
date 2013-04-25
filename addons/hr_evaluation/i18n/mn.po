@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-02-19 05:52+0000\n"
+"Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:44+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:40+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_anonymous_manager:0
@@ -33,6 +33,11 @@ msgstr "Үнэлгээг эхлэх"
 #: view:hr_evaluation.plan:0
 msgid "Group By..."
 msgstr "Бүлэглэх..."
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Cancel Appraisal"
+msgstr ""
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,request_id:0
@@ -83,7 +88,7 @@ msgstr "Үнэлгээний үе шатууд"
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "Send Request"
-msgstr ""
+msgstr "хүсэлт илгээх"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan,month_first:0
@@ -98,7 +103,7 @@ msgstr ""
 #: view:hr.employee:0
 #: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_tree
 msgid "Appraisals"
-msgstr ""
+msgstr "Үнэлгээнүүд"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -109,7 +114,7 @@ msgstr "Үнэлгээний нэр"
 #: field:hr.evaluation.interview,message_ids:0
 #: field:hr_evaluation.evaluation,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Зурвасууд"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -149,7 +154,7 @@ msgstr "Үнэлэх"
 #: help:hr.evaluation.interview,message_unread:0
 #: help:hr_evaluation.evaluation,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Хэрэв тэмдэглэгдсэн бол шинэ зурвас нь анхаарал татахыг шаардана."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -162,13 +167,9 @@ msgid "Ending Date"
 msgstr "Дуусах огноо"
 
 #. module: hr_evaluation
-#: help:hr_evaluation.evaluation,note_action:0
-msgid ""
-"If the evaluation does not meet the expectations, you can proposean action "
-"plan"
-msgstr ""
-"Хэрэв дүгнэлт хүлээлтэд тань нийцэхгүй бол та үйлдлийн төлөвлөгөө санал "
-"болгож болно"
+#: field:hr_evaluation.plan,month_first:0
+msgid "First Appraisal in (months)"
+msgstr "Анхны үнэлгээ (саруудад)"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -223,6 +224,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Чаатлагчийн хураангуйг агуулна (зурвасын тоо,...). Энэ хураангуй нь шууд "
+"html форматтай бөгөөд канбан харагдацад шууд орж харагдах боломжтой."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -239,7 +242,7 @@ msgstr "Тов"
 #: code:addons/hr_evaluation/hr_evaluation.py:320
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Сэрэмжлүүлэг!"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -252,6 +255,11 @@ msgid "survey.request"
 msgstr "Судалгааны хүсэлт"
 
 #. module: hr_evaluation
+#: view:hr.evaluation.interview:0
+msgid "Cancel Survey"
+msgstr ""
+
+#. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "(date)s: Current Date"
 msgstr "(Огноо) Өнөөдрийн огноо"
@@ -259,7 +267,7 @@ msgstr "(Огноо) Өнөөдрийн огноо"
 #. module: hr_evaluation
 #: model:ir.actions.act_window,name:hr_evaluation.act_hr_employee_2_hr__evaluation_interview
 msgid "Interviews"
-msgstr ""
+msgstr "Ярилцалагууд"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:83
@@ -271,13 +279,13 @@ msgstr "Холбоотой "
 #: field:hr.evaluation.interview,message_follower_ids:0
 #: field:hr_evaluation.evaluation,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "дагалдагсад"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,message_unread:0
 #: field:hr_evaluation.evaluation,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Уншаагүй Зурвасууд"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -399,6 +407,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Шинэ үнэлгээний төлөвлөгөө үүсгэхдээ дарна.\n"
+"              </p><p>\n"
+"                Та шинэ үнэлгээ төлөвлөгөө үүсгэж болно (Ж: эхний ярилцлага "
+"6 сарын дараа, дараа нь жил бүр). Дараа нь ажилтан бүр үнэлгээний "
+"төлөвлөгөөтэй холбогдоно тэгээд OpenERP нь автоматаар ярилцлагын хүсэлтийг "
+"менежер рүү, зохион байгуулагч руу илгээнэ.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -446,7 +463,7 @@ msgstr "Бүх хариулт"
 #: view:hr.evaluation.interview:0
 #: view:hr_evaluation.evaluation:0
 msgid "Answer Survey"
-msgstr ""
+msgstr "Хариулах асуулга"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -494,9 +511,13 @@ msgid "Legend"
 msgstr "Ялгах тэмдэг"
 
 #. module: hr_evaluation
-#: field:hr_evaluation.plan,month_first:0
-msgid "First Appraisal in (months)"
-msgstr "Анхны үнэлгээ (саруудад)"
+#: help:hr_evaluation.evaluation,note_action:0
+msgid ""
+"If the evaluation does not meet the expectations, you can proposean action "
+"plan"
+msgstr ""
+"Хэрэв дүгнэлт хүлээлтэд тань нийцэхгүй бол та үйлдлийн төлөвлөгөө санал "
+"болгож болно"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,state:0
@@ -559,7 +580,7 @@ msgstr " (Ажилтны нэр): Харилцагчийн нэр"
 #: field:hr.evaluation.interview,message_is_follower:0
 #: field:hr_evaluation.evaluation,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Дагагч эсэх"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -672,7 +693,7 @@ msgstr "Товлосон огноо"
 #. module: hr_evaluation
 #: help:hr_evaluation.evaluation,rating:0
 msgid "This is the appreciation on which the evaluation is summarized."
-msgstr ""
+msgstr "Энэ нь үнэлгээ нэгтгэгдсэний талархал."
 
 #. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
@@ -709,12 +730,6 @@ msgstr "Үнэлгээний Төлөвлөгөөнүүд"
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_interview
 msgid "Appraisal Interview"
 msgstr "Үнэлгээний Ярилцлага"
-
-#. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-#: view:hr_evaluation.evaluation:0
-msgid "Cancel"
-msgstr "Цуцлах"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -802,6 +817,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Шинэ үнэлгээ үүсгэхдээ дарна.\n"
+"              </p><p>\n"
+"                Ажилчин бүр нь үнэлгээний төлөвлөгөөтэй холбогдсон байна. "
+"Ийм төлөвлөгөөнүүд нь үнэлэх арга, түүний давтамж зэрэгийг тодорхойлдог. "
+"Алхамуудыг тодорхойлж ярилцлагын материалыг хавсаргаж болно. OpenERP нь бүх "
+"төрлийн үнэлгээг хийдэг: доороос-дээш, дээрээс-доош, өөрийн үнэлгээ болон "
+"менежерийн эцсийн үнэлгээ.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -846,6 +871,11 @@ msgid "You cannot start evaluation without Appraisal."
 msgstr "Үнэлгээгээр дүгнэлтийг эхлүүлж болохгүй."
 
 #. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Appraisal Summary..."
+msgstr ""
+
+#. module: hr_evaluation
 #: field:hr.evaluation.interview,user_to_review_id:0
 msgid "Employee to Interview"
 msgstr "Ярилцах ажилтан"
@@ -857,6 +887,8 @@ msgid ""
 "You cannot change state, because some appraisal(s) are in waiting answer or "
 "draft state."
 msgstr ""
+"Төлөвийг өөрчилж болохгүй учир нь зарим үнэлгээ нь хариу хүлээж байгаа юм уу "
+"ноорог төлөвтэй байна."
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -883,12 +915,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Өөрийн үнэлгээнд холбогдох ярилцалагын шинэ хүсэлт үүсгэх. \n"
+"              </p><p>\n"
+"                Ярилцлагын хүсэлт нь ажилтны үнэлгээний төлөвлөгөөний дагууд "
+"OpenERP-р автоматаар үүсгэгддэг. Хэрэглэгчид нь эдэгээр автомат имэйлийг "
+"байн байн авах бөгөөд бие биенээ үнэлэх ярилцлагын хүсэлтүүдийг хүлээн авна. "
+"\n"
+"              </p>\n"
+"            "
 
 #. module: hr_evaluation
 #: help:hr.evaluation.interview,message_ids:0
 #: help:hr_evaluation.evaluation,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Зурвас болон харилцсан түүх"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
@@ -934,3 +975,11 @@ msgstr "Үнэлгээний Товчоо"
 #: field:hr.employee,evaluation_date:0
 msgid "Next Appraisal Date"
 msgstr "Дараагийн Үнэлгээний Огноо"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Action Plan..."
+msgstr ""
+
+#~ msgid "Cancel"
+#~ msgstr "Цуцлах"

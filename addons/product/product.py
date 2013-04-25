@@ -554,7 +554,7 @@ class product_product(osv.osv):
         'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Product Price')),
         'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Product Price')),
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
-        'name_template': fields.related('product_tmpl_id', 'name', string="Name", type='char', size=128, store=True, select=True),
+        'name_template': fields.related('product_tmpl_id', 'name', string="Template Name", type='char', size=128, store=True, select=True),
         'color': fields.integer('Color Index'),
         # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Image",
@@ -588,10 +588,13 @@ class product_product(osv.osv):
             # Check if the product is last product of this template
             other_product_ids = self.search(cr, uid, [('product_tmpl_id', '=', tmpl_id), ('id', '!=', product.id)], context=context)
             if not other_product_ids:
-                 unlink_product_tmpl_ids.append(tmpl_id)
+                unlink_product_tmpl_ids.append(tmpl_id)
             unlink_ids.append(product.id)
+        res = super(product_product, self).unlink(cr, uid, unlink_ids, context=context)
+        # delete templates after calling super, as deleting template could lead to deleting
+        # products due to ondelete='cascade'
         self.pool.get('product.template').unlink(cr, uid, unlink_product_tmpl_ids, context=context)
-        return super(product_product, self).unlink(cr, uid, unlink_ids, context=context)
+        return res
 
     def onchange_uom(self, cursor, user, ids, uom_id, uom_po_id):
         if uom_id and uom_po_id:

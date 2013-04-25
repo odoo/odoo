@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-02-03 10:43+0000\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-04-14 14:31+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-04 05:42+0000\n"
-"X-Generator: Launchpad (build 16462)\n"
+"X-Launchpad-Export-Date: 2013-04-15 06:07+0000\n"
+"X-Generator: Launchpad (build 16564)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -303,6 +303,11 @@ msgid "Laptop E5023"
 msgstr "Laptop E5023"
 
 #. module: product
+#: field:product.price_list,qty1:0
+msgid "Quantity-1"
+msgstr "Hoeveelheid-1"
+
+#. module: product
 #: help:product.packaging,ul_qty:0
 msgid "The number of packages by layer"
 msgstr "Het aantal colli per laag"
@@ -481,7 +486,7 @@ msgstr "Verwervingen"
 #. module: product
 #: model:res.groups,name:product.group_mrp_properties
 msgid "Manage Properties of Product"
-msgstr "Beheer eigenschappen van het product"
+msgstr "Beheer eigenschappen van samengesteld product"
 
 #. module: product
 #: help:product.uom,factor:0
@@ -510,9 +515,9 @@ msgid "Quantity-3"
 msgstr "Hoeveelheid-3"
 
 #. module: product
-#: field:product.price_list,qty1:0
-msgid "Quantity-1"
-msgstr "Hoeveelheid-1"
+#: model:res.groups,name:product.group_product_variant
+msgid "Product Variant (not supported)"
+msgstr "Product variant (wordt niet ondersteund)"
 
 #. module: product
 #: field:product.price_list,qty4:0
@@ -792,7 +797,7 @@ msgstr "Prijslijst"
 #. module: product
 #: field:product.product,virtual_available:0
 msgid "Forecasted Quantity"
-msgstr "Geprognotiseerde hoeveelheid"
+msgstr "Virtuele voorraad"
 
 #. module: product
 #: view:product.product:0
@@ -832,7 +837,12 @@ msgstr "Leverancier van het product"
 #. module: product
 #: model:product.template,name:product.product_product_28_product_template
 msgid "External Hard disk"
-msgstr "Externae Harddisk"
+msgstr "Externe Harddisk"
+
+#. module: product
+#: view:product.product:0
+msgid "describe the product characteristics..."
+msgstr "Beschrijf de kenmerken van het product..."
 
 #. module: product
 #: help:product.template,standard_price:0
@@ -1223,7 +1233,6 @@ msgstr "Logistieke eenheden"
 #: field:product.category,name:0
 #: field:product.pricelist.type,name:0
 #: field:product.pricelist.version,name:0
-#: field:product.product,name_template:0
 #: field:product.template,name:0
 #: field:product.ul,name:0
 #: field:product.uom.categ,name:0
@@ -1396,6 +1405,11 @@ msgid "Specify the minimum amount of margin over the base price."
 msgstr "Specificeer het minimale marge bedrag over de basisprijs."
 
 #. module: product
+#: field:product.product,name_template:0
+msgid "Template Name"
+msgstr "Sjabloonnaam"
+
+#. module: product
 #: field:product.template,weight_net:0
 msgid "Net Weight"
 msgstr "Netto gewicht"
@@ -1426,8 +1440,13 @@ msgstr ""
 
 #. module: product
 #: view:product.product:0
+msgid "This note will be displayed on requests for quotation..."
+msgstr "Deze notitie wordt weergegeven op offerte aanvragen..."
+
+#. module: product
+#: view:product.product:0
 msgid "Inventory"
-msgstr "Voorraadtelling"
+msgstr "Voorraad"
 
 #. module: product
 #: field:product.product,seller_info_id:0
@@ -2010,7 +2029,7 @@ msgstr "Berichten"
 #. module: product
 #: model:product.uom,name:product.product_uom_unit
 msgid "Unit(s)"
-msgstr "Eenheden"
+msgstr "Stuk(s)"
 
 #. module: product
 #: code:addons/product/product.py:176
@@ -2032,6 +2051,11 @@ msgstr "Lengte / Afstand"
 #: model:product.category,name:product.product_category_8
 msgid "Components"
 msgstr "Componenten"
+
+#. module: product
+#: view:product.product:0
+msgid "e.g. 5901234123457"
+msgstr "Bijv. 5901234123457"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_type
@@ -2114,7 +2138,7 @@ msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Klik voor het aanmaken van een nieuw product.\n"
 "              </p><p>\n"
-"               U dien een product aan te maken van alles wat u inkoopt, dit "
+"               U dient een product aan te maken van alles wat u inkoopt, dit "
 "kan \n"
 "               een voorraad product, een verbruiksartikel of diensten zijn, "
 "van\n"
@@ -2275,8 +2299,8 @@ msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Klik voor het aanmaken van een nieuw product.\n"
 "              </p><p>\n"
-"               U dien een product aan te maken van alles wat u verkoopt, dit "
-"kan \n"
+"               U dient een product aan te maken van alles wat u verkoopt, "
+"dit kan \n"
 "               een voorraad product, een verbruiksartikel of diensten zijn, "
 "van\n"
 "               onderaannemers\n"
@@ -2622,7 +2646,11 @@ msgstr "Maateenheid leverancier"
 
 #. module: product
 #: view:product.product:0
-#: model:res.groups,name:product.group_product_variant
+msgid "note to be displayed on quotations..."
+msgstr "Opmerkingen welke wordt weergegeven op iedere offerte..."
+
+#. module: product
+#: view:product.product:0
 msgid "Product Variant"
 msgstr "Productvariant"
 

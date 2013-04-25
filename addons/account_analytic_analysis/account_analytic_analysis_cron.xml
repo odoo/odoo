@@ -1,15 +1,90 @@
 <?xml version="1.0" encoding='UTF-8'?>
 <openerp>
     <data>
+
+        <record id="account_analytic_cron_email_template" model="email.template">
+            <field name="name">Contract expiration reminder</field>
+            <field name="email_from">${object.email or ''}</field>
+            <field name="subject">Contract expiration reminder ${user.company_id.name}</field>
+            <field name="email_to">${object.email}</field>
+            <field name="lang">${object.lang}</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+Hello ${object.name},
+
+% macro account_table(values):
+<table cellspacing="1" border="1" cellpadding="4">
+    <tr>
+        <th>Customer</th>
+        <th>Contract</th>
+        <th>Dates</th>
+        <th>Prepaid Units</th>
+        <th>Contact</th>
+    </tr>
+    % for partner, accounts in values:
+        % for account in accounts:
+        <tr>
+            <td>${partner.name}</td>
+            <td><a href="${ctx["base_url"]}/#action=${ctx["action_id"]}&id=${account.id}&view_type=form">${account.name}</a></td>
+            <td>${account.date_start} to ${account.date and account.date or '???'}</td>
+            <td>
+            % if account.quantity_max != 0.0:
+                ${account.remaining_hours}/${account.quantity_max} units
+            % endif
+            </td>
+            <td>${account.partner_id.phone or ''}, ${account.partner_id.email or ''}</td>
+        </tr>
+        % endfor
+    % endfor
+</table>
+% endmacro 
+
+% if "new" in ctx["data"]:
+    <h2>The following contracts just expired: </h2>
+    ${account_table(ctx["data"]["new"].iteritems())}
+% endif
+
+% if "old" in ctx["data"]:
+    <h2>The following expired contracts are still not processed: </h2>
+    ${account_table(ctx["data"]["old"].iteritems())}
+% endif
+
+% if "future" in ctx["data"]:
+    <h2>The following contracts will expire in less than one month: </h2>
+    ${account_table(ctx["data"]["future"].iteritems())}
+% endif
+
+<p>
+    You can check all contracts to be renewed using the menu:
+</p>
+<ul>
+    <li>Sales / Invoicing / Contracts to Renew</li>
+</ul>
+<p>
+    Thanks,
+</p>
+
+<pre>
+-- 
+OpenERP Automatic Email
+</pre>
+
+            ]]></field>
+        </record>
+        <!--
+
+        -->
+
         <record model="ir.cron" id="account_analytic_cron">
-            <field name="name">Analytic Account Report for Sales</field>
+            <field name="name">Contract expiration reminder</field>
             <field name="interval_number">1</field>
             <field name="interval_type">weeks</field>
             <field name="numbercall">-1</field>
-            <field eval="False" name="doall"/>
-            <field eval="'account.analytic.account'" name="model"/>
-            <field eval="'cron_account_analytic_account'" name="function"/>
-            <field eval="'()'" name="args"/>
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'account.analytic.account'"/>
+            <field name="function" eval="'cron_account_analytic_account'"/>
+            <field name="args" eval="'()'" />
         </record>
     </data>
 </openerp>

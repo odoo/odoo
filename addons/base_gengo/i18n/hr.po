@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-02-12 20:39+0000\n"
+"Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:36+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:33+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: base_gengo
 #: view:res.company:0
@@ -25,13 +25,13 @@ msgstr "Komentari  prevoditelju"
 #. module: base_gengo
 #: field:ir.translation,job_id:0
 msgid "Gengo Job ID"
-msgstr ""
+msgstr "ID Gengo zadatka"
 
 #. module: base_gengo
 #: code:addons/base_gengo/wizard/base_gengo_translations.py:114
 #, python-format
 msgid "This language is not supported by the Gengo translation services."
-msgstr ""
+msgstr "Ovaj jezik nije podržan od GENGO prevoditeljskih servera"
 
 #. module: base_gengo
 #: field:res.company,gengo_comment:0
@@ -44,14 +44,30 @@ msgid "Gengo Private Key"
 msgstr "Gengo privatni ključ"
 
 #. module: base_gengo
+#: constraint:ir.translation:0
+msgid ""
+"The Gengo translation service selected is not supported for this language."
+msgstr "OdabraniGengo sustav prijevoda nije podržan za ovaj jezik."
+
+#. module: base_gengo
+#: view:res.company:0
+msgid "Add Gengo login Public Key..."
+msgstr ""
+
+#. module: base_gengo
 #: model:ir.model,name:base_gengo.model_base_gengo_translations
 msgid "base.gengo.translations"
 msgstr ""
 
 #. module: base_gengo
+#: view:ir.translation:0
+msgid "Gengo Comments & Activity..."
+msgstr ""
+
+#. module: base_gengo
 #: help:res.company,gengo_auto_approve:0
 msgid "Jobs are Automatically Approved by Gengo."
-msgstr ""
+msgstr "Zadaci su automatski odobreni od GENGO-a."
 
 #. module: base_gengo
 #: field:base.gengo.translations,lang_id:0
@@ -61,13 +77,13 @@ msgstr "Jezik"
 #. module: base_gengo
 #: field:ir.translation,gengo_comment:0
 msgid "Comments & Activity Linked to Gengo"
-msgstr ""
+msgstr "Komentari i aktivnosti povezani sa GENGO"
 
 #. module: base_gengo
 #: code:addons/base_gengo/wizard/base_gengo_translations.py:124
 #, python-format
 msgid "Gengo Sync Translation (Response)"
-msgstr ""
+msgstr "Sinhronizacija GENGO prijevoda (odaziv)"
 
 #. module: base_gengo
 #: code:addons/base_gengo/wizard/base_gengo_translations.py:72
@@ -76,10 +92,17 @@ msgid ""
 "Gengo `Public Key` or `Private Key` are missing. Enter your Gengo "
 "authentication parameters under `Settings > Companies > Gengo Parameters`."
 msgstr ""
+"Gengo 'Javni ključ' ili ' Privatni ključ' nedostaju. Unesite Gengo "
+"autorizacijske podatke pod 'Postavke> Organizacije> Gengo postavke'."
 
 #. module: base_gengo
 #: selection:ir.translation,gengo_translation:0
 msgid "Translation By Machine"
+msgstr "Prevelo računalo"
+
+#. module: base_gengo
+#: view:res.company:0
+msgid "Add Gengo login Private Key..."
 msgstr ""
 
 #. module: base_gengo
@@ -91,16 +114,19 @@ msgid ""
 "--\n"
 " Commented on %s by %s."
 msgstr ""
+"%s\n"
+"\n"
+"--\n"
+" Komentirano dana %s od %s."
 
 #. module: base_gengo
 #: field:ir.translation,gengo_translation:0
 msgid "Gengo Translation Service Level"
-msgstr ""
+msgstr "Nivo usluge Gengo prijevoda"
 
 #. module: base_gengo
-#: constraint:ir.translation:0
-msgid ""
-"The Gengo translation service selected is not supported for this language."
+#: view:res.company:0
+msgid "Add your comments here for translator...."
 msgstr ""
 
 #. module: base_gengo
@@ -114,16 +140,18 @@ msgid ""
 "You can select here the service level you want for an automatic translation "
 "using Gengo."
 msgstr ""
+"Ovdje ožete odabrati nivo usluge koju želite koristiti kod automatskih "
+"prijevoda koristeći Gengo."
 
 #. module: base_gengo
 #: field:base.gengo.translations,restart_send_job:0
 msgid "Restart Sending Job"
-msgstr ""
+msgstr "Ponavljanje slanja"
 
 #. module: base_gengo
 #: view:ir.translation:0
 msgid "To Approve In Gengo"
-msgstr ""
+msgstr "Čeka odobrenje u Gengo"
 
 #. module: base_gengo
 #: view:res.company:0
@@ -144,7 +172,7 @@ msgstr "Gengo Javni ključ"
 #: code:addons/base_gengo/wizard/base_gengo_translations.py:123
 #, python-format
 msgid "Gengo Sync Translation (Request)"
-msgstr ""
+msgstr "Sinkronizacija Gengo prijevoda (zahtjev)"
 
 #. module: base_gengo
 #: view:ir.translation:0
@@ -154,20 +182,20 @@ msgstr "Prijevodi"
 #. module: base_gengo
 #: field:res.company,gengo_auto_approve:0
 msgid "Auto Approve Translation ?"
-msgstr ""
+msgstr "Automatski odobri prijevod?"
 
 #. module: base_gengo
 #: model:ir.actions.act_window,name:base_gengo.action_wizard_base_gengo_translations
 #: model:ir.ui.menu,name:base_gengo.menu_action_wizard_base_gengo_translations
 msgid "Gengo: Manual Request of Translation"
-msgstr ""
+msgstr "Gengo: ručni zahtjev za prijevodom"
 
 #. module: base_gengo
 #: code:addons/base_gengo/ir_translation.py:62
 #: code:addons/base_gengo/wizard/base_gengo_translations.py:109
 #, python-format
 msgid "Gengo Authentication Error"
-msgstr ""
+msgstr "Gengo autorizacjska greška"
 
 #. module: base_gengo
 #: model:ir.model,name:base_gengo.model_res_company
@@ -181,6 +209,9 @@ msgid ""
 "translation has to be approved to be uploaded in this system. You are "
 "supposed to do that directly by using your Gengo Account"
 msgstr ""
+"Napomena: Ako je status prijevoda 'U tijeku', to znači da prijevod mora biti "
+"odobren za dodavanje u sistem. To bi vi trebali direktno učiniti prijavom na "
+"svoj Gengo račun"
 
 #. module: base_gengo
 #: code:addons/base_gengo/wizard/base_gengo_translations.py:82
@@ -189,11 +220,13 @@ msgid ""
 "Gengo connection failed with this message:\n"
 "``%s``"
 msgstr ""
+"Gengo veza je pukla sa sljedećom porukom:\n"
+"''%s''"
 
 #. module: base_gengo
 #: view:res.company:0
 msgid "Gengo Parameters"
-msgstr ""
+msgstr "Gengo parametri"
 
 #. module: base_gengo
 #: view:base.gengo.translations:0
@@ -213,7 +246,7 @@ msgstr ""
 #. module: base_gengo
 #: view:ir.translation:0
 msgid "Gengo Translation Service"
-msgstr ""
+msgstr "Servis Gengo prijevoda"
 
 #. module: base_gengo
 #: selection:ir.translation,gengo_translation:0
@@ -223,7 +256,7 @@ msgstr ""
 #. module: base_gengo
 #: view:base.gengo.translations:0
 msgid "Gengo Request Form"
-msgstr ""
+msgstr "Forma Gengo zahtjeva"
 
 #. module: base_gengo
 #: code:addons/base_gengo/wizard/base_gengo_translations.py:114
@@ -237,6 +270,7 @@ msgid ""
 "This comment will be automatically be enclosed in each an every request sent "
 "to Gengo"
 msgstr ""
+"Ovaj komentar će automatski biti uključen u svaki zahtjev poslan u Gengo"
 
 #. module: base_gengo
 #: view:base.gengo.translations:0
@@ -246,4 +280,4 @@ msgstr "Otkaži"
 #. module: base_gengo
 #: view:base.gengo.translations:0
 msgid "or"
-msgstr ""
+msgstr "ili"

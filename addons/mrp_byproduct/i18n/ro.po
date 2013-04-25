@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-02-08 18:38+0000\n"
+"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:54+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:50+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: mrp_byproduct
 #: help:mrp.subproduct,subproduct_type:0
@@ -28,6 +28,14 @@ msgid ""
 "BoM / quantity of manufactured product set on the BoM * quantity of "
 "manufactured product in the production order.)'"
 msgstr ""
+"Definiti modul in care cantitatea de produse secundare va fi stabilita pe "
+"comenzile de productie folosind aceasta LdM. 'Fixa' descrie o situatie in "
+"care cantitatea de produse secundare create este intotdeauna egala cu "
+"cantitatea stabilita in LdM, indiferent de cat de multe sunt create in "
+"comanda de productie. Prin opozitie, 'Variabila' inseamna ca acea cantitate "
+"va fi calculata drept  (cantitatea de produse secundare stabilita in LdM / "
+"cantitatea de produse fabricate stabilita in LdM * cantitatea de produse "
+"fabricate din comanda de productie.)'"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,product_id:0
@@ -37,7 +45,7 @@ msgstr "Produs"
 #. module: mrp_byproduct
 #: field:mrp.subproduct,product_uom:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Unitatea de Masura a Produsului"
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_production
@@ -47,13 +55,13 @@ msgstr "Comanda de productie"
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_change_production_qty
 msgid "Change Quantity of Products"
-msgstr ""
+msgstr "Schimba Cantitatea Produselor"
 
 #. module: mrp_byproduct
 #: view:mrp.bom:0
 #: field:mrp.bom,sub_products:0
 msgid "Byproducts"
-msgstr ""
+msgstr "Produse Secundare"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,subproduct_type:0
@@ -74,7 +82,7 @@ msgstr "Cantitate Produs"
 #: code:addons/mrp_byproduct/mrp_byproduct.py:63
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Avertisment"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,bom_id:0
@@ -98,8 +106,10 @@ msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
 msgstr ""
+"Unitatea de Masura a Produsului pe care ati ales-o are o categorie diferita "
+"decat cea din formularul produsului."
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_subproduct
 msgid "Byproduct"
-msgstr ""
+msgstr "Produs secundar"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-01-27 17:34+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-04-02 14:40+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-28 05:58+0000\n"
-"X-Generator: Launchpad (build 16451)\n"
+"X-Launchpad-Export-Date: 2013-04-03 15:03+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: auth_signup
 #: field:res.partner,signup_type:0
@@ -45,14 +45,15 @@ msgid "base.config.settings"
 msgstr "base.config.settings"
 
 #. module: auth_signup
-#: code:addons/auth_signup/res_users.py:252
+#: code:addons/auth_signup/res_users.py:265
 #, python-format
 msgid "Cannot send email: user has no email address."
 msgstr "Kan e-mail niet versturen: gebruiker heeft geen e-mail adres."
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:25
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:24
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:28
 #, python-format
 msgid "Reset password"
 msgstr "Reset wachtwoord"
@@ -70,21 +71,15 @@ msgstr "Reset wachtwoord"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:125
+#: code:addons/auth_signup/static/src/js/auth_signup.js:117
 #, python-format
 msgid "Please enter a password and confirm it."
 msgstr "Geef een wachtwoord in en bevestig deze."
 
 #. module: auth_signup
-#: view:res.users:0
-msgid "Send an email to the user to (re)set their password."
-msgstr ""
-"Stuur een e-mail naar de gebruiker om het wachtwoord in te stellen of te "
-"resetten."
-
-#. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/xml/auth_signup.xml:23
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:26
 #, python-format
 msgid "Sign Up"
 msgstr "Aanmelden"
@@ -93,12 +88,6 @@ msgstr "Aanmelden"
 #: selection:res.users,state:0
 msgid "New"
 msgstr "Nieuw"
-
-#. module: auth_signup
-#: code:addons/auth_signup/res_users.py:258
-#, python-format
-msgid "Mail sent to:"
-msgstr "E-mail verzonden naar:"
 
 #. module: auth_signup
 #: field:res.users,state:0
@@ -129,7 +118,7 @@ msgstr ""
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:119
+#: code:addons/auth_signup/static/src/js/auth_signup.js:111
 #, python-format
 msgid "Please enter a name."
 msgstr "Vul een naam in."
@@ -145,8 +134,71 @@ msgid "Signup URL"
 msgstr "URL voor aanmelden"
 
 #. module: auth_signup
+#: model:email.template,body_html:auth_signup.set_password_email
+msgid ""
+"\n"
+"                \n"
+"                    <p>\n"
+"                        ${object.name},\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        You have been invited to connect to "
+"\"${object.company_id.name}\" in order to get access to your documents in "
+"OpenERP.\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        To accept the invitation, click on the following "
+"link:\n"
+"                    </p>\n"
+"                    <ul>\n"
+"                        <li><a href=\"${object.signup_url}\">Accept "
+"invitation to \"${object.company_id.name}\"</a></li>\n"
+"                    </ul>\n"
+"                    <p>\n"
+"                        Thanks,\n"
+"                    </p>\n"
+"                    <pre>\n"
+"--\n"
+"${object.company_id.name or ''}\n"
+"${object.company_id.email or ''}\n"
+"${object.company_id.phone or ''}\n"
+"                    </pre>\n"
+"                \n"
+"            "
+msgstr ""
+"\n"
+"                \n"
+"                    <p>\n"
+"                        ${object.name},\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        U bent uitgenodigd om de verbinden met "
+"\"${object.company_id.name}\" zodat u toegang krijgt tot uw documenten in "
+"OpenERP.\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        Om de uitnodiging te accepteren, klik op de volgende "
+"link:\n"
+"                    </p>\n"
+"                    <ul>\n"
+"                        <li><a href=\"${object.signup_url}\">Accepteer "
+"uitnodiging van \"${object.company_id.name}\"</a></li>\n"
+"                    </ul>\n"
+"                    <p>\n"
+"                        Bedankt,\n"
+"                    </p>\n"
+"                    <pre>\n"
+"--\n"
+"${object.company_id.name or ''}\n"
+"${object.company_id.email or ''}\n"
+"${object.company_id.phone or ''}\n"
+"                    </pre>\n"
+"                \n"
+"            "
+
+#. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:122
+#: code:addons/auth_signup/static/src/js/auth_signup.js:114
 #, python-format
 msgid "Please enter a username."
 msgstr "Voer een gebruikersnaam in."
@@ -157,15 +209,24 @@ msgid "Active"
 msgstr "Actief"
 
 #. module: auth_signup
-#: code:addons/auth_signup/res_users.py:256
+#: code:addons/auth_signup/res_users.py:269
 #, python-format
 msgid ""
 "Cannot send email: no outgoing email server configured.\n"
 "You can configure it under Settings/General Settings."
 msgstr ""
-"Het is niet mogelijk om een e-mail te versturen: geen uitgaande e-mail "
-"server ingesteld,\n"
-"Het is mogelijk deze in te stellen bij: Instellingen > Algemene"
+"Het is niet mogelijk om een e-mail te versturen: Er is nog geen uitgaande e-"
+"mail server ingesteld,\n"
+"Het is mogelijk deze in te stellen bij: Instellingen > Algemeen"
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:174
+#, python-format
+msgid "An email has been sent with credentials to reset your password"
+msgstr ""
+"Er is een e-mail verzonden met informatie over het resetten van uw "
+"wachtwoord."
 
 #. module: auth_signup
 #. openerp-web
@@ -183,7 +244,7 @@ msgstr "Naam"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:165
+#: code:addons/auth_signup/static/src/js/auth_signup.js:170
 #, python-format
 msgid "Please enter a username or email address."
 msgstr "Geef gebruikersnaam of e-mail adres in."
@@ -214,7 +275,7 @@ msgstr ""
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:21
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:22
 #, python-format
 msgid "Log in"
 msgstr "Login"
@@ -226,43 +287,38 @@ msgstr "Aanmeld token is geldig"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:116
-#: code:addons/auth_signup/static/src/js/auth_signup.js:119
-#: code:addons/auth_signup/static/src/js/auth_signup.js:122
-#: code:addons/auth_signup/static/src/js/auth_signup.js:125
-#: code:addons/auth_signup/static/src/js/auth_signup.js:128
-#: code:addons/auth_signup/static/src/js/auth_signup.js:162
-#: code:addons/auth_signup/static/src/js/auth_signup.js:165
+#: code:addons/auth_signup/static/src/js/auth_signup.js:108
+#: code:addons/auth_signup/static/src/js/auth_signup.js:111
+#: code:addons/auth_signup/static/src/js/auth_signup.js:114
+#: code:addons/auth_signup/static/src/js/auth_signup.js:117
+#: code:addons/auth_signup/static/src/js/auth_signup.js:120
+#: code:addons/auth_signup/static/src/js/auth_signup.js:167
+#: code:addons/auth_signup/static/src/js/auth_signup.js:170
 #, python-format
 msgid "Login"
 msgstr "Login"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:99
+#: code:addons/auth_signup/static/src/js/auth_signup.js:94
 #, python-format
 msgid "Invalid signup token"
 msgstr "Aanmeld toekenning ongeldig"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:128
+#: code:addons/auth_signup/static/src/js/auth_signup.js:120
 #, python-format
 msgid "Passwords do not match; please retype them."
 msgstr "Wachtwoorden komen niet overeen. Geef de wachtwoorden opnieuw in."
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:116
-#: code:addons/auth_signup/static/src/js/auth_signup.js:162
+#: code:addons/auth_signup/static/src/js/auth_signup.js:108
+#: code:addons/auth_signup/static/src/js/auth_signup.js:167
 #, python-format
 msgid "No database selected !"
 msgstr "Geen database geselecteerd!"
-
-#. module: auth_signup
-#: view:res.users:0
-msgid "Reset Password"
-msgstr "Stel wachtwoord opnieuw in"
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_reset_password:0
@@ -270,18 +326,16 @@ msgid "Enable password reset from Login page"
 msgstr "Wachtwoord reset vanaf login pagina toestaan"
 
 #. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:24
-#, python-format
-msgid "Back to Login"
-msgstr "Terug naar login"
+#: model:email.template,subject:auth_signup.set_password_email
+msgid "${object.company_id.name} invitation to connect on OpenERP"
+msgstr "${object.company_id.name} uitnodiging om te verbinden met OpenERP"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:22
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:27
 #, python-format
-msgid "Sign up"
-msgstr "Aanmelden"
+msgid "Back to Login"
+msgstr "Terug naar login"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
@@ -289,6 +343,27 @@ msgid "Partner"
 msgstr "Relatie"
 
 #. module: auth_signup
+#: view:res.users:0
+msgid "Send reset password instructions by email"
+msgstr "Stuur wachtwoord reset per e-mail."
+
+#. module: auth_signup
 #: field:res.partner,signup_token:0
 msgid "Signup Token"
 msgstr "Aanmeld token"
+
+#~ msgid "Reset Password"
+#~ msgstr "Stel wachtwoord opnieuw in"
+
+#, python-format
+#~ msgid "Sign up"
+#~ msgstr "Aanmelden"
+
+#, python-format
+#~ msgid "Mail sent to:"
+#~ msgstr "E-mail verzonden naar:"
+
+#~ msgid "Send an email to the user to (re)set their password."
+#~ msgstr ""
+#~ "Stuur een e-mail naar de gebruiker om het wachtwoord in te stellen of te "
+#~ "resetten."

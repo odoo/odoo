@@ -36,6 +36,22 @@ class res_users(osv.Model):
         'default_section_id': fields.many2one('crm.case.section', 'Default Sales Team'),
     }
 
+
+class sale_crm_lead(osv.Model):
+    _inherit = 'crm.lead'
+
+    def on_change_user(self, cr, uid, ids, user_id, context=None):
+        """ Override of on change user_id on lead/opportunity; when having sale
+            the new logic is :
+            - use user.default_section_id
+            - or fallback on previous behavior """
+        if user_id:
+            user = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
+            if user.default_section_id and user.default_section_id.id:
+                return {'value': {'section_id': user.default_section_id.id}}
+        return super(sale_crm_lead, self).on_change_user(cr, uid, ids, user_id, context=context)
+
+
 class account_invoice(osv.osv):
     _inherit = 'account.invoice'
     _columns = {

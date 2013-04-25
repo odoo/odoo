@@ -212,8 +212,7 @@ class sale_order(osv.osv):
         'order_policy': fields.selection([
                 ('manual', 'On Demand'),
             ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-            help="""This field controls how invoice and delivery operations are synchronized.
-  - With 'Before Delivery', a draft invoice is created, and it must be paid before delivery."""),
+            help="""This field controls how invoice and delivery operations are synchronized."""),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Pricelist for current sales order."),
         'currency_id': fields.related('pricelist_id', 'currency_id', type="many2one", relation="res.currency", string="Currency", readonly=True, required=True),
         'project_id': fields.many2one('account.analytic.account', 'Contract / Analytic', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="The analytic account related to a sales order."),
@@ -315,10 +314,6 @@ class sale_order(osv.osv):
             return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False,  'payment_term': False, 'fiscal_position': False}}
 
         part = self.pool.get('res.partner').browse(cr, uid, part, context=context)
-        #if the chosen partner is not a company and has a parent company, use the parent to choose the delivery, the 
-        #invoicing addresses and all the fields related to the partner.
-        if part.parent_id and not part.is_company:
-            part = part.parent_id
         addr = self.pool.get('res.partner').address_get(cr, uid, [part.id], ['delivery', 'invoice', 'contact'])
         pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
         payment_term = part.property_payment_term and part.property_payment_term.id or False
@@ -532,6 +527,9 @@ class sale_order(osv.osv):
                     invoice_ref += o.name + '|'
                     self.write(cr, uid, [o.id], {'state': 'progress'})
                     cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (o.id, res))
+                #remove last '|' in invoice_ref
+                if len(invoice_ref) >= 1: 
+                    invoice_ref = invoice_ref[:-1]
                 invoice.write(cr, uid, [res], {'origin': invoice_ref, 'name': invoice_ref})
             else:
                 for order, il in val:
@@ -694,7 +692,9 @@ class sale_order_line(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
         'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.function(_fnct_line_invoiced, string='Invoiced', type='boolean',
-            store={'account.invoice': (_order_lines_from_invoice, ['state'], 10)}),
+            store={
+                'account.invoice': (_order_lines_from_invoice, ['state'], 10),
+                'sale.order.line': (lambda self,cr,uid,ids,ctx=None: ids, ['invoice_lines'], 10)}),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price'), readonly=True, states={'draft': [('readonly', False)]}),
         'type': fields.selection([('make_to_stock', 'from stock'), ('make_to_order', 'on order')], 'Procurement Method', required=True, readonly=True, states={'draft': [('readonly', False)]},
          help="From stock: When needed, the product is taken from the stock or we wait for replenishment.\nOn order: When needed, the product is purchased or produced."),
@@ -717,7 +717,7 @@ class sale_order_line(osv.osv):
         'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', store=True, string='Salesperson'),
         'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
     }
-    _order = 'order_id desc, sequence'
+    _order = 'order_id desc, sequence, id'
     _defaults = {
         'product_uom' : _get_uom_id,
         'discount': 0.0,
@@ -805,7 +805,7 @@ class sale_order_line(osv.osv):
             vals = self._prepare_order_line_invoice_line(cr, uid, line, False, context)
             if vals:
                 inv_id = self.pool.get('account.invoice.line').create(cr, uid, vals, context=context)
-                cr.execute('insert into sale_order_line_invoice_rel (order_line_id,invoice_id) values (%s,%s)', (line.id, inv_id))
+                self.write(cr, uid, [line.id], {'invoice_lines': [(4, inv_id)]}, context=context)
                 sales.add(line.order_id.id)
                 create_ids.append(inv_id)
         # Trigger workflow events
@@ -880,7 +880,7 @@ class sale_order_line(osv.osv):
             date_order = time.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
         result = {}
-        warning_msgs = {}
+        warning_msgs = ''
         product_obj = product_obj.browse(cr, uid, product, context=context_partner)
 
         uom2 = False
@@ -994,5 +994,21 @@ class mail_compose_message(osv.Model):
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'sale.order', context['default_res_id'], 'quotation_sent', cr)
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
+
+
+class account_invoice(osv.Model):
+    _inherit = 'account.invoice'
+
+    def unlink(self, cr, uid, ids, context=None):
+        """ Overwrite unlink method of account invoice to send a trigger to the sale workflow upon invoice deletion """
+        invoice_ids = self.search(cr, uid, [('id', 'in', ids), ('state', 'in', ['draft', 'cancel'])], context=context)
+        #if we can't cancel all invoices, do nothing
+        if len(invoice_ids) == len(ids):
+            #Cancel invoice(s) first before deleting them so that if any sale order is associated with them
+            #it will trigger the workflow to put the sale order in an 'invoice exception' state
+            wf_service = netsvc.LocalService("workflow")
+            for id in ids:
+                wf_service.trg_validate(uid, 'account.invoice', id, 'invoice_cancel', cr)
+        return super(account_invoice, self).unlink(cr, uid, ids, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

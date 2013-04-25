@@ -1006,8 +1006,7 @@ class account_period(osv.osv):
     def find(self, cr, uid, dt=None, context=None):
         if context is None: context = {}
         if not dt:
-            dt = fields.date.context_today(self,cr,uid,context=context)
-#CHECKME: shouldn't we check the state of the period?
+            dt = fields.date.context_today(self, cr, uid, context=context)
         args = [('date_start', '<=' ,dt), ('date_stop', '>=', dt)]
         if context.get('company_id', False):
             args.append(('company_id', '=', context['company_id']))
@@ -1015,6 +1014,7 @@ class account_period(osv.osv):
             company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
             args.append(('company_id', '=', company_id))
         result = []
+        #WARNING: in next version the default value for account_periof_prefer_normal will be True
         if context.get('account_period_prefer_normal'):
             # look for non-special periods first, and fallback to all if no result is found
             result = self.search(cr, uid, args + [('special', '=', False)], context=context)
@@ -1026,6 +1026,9 @@ class account_period(osv.osv):
 
     def action_draft(self, cr, uid, ids, *args):
         mode = 'draft'
+        for period in self.browse(cr, uid, ids):
+            if period.fiscalyear_id.state == 'done':
+                raise osv.except_osv(_('Warning !'), _('You can not re-open a period which belongs to closed fiscal year'))
         cr.execute('update account_journal_period set state=%s where period_id in %s', (mode, tuple(ids),))
         cr.execute('update account_period set state=%s where id in %s', (mode, tuple(ids),))
         return True
@@ -1149,6 +1152,29 @@ class account_move(osv.osv):
     _name = "account.move"
     _description = "Account Entry"
     _order = 'id desc'
+
+    def account_move_prepare(self, cr, uid, journal_id, date=False, ref='', company_id=False, context=None):
+        '''
+        Prepares and returns a dictionary of values, ready to be passed to create() based on the parameters received.
+        '''
+        if not date:
+            date = fields.date.today()
+        period_obj = self.pool.get('account.period')
+        if not company_id:
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+            company_id = user.company_id.id
+        if context is None:
+            context = {}
+        #put the company in context to find the good period
+        ctx = context.copy()
+        ctx.update({'company_id': company_id, 'account_period_prefer_normal': True})
+        return {
+            'journal_id': journal_id,
+            'date': date,
+            'period_id': period_obj.find(cr, uid, date, context=ctx)[0],
+            'ref': ref,
+            'company_id': company_id,
+        }
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         """
@@ -1357,6 +1383,7 @@ class account_move(osv.osv):
                         'ref':False,
                         'balance':False,
                         'account_tax_id':False,
+                        'statement_id': False,
                     })
 
             if 'journal_id' in vals and vals.get('journal_id', False):
@@ -1393,6 +1420,7 @@ class account_move(osv.osv):
         context = {} if context is None else context.copy()
         default.update({
             'state':'draft',
+            'ref': False,
             'name':'/',
         })
         context.update({
@@ -1652,7 +1680,7 @@ class account_move_reconcile(osv.osv):
                 elif reconcile.line_partial_ids:
                     first_partner = reconcile.line_partial_ids[0].partner_id.id
                     move_lines = reconcile.line_partial_ids
-                if any([line.partner_id.id != first_partner for line in move_lines]):
+                if any([(line.account_id.type in ('receivable', 'payable') and line.partner_id.id != first_partner) for line in move_lines]):
                     return False
         return True
 
@@ -1768,7 +1796,8 @@ class account_tax_code(osv.osv):
         if context.get('period_id', False):
             period_id = context['period_id']
         else:
-            period_id = self.pool.get('account.period').find(cr, uid)
+            ctx = dict(context, account_period_prefer_normal=True)
+            period_id = self.pool.get('account.period').find(cr, uid, context=ctx)
             if not period_id:
                 return dict.fromkeys(ids, 0.0)
             period_id = period_id[0]
@@ -1850,6 +1879,13 @@ class account_tax(osv.osv):
             return result in the context
             Ex: result=round(price_unit*0.21,4)
     """
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        name = self.read(cr, uid, id, ['name'], context=context)['name']
+        default = default.copy()
+        default.update({'name': name + _(' (Copy)')})
+        return super(account_tax, self).copy_data(cr, uid, id, default=default, context=context)
 
     def get_precision_tax():
         def change_digit_tax(cr):
@@ -2278,7 +2314,7 @@ class account_model(osv.osv):
         move_date = datetime.strptime(move_date,"%Y-%m-%d")
         for model in self.browse(cr, uid, ids, context=context):
             ctx = context.copy()
-            ctx.update({'company_id': model.company_id.id})
+            ctx.update({'company_id': model.company_id.id, 'account_period_prefer_normal': True})
             period_ids = period_obj.find(cr, uid, dt=context.get('date', False), context=ctx)
             period_id = period_ids and period_ids[0] or False
             ctx.update({'journal_id': model.journal_id.id,'period_id': period_id})

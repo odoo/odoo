@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-03-10 20:34+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:53+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:48+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -32,16 +32,18 @@ msgstr "Előző tevékenység"
 #, python-format
 msgid "The current step for this item has no email or report to preview."
 msgstr ""
+"Ennek a tételnek az aktuális lépéséhez nincs előnézeti e-mail vagy jelentés."
 
 #. module: marketing_campaign
 #: constraint:marketing.campaign.transition:0
 msgid "The To/From Activity of transition must be of the same Campaign "
 msgstr ""
+"A tól/hoz átvezetési tevékenységnek ugyanahhoz a kampányhoz kell tartoznia. "
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,trigger:0
 msgid "Time"
-msgstr ""
+msgstr "Idő"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
@@ -63,16 +65,19 @@ msgid ""
 "reached this point has generated a certain revenue. You can get revenue "
 "statistics in the Reporting section"
 msgstr ""
+"Állítson be elvárt jövedelmet, ha figyelembe akarja venni amikor az egyes "
+"kampány termékek elérik ezt a szintet akkor azok bevételt generálnak. El "
+"tudja érni a bevétel statisztikát a Jelentések részen."
 
 #. module: marketing_campaign
 #: field:marketing.campaign.transition,trigger:0
 msgid "Trigger"
-msgstr ""
+msgstr "Indítás"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
 msgid "Follow-Up"
-msgstr ""
+msgstr "Fizetési emlékeztető"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,count:0
@@ -90,7 +95,7 @@ msgstr "Kampányszerkesztő"
 #: view:marketing.campaign.segment:0
 #: selection:marketing.campaign.segment,state:0
 msgid "Running"
-msgstr ""
+msgstr "Folyamatban lévő"
 
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_3
@@ -98,6 +103,7 @@ msgid ""
 "Hi, we are delighted to let you know that you have entered the select circle "
 "of our Gold Partners"
 msgstr ""
+"Helló, mi örömmel tudatjuk, hogy bekerül az arany kiválasztott tagok körébe"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -113,6 +119,7 @@ msgstr "Tárgy"
 #: view:marketing.campaign.segment:0
 msgid "Sync mode: only records created after last sync"
 msgstr ""
+"Szinkronizációs mód: csak a legutóbbi szinkronizlás után létrehozott rekordok"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,condition:0
@@ -126,6 +133,15 @@ msgid ""
 "   - transitions: list of campaign transitions outgoing from this activity\n"
 "...- re: Python regular expression module"
 msgstr ""
+"Python kifejezés annak eldöntésére, hogy a tevékenység végrehajtható, egyéb "
+"esetben törölve vagy visszavonva lesz. A kifejezés a használhatja a "
+"következő [böngészhető] változókat:\n"
+"   - tevékenység: a vállalat tevékenysége\n"
+"   - feladatelemek: a kampány feladatelem\n"
+"   - forrás: ezt a kampányt képviselő forrás termék\n"
+"   - átmeneti időszakok: kampány átmeneti időszak listák amik ebből a "
+"tevékenységből származnak\n"
+"...- re: Python általános kifejező modul"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -146,11 +162,13 @@ msgid ""
 "The campaign cannot be started. It does not have any starting activity. "
 "Modify campaign's activities to mark one as the starting point."
 msgstr ""
+"A kampány nem indítható el. Nincs semmilyen elindítható tevékenysége. "
+"Módosítsa a kampány tevékenységet, legyen egy induló pontja."
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,email_template_id:0
 msgid "The email to send when this activity is activated"
-msgstr ""
+msgstr "A küldendő email a tevékenység aktiválása után"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -177,12 +195,12 @@ msgstr "Visszaállítás"
 #. module: marketing_campaign
 #: help:marketing.campaign,object_id:0
 msgid "Choose the resource on which you want this campaign to be run"
-msgstr ""
+msgstr "Válasszon forrást amelyen a kampányt futtatni szeretné"
 
 #. module: marketing_campaign
 #: model:ir.actions.client,name:marketing_campaign.action_client_marketing_menu
 msgid "Open Marketing Menu"
-msgstr ""
+msgstr "Merketing menü megnyitása"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,sync_last_date:0
@@ -195,11 +213,18 @@ msgid "Year(s)"
 msgstr "Év(ek)"
 
 #. module: marketing_campaign
+#: help:marketing.campaign.segment,date_run:0
+msgid "Initial start date of this segment."
+msgstr "Elsődleges indítási dátuma ennek a szakasznak."
+
+#. module: marketing_campaign
 #: help:marketing.campaign.segment,sync_last_date:0
 msgid ""
 "Date on which this segment was synchronized last time (automatically or "
 "manually)"
 msgstr ""
+"Dátum amelyen a szakasz utoljára szinkronizálva lett (automatikusan vagy "
+"kézzel)"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,state:0
@@ -226,16 +251,25 @@ msgid ""
 "Normal - the campaign runs normally and automatically sends all emails and "
 "reports (be very careful with this mode, you're live!)"
 msgstr ""
+"Teszt - Ez közvetlenül, automatikusan létrehozza és futtatja az összes "
+"tevékenységet  (anélkül, hogy az átmenetek késésére várakozna) de nem küld e-"
+"maileket és nem készít jelentéseket.\n"
+"Valós idejű teszt - Ez közvetlenül létrehozza és futtatja tevékenységeket de "
+"nem küld e-maileket és nem készít jelentéseket.\n"
+"Kézi visszaigazolással - a kampány normál futása, de a felhasználónak kézzel "
+"kell érvényesítenie a feladatelemet.\n"
+"Normál - a kampány normál futása és automatikus email küldések és jelentés "
+"készítések (legyen nagyon óvatos ezzel a móddal, élőben tesz mindent!)"
 
 #. module: marketing_campaign
-#: help:marketing.campaign.segment,date_run:0
-msgid "Initial start date of this segment."
-msgstr ""
+#: view:marketing.campaign.segment:0
+msgid "Cancel Segment"
+msgstr "Szakasz visszavonása"
 
 #. module: marketing_campaign
 #: view:res.partner:0
 msgid "False"
-msgstr ""
+msgstr "Hamis"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -252,7 +286,7 @@ msgstr "Kampány"
 #. module: marketing_campaign
 #: model:email.template,body_html:marketing_campaign.email_template_1
 msgid "Hello, you will receive your welcome pack via email shortly."
-msgstr ""
+msgstr "Helló, nemsokára emailben megkapja az üdvözlő csomagot."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -267,7 +301,7 @@ msgstr "Szakasz"
 #: code:addons/marketing_campaign/marketing_campaign.py:214
 #, python-format
 msgid "You cannot duplicate a campaign, Not supported yet."
-msgstr ""
+msgstr "Nem sokszorozhat kampányt, még nem támogatott."
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,type:0
@@ -280,11 +314,20 @@ msgid ""
 "of the resource record\n"
 "  "
 msgstr ""
+"A művelet típusa melyet elvégez, amikor ehhez a tevékenységhez bevisz egy "
+"tételt, úgy mint:\n"
+"   - Email: email küldése az előre definiált sablonból\n"
+"   - Jelentés: a erőforrás tételnél meghatározott jelentés nyomtatása és "
+"elmentése egy konkrét könyvtárba\n"
+"   - Egyedi művelet: előre meghatározott művelet végrehajtása, pl.: "
+"erőforrás rekord mező módosítása\n"
+"  "
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_next_sync:0
 msgid "Next time the synchronization job is scheduled to run automatically"
 msgstr ""
+"Következő időpont a munka szinkronizálására amikor az automatikusan futni fog"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -302,7 +345,7 @@ msgstr "Partner"
 #. module: marketing_campaign
 #: model:ir.filters,name:marketing_campaign.filter0
 msgid "Partners"
-msgstr ""
+msgstr "Partnerek"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -313,7 +356,7 @@ msgstr "Marketing jelentések"
 #: selection:marketing.campaign,state:0
 #: selection:marketing.campaign.segment,state:0
 msgid "New"
-msgstr ""
+msgstr "Új"
 
 #. module: marketing_campaign
 #: sql_constraint:marketing.campaign.transition:0
@@ -323,7 +366,7 @@ msgstr "Az intervallumnak pozitívnak vagy 0-nak kell lennie"
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
 msgid "Email"
-msgstr ""
+msgstr "E-mail"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,name:0
@@ -336,7 +379,7 @@ msgstr "Név"
 #. module: marketing_campaign
 #: field:marketing.campaign.workitem,res_name:0
 msgid "Resource Name"
-msgstr ""
+msgstr "Erőforrás neve"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,sync_mode:0
@@ -347,7 +390,7 @@ msgstr "Szinkronizálási mód"
 #: view:marketing.campaign:0
 #: view:marketing.campaign.segment:0
 msgid "Run"
-msgstr ""
+msgstr "Futtatás"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.activity:0
@@ -358,12 +401,12 @@ msgstr "Előző tevékenységek"
 #. module: marketing_campaign
 #: model:email.template,subject:marketing_campaign.email_template_2
 msgid "Congratulations! You are now a Silver Partner!"
-msgstr ""
+msgstr "Gratulálok! Ön mostmár Ezüst partner!"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_done:0
 msgid "Date this segment was last closed or cancelled."
-msgstr ""
+msgstr "Dátum amikor ez a szakasz utoljára le volt zárva vagy visszavonva."
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
@@ -418,6 +461,9 @@ msgid ""
 "reached this point has entailed a certain cost. You can get cost statistics "
 "in the Reporting section"
 msgstr ""
+"Változó költség beállítása ha úgy dönt, hogy mindegyik kampány tétel amikor "
+"eléri ezt a szintet akkor maga után von egy bizonyos költséget. Megkaphatja "
+"a költség statisztikát a Jelentés résznél"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -435,6 +481,9 @@ msgid ""
 "By activating this option, workitems that aren't executed because the "
 "condition is not met are marked as cancelled instead of being deleted."
 msgstr ""
+"Ennek a lehetőségnek a aktiválásával, feladatelemek melyek a körülmények "
+"miatt nem végrehajthatóak azok visszavontak ahelyett, hogy törölte volna "
+"azokat."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -445,7 +494,7 @@ msgstr "Kivételek"
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
 #: field:res.partner,workitem_ids:0
 msgid "Workitems"
-msgstr ""
+msgstr "Feladatelemek"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,fixed_cost:0
@@ -456,6 +505,11 @@ msgstr "Állandó költség"
 #: view:marketing.campaign.segment:0
 msgid "Newly Modified"
 msgstr "Újonnan módosított"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.workitem:0
+msgid "Cancel Workitem"
+msgstr "Munkaelem visszavonása"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
@@ -478,6 +532,23 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Kattintson marketing kampány létrehozásához.\n"
+"          </p><p>\n"
+"            OpenERP marketing kampánya lehetővé teszi a kiállításaihoz\n"
+"            az automatikus kommunikációt. Szakaszokat tud meghatározni \n"
+"           (körülmények megadásával) az érdeklődőkhöz és a partnerekhez \n"
+"            a kampány elvégzéséhez.\n"
+"          </p><p>\n"
+"            Egy kampánynak több tevékenysége lehet mint: email küldés, "
+"levél\n"
+"            nyomtatás, csoporthoz fűzés, stb. ezek a tevékenységek "
+"kapcsolhatóak\n"
+"            egy sajátos helyzethez; kapcsolati űrlap, 10 nappal az első "
+"kapcsolat\n"
+"            felvételtől, ha az érdeklődés még nincs lezárva, stb.\n"
+"          </p>\n"
+"        "
 
 #. module: marketing_campaign
 #: field:marketing.campaign.transition,interval_nbr:0
@@ -508,6 +579,10 @@ msgid ""
 "for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
 "views."
 msgstr ""
+"A létrehozott feladatelemek a rekordhoz tartozó partnerhez lesznek csatlova. "
+"Ha a rekord a partnerrel megegyezik akkor a mezőt hagyja üresen. Ez hasznos "
+"jelentés céljából, a Kampány analízis elemzéshez vagy a Kampány nyomkövetés "
+"nézetben."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -536,6 +611,7 @@ msgstr "Tesztmód"
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "Only records modified after last sync (no duplicates)"
 msgstr ""
+"Csak az utolsó szinkronizálás óta módosult rekordok (nincs többszörözés)"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_ir_actions_report_xml
@@ -550,7 +626,7 @@ msgstr "Kampánystatisztikák"
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,server_action_id:0
 msgid "The action to perform when this activity is activated"
-msgstr ""
+msgstr "Az elvégzett művelet miután tevékenység aktiválásra került"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,partner_field_id:0
@@ -575,6 +651,13 @@ msgid ""
 "records which have the same value for the unique field as other records that "
 "already entered the campaign."
 msgstr ""
+"Még egy kritérium meghatározásának hozzáadása a szűrőhöz, amikor egy új "
+"rekordot választ a kampányba való beillesztéshez \"Nincs többszörözés\" "
+"megakadályozva olyan rekord választását melyek már előzőleg be lettek "
+"illesztve a kampányba. Ha a kampányban van  \"Egyedi mező\" beállítva, "
+"\"nincs többszörözés\" akkor is megakadályozza olyan rekord kiválasztását, "
+"melynek ugyanaz az értéke az egyedi mezőre mint a másik rekordnak, mely már "
+"be lett írva a kampányba."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -600,7 +683,7 @@ msgstr "Tervezet"
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Marketing Campaign Activity"
-msgstr ""
+msgstr "marketing kampány tevékenység"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
@@ -617,7 +700,7 @@ msgstr "Előnézet"
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,state:0
 msgid "Status"
-msgstr ""
+msgstr "Állapot"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -640,6 +723,9 @@ msgid ""
 "An activity with a signal can be called programmatically. Be careful, the "
 "workitem is always created when a signal is sent"
 msgstr ""
+"Egy tevékenység jeladóval ellátva úgy is nevezhető mint programozott "
+"végrehajtó. Vigyázzon, a feladatelem mindig létre lesz hozva, ha a jelet "
+"elküldik"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -647,7 +733,7 @@ msgstr ""
 #: view:marketing.campaign.workitem:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "To Do"
-msgstr ""
+msgstr "Teendő"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -657,17 +743,17 @@ msgstr "Június"
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_email_template
 msgid "Email Templates"
-msgstr ""
+msgstr "E-mail sablonok"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Sync mode: all records"
-msgstr ""
+msgstr "Szinkronizációs mód: minden rekord"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "All records (no duplicates)"
-msgstr ""
+msgstr "Minden rekord (nincs sokszorozás)"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -697,7 +783,7 @@ msgstr "Jelentés generálódik, amikor ez a tevékenység aktiválódott"
 #. module: marketing_campaign
 #: field:marketing.campaign,unique_field_id:0
 msgid "Unique Field"
-msgstr ""
+msgstr "Egyedi mező"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,state:0
@@ -730,7 +816,7 @@ msgstr "Kivitelezés dátuma"
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_workitem
 msgid "Campaign Workitem"
-msgstr ""
+msgstr "Kampány feladatelem"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_activity
@@ -740,7 +826,7 @@ msgstr "Kampánytevékenység"
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,report_directory_id:0
 msgid "This folder is used to store the generated reports"
-msgstr ""
+msgstr "Ez a könyvtár a létrehozott jelentések tárolására szolgál"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:136
@@ -773,6 +859,11 @@ msgid "No preview"
 msgstr "Nincs előnézet"
 
 #. module: marketing_campaign
+#: view:marketing.campaign:0
+msgid "Cancel Campaign"
+msgstr "Kampány visszavonása"
+
+#. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Process"
 msgstr "Folyamat"
@@ -782,12 +873,12 @@ msgstr "Folyamat"
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
 msgid "Cosmetic"
-msgstr ""
+msgstr "Kozmetika"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.transition,trigger:0
 msgid "How is the destination workitem triggered"
-msgstr ""
+msgstr "Ahogy a végső feladatelem kapcsolva lesz"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -806,11 +897,9 @@ msgid "Operation not supported"
 msgstr "Nem támogatott művelet"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:0
-#: view:marketing.campaign.segment:0
 #: view:marketing.campaign.workitem:0
 msgid "Cancel"
-msgstr ""
+msgstr "Visszavonás"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -821,6 +910,7 @@ msgstr "Zárás"
 #: constraint:marketing.campaign.segment:0
 msgid "Model of filter must be same as resource model of Campaign "
 msgstr ""
+"A szűrő modelljének ugyanannak kell lennie mint a kampány erőforrás modellje "
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -836,12 +926,12 @@ msgstr "Erőforrás ID"
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_transition
 msgid "Campaign Transition"
-msgstr ""
+msgstr "Kampány átmenet"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Marketing Campaign Segment"
-msgstr ""
+msgstr "Marketing kampány szakasz"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_segment_opened
@@ -855,7 +945,7 @@ msgstr "Szegmensek"
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,keep_if_condition_not_met:0
 msgid "Don't Delete Workitems"
-msgstr ""
+msgstr "Ne törölje a feladatelemeket"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.activity:0
@@ -877,7 +967,7 @@ msgstr "Tevékenységek"
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "With Manual Confirmation"
-msgstr ""
+msgstr "Kézi visszaigazolással"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -892,7 +982,7 @@ msgstr "Típus"
 #. module: marketing_campaign
 #: model:email.template,subject:marketing_campaign.email_template_3
 msgid "Congratulations! You are now one of our Gold Partners!"
-msgstr ""
+msgstr "Gratulálunk! Most már Ön is egy Arany tagsággal rendelkezik!"
 
 #. module: marketing_campaign
 #: help:marketing.campaign,unique_field_id:0
@@ -906,12 +996,22 @@ msgid ""
 "campaign previously. Only easily comparable fields like textfields, "
 "integers, selections or single relationships may be used."
 msgstr ""
+"Ha be van állítva, ez a mező segítséget ad a szakaszokhoz, melyek a \"nincs "
+"sokszorozás\" módban működnek, elkerülve az egyedülálló rekordok kétszeri "
+"kiválasztását. Egyedülálló rekordok melyek ugyanazzal az értékkel "
+"rendelkeznek az egyedi mezőben. Például az \"e-mail ettől\" mező "
+"kiválasztásával a CMR Lehetőségek-et megakadályozza, hogy a kampányt még "
+"egyszer ugyanarra az e-mail címre elküldje. Ha nincs beállítva, a \"nincs "
+"sokszorozás\" csak attól fog megvédeni, hogy a már kiválasztott kampányt ne "
+"válassza ki még egyszer. Csak a könnyen összehasonlítható mezőket, mint "
+"szöveg mező, egész szám, kiválasztás vagy egyedülálló kapcsolat lehet "
+"használni."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:529
 #, python-format
 msgid "After %(interval_nbr)d %(interval_type)s"
-msgstr ""
+msgstr "Után %(interval_nbr)d %(interval_type)s"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign
@@ -938,7 +1038,7 @@ msgstr "Február"
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,object_id:0
 msgid "Resource"
-msgstr ""
+msgstr "Erőforrás"
 
 #. module: marketing_campaign
 #: help:marketing.campaign,fixed_cost:0
@@ -947,11 +1047,15 @@ msgid ""
 "revenue on each campaign activity. Cost and Revenue statistics are included "
 "in Campaign Reporting."
 msgstr ""
+"fix költség a kampány futtatásához. Lehetősége van megadni változó költséget "
+"is és bevételt mindegyik kampány tevékenységhez. Költség és bevétel "
+"statisztikák a Kampány jelentéseknél."
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Sync mode: only records updated after last sync"
 msgstr ""
+"Szinkronizálási mód: csak az utolsó szinkronizálás óta frissített rekordok"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:793
@@ -962,12 +1066,12 @@ msgstr "E-mail előnézet"
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,signal:0
 msgid "Signal"
-msgstr ""
+msgstr "Jel"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.workitem,date:0
 msgid "If date is not set, this workitem has to be run manually"
-msgstr ""
+msgstr "Ha nincs beállítva a dátum, ezt a feladatelemet kézzel kell futtatni"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -979,6 +1083,7 @@ msgstr "Április"
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are closed."
 msgstr ""
+"Minden szakasz lezárása előtt a kampányt nem lehet elvégzettnek jelölni."
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -1002,12 +1107,17 @@ msgid ""
 "view of the Resource. If no filter is set, all records are selected without "
 "filtering. The synchronization mode may also add a criterion to the filter."
 msgstr ""
+"Szűrő a szakaszhoz tartozó, egyező forrás rekordok kiválasztásához. Új szűrő "
+"is létrehozható és elmenthető a kiterjesztett keresővel a Források lista "
+"nézetében. Ha nincs szűrő kiválasztva, akkor szűrő nélkül lesznek "
+"leválogatva a rekordok. A szinkronizációs mód hozzáadhat kritériumokat a "
+"szűrőhöz."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:136
 #, python-format
 msgid "The campaign cannot be started. There are no activities in it."
-msgstr ""
+msgstr "a kampány nem indítható el. Nincs tevékenység benne."
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,date_next_sync:0
@@ -1018,7 +1128,7 @@ msgstr "Következő szinkronizáció"
 #: model:email.template,body_html:marketing_campaign.email_template_2
 msgid ""
 "Hi, we are delighted to welcome you among our Silver Partners as of today!"
-msgstr ""
+msgstr "Helló, örömmel köszöntjük az Ezüst Partnereink között a mai naptól!"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,ir_filter_id:0
@@ -1033,7 +1143,7 @@ msgstr "Összes"
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "Only records created after last sync"
-msgstr ""
+msgstr "Csak az utolsó szinkronizáció után létrehozott rekordok"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,variable_cost:0
@@ -1043,7 +1153,7 @@ msgstr "Változó költség"
 #. module: marketing_campaign
 #: model:email.template,subject:marketing_campaign.email_template_1
 msgid "Welcome to the OpenERP Partner Channel!"
-msgstr ""
+msgstr "Köszöntjük az  OpenERP Partnereknél!"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0

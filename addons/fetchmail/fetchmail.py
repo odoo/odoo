@@ -78,7 +78,7 @@ class fetchmail_server(osv.osv):
         'priority': fields.integer('Server Priority', readonly=True, states={'draft':[('readonly', False)]}, help="Defines the order of processing, "
                                                                                                                   "lower values mean higher priority"),
         'message_ids': fields.one2many('mail.mail', 'fetchmail_server_id', 'Messages', readonly=True),
-        'configuration' : fields.text('Configuration'),
+        'configuration' : fields.text('Configuration', readonly=True),
         'script' : fields.char('Script', readonly=True, size=64),
     }
     _defaults = {
@@ -89,7 +89,6 @@ class fetchmail_server(osv.osv):
         'attach': True,
         'script': '/mail/static/scripts/openerp_mailgate.py',
     }
-
 
     def onchange_server_type(self, cr, uid, ids, server_type=False, ssl=False, object_id=False):
         port = 0
@@ -113,7 +112,16 @@ class fetchmail_server(osv.osv):
             conf['model']=r[0]['model']
         values['configuration'] = """Use the below script with the following command line options with your Mail Transport Agent (MTA)
 
-openerp_mailgate.py -u %(uid)d -p PASSWORD -o %(model)s -d %(dbname)s --host=HOSTNAME --port=PORT 
+openerp_mailgate.py --host=HOSTNAME --port=PORT -u %(uid)d -p PASSWORD -d %(dbname)s
+
+Example configuration for the postfix mta running locally:
+
+/etc/postfix/virtual_aliases:
+@youdomain openerp_mailgate@localhost
+
+/etc/aliases:
+openerp_mailgate: "|/path/to/openerp-mailgate.py --host=localhost -u %(uid)d -p PASSWORD -d %(dbname)s"
+
 """ % conf
 
         return {'value':values}
@@ -167,13 +175,14 @@ openerp_mailgate.py -u %(uid)d -p PASSWORD -o %(model)s -d %(dbname)s --host=HOS
 
     def _fetch_mails(self, cr, uid, ids=False, context=None):
         if not ids:
-            ids = self.search(cr, uid, [('state','=','done')])
+            ids = self.search(cr, uid, [('state','=','done'),('type','in',['pop','imap'])])
         return self.fetch_mail(cr, uid, ids, context=context)
 
     def fetch_mail(self, cr, uid, ids, context=None):
         """WARNING: meant for cron usage only - will commit() after each email!"""
         if context is None:
             context = {}
+        context['fetchmail_cron_running'] = True
         mail_thread = self.pool.get('mail.thread')
         action_pool = self.pool.get('ir.actions.server')
         for server in self.browse(cr, uid, ids, context=context):
@@ -231,6 +240,29 @@ openerp_mailgate.py -u %(uid)d -p PASSWORD -o %(model)s -d %(dbname)s --host=HOS
                         pop_server.quit()
             server.write({'date': time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)})
         return True
+
+    def cron_update(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        if not context.get('fetchmail_cron_running'):
+            # Enabled/Disable cron based on the number of 'done' server of type pop or imap
+            ids = self.search(cr, uid, [('state','=','done'),('type','in',['pop','imap'])])
+            try:
+                cron_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'fetchmail', 'ir_cron_mail_gateway_action')[1]
+                self.pool.get('ir.cron').write(cr, 1, [cron_id], {'active': bool(ids)})
+            except ValueError:
+                # Nevermind if default cron cannot be found
+                pass
+
+    def create(self, cr, uid, values, context=None):
+        res = super(fetchmail_server, self).create(cr, uid, values, context=context)
+        self.cron_update(cr, uid, context=context)
+        return res
+
+    def write(self, cr, uid, ids, values, context=None):
+        res = super(fetchmail_server, self).write(cr, uid, ids, values, context=context)
+        self.cron_update(cr, uid, context=context)
+        return res
 
 class mail_mail(osv.osv):
     _inherit = "mail.mail"

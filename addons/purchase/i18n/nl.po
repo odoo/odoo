@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-31 15:14+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-04-03 06:54+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-01 05:49+0000\n"
-"X-Generator: Launchpad (build 16455)\n"
+"X-Launchpad-Export-Date: 2013-04-03 15:03+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
 msgid "Analytic Accounting for Purchases"
-msgstr "Inkoop kostenplaaatsen"
+msgstr "Kostenplaatsen voor inkopen"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_config_settings
@@ -70,6 +70,11 @@ msgstr ""
 #: field:purchase.report,day:0
 msgid "Day"
 msgstr "Dag"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Cancel Order"
+msgstr "Annuleer order"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -345,7 +350,7 @@ msgstr ""
 "            inkomende leveringen. Dit afhankelijk van uw instellingen.\n"
 "          </p><p>\n"
 "            Wanneer u een factuur van uw leverancier heeft ontvangen, kunt\n"
-"            u deze vergelijken met de concept fractuur en deze valideren.\n"
+"            u deze vergelijken met de concept factuur en deze valideren.\n"
 "          </p>\n"
 "        "
 
@@ -372,7 +377,8 @@ msgstr "Wanneer u de service verkoopt aan een klant."
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
 msgid "A pick list is generated to track the incoming products."
-msgstr "Een pakbon wordt gegenereerd om de inkomende producten te volgen."
+msgstr ""
+"Een verzamellijst wordt gegenereerd om de inkomende producten te volgen."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
@@ -431,11 +437,11 @@ msgstr ""
 "                </p><p>\n"
 "                    Inkoopfacturen kunnen vooraf gegenereerd worden op basis "
 "van inkoop\n"
-"                    orders of inkomende leveringen. Dit stelt u in staat de "
+"                    orders of inkomende leveringen. Dit stelt u in staat de "
 "facturen\n"
-"                    die u ontvangt van uw leverancier te controleren op "
+"                    die u ontvangt van uw leverancier te controleren op "
 "basis van de \n"
-"                    concept documenten in OpenERP.\n"
+"                    concept documenten in OpenERP.\n"
 "                </p>\n"
 "            "
 
@@ -691,11 +697,11 @@ msgstr ""
 "omgezet in een inkooporder. \n"
 "              </p><p>\n"
 "                Gebruik dit menu om binnen uw inkooporder te zoeken op\n"
-"                referenties, leverancier, producten, enz. Voor elke "
+"                referenties, leverancier, producten, enz. Voor elke "
 "inkooporder,\n"
-"                kunt het bijbehorende overleg met de leverancier bijhouden, "
+"                kunt het bijbehorende overleg met de leverancier bijhouden, "
 "controle\n"
-"                uitvoeren op de ontvangen producten en de facturen van de "
+"                uitvoeren op de ontvangen producten en de facturen van de "
 "leveranciers.\n"
 "              </p>\n"
 "            "
@@ -730,7 +736,7 @@ msgstr "Definieer een kostenrekening voor dit product: \"%s\" (id:%d)."
 #. module: purchase
 #: view:purchase.order:0
 msgid "(update)"
-msgstr "(update)"
+msgstr "(bijwerken)"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -826,6 +832,11 @@ msgid "RFQ"
 msgstr "Offerteaanvraag"
 
 #. module: purchase
+#: view:purchase.order:0
+msgid "Send by Email"
+msgstr "Verzenden via e-mail"
+
+#. module: purchase
 #: report:purchase.order:0
 #: view:purchase.order:0
 #: field:purchase.order,date_order:0
@@ -890,7 +901,7 @@ msgstr "Goederenstromen"
 #: code:addons/purchase/purchase.py:1156
 #, python-format
 msgid "Draft Purchase Order created"
-msgstr "Concept inkoopporderBeheer aangemaakt."
+msgstr "Concept inkooporder aangemaakt."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
@@ -994,7 +1005,6 @@ msgstr "Hvhd"
 #: model:process.transition.action,name:purchase.process_transition_action_approvingcancelpurchaseorder0
 #: model:process.transition.action,name:purchase.process_transition_action_cancelpurchaseorder0
 #: view:purchase.config.settings:0
-#: view:purchase.order:0
 #: view:purchase.order.group:0
 #: view:purchase.order.line_invoice:0
 msgid "Cancel"
@@ -1211,7 +1221,7 @@ msgstr "Offertes en inkopen"
 #: field:account.config.settings,group_analytic_account_for_purchases:0
 #: field:purchase.config.settings,group_analytic_account_for_purchases:0
 msgid "Analytic accounting for purchases"
-msgstr "Inkoop kostenplaaatsen"
+msgstr "Kostenplaatsen voor inkopen"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder1
@@ -1371,6 +1381,11 @@ msgstr "Belastingen"
 #: model:ir.ui.menu,name:purchase.menu_product_in_config_purchase
 msgid "Products"
 msgstr "Producten"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Terms and conditions..."
+msgstr "Algemene inkoopvoorwaarden..."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
@@ -1549,7 +1564,7 @@ msgstr "Status van de inkooporder."
 #. module: purchase
 #: field:purchase.order.line,product_uom:0
 msgid "Product Unit of Measure"
-msgstr "Maateenheid product"
+msgstr "Maateenheid"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_pricelist_version_action
@@ -1594,9 +1609,9 @@ msgid "PO: %s"
 msgstr "IO: %s"
 
 #. module: purchase
-#: view:purchase.order:0
-msgid "Send by EMail"
-msgstr "Stuur per -mail"
+#: model:process.node,note:purchase.process_node_packinginvoice0
+msgid "Outgoing products to invoice"
+msgstr "Te factureren uitgaande producten"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:515
@@ -1607,7 +1622,7 @@ msgstr "Definieer het inkoopboek voor dit bedrijf: \"%s\" (id:%d)."
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase Order "
-msgstr "InkoopporderBeheer "
+msgstr "Inkooporder "
 
 #. module: purchase
 #: help:purchase.config.settings,group_costing_method:0
@@ -1630,7 +1645,7 @@ msgstr "Onbelast"
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_createpackinglist0
 msgid "Pick list generated"
-msgstr "Pakbon gegenereerd"
+msgstr "Verzamellijst gegenereerd"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
@@ -2024,7 +2039,7 @@ msgstr "Geannuleerd"
 #. module: purchase
 #: field:res.partner,purchase_order_count:0
 msgid "# of Purchase Order"
-msgstr "# inkoopporderBeheer"
+msgstr "# inkooporder"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_compose_message
@@ -2039,7 +2054,7 @@ msgstr "Tel.:"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Resend Purchase Order"
-msgstr "InkoopporderBeheer opnieuw verzenden"
+msgstr "Inkooporder opnieuw verzenden"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -2076,9 +2091,9 @@ msgid ""
 "of the purchase order, the invoice is based on received or on ordered "
 "quantities."
 msgstr ""
-"Een pakbon genereert een inkoopfactuur. Afhankelijk van de factuurinstelling "
-"van de inkooporder, is de factuur gebaseerd op ontvangen of bestelde "
-"aantallen."
+"Een verzamellijst genereert een inkoopfactuur. Afhankelijk van de "
+"factuurinstelling van de inkooporder, is de factuur gebaseerd op ontvangen "
+"of bestelde aantallen."
 
 #. module: purchase
 #: field:purchase.order,message_follower_ids:0
@@ -2097,8 +2112,8 @@ msgid ""
 msgstr ""
 "Offerteaanvragen worden gebruikt wanneer u offertes wilt ontvangen van "
 "verschillende leveranciers voor een bepaalde categorie producten.\n"
-"             U kunt per product instellen als u een offerteaanvraag \n"
-"             doet bij een leverancier of als u een offerteaanvraag wilt doen "
+"            U kunt per product instellen als u een offerteaanvraag \n"
+"            doet bij een leverancier of als u een offerteaanvraag wilt doen "
 "om te onderhandelen met meerdere leveranciers."
 
 #. module: purchase
@@ -2165,11 +2180,6 @@ msgstr "EDI Prijslijst (%s)"
 #: field:purchase.report,product_uom:0
 msgid "Reference Unit of Measure"
 msgstr "Maateenheid referentie"
-
-#. module: purchase
-#: model:process.node,note:purchase.process_node_packinginvoice0
-msgid "Outgoing products to invoice"
-msgstr "Te factureren uitgaande producten"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -2316,7 +2326,7 @@ msgstr "Verzoek om offerte nr."
 #. module: purchase
 #: view:purchase.config.settings:0
 msgid "Invoicing Settings"
-msgstr "Facturering instellingen"
+msgstr "Factureer proces"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_by_user_all
@@ -2489,3 +2499,6 @@ msgstr ""
 #: view:purchase.report:0
 msgid "Orders"
 msgstr "Orders"
+
+#~ msgid "Send by EMail"
+#~ msgstr "Stuur per -mail"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-27 19:24+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-07 18:59+0000\n"
 "Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-28 05:58+0000\n"
-"X-Generator: Launchpad (build 16451)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:41+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -33,7 +33,7 @@ msgid "Waiting Second Approval"
 msgstr "Se asteapta a doua aprobare"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:291
+#: code:addons/hr_holidays/hr_holidays.py:298
 #, python-format
 msgid ""
 "You cannot modify a leave request that has been approved. Contact a human "
@@ -173,12 +173,6 @@ msgid "Refuse"
 msgstr "Respingeti"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:433
-#, python-format
-msgid "Request <b>approved</b>, waiting second validation."
-msgstr "Cererea <b>aprobata</b>, in asteptarea celei de-a doua validari."
-
-#. module: hr_holidays
 #: view:hr.employee:0
 #: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
 #: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
@@ -191,9 +185,9 @@ msgid "Messages"
 msgstr "Mesaje"
 
 #. module: hr_holidays
-#: xsl:holidays.summary:0
-msgid "Analyze from"
-msgstr "Analiza de la"
+#: model:ir.model,name:hr_holidays.model_hr_holidays
+msgid "Leave"
+msgstr "Concediu"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:44
@@ -282,9 +276,9 @@ msgstr ""
 #: code:addons/hr_holidays/hr_holidays.py:238
 #: code:addons/hr_holidays/hr_holidays.py:249
 #: code:addons/hr_holidays/hr_holidays.py:274
-#: code:addons/hr_holidays/hr_holidays.py:291
-#: code:addons/hr_holidays/hr_holidays.py:414
-#: code:addons/hr_holidays/hr_holidays.py:464
+#: code:addons/hr_holidays/hr_holidays.py:298
+#: code:addons/hr_holidays/hr_holidays.py:421
+#: code:addons/hr_holidays/hr_holidays.py:471
 #, python-format
 msgid "Warning!"
 msgstr "Avertizare!"
@@ -301,8 +295,8 @@ msgstr "Intalniri Concedii"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
-msgid "Legal Leaves 2012"
-msgstr "Concedii legale 2012"
+msgid "Legal Leaves 2013"
+msgstr "Concedii Legale 2013"
 
 #. module: hr_holidays
 #: selection:hr.holidays.summary.dept,holiday_type:0
@@ -322,7 +316,7 @@ msgid "Sick Leaves"
 msgstr "Concedii medicale"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:471
+#: code:addons/hr_holidays/hr_holidays.py:478
 #, python-format
 msgid "Leave Request for %s"
 msgstr "Cerere de concediu pentru %s"
@@ -393,7 +387,7 @@ msgid "Wheat"
 msgstr "Grau"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:469
+#: code:addons/hr_holidays/hr_holidays.py:476
 #, python-format
 msgid "Allocation for %s"
 msgstr "Alocare pentru %s"
@@ -425,7 +419,7 @@ msgid "Number of Days"
 msgstr "Numar de zile"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:464
+#: code:addons/hr_holidays/hr_holidays.py:471
 #, python-format
 msgid ""
 "The feature behind the field 'Remaining Legal Leaves' can only be used when "
@@ -546,7 +540,7 @@ msgid "Start Date"
 msgstr "Data de inceput"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:414
+#: code:addons/hr_holidays/hr_holidays.py:421
 #, python-format
 msgid ""
 "There are not enough %s allocated for employee %s; please create an "
@@ -710,10 +704,9 @@ msgid "Active"
 msgstr "Activ(a)"
 
 #. module: hr_holidays
-#: view:hr.employee:0
-#: field:hr.employee,remaining_leaves:0
-msgid "Remaining Legal Leaves"
-msgstr "Concedii legale ramase"
+#: view:hr.holidays:0
+msgid "Add a reason..."
+msgstr "Adaugati un motiv..."
 
 #. module: hr_holidays
 #: field:hr.holidays,manager_id:0
@@ -762,11 +755,6 @@ msgid "My Department Leaves"
 msgstr "Concediile din Departamentul meu"
 
 #. module: hr_holidays
-#: model:mail.message.subtype,description:hr_holidays.mt_holidays_confirmed
-msgid "Request confirmed, waiting confirmation"
-msgstr "Cerere confirmata, in asteptarea confirmarii"
-
-#. module: hr_holidays
 #: field:hr.employee,current_leave_state:0
 msgid "Current Leave Status"
 msgstr "Statusul concediului actual"
@@ -811,6 +799,11 @@ msgstr "Analiza concediu"
 #: view:hr.holidays.summary.employee:0
 msgid "Cancel"
 msgstr "Anulati"
+
+#. module: hr_holidays
+#: model:mail.message.subtype,description:hr_holidays.mt_holidays_confirmed
+msgid "Request created and waiting confirmation"
+msgstr "Solicitarea a fost creata si asteapta confirmarea"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -884,7 +877,7 @@ msgid "To Submit"
 msgstr "De Depus"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:336
+#: code:addons/hr_holidays/hr_holidays.py:343
 #: view:hr.holidays:0
 #: selection:hr.holidays,type:0
 #: field:resource.calendar.leaves,holiday_id:0
@@ -897,6 +890,12 @@ msgstr "Cerere de concediu"
 #: field:hr.holidays,name:0
 msgid "Description"
 msgstr "Descriere"
+
+#. module: hr_holidays
+#: view:hr.employee:0
+#: field:hr.employee,remaining_leaves:0
+msgid "Remaining Legal Leaves"
+msgstr "Concedii legale ramase"
 
 #. module: hr_holidays
 #: selection:hr.holidays,holiday_type:0
@@ -976,6 +975,12 @@ msgid "Both Approved and Confirmed"
 msgstr "Atat Aprobat cat si Confirmat"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:440
+#, python-format
+msgid "Request approved, waiting second validation."
+msgstr "Solicitarea aprobata, asteapta a doua validare."
+
+#. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Approve"
 msgstr "Aprobati"
@@ -994,9 +999,9 @@ msgid "The start date must be anterior to the end date."
 msgstr "Data de inceput trebuie sa fie anterioara datei de sfarsit."
 
 #. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_holidays
-msgid "Leave"
-msgstr "Concediu"
+#: xsl:holidays.summary:0
+msgid "Analyze from"
+msgstr "Analiza de la"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,double_validation:0
@@ -1081,3 +1086,13 @@ msgstr "Motive"
 #: field:hr.holidays.summary.employee,holiday_type:0
 msgid "Select Leave Type"
 msgstr "Selecteaza Tipul Concediului"
+
+#, python-format
+#~ msgid "Request <b>approved</b>, waiting second validation."
+#~ msgstr "Cererea <b>aprobata</b>, in asteptarea celei de-a doua validari."
+
+#~ msgid "Legal Leaves 2012"
+#~ msgstr "Concedii legale 2012"
+
+#~ msgid "Request confirmed, waiting confirmation"
+#~ msgstr "Cerere confirmata, in asteptarea confirmarii"

@@ -256,7 +256,7 @@
             <para style="terp_default_Centre_9">[[line.date=='False' and '-' or formatLang(line.date,date=True) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line.amount or '-', currency_obj=line.company_currency) ]] </para>
+            <para style="terp_default_Right_9">[[ formatLang(line.amount or 0.0, currency_obj=line.company_currency) ]] </para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(line.amount_currency, currency_obj=line.currency) ]] </para>

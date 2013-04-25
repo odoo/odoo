@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-06 20:41+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-20 23:34+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:34+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:31+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
@@ -29,7 +29,7 @@ msgid "account.config.settings"
 msgstr "account.config.settings"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:357
+#: code:addons/account_voucher/account_voucher.py:369
 #, python-format
 msgid "Write-Off"
 msgstr "Abschreibung"
@@ -131,7 +131,7 @@ msgid "Voucher Statistics"
 msgstr "Statistik Zahlungsbelege"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1533
+#: code:addons/account_voucher/account_voucher.py:1547
 #, python-format
 msgid ""
 "You can not change the journal as you already reconciled some statement "
@@ -139,6 +139,11 @@ msgid ""
 msgstr ""
 "Dieses Journal kann nicht geändert werden, da bereits Auszugspositionen "
 "ausgeglichen wurden."
+
+#. module: account_voucher
+#: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
+msgid "Status changed"
+msgstr "Status Änderung"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -232,8 +237,8 @@ msgid "Journal Item"
 msgstr "Journal Buchung"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:496
-#: code:addons/account_voucher/account_voucher.py:967
+#: code:addons/account_voucher/account_voucher.py:508
+#: code:addons/account_voucher/account_voucher.py:981
 #, python-format
 msgid "Error!"
 msgstr "Fehler !"
@@ -250,6 +255,11 @@ msgstr "Zahlungsalternativen"
 
 #. module: account_voucher
 #: view:account.voucher:0
+msgid "e.g. 003/10"
+msgstr "z.B. 003/10"
+
+#. module: account_voucher
+#: view:account.voucher:0
 msgid "Other Information"
 msgstr "Weitere Informationen"
 
@@ -260,7 +270,7 @@ msgid "Cancelled"
 msgstr "Abgebrochen"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1139
+#: code:addons/account_voucher/account_voucher.py:1153
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -306,12 +316,13 @@ msgid "Day"
 msgstr "Tag"
 
 #. module: account_voucher
+#: view:account.voucher:0
 #: field:account.voucher,tax_id:0
 msgid "Tax"
 msgstr "Steuer"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:867
+#: code:addons/account_voucher/account_voucher.py:879
 #, python-format
 msgid "Invalid Action!"
 msgstr "Diese Aktion ist fehlerhaft !"
@@ -365,7 +376,12 @@ msgid "Import Invoices"
 msgstr "Importiere Rechnungen"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1098
+#: view:account.voucher:0
+msgid "e.g. Invoice SAJ/0042"
+msgstr "z.B. Rechnung SAJ/0042"
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:1112
 #, python-format
 msgid "Wrong voucher line"
 msgstr "Falsche Belegzeile"
@@ -384,7 +400,7 @@ msgid "Receipt"
 msgstr "Zahlungsbestätigung"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1004
+#: code:addons/account_voucher/account_voucher.py:1018
 #, python-format
 msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
@@ -402,13 +418,18 @@ msgstr "Umsatzpositionen"
 
 #. module: account_voucher
 #: view:account.voucher:0
+msgid "Cancel Voucher"
+msgstr "Abbrechen Auszug"
+
+#. module: account_voucher
+#: view:account.voucher:0
 #: field:account.voucher,period_id:0
 msgid "Period"
 msgstr "Periode"
 
 #. module: account_voucher
 #: view:account.voucher:0
-#: code:addons/account_voucher/account_voucher.py:199
+#: code:addons/account_voucher/account_voucher.py:211
 #, python-format
 msgid "Supplier"
 msgstr "Lieferant"
@@ -429,7 +450,7 @@ msgid "Debit"
 msgstr "Konto belasten (Soll)"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1533
+#: code:addons/account_voucher/account_voucher.py:1547
 #, python-format
 msgid "Unable to change journal !"
 msgstr "Es ist nicht möglich das Journal zu ändern !"
@@ -492,11 +513,22 @@ msgid "Memo"
 msgstr "Memo"
 
 #. module: account_voucher
+#: code:addons/account_voucher/invoice.py:34
+#, python-format
+msgid "Pay Invoice"
+msgstr "Zahle Rechnung"
+
+#. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure to unreconcile and cancel this record ?"
 msgstr ""
 "Wollen Sie den Ausgleich wirklich rückgängig machen und den Datensatz "
 "stornieren / löschen"
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Sales Receipt"
+msgstr "Buchen von Einnahmen"
 
 #. module: account_voucher
 #: field:account.voucher,is_multi_currency:0
@@ -545,13 +577,12 @@ msgid "Avg. Due Delay"
 msgstr "Durch. Zahlungsverzug"
 
 #. module: account_voucher
-#: code:addons/account_voucher/invoice.py:34
-#, python-format
-msgid "Pay Invoice"
-msgstr "Zahle Rechnung"
+#: view:account.voucher:0
+msgid "Are you sure you want to unreconcile this record?"
+msgstr "Möchten Sie diese Buchungen stornieren?"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1139
+#: code:addons/account_voucher/account_voucher.py:1153
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr "Kein Steuerfinanzkonto und Steuerkonto definiert!"
@@ -615,15 +646,15 @@ msgid "To Review"
 msgstr "Zu Prüfen"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1011
 #: code:addons/account_voucher/account_voucher.py:1025
-#: code:addons/account_voucher/account_voucher.py:1180
+#: code:addons/account_voucher/account_voucher.py:1039
+#: code:addons/account_voucher/account_voucher.py:1194
 #, python-format
 msgid "change"
 msgstr "Ändern"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1000
+#: code:addons/account_voucher/account_voucher.py:1014
 #, python-format
 msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
@@ -638,11 +669,6 @@ msgstr ""
 #: view:account.voucher:0
 msgid "Expense Lines"
 msgstr "Aufwandspositionen"
-
-#. module: account_voucher
-#: view:account.voucher:0
-msgid "Sale voucher"
-msgstr "Verkauf Belege"
 
 #. module: account_voucher
 #: help:account.voucher,is_multi_currency:0
@@ -702,11 +728,6 @@ msgid "Voucher Status"
 msgstr "Belegstatus"
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Are you sure to unreconcile this record?"
-msgstr "Möchten Sie wirklich den Ausgleich stornieren?"
-
-#. module: account_voucher
 #: field:account.voucher,company_id:0
 #: field:account.voucher.line,company_id:0
 #: view:sale.receipt.report:0
@@ -725,7 +746,12 @@ msgid "Reconcile Payment Balance"
 msgstr "OP-Ausgleich Saldo"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:963
+#: view:account.voucher:0
+msgid "Cancel Receipt"
+msgstr "Abbrechen Zahlungseinzug"
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:975
 #, python-format
 msgid "Configuration Error !"
 msgstr "Konfigurationsfehler !"
@@ -790,7 +816,7 @@ msgid "October"
 msgstr "Oktober"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:964
+#: code:addons/account_voucher/account_voucher.py:976
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr "Bitte aktivieren Sie die Nummernfolge für das gewählte Journal !"
@@ -811,7 +837,6 @@ msgid "Paid"
 msgstr "Bezahlt"
 
 #. module: account_voucher
-#: view:account.voucher:0
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
 msgid "Sales Receipts"
@@ -871,7 +896,7 @@ msgid "Previous Payments ?"
 msgstr "Vorherige Zahlungen?"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1098
+#: code:addons/account_voucher/account_voucher.py:1112
 #, python-format
 msgid "The invoice you are willing to pay is not valid anymore."
 msgstr "Die Rechnung, die bezahlt werden soll, ist inzwischen ungültig."
@@ -903,7 +928,7 @@ msgid "Active"
 msgstr "Aktiv"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:968
+#: code:addons/account_voucher/account_voucher.py:982
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr "Bitte definieren Sie eine Nummernfolge für dieses Journal."
@@ -977,7 +1002,7 @@ msgstr "Bank Auszug"
 #. module: account_voucher
 #: view:account.bank.statement:0
 msgid "onchange_amount(amount)"
-msgstr ""
+msgstr "onchange_amount(amount)"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -1031,7 +1056,7 @@ msgid "Journal Items"
 msgstr "Buchungsjournale"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:496
+#: code:addons/account_voucher/account_voucher.py:508
 #, python-format
 msgid "Please define default credit/debit accounts on the journal \"%s\"."
 msgstr ""
@@ -1114,11 +1139,6 @@ msgstr "Buchungstext"
 #: selection:sale.receipt.report,month:0
 msgid "May"
 msgstr "Mai"
-
-#. module: account_voucher
-#: view:account.voucher:0
-msgid "Sale Receipt"
-msgstr "Verkauf Buchungsbelege"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1257,7 +1277,7 @@ msgstr ""
 "Bankauszug."
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:867
+#: code:addons/account_voucher/account_voucher.py:879
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr "Offene oder bezahlte Belege können nicht storniert werden"
@@ -1315,13 +1335,8 @@ msgid "Open Balance"
 msgstr "Offener Saldo"
 
 #. module: account_voucher
-#: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
-msgid "Status <b>changed</b>"
-msgstr "Status <b>wurde geändert</b>"
-
-#. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1000
-#: code:addons/account_voucher/account_voucher.py:1004
+#: code:addons/account_voucher/account_voucher.py:1014
+#: code:addons/account_voucher/account_voucher.py:1018
 #, python-format
 msgid "Insufficient Configuration!"
 msgstr "Unzureichende Konfiguration !"
@@ -1336,3 +1351,15 @@ msgstr ""
 "Standardmäßig werden die Zahlungsausgleiche aus Bank Belegen als inaktiv "
 "gesetzt, um Kunden / Lieferanten Bezahlung zu verbergen, während der "
 "Kontoauszug noch nicht endgültig bestätigt wurde."
+
+#~ msgid "Are you sure to unreconcile this record?"
+#~ msgstr "Möchten Sie wirklich den Ausgleich stornieren?"
+
+#~ msgid "Sale voucher"
+#~ msgstr "Verkauf Belege"
+
+#~ msgid "Sale Receipt"
+#~ msgstr "Verkauf Buchungsbelege"
+
+#~ msgid "Status <b>changed</b>"
+#~ msgstr "Status <b>wurde geändert</b>"

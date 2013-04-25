@@ -30,6 +30,7 @@ from openerp.report.render import render
 import stock_graph
 from openerp import pooler
 import StringIO
+import unicodedata
 
 class external_pdf(render):
     def __init__(self, pdf):
@@ -106,7 +107,12 @@ class report_stock(report_int):
         io = StringIO.StringIO()
         gt = stock_graph.stock_graph(io)
         for prod_id in products:
-            gt.add(prod_id, names.get(prod_id, 'Unknown'), products[prod_id])
+            prod_name = names.get(prod_id,'Unknown')
+            if isinstance(prod_name, str):
+                 prod_name = prod_name.decode('utf-8')
+                 prod_name = unicodedata.normalize('NFKD',prod_name)
+                 prod_name = prod_name.encode('ascii','replace')
+            gt.add(prod_id, prod_name, products[prod_id])   
         gt.draw()
         gt.close()
         self.obj = external_pdf(io.getvalue())

@@ -70,9 +70,9 @@ class TestMailBase(common.TransactionCase):
 
         # Test users to use through the various tests
         self.user_raoul_id = self.res_users.create(cr, uid,
-            {'name': 'Raoul Grosbedon', 'signature': 'Raoul', 'email': 'raoul@raoul.fr', 'login': 'raoul', 'groups_id': [(6, 0, [self.group_employee_id])]})
+            {'name': 'Raoul Grosbedon', 'signature': 'SignRaoul', 'email': 'raoul@raoul.fr', 'login': 'raoul', 'groups_id': [(6, 0, [self.group_employee_id])]})
         self.user_bert_id = self.res_users.create(cr, uid,
-            {'name': 'Bert Tartignole', 'signature': 'Bert', 'email': 'bert@bert.fr', 'login': 'bert', 'groups_id': [(6, 0, [])]})
+            {'name': 'Bert Tartignole', 'signature': 'SignBert', 'email': 'bert@bert.fr', 'login': 'bert', 'groups_id': [(6, 0, [])]})
         self.user_raoul = self.res_users.browse(cr, uid, self.user_raoul_id)
         self.user_bert = self.res_users.browse(cr, uid, self.user_bert_id)
         self.user_admin = self.res_users.browse(cr, uid, uid)

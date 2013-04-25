@@ -27,7 +27,7 @@ class account_journal(osv.osv):
     _columns = {
         'journal_user': fields.boolean('PoS Payment Method', help="Check this box if this journal define a payment method that can be used in point of sales."),
 
-        'amount_authorized_diff' : fields.float('Amount Authorized Difference'),
+        'amount_authorized_diff' : fields.float('Amount Authorized Difference', help="This field depicts the maximum difference allowed between the ending balance and the theorical cash when closing a session, for non-POS managers. If this maximum is reached, the user will have an error message at the closing of his session saying that he needs to contact his manager."),
         'self_checkout_payment_method' : fields.boolean('Self Checkout Payment Method'),
     }
     _defaults = {

@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-04-07 12:36+0000\n"
+"Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:02+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-04-08 06:20+0000\n"
+"X-Generator: Launchpad (build 16550)\n"
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_03
 msgid "Deadly bug"
-msgstr ""
+msgstr "Үхлийн буг"
 
 #. module: project_issue
 #: help:project.config.settings,fetchmail_issue:0
@@ -28,6 +28,8 @@ msgid ""
 "Allows you to configure your incoming mail server, and create issues from "
 "incoming emails."
 msgstr ""
+"Ирэх мэйлийн серверийг тохируулж ирсэн имэйлээс асуудал үүсгэх боломжийг "
+"олгодог."
 
 #. module: project_issue
 #: field:project.issue.report,delay_open:0
@@ -48,7 +50,7 @@ msgstr "Асуудлыг Нээх Ажлын Цаг"
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_started
 msgid "Issue started"
-msgstr ""
+msgstr "Асуудал эхэлсэн"
 
 #. module: project_issue
 #: field:project.issue,date_open:0
@@ -74,7 +76,7 @@ msgstr "Явц (%)"
 #: view:project.issue:0
 #: field:project.issue,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Уншаагүй Зурвасууд"
 
 #. module: project_issue
 #: field:project.issue,company_id:0
@@ -101,12 +103,12 @@ msgstr ""
 #. module: project_issue
 #: help:project.issue,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Хэрэв тэмдэглэгдсэн бол шинэ зурвас нь анхаарал татахыг шаардана."
 
 #. module: project_issue
 #: help:account.analytic.account,use_issues:0
 msgid "Check this field if this project manages issues"
-msgstr ""
+msgstr "Хэрэв энэ төсөл асуудлын менежмент хийх бол энэ талбарыг сонго"
 
 #. module: project_issue
 #: field:project.issue,day_open:0
@@ -114,7 +116,7 @@ msgid "Days to Open"
 msgstr "Нээх хүртэлх өдөр"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:465
+#: code:addons/project_issue/project_issue.py:473
 #, python-format
 msgid ""
 "You cannot escalate this issue.\n"
@@ -160,7 +162,7 @@ msgstr "Даалгавар"
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_stage
 msgid "Issue Stage Changed"
-msgstr ""
+msgstr "Асуудлын Үе Өөрчлөгдсөн"
 
 #. module: project_issue
 #: field:project.issue,message_ids:0
@@ -204,7 +206,7 @@ msgstr "Цуцлагдсан"
 #. module: project_issue
 #: field:project.issue,description:0
 msgid "Private Note"
-msgstr ""
+msgstr "Хувийн Тэмдэглэл"
 
 #. module: project_issue
 #: field:project.issue.report,date_closed:0
@@ -229,7 +231,7 @@ msgstr "Нээх хүртэлх дундаж ажлын цаг"
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
+msgstr "Шинжилгээний Данс"
 
 #. module: project_issue
 #: help:project.issue,message_summary:0
@@ -237,6 +239,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Чаатлагчийн хураангуйг агуулна (зурвасын тоо,...). Энэ хураангуй нь шууд "
+"html форматтай бөгөөд канбан харагдацад шууд орж харагдах боломжтой."
 
 #. module: project_issue
 #: help:project.project,project_escalation_id:0
@@ -253,27 +257,26 @@ msgid "Extra Info"
 msgstr "Нэмэлт мэдээлэл"
 
 #. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.action_project_issue_report
-msgid ""
-"This report on the project issues allows you to analyse the quality of your "
-"support or after-sales services. You can track the issues per age. You can "
-"analyse the time required to open or close an issue, the number of email to "
-"exchange and the time spent on average by issues."
-msgstr ""
-"Энэ тайлан нь таны дэмжлэгийн үйлчилгээ болон борлуулалтын дараах "
-"үйлчилгээний чанарыг шинжлэх боломжийг олгодог. Асуудыг та насаар нь хөтлөх "
-"боломжтой. Нээх, хаахад шаардагдсан дундаж хугаца, солилцсон имэйлийн тоо, "
-"зарцуулсан дундаж цаг зэрэгийг шинжлэх боломжтой."
+#: code:addons/project_issue/project_issue.py:473
+#, python-format
+msgid "Warning!"
+msgstr "Анхааруулга!"
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Edit..."
-msgstr ""
+msgstr "Засах..."
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Responsible"
 msgstr "Хариуцагч"
+
+#. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_issue_blocked
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
+msgid "Issue Blocked"
+msgstr "Асуудал Хоригдсон"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -283,13 +286,13 @@ msgstr "Статистик"
 #. module: project_issue
 #: field:project.issue,kanban_state:0
 msgid "Kanban State"
-msgstr ""
+msgstr "Канбан Төлөв"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:360
+#: code:addons/project_issue/project_issue.py:368
 #, python-format
 msgid "Project issue <b>converted</b> to task."
-msgstr ""
+msgstr "Төслийн асуудал даалгавар руу <b>хөрвүүлэгдсэн</b>."
 
 #. module: project_issue
 #: view:project.issue:0
@@ -310,7 +313,7 @@ msgstr "Хувилбар"
 #. module: project_issue
 #: field:project.issue,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Дагагчид"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -320,9 +323,9 @@ msgid "New"
 msgstr "Шинэ"
 
 #. module: project_issue
-#: model:ir.actions.act_window,name:project_issue.project_issue_categ_action
-msgid "Issue Categories"
-msgstr "Асуудлын Ангилал"
+#: view:project.project:0
+msgid "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
+msgstr ""
 
 #. module: project_issue
 #: field:project.issue,email_from:0
@@ -342,10 +345,10 @@ msgid "Lowest"
 msgstr "Хамгийн Бага"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:382
+#: code:addons/project_issue/project_issue.py:390
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (хуулбар)"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -378,7 +381,7 @@ msgstr "project.issue.version"
 #. module: project_issue
 #: field:project.config.settings,fetchmail_issue:0
 msgid "Create issues from an incoming email account "
-msgstr ""
+msgstr "Ирэх имэйлийн хаягаас асуудал үүсгэх "
 
 #. module: project_issue
 #: view:project.issue:0
@@ -393,9 +396,17 @@ msgid "July"
 msgstr "7-р сар"
 
 #. module: project_issue
-#: model:ir.ui.menu,name:project_issue.menu_project_issue_category_act
-msgid "Categories"
-msgstr "Ангилалууд"
+#: model:ir.actions.act_window,help:project_issue.action_project_issue_report
+msgid ""
+"This report on the project issues allows you to analyse the quality of your "
+"support or after-sales services. You can track the issues per age. You can "
+"analyse the time required to open or close an issue, the number of email to "
+"exchange and the time spent on average by issues."
+msgstr ""
+"Энэ тайлан нь таны дэмжлэгийн үйлчилгээ болон борлуулалтын дараах "
+"үйлчилгээний чанарыг шинжлэх боломжийг олгодог. Асуудыг та насаар нь хөтлөх "
+"боломжтой. Нээх, хаахад шаардагдсан дундаж хугаца, солилцсон имэйлийн тоо, "
+"зарцуулсан дундаж цаг зэрэгийг шинжлэх боломжтой."
 
 #. module: project_issue
 #: view:project.issue:0
@@ -413,10 +424,10 @@ msgid "Issues Analysis"
 msgstr "Асуудлын Шинжилгээ"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:485
+#: code:addons/project_issue/project_issue.py:507
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "Гарчиг үгүй"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.action_view_my_project_issue_tree
@@ -434,10 +445,10 @@ msgstr "Холбогч"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Delete"
-msgstr ""
+msgstr "Устга"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:365
+#: code:addons/project_issue/project_issue.py:373
 #, python-format
 msgid "Tasks"
 msgstr "Даалгаврууд"
@@ -460,7 +471,7 @@ msgstr "12-р сар"
 #. module: project_issue
 #: field:project.issue,categ_ids:0
 msgid "Tags"
-msgstr ""
+msgstr "Пайзууд"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -470,17 +481,12 @@ msgstr "Асуудал Хөтлөлтийн Мөчир"
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_01
 msgid "Little problem"
-msgstr ""
+msgstr "Жижиг асуудал"
 
 #. module: project_issue
 #: view:project.project:0
 msgid "creates"
-msgstr ""
-
-#. module: project_issue
-#: model:crm.case.categ,name:project_issue.feature_request_categ
-msgid "Feature Requests"
-msgstr "Онцлог хүсэх"
+msgstr "үүсгэнэ"
 
 #. module: project_issue
 #: field:project.issue,write_date:0
@@ -490,7 +496,7 @@ msgstr "Шинэчилсэн огноо"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Project:"
-msgstr ""
+msgstr "Төсөл:"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -506,7 +512,7 @@ msgstr "Дараагийн үйлдэл"
 #: view:project.issue:0
 #: selection:project.issue,kanban_state:0
 msgid "Blocked"
-msgstr ""
+msgstr "Хоригдсон"
 
 #. module: project_issue
 #: field:project.issue,user_email:0
@@ -532,11 +538,6 @@ msgid ""
 msgstr ""
 "Энэ бичлэгт харгалзах орох, гарах бүх э-мэйлийг илгээхийн өмнө СС талбарт "
 "эдгээр э-мэйл хаягуудыг нэмж өгнө. Э-мэйл хаягуудыг таслалаар тусгаарлана."
-
-#. module: project_issue
-#: model:crm.case.categ,name:project_issue.bug_categ
-msgid "Maintenance"
-msgstr "Маллагаа"
 
 #. module: project_issue
 #: selection:project.issue.report,state:0
@@ -592,14 +593,9 @@ msgid "Normal"
 msgstr "Энгийн"
 
 #. module: project_issue
-#: field:project.project,issue_count:0
-msgid "unknown"
-msgstr ""
-
-#. module: project_issue
 #: view:project.issue:0
 msgid "Category:"
-msgstr ""
+msgstr "Ангилал:"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -609,7 +605,7 @@ msgstr "6-р сар"
 #. module: project_issue
 #: help:project.issue,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Зурвас болон харилцсан түүх"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -624,7 +620,7 @@ msgstr "Хаах өдөр"
 #. module: project_issue
 #: field:project.issue,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Дагагч эсэх"
 
 #. module: project_issue
 #: help:project.issue,state:0
@@ -635,6 +631,10 @@ msgid ""
 "the case needs to be reviewed then the status is                       set "
 "to 'Pending'."
 msgstr ""
+"Шинэ хэрэг үүсмэгц тэр нь \"Ноорог\" төлөвтэй байна. Хэрэв уг хэрэг "
+"боловсруулагдаж эхлэвэл \"Нээлттэй\" төлөвт орно. Хэрэг дуусмагц "
+"\"Хийгдсэн\" төлөвтэй болох ба хэрэв уг хэрэгийг хянах хэрэгтэй бол "
+"\"Хүлээлдэж буй\" төлөвт орно."
 
 #. module: project_issue
 #: field:project.issue,active:0
@@ -648,9 +648,9 @@ msgid "November"
 msgstr "11-р сар"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:465
+#: code:addons/project_issue/project_issue.py:492
 #, python-format
-msgid "Warning!"
+msgid "Customer Email"
 msgstr ""
 
 #. module: project_issue
@@ -659,9 +659,9 @@ msgid "Search"
 msgstr "Хайх"
 
 #. module: project_issue
-#: selection:project.issue.report,month:0
-msgid "October"
-msgstr "10-р сар"
+#: view:project.issue:0
+msgid "Creation Month"
+msgstr "Үүсгэсэн сар"
 
 #. module: project_issue
 #: help:project.issue,days_since_creation:0
@@ -686,7 +686,7 @@ msgstr "Эдгээр хүмүүс и-мэйл хүлээж авна"
 #. module: project_issue
 #: field:project.issue,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Хураангуй"
 
 #. module: project_issue
 #: field:project.issue,date:0
@@ -703,12 +703,12 @@ msgstr "Хариуцагч"
 #. module: project_issue
 #: view:project.config.settings:0
 msgid "Configure"
-msgstr ""
+msgstr "Тохируулга"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_closed
 msgid "Issue closed"
-msgstr ""
+msgstr "Асуудал хаагдсан"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -724,11 +724,6 @@ msgstr "Асуудлын Хувилбар"
 #: field:project.issue.version,name:0
 msgid "Version Number"
 msgstr "Хувилбарийн Дугаар"
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "Cancel"
-msgstr "Цуцлах"
 
 #. module: project_issue
 #: selection:project.issue.report,state:0
@@ -766,8 +761,13 @@ msgstr "Төслийн Асуудал"
 
 #. module: project_issue
 #: view:project.issue:0
-msgid "Creation Month"
-msgstr "Үүсгэсэн сар"
+msgid "Add an internal note..."
+msgstr ""
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "Cancel Issue"
+msgstr ""
 
 #. module: project_issue
 #: help:project.issue,progress:0
@@ -775,10 +775,20 @@ msgid "Computed as: Time Spent / Total Time."
 msgstr "Бодолт: Зарцуулсан хугацаа / Нийт хугацаа."
 
 #. module: project_issue
+#: field:project.project,issue_count:0
+msgid "Unclosed Issues"
+msgstr ""
+
+#. module: project_issue
 #: view:project.issue:0
 #: selection:project.issue,kanban_state:0
 msgid "Ready for next stage"
-msgstr ""
+msgstr "Дараагийн үед бэлэн"
+
+#. module: project_issue
+#: selection:project.issue.report,month:0
+msgid "October"
+msgstr "10-р сар"
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -828,13 +838,13 @@ msgstr "5-р сар"
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_config_settings
 msgid "project.config.settings"
-msgstr ""
+msgstr "project.config.settings"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_closed
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_closed
 msgid "Issue Closed"
-msgstr ""
+msgstr "Асуудал Хаагдсан"
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -846,12 +856,12 @@ msgstr "Имэйл #"
 #: model:mail.message.subtype,name:project_issue.mt_issue_new
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_new
 msgid "Issue Created"
-msgstr ""
+msgstr "Асуудал Үүссэн"
 
 #. module: project_issue
-#: model:mail.message.subtype,name:project_issue.mt_issue_blocked
-#: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
-msgid "Issue Blocked"
+#: code:addons/project_issue/project_issue.py:490
+#, python-format
+msgid "Customer"
 msgstr ""
 
 #. module: project_issue
@@ -863,7 +873,7 @@ msgstr "2-р сар"
 #: model:mail.message.subtype,description:project_issue.mt_issue_stage
 #: model:mail.message.subtype,description:project_issue.mt_project_issue_stage
 msgid "Stage changed"
-msgstr ""
+msgstr "Үе шат өөрчлөгдсөн"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -905,7 +915,7 @@ msgstr "Миний асуудлууд"
 #. module: project_issue
 #: help:project.issue.report,delay_open:0
 msgid "Number of Days to open the project issue."
-msgstr ""
+msgstr "Асуудлыг нээх хүртэлэх хоногийн тоо"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -915,17 +925,12 @@ msgstr "4-р сар"
 #. module: project_issue
 #: view:project.issue:0
 msgid "⇒ Escalate"
-msgstr ""
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "References"
-msgstr "Сурвалж"
+msgstr "⇒ Томруулах"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
 msgid "Issue created"
-msgstr ""
+msgstr "Асуудал үүсссэн"
 
 #. module: project_issue
 #: field:project.issue,working_hours_close:0
@@ -940,7 +945,7 @@ msgstr "ID"
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_blocked
 msgid "Issue blocked"
-msgstr ""
+msgstr "Асуудал хоригдсон"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue_report
@@ -950,7 +955,7 @@ msgstr "project.issue.report"
 #. module: project_issue
 #: help:project.issue.report,delay_close:0
 msgid "Number of Days to close the project issue"
-msgstr "Төслийн даалгаврыг хаах хүртэл өдрийн тоо"
+msgstr "Төслийн даалгаврыг хаах хүртэлх хоногийн тоо"
 
 #. module: project_issue
 #: field:project.issue.report,working_hours_close:0
@@ -960,7 +965,7 @@ msgstr "Хаах хүртэлх дундаж ажлын цаг"
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_stage
 msgid "Stage Changed"
-msgstr ""
+msgstr "Үе шат өөрчлөгдсөн"
 
 #. module: project_issue
 #: selection:project.issue,priority:0
@@ -993,4 +998,25 @@ msgstr "Үргэлжлэх хугацаа"
 #: model:mail.message.subtype,name:project_issue.mt_issue_started
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_started
 msgid "Issue Started"
-msgstr ""
+msgstr "Асуудал эхэлсэн"
+
+#~ msgid "Maintenance"
+#~ msgstr "Маллагаа"
+
+#~ msgid "Issue Categories"
+#~ msgstr "Асуудлын Ангилал"
+
+#~ msgid "Categories"
+#~ msgstr "Ангилалууд"
+
+#~ msgid "Feature Requests"
+#~ msgstr "Онцлог хүсэх"
+
+#~ msgid "Cancel"
+#~ msgstr "Цуцлах"
+
+#~ msgid "References"
+#~ msgstr "Сурвалж"
+
+#~ msgid "unknown"
+#~ msgstr "үл мэдэгдэх"

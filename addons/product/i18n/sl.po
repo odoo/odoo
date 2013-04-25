@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-02-01 22:58+0000\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-03-31 12:07+0000\n"
 "Last-Translator: Dušan Laznik (Mentis) <laznik@mentis.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-02 06:00+0000\n"
-"X-Generator: Launchpad (build 16462)\n"
+"X-Launchpad-Export-Date: 2013-04-01 05:32+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -213,7 +213,7 @@ msgstr "Headset for laptop PC with USB connector."
 #. module: product
 #: model:product.category,name:product.product_category_all
 msgid "All products"
-msgstr "Vsi proizvodi"
+msgstr "Vsi izdelki"
 
 #. module: product
 #: model:process.node,note:product.process_node_supplier0
@@ -286,6 +286,11 @@ msgid "Laptop E5023"
 msgstr "Laptop E5023"
 
 #. module: product
+#: field:product.price_list,qty1:0
+msgid "Quantity-1"
+msgstr "Količina-1"
+
+#. module: product
 #: help:product.packaging,ul_qty:0
 msgid "The number of packages by layer"
 msgstr "Število paketov"
@@ -315,7 +320,7 @@ msgstr "Stanje"
 #. module: product
 #: help:product.template,categ_id:0
 msgid "Select category for the current product"
-msgstr "Izbira kategorije za trenutni proizvod"
+msgstr "Izbira kategorije za trenutni izdelek"
 
 #. module: product
 #: field:product.product,outgoing_qty:0
@@ -365,12 +370,12 @@ msgstr "17” LCD Monitor"
 #. module: product
 #: field:product.supplierinfo,product_name:0
 msgid "Supplier Product Name"
-msgstr "Dobaviteljev naziv proizvoda"
+msgstr "Dobaviteljev naziv izdelka"
 
 #. module: product
 #: view:product.pricelist:0
 msgid "Products Price Search"
-msgstr "Iskanje po cenah proizvodov"
+msgstr "Iskanje po cenah izdelkov"
 
 #. module: product
 #: view:product.template:0
@@ -473,9 +478,9 @@ msgid "Quantity-3"
 msgstr "Količina-3"
 
 #. module: product
-#: field:product.price_list,qty1:0
-msgid "Quantity-1"
-msgstr "Količina-1"
+#: model:res.groups,name:product.group_product_variant
+msgid "Product Variant (not supported)"
+msgstr "Variante izdelkov (ni podprto)"
 
 #. module: product
 #: field:product.price_list,qty4:0
@@ -607,7 +612,7 @@ msgstr "Pogled:"
 #. module: product
 #: model:ir.actions.act_window,name:product.product_template_action_tree
 msgid "Product Templates"
-msgstr "Podloge proizvoda"
+msgstr "Podloge izdelka"
 
 #. module: product
 #: field:product.category,parent_left:0
@@ -775,12 +780,17 @@ msgstr "Pripomočki"
 #. module: product
 #: model:process.transition,name:product.process_transition_supplierofproduct0
 msgid "Supplier of the product"
-msgstr "Dobavitelj proizvoda"
+msgstr "Dobavitelj izdelka"
 
 #. module: product
 #: model:product.template,name:product.product_product_28_product_template
 msgid "External Hard disk"
 msgstr "External Hard disk"
+
+#. module: product
+#: view:product.product:0
+msgid "describe the product characteristics..."
+msgstr "opis karakteristik izdelka"
 
 #. module: product
 #: help:product.template,standard_price:0
@@ -863,8 +873,8 @@ msgid ""
 "1 or several supplier(s) can be linked to a product. All information stands "
 "in the product form."
 msgstr ""
-"Eden ali več dobaviteljev lahko povežemo s proizvodom. Vse  informacije se "
-"nahajajo v formi proizvoda."
+"Enega ali več dobaviteljev lahko povežemo z izdelkom. Vse  informacije se "
+"nahajajo v formi izdelka."
 
 #. module: product
 #: field:product.pricelist.item,price_round:0
@@ -1145,7 +1155,6 @@ msgstr "Logistične enote"
 #: field:product.category,name:0
 #: field:product.pricelist.type,name:0
 #: field:product.pricelist.version,name:0
-#: field:product.product,name_template:0
 #: field:product.template,name:0
 #: field:product.ul,name:0
 #: field:product.uom.categ,name:0
@@ -1207,7 +1216,7 @@ msgstr "Širina"
 #. module: product
 #: help:product.price.type,field:0
 msgid "Associated field in the product form."
-msgstr "Povezano polje s forme proizvoda"
+msgstr "Povezano polje s forme izdelka"
 
 #. module: product
 #: view:product.product:0
@@ -1293,7 +1302,7 @@ msgstr ""
 #: model:ir.ui.menu,name:product.prod_config_main
 #: view:product.product:0
 msgid "Products"
-msgstr "Proizvodi"
+msgstr "Izdelki"
 
 #. module: product
 #: model:product.template,description:product.product_product_32_product_template
@@ -1311,6 +1320,11 @@ msgstr "Število slojev na paleti ali  škatlji"
 #: help:product.pricelist.item,price_min_margin:0
 msgid "Specify the minimum amount of margin over the base price."
 msgstr "Minimalna razlika v ceni."
+
+#. module: product
+#: field:product.product,name_template:0
+msgid "Template Name"
+msgstr "Ime predloge"
 
 #. module: product
 #: field:product.template,weight_net:0
@@ -1338,6 +1352,11 @@ msgid ""
 msgstr ""
 "Določite skupino izdelka , če to pravilo velja le za eno skupino. Drugače "
 "pustite prazno."
+
+#. module: product
+#: view:product.product:0
+msgid "This note will be displayed on requests for quotation..."
+msgstr "Opomba na zahtevah za ponudbo.."
 
 #. module: product
 #: view:product.product:0
@@ -1455,6 +1474,8 @@ msgid ""
 "This price will be considered as a price for the supplier Unit of Measure if "
 "any or the default Unit of Measure of the product otherwise"
 msgstr ""
+"Ta cena velja za dobaviteljevo enoto mere , če je določena , drugače pa za "
+"privzeto enoto mere."
 
 #. module: product
 #: field:product.template,uom_po_id:0
@@ -1552,7 +1573,7 @@ msgstr "Natančnost zaokroževanja"
 #. module: product
 #: view:product.product:0
 msgid "Consumable products"
-msgstr "Potrošni izdelki"
+msgstr "Izdelki z sprotno oskrbo"
 
 #. module: product
 #: model:product.template,name:product.product_product_21_product_template
@@ -1617,7 +1638,7 @@ msgstr "EAN koda pakiranja"
 #. module: product
 #: help:product.supplierinfo,product_uom:0
 msgid "This comes from the product form."
-msgstr "To pride iz forme proizvoda"
+msgstr "To pride iz forme izdelka"
 
 #. module: product
 #: field:product.packaging,weight_ul:0
@@ -1724,7 +1745,7 @@ msgstr "Pakiranje po slojih"
 #: field:product.supplierinfo,product_id:0
 #: model:res.request.link,name:product.req_link_product
 msgid "Product"
-msgstr "Proizvod"
+msgstr "Izdelek"
 
 #. module: product
 #: view:product.product:0
@@ -1794,7 +1815,7 @@ msgstr "Metoda zaokroževanja"
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_label
 msgid "Products Labels"
-msgstr "Etikete proizvodov"
+msgstr "Etikete izdelkov"
 
 #. module: product
 #: model:product.ul,name:product.product_ul_big_box
@@ -1832,7 +1853,7 @@ msgstr "USB Adapter"
 msgid ""
 "Sepcify a unit of measure here if invoicing is made in another unit of "
 "measure than inventory. Keep empty to use the default unit of measure."
-msgstr ""
+msgstr "Določite enoto mere za fakturiranje , če je drugačna od privzete."
 
 #. module: product
 #: code:addons/product/product.py:208
@@ -1884,7 +1905,7 @@ msgstr "Ime te vrste cene"
 #. module: product
 #: model:product.category,name:product.product_category_3
 msgid "Other Products"
-msgstr "Drugi proizvodi"
+msgstr "Drugi izdelki"
 
 #. module: product
 #: model:product.template,description:product.product_product_9_product_template
@@ -1921,6 +1942,11 @@ msgstr "Dolžina/Razdalja"
 #: model:product.category,name:product.product_category_8
 msgid "Components"
 msgstr "Sestavni deli"
+
+#. module: product
+#: view:product.product:0
+msgid "e.g. 5901234123457"
+msgstr "npr. 5901234123457"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_type
@@ -2000,7 +2026,8 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Nov izdelek <p>\n"
+"               Nov izdelek.\n"
+"              </p>\n"
 "            "
 
 #. module: product
@@ -2090,6 +2117,8 @@ msgid ""
 "Specify the fixed amount to add or substract(if negative) to the amount "
 "calculated with the discount."
 msgstr ""
+"Določite fiksni znesek , ki ga je treba prišteti ali odšteti (če je "
+"negativen)."
 
 #. module: product
 #: help:product.product,qty_available:0
@@ -2111,13 +2140,15 @@ msgid ""
 "Consumable: Will not imply stock management for this product. \n"
 "Stockable product: Will imply stock management for this product."
 msgstr ""
+"Sprotna oskrba: brez kontrole zaloge\n"
+"Zaloga: kontrola zaloge"
 
 #. module: product
 #: help:product.pricelist.type,key:0
 msgid ""
 "Used in the code to select specific prices based on the context. Keep "
 "unchanged."
-msgstr ""
+msgstr "Uporabljeno v izvorni kodi. Pustite nespremenjeno."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -2151,6 +2182,8 @@ msgid ""
 "A category of the view type is a virtual category that can be used as the "
 "parent of another category to create a hierarchical structure."
 msgstr ""
+"Skupina vrste \"Pogled\" je virtualna skupina , ki služi kreiranju drevesne "
+"strukture."
 
 #. module: product
 #: selection:product.ul,type:0
@@ -2163,13 +2196,15 @@ msgid ""
 "Specify a template if this rule only applies to one product template. Keep "
 "empty otherwise."
 msgstr ""
+"Določite izdelek , če to pravilo velja le za ta izdelek. Drugače pustite "
+"prazno."
 
 #. module: product
 #: model:product.template,description:product.product_product_2_product_template
 msgid ""
 "This type of service include assistance for security questions, system "
 "configuration requirements, implementation or special needs."
-msgstr ""
+msgstr "Ta vrsta usluge vključuje pomoč pri konfiguraciji , uvedbi ..."
 
 #. module: product
 #: field:product.product,image:0
@@ -2217,7 +2252,7 @@ msgstr "Router R430"
 #. module: product
 #: help:product.packaging,sequence:0
 msgid "Gives the sequence order when displaying a list of packaging."
-msgstr ""
+msgstr "Določa zaporedje seznama pakiranja."
 
 #. module: product
 #: selection:product.category,type:0
@@ -2251,7 +2286,7 @@ msgid ""
 "This supplier's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr ""
-"Dobaviteljev naziv proizvoda bo izpisan na ponudbi. Pusti prazno,če želiš "
+"Dobaviteljev naziv izdelka bo izpisan na ponudbi. Pusti prazno,če želiš "
 "interni naziv."
 
 #. module: product
@@ -2314,7 +2349,7 @@ msgstr "Skupna teža pakiranja palete ali škatlje"
 #. module: product
 #: view:product.uom:0
 msgid "e.g: 1 * (this unit) = ratio * (reference unit)"
-msgstr ""
+msgstr "npr: 1 * (ta enota) = koeficient * (referenčna enota)"
 
 #. module: product
 #: model:product.template,description:product.product_product_25_product_template
@@ -2388,7 +2423,7 @@ msgstr "Vrsta kategorije"
 #. module: product
 #: model:process.node,note:product.process_node_product0
 msgid "Creation of the product"
-msgstr "Kreiranje proizvoda"
+msgstr "Kreiranje izdelka"
 
 #. module: product
 #: field:pricelist.partnerinfo,name:0
@@ -2421,7 +2456,7 @@ msgid ""
 "Small-sized image of the product. It is automatically resized as a 64x64px "
 "image, with aspect ratio preserved. Use this field anywhere a small image is "
 "required."
-msgstr ""
+msgstr "Mala slika. Velikost bo avtomatično prilagojena na 64x64px."
 
 #. module: product
 #: model:product.template,name:product.product_product_40_product_template
@@ -2440,7 +2475,11 @@ msgstr "Dobaviteljeva enota mere"
 
 #. module: product
 #: view:product.product:0
-#: model:res.groups,name:product.group_product_variant
+msgid "note to be displayed on quotations..."
+msgstr "opombaa na ponudbah"
+
+#. module: product
+#: view:product.product:0
 msgid "Product Variant"
 msgstr "Variante izdelka"
 
@@ -2476,6 +2515,10 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Nov cenik.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
@@ -2483,7 +2526,7 @@ msgstr ""
 #: field:product.product,product_tmpl_id:0
 #: view:product.template:0
 msgid "Product Template"
-msgstr "Predloga proizvoda"
+msgstr "Predloga izdelka"
 
 #. module: product
 #: field:product.template,cost_method:0
@@ -2518,6 +2561,7 @@ msgid ""
 "Gives the different ways to package the same product. This has no impact on "
 "the picking order and is mainly used if you use the EDI module."
 msgstr ""
+"Določa drugačen način pakiranja. Uporablja se v povezavi z modulom \"EDI\"."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action
@@ -2561,17 +2605,17 @@ msgid ""
 "Medium-sized image of the product. It is automatically resized as a "
 "128x128px image, with aspect ratio preserved, only when the image exceeds "
 "one of those sizes. Use this field in form views or some kanban views."
-msgstr ""
+msgstr "Srednje velika slika (128x128px)"
 
 #. module: product
 #: view:product.uom:0
 msgid "e.g: 1 * (reference unit) = ratio * (this unit)"
-msgstr ""
+msgstr "npr: 1 * (referenčna enota) = koeficient * (ta enota)"
 
 #. module: product
 #: help:product.supplierinfo,qty:0
 msgid "This is a quantity which is converted into Default Unit of Measure."
-msgstr ""
+msgstr "Ta količina je pretvorjena v privzeto enoto mere."
 
 #. module: product
 #: help:product.template,volume:0

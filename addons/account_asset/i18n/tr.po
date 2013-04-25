@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-05 04:21+0000\n"
-"Last-Translator: Ahmet Altınışık <Unknown>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-08 21:02+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: OpenERP Türkiye Yerelleştirmesi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-05 05:22+0000\n"
-"X-Generator: Launchpad (build 16468)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:29+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 "Language: tr\n"
 
 #. module: account_asset
@@ -198,6 +198,12 @@ msgstr "Notlar"
 #: field:account.asset.depreciation.line,move_id:0
 msgid "Depreciation Entry"
 msgstr "Amortisman kaydı"
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset.py:82
+#, python-format
+msgid "Error!"
+msgstr "Hata!"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -437,6 +443,11 @@ msgid ""
 "You can manually close an asset when the depreciation is over. If the last "
 "line of depreciation is posted, the asset automatically goes in that status."
 msgstr ""
+"Yeni bir demirbaş oluşturulduğunda durumu 'Taslak' olarak ayarlanır.\n"
+"Demirbaş onaylandığında durmu 'çalışıyor' a çevrilir ve amortisman kalemleri "
+"muhasebeye işlenmeye başlar.\n"
+"Amortisman bittiğinden demirbaşı elle kapatabilirsiniz ya da son amortisman "
+"kalemi muhasebeye işlendiğinde durumu otomatik olarak kapanır."
 
 #. module: account_asset
 #: field:account.asset.asset,state:0
@@ -598,6 +609,12 @@ msgid "Current"
 msgstr "Geçerli"
 
 #. module: account_asset
+#: code:addons/account_asset/account_asset.py:82
+#, python-format
+msgid "You cannot delete an asset that contains posted depreciation lines."
+msgstr "İşlenmiş yıpranma kalemleri içeren bir varlığı silemezsiniz."
+
+#. module: account_asset
 #: view:account.asset.category:0
 msgid "Depreciation Method"
 msgstr "Amortisman Yöntemi"
@@ -650,6 +667,9 @@ msgid ""
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
 "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
 msgstr ""
+"Amortisman kalemlerinin hesaplanmasında kullanılacak yöntemi seçin.\n"
+"  * Doğrusal:  Toplam Değer/amortisman sayısı formülü ile hesaplanır\n"
+"  * Azalan Oranlı: kalan değer * amortisman çarpanı formülü ile hesaplanır"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,move_check:0
@@ -670,6 +690,11 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p>\n"
+"            Bu rapordan bütün amortismanlarınızı görebilirsiniz.\n"
+"            arama aracı ile demirbaş raporunuzu kişiselleştirebilirsiniz.\n"
+"          </p>\n"
+"        "
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
@@ -718,6 +743,11 @@ msgstr "Amortisman Satırları Tutarı"
 #, python-format
 msgid "Created Asset Moves"
 msgstr "Oluşturulan Demirbaş Hareketleri"
+
+#. module: account_asset
+#: view:account.asset.asset:0
+msgid "Add an internal note here..."
+msgstr "Buraya iç not ekleyin..."
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,sequence:0

@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-16 13:23+0000\n"
+"Last-Translator: Fábio Martinelli - http://zupy.com.br "
+"<webmaster@guaru.net>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:02+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:57+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_03
@@ -120,7 +121,7 @@ msgid "Days to Open"
 msgstr "Dias para Abrir"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:465
+#: code:addons/project_issue/project_issue.py:473
 #, python-format
 msgid ""
 "You cannot escalate this issue.\n"
@@ -272,18 +273,10 @@ msgid "Extra Info"
 msgstr "Informações Adicionais"
 
 #. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.action_project_issue_report
-msgid ""
-"This report on the project issues allows you to analyse the quality of your "
-"support or after-sales services. You can track the issues per age. You can "
-"analyse the time required to open or close an issue, the number of email to "
-"exchange and the time spent on average by issues."
-msgstr ""
-"Este relatório nos incidentes de projeto permite analisar a qualidade do seu "
-"suporte ou dos serviços pós-venda. Você pode rastrear os incidentes por "
-"período. Você pode analisar o tempo necessário para abrir ou fechar um "
-"incidente, o número de e-mails trocados e o tempo gasto em média por "
-"incidente."
+#: code:addons/project_issue/project_issue.py:473
+#, python-format
+msgid "Warning!"
+msgstr "Atenção!"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -296,6 +289,12 @@ msgid "Responsible"
 msgstr "Responsável"
 
 #. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_issue_blocked
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
+msgid "Issue Blocked"
+msgstr "Incidente Bloqueado"
+
+#. module: project_issue
 #: view:project.issue:0
 msgid "Statistics"
 msgstr "Estatísticas"
@@ -306,7 +305,7 @@ msgid "Kanban State"
 msgstr "Situação Kanban"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:360
+#: code:addons/project_issue/project_issue.py:368
 #, python-format
 msgid "Project issue <b>converted</b> to task."
 msgstr "Incidente de projeto <b>convertido</b> para tarefa."
@@ -340,9 +339,9 @@ msgid "New"
 msgstr "Novo"
 
 #. module: project_issue
-#: model:ir.actions.act_window,name:project_issue.project_issue_categ_action
-msgid "Issue Categories"
-msgstr "Categorias de Incidentes"
+#: view:project.project:0
+msgid "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
+msgstr "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
 
 #. module: project_issue
 #: field:project.issue,email_from:0
@@ -362,7 +361,7 @@ msgid "Lowest"
 msgstr "Mais Baixa"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:382
+#: code:addons/project_issue/project_issue.py:390
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (cópia)"
@@ -413,9 +412,18 @@ msgid "July"
 msgstr "Julho"
 
 #. module: project_issue
-#: model:ir.ui.menu,name:project_issue.menu_project_issue_category_act
-msgid "Categories"
-msgstr "Categorias"
+#: model:ir.actions.act_window,help:project_issue.action_project_issue_report
+msgid ""
+"This report on the project issues allows you to analyse the quality of your "
+"support or after-sales services. You can track the issues per age. You can "
+"analyse the time required to open or close an issue, the number of email to "
+"exchange and the time spent on average by issues."
+msgstr ""
+"Este relatório nos incidentes de projeto permite analisar a qualidade do seu "
+"suporte ou dos serviços pós-venda. Você pode rastrear os incidentes por "
+"período. Você pode analisar o tempo necessário para abrir ou fechar um "
+"incidente, o número de e-mails trocados e o tempo gasto em média por "
+"incidente."
 
 #. module: project_issue
 #: view:project.issue:0
@@ -433,7 +441,7 @@ msgid "Issues Analysis"
 msgstr "Análise de Incidentes"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:485
+#: code:addons/project_issue/project_issue.py:507
 #, python-format
 msgid "No Subject"
 msgstr "Sem Assunto"
@@ -457,7 +465,7 @@ msgid "Delete"
 msgstr "Excluir"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:365
+#: code:addons/project_issue/project_issue.py:373
 #, python-format
 msgid "Tasks"
 msgstr "Tarefas"
@@ -496,11 +504,6 @@ msgstr "Problema pequeno"
 #: view:project.project:0
 msgid "creates"
 msgstr "cria"
-
-#. module: project_issue
-#: model:crm.case.categ,name:project_issue.feature_request_categ
-msgid "Feature Requests"
-msgstr "Solicitações de Funcionalidade"
 
 #. module: project_issue
 #: field:project.issue,write_date:0
@@ -555,11 +558,6 @@ msgstr ""
 "endereços de email com vírgula."
 
 #. module: project_issue
-#: model:crm.case.categ,name:project_issue.bug_categ
-msgid "Maintenance"
-msgstr "Manutenção"
-
-#. module: project_issue
 #: selection:project.issue.report,state:0
 msgid "Draft"
 msgstr "Provisório"
@@ -611,11 +609,6 @@ msgstr "Agosto"
 #: selection:project.issue.report,priority:0
 msgid "Normal"
 msgstr "Normal"
-
-#. module: project_issue
-#: field:project.project,issue_count:0
-msgid "unknown"
-msgstr "desconhecido"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -673,10 +666,10 @@ msgid "November"
 msgstr "Novembro"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:465
+#: code:addons/project_issue/project_issue.py:492
 #, python-format
-msgid "Warning!"
-msgstr "Atenção!"
+msgid "Customer Email"
+msgstr "Email do Cliente"
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -684,9 +677,9 @@ msgid "Search"
 msgstr "Procurar"
 
 #. module: project_issue
-#: selection:project.issue.report,month:0
-msgid "October"
-msgstr "Outubro"
+#: view:project.issue:0
+msgid "Creation Month"
+msgstr "Mês de criação"
 
 #. module: project_issue
 #: help:project.issue,days_since_creation:0
@@ -751,11 +744,6 @@ msgid "Version Number"
 msgstr "Número da Versão"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Cancel"
-msgstr "Cancelar"
-
-#. module: project_issue
 #: selection:project.issue.report,state:0
 msgid "Open"
 msgstr "Aberto"
@@ -791,8 +779,13 @@ msgstr "Incidente do Projeto"
 
 #. module: project_issue
 #: view:project.issue:0
-msgid "Creation Month"
-msgstr "Mês de criação"
+msgid "Add an internal note..."
+msgstr "Adicionar nota interna..."
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "Cancel Issue"
+msgstr "Cancelar Quesão"
 
 #. module: project_issue
 #: help:project.issue,progress:0
@@ -800,10 +793,20 @@ msgid "Computed as: Time Spent / Total Time."
 msgstr "Calculado como: Tempo Gasto / Tempo Total."
 
 #. module: project_issue
+#: field:project.project,issue_count:0
+msgid "Unclosed Issues"
+msgstr "Questões em aberto"
+
+#. module: project_issue
 #: view:project.issue:0
 #: selection:project.issue,kanban_state:0
 msgid "Ready for next stage"
 msgstr "Pronto para o próximo estágio"
+
+#. module: project_issue
+#: selection:project.issue.report,month:0
+msgid "October"
+msgstr "Outubro"
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -874,10 +877,10 @@ msgid "Issue Created"
 msgstr "Incidente Criado"
 
 #. module: project_issue
-#: model:mail.message.subtype,name:project_issue.mt_issue_blocked
-#: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
-msgid "Issue Blocked"
-msgstr "Incidente Bloqueado"
+#: code:addons/project_issue/project_issue.py:490
+#, python-format
+msgid "Customer"
+msgstr "Cliente"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -948,11 +951,6 @@ msgstr "Abril"
 #: view:project.issue:0
 msgid "⇒ Escalate"
 msgstr "⇒ Escalar"
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "References"
-msgstr "Referências"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
@@ -1026,3 +1024,24 @@ msgstr "Duração"
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_started
 msgid "Issue Started"
 msgstr "Incidente Iniciado"
+
+#~ msgid "Categories"
+#~ msgstr "Categorias"
+
+#~ msgid "Feature Requests"
+#~ msgstr "Solicitações de Funcionalidade"
+
+#~ msgid "Cancel"
+#~ msgstr "Cancelar"
+
+#~ msgid "References"
+#~ msgstr "Referências"
+
+#~ msgid "Maintenance"
+#~ msgstr "Manutenção"
+
+#~ msgid "unknown"
+#~ msgstr "desconhecido"
+
+#~ msgid "Issue Categories"
+#~ msgstr "Categorias de Incidentes"

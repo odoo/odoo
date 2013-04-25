@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-28 02:36+0000\n"
-"Last-Translator: erdenebold <erdenebold10@gmail.com>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-04-07 15:28+0000\n"
+"Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:33+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-04-08 06:20+0000\n"
+"X-Generator: Launchpad (build 16550)\n"
 
 #. module: account_followup
 #: model:email.template,subject:account_followup.email_template_account_followup_default
@@ -23,54 +23,49 @@ msgstr ""
 #: model:email.template,subject:account_followup.email_template_account_followup_level1
 #: model:email.template,subject:account_followup.email_template_account_followup_level2
 msgid "${user.company_id.name} Payment Reminder"
-msgstr ""
+msgstr "${user.company_id.name} Төлбөрийн Сануулга"
 
 #. module: account_followup
 #: help:res.partner,latest_followup_level_id:0
 msgid "The maximum follow-up level"
-msgstr ""
+msgstr "Мөшгөлтийн максимум түвшин"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 #: view:res.partner:0
 msgid "Group By..."
-msgstr ""
+msgstr "Бүлэглэх..."
 
 #. module: account_followup
 #: field:account_followup.print,followup_id:0
 msgid "Follow-Up"
-msgstr ""
+msgstr "Мөшгөлт"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(date)s"
-msgstr ""
+msgstr "%(date)s"
 
 #. module: account_followup
 #: field:res.partner,payment_next_action_date:0
 msgid "Next Action Date"
-msgstr ""
+msgstr "Дараа үйлдэл хийх огноо"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 #: field:account_followup.followup.line,manual_action:0
 msgid "Manual Action"
-msgstr ""
+msgstr "Гар үйлдэл"
 
 #. module: account_followup
 #: field:account_followup.sending.results,needprinting:0
 msgid "Needs Printing"
-msgstr ""
-
-#. module: account_followup
-#: view:res.partner:0
-msgid "⇾ Mark as Done"
-msgstr ""
+msgstr "Хэвлэх шаардлагатай"
 
 #. module: account_followup
 #: field:account_followup.followup.line,manual_action_note:0
 msgid "Action To Do"
-msgstr ""
+msgstr "Хийх Ажил"
 
 #. module: account_followup
 #: field:account_followup.followup,company_id:0
@@ -82,43 +77,56 @@ msgstr "Компани"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
+#: code:addons/account_followup/account_followup.py:259
+#, python-format
 msgid "Invoice Date"
-msgstr "Нэхэмжилсэн Огноо"
+msgstr "Нэхэмлэлийн Огноо"
 
 #. module: account_followup
 #: field:account_followup.print,email_subject:0
 msgid "Email Subject"
-msgstr ""
+msgstr "Имэйлийн гарчиг"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(user_signature)s"
-msgstr ""
+msgstr "%(user_signature)s"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "days overdue, do the following actions:"
-msgstr ""
+msgstr "хугацаа дуусах хүртэлх өдөрүүд, дараах арга хэмжээг авна уу:"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Follow-up Steps"
-msgstr ""
+msgstr "Мөшгөлтийн алхамууд"
 
 #. module: account_followup
-#: field:account_followup.print,email_body:0
-msgid "Email Body"
-msgstr ""
+#: code:addons/account_followup/account_followup.py:262
+#, python-format
+msgid "Due Date"
+msgstr "Эцсийн огноо"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_print
 msgid "Send Follow-Ups"
-msgstr ""
+msgstr "Мөшгөлтүүдийг илгээх"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:313
+#: code:addons/account_followup/account_followup.py:319
+#: code:addons/account_followup/report/account_followup_print.py:86
+#, python-format
+msgid "Error!"
+msgstr "Алдаа!"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
+#: code:addons/account_followup/account_followup.py:263
+#, python-format
 msgid "Amount"
-msgstr ""
+msgstr "Дүн"
 
 #. module: account_followup
 #: help:res.partner,payment_next_action:0
@@ -126,11 +134,14 @@ msgid ""
 "This is the next action to be taken.  It will automatically be set when the "
 "partner gets a follow-up level that requires a manual action. "
 msgstr ""
+"Энэ нь дараагийн авах арга хэмжээ байна. Энэ нь харилцагч мөшгөлтийн "
+"дараагийн түвшинд хүрч гар ажиллагаа шаардлагатай болоход автоматаар "
+"тохируулагдана. "
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "No Responsible"
-msgstr ""
+msgstr "Хариуцагчгүй"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -155,6 +166,25 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Сайн байна уу? Эрхэм %(partner_name)s,\n"
+"\n"
+"Бид танд хэдэнтээ сануулга явуулсан хэдий ч таны тооцоо ноцтойгоор хугацаа "
+"хэтрээд байгааг мэдэгдэж байгаадаа харамсаж байна.\n"
+"\n"
+"Даруйхан төлбөрөө төлөх явдал чухал байна. Эс бөгөөс бид таны данстай "
+"харилцах харилцааг зогсоох бөгөөд ингэснээр бид танай компанид аливаа бараа, "
+"үйлчилгээг нийлүүлэхгүй болно.\n"
+"Ойрын 8 хоногийн хугацаанд төлбөрийн талаар зохих арга хэмжээг гүйцэтгэнэ "
+"үү.\n"
+"\n"
+"Хэрэв нэхэмжлэлийг төлөхтэй холбоотой бидний анхаарахгүй, мэдэхгүй байгаа "
+"асуудал байгаа бол бидэнд санаа зоволгүй мэдэгдэнэ үү. Бид асуудлыг хурдан "
+"шийдвэрлэх болно.\n"
+"\n"
+"Хугацаа хэтэрсэн төлбөрийн талаарх дэлгэрэнгүйг доор хэвлэлээ.\n"
+"\n"
+"Хүндэтгэсэн,\n"
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level0
@@ -192,6 +222,43 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"\n"
+"    <p>Сайн байна уу? Эрхэм ${object.name},</p>\n"
+"    <p>\n"
+"Саатал тохиолдлоо. Хэрэв энэ нь бидний алдаа байсан бол дараах дүн "
+"төлөгдөөгүй үлдлээ. Ойрын 8 хоногийн хугацаанд төлбөрийн талаар зохих арга "
+"хэмжээг гүйцэтгэнэ үү.\n"
+"\n"
+"Энэ имэйл илгээгдсэн дараа таны төлбөр хийгдсэн бол энэ имэйлийг хэрэгсэхгүй "
+"байж болно. Манай санхүүгийн албатай эргэлзэлгүйгээр холбогдож болно.\n"
+"\n"
+"    </p>\n"
+"<br/>\n"
+"Хүндэтгэсэн,\n"
+"<br/>\n"
+"   <br/>\n"
+"${user.name}\n"
+"\n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"    <br/>\n"
+"\n"
+"</div>\n"
+"            "
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:261
+#, python-format
+msgid "Reference"
+msgstr "Код"
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
@@ -206,24 +273,24 @@ msgstr "Нийт дебит"
 #. module: account_followup
 #: field:res.partner,payment_next_action:0
 msgid "Next Action"
-msgstr ""
+msgstr "Дараагийн үйлдэл"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid ": Partner Name"
-msgstr ""
+msgstr ": Харилцагчийн нэр"
 
 #. module: account_followup
 #: field:account_followup.followup.line,manual_action_responsible_id:0
 msgid "Assign a Responsible"
-msgstr ""
+msgstr "Хариуцагч Оноох"
 
 #. module: account_followup
 #: view:account_followup.followup:0
 #: field:account_followup.followup,followup_line:0
 #: view:res.partner:0
 msgid "Follow-up"
-msgstr ""
+msgstr "Мөшгөлт"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -239,6 +306,11 @@ msgid "Partner"
 msgstr "Харилцагч"
 
 #. module: account_followup
+#: field:account_followup.print,email_body:0
+msgid "Email Body"
+msgstr "Имэйлийн агуулга"
+
+#. module: account_followup
 #: view:account_followup.followup:0
 msgid ""
 "To remind customers of paying their invoices, you can\n"
@@ -252,6 +324,19 @@ msgid ""
 "                        same customer, the actions of the most \n"
 "                        overdue invoice will be executed."
 msgstr ""
+"Захиалагчид нэхэмжлэлээ төлөх явдлыг сануулахын \n"
+"                         тулд хугацаа дуусах талаар хэр зэрэг ойрхон ямар "
+"арга \n"
+"                         хэмжээнүүд авахыг тодорхойлно. Эдгээр арга \n"
+"                         хэмжээнүүд нь мөшгөлтийн түвшингүүдэд багцлагдаж \n"
+"                         нэхэмжлэлийн хугацаа дууссанаас хэд хоног "
+"өнгөрснөөс \n"
+"                         хамааруулан төрөл бүрийн арга хэмжээг эхлүүлнэ. "
+"Хэрэв \n"
+"                         нэг захиалагч дээр хугацаа хэтэрсэн олон нэхэмжлэл "
+"\n"
+"                         байвал хамгийн их хугацаа хэтэрсэн нэхэмжлэлийн \n"
+"                         дагууд арга хэмжээнүүд авагдана."
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -266,7 +351,7 @@ msgstr "Харилцагч"
 #. module: account_followup
 #: sql_constraint:account_followup.followup:0
 msgid "Only one follow-up per company is allowed"
-msgstr ""
+msgstr "Компанийн хэмжээнд зөвхөн нэг л мөшгөлт зөвшөөрөгдөнө."
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:254
@@ -277,12 +362,12 @@ msgstr "Үнийн нэхэмжлэл сануулах"
 #. module: account_followup
 #: help:account_followup.followup.line,send_letter:0
 msgid "When processing, it will print a letter"
-msgstr ""
+msgstr "Боловсруулж байхдаа энэ нь захидал хэвлэнэ"
 
 #. module: account_followup
 #: field:res.partner,payment_earliest_due_date:0
 msgid "Worst Due Date"
-msgstr ""
+msgstr "Хамгийн муу хугацаат огноо"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -292,17 +377,17 @@ msgstr "Зарга биш"
 #. module: account_followup
 #: view:account_followup.print:0
 msgid "Send emails and generate letters"
-msgstr ""
+msgstr "Имэйл илгээгээд захидал үүсгэнэ"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_customer_followup
 msgid "Manual Follow-Ups"
-msgstr ""
+msgstr "Гар мөшгөлтүүд"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(partner_name)s"
-msgstr ""
+msgstr "%(partner_name)s"
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level1
@@ -344,6 +429,44 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"    \n"
+"    <p>Сайн байна уу? Эрхэм ${object.name},</p>\n"
+"   <p>\n"
+"Бид танд хэдэнтээ сануулга явуулсан хэдий ч таны тооцоо ноцтойгоор хугацаа "
+"хэтрээд байгааг мэдэгдэж байгаадаа харамсаж байна.\n"
+"\n"
+"Даруйхан төлбөрөө төлөх явдал чухал байна. Эс бөгөөс бид таны данстай "
+"харилцах харилцааг зогсоох бөгөөд ингэснээр бид танай компанид аливаа бараа, "
+"үйлчилгээг нийлүүлэхгүй болно.\n"
+"Ойрын 8 хоногийн хугацаанд төлбөрийн талаар зохих арга хэмжээг гүйцэтгэнэ "
+"үү.\n"
+"\n"
+"Хэрэв нэхэмжлэлийг төлөхтэй холбоотой бидний анхаарахгүй, мэдэхгүй байгаа "
+"асуудал байгаа бол бидэнд санаа зоволгүй мэдэгдэнэ үү. Бид асуудлыг хурдан "
+"шийдвэрлэх болно.\n"
+"Хугацаа хэтэрсэн нэхэмжлэлийн талаарх дэлгэрэнгүйг доор хэвлэлээ.\n"
+"\n"
+" </p>\n"
+"<br/>\n"
+"Best Regards,\n"
+"    \n"
+"<br/>\n"
+"<br/>\n"
+"${user.name}\n"
+"    \n"
+"<br/>\n"
+"<br/>\n"
+"\n"
+"${object.get_followup_table_html() | safe}\n"
+"\n"
+"    <br/>\n"
+"\n"
+"</div>\n"
+"            "
 
 #. module: account_followup
 #: field:account_followup.stat,debit:0
@@ -353,91 +476,100 @@ msgstr "Дебит"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat
 msgid "Follow-up Statistics"
-msgstr ""
+msgstr "Мөшгөлтийн Статистик"
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "Send Overdue Email"
-msgstr ""
+msgstr "Хугацаа Хэтэрсэн талаар Имэйл илгээх"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-up Criteria"
-msgstr ""
+msgstr "Мөшгөлтийн Шинжүүр"
 
 #. module: account_followup
 #: help:account_followup.followup.line,sequence:0
 msgid "Gives the sequence order when displaying a list of follow-up lines."
-msgstr ""
+msgstr "Мөшгөлтүүдийн мөрүүдийг харуулах дэс дарааллыг өгнө"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:166
 #, python-format
 msgid " will be sent"
-msgstr ""
+msgstr " илгээгдэх болно"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid ": User's Company Name"
-msgstr ""
+msgstr ": Хэрэглэгчийн Компанийн нэр"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 #: field:account_followup.followup.line,send_letter:0
 msgid "Send a Letter"
-msgstr ""
+msgstr "Захидал илгээх"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
 msgid "Payment Follow-ups"
+msgstr "Төлбөрийн мөшгөлтүүд"
+
+#. module: account_followup
+#: code:addons/account_followup/report/account_followup_print.py:86
+#, python-format
+msgid ""
+"The followup plan defined for the current company does not have any followup "
+"action."
 msgstr ""
+"Идэвхтэй компанид тодорхойлогдсон мөшгөлтөнд ямар ч мөшгөлтийн арга "
+"хэмжээнүүд байхгүй байна."
 
 #. module: account_followup
 #: field:account_followup.followup.line,delay:0
 msgid "Due Days"
-msgstr ""
+msgstr "Товлосон өдрүүд"
 
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
 #: view:account_followup.stat:0
 msgid "Follow-up Level"
-msgstr ""
+msgstr "Мөшгөлтийн түвшин"
 
 #. module: account_followup
 #: field:account_followup.stat,date_followup:0
 msgid "Latest followup"
-msgstr ""
+msgstr "Сүүлийн мөшгөлт"
 
 #. module: account_followup
-#: model:ir.actions.act_window,name:account_followup.action_account_manual_reconcile_receivable
 #: model:ir.ui.menu,name:account_followup.menu_manual_reconcile_followup
 msgid "Reconcile Invoices & Payments"
-msgstr ""
+msgstr "Нэхэмжлэхүүд болон Төлбөрүүдийг Тулгах"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_s
 msgid "Do Manual Follow-Ups"
-msgstr ""
+msgstr "Гар Мөшгөлтүүдийг Хийх"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Li."
-msgstr ""
+msgstr "Ли."
 
 #. module: account_followup
 #: field:account_followup.print,email_conf:0
 msgid "Send Email Confirmation"
-msgstr ""
+msgstr "Батламжлах имэйл илгээх"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow-up Entries with period in current year"
-msgstr ""
+msgstr "Одоогийн жилийн мөчлөгтэй мөшгөлтийн бичилтүүд"
 
 #. module: account_followup
 #: field:account_followup.stat.by.partner,date_followup:0
 msgid "Latest follow-up"
-msgstr ""
+msgstr "Хамгийн сүүлийн мөшгөлт"
 
 #. module: account_followup
 #: field:account_followup.print,partner_lang:0
@@ -448,28 +580,33 @@ msgstr "Имэйлийг Харилцагчийн хэлээр илгээх"
 #: code:addons/account_followup/wizard/account_followup_print.py:169
 #, python-format
 msgid " email(s) sent"
-msgstr ""
+msgstr " имэйл илгээгдсэн"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_print
 msgid "Print Follow-up & Send Mail to Customers"
-msgstr ""
+msgstr "Мөшгөлт хэвлэх & Үйлчлүүлэгч рүү имэйл илгээх"
 
 #. module: account_followup
 #: field:account_followup.followup.line,description:0
 msgid "Printed Message"
-msgstr ""
+msgstr "Хэвлэсэн мессеж"
+
+#. module: account_followup
+#: view:res.partner:0
+msgid "Responsible of credit collection"
+msgstr "Найдвартай кредит цуглуулга"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:155
 #, python-format
 msgid "Anybody"
-msgstr ""
+msgstr "Хэн нэгэн"
 
 #. module: account_followup
 #: help:account_followup.followup.line,send_email:0
 msgid "When processing, it will send an email"
-msgstr ""
+msgstr "Боловсруулж байхдаа энэ нь имэйл илгээнэ"
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
@@ -479,24 +616,24 @@ msgstr "Сануулах Харилцагч"
 #. module: account_followup
 #: view:res.partner:0
 msgid "Print Overdue Payments"
-msgstr ""
+msgstr "Хугацаа нь дууссан төлбөрийг хэвлэх"
 
 #. module: account_followup
 #: field:account_followup.followup.line,followup_id:0
 #: field:account_followup.stat,followup_id:0
 msgid "Follow Ups"
-msgstr ""
+msgstr "Мөшгөлтүүд"
 
 #. module: account_followup
 #: code:addons/account_followup/account_followup.py:219
 #, python-format
 msgid "Email not sent because of email address of partner not filled in"
-msgstr ""
+msgstr "Харилцагчийн имэйл хаяг бөглөгдөөгүй тул имэйл илгээгдсэнгүй"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
 msgid "Account Follow-up"
-msgstr ""
+msgstr "Дансны мөшгөлт"
 
 #. module: account_followup
 #: help:res.partner,payment_responsible_id:0
@@ -504,11 +641,18 @@ msgid ""
 "Optionally you can assign a user to this field, which will make him "
 "responsible for the action."
 msgstr ""
+"Энэ талбарт хэрэглэгчийг оноож болох бөгөөд ингэснээр түүнийг арга хэмжээ "
+"бүрт хариуцагч болгоно."
+
+#. module: account_followup
+#: view:res.partner:0
+msgid "Partners with Overdue Credits"
+msgstr "Харилцагчийн хугацаа нь дууссан кредитүүд"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_sending_results
 msgid "Results from the sending of the different letters and emails"
-msgstr ""
+msgstr "Ялгаатай захидал болон имэйл илгээглтийн үр дүнгүүд"
 
 #. module: account_followup
 #: constraint:account_followup.followup.line:0
@@ -516,55 +660,62 @@ msgid ""
 "Your description is invalid, use the right legend or %% if you want to use "
 "the percent character."
 msgstr ""
+"Таны тодорхойломж буруу, зөв тайлбар эсвэл %%-г процент тэмдэг хэрэглэх гэж "
+"байгаа бол ашиглана уу."
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:172
 #, python-format
 msgid " manual action(s) assigned:"
-msgstr ""
+msgstr " гар арга хэмжээ оноогдсон:"
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "Search Partner"
-msgstr ""
+msgstr "Харилцагч хайх"
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_print_menu
 msgid "Send Letters and Emails"
-msgstr ""
+msgstr "Имэйл болон захидал илгээх"
 
 #. module: account_followup
 #: view:account_followup.followup:0
 msgid "Search Follow-up"
+msgstr "Мөшгөлтүүдийг Хайх"
+
+#. module: account_followup
+#: view:res.partner:0
+msgid ""
+"He said the problem was temporary and promised to pay 50% before 15th of "
+"May, balance before 1st of July."
 msgstr ""
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "Account Move line"
-msgstr ""
+msgstr "Зөөх дансны мөр"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:237
 #, python-format
 msgid "Send Letters and Emails: Actions Summary"
-msgstr ""
+msgstr "Захидал болон имэйл илгээх: үйл ажиллагааны хураангуй"
 
 #. module: account_followup
 #: view:account_followup.print:0
 msgid "or"
-msgstr ""
+msgstr "эсвэл"
 
 #. module: account_followup
-#: view:res.partner:0
-msgid ""
-"If not specified by the latest follow-up level, it will send from the "
-"default email template"
-msgstr ""
+#: field:account_followup.stat,blocked:0
+msgid "Blocked"
+msgstr "Хоригдсон"
 
 #. module: account_followup
 #: sql_constraint:account_followup.followup.line:0
 msgid "Days of the follow-up levels must be different"
-msgstr ""
+msgstr "Мөшгөлтийн түвшингүүдийн өдөрүүд нь ялгаатай байх ёстой"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -574,6 +725,11 @@ msgstr ""
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
 msgid "Follow-Ups Analysis"
+msgstr "Мөшгөлтийн анализ"
+
+#. module: account_followup
+#: view:res.partner:0
+msgid "Action to be taken e.g. Give a phonecall, Check if it's paid, ..."
 msgstr ""
 
 #. module: account_followup
@@ -599,12 +755,13 @@ msgstr ""
 #. module: account_followup
 #: field:account_followup.print,date:0
 msgid "Follow-up Sending Date"
-msgstr ""
+msgstr "Мөшгөлт илгээх огноо"
 
 #. module: account_followup
+#: view:res.partner:0
 #: field:res.partner,payment_responsible_id:0
 msgid "Follow-up Responsible"
-msgstr ""
+msgstr "Мөшгөлтийн Хариуцагч"
 
 #. module: account_followup
 #: model:email.template,body_html:account_followup.email_template_account_followup_level2
@@ -650,7 +807,7 @@ msgstr "Баримт: Үйлчлүүлэгчийн дансны тодорхой
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.account_followup_menu
 msgid "Follow-up Levels"
-msgstr ""
+msgstr "Мөшгөлтийн Түвшингүүд"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line4
@@ -682,7 +839,7 @@ msgstr ""
 #. module: account_followup
 #: field:account.move.line,followup_date:0
 msgid "Latest Follow-up"
-msgstr ""
+msgstr "Сүүлийн Мөшгөлт"
 
 #. module: account_followup
 #: view:account_followup.sending.results:0
@@ -693,12 +850,19 @@ msgstr ""
 #: field:account_followup.print,company_id:0
 #: field:res.partner,unreconciled_aml_ids:0
 msgid "unknown"
+msgstr "тодорхой бус"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:314
+#, python-format
+msgid "Printed overdue payments report"
 msgstr ""
 
 #. module: account_followup
-#: code:addons/account_followup/account_followup.py:283
+#: code:addons/account_followup/account_followup.py:291
 #, python-format
-msgid "Printed overdue payments report"
+msgid ""
+"You became responsible to do the next action for the payment follow-up of"
 msgstr ""
 
 #. module: account_followup
@@ -724,25 +888,25 @@ msgid " email(s) should have been sent, but "
 msgstr ""
 
 #. module: account_followup
-#: help:account_followup.print,test_print:0
-msgid ""
-"Check if you want to print follow-ups without changing follow-ups level."
-msgstr ""
-
-#. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
 msgid "Journal Items"
+msgstr "Журналын бичилтүүд"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:281
+#, python-format
+msgid "Amount due"
 msgstr ""
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Total:"
-msgstr ""
+msgstr "Нийт:"
 
 #. module: account_followup
 #: field:account_followup.followup.line,email_template_id:0
 msgid "Email Template"
-msgstr ""
+msgstr "Э-мэйл загвар"
 
 #. module: account_followup
 #: field:account_followup.print,summary:0
@@ -763,6 +927,12 @@ msgstr "Кредит"
 #. module: account_followup
 #: field:res.partner,payment_amount_overdue:0
 msgid "Amount Overdue"
+msgstr ""
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:264
+#, python-format
+msgid "Lit."
 msgstr ""
 
 #. module: account_followup
@@ -826,7 +996,7 @@ msgstr ""
 #. module: account_followup
 #: view:res.partner:0
 msgid "My Follow-ups"
-msgstr ""
+msgstr "Миний мөшгөлтүүд"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -859,7 +1029,7 @@ msgstr ""
 #. module: account_followup
 #: field:account_followup.stat,period_id:0
 msgid "Period"
-msgstr ""
+msgstr "Мөчлөг"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:228
@@ -887,12 +1057,12 @@ msgstr "Цуцлах"
 #. module: account_followup
 #: view:account_followup.sending.results:0
 msgid "Close"
-msgstr ""
+msgstr "Хаах"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Litigation"
-msgstr ""
+msgstr "Маргаантай"
 
 #. module: account_followup
 #: field:account_followup.stat.by.partner,max_followup_id:0
@@ -906,15 +1076,16 @@ msgid " had unknown email address(es)"
 msgstr ""
 
 #. module: account_followup
-#: view:res.partner:0
-msgid "Responsible"
+#: help:account_followup.print,test_print:0
+msgid ""
+"Check if you want to print follow-ups without changing follow-up level."
 msgstr ""
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_finance_followup
 #: view:res.partner:0
 msgid "Payment Follow-up"
-msgstr ""
+msgstr "Төлбөрийн мөшгөлт"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -942,6 +1113,8 @@ msgstr ""
 #. module: account_followup
 #: report:account_followup.followup.print:0
 #: field:account_followup.sending.results,description:0
+#: code:addons/account_followup/account_followup.py:260
+#, python-format
 msgid "Description"
 msgstr "Тайлбар"
 
@@ -953,12 +1126,12 @@ msgstr ""
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Ref"
-msgstr ""
+msgstr "Сурвалж"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "After"
-msgstr ""
+msgstr "Дараа"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -971,18 +1144,19 @@ msgid "Latest Follow-up Level without litigation"
 msgstr ""
 
 #. module: account_followup
-#: model:ir.actions.act_window,help:account_followup.action_account_manual_reconcile_receivable
-msgid ""
-"<p>\n"
-"                    No journal items found.\n"
-"                </p>\n"
-"            "
+#: view:res.partner:0
+msgid "⇾ Mark as Done"
 msgstr ""
 
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Partner entries"
 msgstr "Харилцагчийн бичилт"
+
+#. module: account_followup
+#: view:account_followup.followup.line:0
+msgid "e.g. Call the customer, check if it's paid, ..."
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -1062,8 +1236,9 @@ msgid " letter(s) in report"
 msgstr ""
 
 #. module: account_followup
-#: view:res.partner:0
-msgid "Partners with Overdue Credits"
+#: model:ir.actions.act_window,name:account_followup.action_customer_my_followup
+#: model:ir.ui.menu,name:account_followup.menu_sale_followup
+msgid "My Follow-Ups"
 msgstr ""
 
 #. module: account_followup
@@ -1106,6 +1281,14 @@ msgstr ""
 #: view:account.move.line:0
 msgid "Total credit"
 msgstr "Нийт кредит"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:313
+#, python-format
+msgid ""
+"The partner does not have any accounting entries to print in the overdue "
+"report for the current company."
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.followup.line,sequence:0
@@ -1153,14 +1336,33 @@ msgstr ""
 #. module: account_followup
 #: view:res.partner:0
 msgid "Accounting"
+msgstr "Санхүү"
+
+#. module: account_followup
+#: view:res.partner:0
+msgid ""
+"If not specified by the latest follow-up level, it will send from the "
+"default email template"
 msgstr ""
 
 #. module: account_followup
-#: field:account_followup.stat,blocked:0
-msgid "Blocked"
+#: code:addons/account_followup/account_followup.py:319
+#, python-format
+msgid "There is no followup plan defined for the current company."
 msgstr ""
 
 #. module: account_followup
 #: field:res.partner,payment_note:0
 msgid "Customer Payment Promise"
 msgstr ""
+
+#~ msgid ""
+#~ "<p>\n"
+#~ "                    No journal items found.\n"
+#~ "                </p>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<p>\n"
+#~ "                    Журналын бичилт олдсонгүй.\n"
+#~ "                </p>\n"
+#~ "            "

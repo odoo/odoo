@@ -36,6 +36,9 @@ class res_partner(osv.osv):
             help="This pricelist will be used, instead of the default one, for sales to the current partner"),
     }
 
+    def _commercial_fields(self, cr, uid, context=None):
+        return super(res_partner, self)._commercial_fields(cr, uid, context=context) + ['property_product_pricelist']
+
 res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

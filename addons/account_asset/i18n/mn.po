@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-26 14:43+0000\n"
+"Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:32+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:29+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -94,7 +94,7 @@ msgstr "Өөрчлөх"
 #: view:asset.asset.report:0
 #: selection:asset.asset.report,state:0
 msgid "Running"
-msgstr "Ажиллаж байна"
+msgstr "Хэрэглэгдэж буй"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -148,7 +148,7 @@ msgstr "Энэ нь таны төлөвлөж байгаа дүн буюу та�
 #. module: account_asset
 #: help:account.asset.asset,method_period:0
 msgid "The amount of time between two depreciations, in months"
-msgstr ""
+msgstr "Хоёр элэгдлийн хоорондын хугацаа сараар"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,depreciation_date:0
@@ -160,7 +160,7 @@ msgstr "Элэгдлийн огноо"
 #. module: account_asset
 #: constraint:account.asset.asset:0
 msgid "Error ! You cannot create recursive assets."
-msgstr ""
+msgstr "Алдаа! Тойрог хамааралтай хөрөнгө үүсгэх боломжгүй."
 
 #. module: account_asset
 #: field:asset.asset.report,posted_value:0
@@ -197,6 +197,12 @@ msgid "Depreciation Entry"
 msgstr "Элэгдлийн Бичилт"
 
 #. module: account_asset
+#: code:addons/account_asset/account_asset.py:82
+#, python-format
+msgid "Error!"
+msgstr "Алдаа!"
+
+#. module: account_asset
 #: view:asset.asset.report:0
 #: field:asset.asset.report,nbr:0
 msgid "# of Depreciation Lines"
@@ -205,7 +211,7 @@ msgstr "Элэгдлийн мөрүүдийнм #"
 #. module: account_asset
 #: field:account.asset.asset,method_period:0
 msgid "Number of Months in a Period"
-msgstr ""
+msgstr "Мөчлөг дахь сарын тоо"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -265,12 +271,12 @@ msgstr "Ашиглалтын хугацааг өөрчлөх"
 #: help:account.asset.category,method_number:0
 #: help:account.asset.history,method_number:0
 msgid "The number of depreciations needed to depreciate your asset"
-msgstr ""
+msgstr "Хөрөнгийг элэгдүүлэхэд шаардлагатай элэгдүүлэлтийн тоо"
 
 #. module: account_asset
 #: view:account.asset.category:0
 msgid "Analytic Information"
-msgstr ""
+msgstr "Шинжилгээний Мэдээлэл"
 
 #. module: account_asset
 #: field:account.asset.category,account_analytic_id:0
@@ -289,11 +295,13 @@ msgid ""
 "Prorata temporis can be applied only for time method \"number of "
 "depreciations\"."
 msgstr ""
+"Prorata temporis нь зөвхөн \"элэгдүүлэлтийн тоо\" хугацааны арга сонгогдсон "
+"үед хэрэглэгдэх боломжтой."
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,remaining_value:0
 msgid "Next Period Depreciation"
-msgstr ""
+msgstr "Элэгдүүлэлтийн дараагийн мөчлөг"
 
 #. module: account_asset
 #: help:account.asset.history,method_period:0
@@ -344,7 +352,7 @@ msgstr "Хөрөнгийн ангилалаар хайх"
 #. module: account_asset
 #: view:asset.modify:0
 msgid "months"
-msgstr ""
+msgstr "сар"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice_line
@@ -372,7 +380,7 @@ msgstr "Хугацааны арга"
 #: view:asset.depreciation.confirmation.wizard:0
 #: view:asset.modify:0
 msgid "or"
-msgstr ""
+msgstr "эсвэл"
 
 #. module: account_asset
 #: field:account.asset.asset,note:0
@@ -431,12 +439,17 @@ msgid ""
 "You can manually close an asset when the depreciation is over. If the last "
 "line of depreciation is posted, the asset automatically goes in that status."
 msgstr ""
+"Хөрөнгийг үүсгэсэн даруйд \"Ноорог\" төлөвтэй байна.\n"
+"Баталсан дараа \"Хэрэглэгдэж буй\" төлөвтэй болж санхүүд элэгдлийн бичилтүүд "
+"илгээгдэнэ.\n"
+"Элэгдэж дууссан дараа хөрөнгийг гараараа хаах боломжтой. Хамгийн сүүлийн "
+"элэгдүүлэлт хийгдмэгц хөрөнгө автоматаар хаагдсан төлөвт орно."
 
 #. module: account_asset
 #: field:account.asset.asset,state:0
 #: field:asset.asset.report,state:0
 msgid "Status"
-msgstr ""
+msgstr "Төлөв"
 
 #. module: account_asset
 #: field:account.asset.asset,partner_id:0
@@ -483,7 +496,7 @@ msgstr "Тооцоолох"
 #. module: account_asset
 #: view:account.asset.history:0
 msgid "Asset History"
-msgstr ""
+msgstr "Хөрөнгийн Түүх"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard
@@ -530,7 +543,7 @@ msgstr "Ерөнхий"
 #: field:account.asset.asset,prorata:0
 #: field:account.asset.category,prorata:0
 msgid "Prorata Temporis"
-msgstr ""
+msgstr "Prorata Temporis"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice
@@ -562,7 +575,7 @@ msgstr "Журналын бичилт"
 #. module: account_asset
 #: view:asset.modify:0
 msgid "Asset Durations to Modify"
-msgstr ""
+msgstr "Засварлах хөрөнгийн үргэлжлэх хугацаа"
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_date:0
@@ -592,6 +605,12 @@ msgid "Current"
 msgstr "Одоогийн"
 
 #. module: account_asset
+#: code:addons/account_asset/account_asset.py:82
+#, python-format
+msgid "You cannot delete an asset that contains posted depreciation lines."
+msgstr "Элэгдэл бодогдсон хөрөнгүүдийг устгах боломжгүй."
+
+#. module: account_asset
 #: view:account.asset.category:0
 msgid "Depreciation Method"
 msgstr "Элэгдлийн арга"
@@ -599,12 +618,12 @@ msgstr "Элэгдлийн арга"
 #. module: account_asset
 #: field:account.asset.depreciation.line,amount:0
 msgid "Current Depreciation"
-msgstr ""
+msgstr "Одоогийн элэгдэл"
 
 #. module: account_asset
 #: field:account.asset.asset,name:0
 msgid "Asset Name"
-msgstr ""
+msgstr "Хөрөнгийн нэр"
 
 #. module: account_asset
 #: field:account.asset.category,open_asset:0
@@ -644,6 +663,9 @@ msgid ""
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
 "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"
 msgstr ""
+"Элэгдүүлэлтийн мөрийг тооцоолох аргыг сонгоно уу.\n"
+"  * Шугаман: Тооцоолох арга нь: Нийт үнэ / Элэгдүүлэх тоо\n"
+"  * Бууруулах: Тооцоолох арга нь: Үлдэгдэл үнэ * Бууруулах үзүүлэлт"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,move_check:0
@@ -664,11 +686,16 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p>\n"
+"            Энэ тайлангаас бүх элэгдлийн тоймыг харах боломжтой. \n"
+"            Хайлт ашиглан Хөрөнгийн тайланг өөриймшүүлэх боломжтой ;\n"
+"          </p>\n"
+"        "
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
 msgid "Gross Value"
-msgstr ""
+msgstr "Нийт Үнэ"
 
 #. module: account_asset
 #: field:account.asset.category,name:0
@@ -714,9 +741,14 @@ msgid "Created Asset Moves"
 msgstr "Үүсгэгдсэн Хөрөнгийн Хөдөлгөөнүүд"
 
 #. module: account_asset
+#: view:account.asset.asset:0
+msgid "Add an internal note here..."
+msgstr "Дотоод тэмдэглэлийг энд бичиж болдог."
+
+#. module: account_asset
 #: field:account.asset.depreciation.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Дараалал"
 
 #. module: account_asset
 #: help:account.asset.category,method_period:0
@@ -753,4 +785,4 @@ msgstr "Хөрөнгийг батлах"
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_tree
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_tree
 msgid "Asset Hierarchy"
-msgstr "Хөрөнгийн эзэмшигч"
+msgstr "Хөрөнгийн Шатлал"

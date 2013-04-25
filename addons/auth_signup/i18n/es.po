@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:35+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:32+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: auth_signup
 #: field:res.partner,signup_type:0
@@ -45,7 +45,7 @@ msgid "base.config.settings"
 msgstr "Parámetros de configuración base"
 
 #. module: auth_signup
-#: code:addons/auth_signup/res_users.py:252
+#: code:addons/auth_signup/res_users.py:265
 #, python-format
 msgid "Cannot send email: user has no email address."
 msgstr ""
@@ -54,7 +54,8 @@ msgstr ""
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:25
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:24
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:28
 #, python-format
 msgid "Reset password"
 msgstr "Restablecer contraseña"
@@ -72,19 +73,15 @@ msgstr "Restablecer contraseña"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:125
+#: code:addons/auth_signup/static/src/js/auth_signup.js:117
 #, python-format
 msgid "Please enter a password and confirm it."
 msgstr "Por favor introduzca una contraseña y confírmela."
 
 #. module: auth_signup
-#: view:res.users:0
-msgid "Send an email to the user to (re)set their password."
-msgstr "Enviar un correo al usuario para restablecer su contraseña."
-
-#. module: auth_signup
 #. openerp-web
 #: code:addons/auth_signup/static/src/xml/auth_signup.xml:23
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:26
 #, python-format
 msgid "Sign Up"
 msgstr "Registro"
@@ -93,12 +90,6 @@ msgstr "Registro"
 #: selection:res.users,state:0
 msgid "New"
 msgstr "Nuevo"
-
-#. module: auth_signup
-#: code:addons/auth_signup/res_users.py:258
-#, python-format
-msgid "Mail sent to:"
-msgstr "Correo enviado a:"
 
 #. module: auth_signup
 #: field:res.users,state:0
@@ -129,7 +120,7 @@ msgstr ""
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:119
+#: code:addons/auth_signup/static/src/js/auth_signup.js:111
 #, python-format
 msgid "Please enter a name."
 msgstr "Por favor, introduzca un nombre."
@@ -145,8 +136,42 @@ msgid "Signup URL"
 msgstr "URL de ingreso"
 
 #. module: auth_signup
+#: model:email.template,body_html:auth_signup.set_password_email
+msgid ""
+"\n"
+"                \n"
+"                    <p>\n"
+"                        ${object.name},\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        You have been invited to connect to "
+"\"${object.company_id.name}\" in order to get access to your documents in "
+"OpenERP.\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        To accept the invitation, click on the following "
+"link:\n"
+"                    </p>\n"
+"                    <ul>\n"
+"                        <li><a href=\"${object.signup_url}\">Accept "
+"invitation to \"${object.company_id.name}\"</a></li>\n"
+"                    </ul>\n"
+"                    <p>\n"
+"                        Thanks,\n"
+"                    </p>\n"
+"                    <pre>\n"
+"--\n"
+"${object.company_id.name or ''}\n"
+"${object.company_id.email or ''}\n"
+"${object.company_id.phone or ''}\n"
+"                    </pre>\n"
+"                \n"
+"            "
+msgstr ""
+
+#. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:122
+#: code:addons/auth_signup/static/src/js/auth_signup.js:114
 #, python-format
 msgid "Please enter a username."
 msgstr "Por favor, introduzca un nombre de usuario."
@@ -157,7 +182,7 @@ msgid "Active"
 msgstr "Activo"
 
 #. module: auth_signup
-#: code:addons/auth_signup/res_users.py:256
+#: code:addons/auth_signup/res_users.py:269
 #, python-format
 msgid ""
 "Cannot send email: no outgoing email server configured.\n"
@@ -166,6 +191,13 @@ msgstr ""
 "No se puede enviar el correo electrónico: no se ha configurado servidor de "
 "correo saliente.\n"
 "Puede configurarlo en Configuración / Configuración general."
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:174
+#, python-format
+msgid "An email has been sent with credentials to reset your password"
+msgstr ""
 
 #. module: auth_signup
 #. openerp-web
@@ -183,7 +215,7 @@ msgstr "Nombre"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:165
+#: code:addons/auth_signup/static/src/js/auth_signup.js:170
 #, python-format
 msgid "Please enter a username or email address."
 msgstr ""
@@ -215,7 +247,7 @@ msgstr ""
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:21
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:22
 #, python-format
 msgid "Log in"
 msgstr "Iniciar sesión"
@@ -227,43 +259,38 @@ msgstr "La palabra de ingreso es válida"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:116
-#: code:addons/auth_signup/static/src/js/auth_signup.js:119
-#: code:addons/auth_signup/static/src/js/auth_signup.js:122
-#: code:addons/auth_signup/static/src/js/auth_signup.js:125
-#: code:addons/auth_signup/static/src/js/auth_signup.js:128
-#: code:addons/auth_signup/static/src/js/auth_signup.js:162
-#: code:addons/auth_signup/static/src/js/auth_signup.js:165
+#: code:addons/auth_signup/static/src/js/auth_signup.js:108
+#: code:addons/auth_signup/static/src/js/auth_signup.js:111
+#: code:addons/auth_signup/static/src/js/auth_signup.js:114
+#: code:addons/auth_signup/static/src/js/auth_signup.js:117
+#: code:addons/auth_signup/static/src/js/auth_signup.js:120
+#: code:addons/auth_signup/static/src/js/auth_signup.js:167
+#: code:addons/auth_signup/static/src/js/auth_signup.js:170
 #, python-format
 msgid "Login"
 msgstr "Inicio de sesión"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:99
+#: code:addons/auth_signup/static/src/js/auth_signup.js:94
 #, python-format
 msgid "Invalid signup token"
 msgstr "Palabra de ingreso no válida"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:128
+#: code:addons/auth_signup/static/src/js/auth_signup.js:120
 #, python-format
 msgid "Passwords do not match; please retype them."
 msgstr "Las contraseñas no coinciden. Por favor vuelva a teclearlas."
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:116
-#: code:addons/auth_signup/static/src/js/auth_signup.js:162
+#: code:addons/auth_signup/static/src/js/auth_signup.js:108
+#: code:addons/auth_signup/static/src/js/auth_signup.js:167
 #, python-format
 msgid "No database selected !"
 msgstr "¡No se ha seleccionado ninguna base de datos!"
-
-#. module: auth_signup
-#: view:res.users:0
-msgid "Reset Password"
-msgstr "Restablecer contraseña"
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_reset_password:0
@@ -273,18 +300,16 @@ msgstr ""
 "sesión"
 
 #. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:24
-#, python-format
-msgid "Back to Login"
-msgstr "Volver al Inicio de sesión"
+#: model:email.template,subject:auth_signup.set_password_email
+msgid "${object.company_id.name} invitation to connect on OpenERP"
+msgstr ""
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:22
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:27
 #, python-format
-msgid "Sign up"
-msgstr "Registrarse"
+msgid "Back to Login"
+msgstr "Volver al Inicio de sesión"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
@@ -292,6 +317,25 @@ msgid "Partner"
 msgstr "Empresa"
 
 #. module: auth_signup
+#: view:res.users:0
+msgid "Send reset password instructions by email"
+msgstr ""
+
+#. module: auth_signup
 #: field:res.partner,signup_token:0
 msgid "Signup Token"
 msgstr "Palabra de ingreso"
+
+#~ msgid "Send an email to the user to (re)set their password."
+#~ msgstr "Enviar un correo al usuario para restablecer su contraseña."
+
+#~ msgid "Reset Password"
+#~ msgstr "Restablecer contraseña"
+
+#, python-format
+#~ msgid "Sign up"
+#~ msgstr "Registrarse"
+
+#, python-format
+#~ msgid "Mail sent to:"
+#~ msgstr "Correo enviado a:"

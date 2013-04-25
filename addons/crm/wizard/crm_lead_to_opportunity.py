@@ -58,11 +58,11 @@ class crm_lead2opportunity_partner(osv.osv_memory):
 
             if partner_id:
                 # Search for opportunities that have the same partner and that arent done or cancelled
-                ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id)])
+                ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id), ('state', '!=', 'done')])
                 for id in ids:
                     tomerge.add(id)
             if email:
-                ids = lead_obj.search(cr, uid, [('email_from', 'ilike', email[0])])
+                ids = lead_obj.search(cr, uid, [('email_from', 'ilike', email[0]), ('state', '!=', 'done')])
                 for id in ids:
                     tomerge.add(id)
 

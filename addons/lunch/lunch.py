@@ -169,7 +169,7 @@ class lunch_order(osv.Model):
         line_ref = self.pool.get("lunch.order.line")
         if view_type == 'form':
             doc = etree.XML(res['arch'])
-            pref_ids = line_ref.search(cr, uid, [('user_id', '=', uid)], order='create_date desc', context=context)
+            pref_ids = line_ref.search(cr, uid, [('user_id', '=', uid)], order='id desc', context=context)
             xml_start = etree.Element("div")
             #If there are no preference (it's the first time for the user)
             if len(pref_ids)==0:
@@ -215,63 +215,70 @@ class lunch_order(osv.Model):
                 currency = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id
 
                 #For each preferences that we get, we will create the XML structure
-                for key,value in categories.items():
+                for key, value in categories.items():
                     xml_pref_1 = etree.Element("div")
-                    xml_pref_1.set('class','oe_lunch_30pc')
+                    xml_pref_1.set('class', 'oe_lunch_30pc')
                     xml_pref_2 = etree.Element("h2")
                     xml_pref_2.text = key
                     xml_pref_1.append(xml_pref_2)
                     i = 0
                     value = value.values()
+                    #TODO: sorted_values is used for a quick and dirty hack in order to display the 5 last orders of each categories.
+                    #It would be better to fetch only the 5 items to display instead of fetching everything then sorting them in order to keep only the 5 last.
+                    #NB: The note could also be ignored + we could fetch the preferences on the most ordered products instead of the last ones...
+                    sorted_values = {}
                     for val in value:
-                        for pref in val.values():
-                            #We only show 5 preferences per category (or it will be too long)
-                            if i==5: break
-                            i+=1
-                            xml_pref_3 = etree.Element("div")
-                            xml_pref_3.set('class','oe_lunch_vignette')
-                            xml_pref_1.append(xml_pref_3)
+                        for elmt in val.values():
+                            sorted_values[elmt.id] = elmt
+                    for key, pref in sorted(sorted_values.iteritems(), key=lambda (k, v): (k, v), reverse=True):
+                        #We only show 5 preferences per category (or it will be too long)
+                        if i == 5:
+                            break
+                        i += 1
+                        xml_pref_3 = etree.Element("div")
+                        xml_pref_3.set('class','oe_lunch_vignette')
+                        xml_pref_1.append(xml_pref_3)
 
-                            xml_pref_4 = etree.Element("span")
-                            xml_pref_4.set('class','oe_lunch_button')
-                            xml_pref_3.append(xml_pref_4)
+                        xml_pref_4 = etree.Element("span")
+                        xml_pref_4.set('class','oe_lunch_button')
+                        xml_pref_3.append(xml_pref_4)
 
-                            xml_pref_5 = etree.Element("button")
-                            xml_pref_5.set('name',"add_preference_"+str(pref.id))
-                            xml_pref_5.set('class','oe_link oe_i oe_button_plus')
-                            xml_pref_5.set('type','object')
-                            xml_pref_5.set('string','+')
-                            xml_pref_4.append(xml_pref_5)
+                        xml_pref_5 = etree.Element("button")
+                        xml_pref_5.set('name',"add_preference_"+str(pref.id))
+                        xml_pref_5.set('class','oe_link oe_i oe_button_plus')
+                        xml_pref_5.set('type','object')
+                        xml_pref_5.set('string','+')
+                        xml_pref_4.append(xml_pref_5)
 
-                            xml_pref_6 = etree.Element("button")
-                            xml_pref_6.set('name',"add_preference_"+str(pref.id))
-                            xml_pref_6.set('class','oe_link oe_button_add')
-                            xml_pref_6.set('type','object')
-                            xml_pref_6.set('string',_("Add"))
-                            xml_pref_4.append(xml_pref_6)
+                        xml_pref_6 = etree.Element("button")
+                        xml_pref_6.set('name',"add_preference_"+str(pref.id))
+                        xml_pref_6.set('class','oe_link oe_button_add')
+                        xml_pref_6.set('type','object')
+                        xml_pref_6.set('string',_("Add"))
+                        xml_pref_4.append(xml_pref_6)
 
-                            xml_pref_7 = etree.Element("div")
-                            xml_pref_7.set('class','oe_group_text_button')
-                            xml_pref_3.append(xml_pref_7)
+                        xml_pref_7 = etree.Element("div")
+                        xml_pref_7.set('class','oe_group_text_button')
+                        xml_pref_3.append(xml_pref_7)
 
-                            xml_pref_8 = etree.Element("div")
-                            xml_pref_8.set('class','oe_lunch_text')
-                            xml_pref_8.text = escape(pref.product_id.name)+str(" ")
-                            xml_pref_7.append(xml_pref_8)
+                        xml_pref_8 = etree.Element("div")
+                        xml_pref_8.set('class','oe_lunch_text')
+                        xml_pref_8.text = escape(pref.product_id.name)+str(" ")
+                        xml_pref_7.append(xml_pref_8)
 
-                            price = pref.product_id.price or 0.0
-                            cur = currency.name or ''
-                            xml_pref_9 = etree.Element("span")
-                            xml_pref_9.set('class','oe_tag')
-                            xml_pref_9.text = str(price)+str(" ")+cur
-                            xml_pref_8.append(xml_pref_9)
+                        price = pref.product_id.price or 0.0
+                        cur = currency.name or ''
+                        xml_pref_9 = etree.Element("span")
+                        xml_pref_9.set('class','oe_tag')
+                        xml_pref_9.text = str(price)+str(" ")+cur
+                        xml_pref_8.append(xml_pref_9)
 
-                            xml_pref_10 = etree.Element("div")
-                            xml_pref_10.set('class','oe_grey')
-                            xml_pref_10.text = escape(pref.note or '')
-                            xml_pref_3.append(xml_pref_10)
+                        xml_pref_10 = etree.Element("div")
+                        xml_pref_10.set('class','oe_grey')
+                        xml_pref_10.text = escape(pref.note or '')
+                        xml_pref_3.append(xml_pref_10)
 
-                            xml_start.append(xml_pref_1)
+                        xml_start.append(xml_pref_1)
 
             first_node = doc.xpath("//div[@name='preferences']")
             if first_node and len(first_node)>0:
@@ -372,12 +379,25 @@ class lunch_order_line(osv.Model):
             cash_ids = [cash.id for cash in order_line.cashmove]
             cashmove_ref.unlink(cr, uid, cash_ids, context=context)
         return self._update_order_lines(cr, uid, ids, context=context)
+    
+    def _get_line_order_ids(self, cr, uid, ids, context=None):
+        """
+        return the list of lunch.order.lines ids to which belong the  lunch.order 'ids'
+        """
+        result = set()
+        for lunch_order in self.browse(cr, uid, ids, context=context):
+            for lines in lunch_order.order_line_ids:
+                result.add(lines.id)
+        return list(result)
 
     _columns = {
         'name': fields.related('product_id', 'name', readonly=True),
         'order_id': fields.many2one('lunch.order', 'Order', ondelete='cascade'),
         'product_id': fields.many2one('lunch.product', 'Product', required=True),
-        'date': fields.related('order_id', 'date', type='date', string="Date", readonly=True, store=True),
+        'date': fields.related('order_id', 'date', type='date', string="Date", readonly=True, store={
+            'lunch.order': (_get_line_order_ids, ['date'], 10), 
+            'lunch.order.line': (lambda self, cr, uid, ids, ctx: ids, [], 10),
+            }),
         'supplier': fields.related('product_id', 'supplier', type='many2one', relation='res.partner', string="Supplier", readonly=True, store=True),
         'user_id': fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='User', readonly=True, store=True),
         'note': fields.text('Note'),

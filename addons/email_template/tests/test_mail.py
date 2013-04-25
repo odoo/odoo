@@ -45,11 +45,11 @@ class test_message_compose(TestMailBase):
         # Mail data
         _subject1 = 'Pigs'
         _subject2 = 'Bird'
-        _body_html1 = '<div><p>Fans of Pigs, unite !\n</p><p>Admin</p></div>'
-        _body_html2 = '<div><p>I am angry !\n</p><p>Admin</p></div>'
+        _body_html1 = 'Fans of Pigs, unite !'
+        _body_html2 = 'I am angry !'
         _attachments = [
-            {'name': 'First', 'datas_fname': 'first.txt', 'datas': base64.b64encode('My first attachment')},
-            {'name': 'Second', 'datas_fname': 'second.txt', 'datas': base64.b64encode('My second attachment')}
+            {'name': 'First', 'datas_fname': 'first.txt', 'datas': base64.b64encode('My first attachment'), 'res_model': 'res.partner', 'res_id': self.partner_admin_id},
+            {'name': 'Second', 'datas_fname': 'second.txt', 'datas': base64.b64encode('My second attachment'), 'res_model': 'res.partner', 'res_id': self.partner_admin_id},
             ]
         _attachments_test = [('first.txt', 'My first attachment'), ('second.txt', 'My second attachment')]
 
@@ -113,14 +113,22 @@ class test_message_compose(TestMailBase):
         partner_ids = self.res_partner.search(cr, uid, [('email', 'in', ['b@b.b', 'c@c.c', 'd@d.d'])])
         # Test: mail.compose.message: subject, body, partner_ids
         self.assertEqual(compose.subject, _subject1, 'mail.compose.message subject incorrect')
-        self.assertEqual(compose.body, _body_html1, 'mail.compose.message body incorrect')
+        self.assertIn(_body_html1, compose.body, 'mail.compose.message body incorrect')
         self.assertEqual(set(message_pids), set(partner_ids), 'mail.compose.message partner_ids incorrect')
-        # Test: mail.compose.message: attachments
-        # Test: mail.message: attachments
+        # Test: mail.compose.message: attachments (owner has not been modified)
         for attach in compose.attachment_ids:
-            self.assertEqual(attach.res_model, 'mail.group', 'mail.message attachment res_model incorrect')
-            self.assertEqual(attach.res_id, self.group_pigs_id, 'mail.message attachment res_id incorrect')
-            self.assertIn((attach.name, base64.b64decode(attach.datas)), _attachments_test,
+            self.assertEqual(attach.res_model, 'res.partner', 'mail.compose.message attachment res_model through templat was overriden')
+            self.assertEqual(attach.res_id, self.partner_admin_id, 'mail.compose.message attachment res_id incorrect')
+            self.assertIn((attach.datas_fname, base64.b64decode(attach.datas)), _attachments_test,
+                'mail.message attachment name / data incorrect')
+        # Test: mail.message: attachments
+        mail_compose.send_mail(cr, uid, [compose_id])
+        group_pigs.refresh()
+        message_pigs = group_pigs.message_ids[0]
+        for attach in message_pigs.attachment_ids:
+            self.assertEqual(attach.res_model, 'mail.group', 'mail.compose.message attachment res_model through templat was overriden')
+            self.assertEqual(attach.res_id, self.group_pigs_id, 'mail.compose.message attachment res_id incorrect')
+            self.assertIn((attach.datas_fname, base64.b64decode(attach.datas)), _attachments_test,
                 'mail.message attachment name / data incorrect')
 
         # ----------------------------------------
@@ -159,8 +167,8 @@ class test_message_compose(TestMailBase):
         # Test: subject, body
         self.assertEqual(message_pigs.subject, _subject1, 'mail.message subject on Pigs incorrect')
         self.assertEqual(message_bird.subject, _subject2, 'mail.message subject on Bird incorrect')
-        self.assertEqual(message_pigs.body, _body_html1, 'mail.message body on Pigs incorrect')
-        self.assertEqual(message_bird.body, _body_html2, 'mail.message body on Bird incorrect')
+        self.assertIn(_body_html1, message_pigs.body, 'mail.message body on Pigs incorrect')
+        self.assertIn(_body_html2, message_bird.body, 'mail.message body on Bird incorrect')
         # Test: partner_ids: p_a_id (default) + 3 newly created partners
         message_pigs_pids = [partner.id for partner in message_pigs.notified_partner_ids]
         message_bird_pids = [partner.id for partner in message_bird.notified_partner_ids]

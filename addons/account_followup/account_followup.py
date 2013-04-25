@@ -238,7 +238,12 @@ class res_partner(osv.osv):
         from report import account_followup_print
 
         assert len(ids) == 1
+        if context is None:
+            context = {}
         partner = self.browse(cr, uid, ids[0], context=context)
+        #copy the context to not change global context. Overwrite it because _() looks for the lang in local variable 'context'.
+        #Set the language to use = the partner language
+        context = dict(context, lang=partner.lang)
         followup_table = ''
         if partner.unreconciled_aml_ids:
             company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
@@ -251,13 +256,14 @@ class res_partner(osv.osv):
                 followup_table += '''
                 <table border="2" width=100%%>
                 <tr>
-                    <td>Invoice date</td>
-                    <td>Reference</td>
-                    <td>Due date</td>
-                    <td>Amount (%s)</td>
-                    <td>Lit.</td>
+                    <td>''' + _("Invoice Date") + '''</td>
+                    <td>''' + _("Description") + '''</td>
+                    <td>''' + _("Reference") + '''</td>
+                    <td>''' + _("Due Date") + '''</td>
+                    <td>''' + _("Amount") + " (%s)" % (currency.symbol) + '''</td>
+                    <td>''' + _("Lit.") + '''</td>
                 </tr>
-                ''' % (currency.symbol)
+                ''' 
                 total = 0
                 for aml in currency_dict['line']:
                     block = aml['blocked'] and 'X' or ' '
@@ -268,12 +274,26 @@ class res_partner(osv.osv):
                     if date <= current_date and aml['balance'] > 0:
                         strbegin = "<TD><B>"
                         strend = "</B></TD>"
-                    followup_table +="<TR>" + strbegin + str(aml['date']) + strend + strbegin + aml['ref'] + strend + strbegin + str(date) + strend + strbegin + str(aml['balance']) + strend + strbegin + block + strend + "</TR>"
+                    followup_table +="<TR>" + strbegin + str(aml['date']) + strend + strbegin + aml['name'] + strend + strbegin + aml['ref'] + strend + strbegin + str(date) + strend + strbegin + str(aml['balance']) + strend + strbegin + block + strend + "</TR>"
                 total = rml_parse.formatLang(total, dp='Account', currency_obj=currency)
                 followup_table += '''<tr> </tr>
                                 </table>
-                                <center>Amount due: %s </center>''' % (total)
+                                <center>''' + _("Amount due") + ''' : %s </center>''' % (total)
         return followup_table
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if vals.get("payment_responsible_id", False):
+            for part in self.browse(cr, uid, ids, context=context):
+                if part.payment_responsible_id <> vals["payment_responsible_id"]:
+                    #Find partner_id of user put as responsible
+                    responsible_partner_id = self.pool.get("res.users").browse(cr, uid, vals['payment_responsible_id'], context=context).partner_id.id
+                    self.pool.get("mail.thread").message_post(cr, uid, 0, 
+                                      body = _("You became responsible to do the next action for the payment follow-up of") + " <b><a href='#id=" + str(part.id) + "&view_type=form&model=res.partner'> " + part.name + " </a></b>",
+                                      type = 'comment',
+                                      subtype = "mail.mt_comment", context = context,
+                                      model = 'res.partner', res_id = part.id, 
+                                      partner_ids = [responsible_partner_id])
+        return super(res_partner, self).write(cr, uid, ids, vals, context=context)
 
     def action_done(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'payment_next_action_date': False, 'payment_next_action':'', 'payment_responsible_id': False}, context=context)
@@ -408,13 +428,16 @@ class res_partner(osv.osv):
     _inherit = "res.partner"
     _columns = {
         'payment_responsible_id':fields.many2one('res.users', ondelete='set null', string='Follow-up Responsible', 
-                                                 help="Optionally you can assign a user to this field, which will make him responsible for the action."), 
-        'payment_note':fields.text('Customer Payment Promise', help="Payment Note"),
+                                                 help="Optionally you can assign a user to this field, which will make him responsible for the action.", 
+                                                 track_visibility="onchange"), 
+        'payment_note':fields.text('Customer Payment Promise', help="Payment Note", track_visibility="onchange"),
         'payment_next_action':fields.text('Next Action', 
-                                    help="This is the next action to be taken.  It will automatically be set when the partner gets a follow-up level that requires a manual action. "), 
+                                    help="This is the next action to be taken.  It will automatically be set when the partner gets a follow-up level that requires a manual action. ", 
+                                    track_visibility="onchange"), 
         'payment_next_action_date':fields.date('Next Action Date',
                                     help="This is when the manual follow-up is needed. " \
-                                    "The date will be set to the current date when the partner gets a follow-up level that requires a manual action. Can be practical to set manually e.g. to see if he keeps his promises."), 
+                                    "The date will be set to the current date when the partner gets a follow-up level that requires a manual action. "\
+                                    "Can be practical to set manually e.g. to see if he keeps his promises."),
         'unreconciled_aml_ids':fields.one2many('account.move.line', 'partner_id', domain=['&', ('reconcile_id', '=', False), '&', 
                             ('account_id.active','=', True), '&', ('account_id.type', '=', 'receivable'), ('state', '!=', 'draft')]), 
         'latest_followup_date':fields.function(_get_latest, method=True, type='date', string="Latest Follow-up Date", 

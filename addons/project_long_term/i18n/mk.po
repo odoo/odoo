@@ -1,0 +1,530 @@
+# Macedonian translation for openobject-addons
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# Sofce Dimitrijeva <sofce@eskon.com.mk>, 2013.
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-03-28 23:28+0000\n"
+"Last-Translator: Софче Димитријева <Unknown>\n"
+"Language-Team: ESKON-INZENERING\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-03-30 06:09+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
+"Language: mk\n"
+
+#. module: project_long_term
+#: help:project.phase,constraint_date_end:0
+msgid "force the phase to finish before this date"
+msgstr "присилно завршување на фазата пред овој датум"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: selection:project.phase,state:0
+msgid "In Progress"
+msgstr "Во тек"
+
+#. module: project_long_term
+#: field:account.analytic.account,use_phases:0
+#: model:ir.actions.act_window,name:project_long_term.act_project_phases
+#: view:project.project:0
+msgid "Phases"
+msgstr "Етапи"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
+#: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
+#: view:project.phase:0
+#: view:project.user.allocation:0
+msgid "Team Planning"
+msgstr "Тимско планирање"
+
+#. module: project_long_term
+#: field:project.phase,user_ids:0
+msgid "Assigned Users"
+msgstr "Назначени корисници"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: field:project.phase,next_phase_ids:0
+msgid "Next Phases"
+msgstr "Следни етапи"
+
+#. module: project_long_term
+#: model:ir.model,name:project_long_term.model_project_user_allocation
+msgid "Phase User Allocation"
+msgstr "Алокација на корисник на етапа"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Project's Tasks"
+msgstr "Проектни задачи"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,help:project_long_term.action_project_compute_phases
+msgid ""
+"To schedule phases of all or a specified project. It then open a gantt "
+"view.\n"
+"               "
+msgstr ""
+"За да се распоредат етапите на сите или на одреден проект. Тоа потоа отвара "
+"гантов приказ.\n"
+"               "
+
+#. module: project_long_term
+#: field:project.phase,task_ids:0
+msgid "Project Tasks"
+msgstr "Проектни задачи"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.action_project_compute_phases
+#: model:ir.ui.menu,name:project_long_term.menu_compute_phase
+#: view:project.compute.phases:0
+msgid "Schedule Phases"
+msgstr "Распореди етапи"
+
+#. module: project_long_term
+#: field:project.phase,sequence:0
+msgid "Sequence"
+msgstr "Секвенца"
+
+#. module: project_long_term
+#: field:project.compute.phases,target_project:0
+msgid "Action"
+msgstr "Акција"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Start Phase"
+msgstr "Започни етапа"
+
+#. module: project_long_term
+#: model:ir.model,name:project_long_term.model_project_task
+msgid "Task"
+msgstr "Задача"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Draft"
+msgstr "Нацрт"
+
+#. module: project_long_term
+#: view:project.compute.phases:0
+#: view:project.compute.tasks:0
+msgid "C_ompute"
+msgstr ""
+
+#. module: project_long_term
+#: view:project.phase:0
+#: selection:project.phase,state:0
+msgid "New"
+msgstr "Ново"
+
+#. module: project_long_term
+#: field:project.phase,product_uom:0
+msgid "Duration Unit of Measure"
+msgstr "Единица мерка за времетраење"
+
+#. module: project_long_term
+#: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar_leaves
+msgid "Resource Leaves"
+msgstr "Отсуства на ресурсот"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: selection:project.phase,state:0
+msgid "Pending"
+msgstr "Чекам"
+
+#. module: project_long_term
+#: help:project.phase,progress:0
+msgid "Computed based on related tasks"
+msgstr "Пресметано врз основа на поврзани задачи"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "In Progress Phases"
+msgstr "Етапи во тек"
+
+#. module: project_long_term
+#: code:addons/project_long_term/project_long_term.py:140
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (копија)"
+
+#. module: project_long_term
+#: code:addons/project_long_term/wizard/project_compute_phases.py:48
+#, python-format
+msgid "Please specify a project to schedule."
+msgstr "Специфицирајте проект за распоредување."
+
+#. module: project_long_term
+#: view:project.phase:0
+#: view:project.user.allocation:0
+msgid "Group By..."
+msgstr "Групирај по..."
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Remaining Hours"
+msgstr "Преостанати часови"
+
+#. module: project_long_term
+#: field:project.phase,constraint_date_start:0
+msgid "Minimum Start Date"
+msgstr "Минимален почетен датум"
+
+#. module: project_long_term
+#: help:project.phase,product_uom:0
+msgid ""
+"Unit of Measure (Unit of Measure) is the unit of measurement for Duration"
+msgstr "Единица мерка (Единица мерка) е единица за мерење на времетраењето"
+
+#. module: project_long_term
+#: help:project.phase,user_ids:0
+msgid ""
+"The resources on the project can be computed automatically by the scheduler."
+msgstr ""
+"Ресурсите на проектот може автоматски да бидат пресметани од страна на "
+"планерот."
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Cancel Phase"
+msgstr "Откажи етапа"
+
+#. module: project_long_term
+#: help:account.analytic.account,use_phases:0
+msgid "Check this field if you plan to use phase-based scheduling"
+msgstr ""
+"Означете го ова поле доколку планирате да правите распоредување врз основа "
+"на етапи"
+
+#. module: project_long_term
+#: help:project.phase,state:0
+msgid ""
+"If the phase is created the status 'Draft'.\n"
+" If the phase is started, the status becomes 'In Progress'.\n"
+" If review is needed the phase is in 'Pending' status.                       "
+"           \n"
+" If the phase is over, the status is set to 'Done'."
+msgstr ""
+"Доколку фазата е креиран статусот е 'Нацрт'.\n"
+"Доколку фазата е започната статусот станува 'Во тек'.\n"
+"Доколку е потребен повторен преглед фазата е во статус 'Чекам' .\n"
+"Доколку фазата е завршена, статусот се подесува на  'Завршено'."
+
+#. module: project_long_term
+#: field:project.phase,progress:0
+msgid "Progress"
+msgstr "Напредок"
+
+#. module: project_long_term
+#: model:ir.ui.menu,name:project_long_term.menu_pm_users_project1
+#: model:ir.ui.menu,name:project_long_term.menu_view_resource
+msgid "Resources"
+msgstr "Ресурси"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "My Projects"
+msgstr "Мои проекти"
+
+#. module: project_long_term
+#: view:project.project:0
+#: view:project.user.allocation:0
+msgid "Phase"
+msgstr "Етапа"
+
+#. module: project_long_term
+#: help:project.phase,duration:0
+msgid "By default in days"
+msgstr "Стандардно во денови"
+
+#. module: project_long_term
+#: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar
+msgid "Working Time"
+msgstr "Работно време"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Pending Phases"
+msgstr "Етапа Чекам"
+
+#. module: project_long_term
+#: help:project.user.allocation,date_start:0
+msgid "Starting Date"
+msgstr "Почетен датум"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Related Tasks"
+msgstr "Поврзани задачи"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Start Month"
+msgstr "Почетен месец"
+
+#. module: project_long_term
+#: field:project.phase,date_end:0
+#: field:project.user.allocation,date_end:0
+msgid "End Date"
+msgstr "Краен датум"
+
+#. module: project_long_term
+#: model:ir.model,name:project_long_term.model_project_compute_tasks
+msgid "Project Compute Tasks"
+msgstr ""
+
+#. module: project_long_term
+#: model:ir.actions.act_window,help:project_long_term.act_project_phase
+msgid ""
+"A project can be split into the different phases. For each phase, you can "
+"define your users allocation, describe different tasks and link your phase "
+"to previous and next phases, add date constraints for the automated "
+"scheduling. Use the long term planning in order to planify your available "
+"users, convert your phases into a series of tasks when you start working on "
+"the project."
+msgstr ""
+"Проектот може да биде разделен на различни фази. За секоја фаза, може да "
+"дефинирате распределба на корисници, да ги опишете различните задачи и да ја "
+"поврзете вашата фаза до претходните и идните фази,да додадете ограничувања "
+"на датумите за автоматско распоредување. Користете долгорочно планирање со "
+"цел да ги планирате расположливите корисници, да ги претворите вашите фази "
+"во серии од задачи кога започнувате да работите на проектот."
+
+#. module: project_long_term
+#: selection:project.compute.phases,target_project:0
+msgid "Compute a Single Project"
+msgstr "Пресметај поединечен проект"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: field:project.phase,previous_phase_ids:0
+msgid "Previous Phases"
+msgstr "Претходни етапи"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "New Phases"
+msgstr "Нови етапи"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Tasks Details"
+msgstr "Детали на задача"
+
+#. module: project_long_term
+#: field:project.project,phase_count:0
+msgid "Open Phases"
+msgstr "Отвори етапи"
+
+#. module: project_long_term
+#: help:project.phase,date_end:0
+msgid ""
+" It's computed by the scheduler according to the start date and the duration."
+msgstr ""
+" Пресметано од страна на планерот според почетниот датум и времетраењето."
+
+#. module: project_long_term
+#: constraint:project.phase:0
+msgid "Loops in phases not allowed"
+msgstr "Јамки во фазите не се дозволени"
+
+#. module: project_long_term
+#: view:project.user.allocation:0
+#: field:project.user.allocation,user_id:0
+msgid "User"
+msgstr "Корисник"
+
+#. module: project_long_term
+#: model:ir.model,name:project_long_term.model_project_project
+#: field:project.compute.phases,project_id:0
+#: field:project.compute.tasks,project_id:0
+#: view:project.phase:0
+#: field:project.phase,project_id:0
+#: view:project.task:0
+#: view:project.user.allocation:0
+#: field:project.user.allocation,project_id:0
+msgid "Project"
+msgstr "Проект"
+
+#. module: project_long_term
+#: view:project.compute.phases:0
+#: view:project.compute.tasks:0
+msgid "Cancel"
+msgstr "Откажи"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Project Users"
+msgstr "Проектни корисници"
+
+#. module: project_long_term
+#: model:ir.model,name:project_long_term.model_project_phase
+#: view:project.phase:0
+#: view:project.task:0
+#: field:project.task,phase_id:0
+#: field:project.user.allocation,phase_id:0
+msgid "Project Phase"
+msgstr "Етапа на проект"
+
+#. module: project_long_term
+#: model:ir.ui.menu,name:project_long_term.menu_phase_schedule
+msgid "Scheduling"
+msgstr "Распоредување"
+
+#. module: project_long_term
+#: constraint:project.phase:0
+msgid "Phase start-date must be lower than phase end-date."
+msgstr ""
+"Почетниот датум на етапата мора да биде помал од крајниот датум на етапата."
+
+#. module: project_long_term
+#: selection:project.phase,state:0
+msgid "Cancelled"
+msgstr "Откажано"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Total Hours"
+msgstr "Вкупно часови"
+
+#. module: project_long_term
+#: model:ir.model,name:project_long_term.model_project_compute_phases
+msgid "Project Compute Phases"
+msgstr ""
+
+#. module: project_long_term
+#: field:project.phase,date_start:0
+#: field:project.user.allocation,date_start:0
+msgid "Start Date"
+msgstr "Почетен датум"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Constraints"
+msgstr "Ограничувања"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: field:project.phase,state:0
+msgid "Status"
+msgstr "Статус"
+
+#. module: project_long_term
+#: help:project.phase,sequence:0
+msgid "Gives the sequence order when displaying a list of phases."
+msgstr ""
+"Го дава редоследот на секвенците кога го прикажува списокот на етапи."
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.project_phase_task_list
+msgid "Tasks"
+msgstr "Задачи"
+
+#. module: project_long_term
+#: help:project.user.allocation,date_end:0
+msgid "Ending Date"
+msgstr "Датум на завршување"
+
+#. module: project_long_term
+#: code:addons/project_long_term/wizard/project_compute_phases.py:48
+#, python-format
+msgid "Error!"
+msgstr "Грешка!"
+
+#. module: project_long_term
+#: help:project.phase,date_start:0
+msgid ""
+"It's computed by the scheduler according the project date or the end date of "
+"the previous phase."
+msgstr ""
+"Пресметано од страна на планерот според датумот на проектот или датумот на "
+"завршување на претходната етапа."
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.act_project_phase
+#: model:ir.actions.act_window,name:project_long_term.act_project_phase_list
+#: model:ir.ui.menu,name:project_long_term.menu_project_phase
+#: model:ir.ui.menu,name:project_long_term.menu_project_phase_list
+#: view:project.phase:0
+#: field:project.project,phase_ids:0
+msgid "Project Phases"
+msgstr "Етапи на проект"
+
+#. module: project_long_term
+#: help:project.phase,constraint_date_start:0
+msgid "force the phase to start after this date"
+msgstr "присилно започнување на фазата по овој датум"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Month"
+msgstr "Месец"
+
+#. module: project_long_term
+#: model:ir.model,name:project_long_term.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Аналитичка сметка"
+
+#. module: project_long_term
+#: field:project.phase,constraint_date_end:0
+msgid "Deadline"
+msgstr "Краен рок"
+
+#. module: project_long_term
+#: view:project.user.allocation:0
+msgid "Project User Allocation"
+msgstr "Алокација на проектен корисник"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.action_project_compute_tasks
+#: model:ir.ui.menu,name:project_long_term.menu_compute_tasks
+#: view:project.compute.tasks:0
+msgid "Schedule Tasks"
+msgstr "Распореди задачи"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: selection:project.phase,state:0
+msgid "Done"
+msgstr "Завршено"
+
+#. module: project_long_term
+#: selection:project.compute.phases,target_project:0
+msgid "Compute All My Projects"
+msgstr "Пресметај ги сите мои проекти"
+
+#. module: project_long_term
+#: field:project.phase,user_force_ids:0
+msgid "Force Assigned Users"
+msgstr "Присилно доделени корисници"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: field:project.phase,duration:0
+msgid "Duration"
+msgstr "Времетраење"
+
+#. module: project_long_term
+#: view:project.user.allocation:0
+msgid "Users"
+msgstr "Корисници"
+
+#. module: project_long_term
+#: field:project.phase,name:0
+msgid "Name"
+msgstr "Име"
+
+#. module: project_long_term
+#: view:project.compute.phases:0
+#: view:project.compute.tasks:0
+msgid "or"
+msgstr "или"

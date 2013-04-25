@@ -10,7 +10,7 @@
                     <field name="date"/>
                     <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                     <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
-                    <field name="partner_id" string="Supplier"/>
+                    <field name="partner_id" string="Supplier" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="journal_id" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('purchase','purchase_refund'))]"/>
                     <field name="period_id"/>
                     <group expand="0" string="Group By...">
@@ -32,7 +32,7 @@
                     <field name="date"/>
                     <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                     <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
-                    <field name="partner_id" string="Customer"/>
+                    <field name="partner_id" string="Customer" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="journal_id" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('sale','sale_refund'))]"/>
                     <field name="period_id"/>
                     <group expand="0" string="Group By...">
@@ -59,17 +59,17 @@
             <field name="name">account.voucher.sale.form</field>
             <field name="model">account.voucher</field>
             <field name="arch" type="xml">
-                <form string="Sale voucher" version="7.0">
+                <form string="Sales Receipt" version="7.0">
                 <header>
                     <button name="proforma_voucher" string="Validate" states="draft" class="oe_highlight"/>
                     <button name="%(act_pay_voucher)d" context="{'narration':narration, 'title':'Customer Payment', 'type':'receipt', 'partner_id':partner_id, 'reference':reference, 'amount':amount}" type="action" string="Validate Payment" attrs="{'invisible':['|',('pay_now','=','pay_now'),'|',('state','=','draft'), ('paid','=',True)]}" class="oe_highlight"/>
-                    <button name="cancel_voucher" string="Cancel" states="draft,proforma" />
-                    <button name="cancel_voucher" string="Cancel" type="object" states="posted" confirm="Are you sure you want to cancel this receipt?"/>
+                    <button name="cancel_voucher" string="Cancel Receipt" states="draft,proforma" />
+                    <button name="cancel_voucher" string="Cancel Receipt" type="object" states="posted" confirm="Are you sure you want to cancel this receipt?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
                 </header>
-                <sheet string="Sales Receipts" >
-                    <h1><label for="number" string="Sale Receipt"/> <field name="number" class="oe_inline" readonly="1"/></h1>
+                <sheet string="Sales Receipt" >
+                    <h1><label for="number" string="Sales Receipt"/> <field name="number" class="oe_inline" readonly="1"/></h1>
                     <group>
                         <group>
                             <field name="type" invisible="True"/>
@@ -145,6 +145,12 @@
                             </field>
                         </page>
                     </notebook>
+                    <group col="4" invisible="1">
+                                    <field name="is_multi_currency" invisible="1"/>
+                                    <field name="payment_rate" required="1" on_change="onchange_rate(payment_rate, amount, currency_id, payment_rate_currency_id, company_id, context)" colspan="3" invisible="1"/>
+                                    <field name="payment_rate_currency_id" colspan="1" nolabel="1" on_change="onchange_payment_rate_currency(currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context)" groups="base.group_multi_currency" invisible="1"/>
+                                    <field name="paid_amount_in_company_currency" colspan="4" invisible="1"/>
+                    </group>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
@@ -208,8 +214,8 @@
                 <header>
                     <button name="proforma_voucher" string="Validate" states="draft" class="oe_highlight"/>
                     <button name="%(act_pay_bills)d" context="{'narration':narration, 'title':'Bill Payment', 'type':'payment', 'partner_id': partner_id, 'reference':reference}" type="action" string="Pay Bill" attrs="{'invisible':['|',('pay_now','=','pay_now'),'|',('state','=','draft'), ('paid','=',True)]}" class="oe_highlight"/>
-                    <button name="cancel_voucher" string="Cancel" states="draft,proforma" />
-                    <button name="cancel_voucher" string="Cancel" type="object" states="posted" confirm="Are you sure you want to cancel this receipt?"/>
+                    <button name="cancel_voucher" string="Cancel Voucher" states="draft,proforma" />
+                    <button name="cancel_voucher" string="Cancel Voucher" type="object" states="posted" confirm="Are you sure you want to cancel this receipt?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
                 </header>

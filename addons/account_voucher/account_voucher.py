@@ -50,13 +50,25 @@ class account_config_settings(osv.osv_memory):
             'company_id', 'income_currency_exchange_account_id',
             type='many2one',
             relation='account.account',
-            string="Gain Exchange Rate Account"),
+            string="Gain Exchange Rate Account", 
+            domain="[('type', '=', 'other')]"),
         'expense_currency_exchange_account_id': fields.related(
             'company_id', 'expense_currency_exchange_account_id',
             type="many2one",
             relation='account.account',
-            string="Loss Exchange Rate Account"),
+            string="Loss Exchange Rate Account",
+            domain="[('type', '=', 'other')]"),
     }
+    def onchange_company_id(self, cr, uid, ids, company_id, context=None):
+        res = super(account_config_settings, self).onchange_company_id(cr, uid, ids, company_id, context=context)
+        if company_id:
+            company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
+            res['value'].update({'income_currency_exchange_account_id': company.income_currency_exchange_account_id and company.income_currency_exchange_account_id.id or False, 
+                                 'expense_currency_exchange_account_id': company.expense_currency_exchange_account_id and company.expense_currency_exchange_account_id.id or False})
+        else: 
+            res['value'].update({'income_currency_exchange_account_id': False, 
+                                 'expense_currency_exchange_account_id': False})
+        return res
 
 class account_voucher(osv.osv):
     def _check_paid(self, cr, uid, ids, name, args, context=None):
@@ -74,7 +86,8 @@ class account_voucher(osv.osv):
         if context is None: context = {}
         if context.get('period_id', False):
             return context.get('period_id')
-        periods = self.pool.get('account.period').find(cr, uid)
+        ctx = dict(context, account_period_prefer_normal=True)
+        periods = self.pool.get('account.period').find(cr, uid, context=ctx)
         return periods and periods[0] or False
 
     def _make_journal_search(self, cr, uid, ttype, context=None):
@@ -212,24 +225,19 @@ class account_voucher(osv.osv):
     def onchange_line_ids(self, cr, uid, ids, line_dr_ids, line_cr_ids, amount, voucher_currency, type, context=None):
         context = context or {}
         if not line_dr_ids and not line_cr_ids:
-            return {'value':{}}
+            return {'value':{'writeoff_amount': 0.0, 'is_multi_currency': False}}
         line_osv = self.pool.get("account.voucher.line")
         line_dr_ids = resolve_o2m_operations(cr, uid, line_osv, line_dr_ids, ['amount'], context)
         line_cr_ids = resolve_o2m_operations(cr, uid, line_osv, line_cr_ids, ['amount'], context)
 
         #compute the field is_multi_currency that is used to hide/display options linked to secondary currency on the voucher
         is_multi_currency = False
-        if voucher_currency:
-            # if the voucher currency is not False, it means it is different than the company currency and we need to display the options
-            is_multi_currency = True
-        else:
-            #loop on the voucher lines to see if one of these has a secondary currency. If yes, we need to define the options
-            for voucher_line in line_dr_ids+line_cr_ids:
-                company_currency = False
-                company_currency = voucher_line.get('move_line_id', False) and self.pool.get('account.move.line').browse(cr, uid, voucher_line.get('move_line_id'), context=context).company_id.currency_id.id
-                if voucher_line.get('currency_id', company_currency) != company_currency:
-                    is_multi_currency = True
-                    break
+        #loop on the voucher lines to see if one of these has a secondary currency. If yes, we need to see the options
+        for voucher_line in line_dr_ids+line_cr_ids:
+            line_currency = voucher_line.get('move_line_id', False) and self.pool.get('account.move.line').browse(cr, uid, voucher_line.get('move_line_id'), context=context).currency_id
+            if line_currency:
+                is_multi_currency = True
+                break
         return {'value': {'writeoff_amount': self._compute_writeoff_amount(cr, uid, line_dr_ids, line_cr_ids, amount, type), 'is_multi_currency': is_multi_currency}}
 
     def _get_writeoff_amount(self, cr, uid, ids, name, args, context=None):
@@ -779,7 +787,7 @@ class account_voucher(osv.osv):
         period_pool = self.pool.get('account.period')
         currency_obj = self.pool.get('res.currency')
         ctx = context.copy()
-        ctx.update({'company_id': company_id})
+        ctx.update({'company_id': company_id, 'account_period_prefer_normal': True})
         pids = period_pool.find(cr, uid, date, context=ctx)
         if pids:
             res['value'].update({'period_id':pids[0]})
@@ -813,6 +821,8 @@ class account_voucher(osv.osv):
         currency_id = False
         if journal.currency:
             currency_id = journal.currency.id
+        else:
+            currency_id = journal.company_id.currency_id.id
         vals['value'].update({'currency_id': currency_id})
         res = self.onchange_partner_id(cr, uid, ids, partner_id, journal_id, amount, currency_id, ttype, date, context)
         for key in res.keys():
@@ -1154,8 +1164,13 @@ class account_voucher(osv.osv):
                         amount_currency = sign * (line.amount)
                     elif line.move_line_id.currency_id.id == voucher_brw.payment_rate_currency_id.id:
                         # if the rate is specified on the voucher, we must use it
-                        voucher_rate = currency_obj.browse(cr, uid, voucher_currency, context=ctx).rate
-                        amount_currency = (move_line['debit'] - move_line['credit']) * voucher_brw.payment_rate * voucher_rate
+                        payment_rate = voucher_brw.payment_rate
+                        if voucher_currency != company_currency:
+                            #if the voucher currency is not the company currency, we need to consider the rate of the line's currency
+                            voucher_rate = currency_obj.browse(cr, uid, voucher_currency, context=ctx).rate
+                            payment_rate = voucher_rate * payment_rate
+                        amount_currency = (move_line['debit'] - move_line['credit']) * payment_rate
+
                     else:
                         # otherwise we use the rates of the system (giving the voucher date in the context)
                         amount_currency = currency_obj.compute(cr, uid, company_currency, line.move_line_id.currency_id.id, move_line['debit']-move_line['credit'], context=ctx)

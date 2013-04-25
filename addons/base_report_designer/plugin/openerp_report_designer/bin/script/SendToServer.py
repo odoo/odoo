@@ -1,49 +1,25 @@
-##########################################################################
+#########################################################################
 #
-# Portions of this file are under the following copyright and license:
+#  Copyright (c) 2003-2004 Danny Brewer d29583@groovegarden.com
+#  Copyright (C) 2004-2010 OpenERP SA (<http://openerp.com>).
 #
+#  This library is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU Lesser General Public
+#  License as published by the Free Software Foundation; either
+#  version 2.1 of the License, or (at your option) any later version.
 #
-#   Copyright (c) 2003-2004 Danny Brewer
-#   d29583@groovegarden.com
+#  This library is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#  Lesser General Public License for more details.
 #
-#   This library is free software; you can redistribute it and/or
-#   modify it under the terms of the GNU Lesser General Public
-#   License as published by the Free Software Foundation; either
-#   version 2.1 of the License, or (at your option) any later version.
+#  You should have received a copy of the GNU Lesser General Public
+#  License along with this library; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
-#   This library is distributed in the hope that it will be useful,
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-#   Lesser General Public License for more details.
+#  See:  http://www.gnu.org/licenses/lgpl.html
 #
-#   You should have received a copy of the GNU Lesser General Public
-#   License along with this library; if not, write to the Free Software
-#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
-#
-#   See:  http://www.gnu.org/licenses/lgpl.html
-#
-#
-# and other portions are under the following copyright and license:
-#
-#
-#    OpenERP, Open Source Management Solution>..
-#    Copyright (C) 2004-2010 OpenERP SA (<http://openerp.com>).
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#
-##############################################################################
+#############################################################################
 
 import uno
 import string
@@ -123,6 +99,7 @@ class SendtoServer(unohelper.Base, XJobExecutor):
         self.win.addFixedText("lblReportName", 2, 30, 50, 15, "Technical Name :")
         self.win.addEdit("txtReportName", -5, 25, 123, 15,report_name)
         self.win.addCheckBox("chkHeader", 51, 45, 70 ,15, "Corporate Header")
+        self.win.setCheckBoxState("chkHeader", True)
         self.win.addFixedText("lblResourceType", 2 , 60, 50, 15, "Select Rpt. Type :")
         self.win.addComboListBox("lstResourceType", -5, 58, 123, 15,True,itemListenerProc=self.lstbox_selected)
         self.lstResourceType = self.win.getControl( "lstResourceType" )
@@ -190,7 +167,6 @@ class SendtoServer(unohelper.Base, XJobExecutor):
             #sock = xmlrpclib.ServerProxy(docinfo.getUserFieldValue(0) +'/xmlrpc/object')
 
             file_type = oDoc2.getURL()[7:].split(".")[-1]
-            res = self.sock.execute(database, uid, self.password, 'ir.actions.report.xml', 'upload_report', int(docinfo.getUserFieldValue(2)),base64.encodestring(data),file_type,{})
             params = {
                 'name': self.win.getEditText("txtName"),
                 'model': docinfo.getUserFieldValue(3),
@@ -200,7 +176,12 @@ class SendtoServer(unohelper.Base, XJobExecutor):
             }
             if self.win.getListBoxSelectedItem("lstResourceType")=='OpenOffice':
                 params['report_type']=file_type
-            res = self.sock.execute(database, uid, self.password, 'ir.actions.report.xml', 'write', int(docinfo.getUserFieldValue(2)), params)
+            self.sock.execute(database, uid, self.password, 'ir.actions.report.xml', 'write', int(docinfo.getUserFieldValue(2)), params)
+
+            # Call upload_report as the *last* step, as it will call register_all() and cause the report service
+            # to be loaded - which requires all the data to be correct in the database
+            self.sock.execute(database, uid, self.password, 'ir.actions.report.xml', 'upload_report', int(docinfo.getUserFieldValue(2)),base64.encodestring(data),file_type,{})
+
             self.logobj.log_write('SendToServer',LOG_INFO, ':Report %s successfully send using %s'%(params['name'],database))
             self.win.endExecute()
         else:

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-03-10 20:27+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:58+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:53+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -25,7 +25,18 @@ msgstr "Ütemezések"
 #. module: procurement
 #: model:ir.model,name:procurement.model_make_procurement
 msgid "Make Procurements"
+msgstr "Beszerzések létrehozása"
+
+#. module: procurement
+#: help:res.company,schedule_range:0
+msgid ""
+"This is the time frame analysed by the scheduler when computing "
+"procurements. All procurements that are not between today and today+range "
+"are skipped for future computation."
 msgstr ""
+"Ez az az időkeret amit az időzítő elemez a beszerezés számításánál. Azok a "
+"beszerzések melyek nincsenek a mai nap és a mai nap + tartomány között, azok "
+"át lesznek lépve és ki lesznek számolva a jövőben."
 
 #. module: procurement
 #: help:procurement.order.compute.all,automatic:0
@@ -34,6 +45,9 @@ msgid ""
 "under 0. You should probably not use this option, we suggest using a MTO "
 "configuration on products."
 msgstr ""
+"Automatikus beszerzést kapcsol az összes 0 alatti virtuális raktárú "
+"termékre. Nem kellene használnia ezt a lehetőséget, ha használja a "
+"Rendelésre feladás beállítást ehhez a termékhez."
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
@@ -44,6 +58,7 @@ msgstr "Csoportosítás..."
 #: help:stock.warehouse.orderpoint,procurement_draft_ids:0
 msgid "Draft procurement of the product and location of that orderpoint"
 msgstr ""
+"A termékre és termékhelyre tervezet beszerzés, ehhez a megrendelési ponthoz."
 
 #. module: procurement
 #: view:product.product:0
@@ -51,6 +66,13 @@ msgid ""
 "required quantities are always\n"
 "                           available"
 msgstr ""
+"igényelt mennyiség mindig\n"
+"                           elérhető"
+
+#. module: procurement
+#: view:procurement.order:0
+msgid "External note..."
+msgstr "Külső megjegyzés"
 
 #. module: procurement
 #: view:product.product:0
@@ -60,6 +82,11 @@ msgid ""
 "inventory, you should\n"
 "                           create others rules like orderpoints."
 msgstr ""
+"Ha nincs elegendő elérhető mennyiség, a kiszállítási kézbesítési bizonylat "
+"új\n"
+"                           termékekre fog várni. A készlet kielégítésére, "
+"más szabályokat\n"
+"                           kell létrehoznia, mint megrendelési pontok."
 
 #. module: procurement
 #: field:procurement.order,procure_method:0
@@ -70,7 +97,7 @@ msgstr "Beszerzési módszer"
 #. module: procurement
 #: selection:product.template,supply_method:0
 msgid "Manufacture"
-msgstr ""
+msgstr "Gyártás"
 
 #. module: procurement
 #: model:process.process,name:procurement.process_process_serviceproductprocess0
@@ -80,12 +107,12 @@ msgstr "Szolgáltatás"
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.action_procurement_compute
 msgid "Compute Stock Minimum Rules Only"
-msgstr ""
+msgstr "Szükséglet számítás minimum készlet szabály szerint"
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Rules"
-msgstr ""
+msgstr "Szabályok"
 
 #. module: procurement
 #: field:procurement.order,company_id:0
@@ -96,7 +123,7 @@ msgstr "Vállalat"
 #. module: procurement
 #: field:procurement.order,product_uos_qty:0
 msgid "UoS Quantity"
-msgstr ""
+msgstr "Eladási mértékegység menynisége"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -106,7 +133,7 @@ msgstr "Ok"
 #. module: procurement
 #: view:procurement.order.compute:0
 msgid "Compute Procurements"
-msgstr ""
+msgstr "Beszerzés számítás"
 
 #. module: procurement
 #: field:procurement.order,message:0
@@ -116,12 +143,12 @@ msgstr "Legutolsó hiba"
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_min_qty:0
 msgid "Minimum Quantity"
-msgstr ""
+msgstr "Minimum mennyiség"
 
 #. module: procurement
 #: help:mrp.property,composition:0
 msgid "Not used in computations, for information purpose only."
-msgstr ""
+msgstr "Nem használt a számításhoz, csak információként szolgál."
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_id:0
@@ -138,36 +165,42 @@ msgid ""
 "will generate a procurement request to increase the stock up to the maximum "
 "quantity."
 msgstr ""
+"Minimum készlet szabályt tud meghatározni, így az OpenERP automatikusan "
+"fogja létrehozni a gyártási megrendelés tervezeteket vagy beszerzési "
+"megrendeléseket a raktárkészlet alapján. Ha egyszer a terméknek a virtuális "
+"készlete (= készleten lévő mínusz minden visszaigazolt megrendelés és "
+"lefoglalások) a minimum mennyiség alatt vannak, OpenERP beszerzési igényt "
+"fog generálni a raktárkészlet növeléséhez egészen a maximum mennyiségig."
 
 #. module: procurement
 #: field:procurement.order,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Üzenetek"
 
 #. module: procurement
-#: help:procurement.order,message:0
-msgid "Exception occurred while computing procurement orders."
-msgstr ""
+#: view:procurement.order:0
+msgid "Cancel Procurement"
+msgstr "Beszerzés visszavonása"
 
 #. module: procurement
 #: view:product.product:0
 msgid "Products"
-msgstr ""
+msgstr "Termékek"
 
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Visszavont"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Permanent Procurement Exceptions"
-msgstr ""
+msgstr "Állandó beszerzés kizárások"
 
 #. module: procurement
 #: help:procurement.order,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 
 #. module: procurement
 #: view:procurement.order.compute.all:0
@@ -182,13 +215,13 @@ msgstr "Készletmozgás"
 #. module: procurement
 #: view:product.product:0
 msgid "Stockable products"
-msgstr ""
+msgstr "Raktározható termékek"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:137
+#: code:addons/procurement/procurement.py:138
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Érvénytelen lépés!"
 
 #. module: procurement
 #: help:procurement.order,message_summary:0
@@ -196,6 +229,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"A chettelés összegzést megállítja (üzenetek száma,...). Ez az összegzés "
+"direkt HTML formátumú ahhoz hogy beilleszthető legyen a kanban nézetekbe."
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -205,7 +240,7 @@ msgstr "Kész"
 #. module: procurement
 #: field:procurement.order.compute.all,automatic:0
 msgid "Automatic orderpoint"
-msgstr ""
+msgstr "Automatikus megrendelés pontja"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_exceptions
@@ -224,6 +259,20 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Beszerzési megrendelés képviseli a termékek bizonyos "
+"mennyiségi igényét, egy megadott időben, a megadott helyen. Vevői "
+"megrendelések tipikus forrásai a beszerzési megrendeléseknek (de ezek "
+"különálló dokumentumok). A beszerzési paraméterektől és a termék "
+"beállításától függően, a beszerzési motor kísérletet tesz a kérésnek eleget "
+"tenni a termék készletről való visszahívásával, a termék beszállítótól való "
+"rendelésével, vagy egy gyártási megrendelés kiállításával, stb. Egy "
+"beszerzési kifogás történhet ha a rendszer nem talál módot az igény "
+"kielégítésére. Egyes kifogások saját maguktól megoldódnak automatikusan, de "
+"mások kézi beavatkozást igényelnek (ezeket egy sajátos hiba üzenet "
+"azonosítja).\n"
+"                </p>\n"
+"            "
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -249,7 +298,7 @@ msgstr "Megerősítés"
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Quantity Multiple"
-msgstr ""
+msgstr "Mennyiség sokszorozás"
 
 #. module: procurement
 #: help:procurement.order,origin:0
@@ -257,11 +306,13 @@ msgid ""
 "Reference of the document that created this Procurement.\n"
 "This is automatically completed by OpenERP."
 msgstr ""
+"Ezt a beszerzést létrehozó dokumentumnak a hivatkozása.\n"
+"Ezt az OpenERP automatikusan kitöltötte."
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Procurement Orders to Process"
-msgstr ""
+msgstr "Beszerzési utasítások végrehajtásra"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
@@ -269,10 +320,10 @@ msgid "Minimum Inventory Rule"
 msgstr "Minimum készlet szabály"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:369
+#: code:addons/procurement/procurement.py:370
 #, python-format
 msgid "Procurement '%s' is in exception: "
-msgstr ""
+msgstr "Beszerzés '%s' kifogásolva van: "
 
 #. module: procurement
 #: field:procurement.order,priority:0
@@ -282,7 +333,7 @@ msgstr "Prioritás"
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Reordering Rules Search"
-msgstr ""
+msgstr "Újrerendelési szabályok keresése"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -292,7 +343,7 @@ msgstr "Várakozó"
 #. module: procurement
 #: field:procurement.order,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Követők"
 
 #. module: procurement
 #: field:procurement.order,location_id:0
@@ -322,17 +373,17 @@ msgstr "Legjobb ár (még nem aktív!)"
 #: code:addons/procurement/schedulers.py:110
 #, python-format
 msgid "PROC %d: from stock - %3.2f %-5s - %s"
-msgstr ""
+msgstr "PROC %d: raktárról - %3.2f %-5s - %s"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute
 msgid "Compute Procurement"
-msgstr ""
+msgstr "Beszerzés számítás"
 
 #. module: procurement
 #: field:res.company,schedule_range:0
 msgid "Scheduler Range Days"
-msgstr ""
+msgstr "Ütemterv tartomány nanjai"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -356,10 +407,11 @@ msgid "Quantity"
 msgstr "Mennyiség"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:364
+#: code:addons/procurement/procurement.py:365
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr ""
+"Nincs definiálva elegendő készlet és mimimum megrendelés pontja szabály."
 
 #. module: procurement
 #: field:make.procurement,uom_id:0
@@ -371,7 +423,7 @@ msgstr "Mértékegység"
 #: selection:procurement.order,procure_method:0
 #: selection:product.template,procure_method:0
 msgid "Make to Stock"
-msgstr ""
+msgstr "Beszerzés készletből"
 
 #. module: procurement
 #: model:ir.actions.act_window,help:procurement.procurement_action
@@ -393,6 +445,23 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson beszerzési megrendelés létrehozásához. \n"
+"              </p><p>\n"
+"                A beszerzési megrendelést a konkrét helyen és konkrét "
+"termék\n"
+"                igényének rögzítésére használják.  A beszerzési "
+"megrendelések\n"
+"                általában automatikusan létrehozottak megrendelésekből, "
+"kihúzási \n"
+"                logisztikából vagy minimum készlet szabályokból.\n"
+"              </p><p>\n"
+"                Beszerzési megrendelés visszaigazolása után, automatikusan\n"
+"                létrehozza a szükséges műveleteket az igény kielégítéséhez: "
+"beszerzési\n"
+"                megrendelés javaslat, gyártási megrendelés, stb.\n"
+"              </p>\n"
+"            "
 
 #. module: procurement
 #: help:procurement.order,procure_method:0
@@ -400,6 +469,8 @@ msgid ""
 "If you encode manually a Procurement, you probably want to use a make to "
 "order method."
 msgstr ""
+"Ha kézzel viszi be a beszerzési megrendelést, akkor biztosan a készlet a "
+"gyártásból módszert használja."
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_procurement
@@ -412,6 +483,8 @@ msgid ""
 "use the available\n"
 "                           inventory"
 msgstr ""
+"használja az elérhető\n"
+"                           készletet"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order
@@ -428,7 +501,7 @@ msgstr "Beszerzési megrendelések"
 #. module: procurement
 #: view:procurement.order:0
 msgid "To Fix"
-msgstr ""
+msgstr "Rögzít"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -438,33 +511,38 @@ msgstr "Kivételek"
 #. module: procurement
 #: model:process.node,note:procurement.process_node_serviceonorder0
 msgid "Assignment from Production or Purchase Order."
-msgstr ""
+msgstr "Ellátás gyártási vagy beszerzési megrendelésből."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_mrp_property
 msgid "Property"
-msgstr ""
+msgstr "Tulajdonság"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.act_make_procurement
 #: view:make.procurement:0
 msgid "Procurement Request"
-msgstr ""
+msgstr "Beszerzési igény"
 
 #. module: procurement
 #: view:procurement.orderpoint.compute:0
 msgid "Compute Stock"
-msgstr ""
+msgstr "Készlet számítás"
+
+#. module: procurement
+#: view:procurement.order:0
+msgid "e.g. SO005"
+msgstr "pl. SO005"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_draft_ids:0
 msgid "Related Procurement Orders"
-msgstr ""
+msgstr "Kapcsolódó beszerzési megrendelések"
 
 #. module: procurement
 #: field:procurement.order,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Olvasatlan üzenetek"
 
 #. module: procurement
 #: selection:mrp.property,composition:0
@@ -484,6 +562,15 @@ msgid ""
 " It is in 'Waiting'. status when the procurement is waiting for another one "
 "to finish."
 msgstr ""
+"Ha egy beszerzést rögzít akkor annak állapota a 'Terv' lesz.\n"
+" Ha a beszerzés visszaigazolt, az állapot be lesz állítva mint "
+"'Visszaigazolt'.            \n"
+"A visszaigazolás után az állapot be lesz állítva mint 'Folyamatban'.\n"
+" Ha valamilyen kifogás van a megrendelésben az állapot be lesz állítva mint "
+"'Kifogásolva'.\n"
+" Miután a kifogás meg lett oldva és eltávolítva az állapot be lesz állítva "
+"mint 'Kész'.\n"
+" 'Várakozik' állapotban van, ha a beszerzés egy másik befejezésére vár."
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,active:0
@@ -491,26 +578,25 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "orderpoint without removing it."
 msgstr ""
+"Ha az aktív mező hamisra állított, akkor lehetősége van a megrendelési "
+"pontot eltüntetni, annak törlése nélkül."
 
 #. module: procurement
-#: view:product.product:0
-msgid ""
-"When you sell this service, nothing special will be triggered\n"
-"                           to deliver the customer, as you set the "
-"procurement method as\n"
-"                           'Make to Stock'."
-msgstr ""
+#: view:procurement.order:0
+msgid "Internal note..."
+msgstr "Belső jegyzet..."
 
 #. module: procurement
 #: help:procurement.orderpoint.compute,automatic:0
 msgid "If the stock of a product is under 0, it will act like an orderpoint"
 msgstr ""
+"Ha a termék készlete 0 alatti, akkor az úgy működik mint megrendelési pont"
 
 #. module: procurement
 #: field:procurement.order,product_uom:0
 #: field:stock.warehouse.orderpoint,product_uom:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Termék mértékegysége"
 
 #. module: procurement
 #: constraint:stock.warehouse.orderpoint:0
@@ -518,6 +604,8 @@ msgid ""
 "You have to select a product unit of measure in the same category than the "
 "default unit of measure of the product"
 msgstr ""
+"Ki kell választania a termék mértékegységét ugyanabból a kategóriából mint a "
+"termék alapértelmezett mértékegysége"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -530,6 +618,8 @@ msgid ""
 "as it's a consumable (as a result of this, the quantity\n"
 "                           on hand may become negative)."
 msgstr ""
+"mivel ez fogyasztási cikk (ennek eredményeképpen, a készlet\n"
+"                           mennyiség negatív lehet ezután)."
 
 #. module: procurement
 #: field:procurement.order,note:0
@@ -543,6 +633,9 @@ msgid ""
 "OpenERP generates a procurement to bring the forecasted quantity to the Max "
 "Quantity."
 msgstr ""
+"Ha a virtuális készlet kevesebb lesz mint az ehhez a mezőhöz tartozó Min "
+"mennyiség, OpenERP generálni fog egy beszerzést ahhoz, hogy az előzetes "
+"mennyiséget Max mennyiségbe emelje."
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -554,12 +647,12 @@ msgstr "Tervezet"
 #: model:ir.ui.menu,name:procurement.menu_stock_proc_schedulers
 #: view:procurement.order.compute.all:0
 msgid "Run Schedulers"
-msgstr ""
+msgstr "Ütemezők futtatása"
 
 #. module: procurement
 #: view:procurement.order.compute:0
 msgid "This wizard will schedule procurements."
-msgstr ""
+msgstr "Ez a varázsló ütemezni fogja a beszerzéseket"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -570,12 +663,12 @@ msgstr "Állapot"
 #. module: procurement
 #: selection:product.template,supply_method:0
 msgid "Buy"
-msgstr ""
+msgstr "Vásárlás"
 
 #. module: procurement
 #: view:product.product:0
 msgid "for the delivery order."
-msgstr ""
+msgstr "a megrendeléshez."
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -589,22 +682,25 @@ msgid ""
 "will be generated, depending on the product type. \n"
 "Buy: When procuring the product, a purchase order will be generated."
 msgstr ""
+"Gyártás: Ha a terméket gyártja, egy gyártási megrendelés vagy munka "
+"megrendelés lesz generálva, a termék típusától függően. \n"
+"Vásárlás: Ha beszerezi a terméket, egy megrendelés lesz generálva."
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_max_qty:0
 msgid "Maximum Quantity"
-msgstr ""
+msgstr "Maximális mennyiség"
 
 #. module: procurement
 #: field:procurement.order,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Ez egy követő"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:366
+#: code:addons/procurement/procurement.py:367
 #, python-format
 msgid "Not enough stock."
-msgstr ""
+msgstr "Nincs elég készlet."
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,active:0
@@ -617,12 +713,14 @@ msgid "Procure Products"
 msgstr "Termékek beszerzése"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:311
+#: code:addons/procurement/procurement.py:312
 #, python-format
 msgid ""
 "Please check the quantity in procurement order(s) for the product \"%s\", it "
 "should not be 0 or less!"
 msgstr ""
+"Kérem ellenőrizze a beszerzési megrendelése(ke)n a mennyiséget erre a "
+"termékre \"%s\", nem lehet 0 vagy kisebb!"
 
 #. module: procurement
 #: field:procurement.order,date_planned:0
@@ -640,17 +738,20 @@ msgid ""
 "When you sell this product, a delivery order will be created.\n"
 "                           OpenERP will consider that the"
 msgstr ""
+"Ha értékesíti ezt a terméket, egy kézbesítési kiszállítási jegy lesz "
+"létrehozva.\n"
+"                           OpenERP úgy fogja tekinteni mint"
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:133
 #, python-format
 msgid "Automatic OP: %s"
-msgstr ""
+msgstr "Automatikus megrendelési pont: %s"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_orderpoint_compute
 msgid "Automatic Order Point"
-msgstr ""
+msgstr "Automatikus megrendelési pont"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,qty_multiple:0
@@ -658,9 +759,23 @@ msgid "Qty Multiple"
 msgstr "Rendelési egység"
 
 #. module: procurement
+#: view:product.product:0
+msgid ""
+"When you sell this service, nothing special will be triggered\n"
+"                           to deliver the customer, as you set the "
+"procurement method as\n"
+"                           'Make to Stock'."
+msgstr ""
+"Ha értékesíti ezt a szolgáltatást, nem lesz különösebb kapcsolás "
+"végrehajtva\n"
+"                           szállítva lesz a vevőnek, a beszerzési módban "
+"beállítottak szerint mint\n"
+"                           'Beszerzés készletből'."
+
+#. module: procurement
 #: help:stock.warehouse.orderpoint,qty_multiple:0
 msgid "The procurement quantity will be rounded up to this multiple."
-msgstr ""
+msgstr "A beszerzési mennyiség kerekítve lesz eddig a sokszorosig."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_res_company
@@ -675,17 +790,17 @@ msgstr "Extra információ"
 #. module: procurement
 #: field:procurement.order,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Összegzés"
 
 #. module: procurement
 #: sql_constraint:stock.warehouse.orderpoint:0
 msgid "Qty Multiple must be greater than zero."
-msgstr ""
+msgstr "Mennyiség sokszorosnak nagyobbnak kell lenninie mint nulla."
 
 #. module: procurement
 #: selection:stock.warehouse.orderpoint,logic:0
 msgid "Order to Max"
-msgstr ""
+msgstr "Maximumig rendelés"
 
 #. module: procurement
 #: field:procurement.order,date_close:0
@@ -695,7 +810,7 @@ msgstr "Lezárás dátuma"
 #. module: procurement
 #: view:res.company:0
 msgid "Logistics"
-msgstr ""
+msgstr "Logisztika"
 
 #. module: procurement
 #: help:product.template,procure_method:0
@@ -704,14 +819,18 @@ msgid ""
 "for replenishment. \n"
 "Make to Order: When needed, the product is purchased or produced."
 msgstr ""
+"Beszerzés készletből: Ha szükség van rá, a termék a raktár készletről vagy "
+"megvárja a feltöltést. \n"
+"Beszerzés megrendelésből/vásárlásból: Ha szükség van rá, a termék meg lesz "
+"vásárolva vagy termelve lesz."
 
 #. module: procurement
 #: field:mrp.property,composition:0
 msgid "Properties composition"
-msgstr ""
+msgstr "Összetételek tulajdonságai"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:310
+#: code:addons/procurement/procurement.py:311
 #, python-format
 msgid "Data Insufficient !"
 msgstr "Elégtelen adat !"
@@ -721,7 +840,7 @@ msgstr "Elégtelen adat !"
 #: field:mrp.property,group_id:0
 #: field:mrp.property.group,name:0
 msgid "Property Group"
-msgstr ""
+msgstr "Tulajdonságcsoport"
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
@@ -736,7 +855,7 @@ msgstr "Beszerzések"
 #. module: procurement
 #: view:procurement.order:0
 msgid "Run Procurement"
-msgstr ""
+msgstr "Beszerzés fut"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -745,17 +864,16 @@ msgstr "Kész"
 
 #. module: procurement
 #: view:make.procurement:0
-#: view:procurement.order:0
 #: view:procurement.order.compute:0
 #: view:procurement.order.compute.all:0
 #: view:procurement.orderpoint.compute:0
 msgid "Cancel"
-msgstr ""
+msgstr "Mégsem"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,logic:0
 msgid "Reordering Mode"
-msgstr ""
+msgstr "Újrarendelési mód"
 
 #. module: procurement
 #: field:procurement.order,origin:0
@@ -768,10 +886,13 @@ msgid "Not urgent"
 msgstr "Nem sürgős"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.product_open_orderpoint
-#: view:product.product:0
-msgid "Orderpoints"
-msgstr ""
+#: model:ir.actions.act_window,name:procurement.procurement_action5
+#: model:ir.actions.act_window,name:procurement.procurement_action_board
+#: model:ir.actions.act_window,name:procurement.procurement_exceptions
+#: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
+#: view:procurement.order:0
+msgid "Procurement Exceptions"
+msgstr "Beszerzési kifogások"
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_max_qty:0
@@ -780,11 +901,14 @@ msgid ""
 "procurement to bring the forecasted quantity to the Quantity specified as "
 "Max Quantity."
 msgstr ""
+"Ha a virtuális készlet a Min mennyiség alá csökken, OpenERP beszerzést "
+"generál, hogy visszaállítsa az előrejelzett mennyiséget a Max mennyiségben "
+"beállított értékre."
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute_all
 msgid "Compute all schedulers"
-msgstr ""
+msgstr "Összes ütemező futtatása"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -794,16 +918,13 @@ msgstr "Később"
 #. module: procurement
 #: view:board.board:0
 msgid "Procurements in Exception"
-msgstr ""
+msgstr "Beszerzések kifogásolásban"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.procurement_action5
-#: model:ir.actions.act_window,name:procurement.procurement_action_board
-#: model:ir.actions.act_window,name:procurement.procurement_exceptions
-#: model:ir.ui.menu,name:procurement.menu_stock_procurement_action
-#: view:procurement.order:0
-msgid "Procurement Exceptions"
-msgstr ""
+#: model:ir.actions.act_window,name:procurement.product_open_orderpoint
+#: view:product.product:0
+msgid "Orderpoints"
+msgstr "Megrendelési pont"
 
 #. module: procurement
 #: field:product.product,orderpoint_ids:0
@@ -820,11 +941,17 @@ msgid ""
 "order or\n"
 "                        a new task."
 msgstr ""
+"Ennek kitöltésével erre a termékre beszerzési igényt indít.\n"
+"                        A termék beállítása szerint, kapcsolhat egy "
+"beszerzési\n"
+"                        megrendelés tervet, egy gyártási megrendelést vagy "
+"egy\n"
+"                        új munkát."
 
 #. module: procurement
 #: field:procurement.order,close_move:0
 msgid "Close Move at end"
-msgstr ""
+msgstr "A beszerzés végén bezárja"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -860,19 +987,19 @@ msgstr "Sürgős"
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Running"
-msgstr ""
+msgstr "Folyamatban lévő"
 
 #. module: procurement
 #: model:process.node,name:procurement.process_node_serviceonorder0
 #: selection:procurement.order,procure_method:0
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
-msgstr "Rendelésre gyártás/vásárlás"
+msgstr "Beszerzés megrendelésből/vásárlásból"
 
 #. module: procurement
 #: field:product.template,supply_method:0
 msgid "Supply Method"
-msgstr ""
+msgstr "Ellátás módja"
 
 #. module: procurement
 #: field:procurement.order,move_id:0
@@ -887,12 +1014,12 @@ msgstr "A beszerzési út függ a termék típusától."
 #. module: procurement
 #: view:product.product:0
 msgid "When you sell this product, OpenERP will"
-msgstr ""
+msgstr "Ha értékesíti ezt a terméket, akkor az OpenERP fogja"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Temporary Procurement Exceptions"
-msgstr ""
+msgstr "Ideiglenes beszerzési kifogások"
 
 #. module: procurement
 #: field:mrp.property,name:0
@@ -912,13 +1039,15 @@ msgstr "max."
 #: model:ir.ui.menu,name:procurement.menu_stock_order_points
 #: view:stock.warehouse.orderpoint:0
 msgid "Reordering Rules"
-msgstr ""
+msgstr "Újrarendelési szabályok"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:138
+#: code:addons/procurement/procurement.py:139
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state."
 msgstr ""
+"Nem tudja törölni a beszerzési megrendelés(eke)t melyek a %s  állapotban "
+"vannak."
 
 #. module: procurement
 #: field:procurement.order,product_uos:0
@@ -928,13 +1057,15 @@ msgstr "Termék eladási egysége"
 #. module: procurement
 #: model:ir.model,name:procurement.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Terméksablon"
 
 #. module: procurement
 #: view:procurement.orderpoint.compute:0
 msgid ""
 "Wizard checks all the stock minimum rules and generate procurement order."
 msgstr ""
+"A varázsló ellenőrzi az összes raktár készlet minimum szabályt és beszerzési "
+"megrendelést generál."
 
 #. module: procurement
 #: view:procurement.order:0
@@ -942,12 +1073,9 @@ msgid "Search Procurement"
 msgstr "Beszerzés keresése"
 
 #. module: procurement
-#: help:res.company,schedule_range:0
-msgid ""
-"This is the time frame analysed by the scheduler when computing "
-"procurements. All procurements that are not between today and today+range "
-"are skipped for future computation."
-msgstr ""
+#: help:procurement.order,message:0
+msgid "Exception occurred while computing procurement orders."
+msgstr "Kizárás történt a beszerzés számítása közben."
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -957,22 +1085,22 @@ msgstr "Nagyon sürgős"
 #. module: procurement
 #: field:procurement.orderpoint.compute,automatic:0
 msgid "Automatic Orderpoint"
-msgstr ""
+msgstr "Automatikus megrendelési pont"
 
 #. module: procurement
 #: help:procurement.order,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Üzenetek és kommunikáció történet"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Procurement started late"
-msgstr ""
+msgstr "A beszerzés később indult"
 
 #. module: procurement
 #: selection:mrp.property,composition:0
 msgid "min"
-msgstr ""
+msgstr "perc"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -980,27 +1108,27 @@ msgstr ""
 #: view:procurement.order.compute.all:0
 #: view:procurement.orderpoint.compute:0
 msgid "or"
-msgstr ""
+msgstr "vagy"
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:134
 #, python-format
 msgid "SCHEDULER"
-msgstr ""
+msgstr "ÜTEMEZŐ"
 
 #. module: procurement
 #: view:product.product:0
 msgid "Request Procurement"
-msgstr ""
+msgstr "Beszerzési igény"
 
 #. module: procurement
 #: code:addons/procurement/schedulers.py:87
 #, python-format
 msgid "PROC %d: on order - %3.2f %-5s - %s"
-msgstr ""
+msgstr "PROC %d: megrendelésen - %3.2f %-5s - %s"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:338
+#: code:addons/procurement/procurement.py:339
 #, python-format
 msgid "Products reserved from stock."
-msgstr ""
+msgstr "Termék a raktárkészletről foglalva."

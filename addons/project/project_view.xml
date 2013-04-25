@@ -77,7 +77,7 @@
                     <button name="set_template" string="Set as Template" type="object" states="open" groups="base.group_user"/>
                     <button string="New Project Based on Template" name="duplicate_template"  type="object" states="template" context="{'parent_id':parent_id}" class="oe_highlight" groups="base.group_user"/>
                     <button name="reset_project" string="Reset as Project" type="object" states="template" class="oe_highlight" groups="base.group_user"/>
-                    <button name="set_cancel" string="Cancel" type="object" states="open,pending" groups="base.group_user"/>
+                    <button name="set_cancel" string="Cancel Project" type="object" states="open,pending" groups="base.group_user"/>
                     <field name="state" widget="statusbar" statusbar_visible="open,close" statusbar_colors='{"pending":"blue"}' readonly="1"/>
                 </header>
                 <sheet string="Project">
@@ -153,7 +153,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Tasks Stages" attrs="{'invisible': [('use_tasks', '=', False)]}">
+                        <page string="Project Stages" attrs="{'invisible': [('use_tasks', '=', False)]}" name="project_stages">
                              <field name="type_ids"/>
                         </page>
                     </notebook>
@@ -182,7 +182,7 @@
                     <separator/>
                     <filter string="Project(s) Manager" domain="[('user_id','=',uid)]" help="Projects in which I am a manager" icon="terp-personal"/>
                     <field name="user_id" string="Project Manager"/>
-                    <field name="partner_id" string="Contact"/>
+                    <field name="partner_id" string="Contact" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <group expand="0" string="Group By...">
                         <filter string="Manager" name="Manager" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Contact" name="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
@@ -476,7 +476,6 @@
                     <field name="remaining_hours" sum="Remaining Time" groups="project.group_time_work_estimation_tasks"/>
                     <field name="date_deadline"/>
                     <field name="message_summary"/>
-                    <field name="message_unread"/>
                     <field name="categ_ids"/>
                     <templates>
                     <t t-name="kanban-box">
@@ -523,6 +522,7 @@
                                     </span>
                                 </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:5px;">
+                                    <t t-raw="record.message_summary.raw_value"/>
                                     <field name="categ_ids"/>
                                 </div>
                             </div>
@@ -747,6 +747,37 @@
 
         <!-- User Form -->
         <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" domain="[('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned Tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
+
+        <!-- Tags -->
+        <record model="ir.ui.view" id="project_category_search_view">
+            <field name="name">Tags</field>
+            <field name="model">project.category</field>
+            <field name="arch" type="xml">
+                <search string="Issue Version">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="project_category_form_view">
+            <field name="name">Tags</field>
+            <field name="model">project.category</field>
+            <field name="arch" type="xml">
+                <form string="Tags">
+                    <field name="name"/>
+                </form>
+            </field>
+        </record>
+        <record id="project_category_action" model="ir.actions.act_window">
+            <field name="name">Tags</field>
+            <field name="res_model">project.category</field>
+            <field name="view_type">form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new tag.
+              </p>
+            </field>
+        </record>
+        <menuitem action="project_category_action" id="menu_project_category_act" parent="base.menu_definitions" groups="base.group_no_one"/>
 
     </data>
 </openerp>

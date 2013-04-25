@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-27 13:48+0000\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-07 18:56+0000\n"
 "Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-28 05:58+0000\n"
-"X-Generator: Launchpad (build 16451)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:40+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_anonymous_manager:0
@@ -33,6 +33,11 @@ msgstr "Incepeti Evaluarea"
 #: view:hr_evaluation.plan:0
 msgid "Group By..."
 msgstr "Grupati dupa..."
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Cancel Appraisal"
+msgstr "Anulati Evaluarea"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,request_id:0
@@ -162,12 +167,9 @@ msgid "Ending Date"
 msgstr "Data de sfarsit"
 
 #. module: hr_evaluation
-#: help:hr_evaluation.evaluation,note_action:0
-msgid ""
-"If the evaluation does not meet the expectations, you can proposean action "
-"plan"
-msgstr ""
-"Daca evaluarea nu raspunde asteptarilor, puteti propune un plan de actiune"
+#: field:hr_evaluation.plan,month_first:0
+msgid "First Appraisal in (months)"
+msgstr "Prima Evaluare in (luni)"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -251,6 +253,11 @@ msgstr "Evaluari in desfasurare"
 #: model:ir.model,name:hr_evaluation.model_survey_request
 msgid "survey.request"
 msgstr "cerere.sondaj"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:0
+msgid "Cancel Survey"
+msgstr "Anulati Sondajul"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -508,9 +515,12 @@ msgid "Legend"
 msgstr "Legenda"
 
 #. module: hr_evaluation
-#: field:hr_evaluation.plan,month_first:0
-msgid "First Appraisal in (months)"
-msgstr "Prima Evaluare in (luni)"
+#: help:hr_evaluation.evaluation,note_action:0
+msgid ""
+"If the evaluation does not meet the expectations, you can proposean action "
+"plan"
+msgstr ""
+"Daca evaluarea nu raspunde asteptarilor, puteti propune un plan de actiune"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,state:0
@@ -725,12 +735,6 @@ msgid "Appraisal Interview"
 msgstr "Interviu evaluare"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-#: view:hr_evaluation.evaluation:0
-msgid "Cancel"
-msgstr "Anulati"
-
-#. module: hr_evaluation
 #: view:hr.evaluation.report:0
 msgid "In Progress"
 msgstr "In curs de desfasurare"
@@ -875,6 +879,11 @@ msgid "You cannot start evaluation without Appraisal."
 msgstr "Nu puteti incepe evaluarea fara Apreciere."
 
 #. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Appraisal Summary..."
+msgstr "Rezumat Evaluari..."
+
+#. module: hr_evaluation
 #: field:hr.evaluation.interview,user_to_review_id:0
 msgid "Employee to Interview"
 msgstr "Angajatul care va fi intervievat"
@@ -976,3 +985,11 @@ msgstr "Rezumat Apreciere"
 #: field:hr.employee,evaluation_date:0
 msgid "Next Appraisal Date"
 msgstr "Data Urmatoarei Aprecieri"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Action Plan..."
+msgstr "Plan de Actiune..."
+
+#~ msgid "Cancel"
+#~ msgstr "Anulati"

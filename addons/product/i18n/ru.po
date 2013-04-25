@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-02-04 13:48+0000\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-02-07 10:16+0000\n"
 "Last-Translator: Denis Karataev <dskarataev@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-05 05:23+0000\n"
-"X-Generator: Launchpad (build 16468)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:54+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -284,6 +284,11 @@ msgid "Laptop E5023"
 msgstr ""
 
 #. module: product
+#: field:product.price_list,qty1:0
+msgid "Quantity-1"
+msgstr "Количество-1"
+
+#. module: product
 #: help:product.packaging,ul_qty:0
 msgid "The number of packages by layer"
 msgstr "Количество упаковок на слой"
@@ -465,9 +470,9 @@ msgid "Quantity-3"
 msgstr "Количество-3"
 
 #. module: product
-#: field:product.price_list,qty1:0
-msgid "Quantity-1"
-msgstr "Количество-1"
+#: model:res.groups,name:product.group_product_variant
+msgid "Product Variant (not supported)"
+msgstr ""
 
 #. module: product
 #: field:product.price_list,qty4:0
@@ -779,6 +784,11 @@ msgid "External Hard disk"
 msgstr "Внешний жесткий диск"
 
 #. module: product
+#: view:product.product:0
+msgid "describe the product characteristics..."
+msgstr ""
+
+#. module: product
 #: help:product.template,standard_price:0
 msgid ""
 "Cost price of the product used for standard stock valuation in accounting "
@@ -1052,6 +1062,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Нажмите для добавления нового продукта.\n"
+"              </p><p>\n"
+"                Вы должны определить продукт для всего что вы продаете, будь "
+"то\n"
+"                материальный продукт, потребляемый или услуга которую вы "
+"оказываете\n"
+"                клиентам.\n"
+"              </p><p>\n"
+"                Форма продукта содержит информацию для упрощения процесса\n"
+"                продажи: цена, описание для заявок, бухгалтерская "
+"информация,\n"
+"                методы снабжения, и т.д.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: view:product.price_list:0
@@ -1138,7 +1163,6 @@ msgstr "Логистические единицы"
 #: field:product.category,name:0
 #: field:product.pricelist.type,name:0
 #: field:product.pricelist.version,name:0
-#: field:product.product,name_template:0
 #: field:product.template,name:0
 #: field:product.ul,name:0
 #: field:product.uom.categ,name:0
@@ -1299,6 +1323,11 @@ msgid "Specify the minimum amount of margin over the base price."
 msgstr "Укажите минимальную наценку к базовой цене."
 
 #. module: product
+#: field:product.product,name_template:0
+msgid "Template Name"
+msgstr ""
+
+#. module: product
 #: field:product.template,weight_net:0
 msgid "Net Weight"
 msgstr "Вес нетто"
@@ -1323,6 +1352,11 @@ msgstr ""
 msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+msgid "This note will be displayed on requests for quotation..."
 msgstr ""
 
 #. module: product
@@ -1434,7 +1468,7 @@ msgstr "Вес"
 #. module: product
 #: view:product.product:0
 msgid "Description for Quotations"
-msgstr "Описание предложения"
+msgstr "Описание для заявок"
 
 #. module: product
 #: help:pricelist.partnerinfo,price:0
@@ -1879,7 +1913,7 @@ msgstr "Сообщения"
 #. module: product
 #: model:product.uom,name:product.product_uom_unit
 msgid "Unit(s)"
-msgstr "Штук"
+msgstr "шт."
 
 #. module: product
 #: code:addons/product/product.py:176
@@ -1901,6 +1935,11 @@ msgstr "Длинна / Расстояние"
 #: model:product.category,name:product.product_category_8
 msgid "Components"
 msgstr "Компоненты"
+
+#. module: product
+#: view:product.product:0
+msgid "e.g. 5901234123457"
+msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_type
@@ -1979,6 +2018,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Нажмите для добавления нового продукта.\n"
+"              </p><p>\n"
+"                Вы должны определить продукт для всего что вы покупаете, "
+"будь то\n"
+"                материальный продукт, потребляемый или услуга которую вы "
+"покупаете у подрядчиков.\n"
+"              </p><p>\n"
+"                Форма продукта содержит подробную информацию для улучшения\n"
+"                процесса закупки: цены, логистика снабжения, бухгалтерская "
+"информация,\n"
+"                доступные поставщики, и т.д.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_44_product_template
@@ -2111,6 +2164,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Нажмите для добавления нового продукта.\n"
+"              </p><p>\n"
+"                Вы должны определить продукт для всего что вы покупаете или "
+"продаете,\n"
+"                будь то материальный продукт, потребляемый или услуга.\n"
+"              </p>\n"
+"            "
 
 #. module: product
 #: view:product.product:0
@@ -2401,7 +2462,11 @@ msgstr "Единица измерения поставщика"
 
 #. module: product
 #: view:product.product:0
-#: model:res.groups,name:product.group_product_variant
+msgid "note to be displayed on quotations..."
+msgstr ""
+
+#. module: product
+#: view:product.product:0
 msgid "Product Variant"
 msgstr "Вариант продукта"
 

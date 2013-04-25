@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-01-09 16:11+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-03-21 01:46+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:34+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:31+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: account_test
 #: view:accounting.assert.test:0
@@ -47,6 +48,32 @@ msgid ""
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
 msgstr ""
+"Le code devrait définir une variable nommée 'result' avec pour valeur le "
+"résultat de votre test, et de type liste ou\n"
+"dictionnaire. Si 'result' est une liste vide, alors le test fut réussi. "
+"Autrement il essaiera\n"
+"de traduire et d'imprimer le contenu de 'result'.\n"
+"\n"
+"Si le 'result' de votre test est un dictionnaire, vous pouvez définir une "
+"variable nommée 'column_order' pour indiquer\n"
+"dans quel ordre vous voulez imprimer le contenu de 'result'.\n"
+"\n"
+"En cas de besoin, vous pouvez aussi utiliser les variables suivantes dans "
+"votre code:\n"
+"    * cr: curseur de base de données\n"
+"    * uid: ID de l'utilisateur actuel\n"
+"\n"
+"Dans tous les cas, le code doit être des déclarations python correctes avec "
+"une indentation correcte (si besoin).\n"
+"\n"
+"Exemple: \n"
+"    sql = '''SELECT id, name, ref, date\n"
+"             FROM account_move_line \n"
+"             WHERE account_id IN (SELECT id FROM account_account WHERE type "
+"= 'view')\n"
+"          '''\n"
+"    cr.execute(sql)\n"
+"    result = cr.dictfetchall()"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_02
@@ -74,12 +101,12 @@ msgstr "Nom du test"
 #. module: account_test
 #: report:account.test.assert.print:0
 msgid "Accouting tests on"
-msgstr ""
+msgstr "Comptabilité - Tests en cours"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_01
 msgid "Test 1: General balance"
-msgstr ""
+msgstr "Test 1: Solde global"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
@@ -101,7 +128,7 @@ msgstr "Tests"
 #. module: account_test
 #: field:accounting.assert.test,desc:0
 msgid "Test Description"
-msgstr ""
+msgstr "Description du test"
 
 #. module: account_test
 #: view:accounting.assert.test:0
@@ -123,13 +150,13 @@ msgstr ""
 #: model:ir.actions.report.xml,name:account_test.account_assert_test_report
 #: model:ir.ui.menu,name:account_test.menu_action_license
 msgid "Accounting Tests"
-msgstr ""
+msgstr "Tests (Comptabilité)"
 
 #. module: account_test
 #: code:addons/account_test/report/account_test_report.py:74
 #, python-format
 msgid "The test was passed successfully"
-msgstr ""
+msgstr "Le test a été effectué avec succès."
 
 #. module: account_test
 #: field:accounting.assert.test,active:0
@@ -155,7 +182,7 @@ msgstr ""
 #. module: account_test
 #: field:accounting.assert.test,code_exec:0
 msgid "Python code"
-msgstr ""
+msgstr "Source python"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
@@ -205,6 +232,8 @@ msgid ""
 "Check if the balance of the new opened fiscal year matches with last year's "
 "balance"
 msgstr ""
+"Vérifier si le solde du dernier exercice comptable ouvert correspond au "
+"solde de l'exercice précédent"
 
 #. module: account_test
 #: view:accounting.assert.test:0
@@ -219,11 +248,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_no_content_create\">\n"
+"                Cliquer pour créer un test (Comptabilité).\n"
+"              </p>\n"
+"            "
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
 msgid "Check the balance: Debit sum = Credit sum"
-msgstr ""
+msgstr "Vérifier le solde : Débit total = Crédit total"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_08

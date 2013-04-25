@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-04-02 12:05+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:34+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-04-03 15:03+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -25,13 +25,18 @@ msgstr "Alárendelt gyűjtőkódok"
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "Folyamatban"
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:229
 #, python-format
 msgid "Contract: "
-msgstr ""
+msgstr "Szerződés: "
+
+#. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_pending
+msgid "Contract pending"
+msgstr "Szerződés függőben"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -41,7 +46,7 @@ msgstr "Sablon"
 #. module: analytic
 #: view:account.analytic.account:0
 msgid "End Date"
-msgstr ""
+msgstr "Befejezés dátuma"
 
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
@@ -52,19 +57,6 @@ msgstr "Itt lehet megadni a mennyiséget."
 #: field:account.analytic.account,debit:0
 msgid "Debit"
 msgstr "Tartozik"
-
-#. module: analytic
-#: help:account.analytic.account,type:0
-msgid ""
-"If you select the View Type, it means you won't allow to create journal "
-"entries using that account.\n"
-"The type 'Analytic account' stands for usual accounts that you only want to "
-"use in accounting.\n"
-"If you select Contract or Project, it offers you the possibility to manage "
-"the validity and the invoicing options for this account.\n"
-"The special type 'Template of Contract' allows you to define a template with "
-"default data that you can reuse easily."
-msgstr ""
 
 #. module: analytic
 #: view:account.analytic.account:0
@@ -79,16 +71,24 @@ msgid ""
 "the\n"
 "                                        customer."
 msgstr ""
+"Ha egyszer a szerződés határideje át lett\n"
+"                                        lépve vagy a maximum szolgáltatási "
+"egységek száma\n"
+"                                        (pl. támogatási szerződés) el lett\n"
+"                                        érve, a számlázási ügyintéző e-"
+"mailben\n"
+"                                        értesítve lesz a szerződés "
+"megújításáról."
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
 msgid "Contract or Project"
-msgstr ""
+msgstr "Projekt szerződése"
 
 #. module: analytic
 #: field:account.analytic.account,name:0
 msgid "Account/Contract Name"
-msgstr ""
+msgstr "Fiók/Szerződés neve"
 
 #. module: analytic
 #: field:account.analytic.account,manager_id:0
@@ -98,7 +98,7 @@ msgstr "Felelős"
 #. module: analytic
 #: field:account.analytic.account,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Követők"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -108,28 +108,28 @@ msgstr "Lezárt"
 #. module: analytic
 #: model:mail.message.subtype,name:analytic.mt_account_pending
 msgid "Contract to Renew"
-msgstr ""
+msgstr "Megújítandó szerződés"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "New"
-msgstr ""
+msgstr "Új"
 
 #. module: analytic
 #: field:account.analytic.account,user_id:0
 msgid "Project Manager"
-msgstr ""
+msgstr "Projektmenedzser"
 
 #. module: analytic
 #: field:account.analytic.account,state:0
 msgid "Status"
-msgstr ""
+msgstr "Állapot"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:268
+#: code:addons/analytic/analytic.py:271
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (másolat)"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
@@ -143,14 +143,20 @@ msgid "Description"
 msgstr "Leírás"
 
 #. module: analytic
+#: code:addons/analytic/analytic.py:262
+#, python-format
+msgid "Quick account creation disallowed."
+msgstr "Gyors könyvelés létrehozása letiltva."
+
+#. module: analytic
 #: field:account.analytic.account,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Olvasatlan üzenetek"
 
 #. module: analytic
 #: constraint:account.analytic.account:0
 msgid "Error! You cannot create recursive analytic accounts."
-msgstr ""
+msgstr "Hiba! Nem tud visszatérő Elemző/Gyűjtő számlákat létrehozni."
 
 #. module: analytic
 #: field:account.analytic.account,company_id:0
@@ -161,17 +167,21 @@ msgstr "Vállalat"
 #. module: analytic
 #: view:account.analytic.account:0
 msgid "Renewal"
-msgstr ""
+msgstr "Megújítás"
 
 #. module: analytic
-#: help:account.analytic.account,message_ids:0
-msgid "Messages and communication history"
+#: help:account.analytic.account,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
 msgstr ""
+"A chettelés összegzést megállítja (üzenetek száma,...). Ez az összegzés "
+"direkt HTML formátumú ahhoz hogy beilleszthető legyen a kanban nézetekbe."
 
 #. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_opened
-msgid "Stage <b>opened</b>"
-msgstr ""
+#: help:account.analytic.account,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Ha be van jelölve, akkor figyelje az új üzeneteket."
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
@@ -179,6 +189,8 @@ msgid ""
 "Sets the higher limit of time to work on the contract, based on the "
 "timesheet. (for instance, number of hours in a limited support contract.)"
 msgstr ""
+"Beállítja az időbeosztás szerinti a szerződésre ráfordítható hosszabb időt. "
+"(például, órák száma egy korlátozottan támogatott szerződéshez.)"
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:160
@@ -191,11 +203,17 @@ msgid ""
 "consolidation purposes of several companies charts with different "
 "currencies, for example."
 msgstr ""
+"Ha beállított egy vállalatot, a kiválasztott pénznemnek azonosnak kell "
+"lennie a pénznemével. \n"
+"A vállalathoz tartozókat leválaszthatja, ezzel megváltoztatható a pénznem, "
+"de csak az elemző számlák 'nézet' típusán. Ez nagyon hasznos lehet  "
+"különböző vállalatok különböző pénznemében értékel grafikonjainak "
+"megerősítéshez, például."
 
 #. module: analytic
 #: field:account.analytic.account,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Ez egy követő"
 
 #. module: analytic
 #: field:account.analytic.line,user_id:0
@@ -203,9 +221,9 @@ msgid "User"
 msgstr "Felhasználó"
 
 #. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_pending
-msgid "Contract <b>pending</b>"
-msgstr ""
+#: field:account.analytic.account,parent_id:0
+msgid "Parent Analytic Account"
+msgstr "Fölérendelt gyűjtőkód"
 
 #. module: analytic
 #: field:account.analytic.line,date:0
@@ -215,12 +233,12 @@ msgstr "Dátum"
 #. module: analytic
 #: model:mail.message.subtype,name:analytic.mt_account_closed
 msgid "Contract Finished"
-msgstr ""
+msgstr "Szerződés végrehejtva"
 
 #. module: analytic
 #: view:account.analytic.account:0
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "Kikötések és feltételek"
 
 #. module: analytic
 #: help:account.analytic.line,amount:0
@@ -234,43 +252,48 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
 msgid "Customer"
-msgstr ""
+msgstr "Vevő"
 
 #. module: analytic
 #: field:account.analytic.account,child_complete_ids:0
 msgid "Account Hierarchy"
-msgstr ""
+msgstr "Számla fiók hierarchia, rangsor"
 
 #. module: analytic
 #: field:account.analytic.account,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Üzenetek"
 
 #. module: analytic
-#: field:account.analytic.account,parent_id:0
-msgid "Parent Analytic Account"
-msgstr "Fölérendelt gyűjtőkód"
+#: help:account.analytic.account,message_ids:0
+msgid "Messages and communication history"
+msgstr "Üzenetek és kommunikációs történet"
+
+#. module: analytic
+#: constraint:account.analytic.line:0
+msgid "You cannot create analytic line on view account."
+msgstr "Nem hozhat létre elemző sort a számla nézeten."
 
 #. module: analytic
 #: view:account.analytic.account:0
 msgid "Contract Information"
-msgstr ""
+msgstr "Szerződé információja"
 
 #. module: analytic
 #: field:account.analytic.account,template_id:0
 #: selection:account.analytic.account,type:0
 msgid "Template of Contract"
-msgstr ""
+msgstr "Szerződés sablonja"
 
 #. module: analytic
 #: field:account.analytic.account,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Összegzés"
 
 #. module: analytic
 #: field:account.analytic.account,quantity_max:0
 msgid "Prepaid Service Units"
-msgstr ""
+msgstr "Előre fizetett szolgáltatási egység"
 
 #. module: analytic
 #: field:account.analytic.account,credit:0
@@ -280,12 +303,28 @@ msgstr "Követel"
 #. module: analytic
 #: model:mail.message.subtype,name:analytic.mt_account_opened
 msgid "Contract Opened"
-msgstr ""
+msgstr "Szerződés megnyitva, elindítva"
 
 #. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_closed
-msgid "Contract <b>closed</b>"
+#: help:account.analytic.account,type:0
+msgid ""
+"If you select the View Type, it means you won't allow to create journal "
+"entries using that account.\n"
+"The type 'Analytic account' stands for usual accounts that you only want to "
+"use in accounting.\n"
+"If you select Contract or Project, it offers you the possibility to manage "
+"the validity and the invoicing options for this account.\n"
+"The special type 'Template of Contract' allows you to define a template with "
+"default data that you can reuse easily."
 msgstr ""
+"A nézet típus kiválasztásával, megtiltja ezzel a fiókkal a napló bejegyzés "
+"készítését.\n"
+"Az 'Elemző/gyüjtő számla' típust olyan fiókokhoz használja, melyeket csak "
+"könyveléshez használ.\n"
+"Ha Szerződést vagy Projektet választ, lehetősége lesz kezelni a fiók "
+"érvényesítés és számlázási lehetőségeit.\n"
+"A speciális 'Szerződési sablon' típus lehetővé teszi alapértékekkel "
+"kitöltött sablon létrehozását, melyet könnyen ismét felhasználhat."
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -295,7 +334,7 @@ msgstr "Érvénytelenített"
 #. module: analytic
 #: selection:account.analytic.account,type:0
 msgid "Analytic View"
-msgstr ""
+msgstr "Elemző nézet"
 
 #. module: analytic
 #: field:account.analytic.account,balance:0
@@ -303,14 +342,14 @@ msgid "Balance"
 msgstr "Egyenleg"
 
 #. module: analytic
-#: help:account.analytic.account,message_unread:0
-msgid "If checked new messages require your attention."
-msgstr ""
+#: field:account.analytic.account,complete_name:0
+msgid "Full Name"
+msgstr "Teljes név"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "To Renew"
-msgstr ""
+msgstr "Megújításhoz"
 
 #. module: analytic
 #: field:account.analytic.account,quantity:0
@@ -326,28 +365,28 @@ msgstr "Záró dátum"
 #. module: analytic
 #: field:account.analytic.account,code:0
 msgid "Reference"
-msgstr ""
+msgstr "Hivatkozás"
 
 #. module: analytic
 #: code:addons/analytic/analytic.py:160
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Hiba!"
+
+#. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_closed
+msgid "Contract closed"
+msgstr "Szerződés lezárva"
 
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
-msgstr ""
+msgstr "Analitikus/elemző könyvvitel"
 
 #. module: analytic
 #: field:account.analytic.line,amount:0
 msgid "Amount"
 msgstr "Összeg"
-
-#. module: analytic
-#: field:account.analytic.account,complete_name:0
-msgid "Full Account Name"
-msgstr "Gyűjtőkód teljes neve"
 
 #. module: analytic
 #: view:account.analytic.account:0
@@ -360,31 +399,39 @@ msgstr "Gyűjtőkód"
 #. module: analytic
 #: field:account.analytic.account,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Pénznem"
 
 #. module: analytic
-#: help:account.analytic.account,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
-msgstr ""
+#: model:mail.message.subtype,description:analytic.mt_account_opened
+msgid "Contract opened"
+msgstr "Szerződés megynitva"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:262
+#, python-format
+msgid "Warning"
+msgstr "Figyelmeztetés"
 
 #. module: analytic
 #: field:account.analytic.account,type:0
 msgid "Type of Account"
-msgstr ""
+msgstr "Bankszámla típusa"
 
 #. module: analytic
 #: field:account.analytic.account,date_start:0
 msgid "Start Date"
-msgstr ""
-
-#. module: analytic
-#: constraint:account.analytic.line:0
-msgid "You cannot create analytic line on view account."
-msgstr ""
+msgstr "Kezdő dátum"
 
 #. module: analytic
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
 msgstr "Gyűjtőkód tételek"
+
+#~ msgid "Full Account Name"
+#~ msgstr "Gyűjtőkód teljes neve"
+
+#~ msgid "Contract <b>pending</b>"
+#~ msgstr "Szerződés <b>függőben</b>"
+
+#~ msgid "Contract <b>closed</b>"
+#~ msgstr "Szerződés <b>lezárva</b>"

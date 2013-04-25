@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"PO-Revision-Date: 2013-02-09 13:58+0000\n"
+"Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:41+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-03-28 05:37+0000\n"
+"X-Generator: Launchpad (build 16546)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -23,7 +23,7 @@ msgid "Parent Directory"
 msgstr "Эцэг хавтас"
 
 #. module: document
-#: code:addons/document/document.py:336
+#: code:addons/document/document.py:350
 #, python-format
 msgid "Directory name contains special characters!"
 msgstr "Хавтасны нэр онцгой тэмдэгт агуулж болно!"
@@ -50,7 +50,7 @@ msgstr "Бүлэглэх..."
 #. module: document
 #: view:ir.attachment:0
 msgid "Modification"
-msgstr ""
+msgstr "Өөрчлөх"
 
 #. module: document
 #: view:document.directory:0
@@ -71,7 +71,7 @@ msgstr "Дүрслэх төрөл"
 #. module: document
 #: selection:report.document.user,month:0
 msgid "March"
-msgstr "3 сар"
+msgstr "3-р сар"
 
 #. module: document
 #: field:document.directory.dctx,expr:0
@@ -92,12 +92,12 @@ msgstr "Хавтасын агуулга"
 #. module: document
 #: view:ir.attachment:0
 msgid "My Document(s)"
-msgstr ""
+msgstr "Миний баримтууд"
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_management_configuration
 msgid "Document Management"
-msgstr "Баримтын менежмент"
+msgstr "Баримтын удирдлага"
 
 #. module: document
 #: help:document.directory.dctx,expr:0
@@ -113,11 +113,11 @@ msgstr ""
 #. module: document
 #: help:document.directory.dctx,field:0
 msgid "The name of the field."
-msgstr ""
+msgstr "Талбарын нэр"
 
 #. module: document
-#: code:addons/document/document.py:326
-#: code:addons/document/document.py:331
+#: code:addons/document/document.py:340
+#: code:addons/document/document.py:345
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "Хавтасны нэр давхцахгүй!"
@@ -203,14 +203,22 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Шинэ баримт үүсгэхээр бол дарна уу. \n"
+"          </p><p>\n"
+"            Баримтын агуулах нь бүх төрлийн хавсралт руу хандах\n"
+"            боломжийг өгдөг. Хавсралтууд нь имэйлийн, төслийн, нэхэмжлэлүүд "
+"гэх мэт байж болно.\n"
+"          </p>\n"
+"        "
 
 #. module: document
-#: code:addons/document/document.py:326
-#: code:addons/document/document.py:331
-#: code:addons/document/document.py:336
+#: code:addons/document/document.py:340
+#: code:addons/document/document.py:345
+#: code:addons/document/document.py:350
 #, python-format
 msgid "ValidateError"
-msgstr "ValidateError"
+msgstr "Баталгаатай алдаа"
 
 #. module: document
 #: model:ir.model,name:document.model_ir_actions_report_xml
@@ -250,14 +258,14 @@ msgstr "Төрөл"
 #. module: document
 #: sql_constraint:ir.attachment:0
 msgid "The filename must be unique in a directory !"
-msgstr ""
+msgstr "Файлын нэр хаврас дотроо цор ганц байх ёстой."
 
 #. module: document
 #: code:addons/document/document.py:110
-#: code:addons/document/document.py:296
+#: code:addons/document/document.py:310
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (хуулбар)"
 
 #. module: document
 #: help:document.directory,ressource_type_id:0
@@ -277,7 +285,7 @@ msgstr "Хэрэв нөөцүүд дээр шүүлт хэрэглэх бол д
 #. module: document
 #: constraint:document.directory:0
 msgid "Error! You cannot create recursive directories."
-msgstr ""
+msgstr "Алдаа! Та хүрээ хамааралтай хавтас үүсгэх боломжгүй."
 
 #. module: document
 #: field:document.directory,resource_field:0
@@ -316,7 +324,7 @@ msgid "Virtual Files"
 msgstr "Виртуаль файлууд"
 
 #. module: document
-#: code:addons/document/document.py:562
+#: code:addons/document/document.py:576
 #, python-format
 msgid "Error at doc write!"
 msgstr "Бичих алдаа!"
@@ -361,12 +369,12 @@ msgstr "Сүүлд зассан хэрэглэгч"
 #: model:ir.actions.act_window,name:document.action_view_files_by_user_graph
 #: view:report.document.user:0
 msgid "Files by User"
-msgstr ""
+msgstr "Хэрэглэгчийн файлууд"
 
 #. module: document
 #: view:ir.attachment:0
 msgid "on"
-msgstr ""
+msgstr "дээр"
 
 #. module: document
 #: field:document.directory,domain:0
@@ -424,7 +432,7 @@ msgstr "Статик"
 #. module: document
 #: field:report.document.user,user:0
 msgid "unknown"
-msgstr ""
+msgstr "үл мэдэгдэх"
 
 #. module: document
 #: view:document.directory:0
@@ -501,7 +509,7 @@ msgstr ""
 #: code:addons/document/static/src/js/document.js:6
 #, python-format
 msgid "Attachment(s)"
-msgstr ""
+msgstr "хавсралт(-ууд)"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -589,7 +597,7 @@ msgstr "Хавтасны нэр давхцаж болохгүй!"
 #. module: document
 #: view:ir.attachment:0
 msgid "Attachments"
-msgstr ""
+msgstr "Хавсралтууд"
 
 #. module: document
 #: field:document.directory,create_uid:0
@@ -677,7 +685,7 @@ msgstr "ir.attachment"
 #. module: document
 #: view:report.document.user:0
 msgid "Users File"
-msgstr ""
+msgstr "Хэрэглэгчийн файл"
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
@@ -736,15 +744,14 @@ msgid ""
 "Only members of these groups will have access to this directory and its "
 "files."
 msgstr ""
-"Only members of these groups will have access to this directory and its "
-"files."
+"Зөвхөн эдгээр бүлгийн гишүүд энэ хавтас болон файлуудыг ашиглах боломжтой."
 
 #. module: document
 #. openerp-web
 #: code:addons/document/static/src/js/document.js:17
 #, python-format
 msgid "%s (%s)"
-msgstr ""
+msgstr "%s (%s)"
 
 #. module: document
 #: field:document.directory.content,sequence:0

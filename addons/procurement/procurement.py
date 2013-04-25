@@ -67,10 +67,11 @@ class StockMove(osv.osv):
         'procurements': fields.one2many('procurement.order', 'move_id', 'Procurements'),
     }
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        default = default or {}
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
         default['procurements'] = []
-        return super(StockMove, self).copy(cr, uid, id, default, context=context)
+        return super(StockMove, self).copy_data(cr, uid, id, default, context=context)
 
 StockMove()
 
@@ -103,7 +104,7 @@ class procurement_order(osv.osv):
             readonly=True, required=True, help="If you encode manually a Procurement, you probably want to use" \
             " a make to order method."),
         'note': fields.text('Note'),
-        'message': fields.char('Latest error', help="Exception occurred while computing procurement orders."),
+        'message': fields.char('Latest error', size=124, help="Exception occurred while computing procurement orders."),
         'state': fields.selection([
             ('draft','Draft'),
             ('cancel','Cancelled'),

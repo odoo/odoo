@@ -31,8 +31,8 @@
                 <header>
                     <button name="case_open" string="Open" type="object" class="oe_highlight"
                             states="draft,pending"/>
-                    <button name="case_close" string="Close" type="object" states="draft,pending"/>
-                    <button name="case_close" string="Close" type="object" states="open" class="oe_highlight"/>
+                    <button name="case_close" string="Close Case" type="object" states="draft,pending"/>
+                    <button name="case_close" string="Close Case" type="object" states="open" class="oe_highlight"/>
                     <button name="case_pending" string="Pending" type="object"
                             states="draft"/>
                     <button name="case_pending" string="Pending" type="object" 
@@ -41,7 +41,7 @@
                             states="cancel,done"/>
                     <button name="case_escalate" string="Escalate" type="object" 
                             states="open,draft,pending"/>
-                    <button name="case_cancel" string="Cancel" type="object"
+                    <button name="case_cancel" string="Cancel Case" type="object"
                             states="draft,open,pending"/>
                     <field name="state" nolabel="1" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                 </header>
@@ -95,7 +95,7 @@
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_ids" widget="mail_thread" placeholder="Share a note..."/>
+                    <field name="message_ids" widget="mail_thread"/>
                     <field name="message_follower_ids" widget="mail_followers"/>
                 </div>
                 </form>
@@ -152,7 +152,7 @@
                     <separator/>
                     <filter string="Assigned to Me or My Sales Team(s)" icon="terp-personal+" domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                             help="Helpdesk requests that are assigned to me or to one of the sale teams I manage" />
-                    <field name="partner_id" />
+                    <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="user_id"/>
                     <field name="section_id" string="Sales Team"/>
                     <group expand="0" string="Group By...">
