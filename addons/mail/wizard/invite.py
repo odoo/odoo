@@ -59,8 +59,8 @@ class invite_wizard(osv.osv_memory):
             new_follower_ids = [p.id for p in wizard.partner_ids if p.id not in document.message_follower_ids]
             model_obj.message_subscribe(cr, uid, [wizard.res_id], new_follower_ids, context=context)
 
-            # send an email
-            if wizard.message:
+            # send an email only if a personal message exists
+            if wizard.message and not wizard.message == '<br>':  # when deleting the message, cleditor keeps a <br>
                 # add signature
                 user_id = self.pool.get("res.users").read(cr, uid, [uid], fields=["signature"], context=context)[0]
                 signature = user_id and user_id["signature"] or ''
