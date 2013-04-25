@@ -113,62 +113,100 @@ class TestSanitizer(unittest2.TestCase):
 class TestCleaner(unittest2.TestCase):
     """ Test the email cleaner function that filters the content of incoming emails """
 
-    def test_00_html_email_clean_text(self):
+    def test_00_html_email_clean_signature(self):
+        """ html_email_clean test for signatures """
+        test_data = [("""This is Sparta!\n--\nAdministrator\n+9988776655""",
+                        ['This is Sparta!'],
+                        ['Administrator', '9988776655']),
+                     ("""<p>--\nAdministrator</p>""",
+                        [],
+                        ['--', 'Administrator']),
+                     ("""<p>This is Sparta!\n---\nAdministrator</p>""",
+                        ['This is Sparta!'],
+                        ['---', 'Administrator']),
+                     ("""<p>--<br>Administrator</p>""",
+                        [],
+                        []),
+                     ("""<p>This is Sparta!<br/>--<br>Administrator</p>""",
+                        ['This is Sparta!'],
+                        [])
+                    ]
+        for test, in_lst, out_lst in test_data:
+            new_html = html_email_clean(test, remove=True)
+            for text in in_lst:
+                self.assertIn(text, new_html, 'html_email_cleaner wrongly removed content')
+            for text in out_lst:
+                self.assertNotIn(text, new_html, 'html_email_cleaner did not remove unwanted content')
+
+    def test_05_html_email_clean_signature(self):
+        """ html_email_clean test for quotes """
+        test_data = [("""This is Sparta!\n>Ah bon ?\nCertes\n> Chouette !\nClair""",
+                        ['This is Sparta!', 'Certes', 'Clair'],
+                        ['Ah bon', 'Chouette'])
+                    ]
+        for test, in_lst, out_lst in test_data:
+            new_html = html_email_clean(test, remove=True)
+            for text in in_lst:
+                self.assertIn(text, new_html, 'html_email_cleaner wrongly removed content')
+            for text in out_lst:
+                self.assertNotIn(text, new_html, 'html_email_cleaner did not remove unwanted content')
+
+    def test_10_html_email_clean_text(self):
         """ html_email_clean test for text-based emails """
-        new_html = html_email_clean(test_mail_examples.TEXT_1, remove_unwanted=True)
+        new_html = html_email_clean(test_mail_examples.TEXT_1, remove=True)
         for ext in test_mail_examples.TEXT_1_IN:
             self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
         for ext in test_mail_examples.TEXT_1_OUT:
             self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase signature / quoted content')
 
-        new_html = html_email_clean(test_mail_examples.TEXT_2, remove_unwanted=True)
+        new_html = html_email_clean(test_mail_examples.TEXT_2, remove=True)
         for ext in test_mail_examples.TEXT_2_IN:
             self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
         for ext in test_mail_examples.TEXT_2_OUT:
             self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase signature / quoted content')
 
-    def test_10_html_email_clean_html(self):
-        new_html = html_email_clean(test_mail_examples.HTML_1, remove_unwanted=True)
+    def test_20_html_email_clean_html(self):
+        new_html = html_email_clean(test_mail_examples.HTML_1, remove=True)
         for ext in test_mail_examples.HTML_1_IN:
             self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
         for ext in test_mail_examples.HTML_1_OUT:
             self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase signature / quoted content')
 
-        new_html = html_email_clean(test_mail_examples.HTML_2, remove_unwanted=False)
+        new_html = html_email_clean(test_mail_examples.HTML_2, remove=True)
         for ext in test_mail_examples.HTML_2_IN:
             self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
         for ext in test_mail_examples.HTML_2_OUT:
             self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase signature / quoted content')
 
-        new_html = html_email_clean(test_mail_examples.HTML_3, remove_unwanted=False)
+        new_html = html_email_clean(test_mail_examples.HTML_3, remove=False)
         for ext in test_mail_examples.HTML_3_IN:
             self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
         # for ext in test_mail_examples.HTML_3_OUT:
         #     self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase signature / quoted content')
 
-    def test_20_html_email_clean_msoffice(self):
-        new_html = html_email_clean(test_mail_examples.MSOFFICE_1, remove_unwanted=True)
+    def test_30_html_email_clean_msoffice(self):
+        new_html = html_email_clean(test_mail_examples.MSOFFICE_1, remove=True)
         for ext in test_mail_examples.MSOFFICE_1_IN:
             self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
         for ext in test_mail_examples.MSOFFICE_1_OUT:
             self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase signature / quoted content')
 
-    def test_30_html_email_clean_hotmail(self):
-        new_html = html_email_clean(test_mail_examples.HOTMAIL_1, remove_unwanted=True)
+    def test_40_html_email_clean_hotmail(self):
+        new_html = html_email_clean(test_mail_examples.HOTMAIL_1, remove=True)
         for ext in test_mail_examples.HOTMAIL_1_IN:
             self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
         for ext in test_mail_examples.HOTMAIL_1_OUT:
             self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase signature / quoted content')
 
-    def test_40_html_email_clean_gmail(self):
-        new_html = html_email_clean(test_mail_examples.GMAIL_1, remove_unwanted=True)
+    def test_50_html_email_clean_gmail(self):
+        new_html = html_email_clean(test_mail_examples.GMAIL_1, remove=True)
         for ext in test_mail_examples.GMAIL_1_IN:
             self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
         for ext in test_mail_examples.GMAIL_1_OUT:
             self.assertNotIn(ext, new_html, 'html_email_cleaner did not erase signature / quoted content')
 
-    def test_50_html_email_clean_thunderbird(self):
-        new_html = html_email_clean(test_mail_examples.THUNDERBIRD_1, remove_unwanted=True)
+    def test_60_html_email_clean_thunderbird(self):
+        new_html = html_email_clean(test_mail_examples.THUNDERBIRD_1, remove=True)
         for ext in test_mail_examples.THUNDERBIRD_1_IN:
             self.assertIn(ext, new_html, 'html_email_cleaner wrongly removed not quoted content')
         for ext in test_mail_examples.THUNDERBIRD_1_OUT:
