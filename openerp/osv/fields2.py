@@ -47,7 +47,7 @@ class Field(object):
         self.model = model
         self.name = name
         if not self.string:
-            self.string = name.capitalize()
+            self.string = name.replace('_', ' ').capitalize()
 
     def make_column(self):
         """ return a low-level field object corresponding to `self` """
