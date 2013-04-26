@@ -91,6 +91,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     init: function(parent, dataset, view_id, options) {
         var self = this;
         this._super(parent);
+        this.ViewManager = parent;
         this.set_default_options(options);
         this.dataset = dataset;
         this.model = dataset.model;
@@ -720,6 +721,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         return this.save().done(function(result) {
             self.trigger("save", result);
             self.to_view_mode();
+        }).then(function(result) {
+            self.ViewManager.ActionManager.__parentedParent.menu.do_reload_needaction();
         });
     },
     on_button_cancel: function(event) {
