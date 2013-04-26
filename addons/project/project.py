@@ -210,7 +210,7 @@ class project(osv.osv):
 
     def _get_visibility_selection(self, cr, uid, context=None):
         """ Overriden in portal_project to offer more options """
-        return [('public', 'All Users'),
+        return [('public', 'Public'),
                 ('employees', 'Employees Only'),
                 ('followers', 'Followers Only')]
 
@@ -275,7 +275,17 @@ class project(osv.osv):
                                          "with Tasks (or optionally Issues if the Issue Tracker module is installed)."),
         'alias_model': fields.selection(_alias_models, "Alias Model", select=True, required=True,
                                         help="The kind of document created when an email is received on this project's email alias"),
-        'privacy_visibility': fields.selection(_visibility_selection, 'Privacy / Visibility', required=True),
+        'privacy_visibility': fields.selection(_visibility_selection, 'Privacy / Visibility', required=True,
+            help="Holds visibility of the tasks or issues that belong to the current project:\n"
+                    "- Public: everybody sees everything; if portal is activated, portal users\n"
+                    "   see all tasks or issues; if anonymous portal is activated, visitors\n"
+                    "   see all tasks or issues\n"
+                    "- Portal (only available if Portal is installed): employees see everything;\n"
+                    "   if portal is activated, portal users see the tasks or issues followed by\n"
+                    "   them or by someone of their company\n"
+                    "- Employees Only: employees see all tasks or issues\n"
+                    "- Followers Only: employees see only the followed tasks or issues; if portal\n"
+                    "   is activated, portal users see the followed tasks or issues."),
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
         'doc_count':fields.function(_get_attached_docs, string="Number of documents attached", type='int')
      }
