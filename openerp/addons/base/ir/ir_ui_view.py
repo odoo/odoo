@@ -68,7 +68,7 @@ class view(osv.osv):
 
     _columns = {
         'name': fields.char('View Name', required=True),
-        'model': fields.char('Object', size=64, required=True, select=True),
+        'model': fields.char('Object', size=64, select=True),
         'priority': fields.integer('Sequence', required=True),
         'type': fields.function(_type_field, type='selection', selection=[
             ('tree','Tree'),
@@ -79,7 +79,7 @@ class view(osv.osv):
             ('diagram','Diagram'),
             ('gantt', 'Gantt'),
             ('kanban', 'Kanban'),
-            ('search','Search')], string='View Type', required=True, select=True, store=True),
+            ('search','Search')], string='View Type', select=True, store=True),
         'arch': fields.text('View Architecture', required=True),
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade', select=True),
         'field_parent': fields.char('Child Field',size=64),
@@ -90,9 +90,7 @@ class view(osv.osv):
         'model_ids': fields.one2many('ir.model.data', 'res_id', auto_join=True),
     }
     _defaults = {
-        'arch': '<?xml version="1.0"?>\n<tree string="My view">\n\t<field name="name"/>\n</tree>',
         'priority': 16,
-        'type': 'tree',
     }
     _order = "priority,name"
 
@@ -284,7 +282,7 @@ class view(osv.osv):
         """
         user_groups = frozenset(self.pool.get('res.users').browse(cr, 1, uid, context).groups_id)
 
-        conditions = [['inherit_id', '=', view_id], ['model', '=', model or '']]
+        conditions = [['inherit_id', '=', view_id], ['model', '=', model]]
         if self.pool._init:
             # Module init currently in progress, only consider views from
             # modules whose code is already loaded

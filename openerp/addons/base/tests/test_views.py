@@ -239,7 +239,7 @@ class TestNoModel(common.TransactionCase):
             'type': 'form',
             'priority': 16,
             'inherit_id': False,
-            'model': '',
+            'model': False,
         })
 
     arch = E.body(

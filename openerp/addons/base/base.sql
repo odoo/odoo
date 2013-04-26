@@ -113,18 +113,6 @@ CREATE TABLE ir_act_client (
 )
 INHERITS (ir_actions);
 
-
-CREATE TABLE ir_ui_view (
-    id serial NOT NULL,
-    name varchar(64) DEFAULT ''::varchar NOT NULL,
-    model varchar(64) DEFAULT ''::varchar NOT NULL,
-    "type" varchar(64) DEFAULT 'form'::varchar NOT NULL,
-    arch text NOT NULL,
-    field_parent varchar(64),
-    priority integer DEFAULT 5 NOT NULL,
-    primary key(id)
-);
-
 CREATE TABLE ir_ui_menu (
     id serial NOT NULL,
     parent_id int references ir_ui_menu on delete set null,
