@@ -58,7 +58,7 @@ class Field(object):
         if instance is None:
             return self         # the field is accessed through the class owner
         assert instance.is_record_or_null() and instance._name == self.model
-        return instance._get_field_value(self.name)
+        return instance._get_field(self.name)
 
     def __set__(self, instance, value):
         """ set the value of field `self` for the record `instance` """

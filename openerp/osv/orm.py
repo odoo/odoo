@@ -5470,7 +5470,7 @@ class BaseModel(object):
     def __ne__(self, other):
         return not self == other
 
-    def _get_record_field(self, field_name):
+    def _get_field(self, field_name):
         """ read the field `field_name` on a record instance """
         if not self.is_record_or_null():
             raise except_orm("ValueError", "Expected record: %s" % self)
@@ -5536,7 +5536,7 @@ class BaseModel(object):
                 model_cache.ids.add(self._id)
                 fetch_ids = model_cache.ids - set(model_cache[field_name])
 
-                # check whether fields have to be recomputed
+                # do not fetch the records/fields that have to be recomputed
                 for fname in list(fetch_fields):
                     recompute_ids = recomputing.get(fname, set())
                     if self._id in recompute_ids:
@@ -5544,8 +5544,11 @@ class BaseModel(object):
                     else:
                         fetch_ids -= recompute_ids      # do not fetch those records
 
+                # fetch and check result
                 assert field_name in fetch_fields and self._id in fetch_ids
-                self._fetch_record_fields(list(fetch_fields), list(fetch_ids))
+                fetched = self.recordset(fetch_ids)._fetch_fields(list(fetch_fields))
+                if self not in fetched:
+                    raise except_orm("AccessError", "%s does not exist." % self)
 
             if self._id not in model_cache[field_name]:
                 # How did this happen? Could be a missing model due to custom fields used too soon.
@@ -5554,14 +5557,16 @@ class BaseModel(object):
 
             return browse_function(self, column, model_cache[field_name][self._id])
 
-    def _fetch_record_fields(self, field_names, ids):
-        """ read the given fields in the record cache """
-        cache = self.scope.cache
-
+    @api.recordset
+    def _fetch_fields(self, field_names):
+        """ fetch the given fields of `self` in the record cache, and
+            return the records actually fetched
+        """
         # read the (old-style only) fields
-        result = self.browse(ids).read(field_names, load="_classic_write")
+        result = self.read(field_names, load="_classic_write")
 
         # process result field by field
+        cache = self.scope.cache
         for field_name in field_names:
             # build dictionary {id: value, ...} for field
             values = {}
@@ -5582,6 +5587,9 @@ class BaseModel(object):
             # update the cache
             cache[self._name][field_name].update(values)
 
+        # return the fetched records
+        return self.recordset([data['id'] for data in result])
+
     def __getitem__(self, key):
         """ If `self` is a record, return the value of the field named `key`.
             If `self` is a recordset, return a record or a recordset from
@@ -5598,7 +5606,7 @@ class BaseModel(object):
                 assert list(rs2) == list(rs[10:20])
         """
         if self.is_record_or_null():
-            return self._get_record_field(key)
+            return self._get_field(key)
         elif self.is_recordset():
             select = self._ids[key]
             if isinstance(select, list):
@@ -5619,7 +5627,7 @@ class BaseModel(object):
         if not name.startswith('_'):
             try:
                 # get the value of the field with the given name
-                return self._get_record_field(name)
+                return self._get_field(name)
             except KeyError as e:
                 raise AttributeError, e.message, sys.exc_info()[2]
 
@@ -5735,7 +5743,7 @@ class BaseModel(object):
 
         with scope_proxy.recomputing_manager(spec):
             # simply evaluate the fields to recompute on their records;
-            # the method _get_record_field() will do the job!
+            # the method _get_field() will do the job!
             for m, fs, ids in spec:
                 model = self.pool[m]
                 # recompute stored fields only
