@@ -20,6 +20,7 @@ import traceback
 import urlparse
 import uuid
 import xmlrpclib
+import errno
 
 import babel.core
 import simplejson
@@ -355,16 +356,30 @@ def httprequest(f):
 addons_module = {}
 addons_manifest = {}
 controllers_class = []
+controllers_class_path = {}
 controllers_object = {}
+controllers_object_path = {}
 controllers_path = {}
 
 class ControllerType(type):
     def __init__(cls, name, bases, attrs):
         super(ControllerType, cls).__init__(name, bases, attrs)
-        controllers_class.append(("%s.%s" % (cls.__module__, cls.__name__), cls))
+        name_class = ("%s.%s" % (cls.__module__, cls.__name__), cls)
+        controllers_class.append(name_class)
+        path = attrs.get('_cp_path')
+        if path not in controllers_class_path:
+            controllers_class_path[path] = name_class
 
 class Controller(object):
     __metaclass__ = ControllerType
+
+    def __new__(cls, *args, **kwargs):
+        subclasses = [c for c in cls.__subclasses__() if c._cp_path == cls._cp_path]
+        if subclasses:
+            name = "%s (extended by %s)" % (cls.__name__, ', '.join(sub.__name__ for sub in subclasses))
+            cls = type(name, tuple(reversed(subclasses)), {})
+
+        return object.__new__(cls)
 
 #----------------------------------------------------------
 # Session context manager
@@ -477,8 +492,15 @@ def session_path():
     except Exception:
         username = "unknown"
     path = os.path.join(tempfile.gettempdir(), "oe-sessions-" + username)
-    if not os.path.exists(path):
+    try:
         os.mkdir(path, 0700)
+    except OSError as exc:
+        if exc.errno == errno.EEXIST:
+            # directory exists: ensure it has the correct permissions
+            # this will fail if the directory is not owned by the current user
+            os.chmod(path, 0700)
+        else:
+            raise
     return path
 
 class Root(object):
@@ -558,10 +580,11 @@ class Root(object):
                         addons_manifest[module] = manifest
                         self.statics['/%s/static' % module] = path_static
 
-        for k, v in controllers_class:
-            if k not in controllers_object:
-                o = v()
-                controllers_object[k] = o
+        for k, v in controllers_class_path.items():
+            if k not in controllers_object_path and hasattr(v[1], '_cp_path'):
+                o = v[1]()
+                controllers_object[v[0]] = o
+                controllers_object_path[k] = o
                 if hasattr(o, '_cp_path'):
                     controllers_path[o._cp_path] = o
 

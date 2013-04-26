@@ -249,7 +249,9 @@ instance.web.CrashManager = instance.web.Class.extend({
         }
         // yes, exception handling is shitty
         if (error.code === 300 && error.data && error.data.type == "client_exception" && error.data.debug.match("SessionExpiredException")) {
-            this.show_warning({type: "Session Expired", data: { fault_code: "Your OpenERP session expired. Please refresh the current web page." }});
+            this.show_warning({type: "Session Expired", data: {
+                fault_code: _t("Your OpenERP session expired. Please refresh the current web page.")
+            }});
             return;
         }
         if (error.data.fault_code) {
