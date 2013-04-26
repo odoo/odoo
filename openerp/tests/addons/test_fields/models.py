@@ -45,6 +45,7 @@ from openerp import api, scope, models, fields
 class res_partner(models.Model):
     _inherit = 'res.partner'
 
+    number_of_employees = fields.Integer()
     name_size = fields.Integer(compute='compute_name_size', store=False)
     children_count = fields.Integer(compute='compute_children_count', store=True)
 

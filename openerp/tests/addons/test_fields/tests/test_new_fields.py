@@ -51,6 +51,13 @@ class TestNewFields(common.TransactionCase):
         # find partners with children
         alpha, beta, gamma = self.Partner.search([('child_ids.name', '!=', False)], limit=3)
 
+        # check regular field
+        alpha.number_of_employees = 10
+        self.assertEqual(alpha.number_of_employees, 10)
+
+        alpha.write({'number_of_employees': 20})
+        self.assertEqual(alpha.number_of_employees, 20)
+
         # check definition of the field
         self.assertEqual(alpha.children_count, len(alpha.child_ids))
         self.assertEqual(beta.children_count, len(beta.child_ids))
