@@ -200,8 +200,11 @@ class view(osv.osv):
                 view_id = self.default_view(cr, uid, model, view_type, context=context)
             root_id = self.root_ancestor(cr, uid, view_id, context=context)
 
-            if fields and 'arch' not in fields:
-                fields = list(itertools.chain(['arch'], fields))
+            if fields:
+                needed_fields = ['arch', 'model']
+                fields = list(itertools.chain(
+                    [field for field in needed_fields if field not in fields],
+                    fields))
 
             [view] = self.read(cr, uid, [root_id], fields=fields, context=context)
 
@@ -281,7 +284,7 @@ class view(osv.osv):
         """
         user_groups = frozenset(self.pool.get('res.users').browse(cr, 1, uid, context).groups_id)
 
-        conditions = [['inherit_id', '=', view_id], ['model', '=', model]]
+        conditions = [['inherit_id', '=', view_id], ['model', '=', model or '']]
         if self.pool._init:
             # Module init currently in progress, only consider views from
             # modules whose code is already loaded
