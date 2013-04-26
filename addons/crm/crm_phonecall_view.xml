@@ -185,7 +185,7 @@
                <separator/>
                <filter string="Phone Calls Assigned to Me or My Team(s)" icon="terp-personal+" domain="['|', ('section_id.user_id','=',uid), ('user_id', '=', uid)]"
                        help="Phone Calls Assigned to the current user or with a team having the current user as team leader"/>
-               <field name="partner_id"/>
+               <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                <field name="user_id"/>
                <field name="section_id" string="Sales Team"/>
                <group expand="0" string="Group By...">

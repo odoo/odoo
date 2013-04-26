@@ -293,8 +293,8 @@ class project(osv.osv):
         'sequence': 10,
         'type_ids': _get_type_common,
         'alias_model': 'project.task',
-        'privacy_visibility': 'public',
-        'alias_domain': False, # always hide alias during creation
+        'privacy_visibility': 'employees',
+        'alias_domain': False,  # always hide alias during creation
     }
 
     # TODO: Why not using a SQL contraints ?

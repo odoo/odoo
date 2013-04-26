@@ -171,7 +171,7 @@ class account_installer(osv.osv_memory):
         chart = self.read(cr, uid, ids, ['charts'],
                           context=context)[0]['charts']
         _logger.debug('Installing chart of accounts %s', chart)
-        return (modules | set([chart])) - set(['has_default_company'])
+        return (modules | set([chart])) - set(['has_default_company', 'configurable'])
 
 account_installer()
 

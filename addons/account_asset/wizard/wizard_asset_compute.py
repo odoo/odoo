@@ -30,7 +30,8 @@ class asset_depreciation_confirmation_wizard(osv.osv_memory):
     }
    
     def _get_period(self, cr, uid, context=None):
-        periods = self.pool.get('account.period').find(cr, uid)
+        ctx = dict(context or {}, account_period_prefer_normal=True)
+        periods = self.pool.get('account.period').find(cr, uid, context=ctx)
         if periods:
             return periods[0]
         return False

@@ -513,7 +513,8 @@ class account_move_line(osv.osv):
         if context.get('period_id', False):
             return context['period_id']
         account_period_obj = self.pool.get('account.period')
-        ids = account_period_obj.find(cr, uid, context=context)
+        ctx = dict(context, account_period_prefer_normal=True)
+        ids = account_period_obj.find(cr, uid, context=ctx)
         period_id = False
         if ids:
             period_id = ids[0]
@@ -625,7 +626,7 @@ class account_move_line(osv.osv):
         (_check_date, 'The date of your Journal Entry is not in the defined period! You should change the date or remove this constraint from the journal.', ['date']),
         (_check_currency, 'The selected account of your Journal Entry forces to provide a secondary currency. You should remove the secondary currency on the account or select a multi-currency view on the journal.', ['currency_id']),
         (_check_currency_and_amount, "You cannot create journal items with a secondary currency without recording both 'currency' and 'amount currency' field.", ['currency_id','amount_currency']),
-        (_check_currency_amount, 'The amount expressed in the secondary currency must be positif when journal item are debit and negatif when journal item are credit.', ['amount_currency']),
+        (_check_currency_amount, 'The amount expressed in the secondary currency must be positive when the journal item is a debit and negative when if it is a credit.', ['amount_currency']),
         (_check_currency_company, "You cannot provide a secondary currency if it is the same than the company one." , ['currency_id']),
     ]
 
@@ -654,13 +655,7 @@ class account_move_line(osv.osv):
         }
         return result
 
-    def onchange_account_id(self, cr, uid, ids, account_id, context=None):
-        res = {'value': {}}
-        if account_id:
-            res['value']['account_tax_id'] = [x.id for x in self.pool.get('account.account').browse(cr, uid, account_id, context=context).tax_ids]
-        return res
-
-    def onchange_partner_id(self, cr, uid, ids, move_id, partner_id, account_id=None, debit=0, credit=0, date=False, journal=False):
+    def onchange_partner_id(self, cr, uid, ids, move_id, partner_id, account_id=None, debit=0, credit=0, date=False, journal=False, context=None):
         partner_obj = self.pool.get('res.partner')
         payment_term_obj = self.pool.get('account.payment.term')
         journal_obj = self.pool.get('account.journal')
@@ -674,8 +669,8 @@ class account_move_line(osv.osv):
             date = datetime.now().strftime('%Y-%m-%d')
         jt = False
         if journal:
-            jt = journal_obj.browse(cr, uid, journal).type
-        part = partner_obj.browse(cr, uid, partner_id)
+            jt = journal_obj.browse(cr, uid, journal, context=context).type
+        part = partner_obj.browse(cr, uid, partner_id, context=context)
 
         payment_term_id = False
         if jt and jt in ('purchase', 'purchase_refund') and part.property_supplier_payment_term:
@@ -700,20 +695,20 @@ class account_move_line(osv.osv):
                     elif part.supplier:
                         val['account_id'] = fiscal_pos_obj.map_account(cr, uid, part and part.property_account_position or False, id1)
                 if val.get('account_id', False):
-                    d = self.onchange_account_id(cr, uid, ids, val['account_id'])
+                    d = self.onchange_account_id(cr, uid, ids, account_id=val['account_id'], partner_id=part.id, context=context)
                     val.update(d['value'])
         return {'value':val}
 
-    def onchange_account_id(self, cr, uid, ids, account_id=False, partner_id=False):
+    def onchange_account_id(self, cr, uid, ids, account_id=False, partner_id=False, context=None):
         account_obj = self.pool.get('account.account')
         partner_obj = self.pool.get('res.partner')
         fiscal_pos_obj = self.pool.get('account.fiscal.position')
         val = {}
         if account_id:
-            res = account_obj.browse(cr, uid, account_id)
+            res = account_obj.browse(cr, uid, account_id, context=context)
             tax_ids = res.tax_ids
             if tax_ids and partner_id:
-                part = partner_obj.browse(cr, uid, partner_id)
+                part = partner_obj.browse(cr, uid, partner_id, context=context)
                 tax_id = fiscal_pos_obj.map_tax(cr, uid, part and part.property_account_position or False, tax_ids)[0]
             else:
                 tax_id = tax_ids and tax_ids[0].id or False

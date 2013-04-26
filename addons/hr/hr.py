@@ -22,7 +22,9 @@
 from openerp import addons
 import logging
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
 from openerp import tools
+
 _logger = logging.getLogger(__name__)
 
 class hr_employee_category(osv.osv):
@@ -216,7 +218,7 @@ class hr_employee(osv.osv):
             (model, mail_group_id) = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'group_all_employees')
             employee = self.browse(cr, uid, employee_id, context=context)
             self.pool.get('mail.group').message_post(cr, uid, [mail_group_id],
-                body='Welcome to %s! Please help him/her take the first steps with OpenERP!' % (employee.name),
+                body=_('Welcome to %s! Please help him/her take the first steps with OpenERP!') % (employee.name),
                 subtype='mail.mt_comment', context=context)
         except:
             pass # group deleted: do not push a message

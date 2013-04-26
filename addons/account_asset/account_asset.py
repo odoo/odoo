@@ -83,7 +83,8 @@ class account_asset_asset(osv.osv):
         return super(account_asset_asset, self).unlink(cr, uid, ids, context=context)
 
     def _get_period(self, cr, uid, context=None):
-        periods = self.pool.get('account.period').find(cr, uid)
+        ctx = dict(context or {}, account_period_prefer_normal=True)
+        periods = self.pool.get('account.period').find(cr, uid, context=ctx)
         if periods:
             return periods[0]
         else:
@@ -399,7 +400,8 @@ class account_asset_depreciation_line(osv.osv):
         asset_ids = []
         for line in self.browse(cr, uid, ids, context=context):
             depreciation_date = context.get('depreciation_date') or time.strftime('%Y-%m-%d')
-            period_ids = period_obj.find(cr, uid, depreciation_date, context=context)
+            ctx = dict(context, account_period_prefer_normal=True)
+            period_ids = period_obj.find(cr, uid, depreciation_date, context=ctx)
             company_currency = line.asset_id.company_id.currency_id.id
             current_currency = line.asset_id.currency_id.id
             context.update({'date': depreciation_date})
