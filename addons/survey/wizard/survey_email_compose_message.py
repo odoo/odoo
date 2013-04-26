@@ -51,6 +51,7 @@ class survey_mail_compose_message(osv.TransientModel):
         return urls
 
     _columns = {
+        'survey_id': fields.many2one('survey', 'Survey', required=True),
         'public': fields.selection([('public_link', 'Share the public web link to your audience.'), \
                 ('email_public_link', 'Send by email the public web link to your audience.'),\
                 ('email_private', 'Send private invitation to your audience (only one response per recipient and per invitation).')],
@@ -126,7 +127,7 @@ class survey_mail_compose_message(osv.TransientModel):
 
         def create_token(wizard, partner_id, email):
             if context.get("survey_resent_token"):
-                response_ids = survey_response_obj.search(cr, uid, [('survey_id', '=', wizard.res_id), ('state', 'in', ['new', 'skip']), '|', ('partner_id', '=', partner_id), ('email', '=', email)], context=context)
+                response_ids = survey_response_obj.search(cr, uid, [('survey_id', '=', wizard.survey_id), ('state', 'in', ['new', 'skip']), '|', ('partner_id', '=', partner_id), ('email', '=', email)], context=context)
                 if response_ids:
                     return survey_response_obj.read(cr, uid, response_ids, ['token'], context=context)[0]['token']
             if wizard.public != 'email_private':
@@ -136,7 +137,7 @@ class survey_mail_compose_message(osv.TransientModel):
                 # create response with token
                 survey_response_obj.create(cr, uid, {
                         'date_deadline': wizard.date_deadline,
-                        'survey_id': wizard.res_id,
+                        'survey_id': wizard.survey_id,
                         'date_create': datetime.now(),
                         'response_type': 'link',
                         'state': 'new',
@@ -189,8 +190,8 @@ class survey_mail_compose_message(osv.TransientModel):
 
     def default_get(self, cr, uid, fields, context=None):
         value = super(survey_mail_compose_message, self).default_get(cr, uid, fields, context=context)
-        if value.get('res_id'):
-            public_url = self.pool.get('survey').browse(cr, uid, value['res_id'], context=context).public_url
+        if value.get('survey_id'):
+            public_url = self.pool.get('survey').browse(cr, uid, value['survey_id'], context=context).public_url
             value['public_url'] = public_url
             value['public_url_html'] = '<a href="%s">%s</a>' % (public_url, _("Click here to take survey"))
         return value

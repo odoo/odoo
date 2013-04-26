@@ -6,14 +6,20 @@
         <record id="email_template_survey" model="email.template">
             <field name="name">Survey - Send by Email</field>
             <field name="subject">${object.title}</field>
-            <field name="lang">${object.lang}</field>
             <field name="model_id" ref="model_survey"/>
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[
 <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); ">
     <p>Hello,</p>
     <p>We are conducting a survey, and you response would be appreciated.</p>
-    <p>Here is a link to the survey: <br/><a href="__URL__">${object.title}</a></p>
+    <p>Here is a link to the survey: <br/>
+% if "title" in object:
+    <a href="__URL__">${object.title}</a>
+% endif
+% if "title" not in object:
+    __URL__
+% endif
+    </p>
     <p>Thanks for your participation!</p>
 </div>
 ]]></field>
@@ -31,8 +37,9 @@
                     <field name="model" invisible="1"/>
                     <field name="res_id" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
-                    <group col="2" invisible="context.get('survey_resent_token')">
-                        <field name="public" widget="radio"/>
+                    <group col="2">
+                        <field name="survey_id" readonly="context.get('default_survey_id')"/>
+                        <field name="public" widget="radio" invisible="context.get('survey_resent_token')"/>
                     </group>
                     <group col="1" invisible="context.get('survey_resent_token')" attrs="{'invisible':[('public','in',['email_private', 'email_public_link'])]}" class="oe_survey_email_public">
                         <div>
