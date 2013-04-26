@@ -2222,23 +2222,17 @@ class stock_move(osv.osv):
                                     (move.product_id.categ_id.name, move.product_id.categ_id.id,))
         return journal_id, acc_src, acc_dest, acc_valuation
 
-    def _get_reference_accounting_values_for_valuation(self, cr, uid, move, context=None):
-        """
-        Return the reference amount and reference currency representing the inventory valuation for this move.
-        These reference values should possibly be converted before being posted in Journals to adapt to the primary
-        and secondary currencies of the relevant accounts.
-        """
-        product_uom_obj = self.pool.get('product.uom')
+
+    #We can use a preliminary type
+    def get_reference_amount(self, cr, uid, move, qty, context=None):
+        # if product is set to average price and a specific value was entered in the picking wizard,
+        # we use it
 
         # by default the reference currency is that of the move's company
         reference_currency_id = move.company_id.currency_id.id
-
-        default_uom = move.product_id.uom_id.id
-        qty = product_uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, default_uom)
-
-        # if product is set to average price and a specific value was entered in the picking wizard,
-        # we use it
-        if move.product_id.cost_method == 'average' and move.price_unit:
+        
+        #I use 
+        if move.product_id.cost_method != 'standard' and move.price_unit:
             reference_amount = qty * move.price_unit
             reference_currency_id = move.price_currency_id.id or reference_currency_id
 
@@ -2250,7 +2244,22 @@ class stock_move(osv.osv):
             currency_ctx = dict(context, currency_id = move.company_id.currency_id.id)
             amount_unit = move.product_id.price_get('standard_price', context=currency_ctx)[move.product_id.id]
             reference_amount = amount_unit * qty
+        
+        return reference_amount, reference_currency_id
 
+
+    def _get_reference_accounting_values_for_valuation(self, cr, uid, move, context=None):
+        """
+        Return the reference amount and reference currency representing the inventory valuation for this move.
+        These reference values should possibly be converted before being posted in Journals to adapt to the primary
+        and secondary currencies of the relevant accounts.
+        """
+        product_uom_obj = self.pool.get('product.uom')
+
+        default_uom = move.product_id.uom_id.id
+        qty = product_uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, default_uom)
+        
+        reference_amount, reference_currency_id = self.get_reference_amount(cr, uid, move, qty, context=context)
         return reference_amount, reference_currency_id
 
 
