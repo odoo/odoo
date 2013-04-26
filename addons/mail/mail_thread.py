@@ -449,7 +449,7 @@ class mail_thread(osv.AbstractModel):
         ir_attachment_obj.unlink(cr, uid, attach_ids, context=context)
         return True
 
-    def _get_document_action(self, cr, uid, id, model=None, context=None):
+    def _get_formview_action(self, cr, uid, id, model=None, context=None):
         """ Return an action to open the document. This method is meant to be
             overridden in addons that want to give specific view ids for example.
 
@@ -498,10 +498,10 @@ class mail_thread(osv.AbstractModel):
             try:
                 model_obj = self.pool.get(msg.model)
                 model_obj.check_access_rule(cr, uid, [msg.res_id], 'read', context=context)
-                if not hasattr(model_obj, '_get_document_action'):
-                    action = self.pool.get('mail.thread')._get_document_action(cr, uid, msg.res_id, model=msg.model, context=context)
+                if not hasattr(model_obj, '_get_formview_action'):
+                    action = self.pool.get('mail.thread')._get_formview_action(cr, uid, msg.res_id, model=msg.model, context=context)
                 else:
-                    action = model_obj._get_document_action(cr, uid, msg.res_id, context=context)
+                    action = model_obj._get_formview_action(cr, uid, msg.res_id, context=context)
             except (osv.except_osv, orm.except_orm):
                 action.update({
                     'context': {
