@@ -198,6 +198,16 @@ class mail_mail(osv.Model):
     # mail_mail formatting, tools and send mechanism
     #------------------------------------------------------
 
+    # TDE NOTE: as for 7.0 link generation is located in mail.mail because it grew
+    # based on a simple URL generation that moved towards something more complicated
+    # Moreover a bug in hierarchy generation prevents from putting link generation
+    # inside mail_thread and override it in modules; the overrides will not be
+    # taken into account
+    # TODO in 8.0: maybe factorize this to enable in modules link generation
+    # independently of mail_mail model
+    # TODO in 8.0: factorize doc name sanitized and 'Followers of ...' formatting
+    # because it begins to appear everywhere
+
     def _get_partner_access_link(self, cr, uid, mail, partner=None, context=None):
         """ Generate URLs for links in mails:
             - partner is an user and has read access to the document: direct link to document with model, res_id

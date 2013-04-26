@@ -33,7 +33,7 @@ from email.message import Message
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.addons.mail.mail_message import decode
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, orm
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 
@@ -449,7 +449,24 @@ class mail_thread(osv.AbstractModel):
         ir_attachment_obj.unlink(cr, uid, attach_ids, context=context)
         return True
 
-    def message_redirect_get_inbox_action_xml_id(self, cr, uid, context=None):
+    def _get_document_action(self, cr, uid, id, model=None, context=None):
+        """ Return an action to open the document. This method is meant to be
+            overridden in addons that want to give specific view ids for example.
+
+            :param int id: id of the document to open
+            :param string model: specific model that overrides self._name
+        """
+        return {
+                'type': 'ir.actions.act_window',
+                'res_model': model or self._name,
+                'view_type': 'form',
+                'view_mode': 'form',
+                'views': [(False, 'form')],
+                'target': 'current',
+                'res_id': id,
+            }
+
+    def _get_inbox_action_xml_id(self, cr, uid, context=None):
         """ When redirecting towards the Inbox, choose which action xml_id has
             to be fetched. This method is meant to be inherited, at least in portal
             because portal users have a different Inbox action than classic users. """
@@ -469,7 +486,7 @@ class mail_thread(osv.AbstractModel):
 
         # default action is the Inbox action
         self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
-        act_model, act_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, *self.message_redirect_get_inbox_action_xml_id(cr, uid, context=context))
+        act_model, act_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, *self._get_inbox_action_xml_id(cr, uid, context=context))
         action = self.pool.get(act_model).read(cr, uid, act_id, [])
 
         # if msg_id specified: try to redirect to the document or fallback on the Inbox
@@ -479,17 +496,13 @@ class mail_thread(osv.AbstractModel):
         msg = self.pool.get('mail.message').browse(cr, uid, msg_id, context=context)
         if msg.model and msg.res_id and self.pool.get(msg.model).check_access_rights(cr, uid, 'read', raise_exception=False):
             try:
-                self.pool.get(msg.model).check_access_rule(cr, uid, [msg.res_id], 'read', context=context)
-                action = {
-                    'type': 'ir.actions.act_window',
-                    'res_model': msg.model,
-                    'view_type': 'form',
-                    'view_mode': 'form',
-                    'views': [(msg.res_id, 'form')],
-                    'target': 'current',
-                    'res_id': msg.res_id,
-                }
-            except osv.except_osv:
+                model_obj = self.pool.get(msg.model)
+                model_obj.check_access_rule(cr, uid, [msg.res_id], 'read', context=context)
+                if not hasattr(model_obj, '_get_document_action'):
+                    action = self.pool.get('mail.thread')._get_document_action(cr, uid, msg.res_id, model=msg.model, context=context)
+                else:
+                    action = model_obj._get_document_action(cr, uid, msg.res_id, context=context)
+            except (osv.except_osv, orm.except_orm):
                 action.update({
                     'context': {
                         'search_default_model': msg.model,
