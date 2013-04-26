@@ -2610,11 +2610,12 @@ class stock_move(osv.osv):
             product_price = partial_data.get('product_price',0.0)
             product_currency = partial_data.get('product_currency',False)
             product = product_obj.browse(cr, uid, move.product_id.id, context=context)
+
+            #Check we are using the right company
+            company_id = move.company_id.id
             ctx = context.copy()
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-            company_id = move.company_id.id
             if company_id != user.company_id.id:
-                #test if I could do this with a read instead
                 ctx['force_company'] = move.company_id.id
                 product = product_obj.browse(cr, uid, move.product_id.id, context=ctx)
             cost_method = product.cost_method
@@ -2622,14 +2623,19 @@ class stock_move(osv.osv):
             #Check if cost_method used needs update
             avg_in_update = (move.picking_id.type == 'in') and (cost_method == 'average')
             avg_out_update = (move.picking_id.type == 'out') and (cost_method == 'average') and (move.move_returned_from)
-            if avg_in_update or avg_out_update: 
+            if avg_in_update or avg_out_update:
+                
+                # If no price from picking, use cost price from product
+                if product_price == 0:
+                    product_price = product.price_get('standard_price', context=ctx)[product.id]
+                
                 move_currency_id = move.company_id.currency_id.id
                 ctx['currency_id'] = move_currency_id
                 qty = uom_obj._compute_qty(cr, uid, product_uom, product_qty, product.uom_id.id)
-                first_avail = False
+
                 if not product.id in product_avail:
                     product_avail[product.id] = product.qty_available
-                    first_avail = True
+
                 if qty > 0:
                     if avg_in_update:
                         new_price = currency_obj.compute(cr, uid, product_currency,
@@ -2652,15 +2658,13 @@ class stock_move(osv.osv):
                             amount_unit = product.price_get('standard_price', context=ctx)[product.id]
                             new_std_price = ((amount_unit * product_avail[product.id])\
                                              - (new_price * qty))/(product_avail[product.id] - qty)
-                    # Write the field according to price type field
-                    product_obj.write(cr, uid, [product.id], {'standard_price': new_std_price})
                     
                     #Adjust product available with the right amount
-                    if not first_avail: 
-                        if avg_out_update:
-                            product_avail[product.id] -= qty
-                        else:
-                            product_avail[product.id] += qty
+
+                    if avg_out_update:
+                        product_avail[product.id] -= qty
+                    else:
+                        product_avail[product.id] += qty
                     
                     # Write the field according to price type field, company dependence in ctx
                     product_obj.write(cr, uid, [product.id], {'standard_price': new_std_price}, context=ctx)
