@@ -5382,9 +5382,9 @@ class BaseModel(object):
         """
         if ids is None:
             if self.is_null():
-                ids = []
+                ids = ()
             elif self.is_record():
-                ids = [self._id]
+                ids = (self._id,)
             elif self.is_recordset():
                 ids = self._ids
             else:
@@ -5393,7 +5393,7 @@ class BaseModel(object):
         else:
             ids = map(int, ids)
 
-        return self._make_instance(_ids=ids, _scope=scope)
+        return self._make_instance(_ids=tuple(ids), _scope=scope)
 
     def is_recordset(self):
         """ test whether `self` is a recordset instance """
@@ -5403,7 +5403,7 @@ class BaseModel(object):
         """ Return the `id`/`ids` corresponding to a record/recordset/null instance. """
         if self.is_record_or_null():
             return self._id
-        return self._ids
+        return list(self._ids)
 
     def __nonzero__(self):
         """ Test whether `self` is nonempty and not null. """
@@ -5608,11 +5608,10 @@ class BaseModel(object):
         if self.is_record_or_null():
             return self._get_field(key)
         elif self.is_recordset():
-            select = self._ids[key]
-            if isinstance(select, list):
-                return self.recordset(select, scope=self._scope)
+            if isinstance(key, slice):
+                return self.recordset(self._ids[key], scope=self._scope)
             else:
-                return self.record(select, scope=self._scope)
+                return self.record(self._ids[key], scope=self._scope)
         else:
             raise except_orm("ValueError", "Expected record or recordset: %s" % self)
 
@@ -5663,7 +5662,7 @@ class BaseModel(object):
         if self.is_record_or_null():
             return hash((self._name, self._id))
         elif self.is_recordset():
-            return hash((self._name, tuple(self._ids)))
+            return hash((self._name, self._ids))
         else:
             return hash(self._name)
 
