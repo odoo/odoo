@@ -105,10 +105,10 @@ class account_analytic_invoice_line(osv.osv):
             context = {}
         company_id = company_id or False
         context.update({'company_id': company_id, 'force_company': company_id})
-        if not partner_id:
-            raise osv.except_osv(_('No Partner Defined !'),_("You must first select a partner !") )
         if not product:
             return {'value': {'price_unit': 0.0}, 'domain':{'product_uom':[]}}
+        if not partner_id:
+            raise osv.except_osv(_('No Partner Defined !'),_("You must first select a Customer !") )
         part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
         fpos_obj = self.pool.get('account.fiscal.position')
         fpos = False
