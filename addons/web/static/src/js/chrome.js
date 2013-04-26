@@ -885,14 +885,15 @@ instance.web.Menu =  instance.web.Widget.extend({
         });
     },
     menu_loaded: function(data) {
+        var self = this;
         this.data = {data: data};
         this.renderElement();
         this.$secondary_menus.html(QWeb.render("Menu.secondary", { widget : this }));
         this.$el.on('click', 'a[data-menu]', this.on_top_menu_click);
         // Hide second level submenus
         this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').hide();
-        if (this.current_menu) {
-            this.open_menu(this.current_menu);
+        if (self.current_menu) {
+            self.open_menu(self.current_menu);
         }
         this.trigger('menu_loaded', data);
         this.has_been_loaded.resolve();
