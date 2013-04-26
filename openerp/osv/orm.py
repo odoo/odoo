@@ -3984,8 +3984,9 @@ class BaseModel(object):
             if ir_value_ids:
                 ir_values_obj.unlink(cr, uid, ir_value_ids, context=context)
 
-        # invalidate the cache
-        self.invalidate_cache(None, ids)
+        # invalidate the *whole* cache, since the orm does not handle all
+        # changes made in the database, like cascading delete!
+        self.invalidate_cache()
 
         for order, obj_name, store_ids, fields in result_store:
             if obj_name != self._name:
