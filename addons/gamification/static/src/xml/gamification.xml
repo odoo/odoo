@@ -17,7 +17,7 @@
                                 <div class="oe_goal_progress_background"></div>
                                 <div class="oe_goal_progress" t-attf-style="#{goal.type_display == 'progress' ? 'width: '+goal.completeness+'%;' : 'width:0;'}"></div>
                             </t>
-                            <div t-attf-class="oe_goal_inner_box">
+                            
                                 <t t-if="goal.type_display == 'progress'">
                                     <div class="oe_cell oe_goal_current"><t t-esc="goal.current" /></div>
                                 </t>
@@ -39,7 +39,6 @@
                                         <t t-if="goal.type_unit"><t t-esc="goal.type_unit"/></t>)
                                     </t>
                                 </div>
-                            </div>
                     </div>
                 </div>
             </t>
@@ -67,7 +66,7 @@
                                 <div class="oe_goal_progress_background"></div>
                                 <div class="oe_goal_progress" t-attf-style="#{planline.type_display == 'progress' ? 'width: '+goal.completeness+'%;' : 'width:0;'}"></div>
                             </t>
-                            <div class="oe_goal_inner_box">
+                            
                                 <div class="oe_cell col0"><t t-esc="goal.rank" /></div>
                                 <div class="oe_cell col1"><img class="oe_user_avatar" t-attf-alt="#{goal.user_name}" t-attf-data-id="#{goal.user_id}"/></div>
                                 <div class="oe_cell col2">
@@ -82,7 +81,7 @@
                                             </a>
                                         </t>
                                 </div>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
