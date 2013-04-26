@@ -49,10 +49,11 @@ class res_partner(models.Model):
     name_size = fields.Integer(compute='compute_name_size', store=False)
     children_count = fields.Integer(compute='compute_children_count', store=True)
 
-    @api.record
+    @api.recordset
     @api.depends('name')
     def compute_name_size(self):
-        self.name_size = len(self.name)
+        for rec in self:
+            rec.name_size = len(rec.name)
 
     # Note: we introduce this weird dependency in order to catch changes on both
     # fields 'child_ids' and 'parent_id'
