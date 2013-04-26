@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.addons.mail.tests.test_mail_base import TestMailBase
+from openerp.tools import mute_logger
 
 MAIL_TEMPLATE = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
@@ -123,6 +124,7 @@ class TestMailgateway(TestMailBase):
         self.assertEqual(partner_info['partner_id'], p_b_id,
                         'mail_thread: message_find_partner_from_emails wrong partner found')
 
+    @mute_logger('openerp.addons.mail.mail_thread', 'openerp.osv.orm')
     def test_10_message_process(self):
         """ Testing incoming emails processing. """
         cr, uid, user_raoul = self.cr, self.uid, self.user_raoul
@@ -365,6 +367,7 @@ class TestMailgateway(TestMailBase):
         self.assertEqual(msg.body, '<pre>\nPlease call me as soon as possible this afternoon!\n\n--\nSylvie\n</pre>',
                             'message_process: plaintext incoming email incorrectly parsed')
 
+    @mute_logger('openerp.addons.mail.mail_thread', 'openerp.osv.orm')
     def test_20_thread_parent_resolution(self):
         """ Testing parent/child relationships are correctly established when processing incoming mails """
         cr, uid = self.cr, self.uid

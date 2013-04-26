@@ -1841,10 +1841,19 @@ openerp.mail = function (session) {
             this._super(parent, action);
 
             this.action = _.clone(action);
+            // debugger
             this.domain = this.action.params.domain || this.action.domain || [];
             this.context = _.extend(this.action.params.context || {}, this.action.context || {});
 
+            // filter some parameters that we will propagate as search_default
             this.defaults = {};
+            for (var key in this.action.context.params) {
+                if (_.indexOf(['model', 'res_id'], key) == -1) {
+                    continue;
+                }
+                this.context['search_default_' + key] = this.action.context.params[key];
+                console.log(this.context);
+            }
             for (var key in this.context) {
                 if (key.match(/^search_default_/)) {
                     this.defaults[key.replace(/^search_default_/, '')] = this.context[key];
