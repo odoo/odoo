@@ -39,7 +39,3 @@ class mail_mail(osv.Model):
             return _("""<small>Access your messages and documents through <a style='color:inherit' href="%s">our Customer Portal</a></small>""") % partner.signup_url
         else:
             return super(mail_mail, self)._get_partner_access_link(cr, uid, mail, partner=partner, context=context)
-
-    def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
-        """ TODO: remove me in 8.0 """
-        return super(mail_mail, self).send_get_mail_body(cr, uid, mail, partner=partner, context=context)
