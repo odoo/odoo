@@ -450,6 +450,8 @@ openerp.im = function(instance) {
         },
         focus: function() {
             this.$(".oe_im_chatview_input").focus();
+            if (! this.shown)
+                this.show_hide();
         },
         destroy: function() {
             this.user.remove_watcher();
