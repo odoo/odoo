@@ -5078,6 +5078,8 @@ class BaseModel(object):
         """
         if type(ids) in (int, long):
             ids = [ids]
+        if not ids:
+            return []
         query = 'SELECT id FROM "%s"' % self._table
         cr.execute(query + "WHERE ID IN %s", (tuple(ids),))
         return [x[0] for x in cr.fetchall()]
@@ -5719,7 +5721,8 @@ class BaseModel(object):
             for model_name, field_name, path in self._recompute[field]:
                 # find which records in model have to be recomputed
                 recs = self.pool[model_name].search([(path, 'in', self._ids)])
-                target[model_name][field_name].update(recs._ids)
+                if recs:
+                    target[model_name][field_name].update(recs._ids)
 
         # return spec
         return [(m, [f], list(ids))
