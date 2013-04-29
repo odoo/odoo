@@ -3499,44 +3499,7 @@ class BaseModel(object):
         return fields
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
-        """ Read the given fields of the records.
-
-            :param fields: optional list of field names to return
-            :param load: ignore this, this is for compatibility purpose
-            :return: list of dictionaries with the requested fields
-        """
-        # This method is defined with the old-style signature, because of sloppy
-        # positional calls that result in wrongly assigning parameters 'load'
-        # and 'context'.
-
-        # use the new-style API internally
-        recs = self.browse(ids, scoped=False)
-
-        # split up fields into old-style and pure new-style ones
-        if fields is None:
-            old_fields = set(self._columns)
-            new_fields = set(self._fields) - old_fields
-        else:
-            new_fields = set(fields) & (set(self._fields) - set(self._columns))
-            old_fields = set(fields) - new_fields
-
-        # read old-style fields with the low-level method
-        result = recs.recordset()._read(list(old_fields), load=load)
-
-        # read new-style fields with records
-        for f in new_fields:
-            format = self._fields[f].format_read
-            for values in result:
-                rec = self.record(values['id'])
-                values[f] = format(rec[f])
-
-        return result if recs.is_recordset() else (bool(result) and result[0])
-
-    def _read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         """ Read records with given ids with the given fields.
-
-            This method should be considered low-level, as it ignores new-style
-            fields. It should never be used by client code.
 
         :param cr: database cursor
         :param user: current user id
@@ -3556,19 +3519,30 @@ class BaseModel(object):
                             * if user tries to bypass access rules for read on the requested object
 
         """
-
+        # first check access rights
         self.check_access_rights(cr, user, 'read')
         fields = self.check_field_access_rights(cr, user, 'read', fields)
-        if isinstance(ids, (int, long)):
-            select = [ids]
-        else:
-            select = ids
-        select = map(lambda x: isinstance(x, dict) and x['id'] or x, select)
-        result = self._read_flat(cr, user, select, fields, context, load)
 
-        if isinstance(ids, (int, long)):
-            return result and result[0] or False
-        return result
+        # split up fields into old-style and pure new-style ones
+        if fields is None:
+            old_fields = set(self._columns)
+            new_fields = set(self._fields) - old_fields
+        else:
+            new_fields = set(fields) & (set(self._fields) - set(self._columns))
+            old_fields = set(fields) - new_fields
+
+        # read old-style fields with (low-level) method _read_flat
+        select = self.browse(ids, scoped=False)
+        result = select.recordset()._read_flat(list(old_fields), load=load)
+
+        # read new-style fields with records
+        for f in new_fields:
+            field_format = self._fields[f].format_read
+            for values in result:
+                rec = self.record(values['id'])
+                values[f] = field_format(rec[f])
+
+        return result if select.is_recordset() else (bool(result) and result[0])
 
     def _read_flat(self, cr, user, ids, fields_to_read, context=None, load='_classic_read'):
         if not context:
