@@ -3,7 +3,7 @@ import unittest2
 from lxml import etree as ET
 from lxml.builder import E
 
-from . import common
+from openerp.tests import common
 
 from openerp.tools.convert import _eval_xml
 
