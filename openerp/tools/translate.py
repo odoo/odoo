@@ -550,6 +550,8 @@ def trans_parse_view(de):
         res.append(de.get('sum').encode("utf8"))
     if de.get("confirm"):
         res.append(de.get('confirm').encode("utf8"))
+    if de.get("placeholder"):
+        res.append(de.get('placeholder').encode("utf8"))
     for n in de:
         res.extend(trans_parse_view(n))
     return res
@@ -659,7 +661,7 @@ def trans_generate(lang, modules, cr):
         model = encode(model)
         xml_name = "%s.%s" % (module, encode(xml_name))
 
-        if not registry.get(model):
+        if model not in registry:
             _logger.error("Unable to find object %r", model)
             continue
 
@@ -764,11 +766,11 @@ def trans_generate(lang, modules, cr):
                 push_constraint_msg(module, term_type, model._name, constraint[msg_pos])
             
     for (_, model, module) in cr.fetchall():
-        model_obj = registry.get(model)
-
-        if not model_obj:
+        if model not in registry:
             _logger.error("Unable to find object %r", model)
             continue
+
+        model_obj = registry[model]
 
         if model_obj._constraints:
             push_local_constraints(module, model_obj, 'constraints')

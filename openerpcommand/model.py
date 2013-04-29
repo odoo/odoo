@@ -13,7 +13,7 @@ def run(args):
     openerp.netsvc.init_logger()
     registry = openerp.modules.registry.RegistryManager.get(
         args.database, update_module=False)
-    model = registry.get(args.model)
+    model = registry[args.model]
     longest_k = 1
     longest_string = 1
     columns = model._columns

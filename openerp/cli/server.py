@@ -220,15 +220,7 @@ def quit_on_signals():
         os.unlink(config['pidfile'])
     sys.exit(0)
 
-def configure_babel_localedata_path():
-    # Workaround: py2exe and babel.
-    if hasattr(sys, 'frozen'):
-        import babel
-        babel.localedata._dirname = os.path.join(os.path.dirname(sys.executable), 'localedata')
-
 def main(args):
-    os.environ["TZ"] = "UTC"
-
     check_root_user()
     openerp.tools.config.parse_config(args)
 
@@ -245,8 +237,6 @@ def main(args):
     report_configuration()
 
     config = openerp.tools.config
-
-    configure_babel_localedata_path()
 
     setup_signal_handlers(signal_handler)
 

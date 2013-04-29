@@ -25,6 +25,7 @@ import time
 import types
 
 import openerp
+import openerp.modules.registry
 from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.osv import fields,osv
@@ -70,7 +71,7 @@ class ir_model(osv.osv):
         models = self.browse(cr, uid, ids, context=context)
         res = dict.fromkeys(ids)
         for model in models:
-            if self.pool.get(model.model):
+            if model.model in self.pool:
                 res[model.id] = self.pool[model.model].is_transient()
             else:
                 _logger.error('Missing model %s' % (model.model, ))
@@ -168,7 +169,9 @@ class ir_model(osv.osv):
         if not context.get(MODULE_UNINSTALL_FLAG):
             # only reload pool for normal unlink. For module uninstall the
             # reload is done independently in openerp.modules.loading
+            cr.commit() # must be committed before reloading registry in new cursor
             openerp.modules.registry.RegistryManager.new(cr.dbname)
+            openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
 
         return res
 
@@ -194,6 +197,7 @@ class ir_model(osv.osv):
                 field_state='manual',
                 select=vals.get('select_level', '0'))
             self.pool[vals['model']]._auto_init(cr, ctx)
+            openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         return res
 
     def instanciate(self, cr, user, model, context=None):
@@ -259,7 +263,6 @@ class ir_model_fields(osv.osv):
         'state': lambda self,cr,uid,ctx=None: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
         'on_delete': 'set null',
         'select_level': '0',
-        'size': 64,
         'field_description': '',
         'selectable': 1,
     }
@@ -289,10 +292,10 @@ class ir_model_fields(osv.osv):
         return True
 
     def _size_gt_zero_msg(self, cr, user, ids, context=None):
-        return _('Size of the field can never be less than 1 !')
+        return _('Size of the field can never be less than 0 !')
 
     _sql_constraints = [
-        ('size_gt_zero', 'CHECK (size>0)',_size_gt_zero_msg ),
+        ('size_gt_zero', 'CHECK (size>=0)',_size_gt_zero_msg ),
     ]
 
     def _drop_column(self, cr, uid, ids, context=None):
@@ -318,6 +321,9 @@ class ir_model_fields(osv.osv):
 
         self._drop_column(cr, user, ids, context)
         res = super(ir_model_fields, self).unlink(cr, user, ids, context)
+        if not context.get(MODULE_UNINSTALL_FLAG):
+            cr.commit()
+            openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         return res
 
     def create(self, cr, user, vals, context=None):
@@ -340,7 +346,7 @@ class ir_model_fields(osv.osv):
             if vals.get('relation',False) and not self.pool['ir.model'].search(cr, user, [('model','=',vals['relation'])]):
                 raise except_orm(_('Error'), _("Model %s does not exist!") % vals['relation'])
 
-            if self.pool.get(vals['model']):
+            if vals['model'] in self.pool:
                 self.pool[vals['model']].__init__(self.pool, cr)
                 #Added context to _auto_init for special treatment to custom field for select_level
                 ctx = dict(context,
@@ -349,6 +355,7 @@ class ir_model_fields(osv.osv):
                     select=vals.get('select_level', '0'),
                     update_custom_fields=True)
                 self.pool[vals['model']]._auto_init(cr, ctx)
+                openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
 
         return res
 
@@ -367,7 +374,6 @@ class ir_model_fields(osv.osv):
                     raise except_orm(_('Error!'),  _('Renaming sparse field "%s" is not allowed')%field.name)
 
         column_rename = None # if set, *one* column can be renamed here
-        obj = None
         models_patch = {}    # structs of (obj, [(field, prop, change_to),..])
                              # data to be updated on the orm model
 
@@ -390,8 +396,7 @@ class ir_model_fields(osv.osv):
             checked_selection = False # need only check it once, so defer
 
             for item in self.browse(cr, user, ids, context=context):
-                if not (obj and obj._name == item.model):
-                    obj = self.pool.get(item.model)
+                obj = self.pool.get(item.model)
 
                 if item.state != 'manual':
                     raise except_orm(_('Error!'),
@@ -427,7 +432,7 @@ class ir_model_fields(osv.osv):
 
                 # We don't check the 'state', because it might come from the context
                 # (thus be set for multiple fields) and will be ignored anyway.
-                if obj:
+                if obj is not None:
                     models_patch.setdefault(obj._name, (obj,[]))
                     # find out which properties (per model) we need to update
                     for field_name, field_property, set_fn in model_props:
@@ -465,6 +470,7 @@ class ir_model_fields(osv.osv):
                 for col_name, col_prop, val in patch_struct[1]:
                     setattr(obj._columns[col_name], col_prop, val)
                 obj._auto_init(cr, ctx)
+            openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         return res
 
 class ir_model_constraint(Model):
@@ -507,7 +513,7 @@ class ir_model_constraint(Model):
         ids.reverse()
         for data in self.browse(cr, uid, ids, context):
             model = data.model.model
-            model_obj = self.pool.get(model)
+            model_obj = self.pool[model]
             name = openerp.tools.ustr(data.name)
             typ = data.type
 
@@ -682,7 +688,7 @@ class ir_model_access(osv.osv):
             model_name = model
 
         # TransientModel records have no access rights, only an implicit access rule
-        if not self.pool.get(model_name):
+        if model_name not in self.pool:
             _logger.error('Missing model %s' % (model_name, ))
         elif self.pool[model_name].is_transient():
             return True
@@ -746,9 +752,8 @@ class ir_model_access(osv.osv):
     def call_cache_clearing_methods(self, cr):
         self.check.clear_cache(self)    # clear the cache of check function
         for model, method in self.__cache_clearing_methods:
-            object_ = self.pool.get(model)
-            if object_:
-                getattr(object_, method)()
+            if model in self.pool:
+                getattr(self.pool[model], method)()
 
     #
     # Check rights on actions
@@ -858,10 +863,23 @@ class ir_model_data(osv.osv):
     def get_object_reference(self, cr, uid, module, xml_id):
         """Returns (model, res_id) corresponding to a given module and xml_id (cached) or raise ValueError if not found"""
         data_id = self._get_id(cr, uid, module, xml_id)
+        #assuming data_id is not False, as it was checked upstream
         res = self.read(cr, uid, data_id, ['model', 'res_id'])
         if not res['res_id']:
             raise ValueError('No such external ID currently defined in the system: %s.%s' % (module, xml_id))
         return res['model'], res['res_id']
+
+    def check_object_reference(self, cr, uid, module, xml_id, raise_on_access_error=False):
+        """Returns (model, res_id) corresponding to a given module and xml_id (cached), if and only if the user has the necessary access rights
+        to see that object, otherwise raise a ValueError if raise_on_access_error is True or returns a tuple (model found, False)"""
+        model, res_id = self.get_object_reference(cr, uid, module, xml_id)
+        #search on id found in result to check if current user has read access right
+        check_right = self.pool.get(model).search(cr, uid, [('id', '=', res_id)])
+        if check_right:
+            return model, res_id
+        if raise_on_access_error:
+            raise ValueError('Not enough access rights on the external ID: %s.%s' % (module, xml_id))
+        return model, False
 
     def get_object(self, cr, uid, module, xml_id, context=None):
         """Returns a browsable record for the given module name and xml_id or raise ValueError if not found"""
@@ -896,7 +914,7 @@ class ir_model_data(osv.osv):
         return super(ir_model_data,self).unlink(cr, uid, ids, context=context)
 
     def _update(self,cr, uid, model, module, values, xml_id=False, store=True, noupdate=False, mode='init', res_id=False, context=None):
-        model_obj = self.pool.get(model)
+        model_obj = self.pool[model]
         if not context:
             context = {}
         # records created during module install should not display the messages of OpenChatter
@@ -1114,7 +1132,7 @@ class ir_model_data(osv.osv):
                 to_unlink.append((model,res_id))
         if not config.get('import_partial'):
             for (model, res_id) in to_unlink:
-                if self.pool.get(model):
+                if model in self.pool:
                     _logger.info('Deleting %s@%s', res_id, model)
                     self.pool[model].unlink(cr, uid, [res_id])
 

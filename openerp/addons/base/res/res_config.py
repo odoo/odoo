@@ -31,6 +31,37 @@ from openerp import exceptions
 
 _logger = logging.getLogger(__name__)
 
+
+class res_config_module_installation_mixin(object):
+    def _install_modules(self, cr, uid, modules, context):
+        """Install the requested modules.
+            return the next action to execute
+
+          modules is a list of tuples
+            (mod_name, browse_record | None)
+        """
+        ir_module = self.pool.get('ir.module.module')
+        to_install_ids = []
+        to_install_missing_names = []
+
+        for name, module in modules:
+            if not module:
+                to_install_missing_names.append(name)
+            elif module.state == 'uninstalled':
+                to_install_ids.append(module.id)
+
+        if to_install_ids:
+            ir_module.button_immediate_install(cr, uid, to_install_ids, context=context)
+
+        if to_install_missing_names:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'apps',
+                'params': {'modules': to_install_missing_names},
+            }
+
+        return None
+
 class res_config_configurable(osv.osv_memory):
     ''' Base classes for new-style configuration items
 
@@ -155,7 +186,7 @@ class res_config_configurable(osv.osv_memory):
 
 res_config_configurable()
 
-class res_config_installer(osv.osv_memory):
+class res_config_installer(osv.osv_memory, res_config_module_installation_mixin):
     """ New-style configuration base specialized for addons selection
     and installation.
 
@@ -353,17 +384,18 @@ class res_config_installer(osv.osv_memory):
         return fields
 
     def execute(self, cr, uid, ids, context=None):
-        modules = self.pool['ir.module.module']
         to_install = list(self.modules_to_install(
             cr, uid, ids, context=context))
         _logger.info('Selecting addons %s to install', to_install)
-        modules.state_update(
-            cr, uid,
-            modules.search(cr, uid, [('name','in',to_install)]),
-            'to install', ['uninstalled'], context=context)
-        cr.commit()
-        openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
-        openerp.modules.registry.RegistryManager.new(cr.dbname, update_module=True)
+
+        ir_module = self.pool.get('ir.module.module')
+        modules = []
+        for name in to_install:
+            mod_ids = ir_module.search(cr, uid, [('name', '=', name)])
+            record = ir_module.browse(cr, uid, mod_ids[0], context) if mod_ids else None
+            modules.append((name, record))
+
+        return self._install_modules(cr, uid, modules, context=context)
 
 res_config_installer()
 
@@ -404,8 +436,7 @@ class ir_actions_configuration_wizard(osv.osv_memory):
 ir_actions_configuration_wizard()
 
 
-
-class res_config_settings(osv.osv_memory):
+class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
     """ Base configuration wizard for application settings.  It provides support for setting
         default values, assigning groups to employee users, and installing modules.
         To make such a 'settings' wizard, define a model like::
@@ -529,33 +560,22 @@ class res_config_settings(osv.osv_memory):
                 getattr(self, method)(cr, uid, ids, context)
 
         # module fields: install/uninstall the selected modules
-        to_install_missing_names = []
+        to_install = []
         to_uninstall_ids = []
-        to_install_ids = []
         lm = len('module_')
         for name, module in classified['module']:
             if config[name]:
-                if not module:
-                    # missing module, will be provided by apps.openerp.com
-                    to_install_missing_names.append(name[lm:])
-                elif module.state == 'uninstalled':
-                    # local module, to be installed
-                    to_install_ids.append(module.id)
+                to_install.append((name[lm:], module))
             else:
                 if module and module.state in ('installed', 'to upgrade'):
                     to_uninstall_ids.append(module.id)
 
         if to_uninstall_ids:
             ir_module.button_immediate_uninstall(cr, uid, to_uninstall_ids, context=context)
-        if to_install_ids:
-            ir_module.button_immediate_install(cr, uid, to_install_ids, context=context)
 
-        if to_install_missing_names:
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'apps',
-                'params': {'modules': to_install_missing_names},
-            }
+        action = self._install_modules(cr, uid, to_install, context=context)
+        if action:
+            return action
 
         # After the uninstall/install calls, the self.pool is no longer valid.
         # So we reach into the RegistryManager directly.

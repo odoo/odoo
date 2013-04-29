@@ -397,11 +397,11 @@ class ir_values(osv.osv):
             action_model,id = action['value'].split(',')
             fields = [
                     field
-                    for field in self.pool.get(action_model)._all_columns
+                    for field in self.pool[action_model]._all_columns
                     if field not in EXCLUDED_FIELDS]
             # FIXME: needs cleanup
             try:
-                action_def = self.pool.get(action_model).read(cr, uid, int(id), fields, context)
+                action_def = self.pool[action_model].read(cr, uid, int(id), fields, context)
                 if action_def:
                     if action_model in ('ir.actions.report.xml','ir.actions.act_window',
                                         'ir.actions.wizard'):

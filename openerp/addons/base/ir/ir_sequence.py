@@ -217,7 +217,7 @@ class ir_sequence(openerp.osv.osv.osv):
     def next_by_id(self, cr, uid, sequence_id, context=None):
         """ Draw an interpolated string using the specified sequence."""
         self.check_access_rights(cr, uid, 'read')
-        company_ids = self.pool.get('res.company').search(cr, uid, [], order='company_id', context=context) + [False]
+        company_ids = self.pool.get('res.company').search(cr, uid, [], context=context) + [False]
         ids = self.search(cr, uid, ['&',('id','=', sequence_id),('company_id','in',company_ids)])
         return self._next(cr, uid, ids, context)
 
@@ -234,8 +234,8 @@ class ir_sequence(openerp.osv.osv.osv):
                 specific company will get higher priority. 
         """
         self.check_access_rights(cr, uid, 'read')
-        company_ids = self.pool.get('res.company').search(cr, uid, [], order='company_id', context=context) + [False]
-        ids = self.search(cr, uid, ['&',('code','=', sequence_code),('company_id','in',company_ids)])
+        company_ids = self.pool.get('res.company').search(cr, uid, [], context=context) + [False]
+        ids = self.search(cr, uid, ['&', ('code', '=', sequence_code), ('company_id', 'in', company_ids)])
         return self._next(cr, uid, ids, context)
 
     def get_id(self, cr, uid, sequence_code_or_id, code_or_id='id', context=None):
