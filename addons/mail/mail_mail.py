@@ -198,14 +198,9 @@ class mail_mail(osv.Model):
     # mail_mail formatting, tools and send mechanism
     #------------------------------------------------------
 
-    # TDE NOTE: as for 7.0 link generation is located in mail.mail because it grew
-    # based on a simple URL generation that moved towards something more complicated
-    # Moreover a bug in hierarchy generation prevents from putting link generation
-    # inside mail_thread and override it in modules; the overrides will not be
-    # taken into account
-    # TODO in 8.0: maybe factorize this to enable in modules link generation
+    # TODO in 8.0(+): maybe factorize this to enable in modules link generation
     # independently of mail_mail model
-    # TODO in 8.0: factorize doc name sanitized and 'Followers of ...' formatting
+    # TODO in 8.0(+): factorize doc name sanitized and 'Followers of ...' formatting
     # because it begins to appear everywhere
 
     def _get_partner_access_link(self, cr, uid, mail, partner=None, context=None):
@@ -225,7 +220,7 @@ class mail_mail(osv.Model):
                         'message_id': mail.mail_message_id.id,
                     })
             url = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
-            return _("""<small>Access this document <a style='color:inherit' href="%s">directly in OpenERP</a></small>""") % url
+            return _("""<small>Access your messages and documents <a style='color:inherit' href="%s">in OpenERP</a></small>""") % url
         else:
             return None
 

@@ -494,21 +494,23 @@ class mail_thread(osv.AbstractModel):
         if not msg_id:
             return action
         msg = self.pool.get('mail.message').browse(cr, uid, msg_id, context=context)
-        if msg.model and msg.res_id and self.pool.get(msg.model).check_access_rights(cr, uid, 'read', raise_exception=False):
-            try:
-                model_obj = self.pool.get(msg.model)
-                model_obj.check_access_rule(cr, uid, [msg.res_id], 'read', context=context)
-                if not hasattr(model_obj, '_get_formview_action'):
-                    action = self.pool.get('mail.thread')._get_formview_action(cr, uid, msg.res_id, model=msg.model, context=context)
-                else:
-                    action = model_obj._get_formview_action(cr, uid, msg.res_id, context=context)
-            except (osv.except_osv, orm.except_orm):
-                action.update({
-                    'context': {
-                        'search_default_model': msg.model,
-                        'search_default_res_id': msg.res_id,
-                    }
-                })
+        if msg.model and msg.res_id:
+            action.update({
+                'context': {
+                    'search_default_model': msg.model,
+                    'search_default_res_id': msg.res_id,
+                }
+            })
+            if self.pool.get(msg.model).check_access_rights(cr, uid, 'read', raise_exception=False):
+                try:
+                    model_obj = self.pool.get(msg.model)
+                    model_obj.check_access_rule(cr, uid, [msg.res_id], 'read', context=context)
+                    if not hasattr(model_obj, '_get_formview_action'):
+                        action = self.pool.get('mail.thread')._get_formview_action(cr, uid, msg.res_id, model=msg.model, context=context)
+                    else:
+                        action = model_obj._get_formview_action(cr, uid, msg.res_id, context=context)
+                except (osv.except_osv, orm.except_orm):
+                    pass
         return action
 
     #------------------------------------------------------
