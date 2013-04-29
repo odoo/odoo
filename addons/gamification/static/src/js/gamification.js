@@ -136,30 +136,6 @@ openerp.gamification = function(instance) {
     });
 
     instance.web_kanban.KanbanRecord.include({
-        start: function () {
-            var rendering = this._super();
-            var self = this;
-
-            // add gauge in goal kanban views
-            $.when(rendering).done(function() {
-                if (self.view.dataset.model === 'gamification.goal' && self.$el.find('.oe_goal_gauge').length == 1) {
-                    var g = new JustGage({
-                        parentNode: self.$('.oe_goal_gauge').empty().get(0),
-                        value: self.record.current.raw_value,
-                        min: 0,
-                        max: self.record.target_goal.raw_value,
-                        relativeGaugeSize: true,
-                        humanFriendly: true,
-                        label: self.record.type_suffix.raw_value,
-                        levelColors: [
-                            "#ff0000",
-                            "#f9c802",
-                            "#a9d70b"
-                        ]
-                    });
-                }
-            });
-        },
         // open related goals when clicking on challenge kanban view
         on_card_clicked: function() {
             if (this.view.dataset.model === 'gamification.goal.plan') {
@@ -169,4 +145,36 @@ openerp.gamification = function(instance) {
             }
         }
     });
+
+    instance.gamification.GoalWidget = instance.web_kanban.AbstractField.extend({
+        className: "oe_goal_gauge",
+        start: function() {
+            var self = this;
+            var max = 100;
+            if (this.options.max_field) {
+                max = self.getParent().record[this.options.max_field].raw_value;
+            }
+            var label = "";
+            if (this.options.label_field) {
+                label = self.getParent().record[this.options.label_field].raw_value;
+            }
+            this.g = new JustGage({
+                parentNode: self.$el[0],
+                value: self.get("value"),
+                min: 0,
+                max: max,
+                relativeGaugeSize: true,
+                humanFriendly: true,
+                label: label,
+                levelColors: [
+                    "#ff0000",
+                    "#f9c802",
+                    "#a9d70b"
+                ]
+            });
+        },
+    });
+    instance.web_kanban.fields_registry.add("goal", "instance.gamification.GoalWidget");
+
+    
 };
