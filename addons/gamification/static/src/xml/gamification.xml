@@ -60,7 +60,7 @@
                         </div>
                     </div>
                     <div t-foreach="planline.goals" t-as="goal" t-attf-class="#{goal.id == planline.own_goal_id ? 'oe_bold' : ''}">
-                        <div t-attf-class="oe_row oe_goal_outer_box #{goal.state == 'reached' ? 'oe_goal_reached' : ''} #{goal.type_display != 'progress' ? 'oe_no_progress' : ''}">
+                        <div t-attf-class="oe_row oe_goal_outer_box #{goal.state == 'reached' ? 'oe_goal_reached' : ''}">
                             <t t-if="planline.type_display == 'progress'">
                                 <div class="oe_goal_progress_background"></div>
                                 <div class="oe_goal_progress" t-attf-style="#{planline.type_display == 'progress' ? 'width: '+goal.completeness+'%;' : 'width:0;'}"></div>
