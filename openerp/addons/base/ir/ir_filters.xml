@@ -4,7 +4,7 @@
         <!-- Restrict modifications on ir.filters to owner only -->
         <record id="ir_filters_rule" model="ir.rule">
             <field name="name">ir.filters.owner</field>
-            <field model="ir.model" name="model_id" ref="model_ir_filters"/>
+            <field name="model_id" ref="model_ir_filters"/>
             <field name="domain_force">[('user_id','in',[False,user.id])]</field>
         </record>
     </data>
