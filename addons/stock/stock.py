@@ -2705,11 +2705,9 @@ class stock_move(osv.osv):
         complete, too_many, too_few = [], [], []
         move_product_qty, prodlot_ids, product_avail, partial_qty, product_uoms = {}, {}, {}, {}, {}
         
-        
-        #Should trigger price_calculation here:
+        #Let us do the price calculation
         move_ids = [x.id for x in self.browse(cr, uid, ids, context=context)]
-        self.price_computation(cr, uid, move_ids, partial_datas, context=context)
-        
+        self.price_computation(cr, uid, move_ids, partial_datas, contexth=context)
 
         for move in self.browse(cr, uid, ids, context=context):
             if move.state in ('done', 'cancel'):

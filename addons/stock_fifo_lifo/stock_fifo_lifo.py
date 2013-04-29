@@ -42,9 +42,8 @@ class product_product (osv.osv):
         '''
             This method returns a list of tuples for which the stock moves are working fifo/lifo
             This should be called for only one product at a time
-            -> might still need to add UoM
         '''
-        assert len(ids) == 1, 'Only the fifolifo stock moves of one product can be calculated at a time.'
+        assert len(ids) == 1, 'Only the fifolifo stock matchings of one product can be calculated at a time.'
         product = self.browse(cr, uid, ids, context=context)[0]
         move_obj = self.pool.get('stock.move')
 
@@ -112,24 +111,25 @@ class stock_move(osv.osv):
             #Still need to see how to handle UoM + check quantity from the partial datas
             product_qty = move.product_qty
             
-            if move.picking_id.type == 'out' and cost_method in ['fifo', 'lifo']:
-                if not move.move_returned_from:
-                    tuples = product_obj.get_stock_matchings_fifolifo(cr, uid, [product.id], product_qty, cost_method == 'fifo', context=context)
-                    price_amount = 0.0
-                    amount = 0.0
-                    for match in tuples: 
-                        matchvals = {'move_in_id': match[0], 'qty': match[1], 
-                                     'move_out_id': move.id}
-                        match_id = matching_obj.create(cr, uid, matchvals, context=context)
-                        move_in = self.browse(cr, uid, match[0], context=context)
-                        self.write(cr, uid, match[0], { 'qty_remaining': move_in.qty_remaining - match[1]}, context=context)
-                        price_amount += match[1] * match[2]
-                        amount += match[1]
-                    self.write(cr, uid, move.id, {'price_unit': price_amount / amount}, context=context)
-                    #Should also write this price to the standard price of the product
-                else:
-                    #We should put the price unit of the returned move, when it is something that gets returned
-                    self.write(cr, uid, move.id, {'price_unit': move.move_returned_from.price_unit}, context=context)
+            if move.picking_id.type == 'out' and cost_method in ['fifo', 'lifo'] and not move.move_returned_from:
+                tuples = product_obj.get_stock_matchings_fifolifo(cr, uid, [product.id], product_qty, cost_method == 'fifo', context=context)
+                price_amount = 0.0
+                amount = 0.0
+                for match in tuples: 
+                    matchvals = {'move_in_id': match[0], 'qty': match[1], 
+                                 'move_out_id': move.id}
+                    match_id = matching_obj.create(cr, uid, matchvals, context=context)
+                    move_in = self.browse(cr, uid, match[0], context=context)
+                    self.write(cr, uid, match[0], { 'qty_remaining': move_in.qty_remaining - match[1]}, context=context)
+                    price_amount += match[1] * match[2]
+                    amount += match[1]
+                self.write(cr, uid, move.id, {'price_unit': price_amount / amount}, context=context)
+                #This price has to be put as the new standard price for the product
+                product_obj.write(cr, uid, product.id, {'standard_price': price_amount / amount}, context=ctx)
+            # When the move is products returned to supplier or return products from customer
+            # then the price should be the price from the original move
+            if move.move_returned_from:
+                self.write(cr, uid, move.id, {'price_unit': move.move_returned_from.price_unit}, context=context)
         return True
 
 class stock_move_matching(osv.osv):
