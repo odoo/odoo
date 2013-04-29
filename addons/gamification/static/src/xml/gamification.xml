@@ -60,7 +60,7 @@
                         </div>
                     </div>
                     <div t-foreach="planline.goals" t-as="goal" t-attf-class="#{goal.id == planline.own_goal_id ? 'oe_bold' : ''}">
-                        <div t-attf-class="oe_row oe_goal_outer_box #{goal.state == 'reached' ? 'oe_goal_reached' : ''}">
+                        <div t-attf-class="oe_row oe_goal_outer_box #{goal.state == 'reached' ? 'oe_goal_reached' : ''} #{planline.type_display != 'progress' ? 'oe_no_progress' : ''}">
                             <t t-if="planline.type_display == 'progress'">
                                 <div class="oe_goal_progress_background"></div>
                                 <div class="oe_goal_progress" t-attf-style="#{planline.type_display == 'progress' ? 'width: '+goal.completeness+'%;' : 'width:0;'}"></div>
@@ -69,9 +69,9 @@
                                 <div class="oe_cell col0"><t t-esc="goal.rank" /></div>
                                 <div class="oe_cell col1"><img class="oe_user_avatar" t-attf-alt="#{goal.user_name}" t-attf-data-id="#{goal.user_id}"/></div>
                                 <div class="oe_cell col2">
-                                    <t t-if="planline.type_display == 'progress'"><br/>
+                                    <t t-if="planline.type_display == 'progress'">
                                         <!-- progress, action on current value -->
-                                        <t t-esc="goal.user_name"/>
+                                        <t t-esc="goal.user_name"/><br/>
                                         <t t-if="goal.id != planline.own_goal_id or (planline.computation_mode != 'manually' and !planline.type_action)">
                                             <span t-attf-class="#{planline.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="goal.current" /></span><t t-if="planline.type_unit"> <t t-esc="planline.type_unit"/></t>
                                         </t>

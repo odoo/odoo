@@ -123,10 +123,6 @@ openerp.gamification = function(instance) {
     });
 
     instance.mail.Widget.include({
-        init: function (parent, action) {
-            var self = this;
-            this._super(parent, action);
-        },
         start: function() {
             this._super();
             var self = this;
