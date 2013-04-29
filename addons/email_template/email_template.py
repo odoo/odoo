@@ -376,7 +376,8 @@ class email_template(osv.osv):
 
         # create a mail_mail based on values, without attachments
         values = self.generate_email(cr, uid, template_id, res_id, context=context)
-        assert values.get('email_from'), 'email_from is missing or empty after template rendering, send_mail() cannot proceed'
+        if not values.get('email_from'):
+            raise osv.except_osv(_('Warning!'),_('email_from is missing or empty after template rendering, send_mail() cannot proceed'))
         del values['email_recipients']  # TODO Properly use them.
         attachment_ids = values.pop('attachment_ids', [])
         attachments = values.pop('attachments', [])
