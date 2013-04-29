@@ -186,7 +186,7 @@ class hr_applicant(base_stage, osv.Model):
         return res
 
     _columns = {
-        'name': fields.char('Subject', size=128, required=True),
+        'name': fields.char('Application Name', size=128, required=True),
         'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the case without removing it."),
         'description': fields.text('Description'),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
@@ -219,7 +219,7 @@ class hr_applicant(base_stage, osv.Model):
         'salary_expected_extra': fields.char('Expected Salary Extra', size=100, help="Salary Expected by Applicant, extra advantages"),
         'salary_proposed': fields.float('Proposed Salary', help="Salary Proposed by the Organisation"),
         'salary_expected': fields.float('Expected Salary', help="Salary Expected by Applicant"),
-        'availability': fields.integer('Availability'),
+        'availability': fields.integer('Availability', help="The number of days in which the applicant will be available to start working"),
         'partner_name': fields.char("Applicant's Name", size=64),
         'partner_phone': fields.char('Phone', size=32),
         'partner_mobile': fields.char('Mobile', size=32),
@@ -306,6 +306,14 @@ class hr_applicant(base_stage, osv.Model):
             return stage_ids[0]
         return False
 
+    def log_meeting(self, cr, uid, ids, meeting_subject, meeting_date, duration, context=None):
+         if not duration:
+             duration = _('unknown')
+         else:
+             duration = str(duration)
+         message = _("Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)") % (meeting_date, meeting_subject, duration)
+         return self.message_post(cr, uid, ids, body=message,context=context)
+
     def action_makeMeeting(self, cr, uid, ids, context=None):
         """ This opens Meeting's calendar view to schedule meeting on current applicant
             @return: Dictionary value for created Meeting view
@@ -314,6 +322,7 @@ class hr_applicant(base_stage, osv.Model):
         category = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'categ_meet_interview', context)
         res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'base_calendar', 'action_crm_meeting', context)
         res['context'] = {
+            'default_applicant_id':applicant.id,
             'default_partner_ids': applicant.partner_id and [applicant.partner_id.id] or False,
             'default_user_id': uid,
             'default_name': applicant.name,
@@ -561,5 +570,18 @@ class applicant_category(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
     }
+
+class crm_meeting(osv.Model):
+    _inherit = 'crm.meeting'
+    _columns = {
+    'applicant_id': fields.many2one ('hr.applicant', 'Recruitment')
+    }
+
+    def create(self, cr, uid, vals, context=None):
+        res = super(crm_meeting, self).create(cr, uid, vals, context=context)
+        obj = self.browse(cr, uid, res, context=context)
+        if obj.applicant_id:
+            self.pool.get('hr.applicant').log_meeting(cr, uid, [obj.applicant_id.id] , obj.name, obj.date,obj.duration, context=context)
+        return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
