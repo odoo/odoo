@@ -133,12 +133,16 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         }
         switch (node.tag) {
             case 'field':
-                if (this.fields_view.fields[node.attrs.name].type === 'many2many') {
+                var ftype = this.fields_view.fields[node.attrs.name].type;
+                ftype = node.attrs.widget ? node.attrs.widget : ftype;
+                if (ftype === 'many2many') {
                     if (_.indexOf(this.many2manys, node.attrs.name) < 0) {
                         this.many2manys.push(node.attrs.name);
                     }
                     node.tag = 'div';
                     node.attrs['class'] = (node.attrs['class'] || '') + ' oe_form_field oe_tags';
+                } else if (instance.web_kanban.fields_registry.contains(ftype)) {
+                    // do nothing, the kanban record will handle it
                 } else {
                     node.tag = QWeb.prefix;
                     node.attrs[QWeb.prefix + '-esc'] = 'record.' + node.attrs['name'] + '.value';
@@ -766,6 +770,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
             };
         }
         this.state = this.view.state.records[this.id];
+        this.fields = {};
     },
     set_record: function(record) {
         var self = this;
@@ -779,7 +784,11 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
         this.record = this.transform_record(record);
     },
     start: function() {
+        var self = this;
         this._super();
+        this.$("[data-field_id]").each(function() {
+            self.add_widget($(this));
+        });
         this.$el.data('widget', this);
         this.bind_events();
     },
@@ -815,6 +824,27 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
             'content': this.view.qweb.render('kanban-box', this.qweb_context)
         });
         this.replaceElement($el);
+        this.replace_fields();
+    },
+    replace_fields: function() {
+        var self = this;
+        this.$("field").each(function() {
+            var $field = $(this);
+            var $nfield = $("<span></span");
+            var id = _.uniqueId("kanbanfield");
+            self.fields[id] = $field;
+            $nfield.attr("data-field_id", id);
+            $field.replaceWith($nfield);
+        });
+    },
+    add_widget: function($node) {
+        var $orig = this.fields[$node.data("field_id")];
+        var field = this.record[$orig.attr("name")];
+        var type = field.type;
+        type = $orig.attr("widget") ? $orig.attr("widget") : type;
+        var obj = instance.web_kanban.fields_registry.get_object(type);
+        var widget = new obj(this, field, $orig);
+        widget.replace($node);
     },
     bind_events: function() {
         var self = this;
@@ -1114,6 +1144,43 @@ instance.web_kanban.QuickCreate = instance.web.Widget.extend({
         });
     }
 });
+
+/**
+ * Interface to be implemented by kanban fields.
+ *
+ */
+instance.web_kanban.FieldInterface = {
+    /**
+        Constructor.
+        - parent: The widget's parent.
+        - field: A dictionary giving details about the field, including the current field's value in the
+            raw_value field.
+        - $node: The field <field> tag as it appears in the view, encapsulated in a jQuery object.
+    */
+    init: function(parent, field, $node) {},
+};
+
+/**
+ * Abstract class for classes implementing FieldInterface.
+ *
+ * Properties:
+ *     - value: useful property to hold the value of the field. By default, the constructor
+ *     sets value property.
+ *
+ */
+instance.web_kanban.AbstractField = instance.web.Widget.extend(instance.web_kanban.FieldInterface, {
+    /**
+        Constructor that saves the field and $node parameters and sets the "value" property.
+    */
+    init: function(parent, field, $node) {
+        this._super(parent);
+        this.field = field;
+        this.$node = $node;
+        this.set("value", field.raw_value);
+    },
+});
+
+instance.web_kanban.fields_registry = new instance.web.Registry({});
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
