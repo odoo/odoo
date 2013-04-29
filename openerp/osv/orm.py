@@ -5324,7 +5324,7 @@ class BaseModel(object):
 
     def is_null(self):
         """ test whether self is a null instance """
-        return getattr(self, '_id', None) is False
+        return not bool(getattr(self, '_id', True))
 
     def record(self, id=None, scope=None):
         """ make a record instance
