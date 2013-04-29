@@ -155,9 +155,10 @@
                                     <field name="user_id" />
                                     <div class="oe_goal_state_block">
                                         <t t-if="record.type_display.raw_value == 'checkbox'">
-                                            <div class="oe_goal_state oe_e"><t t-if="record.state.raw_value=='reached'"><span class="oe_green">W</span></t>
-                                                <t t-if="record.state.raw_value=='inprogress' || record.state.raw_value=='inprogress_update'">N</t>
-                                                <t t-if="record.state.raw_value=='failed'"><span class="oe_red">X</span></t>
+                                            <div class="oe_goal_state oe_e">
+                                                <t t-if="record.state.raw_value=='reached'"><span class="oe_green" title="Goal Reached">W</span></t>
+                                                <t t-if="record.state.raw_value=='inprogress' || record.state.raw_value=='inprogress_update'"><span title="Goal in Progress">N</span></t>
+                                                <t t-if="record.state.raw_value=='failed'"><span class="oe_red" title="Goal Failed">X</span></t>
                                             </div>
                                         </t>
                                         <t t-if="record.type_display.raw_value == 'progress'">
@@ -168,7 +169,7 @@
                                                 <div t-attf-class="oe_goal_state #{record.current.raw_value == record.target_goal.raw_value+1 ? 'oe_orange' : record.current.raw_value &gt; record.target_goal.raw_value ? 'oe_red' : 'oe_green'}">
                                                     <t t-esc="record.current.raw_value" />
                                                 </div>
-                                                <em>reached when lower than <t t-esc="record.target_goal.raw_value" /></em>
+                                                <em>Target: less than <t t-esc="record.target_goal.raw_value" /></em>
                                             </t>
                                         </t>
                                         

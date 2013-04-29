@@ -31,7 +31,7 @@
                                             Target:
                                         </t>
                                         <t t-if="goal.type_condition == 'lower'">
-                                            Target less than:
+                                            Target: &lt;=
                                         </t>
                                         <span t-attf-class="#{goal.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="goal.target_goal"/></span>
                                         <t t-if="goal.type_unit"><t t-esc="goal.type_unit"/></t>
@@ -53,7 +53,7 @@
                                     Target:
                                 </t>
                                 <t t-if="planline.type_condition == 'lower'">
-                                    Target (less than):
+                                    Target: &lt;=
                                 </t>
                                 <span t-attf-class="#{planline.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="planline.target_goal" /></span><t t-if="planline.type_unit"> <t t-esc="planline.type_unit"/></t>
                             </div>
