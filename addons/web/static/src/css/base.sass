@@ -123,6 +123,7 @@ $sheet-padding: 16px
     font-size: 1px
     letter-spacing: -1px
     color: transparent
+    text-shadow: none
     font-weight: normal
     &:before
         font: 21px "mnmliconsRegular"
@@ -133,6 +134,7 @@ $sheet-padding: 16px
     font-size: 1px
     letter-spacing: -1px
     color: transparent
+    text-shadow: none
     font-weight: normal
     &:before
         font: $size "entypoRegular"
@@ -364,6 +366,13 @@ $sheet-padding: 16px
         font-family: "entypoRegular" !important
         font-size: 34px
         font-weight: 300 !important
+        &.oe_e_alias
+            font-size: 30px
+            line-height: 15px
+            vertical-align: top
+            margin-right: 3px
+            color: white
+            text-shadow: 0px 0px 2px rgba(0, 0, 0, 1)
     .oe_left
         float: left
         margin-right: 8px
@@ -1979,9 +1988,9 @@ $sheet-padding: 16px
             .oe_form_field_float input
                 width: 7em
             .oe_form_field_date input
-                width: 7.5em
+                width: 100px
             .oe_form_field_datetime input
-                width: 11.5em
+                width: 150px
     // }}}
     // FormView.fields_binary {{{
     /* http://www.quirksmode.org/dom/inputfile.html
@@ -2558,6 +2567,8 @@ div.ui-widget-overlay
     .placeholder
         color: $tag-border !important
         font-style: italic !important
+    .oe_form_binary_file
+        width: 80px
     .oe_form_field_boolean input
         background: #fff
     .db_option_table .oe_form_field_selection
