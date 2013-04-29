@@ -84,7 +84,7 @@ class account_voucher(osv.osv):
         if context is None: context = {}
         if context.get('period_id', False):
             return context.get('period_id')
-        periods = self.pool.get('account.period').find(cr, uid)
+        periods = self.pool.get('account.period').find(cr, uid, context=context)
         return periods and periods[0] or False
 
     def _make_journal_search(self, cr, uid, ttype, context=None):

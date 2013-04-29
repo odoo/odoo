@@ -170,7 +170,7 @@ class mail_alias(osv.Model):
         alias_id_column.required = False
 
         # call _auto_init
-        child_model_auto_init_fct(cr, context=context)
+        res = child_model_auto_init_fct(cr, context=context)
 
         registry = RegistryManager.get(cr.dbname)
         mail_alias = registry.get('mail.alias')
@@ -199,6 +199,7 @@ class mail_alias(osv.Model):
 
         # set back the unique alias_id constraint
         alias_id_column.required = True
+        return res
 
     def create(self, cr, uid, vals, context=None):
         """ Creates an email.alias record according to the values provided in ``vals``,
