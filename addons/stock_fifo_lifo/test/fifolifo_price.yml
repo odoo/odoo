@@ -27,7 +27,7 @@
       - product_id: product_fifo_icecream
         product_qty: 10.0
         product_uom: product.product_uom_categ_kgm
-        price_unit: 60.0
+        price_unit: 50.0
         name: 'FIFO Ice Cream'
 - 
   I create a draft Purchase Order for second shipment for 30 pieces at 80 euro
@@ -108,3 +108,42 @@
 -
   !python {model: stock.picking}: |
     assert len(self.browse(cr, uid, ref("outgoing_fifo_shipment")).move_lines[0].matching_ids_out) == 2, 'Should have created 2 matchings'
+- 
+  Check product standard price changed to 65.0
+- 
+  !python {model: product.product}: |
+    assert self.browse(cr, uid, ref("product_fifo_icecream")).standard_price == 65.0
+- 
+  Do a delivery of an extra 500 g (delivery order)
+- 
+  !record {model: stock.picking, id: outgoing_fifo_shipment}:
+    type: out
+-
+  Picking needs movement from stock
+-
+  !record {model: stock.move, id: outgoing_shipment_fifo_icecream_gram}:
+    picking_id: outgoing_fifo_shipment
+    product_id: product_fifo_icecream
+    product_uom: product.product_uom_gram
+    product_qty: 500.0
+    type: out
+-
+  I confirm outgoing shipment of 20 kg of FIFO Ice Cream.
+-
+  !workflow {model: stock.picking, action: button_confirm, ref: outgoing_fifo_shipment}
+- 
+  Process the delivery of the outgoing shipment
+- 
+  !python {model: stock.partial.picking}: |
+    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [ref("outgoing_fifo_shipment")], 'default_type':'out'})
+    self.do_partial(cr, uid, [partial_id])
+-
+  Check 1 stock move matching was created
+-
+  !python {model: stock.picking}: |
+    assert len(self.browse(cr, uid, ref("outgoing_fifo_shipment")).move_lines[0].matching_ids_out) == 1, 'Should have created 1 matching'
+- 
+  Check product price changed to 80.0
+- 
+  !python {model: product.product}: |
+    assert self.browse(cr, uid, ref("product_fifo_icecream")).standard_price == 80.0
