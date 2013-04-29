@@ -120,7 +120,7 @@ class partner_vat_intra(osv.osv_memory):
 
         p_id_list = obj_partner.search(cr, uid, [('vat','!=',False)], context=context)
         if not p_id_list:
-            raise osv.except_osv(_('Insufficient Data!'),_('No partner has a VAT number asociated with him.'))
+            raise osv.except_osv(_('Insufficient Data!'),_('No partner has a VAT number associated with him.'))
 
         seq_declarantnum = obj_sequence.get(cr, uid, 'declarantnum')
         dnum = company_vat[2:] + seq_declarantnum[-4:]

@@ -600,7 +600,7 @@ class account_invoice(osv.osv):
                         obj_l = account_obj.browse(cr, uid, inv_line[2]['account_id'])
                         if obj_l.company_id.id != company_id:
                             raise osv.except_osv(_('Configuration Error!'),
-                                _('Invoice line account\'s company and invoice\'s compnay does not match.'))
+                                _('Invoice line account\'s company and invoice\'s company does not match.'))
                         else:
                             continue
         if company_id and type:
