@@ -1176,6 +1176,7 @@ instance.web_kanban.AbstractField = instance.web.Widget.extend(instance.web_kanb
         this._super(parent);
         this.field = field;
         this.$node = $node;
+        this.options = instance.web.py_eval(this.$node.attr("options") || '{}');
         this.set("value", field.raw_value);
     },
 });
