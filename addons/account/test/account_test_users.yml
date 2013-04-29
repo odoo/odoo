@@ -2,7 +2,7 @@
    Create a user as 'Accountant'
 -
   !context
-    default_groups_ref: [account.group_account_user]
+    default_groups_ref: [base.group_partner_manager,account.group_account_user]
 -
   !record {model: res.users, id: res_users_account_user}:
     company_id: base.main_company
