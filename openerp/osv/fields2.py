@@ -57,17 +57,13 @@ class Field(object):
         """ read the value of field `self` for the record `instance` """
         if instance is None:
             return self         # the field is accessed through the class owner
-        assert instance.is_record_or_null() and instance._name == self.model
+        assert instance._name == self.model
         return instance._get_field(self.name)
 
     def __set__(self, instance, value):
         """ set the value of field `self` for the record `instance` """
-        assert instance.is_record() and instance._name == self.model
-        value = self.record_to_cache(value)
-        if self.store:
-            instance.write({self.name: value})
-        # store into cache here, since method write() invalidates the cache!
-        scope.cache[self.model][self.name][instance._id] = value
+        assert instance._name == self.model
+        return instance._set_field(self.name, self.record_to_cache(value))
 
     def cache_to_record(self, value):
         """ convert `value` from the cache level to the record level """

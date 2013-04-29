@@ -5566,6 +5566,18 @@ class BaseModel(object):
         # return the fetched records
         return self.recordset([data['id'] for data in result])
 
+    def _set_field(self, field_name, value):
+        """ Assign the field `field_name` of `self` to `value`.
+            The value is assigned in the records cache, and if the field is
+            stored, the value is also written to the database.
+        """
+        if self.is_null():
+            return
+        if field_name in self._all_columns:
+            self.write({field_name: value})
+        # store into cache here, since method write() invalidates the cache!
+        scope_proxy.cache[self._name][field_name][self._id] = value
+
     def __getitem__(self, key):
         """ If `self` is a record, return the value of the field named `key`.
             If `self` is a recordset, return a record or a recordset from
