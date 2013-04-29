@@ -8,6 +8,7 @@
             <field name="context">{
               'default_model': 'res.users',
               'default_res_id': uid,
+              'needaction_menu_ref': ['mail.mail_tomefeeds', 'mail.mail_starfeeds']
             }</field>
             <field name="params" eval="&quot;{
                 'domain': [
@@ -36,7 +37,8 @@
             <field name="context">{
               'default_model': 'res.users',
               'default_res_id': uid,
-              'search_default_message_unread': True
+              'search_default_message_unread': True,
+              'needaction_menu_ref': ['mail.mail_starfeeds', 'mail.mail_inboxfeeds']
             }</field>
             <field name="params" eval="&quot;{
                 'domain': [
@@ -87,7 +89,8 @@
             <field name="tag">mail.wall</field>
             <field name="context">{
               'default_model': 'res.users',
-              'default_res_id': uid
+              'default_res_id': uid,
+              'needaction_menu_ref': ['mail.mail_tomefeeds', 'mail.mail_starfeeds', 'mail.mail_inboxfeeds']
             }</field>
             <field name="params" eval="&quot;{
                 'domain': [

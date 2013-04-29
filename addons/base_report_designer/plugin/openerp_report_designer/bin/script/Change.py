@@ -1,49 +1,26 @@
-##########################################################################
+#########################################################################
 #
-# Portions of this file are under the following copyright and license:
+#  Copyright (c) 2003-2004 Danny Brewer d29583@groovegarden.com
+#  Copyright (C) 2004-2010 OpenERP SA (<http://openerp.com>).
 #
+#  This library is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU Lesser General Public
+#  License as published by the Free Software Foundation; either
+#  version 2.1 of the License, or (at your option) any later version.
 #
-#   Copyright (c) 2003-2004 Danny Brewer 
-#   d29583@groovegarden.com 
-# 
-#   This library is free software; you can redistribute it and/or 
-#   modify it under the terms of the GNU Lesser General Public 
-#   License as published by the Free Software Foundation; either 
-#   version 2.1 of the License, or (at your option) any later version. 
-# 
-#   This library is distributed in the hope that it will be useful, 
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of 
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
-#   Lesser General Public License for more details. 
-# 
-#   You should have received a copy of the GNU Lesser General Public 
-#   License along with this library; if not, write to the Free Software 
-#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA 
-# 
-#   See:  http://www.gnu.org/licenses/lgpl.html 
+#  This library is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#  Lesser General Public License for more details.
 #
-# 
-# and other portions are under the following copyright and license:
+#  You should have received a copy of the GNU Lesser General Public
+#  License along with this library; if not, write to the Free Software
+#  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 #
+#  See:  http://www.gnu.org/licenses/lgpl.html
 #
-#    OpenERP, Open Source Management Solution>..
-#    Copyright (C) 2004-2010 OpenERP SA (<http://openerp.com>). 
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-#
-##############################################################################
+#############################################################################
+
 import uno
 import string
 import unohelper
@@ -72,7 +49,7 @@ class Change( unohelper.Base, XJobExecutor ):
             'XML-RPC': 'http://',
             'XML-RPC secure': 'https://',
             'NET-RPC': 'socket://',
-        }  
+        }
         host=port=protocol=''
         if docinfo.getUserFieldValue(0):
             m = re.match('^(http[s]?://|socket://)([\w.\-]+):(\d{1,5})$',  docinfo.getUserFieldValue(0) or '')
@@ -80,7 +57,7 @@ class Change( unohelper.Base, XJobExecutor ):
             port = m.group(3)
             protocol = m.group(1)
         if  protocol:
-            for (key, value) in self.protocol.iteritems(): 
+            for (key, value) in self.protocol.iteritems():
                 if value==protocol:
                     protocol=key
                     break
@@ -102,7 +79,7 @@ class Change( unohelper.Base, XJobExecutor ):
         self.win.addButton( 'btnNext', -2, -5, 30, 15, 'Next', actionListenerProc = self.btnNext_clicked )
 
         self.win.addButton( 'btnCancel', -2 - 30 - 5 ,-5, 30, 15, 'Cancel', actionListenerProc = self.btnCancel_clicked )
-       
+
         for i in self.protocol.keys():
             self.lstProtocol.addItem(i,self.lstProtocol.getItemCount() )
         self.win.doModalDialog( "lstProtocol",  protocol)
@@ -110,27 +87,27 @@ class Change( unohelper.Base, XJobExecutor ):
     def btnNext_clicked(self, oActionEvent):
         global url
         aVal=''
-        #aVal= Fetature used 
+        #aVal= Fetature used
         try:
             url = self.protocol[self.win.getListBoxSelectedItem("lstProtocol")]+self.win.getEditText("txtHost")+":"+self.win.getEditText("txtPort")
             self.sock=RPCSession(url)
             desktop=getDesktop()
             doc = desktop.getCurrentComponent()
-            docinfo=doc.getDocumentInfo()        
+            docinfo=doc.getDocumentInfo()
             docinfo.setUserFieldValue(0,url)
             res=self.sock.listdb()
             self.win.endExecute()
             ServerParameter(aVal,url)
         except :
-            import traceback,sys 
+            import traceback,sys
             info = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
-            self.logobj.log_write('ServerParameter', LOG_ERROR, info)     
+            self.logobj.log_write('ServerParameter', LOG_ERROR, info)
             ErrorDialog("Connection to server is fail. Please check your Server Parameter.", "", "Error!")
             self.win.endExecute()
-                 
+
     def btnCancel_clicked(self,oActionEvent):
         self.win.endExecute()
-        
+
 
 if __name__<>"package" and __name__=="__main__":
     Change(None)

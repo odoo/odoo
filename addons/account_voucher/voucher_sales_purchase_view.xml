@@ -145,6 +145,12 @@
                             </field>
                         </page>
                     </notebook>
+                    <group col="4" invisible="1">
+                                    <field name="is_multi_currency" invisible="1"/>
+                                    <field name="payment_rate" required="1" on_change="onchange_rate(payment_rate, amount, currency_id, payment_rate_currency_id, company_id, context)" colspan="3" invisible="1"/>
+                                    <field name="payment_rate_currency_id" colspan="1" nolabel="1" on_change="onchange_payment_rate_currency(currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context)" groups="base.group_multi_currency" invisible="1"/>
+                                    <field name="paid_amount_in_company_currency" colspan="4" invisible="1"/>
+                    </group>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
