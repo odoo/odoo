@@ -965,7 +965,7 @@ class account_voucher(osv.osv):
             name = voucher_brw.number
         elif voucher_brw.journal_id.sequence_id:
             if not voucher_brw.journal_id.sequence_id.active:
-                raise osv.except_osv(_('Configuration Error !'),
+                raise osv.except_osv(_('Configuration Error!'),
                     _('Please activate the sequence of selected journal !'))
             c = dict(context)
             c.update({'fiscalyear_id': voucher_brw.period_id.fiscalyear_id.id})
@@ -1535,7 +1535,7 @@ class account_bank_statement(osv.osv):
         for bk_st in self.browse(cr, uid, ids, context=context):
             if vals.get('journal_id') and bk_st.line_ids:
                 if any([x.voucher_id and True or False for x in bk_st.line_ids]):
-                    raise osv.except_osv(_('Unable to change journal !'), _('You can not change the journal as you already reconciled some statement lines!'))
+                    raise osv.except_osv(_('Unable To Change Journal!'), _('You can not change the journal as you already reconciled some statement lines!'))
         return super(account_bank_statement, self).write(cr, uid, ids, vals, context=context)
 
 
