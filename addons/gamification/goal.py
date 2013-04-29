@@ -59,7 +59,7 @@ class gamification_goal_type(osv.Model):
         return res
 
     _columns = {
-        'name': fields.char('Goal Type Name', required=True, translate=True),
+        'name': fields.char('Goal Type', required=True, translate=True),
         'description': fields.text('Goal Description'),
 
         'monetary': fields.boolean('Monetary Value', help="The target and current value are defined in the company currency."),
@@ -95,7 +95,7 @@ class gamification_goal_type(osv.Model):
             help="Technical filters rules to apply",
             required=True),
         'compute_code': fields.char('Compute Code',
-            help="The name of the python method that will be executed to verify if a user can receive this badge."),
+            help="The name of the python method that will be executed to compute the current value. See the file gamification/goal_type_data.py for examples."),
 
         'condition': fields.selection([
                 ('higher', 'The higher the better'),
