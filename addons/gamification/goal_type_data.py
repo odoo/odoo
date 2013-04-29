@@ -20,11 +20,6 @@
 ##############################################################################
 
 from openerp.osv import osv
-from openerp import SUPERUSER_ID
-
-from datetime import date
-from dateutil.relativedelta import relativedelta
-
 
 class gamification_goal_type_data(osv.Model):
     """Goal type data
@@ -35,33 +30,13 @@ class gamification_goal_type_data(osv.Model):
     """
     _inherit = 'gamification.goal.type'
 
-    def last_connection(self, cr, uid, context=None):
-        """Return the number of days since the last connection"""
-        if context is None: context = {}
-        user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
-        delta = date.today() - user.login_date
-        return delta.days
-
-    def months_since_created(self, cr, uid, context=None):
-        """Return the number of months since the user was created"""
-        if context is None: context = {}
-        user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
-        today = date.today()
-        delta = relativedelta(years=user.create_date.year - today.year, months=user.create_date.month - today.month)
-        return delta.years*12 + delta.months
-
     def number_following(self, cr, uid, xml_id="mail.thread", context=None):
         """Return the number of 'xml_id' objects the user is following
 
-        'message_is_follower' is a non-stored field so could not be in a search
-        domain with a 'count' goal type
-        The object must inherit from mail.thread
+        The model specified in 'xml_id' must inherit from mail.thread
         """
         if context is None: context = {}
         ref_obj = self.pool.get(xml_id)
-        obj_ids = ref_obj.search(cr, uid, [], context=context)
-        following_count = 0
-        for obj in ref_obj.browse(cr, uid, obj_ids, context=context):
-            if obj.message_is_follower:
-                following_count += 1
-        return following_count
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        count = ref_obj.search(cr, uid, [('message_follower_ids', '=', user.partner_id.id)], count=True, context=context)
+        return count

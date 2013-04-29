@@ -261,9 +261,10 @@ class gamification_goal(osv.Model):
                 values = {'cr': cr, 'uid': goal.user_id.id, 'context': context, 'self': self.pool.get('gamification.goal.type')}
                 result = safe_eval(goal.type_id.compute_code, values, {})
 
-                if type(result) == float or type(result) == int:
+                if type(result) == float or type(result) == int or type(result) == long:
                     towrite = {'current': result}
                 else:
+                    towrite = {'current': goal.current}
                     _logger.exception(_('Unvalid return content from the evaluation of %s' % str(goal.type_id.compute_code)))
                     # raise osv.except_osv(_('Error!'), _('Unvalid return content from the evaluation of %s' % str(goal.type_id.compute_code)))
 
