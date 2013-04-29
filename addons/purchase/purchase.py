@@ -948,7 +948,7 @@ class purchase_order_line(osv.osv):
             lang = res_partner.browse(cr, uid, partner_id).lang
             context_partner.update( {'lang': lang, 'partner_id': partner_id} )
         product = product_product.browse(cr, uid, product_id, context=context_partner)
-        name = product.name
+        id_p, name = product_product.name_get(cr, uid, product_id, context=context_partner)[0]
         if product.description_purchase:
             name += '\n' + product.description_purchase
         res['value'].update({'name': name})
