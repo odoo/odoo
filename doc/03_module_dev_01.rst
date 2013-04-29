@@ -172,40 +172,73 @@ is as follows:
      </data>
    </openerp>
 
-Record Tag
-//////////
+``<record>``
+////////////
 
-**Description**
+Defines a new record in a specified OpenERP model.
 
-The addition of new data is made with the record tag. This one takes a
-mandatory attribute : model. Model is the object name where the insertion has
-to be done. The tag record can also take an optional attribute: id. If this
-attribute is given, a variable of this name can be used later on, in the same
-file, to make reference to the newly created resource ID.
+``@model`` (required)
 
-A record tag may contain field tags. They indicate the record's fields value.
-If a field is not specified the default value will be used.
+    Name of the model in which this record will be created/inserted.
 
-The Record Field tag
-////////////////////
+``@id`` (optional)
 
-The attributes for the field tag are the following:
+    :term:`external ID` for the record, also allows referring to this record in
+    the rest of this file or in other files (through ``field/@ref`` or the
+    :py:func:`ref() <openerp.tools.convert._ref>` function)
 
-name : mandatory
-  the field name
+A record tag generally contains multiple ``field`` tags specifying the values
+set on the record's fields when creating it. Fields left out will be set to
+their default value unless required.
 
-eval : optional
-  python expression that indicating the value to add
-  
-ref
-  reference to an id defined in this file
+``<field>``
+///////////
 
-model
-  model to be looked up in the search
+In its most basic use, the ``field`` tag will set its body (as a string) as
+the value of the corresponding ``record``'s ``@name`` field.
 
-search
-  a query
+Extra attributes can either preprocess the body or replace its use entirely:
 
+``@name`` (mandatory)
+
+    Name of the field in the containing ``record``'s model
+
+``@type`` (optional)
+
+    One of ``char``, ``int``, ``float``, ``list``, ``tuple``, ``xml`` or
+    ``html`` or ``file``. Converts the ``field``'s body to the specified type
+    (or validates the body's content)
+
+    * ``xml`` will join multiple XML nodes under a single ``<data>`` root
+    * in ``xml`` and ``html``, external ids can be referenced using
+      ``%(id_name)s``
+    * ``list`` and ``tuple``'s element are specified using ``<value>``
+      sub-nodes with the same attributes as ``field``.
+    * ``file`` expects a module-local path and will save the path prefixed with
+      the current module's name, separated by a ``,`` (comma). For use with
+      :py:func:`~openerp.modules.module.get_module_resource`.
+
+``@model``
+
+    Model used for ``@search``'s search, or registry object put in context for
+    ``@eval``. Required if ``@search`` but optional if ``@eval``.
+
+``@eval`` (optional)
+
+    A Python expression evaluated to obtain the value to set on the record
+
+``@ref`` (optional)
+
+    Links to an other record through its :term:`external id`. The module prefix
+    may be ommitted to link to a record defined in the same module.
+
+``@search`` (optional)
+
+    Search domain (evaluated Python expression) into ``@model`` to get the
+    records to set on the field.
+
+    Sets all the matches found for m2m fields, the first id for other field
+    types.
 
 **Example**
 

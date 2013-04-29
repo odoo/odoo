@@ -21,6 +21,7 @@ import test_osv
 import test_translate
 import test_uninstall
 import test_view_validation
+import test_convert
 # This need a change in `oe run-tests` to only run fast_suite + checks by default.
 # import test_xmlrpc
 
@@ -41,6 +42,7 @@ checks = [
     test_misc,
     test_osv,
     test_translate,
+    test_convert,
 ]
  
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

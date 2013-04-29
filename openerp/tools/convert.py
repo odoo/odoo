@@ -161,6 +161,12 @@ def _eval_xml(self, node, pool, cr, uid, idref, context=None):
         if t == 'html':
             return _process("".join([etree.tostring(n, encoding='utf-8')
                                    for n in node]), idref)
+        if t == 'file':
+            from ..modules import module
+            path = node.text.strip()
+            if not module.get_module_resource(self.module, path):
+                raise IOError("No such file or directory: '%s'" % path)
+            return '%s,%s' % (self.module, path)
         if t in ('char', 'int', 'float'):
             d = node.text
             if t == 'int':
