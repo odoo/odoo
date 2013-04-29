@@ -70,7 +70,6 @@ class mrp_workcenter(osv.osv):
             value = {'costs_hour': cost.standard_price}
         return {'value': value}
 
-mrp_workcenter()
 
 
 class mrp_routing(osv.osv):
@@ -98,7 +97,6 @@ class mrp_routing(osv.osv):
         'active': lambda *a: 1,
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.routing', context=context)
     }
-mrp_routing()
 
 class mrp_routing_workcenter(osv.osv):
     """
@@ -124,7 +122,6 @@ class mrp_routing_workcenter(osv.osv):
         'cycle_nbr': lambda *a: 1.0,
         'hour_nbr': lambda *a: 0.0,
     }
-mrp_routing_workcenter()
 
 class mrp_bom(osv.osv):
     """

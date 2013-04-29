@@ -52,6 +52,9 @@ class hr_expense_expense(osv.osv):
             res[expense.id] = total
         return res
 
+    def _get_expense_from_line(self, cr, uid, ids, context=None):
+        return [line.expense_id.id for line in self.pool.get('hr.expense.line').browse(cr, uid, ids, context=context)]
+
     def _get_currency(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, [uid], context=context)[0]
         if user.company_id:
@@ -84,7 +87,10 @@ class hr_expense_expense(osv.osv):
         'account_move_id': fields.many2one('account.move', 'Ledger Posting'),
         'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', readonly=True, states={'draft':[('readonly',False)]} ),
         'note': fields.text('Note'),
-        'amount': fields.function(_amount, string='Total Amount', digits_compute=dp.get_precision('Account')),
+        'amount': fields.function(_amount, string='Total Amount', digits_compute=dp.get_precision('Account'), 
+            store={
+                'hr.expense.line': (_get_expense_from_line, ['unit_amount','unit_quantity'], 10)
+            }),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'department_id':fields.many2one('hr.department','Department', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True),
@@ -321,7 +327,7 @@ class hr_expense_expense(osv.osv):
                              'price_unit': tax['price_unit'],
                              'quantity': 1,
                              'price':  tax['amount'] * tax['base_sign'] or 0.0,
-                             'account_id': tax['account_collected_id'],
+                             'account_id': tax['account_collected_id'] or mres['account_id'],
                              'tax_code_id': tax['tax_code_id'],
                              'tax_amount': tax['amount'] * tax['base_sign'],
                              }
@@ -377,7 +383,6 @@ class hr_expense_expense(osv.osv):
         }
         return result
 
-hr_expense_expense()
 
 class product_product(osv.osv):
     _inherit = "product.product"
@@ -385,7 +390,6 @@ class product_product(osv.osv):
         'hr_expense_ok': fields.boolean('Can be Expensed', help="Specify if the product can be selected in an HR expense line."),
     }
 
-product_product()
 
 class hr_expense_line(osv.osv):
     _name = "hr.expense.line"
@@ -444,6 +448,5 @@ class hr_expense_line(osv.osv):
             res['value'].update({'uom_id': product.uom_id.id})
         return res
 
-hr_expense_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

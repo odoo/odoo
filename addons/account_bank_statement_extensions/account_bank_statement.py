@@ -62,7 +62,6 @@ class account_bank_statement(osv.osv):
                 bank_statement_line_obj.invalidate_cache(['state'], line_ids)
         return True
 
-account_bank_statement()
 
 class account_bank_statement_line_global(osv.osv):
     _name = 'account.bank.statement.line.global'
@@ -106,7 +105,6 @@ class account_bank_statement_line_global(osv.osv):
             ids = self.search(cr, user, args, context=context, limit=limit)
         return self.name_get(cr, user, ids, context=context)
 
-account_bank_statement_line_global()
 
 class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
@@ -136,6 +134,5 @@ class account_bank_statement_line(osv.osv):
             Please go to the associated bank statement in order to delete and/or modify bank statement line.'))
         return super(account_bank_statement_line, self).unlink(cr, uid, ids, context=context)
 
-account_bank_statement_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -110,7 +110,6 @@ added to partners that match the segmentation criterions after computation.'),
 
         self.write(cr, uid, ids, {'state':'running', 'partner_id':0})
         return self.process_continue(cr, uid, ids, start=True)
-crm_segmentation()
 
 class crm_segmentation_line(osv.osv):
     """ Segmentation line """
@@ -182,7 +181,6 @@ class crm_segmentation_line(osv.osv):
                     return True
         return True
 
-crm_segmentation_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

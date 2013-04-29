@@ -288,7 +288,6 @@ class process_process(osv.osv):
         })
         return super(process_process, self).copy(cr, uid, id, default, context)
 
-process_process()
 
 class process_node(osv.osv):
     _name = 'process.node'
@@ -323,7 +322,6 @@ class process_node(osv.osv):
         })
         return super(process_node, self).copy_data(cr, uid, id, default, context=context)
 
-process_node()
 
 class process_node_condition(osv.osv):
     _name = 'process.condition'
@@ -334,7 +332,6 @@ class process_node_condition(osv.osv):
         'model_id': fields.many2one('ir.model', 'Object', ondelete='set null'),
         'model_states': fields.char('Expression', required=True, size=128)
     }
-process_node_condition()
 
 class process_transition(osv.osv):
     _name = 'process.transition'
@@ -348,7 +345,6 @@ class process_transition(osv.osv):
         'group_ids': fields.many2many('res.groups', 'process_transition_group_rel', 'tid', 'rid', string='Required Groups'),
         'note': fields.text('Description', translate=True),
     }
-process_transition()
 
 class process_transition_action(osv.osv):
     _name = 'process.transition.action'
@@ -381,6 +377,5 @@ class process_transition_action(osv.osv):
 
         return super(process_transition_action, self).copy_data(cr, uid, id, default, context)
 
-process_transition_action()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -29,7 +29,6 @@ class purchase_order_line(osv.osv):
          'analytics_id':fields.many2one('account.analytic.plan.instance','Analytic Distribution'),
     }
 
-purchase_order_line()
 
 class purchase_order(osv.osv):
     _name='purchase.order'
@@ -40,6 +39,5 @@ class purchase_order(osv.osv):
         res['analytics_id'] = order_line.analytics_id.id
         return res
 
-purchase_order()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -50,7 +50,6 @@ class res_partner(osv.osv):
          'invoice_warn' : 'no-message',
     }
 
-res_partner()
 
 
 class sale_order(osv.osv):
@@ -79,7 +78,6 @@ class sale_order(osv.osv):
             warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
 
         return {'value': result.get('value',{}), 'warning':warning}
-sale_order()
 
 
 class purchase_order(osv.osv):
@@ -108,7 +106,6 @@ class purchase_order(osv.osv):
 
         return {'value': result.get('value',{}), 'warning':warning}
 
-purchase_order()
 
 
 class account_invoice(osv.osv):
@@ -145,7 +142,6 @@ class account_invoice(osv.osv):
 
         return {'value': result.get('value',{}), 'warning':warning}
 
-account_invoice()
 
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
@@ -173,7 +169,6 @@ class stock_picking(osv.osv):
 
         return {'value': result.get('value',{}), 'warning':warning}
 
-stock_picking()
 
 # FIXME:(class stock_picking_in and stock_picking_out) this is a temporary workaround because of a framework bug (ref: lp:996816). 
 # It should be removed as soon as the bug is fixed
@@ -243,7 +238,6 @@ class product_product(osv.osv):
          'purchase_line_warn' : 'no-message',
     }
 
-product_product()
 
 class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'
@@ -279,7 +273,6 @@ class sale_order_line(osv.osv):
 
         return {'value': result.get('value',{}), 'warning':warning}
 
-sale_order_line()
 
 class purchase_order_line(osv.osv):
     _inherit = 'purchase.order.line'
@@ -311,7 +304,6 @@ class purchase_order_line(osv.osv):
 
         return {'value': result.get('value',{}), 'warning':warning}
 
-purchase_order_line()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

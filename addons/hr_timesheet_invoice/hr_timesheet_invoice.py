@@ -37,7 +37,6 @@ class hr_timesheet_invoice_factor(osv.osv):
         'factor': lambda *a: 0.0,
     }
 
-hr_timesheet_invoice_factor()
 
 
 class account_analytic_account(osv.osv):
@@ -287,7 +286,6 @@ class account_analytic_line(osv.osv):
                 invoice_obj.button_reset_taxes(cr, uid, [last_invoice], context)
         return invoices
 
-account_analytic_line()
 
 
 class hr_analytic_timesheet(osv.osv):
@@ -315,7 +313,6 @@ class hr_analytic_timesheet(osv.osv):
         return super(hr_analytic_timesheet, self).copy(cursor, user, obj_id,
                 default, context=context)
 
-hr_analytic_timesheet()
 
 
 class account_invoice(osv.osv):
@@ -335,7 +332,6 @@ class account_invoice(osv.osv):
                         il['analytic_lines'][0][2]['to_invoice'] = to_invoice[0]
         return iml
 
-account_invoice()
 
 
 class account_move_line(osv.osv):
@@ -354,6 +350,5 @@ class account_move_line(osv.osv):
                     }, context=context)
         return res
 
-account_move_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

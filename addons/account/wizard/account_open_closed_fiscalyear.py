@@ -44,6 +44,5 @@ class account_open_closed_fiscalyear(osv.osv_memory):
             move_obj.invalidate_cache(None, ids_move)
         return {'type': 'ir.actions.act_window_close'}
 
-account_open_closed_fiscalyear()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

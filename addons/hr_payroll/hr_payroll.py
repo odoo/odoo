@@ -109,7 +109,6 @@ class hr_payroll_structure(osv.osv):
             parent = self._get_parent_structure(cr, uid, parent, context)
         return parent + struct_ids
 
-hr_payroll_structure()
 
 class hr_contract(osv.osv):
     """
@@ -146,7 +145,6 @@ class hr_contract(osv.osv):
         structure_ids = [contract.struct_id.id for contract in self.browse(cr, uid, contract_ids, context=context)]
         return list(set(self.pool.get('hr.payroll.structure')._get_parent_structure(cr, uid, structure_ids, context=context)))
 
-hr_contract()
 
 class contrib_register(osv.osv):
     '''
@@ -169,7 +167,6 @@ class contrib_register(osv.osv):
                     context=context).company_id.id,
     }
 
-contrib_register()
 
 class hr_salary_rule_category(osv.osv):
     """
@@ -193,7 +190,6 @@ class hr_salary_rule_category(osv.osv):
                     context=context).company_id.id,
     }
 
-hr_salary_rule_category()
 
 class one2many_mod2(fields.one2many):
 
@@ -237,7 +233,6 @@ class hr_payslip_run(osv.osv):
     def close_payslip_run(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'close'}, context=context)
 
-hr_payslip_run()
 
 class hr_payslip(osv.osv):
     '''
@@ -717,7 +712,6 @@ class hr_payslip(osv.osv):
             res['value'].update({'struct_id': False})
         return self.onchange_employee_id(cr, uid, ids, date_from=date_from, date_to=date_to, employee_id=employee_id, contract_id=contract_id, context=context)
 
-hr_payslip()
 
 class hr_payslip_worked_days(osv.osv):
     '''
@@ -739,7 +733,6 @@ class hr_payslip_worked_days(osv.osv):
     _defaults = {
         'sequence': 10,
     }
-hr_payslip_worked_days()
 
 class hr_payslip_input(osv.osv):
     '''
@@ -762,7 +755,6 @@ class hr_payslip_input(osv.osv):
         'amount': 0.0,
     }
 
-hr_payslip_input()
 
 class hr_salary_rule(osv.osv):
 
@@ -901,7 +893,6 @@ result = rules.NET > categories.NET * 0.10''',
             except:
                 raise osv.except_osv(_('Error!'), _('Wrong python condition defined for salary rule %s (%s).')% (rule.name, rule.code))
 
-hr_salary_rule()
 
 class hr_rule_input(osv.osv):
     '''
@@ -916,7 +907,6 @@ class hr_rule_input(osv.osv):
         'input_id': fields.many2one('hr.salary.rule', 'Salary Rule Input', required=True)
     }
 
-hr_rule_input()
 
 class hr_payslip_line(osv.osv):
     '''
@@ -951,7 +941,6 @@ class hr_payslip_line(osv.osv):
         'rate': 100.0,
     }
 
-hr_payslip_line()
 
 class hr_payroll_structure(osv.osv):
 
@@ -960,7 +949,6 @@ class hr_payroll_structure(osv.osv):
         'rule_ids':fields.many2many('hr.salary.rule', 'hr_structure_salary_rule_rel', 'struct_id', 'rule_id', 'Salary Rules'),
     }
 
-hr_payroll_structure()
 
 class hr_employee(osv.osv):
     '''
@@ -993,6 +981,5 @@ class hr_employee(osv.osv):
         'total_wage': fields.function(_calculate_total_wage, method=True, type='float', string='Total Basic Salary', digits_compute=dp.get_precision('Payroll'), help="Sum of all current contract's wage of employee."),
     }
 
-hr_employee()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
