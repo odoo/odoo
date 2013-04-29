@@ -134,6 +134,9 @@ class res_partner(osv.osv):
         'vat_subjected': fields.boolean('VAT Legal Statement', help="Check this box if the partner is subjected to the VAT. It will be used for the VAT legal statement.")
     }
 
+    def _commercial_fields(self, cr, uid, context=None):
+        return super(res_partner, self)._commercial_fields(cr, uid, context=context) + ['vat_subjected']
+
     def _construct_constraint_msg(self, cr, uid, ids, context=None):
         def default_vat_check(cn, vn):
             # by default, a VAT number is valid if:
