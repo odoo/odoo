@@ -50,10 +50,6 @@ class survey(osv.osv):
         else:
             return []
 
-    def default_get(self, cr, uid, fields, context=None):
-        data = super(survey, self).default_get(cr, uid, fields, context)
-        return data
-
     def _get_tot_start_survey(self, cr, uid, ids, name, arg, context=None):
         """ Compute if the message is unread by the current user. """
         res = dict((id, 0) for id in ids)

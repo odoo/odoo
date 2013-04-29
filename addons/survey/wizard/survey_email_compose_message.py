@@ -68,30 +68,31 @@ class survey_mail_compose_message(osv.TransientModel):
         'date_deadline': fields.date(string="Deadline to which the invitation to respond is valid", help="Deadline to which the invitation to respond for this survey is valid. If the field is empty, the invitation is still valid."),
     }
 
-    def get_default_partner_ids(self, cr, uid, context=None):
-        res = []
-        if context is None:
-            context = {}
-        if context.get('active_model') == 'res.partner' and context.get('active_ids'):
-            res = context.get('active_ids')
-        return res
-
     _defaults = {
         'public': 'email_private',
         'survey_id': lambda self,cr,uid,ctx={}: ctx.get('model') == 'survey' and ctx.get('res_id') or None,
-        'partner_ids': get_default_partner_ids,
     }
+
+    def default_get(self, cr, uid, fields, context=None):
+        res = super(survey_mail_compose_message, self).default_get(cr, uid, fields, context=context)
+        if context.get('active_model') == 'res.partner' and context.get('active_ids'):
+            res.update({'partner_ids': context.get('active_ids')})
+        return res
 
     def onchange_multi_email(self, cr, uid, ids, multi_email, context=None):
         emails = list(set(emails_split.split(multi_email or "")))
         emails_checked = []
+        error_message = ""
         for email in emails:
             email = email.strip()
             if email:
                 if not re.search(r"^[^@]+@[^@]+$", email):
-                    raise osv.except_osv(_('Warning!'), _("An email address is incorrect: '%s'" % email))
+                    error_message += "\n'%s'" % email
                 else:
                     emails_checked.append(email)
+        if error_message:
+            raise osv.except_osv(_('Warning!'), _("One email at least is incorrect: %s" % error_message))
+
         emails_checked.sort()
         values = {'multi_email': '\n'.join(emails_checked)}
         return {'value': values}
@@ -192,7 +193,7 @@ class survey_mail_compose_message(osv.TransientModel):
                 emails = list(set(emails_split.split(wizard.multi_email)) - set([partner.email for partner in wizard.partner_ids]))
                 for email in emails:
                     email = email.strip()
-                    if email:
+                    if re.search(r"^[^@]+@[^@]+$", email):
                         emails_list.append(email)
 
             # remove public anonymous access
@@ -204,7 +205,7 @@ class survey_mail_compose_message(osv.TransientModel):
             if not len(emails_list) and not len(partner_list):
                 if wizard.model == 'res.partner' and wizard.res_id:
                     return False
-                raise osv.except_osv(_('Warning!'), _("Please enter at least one recipient."))
+                raise osv.except_osv(_('Warning!'), _("Please enter at least one valid recipient."))
 
             for email in emails_list:
                 partner_id = partner_obj.search(cr, uid, [('email', '=', email)], context=context)
