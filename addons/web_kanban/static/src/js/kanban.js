@@ -843,7 +843,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
         var type = field.type;
         type = $orig.attr("widget") ? $orig.attr("widget") : type;
         var obj = instance.web_kanban.fields_registry.get_object(type);
-        var widget = new obj(this, $orig);
+        var widget = new obj(this, field, $orig);
         widget.replace($node);
     },
     bind_events: function() {
@@ -1145,13 +1145,42 @@ instance.web_kanban.QuickCreate = instance.web.Widget.extend({
     }
 });
 
-instance.web_kanban.TestField = instance.web.Widget.extend({
-    renderElement: function() {
-        this.$el.text("yop");
+/**
+ * Interface to be implemented by kanban fields.
+ *
+ */
+instance.web_kanban.FieldInterface = {
+    /**
+        Constructor.
+        - parent: The widget's parent.
+        - field: A dictionary giving details about the field, including the current field's value in the
+            raw_value field.
+        - $node: The field <field> tag as it appears in the view, encapsulated in a jQuery object.
+    */
+    init: function(parent, field, $node) {},
+};
+
+/**
+ * Abstract class for classes implementing FieldInterface.
+ *
+ * Properties:
+ *     - value: useful property to hold the value of the field. By default, the constructor
+ *     sets value property.
+ *
+ */
+instance.web_kanban.AbstractField = instance.web.Widget.extend(instance.web_kanban.FieldInterface, {
+    /**
+        Constructor that saves the field and $node parameters and sets the "value" property.
+    */
+    init: function(parent, field, $node) {
+        this._super(parent);
+        this.field = field;
+        this.$node = $node;
+        this.set("value", field.raw_value);
     },
 });
 
-instance.web_kanban.fields_registry = new instance.web.Registry({"char": "instance.web_kanban.TestField"});
+instance.web_kanban.fields_registry = new instance.web.Registry({});
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
