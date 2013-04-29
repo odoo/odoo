@@ -158,8 +158,8 @@ class res_partner_bank(osv.osv):
         'name': '/'
     }
 
-    def fields_get(self, cr, uid, fields=None, context=None):
-        res = super(res_partner_bank, self).fields_get(cr, uid, fields, context)
+    def fields_get(self, cr, uid, allfields=None, context=None):
+        res = super(res_partner_bank, self).fields_get(cr, uid, allfields=allfields, context=context)
         bank_type_obj = self.pool.get('res.partner.bank.type')
         type_ids = bank_type_obj.search(cr, uid, [])
         types = bank_type_obj.browse(cr, uid, type_ids)
