@@ -251,9 +251,9 @@ instance.web.CrashManager = instance.web.Class.extend({
         if (handler) {
             new (handler)(this, error).display();
             return;
-        };
+        }
         if (error.data.name === "openerp.addons.web.session SessionExpiredException") {
-            this.show_warning({type: "Session Expired", data: { message: "Your OpenERP session expired. Please refresh the current web page." }});
+            this.show_warning({type: "Session Expired", data: { message: _t("Your OpenERP session expired. Please refresh the current web page.") }});
             return;
         }
         if (error.data.exception_type === "except_osv" || error.data.exception_type === "warning"
@@ -530,16 +530,11 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                     'login': 'admin',
                     'password': form_obj['create_admin_pwd'],
                     'login_successful': function() {
-                        var action = {
-                            type: "ir.actions.client",
-                            tag: 'reload',
-                            params: {
-                                url_search : {
-                                    db: form_obj['db_name'],
-                                },
-                            }
-                        };
-                        self.do_action(action);
+                        var url = '/?db=' + form_obj['db_name'];
+                        if (self.session.debug) {
+                            url += '&debug';
+                        }
+                        instance.web.redirect(url);
                     },
                 },
                 _push_me: false,
@@ -1374,7 +1369,7 @@ instance.web.WebClient = instance.web.Client.extend({
             if (browser_offset !== user_offset) {
                 var $icon = $(QWeb.render('WebClient.timezone_systray'));
                 $icon.on('click', function() {
-                    var notification = self.do_warn(_t("Timezone mismatch"), QWeb.render('WebClient.timezone_notification', {
+                    var notification = self.do_warn(_t("Timezone Mismatch"), QWeb.render('WebClient.timezone_notification', {
                         user_timezone: instance.session.user_context.tz || 'UTC',
                         user_offset: user_offset,
                         browser_offset: browser_offset,
