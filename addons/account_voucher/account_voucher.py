@@ -965,7 +965,7 @@ class account_voucher(osv.osv):
             name = voucher_brw.number
         elif voucher_brw.journal_id.sequence_id:
             if not voucher_brw.journal_id.sequence_id.active:
-                raise osv.except_osv(_('Configuration Error !'),
+                raise osv.except_osv(_('Configuration Error!'),
                     _('Please activate the sequence of selected journal !'))
             c = dict(context)
             c.update({'fiscalyear_id': voucher_brw.period_id.fiscalyear_id.id})
