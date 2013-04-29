@@ -55,7 +55,7 @@ class base_module_import(osv.osv_memory):
         try:
             file_data = zipfile.ZipFile(fp, 'r')
         except zipfile.BadZipfile:
-            raise osv.except_osv(_('Error !'), _('File is not a zip file!'))
+            raise osv.except_osv(_('Error!'), _('File is not a zip file!'))
         init_file_name = sorted(file_data.namelist())[0]
         module_name = os.path.split(init_file_name)[0]
 
@@ -63,8 +63,8 @@ class base_module_import(osv.osv_memory):
         try:
             zip_file = open(file_path, 'wb')
         except IOError:
-            raise osv.except_osv(_('Error !'),
-                                 _('Can not create the module file: %s !') % \
+            raise osv.except_osv(_('Error!'),
+                                 _('Can not create the module file: %s!') % \
                                  (file_path,) )
         zip_file.write(zip_data)
         zip_file.close()
