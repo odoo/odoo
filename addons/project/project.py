@@ -477,12 +477,15 @@ def Project():
   def Project_%d():
     start = \'%s\'
     working_days = %s
-    resource = %s
 """       % (
             project.id,
-            project.date_start or time.strftime('%Y-%m-%d'), working_days,
-            '|'.join(['User_'+str(x) for x in puids])
-        )
+            project.date_start or time.strftime('%Y-%m-%d'), working_days
+            )
+        resource = '|'.join(['User_'+str(x) for x in puids])
+        if resource :
+            result+= """
+    resource = %s
+""" %   ( resource, )
         vacation = calendar_id and tuple(resource_pool.compute_vacation(cr, uid, calendar_id, context=context)) or False
         if vacation:
             result+= """
