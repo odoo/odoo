@@ -123,6 +123,7 @@ $sheet-padding: 16px
     font-size: 1px
     letter-spacing: -1px
     color: transparent
+    text-shadow: none
     font-weight: normal
     &:before
         font: 21px "mnmliconsRegular"
@@ -133,6 +134,7 @@ $sheet-padding: 16px
     font-size: 1px
     letter-spacing: -1px
     color: transparent
+    text-shadow: none
     font-weight: normal
     &:before
         font: $size "entypoRegular"
@@ -1979,9 +1981,9 @@ $sheet-padding: 16px
             .oe_form_field_float input
                 width: 7em
             .oe_form_field_date input
-                width: 7.5em
+                width: 100px
             .oe_form_field_datetime input
-                width: 11.5em
+                width: 150px
     // }}}
     // FormView.fields_binary {{{
     /* http://www.quirksmode.org/dom/inputfile.html
@@ -2558,6 +2560,8 @@ div.ui-widget-overlay
     .placeholder
         color: $tag-border !important
         font-style: italic !important
+    .oe_form_binary_file
+        width: 80px
     .oe_form_field_boolean input
         background: #fff
     .db_option_table .oe_form_field_selection

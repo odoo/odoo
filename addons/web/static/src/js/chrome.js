@@ -251,9 +251,9 @@ instance.web.CrashManager = instance.web.Class.extend({
         if (handler) {
             new (handler)(this, error).display();
             return;
-        };
+        }
         if (error.data.name === "openerp.addons.web.session SessionExpiredException") {
-            this.show_warning({type: "Session Expired", data: { message: "Your OpenERP session expired. Please refresh the current web page." }});
+            this.show_warning({type: "Session Expired", data: { message: _t("Your OpenERP session expired. Please refresh the current web page.") }});
             return;
         }
         if (error.data.exception_type === "except_osv" || error.data.exception_type === "warning"
@@ -530,16 +530,11 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                     'login': 'admin',
                     'password': form_obj['create_admin_pwd'],
                     'login_successful': function() {
-                        var action = {
-                            type: "ir.actions.client",
-                            tag: 'reload',
-                            params: {
-                                url_search : {
-                                    db: form_obj['db_name'],
-                                },
-                            }
-                        };
-                        self.do_action(action);
+                        var url = '/?db=' + form_obj['db_name'];
+                        if (self.session.debug) {
+                            url += '&debug';
+                        }
+                        instance.web.redirect(url);
                     },
                 },
                 _push_me: false,
@@ -918,9 +913,7 @@ instance.web.Menu =  instance.web.Widget.extend({
             self.reflow();
             // launch the fetch of needaction counters, asynchronous
             if (!_.isEmpty(menu_data.all_menu_ids)) {
-                this.rpc("/web/menu/load_needaction", {menu_ids: menu_data.all_menu_ids}).done(function(r) {
-                    self.on_needaction_loaded(r);
-                });
+                this.do_load_needaction(menu_data.all_menu_ids);
             }
         });
         var lazyreflow = _.debounce(this.reflow.bind(this), 200);
@@ -946,7 +939,7 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.data = {data: data};
         this.renderElement();
         this.$secondary_menus.html(QWeb.render("Menu.secondary", { widget : this }));
-        this.$el.on('click', 'a[data-menu]', this.on_menu_click);
+        this.$el.on('click', 'a[data-menu]', this.on_top_menu_click);
         // Hide second level submenus
         this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').hide();
         if (self.current_menu) {
@@ -954,6 +947,12 @@ instance.web.Menu =  instance.web.Widget.extend({
         }
         this.trigger('menu_loaded', data);
         this.has_been_loaded.resolve();
+    },
+    do_load_needaction: function (menu_ids) {
+        var self = this;
+        return this.rpc("/web/menu/load_needaction", {'menu_ids': menu_ids}).done(function(r) {
+            self.on_needaction_loaded(r);
+        });
     },
     on_needaction_loaded: function(data) {
         var self = this;
@@ -1086,11 +1085,36 @@ instance.web.Menu =  instance.web.Widget.extend({
         }
         this.open_menu(id);
     },
+    do_reload_needaction: function () {
+        var self = this;
+        self.do_load_needaction([self.current_menu]).then(function () {
+            self.trigger("need_action_reloaded");
+        });
+    },
     /**
      * Jquery event handler for menu click
      *
      * @param {Event} ev the jquery event
      */
+    on_top_menu_click: function(ev) {
+        var self = this;
+        var id = $(ev.currentTarget).data('menu');
+        var menu_ids = [id];
+        var menu = _.filter(this.data.data.children, function (menu) {return menu.id == id;})[0];
+        function add_menu_ids (menu) {
+            if (menu.children) {
+                _.each(menu.children, function (menu) {
+                    menu_ids.push(menu.id);
+                    add_menu_ids(menu);
+                });
+            }
+        };
+        add_menu_ids(menu);
+        self.do_load_needaction(menu_ids).then(function () {
+            self.trigger("need_action_reloaded");
+        });
+        this.on_menu_click(ev);
+    },
     on_menu_click: function(ev) {
         ev.preventDefault();
         var needaction = $(ev.target).is('div.oe_menu_counter');

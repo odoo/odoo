@@ -521,6 +521,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 return x;
             }
         });
+        this.ActionManager = parent;
         this.views = {};
         this.flags = flags || {};
         this.registry = instance.web.views;
@@ -1004,7 +1005,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
     switch_mode: function (view_type, no_store, options) {
         var self = this;
 
-        return $.when(this._super.apply(this, arguments)).done(function () {
+        return this.alive($.when(this._super.apply(this, arguments))).done(function () {
             var controller = self.views[self.active_view].controller;
             self.$el.find('.oe_debug_view').html(QWeb.render('ViewManagerDebug', {
                 view: controller,
@@ -1252,6 +1253,7 @@ instance.web.View = instance.web.Widget.extend({
     view_type: undefined,
     init: function(parent, dataset, view_id, options) {
         this._super(parent);
+        this.ViewManager = parent;
         this.dataset = dataset;
         this.view_id = view_id;
         this.set_default_options(options);
@@ -1323,7 +1325,6 @@ instance.web.View = instance.web.Widget.extend({
             }
         };
         var context = new instance.web.CompoundContext(dataset.get_context(), action_data.context || {});
-
         var handler = function (action) {
             if (action && action.constructor == Object) {
                 var ncontext = new instance.web.CompoundContext(context);
@@ -1360,7 +1361,11 @@ instance.web.View = instance.web.Widget.extend({
                 }
             }
             args.push(context);
-            return dataset.call_button(action_data.name, args).then(handler);
+            return dataset.call_button(action_data.name, args).then(handler).then(function () {
+                if (self.ViewManager.ActionManager) {
+                    self.ViewManager.ActionManager.__parentedParent.menu.do_reload_needaction();
+                }
+            });
         } else if (action_data.type=="action") {
             return this.rpc('/web/action/load', {
                 action_id: action_data.name,

@@ -261,10 +261,13 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             var remaining = groups.length - 1,
                 groups_array = [];
             return $.when.apply(null, _.map(groups, function (group, index) {
+                var def = $.when([]);
                 var dataset = new instance.web.DataSetSearch(self, self.dataset.model,
                     new instance.web.CompoundContext(self.dataset.get_context(), group.model.context()), group.model.domain());
-                return dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit })
-                    .then(function (records) {
+                if (group.attributes.length >= 1) {
+                    def = dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit });
+                }
+                return def.then(function(records) {
                         self.nb_records += records.length;
                         self.dataset.ids.push.apply(self.dataset.ids, dataset.ids);
                         groups_array[index] = new instance.web_kanban.KanbanGroup(self, records, group, dataset);
