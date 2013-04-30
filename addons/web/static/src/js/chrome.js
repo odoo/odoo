@@ -251,9 +251,9 @@ instance.web.CrashManager = instance.web.Class.extend({
         if (handler) {
             new (handler)(this, error).display();
             return;
-        };
+        }
         if (error.data.name === "openerp.addons.web.session SessionExpiredException") {
-            this.show_warning({type: "Session Expired", data: { message: "Your OpenERP session expired. Please refresh the current web page." }});
+            this.show_warning({type: "Session Expired", data: { message: _t("Your OpenERP session expired. Please refresh the current web page.") }});
             return;
         }
         if (error.data.exception_type === "except_osv" || error.data.exception_type === "warning"
@@ -530,16 +530,11 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                     'login': 'admin',
                     'password': form_obj['create_admin_pwd'],
                     'login_successful': function() {
-                        var action = {
-                            type: "ir.actions.client",
-                            tag: 'reload',
-                            params: {
-                                url_search : {
-                                    db: form_obj['db_name'],
-                                },
-                            }
-                        };
-                        self.do_action(action);
+                        var url = '/?db=' + form_obj['db_name'];
+                        if (self.session.debug) {
+                            url += '&debug';
+                        }
+                        instance.web.redirect(url);
                     },
                 },
                 _push_me: false,
@@ -1257,7 +1252,8 @@ instance.web.WebClient = instance.web.Client.extend({
                 $("body").addClass("kitten-mode-activated");
                 $("body").css("background-image", "url(" + instance.session.origin + "/web/static/src/img/back-enable.jpg" + ")");
                 if ($.blockUI) {
-                    $.blockUI.defaults.message = '<img src="http://www.amigrave.com/kitten.gif">';
+                    var imgkit = Math.floor(Math.random() * 2 + 1);
+                    $.blockUI.defaults.message = '<img src="http://www.amigrave.com/loading-kitten/' + imgkit + '.gif" class="loading-kitten">';
                 }
             }
             if (!self.session.session_is_valid()) {

@@ -1,0 +1,27 @@
+Index: web_example/static/src/js/first_module.js
+===================================================================
+--- web_example.orig/static/src/js/first_module.js
++++ web_example/static/src/js/first_module.js
+@@ -55,16 +55,20 @@ openerp.web_example = function (instance
+                 33);
+         },
+         watch_stop: function () {
++            var self = this;
+             clearInterval(this._watch);
+             var time = this.current();
+             this.update_counter(time);
+             this._start = this._watch = null;
+             this.$el.removeClass('oe_web_example_started')
+                     .addClass('oe_web_example_stopped');
+-            this.model.call('create', [{
++            var record = {
+                 user_id: instance.session.uid,
+                 time: time,
+-            }]);
++            };
++            this.model.call('create', [record]).done(function () {
++                self.display_record(record);
++            });
+         },
+         destroy: function () {
+             if (this._watch) {
