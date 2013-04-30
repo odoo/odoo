@@ -456,8 +456,8 @@ class product_product(osv.osv):
         'track_outgoing': fields.boolean('Track Outgoing Lots', help="Forces to specify a Serial Number for all moves containing this product and going to a Customer Location"),
         'location_id': fields.dummy(string='Location', relation='stock.location', type='many2one'),
         'warehouse_id': fields.dummy(string='Warehouse', relation='stock.warehouse', type='many2one'),
-        'valuation':fields.selection([('manual_periodic', 'Periodical (manual)'),
-                                        ('real_time','Real Time (automated)'),], 'Inventory Valuation',
+        'valuation':fields.property('', type='selection', selection =  [('manual_periodic', 'Periodical (manual)'),
+                                        ('real_time','Real Time (automated)'),], string = 'Inventory Valuation',
                                         help="If real-time valuation is enabled for a product, the system will automatically write journal entries corresponding to stock moves." \
                                              "The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products."
                                         , required=True),

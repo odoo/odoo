@@ -1630,6 +1630,14 @@ class stock_move(osv.osv):
                 raise osv.except_osv(_('Error'), _('You cannot move product %s to a location of type view %s.')% (record.product_id.name, record.location_dest_id.name))
         return True
 
+    def _check_company_location(self, cr, uid, ids, context=None):
+        for record in self.browse(cr, uid, ids, context=context):
+            if record.location_id.company_id and (record.company_id.id != record.location_id.company_id.id):
+                raise osv.except_osv(_('Error'), _('The company of the source location %s and the company of the stock move should be the same') % record.location_id.name)
+            if record.location_dest_id.company_id and (record.company_id.id != record.location_dest_id.company_id.id):
+                raise osv.except_osv(_('Error'), _('The company of the destination location %s and the company of the stock move should be the same') % record.location_dest_id.name)
+        return True
+
     _constraints = [
         (_check_tracking,
             'You must assign a serial number for this product.',
@@ -1638,7 +1646,9 @@ class stock_move(osv.osv):
             ['location_id','location_dest_id']),
         (_check_product_lot,
             'You try to assign a lot which is not from the same product.',
-            ['prodlot_id'])]
+            ['prodlot_id']), 
+        (_check_company_location, 'You cannot use a location from another company. ', 
+            ['company_id', 'location_id', 'location_dest_id'])]
 
     def _default_location_destination(self, cr, uid, context=None):
         """ Gets default address of partner for destination location
@@ -1667,6 +1677,11 @@ class stock_move(osv.osv):
                 location_xml_id = 'stock_location_customers'
             if location_xml_id:
                 location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
+                if location_id:
+                    location_company = self.pool.get("stock.location").browse(cr, uid, location_id, context=context).company_id
+                    user_company = self.pool.get("res.users").browse(cr, uid, uid, context=context).company_id.id
+                    if location_company and location_company.id != user_company:
+                        location_id = False
         return location_id
 
     def _default_location_source(self, cr, uid, context=None):
@@ -1696,6 +1711,11 @@ class stock_move(osv.osv):
                 location_xml_id = 'stock_location_stock'
             if location_xml_id:
                 location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
+                if location_id:
+                    location_company = self.pool.get("stock.location").browse(cr, uid, location_id, context=context).company_id
+                    user_company = self.pool.get("res.users").browse(cr, uid, uid, context=context).company_id.id
+                    if location_company and location_company.id != user_company:
+                        location_id = False
         return location_id
 
     def _default_destination_address(self, cr, uid, context=None):
@@ -1915,6 +1935,16 @@ class stock_move(osv.osv):
             location_dest_id = 'stock_location_customers'
         source_location = mod_obj.get_object_reference(cr, uid, 'stock', location_source_id)
         dest_location = mod_obj.get_object_reference(cr, uid, 'stock', location_dest_id)
+        #Check companies
+        user_company = self.pool.get("res.users").browse(cr, uid, uid, context=context).company_id.id
+        if source_location:
+            location_company = self.pool.get("stock.location").browse(cr, uid, source_location[1], context=context).company_id
+            if location_company and location_company.id != user_company:
+                source_location = False
+        if dest_location:
+            location_company = self.pool.get("stock.location").browse(cr, uid, dest_location[1], context=context).company_id
+            if location_company and location_company.id != user_company:
+                dest_location = False
         return {'value':{'location_id': source_location and source_location[1] or False, 'location_dest_id': dest_location and dest_location[1] or False}}
 
     def onchange_date(self, cr, uid, ids, date, date_expected, context=None):
@@ -2269,7 +2299,10 @@ class stock_move(osv.osv):
         to real_time valuation tracking, and the source or destination location is
         a transit location or is outside of the company.
         """
-        if move.product_id.valuation == 'real_time': # FIXME: product valuation should perhaps be a property?
+        ctx = context.copy()
+        ctx['force_company'] = move.company_id.id
+        valuation = self.pool.get("product.product").browse(cr, uid, move.product_id.id, context=ctx).valuation
+        if valuation == 'real_time':
             if context is None:
                 context = {}
             src_company_ctx = dict(context,force_company=move.location_id.company_id.id)
