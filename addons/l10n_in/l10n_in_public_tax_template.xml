@@ -104,6 +104,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="type">percent</field>
         <field name="amount">0.0200</field>
+        <field name="sequence">3</field>
         <field name="account_collected_id" ref="p154009"/>
         <field name="account_paid_id" ref="p154009"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_ic_edu_cess"/>
@@ -117,6 +118,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="type">percent</field>
         <field name="amount">0.0100</field>
+        <field name="sequence">5</field>
         <field name="account_collected_id" ref="p154002"/>
         <field name="account_paid_id" ref="p154002"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_ic_seco_hec"/>
@@ -134,47 +136,6 @@
         <field name="account_paid_id" ref="p154010"/>
         <field name="base_code_id" ref="vat_code_tax_pur_base_tds"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_tds_sal"/>
-        <field name="chart_template_id" ref="indian_chart_template_public"/>
-    </record>
-
-    <record id="account_tax_exic6_pur" model="account.tax.template">
-        <field name="name">Input Excise Duty 6%</field>
-        <field name="description">Input Excise Duty 6%</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="type">percent</field>
-        <field name="amount">0.0600</field>
-        <field name="account_collected_id" ref="p154011"/>
-        <field name="account_paid_id" ref="p154011"/>
-        <field name="base_code_id" ref="vat_code_tax_pur_vat"/>
-        <field name="tax_code_id" ref="vat_code_tax_pay_exice6"/>
-        <field name="chart_template_id" ref="indian_chart_template_public"/>
-    </record>
-
-    <record id="account_tax_exice6_edu_cess2_pur" model="account.tax.template">
-        <field name="name">Education Cess 2% Purchase</field>
-        <field name="description">Education Cess 2% Purchase</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="type">percent</field>
-        <field name="amount">0.0200</field>
-        <field name="sequence">21</field>
-        <field name="account_collected_id" ref="p154014"/>
-        <field name="account_paid_id" ref="p154014"/>
-        <field name="tax_code_id" ref="vat_code_tax_pay_cess2"/>
-        <field name="parent_id" ref="account_tax_exic6_pur"/>
-        <field name="chart_template_id" ref="indian_chart_template_public"/>
-    </record>
-
-    <record id="account_tax_exice6_seco_high_cess_pur" model="account.tax.template">
-        <field name="name">Seco. &amp; Higher Edu. Cess 1% Purchase</field>
-        <field name="description">Seco. &amp; Higher Edu. Cess 1% Purchase</field>
-        <field name="type_tax_use">all</field>
-        <field name="type">percent</field>
-        <field name="amount">0.0100</field>
-        <field name="sequence">22</field>
-        <field name="account_collected_id" ref="p154015"/>
-        <field name="account_paid_id" ref="p154015"/>
-        <field name="tax_code_id" ref="vat_code_tax_pay_sec_hig_edu"/>
-        <field name="parent_id" ref="account_tax_exic6_pur"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -253,7 +214,7 @@
         <field name="type_tax_use">sale</field>
         <field name="type">percent</field>
         <field name="amount">0.0200</field>
-        <field name="sequence">2</field>
+        <field name="sequence">3</field>
         <field name="account_collected_id" ref="p247010"/>
         <field name="account_paid_id" ref="p247010"/>
         <field name="tax_code_id" ref="vat_code_tax_rec_cess2"/>
@@ -267,7 +228,7 @@
         <field name="type_tax_use">sale</field>
         <field name="type">percent</field>
         <field name="amount">0.0100</field>
-        <field name="sequence">3</field>
+        <field name="sequence">5</field>
         <field name="account_collected_id" ref="p247002"/>
         <field name="account_paid_id" ref="p247002"/>
         <field name="tax_code_id" ref="vat_code_tax_rec_sec_hig_cess"/>
@@ -635,6 +596,48 @@
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
+    <record id="account_tax_exic6_pur" model="account.tax.template">
+        <field name="name">Input Excise Duty 6%</field>
+        <field name="description">Input Excise Duty 6%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="type">percent</field>
+        <field name="amount">0.0600</field>
+        <field name="sequence">1</field>
+        <field name="account_collected_id" ref="p154011"/>
+        <field name="account_paid_id" ref="p154011"/>
+        <field name="base_code_id" ref="vat_code_tax_pur_vat"/>
+        <field name="tax_code_id" ref="vat_code_tax_pay_exice6"/>
+        <field name="chart_template_id" ref="indian_chart_template_public"/>
+    </record>
+
+    <record id="account_tax_exice6_edu_cess2_pur" model="account.tax.template">
+        <field name="name">Education Cess 2% Purchase</field>
+        <field name="description">Education Cess 2% Purchase</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="type">percent</field>
+        <field name="amount">0.0200</field>
+        <field name="sequence">21</field>
+        <field name="account_collected_id" ref="p154014"/>
+        <field name="account_paid_id" ref="p154014"/>
+        <field name="tax_code_id" ref="vat_code_tax_pay_cess2"/>
+        <field name="parent_id" ref="account_tax_exic6_pur"/>
+        <field name="chart_template_id" ref="indian_chart_template_public"/>
+    </record>
+
+    <record id="account_tax_exice6_seco_high_cess_pur" model="account.tax.template">
+        <field name="name">Seco. &amp; Higher Edu. Cess 1% Purchase</field>
+        <field name="description">Seco. &amp; Higher Edu. Cess 1% Purchase</field>
+        <field name="type_tax_use">all</field>
+        <field name="type">percent</field>
+        <field name="amount">0.0100</field>
+        <field name="sequence">22</field>
+        <field name="account_collected_id" ref="p154015"/>
+        <field name="account_paid_id" ref="p154015"/>
+        <field name="tax_code_id" ref="vat_code_tax_pay_sec_hig_edu"/>
+        <field name="parent_id" ref="account_tax_exic6_pur"/>
+        <field name="chart_template_id" ref="indian_chart_template_public"/>
+    </record>
+
     <record id="account_tax_ser12_sale" model="account.tax.template">
         <field name="name">Service Tax 12% - Sales</field>
         <field name="description">Service Tax 12% - Sales</field>
@@ -655,7 +658,7 @@
         <field name="type_tax_use">sale</field>
         <field name="type">percent</field>
         <field name="amount">0.02</field>
-        <field name="sequence">1</field>
+        <field name="sequence">3</field>
         <field name="account_collected_id" ref="p24740"/>
         <field name="account_paid_id" ref="p24740"/>
         <field name="tax_code_id" ref="vat_code_tax_rec_st2"/>
@@ -669,7 +672,7 @@
         <field name="type_tax_use">sale</field>
         <field name="type">percent</field>
         <field name="amount">0.01</field>
-        <field name="sequence">1</field>
+        <field name="sequence">5</field>
         <field name="account_collected_id" ref="p24740"/>
         <field name="account_paid_id" ref="p24740"/>
         <field name="tax_code_id" ref="vat_code_tax_rec_st1"/>

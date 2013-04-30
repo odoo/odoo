@@ -19,6 +19,7 @@
 
         <record model="account.tax.code.template" id="vat_code_payable">
             <field name="name">Tax Paid</field>
+            <field name="sign">-1</field>
             <field name="parent_id" ref="vat_code_balance_net"/>
         </record>
 
@@ -50,6 +51,11 @@
         <record model="account.tax.code.template" id="vat_code_tax_rec_exice_salebase">
             <field name="name">Excise Duty 12.36% - Sales</field>
             <field name="parent_id" ref="vat_code_tax_rec"/>
+        </record>
+
+        <record model="account.tax.code.template" id="vat_code_tax_sale_ser12">
+            <field name="name">Sales Service Tax 12%</field>
+            <field name="parent_id" ref="vat_code_base_tax_sale"/>
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_rec_exice12">
@@ -208,7 +214,7 @@
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_pay_tds_dir_intrest">
-            <field name="name"> TDS on Director's Interest</field>
+            <field name="name">TDS on Director's Interest</field>
             <field name="parent_id" ref="vat_code_payable"/>
         </record>
 
@@ -268,7 +274,7 @@
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_sale_cst15">
-            <field name="name">CST 5% on Sales</field>
+            <field name="name">Sales CST 5%</field>
             <field name="parent_id" ref="vat_code_base_tax_sale"/>
         </record>
 
@@ -358,7 +364,7 @@
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_sal_sez_in_guj">
-            <field name="name">Sales Export - SEZ - In Gujarat </field>
+            <field name="name">Sales Export - SEZ - In Gujarat</field>
             <field name="parent_id" ref="vat_code_base_tax_sale"/>
         </record>
 
@@ -420,11 +426,6 @@
         <record model="account.tax.code.template" id="vat_code_tax_rec_st1">
             <field name="name">Service Tax 1% - Sales</field>
             <field name="parent_id" ref="vat_code_tax_rec_st_salebase"/>
-        </record>
-
-        <record model="account.tax.code.template" id="vat_code_tax_sale_ser12">
-            <field name="name">Service Tax 12% - Sales</field>
-            <field name="parent_id" ref="vat_code_base_tax_sale"/>
         </record>
 
     </data>
