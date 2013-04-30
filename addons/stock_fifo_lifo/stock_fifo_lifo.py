@@ -38,34 +38,59 @@ class product_product (osv.osv):
     }
 
 
-    def get_stock_matchings_fifolifo(self, cr, uid, ids, qty, fifo, context=None):
+    def get_stock_matchings_fifolifo(self, cr, uid, ids, qty, fifo, product_uom_id = False, currency_id = False, context=None):
         '''
             This method returns a list of tuples for which the stock moves are working fifo/lifo
             This should be called for only one product at a time
+            UoMs and currencies from the corresponding moves are converted towards that given in the params
         '''
-        assert len(ids) == 1, 'Only the fifolifo stock matchings of one product can be calculated at a time.'
+        assert len(ids) == 1, _('Only the fifolifo stock matchings of one product can be calculated at a time.')
+        uom_obj = self.pool.get('product.uom')
+        currency_obj = self.pool.get('res.currency')
+        
         product = self.browse(cr, uid, ids, context=context)[0]
         move_obj = self.pool.get('stock.move')
 
+        if not product_uom_id: 
+            product_uom_id = product.uom_id.id
+        
+        if 'force_company' in context:
+            company_id = context['force_company']
+        else:
+            #Would be better not to have to go here
+            company_id = product.company_id.id
+
+        if not currency_id:
+            currency_id = self.pool.get('res.company').browse(cr, uid, company_id, context=context).currency_id.id
+
         if fifo:
-            move_ids = move_obj.search(cr, uid, [('qty_remaining', '>', 0), ('state', '=', 'done'), 
+            move_ids = move_obj.search(cr, uid, [('company_id','=', company_id), ('qty_remaining', '>', 0), ('state', '=', 'done'), 
                                              ('type', '=', 'in'), ('product_id', '=', product.id)], 
                                        order = 'date', context=context)
         else: 
-            move_ids = move_obj.search(cr, uid, [('qty_remaining', '>', 0), ('state', '=', 'done'), 
+            move_ids = move_obj.search(cr, uid, [('company_id','=', company_id), ('qty_remaining', '>', 0), ('state', '=', 'done'), 
                                              ('type', '=', 'in'), ('product_id', '=', product.id)], 
                                        order = 'date desc', context=context)
         tuples = []
         qty_to_go = qty
         for move in move_obj.browse(cr, uid, move_ids, context=context):
-            # @TODO convert UoM for product quantities?
-            product_qty = move.product_qty
+            #Convert to UoM of product each time
+            uom_from = move.product_uom.id
+            qty_from = move.product_qty
+            product_qty = uom_obj._compute_qty(cr, uid, uom_from, qty_from, product_uom_id)
+            #Convert currency from in move currency id to out move currency
+            if move.price_currency_id and (move.price_currency_id.id != currency_id): 
+                new_price = currency_obj.compute(cr, uid, move.price_currency_id, currency_id, 
+                                                 move.price_unit)
+            else:
+                new_price = move.price_unit
+            new_price = uom_obj._compute_price(cr, uid, uom_from, new_price,
+                            product_uom_id)
             if qty_to_go - product_qty >= 0: 
-                tuples.append((move.id, product_qty, move.price_unit),)
+                tuples.append((move.id, product_qty, new_price),)
                 qty_to_go -= product_qty
             else:
-                tuples.append((move.id, qty_to_go, move.price_unit),)
-                qty_to_go = 0
+                tuples.append((move.id, qty_to_go, new_price),)
                 break
         return tuples
 
@@ -89,14 +114,21 @@ class stock_move(osv.osv):
         return res
 
 
-    #@TODO overwrite method for price_computation
+    #Overwrites method for FIFO computation
     def price_computation(self, cr, uid, ids, partial_datas, context=None):
         super(stock_move, self).price_computation(cr, uid, ids, partial_datas, context=context)
         product_obj = self.pool.get('product.product')
         matching_obj = self.pool.get('stock.move.matching')
+        currency_obj = self.pool.get('res.currency')
+        uom_obj = self.pool.get('product.uom')
         
         #Find stock moves working in fifo/lifo price -> find stock moves out
         for move in self.browse(cr, uid, ids, context=context):
+            partial_data = partial_datas.get('move%s'%(move.id), {})
+            product_qty = partial_data.get('product_qty',0.0)
+            product_uom = partial_data.get('product_uom',False)
+            product_price = partial_data.get('product_price',0.0)
+            product_currency = partial_data.get('product_currency',False)
             product = product_obj.browse(cr, uid, move.product_id.id, context=context)
 
             #Check we are using the right company
@@ -104,31 +136,45 @@ class stock_move(osv.osv):
             ctx = context.copy()
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             if company_id != user.company_id.id:
-                ctx['force_company'] = move.company_id.id
+                ctx['force_company'] = company_id
                 product = product_obj.browse(cr, uid, move.product_id.id, context=ctx)
             cost_method = product.cost_method
-            product_price = move.price_unit
-            #Still need to see how to handle UoM + check quantity from the partial datas
-            product_qty = move.product_qty
             
             if move.picking_id.type == 'out' and cost_method in ['fifo', 'lifo'] and not move.move_returned_from:
-                tuples = product_obj.get_stock_matchings_fifolifo(cr, uid, [product.id], product_qty, cost_method == 'fifo', context=context)
+                #get_stock_matchings will convert to currency and UoM of this stock move
+                tuples = product_obj.get_stock_matchings_fifolifo(cr, uid, [product.id], product_qty, cost_method == 'fifo', 
+                                                                  product_uom, move.price_currency_id, context=context)
                 price_amount = 0.0
                 amount = 0.0
+                move_currency_id = move.company_id.currency_id.id
+                ctx['currency_id'] = move_currency_id
                 for match in tuples: 
                     matchvals = {'move_in_id': match[0], 'qty': match[1], 
                                  'move_out_id': move.id}
                     match_id = matching_obj.create(cr, uid, matchvals, context=context)
                     move_in = self.browse(cr, uid, match[0], context=context)
+                    #Reduce remaining quantity
                     self.write(cr, uid, match[0], { 'qty_remaining': move_in.qty_remaining - match[1]}, context=context)
                     price_amount += match[1] * match[2]
                     amount += match[1]
                 self.write(cr, uid, move.id, {'price_unit': price_amount / amount}, context=context)
-                #This price has to be put as the new standard price for the product
-                product_obj.write(cr, uid, product.id, {'standard_price': price_amount / amount}, context=ctx)
+                #This price has to be put as the new standard price for the product, but needs to be converted to product UoM and currency
+                #convert uom of qty
+                uom_id = product.uom_id.id
+                product_qty = uom_obj._compute_qty(cr, uid, product_uom, amount, uom_id)
+                #convert price, no need of UoM conversion as it is the total price
+                currency_id = move.company_id.currency_id.id
+                currency_from = move.price_currency_id
+                if move.price_currency_id and (move.price_currency_id.id != currency_id): 
+                    new_price = currency_obj.compute(cr, uid, move.price_currency_id, currency_id, 
+                                                 price_amount)
+                else:
+                    new_price = price_amount
+                #new_price does not depend on qty as it is the total amount => no conversion needed for uom 
+                product_obj.write(cr, uid, product.id, {'standard_price': new_price / product_qty}, context=ctx)
             # When the move is products returned to supplier or return products from customer
             # then the price should be the price from the original move
-            if move.move_returned_from:
+            if move.move_returned_from and cost_method in ['fifo', 'lifo']: 
                 self.write(cr, uid, move.id, {'price_unit': move.move_returned_from.price_unit}, context=context)
         return True
 

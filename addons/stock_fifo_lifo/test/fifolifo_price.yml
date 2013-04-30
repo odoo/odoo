@@ -116,32 +116,32 @@
 - 
   Do a delivery of an extra 500 g (delivery order)
 - 
-  !record {model: stock.picking, id: outgoing_fifo_shipment}:
+  !record {model: stock.picking, id: outgoing_fifo_shipment_uom}:
     type: out
 -
   Picking needs movement from stock
 -
   !record {model: stock.move, id: outgoing_shipment_fifo_icecream_gram}:
-    picking_id: outgoing_fifo_shipment
+    picking_id: outgoing_fifo_shipment_uom
     product_id: product_fifo_icecream
     product_uom: product.product_uom_gram
     product_qty: 500.0
     type: out
 -
-  I confirm outgoing shipment of 20 kg of FIFO Ice Cream.
+  I confirm outgoing shipment of 500g of FIFO Ice Cream.
 -
-  !workflow {model: stock.picking, action: button_confirm, ref: outgoing_fifo_shipment}
+  !workflow {model: stock.picking, action: button_confirm, ref: outgoing_fifo_shipment_uom}
 - 
   Process the delivery of the outgoing shipment
 - 
   !python {model: stock.partial.picking}: |
-    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [ref("outgoing_fifo_shipment")], 'default_type':'out'})
+    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [ref("outgoing_fifo_shipment_uom")], 'default_type':'out'})
     self.do_partial(cr, uid, [partial_id])
 -
   Check 1 stock move matching was created
 -
   !python {model: stock.picking}: |
-    assert len(self.browse(cr, uid, ref("outgoing_fifo_shipment")).move_lines[0].matching_ids_out) == 1, 'Should have created 1 matching'
+    assert len(self.browse(cr, uid, ref("outgoing_fifo_shipment_uom")).move_lines[0].matching_ids_out) == 1, 'Should have created 1 matching'
 - 
   Check product price changed to 80.0
 - 

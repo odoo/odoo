@@ -2628,7 +2628,6 @@ class stock_move(osv.osv):
                 ctx['force_company'] = move.company_id.id
                 product = product_obj.browse(cr, uid, move.product_id.id, context=ctx)
             cost_method = product.cost_method
-            product_price = move.price_unit
             #Check if cost_method used needs update
             avg_in_update = (move.picking_id.type == 'in') and (cost_method == 'average')
             avg_out_update = (move.picking_id.type == 'out') and (cost_method == 'average') and (move.move_returned_from)
@@ -2707,7 +2706,7 @@ class stock_move(osv.osv):
         
         #Let us do the price calculation
         move_ids = [x.id for x in self.browse(cr, uid, ids, context=context)]
-        self.price_computation(cr, uid, move_ids, partial_datas, contexth=context)
+        self.price_computation(cr, uid, move_ids, partial_datas, context=context)
 
         for move in self.browse(cr, uid, ids, context=context):
             if move.state in ('done', 'cancel'):
