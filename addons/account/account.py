@@ -2307,7 +2307,7 @@ class account_model(osv.osv):
             try:
                 entry['name'] = model.name%{'year': move_date.strftime('%Y'), 'month': move_date.strftime('%m'), 'date': move_date.strftime('%Y-%m')}
             except:
-                raise osv.except_osv(_('Wrong model!'), _('You have a wrong expression "%(...)s" in your model !'))
+                raise osv.except_osv(_('Wrong Model!'), _('You have a wrong expression "%(...)s" in your model!'))
             move_id = account_move_obj.create(cr, uid, {
                 'ref': entry['name'],
                 'period_id': period_id,

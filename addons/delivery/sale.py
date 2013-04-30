@@ -54,7 +54,7 @@ class sale_order(osv.osv):
                 raise osv.except_osv(_('No Grid Available!'), _('No grid matching for this carrier!'))
 
             if not order.state in ('draft'):
-                raise osv.except_osv(_('Order Not In Draft State!'), _('The order state have to be draft to add delivery lines.'))
+                raise osv.except_osv(_('Order not in Draft State!'), _('The order state have to be draft to add delivery lines.'))
 
             grid = grid_obj.browse(cr, uid, grid_id, context=context)
 
