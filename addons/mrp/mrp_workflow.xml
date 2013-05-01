@@ -78,13 +78,6 @@
             <field name="signal">button_produce</field>
         </record>
         
-        <record id="prod_trans_done" model="workflow.transition">
-            <field name="act_from" ref="prod_act_ready"/>
-            <field name="act_to" ref="prod_act_done"/>
-            <field name="signal">button_produce_done</field>
-            <field name="condition">test_production_done()</field>
-        </record>
-                
         <record id="prod_trans_in_production_done" model="workflow.transition">
             <field name="act_from" ref="prod_act_in_production"/>
             <field name="act_to" ref="prod_act_done"/>
