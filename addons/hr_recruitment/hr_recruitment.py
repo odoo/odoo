@@ -578,10 +578,10 @@ class crm_meeting(osv.Model):
     }
 
     def create(self, cr, uid, vals, context=None):
-        res = super(crm_meeting, self).create(cr, uid, vals, context=context)
-        obj = self.browse(cr, uid, res, context=context)
-        if obj.applicant_id:
-            self.pool.get('hr.applicant').log_meeting(cr, uid, [obj.applicant_id.id] , obj.name, obj.date,obj.duration, context=context)
-        return res
+        meeting_id = super(crm_meeting, self).create(cr, uid, vals, context=context)
+        obj_meeting = self.browse(cr, uid, meeting_id, context=context)
+        if obj_meeting.applicant_id:
+            self.pool.get('hr.applicant').log_meeting(cr, uid, [obj_meeting.applicant_id.id] , obj_meeting.name, obj_meeting.date,obj_meeting.duration, context=context)
+        return meeting_id
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
