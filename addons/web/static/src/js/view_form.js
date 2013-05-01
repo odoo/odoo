@@ -2757,14 +2757,10 @@ instance.web.form.FieldBoolean = instance.web.form.AbstractField.extend({
         return input ? input.focus() : false;
     },
     click_disabled_boolean: function(){
-        var $disabled = $(document).find('input[type=checkbox]:disabled');
+        var $disabled = this.$el.find('input[type=checkbox]:disabled');
         $disabled.each(function (){
-            var $parent = $(this).closest("span");
-            if($(this).next('div')){
-                $(this).next('div').remove();
-            }
-            var $overlay = $("<div class=boolean />");
-            $parent.append($overlay);
+            $(this).next('div').remove();
+            $(this).closest("span").append($('<div class="boolean"/>'));
         });
     }
 });
