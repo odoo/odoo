@@ -790,7 +790,7 @@ class expression(object):
                 leaf.add_join_context(next_model, working_model._inherits[next_model._name], 'id', working_model._inherits[next_model._name])
                 push(leaf)
 
-            elif not field and left == 'id' and operator == 'child_of':
+            elif left == 'id' and operator == 'child_of':
                 ids2 = to_ids(right, working_model, context)
                 dom = child_of_domain(left, ids2, working_model)
                 for dom_leaf in reversed(dom):
