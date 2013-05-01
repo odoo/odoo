@@ -13,6 +13,7 @@ This module provides the core of the OpenERP Web Client.
     'auto_install': True,
     'post_load': 'wsgi_postload',
     'js' : [
+        "static/src/fixbind.js",
         "static/lib/datejs/globalization/en-US.js",
         "static/lib/datejs/core.js",
         "static/lib/datejs/parser.js",
@@ -26,6 +27,7 @@ This module provides the core of the OpenERP Web Client.
         "static/lib/spinjs/spin.js",
         "static/lib/jquery.autosize/jquery.autosize.js",
         "static/lib/jquery.blockUI/jquery.blockUI.js",
+        "static/lib/jquery.placeholder/jquery.placeholder.js",
         "static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js",
         "static/lib/jquery.ui.timepicker/js/jquery-ui-timepicker-addon.js",
         "static/lib/jquery.ui.notify/js/jquery.notify.js",
@@ -75,6 +77,7 @@ This module provides the core of the OpenERP Web Client.
         "static/test/class.js",
         "static/test/registry.js",
         "static/test/form.js",
+        "static/test/data.js",
         "static/test/list-utils.js",
         "static/test/formats.js",
         "static/test/rpc.js",

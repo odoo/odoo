@@ -321,9 +321,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                             .appendTo($this.empty())
                             .click(function (e) {e.stopPropagation();})
                             .append('<option value="80">80</option>' +
-                                    '<option value="100">100</option>' +
                                     '<option value="200">200</option>' +
                                     '<option value="500">500</option>' +
+                                    '<option value="2000">2000</option>' +
                                     '<option value="NaN">' + _t("Unlimited") + '</option>')
                             .change(function () {
                                 var val = parseInt($select.val(), 10);
@@ -578,7 +578,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         this.no_leaf = !!context['group_by_no_leaf'];
         this.grouped = !!group_by;
 
-        return this.load_view(context).then(
+        return this.alive(this.load_view(context)).then(
             this.proxy('reload_content'));
     },
     /**
@@ -895,8 +895,9 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
 
         this.record_callbacks = {
             'remove': function (event, record) {
-                var $row = self.$current.children(
-                    '[data-id=' + record.get('id') + ']');
+                var id = record.get('id');
+                self.dataset.remove_ids([id])
+                var $row = self.$current.children('[data-id=' + id + ']');
                 var index = $row.data('index');
                 $row.remove();
             },

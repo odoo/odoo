@@ -123,6 +123,7 @@ $sheet-padding: 16px
     font-size: 1px
     letter-spacing: -1px
     color: transparent
+    text-shadow: none
     font-weight: normal
     &:before
         font: 21px "mnmliconsRegular"
@@ -133,6 +134,7 @@ $sheet-padding: 16px
     font-size: 1px
     letter-spacing: -1px
     color: transparent
+    text-shadow: none
     font-weight: normal
     &:before
         font: $size "entypoRegular"
@@ -370,6 +372,10 @@ $sheet-padding: 16px
     .oe_right
         float: right
         margin-left: 8px
+    .oe_text_center
+        text-align: center
+    .oe_text_left
+        text-align: left
     .oe_text_right
         text-align: right
     .oe_clear
@@ -476,7 +482,28 @@ $sheet-padding: 16px
     .oe_tag_dark
         background: $tag-bg-dark
         color: #eee
-
+    .oe_form_field_radio
+        &.oe_horizontal
+            white-space: nowrap
+            label
+                display: inline-block
+                text-align: center
+                height: 16px
+        &.oe_vertical
+            label
+                margin-left: 4px
+        &.oe_form_required
+            .oe_radio_input
+                border: 2px solid transparent
+                display: inline-block
+                height: 12px
+                width: 12px
+                vertical-align: bottom
+                border-radius: 10px
+                margin: 1px 0
+            &.oe_form_invalid
+                .oe_radio_input
+                    border-color: red
     .oe_tags
         &.oe_inline
             min-width: 250px
@@ -1436,7 +1463,7 @@ $sheet-padding: 16px
 
         .oe_searchview_drawer
             position: absolute
-            z-index: 100
+            z-index: 2
             // detach drawer from field slightly
             margin-top: 4px
             top: 100%
@@ -1660,6 +1687,9 @@ $sheet-padding: 16px
             @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
     .oe_form_invisible
         display: none !important
+    .oe_form_editable
+        .oe_read_only
+            display: none !important
     .oe_form_readonly
         .oe_edit_only, .oe_form_field:empty
             display: none !important
@@ -1760,7 +1790,21 @@ $sheet-padding: 16px
                 padding: 2px 11px 2px 0px !important
             label.oe_form_label_help
                 font-weight: normal
-
+        .oe_form_box_info
+            background: #fe9
+            border-bottom: 1px solid #cb6
+            padding: 4px
+            > p
+                margin: auto
+        .oe_form_box_warning
+            background: #bd362f
+            border-bottom: 1px solid #900
+            padding: 4px
+            *
+                color: white
+                text-shadow: none
+            > p
+                margin: auto
     // }}}
     // FormView.group {{{
     .oe_form
@@ -1832,6 +1876,12 @@ $sheet-padding: 16px
     .oe_form
         .oe_form_field_text
             width: 100%
+            .oe_form_text_content
+                text-overflow: ellipsis
+                display: inline-block
+                white-space: pre-wrap
+                overflow-x: hidden
+                width: 100%
         .oe_form_field_char input,
         .oe_form_field_url input,
         .oe_form_field_email input,
@@ -1860,6 +1910,7 @@ $sheet-padding: 16px
             background: white
             min-width: 60px
             color: #1f1f1f
+            font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif
         input[readonly], select[readonly], textarea[readonly], input[disabled], select[disabled]
             background: #E5E5E5 !important
             color: #666
@@ -1868,6 +1919,7 @@ $sheet-padding: 16px
             padding-left: 8px
             @include box-shadow(none)
             @include radius(0px)
+            color: #4c4c4c
         textarea.oe_inline[disabled]
             border-left: 8px solid #eee
         .oe_form_field_url button img
@@ -1939,9 +1991,9 @@ $sheet-padding: 16px
             .oe_form_field_float input
                 width: 7em
             .oe_form_field_date input
-                width: 7.5em
+                width: 100px
             .oe_form_field_datetime input
-                width: 11.5em
+                width: 150px
     // }}}
     // FormView.fields_binary {{{
     /* http://www.quirksmode.org/dom/inputfile.html
@@ -2468,6 +2520,9 @@ $sheet-padding: 16px
     background-attachment: fixed
     >*
         opacity: 0.70
+.loading-kitten
+    @include radius(15px)
+    @include box-shadow(0 0 5px 5px #999)
 // }}}
 
 // jQueryUI top level {{{
@@ -2505,8 +2560,18 @@ div.ui-widget-overlay
     @include radius(3px)
 // }}}
 
+.openerp
+    .db_option_table
+        td
+            padding-bottom: 10px !important
+
 // Internet Explorer 9+ specifics {{{
 .openerp_ie
+    .placeholder
+        color: $tag-border !important
+        font-style: italic !important
+    .oe_form_binary_file
+        width: 80px
     .oe_form_field_boolean input
         background: #fff
     .db_option_table .oe_form_field_selection
@@ -2522,6 +2587,8 @@ div.ui-widget-overlay
         button.oe_highlight
             padding-top: 0
             padding-bottom: 0
+    .oe_view_manager_view_kanban
+        display: table-cell
     .oe_view_manager_buttons
         button.oe_write_full
             padding-top: 0
