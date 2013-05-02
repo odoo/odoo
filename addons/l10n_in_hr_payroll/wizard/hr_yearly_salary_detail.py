@@ -61,6 +61,5 @@ class yearly_salary_detail(osv.osv_memory):
             'datas': datas,
        }
 
-yearly_salary_detail()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

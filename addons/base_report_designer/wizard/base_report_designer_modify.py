@@ -54,7 +54,6 @@ class base_report_sxw(osv.osv_memory):
             'target': 'new',
         }
 
-base_report_sxw()
 
 class base_report_file_sxw(osv.osv_memory):
     """Base Report File sxw """
@@ -116,7 +115,6 @@ class base_report_file_sxw(osv.osv_memory):
             'type': 'ir.actions.act_window',
             'target': 'new',
         }
-base_report_file_sxw()
 
 class base_report_rml_save(osv.osv_memory):
     """Base Report file Save"""
@@ -146,6 +144,5 @@ class base_report_rml_save(osv.osv_memory):
          'file_rml':fields.binary('Save As'),
          }
 
-base_report_rml_save()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

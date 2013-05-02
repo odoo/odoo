@@ -52,6 +52,9 @@ class hr_expense_expense(osv.osv):
             res[expense.id] = total
         return res
 
+    def _get_expense_from_line(self, cr, uid, ids, context=None):
+        return [line.expense_id.id for line in self.pool.get('hr.expense.line').browse(cr, uid, ids, context=context)]
+
     def _get_currency(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, [uid], context=context)[0]
         if user.company_id:
@@ -84,7 +87,10 @@ class hr_expense_expense(osv.osv):
         'account_move_id': fields.many2one('account.move', 'Ledger Posting'),
         'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', readonly=True, states={'draft':[('readonly',False)]} ),
         'note': fields.text('Note'),
-        'amount': fields.function(_amount, string='Total Amount', digits_compute=dp.get_precision('Account')),
+        'amount': fields.function(_amount, string='Total Amount', digits_compute=dp.get_precision('Account'), 
+            store={
+                'hr.expense.line': (_get_expense_from_line, ['unit_amount','unit_quantity'], 10)
+            }),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'department_id':fields.many2one('hr.department','Department', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True),
@@ -228,6 +234,8 @@ class hr_expense_expense(osv.osv):
         for exp in self.browse(cr, uid, ids, context=context):
             if not exp.employee_id.address_home_id:
                 raise osv.except_osv(_('Error!'), _('The employee must have a home address.'))
+            if not exp.employee_id.address_home_id.property_account_payable.id:
+                raise osv.except_osv(_('Error!'), _('The employee must have a payable account set on his home address.'))
             company_currency = exp.company_id.currency_id.id
             diff_currency_p = exp.currency_id.id <> company_currency
             
@@ -319,7 +327,7 @@ class hr_expense_expense(osv.osv):
                              'price_unit': tax['price_unit'],
                              'quantity': 1,
                              'price':  tax['amount'] * tax['base_sign'] or 0.0,
-                             'account_id': tax['account_collected_id'],
+                             'account_id': tax['account_collected_id'] or mres['account_id'],
                              'tax_code_id': tax['tax_code_id'],
                              'tax_amount': tax['amount'] * tax['base_sign'],
                              }
@@ -333,6 +341,8 @@ class hr_expense_expense(osv.osv):
             acc = line.product_id.property_account_expense
             if not acc:
                 acc = line.product_id.categ_id.property_account_expense_categ
+            if not acc:
+                raise osv.except_osv(_('Error!'), _('No purchase account found for the product %s (or for his category), please configure one.') % (line.product_id.name))
         else:
             acc = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category', context={'force_company': company.id})
             if not acc:
@@ -373,7 +383,6 @@ class hr_expense_expense(osv.osv):
         }
         return result
 
-hr_expense_expense()
 
 class product_product(osv.osv):
     _inherit = "product.product"
@@ -381,7 +390,6 @@ class product_product(osv.osv):
         'hr_expense_ok': fields.boolean('Can be Expensed', help="Specify if the product can be selected in an HR expense line."),
     }
 
-product_product()
 
 class hr_expense_line(osv.osv):
     _name = "hr.expense.line"
@@ -440,6 +448,5 @@ class hr_expense_line(osv.osv):
             res['value'].update({'uom_id': product.uom_id.id})
         return res
 
-hr_expense_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

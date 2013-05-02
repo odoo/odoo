@@ -74,7 +74,6 @@ class stock_production_lot(osv.osv):
         'removal_date': _get_date('removal_time'),
         'alert_date': _get_date('alert_time'),
     }
-stock_production_lot()
 
 class product_product(osv.osv):
     _inherit = 'product.product'
@@ -88,5 +87,4 @@ class product_product(osv.osv):
         'alert_time': fields.integer('Product Alert Time',
             help='When a new a Serial Number is issued, this is the number of days before an alert should be notified.'),
     }
-product_product()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

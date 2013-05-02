@@ -39,7 +39,7 @@ class stock_invoice_onshipping(osv.osv_memory):
         if not model or 'stock.picking' not in model:
             return []
 
-        model_pool = self.pool.get(model)
+        model_pool = self.pool[model]
         journal_obj = self.pool.get('account.journal')
         res_ids = context and context.get('active_ids', [])
         vals = []
@@ -119,7 +119,7 @@ class stock_invoice_onshipping(osv.osv_memory):
         elif inv_type == "in_refund":
             action_model,action_id = data_pool.get_object_reference(cr, uid, 'account', "action_invoice_tree4")
         if action_model:
-            action_pool = self.pool.get(action_model)
+            action_pool = self.pool[action_model]
             action = action_pool.read(cr, uid, action_id, context=context)
             action['domain'] = "[('id','in', ["+','.join(map(str,invoice_ids))+"])]"
         return action
@@ -146,6 +146,5 @@ class stock_invoice_onshipping(osv.osv_memory):
               context=context)
         return res
 
-stock_invoice_onshipping()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -559,10 +559,11 @@ class account_move_line(osv.osv):
     ]
 
     def _auto_init(self, cr, context=None):
-        super(account_move_line, self)._auto_init(cr, context=context)
+        res = super(account_move_line, self)._auto_init(cr, context=context)
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'account_move_line_journal_id_period_id_index\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX account_move_line_journal_id_period_id_index ON account_move_line (journal_id, period_id)')
+        return res
 
     def _check_no_view(self, cr, uid, ids, context=None):
         lines = self.browse(cr, uid, ids, context=context)
@@ -654,13 +655,7 @@ class account_move_line(osv.osv):
         }
         return result
 
-    def onchange_account_id(self, cr, uid, ids, account_id, context=None):
-        res = {'value': {}}
-        if account_id:
-            res['value']['account_tax_id'] = [x.id for x in self.pool.get('account.account').browse(cr, uid, account_id, context=context).tax_ids]
-        return res
-
-    def onchange_partner_id(self, cr, uid, ids, move_id, partner_id, account_id=None, debit=0, credit=0, date=False, journal=False):
+    def onchange_partner_id(self, cr, uid, ids, move_id, partner_id, account_id=None, debit=0, credit=0, date=False, journal=False, context=None):
         partner_obj = self.pool.get('res.partner')
         payment_term_obj = self.pool.get('account.payment.term')
         journal_obj = self.pool.get('account.journal')
@@ -674,8 +669,8 @@ class account_move_line(osv.osv):
             date = datetime.now().strftime('%Y-%m-%d')
         jt = False
         if journal:
-            jt = journal_obj.browse(cr, uid, journal).type
-        part = partner_obj.browse(cr, uid, partner_id)
+            jt = journal_obj.browse(cr, uid, journal, context=context).type
+        part = partner_obj.browse(cr, uid, partner_id, context=context)
 
         payment_term_id = False
         if jt and jt in ('purchase', 'purchase_refund') and part.property_supplier_payment_term:
@@ -700,20 +695,20 @@ class account_move_line(osv.osv):
                     elif part.supplier:
                         val['account_id'] = fiscal_pos_obj.map_account(cr, uid, part and part.property_account_position or False, id1)
                 if val.get('account_id', False):
-                    d = self.onchange_account_id(cr, uid, ids, val['account_id'])
+                    d = self.onchange_account_id(cr, uid, ids, account_id=val['account_id'], partner_id=part.id, context=context)
                     val.update(d['value'])
         return {'value':val}
 
-    def onchange_account_id(self, cr, uid, ids, account_id=False, partner_id=False):
+    def onchange_account_id(self, cr, uid, ids, account_id=False, partner_id=False, context=None):
         account_obj = self.pool.get('account.account')
         partner_obj = self.pool.get('res.partner')
         fiscal_pos_obj = self.pool.get('account.fiscal.position')
         val = {}
         if account_id:
-            res = account_obj.browse(cr, uid, account_id)
+            res = account_obj.browse(cr, uid, account_id, context=context)
             tax_ids = res.tax_ids
             if tax_ids and partner_id:
-                part = partner_obj.browse(cr, uid, partner_id)
+                part = partner_obj.browse(cr, uid, partner_id, context=context)
                 tax_id = fiscal_pos_obj.map_tax(cr, uid, part and part.property_account_position or False, tax_ids)[0]
             else:
                 tax_id = tax_ids and tax_ids[0].id or False
@@ -742,7 +737,7 @@ class account_move_line(osv.osv):
     def list_partners_to_reconcile(self, cr, uid, context=None):
         cr.execute(
              """SELECT partner_id FROM (
-                SELECT l.partner_id, p.last_reconciliation_date, SUM(l.debit) AS debit, SUM(l.credit) AS credit, MAX(l.date) AS max_date
+                SELECT l.partner_id, p.last_reconciliation_date, SUM(l.debit) AS debit, SUM(l.credit) AS credit, MAX(l.create_date) AS max_date
                 FROM account_move_line l
                 RIGHT JOIN account_account a ON (a.id = l.account_id)
                 RIGHT JOIN res_partner p ON (l.partner_id = p.id)
@@ -753,9 +748,14 @@ class account_move_line(osv.osv):
                 ) AS s
                 WHERE debit > 0 AND credit > 0 AND (last_reconciliation_date IS NULL OR max_date > last_reconciliation_date)
                 ORDER BY last_reconciliation_date""")
-        ids = cr.fetchall()
-        ids = len(ids) and [x[0] for x in ids] or []
-        return self.pool.get('res.partner').name_get(cr, uid, ids, context=context)
+        ids = [x[0] for x in cr.fetchall()]
+        if not ids: 
+            return []
+
+        # To apply the ir_rules
+        partner_obj = self.pool.get('res.partner')
+        ids = partner_obj.search(cr, uid, [('id', 'in', ids)], context=context)
+        return partner_obj.name_get(cr, uid, ids, context=context)
 
     def reconcile_partial(self, cr, uid, ids, type='auto', context=None, writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False):
         move_rec_obj = self.pool.get('account.move.reconcile')
@@ -980,8 +980,7 @@ class account_move_line(osv.osv):
         if context is None:
             context = {}
         period_pool = self.pool.get('account.period')
-        ctx = dict(context, account_period_prefer_normal=True)
-        pids = period_pool.find(cr, user, date, context=ctx)
+        pids = period_pool.find(cr, user, date, context=context)
         if pids:
             res.update({
                 'period_id':pids[0]
@@ -1303,6 +1302,5 @@ class account_move_line(osv.osv):
                 bool(journal.currency),bool(journal.analytic_journal_id)))
         return result
 
-account_move_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

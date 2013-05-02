@@ -487,6 +487,12 @@ class hr_applicant(base_stage, osv.Model):
         """
         return self.set_priority(cr, uid, ids, '3')
 
+    def get_empty_list_help(self, cr, uid, help, context=None):
+        context['empty_list_help_model'] = 'hr.job'
+        context['empty_list_help_id'] = context.get('default_job_id', None)
+        context['empty_list_help_document_name'] = _("job applicants")
+        return super(hr_applicant, self).get_empty_list_help(cr, uid, help, context=context)
+
 
 class hr_job(osv.osv):
     _inherit = "hr.job"
@@ -543,8 +549,9 @@ class hr_job(osv.osv):
 
     def _auto_init(self, cr, context=None):
         """Installation hook to create aliases for all jobs and avoid constraint errors."""
-        self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(hr_job,self)._auto_init,
+        res = self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(hr_job,self)._auto_init,
             self._columns['alias_id'], 'name', alias_prefix='job+', alias_defaults={'job_id': 'id'}, context=context)
+        return res
 
     def create(self, cr, uid, vals, context=None):
         mail_alias = self.pool.get('mail.alias')

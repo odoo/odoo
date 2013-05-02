@@ -48,7 +48,7 @@
                 <sheet string="Helpdesk Support">
                     <group col="4" class="oe_header">
                         <field name="name" string="Query"/>
-                        <field name="section_id" widget="selection"/>
+                        <field name="section_id" widget="selection" groups="base.group_multi_salesteams"/>
                         <field name="user_id"/>
                         <field name="date"/>
                         <field name="date_deadline"/>
@@ -115,7 +115,7 @@
                     <field name="date" string="Date"/>
                     <field name="date_deadline"/>
                     <field name="user_id"/>
-                    <field name="section_id"/>
+                    <field name="section_id" groups="base.group_multi_salesteams"/>
                     <field name="priority"/>
                     <field name="state"/>
                 </tree>
@@ -152,9 +152,9 @@
                     <separator/>
                     <filter string="Assigned to Me or My Sales Team(s)" icon="terp-personal+" domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                             help="Helpdesk requests that are assigned to me or to one of the sale teams I manage" />
-                    <field name="partner_id" />
+                    <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="user_id"/>
-                    <field name="section_id" string="Sales Team"/>
+                    <field name="section_id" string="Sales Team" groups="base.group_multi_salesteams"/>
                     <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner" domain="[]" help="Partner" context="{'group_by':'partner_id'}" />
                         <filter string="Responsible" icon="terp-personal" domain="[]" help="Responsible User" context="{'group_by':'user_id'}" />
