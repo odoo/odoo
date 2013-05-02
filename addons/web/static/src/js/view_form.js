@@ -2760,7 +2760,7 @@ instance.web.form.FieldBoolean = instance.web.form.AbstractField.extend({
         var $disabled = this.$el.find('input[type=checkbox]:disabled');
         $disabled.each(function (){
             $(this).next('div').remove();
-            $(this).closest("span").append($('<div class="boolean"/>'));
+            $(this).closest("span").append($('<div class="boolean"></div>'));
         });
     }
 });
