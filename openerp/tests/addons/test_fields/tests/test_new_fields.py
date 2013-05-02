@@ -88,3 +88,16 @@ class TestNewFields(common.TransactionCase):
             self.assertEqual(beta.children_count, beta_count - n)
             self.assertEqual(gamma.children_count, gamma_count + n)
 
+    def test_float(self):
+        """ test float fields """
+        # find partners with children
+        alpha, = self.Partner.search([], limit=1)
+
+        # assign value, and expect rounding
+        alpha.write({'some_float_field': 2.4999999999999996})
+        self.assertEqual(alpha.some_float_field, 2.50)
+
+        # same with field setter
+        alpha.some_float_field = 2.4999999999999996
+        self.assertEqual(alpha.some_float_field, 2.50)
+

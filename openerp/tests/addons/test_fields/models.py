@@ -46,6 +46,8 @@ class res_partner(models.Model):
     _inherit = 'res.partner'
 
     number_of_employees = fields.Integer()
+    some_float_field = fields.Float(digits=(10,2))
+
     name_size = fields.Integer(compute='compute_name_size', store=False)
     children_count = fields.Integer(compute='compute_children_count', store=True)
 

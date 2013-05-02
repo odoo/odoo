@@ -23,6 +23,8 @@
 
 from copy import copy
 
+from openerp.tools import float_round
+
 
 class MetaField(type):
     """ Metaclass for field classes. """
@@ -111,6 +113,25 @@ class Field(object):
         return value
 
 
+class Boolean(Field):
+    """ Boolean field. """
+    type = 'boolean'
+
+    @classmethod
+    def from_column(cls, column):
+        attrs = ('string', 'help', 'readonly', 'required')
+        kwargs = dict((attr, getattr(column, attr)) for attr in attrs)
+        return cls(**kwargs)
+
+    def to_column(self):
+        attrs = ('string', 'help', 'readonly', 'required')
+        kwargs = dict((attr, getattr(self, attr)) for attr in attrs)
+        return fields.boolean(**kwargs)
+
+    def record_to_cache(self, value):
+        return bool(value)
+
+
 class Integer(Field):
     """ Integer field. """
     type = 'integer'
@@ -128,6 +149,36 @@ class Integer(Field):
 
     def record_to_cache(self, value):
         return int(value or 0)
+
+
+class Float(Field):
+    """ Float field. """
+    type = 'float'
+    digits = None                       # None, (precision, scale), or callable
+
+    @classmethod
+    def from_column(cls, column):
+        attrs = ('string', 'help', 'readonly', 'required')
+        kwargs = dict((attr, getattr(column, attr)) for attr in attrs)
+        if column.digits:
+            kwargs['digits'] = column.digits
+        elif column.digits_compute:
+            kwargs['digits'] = column.digits_compute(scope.cr)
+        return cls(**kwargs)
+
+    def to_column(self):
+        if callable(self.digits):
+            self.digits = self.digits(scope.cr)
+        attrs = ('string', 'help', 'readonly', 'required', 'digits')
+        kwargs = dict((attr, getattr(self, attr)) for attr in attrs)
+        return fields.float(**kwargs)
+
+    def record_to_cache(self, value):
+        # apply rounding here, otherwise value in cache may be wrong!
+        if self.digits:
+            return float_round(float(value or 0.0), precision_digits=self.digits[1])
+        else:
+            return float(value or 0.0)
 
 
 # imported here to avoid dependency cycle issues
