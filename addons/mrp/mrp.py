@@ -982,6 +982,7 @@ class mrp_production(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         uncompute_ids = filter(lambda x:x, [not x.product_lines and x.id or False for x in self.browse(cr, uid, ids, context=context)])
         self.action_compute(cr, uid, uncompute_ids, context=context)
+        
         for production in self.browse(cr, uid, ids, context=context):
             shipment_id = self._make_production_internal_shipment(cr, uid, production, context=context)
             produce_move_id = self._make_production_produce_line(cr, uid, production, context=context)
@@ -996,7 +997,9 @@ class mrp_production(osv.osv):
                 shipment_move_id = self._make_production_internal_shipment_line(cr, uid, line, shipment_id, consume_move_id,\
                                  destination_location_id=source_location_id, context=context)
                 self._make_production_line_procurement(cr, uid, line, shipment_move_id, context=context)
-
+            for componant in production.bom_id.bom_lines:
+                if componant.product_id.type == 'service' and not production.move_lines or not production.move_lines2:
+                    wf_service.trg_validate(uid, 'mrp.production', shipment_id, 'button_confirm', cr)
             wf_service.trg_validate(uid, 'stock.picking', shipment_id, 'button_confirm', cr)
             production.write({'state':'confirmed'}, context=context)
         return shipment_id
