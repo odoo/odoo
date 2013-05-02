@@ -544,6 +544,29 @@
   background: #7c7bad;
   color: #eeeeee;
 }
+.openerp .oe_form_field_radio.oe_horizontal {
+  white-space: nowrap;
+}
+.openerp .oe_form_field_radio.oe_horizontal label {
+  display: inline-block;
+  text-align: center;
+  height: 16px;
+}
+.openerp .oe_form_field_radio.oe_vertical label {
+  margin-left: 4px;
+}
+.openerp .oe_form_field_radio.oe_form_required .oe_radio_input {
+  border: 2px solid transparent;
+  display: inline-block;
+  height: 12px;
+  width: 12px;
+  vertical-align: bottom;
+  border-radius: 10px;
+  margin: 1px 0;
+}
+.openerp .oe_form_field_radio.oe_form_required.oe_form_invalid .oe_radio_input {
+  border-color: red;
+}
 .openerp .oe_tags {
   margin-bottom: 1px;
 }
@@ -1269,7 +1292,7 @@
   color: white;
   padding: 2px 4px;
   margin: 1px 6px 0 0;
-  border: 1px solid lightGray;
+  border: 1px solid lightgrey;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
@@ -1301,7 +1324,7 @@
   transform: scale(1.1);
 }
 .openerp .oe_secondary_submenu .oe_active {
-  border-top: 1px solid lightGray;
+  border-top: 1px solid lightgrey;
   border-bottom: 1px solid #dedede;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
@@ -1703,6 +1726,7 @@
   font-size: 1px;
   letter-spacing: -1px;
   color: transparent;
+  text-shadow: none;
   font-weight: normal;
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
@@ -2286,7 +2310,7 @@
 }
 .openerp .oe_form .oe_form_label_help[for] span, .openerp .oe_form .oe_form_label[for] span {
   font-size: 80%;
-  color: darkGreen;
+  color: darkgreen;
   vertical-align: top;
   position: relative;
   top: -4px;
@@ -2311,30 +2335,6 @@
 .openerp .oe_form_field_progressbar {
   display: inline-block;
   min-width: 70px;
-}
-.openerp .oe_form_field_radio.oe_horizontal {
-  white-space: nowrap;
-}
-.openerp .oe_form_field_radio.oe_form_required .oe_radio_input {
-  border: 1px solid transparent;
-  display: inline-block;
-  height: 12px;
-  width: 12px;
-  vertical-align: bottom;
-  border-radius: 10px;
-  margin: 1px 0;
-}
-.openerp .oe_form_field_radio.oe_form_required.oe_form_invalid .oe_radio_input {
-  border-color: red;
-}
-.openerp .oe_form_field_radio.oe_horizontal label,
-.openerp .oe_form_field_radio.oe_horizontal div {
-  display: inline-block;
-  text-align: center;
-  height: 16px;
-}
-.openerp .oe_form_field_radio.oe_vertical label {
-  margin-left: 4px;
 }
 .openerp .oe_form_field_progressbar.ui-progressbar {
   height: 22px;
@@ -2496,10 +2496,10 @@
   width: 7em;
 }
 .openerp .oe_form_editable .oe_form .oe_form_field_date input {
-  width: 7.5em;
+  width: 100px;
 }
 .openerp .oe_form_editable .oe_form .oe_form_field_datetime input {
-  width: 11.5em;
+  width: 150px;
 }
 .openerp .oe_hidden_input_file {
   position: relative;
@@ -3046,6 +3046,7 @@
   font-size: 1px;
   letter-spacing: -1px;
   color: transparent;
+  text-shadow: none;
   font-weight: normal;
   margin-right: 7px;
 }
@@ -3181,6 +3182,7 @@
 .kitten-mode-activated > * {
   opacity: 0.7;
 }
+
 .loading-kitten {
   -moz-border-radius: 15px;
   -webkit-border-radius: 15px;
@@ -3242,6 +3244,9 @@ div.ui-widget-overlay {
 .openerp_ie .placeholder {
   color: #afafb6 !important;
   font-style: italic !important;
+}
+.openerp_ie .oe_form_binary_file {
+  width: 80px;
 }
 .openerp_ie .oe_form_field_boolean input {
   background: white;
