@@ -9,7 +9,12 @@
         <field name="domain">['|', ('type','=','lead'), ('type','=',False)]</field>
         <field name="view_id" ref="crm_case_tree_view_leads"/>
         <field name="search_view_id" ref="crm.view_crm_case_leads_filter"/>
-        <field name="context">{'default_type':'lead', 'stage_type':'lead'}</field>
+         <field name="context">{
+                 'default_type':'lead',
+                 'stage_type':'lead',
+                 'needaction_menu_ref': 'crm.menu_crm_opportunities',
+             }
+         </field>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
             Click to create an unqualified lead.

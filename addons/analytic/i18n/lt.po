@@ -1,0 +1,412 @@
+# Lithuanian translation for openobject-addons
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the openobject-addons package.
+# Giedrius Slavinskas <giedrius@inovera.lt>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"PO-Revision-Date: 2013-04-30 16:26+0000\n"
+"Last-Translator: Giedrius Slavinskas - inovera.lt <giedrius@inovera.lt>\n"
+"Language-Team: Lithuanian <lt@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-05-01 05:14+0000\n"
+"X-Generator: Launchpad (build 16580)\n"
+
+#. module: analytic
+#: field:account.analytic.account,child_ids:0
+msgid "Child Accounts"
+msgstr "Vaikinės sąskaitos"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "In Progress"
+msgstr "Vykdoma"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:229
+#, python-format
+msgid "Contract: "
+msgstr "Sutartis: "
+
+#. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_pending
+msgid "Contract pending"
+msgstr ""
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "Template"
+msgstr ""
+
+#. module: analytic
+#: view:account.analytic.account:0
+msgid "End Date"
+msgstr "Pabaigos data"
+
+#. module: analytic
+#: help:account.analytic.line,unit_amount:0
+msgid "Specifies the amount of quantity to count."
+msgstr "Nurodo produkto kiekį."
+
+#. module: analytic
+#: field:account.analytic.account,debit:0
+msgid "Debit"
+msgstr "Debetas"
+
+#. module: analytic
+#: view:account.analytic.account:0
+msgid ""
+"Once the end date of the contract is\n"
+"                                        passed or the maximum number of "
+"service\n"
+"                                        units (e.g. support contract) is\n"
+"                                        reached, the account manager is "
+"notified \n"
+"                                        by email to renew the contract with "
+"the\n"
+"                                        customer."
+msgstr ""
+"Kai tik pasibaigia sutartis\n"
+"                                        arba maksimaliai kartų atlikus "
+"paslaugas\n"
+"                                        (pvz. techninės pagalbos sutartis),\n"
+"                                        sąskaitos valdytojas yra įspėjamas\n"
+"                                        el. laišku, kad atnaujintų sutartį "
+"su\n"
+"                                        pirkėju."
+
+#. module: analytic
+#: selection:account.analytic.account,type:0
+msgid "Contract or Project"
+msgstr "Sutartis arba projektas"
+
+#. module: analytic
+#: field:account.analytic.account,name:0
+msgid "Account/Contract Name"
+msgstr "Sąskaitos/sutarties pavadinimas"
+
+#. module: analytic
+#: field:account.analytic.account,manager_id:0
+msgid "Account Manager"
+msgstr "Sąskaitos valdytojas"
+
+#. module: analytic
+#: field:account.analytic.account,message_follower_ids:0
+msgid "Followers"
+msgstr "Prenumeratoriai"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "Closed"
+msgstr "Uždaryta"
+
+#. module: analytic
+#: model:mail.message.subtype,name:analytic.mt_account_pending
+msgid "Contract to Renew"
+msgstr ""
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "New"
+msgstr "Naujas"
+
+#. module: analytic
+#: field:account.analytic.account,user_id:0
+msgid "Project Manager"
+msgstr "Projekto vadovas"
+
+#. module: analytic
+#: field:account.analytic.account,state:0
+msgid "Status"
+msgstr "Būsena"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:271
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (kopija)"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_line
+msgid "Analytic Line"
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,description:0
+#: field:account.analytic.line,name:0
+msgid "Description"
+msgstr "Aprašymas"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:262
+#, python-format
+msgid "Quick account creation disallowed."
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,message_unread:0
+msgid "Unread Messages"
+msgstr "Neperžiūrėtos žinutės"
+
+#. module: analytic
+#: constraint:account.analytic.account:0
+msgid "Error! You cannot create recursive analytic accounts."
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,company_id:0
+#: field:account.analytic.line,company_id:0
+msgid "Company"
+msgstr "Įmonė"
+
+#. module: analytic
+#: view:account.analytic.account:0
+msgid "Renewal"
+msgstr "Pratęsimas"
+
+#. module: analytic
+#: help:account.analytic.account,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+"Saugo pokalbių suvestinę (žinučių skaičius, ...). Ši apžvalga saugoma html "
+"formatu, kad būtų galima įterpti į kanban rodinius."
+
+#. module: analytic
+#: help:account.analytic.account,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Jeigu pažymėta, naujos žinutės reikalaus jūsų dėmesio."
+
+#. module: analytic
+#: help:account.analytic.account,quantity_max:0
+msgid ""
+"Sets the higher limit of time to work on the contract, based on the "
+"timesheet. (for instance, number of hours in a limited support contract.)"
+msgstr ""
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:160
+#, python-format
+msgid ""
+"If you set a company, the currency selected has to be the same as it's "
+"currency. \n"
+"You can remove the company belonging, and thus change the currency, only on "
+"analytic account of type 'view'. This can be really usefull for "
+"consolidation purposes of several companies charts with different "
+"currencies, for example."
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Ar prenumeratorius"
+
+#. module: analytic
+#: field:account.analytic.line,user_id:0
+msgid "User"
+msgstr "Naudotojas"
+
+#. module: analytic
+#: field:account.analytic.account,parent_id:0
+msgid "Parent Analytic Account"
+msgstr "Tėvinė analitinė sąskaita"
+
+#. module: analytic
+#: field:account.analytic.line,date:0
+msgid "Date"
+msgstr "Data"
+
+#. module: analytic
+#: model:mail.message.subtype,name:analytic.mt_account_closed
+msgid "Contract Finished"
+msgstr ""
+
+#. module: analytic
+#: view:account.analytic.account:0
+msgid "Terms and Conditions"
+msgstr "Sąlygos"
+
+#. module: analytic
+#: help:account.analytic.line,amount:0
+msgid ""
+"Calculated by multiplying the quantity and the price given in the Product's "
+"cost price. Always expressed in the company main currency."
+msgstr ""
+"Apskaičiuota dauginant kiekį iš nurodyto Produkto savikainos. Suma visada "
+"išreikšta pagrindine įmonės valiuta."
+
+#. module: analytic
+#: field:account.analytic.account,partner_id:0
+msgid "Customer"
+msgstr "Pirkėjas"
+
+#. module: analytic
+#: field:account.analytic.account,child_complete_ids:0
+msgid "Account Hierarchy"
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,message_ids:0
+msgid "Messages"
+msgstr "Pranešimai"
+
+#. module: analytic
+#: help:account.analytic.account,message_ids:0
+msgid "Messages and communication history"
+msgstr "Žinučių ir pranešimų istorija"
+
+#. module: analytic
+#: constraint:account.analytic.line:0
+msgid "You cannot create analytic line on view account."
+msgstr ""
+
+#. module: analytic
+#: view:account.analytic.account:0
+msgid "Contract Information"
+msgstr "Sutarties duomenys"
+
+#. module: analytic
+#: field:account.analytic.account,template_id:0
+#: selection:account.analytic.account,type:0
+msgid "Template of Contract"
+msgstr "Sutarties šablonas"
+
+#. module: analytic
+#: field:account.analytic.account,message_summary:0
+msgid "Summary"
+msgstr "Santrauka"
+
+#. module: analytic
+#: field:account.analytic.account,quantity_max:0
+msgid "Prepaid Service Units"
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,credit:0
+msgid "Credit"
+msgstr "Kreditas"
+
+#. module: analytic
+#: model:mail.message.subtype,name:analytic.mt_account_opened
+msgid "Contract Opened"
+msgstr ""
+
+#. module: analytic
+#: help:account.analytic.account,type:0
+msgid ""
+"If you select the View Type, it means you won't allow to create journal "
+"entries using that account.\n"
+"The type 'Analytic account' stands for usual accounts that you only want to "
+"use in accounting.\n"
+"If you select Contract or Project, it offers you the possibility to manage "
+"the validity and the invoicing options for this account.\n"
+"The special type 'Template of Contract' allows you to define a template with "
+"default data that you can reuse easily."
+msgstr ""
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "Cancelled"
+msgstr "Atšauktas"
+
+#. module: analytic
+#: selection:account.analytic.account,type:0
+msgid "Analytic View"
+msgstr "Analitinė apžvalga"
+
+#. module: analytic
+#: field:account.analytic.account,balance:0
+msgid "Balance"
+msgstr "Balansas"
+
+#. module: analytic
+#: field:account.analytic.account,complete_name:0
+msgid "Full Name"
+msgstr "Pilnas pavadinimas"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "To Renew"
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,quantity:0
+#: field:account.analytic.line,unit_amount:0
+msgid "Quantity"
+msgstr "Kiekis"
+
+#. module: analytic
+#: field:account.analytic.account,date:0
+msgid "Date End"
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,code:0
+msgid "Reference"
+msgstr "Numeris"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:160
+#, python-format
+msgid "Error!"
+msgstr "Klaida!"
+
+#. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_closed
+msgid "Contract closed"
+msgstr ""
+
+#. module: analytic
+#: model:res.groups,name:analytic.group_analytic_accounting
+msgid "Analytic Accounting"
+msgstr "Analitinė apskaita"
+
+#. module: analytic
+#: field:account.analytic.line,amount:0
+msgid "Amount"
+msgstr "Suma"
+
+#. module: analytic
+#: view:account.analytic.account:0
+#: selection:account.analytic.account,type:0
+#: field:account.analytic.line,account_id:0
+#: model:ir.model,name:analytic.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Analitinė sąskaita"
+
+#. module: analytic
+#: field:account.analytic.account,currency_id:0
+msgid "Currency"
+msgstr "Valiuta"
+
+#. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_opened
+msgid "Contract opened"
+msgstr ""
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:262
+#, python-format
+msgid "Warning"
+msgstr "Įspėjimas"
+
+#. module: analytic
+#: field:account.analytic.account,type:0
+msgid "Type of Account"
+msgstr "Sąskaitos tipas"
+
+#. module: analytic
+#: field:account.analytic.account,date_start:0
+msgid "Start Date"
+msgstr "Pradžios data"
+
+#. module: analytic
+#: field:account.analytic.account,line_ids:0
+msgid "Analytic Entries"
+msgstr "Analitiniai įrašai"

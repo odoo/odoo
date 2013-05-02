@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-04-13 18:18+0000\n"
+"PO-Revision-Date: 2013-04-28 19:51+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-14 05:50+0000\n"
-"X-Generator: Launchpad (build 16564)\n"
+"X-Launchpad-Export-Date: 2013-04-29 06:04+0000\n"
+"X-Generator: Launchpad (build 16580)\n"
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_03
@@ -27,11 +27,13 @@ msgid ""
 "Allows you to configure your incoming mail server, and create issues from "
 "incoming emails."
 msgstr ""
+"Gelen eposta sunucunuzu yapılandırmanızı ve gelen epostalardan sorunlar "
+"oluşturmanızı sağlar."
 
 #. module: project_issue
 #: field:project.issue.report,delay_open:0
 msgid "Avg. Delay to Open"
-msgstr ""
+msgstr "Açmak için Gerekli Süre"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -42,7 +44,7 @@ msgstr "Grupla İle..."
 #. module: project_issue
 #: field:project.issue,working_hours_open:0
 msgid "Working Hours to Open the Issue"
-msgstr ""
+msgstr "Sorunun Açılması için Gerekli Çalışam Süresi"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_started
@@ -85,7 +87,7 @@ msgstr "Firma"
 #. module: project_issue
 #: field:project.issue,email_cc:0
 msgid "Watchers Emails"
-msgstr ""
+msgstr "İzleyici Epostaları"
 
 #. module: project_issue
 #: help:project.issue,kanban_state:0
@@ -96,21 +98,26 @@ msgid ""
 " * Ready for next stage indicates the issue is ready to be pulled to the "
 "next stage"
 msgstr ""
+"Bir sorunun kanban durumu özel durumların sorunu etkilediğini belirtir:\n"
+" * Normal, varsayılan durumdur\n"
+" * Engelli, bir şeyin bu sorunla ilgili işlemleri engellediğini belirtir\n"
+" * Sonraki aşama için Hazır, sorunun bir sonraki aşamaya geçirilmeye hazır "
+"olduğunu belirtir"
 
 #. module: project_issue
 #: help:project.issue,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "İşaretliyse yeni mesajlar ilginizi gerektirir."
 
 #. module: project_issue
 #: help:account.analytic.account,use_issues:0
 msgid "Check this field if this project manages issues"
-msgstr ""
+msgstr "Bu projede sorunlar yürütülüyorsa bu alanı işaretleyin"
 
 #. module: project_issue
 #: field:project.issue,day_open:0
 msgid "Days to Open"
-msgstr ""
+msgstr "Açılış için Gün Sayısı"
 
 #. module: project_issue
 #: code:addons/project_issue/project_issue.py:473
@@ -119,22 +126,24 @@ msgid ""
 "You cannot escalate this issue.\n"
 "The relevant Project has not configured the Escalation Project!"
 msgstr ""
+"Bu sorunu yükseltemezsiniz.\n"
+"İlgili Proje Yükseltme Projesini henüz yapılandırmamıştır!"
 
 #. module: project_issue
 #: constraint:project.project:0
 msgid "Error! You cannot assign escalation to the same project!"
-msgstr ""
+msgstr "Hata! Aynı projeye yükselme atayamazsınız!"
 
 #. module: project_issue
 #: selection:project.issue,priority:0
 #: selection:project.issue.report,priority:0
 msgid "Highest"
-msgstr ""
+msgstr "En yüksek"
 
 #. module: project_issue
 #: help:project.issue,inactivity_days:0
 msgid "Difference in days between last action and current date"
-msgstr ""
+msgstr "Son işlem tarihi ve geçerli tarih arasındaki fark"
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -145,7 +154,7 @@ msgstr "Gün"
 #. module: project_issue
 #: field:project.issue,days_since_creation:0
 msgid "Days since creation date"
-msgstr ""
+msgstr "Oluşturma tarihinden bugüne kadar ki gün sayısı"
 
 #. module: project_issue
 #: field:project.issue,task_id:0
@@ -167,7 +176,7 @@ msgstr "Mesajlar"
 #. module: project_issue
 #: field:project.issue,inactivity_days:0
 msgid "Days since last action"
-msgstr ""
+msgstr "Son işlemden bu güne kadar ki gün sayısı"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_project
@@ -191,6 +200,15 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Yeni bir sorun bildirmek için tıklayın.\n"
+"          </p><p>\n"
+"            OpenERP sorun izleyicisi, iç istekler, yazılım geliştirme "
+"hataları,\n"
+"            müşteri şikayetleri, proje zorlukları, malzeme hataları gibi\n"
+"            şeyleri etkili bir şeklide yönetmenizi sağlar.\n"
+"          </p>\n"
+"        "
 
 #. module: project_issue
 #: selection:project.issue,state:0
@@ -206,7 +224,7 @@ msgstr "Özel Not"
 #. module: project_issue
 #: field:project.issue.report,date_closed:0
 msgid "Date of Closing"
-msgstr ""
+msgstr "Kapatma için gerekli Gün sayısı"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -221,7 +239,7 @@ msgstr "Renk İndeksi"
 #. module: project_issue
 #: field:project.issue.report,working_hours_open:0
 msgid "Avg. Working Hours to Open"
-msgstr ""
+msgstr "Açmak için gerekli Ort. Çalışma Süresi"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_account_analytic_account
@@ -234,6 +252,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Sohbetçi özetini (mesaj sayısı, ...) barındırır. Bu özet kanban "
+"görünümlerine eklenmek üzere doğrudan html biçimindedir."
 
 #. module: project_issue
 #: help:project.project,project_escalation_id:0
@@ -241,6 +261,8 @@ msgid ""
 "If any issue is escalated from the current Project, it will be listed under "
 "the project selected here."
 msgstr ""
+"Geçerli Projeden herhangi bir soru yükseltilirse, burada seçilen projelerde "
+"listelenecektir."
 
 #. module: project_issue
 #: view:project.issue:0
@@ -316,7 +338,7 @@ msgstr "Yeni"
 #. module: project_issue
 #: view:project.project:0
 msgid "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
-msgstr ""
+msgstr "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
 
 #. module: project_issue
 #: field:project.issue,email_from:0
@@ -362,12 +384,12 @@ msgstr "Versiyon"
 #. module: project_issue
 #: view:project.issue:0
 msgid "To Do Issues"
-msgstr ""
+msgstr "Yapılacak Sorunlar"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue_version
 msgid "project.issue.version"
-msgstr ""
+msgstr "project.issue.version"
 
 #. module: project_issue
 #: field:project.config.settings,fetchmail_issue:0
@@ -394,6 +416,10 @@ msgid ""
 "analyse the time required to open or close an issue, the number of email to "
 "exchange and the time spent on average by issues."
 msgstr ""
+"Proje sorunlarındaki bu rapor destek ve satış sonrası hizmetlerinizin "
+"kalitesini incelemenizi sağlar.  Her aşamadaki sorunları izleyebilirsiniz. "
+"Bir sorunu açıp kapatmak için gerekli süreyi, karşılıklı gönderilecek eposta "
+"sayısını ve sorunların tükettiği süreyi inceleyebilirsiniz."
 
 #. module: project_issue
 #: view:project.issue:0
@@ -523,6 +549,8 @@ msgid ""
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
 msgstr ""
+"Bu eposta adresleri gönderilmeden önce bütün gelen ve giden epostaların CC "
+"satırına eklenecektir. Birden fazla eposta adresini virgül ile ayırınız."
 
 #. module: project_issue
 #: selection:project.issue.report,state:0
@@ -616,6 +644,10 @@ msgid ""
 "the case needs to be reviewed then the status is                       set "
 "to 'Pending'."
 msgstr ""
+"Bir durum oluşturulduğunda durum 'Taslak' olarak ayarlanır. Durum sürmekte "
+"ise 'Açık' olarak ayarlanır. Durum bittiğinde, durum 'Yapıldı' olarak "
+"ayarlanır. Eğer durumun incelenmesi gerekiyorsa durum 'Bekliyor' olarak "
+"ayarlanır."
 
 #. module: project_issue
 #: field:project.issue,active:0
@@ -632,7 +664,7 @@ msgstr "Kasım"
 #: code:addons/project_issue/project_issue.py:492
 #, python-format
 msgid "Customer Email"
-msgstr ""
+msgstr "Müşteri Epostası"
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -657,12 +689,12 @@ msgstr "Ocak"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Feature Tracker Tree"
-msgstr ""
+msgstr "Sonraki İzleme Ağacı"
 
 #. module: project_issue
 #: help:project.issue,email_from:0
 msgid "These people will receive email."
-msgstr ""
+msgstr "Bu kişiler eposta alacaktır"
 
 #. module: project_issue
 #: field:project.issue,message_summary:0
@@ -743,12 +775,12 @@ msgstr "Proje Sorun"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Add an internal note..."
-msgstr ""
+msgstr "Bir iç not ekle..."
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Cancel Issue"
-msgstr ""
+msgstr "Sorun İptal et"
 
 #. module: project_issue
 #: help:project.issue,progress:0
@@ -758,7 +790,7 @@ msgstr "Hesapla : Haracan Zaman / Toplam Süre."
 #. module: project_issue
 #: field:project.project,issue_count:0
 msgid "Unclosed Issues"
-msgstr ""
+msgstr "Kapatılmamış Sorunlar"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -794,12 +826,12 @@ msgstr "Sorun"
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_02
 msgid "PBCK"
-msgstr ""
+msgstr "PBCK"
 
 #. module: project_issue
 #: view:project.issue:0
 msgid "Feature Tracker Search"
-msgstr ""
+msgstr "Sonraki İzleme Araması"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -819,7 +851,7 @@ msgstr "Mayıs"
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_config_settings
 msgid "project.config.settings"
-msgstr ""
+msgstr "project.config.settings"
 
 #. module: project_issue
 #: model:mail.message.subtype,name:project_issue.mt_issue_closed
@@ -843,7 +875,7 @@ msgstr "Sorun Oluşturdu"
 #: code:addons/project_issue/project_issue.py:490
 #, python-format
 msgid "Customer"
-msgstr ""
+msgstr "Müşteri"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -878,6 +910,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Yeni bir sürüm eklemek için tıklayın.\n"
+"              </p><p>\n"
+"                Burada, sorunlarınız üzerinde çalışacağınız ürünlerinize\n"
+"                farklı sürümler tanımlayın.\n"
+"              </p>\n"
+"            "
 
 #. module: project_issue
 #: help:project.issue,section_id:0
@@ -885,6 +924,8 @@ msgid ""
 "Sales team to which Case belongs to.                             Define "
 "Responsible user and Email account for mail gateway."
 msgstr ""
+"Durumun ait olduğu satış takımı. Posta ağgeçidi için Sorumlu kullanıcı ve "
+"Eposta hesabı tanımlayın."
 
 #. module: project_issue
 #: view:board.board:0
@@ -894,7 +935,7 @@ msgstr "Sorunlarım"
 #. module: project_issue
 #: help:project.issue.report,delay_open:0
 msgid "Number of Days to open the project issue."
-msgstr ""
+msgstr "Proje sorununu açmak için gerekli Gün Sayısı."
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -929,7 +970,7 @@ msgstr "Sorun engellendi"
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue_report
 msgid "project.issue.report"
-msgstr ""
+msgstr "project.issue.report"
 
 #. module: project_issue
 #: help:project.issue.report,delay_close:0
