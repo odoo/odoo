@@ -24,12 +24,27 @@
 from copy import copy
 
 
+class MetaField(type):
+    """ Metaclass for field classes. """
+    _class_by_type = {}
+
+    def __init__(cls, name, bases, attrs):
+        super(MetaField, cls).__init__(name, bases, attrs)
+        if cls.type:
+            assert cls.from_column.im_func != Field.from_column.im_func, \
+                "Class %s must define a class method 'from_column'." % name
+            cls._class_by_type[cls.type] = cls
+
+
 class Field(object):
     """ Base class of all fields. """
+    __metaclass__ = MetaField
+
     name = None                 # name of the field
     model = None                # name of the model of this field
-    store = True                # whether the field is stored in database
+    type = None                 # type of the field (string)
 
+    store = True                # whether the field is stored in database
     compute = None              # name of model method that computes value
     depends = ()                # collection of field dependencies
 
@@ -52,6 +67,14 @@ class Field(object):
         self.name = name
         if not self.string:
             self.string = name.replace('_', ' ').capitalize()
+
+    @classmethod
+    def from_column(cls, column):
+        """ return a field for the low-level field `column` """
+        try:
+            return cls._class_by_type[column._type].from_column(column)
+        except KeyError:
+            raise NotImplementedError()
 
     def to_column(self):
         """ return a low-level field object corresponding to `self` """
@@ -90,6 +113,13 @@ class Field(object):
 
 class Integer(Field):
     """ Integer field. """
+    type = 'integer'
+
+    @classmethod
+    def from_column(cls, column):
+        attrs = ('string', 'help', 'readonly', 'required')
+        kwargs = dict((attr, getattr(column, attr)) for attr in attrs)
+        return cls(**kwargs)
 
     def to_column(self):
         attrs = ('string', 'help', 'readonly', 'required')

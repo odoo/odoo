@@ -751,7 +751,7 @@ class BaseModel(object):
                 cls._fields[attr] = field
 
                 # if stored, add a corresponding column in cls._columns
-                if field.store:
+                if field.store and attr not in cls._columns:
                     _logger.debug("Create column for field %s.%s", cls._name, attr)
                     cls._columns[attr] = field.to_column()
 
@@ -759,6 +759,22 @@ class BaseModel(object):
                 if field.compute:
                     compute_method = getattr(cls, field.compute)
                     field.depends = getattr(compute_method, '_depends', ())
+
+        # interface columns with new-style fields
+        for attr in set(cls._columns) - set(cls._fields):
+            column = cls._columns[attr]
+            try:
+                field = Field.from_column(column)
+            except NotImplementedError:
+                pass
+            else:
+                field.set_model_name(cls._name, attr)
+
+                # add field as an attribute and in _fields (for reflection)
+                if not hasattr(cls, attr):
+                    _logger.debug("Create field for column %s.%s", cls._name, attr)
+                    setattr(cls, attr, field)
+                cls._fields[attr] = field
 
         # triggers to recompute stored function fields on other models
         #   cls._recompute = {trigger_field: [(model, field, path), ...], ...}
