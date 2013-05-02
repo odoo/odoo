@@ -107,8 +107,8 @@
     </record>
 
     <record id="account_tax_ic_st" model="account.tax.template">
-        <field name="name">Input Credit - Service Tax 12%</field>
-        <field name="description">Input Credit - Service Tax 12%</field>
+        <field name="name">Input Service Tax 12%</field>
+        <field name="description">Input Service Tax 12%</field>
         <field name="type_tax_use">purchase</field>
         <field name="type">percent</field>
         <field name="amount">0.1200</field>
@@ -125,8 +125,8 @@
     </record>
 
     <record id="account_tax_in_edu_cess_st" model="account.tax.template">
-        <field name="name">Input Credit - Service Tax Edu. Cess. 2%</field>
-        <field name="description">Input Credit - Service Tax Edu. Cess. 2%</field>
+        <field name="name">Input Service Tax Edu. Cess. 2%</field>
+        <field name="description">Input Service Tax Edu. Cess. 2%</field>
         <field name="type_tax_use">purchase</field>
         <field name="type">percent</field>
         <field name="amount">0.0200</field>
@@ -141,8 +141,8 @@
     </record>
 
     <record id="account_tax_in_credit_ser_tax_seco_hec" model="account.tax.template">
-        <field name="name">Input Credit - Service Tax Seco. &amp; HEC 1%</field>
-        <field name="description">Input Credit - Service Tax Seco. &amp; HEC 1%</field>
+        <field name="name">Input Service Tax Seco. &amp; HEC 1%</field>
+        <field name="description">Input Service Tax Seco. &amp; HEC 1%</field>
         <field name="type_tax_use">purchase</field>
         <field name="type">percent</field>
         <field name="amount">0.0100</field>
@@ -249,9 +249,9 @@
         <field name="include_base_amount" eval="True"/>
         <field name="account_collected_id" ref="p247001"/>
         <field name="account_paid_id" ref="p247001"/>
-        <field name="base_code_id" ref="vat_code_tax_pur_sales_vat"/>
+        <field name="base_code_id" ref="vat_code_tax_sales_excise"/>
         <field name="tax_code_id" ref="vat_code_tax_rec_exice12"/>
-        <field name="ref_base_code_id" ref="vat_code_tax_pur_sales_vat"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_sales_excise"/>
         <field name="ref_base_sign" eval="-1"/>
         <field name="ref_tax_code_id" ref="vat_code_tax_rec_exice12"/>
         <field name="ref_tax_sign" eval="-1"/>
@@ -454,10 +454,10 @@
         <field name="account_collected_id" ref="p154025"/>
         <field name="account_paid_id" ref="p154025"/>
         <field name="base_code_id" ref="vat_code_tax_pur_vat4"/>
-        <field name="tax_code_id" ref="vat_code_tax_rec_vat4"/>
+        <field name="tax_code_id" ref="vat_code_tax_pay_vat4"/>
         <field name="ref_base_code_id" ref="vat_code_tax_pur_vat4"/>
         <field name="ref_base_sign" eval="-1"/>
-        <field name="ref_tax_code_id" ref="vat_code_tax_rec_vat4"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_vat4"/>
         <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
@@ -544,9 +544,9 @@
         <field name="include_base_amount" eval="True"/>
         <field name="account_collected_id" ref="p247005"/>
         <field name="account_paid_id" ref="p247005"/>
-        <field name="base_code_id" ref="vat_code_tax_sale_cst12"/>
+        <field name="base_code_id" ref="vat_code_tax_sale_cst2"/>
         <field name="tax_code_id" ref="vat_code_tax_rec_cst2"/>
-        <field name="ref_base_code_id" ref="vat_code_tax_sale_cst12"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_sale_cst2"/>
         <field name="ref_base_sign" eval="-1"/>
         <field name="ref_tax_code_id" ref="vat_code_tax_rec_cst2"/>
         <field name="ref_tax_sign" eval="-1"/>
@@ -580,9 +580,9 @@
         <field name="sequence">60</field>
         <field name="account_collected_id" ref="p154028"/>
         <field name="account_paid_id" ref="p154028"/>
-        <field name="base_code_id" ref="vat_code_tax_pur_vat12_vat15"/>
+        <field name="base_code_id" ref="vat_code_tax_pur_vat12"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_vat12"/>
-        <field name="ref_base_code_id" ref="vat_code_tax_pur_vat12_vat15"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_pur_vat12"/>
         <field name="ref_base_sign" eval="-1"/>
         <field name="ref_tax_code_id" ref="vat_code_tax_pay_vat12"/>
         <field name="ref_tax_sign" eval="-1"/>
@@ -598,9 +598,9 @@
         <field name="sequence">80</field>
         <field name="account_collected_id" ref="p154029"/>
         <field name="account_paid_id" ref="p154029"/>
-        <field name="base_code_id" ref="vat_code_tax_pur_vat12_vat15"/>
+        <field name="base_code_id" ref="vat_code_tax_pur_vat25"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_add_vat2"/>
-        <field name="ref_base_code_id" ref="vat_code_tax_pur_vat12_vat15"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_pur_vat25"/>
         <field name="ref_base_sign" eval="-1"/>
         <field name="ref_tax_code_id" ref="vat_code_tax_pay_add_vat2"/>
         <field name="ref_tax_sign" eval="-1"/>
