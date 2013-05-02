@@ -13,7 +13,9 @@
         <field name="base_code_id" ref="vat_code_tax_pur_PCST5"/>
         <field name="tax_code_id" ref="vat_code_tax_pur_CSTP5"/>
         <field name="ref_base_code_id" ref="vat_code_tax_pur_PCST5"/>
+        <field name="ref_base_sign" eval="-1"/>
         <field name="ref_tax_code_id" ref="vat_code_tax_pur_CSTP5"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -27,6 +29,10 @@
         <field name="account_paid_id" ref="p154003"/>
         <field name="base_code_id" ref="vat_code_tax_pur_urd"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_urd"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_pur_urd"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_urd"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -40,6 +46,10 @@
         <field name="account_paid_id" ref="p154004"/>
         <field name="base_code_id" ref="vat_code_tax_pur_base_tds"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_tds_audit_fee"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_pur_base_tds"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_tds_audit_fee"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -53,6 +63,10 @@
         <field name="account_paid_id" ref="p154005"/>
         <field name="base_code_id" ref="vat_code_tax_pur_base_tds"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_tds_brokerage"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_pur_base_tds"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_tds_brokerage"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -67,6 +81,10 @@
         <field name="account_paid_id" ref="p154006"/>
         <field name="base_code_id" ref="vat_code_tax_tds_pur_import"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_import_duty"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_tds_pur_import"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_import_duty"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -81,6 +99,10 @@
         <field name="account_paid_id" ref="p154007"/>
         <field name="base_code_id" ref="vat_code_tax_tds_pur_import"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_add_imp_duty"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_tds_pur_import"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_add_imp_duty"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -95,6 +117,10 @@
         <field name="account_paid_id" ref="p154008"/>
         <field name="base_code_id" ref="vat_code_tax_pur_exp_act"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_ic_st"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_pur_exp_act"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_ic_st"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -108,6 +134,8 @@
         <field name="account_collected_id" ref="p154009"/>
         <field name="account_paid_id" ref="p154009"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_ic_edu_cess"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pur_PCST5"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="parent_id" ref="account_tax_ic_st"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
@@ -122,6 +150,8 @@
         <field name="account_collected_id" ref="p154002"/>
         <field name="account_paid_id" ref="p154002"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_ic_seco_hec"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_ic_seco_hec"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="parent_id" ref="account_tax_ic_st"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
@@ -136,6 +166,10 @@
         <field name="account_paid_id" ref="p154010"/>
         <field name="base_code_id" ref="vat_code_tax_pur_base_tds"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_tds_sal"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_pur_base_tds"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_tds_sal"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -149,6 +183,10 @@
         <field name="account_paid_id" ref="p154012"/>
         <field name="base_code_id" ref="vat_code_tax_pur_vat"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_exice5"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_pur_vat"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_exice5"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -163,6 +201,10 @@
         <field name="account_paid_id" ref="p154013"/>
         <field name="base_code_id" ref="vat_code_tax_pur_vat"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_exice12"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_pur_vat"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_exice12"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -176,6 +218,8 @@
         <field name="account_collected_id" ref="p154014"/>
         <field name="account_paid_id" ref="p154014"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_cess2"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_cess2"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="parent_id" ref="account_tax_exice12_pur"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
@@ -190,6 +234,8 @@
         <field name="account_collected_id" ref="p154015"/>
         <field name="account_paid_id" ref="p154015"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_sec_hig_edu"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_sec_hig_edu"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="parent_id" ref="account_tax_exice12_pur"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
@@ -205,6 +251,10 @@
         <field name="account_paid_id" ref="p247001"/>
         <field name="base_code_id" ref="vat_code_tax_pur_sales_vat"/>
         <field name="tax_code_id" ref="vat_code_tax_rec_exice12"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_pur_sales_vat"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec_exice12"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -218,6 +268,8 @@
         <field name="account_collected_id" ref="p247010"/>
         <field name="account_paid_id" ref="p247010"/>
         <field name="tax_code_id" ref="vat_code_tax_rec_cess2"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec_cess2"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="parent_id" ref="account_tax_exice12_sale"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
@@ -232,6 +284,8 @@
         <field name="account_collected_id" ref="p247002"/>
         <field name="account_paid_id" ref="p247002"/>
         <field name="tax_code_id" ref="vat_code_tax_rec_sec_hig_cess"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec_sec_hig_cess"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="parent_id" ref="account_tax_exice12_sale"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
@@ -246,6 +300,10 @@
         <field name="account_paid_id" ref="p154016"/>
         <field name="base_code_id" ref="vat_code_tax_pur_plant_machinery"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_seco_hec"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_pur_plant_machinery"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_seco_hec"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -259,6 +317,10 @@
         <field name="account_paid_id" ref="p154017"/>
         <field name="base_code_id" ref="vat_code_tax_pur_base_tds"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_tds_contractor"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_pur_base_tds"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_tds_contractor"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -272,6 +334,10 @@
         <field name="account_paid_id" ref="p154018"/>
         <field name="base_code_id" ref="vat_code_tax_pur_base_tds"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_tds_dir_intrest"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_pur_base_tds"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_tds_dir_intrest"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -285,6 +351,10 @@
         <field name="account_paid_id" ref="p154019"/>
         <field name="base_code_id" ref="vat_code_tax_pur_base_tds"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_tds_dir_ren"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_pur_base_tds"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_tds_dir_ren"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -298,6 +368,10 @@
         <field name="account_paid_id" ref="p154020"/>
         <field name="base_code_id" ref="vat_code_tax_pur_base_tds"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_tds_intrest"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_pur_base_tds"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_tds_intrest"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -312,6 +386,10 @@
         <field name="account_paid_id" ref="p154021"/>
         <field name="base_code_id" ref="vat_code_tax_pur_base_tds"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_tds_prof_fee"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_pur_base_tds"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_tds_prof_fee"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -325,6 +403,10 @@
         <field name="account_paid_id" ref="p154022"/>
         <field name="base_code_id" ref="vat_code_tax_pur_base_tds"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_tds_rent"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_pur_base_tds"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_tds_rent"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -338,6 +420,10 @@
         <field name="account_paid_id" ref="p154023"/>
         <field name="base_code_id" ref="vat_code_tax_pur_plant_machinery"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_edu_cess"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_pur_plant_machinery"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_edu_cess"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -351,6 +437,10 @@
         <field name="account_paid_id" ref="p154024"/>
         <field name="base_code_id" ref="vat_code_tax_pur_plant_machinery"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_cap_goods"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_pur_plant_machinery"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_cap_goods"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -365,7 +455,10 @@
         <field name="account_paid_id" ref="p154025"/>
         <field name="base_code_id" ref="vat_code_tax_pur_vat4"/>
         <field name="tax_code_id" ref="vat_code_tax_rec_vat4"/>
-        <field name="child_depend" eval="True"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_pur_vat4"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec_vat4"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -380,6 +473,10 @@
         <field name="account_paid_id" ref="p154026"/>
         <field name="base_code_id" ref="vat_code_tax_pur_vat4"/>
         <field name="tax_code_id" ref="vat_code_tax_rec_add_vat1"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_pur_vat4"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec_add_vat1"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -394,6 +491,10 @@
         <field name="account_paid_id" ref="p154027"/>
         <field name="base_code_id" ref="vat_code_tax_pur_vat15"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_vat15"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_pur_vat15"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_vat15"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -408,6 +509,10 @@
         <field name="account_paid_id" ref="p247003"/>
         <field name="base_code_id" ref="vat_code_tax_sal_vat4"/>
         <field name="tax_code_id" ref="vat_code_tax_rec_vat4"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_sal_vat4"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec_vat4"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -422,6 +527,10 @@
         <field name="account_paid_id" ref="p247004"/>
         <field name="base_code_id" ref="vat_code_tax_sal_vat4"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_add_vat1"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_sal_vat4"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_add_vat1"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -437,6 +546,10 @@
         <field name="account_paid_id" ref="p247005"/>
         <field name="base_code_id" ref="vat_code_tax_sale_cst12"/>
         <field name="tax_code_id" ref="vat_code_tax_rec_cst2"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_sale_cst12"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec_cst2"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -451,6 +564,10 @@
         <field name="account_paid_id" ref="p247006"/>
         <field name="base_code_id" ref="vat_code_tax_sale_cst15"/>
         <field name="tax_code_id" ref="vat_code_tax_rec_cst5"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_sale_cst15"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec_cst5"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -465,6 +582,10 @@
         <field name="account_paid_id" ref="p154028"/>
         <field name="base_code_id" ref="vat_code_tax_pur_vat12_vat15"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_vat12"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_pur_vat12_vat15"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_vat12"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -479,6 +600,10 @@
         <field name="account_paid_id" ref="p154029"/>
         <field name="base_code_id" ref="vat_code_tax_pur_vat12_vat15"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_add_vat2"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_pur_vat12_vat15"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_add_vat2"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -493,6 +618,10 @@
         <field name="account_paid_id" ref="p154030"/>
         <field name="base_code_id" ref="vat_code_tax_pur_cst2"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_cst2"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_pur_cst2"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_cst2"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -504,6 +633,10 @@
         <field name="amount">0.02</field>
         <field name="base_code_id" ref="vat_code_tax_sal_exp_ct1"/>
         <field name="tax_code_id" ref="vat_code_tax_rec_fomh"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_sal_exp_ct1"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec_fomh"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -517,6 +650,10 @@
         <field name="account_paid_id" ref="p247007"/>
         <field name="base_code_id" ref="vat_code_tax_sal_ct3_cst"/>
         <field name="tax_code_id" ref="vat_code_tax_rec_cst2_on_sal_cst3"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_sal_ct3_cst"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec_cst2_on_sal_cst3"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -530,6 +667,10 @@
         <field name="account_paid_id" ref="p247008"/>
         <field name="base_code_id" ref="vat_code_tax_sal_cst3"/>
         <field name="tax_code_id" ref="vat_code_tax_rec_out4_sal_cst3"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_sal_cst3"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec_out4_sal_cst3"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -543,6 +684,10 @@
         <field name="account_paid_id" ref="p247009"/>
         <field name="base_code_id" ref="vat_code_tax_sal_cst3"/>
         <field name="tax_code_id" ref="vat_code_tax_rec_out_add1_sale_cst3"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_sal_cst3"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec_out_add1_sale_cst3"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -553,6 +698,10 @@
         <field name="type">fixed</field>
         <field name="base_code_id" ref="vat_code_tax_sal_sez_out_guj"/>
         <field name="tax_code_id" ref="vat_code_tax_no_saz_ogs"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_sal_sez_out_guj"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_no_saz_ogs"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -563,6 +712,10 @@
         <field name="type">percent</field>
         <field name="base_code_id" ref="vat_code_tax_sal_sez_in_guj"/>
         <field name="tax_code_id" ref="vat_code_tax_no_sez_guj"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_sal_sez_in_guj"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_no_sez_guj"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -573,6 +726,10 @@
         <field name="type">percent</field>
         <field name="base_code_id" ref="vat_code_tax_sal_formh_tax"/>
         <field name="tax_code_id" ref="vat_code_tax_rec_formh_bed"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_sal_formh_tax"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec_formh_bed"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -583,6 +740,10 @@
         <field name="type">percent</field>
         <field name="base_code_id" ref="vat_code_tax_sal_out_country"/>
         <field name="tax_code_id" ref="vat_code_tax_rec_no_out_country"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_sal_out_country"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec_no_out_country"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -593,6 +754,10 @@
         <field name="type">percent</field>
         <field name="base_code_id" ref="vat_code_tax_sal_proj"/>
         <field name="tax_code_id" ref="vat_code_tax_rec_no_proj"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_sal_proj"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec_no_proj"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -607,6 +772,10 @@
         <field name="account_paid_id" ref="p154011"/>
         <field name="base_code_id" ref="vat_code_tax_pur_vat"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_exice6"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_pur_vat"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_exice6"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -620,6 +789,8 @@
         <field name="account_collected_id" ref="p154014"/>
         <field name="account_paid_id" ref="p154014"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_cess2"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_cess2"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="parent_id" ref="account_tax_exic6_pur"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
@@ -634,6 +805,8 @@
         <field name="account_collected_id" ref="p154015"/>
         <field name="account_paid_id" ref="p154015"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_sec_hig_edu"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_sec_hig_edu"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="parent_id" ref="account_tax_exic6_pur"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
@@ -649,6 +822,10 @@
         <field name="account_paid_id" ref="p24740"/>
         <field name="base_code_id" ref="vat_code_tax_sale_ser12"/>
         <field name="tax_code_id" ref="vat_code_tax_rec_st12"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_sale_ser12"/>
+        <field name="ref_base_sign" eval="-1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec_st12"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
 
@@ -662,6 +839,8 @@
         <field name="account_collected_id" ref="p24740"/>
         <field name="account_paid_id" ref="p24740"/>
         <field name="tax_code_id" ref="vat_code_tax_rec_st2"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec_st2"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="parent_id" ref="account_tax_ser12_sale"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
@@ -676,6 +855,8 @@
         <field name="account_collected_id" ref="p24740"/>
         <field name="account_paid_id" ref="p24740"/>
         <field name="tax_code_id" ref="vat_code_tax_rec_st1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec_st1"/>
+        <field name="ref_tax_sign" eval="-1"/>
         <field name="parent_id" ref="account_tax_ser12_sale"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
