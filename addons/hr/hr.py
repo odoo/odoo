@@ -220,17 +220,19 @@ class hr_employee(osv.osv):
     def create(self, cr, uid, data, context=None):
         employee_id = super(hr_employee, self).create(cr, uid, data, context=context)
         employee = self.browse(cr, uid, employee_id, context=context)
-        try:
-            (model, mail_group_id) = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'group_all_employees')
-            self.pool.get('mail.group').message_post(cr, uid, [mail_group_id],
-                body=_('Welcome to %s! Please help him/her take the first steps with OpenERP!') % (employee.name),
-                subtype='mail.mt_comment', context=context)
-        except:
-            pass # group deleted: do not push a message
-
-        self.message_post(cr, uid, employee_id,
-            body=_('%s has joined the company.') % employee.name,
-            subtype='mail.mt_comment', context=context)
+        if employee.user_id:
+            # send a copy to every user of the company
+            company_id = employee.user_id.partner_id.company_id.id
+            partner_ids = self.pool.get('res.partner').search(cr, uid, [
+                ('company_id', '=', company_id),
+                ('user_ids', '!=', False)], context=context)
+        else:
+            partner_ids = []
+        self.message_post(cr, uid, [employee_id],
+            body=_('Welcome to %s! Please help him/her take the first steps with OpenERP!') % (employee.name),
+            partner_ids=partner_ids,
+            subtype='mail.mt_comment', context=context
+        )
         return employee_id
 
     def unlink(self, cr, uid, ids, context=None):
