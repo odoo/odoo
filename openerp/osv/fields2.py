@@ -21,7 +21,7 @@
 
 """ High-level objects for fields. """
 
-from datetime import date, datetime
+from copy import copy
 
 
 class Field(object):
@@ -42,6 +42,10 @@ class Field(object):
         for attr in kwargs:
             setattr(self, attr, kwargs[attr])
 
+    def copy(self):
+        """ make a copy of `self` (used for field inheritance among models) """
+        return copy(self)
+
     def set_model_name(self, model, name):
         """ assign the model and field names of `self` """
         self.model = model
@@ -49,7 +53,7 @@ class Field(object):
         if not self.string:
             self.string = name.replace('_', ' ').capitalize()
 
-    def make_column(self):
+    def to_column(self):
         """ return a low-level field object corresponding to `self` """
         raise NotImplementedError()
 
@@ -87,10 +91,7 @@ class Field(object):
 class Integer(Field):
     """ Integer field. """
 
-    def __init__(self, **kwargs):
-        super(Integer, self).__init__(**kwargs)
-
-    def make_column(self):
+    def to_column(self):
         attrs = ('string', 'help', 'readonly', 'required')
         kwargs = dict((attr, getattr(self, attr)) for attr in attrs)
         return fields.integer(**kwargs)

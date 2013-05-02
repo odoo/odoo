@@ -743,7 +743,7 @@ class BaseModel(object):
         for attr in dir(cls):
             value = getattr(cls, attr)
             if isinstance(value, Field):
-                field = copy.copy(value)
+                field = value.copy()
                 field.set_model_name(cls._name, attr)
 
                 # add field as an attribute and in _fields (for reflection)
@@ -752,7 +752,8 @@ class BaseModel(object):
 
                 # if stored, add a corresponding column in cls._columns
                 if field.store:
-                    cls._columns[attr] = field.make_column()
+                    _logger.debug("Create column for field %s.%s", cls._name, attr)
+                    cls._columns[attr] = field.to_column()
 
                 # retrieve field dependencies
                 if field.compute:
@@ -774,8 +775,8 @@ class BaseModel(object):
         obj = object.__new__(cls)
         obj.__init__(pool, cr)
 
-        # check for name clashes between member and field names
-        for attr in sorted(set(dir(obj)) & set(obj._all_columns)):
+        # check for name clashes between member and column names
+        for attr in sorted(set(dir(obj)) & set(obj._all_columns) - set(obj._fields)):
             _logger.warning("Model %s has both a field and a member named %r", obj, attr)
 
         return obj
