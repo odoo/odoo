@@ -837,6 +837,9 @@ class mrp_production(osv.osv):
             if not production.product_lines:
                 if not self.action_compute(cr, uid, [production.id]):
                     res = False
+            for componant in production.bom_id.bom_lines:
+                if componant.product_id.type == 'service' and not production.move_lines or not production.move_lines2:
+                    res=False                    
         return res
 
     def _get_auto_picking(self, cr, uid, production):
@@ -983,7 +986,10 @@ class mrp_production(osv.osv):
         for production in self.browse(cr, uid, ids, context=context):
             shipment_id = self._make_production_internal_shipment(cr, uid, production, context=context)
             produce_move_id = self._make_production_produce_line(cr, uid, production, context=context)
-
+            for componant in production.bom_id.bom_lines:
+                if componant.product_id.type == 'service' and not production.move_lines or not production.move_lines2:
+                    wf_service.trg_validate(uid, 'mrp.production', shipment_id, 'button_confirm', cr)
+                    production.write({'state':'confirmed'}, context=context)
             # Take routing location as a Source Location.
             source_location_id = production.location_src_id.id
             if production.bom_id.routing_id and production.bom_id.routing_id.location_id:
@@ -994,9 +1000,6 @@ class mrp_production(osv.osv):
                 shipment_move_id = self._make_production_internal_shipment_line(cr, uid, line, shipment_id, consume_move_id,\
                                  destination_location_id=source_location_id, context=context)
                 self._make_production_line_procurement(cr, uid, line, shipment_move_id, context=context)
-            for componant in production.bom_id.bom_lines:
-                if componant.product_id.type == 'service' and not production.move_lines or not production.move_lines2:
-                    wf_service.trg_validate(uid, 'mrp.production', shipment_id, 'button_confirm', cr)
             wf_service.trg_validate(uid, 'stock.picking', shipment_id, 'button_confirm', cr)
             production.write({'state':'confirmed'}, context=context)
         return shipment_id
