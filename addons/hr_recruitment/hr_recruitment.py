@@ -506,7 +506,9 @@ class hr_job(osv.osv):
         res = {}
         for position in self.browse(cr, uid, ids, context=context):
             res[position.id] = {}
-            priority1, priority2, priority3 = 0
+            priority1 = 0
+            priority2 = 0
+            priority3 = 0
             rate_ids = applicant_obj.search(cr, uid, [('job_id', '=', position.id)], context=context)
             for applicant in applicant_obj.browse(cr, uid, rate_ids, context=context):
                 if applicant.job_id.id == position.id:
