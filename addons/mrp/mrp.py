@@ -841,8 +841,8 @@ class mrp_production(osv.osv):
                 if not self.action_compute(cr, uid, [production.id]):
                     res = False
             for componant in production.bom_id.bom_lines:
-                if componant.product_id.type == 'service' and not production.move_lines and not production.move_lines2:
-                    res=False                    
+                if componant.product_id.type == 'service' and not production.move_lines:
+                    res=True 
         return res
 
     def _get_auto_picking(self, cr, uid, production):
@@ -989,9 +989,6 @@ class mrp_production(osv.osv):
         for production in self.browse(cr, uid, ids, context=context):
             shipment_id = self._make_production_internal_shipment(cr, uid, production, context=context)
             produce_move_id = self._make_production_produce_line(cr, uid, production, context=context)
-            for componant in production.bom_id.bom_lines:
-                if componant.product_id.type == 'service' and not production.move_lines and not production.move_lines2:
-                    wf_service.trg_validate(uid, 'mrp.production', shipment_id, 'button_confirm', cr)
             # Take routing location as a Source Location.
             source_location_id = production.location_src_id.id
             if production.bom_id.routing_id and production.bom_id.routing_id.location_id:
