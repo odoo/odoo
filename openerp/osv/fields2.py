@@ -23,7 +23,7 @@
 
 from copy import copy
 
-from openerp.tools import float_round
+from openerp.tools import float_round, ustr
 
 
 class MetaField(type):
@@ -179,6 +179,90 @@ class Float(Field):
             return float_round(float(value or 0.0), precision_digits=self.digits[1])
         else:
             return float(value or 0.0)
+
+
+class Char(Field):
+    """ Char field. """
+    type = 'char'
+    size = None
+
+    @classmethod
+    def from_column(cls, column):
+        attrs = ('string', 'help', 'readonly', 'required', 'size')
+        kwargs = dict((attr, getattr(column, attr)) for attr in attrs)
+        return cls(**kwargs)
+
+    def to_column(self):
+        attrs = ('string', 'help', 'readonly', 'required', 'size')
+        kwargs = dict((attr, getattr(self, attr)) for attr in attrs)
+        return fields.char(**kwargs)
+
+    def record_to_cache(self, value):
+        return bool(value) and ustr(value)[:self.size]
+
+
+class Text(Field):
+    """ Text field. """
+    type = 'text'
+
+    @classmethod
+    def from_column(cls, column):
+        attrs = ('string', 'help', 'readonly', 'required')
+        kwargs = dict((attr, getattr(column, attr)) for attr in attrs)
+        return cls(**kwargs)
+
+    def to_column(self):
+        attrs = ('string', 'help', 'readonly', 'required')
+        kwargs = dict((attr, getattr(self, attr)) for attr in attrs)
+        return fields.char(**kwargs)
+
+
+class Html(Field):
+    """ Html field. """
+    type = 'html'
+
+    @classmethod
+    def from_column(cls, column):
+        attrs = ('string', 'help', 'readonly', 'required')
+        kwargs = dict((attr, getattr(column, attr)) for attr in attrs)
+        return cls(**kwargs)
+
+    def to_column(self):
+        attrs = ('string', 'help', 'readonly', 'required')
+        kwargs = dict((attr, getattr(self, attr)) for attr in attrs)
+        return fields.html(**kwargs)
+
+
+class Date(Field):
+    """ Date field. """
+    type = 'date'
+
+    @classmethod
+    def from_column(cls, column):
+        attrs = ('string', 'help', 'readonly', 'required')
+        kwargs = dict((attr, getattr(column, attr)) for attr in attrs)
+        return cls(**kwargs)
+
+    def to_column(self):
+        attrs = ('string', 'help', 'readonly', 'required')
+        kwargs = dict((attr, getattr(self, attr)) for attr in attrs)
+        return fields.date(**kwargs)
+
+
+class Datetime(Field):
+    """ Datetime field. """
+    type = 'datetime'
+
+    @classmethod
+    def from_column(cls, column):
+        attrs = ('string', 'help', 'readonly', 'required')
+        kwargs = dict((attr, getattr(column, attr)) for attr in attrs)
+        return cls(**kwargs)
+
+    def to_column(self):
+        attrs = ('string', 'help', 'readonly', 'required')
+        kwargs = dict((attr, getattr(self, attr)) for attr in attrs)
+        return fields.datetime(**kwargs)
 
 
 # imported here to avoid dependency cycle issues
