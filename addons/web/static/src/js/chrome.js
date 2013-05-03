@@ -950,6 +950,10 @@ instance.web.Menu =  instance.web.Widget.extend({
     },
     do_load_needaction: function (menu_ids) {
         var self = this;
+        menu_ids = _.reject(menu_ids, _.isEmpty);
+        if (_.isEmpty(menu_ids)) {
+            return $.when();
+        }
         return this.rpc("/web/menu/load_needaction", {'menu_ids': menu_ids}).done(function(r) {
             self.on_needaction_loaded(r);
         });
@@ -1087,9 +1091,11 @@ instance.web.Menu =  instance.web.Widget.extend({
     },
     do_reload_needaction: function () {
         var self = this;
-        self.do_load_needaction([self.current_menu]).then(function () {
-            self.trigger("need_action_reloaded");
-        });
+        if (self.current_menu) {
+            self.do_load_needaction([self.current_menu]).then(function () {
+                self.trigger("need_action_reloaded");
+            });
+        }
     },
     /**
      * Jquery event handler for menu click
