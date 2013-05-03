@@ -989,7 +989,6 @@ class mrp_production(osv.osv):
             for componant in production.bom_id.bom_lines:
                 if componant.product_id.type == 'service' and not production.move_lines or not production.move_lines2:
                     wf_service.trg_validate(uid, 'mrp.production', shipment_id, 'button_confirm', cr)
-                    production.write({'state':'confirmed'}, context=context)
             # Take routing location as a Source Location.
             source_location_id = production.location_src_id.id
             if production.bom_id.routing_id and production.bom_id.routing_id.location_id:
