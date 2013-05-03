@@ -33,8 +33,6 @@ class MetaField(type):
     def __init__(cls, name, bases, attrs):
         super(MetaField, cls).__init__(name, bases, attrs)
         if cls.type:
-            assert cls.from_column.im_func != Field.from_column.im_func, \
-                "Class %s must define a class method 'from_column'." % name
             cls._class_by_type[cls.type] = cls
 
 
@@ -55,6 +53,9 @@ class Field(object):
     readonly = False
     required = False
 
+    # attributes passed when converting from/to a column
+    _attrs = ('string', 'help', 'readonly', 'required')
+
     def __init__(self, **kwargs):
         for attr in kwargs:
             setattr(self, attr, kwargs[attr])
@@ -73,14 +74,20 @@ class Field(object):
     @classmethod
     def from_column(cls, column):
         """ return a field for the low-level field `column` """
-        try:
-            return cls._class_by_type[column._type].from_column(column)
-        except KeyError:
-            raise NotImplementedError()
+        if cls is Field:
+            # delegate to the Field subclass corresponding to the column type
+            if column._type in cls._class_by_type:
+                return cls._class_by_type[column._type].from_column(column)
+            else:
+                raise NotImplementedError()
+        # generic implementation for subclasses
+        kwargs = dict((attr, getattr(column, attr)) for attr in cls._attrs)
+        return cls(**kwargs)
 
     def to_column(self):
         """ return a low-level field object corresponding to `self` """
-        raise NotImplementedError()
+        kwargs = dict((attr, getattr(self, attr)) for attr in self._attrs)
+        return getattr(fields, self.type)(**kwargs)
 
     def __get__(self, instance, owner):
         """ read the value of field `self` for the record `instance` """
@@ -117,17 +124,6 @@ class Boolean(Field):
     """ Boolean field. """
     type = 'boolean'
 
-    @classmethod
-    def from_column(cls, column):
-        attrs = ('string', 'help', 'readonly', 'required')
-        kwargs = dict((attr, getattr(column, attr)) for attr in attrs)
-        return cls(**kwargs)
-
-    def to_column(self):
-        attrs = ('string', 'help', 'readonly', 'required')
-        kwargs = dict((attr, getattr(self, attr)) for attr in attrs)
-        return fields.boolean(**kwargs)
-
     def record_to_cache(self, value):
         return bool(value)
 
@@ -135,17 +131,6 @@ class Boolean(Field):
 class Integer(Field):
     """ Integer field. """
     type = 'integer'
-
-    @classmethod
-    def from_column(cls, column):
-        attrs = ('string', 'help', 'readonly', 'required')
-        kwargs = dict((attr, getattr(column, attr)) for attr in attrs)
-        return cls(**kwargs)
-
-    def to_column(self):
-        attrs = ('string', 'help', 'readonly', 'required')
-        kwargs = dict((attr, getattr(self, attr)) for attr in attrs)
-        return fields.integer(**kwargs)
 
     def record_to_cache(self, value):
         return int(value or 0)
@@ -155,23 +140,18 @@ class Float(Field):
     """ Float field. """
     type = 'float'
     digits = None                       # None, (precision, scale), or callable
+    _attrs = ('string', 'help', 'readonly', 'required', 'digits')
 
     @classmethod
     def from_column(cls, column):
-        attrs = ('string', 'help', 'readonly', 'required')
-        kwargs = dict((attr, getattr(column, attr)) for attr in attrs)
-        if column.digits:
-            kwargs['digits'] = column.digits
-        elif column.digits_compute:
-            kwargs['digits'] = column.digits_compute(scope.cr)
+        column.digits_change(scope.cr)      # determine column.digits
+        kwargs = dict((attr, getattr(column, attr)) for attr in cls._attrs)
         return cls(**kwargs)
 
     def to_column(self):
         if callable(self.digits):
             self.digits = self.digits(scope.cr)
-        attrs = ('string', 'help', 'readonly', 'required', 'digits')
-        kwargs = dict((attr, getattr(self, attr)) for attr in attrs)
-        return fields.float(**kwargs)
+        return super(Float, self).to_column()
 
     def record_to_cache(self, value):
         # apply rounding here, otherwise value in cache may be wrong!
@@ -185,17 +165,7 @@ class Char(Field):
     """ Char field. """
     type = 'char'
     size = None
-
-    @classmethod
-    def from_column(cls, column):
-        attrs = ('string', 'help', 'readonly', 'required', 'size')
-        kwargs = dict((attr, getattr(column, attr)) for attr in attrs)
-        return cls(**kwargs)
-
-    def to_column(self):
-        attrs = ('string', 'help', 'readonly', 'required', 'size')
-        kwargs = dict((attr, getattr(self, attr)) for attr in attrs)
-        return fields.char(**kwargs)
+    _attrs = ('string', 'help', 'readonly', 'required', 'size')
 
     def record_to_cache(self, value):
         return bool(value) and ustr(value)[:self.size]
@@ -205,64 +175,20 @@ class Text(Field):
     """ Text field. """
     type = 'text'
 
-    @classmethod
-    def from_column(cls, column):
-        attrs = ('string', 'help', 'readonly', 'required')
-        kwargs = dict((attr, getattr(column, attr)) for attr in attrs)
-        return cls(**kwargs)
-
-    def to_column(self):
-        attrs = ('string', 'help', 'readonly', 'required')
-        kwargs = dict((attr, getattr(self, attr)) for attr in attrs)
-        return fields.char(**kwargs)
-
 
 class Html(Field):
     """ Html field. """
     type = 'html'
-
-    @classmethod
-    def from_column(cls, column):
-        attrs = ('string', 'help', 'readonly', 'required')
-        kwargs = dict((attr, getattr(column, attr)) for attr in attrs)
-        return cls(**kwargs)
-
-    def to_column(self):
-        attrs = ('string', 'help', 'readonly', 'required')
-        kwargs = dict((attr, getattr(self, attr)) for attr in attrs)
-        return fields.html(**kwargs)
 
 
 class Date(Field):
     """ Date field. """
     type = 'date'
 
-    @classmethod
-    def from_column(cls, column):
-        attrs = ('string', 'help', 'readonly', 'required')
-        kwargs = dict((attr, getattr(column, attr)) for attr in attrs)
-        return cls(**kwargs)
-
-    def to_column(self):
-        attrs = ('string', 'help', 'readonly', 'required')
-        kwargs = dict((attr, getattr(self, attr)) for attr in attrs)
-        return fields.date(**kwargs)
-
 
 class Datetime(Field):
     """ Datetime field. """
     type = 'datetime'
-
-    @classmethod
-    def from_column(cls, column):
-        attrs = ('string', 'help', 'readonly', 'required')
-        kwargs = dict((attr, getattr(column, attr)) for attr in attrs)
-        return cls(**kwargs)
-
-    def to_column(self):
-        attrs = ('string', 'help', 'readonly', 'required')
-        kwargs = dict((attr, getattr(self, attr)) for attr in attrs)
-        return fields.datetime(**kwargs)
 
 
 # imported here to avoid dependency cycle issues

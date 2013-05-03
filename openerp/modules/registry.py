@@ -127,17 +127,17 @@ class Registry(Mapping):
         """
         models_to_load = [] # need to preserve loading order
 
-        # Instantiate registered classes (via the MetaModel automatic discovery
-        # or via explicit constructor call), and add them to the pool.
-        for cls in openerp.osv.orm.MetaModel.module_to_models.get(module.name, []):
-            # models register themselves in self.models
-            model = cls.create_instance(self, cr)
-            if model._name not in models_to_load:
-                # avoid double-loading models whose declaration is split
-                models_to_load.append(model._name)
-
-        # call hook after models have been instantiated
         with openerp.osv.scope.Scope(cr, SUPERUSER_ID, None):
+            # Instantiate registered classes (via the MetaModel automatic discovery
+            # or via explicit constructor call), and add them to the pool.
+            for cls in openerp.osv.orm.MetaModel.module_to_models.get(module.name, []):
+                # models register themselves in self.models
+                model = cls.create_instance(self, cr)
+                if model._name not in models_to_load:
+                    # avoid double-loading models whose declaration is split
+                    models_to_load.append(model._name)
+
+            # call hook after models have been instantiated
             for model in self.models.itervalues():
                 model.after_create_instance()
 
