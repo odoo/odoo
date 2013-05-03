@@ -140,7 +140,6 @@ class stock_picking(osv.osv):
         'weight_uom_id': lambda self,cr,uid,c: self._get_default_uom(cr,uid,c)
     }
 
-stock_picking()
 
 class stock_move(osv.osv):
     _inherit = 'stock.move'
@@ -184,7 +183,6 @@ class stock_move(osv.osv):
     _defaults = {
         'weight_uom_id': lambda self,cr,uid,c: self._get_default_uom(cr,uid,c)
     }
-stock_move()
 
 # Redefinition of the new fields in order to update the model stock.picking.out in the orm
 # FIXME: this is a temporary workaround because of a framework bug (ref: lp996816). It should be removed as soon as
@@ -215,7 +213,6 @@ class stock_picking_out(osv.osv):
         'carrier_tracking_ref': fields.char('Carrier Tracking Ref', size=32),
         'number_of_packages': fields.integer('Number of Packages'),
         }
-stock_picking_out()
 
 class stock_picking_in(osv.osv):
     _inherit = 'stock.picking.in'
@@ -238,7 +235,6 @@ class stock_picking_in(osv.osv):
                 'stock.move': (_get_picking_line, ['product_id','product_qty','product_uom','product_uos_qty'], 20),
                 }),
         }
-stock_picking_in()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
