@@ -840,9 +840,6 @@ class mrp_production(osv.osv):
             if not production.product_lines:
                 if not self.action_compute(cr, uid, [production.id]):
                     res = False
-            for componant in production.bom_id.bom_lines:
-                if componant.product_id.type == 'service' and not production.move_lines:
-                    res=True 
         return res
 
     def _get_auto_picking(self, cr, uid, production):
@@ -985,7 +982,6 @@ class mrp_production(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         uncompute_ids = filter(lambda x:x, [not x.product_lines and x.id or False for x in self.browse(cr, uid, ids, context=context)])
         self.action_compute(cr, uid, uncompute_ids, context=context)
-        
         for production in self.browse(cr, uid, ids, context=context):
             shipment_id = self._make_production_internal_shipment(cr, uid, production, context=context)
             produce_move_id = self._make_production_produce_line(cr, uid, production, context=context)

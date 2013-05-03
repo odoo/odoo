@@ -164,6 +164,13 @@ class StockPicking(osv.osv):
         for move in move_obj.browse(cr, uid, move_ids):
             todo.extend(move_obj._action_explode(cr, uid, move))
         return list(set(todo))
+    
+    def test_cancel(self, cr, uid, ids, context=None):
+        res = super(StockPicking, self).test_cancel(cr, uid, ids, context=context)
+        for pick in self.browse(cr, uid, ids, context=context):
+            if not pick.move_lines:
+                return False
+        return res    
 
 StockPicking()
 
