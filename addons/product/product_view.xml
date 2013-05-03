@@ -81,6 +81,7 @@
                                         <field name="type"/>
                                         <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
                                         <field name="list_price"/>
+                                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                                     </group>
                                     <group>
                                         <field name="default_code"/>
