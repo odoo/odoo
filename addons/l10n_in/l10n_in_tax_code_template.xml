@@ -48,6 +48,11 @@
             <field name="parent_id" ref="vat_code_base_tax_purchase"/>
         </record>
 
+        <record model="account.tax.code.template" id="vat_code_tax_pur_ser12">
+            <field name="name">Purchase Service Tax 12%</field>
+            <field name="parent_id" ref="vat_code_base_tax_purchase"/>
+        </record>
+
         <record model="account.tax.code.template" id="vat_code_tax_sale_ser12">
             <field name="name">Sales Service Tax 12%</field>
             <field name="parent_id" ref="vat_code_base_tax_sale"/>
@@ -74,7 +79,7 @@
         </record>
 
         <record model="account.tax.code.template" id="vat_code_tax_pay_ic_st_purbase">
-            <field name="name">Input Service Tax 12.36% - Purchase</field>
+            <field name="name">Excise Duty 12.36% - Purchase</field>
             <field name="parent_id" ref="vat_code_payable"/>
         </record>
 
@@ -519,32 +524,32 @@
         </record>
 
         <record model="account.tax.code.template" id="vat_code_base_tax_sale15">
-            <field name="name">Sale Tax 15%</field>
+            <field name="name">Sales Tax 15%</field>
             <field name="parent_id" ref="vat_code_base_tax_sale"/>
         </record>
 
         <record model="account.tax.code.template" id="vat_code_rec_sale15">
-            <field name="name">Sale Tax - 15%</field>
+            <field name="name">Sales Tax - 15%</field>
             <field name="parent_id" ref="vat_code_tax_rec"/>
         </record>
 
         <record model="account.tax.code.template" id="vat_code_base_tax_sale12">
-            <field name="name">Sale Tax 12%</field>
+            <field name="name">Sales Tax 12%</field>
             <field name="parent_id" ref="vat_code_base_tax_sale"/>
         </record>
 
         <record model="account.tax.code.template" id="vat_code_rec_sale12">
-            <field name="name">Sale Tax - 12%</field>
+            <field name="name">Sales Tax - 12%</field>
             <field name="parent_id" ref="vat_code_tax_rec"/>
         </record>
 
         <record model="account.tax.code.template" id="vat_code_base_tax_sale4">
-            <field name="name">Sale Tax 4%</field>
+            <field name="name">Sales Tax 4%</field>
             <field name="parent_id" ref="vat_code_base_tax_sale"/>
         </record>
 
         <record model="account.tax.code.template" id="vat_code_rec_sale4">
-            <field name="name">Sale Tax - 4%</field>
+            <field name="name">Sales Tax - 4%</field>
             <field name="parent_id" ref="vat_code_tax_rec"/>
         </record>
 

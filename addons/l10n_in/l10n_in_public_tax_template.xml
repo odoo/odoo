@@ -107,17 +107,17 @@
     </record>
 
     <record id="account_tax_ic_st" model="account.tax.template">
-        <field name="name">Input Service Tax 12%</field>
-        <field name="description">Input Service Tax 12%</field>
+        <field name="name">Service Tax 12% - Purchase</field>
+        <field name="description">Service Tax 12% - Purchase</field>
         <field name="type_tax_use">purchase</field>
         <field name="type">percent</field>
         <field name="amount">0.1200</field>
         <field name="sequence">1</field>
         <field name="account_collected_id" ref="p154008"/>
         <field name="account_paid_id" ref="p154008"/>
-        <field name="base_code_id" ref="vat_code_tax_pur_exp_act"/>
+        <field name="base_code_id" ref="vat_code_tax_pur_ser12"/>
         <field name="tax_code_id" ref="vat_code_tax_pay_ic_st"/>
-        <field name="ref_base_code_id" ref="vat_code_tax_pur_exp_act"/>
+        <field name="ref_base_code_id" ref="vat_code_tax_pur_ser12"/>
         <field name="ref_base_sign" eval="-1"/>
         <field name="ref_tax_code_id" ref="vat_code_tax_pay_ic_st"/>
         <field name="ref_tax_sign" eval="-1"/>
@@ -125,8 +125,8 @@
     </record>
 
     <record id="account_tax_in_edu_cess_st" model="account.tax.template">
-        <field name="name">Input Service Tax Edu. Cess. 2%</field>
-        <field name="description">Input Service Tax Edu. Cess. 2%</field>
+        <field name="name">Service Tax Edu. Cess. 2% - Purchase</field>
+        <field name="description">Service Tax Edu. Cess. 2% - Purchase</field>
         <field name="type_tax_use">purchase</field>
         <field name="type">percent</field>
         <field name="amount">0.0200</field>
@@ -141,8 +141,8 @@
     </record>
 
     <record id="account_tax_in_credit_ser_tax_seco_hec" model="account.tax.template">
-        <field name="name">Input Service Tax Seco. &amp; HEC 1%</field>
-        <field name="description">Input Service Tax Seco. &amp; HEC 1%</field>
+        <field name="name">Service Tax Seco. &amp; HEC 1% - Purchase</field>
+        <field name="description">Service Tax Seco. &amp; HEC 1% - Purchase</field>
         <field name="type_tax_use">purchase</field>
         <field name="type">percent</field>
         <field name="amount">0.0100</field>
@@ -472,10 +472,10 @@
         <field name="account_collected_id" ref="p154026"/>
         <field name="account_paid_id" ref="p154026"/>
         <field name="base_code_id" ref="vat_code_tax_pur_vat4"/>
-        <field name="tax_code_id" ref="vat_code_tax_rec_add_vat1"/>
+        <field name="tax_code_id" ref="vat_code_tax_pay_add_vat1"/>
         <field name="ref_base_code_id" ref="vat_code_tax_pur_vat4"/>
         <field name="ref_base_sign" eval="-1"/>
-        <field name="ref_tax_code_id" ref="vat_code_tax_rec_add_vat1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_pay_add_vat1"/>
         <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
@@ -526,10 +526,10 @@
         <field name="account_collected_id" ref="p247004"/>
         <field name="account_paid_id" ref="p247004"/>
         <field name="base_code_id" ref="vat_code_tax_sal_vat4"/>
-        <field name="tax_code_id" ref="vat_code_tax_pay_add_vat1"/>
+        <field name="tax_code_id" ref="vat_code_tax_rec_add_vat1"/>
         <field name="ref_base_code_id" ref="vat_code_tax_sal_vat4"/>
         <field name="ref_base_sign" eval="-1"/>
-        <field name="ref_tax_code_id" ref="vat_code_tax_pay_add_vat1"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec_add_vat1"/>
         <field name="ref_tax_sign" eval="-1"/>
         <field name="chart_template_id" ref="indian_chart_template_public"/>
     </record>
@@ -628,7 +628,7 @@
     <record id="account_tax_no_form_h" model="account.tax.template">
         <field name="name">No Tax Form H</field>
         <field name="description">No Tax Form H</field>
-        <field name="type_tax_use">purchase</field>
+        <field name="type_tax_use">sale</field>
         <field name="type">percent</field>
         <field name="amount">0.02</field>
         <field name="base_code_id" ref="vat_code_tax_sal_exp_ct1"/>
@@ -643,7 +643,7 @@
     <record id="account_tax_cst2_sale_cst3_against_c" model="account.tax.template">
         <field name="name">CST 2% on Sales - CT3  Against Form - C</field>
         <field name="description">CST 2% on Sales - CT3  Against Form - C</field>
-        <field name="type_tax_use">purchase</field>
+        <field name="type_tax_use">sale</field>
         <field name="type">percent</field>
         <field name="amount">0.02</field>
         <field name="account_collected_id" ref="p247007"/>
@@ -660,7 +660,7 @@
     <record id="account_tax_out_vat4_sal_ct3" model="account.tax.template">
         <field name="name">Output VAT 4% on Sales - CT3</field>
         <field name="description">Output VAT 4% on Sales - CT3</field>
-        <field name="type_tax_use">purchase</field>
+        <field name="type_tax_use">sale</field>
         <field name="type">percent</field>
         <field name="amount">0.04</field>
         <field name="account_collected_id" ref="p247008"/>
@@ -677,7 +677,7 @@
     <record id="account_tax_out_add1_sal_ct3" model="account.tax.template">
         <field name="name">Output Adi. VAT 1% on Sales - CT3</field>
         <field name="description">Output Adi. VAT 1% on Sales - CT3</field>
-        <field name="type_tax_use">purchase</field>
+        <field name="type_tax_use">sale</field>
         <field name="type">percent</field>
         <field name="amount">0.01</field>
         <field name="account_collected_id" ref="p247009"/>
@@ -694,7 +694,7 @@
     <record id="account_no_tax_sez_ogs" model="account.tax.template">
         <field name="name">No Tax SEZ OGS</field>
         <field name="description">No Tax SEZ OGS</field>
-        <field name="type_tax_use">purchase</field>
+        <field name="type_tax_use">sale</field>
         <field name="type">fixed</field>
         <field name="base_code_id" ref="vat_code_tax_sal_sez_out_guj"/>
         <field name="tax_code_id" ref="vat_code_tax_no_saz_ogs"/>
@@ -708,7 +708,7 @@
     <record id="account_no_tax_sez_guj" model="account.tax.template">
         <field name="name">No Tax SEZ Gujarat</field>
         <field name="description">No Tax SEZ Gujarat</field>
-        <field name="type_tax_use">purchase</field>
+        <field name="type_tax_use">sale</field>
         <field name="type">percent</field>
         <field name="base_code_id" ref="vat_code_tax_sal_sez_in_guj"/>
         <field name="tax_code_id" ref="vat_code_tax_no_sez_guj"/>
@@ -722,7 +722,7 @@
     <record id="account_no_tax_h_with_bed" model="account.tax.template">
         <field name="name">No Tax Form H with BED</field>
         <field name="description">No Tax Form H with BED</field>
-        <field name="type_tax_use">purchase</field>
+        <field name="type_tax_use">sale</field>
         <field name="type">percent</field>
         <field name="base_code_id" ref="vat_code_tax_sal_formh_tax"/>
         <field name="tax_code_id" ref="vat_code_tax_rec_formh_bed"/>
@@ -736,7 +736,7 @@
     <record id="account_no_tax_export_out_country" model="account.tax.template">
         <field name="name">No Tax Exports - Out of Country</field>
         <field name="description">No Tax Exports - Out of Country</field>
-        <field name="type_tax_use">purchase</field>
+        <field name="type_tax_use">sale</field>
         <field name="type">percent</field>
         <field name="base_code_id" ref="vat_code_tax_sal_out_country"/>
         <field name="tax_code_id" ref="vat_code_tax_rec_no_out_country"/>
@@ -750,7 +750,7 @@
     <record id="account_no_tax_proj" model="account.tax.template">
         <field name="name">No Tax Projects</field>
         <field name="description">No Tax Projects</field>
-        <field name="type_tax_use">purchase</field>
+        <field name="type_tax_use">sale</field>
         <field name="type">percent</field>
         <field name="base_code_id" ref="vat_code_tax_sal_proj"/>
         <field name="tax_code_id" ref="vat_code_tax_rec_no_proj"/>
@@ -798,7 +798,7 @@
     <record id="account_tax_exice6_seco_high_cess_pur" model="account.tax.template">
         <field name="name">Seco. &amp; Higher Edu. Cess 1% Purchase</field>
         <field name="description">Seco. &amp; Higher Edu. Cess 1% Purchase</field>
-        <field name="type_tax_use">all</field>
+        <field name="type_tax_use">purchase</field>
         <field name="type">percent</field>
         <field name="amount">0.0100</field>
         <field name="sequence">22</field>
