@@ -24,26 +24,22 @@
     margin: 10px;
 }
 .openerp .oe_kanban_view .oe_kanban_crm_salesteams .oe_items_list div {
-    width: 120px;
+    width: 160px;
     height: 22px;
     margin: 0;
-}
-.openerp .oe_kanban_view .oe_kanban_crm_salesteams .oe_items_list div:nth-child(2n) {
-    position: absolute;
-    right: 0px;
-}
-.openerp .oe_kanban_view .oe_kanban_crm_salesteams .oe_items_list div:nth-child(2n) a {
     position: relative;
-    top: -20px;
-}
-.openerp .oe_kanban_view .oe_kanban_crm_salesteams .oe_kanban_content > div {
-    clear: both;
-}
-.openerp .oe_kanban_view .oe_kanban_crm_salesteams .oe_items_list div a:first-child {
-    width: 80px;
+    display: inline-block;
 }
 .openerp .oe_kanban_view .oe_kanban_crm_salesteams .oe_items_list a:hover {
     text-decoration: underline !important;
+}
+.openerp .oe_kanban_view .oe_kanban_crm_salesteams .oe_items_list div a:nth-child(2n) {
+    position: absolute;
+    left: 90px;
+    top: 0;
+}
+.openerp .oe_kanban_view .oe_kanban_crm_salesteams .oe_items_list div:nth-child(2n) a:nth-child(2n) {
+    left: 110px;
 }
 .openerp .oe_kanban_view .oe_kanban_crm_salesteams .oe_center {
     text-align: center;
@@ -63,6 +59,6 @@
 }
 
 .openerp .oe_kanban_view .oe_sparkline_bar {
-    float: right;
     height: 20px;
+    width: 36px;
 }
