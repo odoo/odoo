@@ -838,7 +838,7 @@ class mrp_production(osv.osv):
                 if not self.action_compute(cr, uid, [production.id]):
                     res = False
             for componant in production.bom_id.bom_lines:
-                if componant.product_id.type == 'service' and not production.move_lines or not production.move_lines2:
+                if componant.product_id.type == 'service' and not production.move_lines and not production.move_lines2:
                     res=False                    
         return res
 
