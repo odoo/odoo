@@ -126,3 +126,23 @@ class TestNewFields(common.TransactionCase):
         with self.assertRaises(ValueError):
             alpha.date = '12-5-1'
 
+    def test_selection(self):
+        """ test selection fields """
+        # find a partner
+        alpha = self.Partner.search([], limit=1)[0]
+
+        # one may assign False or None
+        alpha.type = None
+        self.assertIs(alpha.type, False)
+
+        # one may assign a value, and it must be checked
+        alpha.type = 'delivery'
+        with self.assertRaises(ValueError):
+            alpha.type = 'notacorrectvalue'
+
+        # same with dynamic selections
+        for language in self.registry('res.lang').search([]):
+            alpha.lang = language.code
+        with self.assertRaises(ValueError):
+            alpha.lang = 'zz_ZZ'
+

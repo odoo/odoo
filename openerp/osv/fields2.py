@@ -21,6 +21,7 @@
 
 """ High-level objects for fields. """
 
+import base64
 from copy import copy
 from datetime import date, datetime
 
@@ -58,7 +59,8 @@ class Field(object):
     # attributes passed when converting from/to a column
     _attrs = ('string', 'help', 'readonly', 'required')
 
-    def __init__(self, **kwargs):
+    def __init__(self, string=None, **kwargs):
+        kwargs['string'] = string
         for attr in kwargs:
             setattr(self, attr, kwargs[attr])
 
@@ -210,6 +212,58 @@ class Datetime(Field):
             value = value.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         elif value:
             datetime.strptime(value, DEFAULT_SERVER_DATETIME_FORMAT)    # check format
+        return value or False
+
+
+class Binary(Field):
+    """ Binary field. """
+    type = 'binary'
+
+    def record_to_cache(self, value):
+        if value:
+            base64.b64decode(value)             # check value format
+        return value or False
+
+
+class Selection(Field):
+    """ Selection field. """
+    type = 'selection'
+    selection = None        # [(value, string), ...], model method or method name
+    _attrs = ('string', 'help', 'readonly', 'required', 'selection')
+
+    def __init__(self, selection, string=None, **kwargs):
+        """ Selection field.
+
+            :param selection: specifies the possible values for this field.
+                It is given as either a list of pairs (`value`, `string`), or a
+                model method, or a method name.
+        """
+        super(Selection, self).__init__(selection=selection, string=string, **kwargs)
+
+    def to_column(self):
+        kwargs = dict((attr, getattr(self, attr)) for attr in self._attrs)
+        if isinstance(self.selection, basestring):
+            # retrieve the method instead of its name
+            model_class = scope.model(self.model).__class__
+            kwargs['selection'] = getattr(model_class, self.selection)
+        return fields.selection(**kwargs)
+
+    def get_selection(self):
+        """ return the selection as a list of pairs """
+        value = self.selection
+        if isinstance(value, basestring):
+            return getattr(scope.model(self.model), value)()
+        elif callable(value):
+            return value(scope.model(self.model))
+        else:
+            return value
+
+    def record_to_cache(self, value):
+        if value:
+            values = [item[0] for item in self.get_selection()]
+            if value not in values:
+                msg = "Wrong value for %s.%s: %r not in %r"
+                raise ValueError(msg % (self.model, self.name, value, values))
         return value or False
 
 
