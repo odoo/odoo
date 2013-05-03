@@ -180,7 +180,7 @@ class survey_question_wiz(osv.osv_memory):
             first = False
 
     def _view_field_rating_scale(self, cr, uid, xml_group, fields, readonly, que, que_rec, context=None):
-        self._view_field_matrix_of_choices_only_one_ans(xml_group, fields, readonly, que, que_rec)
+        self._view_field_matrix_of_choices_only_one_ans(cr, uid, xml_group, fields, readonly, que, que_rec, context)
 
     def _view_field_postprocessing(self, cr, uid, xml_group, fields, readonly, que, que_rec, context=None):
         # after matrix of choices
