@@ -40,7 +40,8 @@ class product_product (osv.osv):
 
     def get_stock_matchings_fifolifo(self, cr, uid, ids, qty, fifo, product_uom_id = False, currency_id = False, context=None):
         '''
-            This method returns a list of tuples for which the stock moves are working fifo/lifo:
+            This method returns a list of tuples with quantities from stock in moves
+            These are the quantities that would go out theoretically according to the fifo or lifo method if qty needs to go out
             (move_in_id, qty in uom of move out, price (converted to move out), qty in uom of move in
             This should be called for only one product at a time
             UoMs and currencies from the corresponding moves are converted towards that given in the params
@@ -77,13 +78,12 @@ class product_product (osv.osv):
         for move in move_obj.browse(cr, uid, move_in_ids, context=context):
             #Convert to UoM of product each time
             uom_from = move.product_uom.id
-            qty_from = move.product_qty
+            qty_from = move.qty_remaining
             product_qty = uom_obj._compute_qty(cr, uid, uom_from, qty_from, product_uom_id)
             #Convert currency from in move currency id to out move currency
             if move.price_currency_id and (move.price_currency_id.id != currency_id):
                 new_price = currency_obj.compute(cr, uid, move.price_currency_id.id, currency_id, 
                                                  move.price_unit)
-
             else:
                 new_price = move.price_unit
             new_price = uom_obj._compute_price(cr, uid, uom_from, new_price,
@@ -142,10 +142,10 @@ class stock_move(osv.osv):
                 product = product_obj.browse(cr, uid, move.product_id.id, context=ctx)
             cost_method = product.cost_method
             
-            if move.picking_id.type == 'out' and cost_method in ['fifo', 'lifo'] and not move.move_returned_from:
+            if move.picking_id.type == 'out' and cost_method in ['fifo', 'lifo']:
                 #get_stock_matchings will convert to currency and UoM of this stock move
                 tuples = product_obj.get_stock_matchings_fifolifo(cr, uid, [product.id], product_qty, cost_method == 'fifo', 
-                                                                  product_uom, move.price_currency_id, context=context)
+                                                                  product_uom, move.price_currency_id.id, context=context)
                 price_amount = 0.0
                 amount = 0.0
                 move_currency_id = move.company_id.currency_id.id
@@ -157,6 +157,7 @@ class stock_move(osv.osv):
                     move_in = self.browse(cr, uid, match[0], context=context)
                     #Reduce remaining quantity
                     self.write(cr, uid, match[0], { 'qty_remaining': move_in.qty_remaining - match[3]}, context=context)
+                    
                     price_amount += match[1] * match[2]
                     amount += match[1]
                 self.write(cr, uid, move.id, {'price_unit': price_amount / amount}, context=context)
@@ -177,7 +178,7 @@ class stock_move(osv.osv):
                 product_obj.write(cr, uid, product.id, {'standard_price': new_price / product_qty}, context=ctx)
             # When the move is products returned to supplier or return products from customer
             # then the price should be the price from the original move
-            elif cost_method in ['fifo', 'lifo']: #if move.move_returned_from and cost_method in ['fifo', 'lifo']: 
+            elif cost_method in ['fifo', 'lifo']:  
                 self.write(cr, uid, [move.id],
                             {'price_unit': product_price,
                              'price_currency_id': product_currency})
