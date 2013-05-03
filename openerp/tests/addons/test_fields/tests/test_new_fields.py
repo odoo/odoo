@@ -2,6 +2,8 @@
 # test cases for new-style fields
 #
 
+from datetime import date, datetime
+
 from openerp.tests import common
 
 
@@ -90,8 +92,8 @@ class TestNewFields(common.TransactionCase):
 
     def test_float(self):
         """ test float fields """
-        # find partners with children
-        alpha, = self.Partner.search([], limit=1)
+        # find a partner
+        alpha = self.Partner.search([], limit=1)[0]
 
         # assign value, and expect rounding
         alpha.write({'some_float_field': 2.4999999999999996})
@@ -100,4 +102,27 @@ class TestNewFields(common.TransactionCase):
         # same with field setter
         alpha.some_float_field = 2.4999999999999996
         self.assertEqual(alpha.some_float_field, 2.50)
+
+    def test_date(self):
+        """ test date fields """
+        # find a partner
+        alpha = self.Partner.search([], limit=1)[0]
+
+        # one may assign False or None
+        alpha.date = None
+        self.assertIs(alpha.date, False)
+
+        # one may assign date and datetime objects
+        alpha.date = date(2012, 05, 01)
+        self.assertEqual(alpha.date, '2012-05-01')
+
+        alpha.date = datetime(2012, 05, 01, 10, 45, 00)
+        self.assertEqual(alpha.date, '2012-05-01')
+
+        # one may assign dates in the default format, and it must be checked
+        alpha.date = '2012-05-01'
+        self.assertEqual(alpha.date, '2012-05-01')
+
+        with self.assertRaises(ValueError):
+            alpha.date = '12-5-1'
 

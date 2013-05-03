@@ -22,8 +22,10 @@
 """ High-level objects for fields. """
 
 from copy import copy
+from datetime import date, datetime
 
-from openerp.tools import float_round, ustr
+from openerp.tools import float_round, ustr, html_sanitize
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
 
 class MetaField(type):
@@ -175,20 +177,40 @@ class Text(Field):
     """ Text field. """
     type = 'text'
 
+    def record_to_cache(self, value):
+        return bool(value) and ustr(value)
+
 
 class Html(Field):
     """ Html field. """
     type = 'html'
+
+    def record_to_cache(self, value):
+        return bool(value) and html_sanitize(value)
 
 
 class Date(Field):
     """ Date field. """
     type = 'date'
 
+    def record_to_cache(self, value):
+        if isinstance(value, (date, datetime)):
+            value = value.strftime(DEFAULT_SERVER_DATE_FORMAT)
+        elif value:
+            datetime.strptime(value, DEFAULT_SERVER_DATE_FORMAT)    # check format
+        return value or False
+
 
 class Datetime(Field):
     """ Datetime field. """
     type = 'datetime'
+
+    def record_to_cache(self, value):
+        if isinstance(value, (date, datetime)):
+            value = value.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        elif value:
+            datetime.strptime(value, DEFAULT_SERVER_DATETIME_FORMAT)    # check format
+        return value or False
 
 
 # imported here to avoid dependency cycle issues
