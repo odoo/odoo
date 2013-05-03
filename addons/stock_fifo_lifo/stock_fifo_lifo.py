@@ -83,7 +83,7 @@ class product_product (osv.osv):
             #Convert currency from in move currency id to out move currency
             if move.price_currency_id and (move.price_currency_id.id != currency_id):
                 new_price = currency_obj.compute(cr, uid, move.price_currency_id.id, currency_id, 
-                                                 move.price_unit)
+                                                 move.price_unit, round=False)
             else:
                 new_price = move.price_unit
             new_price = uom_obj._compute_price(cr, uid, uom_from, new_price,
@@ -161,7 +161,8 @@ class stock_move(osv.osv):
                     price_amount += match[1] * match[2]
                     amount += match[1]
                 self.write(cr, uid, move.id, {'price_unit': price_amount / amount}, context=context)
-                
+                print price_amount
+                print amount
                 #This price has to be put as the new standard price for the product, but needs to be converted to product UoM and currency
                 #convert uom of qty
                 uom_id = product.uom_id.id
