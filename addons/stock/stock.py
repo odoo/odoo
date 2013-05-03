@@ -2263,7 +2263,7 @@ class stock_move(osv.osv):
         
         #I use 
         if move.product_id.cost_method != 'standard' and move.price_unit:
-            reference_amount = qty * move.price_unit
+            reference_amount = move.product_qty * move.price_unit #Using move.price_qty instead of qty to have correct amount
             reference_currency_id = move.price_currency_id.id or reference_currency_id
 
         # Otherwise we default to the company's valuation price type, considering that the values of the
@@ -2331,7 +2331,6 @@ class stock_move(osv.osv):
                     account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, acc_dest, acc_valuation, reference_amount, reference_currency_id, context))]
                 else:
                     account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, acc_src, acc_valuation, reference_amount, reference_currency_id, context))]
-
             move_obj = self.pool.get('account.move')
             for j_id, move_lines in account_moves:
                 move_obj.create(cr, uid,
@@ -2436,7 +2435,7 @@ class stock_move(osv.osv):
             # fix credit line:
             credit_line_vals['credit'] = cur_obj.compute(cr, uid, reference_currency_id, src_main_currency_id, reference_amount, context=context)
             if (not src_acct.currency_id) or src_acct.currency_id.id == reference_currency_id:
-                credit_line_vals.update(currency_id=reference_currency_id, amount_currency=reference_amount)
+                credit_line_vals.update(currency_id=reference_currency_id, amount_currency=-reference_amount)
         if reference_currency_id != dest_main_currency_id:
             # fix debit line:
             debit_line_vals['debit'] = cur_obj.compute(cr, uid, reference_currency_id, dest_main_currency_id, reference_amount, context=context)

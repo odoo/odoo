@@ -11,13 +11,13 @@
     uom_id: product.product_uom_kgm
     uom_po_id: product.product_uom_kgm
     procure_method: make_to_stock
-    valuation: real_time
     cost_method: fifo
+    valuation: real_time
     property_stock_account_input: account.o_expense
     property_stock_account_output: account.o_income
     description: FIFO Ice Cream can be mass-produced and thus is widely available in developed parts of the world. Ice cream can be purchased in large cartons (vats and squrounds) from supermarkets and grocery stores, in smaller quantities from ice cream shops, convenience stores, and milk bars, and in individual servings from small carts or vans at public events.
 - 
-  I create a draft Purchase Order for first in move for 10 pieces at 60 euro
+  I create a draft Purchase Order for first in move for 10 kg at 60 euro
 - 
   !record {model: purchase.order, id: purchase_order_fifo1}:
     partner_id: base.res_partner_3
@@ -30,7 +30,7 @@
         price_unit: 50.0
         name: 'FIFO Ice Cream'
 - 
-  I create a draft Purchase Order for second shipment for 30 pieces at 80 euro
+  I create a draft Purchase Order for second shipment for 30 kg at 80 euro
 - 
   !record {model: purchase.order, id: purchase_order_fifo2}:
     partner_id: base.res_partner_3
@@ -103,9 +103,9 @@
   !python {model: stock.partial.picking}: |
     partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [ref("outgoing_fifo_shipment")], 'default_type':'out'})
     self.do_partial(cr, uid, [partial_id])
--
+- 
   Check 2 stock move matchings were created
--
+- 
   !python {model: stock.picking}: |
     assert len(self.browse(cr, uid, ref("outgoing_fifo_shipment")).move_lines[0].matching_ids_out) == 2, 'Should have created 2 matchings'
 - 
@@ -147,3 +147,75 @@
 - 
   !python {model: product.product}: |
     assert self.browse(cr, uid, ref("product_fifo_icecream")).standard_price == 80.0
+- 
+  Create new pricelist in usd
+- 
+  !record {model: product.pricelist, id: supplier_pricelist_usd}:
+    name: Supplier Pricelist
+    type: purchase
+    currency_id: base.USD
+    version_id:
+      - name: v1.0
+        items_id:
+            - name: 20% Discount given by my supplier
+              sequence: 1
+              price_min_margin: 2
+              price_max_margin: 5
+              product_id: product_fifo_icecream
+              base: -2
+- 
+  Purchase order in usd
+- 
+  I create a draft Purchase Order for 30000 g at 0.150 USD
+- 
+  !record {model: purchase.order, id: purchase_order_fifo_usd}:
+    partner_id: base.res_partner_3
+    location_id: stock.stock_location_stock
+    pricelist_id: supplier_pricelist_usd
+    order_line:
+      - product_id: product_fifo_icecream
+        product_qty: 30000
+        product_uom: product.product_uom_gram
+        price_unit: 0.150
+        name: 'FIFO Ice Cream'
+- 
+  I confirm the first purchase order
+-
+  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_fifo_usd}
+- 
+  Process the reception of purchase order with usd
+-
+  !python {model: stock.partial.picking}: |
+    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo_usd")).picking_ids
+    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
+    self.do_partial(cr, uid, [partial_id])
+- 
+  We create delivery order of 49500 gram
+- 
+  !record {model: stock.picking, id: outgoing_fifo_shipment_cur}:
+    type: out
+-
+  Picking needs movement from stock
+-
+  !record {model: stock.move, id: outgoing_shipment_fifo_icecream_cur}:
+    picking_id: outgoing_fifo_shipment_cur
+    product_id: product_fifo_icecream
+    product_uom: product.product_uom_gram
+    product_qty: 49500
+    type: out
+- 
+  Process the delivery of the outgoing shipment
+- 
+  !python {model: stock.partial.picking}: |
+    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [ref("outgoing_fifo_shipment_cur")], 'default_type':'out'})
+    self.do_partial(cr, uid, [partial_id])
+- 
+  Print price
+- 
+  !python {model: product.product}: |
+    print self.browse(cr, uid, ref("product_fifo_icecream")).standard_price
+    print self.browse(cr, uid, ref("product_fifo_icecream")).qty_available
+    list = self.pool.get("stock.move.matching").search(cr, uid, [])
+    for move in self.pool.get("stock.move.matching").browse(cr, uid, list):
+      print move.price_unit
+      print move.qty

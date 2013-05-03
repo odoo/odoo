@@ -151,7 +151,7 @@ class stock_partial_picking(osv.osv_memory):
             'location_id' : move.location_id.id,
             'location_dest_id' : move.location_dest_id.id,
         }
-        if move.picking_id.type == 'in' and move.product_id.cost_method == 'average':
+        if move.picking_id.type == 'in' and move.product_id.cost_method != 'standard':
             partial_move.update(update_cost=True, **self._product_cost_for_average_update(cr, uid, move))
         return partial_move
 
@@ -208,7 +208,7 @@ class stock_partial_picking(osv.osv_memory):
                 'product_uom': wizard_line.product_uom.id,
                 'prodlot_id': wizard_line.prodlot_id.id,
             }
-            if (picking_type == 'in') and (wizard_line.product_id.cost_method == 'average'):
+            if (picking_type == 'in') and (wizard_line.product_id.cost_method != 'standard'):
                 partial_data['move%s' % (wizard_line.move_id.id)].update(product_price=wizard_line.cost,
                                                                   product_currency=wizard_line.currency.id)
         stock_picking.do_partial(cr, uid, [partial.picking_id.id], partial_data, context=context)
