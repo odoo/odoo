@@ -154,7 +154,7 @@
     payment_option: 'with_writeoff'
     writeoff_acc_id: account.a_expense
     comment: 'Write Off'
-    payment_rate: 1.25
+    payment_rate: 0.8
     payment_rate_currency_id: base.EUR
 
 -
@@ -216,7 +216,7 @@
         elif move_line.amount_currency == -70.00:
             assert move_line.credit == 56.00, "Debtor account has wrong entry."
         elif move_line.amount_currency == 10.00:
-            assert move_line.debit == 8.00, "Writeoff amount is wrong."
+            assert move_line.debit == 8.00, "Writeoff amount is wrong: Got a debit of %s (expected 8,00€)" % (move_line.debit)
         elif move_line.amount_currency == 240.00:
             assert move_line.debit == 192.00, "Bank entry is wrong."
         else:
