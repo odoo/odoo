@@ -1,0 +1,243 @@
+-
+  In order to check the Account_voucher module with multi-currency in OpenERP, 
+  I create 2 Invoices in USD and make 1 Payment in USD based on the currency rating given by the bank which is slightly different that the one encoded in OpenERP
+-
+  I set the income and expense currency accounts on the main company
+-
+  !python {model: res.company}: |
+    from datetime import datetime
+    vals = {
+      'income_currency_exchange_account_id': ref('account.o_expense'),
+      'expense_currency_exchange_account_id': ref('account.o_expense')}
+    self.write(cr, uid, ref('base.main_company'), vals)
+-
+  I create currency USD in OpenERP for January of 1.333333 Rate
+-
+  !python {model: res.currency.rate}: |
+    from datetime import datetime
+    curr_id = self.pool.get('res.currency').search(cr, uid, [('name', '=', 'USD')])[0]
+    date = '%s-01-01' %(datetime.now().year)
+    ids = self.search(cr, uid, [('currency_id','=',curr_id), ('name', '=', date)])
+    self.write(cr, uid, ids, {'rate': 1.333333})
+-
+  I create currency USD in OpenERP for February of 1.250000 Rate
+-
+  !record {model: res.currency.rate, id: feb_usd}:
+    currency_id: base.USD
+    name: !eval "'%s-02-01' %(datetime.now().year)"
+    rate: 1.250000
+
+-
+  I create currency USD in OpenERP for March of 1.111111 Rate
+-
+  !record {model: res.currency.rate, id: mar_usd}:
+    currency_id: base.USD
+    name: !eval "'%s-03-01' %(datetime.now().year)"
+    rate: 1.111111
+
+-
+  I create currency USD in OpenERP for April of 1.052632 Rate
+-
+  !record {model: res.currency.rate, id: apr_usd}:
+    currency_id: base.USD
+    name: !eval "'%s-04-01' %(datetime.now().year)"
+    rate: 1.052632
+
+-
+  I create a cash account with currency USD
+-
+  !record {model: account.account, id: account_cash_usd_id}:
+    currency_id: base.USD
+    name: "cash account in usd"
+    code: "Xcash usd"
+    type: 'liquidity'
+    user_type: "account.data_account_type_cash"
+
+-
+  I create a bank journal with USD as currency
+-
+  !record {model: account.journal, id: bank_journal_USD}:
+    name: Bank Journal(USD)
+    code: BUSD
+    type: bank
+    analytic_journal_id: account.sit
+    sequence_id: account.sequence_bank_journal
+    default_debit_account_id: account_cash_usd_id
+    default_credit_account_id: account_cash_usd_id
+    currency: base.USD
+    company_id: base.main_company
+
+-
+  I create the first invoice on 1st January  for 200 USD
+-
+  !record {model: account.invoice, id: account_invoice_jan}:
+    account_id: account.a_recv
+    company_id: base.main_company
+    currency_id: base.USD
+    date_invoice: !eval "'%s-01-01' %(datetime.now().year)"
+    period_id: account.period_1
+    invoice_line:
+      - account_id: account.a_sale
+        name: '[PCSC234] PC Assemble SC234'
+        price_unit: 200.0
+        quantity: 1.0
+        product_id: product.product_product_3
+        uos_id: product.product_uom_unit
+    journal_id: account.sales_journal
+    partner_id: base.res_partner_19
+    reference_type: none
+-
+  I Validate invoice by clicking on Validate button
+-
+  !workflow {model: account.invoice, action: invoice_open, ref: account_invoice_jan}
+-
+  I check that first invoice move is correct for debtor account (debit - credit == 150.0)
+-
+  !python {model: account.invoice}: |
+    invoice_id = self.browse(cr, uid, ref("account_invoice_jan"))
+    assert invoice_id.move_id, "Move not created for open invoice"
+    move_line_obj = self.pool.get('account.move.line')
+    move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('account_id', '=', invoice_id.account_id.id)])
+    move_line = move_line_obj.browse(cr, uid, move_lines[0])
+    assert (move_line.debit - move_line.credit == 150.0), "Invoice move is not correct for debtors account"
+-
+  I create the second invoice on 1st February for 100 USD
+-
+  !record {model: account.invoice, id: account_invoice_feb}:
+    account_id: account.a_recv
+    company_id: base.main_company
+    currency_id: base.USD
+    date_invoice: !eval "'%s-02-01' %(datetime.now().year)"
+    period_id: account.period_2
+    invoice_line:
+      - account_id: account.a_sale
+        name: '[PCSC234] PC Assemble SC234'
+        price_unit: 100.0
+        quantity: 1.0
+        product_id: product.product_product_3
+        uos_id: product.product_uom_unit
+    journal_id: account.sales_journal
+    partner_id: base.res_partner_19
+    reference_type: none
+-
+  I Validate invoice by clicking on Validate button
+-
+  !workflow {model: account.invoice, action: invoice_open, ref: account_invoice_feb}
+-
+  I check that second invoice move is correct for debtor account (debit - credit == 80)
+-
+  !python {model: account.invoice}: |
+    invoice_id = self.browse(cr, uid, ref("account_invoice_feb"))
+    assert invoice_id.move_id, "Move not created for open invoice"
+    move_line_obj = self.pool.get('account.move.line')
+    move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('account_id', '=', invoice_id.account_id.id)])
+    move_line = move_line_obj.browse(cr, uid, move_lines[0])
+    assert (move_line.debit - move_line.credit == 80), "Invoice move is not correct for debtors account"
+
+-
+  I set the context that will be used for the encoding of all the vouchers of this file
+-
+  !context
+    'type': 'receipt'
+-
+  On the first March, I create the first voucher of payment with values 240 USD, journal USD, and specifying that $1 = 1.25€
+-
+  !record {model: account.voucher, id: account_voucher_1_case1, view: view_vendor_receipt_form}:
+    account_id: account.cash
+    amount: 240.0
+    company_id: base.main_company
+    journal_id: bank_journal_USD
+    name: 'First payment: Case 1 USD/USD'
+    partner_id: base.res_partner_19
+    period_id: account.period_3
+    date: !eval time.strftime("%Y-03-01")
+    payment_option: 'with_writeoff'
+    writeoff_acc_id: account.a_expense
+    comment: 'Write Off'
+    payment_rate: 1.25
+    payment_rate_currency_id: base.EUR
+
+-
+  I fill amounts 180 for the invoice of 200$ and 70 for the invoice of 100$>
+-
+  !python {model: account.voucher}: |
+    import netsvc, time
+    vals = {}
+    voucher_id = self.browse(cr, uid, ref('account_voucher_1_case1'))
+    data = []
+    for item in voucher_id.line_cr_ids:
+        if item.amount_unreconciled == 200.00:
+            data += [(item.id, 180.0)]
+        else:
+            data += [(item.id, 70.0)]
+    for line_id, amount in data:
+        self.pool.get('account.voucher.line').write(cr, uid, [line_id], {'amount': amount})
+    assert (voucher_id.state=='draft'), "Voucher is not in draft state"
+-
+  I check that writeoff amount computed is -10.0
+-
+  !python {model: account.voucher}: |
+    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 1 USD/USD'), ('partner_id', '=', ref('base.res_partner_19'))])
+    voucher_id = self.browse(cr, uid, voucher[0])
+    assert (voucher_id.writeoff_amount == -10.0), "Writeoff amount is not -10.0"
+-
+  I confirm the voucher
+-
+  !python {model: account.voucher}: |
+    import netsvc
+    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 1 USD/USD'), ('partner_id', '=', ref('base.res_partner_19'))])
+    wf_service = netsvc.LocalService("workflow")
+    wf_service.trg_validate(uid, 'account.voucher', voucher[0], 'proforma_voucher', cr)
+-
+  I check that the move of my first voucher is valid
+-
+  !python {model: account.voucher}: |
+    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 1 USD/USD'), ('partner_id', '=', ref('base.res_partner_19'))])
+    voucher_id = self.browse(cr, uid, voucher[0])
+    move_line_obj = self.pool.get('account.move.line')
+    move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
+    for move_line in move_line_obj.browse(cr, uid, move_lines):
+        assert move_line.state == 'valid', "Voucher move is not valid"
+-
+  I check that my debtor account is correct
+-
+  I check that the debtor account has 2 new lines with -180 and -70 as amount_currency columns and that their credit columns are respectively 144 and 56
+-
+  I check that my write-off is correct. 8 debit and 10 amount_currency
+-
+  !python {model: account.voucher}: |
+    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 1 USD/USD'), ('partner_id', '=', ref('base.res_partner_19'))])
+    voucher_id = self.browse(cr, uid, voucher[0])
+    move_line_obj = self.pool.get('account.move.line')
+    move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
+    for move_line in move_line_obj.browse(cr, uid, move_lines):
+        if move_line.amount_currency == -180.00:
+            assert move_line.credit == 144.00, "Debtor account has wrong entry."
+        elif move_line.amount_currency == -70.00:
+            assert move_line.credit == 56.00, "Debtor account has wrong entry."
+        elif move_line.amount_currency == 10.00:
+            assert move_line.debit == 8.00, "Writeoff amount is wrong."
+        elif move_line.amount_currency == 240.00:
+            assert move_line.debit == 192.00, "Bank entry is wrong."
+        else:
+            assert False, "Unrecognized journal entry"
+-
+  I check the residual amount of Invoice1, should be 20 in amount_currency and 6 in amount_residual
+-
+  !python {model: account.invoice}: |
+    invoice_id = self.browse(cr, uid, ref("account_invoice_jan"))
+    move_line_obj = self.pool.get('account.move.line')
+    move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
+    move_line = move_line_obj.browse(cr, uid, move_lines[0])
+    assert (move_line.amount_residual == 6.0) , "Residual amount is not correct for first Invoice"
+    assert (move_line.amount_residual_currency == 20.0) , "Residual amount in currency is not correct for first Invoice"
+-
+  I check the residual amuont of Invoice2, should be 30 in residual currency and 24 in amount_residual
+-
+  !python {model: account.invoice}: |
+    invoice_id = self.browse(cr, uid, ref("account_invoice_feb"))
+    move_line_obj = self.pool.get('account.move.line')
+    move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
+    move_line = move_line_obj.browse(cr, uid, move_lines[0])
+    assert (move_line.amount_residual == 24.0) , "Residual amount is not correct for second Invoice"
+    assert (move_line.amount_residual_currency == 30.0) , "Residual amount in currency is not correct for second Invoice"
