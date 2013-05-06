@@ -188,7 +188,7 @@ class crm_case_section(osv.osv):
                                          "create new leads assigned to the team."),
         'color': fields.integer('Color Index'),
         'use_leads': fields.boolean('Leads',
-            help="This enables the management of leads in the sales team. Otherwise the sales team manages only opportunities."),
+            help="The first contact you get with a potential customer is a lead you qualify before converting it into a real business opportunity. Check this box to manage leads in this sales team."),
 
         'target_duration': fields.selection([("monthly", "Monthly"), ("quarterly", "Quarterly"), ("semesterly", "Semesterly"), ("annually", "Annually")],
             string='Report Duration View', required=True),
