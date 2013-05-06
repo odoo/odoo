@@ -249,7 +249,7 @@
                 <xpath expr="//div[@class='oe_items_list']" position="after">
                     <div class="oe_center" t-if="record.target_invoice.raw_value">
                         <field name="sent_invoice_per_duration" widget="gage" style="width:160px; height: 120px;" options="{'max_field': 'target_invoice', 'label_field': 'target_duration_txt'}">Invoiced</field>
-                        <field name="forecast" widget="gage" style="width:160px; height: 120px;" options="{'max_field': 'target_invoice', 'label_field': 'target_duration_txt'}">Forecast</field>
+                        <field name="forecast" widget="gage" style="width:160px; height: 120px;" options="{'max_field': 'target_invoice', 'label_field': 'target_duration_txt', 'action_change': 'action_forecast'}">Forecast</field>
                     </div>
                     <div class="oe_center" style="color:#bbbbbb;" t-if="!record.target_invoice.raw_value">
                         <br/>Not target invoicing defined
