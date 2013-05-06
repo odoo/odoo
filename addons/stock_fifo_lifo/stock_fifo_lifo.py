@@ -145,7 +145,7 @@ class stock_move(osv.osv):
             if move.picking_id.type == 'out' and cost_method in ['fifo', 'lifo']:
                 #get_stock_matchings will convert to currency and UoM of this stock move
                 tuples = product_obj.get_stock_matchings_fifolifo(cr, uid, [product.id], product_qty, cost_method == 'fifo', 
-                                                                  product_uom, move.price_currency_id.id, context=context)
+                                                                  product_uom, move.company_id.currency_id.id, context=context) #Always move of the company
                 price_amount = 0.0
                 amount = 0.0
                 move_currency_id = move.company_id.currency_id.id
@@ -157,7 +157,6 @@ class stock_move(osv.osv):
                     move_in = self.browse(cr, uid, match[0], context=context)
                     #Reduce remaining quantity
                     self.write(cr, uid, match[0], { 'qty_remaining': move_in.qty_remaining - match[3]}, context=context)
-                    
                     price_amount += match[1] * match[2]
                     amount += match[1]
                 self.write(cr, uid, move.id, {'price_unit': price_amount / amount}, context=context)
@@ -180,9 +179,15 @@ class stock_move(osv.osv):
             # When the move is products returned to supplier or return products from customer
             # then the price should be the price from the original move
             elif cost_method in ['fifo', 'lifo']:  
+                #The currency in the stock move should be the currency of the company
+                if product_currency != move.company_id.currency_id.id:
+                    new_price = currency_obj.compute(cr, uid, product_currency, move.company_id.currency_id.id, 
+                                                 product_price, round=False)
+                else:
+                    new_price = product_price
                 self.write(cr, uid, [move.id],
-                            {'price_unit': product_price,
-                             'price_currency_id': product_currency})
+                            {'price_unit': new_price,
+                             'price_currency_id': move.company_id.currency_id.id})
         return True
 
 class stock_move_matching(osv.osv):

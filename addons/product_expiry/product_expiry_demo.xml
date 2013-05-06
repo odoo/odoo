@@ -5,6 +5,7 @@
             <field name="supply_method">buy</field>
             <field name="list_price">7.0</field>
             <field name="standard_price">5.0</field>
+            <field name="cost_method">standard</field>
             <field name="uom_id" ref="product.product_uom_unit"/>
             <field name="uom_po_id" ref="product.product_uom_unit"/>
             <field name="uos_id" ref="product.product_uom_kgm" />
@@ -34,7 +35,7 @@
         <record id="product_product_from" model="product.product">
             <field name="supply_method">buy</field>
             <field name="list_price">8.0</field>
-            <field name="standard_price">6.0</field>
+<!--            <field name="standard_price">6.0</field>-->
             <field name="uom_id" ref="product.product_uom_unit"/>
             <field name="uom_po_id" ref="product.product_uom_unit"/>
             <field name="uos_id" ref="product.product_uom_kgm" />
