@@ -786,6 +786,10 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
     start: function() {
         var self = this;
         this._super();
+        this.init_content();
+    },
+    init_content: function() {
+        self.sub_widgets = [];
         this.$("[data-field_id]").each(function() {
             self.add_widget($(this));
         });
@@ -844,6 +848,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
         type = $orig.attr("widget") ? $orig.attr("widget") : type;
         var obj = instance.web_kanban.fields_registry.get_object(type);
         var widget = new obj(this, field, $orig);
+        self.sub_widgets.append(widget);
         widget.replace($node);
     },
     bind_events: function() {
@@ -986,11 +991,14 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
     do_reload: function() {
         var self = this;
         this.view.dataset.read_ids([this.id], this.view.fields_keys.concat(['__last_update'])).done(function(records) {
+             _.each(self.sub_widgets, function(el) {
+                 el.destroy();
+             });
+             self.sub_widgets = [];
             if (records.length) {
                 self.set_record(records[0]);
                 self.renderElement();
-                self.$el.data('widget', self);
-                self.bind_events();
+                self.init_content();
                 self.group.compute_cards_auto_height();
                 self.view.postprocess_m2m_tags();
             } else {
