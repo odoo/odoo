@@ -45,15 +45,15 @@ AVAILABLE_PRIORITIES = [
 
 DURATION_TXT = {
     "monthly": _("month"),
+    "quarterly": _("quarter"),
     "semesterly": _("semester"),
-    "semiannually": _("semi"),
     "annually": _("year")
 }
 
 MONTHS = {
     "monthly": 1,
-    "semesterly": 3,
-    "semiannually": 6,
+    "quarterly": 3,
+    "semesterly": 6,
     "annually": 12
 }
 
@@ -190,7 +190,7 @@ class crm_case_section(osv.osv):
         'use_leads': fields.boolean('Leads',
             help="This enables the management of leads in the sales team. Otherwise the sales team manages only opportunities."),
 
-        'target_duration': fields.selection([("monthly", "Monthly"), ("semesterly", "Semesterly"), ("semiannually", "Semiannually"), ("annually", "Annually")],
+        'target_duration': fields.selection([("monthly", "Monthly"), ("quarterly", "Quarterly"), ("semesterly", "Semesterly"), ("annually", "Annually")],
             string='Report Duration View', required=True),
         'target_duration_txt': fields.function(_get_target_duration_txt,
             string='Duration',
