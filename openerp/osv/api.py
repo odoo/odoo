@@ -318,7 +318,7 @@ def record(method):
             return new_api(self.browse(ids, scoped=False), *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
-        if self.is_record_or_null():
+        if self.is_record():
             return method(self, *args, **kwargs)
         else:
             return [method(rec, *args, **kwargs) for rec in self]
@@ -353,7 +353,7 @@ def recordset(method):
             return new_api(self.browse(ids, scoped=False), *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
-        if self.is_record_or_null():
+        if self.is_record():
             return _get_one(method(self.recordset(), *args, **kwargs))
         else:
             return method(self, *args, **kwargs)
@@ -447,7 +447,7 @@ def cr_uid_id(method):
 
     def new_api(self, *args, **kwargs):
         cr, uid, context = scope
-        if self.is_record_or_null():
+        if self.is_record():
             return method(self, cr, uid, self.id, *args, **kwargs)
         else:
             return [method(self, cr, uid, rec.id, *args, **kwargs) for rec in self]
@@ -481,7 +481,7 @@ def cr_uid_id_context(method):
     def new_api(self, *args, **kwargs):
         cr, uid, context = scope
         kwargs = _kwargs_context(kwargs, context)
-        if self.is_record_or_null():
+        if self.is_record():
             return method(self, cr, uid, self.id, *args, **kwargs)
         else:
             return [method(self, cr, uid, rec.id, *args, **kwargs) for rec in self]
@@ -502,7 +502,7 @@ def cr_uid_ids(method):
 
     def new_api(self, *args, **kwargs):
         cr, uid, context = scope
-        if self.is_record_or_null():
+        if self.is_record():
             return _get_one(method(self, cr, uid, [self.id], *args, **kwargs))
         else:
             return method(self, cr, uid, map(int, self), *args, **kwargs)
@@ -538,7 +538,7 @@ def cr_uid_ids_context(method):
     def new_api(self, *args, **kwargs):
         cr, uid, context = scope
         kwargs = _kwargs_context(kwargs, context)
-        if self.is_record_or_null():
+        if self.is_record():
             return _get_one(method(self, cr, uid, [self.id], *args, **kwargs))
         else:
             return method(self, cr, uid, map(int, self), *args, **kwargs)

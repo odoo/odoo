@@ -1476,7 +1476,7 @@ class BaseModel(object):
                 property_obj = self.pool.get('ir.property')
                 prop_value = property_obj.get(cr, uid, f, self._name, context=context)
                 if prop_value:
-                    if isinstance(prop_value, (Record, Null)):
+                    if isinstance(prop_value, Record):
                         defaults[f] = prop_value.id
                     else:
                         defaults[f] = prop_value
@@ -5334,19 +5334,11 @@ class BaseModel(object):
     def scope(self):
         return self._scope or scope_proxy.current
 
-    def null(self, scope=None):
-        """ make a null instance """
-        # a null instance is represented as a record with id=False
-        return self._make_instance(_id=False, _scope=scope)
-
-    def is_null(self):
-        """ test whether self is a null instance """
-        return not bool(getattr(self, '_id', True))
-
     def record(self, id=None, scope=None):
-        """ make a record instance
+        """ make a record instance (possibly null)
 
-            :param id: the record's id (or convert `self` if ``None``)
+            :param id: the record's id, may be ``False`` for a null record, or
+                ``None`` to convert `self` into a record
             :param scope: the optional scope to attach to the record
         """
         if id is None:
@@ -5357,15 +5349,19 @@ class BaseModel(object):
             else:
                 raise except_orm("ValueError", "Expected singleton: %s" % self)
 
-        return self._make_instance(_id=id, _scope=scope)
+        return self._make_instance(_id=(id or False), _scope=scope)
 
     def is_record(self):
-        """ test whether `self` is a record instance """
-        return bool(getattr(self, '_id', None))
-
-    def is_record_or_null(self):
-        """ test whether `self` is a record or null instance """
+        """ test whether `self` is a record instance (possibly null) """
         return hasattr(self, '_id')
+
+    def null(self, scope=None):
+        """ make a null instance """
+        return self.record(False, scope=scope)
+
+    def is_null(self):
+        """ test whether self is a null instance """
+        return not bool(getattr(self, '_id', True))
 
     def recordset(self, ids=None, scope=None):
         """ make a recordset instance
@@ -5394,15 +5390,11 @@ class BaseModel(object):
 
     def unbrowse(self):
         """ Return the `id`/`ids` corresponding to a record/recordset/null instance. """
-        if self.is_record_or_null():
-            return self._id
-        return list(self._ids)
+        return list(self._ids) if self.is_recordset() else self._id
 
     def __nonzero__(self):
         """ Test whether `self` is nonempty and not null. """
-        if self.is_recordset():
-            return bool(self._ids)
-        return not self.is_null()
+        return bool(self._ids) if self.is_recordset() else not self.is_null()
 
     def __iter__(self):
         """ Return an iterator over `self` (must be a recordset). """
@@ -5427,7 +5419,7 @@ class BaseModel(object):
         """ If `self` is a record, test whether `item` is a field name.
             If `self` is a recordset, test whether `item` is a record in `self`.
         """
-        if self.is_record_or_null():
+        if self.is_record():
             return item == 'id' or item in self._all_columns
         elif self.is_recordset():
             if isinstance(item, Record) and item._name == self._name:
@@ -5447,7 +5439,7 @@ class BaseModel(object):
 
     def __eq__(self, other):
         """ Test equality between two records, two recordsets or two models. """
-        if self.is_record_or_null() and isinstance(other, (Record, Null)):
+        if self.is_record() and isinstance(other, Record):
             # compare two records or nulls
             return (self._name, self._id) == (other._name, other._id)
         elif self.is_recordset() and isinstance(other, Recordset):
@@ -5465,7 +5457,7 @@ class BaseModel(object):
 
     def _get_field(self, field_name):
         """ read the field `field_name` on a record instance """
-        if not self.is_record_or_null():
+        if not self.is_record():
             raise except_orm("ValueError", "Expected record: %s" % self)
         if field_name == 'id':
             return self._id
@@ -5608,7 +5600,7 @@ class BaseModel(object):
                 rs2 = rs1[:10]              # same as rs with offset 10 and limit 10
                 assert list(rs2) == list(rs[10:20])
         """
-        if self.is_record_or_null():
+        if self.is_record():
             return self._get_field(key)
         elif self.is_recordset():
             if isinstance(key, slice):
@@ -5640,19 +5632,19 @@ class BaseModel(object):
             raise AttributeError("%r object has no attribute %r" % (type(self).__name__, name))
 
     def __int__(self):
-        if self.is_record_or_null():
+        if self.is_record():
             return self._id
         else:
             raise except_orm("ValueError", "Expected record: %s" % self)
 
     def __str__(self):
         model_name = self._name.replace('.', '_')
-        if self.is_record():
+        if self.is_null():
+            return "%s.null()" % model_name
+        elif self.is_record():
             return "%s.record(%d)" % (model_name, self._id)
         elif self.is_recordset():
             return "%s.recordset(%s)" % (model_name, self._ids)
-        elif self.is_null():
-            return "%s.null()" % model_name
         else:
             return model_name
 
@@ -5662,7 +5654,7 @@ class BaseModel(object):
     __repr__ = __str__
 
     def __hash__(self):
-        if self.is_record_or_null():
+        if self.is_record():
             return hash((self._name, self._id))
         elif self.is_recordset():
             return hash((self._name, self._ids))
