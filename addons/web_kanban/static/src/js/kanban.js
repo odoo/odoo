@@ -789,6 +789,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
         this.init_content();
     },
     init_content: function() {
+        var self = this;
         self.sub_widgets = [];
         this.$("[data-field_id]").each(function() {
             self.add_widget($(this));
