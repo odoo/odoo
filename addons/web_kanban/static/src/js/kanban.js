@@ -849,7 +849,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
         type = $orig.attr("widget") ? $orig.attr("widget") : type;
         var obj = instance.web_kanban.fields_registry.get_object(type);
         var widget = new obj(this, field, $orig);
-        self.sub_widgets.append(widget);
+        this.sub_widgets.push(widget);
         widget.replace($node);
     },
     bind_events: function() {
