@@ -1379,7 +1379,7 @@ class Binary(openerpweb.Controller):
         else:
             try:
                 # create an empty registry
-                registry = openerp.modules.registry.Registry(dbname.lower())
+                registry = openerp.modules.registry.Registry(dbname)
                 with registry.cursor() as cr:
                     cr.execute("""SELECT c.logo_web
                                     FROM res_users u
