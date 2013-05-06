@@ -50,6 +50,7 @@ class res_partner(models.Model):
 
     name_size = fields.Integer(compute='compute_name_size', store=False)
     children_count = fields.Integer(compute='compute_children_count', store=True)
+    has_sibling = fields.Integer(compute='compute_has_sibling', store=True)
 
     @api.recordset
     @api.depends('name')
@@ -63,4 +64,10 @@ class res_partner(models.Model):
     @api.depends('child_ids.parent_id')
     def compute_children_count(self):
         self.children_count = len(self.child_ids)
+
+    # depends on function field => cascading recomputations
+    @api.record
+    @api.depends('parent_id.children_count')
+    def compute_has_sibling(self):
+        self.has_sibling = self.parent_id.children_count >= 2
 

@@ -38,8 +38,6 @@ _local = Local()
 
 class ScopeProxy(object):
     """ This a proxy object to the current scope. """
-    _recompute_target = None
-
     @property
     def root(self):
         stack = getattr(_local, 'scope_stack', None)
@@ -83,24 +81,26 @@ class ScopeProxy(object):
         """ Create a context manager for recomputing fields.
             See :meth:`RecordCache.invalidate` for the parameter `spec`.
         """
-        # recompute_target = {model_name: {field_name: set(ids), ...}, ...}
-        recompute_target = defaultdict(lambda: defaultdict(set))
+        # recomputing = {model_name: {field_name: set(ids), ...}, ...}
+        recomputing = defaultdict(lambda: defaultdict(set))
         for m, fs, ids in spec:
             assert ids is not None
             for f in fs:
-                recompute_target[m][f].update(ids)
+                recomputing[m][f].update(ids)
 
         try:
-            self._recompute_target = recompute_target
+            old = getattr(_local, 'recomputing', None)
+            _local.recomputing = recomputing
             yield
         finally:
-            self._recompute_target = None
+            _local.recomputing = old
 
     def recomputing(self, model_name):
         """ Return a dictionary associating field names to record ids being
             recomputed for `model_name`.
         """
-        return self._recompute_target[model_name] if self._recompute_target else {}
+        recomputing = getattr(_local, 'recomputing', None)
+        return recomputing[model_name] if recomputing else {}
 
 proxy = ScopeProxy()
 
