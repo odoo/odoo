@@ -776,7 +776,7 @@
                     </group>
                     <notebook>
                         <page string="Products">
-                            <field name="move_lines" context="{'address_in_id': partner_id, 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree', 'picking_type': 'internal'}"/>
+                            <field name="move_lines" context="{'address_in_id': partner_id, 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree', 'picking_type': 'internal'}"/>
                             <field name="note" placeholder="Add an internal note..." class="oe_inline"/>
                         </page>
                         <page string="Additional Info">
@@ -911,7 +911,7 @@
                     <field name="partner_id" on_change="onchange_partner_in(partner_id)"  string="Customer"/>
                 </xpath>
                 <xpath expr="//field[@name='move_lines']" position="replace">
-                    <field name="move_lines" context="{'address_out_id': partner_id, 'picking_type': 'out', 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree'}"/>
+                    <field name="move_lines" context="{'address_out_id': partner_id, 'picking_type': 'out', 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree'}"/>
                 </xpath>
                 <xpath expr="/form/sheet" position="after">
                     <div class="oe_chatter">
@@ -1038,7 +1038,7 @@
                     <field name="partner_id" on_change="onchange_partner_in(partner_id)"  string="Supplier"/>
                 </xpath>
                 <xpath expr="//field[@name='move_lines']" position="replace">
-                    <field name="move_lines" context="{'address_in_id': partner_id, 'picking_type': 'in', 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree'}"/>
+                    <field name="move_lines" context="{'address_in_id': partner_id, 'picking_type': 'in', 'form_view_ref':'stock.view_move_picking_form', 'tree_view_ref':'stock.view_move_picking_tree'}"/>
                 </xpath>
                 <xpath expr="/form/sheet" position="after">
                     <div class="oe_chatter">
@@ -1256,7 +1256,7 @@
                             <field name="date" groups="base.group_no_one"/>
                         </group>
                         <group string="Traceability"
-                            groups="stock.group_tracking_lot">
+                            groups="stock.group_tracking_lot,stock.group_production_lot">
                             <label for="tracking_id" groups="stock.group_tracking_lot"/>
                             <div groups="stock.group_tracking_lot">
                                 <field name="tracking_id" class="oe_inline"/>
