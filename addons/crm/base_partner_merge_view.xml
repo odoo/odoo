@@ -98,7 +98,8 @@
                                 redirected to the aggregated contact. You can remove
                                 contacts from this list to avoid merging them.
                             </p>
-                            <field name="partner_ids" nolabel="1">
+                            <field name="dst_partner_id" attrs="{'required': [('state', '=', 'selection')]}"/>
+                            <field name="partner_ids" nolabel="1" on_change="onchange_partner_ids(partner_ids)">
                                 <tree string="Partners">
                                     <field name="id" />
                                     <field name="name" />
@@ -117,7 +118,7 @@
 
         <record model="ir.actions.server"
             id="ir_actions_server_merge_automatic">
-            <field name="code">pool.get('base.partner.merge.automatic.wizard').merge_multi(cr, uid, None, context)</field>
+            <field name="code">action = pool.get('base.partner.merge.automatic.wizard').merge_multi(cr, uid, None, context)</field>
             <field name="condition">True</field>
             <field name="model_id" ref="base.model_res_partner" />
             <field name="name">Automatic Merge</field>
