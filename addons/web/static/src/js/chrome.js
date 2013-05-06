@@ -900,7 +900,7 @@ instance.web.Menu =  instance.web.Widget.extend({
     },
     do_load_needaction: function (menu_ids) {
         var self = this;
-        menu_ids = _.reject(menu_ids, _.isEmpty);
+        menu_ids = _.compact(menu_ids);
         if (_.isEmpty(menu_ids)) {
             return $.when();
         }
