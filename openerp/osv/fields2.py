@@ -113,12 +113,8 @@ class Field(object):
         """ convert `value` from the record level to the cache level """
         return value
 
-    def null(self):
-        """ return the null value for this field at the record level """
-        return False
-
-    def format_read(self, value):
-        """ convert the record-level value as returned by method
+    def record_to_read(self, value):
+        """ convert `value` from the record level to a value as returned by
             :meth:`openerp.osv.orm.BaseModel.read`
         """
         return value

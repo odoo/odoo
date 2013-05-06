@@ -3554,7 +3554,7 @@ class BaseModel(object):
 
         # read new-style fields with records
         for f in new_fields:
-            field_format = self._fields[f].format_read
+            field_format = self._fields[f].record_to_read
             for values in result:
                 rec = self.record(values['id'])
                 values[f] = field_format(rec[f])
@@ -5471,32 +5471,30 @@ class BaseModel(object):
             return self._id
 
         with self.scope:
-            model_cache = self.scope.cache[self._name]
+            model_cache = scope_proxy.cache[self._name]
+            field_cache = model_cache[field_name]
             recomputing = scope_proxy.recomputing(self._name)
 
             # handle the case of new-style fields
             field = self._fields.get(field_name)
             if field:
                 if self.is_null():
-                    return field.null()
+                    return field.cache_to_record(False)
 
-                if self._id in model_cache[field_name]:
-                    value = model_cache[field_name][self._id]
-                    return field.cache_to_record(value)
+                if self._id in field_cache:
+                    return field.cache_to_record(field_cache[self._id])
 
                 if not field.store:
                     # a "pure" function field, simply evaluate it on self
                     assert field.compute
                     getattr(self, field.compute)()
-                    value = model_cache[field_name][self._id]
-                    return field.cache_to_record(value)
+                    return field.cache_to_record(field_cache[self._id])
 
                 if field.compute and self._id in recomputing.get(field_name, ()):
                     # field is stored and must be recomputed (in batch!)
                     recs = self.recordset(recomputing[field_name]).exists()
                     getattr(recs, field.compute)()
-                    value = model_cache[field_name][self._id]
-                    return field.cache_to_record(value)
+                    return field.cache_to_record(field_cache[self._id])
 
             # fetch the definition of the field which was asked for
             column = self._all_columns[field_name].column
@@ -5506,7 +5504,7 @@ class BaseModel(object):
                 # return False, null or recordset, depending on the field's type
                 return browse_function(self, column, False)
 
-            if self._id not in model_cache[field_name]:
+            if self._id not in field_cache:
                 # a pure function field: simply evaluate it for self
                 if isinstance(column, fields.function) and not column.store:
                     value = self.read([field_name], load="_classic_write")[field_name]
@@ -5527,7 +5525,7 @@ class BaseModel(object):
                 # determine which records to fetch: take the records in the same
                 # model that don't have the field yet in cache
                 model_cache.ids.add(self._id)
-                fetch_ids = model_cache.ids - set(model_cache[field_name])
+                fetch_ids = model_cache.ids - set(field_cache)
 
                 # do not fetch the records/fields that have to be recomputed
                 for fname in list(fetch_fields):
@@ -5543,12 +5541,12 @@ class BaseModel(object):
                 if self not in fetched:
                     raise except_orm("AccessError", "%s does not exist." % self)
 
-            if self._id not in model_cache[field_name]:
+            if self._id not in field_cache:
                 # How did this happen? Could be a missing model due to custom fields used too soon.
                 _logger.warning("Unknown field %r in %s" % (field_name, self))
                 raise KeyError(field_name)
 
-            return browse_function(self, column, model_cache[field_name][self._id])
+            return browse_function(self, column, field_cache[self._id])
 
     @api.recordset
     def _fetch_fields(self, field_names):
