@@ -59,7 +59,6 @@ from lxml import etree
 import api
 from scope import proxy as scope_proxy
 import fields
-from fields2 import Field
 import openerp
 import openerp.tools as tools
 from openerp.tools.config import config
@@ -5471,22 +5470,22 @@ class BaseModel(object):
             field = self._fields.get(field_name)
             if field:
                 if self.is_null():
-                    return field.cache_to_record(False)
+                    return field.cache_to_record(self, False)
 
                 if self._id in field_cache:
-                    return field.cache_to_record(field_cache[self._id])
+                    return field.cache_to_record(self, field_cache[self._id])
 
                 if not field.store:
                     # a "pure" function field, simply evaluate it on self
                     assert field.compute
                     getattr(self, field.compute)()
-                    return field.cache_to_record(field_cache[self._id])
+                    return field.cache_to_record(self, field_cache[self._id])
 
                 if field.compute and self._id in recomputing.get(field_name, ()):
                     # field is stored and must be recomputed (in batch!)
                     recs = self.recordset(recomputing[field_name]).exists()
                     getattr(recs, field.compute)()
-                    return field.cache_to_record(field_cache[self._id])
+                    return field.cache_to_record(self, field_cache[self._id])
 
             # fetch the definition of the field which was asked for
             column = self._all_columns[field_name].column
@@ -5781,9 +5780,6 @@ browse_record = Record
 browse_record_list = Recordset
 
 
-# keep this import here, at top it will cause dependency cycle errors
-import expression
-
 class Model(BaseModel):
     """Main super-class for regular database-persisted OpenERP models.
 
@@ -5880,5 +5876,10 @@ PGERROR_TO_OE = defaultdict(
     # unique constraint error
     '23505': convert_pgerror_23505,
 })
+
+
+# keep those imports here to avoid dependency cycle errors
+import expression
+from fields2 import Field
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

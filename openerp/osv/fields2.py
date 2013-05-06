@@ -105,7 +105,7 @@ class Field(object):
         assert instance._name == self.model
         return instance._set_field(self.name, self.record_to_cache(value))
 
-    def cache_to_record(self, value):
+    def cache_to_record(self, record, value):
         """ convert `value` from the cache level to the record level """
         return value
 
@@ -269,6 +269,116 @@ class Selection(Field):
         return value or False
 
 
+class Many2one(Field):
+    """ Many2one field. """
+    type = 'many2one'
+    comodel = None                      # model of values
+
+    def __init__(self, comodel, string=None, **kwargs):
+        super(Many2one, self).__init__(comodel=comodel, string=string, **kwargs)
+
+    @classmethod
+    def from_column(cls, column):
+        kwargs = dict((attr, getattr(column, attr)) for attr in cls._attrs)
+        kwargs['comodel'] = column._obj
+        return cls(**kwargs)
+
+    def to_column(self):
+        kwargs = dict((attr, getattr(self, attr)) for attr in self._attrs)
+        kwargs['obj'] = self.comodel
+        return fields.many2one(**kwargs)
+
+    def cache_to_record(self, record, value):
+        model = scope.model(self.comodel)
+        return model.record(value or False, scope=record._scope)
+
+    def record_to_cache(self, value):
+        if isinstance(value, Record) and value._name == self.comodel:
+            return value._id
+        elif value in (False, None):
+            return False
+        raise ValueError("Wrong value for %s.%s: %r" % (self.model, self.name, value))
+
+    def record_to_read(self, value):
+        return bool(value) and value.name_get()
+
+
+class One2many(Field):
+    """ One2many field. """
+    type = 'one2many'
+    comodel = None                      # model of values
+    inverse = None                      # name of inverse field
+
+    def __init__(self, comodel, inverse=None, string=None, **kwargs):
+        super(One2many, self).__init__(
+            comodel=comodel, inverse=inverse, string=string, **kwargs)
+
+    @classmethod
+    def from_column(cls, column):
+        kwargs = dict((attr, getattr(column, attr)) for attr in cls._attrs)
+        # beware when getting parameters: column may be a function field
+        kwargs['comodel'] = column._obj
+        kwargs['inverse'] = getattr(column, '_fields_id', None)
+        return cls(**kwargs)
+
+    def to_column(self):
+        kwargs = dict((attr, getattr(self, attr)) for attr in self._attrs)
+        kwargs['obj'] = self.comodel
+        kwargs['fields_id'] = self.inverse
+        return fields.one2many(**kwargs)
+
+    def cache_to_record(self, record, value):
+        model = scope.model(self.comodel)
+        return model.recordset(value or (), scope=record._scope)
+
+    def record_to_cache(self, value):
+        if isinstance(value, Recordset) and value._name == self.comodel:
+            return value.unbrowse()
+        raise ValueError("Wrong value for %s.%s: %s" % (self.model, self.name, value))
+
+
+class Many2many(Field):
+    """ Many2many field. """
+    type = 'many2many'
+    comodel = None                      # model of values
+    relation = None                     # name of table
+    column1 = None                      # column of table referring to model
+    column2 = None                      # column of table referring to comodel
+
+    def __init__(self, comodel, relation=None, column1=None, column2=None,
+                string=None, **kwargs):
+        super(Many2many, self).__init__(comodel=comodel, relation=relation,
+            column1=column1, column2=column2, string=string, **kwargs)
+
+    @classmethod
+    def from_column(cls, column):
+        kwargs = dict((attr, getattr(column, attr)) for attr in cls._attrs)
+        # beware when getting parameters: column may be a function field
+        kwargs['comodel'] = column._obj
+        kwargs['relation'] = getattr(column, '_rel', None)
+        kwargs['column1'] = getattr(column, '_id1', None)
+        kwargs['column2'] = getattr(column, '_id2', None)
+        return cls(**kwargs)
+
+    def to_column(self):
+        kwargs = dict((attr, getattr(self, attr)) for attr in self._attrs)
+        kwargs['obj'] = self.comodel
+        kwargs['rel'] = self.relation
+        kwargs['id1'] = self.column1
+        kwargs['id2'] = self.column2
+        return fields.many2many(**kwargs)
+
+    def cache_to_record(self, record, value):
+        model = scope.model(self.comodel)
+        return model.recordset(value or (), scope=record._scope)
+
+    def record_to_cache(self, value):
+        if isinstance(value, Recordset) and value._name == self.comodel:
+            return value.unbrowse()
+        raise ValueError("Wrong value for %s.%s: %s" % (self.model, self.name, value))
+
+
 # imported here to avoid dependency cycle issues
 from openerp.osv import fields
+from openerp.osv.orm import Record, Recordset
 from openerp.osv.scope import proxy as scope

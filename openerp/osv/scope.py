@@ -302,7 +302,7 @@ class RecordCache(defaultdict):
             # read the fields that are present in the cache
             model = proxy.model(model_name)
             ids = list(model_cache.ids)
-            field_names = model_cache.keys()
+            field_names = [f for f in model._all_columns if f in model_cache]
             result = model.read(cr, uid, ids, field_names, context=context, load="_classic_write")
 
             # compare the result with the content of the cache
