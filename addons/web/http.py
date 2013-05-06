@@ -118,11 +118,6 @@ class WebRequest(object):
         # we use _ as seprator where RFC2616 uses '-'
         self.lang = lang.replace('-', '_')
 
-    def wrap_transaction(self, fct):
-        from openerp.addons.web.com import transaction
-        with transaction.init(self.session._db, self.session._uid, self.session._password):
-            return fct()
-
 def reject_nonliteral(dct):
     if '__ref' in dct:
         raise ValueError(
@@ -205,7 +200,7 @@ class JsonRequest(WebRequest):
             if _logger.isEnabledFor(logging.DEBUG):
                 _logger.debug("--> %s.%s\n%s", method.im_class.__name__, method.__name__, pprint.pformat(self.jsonrequest))
             response['id'] = self.jsonrequest.get('id')
-            response["result"] = self.wrap_transaction(lambda: method(self, **self.params))
+            response["result"] = method(self, **self.params)
         except session.AuthenticationError, e:
             se = serialize_exception(e)
             error = {
@@ -299,7 +294,7 @@ class HttpRequest(WebRequest):
                 akw[key] = type(value)
         _logger.debug("%s --> %s.%s %r", self.httprequest.method, method.im_class.__name__, method.__name__, akw)
         try:
-            r = self.wrap_transaction(lambda: method(self, **self.params))
+            r = method(self, **self.params)
         except Exception, e:
             _logger.exception("An exception occured during an http request")
             se = serialize_exception(e)
