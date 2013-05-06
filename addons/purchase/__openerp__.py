@@ -67,6 +67,7 @@ Dashboard / Reports for Purchase Management will include:
         'res_config_view.xml',
     ],
     'test': [
+        'test/ui/purchase_users.yml',
         'test/process/cancel_order.yml',
         'test/process/rfq2order2done.yml',
         'test/process/generate_invoice_from_reception.yml',
@@ -79,7 +80,6 @@ Dashboard / Reports for Purchase Management will include:
         'test/ui/delete_order.yml',
     ],
     'demo': [
-        'test/ui/purchase_users.yml',
         'purchase_order_demo.yml',
         'purchase_demo.xml',
     ],
