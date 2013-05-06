@@ -56,9 +56,9 @@ class crm_case_section(osv.osv):
                 if when:
                     domain += [('date_order', '<', dates[when-1].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
                 rate = 0
-                opportunity_ids = obj.search(cr, uid, domain, context=context)
-                for invoice in obj.browse(cr, uid, opportunity_ids, context=context):
-                    rate += invoice.amount_total
+                order_ids = obj.search(cr, uid, domain, context=context)
+                for order in obj.browse(cr, uid, order_ids, context=context):
+                    rate += order.amount_total
                 rate_invoice.append(rate)
             rate_invoice.reverse()
             res[section.id] = rate_invoice
@@ -77,9 +77,9 @@ class crm_case_section(osv.osv):
                 if when:
                     domain += [('date_confirm', '<', dates[when-1].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
                 rate = 0
-                opportunity_ids = obj.search(cr, uid, domain, context=context)
-                for invoice in obj.browse(cr, uid, opportunity_ids, context=context):
-                    rate += invoice.amount_total
+                order_ids = obj.search(cr, uid, domain, context=context)
+                for order in obj.browse(cr, uid, order_ids, context=context):
+                    rate += order.amount_total
                 rate_invoice.append(rate)
             rate_invoice.reverse()
             res[section.id] = rate_invoice
@@ -98,8 +98,8 @@ class crm_case_section(osv.osv):
                 if when:
                     domain += [('date', '<', dates[when-1].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
                 rate = 0
-                opportunity_ids = obj.search(cr, uid, domain, context=context)
-                for invoice in obj.browse(cr, uid, opportunity_ids, context=context):
+                invoice_ids = obj.search(cr, uid, domain, context=context)
+                for invoice in obj.browse(cr, uid, invoice_ids, context=context):
                     rate += invoice.price_total
                 rate_invoice.append(rate)
             rate_invoice.reverse()

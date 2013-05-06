@@ -12,7 +12,8 @@ openerp.sale_crm.GaugeWidget = openerp.web_kanban.AbstractField.extend({
             label = this.getParent().record[this.options.label_field].raw_value;
         }
         var title = this.$node.html();
-        var value = _.isArray(this.field.value) ? this.field.value.pop() : this.field.value;
+        var val = this.field.value;
+        var value = _.isArray(val) && val.length ? val[val.length-1] : val;
         var unique_id = _.uniqueId("JustGage");
         
         this.$el.empty()
