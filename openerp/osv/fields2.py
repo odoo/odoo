@@ -140,7 +140,7 @@ class Float(Field):
     """ Float field. """
     type = 'float'
     digits = None                       # None, (precision, scale), or callable
-    _attrs = ('string', 'help', 'readonly', 'required', 'digits')
+    _attrs = Field._attrs + ('digits',)
 
     @classmethod
     def from_column(cls, column):
@@ -161,25 +161,31 @@ class Float(Field):
             return float(value or 0.0)
 
 
-class Char(Field):
-    """ Char field. """
-    type = 'char'
-    size = None
-    _attrs = ('string', 'help', 'readonly', 'required', 'size')
-
-    def record_to_cache(self, value):
-        return bool(value) and ustr(value)[:self.size]
-
-
-class Text(Field):
-    """ Text field. """
-    type = 'text'
+class _String(Field):
+    """ Abstract class for string fields. """
+    translate = False
+    _attrs = Field._attrs + ('translate',)
 
     def record_to_cache(self, value):
         return bool(value) and ustr(value)
 
 
-class Html(Field):
+class Char(_String):
+    """ Char field. """
+    type = 'char'
+    size = None
+    _attrs = _String._attrs + ('size',)
+
+    def record_to_cache(self, value):
+        return bool(value) and ustr(value)[:self.size]
+
+
+class Text(_String):
+    """ Text field. """
+    type = 'text'
+
+
+class Html(_String):
     """ Html field. """
     type = 'html'
 
@@ -225,7 +231,7 @@ class Selection(Field):
     """ Selection field. """
     type = 'selection'
     selection = None        # [(value, string), ...], model method or method name
-    _attrs = ('string', 'help', 'readonly', 'required', 'selection')
+    _attrs = Field._attrs + ('selection',)
 
     def __init__(self, selection, string=None, **kwargs):
         """ Selection field.
