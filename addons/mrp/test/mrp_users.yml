@@ -1,9 +1,6 @@
 -
    Create a user as 'MRP Manager'
 -
-  !context
-    default_groups_ref: [mrp.group_mrp_manager]
--
   !record {model: res.users, id: res_users_mrp_manager}:
     company_id: base.main_company
     name: MRP Manager
@@ -11,10 +8,13 @@
     password: mam
     email: mrp_manager@yourcompany.com
 -
-   Create a user as 'MRP User'
+  I added groups for MRP Manager.
 -
-  !context
-    default_groups_ref: [mrp.group_mrp_user]
+  !record {model: res.users, id: res_users_mrp_manager}:
+    groups_id:
+      - mrp.group_mrp_manager
+-
+   Create a user as 'MRP User'
 -
   !record {model: res.users, id: res_users_mrp_user}:
     company_id: base.main_company
@@ -22,3 +22,9 @@
     login: mau
     password: mau
     email: mrp_user@yourcompany.com
+-
+  I added groups for MRP User.
+-
+  !record {model: res.users, id: res_users_mrp_user}:
+    groups_id:
+      - mrp.group_mrp_user

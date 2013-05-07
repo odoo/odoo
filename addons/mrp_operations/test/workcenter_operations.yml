@@ -1,15 +1,18 @@
 -
    Create a user as 'MRP User'
 -
-  !context
-    default_groups_ref: [mrp.group_mrp_user]
--
   !record {model: res.users, id: res_mrp_operation_user}:
     company_id: base.main_company
     name: MRP User
     login: maou
     password: maou
     email: mrp_operation_user@yourcompany.com
+-
+  I added groups for MRP User.
+-
+  !record {model: res.users, id: res_mrp_operation_user}:
+    groups_id:
+      - mrp.group_mrp_user
 -
   In order to test mrp_operations with OpenERP, I refer created production order of PC Assemble SC349
   with routing - Manual Component's Assembly to test complete production process with respect of workcenter with giving access rights of MRP User.
