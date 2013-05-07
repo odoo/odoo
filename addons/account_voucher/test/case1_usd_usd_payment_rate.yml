@@ -68,6 +68,13 @@
     company_id: base.main_company
 
 -
+  I create a new partner Kate Mc Kay
+-
+  !record {model: res.partner, id: res_partner_mc_kay}:
+    name: "Mc Kay Kate"
+    property_account_receivable: account.a_recv
+    property_account_payable: account.a_pay
+-
   I create the first invoice on 1st January  for 200 USD
 -
   !record {model: account.invoice, id: account_invoice_jan_payment_rate}:
@@ -84,7 +91,7 @@
         product_id: product.product_product_3
         uos_id: product.product_uom_unit
     journal_id: account.sales_journal
-    partner_id: base.res_partner_19
+    partner_id: res_partner_mc_kay
     reference_type: none
 -
   I Validate invoice by clicking on Validate button
@@ -117,7 +124,7 @@
         product_id: product.product_product_3
         uos_id: product.product_uom_unit
     journal_id: account.sales_journal
-    partner_id: base.res_partner_19
+    partner_id: res_partner_mc_kay
     reference_type: none
 -
   I Validate invoice by clicking on Validate button
@@ -148,7 +155,7 @@
     company_id: base.main_company
     journal_id: bank_journal_USD
     name: 'Payment: Case 1 USD/USD payment rate'
-    partner_id: base.res_partner_19
+    partner_id: res_partner_mc_kay
     period_id: account.period_3
     date: !eval time.strftime("%Y-03-01")
     payment_option: 'with_writeoff'
