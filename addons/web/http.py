@@ -614,7 +614,7 @@ class Root(object):
                         elif exposed == 'http':
                             _logger.debug("Dispatch http to %s %s %s", ps, c, method_name)
                             return lambda request: HttpRequest(request).dispatch(method)
-                    elif method_name != "index":
+                    if method_name != "index":
                         method_name = "index"
                         continue
                 ps, _slash, method_name = ps.rpartition('/')
