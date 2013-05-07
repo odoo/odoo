@@ -78,19 +78,18 @@
                                 <label for="name" string="Group Name"/>
                             </div>
                             <h1><field name="name" readonly="0"/></h1>
-                            <div name="group_alias"
+                            <group colspan="2" name="group_alias"
                                     attrs="{'invisible': [('alias_domain', '=', False)]}">
-                                <span name="read_alias" class="oe_read_only" attrs="{'invisible': [('alias_name', '=', False)]}">
-                                    <span class="oe_e oe_e_alias">%%</span>
-                                    <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/>
-                                </span>
-                                <span name="edit_alias" class="oe_edit_only">
-                                    <span class="oe_e oe_e_alias">%%</span>
-                                    <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
-                                </span>
-                                <span class="oe_e oe_e_alias">V</span>
-                                <field name="alias_contact" class="oe_inline"/>
-                            </div>
+                                <label for="alias_id" string="%%" class="oe_e oe_e_alias" style="min-width: 20px;"/>
+                                <div name="alias_def">
+                                    <field name="alias_id" class="oe_read_only oe_inline" string="Email Alias"/>
+                                    <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
+                                        <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                                    </div>
+                                </div>
+                                <label for="alias_contact" string="V" class="oe_e oe_e_alias" style="min-width: 20px;"/>
+                                <field name="alias_contact" class="oe_inline" nolabel="1"/>
+                            </group>
                         </div>
                         <field name="description" placeholder="Topics discussed in this group..."/>
                         <div class="oe_clear"/>

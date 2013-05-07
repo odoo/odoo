@@ -99,15 +99,17 @@
                         <button name="attachment_tree_view" string="Documents" type="object"/>
                     </div>
                     <group>
-                        <group colspan="2"
+                        <group colspan="2" name="group_alias"
                                 attrs="{'invisible': [('alias_domain', '=', False)]}">
-                                <field name="privacy_visibility" widget="radio"/>
-                                <field name="alias_id" class="oe_read_only" string="Email Alias"/>
-                                <label for="alias_name" string="Email Alias" class="oe_edit_only"/>
-                                <div class="oe_edit_only">
+                            <field name="privacy_visibility" widget="radio"/>
+                            <label for="alias_name" string="Email Alias"/>
+                            <div name="alias_def">
+                                <field name="alias_id" class="oe_read_only oe_inline" string="Email Alias"/>
+                                <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
                                     <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                                 </div>
-                                <field name="alias_contact" class="oe_inline"/>
+                            </div>
+                            <field name="alias_contact" class="oe_inline"/>
                         </group>
                         <field name="user_id" string="Project Manager" 
                                 attrs="{'readonly':[('state','in',['close', 'cancelled'])]}" 
