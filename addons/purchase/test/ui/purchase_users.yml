@@ -1,9 +1,6 @@
 -
   Create a user as 'Purchase manager'
 -
-  !context
-    default_groups_ref: ['purchase.group_purchase_manager']
--
   !record {model: res.users, id: res_users_purchase_manager}:
     company_id: base.main_company
     name: Purchase Manager
@@ -11,10 +8,13 @@
     password: pm
     email: purchasemanager@yourcompany.com
 -
-  Create a user as 'Purchase user'
+  I added groups for Purchase manager.
 -
-  !context
-    default_groups_ref: ['purchase.group_purchase_user']
+  !record {model: res.users, id: res_users_purchase_manager}:
+    groups_id:
+      - purchase.group_purchase_manager
+-
+  Create a user as 'Purchase user'
 -
   !record {model: res.users, id: res_users_purchase_user}:
     company_id: base.main_company
@@ -22,3 +22,9 @@
     login: pu
     password: pu
     email: purchaseuser@yourcompany.com
+-
+  I added groups for Purchase user.
+-
+  !record {model: res.users, id: res_users_purchase_user}:
+    groups_id:
+      - purchase.group_purchase_user

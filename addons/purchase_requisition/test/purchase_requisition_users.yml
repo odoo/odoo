@@ -1,8 +1,5 @@
 -
-  Create a user as 'Purchase Reqisition Manager'
--
-  !context
-    default_groups_ref: ['purchase_requisition.group_purchase_requisition_manager']
+  Create a user as 'Purchase Requisition Manager'
 -
   !record {model: res.users, id: res_users_purchase_requisition_manager}:
     company_id: base.main_company
@@ -11,10 +8,13 @@
     password: prm
     email: requisition_manager@yourcompany.com
 -
-  Create a user as 'Purchase Reqisition User'
+  I added groups for Purchase Requisition Manager.
 -
-  !context
-    default_groups_ref: ['purchase_requisition.group_purchase_requisition_user']
+  !record {model: res.users, id: res_users_purchase_requisition_manager}:
+    groups_id:
+      - purchase_requisition.group_purchase_requisition_manager
+-
+  Create a user as 'Purchase Requisition User'
 -
   !record {model: res.users, id: res_users_purchase_requisition_user}:
     company_id: base.main_company
@@ -22,3 +22,9 @@
     login: pru
     password: pru
     email: requisition_user@yourcompany.com
+-
+  I added groups for Purchase Requisition User.
+-
+  !record {model: res.users, id: res_users_purchase_requisition_user}:
+    groups_id:
+      - purchase_requisition.group_purchase_requisition_user
