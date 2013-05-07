@@ -118,6 +118,13 @@ class WebRequest(object):
         # we use _ as seprator where RFC2616 uses '-'
         self.lang = lang.replace('-', '_')
 
+    @contextlib.contextmanager
+    def registry_cr(self):
+        dbname = self.session._db or openerp.addons.web.controllers.main.db_monodb(self)
+        registry = openerp.modules.registry.Registry(dbname.lower())
+        with registry.cursor() as cr:
+            yield (registry, cr)
+
 def reject_nonliteral(dct):
     if '__ref' in dct:
         raise ValueError(
