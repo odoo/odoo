@@ -1,9 +1,6 @@
 -
    Create a user as 'Stock Manager'
 -
-  !context
-    default_groups_ref: ['stock.group_stock_manager']
--
   !record {model: res.users, id: res_users_stock_manager}:
     company_id: base.main_company
     name: Stock Manager
@@ -11,10 +8,13 @@
     password: sam
     email: stockmanager@yourcompany.com
 -
-   Create a user as 'Stock User'
+  I added groups for Stock Manager.
 -
-  !context
-    default_groups_ref: ['stock.group_stock_user']
+  !record {model: res.users, id: res_users_stock_manager}:
+    groups_id:
+      - stock.group_stock_manager
+-
+   Create a user as 'Stock User'
 -
   !record {model: res.users, id: res_users_stock_user}:
     company_id: base.main_company
@@ -22,3 +22,9 @@
     login: sau
     password: sau
     email: stockuser@yourcompany.com
+-
+  I added groups for Stock User.
+-
+  !record {model: res.users, id: res_users_stock_user}:
+    groups_id:
+      - stock.group_stock_user
