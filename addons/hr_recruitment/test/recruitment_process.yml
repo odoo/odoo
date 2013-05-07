@@ -1,15 +1,18 @@
 -
   Create a user as 'HR Recruitment Officer'
 -
-  !context
-    default_groups_ref: [base.group_hr_user]
--
-  !record {model: res.users, id: res_users_hr_officer}:
+  !record {model: res.users, id: res_users_hr_recruitment_officer}:
     company_id: base.main_company
-    name: HR Officer
+    name: HR Recruitment Officer
     login: hrro
     password: hrro
     email: hrofcr@yourcompany.com
+-
+  I added groups for HR Recruitment Officer.
+-
+  !record {model: res.users, id: res_users_hr_recruitment_officer}:
+    groups_id:
+      - base.group_hr_user
 -
   In Order to test process of Recruitment so giving HR officer's rights,
 -

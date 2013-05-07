@@ -1,14 +1,17 @@
 -
   Create a user as 'HR Attendance Officer'
 -
-  !context
-    default_groups_ref: [base.group_hr_user]
--
   !record {model: res.users, id: res_users_attendance_officer}:
     company_id: base.main_company
     name: HR Officer
     login: ao
     password: ao
+-
+  I added groups for HR Attendance Officer.
+-
+  !record {model: res.users, id: res_users_attendance_officer}:
+    groups_id:
+      - base.group_hr_user
 -
   Give the access rights of Hr Officer to test attendance process.
 -
