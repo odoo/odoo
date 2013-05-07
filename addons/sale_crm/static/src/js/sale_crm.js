@@ -1,10 +1,10 @@
 openerp.sale_crm = function(openerp) {
+var _t = openerp.web._t;
 
 openerp.sale_crm.GaugeWidget = openerp.web_kanban.AbstractField.extend({
     className: "oe_gage",
     start: function() {
         var self = this;
-        console.log("start");
 
         var parent = this.getParent();
         var max = this.options.max_field ? parent.record[this.options.max_field].raw_value : 100;
@@ -39,6 +39,14 @@ openerp.sale_crm.GaugeWidget = openerp.web_kanban.AbstractField.extend({
 
         var flag_open = false;
         if (self.options.action_change) {
+            var $svg = self.$el.find('svg');
+            var css = {
+                'text-align': 'center',
+                'position': 'absolute',
+                'width': self.$el.outerWidth() + 'px',
+                'top': (self.$el.outerHeight()/2-5) + 'px'
+            };
+
             self.$el.click(function (event) {
                 event.stopPropagation();
                 flag_open = false;
@@ -46,9 +54,14 @@ openerp.sale_crm.GaugeWidget = openerp.web_kanban.AbstractField.extend({
                     return;
                 }
                 if (!self.$el.find(".oe_justgage_edit").size()) {
-                    var $svg = self.$el.find('svg');
-                    $div = $('<div class="oe_justgage_edit" style="text-align: center; z-index: 1; position: absolute; width: ' + $svg.outerWidth() + 'px; top: ' + ($svg.outerHeight()/2-5) + 'px;"/>');
-                    $input = $('<input style="text-align: center; width: ' + ($svg.outerWidth()-40) + 'px; margin: auto;"/>').val(value);
+                    $div = $('<div class="oe_justgage_edit" style="z-index:1"/>');
+                    $div.css(css);
+                    $input = $('<input/>').val(value);
+                    $input.css({
+                        'text-align': 'center',
+                        'margin': 'auto',
+                        'width': ($svg.outerWidth()-40) + 'px'
+                    });
                     $div.append($input);
                     self.$el.prepend($div)
                     $input.focus()
@@ -80,6 +93,13 @@ openerp.sale_crm.GaugeWidget = openerp.web_kanban.AbstractField.extend({
             }).mousedown(function () {
                 flag_open = true;
             });
+
+            if (!+value) {
+                $svg.fadeTo(0, 0.3);
+                $div = $('<div/>').text(_t("Click to change value"));
+                $div.css(css);
+                self.$el.append($div);
+            }
         }
     },
 });
