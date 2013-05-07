@@ -1,33 +1,45 @@
 -
-  Create a user as 'HR Manager'
--
-  !context
-    default_groups_ref: [base.group_hr_manager]
+  Create a user as 'HR timesheet Manager'
 -
   !record {model: res.users, id: res_hr_timesheet_manager}:
     company_id: base.main_company
-    name: HR manager
+    name: HR timesheet manager
     login: hrtm
     password: hrtm
 -
-  Create a user as 'HR Officer'
+  I added groups for HR timesheet Manager.
+-
+  !record {model: res.users, id: res_hr_timesheet_manager}:
+    groups_id:
+      - base.group_hr_manager
+-
+  Create a user as 'HR timesheet Officer'
 -
   !context
     default_groups_ref: [base.group_hr_user]
 -
   !record {model: res.users, id: res_hr_timesheet_officer}:
     company_id: base.main_company
-    name: HR Officer
+    name: HR timesheet Officer
     login: hrto
     password: hrto
 -
-  Create a user as 'Employee'
+  I added groups for HR timesheet Officer.
 -
-  !context
-    default_groups_ref: [base.group_user]
+  !record {model: res.users, id: res_hr_timesheet_officer}:
+    groups_id:
+      - base.group_hr_user
+-
+  Create a user as 'Timesheet Employee'
 -
   !record {model: res.users, id: res_hr_timesheet_employee}:
     company_id: base.main_company
-    name: Employee
+    name: Timesheet Employee
     login: empt
     password: empt
+-
+  I added groups for Timesheet Employee.
+-
+  !record {model: res.users, id: res_hr_timesheet_employee}:
+    groups_id:
+      - base.group_user
