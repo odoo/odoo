@@ -300,7 +300,9 @@ class product_template(osv.osv):
         'rental': fields.boolean('Can be Rent'),
         'categ_id': fields.many2one('product.category','Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
-        'standard_price': fields.property('', type = 'float', view_load=True, 
+        #TODO: why is there a first empty arg? relation='' could be written server side, no?
+        #TODO: put back decimal precision
+        'standard_price': fields.property(relation='', type = 'float', view_load=True, 
                                           help="Cost price of the product used for standard stock valuation in accounting and used as a base price on purchase orders.", 
                                           groups="base.group_user", string="Cost"),
         'volume': fields.float('Volume', help="The volume in m3."),

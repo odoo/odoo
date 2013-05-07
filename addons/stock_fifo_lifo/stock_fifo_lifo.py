@@ -24,6 +24,7 @@ from openerp.osv import osv, fields
 
 
 #@TODO Should not this be product template?
+#TODO: remove this module and put everything in existing core modules (purchase, stock, product...)
 class product_product (osv.osv):
     _name = "product.product"
     _inherit = "product.product"

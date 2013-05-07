@@ -152,6 +152,8 @@ class report_sales_by_margin_pos(osv.osv):
         'total':fields.float('Margin', readonly=True, select=True),
 
     }
+    #TODO: i don't think your join condition is correct, in all your reports because the company_id field on ir.property may be emtpy (not required)
+    #so you should take that into account in your query :-s
 
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_sales_by_margin_pos')
