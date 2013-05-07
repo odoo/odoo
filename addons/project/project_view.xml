@@ -88,19 +88,6 @@
                         <h1>
                             <field name="name" string="Project Name"/>
                         </h1>
-                        <div name="group_alias"
-                                attrs="{'invisible': [('alias_domain', '=', False)]}">
-                            <span name="read_alias" class="oe_read_only" attrs="{'invisible': [('alias_name', '=', False)]}">
-                                <span class="oe_e oe_e_alias">%%</span>
-                                <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/>
-                            </span>
-                            <span name="edit_alias" class="oe_edit_only">
-                                <span class="oe_e oe_e_alias">%%</span>
-                                <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
-                            </span>
-                            <span class="oe_e oe_e_alias">V</span>
-                            <field name="alias_contact" class="oe_inline"/>
-                        </div>
                         <div name="options_active">
                             <field name="use_tasks" class="oe_inline"/>
                             <label for="use_tasks"/>
@@ -112,18 +99,23 @@
                         <button name="attachment_tree_view" string="Documents" type="object"/>
                     </div>
                     <group>
-                        <group>
-                            <field name="privacy_visibility" widget="radio"/>
-                            <field name="user_id" string="Project Manager" 
+                        <group colspan="2"
+                                attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                <field name="privacy_visibility" widget="radio"/>
+                                <field name="alias_id" class="oe_read_only" string="Email Alias"/>
+                                <label for="alias_name" string="Email Alias" class="oe_edit_only"/>
+                                <div class="oe_edit_only">
+                                    <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                                </div>
+                                <field name="alias_contact" class="oe_inline"/>
+                        </group>
+                        <field name="user_id" string="Project Manager" 
                                 attrs="{'readonly':[('state','in',['close', 'cancelled'])]}" 
                                 context="{'default_groups_ref': ['base.group_user', 'project.group_project_manager']}"/>
-                        </group>
-                        <group>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
-                            <p colspan="2" attrs="{'invisible': [('analytic_account_id','=',False)]}">
-                                To invoice or setup invoicing and renewal options, go to the related contract: <field name="analytic_account_id" readonly="1" required="0" class="oe_inline"/>.
-                            </p>
-                        </group>
+                        <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
+                        <p colspan="2" attrs="{'invisible': [('analytic_account_id','=',False)]}">
+                            To invoice or setup invoicing and renewal options, go to the related contract: <field name="analytic_account_id" readonly="1" required="0" class="oe_inline"/>.
+                        </p>
                     </group>
                     <notebook>
                         <page string="Team" name="team">
