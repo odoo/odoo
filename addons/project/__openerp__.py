@@ -76,9 +76,8 @@ Dashboard / Reports for Project Management will include:
         'report/project_cumulative.xml',
         'board_project_view.xml',
         'res_config_view.xml',
-        'project_demo.xml',
     ],
-    # 'demo': ['project_demo.xml'],
+    'demo': ['project_demo.xml'],
     'test': [
         'test/project_demo.yml',
         'test/project_process.yml',
