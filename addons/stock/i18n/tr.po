@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-04-26 18:58+0000\n"
+"PO-Revision-Date: 2013-05-05 09:15+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-27 06:34+0000\n"
-"X-Generator: Launchpad (build 16580)\n"
+"X-Launchpad-Export-Date: 2013-05-06 06:35+0000\n"
+"X-Generator: Launchpad (build 16598)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -4434,6 +4434,12 @@ msgid ""
 "this quantity on assigned moves affects the product reservation, and should "
 "be done with care."
 msgstr ""
+"Bu envanter bakış açısından ürün miktarıdır. 'Yapıldı' durumundaki "
+"hareketler için, gerçekten hareket gören ürünlerin miktarıdır. Diğer "
+"hareketleri için, hareket görmesi planlanan ürünlerin miktarıdır. Bu "
+"miktarın azaltılması bir sipariş bakiyesi oluşturmaz. Atandığı hareketlerde "
+"bu miktarı değiştirmek ürün rezervasyonunu etkileyeceğinden çok dikkatli "
+"yapılmalıdır."
 
 #. module: stock
 #: help:stock.location,valuation_in_account_id:0
@@ -4892,6 +4898,10 @@ msgid ""
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
 msgstr ""
+"Gerçek zamanlı envanter değerlemesi yaparken, gelen bütün stok "
+"hareketlerinin karşıt günlük maddeleri, kaynak konumda özel bir değerleme "
+"hesabı tanımlanıncaya kadar bu hesaba işlenecektir. Ürüne tanımlanmamışsa, "
+"ürün kategorisinden bir tane kullanılır."
 
 #. module: stock
 #: view:stock.move:0
@@ -5197,6 +5207,9 @@ msgid ""
 "would let a quantity of \"%s %s\" to ship and only roundings of \"%s %s\" is "
 "accepted by the uom."
 msgstr ""
+"İlk ürün ölçü biriminin yuvarlanması \"%s %s\" sevkiyatına izin vermez, "
+"çünkü ölçü birimi \"%s %s\" miktarın sevkiyatını ve yalnızca \"%s %s\" "
+"miktarın yuvarlanmasını kabul eder."
 
 #. module: stock
 #: help:stock.move,move_dest_id:0
