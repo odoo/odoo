@@ -101,18 +101,19 @@ class mail_thread(osv.AbstractModel):
 
         if catchall_domain and model and res_id:  # specific res_id -> find its alias (i.e. section_id specified)
             object_id = self.pool.get(model).browse(cr, uid, res_id, context=context)
-            alias = object_id.alias_id
+            if object_id.alias_id and object_id.alias_id.alias_name:  # avoid void aliases
+                alias = object_id.alias_id
         elif catchall_domain and model:  # no specific res_id given -> generic help message, take an example alias (i.e. alias of some section_id)
             model_id = self.pool.get('ir.model').search(cr, uid, [("model", "=", self._name)], context=context)[0]
             alias_obj = self.pool.get('mail.alias')
-            alias_ids = alias_obj.search(cr, uid, [("alias_model_id", "=", model_id)], context=context, limit=1, order='id ASC')
+            alias_ids = alias_obj.search(cr, uid, [("alias_model_id", "=", model_id), ("alias_name", "!=", False)], context=context, limit=1, order='id ASC')
             if alias_ids:
                 alias = alias_obj.browse(cr, uid, alias_ids[0], context=context)
 
         if alias:
             alias_email = alias.name_get()[0][1]
             return _("""<p class='oe_view_nocontent_create'>
-                            Click here to add a new %(document)s or send an email to: <a href='mailto:%(email)s'>%(email)s</a>
+                            Click here to add new %(document)s or send an email to: <a href='mailto:%(email)s'>%(email)s</a>
                         </p>
                         %(static_help)s"""
                     ) % {
@@ -122,7 +123,7 @@ class mail_thread(osv.AbstractModel):
                     }
 
         if document_name != 'document' and help and help.find("oe_view_nocontent_create") == -1:
-            return _("<p class='oe_view_nocontent_create'>Click here to add a new %(document)s</p>%(static_help)s") % {
+            return _("<p class='oe_view_nocontent_create'>Click here to add new %(document)s</p>%(static_help)s") % {
                         'document': document_name,
                         'static_help': help or '',
                     }
