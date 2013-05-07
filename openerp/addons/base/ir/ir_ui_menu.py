@@ -299,13 +299,21 @@ class ir_ui_menu(osv.osv):
             - the needaction counter of the related action, taking into account
               the action domain
         """
+        if context is None:
+            context = {}
         res = {}
         menu_ids = set()
         for menu in self.browse(cr, uid, ids, context=context):
             menu_ids.add(menu.id)
             ctx = None
             if menu.action and menu.action.type in ('ir.actions.act_window', 'ir.actions.client') and menu.action.context:
-                ctx = eval(menu.action.context, context) or None
+                try:
+                    # use magical UnquoteEvalContext to ignore undefined client-side variables such as `active_id`
+                    eval_ctx = tools.UnquoteEvalContext(**context)
+                    ctx = eval(menu.action.context, locals_dict=eval_ctx, nocopy=True) or None
+                except Exception:
+                    # if the eval still fails for some reason, we'll simply skip this menu
+                    pass
             menu_ref = ctx and ctx.get('needaction_menu_ref')
             if menu_ref:
                 if not isinstance(menu_ref, list):
