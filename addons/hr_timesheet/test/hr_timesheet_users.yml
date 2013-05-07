@@ -15,9 +15,6 @@
 -
   Create a user as 'HR timesheet Officer'
 -
-  !context
-    default_groups_ref: [base.group_hr_user]
--
   !record {model: res.users, id: res_hr_timesheet_officer}:
     company_id: base.main_company
     name: HR timesheet Officer
