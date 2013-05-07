@@ -152,3 +152,19 @@ class TestNewFields(common.TransactionCase):
         with self.assertRaises(ValueError):
             alpha.lang = 'zz_ZZ'
 
+    def test_reference(self):
+        """ test reference fields. """
+        alpha, beta = self.Partner.search([], limit=2)
+
+        # one may assign False or None
+        alpha.some_reference_field = None
+        self.assertIs(alpha.some_reference_field, False)
+
+        # one may assign a partner or a user
+        alpha.some_reference_field = beta
+        self.assertEqual(alpha.some_reference_field, beta)
+        alpha.some_reference_field = self.scope.user
+        self.assertEqual(alpha.some_reference_field, self.scope.user)
+        with self.assertRaises(ValueError):
+            alpha.some_reference_field = self.scope.user.company_id
+

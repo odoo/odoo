@@ -47,10 +47,15 @@ class res_partner(models.Model):
 
     number_of_employees = fields.Integer()
     some_float_field = fields.Float(digits=(10,2))
+    some_reference_field = fields.Reference(selection='_references_models')
 
     name_size = fields.Integer(compute='compute_name_size', store=False)
     children_count = fields.Integer(compute='compute_children_count', store=True)
     has_sibling = fields.Integer(compute='compute_has_sibling', store=True)
+
+    @api.model
+    def _references_models(self):
+        return [('res.partner', 'Partner'), ('res.users', 'User')]
 
     @api.recordset
     @api.depends('name')

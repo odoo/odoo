@@ -245,10 +245,9 @@ class Selection(Field):
     def to_column(self):
         kwargs = dict((attr, getattr(self, attr)) for attr in self._attrs)
         if isinstance(self.selection, basestring):
-            # retrieve the method instead of its name
-            model_class = scope.model(self.model).__class__
-            kwargs['selection'] = getattr(model_class, self.selection)
-        return fields.selection(**kwargs)
+            method = self.selection
+            kwargs['selection'] = lambda self, *args, **kwargs: getattr(self, method)(*args, **kwargs)
+        return getattr(fields, self.type)(**kwargs)
 
     def get_selection(self):
         """ return the selection as a list of pairs """
@@ -267,6 +266,36 @@ class Selection(Field):
                 msg = "Wrong value for %s.%s: %r not in %r"
                 raise ValueError(msg % (self.model, self.name, value, values))
         return value or False
+
+
+class Reference(Selection):
+    """ Reference field. """
+    type = 'reference'
+    size = 128
+    _attrs = Selection._attrs + ('size',)
+
+    def __init__(self, selection, string=None, **kwargs):
+        """ Reference field.
+
+            :param selection: specifies the possible model names for this field.
+                It is given as either a list of pairs (`value`, `string`), or a
+                model method, or a method name.
+        """
+        super(Reference, self).__init__(selection=selection, string=string, **kwargs)
+
+    def cache_to_record(self, record, value):
+        if value:
+            res_model, res_id = value.split(',')
+            return scope.model(res_model).record(int(res_id), scope=record._scope)
+        return False
+
+    def record_to_cache(self, value):
+        if value:
+            models = [item[0] for item in self.get_selection()]
+            if isinstance(value, Record) and value._name in models:
+                return "%s,%s" % (value._name, value._id)
+            raise ValueError("Wrong value for %s.%s: %s" % (self.model, self.name, value))
+        return False
 
 
 class Many2one(Field):
