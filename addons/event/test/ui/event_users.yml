@@ -1,9 +1,6 @@
 -
   Create a user as 'Event manager'
 -
-  !context
-    default_groups_ref: [event.group_event_manager]
--
   !record {model: res.users, id: res_users_eventmanager}:
     company_id: base.main_company
     name: Event manager
@@ -11,10 +8,13 @@
     password: em
     email: eventmanager@yourcompany.com
 -
-  Create a user as 'Event user'
+  I added groups for Event manager.
 -
-  !context
-    default_groups_ref: [event.group_event_user]
+  !record {model: res.users, id: res_users_eventmanager}:
+    groups_id:
+      - event.group_event_manager
+-
+  Create a user as 'Event user'
 -
   !record {model: res.users, id: res_users_eventuser}:
     company_id: base.main_company
@@ -22,3 +22,9 @@
     login: eu
     password: eu
     email: eventuser@yourcompany.com
+-
+  I added groups for Event manager.
+-
+  !record {model: res.users, id: res_users_eventuser}:
+    groups_id:
+      - event.group_event_user
