@@ -337,8 +337,10 @@
                     <field name="project_escalation_id"/>
                 </field>
                 <xpath expr='//div[@name="edit_alias"]' position='after'>
-                    <label for="alias_model" string="creates" style="vertical-align: middle;"/>
-                    <field name="alias_model" class="oe_inline"/>
+                    <label for="alias_model" string="creates" style="vertical-align: middle;"
+                            attrs="{'invisible': [('alias_name', '=', False)]}"/>
+                    <field name="alias_model" class="oe_inline"
+                            attrs="{'invisible': [('alias_name', '=', False)]}"/>
                 </xpath>
             </field>
        </record>

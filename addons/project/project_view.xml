@@ -109,7 +109,8 @@
                                     <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
                                 </div>
                             </div>
-                            <field name="alias_contact" class="oe_inline"/>
+                            <field name="alias_contact" class="oe_inline"
+                                    attrs="{'invisible': [('alias_name', '=', False)]}"/>
                         </group>
                         <field name="user_id" string="Project Manager" 
                                 attrs="{'readonly':[('state','in',['close', 'cancelled'])]}" 
