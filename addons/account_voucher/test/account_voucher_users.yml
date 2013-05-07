@@ -1,8 +1,5 @@
 -
-   Create a user as 'Accountant for voucher'
--
-  !context
-    default_groups_ref: [base.group_partner_manager,account.group_account_user]
+   Create a user as 'Accountant for account voucher'
 -
   !record {model: res.users, id: res_users_account_voucher_user}:
     company_id: base.main_company
@@ -11,10 +8,14 @@
     password: acc
     email: accountant@yourcompany.com
 -
-   Create a user as 'Financial Manager for account voucher'
+  I added groups to Accountant for account voucher which needed.
 -
-  !context
-    default_groups_ref: [base.group_partner_manager,account.group_account_manager]
+  !record {model: res.users, id: res_users_account_voucher_user}:
+    groups_id:
+      - base.group_partner_manager
+      - account.group_account_user
+-
+   Create a user as 'Financial Manager for account voucher'
 -
   !record {model: res.users, id: res_users_account_voucher_manager}:
     company_id: base.main_company
@@ -22,3 +23,10 @@
     login: fmv
     password: fmv
     email: finmanager@yourcompany.com
+-
+  I added groups to Financial Manager for account voucher which needed.
+-
+  !record {model: res.users, id: res_users_account_voucher_manager}:
+    groups_id:
+      - base.group_partner_manager
+      - account.group_account_manager

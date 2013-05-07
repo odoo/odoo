@@ -1,9 +1,6 @@
 -
    Create a user as 'Accountant'
 -
-  !context
-    default_groups_ref: [base.group_partner_manager,account.group_account_user]
--
   !record {model: res.users, id: res_users_account_user}:
     company_id: base.main_company
     name: Accountant  
@@ -11,10 +8,14 @@
     password: acc
     email: accountuser@yourcompany.com
 -
-   Create a user as 'Financial Manager'
+  I added groups for Accountant which needed.
 -
-  !context
-    default_groups_ref: [account.group_account_manager]
+  !record {model: res.users, id: res_users_account_user}:
+    groups_id:
+      - account.group_account_user
+      - base.group_partner_manager
+-
+   Create a user as 'Financial Manager'
 -
   !record {model: res.users, id: res_users_account_manager}:
     company_id: base.main_company
@@ -22,3 +23,9 @@
     login: fm
     password: fm
     email: accountmanager@yourcompany.com
+-
+  I added groups for Financial Manager which needed.
+-
+  !record {model: res.users, id: res_users_account_manager}:
+    groups_id:
+      - account.group_account_manager
