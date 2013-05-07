@@ -201,12 +201,12 @@ def _returns_new(method, func):
     if model == 'self':
         def wrapper(self, *args, **kwargs):
             res = func(self, *args, **kwargs)
-            return self.browse(res, scoped=False)
+            return self.browse(res)
         return wrapper
     elif model:
         def wrapper(self, *args, **kwargs):
             res = func(self, *args, **kwargs)
-            return scope.model(model).browse(res, scoped=False)
+            return scope.model(model).browse(res)
         return wrapper
     else:
         return func
@@ -315,7 +315,7 @@ def record(method):
     def old_api(self, cr, uid, ids, *args, **kwargs):
         context, args, kwargs = _split_context_args(nargs, args, kwargs)
         with Scope(cr, uid, context):
-            return new_api(self.browse(ids, scoped=False), *args, **kwargs)
+            return new_api(self.browse(ids), *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
         if self.is_record():
@@ -350,7 +350,7 @@ def recordset(method):
     def old_api(self, cr, uid, ids, *args, **kwargs):
         context, args, kwargs = _split_context_args(nargs, args, kwargs)
         with Scope(cr, uid, context):
-            return new_api(self.browse(ids, scoped=False), *args, **kwargs)
+            return new_api(self.browse(ids), *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
         if self.is_record():

@@ -3548,7 +3548,7 @@ class BaseModel(object):
             old_fields = set(fields) - new_fields
 
         # read old-style fields with (low-level) method _read_flat
-        select = self.browse(ids, scoped=False)
+        select = self.browse(ids)
         result = select.recordset()._read_flat(list(old_fields), load=load)
 
         # read new-style fields with records
@@ -4504,27 +4504,21 @@ class BaseModel(object):
         self.create_workflow(cr, user, [id_new], context=context)
         return id_new
 
-    def browse(self, cr, uid, select, context=None, scoped=True):
-        """ return a record, recordset or null instance corresponding to the
-            value of parameter `select` (id, list of ids or ``False``).
+    def browse(self, cr, uid, select, context=None):
+        """ return a record or recordset instance corresponding to the value of
+            parameter `select` (id or list of ids).
 
             :param cr: database cursor
             :param uid: current user id
-            :param select: id, list of ids, or ``False``.
+            :param select: id, list of ids, or ``False`` (null)
             :param context: context arguments, like lang, time zone
-            :param scoped: whether the result is attached to the current scope
-            :rtype: record, recordset or null requested
+            :rtype: record or recordset requested
         """
-        scope = scope_proxy.current if scoped else None
-
-        # need to accepts ints and longs because ids coming from a method
-        # launched by button in the interface have a type long...
-        if isinstance(select, (int, long)) and select:
-            return self.record(select, scope=scope)
-        elif isinstance(select, list):
-            return self.recordset(select, scope=scope)
+        scope = scope_proxy.current
+        if isinstance(select, list):
+            return self._make_instance(_ids=tuple(select), _scope=scope)
         else:
-            return self.null(scope=scope)
+            return self._make_instance(_id=(select or False), _scope=scope)
 
     def _store_get_values(self, cr, uid, ids, fields, context):
         """Returns an ordered list of fields.functions to call due to

@@ -249,24 +249,16 @@ class TestAPI(common.TransactionCase):
         """ Test scope on records. """
         outer_scope = scope.current
 
-        # partners and reachable records are not attached to a particular scope
-        f_partners = self.Partner.search([('name', 'ilike', 'j')])
-        for x in (f_partners, f_partners[0], f_partners[0].company_id):
+        # partners and reachable records are attached to the outer scope
+        partners = self.Partner.search([('name', 'ilike', 'j')])
+        for x in (partners, partners[0], partners[0].company_id):
             self.assertEqual(x.scope, outer_scope)
-        for p in f_partners:
-            self.assertEqual(p.scope, outer_scope)
-
-        # create a recordset and records attached to the outer scope
-        s_partners = f_partners.recordset(scope=outer_scope)
-        self.assertEqual(s_partners, f_partners)
-        for x in (s_partners, s_partners[0], s_partners[0].company_id):
-            self.assertEqual(x.scope, outer_scope)
-        for p in s_partners:
+        for p in partners:
             self.assertEqual(p.scope, outer_scope)
 
         # check that current user can read and modify company data
-        f_partners[0].company_id.name
-        f_partners[0].company_id.write({'name': 'Fools'})
+        partners[0].company_id.name
+        partners[0].company_id.write({'name': 'Fools'})
 
         # create a scope with the demo user
         demo = self.Users.search([('login', '=', 'demo')])[0]
@@ -274,33 +266,34 @@ class TestAPI(common.TransactionCase):
         with scope(demo) as inner_scope:
             self.assertNotEqual(inner_scope, outer_scope)
 
-            # f_partners and related records refer to current scope
-            for x in (f_partners, f_partners[0], f_partners[0].company_id):
-                self.assertEqual(x.scope, inner_scope)
-            for p in f_partners:
-                self.assertEqual(p.scope, inner_scope)
-
-            # but s_partners and related records are still attached to outer_scope
-            for x in (s_partners, s_partners[0], s_partners[0].company_id):
+            # partners and related records are still attached to outer_scope
+            for x in (partners, partners[0], partners[0].company_id):
                 self.assertEqual(x.scope, outer_scope)
-            for p in s_partners:
+            for p in partners:
                 self.assertEqual(p.scope, outer_scope)
+
+            # create record instances attached to the inner scope
+            demo_partners = partners.browse(map(int, partners))
+            for x in (demo_partners, demo_partners[0], demo_partners[0].company_id):
+                self.assertEqual(x.scope, inner_scope)
+            for p in demo_partners:
+                self.assertEqual(p.scope, inner_scope)
 
             # demo user cannot modify company data, whatever the scope of the record
             with self.assertRaises(except_orm):
-                f_partners[0].company_id.write({'name': 'Pricks'})
+                partners[0].company_id.write({'name': 'Pricks'})
             with self.assertRaises(except_orm):
-                s_partners[0].company_id.write({'name': 'Pricks'})
+                demo_partners[0].company_id.write({'name': 'Pricks'})
 
             # remove demo user from all groups, such that it cannot read partner data
             with scope.SUDO():
                 demo.write({'groups_id': [(5,)]})
 
-            # demo user can no longer read partner data from an unscoped record
+            # demo user can no longer access partner data
             with self.assertRaises(except_orm):
-                f_partners[0].company_id.name
-            # but it can still read partner data from a scoped record
-            s_partners[0].company_id.name
+                demo_partners[0].company_id.name
+            # but it can still read partner data from the outer scope
+            partners[0].company_id.name
 
     @mute_logger('openerp.osv.orm')
     def test_60_cache(self):
