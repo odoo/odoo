@@ -373,7 +373,16 @@ class WorkerLongPolling(Worker):
         Worker.start(self)
         from gevent.wsgi import WSGIServer
         self.server = WSGIServer(self.multi.long_polling_socket, self.multi.app)
-        self.server.serve_forever()
+        self.server.start()
+
+    def stop(self):
+        self.server.stop()
+
+    def sleep(self):
+        time.sleep(1)
+
+    def process_work(self):
+        pass
 
 class WorkerBaseWSGIServer(werkzeug.serving.BaseWSGIServer):
     """ werkzeug WSGI Server patched to allow using an external listen socket

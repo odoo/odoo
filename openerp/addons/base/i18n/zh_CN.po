@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-19 05:23+0000\n"
-"X-Generator: Launchpad (build 16567)\n"
+"X-Launchpad-Export-Date: 2013-04-30 05:28+0000\n"
+"X-Generator: Launchpad (build 16580)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_writing
@@ -575,6 +575,14 @@ msgid ""
 "that have no counterpart in the general financial accounts.\n"
 "    "
 msgstr ""
+"\n"
+"用于定义财务分析项目的模块。\n"
+"================================================\n"
+"\n"
+"在OpenERP中，财务分析虽与常规财务相连，但却是\n"
+"完全独立的。因此，可以使用许多不同的分析操作，\n"
+"即使在常规财务会计模块中没有对应功能。\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_idea
@@ -837,7 +845,7 @@ msgstr ""
 "\n"
 "OpenERP Web LinkedIn 模块.\n"
 "============================\n"
-"这个模块在OpenERP上提供了一体化的Linke dIn\n"
+"此模块用于在OpenERP中集成LinkedIn.\n"
 "        "
 
 #. module: base
@@ -864,7 +872,7 @@ msgstr ""
 #. module: base
 #: help:ir.cron,nextcall:0
 msgid "Next planned execution date for this job."
-msgstr "此任务的下一次执行时间"
+msgstr "该任务的下次执行日期"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view
@@ -1094,7 +1102,10 @@ msgid ""
 "       "
 msgstr ""
 "\n"
-"这模块目的是管理员工的考勤 根据执行的签入/签出的动作保存员工帐户的考勤记录。\n"
+"此模块用于管理员工的考勤.\n"
+"==================================================\n"
+"\n"
+"以员工的登入/退出时间为准，记录员工考勤.\n"
 "       "
 
 #. module: base
@@ -1215,7 +1226,7 @@ msgstr "TGZ 压缩包"
 #: view:res.groups:0
 msgid ""
 "Users added to this group are automatically added in the following groups."
-msgstr "若有用户添加至本组时自动将用户添加到下面的组。"
+msgstr "加入本群组的用户也将自动加入以下群组."
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:733
@@ -1768,6 +1779,20 @@ msgid ""
 "in their pockets, this module is essential.\n"
 "    "
 msgstr ""
+"\n"
+"管理午餐的基本模块\n"
+"================================\n"
+"\n"
+"许多公司为给员工提供便利，会从熟悉的餐厅为其员工预定象三明治、披萨饼或其它形式的午餐。\n"
+"\n"
+"然而公司内部的午餐预定需要适当的管理，尤其是当员工和餐厅数量比较多的情况下。\n"
+"\n"
+"我们开发的“午餐订购”模块会使这个管理工作变得简单，并给员工提供了更多的工具盒便利。 \n"
+"\n"
+"除了提供完备的餐食和餐厅管理，本模块还可以根据员工的喜好提供快速订餐选项和显示提示信息。 \n"
+"\n"
+"如果想节省员工的时间，避免他们总是要准备很多零钱，这个模块就是必须的。\n"
+"    "
 
 #. module: base
 #: view:wizard.ir.model.menu.create:0
@@ -1810,7 +1835,7 @@ msgstr "该业务伙伴或者公司的网站"
 msgid ""
 "If you check this box, your customized translations will be overwritten and "
 "replaced by the official ones."
-msgstr "如果勾上这个勾，数据库中的翻译将被服务器上的po文件中的翻译覆盖"
+msgstr "如果选定，则定制翻译会被系统翻译覆盖替换。"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_action_report_xml
@@ -2791,6 +2816,9 @@ msgid ""
 "==================================\n"
 "    "
 msgstr ""
+"\n"
+"美国 - 会计科目\n"
+"    "
 
 #. module: base
 #: field:ir.actions.act_url,target:0
@@ -2847,6 +2875,16 @@ msgid ""
 "        * Files by Partner (graph)\n"
 "        * Files Size by Month (graph)\n"
 msgstr ""
+"\n"
+"这是一个完整的文档管理系统。\n"
+"================================================\n"
+"    * 用户身份验证\n"
+"    * 文档索引：在Windows平台上不支持pptx和docx格式文件。\n"
+"    * 文档面板包含：\n"
+"        * 新文件列表\n"
+"        * 按资源类型的文件图表\n"
+"        * 按合作者的文件图表\n"
+"        * 按月的文件大小图表\n"
 
 #. module: base
 #: view:ir.actions.report.xml:0
@@ -2998,6 +3036,14 @@ msgid ""
 "This module is currently not compatible with the ``user_ldap`` module and\n"
 "will disable LDAP authentication completely if installed at the same time.\n"
 msgstr ""
+"\n"
+"加密密码\n"
+"===================\n"
+"\n"
+"LDAP身份验证的内部功能：\n"
+"-------------------------------\n"
+"当前该模块与``user_ldap``模块并不兼容\n"
+"如果二者同时安装，会禁用LDAP身份验证。\n"
 
 #. module: base
 #: model:res.groups,name:base.group_hr_manager
@@ -12206,7 +12252,7 @@ msgstr "报表类型"
 #: view:res.partner.bank:0
 #: view:res.users:0
 msgid "State"
-msgstr "状态"
+msgstr "省"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -14559,7 +14605,7 @@ msgstr "源模型"
 #. module: base
 #: view:ir.sequence:0
 msgid "Day of the Week (0:Monday): %(weekday)s"
-msgstr ""
+msgstr "一周的第几天 (0:星期一):%(weekday)s"
 
 #. module: base
 #: code:addons/base/module/wizard/base_module_upgrade.py:84
