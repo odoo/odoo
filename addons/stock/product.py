@@ -216,7 +216,10 @@ class product_product(osv.osv):
             if type(context['location']) == type(1):
                 location_ids = [context['location']]
             elif type(context['location']) in (type(''), type(u'')):
-                location_ids = location_obj.search(cr, uid, [('name','ilike',context['location'])], context=context)
+                if context.get('force_company', False):
+                    location_ids = location_obj.search(cr, uid, [('name','ilike',context['location']), ('company_id', '=', context['force_company'])], context=context)
+                else:
+                    location_ids = location_obj.search(cr, uid, [('name','ilike',context['location'])], context=context)
             else:
                 location_ids = context['location']
         else:
@@ -225,13 +228,19 @@ class product_product(osv.osv):
             if not wids:
                 return False
             for w in warehouse_obj.browse(cr, uid, wids, context=context):
-                location_ids.append(w.lot_stock_id.id)
+                if not context.get('force_company', False) or w.lot_stock_id.company_id == context['force_company']:
+                    location_ids.append(w.lot_stock_id.id)
 
         # build the list of ids of children of the location given by id
         if context.get('compute_child',True):
-            child_location_ids = location_obj.search(cr, uid, [('location_id', 'child_of', location_ids)])
+            if context.get('force_company', False):
+                child_location_ids = location_obj.search(cr, uid, [('location_id', 'child_of', location_ids), ('company_id', '=', context['force_company'])])
+            else:
+                child_location_ids = location_obj.search(cr, uid, [('location_id', 'child_of', location_ids)])
             location_ids = child_location_ids or location_ids
-            
+        
+        
+        
         return location_ids
 
 
@@ -299,12 +308,6 @@ class product_product(osv.osv):
         if where_add:
             where += where_add
 
-        #It depends on the company of the user OR by using force_company in context
-        user = self.pool.get("res.users").browse(cr, uid, uid, context=context)
-        if context.get("force_company", False):
-            where.append(context['force_company'])
-        else:
-            where.append(user.company_id.id)
 
         prodlot_id = context.get('prodlot_id', False)
         prodlot_clause = ''
@@ -322,7 +325,6 @@ class product_product(osv.osv):
                 'and location_dest_id IN %s '\
                 'and product_id IN %s '\
                 'and state IN %s ' + (date_str and 'and '+date_str+' ' or '') +' '\
-                'and company_id = %s '\
                 + prodlot_clause + 
                 'group by product_id,product_uom',tuple(where))
             results = cr.fetchall()
@@ -335,7 +337,6 @@ class product_product(osv.osv):
                 'and location_dest_id NOT IN %s '\
                 'and product_id  IN %s '\
                 'and state in %s ' + (date_str and 'and '+date_str+' ' or '') + ' '\
-                'and company_id = %s '\
                 + prodlot_clause + 
                 'group by product_id,product_uom',tuple(where))
             results2 = cr.fetchall()

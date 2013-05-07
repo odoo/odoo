@@ -141,31 +141,35 @@ class stock_move(osv.osv):
                 ctx['force_company'] = company_id
                 product = product_obj.browse(cr, uid, move.product_id.id, context=ctx)
             cost_method = product.cost_method
-            
+            uom_id = product.uom_id.id
             if move.picking_id.type == 'out' and cost_method in ['fifo', 'lifo']:
+                #This price has to be put as the new standard price for the product, but needs to be converted to product UoM and currency
+                #convert uom of qty
+
+                product_uom_qty = uom_obj._compute_qty(cr, uid, product_uom, product_qty, uom_id)
+
                 #get_stock_matchings will convert to currency and UoM of this stock move
                 tuples = product_obj.get_stock_matchings_fifolifo(cr, uid, [product.id], product_qty, cost_method == 'fifo', 
-                                                                  product_uom, move.company_id.currency_id.id, context=context) #Always move of the company
+                                                                  product_uom, move.company_id.currency_id.id, context=context) #Always currency of the company
                 price_amount = 0.0
                 amount = 0.0
                 move_currency_id = move.company_id.currency_id.id
                 ctx['currency_id'] = move_currency_id
                 for match in tuples: 
                     matchvals = {'move_in_id': match[0], 'qty': match[1], 
-                                 'move_out_id': move.id}
+                                 'move_out_id': move.id, 'price_unit_out': match[2]}
                     match_id = matching_obj.create(cr, uid, matchvals, context=context)
                     move_in = self.browse(cr, uid, match[0], context=context)
                     #Reduce remaining quantity
                     self.write(cr, uid, match[0], { 'qty_remaining': move_in.qty_remaining - match[3]}, context=context)
                     price_amount += match[1] * match[2]
                     amount += match[1]
-                self.write(cr, uid, move.id, {'price_unit': price_amount / amount}, context=context)
-                print price_amount
-                print amount
-                #This price has to be put as the new standard price for the product, but needs to be converted to product UoM and currency
-                #convert uom of qty
-                uom_id = product.uom_id.id
-                product_qty = uom_obj._compute_qty(cr, uid, product_uom, amount, uom_id)
+                if product.qty_available >= product_uom_qty:
+                    self.write(cr, uid, move.id, {'price_unit': price_amount / amount}, context=context)
+                else:
+                    self.write(cr, uid, move.id, {'price_unit': price_amount / amount}, context=context)
+                
+
                 #convert price, no need of UoM conversion as it is the total price
                 currency_id = move.company_id.currency_id.id
                 currency_from = move.price_currency_id
@@ -175,16 +179,23 @@ class stock_move(osv.osv):
                 else:
                     new_price = price_amount
                 #new_price does not depend on qty as it is the total amount => no conversion needed for uom 
-                product_obj.write(cr, uid, product.id, {'standard_price': new_price / product_qty}, context=ctx)
-            # When the move is products returned to supplier or return products from customer
-            # then the price should be the price from the original move
+                product_obj.write(cr, uid, product.id, {'standard_price': new_price / product_uom_qty}, context=ctx)
+            # When the move is products returned to supplier or return products from customer, 
+            # it should be treated as a normal in or out, so for every in
             elif cost_method in ['fifo', 'lifo']:  
                 #The currency in the stock move should be the currency of the company
-                if product_currency != move.company_id.currency_id.id:
-                    new_price = currency_obj.compute(cr, uid, product_currency, move.company_id.currency_id.id, 
-                                                 product_price, round=False)
-                else:
-                    new_price = product_price
+                if product_price > 0.0:
+                    if product_currency != move.company_id.currency_id.id:
+                        new_price = currency_obj.compute(cr, uid, product_currency, move.company_id.currency_id.id, 
+                                                     product_price, round=False)
+                    else:
+                        new_price = product_price
+                else: 
+                    if product_uom != uom_id:
+                        new_price = uom_obj._compute_price(cr, uid, uom_id, new_price,
+                            product_uom)
+                    else:
+                        new_price = product.standard_price
                 self.write(cr, uid, [move.id],
                             {'price_unit': new_price,
                              'price_currency_id': move.company_id.currency_id.id})
@@ -196,7 +207,8 @@ class stock_move_matching(osv.osv):
     _columns = {
         'move_in_id': fields.many2one('stock.move', 'Stock move in', required=True),
         'move_out_id': fields.many2one('stock.move', 'Stock move out', required=True),
-        'qty': fields.integer('Quantity', required=True), 
+        'qty': fields.float('Quantity', required=True), 
         'price_unit':fields.related('move_in_id', 'price_unit', string="Unit price", type="float"),
+        'price_unit_out': fields.float('Unit price out') 
     }
 

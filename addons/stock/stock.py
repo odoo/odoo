@@ -2293,6 +2293,9 @@ class stock_move(osv.osv):
         return reference_amount, reference_currency_id
 
 
+        
+
+
     def _create_product_valuation_moves(self, cr, uid, move, context=None):
         """
         Generate the appropriate accounting moves if the product being moves is subject
@@ -2316,9 +2319,9 @@ class stock_move(osv.osv):
                 reference_amount, reference_currency_id = self._get_reference_accounting_values_for_valuation(cr, uid, move, src_company_ctx)
                 #returning goods to supplier
                 if move.location_dest_id.usage == 'supplier':
-                    account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, acc_valuation, acc_src, reference_amount, reference_currency_id, context))]
+                    account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, acc_valuation, acc_src, reference_amount, reference_currency_id, 'out', context=context))]
                 else:
-                    account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, acc_valuation, acc_dest, reference_amount, reference_currency_id, context))]
+                    account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, acc_valuation, acc_dest, reference_amount, reference_currency_id, 'out', context=context))]
 
             # Incoming moves (or cross-company input part)
             if move.location_dest_id.company_id \
@@ -2328,9 +2331,9 @@ class stock_move(osv.osv):
                 reference_amount, reference_currency_id = self._get_reference_accounting_values_for_valuation(cr, uid, move, src_company_ctx)
                 #goods return from customer
                 if move.location_id.usage == 'customer':
-                    account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, acc_dest, acc_valuation, reference_amount, reference_currency_id, context))]
+                    account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, acc_dest, acc_valuation, reference_amount, reference_currency_id, 'in', context=context))]
                 else:
-                    account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, acc_src, acc_valuation, reference_amount, reference_currency_id, context))]
+                    account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, acc_src, acc_valuation, reference_amount, reference_currency_id, 'in', context=context))]
             move_obj = self.pool.get('account.move')
             for j_id, move_lines in account_moves:
                 move_obj.create(cr, uid,
@@ -2394,55 +2397,70 @@ class stock_move(osv.osv):
 
         return True
 
-    def _create_account_move_line(self, cr, uid, move, src_account_id, dest_account_id, reference_amount, reference_currency_id, context=None):
+    def _create_account_move_line(self, cr, uid, move, src_account_id, dest_account_id, reference_amount, reference_currency_id, type='', context=None):
         """
         Generate the account.move.line values to post to track the stock valuation difference due to the
         processing of the given stock move.
         """
-        # prepare default values considering that the destination accounts have the reference_currency_id as their main currency
-        partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
-        debit_line_vals = {
-                    'name': move.name,
-                    'product_id': move.product_id and move.product_id.id or False,
-                    'quantity': move.product_qty,
-                    'ref': move.picking_id and move.picking_id.name or False,
-                    'date': time.strftime('%Y-%m-%d'),
-                    'partner_id': partner_id,
-                    'debit': reference_amount,
-                    'account_id': dest_account_id,
-        }
-        credit_line_vals = {
-                    'name': move.name,
-                    'product_id': move.product_id and move.product_id.id or False,
-                    'quantity': move.product_qty,
-                    'ref': move.picking_id and move.picking_id.name or False,
-                    'date': time.strftime('%Y-%m-%d'),
-                    'partner_id': partner_id,
-                    'credit': reference_amount,
-                    'account_id': src_account_id,
-        }
+        move_list = []
+        # Consists of access rights 
+        # TODO Check if currency is not needed
+        if type == 'out' and move.product_id.cost_method in ['fifo', 'lifo']:
+            match_obj = self.pool.get("stock.move.matching")
+            matches = match_obj.search(cr, uid, [('move_out_id','=', move.id)], context=context)
+            for match in match_obj.browse(cr, uid, matches, context=context):
+                move_in = match.move_in_id
+                move_list += [(match.qty, match.qty * match.price_unit_out)]
+        else:
+            move_list = [(move.product_qty, reference_amount)]
+            
+        res = []
+        for item in move_list:
+            # prepare default values considering that the destination accounts have the reference_currency_id as their main currency
+            partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
+            debit_line_vals = {
+                        'name': move.name,
+                        'product_id': move.product_id and move.product_id.id or False,
+                        'quantity': item[0],
+                        'ref': move.picking_id and move.picking_id.name or False,
+                        'date': time.strftime('%Y-%m-%d'),
+                        'partner_id': partner_id,
+                        'debit': item[1],
+                        'account_id': dest_account_id,
+            }
+            credit_line_vals = {
+                        'name': move.name,
+                        'product_id': move.product_id and move.product_id.id or False,
+                        'quantity': item[0],
+                        'ref': move.picking_id and move.picking_id.name or False,
+                        'date': time.strftime('%Y-%m-%d'),
+                        'partner_id': partner_id,
+                        'credit': item[1],
+                        'account_id': src_account_id,
+            }
 
-        # if we are posting to accounts in a different currency, provide correct values in both currencies correctly
-        # when compatible with the optional secondary currency on the account.
-        # Financial Accounts only accept amounts in secondary currencies if there's no secondary currency on the account
-        # or if it's the same as that of the secondary amount being posted.
-        account_obj = self.pool.get('account.account')
-        src_acct, dest_acct = account_obj.browse(cr, uid, [src_account_id, dest_account_id], context=context)
-        src_main_currency_id = src_acct.company_id.currency_id.id
-        dest_main_currency_id = dest_acct.company_id.currency_id.id
-        cur_obj = self.pool.get('res.currency')
-        if reference_currency_id != src_main_currency_id:
-            # fix credit line:
-            credit_line_vals['credit'] = cur_obj.compute(cr, uid, reference_currency_id, src_main_currency_id, reference_amount, context=context)
-            if (not src_acct.currency_id) or src_acct.currency_id.id == reference_currency_id:
-                credit_line_vals.update(currency_id=reference_currency_id, amount_currency=-reference_amount)
-        if reference_currency_id != dest_main_currency_id:
-            # fix debit line:
-            debit_line_vals['debit'] = cur_obj.compute(cr, uid, reference_currency_id, dest_main_currency_id, reference_amount, context=context)
-            if (not dest_acct.currency_id) or dest_acct.currency_id.id == reference_currency_id:
-                debit_line_vals.update(currency_id=reference_currency_id, amount_currency=reference_amount)
-
-        return [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
+            # if we are posting to accounts in a different currency, provide correct values in both currencies correctly
+            # when compatible with the optional secondary currency on the account.
+            # Financial Accounts only accept amounts in secondary currencies if there's no secondary currency on the account
+            # or if it's the same as that of the secondary amount being posted.
+            #TODO -> might need to be changed still for fifolifo
+            account_obj = self.pool.get('account.account')
+            src_acct, dest_acct = account_obj.browse(cr, uid, [src_account_id, dest_account_id], context=context)
+            src_main_currency_id = src_acct.company_id.currency_id.id
+            dest_main_currency_id = dest_acct.company_id.currency_id.id
+            cur_obj = self.pool.get('res.currency')
+            if reference_currency_id != src_main_currency_id:
+                # fix credit line:
+                credit_line_vals['credit'] = cur_obj.compute(cr, uid, reference_currency_id, src_main_currency_id, reference_amount, context=context)
+                if (not src_acct.currency_id) or src_acct.currency_id.id == reference_currency_id:
+                    credit_line_vals.update(currency_id=reference_currency_id, amount_currency=-reference_amount)
+            if reference_currency_id != dest_main_currency_id:
+                # fix debit line:
+                debit_line_vals['debit'] = cur_obj.compute(cr, uid, reference_currency_id, dest_main_currency_id, reference_amount, context=context)
+                if (not dest_acct.currency_id) or dest_acct.currency_id.id == reference_currency_id:
+                    debit_line_vals.update(currency_id=reference_currency_id, amount_currency=reference_amount)
+            res += [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
+        return res
 
     def unlink(self, cr, uid, ids, context=None):
         if context is None:
@@ -2666,7 +2684,7 @@ class stock_move(osv.osv):
             if avg_in_update or avg_out_update:
                 
                 # If no price from picking, use cost price from product
-                if product_price == 0:
+                if product_price == 0.0:
                     product_price = product.price_get('standard_price', context=ctx)[product.id]
                 
                 move_currency_id = move.company_id.currency_id.id
