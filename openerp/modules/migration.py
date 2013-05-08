@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2013 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -180,14 +180,14 @@ class MigrationManager(object):
                         try:
                             mod = imp.load_source(name, pyfile, fp2)
                             _logger.info('module %(addon)s: Running migration %(version)s %(name)s' % mergedict({'name': mod.__name__}, strfmt))
-                            mod.migrate(self.cr, pkg.installed_version)
+                            migrate = mod.migrate
                         except ImportError:
-                            _logger.error('module %(addon)s: Unable to load %(stage)s-migration file %(file)s' % mergedict({'file': pyfile}, strfmt))
+                            _logger.exception('module %(addon)s: Unable to load %(stage)s-migration file %(file)s' % mergedict({'file': pyfile}, strfmt))
                             raise
                         except AttributeError:
                             _logger.error('module %(addon)s: Each %(stage)s-migration file must have a "migrate(cr, installed_version)" function' % strfmt)
-                        except:
-                            raise
+                        else:
+                            migrate(self.cr, pkg.installed_version)
                     finally:
                         if fp:
                             fp.close()
