@@ -25,6 +25,7 @@ from dateutil import rrule
 import math
 from faces import *
 from openerp.osv import fields, osv
+from openerp.tools.float_utils import float_compare
 from openerp.tools.translate import _
 
 from itertools import groupby
@@ -108,7 +109,7 @@ class resource_calendar(osv.osv):
         result = []
         maxrecur = 100
         current_hour = dt_from.hour
-        while (todo>0) and maxrecur:
+        while float_compare(todo,0) and maxrecur:
             cr.execute("select hour_from,hour_to from resource_calendar_attendance where dayofweek='%s' and calendar_id=%s order by hour_from desc", (dt_from.weekday(),id))
             for (hour_from,hour_to) in cr.fetchall():
                 leave_flag  = False
@@ -128,8 +129,7 @@ class resource_calendar(osv.osv):
                         d2 = datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(m)), int((m%1) * 60))
                         result.append((d1, d2))
                         current_hour = hour_from
-                        # avoid float point error with round
-                        todo = round(todo - (hour_to - m), 4)
+                        todo -= hour_to - m
             dt_from -= timedelta(days=1)
             current_hour = 24
             maxrecur -= 1
@@ -162,7 +162,7 @@ class resource_calendar(osv.osv):
             result = []
             maxrecur = 100
             current_hour = dt_from.hour
-            while (todo>0) and maxrecur:
+            while float_compare(todo,0) and maxrecur:
                 for (hour_from,hour_to) in [(item['hour_from'], item['hour_to']) for item in hours_by_cal[id] if item['dayofweek'] == str(dt_from.weekday())]:
                     leave_flag  = False
                     if (hour_to>current_hour) and (todo>0):
@@ -181,8 +181,7 @@ class resource_calendar(osv.osv):
                             d2 = datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(hour_to)), int((hour_to%1) * 60))
                             result.append((d1, d2))
                             current_hour = hour_to
-                            # avoid float point error with round
-                            todo = round(todo - (hour_to - m), 4)
+                            todo -= hour_to - m
                 dt_from += timedelta(days=1)
                 current_hour = 0
                 maxrecur -= 1
