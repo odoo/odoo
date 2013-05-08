@@ -252,11 +252,11 @@ class TestAPI(common.TransactionCase):
 
         # partners and reachable records are attached to the outer scope
         partners = self.Partner.search([('name', 'ilike', 'j')])
-        self.assertEqual(partners.scope, outer_scope)
+        self.assertEqual(partners._scope, outer_scope)
         for x in (partners, partners[0], partners[0].company_id):
-            self.assertEqual(x.scope, outer_scope)
+            self.assertEqual(x._scope, outer_scope)
         for p in partners:
-            self.assertEqual(p.scope, outer_scope)
+            self.assertEqual(p._scope, outer_scope)
 
         # check that current user can read and modify company data
         partners[0].company_id.name
@@ -269,18 +269,19 @@ class TestAPI(common.TransactionCase):
             self.assertNotEqual(inner_scope, outer_scope)
 
             # partners and related records are still attached to outer_scope
-            self.assertEqual(partners.scope, outer_scope)
+            self.assertEqual(partners._scope, outer_scope)
             for x in (partners, partners[0], partners[0].company_id):
-                self.assertEqual(x.scope, outer_scope)
+                self.assertEqual(x._scope, outer_scope)
             for p in partners:
-                self.assertEqual(p.scope, outer_scope)
+                self.assertEqual(p._scope, outer_scope)
 
             # create record instances attached to the inner scope
-            demo_partners = partners.browse(map(int, partners))
+            demo_partners = partners.scoped()
+            self.assertEqual(demo_partners._scope, inner_scope)
             for x in (demo_partners, demo_partners[0], demo_partners[0].company_id):
-                self.assertEqual(x.scope, inner_scope)
+                self.assertEqual(x._scope, inner_scope)
             for p in demo_partners:
-                self.assertEqual(p.scope, inner_scope)
+                self.assertEqual(p._scope, inner_scope)
 
             # demo user cannot modify company data, whatever the scope of the record
             with self.assertRaises(except_orm):

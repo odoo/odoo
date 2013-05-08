@@ -5319,10 +5319,6 @@ class BaseModel(object):
         '_records',                     # a recordset refers to its records
     ]
 
-    @property
-    def scope(self):
-        return self._scope or scope_proxy.current
-
     def null(self):
         """ make a null instance attached to the current scope """
         return self.record(False)
@@ -5374,6 +5370,15 @@ class BaseModel(object):
                 return self.recordset((self._id,))
         else:
             raise except_orm("ValueError", "Expected record or recordset: %s" % self)
+
+    def scoped(self):
+        """ Return an instance equivalent to `self` attached to the current scope. """
+        if self._scope is scope_proxy.current:
+            return self
+        if self.is_record():
+            return self.record(self._id)
+        else:
+            return self.recordset(self)
 
     def unbrowse(self):
         """ Return the `id`/`ids` corresponding to a record/recordset/null instance. """
