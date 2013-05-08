@@ -5315,8 +5315,8 @@ class BaseModel(object):
 
     # specific attributes used by record, recordset and null instances
     INSTANCE_ATTRIBUTES = [
-        '_id',
-        '_ids',
+        '_id',                          # a record refers to its id
+        '_records',                     # a recordset refers to its records
     ]
 
     @property
@@ -5334,7 +5334,8 @@ class BaseModel(object):
     def recordset(self, ids):
         """ make a recordset instance attached to the current scope """
         ids = map(int, ids or ())
-        return self._make_instance(_ids=tuple(ids), _scope=scope_proxy.current)
+        records = tuple(self.record(id) for id in ids)
+        return self._make_instance(_records=records, _scope=scope_proxy.current)
 
     def is_null(self):
         """ test whether self is a null instance """
@@ -5346,7 +5347,7 @@ class BaseModel(object):
 
     def is_recordset(self):
         """ test whether `self` is a recordset instance """
-        return hasattr(self, '_ids')
+        return hasattr(self, '_records')
 
     def to_record(self):
         """ Convert `self` into a single record attached to the same scope;
@@ -5354,7 +5355,7 @@ class BaseModel(object):
         """
         if self.is_record():
             return self
-        elif self.is_recordset() and len(self._ids) == 1:
+        elif self.is_recordset() and len(self) == 1:
             return self[0]
         else:
             raise except_orm("ValueError", "Expected singleton: %s" % self)
@@ -5376,11 +5377,11 @@ class BaseModel(object):
 
     def unbrowse(self):
         """ Return the `id`/`ids` corresponding to a record/recordset/null instance. """
-        return list(self._ids) if self.is_recordset() else self._id
+        return map(int, self._records) if self.is_recordset() else self._id
 
     def __nonzero__(self):
         """ Test whether `self` is nonempty and not null. """
-        return bool(self._ids) if self.is_recordset() else not self.is_null()
+        return bool(self._records) if self.is_recordset() else not self.is_null()
 
     def __iter__(self):
         """ Return an iterator over `self` (must be a recordset). """
@@ -5389,17 +5390,14 @@ class BaseModel(object):
 
         # iterating over records usually implies reading them
         # -> add the ids in the cache to prefetch all records at once
-        self._scope.cache[self._name].ids.update(self._ids)
+        self._scope.cache[self._name].ids.update(self.unbrowse())
 
-        with self._scope:
-            recs = [self.record(id) for id in self._ids]
-
-        return iter(recs)
+        return iter(self._records)
 
     def __len__(self):
         """ Return the size of `self` (must be a recordset). """
         if self.is_recordset():
-            return len(self._ids)
+            return len(self._records)
         else:
             raise except_orm("ValueError", "Expected recordset: %s" % self)
 
@@ -5411,7 +5409,7 @@ class BaseModel(object):
             return item == 'id' or item in self._all_columns
         elif self.is_recordset():
             if isinstance(item, Record) and item._name == self._name:
-                return item.id in self._ids
+                return item in self._records
             else:
                 _logger.warning("Unexpected: %s in %s" % (item, self))
                 return False
@@ -5422,7 +5420,7 @@ class BaseModel(object):
         """ Return the concatenation of two recordsets as a recordset. """
         if self._name != other._name:
             raise except_orm("ValueError", "Mixing apples and oranges: %s, %s" % (self, other))
-        ids = self.to_recordset()._ids + other.to_recordset()._ids
+        ids = self.to_recordset().unbrowse() + other.to_recordset().unbrowse()
         with self._scope:
             return self.recordset(ids)
 
@@ -5433,7 +5431,7 @@ class BaseModel(object):
             return (self._name, self._id) == (other._name, other._id)
         elif self.is_recordset() and isinstance(other, Recordset):
             # compare two recordsets
-            return (self._name, self._ids) == (other._name, other._ids)
+            return (self._name, self._records) == (other._name, other._records)
         elif isinstance(other, BaseModel):
             # compare two models
             return self._name == other._name
@@ -5592,11 +5590,11 @@ class BaseModel(object):
         if self.is_record():
             return self._get_field(key)
         elif self.is_recordset():
-            with self._scope:
-                if isinstance(key, slice):
-                    return self.recordset(self._ids[key])
-                else:
-                    return self.record(self._ids[key])
+            if isinstance(key, slice):
+                with self._scope:
+                    return self.recordset(self._records[key])
+            else:
+                return self._records[key]
         else:
             raise except_orm("ValueError", "Expected record or recordset: %s" % self)
 
@@ -5634,7 +5632,7 @@ class BaseModel(object):
         elif self.is_record():
             return "%s.record(%d)" % (model_name, self._id)
         elif self.is_recordset():
-            return "%s.recordset(%s)" % (model_name, self._ids)
+            return "%s.recordset(%s)" % (model_name, self.unbrowse())
         else:
             return model_name
 
@@ -5647,7 +5645,7 @@ class BaseModel(object):
         if self.is_record():
             return hash((self._name, self._id))
         elif self.is_recordset():
-            return hash((self._name, self._ids))
+            return hash((self._name, tuple(self.unbrowse())))
         else:
             return hash(self._name)
 
@@ -5703,9 +5701,9 @@ class BaseModel(object):
         for field in modified_fields:
             for model_name, field_name, path in self._recompute[field]:
                 # find which records in model have to be recomputed
-                recs = self.pool[model_name].search([(path, 'in', self._ids)])
+                recs = self.pool[model_name].search([(path, 'in', self.unbrowse())])
                 if recs:
-                    target[model_name][field_name].update(recs._ids)
+                    target[model_name][field_name].update(recs.unbrowse())
 
         # return spec
         return [(m, [f], list(ids))
