@@ -132,11 +132,58 @@ class account_config_settings(osv.osv_memory):
         count = self.pool.get('res.company').search_count(cr, uid, [], context=context)
         return bool(count == 1)
 
+    def _default_start_date(self, cr, uid, context=None):
+        """Compute default starting date for fiscalyear
+        - if no fiscal year, use 1st jan of this year
+        - if in a fiscal year, use its starting date
+        - if past fiscal year, use the ending date of the latest +1 day
+        """
+        company_id = self._default_company(cr, uid, context=context)
+        fiscalyear_ids = self.pool.get('account.fiscalyear').search(cr, uid,
+                [('date_start', '<=', time.strftime('%Y-%m-%d')), ('date_stop', '>=', time.strftime('%Y-%m-%d')),
+                 ('company_id', '=', company_id)])
+        if fiscalyear_ids:
+            # has a current fiscal year, use this one
+            return self.pool.get('account.fiscalyear').browse(cr, uid, fiscalyear_ids[0], context=context).date_start
+        else:
+            past_fiscalyear_ids = self.pool.get('account.fiscalyear').search(cr, uid,
+                [('date_stop', '<=', time.strftime('%Y-%m-%d')), ('company_id', '=', company_id)])
+            if past_fiscalyear_ids:
+                # use the latest fiscal year+1 day, sorted by start_date
+                latest_stop = self.pool.get('account.fiscalyear').browse(cr, uid, past_fiscalyear_ids[-1], context=context).date_stop
+                return (datetime.datetime.strptime(latest_stop, "%Y-%m-%d") + datetime.timedelta(days=1)).strftime('%Y-%m-%d')
+            else:
+                return time.strftime('%Y-01-01')
+
+    def _default_stop_date(self, cr, uid, context=None):
+        """Compute default ending date for fiscalyear
+        - if no fiscal year, use 31th dec of this year
+        - if in a fiscal year, use its ending date
+        - if past fiscal year, use 31th dec of year of the latest fiscalyear +1 day
+        """
+        company_id = self._default_company(cr, uid, context=context)
+        fiscalyear_ids = self.pool.get('account.fiscalyear').search(cr, uid,
+                [('date_start', '<=', time.strftime('%Y-%m-%d')), ('date_stop', '>=', time.strftime('%Y-%m-%d')),
+                 ('company_id', '=', company_id)])
+        if fiscalyear_ids:
+            # has a current fiscal year, use this one
+            return self.pool.get('account.fiscalyear').browse(cr, uid, fiscalyear_ids[0], context=context).date_stop
+        else:
+            past_fiscalyear_ids = self.pool.get('account.fiscalyear').search(cr, uid,
+                [('date_stop', '<=', time.strftime('%Y-%m-%d')), ('company_id', '=', company_id)])
+            if past_fiscalyear_ids:
+                # use the latest fiscal year+1 day, sorted by start_date
+                latest_stop = self.pool.get('account.fiscalyear').browse(cr, uid, past_fiscalyear_ids[-1], context=context).date_stop
+                return latest_stop.replace(year= latest_stop.year+1).strftime('%Y-%m-%d')
+            else:
+                return time.strftime('%Y-12-31')
+
+
     _defaults = {
         'company_id': _default_company,
         'has_default_company': _default_has_default_company,
-        'date_start': lambda *a: time.strftime('%Y-01-01'),
-        'date_stop': lambda *a: time.strftime('%Y-12-31'),
+        'date_start': _default_start_date,
+        'date_stop': _default_stop_date,
         'period': 'month',
     }
 
