@@ -308,7 +308,7 @@ class product_template(osv.osv):
         'volume': fields.float('Volume', help="The volume in m3."),
         'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The gross weight in Kg."),
         'weight_net': fields.float('Net Weight', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
-        'cost_method': fields.property('', type='selection', view_load=True, selection = [('standard','Standard Price'), ('average','Average Price')],
+        'cost_method': fields.property('', type='selection', view_load=True, selection = [('standard','Standard Price'), ('average','Average Price'), ('fifo', 'FIFO price'), ('lifo', 'LIFO price')],
             help="Standard Price: The cost price is manually updated at the end of a specific period (usually every year). \nAverage Price: The cost price is recomputed at each incoming shipment.", 
             string="Costing Method"),
         'warranty': fields.float('Warranty'),

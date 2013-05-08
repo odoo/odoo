@@ -25,18 +25,18 @@ from openerp.osv import osv, fields
 
 #@TODO Should not this be product template?
 #TODO: remove this module and put everything in existing core modules (purchase, stock, product...)
-class product_product (osv.osv):
-    _name = "product.product"
-    _inherit = "product.product"
-    _columns = {
-        'cost_method': fields.property('', type='selection', view_load=True, selection = [('standard','Standard Price'), ('average','Average Price'), 
-                                                                                          ('fifo', 'FIFO price'), ('lifo', 'LIFO price')],
-            help="""Standard Price: The cost price is manually updated at the end of a specific period (usually every year).
-                Average Price: The cost price is recomputed at each incoming shipment.
-                FIFO: When cost is calculated the FIFO way.
-                LIFO: When cost is calculated the LIFO way. """, 
-            string="Costing Method"),
-    }
+# class product_product (osv.osv):
+#     _name = "product.product"
+#     _inherit = "product.product"
+#     _columns = {
+#         'cost_method': fields.property('', type='selection', view_load=True, selection = [('standard','Standard Price'), ('average','Average Price'), 
+#                                                                                           ('fifo', 'FIFO price'), ('lifo', 'LIFO price')],
+#             help="""Standard Price: The cost price is manually updated at the end of a specific period (usually every year).
+#                 Average Price: The cost price is recomputed at each incoming shipment.
+#                 FIFO: When cost is calculated the FIFO way.
+#                 LIFO: When cost is calculated the LIFO way. """, 
+#             string="Costing Method"),
+#     }
 
 
     def get_stock_matchings_fifolifo(self, cr, uid, ids, qty, fifo, product_uom_id = False, currency_id = False, context=None):
