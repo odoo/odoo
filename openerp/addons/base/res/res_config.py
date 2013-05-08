@@ -623,7 +623,7 @@ class res_config_settings(osv.osv_memory, res_config_module_installation_mixin):
             structured as follows: module_name.menuitem_xml_id (e.g.: "base.menu_sale_config")
         :return tuple:
             - t[0]: string: full path to the menuitem (e.g.: "Settings/Configuration/Sales")
-            - t[1]: long: id of the menuitem's action
+            - t[1]: int or long: id of the menuitem's action
         """
         module_name, menu_xml_id = menu_xml_id.split('.')
         dummy, menu_id = self.pool['ir.model.data'].get_object_reference(cr, uid, module_name, menu_xml_id)
