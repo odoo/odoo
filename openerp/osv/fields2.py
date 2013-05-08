@@ -286,7 +286,7 @@ class Reference(Selection):
     def cache_to_record(self, record, value):
         if value:
             res_model, res_id = value.split(',')
-            return scope.model(res_model).record(int(res_id), scope=record._scope)
+            return scope.model(res_model).record(int(res_id))
         return False
 
     def record_to_cache(self, value):
@@ -318,8 +318,7 @@ class Many2one(Field):
         return fields.many2one(**kwargs)
 
     def cache_to_record(self, record, value):
-        model = scope.model(self.comodel)
-        return model.record(value or False, scope=record._scope)
+        return scope.model(self.comodel).record(value)
 
     def record_to_cache(self, value):
         if isinstance(value, Record) and value._name == self.comodel:
@@ -357,8 +356,7 @@ class One2many(Field):
         return fields.one2many(**kwargs)
 
     def cache_to_record(self, record, value):
-        model = scope.model(self.comodel)
-        return model.recordset(value or (), scope=record._scope)
+        return scope.model(self.comodel).recordset(value)
 
     def record_to_cache(self, value):
         if isinstance(value, Recordset) and value._name == self.comodel:
@@ -398,8 +396,7 @@ class Many2many(Field):
         return fields.many2many(**kwargs)
 
     def cache_to_record(self, record, value):
-        model = scope.model(self.comodel)
-        return model.recordset(value or (), scope=record._scope)
+        return scope.model(self.comodel).recordset(value)
 
     def record_to_cache(self, value):
         if isinstance(value, Recordset) and value._name == self.comodel:

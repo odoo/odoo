@@ -266,13 +266,11 @@ def _clean_one(value):
 
 
 def _browse_one(record, column, value):
-    model = record.pool[column._obj]
-    return model.record(value or False, scope=record._scope)
+    return record.pool[column._obj].record(value)
 
 
 def _browse_many(record, column, value):
-    model = record.pool[column._obj]
-    return model.recordset(value or [], scope=record._scope)
+    return record.pool[column._obj].recordset(value)
 
 
 def _browse_reference(record, column, value):
@@ -280,8 +278,7 @@ def _browse_reference(record, column, value):
         ref_obj, ref_id = value.split(',')
         ref_id = long(ref_id)
         if ref_id:
-            model = record.pool[ref_obj]
-            return model.record(ref_id, scope=record._scope)
+            return record.pool[ref_obj].record(ref_id)
     return False
 
 
@@ -3549,7 +3546,7 @@ class BaseModel(object):
 
         # read old-style fields with (low-level) method _read_flat
         select = self.browse(ids)
-        result = select.recordset()._read_flat(list(old_fields), load=load)
+        result = select.to_recordset()._read_flat(list(old_fields), load=load)
 
         # read new-style fields with records
         for f in new_fields:
@@ -4514,11 +4511,10 @@ class BaseModel(object):
             :param context: context arguments, like lang, time zone
             :rtype: record or recordset requested
         """
-        scope = scope_proxy.current
         if isinstance(select, list):
-            return self._make_instance(_ids=tuple(select), _scope=scope)
+            return self.recordset(select)
         else:
-            return self._make_instance(_id=(select or False), _scope=scope)
+            return self.record(select)
 
     def _store_get_values(self, cr, uid, ids, fields, context):
         """Returns an ordered list of fields.functions to call due to
@@ -5327,59 +5323,56 @@ class BaseModel(object):
     def scope(self):
         return self._scope or scope_proxy.current
 
-    def record(self, id=None, scope=None):
-        """ make a record instance (possibly null)
+    def null(self):
+        """ make a null instance attached to the current scope """
+        return self.record(False)
 
-            :param id: the record's id, may be ``False`` for a null record, or
-                ``None`` to convert `self` into a record
-            :param scope: the optional scope to attach to the record
-        """
-        if id is None:
-            if self.is_record():
-                id = self._id
-            elif self.is_recordset() and len(self._ids) == 1:
-                id = self._ids[0]
-            else:
-                raise except_orm("ValueError", "Expected singleton: %s" % self)
+    def record(self, id):
+        """ make a record instance attached to the current scope """
+        return self._make_instance(_id=(id or False), _scope=scope_proxy.current)
 
-        return self._make_instance(_id=(id or False), _scope=scope)
-
-    def is_record(self):
-        """ test whether `self` is a record instance (possibly null) """
-        return hasattr(self, '_id')
-
-    def null(self, scope=None):
-        """ make a null instance """
-        return self.record(False, scope=scope)
+    def recordset(self, ids):
+        """ make a recordset instance attached to the current scope """
+        ids = map(int, ids or ())
+        return self._make_instance(_ids=tuple(ids), _scope=scope_proxy.current)
 
     def is_null(self):
         """ test whether self is a null instance """
         return not bool(getattr(self, '_id', True))
 
-    def recordset(self, ids=None, scope=None):
-        """ make a recordset instance
-
-            :param ids: the record ids (or convert `self` if ``None``)
-            :param scope: the optional scope to attach to the recordset
-        """
-        if ids is None:
-            if self.is_null():
-                ids = ()
-            elif self.is_record():
-                ids = (self._id,)
-            elif self.is_recordset():
-                ids = self._ids
-            else:
-                cr, uid, context = scope or scope_proxy
-                ids = self.search(cr, uid, [], context=context)
-        else:
-            ids = map(int, ids)
-
-        return self._make_instance(_ids=tuple(ids), _scope=scope)
+    def is_record(self):
+        """ test whether `self` is a record instance (possibly null) """
+        return hasattr(self, '_id')
 
     def is_recordset(self):
         """ test whether `self` is a recordset instance """
         return hasattr(self, '_ids')
+
+    def to_record(self):
+        """ Convert `self` into a single record attached to the same scope;
+            raise an exception if the conversion is not possible.
+        """
+        if self.is_record():
+            return self
+        elif self.is_recordset() and len(self._ids) == 1:
+            return self[0]
+        else:
+            raise except_orm("ValueError", "Expected singleton: %s" % self)
+
+    def to_recordset(self):
+        """ Convert `self` into a recordset attached to the same scope;
+            raise an exception if the conversion is not possible.
+        """
+        if self.is_recordset():
+            return self
+        elif self.is_null():
+            with self._scope:
+                return self.recordset(())
+        elif self.is_record():
+            with self._scope:
+                return self.recordset((self._id,))
+        else:
+            raise except_orm("ValueError", "Expected record or recordset: %s" % self)
 
     def unbrowse(self):
         """ Return the `id`/`ids` corresponding to a record/recordset/null instance. """
@@ -5396,10 +5389,12 @@ class BaseModel(object):
 
         # iterating over records usually implies reading them
         # -> add the ids in the cache to prefetch all records at once
-        self.scope.cache[self._name].ids.update(self._ids)
+        self._scope.cache[self._name].ids.update(self._ids)
 
-        for id in self._ids:
-            yield self.record(id, scope=self._scope)
+        with self._scope:
+            recs = [self.record(id) for id in self._ids]
+
+        return iter(recs)
 
     def __len__(self):
         """ Return the size of `self` (must be a recordset). """
@@ -5427,8 +5422,9 @@ class BaseModel(object):
         """ Return the concatenation of two recordsets as a recordset. """
         if self._name != other._name:
             raise except_orm("ValueError", "Mixing apples and oranges: %s, %s" % (self, other))
-        ids = self.recordset()._ids + other.recordset()._ids
-        return self.recordset(ids, scope=self._scope)
+        ids = self.to_recordset()._ids + other.to_recordset()._ids
+        with self._scope:
+            return self.recordset(ids)
 
     def __eq__(self, other):
         """ Test equality between two records, two recordsets or two models. """
@@ -5455,7 +5451,7 @@ class BaseModel(object):
         if field_name == 'id':
             return self._id
 
-        with self.scope:
+        with self._scope:
             model_cache = scope_proxy.cache[self._name]
             field_cache = model_cache[field_name]
             recomputing = scope_proxy.recomputing(self._name)
@@ -5542,7 +5538,7 @@ class BaseModel(object):
         result = self.read(field_names, load="_classic_write")
 
         # process result field by field
-        cache = self.scope.cache
+        cache = self._scope.cache
         for field_name in field_names:
             # build dictionary {id: value, ...} for field
             values = {}
@@ -5596,10 +5592,11 @@ class BaseModel(object):
         if self.is_record():
             return self._get_field(key)
         elif self.is_recordset():
-            if isinstance(key, slice):
-                return self.recordset(self._ids[key], scope=self._scope)
-            else:
-                return self.record(self._ids[key], scope=self._scope)
+            with self._scope:
+                if isinstance(key, slice):
+                    return self.recordset(self._ids[key])
+                else:
+                    return self.record(self._ids[key])
         else:
             raise except_orm("ValueError", "Expected record or recordset: %s" % self)
 

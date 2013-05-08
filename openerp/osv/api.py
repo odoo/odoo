@@ -354,7 +354,7 @@ def recordset(method):
 
     def new_api(self, *args, **kwargs):
         if self.is_record():
-            return _get_one(method(self.recordset(), *args, **kwargs))
+            return _get_one(method(self.to_recordset(), *args, **kwargs))
         else:
             return method(self, *args, **kwargs)
 

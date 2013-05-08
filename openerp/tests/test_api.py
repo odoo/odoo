@@ -98,12 +98,13 @@ class TestAPI(common.TransactionCase):
 
         partners = self.Partner.search([])
         for name, cinfo in partners._all_columns.iteritems():
-            if cinfo.column._type in ('many2one', 'reference'):
+            if cinfo.column._type == 'many2one':
+                for p in partners:
+                    self.assertIsKind(p[name], Record, cinfo.column._obj)
+            elif cinfo.column._type == 'reference':
                 for p in partners:
                     if p[name]:
                         self.assertIsKind(p[name], Record, cinfo.column._obj)
-                    else:
-                        self.assertIsKind(p[name], Null, cinfo.column._obj)
             elif cinfo.column._type in ('one2many', 'many2many'):
                 for p in partners:
                     self.assertIsKind(p[name], Recordset, cinfo.column._obj)
@@ -251,6 +252,7 @@ class TestAPI(common.TransactionCase):
 
         # partners and reachable records are attached to the outer scope
         partners = self.Partner.search([('name', 'ilike', 'j')])
+        self.assertEqual(partners.scope, outer_scope)
         for x in (partners, partners[0], partners[0].company_id):
             self.assertEqual(x.scope, outer_scope)
         for p in partners:
@@ -267,6 +269,7 @@ class TestAPI(common.TransactionCase):
             self.assertNotEqual(inner_scope, outer_scope)
 
             # partners and related records are still attached to outer_scope
+            self.assertEqual(partners.scope, outer_scope)
             for x in (partners, partners[0], partners[0].company_id):
                 self.assertEqual(x.scope, outer_scope)
             for p in partners:
@@ -338,23 +341,18 @@ class TestAPI(common.TransactionCase):
 
     @mute_logger('openerp.osv.orm')
     def test_70_record_recordset(self):
-        """ Check properties record and recordset. """
+        """ Check methods to_record() and to_recordset(). """
         ps = self.Partner.search([('name', 'ilike', 'a')], limit=1)
-        self.assertEqual(ps.recordset(), ps)
-        p = ps.record()
+        self.assertEqual(ps.to_recordset(), ps)
+        p = ps.to_record()
         self.assertEqual(p, ps[0])
-        self.assertEqual(p.recordset(), ps)
-
-        ps = self.Partner.recordset()
-        self.assertEqual(ps.recordset(), ps)
-        for p in ps:
-            self.assertIsInstance(p.id, (int, long))
+        self.assertEqual(p.to_recordset(), ps)
 
     @mute_logger('openerp.osv.orm')
     def test_80_contains(self):
         """ Test membership on recordset. """
         ps = self.Partner.search([('name', 'ilike', 'a')], limit=1)
-        p = ps.record()
+        p = ps.to_record()
         ps = self.Partner.search([('name', 'ilike', 'a')])
         self.assertTrue(p in ps)
 
