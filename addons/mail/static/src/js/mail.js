@@ -1709,8 +1709,15 @@ openerp.mail = function (session) {
         * contains the menu widget and the sub menu related of this wall
         */
         do_reload_menu_emails: function () {
-            var ActionManager = this.__parentedParent.ActionManager || this.__parentedParent.__parentedParent.ViewManager.ActionManager;
-            ActionManager.__parentedParent.menu.do_reload_needaction();
+            var menu = session.webclient.menu;
+            if (!menu) {
+                return $.when();
+            }
+            return menu.rpc("/web/menu/load_needaction", {'menu_ids': [menu.current_menu]}).done(function(r) {
+                menu.on_needaction_loaded(r);
+            }).then(function () {
+                menu.trigger("need_action_reloaded");
+            });
         },
 
         /**
