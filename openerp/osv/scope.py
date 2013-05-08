@@ -67,7 +67,10 @@ class ScopeProxy(object):
         return iter(self.current)
 
     def __call__(self, *args, **kwargs):
-        return self.current(*args, **kwargs)
+        if self.current:
+            return self.current(*args, **kwargs)
+        else:
+            return Scope(*args, **kwargs)
 
     def invalidate_cache(self, spec=None):
         """ Invalidate the record cache in all scopes.
@@ -75,6 +78,11 @@ class ScopeProxy(object):
         """
         for s in getattr(_local, 'scope_list', ()):
             s.cache.invalidate(spec)
+
+    def check_cache(self):
+        """ Check the record caches in all scopes. """
+        for s in getattr(_local, 'scope_list', ()):
+            s.cache.check()
 
     @contextmanager
     def recomputing_manager(self, spec):
