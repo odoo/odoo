@@ -426,7 +426,7 @@ class MergePartnerAutomatic(osv.TransientModel):
         this = self.browse(cr, uid, ids[0], context=context)
         if this.current_line_id:
             this.current_line_id.unlink()
-        return self._next_screen(cr, uid, this)
+        return self._next_screen(cr, uid, this, context)
 
     def _get_ordered_partner(self, cr, uid, partner_ids, context=None):
         partners = self.pool.get('res.partner').browse(cr, uid, list(partner_ids), context=context)
@@ -435,7 +435,7 @@ class MergePartnerAutomatic(osv.TransientModel):
                                 key=operator.attrgetter('active'), reverse=True)
         return ordered_partners
 
-    def _next_screen(self, cr, uid, this):
+    def _next_screen(self, cr, uid, this, context=None):
         this.refresh()
         values = {}
         if this.line_ids:
@@ -545,7 +545,7 @@ class MergePartnerAutomatic(osv.TransientModel):
         query = self._generate_query(groups, this.maximum_group)
         self._process_query(cr, uid, ids, query, context=context)
 
-        return self._next_screen(cr, uid, this)
+        return self._next_screen(cr, uid, this, context)
 
     def automatic_process_cb(self, cr, uid, ids, context=None):
         assert is_integer_list(ids)
@@ -686,7 +686,7 @@ class MergePartnerAutomatic(osv.TransientModel):
         #         p1.parent_id = p1.id
         # """)
 
-        return self._next_screen(cr, uid, this)
+        return self._next_screen(cr, uid, this, context)
 
     def merge_cb(self, cr, uid, ids, context=None):
         assert is_integer_list(ids)
@@ -709,7 +709,7 @@ class MergePartnerAutomatic(osv.TransientModel):
 
         this.current_line_id.unlink()
 
-        return self._next_screen(cr, uid, this)
+        return self._next_screen(cr, uid, this, context)
 
     def merge_multi(self, cr, uid, ids, context=None):
 
