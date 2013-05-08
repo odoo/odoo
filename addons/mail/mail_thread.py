@@ -1385,7 +1385,6 @@ class mail_thread(osv.AbstractModel):
             removed_suggested_threads = []
 
         thread_ids = self.search(cr, uid, [('id', 'not in', removed_suggested_threads), ('message_is_follower', '=', False)], context=context)
-        print(thread_ids)
         for thread in self.browse(cr, uid, thread_ids, context=context):
             data = {
                 'id': thread.id,
@@ -1393,6 +1392,5 @@ class mail_thread(osv.AbstractModel):
                 'name': thread.name,
                 'image_small': thread.image_small
             }
-            print(data['id'], data['name'], data['popularity'])
             threads.append(data)
         return sorted(threads, key=lambda x: (x['popularity'], x['id']), reverse=True)[:3]
