@@ -159,7 +159,7 @@ class account_config_settings(osv.osv_memory):
         """Compute default ending date for fiscalyear
         - if no fiscal year, use 31th dec of this year
         - if in a fiscal year, use its ending date
-        - if past fiscal year, use 31th dec of year of the latest fiscalyear +1 day
+        - if past fiscal year, use the ending date of latest fiscalyear +1 year
         """
         company_id = self._default_company(cr, uid, context=context)
         fiscalyear_ids = self.pool.get('account.fiscalyear').search(cr, uid,
