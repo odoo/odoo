@@ -173,8 +173,9 @@ class account_config_settings(osv.osv_memory):
                 [('date_stop', '<=', time.strftime('%Y-%m-%d')), ('company_id', '=', company_id)])
             if past_fiscalyear_ids:
                 # use the latest fiscal year+1 day, sorted by start_date
-                latest_stop = self.pool.get('account.fiscalyear').browse(cr, uid, past_fiscalyear_ids[-1], context=context).date_stop
-                return latest_stop.replace(year= latest_stop.year+1).strftime('%Y-%m-%d')
+                latest_year = self.pool.get('account.fiscalyear').browse(cr, uid, past_fiscalyear_ids[-1], context=context)
+                latest_stop = datetime.datetime.strptime(latest_year.date_stop, "%Y-%m-%d")
+                return latest_stop.replace(year=latest_stop.year+1).strftime('%Y-%m-%d')
             else:
                 return time.strftime('%Y-12-31')
 
