@@ -1163,15 +1163,28 @@ class mail_thread(osv.AbstractModel):
         else:
             self.check_access_rights(cr, uid, 'write')
 
+        # subscribe partners
         self.write(cr, SUPERUSER_ID, ids, {'message_follower_ids': [(4, pid) for pid in partner_ids]}, context=context)
-        # if subtypes are not specified (and not set to a void list), fetch default ones
-        if subtype_ids is None:
-            subtype_obj = self.pool.get('mail.message.subtype')
-            subtype_ids = subtype_obj.search(cr, uid, [('default', '=', True), '|', ('res_model', '=', self._name), ('res_model', '=', False)], context=context)
-        # update the subscriptions
+
+        # subtype specified: update the subscriptions
         fol_obj = self.pool.get('mail.followers')
-        fol_ids = fol_obj.search(cr, SUPERUSER_ID, [('res_model', '=', self._name), ('res_id', 'in', ids), ('partner_id', 'in', partner_ids)], context=context)
-        fol_obj.write(cr, SUPERUSER_ID, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
+        if subtype_ids is not None:
+            fol_ids = fol_obj.search(cr, SUPERUSER_ID, [('res_model', '=', self._name), ('res_id', 'in', ids), ('partner_id', 'in', partner_ids)], context=context)
+            fol_obj.write(cr, SUPERUSER_ID, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
+        # no subtypes: default ones for new subscription, do not update existing subscriptions
+        else:
+            # search new subscriptions: subtype_ids is False
+            fol_ids = fol_obj.search(cr, SUPERUSER_ID, [
+                            ('res_model', '=', self._name),
+                            ('res_id', 'in', ids),
+                            ('partner_id', 'in', partner_ids),
+                            ('subtype_ids', '=', False)
+                        ], context=context)
+            if fol_ids:
+                subtype_obj = self.pool.get('mail.message.subtype')
+                subtype_ids = subtype_obj.search(cr, uid, [('default', '=', True), '|', ('res_model', '=', self._name), ('res_model', '=', False)], context=context)
+                fol_obj.write(cr, SUPERUSER_ID, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
+
         return True
 
     def message_unsubscribe_users(self, cr, uid, ids, user_ids=None, context=None):
