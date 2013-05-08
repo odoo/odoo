@@ -76,13 +76,14 @@ class ScopeProxy(object):
         """ Invalidate the record cache in all scopes.
             See :meth:`RecordCache.invalidate` for the parameter `spec`.
         """
-        for s in getattr(_local, 'scope_list', ()):
-            s.cache.invalidate(spec)
+        for scope in getattr(_local, 'scope_list', ()):
+            scope.cache.invalidate(spec)
 
     def check_cache(self):
         """ Check the record caches in all scopes. """
-        for s in getattr(_local, 'scope_list', ()):
-            s.cache.check()
+        for scope in getattr(_local, 'scope_list', ()):
+            with scope:
+                scope.cache.check()
 
     @contextmanager
     def recomputing_manager(self, spec):
@@ -304,6 +305,7 @@ class RecordCache(defaultdict):
 
     def check(self):
         """ self-check for validating the cache """
+        assert proxy.cache is self
         cr, uid, context = proxy
         invalids = []
 
@@ -317,12 +319,10 @@ class RecordCache(defaultdict):
             # compare the result with the content of the cache
             for field in field_names:
                 field_cache = model_cache[field]
-                clean = lambda v: v
-                if model._all_columns[field].column._type == 'many2one':
-                    clean = lambda v: v[0] if isinstance(v, (tuple, list)) else v
+                column = model._all_columns[field].column
                 for data in result:
                     id = data['id']
-                    if id in field_cache and field_cache[id] != clean(data[field]):
+                    if id in field_cache and field_cache[id] != column.read_to_cache(data[field]):
                         invalids.append((model_name, field))
                         break
 

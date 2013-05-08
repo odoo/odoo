@@ -105,9 +105,9 @@ class Field(object):
         assert instance._name == self.model
         return instance._set_field(self.name, self.record_to_cache(value))
 
-    def cache_to_record(self, record, value):
-        """ convert `value` from the cache level to the record level """
-        return value
+    def null(self):
+        """ return the null value for this field """
+        return False
 
     def record_to_cache(self, value):
         """ convert `value` from the record level to the cache level """
@@ -249,23 +249,21 @@ class Selection(Field):
             kwargs['selection'] = lambda self, *args, **kwargs: getattr(self, method)(*args, **kwargs)
         return getattr(fields, self.type)(**kwargs)
 
-    def get_selection(self):
-        """ return the selection as a list of pairs """
+    def get_values(self):
+        """ return a list of the possible values """
         value = self.selection
         if isinstance(value, basestring):
-            return getattr(scope.model(self.model), value)()
+            value = getattr(scope.model(self.model), value)()
         elif callable(value):
-            return value(scope.model(self.model))
-        else:
-            return value
+            value = value(scope.model(self.model))
+        return [item[0] for item in value]
 
     def record_to_cache(self, value):
-        if value:
-            values = [item[0] for item in self.get_selection()]
-            if value not in values:
-                msg = "Wrong value for %s.%s: %r not in %r"
-                raise ValueError(msg % (self.model, self.name, value, values))
-        return value or False
+        if value is None or value is False:
+            return False
+        if value in self.get_values():
+            return value
+        raise ValueError("Wrong value for %s.%s: %r" % (self.model, self.name, value))
 
 
 class Reference(Selection):
@@ -283,19 +281,12 @@ class Reference(Selection):
         """
         super(Reference, self).__init__(selection=selection, string=string, **kwargs)
 
-    def cache_to_record(self, record, value):
-        if value:
-            res_model, res_id = value.split(',')
-            return scope.model(res_model).record(int(res_id))
-        return False
-
     def record_to_cache(self, value):
-        if value:
-            models = [item[0] for item in self.get_selection()]
-            if isinstance(value, Record) and value._name in models:
-                return "%s,%s" % (value._name, value._id)
-            raise ValueError("Wrong value for %s.%s: %s" % (self.model, self.name, value))
-        return False
+        if value is None or value is False:
+            return False
+        if isinstance(value, Record) and value._name in self.get_values():
+            return value.scoped()
+        raise ValueError("Wrong value for %s.%s: %r" % (self.model, self.name, value))
 
 
 class Many2one(Field):
@@ -317,14 +308,14 @@ class Many2one(Field):
         kwargs['obj'] = self.comodel
         return fields.many2one(**kwargs)
 
-    def cache_to_record(self, record, value):
-        return scope.model(self.comodel).record(value)
+    def null(self):
+        return scope.model(self.comodel).null()
 
     def record_to_cache(self, value):
+        if value is None or value is False:
+            return self.null()
         if isinstance(value, Record) and value._name == self.comodel:
-            return value._id
-        elif value in (False, None):
-            return False
+            return value.scoped()
         raise ValueError("Wrong value for %s.%s: %r" % (self.model, self.name, value))
 
     def record_to_read(self, value):
@@ -355,12 +346,14 @@ class One2many(Field):
         kwargs['fields_id'] = self.inverse
         return fields.one2many(**kwargs)
 
-    def cache_to_record(self, record, value):
-        return scope.model(self.comodel).recordset(value)
+    def null(self):
+        return scope.model(self.comodel).recordset()
 
     def record_to_cache(self, value):
+        if value is None or value is False:
+            return self.null()
         if isinstance(value, Recordset) and value._name == self.comodel:
-            return value.unbrowse()
+            return value.scoped()
         raise ValueError("Wrong value for %s.%s: %s" % (self.model, self.name, value))
 
 
@@ -395,12 +388,14 @@ class Many2many(Field):
         kwargs['id2'] = self.column2
         return fields.many2many(**kwargs)
 
-    def cache_to_record(self, record, value):
-        return scope.model(self.comodel).recordset(value)
+    def null(self):
+        return scope.model(self.comodel).recordset()
 
     def record_to_cache(self, value):
+        if value is None or value is False:
+            return self.null()
         if isinstance(value, Recordset) and value._name == self.comodel:
-            return value.unbrowse()
+            return value.scoped()
         raise ValueError("Wrong value for %s.%s: %s" % (self.model, self.name, value))
 
 

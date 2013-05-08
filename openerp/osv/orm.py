@@ -256,57 +256,6 @@ class except_orm(Exception):
         self.args = (name, value)
 
 
-#
-# Helper functions for browsing record values
-#
-
-def _clean_one(value):
-    """ clean many2one value: return an id or False """
-    return value[0] if isinstance(value, (tuple, list)) else value
-
-
-def _browse_one(record, column, value):
-    return record.pool[column._obj].record(value)
-
-
-def _browse_many(record, column, value):
-    return record.pool[column._obj].recordset(value)
-
-
-def _browse_reference(record, column, value):
-    if value:
-        ref_obj, ref_id = value.split(',')
-        ref_id = long(ref_id)
-        if ref_id:
-            return record.pool[ref_obj].record(ref_id)
-    return False
-
-
-_browse_default = lambda record, column, value: value
-
-
-_browse_functions = {
-    'many2one': _browse_one,
-    'many2many': _browse_many,
-    'one2many': _browse_many,
-    'reference': _browse_reference,
-}
-
-
-#
-# Helper functions to return field values as the method read should.
-#
-
-_read_default = lambda value: value
-
-_read_functions = {
-    'many2one': lambda value: bool(value) and value.name_get(),
-    'many2many': lambda value: value.unbrowse(),
-    'one2many': lambda value: value.unbrowse(),
-    'reference': lambda value: bool(value) and "%s,%s" % (value._name, value._id),
-}
-
-
 def pg_varchar(size=0):
     """ Returns the VARCHAR declaration for the provided size:
 
@@ -5451,86 +5400,85 @@ class BaseModel(object):
         """ read the field `field_name` on a record instance """
         if not self.is_record():
             raise except_orm("ValueError", "Expected record: %s" % self)
+
         if field_name == 'id':
             return self._id
 
-        with self._scope:
-            model_cache = scope_proxy.cache[self._name]
+        with self._scope as scope:
+            model_cache = scope.cache[self._name]
             field_cache = model_cache[field_name]
+
+            if self._id in field_cache:
+                return field_cache[self._id]
+
             recomputing = scope_proxy.recomputing(self._name)
 
             # handle the case of new-style fields
             field = self._fields.get(field_name)
             if field:
                 if self.is_null():
-                    return field.cache_to_record(self, False)
-
-                if self._id in field_cache:
-                    return field.cache_to_record(self, field_cache[self._id])
+                    return field.null()
 
                 if not field.store:
                     # a "pure" function field, simply evaluate it on self
                     assert field.compute
                     getattr(self, field.compute)()
-                    return field.cache_to_record(self, field_cache[self._id])
+                    return field_cache[self._id]
 
                 if field.compute and self._id in recomputing.get(field_name, ()):
                     # field is stored and must be recomputed (in batch!)
                     recs = self.recordset(recomputing[field_name]).exists()
                     getattr(recs, field.compute)()
-                    return field.cache_to_record(self, field_cache[self._id])
+                    return field_cache[self._id]
 
             # fetch the definition of the field which was asked for
             column = self._all_columns[field_name].column
-            browse_function = _browse_functions.get(column._type, _browse_default)
 
             if self.is_null():
                 # return False, null or recordset, depending on the field's type
-                return browse_function(self, column, False)
+                return column.read_to_cache(False)
 
-            if self._id not in field_cache:
-                # a pure function field: simply evaluate it for self
-                if isinstance(column, fields.function) and not column.store:
-                    value = self.read([field_name], load="_classic_write")[field_name]
-                    if column._type == 'many2one':
-                        value = _clean_one(value)
-                    return browse_function(self, column, value)
+            # a pure function field: simply evaluate it for self
+            if isinstance(column, fields.function) and not column.store:
+                value = self.read([field_name], load="_classic_write")[field_name]
+                return column.read_to_cache(value)
 
-                # determine which fields to fetch
-                fetch_fields = set((field_name,))
-                if column._prefetch and not self.pool._init:
-                    # Note: do not prefetch fields when self.pool._init is True,
-                    # because some columns may be missing from the database!
-                    for fname, cinfo in self._all_columns.iteritems():
-                        # prefetch all classic and many2one fields
-                        if cinfo.column._classic_write:
-                            fetch_fields.add(fname)
+            # determine which fields to fetch
+            fetch_fields = set((field_name,))
+            if column._prefetch and not self.pool._init:
+                # Note: do not prefetch fields when self.pool._init is True,
+                # because some columns may be missing from the database!
+                for fname, cinfo in self._all_columns.iteritems():
+                    # prefetch all classic and many2one fields
+                    if cinfo.column._classic_write:
+                        fetch_fields.add(fname)
 
-                # determine which records to fetch: take the records in the same
-                # model that don't have the field yet in cache
-                model_cache.ids.add(self._id)
-                fetch_ids = model_cache.ids - set(field_cache)
+            # determine which records to fetch: take the records in the same
+            # model that don't have the field yet in cache
+            model_cache.ids.add(self._id)
+            fetch_ids = model_cache.ids - set(field_cache)
 
-                # do not fetch the records/fields that have to be recomputed
-                for fname in list(fetch_fields):
-                    recompute_ids = recomputing.get(fname, set())
-                    if self._id in recompute_ids:
-                        fetch_fields.discard(fname)     # do not fetch that field at all
-                    else:
-                        fetch_ids -= recompute_ids      # do not fetch those records
+            # do not fetch the records/fields that have to be recomputed
+            for fname in list(fetch_fields):
+                recompute_ids = recomputing.get(fname, set())
+                if self._id in recompute_ids:
+                    fetch_fields.discard(fname)     # do not fetch that field at all
+                else:
+                    fetch_ids -= recompute_ids      # do not fetch those records
 
-                # fetch and check result
-                assert field_name in fetch_fields and self._id in fetch_ids
-                fetched = self.recordset(fetch_ids)._fetch_fields(list(fetch_fields))
-                if self not in fetched:
-                    raise except_orm("AccessError", "%s does not exist." % self)
+            # fetch and check result
+            assert field_name in fetch_fields and self._id in fetch_ids
+            recs = self.recordset(fetch_ids)
+            fetched = recs._fetch_fields(list(fetch_fields))
+            if self not in fetched:
+                raise except_orm("AccessError", "%s does not exist." % self)
 
             if self._id not in field_cache:
                 # How did this happen? Could be a missing model due to custom fields used too soon.
                 _logger.warning("Unknown field %r in %s" % (field_name, self))
                 raise KeyError(field_name)
 
-            return browse_function(self, column, field_cache[self._id])
+            return field_cache[self._id]
 
     @api.recordset
     def _fetch_fields(self, field_names):
@@ -5543,21 +5491,12 @@ class BaseModel(object):
         # process result field by field
         cache = self._scope.cache
         for field_name in field_names:
+            column = self._all_columns[field_name].column
+            
             # build dictionary {id: value, ...} for field
             values = {}
             for data in result:
-                values[data['id']] = data[field_name]
-
-            # feed cache for prefetching relation fields
-            column = self._all_columns[field_name].column
-            if column._type == 'many2one':
-                values = dict((i, _clean_one(v)) for i, v in values.iteritems())
-                value_ids = filter(None, values.itervalues())
-                cache[column._obj].ids.update(value_ids)
-
-            elif column._type in ('one2many', 'many2many'):
-                value_ids = itertools.chain(*values.values())
-                cache[column._obj].ids.update(value_ids)
+                values[data['id']] = column.read_to_cache(data[field_name])
 
             # update the cache
             cache[self._name][field_name].update(values)
@@ -5573,7 +5512,8 @@ class BaseModel(object):
         if self.is_null():
             return
         if field_name in self._all_columns:
-            self.write({field_name: value})
+            column = self._all_columns[field_name].column
+            self.write({field_name: column.cache_to_write(value)})
         # store into cache here, since method write() invalidates the cache!
         scope_proxy.cache[self._name][field_name][self._id] = value
 

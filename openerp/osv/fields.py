@@ -134,6 +134,18 @@ class _column(object):
         res = obj.read(cr, uid, ids, [name], context=context)
         return [x[name] for x in res]
 
+    def read_to_cache(self, value):
+        """ convert `value` as returned by :meth:`openerp.osv.orm.BaseModel.read`
+            into a valid value for the record cache
+        """
+        return value
+
+    def cache_to_write(self, value):
+        """ convert `value` from the record cache into a value for method
+            :meth:`openerp.osv.orm.BaseModel.write`
+        """
+        return value
+
     def as_display_name(self, cr, uid, obj, value, context=None):
         """Converts a field value to a suitable string representation for a record,
            e.g. when this field is used as ``rec_name``.
@@ -196,6 +208,15 @@ class reference(_column):
                 if not obj.pool[model].exists(cr, uid, [int(res_id)], context=context):
                     result[value['id']] = False
         return result
+
+    def read_to_cache(self, value):
+        if value:
+            res_model, res_id = value.split(',')
+            return scope.model(res_model).record(int(res_id))
+        return False
+
+    def cache_to_write(self, value):
+        return "%s,%s" % (value._name, value._id) if value else False
 
     @classmethod
     def _as_display_name(cls, field, cr, uid, obj, value, context=None):
@@ -498,7 +519,14 @@ class many2one(_column):
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, context=None):
         return obj.pool[self._obj].search(cr, uid, args+self._domain+[('name', 'like', value)], offset, limit, context=context)
 
-    
+    def read_to_cache(self, value):
+        if isinstance(value, tuple):
+            value = value[0]
+        return scope.model(self._obj).record(value)
+
+    def cache_to_write(self, value):
+        return value._id
+
     @classmethod
     def _as_display_name(cls, field, cr, uid, obj, value, context=None):
         return value[1] if isinstance(value, tuple) else tools.ustr(value) 
@@ -598,7 +626,12 @@ class one2many(_column):
         domain = self._domain(obj) if callable(self._domain) else self._domain
         return obj.pool[self._obj].name_search(cr, uid, value, domain, operator, context=context,limit=limit)
 
-    
+    def read_to_cache(self, value):
+        return scope.model(self._obj).recordset(value)
+
+    def cache_to_write(self, value):
+        return [(6, 0, value.unbrowse())]
+
     @classmethod
     def _as_display_name(cls, field, cr, uid, obj, value, context=None):
         raise NotImplementedError('One2Many columns should not be used as record name (_rec_name)') 
@@ -787,6 +820,12 @@ class many2many(_column):
     #
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like', context=None):
         return obj.pool[self._obj].search(cr, uid, args+self._domain+[('name', operator, value)], offset, limit, context=context)
+
+    def read_to_cache(self, value):
+        return scope.model(self._obj).recordset(value)
+
+    def cache_to_write(self, value):
+        return [(6, 0, value.unbrowse())]
 
     @classmethod
     def _as_display_name(cls, field, cr, uid, obj, value, context=None):
@@ -1147,6 +1186,16 @@ class function(_column):
         if self._fnct_inv:
             with Scope(cr, user, context):
                 self._fnct_inv(obj, cr, user, id, name, value, self._fnct_inv_arg, context)
+
+    def read_to_cache(self, value):
+        # hack: get the method's function from the class of the right type
+        type_class = globals()[self._type]
+        return type_class.read_to_cache.im_func(self, value)
+
+    def cache_to_write(self, value):
+        # hack: get the method's function from the class of the right type
+        type_class = globals()[self._type]
+        return type_class.cache_to_write.im_func(self, value)
 
     @classmethod
     def _as_display_name(cls, field, cr, uid, obj, value, context=None):
@@ -1591,6 +1640,6 @@ class column_info(object):
             self.parent_model, self.parent_column, self.original_parent)
 
 
-from openerp.osv.scope import Scope
+from openerp.osv.scope import Scope, proxy as scope
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
