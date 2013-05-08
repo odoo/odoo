@@ -121,7 +121,7 @@ class WebRequest(object):
     @contextlib.contextmanager
     def registry_cr(self):
         dbname = self.session._db or openerp.addons.web.controllers.main.db_monodb(self)
-        registry = openerp.modules.registry.Registry(dbname.lower())
+        registry = openerp.modules.registry.RegistryManager.get(dbname.lower())
         with registry.cursor() as cr:
             yield (registry, cr)
 
