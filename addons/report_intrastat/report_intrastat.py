@@ -34,7 +34,6 @@ class res_country(osv.osv):
         'intrastat': lambda *a: False,
     }
 
-res_country()
 
 
 class report_intrastat_code(osv.osv):
@@ -45,7 +44,6 @@ class report_intrastat_code(osv.osv):
         'description': fields.char('Description', size=64),
     }
 
-report_intrastat_code()
 
 
 class product_template(osv.osv):
@@ -55,7 +53,6 @@ class product_template(osv.osv):
         'intrastat_id': fields.many2one('report.intrastat.code', 'Intrastat code'),
     }
 
-product_template()
 
 class report_intrastat(osv.osv):
     _name = "report.intrastat"
@@ -122,6 +119,5 @@ class report_intrastat(osv.osv):
                 group by to_char(inv.create_date, 'YYYY'), to_char(inv.create_date, 'MM'),intrastat.id,inv.type,pt.intrastat_id, inv_country.code,inv.number,  inv.currency_id
             )""")
 
-report_intrastat()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

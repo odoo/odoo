@@ -37,7 +37,7 @@ except ImportError:
     from DAV.davcmd import copyone, copytree, moveone, movetree, delone, deltree
 
 import openerp
-from openerp import sql_db, netsvc
+from openerp import sql_db
 import openerp.service
 from openerp.tools import misc
 

@@ -215,9 +215,10 @@
 -
   !python {model: mrp.production}: |
     import os
-    from openerp import netsvc, tools
+    import openerp.report
+    from openerp import tools
     order = self.browse(cr, uid, ref("mrp_production_test1"))
-    (data, format) = netsvc.LocalService('report.bom.structure').create(cr, uid, [order.bom_id.id], {}, {})
+    data, format = openerp.report.render_report(cr, uid, [order.bom_id.id], 'bom.structure', {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'mrp-bom_structure_report.'+format), 'wb+').write(data)
 -
@@ -225,8 +226,9 @@
 -
   !python {model: mrp.production}: |
     import os
-    from openerp import netsvc, tools
-    (data, format) = netsvc.LocalService('report.mrp.production.order').create(cr, uid, [ref("mrp_production_test1")], {}, {})
+    import openerp.report
+    from openerp import tools
+    data, format = openerp.report.render_report(cr, uid, [ref("mrp_production_test1")], 'mrp.production.order', {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'mrp-production_order_report.'+format), 'wb+').write(data)
 -

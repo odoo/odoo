@@ -35,7 +35,6 @@ class hr_action_reason(osv.osv):
         'action_type': 'sign_in',
     }
 
-hr_action_reason()
 
 def _employee_get(obj, cr, uid, context=None):
     ids = obj.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
@@ -86,7 +85,6 @@ class hr_attendance(osv.osv):
     _constraints = [(_altern_si_so, 'Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)', ['action'])]
     _order = 'name desc'
 
-hr_attendance()
 
 class hr_employee(osv.osv):
     _inherit = "hr.employee"
@@ -166,6 +164,5 @@ class hr_employee(osv.osv):
             hr_attendance.create(cr, uid, vals, context=context)
         return True
 
-hr_employee()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

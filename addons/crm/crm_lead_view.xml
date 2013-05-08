@@ -100,6 +100,7 @@
                     <button name="case_cancel" string="Cancel Case" type="object"
                             states="draft,open,pending"/>
                     <field name="stage_id" widget="statusbar" clickable="True"
+                            domain="['&amp;', '|', ('case_default', '=', True), ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"
                             on_change="onchange_stage_id(stage_id)"/>
                 </header>
                 <sheet>
@@ -151,12 +152,13 @@
                             -->
                         </group>
                         <group>
-                            <field name="user_id"
-                                context="{'default_groups_ref': ['base.group_user', 'base.group_sale_salesman_all_leads']}"/>
-                            <label for="section_id"/>
-                            <div>
+                            <field name="user_id" on_change="on_change_user(user_id, context)"
+                                context="{'default_groups_ref': ['base.group_user', 'base.group_sale_salesman_all_leads'] }"/>
+                            <label for="section_id" groups="base.group_multi_salesteams"/>
+                            <div groups="base.group_multi_salesteams">
                                 <field name="section_id"/>
-                                <button name="case_escalate" string="Escalate" type="object" attrs="{'invisible': ['|', ('section_id','=',False), ('state', 'not in', ['draft','open','pending'])]}"/>
+                                <button name="case_escalate" string="Escalate" type="object"
+                                        attrs="{'invisible': ['|', ('section_id','=',False), ('state', 'not in', ['draft','open','pending'])]}"/>
                             </div>
                             <field name="type" invisible="1"/>
                         </group>
@@ -228,7 +230,7 @@
                     <field name="stage_id"/>
                     <field name="user_id" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
-                    <field name="section_id" invisible="context.get('invisible_section', True)"/>
+                    <field name="section_id" invisible="context.get('invisible_section', True)" groups="base.group_multi_salesteams"/>
                     <field name="state" invisible="1"/>
                     <field name="type_id" invisible="1"/>
                     <field name="referred" invisible="1"/>
@@ -326,15 +328,15 @@
                 <search string="Search Leads">
                     <field name="name" string="Lead / Customer" filter_domain="['|','|',('partner_name','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
                     <field name="categ_ids" string="Category" filter_domain="[('categ_ids','ilike',self)]"/>
-                    <field name="section_id" context="{'invisible_section': False, 'default_section_id': self}"/>
+                    <field name="section_id" context="{'invisible_section': False}" groups="base.group_multi_salesteams"/>
                     <field name="user_id"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="create_date"/>
                     <field name="country_id" context="{'invisible_country': False}"/>
                     <separator/>
                     <filter string="Open" name="open" domain="[('state','!=','cancel')]" help="Open Leads"/>
                     <filter string="Dead" name="dead" domain="[('state','=','cancel')]"/>
-                    <filter string="Unassigned" domain="[('user_id','=', False)]" help="No salesperson"/>
+                    <filter string="Unassigned" name="unassigned" domain="[('user_id','=', False)]" help="No salesperson"/>
                     <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]" help="Unread messages"/>
                     <filter string="Assigned to Me"
                             domain="[('user_id','=',uid)]" context="{'invisible_section': False}"
@@ -427,9 +429,9 @@
                             </group>
 
                             <group>
-                                <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_sale_salesman_all_leads']}"/>
-                                <label for="section_id"/>
-                                <div>
+                                <field name="user_id" on_change="on_change_user(user_id, context)" context="{'default_groups_ref': ['base.group_user', 'base.group_sale_salesman_all_leads']}"/>
+                                <label for="section_id" groups="base.group_multi_salesteams"/>
+                                <div groups="base.group_multi_salesteams">
                                     <field name="section_id" widget="selection"/>
                                     <button name="case_escalate" string="Escalate" type="object" class="oe_link" attrs="{'invisible': ['|', ('section_id','=',False), ('state', 'not in', ['draft','open','pending'])]}"/>
                                 </div>
@@ -525,7 +527,7 @@
                     <field name="stage_id"/>
                     <field name="planned_revenue" sum="Expected Revenues"/>
                     <field name="probability" avg="Avg. of Probability"/>
-                    <field name="section_id" invisible="context.get('invisible_section', True)"/>
+                    <field name="section_id" invisible="context.get('invisible_section', True)" groups="base.group_multi_salesteams"/>
                     <field name="user_id"/>
                     <field name="referred" invisible="1"/>
                     <field name="priority" invisible="1"/>
@@ -544,15 +546,15 @@
                 <search string="Search Opportunities">
                     <field name="name" string="Opportunity" filter_domain="['|','|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self),('name', 'ilike', self)]"/>
                     <field name="categ_ids" string="Category" filter_domain="[('categ_ids','ilike', self)]"/>
-                    <field name="section_id" context="{'invisible_section': False, 'default_section_id': self}"/>
+                    <field name="section_id" context="{'invisible_section': False}" groups="base.group_multi_salesteams"/>
                     <field name="user_id"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <separator/>
                     <filter string="New" name="new" domain="[('state','=','draft')]" help="New Opportunities"/>
                     <filter string="In Progress" name="open" domain="[('state','=','open')]" help="Open Opportunities"/>
                     <filter string="Won" name="won" domain="[('state','=','done')]"/>
                     <filter string="Lost" name="lost" domain="[('state','=','cancel')]"/>
-                    <filter string="Unassigned" domain="[('user_id','=', False)]" help="No salesperson"/>
+                    <filter string="Unassigned" name="unassigned" domain="[('user_id','=', False)]" help="No salesperson"/>
                     <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]" help="Unread messages"/>
                     <filter string="Assigned to Me"
                             domain="[('user_id','=',uid)]" context="{'invisible_section': False}"

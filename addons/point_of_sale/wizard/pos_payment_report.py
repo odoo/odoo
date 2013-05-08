@@ -43,7 +43,6 @@ class pos_payment_report(osv.osv_memory):
             'datas': datas,
        }
 
-pos_payment_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

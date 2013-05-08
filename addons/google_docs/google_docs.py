@@ -233,7 +233,6 @@ class config(osv.osv):
     _defaults = {
         'name_template': '%(name)s_%(model)s_%(filter)s_gdrive',
     }
-
     def _check_model_id(self, cr, uid, ids, context=None):
         config_id = self.browse(cr, uid, ids[0], context=context)
         if config_id.filter_id.id and config_id.model_id != config_id.filter_id.model_id:

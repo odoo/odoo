@@ -42,7 +42,6 @@ class account_invoice_confirm(osv.osv_memory):
             
         return {'type': 'ir.actions.act_window_close'}
 
-account_invoice_confirm()
 
 class account_invoice_cancel(osv.osv_memory):
     """
@@ -64,6 +63,5 @@ class account_invoice_cancel(osv.osv_memory):
             account_invoice_obj.signal_invoice_cancel(cr , uid, [record['id']])
         return {'type': 'ir.actions.act_window_close'}
 
-account_invoice_cancel()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
