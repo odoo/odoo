@@ -25,6 +25,7 @@ from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 from os.path import join as opj
 
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT as DF
 from openerp.tools.translate import _
 from openerp.osv import fields, osv
 from openerp import tools
@@ -140,18 +141,18 @@ class account_config_settings(osv.osv_memory):
         """
         company_id = self._default_company(cr, uid, context=context)
         fiscalyear_ids = self.pool.get('account.fiscalyear').search(cr, uid,
-                [('date_start', '<=', time.strftime('%Y-%m-%d')), ('date_stop', '>=', time.strftime('%Y-%m-%d')),
+                [('date_start', '<=', time.strftime(DF)), ('date_stop', '>=', time.strftime(DF)),
                  ('company_id', '=', company_id)])
         if fiscalyear_ids:
             # has a current fiscal year, use this one
             return self.pool.get('account.fiscalyear').browse(cr, uid, fiscalyear_ids[0], context=context).date_start
         else:
             past_fiscalyear_ids = self.pool.get('account.fiscalyear').search(cr, uid,
-                [('date_stop', '<=', time.strftime('%Y-%m-%d')), ('company_id', '=', company_id)])
+                [('date_stop', '<=', time.strftime(DF)), ('company_id', '=', company_id)])
             if past_fiscalyear_ids:
                 # use the latest fiscal year+1 day, sorted by start_date
                 latest_stop = self.pool.get('account.fiscalyear').browse(cr, uid, past_fiscalyear_ids[-1], context=context).date_stop
-                return (datetime.datetime.strptime(latest_stop, "%Y-%m-%d") + datetime.timedelta(days=1)).strftime('%Y-%m-%d')
+                return (datetime.datetime.strptime(latest_stop, DF) + datetime.timedelta(days=1)).strftime(DF)
             else:
                 return time.strftime('%Y-01-01')
 
@@ -163,19 +164,19 @@ class account_config_settings(osv.osv_memory):
         """
         company_id = self._default_company(cr, uid, context=context)
         fiscalyear_ids = self.pool.get('account.fiscalyear').search(cr, uid,
-                [('date_start', '<=', time.strftime('%Y-%m-%d')), ('date_stop', '>=', time.strftime('%Y-%m-%d')),
+                [('date_start', '<=', time.strftime(DF)), ('date_stop', '>=', time.strftime(DF)),
                  ('company_id', '=', company_id)])
         if fiscalyear_ids:
             # has a current fiscal year, use this one
             return self.pool.get('account.fiscalyear').browse(cr, uid, fiscalyear_ids[0], context=context).date_stop
         else:
             past_fiscalyear_ids = self.pool.get('account.fiscalyear').search(cr, uid,
-                [('date_stop', '<=', time.strftime('%Y-%m-%d')), ('company_id', '=', company_id)])
+                [('date_stop', '<=', time.strftime(DF)), ('company_id', '=', company_id)])
             if past_fiscalyear_ids:
                 # use the latest fiscal year+1 day, sorted by start_date
                 latest_year = self.pool.get('account.fiscalyear').browse(cr, uid, past_fiscalyear_ids[-1], context=context)
-                latest_stop = datetime.datetime.strptime(latest_year.date_stop, "%Y-%m-%d")
-                return latest_stop.replace(year=latest_stop.year+1).strftime('%Y-%m-%d')
+                latest_stop = datetime.datetime.strptime(latest_year.date_stop, DF)
+                return latest_stop.replace(year=latest_stop.year+1).strftime(DF)
             else:
                 return time.strftime('%Y-12-31')
 
