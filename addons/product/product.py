@@ -302,7 +302,7 @@ class product_template(osv.osv):
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
         #TODO: why is there a first empty arg? relation='' could be written server side, no?
         #TODO: put back decimal precision
-        'standard_price': fields.property(relation='', type = 'float', view_load=True, 
+        'standard_price': fields.property('', type = 'float', view_load=True, 
                                           help="Cost price of the product used for standard stock valuation in accounting and used as a base price on purchase orders.", 
                                           groups="base.group_user", string="Cost"),
         'volume': fields.float('Volume', help="The volume in m3."),

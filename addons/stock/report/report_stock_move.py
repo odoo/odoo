@@ -56,6 +56,7 @@ class report_stock_move(osv.osv):
 
     }
 
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_stock_move')
         cr.execute("""
