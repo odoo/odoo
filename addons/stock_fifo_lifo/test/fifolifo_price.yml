@@ -89,17 +89,6 @@
         price_unit: 50.0
         name: 'FIFO Ice Cream'
 - 
-  I confirm the Chicago Shop company's purchase order'
-- 
-  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_fifo_comp}
-- 
-  I receive the Chicago Shop company's purchase order'
-- 
-  !python {model: stock.partial.picking}: |
-    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo_comp")).picking_ids
-    partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
-    self.do_partial(cr, uid, [partial_id])
-- 
   Check the standard price should not have changed
 - 
   !python {model: product.product}: |
