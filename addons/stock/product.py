@@ -462,7 +462,7 @@ class product_product(osv.osv):
         'warehouse_id': fields.dummy(string='Warehouse', relation='stock.warehouse', type='many2one'),
         #TODO: why first arg is empty?
         'valuation':fields.property('', type='selection', selection =  [('manual_periodic', 'Periodical (manual)'),
-                                        ('real_time','Real Time (automated)'),], string = 'Inventory Valuation',
+                                        ('real_time','Real Time (automated)'),], string = 'Inventory Valuation', view_load = '1', 
                                         help="If real-time valuation is enabled for a product, the system will automatically write journal entries corresponding to stock moves." \
                                              "The inventory variation account set on the product category will represent the current inventory value, and the stock input and stock output account will hold the counterpart moves for incoming and outgoing products."
                                         , required=True),
