@@ -343,7 +343,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
                     var defs = [];
                     _.each(axis, function(x) {
                         var key = x[xaxis[0]]
-                        defs.push(obj.call("read_group", [domain, yaxis.concat(xaxis.slice(1, 2)), xaxis.slice(1, 2)], {context: context}).then(function(res) {
+                        defs.push(obj.call("read_group", [x['__domain'], yaxis.concat(xaxis.slice(1, 2)), xaxis.slice(1, 2)], {context: context}).then(function(res) {
                             return [x, key, res];
                         }));
                     });
