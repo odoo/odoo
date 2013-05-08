@@ -5331,7 +5331,7 @@ class BaseModel(object):
         """ make a record instance attached to the current scope """
         return self._make_instance(_id=(id or False), _scope=scope_proxy.current)
 
-    def recordset(self, ids):
+    def recordset(self, ids=None):
         """ make a recordset instance attached to the current scope """
         ids = map(int, ids or ())
         records = tuple(self.record(id) for id in ids)
@@ -5368,7 +5368,7 @@ class BaseModel(object):
             return self
         elif self.is_null():
             with self._scope:
-                return self.recordset(())
+                return self.recordset()
         elif self.is_record():
             with self._scope:
                 return self.recordset((self._id,))
