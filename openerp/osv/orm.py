@@ -5520,11 +5520,12 @@ class BaseModel(object):
         if self.is_null():
             return
 
+        # store value in database
         if field_name in self._all_columns:
             column = self._all_columns[field_name].column
             self.write({field_name: column.cache_to_write(value)})
 
-        # store into cache here, since method write() invalidates the cache!
+        # store value in cache (here because write() invalidates the cache!)
         self._data[field_name] = value
 
     def __getitem__(self, key):

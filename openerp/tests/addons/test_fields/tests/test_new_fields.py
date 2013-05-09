@@ -4,6 +4,7 @@
 
 from datetime import date, datetime
 
+from openerp import scope
 from openerp.tests import common
 
 
@@ -12,6 +13,7 @@ class TestNewFields(common.TransactionCase):
     def setUp(self):
         super(TestNewFields, self).setUp()
         self.Partner = self.registry('res.partner')
+        self.User = self.registry('res.users')
 
     def test_basics(self):
         """ test accessing new fields """
@@ -151,6 +153,31 @@ class TestNewFields(common.TransactionCase):
             alpha.lang = language.code
         with self.assertRaises(ValueError):
             alpha.lang = 'zz_ZZ'
+
+    def test_relation(self):
+        """ test relation fields """
+        outer_scope = scope.current
+        demo = self.User.search([('login', '=', 'demo')]).to_record()
+        alpha, beta = self.Partner.search([], limit=2)
+
+        # check scope of records
+        self.assertEqual(alpha._scope, outer_scope)
+        self.assertEqual(beta._scope, outer_scope)
+
+        with scope(demo) as inner_scope:
+            self.assertNotEqual(inner_scope, outer_scope)
+
+            # assign alpha's parent in inner scope
+            alpha.parent_id = beta.scoped()
+
+            # both alpha and its parent field must be in outer scope
+            self.assertEqual(alpha._scope, outer_scope)
+            self.assertEqual(alpha.parent_id._scope, outer_scope)
+
+            # migrate alpha into the current scope, and check again
+            gamma = alpha.scoped()
+            self.assertEqual(gamma._scope, inner_scope)
+            self.assertEqual(gamma.parent_id._scope, inner_scope)
 
     def test_reference(self):
         """ test reference fields. """
