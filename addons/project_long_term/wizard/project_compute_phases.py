@@ -52,7 +52,8 @@ class project_compute_phases(osv.osv_memory):
         else:
             project_ids = project_pool.search(cr, uid, [('user_id','=',uid)], context=context)
 
-        project_pool.schedule_phases(cr, uid, project_ids, context=context)
+        if project_ids:
+            project_pool.schedule_phases(cr, uid, project_ids, context=context)
         return self._open_phases_list(cr, uid, data, context=context)
 
     def _open_phases_list(self, cr, uid, data, context=None):
