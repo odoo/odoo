@@ -15,7 +15,7 @@ class TestNewFields(common.TransactionCase):
         self.Partner = self.registry('res.partner')
         self.User = self.registry('res.users')
 
-    def test_basics(self):
+    def test_00_basics(self):
         """ test accessing new fields """
         # find a partner
         partner = self.Partner.search([('name', 'ilike', 'j')])[0]
@@ -33,7 +33,7 @@ class TestNewFields(common.TransactionCase):
         self.assertIsInstance(values['children_count'], (int, long))
         self.assertEqual(values['children_count'], partner.children_count)
 
-    def test_non_stored(self):
+    def test_10_non_stored(self):
         """ test non-stored fields """
         # find partners
         alpha, beta, gamma = self.Partner.search([], limit=3)
@@ -50,7 +50,7 @@ class TestNewFields(common.TransactionCase):
             alpha.write({'name': alpha_name + ("!" * n)})
             self.assertEqual(alpha.name_size, alpha_size + n)
 
-    def test_stored(self):
+    def test_11_stored(self):
         """ test stored fields """
         # find partners with children
         alpha, beta, gamma = self.Partner.search([('child_ids.name', '!=', False)], limit=3)
@@ -98,7 +98,7 @@ class TestNewFields(common.TransactionCase):
             for c in children:
                 self.assertEqual(c.has_sibling, c.parent_id.children_count >= 2)
 
-    def test_float(self):
+    def test_20_float(self):
         """ test float fields """
         # find a partner
         alpha = self.Partner.search([], limit=1)[0]
@@ -111,7 +111,7 @@ class TestNewFields(common.TransactionCase):
         alpha.some_float_field = 2.4999999999999996
         self.assertEqual(alpha.some_float_field, 2.50)
 
-    def test_date(self):
+    def test_21_date(self):
         """ test date fields """
         # find a partner
         alpha = self.Partner.search([], limit=1)[0]
@@ -134,7 +134,7 @@ class TestNewFields(common.TransactionCase):
         with self.assertRaises(ValueError):
             alpha.date = '12-5-1'
 
-    def test_selection(self):
+    def test_22_selection(self):
         """ test selection fields """
         # find a partner
         alpha = self.Partner.search([], limit=1)[0]
@@ -154,7 +154,7 @@ class TestNewFields(common.TransactionCase):
         with self.assertRaises(ValueError):
             alpha.lang = 'zz_ZZ'
 
-    def test_relation(self):
+    def test_23_relation(self):
         """ test relation fields """
         outer_scope = scope.current
         demo = self.User.search([('login', '=', 'demo')]).to_record()
@@ -179,7 +179,7 @@ class TestNewFields(common.TransactionCase):
             self.assertEqual(gamma._scope, inner_scope)
             self.assertEqual(gamma.parent_id._scope, inner_scope)
 
-    def test_reference(self):
+    def test_24_reference(self):
         """ test reference fields. """
         alpha, beta = self.Partner.search([], limit=2)
 
