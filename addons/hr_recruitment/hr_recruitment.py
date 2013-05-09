@@ -236,6 +236,7 @@ class hr_applicant(base_stage, osv.Model):
         'color': fields.integer('Color Index'),
         'emp_id': fields.many2one('hr.employee', 'employee'),
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
+        'prev_stage': fields.char('Previous Stage',size=32),
     }
 
     _defaults = {
@@ -251,7 +252,13 @@ class hr_applicant(base_stage, osv.Model):
     _group_by_full = {
         'stage_id': _read_group_stage_ids
     }
-
+    
+    def write(self, cr, uid, ids, vals, context=None):
+        for data in self.browse(cr, uid, ids, context=context):
+            if vals.get('stage_id'):
+                vals['prev_stage'] = data.stage_id.name
+        return super(hr_applicant, self).write(cr, uid, ids, vals, context=context)
+    
     def onchange_job(self, cr, uid, ids, job, context=None):
         result = {}
 
