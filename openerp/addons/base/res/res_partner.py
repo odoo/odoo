@@ -259,8 +259,8 @@ class res_partner(osv.osv, format_address):
         'street2': fields.char('Street2', size=128),
         'zip': fields.char('Zip', change_default=True, size=24),
         'city': fields.char('City', size=128),
-        'state_id': fields.many2one("res.country.state", 'State'),
-        'country_id': fields.many2one('res.country', 'Country'),
+        'state_id': fields.many2one("res.country.state", 'State', ondelete='restrict'),
+        'country_id': fields.many2one('res.country', 'Country', ondelete='restrict'),
         'country': fields.related('country_id', type='many2one', relation='res.country', string='Country',
                                   deprecated="This field will be removed as of OpenERP 7.1, use country_id instead"),
         'email': fields.char('Email', size=240),
@@ -446,7 +446,7 @@ class res_partner(osv.osv, format_address):
             commercial_fields = self._commercial_fields(cr, uid, context=context)
             sync_vals = self._update_fields_values(cr, uid, partner.commercial_partner_id,
                                                         commercial_fields, context=context)
-            return self.write(cr, uid, partner.id, sync_vals, context=context)
+            partner.write(sync_vals)
 
     def _commercial_sync_to_children(self, cr, uid, partner, context=None):
         """ Handle sync of commercial fields to descendants """
@@ -472,7 +472,7 @@ class res_partner(osv.osv, format_address):
                                                       use_parent_address=partner.use_parent_address,
                                                       parent_id=partner.parent_id.id,
                                                       context=context).get('value', {})
-                self.update_address(cr, uid, partner.id, onchange_vals, context=context)
+                partner.update_address(onchange_vals)
 
         # 2. To DOWNSTREAM: sync children 
         if partner.child_ids:
