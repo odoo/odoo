@@ -5265,16 +5265,29 @@ class BaseModel(object):
     # specific attributes used by record, recordset and null instances
     INSTANCE_ATTRIBUTES = [
         '_id',                          # a record refers to its id
+        '_data',                        # a record holds its own cache
         '_records',                     # a recordset refers to its records
+        '_scope',                       # instances are attached to a scope
     ]
 
     def null(self):
         """ make a null instance attached to the current scope """
-        return self.record(False)
+        scope = scope_proxy.current
+        return self._make_instance(_id=False, _scope=scope, _data={})
 
     def record(self, id):
         """ make a record instance attached to the current scope """
-        return self._make_instance(_id=(id or False), _scope=scope_proxy.current)
+        if not id:
+            return self.null()
+        # retrieve the record instance from the cache attached to scope
+        scope = scope_proxy.current
+        model_cache = scope.cache[self._name]
+        rec = model_cache.get(id)
+        if rec is None:
+            # the instance does not exist yet, create it and put it in cache
+            rec = self._make_instance(_id=id, _scope=scope, _data={})
+            model_cache[id] = rec
+        return rec
 
     def recordset(self, ids=None):
         """ make a recordset instance attached to the current scope """
@@ -5341,11 +5354,6 @@ class BaseModel(object):
         """ Return an iterator over `self` (must be a recordset). """
         if not self.is_recordset():
             raise except_orm("ValueError", "Expected recordset: %s" % self)
-
-        # iterating over records usually implies reading them
-        # -> add the ids in the cache to prefetch all records at once
-        self._scope.cache[self._name].ids.update(self.unbrowse())
-
         return iter(self._records)
 
     def __len__(self):
@@ -5404,16 +5412,13 @@ class BaseModel(object):
         if field_name == 'id':
             return self._id
 
-        with self._scope as scope:
-            model_cache = scope.cache[self._name]
-            field_cache = model_cache[field_name]
+        if field_name in self._data:
+            return self._data[field_name]
 
-            if self._id in field_cache:
-                return field_cache[self._id]
-
+        with self._scope:
             recomputing = scope_proxy.recomputing(self._name)
 
-            # handle the case of new-style fields
+            # handle the case of high-level fields
             field = self._fields.get(field_name)
             if field:
                 if self.is_null():
@@ -5423,25 +5428,34 @@ class BaseModel(object):
                     # a "pure" function field, simply evaluate it on self
                     assert field.compute
                     getattr(self, field.compute)()
-                    return field_cache[self._id]
+                    return self._data[field_name]
 
                 if field.compute and self._id in recomputing.get(field_name, ()):
                     # field is stored and must be recomputed (in batch!)
                     recs = self.recordset(recomputing[field_name]).exists()
                     getattr(recs, field.compute)()
-                    return field_cache[self._id]
+                    return self._data[field_name]
 
-            # fetch the definition of the field which was asked for
+            # handle the case of low-level fields
             column = self._all_columns[field_name].column
 
             if self.is_null():
                 # return False, null or recordset, depending on the field's type
                 return column.read_to_cache(False)
 
-            # a pure function field: simply evaluate it for self
             if isinstance(column, fields.function) and not column.store:
+                # a pure function field: simply evaluate it for self
                 value = self.read([field_name], load="_classic_write")[field_name]
                 return column.read_to_cache(value)
+
+            # make sure that self is in cache
+            model_cache = self._scope.cache[self._name]
+            model_cache[self._id] = self
+
+            # determine which records to fetch: take the records of the same
+            # model that don't have the field yet in their cache
+            fetch_ids = set(rec._id for rec in model_cache.itervalues()
+                            if field_name not in rec._data)
 
             # determine which fields to fetch
             fetch_fields = set((field_name,))
@@ -5452,11 +5466,6 @@ class BaseModel(object):
                     # prefetch all classic and many2one fields
                     if cinfo.column._classic_write:
                         fetch_fields.add(fname)
-
-            # determine which records to fetch: take the records in the same
-            # model that don't have the field yet in cache
-            model_cache.ids.add(self._id)
-            fetch_ids = model_cache.ids - set(field_cache)
 
             # do not fetch the records/fields that have to be recomputed
             for fname in list(fetch_fields):
@@ -5473,33 +5482,32 @@ class BaseModel(object):
             if self not in fetched:
                 raise except_orm("AccessError", "%s does not exist." % self)
 
-            if self._id not in field_cache:
+            if field_name not in self._data:
                 # How did this happen? Could be a missing model due to custom fields used too soon.
                 _logger.warning("Unknown field %r in %s" % (field_name, self))
                 raise KeyError(field_name)
 
-            return field_cache[self._id]
+            return self._data[field_name]
 
     @api.recordset
     def _fetch_fields(self, field_names):
         """ fetch the given fields of `self` in the record cache, and
             return the records actually fetched
         """
+        # for efficiency, index converter functions by field name
+        converter = dict(
+            (field, self._all_columns[field].column.read_to_cache)
+            for field in field_names
+        )
+
         # read the (old-style only) fields
         result = self.read(field_names, load="_classic_write")
 
-        # process result field by field
-        cache = self._scope.cache
-        for field_name in field_names:
-            column = self._all_columns[field_name].column
-            
-            # build dictionary {id: value, ...} for field
-            values = {}
-            for data in result:
-                values[data['id']] = column.read_to_cache(data[field_name])
-
-            # update the cache
-            cache[self._name][field_name].update(values)
+        # update record caches
+        for data in result:
+            rec = self.record(data['id'])
+            for field in field_names:
+                rec._data[field] = converter[field](data[field])
 
         # return the fetched records
         return self.recordset([data['id'] for data in result])
@@ -5511,11 +5519,13 @@ class BaseModel(object):
         """
         if self.is_null():
             return
+
         if field_name in self._all_columns:
             column = self._all_columns[field_name].column
             self.write({field_name: column.cache_to_write(value)})
+
         # store into cache here, since method write() invalidates the cache!
-        scope_proxy.cache[self._name][field_name][self._id] = value
+        self._data[field_name] = value
 
     def __getitem__(self, key):
         """ If `self` is a record, return the value of the field named `key`.

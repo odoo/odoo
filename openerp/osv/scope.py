@@ -25,7 +25,7 @@
 """
 
 __all__ = [
-    'Scope', 'proxy', 'RecordCache',
+    'Scope', 'proxy', 'Cache',
 ]
 
 from collections import defaultdict
@@ -74,7 +74,7 @@ class ScopeProxy(object):
 
     def invalidate_cache(self, spec=None):
         """ Invalidate the record cache in all scopes.
-            See :meth:`RecordCache.invalidate` for the parameter `spec`.
+            See :meth:`Cache.invalidate` for the parameter `spec`.
         """
         for scope in getattr(_local, 'scope_list', ()):
             scope.cache.invalidate(spec)
@@ -88,7 +88,7 @@ class ScopeProxy(object):
     @contextmanager
     def recomputing_manager(self, spec):
         """ Create a context manager for recomputing fields.
-            See :meth:`RecordCache.invalidate` for the parameter `spec`.
+            See :meth:`Cache.invalidate` for the parameter `spec`.
         """
         # recomputing = {model_name: {field_name: set(ids), ...}, ...}
         recomputing = defaultdict(lambda: defaultdict(set))
@@ -132,7 +132,7 @@ class Scope(object):
         The scope provides extra attributes:
 
          - :attr:`registry`, the model registry of the current database,
-         - :attr:`cache`, a records cache (see :class:`RecordCache`).
+         - :attr:`cache`, a records cache (see :class:`Cache`).
     """
     def __new__(cls, cr, uid, context):
         args = (cr, int(uid), context if context is not None else {})
@@ -148,7 +148,7 @@ class Scope(object):
         obj = object.__new__(cls)
         obj.cr, obj.uid, obj.context = args
         obj.registry = RegistryManager.get(cr.dbname)
-        obj.cache = RecordCache()
+        obj.cache = Cache()
         scope_list.append(obj)
         return obj
 
@@ -223,71 +223,42 @@ class Scope(object):
 #
 # Records cache
 #
-class ModelCache(defaultdict):
-    """ Cache for records in a given model. The cache is a dictionary that
-        associates `field` names to `id-value` dictionaries.
+def get_values(d, keys):
+    """ return the values of dictionary `d` corresponding to `keys`, or all
+        values of `d` if `keys` is ``None``
+    """
+    if keys is None:
+        return d.itervalues()
+    else:
+        return (d[key] for key in keys if key in d)
 
-        It also  refers to a set of record ids (attribute :attr:`ids`), which is
-        used for prefetching.
+def drop_values(d, keys):
+    """ discard the items of `d` corresponding to `keys`, or all items if `keys`
+        is ``None``
+    """
+    if keys is None:
+        d.clear()
+    else:
+        for key in keys:
+            d.pop(key, None)
+
+
+class Cache(defaultdict):
+    """ Cache for records in a given scope. The cache is a dictionary mapping
+        each model name to a dictionary, which itself maps record ids to their
+        corresponding record. Every record holds a cache for its own fields.
+
+            # access the record of a given model in cache (if present)
+            record = cache[model_name][record_id]
+
+            # access the value of a field of record (if present)
+            value = record._data[field_name]
     """
     def __init__(self):
-        super(ModelCache, self).__init__(dict)
-        self.ids = set()
-
-    def update(self, field, values):
-        """ update the cache for the given field
-
-            :param values: a dictionary associating record ids to values
-        """
-        self.ids.update(values.iterkeys())
-        self[field].update(values)
-
-    def invalidate(self, fields=None, ids=None):
-        """ invalidate the given fields for the given ids
-
-            :param fields: the list of fields to invalidate, ``None`` for all
-            :param ids: the list of record ids to invalidate, ``None`` for all
-        """
-        if fields is None:
-            if ids is None:
-                self.ids.clear()
-                self.clear()
-            else:
-                self.ids.difference_update(ids)
-                for field_cache in self.itervalues():
-                    for id in ids:
-                        field_cache.pop(id, None)
-        else:
-            if ids is None:
-                for field in fields:
-                    self.pop(field, None)
-            else:
-                for field in fields:
-                    field_cache = self[field]
-                    for id in ids:
-                        field_cache.pop(id, None)
-
-
-class RecordCache(defaultdict):
-    """ Cache for records of any model. The cache is organized as a set of
-        nested dictionaries, where the keys are: the model name, the field name,
-        and the record id, respectively. The cache of a model is updated field
-        by field, and provides a set of record ids that is for prefetching::
-
-            # access the value of a field of a record in a model
-            value = cache[model_name][field_name][record_id]
-
-            # update the values of a field for multiple records
-            cache[model_name].update(field_name, {record_id: value, ...})
-
-            # access/modify the set of record ids used for prefetching
-            cache[model_name].ids
-    """
-    def __init__(self):
-        super(RecordCache, self).__init__(ModelCache)
+        super(Cache, self).__init__(dict)
 
     def invalidate(self, spec=None):
-        """ Invalidate the record cache.
+        """ Invalidate the cache.
 
             :param spec: describes what to invalidate;
                 either ``None`` (invalidate everything), or
@@ -297,33 +268,34 @@ class RecordCache(defaultdict):
                 and `ids` is a list of record ids or ``None`` for all records.
         """
         if spec is None:
-            for model_cache in self.itervalues():
-                model_cache.invalidate()
-        else:
-            for model, fields, ids in spec:
-                self[model].invalidate(fields, ids)
+            spec = [(model, None, None) for model in self]
+
+        for model, fields, ids in spec:
+            model_cache = self[model]
+            for record in get_values(model_cache, ids):
+                drop_values(record._data, fields)
+            if fields is None:
+                drop_values(model_cache, ids)
 
     def check(self):
         """ self-check for validating the cache """
         assert proxy.cache is self
-        cr, uid, context = proxy
-        invalids = []
 
+        invalids = []
         for model_name, model_cache in self.items():
-            # read the fields that are present in the cache
+            # read the records and fields that are present in the cache
             model = proxy.model(model_name)
-            ids = list(model_cache.ids)
-            field_names = [f for f in model._all_columns if f in model_cache]
-            result = model.read(cr, uid, ids, field_names, context=context, load="_classic_write")
+            recs = model.recordset(model_cache.itervalues())
+            fields = set(f for rec in recs for f in rec._data if f in model._all_columns)
+            result = recs.read(list(fields), load="_classic_write")
 
             # compare the result with the content of the cache
-            for field in field_names:
-                field_cache = model_cache[field]
-                column = model._all_columns[field].column
-                for data in result:
-                    id = data['id']
-                    if id in field_cache and field_cache[id] != column.read_to_cache(data[field]):
-                        invalids.append((model_name, field))
+            for data in result:
+                rec = model.record(data['id'])
+                for field, value in rec._data.iteritems():
+                    column = model._all_columns[field].column
+                    if column.read_to_cache(data[field]) != value:
+                        invalids.append((rec, rec._data, data))
                         break
 
         if invalids:
