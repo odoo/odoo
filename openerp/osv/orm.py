@@ -5452,20 +5452,20 @@ class BaseModel(object):
             model_cache = self._scope.cache[self._name]
             model_cache[self._id] = self
 
-            # determine which records to fetch: take the records of the same
-            # model that don't have the field yet in their cache
-            fetch_ids = set(rec._id for rec in model_cache.itervalues()
-                            if field_name not in rec._data)
+            # fetch the record of this model without field_name in their cache
+            fetch_ids = set(rec._id
+                for rec in model_cache.itervalues()
+                if field_name not in rec._data)
 
-            # determine which fields to fetch
-            fetch_fields = set((field_name,))
+            # prefetch all classic and many2one fields if column is one of them
+            # Note: do not prefetch fields when self.pool._init is True, because
+            # some columns may be missing from the database!
             if column._prefetch and not self.pool._init:
-                # Note: do not prefetch fields when self.pool._init is True,
-                # because some columns may be missing from the database!
-                for fname, cinfo in self._all_columns.iteritems():
-                    # prefetch all classic and many2one fields
-                    if cinfo.column._classic_write:
-                        fetch_fields.add(fname)
+                fetch_fields = set(fname
+                    for fname, cinfo in self._all_columns.iteritems()
+                    if cinfo.column._classic_write)
+            else:
+                fetch_fields = set((field_name,))
 
             # do not fetch the records/fields that have to be recomputed
             for fname in list(fetch_fields):
@@ -5477,8 +5477,8 @@ class BaseModel(object):
 
             # fetch and check result
             assert field_name in fetch_fields and self._id in fetch_ids
-            recs = self.recordset(fetch_ids)
-            fetched = recs._fetch_fields(list(fetch_fields))
+            fetch_recs = self.recordset(fetch_ids)
+            fetched = fetch_recs._fetch_fields(list(fetch_fields))
             if self not in fetched:
                 raise except_orm("AccessError", "%s does not exist." % self)
 
@@ -5497,8 +5497,7 @@ class BaseModel(object):
         # for efficiency, index converter functions by field name
         converter = dict(
             (field, self._all_columns[field].column.read_to_cache)
-            for field in field_names
-        )
+            for field in field_names)
 
         # read the (old-style only) fields
         result = self.read(field_names, load="_classic_write")
