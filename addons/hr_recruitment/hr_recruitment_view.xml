@@ -303,10 +303,12 @@
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
             <field name="expected_employees" version="7.0" position="after">
+                <label for="no_of_application" groups="base.group_user"/>
+                <div><field name="no_of_application"/><button class="oe_inline oe_link oe_app" string="Application" name="%(hr_job_applications)d" type="action"/></div>
                 <label for="survey_id" groups="base.group_user"/>
                 <div groups="base.group_user">
                     <field name="survey_id" class="oe_inline" domain="[('type','=','Human Resources')]"/>
-                    <button class="oe_inline"
+                    <button class="oe_inline oe_link"
                         string="Interview"
                         name="action_print_survey" type="object"
                         attrs="{'invisible':[('survey_id','=',False)]}"/>
@@ -344,7 +346,7 @@
                     <field name="department_id"/>
                     <field name="no_of_recruitment"/>
                     <field name="color"/>
-                    <field name="priority_count"/>
+                    <field name="no_of_application"/>
                     <field name="manager_id"/>
                     <field name="message_summary"/>
                     <templates>
@@ -359,6 +361,7 @@
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content" >
+                                  
                                   <a class="oe_kanban_action_a" name="%(hr_job_applications)d" type="action" >
                                     <h3 class="oe_job oe_kanban_ellipsis"><field name="name"/></h3>
                                     <div class="oe_job oe_kanban_ellipsis"><field name="department_id"/></div>
@@ -366,8 +369,8 @@
                                     <div class="oe_name"><t t-esc="record.manager_id.value.name"/></div>
                                     <div style="margin-top:25px;margin-bottom:7px;"><t t-esc="Math.round(record.no_of_recruitment.raw_value)"/> Expected in Recruitment</div>
                                     <div class="oe_application">
-                                       <span t-if="widget.values.priority_count.value.total_application gt 1"><t t-esc="Math.round(widget.values.priority_count.value.total_application)"/> Applications</span>
-                                       <span t-if="widget.values.priority_count.value.total_application lt 2"><t t-esc="Math.round(widget.values.priority_count.value.total_application)"/> Application</span>
+                                       <span t-if="widget.values.no_of_application.value gt 1"><t t-esc="widget.values.no_of_application.value"/> Applications</span>
+                                       <span t-if="widget.values.no_of_application.value lt 2"><t t-esc="widget.values.no_of_application.value"/> Application</span>
                                     </div>
                                   </a>
                                   <div class="oe_kanban_footer_left oe_job_message"><t t-raw="record.message_summary.raw_value"/></div>
@@ -385,6 +388,20 @@
             <field name="res_model">hr.job</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new job position.
+              </p><p>
+                Job Positions are used to define jobs and their requirements.
+                You can keep track of the number of employees you have per job
+                position and follow the evolution according to what you planned
+                for the future.
+              </p><p>
+                You can attach a survey to a job position. It will be used in
+                the recruitment process to evaluate the applicants for this job
+                position.
+              </p>
+            </field>
         </record>
 
     <!-- Stage Tree View -->

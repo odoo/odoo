@@ -492,30 +492,6 @@ class hr_job(osv.osv):
     _name = "hr.job"
     _inherits = {'mail.alias': 'alias_id'}
 
-    def _count_priority(self, cr, uid, ids, name, args, context=None):
-        """Applicant, priority count like number of star 3,2,1(star rating)
-        """
-        applicant_obj = self.pool.get('hr.applicant')
-        res = {}
-        for position in self.browse(cr, uid, ids, context=context):
-            res[position.id] = {}
-            priority1 = 0
-            priority2 = 0
-            priority3 = 0
-            rate_ids = applicant_obj.search(cr, uid, [('job_id', '=', position.id)], context=context)
-            for applicant in applicant_obj.browse(cr, uid, rate_ids, context=context):
-                if applicant.job_id.id == position.id:
-                    if applicant.priority == '3':
-                        priority3 += 1
-                    elif applicant.priority == '2':
-                        priority2 += 1
-                    elif applicant.priority == '1':
-                        priority1 += 1
-                    else:
-                        pass
-            res[position.id] = {'priority1': priority1, 'priority2': priority2, 'priority3': priority3, 'total_application':len(rate_ids)}
-        return res
-
     def _get_department_mgr(self, cr, uid, ids, name, args, context=None):
         """Get manager image for specific job position.
         """
@@ -535,7 +511,6 @@ class hr_job(osv.osv):
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
                                     help="Email alias for this job position. New emails will automatically "
                                          "create new applicants for this job position."),
-        'priority_count': fields.function(_count_priority, string='Total Priority Employees', type="char"),
         'manager_id': fields.function(_get_department_mgr, string='Department Manager', type="char"),#manager image in kanban
     }
     _defaults = {
