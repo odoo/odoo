@@ -1,71 +1,149 @@
-openerp.google_docs = function(instance, m) {
-var _t = instance.web._t,
-    QWeb = instance.web.qweb;
-
+openerp.google_docs = function (instance, m) {
+    var _t = instance.web._t,
+        QWeb = instance.web.qweb;
+    
     instance.web.Sidebar.include({
-    	
-    	start: function() {
+        start: function () {
             var self = this;
-            var ids 
+            var ids
             this._super.apply(this, arguments);
             var view = self.getParent();
             var result;
-            if(view.fields_view.type == "form"){
-            	ids = []
-            	view.on("load_record", self, function(r){
-		            	ids = [r.id]
-		            	self.add_gdoc_items(view, r.id)
-            		});
+            if (view.fields_view.type == "form") {
+                ids = []
+                view.on("load_record", self, function (r) {
+                    ids = [r.id]
+                    self.add_gdoc_items(view, r.id)
+                });
+            }
+        },
+        
+        add_gdoc_items: function (view, res_id) {
+            var self = this;
+            var gdoc_item = _.indexOf(_.pluck(self.items.other, 'classname'), 'oe_share_gdoc');
+            if (gdoc_item !== -1) {
+                self.items.other.splice(gdoc_item, 1);
+            }
+            if (res_id) {
+                view.sidebar_eval_context().done(function (context) {
+                    var ds = new instance.web.DataSet(this, 'ir.attachment', context);
+                    ds.call('get_google_docs_config', [view.dataset.model, res_id, context]).done(function (r) {
+                        if (!_.isEmpty(r)) {
+                            _.each(r, function (res) {
+                                var g_item = _.indexOf(_.pluck(self.items.other, 'label'), res.name);
+                                if (g_item !== -1) {
+                                    self.items.other.splice(g_item, 1);
+                                }
+                                self.add_items('other', [{
+                                        label: res.name,
+                                        config_id: res.id,
+                                        res_id: res_id,
+                                        res_model: view.dataset.model,
+                                        callback: self.on_google_doc,
+                                        classname: 'oe_share_gdoc'
+                                    },
+                                ]);
+                            })
+                        }
+                    });
+                });
+            }
+        },
+        fetch: function(model, fields, domain, ctx){
+            return new instance.web.Model(model).query(fields).filter(domain).context(ctx).all()
+        },
+        on_google_doc: function (doc_item) {
+        	var self = this;
+        	self.config = doc_item;
+        	var loaded = self.fetch('google.docs.config',['gdocs_resource_id','google_client_id'],[['id','=',doc_item.config_id]]) 
+            .then(function(configs){
+            	var ds = new instance.web.DataSet(self, 'google.docs.config');
+                ds.call('get_google_doc_name', [[doc_item.config_id], doc_item.res_id]).done(function (r) {
+                    if (!_.isEmpty(r)) {
+                    	self.OAUTHURL = 'https://accounts.google.com/o/oauth2/auth?';
+         	            self.VALIDURL = 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=';
+         	            self.SCOPES = 'https://www.googleapis.com/auth/drive';
+         	            self.CLIENT_ID = configs[0].google_client_id;//'39623646228-4de6gmcai1n3mj14h08bcir2u42ln07e.apps.googleusercontent.com';
+         	            //self.GDOCS_TEMPLATE_URL = configs[0].gdocs_template_url;//'https://docs.google.com/document/d/1FOqv2iDaRcjdDz577dECgVvqhYN7bgAg3vB9M7DiCdM/edit';
+         	            self.gdoc_name = r[doc_item.config_id]['name'];
+         	            //var pattern = /(\/d\/)(.[^/]*)/;
+         	            self.GDOCS_TEMPLATE_ID = configs[0].gdocs_resource_id;//self.GDOCS_TEMPLATE_URL.match(pattern)[2];
+         	            self.gdoc_url = r[doc_item.config_id]['url'];
+         	            self.handleClientLoad();
+         	            
+                    }
+                }); 
+            });
+        },
+        
+        handleClientLoad: function () {
+            var self = this;
+            window.setTimeout(function () {
+                self.checkAuth(self)
+            }, 1);
+        },
+        
+        checkAuth: function (self) {
+            gapi.auth.authorize({
+                'client_id': self.CLIENT_ID,
+                'scope': self.SCOPES,
+                'immediate': true
+            }, function (authResult) {
+                self.handleAuthResult(self, authResult)
+            });
+        },
+        
+        handleAuthResult: function (self, authResult) {
+            if (authResult && !authResult.error) {
+                self.clientLoad(self);
+            } else {
+                gapi.auth.authorize({
+                    'client_id': self.CLIENT_ID,
+                    'scope': self.SCOPES,
+                    'immediate': false
+                },
+                    self.handleAuthResult);
+            }
+        },
+        
+        clientLoad: function (self) {
+            gapi.client.load('drive', 'v2', function () {
+            	if (self.gdoc_url == false){ 
+            		self.copyFile(self.config, self.GDOCS_TEMPLATE_ID, self.gdoc_name);
             	}
-        	},
+            	else{
+            		window.open(self.gdoc_url, '_newtab');
+            	}
+            });
+        },
         
-	      add_gdoc_items: function(view, res_id){
-	        	var self = this;
-	        	var gdoc_item = _.indexOf(_.pluck(self.items.other,'classname'),'oe_share_gdoc');
-	        	if(gdoc_item !== -1)
-	        	{
-	        		self.items.other.splice(gdoc_item,1);
-	        	}
-	        	if( res_id ){
-	                view.sidebar_eval_context().done(function (context) {
-		            var ds = new instance.web.DataSet(this, 'ir.attachment', context);
-		            ds.call('get_google_docs_config', [view.dataset.model, res_id, context]).done(function(r) {
-		            	if(!_.isEmpty(r)){
-		            	_.each(r,function(res){
-		            		var g_item = _.indexOf(_.pluck(self.items.other,'label'),res.name);
-				        	if(g_item !== -1)
-				        	{
-				        		self.items.other.splice(g_item,1);
-				        	}
-				   
-		            		self.add_items('other', [
-		                    {   label: res.name,
-		                        config_id: res.id,
-		                        callback: self.on_google_doc,
-		                        classname: 'oe_share_gdoc' },
-		                	]);
-		            	  })
-		               }
-		              });
-		            });
-		         }
-	        },
-        
-        
-	        on_google_doc: function(doc_item) {
-	            var self = this;
-	            var view = self.getParent();
-	            var ids = ( view.fields_view.type != "form" )? view.groups.get_selection().ids : [ view.datarecord.id ];
-	            if( !_.isEmpty(ids) ){
-	                view.sidebar_eval_context().done(function (context) {
-	                    var ds = new instance.web.DataSet(this, 'ir.attachment', context);
-	                    ds.call('get_google_attachment', [doc_item.config_id, view.datarecord.id, context]).done(function(res) {
-	                        window.open(res.url,"_blank");
-	                        view.reload();
-	                    })
-	                    	
-	                });
-	            }
-	        }
+        copyFile: function (config, originFileId, copyTitle) {
+            var body = {
+                'title': copyTitle
+            };
+            var request = gapi.client.drive.files.copy({
+                'fileId': originFileId,
+                'resource': body
+            });
+            request.execute(function (resp) {
+                console.log('Copy ID: ' + resp.id);
+                var get_new_file = gapi.client.drive.files.get({
+                    'fileId': resp.id
+                });
+                get_new_file.execute(function (file) {
+                	var ds = new instance.web.DataSet(self, 'ir.attachment');
+                	vals = {
+	                	'res_model': config.res_model,
+	                    'res_id': config.res_id,
+	                    'type': 'url',
+	                    'name': copyTitle,
+	                    'url': file.alternateLink
+                	}
+                    ds.call('create', [vals]).done(function (r) {
+                    	window.open(file.alternateLink, '_newtab');
+                    });
+                });
+            });
+        },
     });
 };

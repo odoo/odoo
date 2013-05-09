@@ -28,92 +28,9 @@ from urlparse import urlparse
 
 _logger = logging.getLogger(__name__)
 
-try:
-    import gdata.docs.data
-    import gdata.docs.client
-
-    # API breakage madness in the gdata API - those guys are insane. 
-    try:
-        # gdata 2.0.15+
-        gdata.docs.client.DocsClient.copy_resource
-    except AttributeError:
-        # gdata 2.0.14- : copy_resource() was copy()
-        gdata.docs.client.DocsClient.copy_resource = gdata.docs.client.DocsClient.copy
-
-    try:
-        # gdata 2.0.16+
-        gdata.docs.client.DocsClient.get_resource_by_id
-    except AttributeError:
-        try:
-            # gdata 2.0.15+
-            gdata.docs.client.DocsClient.get_resource_by_self_link
-            def get_resource_by_id_2_0_16(self, resource_id, **kwargs):
-                return self.GetResourceBySelfLink(
-                    gdata.docs.client.RESOURCE_FEED_URI + ('/%s' % resource_id), **kwargs)
-            gdata.docs.client.DocsClient.get_resource_by_id = get_resource_by_id_2_0_16
-        except AttributeError:
-            # gdata 2.0.14- : alias get_resource_by_id()
-            gdata.docs.client.DocsClient.get_resource_by_id = gdata.docs.client.DocsClient.get_doc
-
-    try:
-        import atom.http_interface
-        _logger.info('GData lib version `%s` detected' % atom.http_interface.USER_AGENT)
-    except (ImportError, AttributeError):
-        _logger.debug('GData lib version could not be detected', exc_info=True)
-
-except ImportError:
-    _logger.warning("Please install latest gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list")
-
-
 class google_docs_ir_attachment(osv.osv):
     _inherit = 'ir.attachment'
-
-    def _auth(self, cr, uid, context=None):
-        '''
-        Connexion with google base account
-        @return client object for connexion
-        '''
-        #pool the google.login in google_base_account
-        google_pool = self.pool.get('google.login')
-        #get gmail password and login. We use default_get() instead of a create() followed by a read() on the 
-        # google.login object, because it is easier. The keys 'user' and 'password' ahve to be passed in the dict
-        # but the values will be replaced by the user gmail password and login.
-        user_config = google_pool.default_get(cr, uid, {'user' : '' , 'password' : ''}, context=context)
-        #login gmail account
-        client = google_pool.google_login(user_config['user'], user_config['password'], type='docs_client', context=context)
-        if not client:
-            raise osv.except_osv(_('Google Drive Error!'), _("Check your google account configuration in Users/Users/Google Account."))
-        _logger.info('Logged into google docs as %s', user_config['user'])
-        return client
-
-    def copy_gdoc(self, cr, uid, res_model, res_id, name_gdocs, gdoc_template_id, context=None):
-        '''
-        copy an existing document in google docs
-           :param res_model: the object for which the google doc is created
-           :param res_id: the Id of the object for which the google doc is created
-           :param name_gdocs: the name of the future ir.attachment that will be created. Based on the google doc template foun.
-           :param gdoc_template_id: the id of the google doc document to copy
-           :return: the ID of the google document object created
-        '''
-        #login with the base account google module
-        client = self._auth(cr, uid)
-        # fetch and copy the original document
-        try:
-            doc = client.get_resource_by_id(gdoc_template_id)
-            #copy the document you choose in the configuration
-            copy_resource = client.copy_resource(doc, name_gdocs)
-        except:
-            raise osv.except_osv(_('Google Drive Error!'), _("Your resource id is not correct. You can find the id in the google docs URL."))
-        # create an ir.attachment
-        self.create(cr, uid, {
-            'res_model': res_model,
-            'res_id': res_id,
-            'type': 'url',
-            'name': name_gdocs,
-            'url': copy_resource.get_alternate_link().href
-        }, context=context)
-        return copy_resource.resource_id.text
-
+    
     def get_google_docs_config(self, cr, uid, res_model, res_id, context=None):
         '''
         Function called by the js, when no google doc are yet associated with a record, with the aim to create one. It
@@ -157,39 +74,37 @@ class google_docs_ir_attachment(osv.osv):
             record_ids = model.search(cr, uid, domain, context=ctx)
         return record_ids
     
-    def get_google_attachment(self, cr, uid, config_id, res_id, context=None):
-        pool_gdoc_config = self.pool.get('google.docs.config')
+class config(osv.osv):
+    _name = 'google.docs.config'
+    _description = "Google Drive templates config"
+    
+    def get_google_doc_name(self, cr, uid, ids, res_id, context=None):
         pool_model = self.pool.get("ir.model")
-        attachment = {'url': False}
-        config = pool_gdoc_config.browse(cr, SUPERUSER_ID, config_id, context=context)
-        if config:
+        res = {}
+        for config in self.browse(cr, SUPERUSER_ID, ids, context=context):
             res_model = config.model_id
             model_ids = pool_model.search(cr, uid, [('model','=',res_model)])
             if not model_ids:
-                return attachment
-            model = pool_model.browse(cr, uid, model_ids[0], context=context).name
+                continue
+            model = pool_model.browse(cr, uid, model_ids[0], context=context)
+            model_name = model.name
             filter_name = config.filter_id and config.filter_id.name or False
             record = self.pool.get(res_model).read(cr, uid, res_id, [], context=context)
-            record.update({'model': model,'filter':filter_name})
+            record.update({'model': model_name,'filter':filter_name})
             name_gdocs = config.name_template or "%(name)s_%(model)s_%(filter)s_gdrive"
             try:
                 name_gdocs = name_gdocs % record
             except:
                 raise osv.except_osv(_('Key Error!'), _("Your Google Doc Name Pattern's key does not found in object."))
-    
-            attach_ids = self.search(cr, uid, [('res_model','=',res_model),('name','=',name_gdocs),('res_id','=',res_id)])
-            if not attach_ids: 
-                google_template_id = config.gdocs_resource_id
-                attach_id = self.copy_gdoc(cr, uid, config.model_id, res_id, name_gdocs, google_template_id, context=context)
-            else:
-                attach_id = attach_ids[0] 
-            attachments = self.browse(cr, uid, attach_id, context)
-            attachment['url'] = attachments.url
-        return attachment
-
-class config(osv.osv):
-    _name = 'google.docs.config'
-    _description = "Google Drive templates config"
+            
+            attach_pool = self.pool.get("ir.attachment")
+            attach_ids = attach_pool.search(cr, uid, [('res_model','=',res_model),('name','=',name_gdocs),('res_id','=',res_id)])
+            url = False
+            if attach_ids:
+                attachment = attach_pool.browse(cr, uid, attach_ids[0], context)
+                url = attachment.url
+            res[config.id] = {'name':name_gdocs, 'url': url}
+        return res
     
     def _list_all_models(self, cr, uid, context=None):
         cr.execute("SELECT model, name from ir_model order by name")
@@ -207,10 +122,16 @@ class config(osv.osv):
                     key = url.query.split('=')[1]
                 else:
                     key = res[3]
-                res_id = resource + ":" + key
-                result[data.id] = str(res_id)
+                result[data.id] = str(key)
             except:
                 raise osv.except_osv(_('Incorrect URL!'), _("Please enter a valid URL."))
+        return result
+    
+    def _client_id_get(self, cr, uid, ids, name, arg, context=None):
+        result = {}
+        for config_id in ids:
+            user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid)
+            result[config_id] = user.company_id.google_client_id
         return result
 
     _columns = {
@@ -218,9 +139,10 @@ class config(osv.osv):
         'model_id': fields.selection(_list_all_models, 'Model', required=True),
         'filter_id' : fields.many2one('ir.filters', 'Filter'),
         'gdocs_template_url': fields.char('Template URL', required=True, size=1024),
-        'gdocs_resource_id' : fields.function(_resource_get,type="char" ,string='Resource Id',store=True),
+        'gdocs_resource_id' : fields.function(_resource_get,type="char" ,string='Resource Id'),
+        'google_client_id' : fields.function(_client_id_get,type="char" ,string='Google Client '),
         'name_template': fields.char('Google Drive Name Pattern', size=64, help='Choose how the new google drive will be named, on google side. Eg. gdoc_%(field_name)s', required=True),
-            }
+    }
 
     def onchange_model_id(self, cr, uid, ids, model_id, context=None):
          res = {'domain':{'filter_id':[]}}
@@ -244,3 +166,10 @@ class config(osv.osv):
     ]
 
 config()
+
+
+class res_company(osv.osv):
+    _inherit = "res.company"
+    _columns = {
+        'google_client_id': fields.char('Google Client ID', size=200),
+    }

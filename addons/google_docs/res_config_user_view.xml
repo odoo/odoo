@@ -82,6 +82,18 @@
         </field>
     </record>
 
+		<record model="ir.ui.view" id="view_company_inherit_form2">
+			<field name="name">res.company.form.inherit</field>
+			<field name="inherit_id" ref="base.view_company_form" />
+			<field name="model">res.company</field>
+			<field name="arch" type="xml">
+				<xpath expr="//group[@name='account_grp']" position="after">
+					<group string="Google Configuration">
+						<field name='google_client_id'/>
+					</group>
+				</xpath>
+			</field>
+		</record>
         <menuitem name='Google Drive configuration' id='menu_gdocs_config' parent='base.menu_administration'/>
         <menuitem id='menu_gdocs_model_config' parent='menu_gdocs_config' action='action_google_docs_users_config'/>
     </data>
