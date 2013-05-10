@@ -168,8 +168,8 @@ class stock_move(osv.osv):
                 if product.qty_available >= product_uom_qty:
                     self.write(cr, uid, move.id, {'price_unit': price_amount / amount}, context=context)
                 else:
-                    self.write(cr, uid, move.id, {'price_unit': price_amount / amount}, context=context)
-                
+                    standard_price = product.standard_price
+                    self.write(cr, uid, move.id, {'price_unit': standard_price}, context=context)
 
                 #convert price, no need of UoM conversion as it is the total price
                 currency_id = move.company_id.currency_id.id
@@ -179,8 +179,9 @@ class stock_move(osv.osv):
                                                  price_amount)
                 else:
                     new_price = price_amount
-                #new_price does not depend on qty as it is the total amount => no conversion needed for uom 
-                product_obj.write(cr, uid, product.id, {'standard_price': new_price / product_uom_qty}, context=ctx)
+
+                if product.qty_available >= product_uom_qty:
+                    product_obj.write(cr, uid, product.id, {'standard_price': new_price / product_uom_qty}, context=ctx)
             # When the move is products returned to supplier or return products from customer, 
             # it should be treated as a normal in or out, so for every in
             elif cost_method in ['fifo', 'lifo']:  

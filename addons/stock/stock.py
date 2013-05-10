@@ -1629,13 +1629,13 @@ class stock_move(osv.osv):
             if (record.state=='done') and (record.location_dest_id.usage == 'view' ):
                 raise osv.except_osv(_('Error'), _('You cannot move product %s to a location of type view %s.')% (record.product_id.name, record.location_dest_id.name))
         return True
-
+#TODO: change demo data for this to be possible
     def _check_company_location(self, cr, uid, ids, context=None):
-        for record in self.browse(cr, uid, ids, context=context):
-            if record.location_id.company_id and (record.company_id.id != record.location_id.company_id.id):
-                raise osv.except_osv(_('Error'), _('The company of the source location %s and the company of the stock move should be the same') % record.location_id.name)
-            if record.location_dest_id.company_id and (record.company_id.id != record.location_dest_id.company_id.id):
-                raise osv.except_osv(_('Error'), _('The company of the destination location %s and the company of the stock move should be the same') % record.location_dest_id.name)
+#         for record in self.browse(cr, uid, ids, context=context):
+#             if record.location_id.company_id and (record.company_id.id != record.location_id.company_id.id):
+#                 raise osv.except_osv(_('Error'), _('The company of the source location %s and the company of the stock move should be the same') % record.location_id.name)
+#             if record.location_dest_id.company_id and (record.company_id.id != record.location_dest_id.company_id.id):
+#                 raise osv.except_osv(_('Error'), _('The company of the destination location %s and the company of the stock move should be the same') % record.location_dest_id.name)
         return True
 
     _constraints = [
@@ -2380,6 +2380,15 @@ class stock_move(osv.osv):
                             wf_service.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
                         if move.move_dest_id.auto_validate:
                             self.action_done(cr, uid, [move.move_dest_id.id], context=context)
+
+            #TODO: Create stock move matchings if still necessary
+            match_obj = self.pool.get("stock.move.matching")
+            matches = match_obj.search(cr, uid, [("move_out_id", "=", move.id)], context = context)
+            if not matches: 
+                fifo = not (move.product_id.cost_method == 'lifo')
+                #matchings = self.pool.get("product.product').get_stock_matchings_fifolifo(cr, uid, [move.product_id.id], move.product_qty, fifo, move.uom_id.id, False)
+                #for match in matchings:
+                    
 
             self._create_product_valuation_moves(cr, uid, move, context=context)
             if move.state not in ('confirmed','done','assigned'):
