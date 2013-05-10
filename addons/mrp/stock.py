@@ -147,6 +147,18 @@ class StockMove(osv.osv):
                 production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new_move)]})
                 res.append(new_move)
         return res
+    
+    def action_done(self, cr, uid, ids, context=None):
+        res = super(StockMove, self).action_done(cr, uid, ids, context=context)
+        production_obj = self.pool.get('mrp.production')
+        wf_service = netsvc.LocalService("workflow")
+        for move in self.browse(cr, uid, ids, context=context):
+            production_ids = production_obj.search(cr, uid, [('move_created_ids', 'in', [move.id])])
+            if production_ids:
+                product_data = production_obj.browse(cr, uid, production_ids[0])
+                if product_data.move_created_ids2 and product_data.move_lines2 and move.state=='done':
+                    wf_service.trg_validate(uid, 'mrp.production', product_data.id, 'button_produce_done', cr)
+        return res    
 
 StockMove()
 
