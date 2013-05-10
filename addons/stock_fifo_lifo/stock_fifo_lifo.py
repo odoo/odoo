@@ -152,6 +152,7 @@ class stock_move(osv.osv):
                 #get_stock_matchings will convert to currency and UoM of this stock move
                 tuples = product_obj.get_stock_matchings_fifolifo(cr, uid, [product.id], product_qty, cost_method == 'fifo', 
                                                                   product_uom, move.company_id.currency_id.id, context=context) #Always currency of the company
+                print "TUPLES:", tuples
                 price_amount = 0.0
                 amount = 0.0
                 move_currency_id = move.company_id.currency_id.id
