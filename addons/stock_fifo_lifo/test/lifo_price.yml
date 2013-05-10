@@ -46,10 +46,6 @@
   I confirm the first purchase order
 -
   !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_lifo1}
-- 
-  I confirm the second purchase order
-- 
-  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_lifo2}
 -
   I check the "Approved" status of purchase order 1
 -
@@ -67,6 +63,10 @@
 - 
   !python {model: product.product}: |
     assert self.browse(cr, uid, ref("product_lifo_icecream")).standard_price == 70.0, 'Standard price should not have changed!'
+- 
+  I confirm the second purchase order
+- 
+  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_lifo2}
 - 
   Process the reception of purchase order 2
 - 

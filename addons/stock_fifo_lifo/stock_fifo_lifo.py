@@ -48,6 +48,7 @@ class product_product (osv.osv):
             UoMs and currencies from the corresponding moves are converted towards that given in the params
         '''
         assert len(ids) == 1, _('Only the fifolifo stock matchings of one product can be calculated at a time.')
+        print uid, ids, qty, fifo, product_uom_id, currency_id, context
         uom_obj = self.pool.get('product.uom')
         currency_obj = self.pool.get('res.currency')
         
@@ -65,7 +66,8 @@ class product_product (osv.osv):
 
         if not currency_id:
             currency_id = self.pool.get('res.company').browse(cr, uid, company_id, context=context).currency_id.id
-
+        print fifo
+        print company_id, product.id
         if fifo:
             move_in_ids = move_obj.search(cr, uid, [('company_id','=', company_id), ('qty_remaining', '>', 0), ('state', '=', 'done'), 
                                              ('type', '=', 'in'), ('product_id', '=', product.id)], 
@@ -74,6 +76,7 @@ class product_product (osv.osv):
             move_in_ids = move_obj.search(cr, uid, [('company_id','=', company_id), ('qty_remaining', '>', 0), ('state', '=', 'done'), 
                                              ('type', '=', 'in'), ('product_id', '=', product.id)], 
                                        order = 'date desc', context=context)
+        print move_in_ids
         tuples = []
         qty_to_go = qty
         for move in move_obj.browse(cr, uid, move_in_ids, context=context):
