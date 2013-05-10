@@ -5321,16 +5321,29 @@ class BaseModel(object):
         """ Test whether `self` is a recordset instance. """
         return hasattr(self, '_records')
 
-    def to_record(self):
+    def one(self):
         """ Convert `self` into a single record attached to the same scope;
-            raise an exception if the conversion is not possible.
+            `self` must be a non-null record or a recordset with a single element.
+            Raise an exception if the conversion is not possible.
         """
-        if self.is_record():
+        if self.is_record() and self:
             return self
         elif self.is_recordset() and len(self) == 1:
             return self[0]
         else:
             raise except_orm("ValueError", "Expected singleton: %s" % self)
+
+    def to_record(self):
+        """ Convert `self` into a record (possibly null) attached to the same
+            scope. If `self` is a nonempty recordset, return its first element.
+        """
+        if self.is_record():
+            return self
+        elif self:
+            return self[0]
+        else:
+            with self._scope:
+                return self.null()
 
     def to_recordset(self):
         """ Convert `self` into a recordset attached to the same scope;

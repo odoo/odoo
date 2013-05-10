@@ -342,17 +342,40 @@ class TestAPI(common.TransactionCase):
 
     @mute_logger('openerp.osv.orm')
     def test_70_record_recordset(self):
-        """ Check methods to_record() and to_recordset(). """
-        ps = self.Partner.search([('name', 'ilike', 'a')], limit=1)
+        """ Check methods one(), to_record() and to_recordset(). """
+        # check with many records
+        ps = self.Partner.search([('name', 'ilike', 'a')])
+        self.assertTrue(len(ps) > 1)
+
+        with self.assertRaises(except_orm): ps.one()
+        self.assertEqual(ps.to_record(), ps[0])
         self.assertEqual(ps.to_recordset(), ps)
-        p = ps.to_record()
-        self.assertEqual(p, ps[0])
-        self.assertEqual(p.to_recordset(), ps)
+
+        # check with a single record and singleton recordset
+        p1, ps1 = ps[0], ps.recordset([ps[0]])
+        self.assertEqual(p1.one(), p1)
+        self.assertEqual(p1.to_record(), p1)
+        self.assertEqual(p1.to_recordset(), ps1)
+
+        self.assertEqual(ps1.one(), p1)
+        self.assertEqual(ps1.to_record(), p1)
+        self.assertEqual(ps1.to_recordset(), ps1)
+
+        # check with null record and empty recordset
+        p0, ps0 = ps.null(), ps.recordset()
+        with self.assertRaises(except_orm): p0.one()
+        self.assertEqual(p0.to_record(), p0)
+        self.assertEqual(p0.to_recordset(), ps0)
+
+        with self.assertRaises(except_orm): ps0.one()
+        self.assertEqual(ps0.to_record(), p0)
+        self.assertEqual(ps0.to_recordset(), ps0)
 
         # conversion between record and recordset within the same scope must
         # preserve record instances
-        self.assertIs(p.to_record(), p)
-        self.assertIs(p.to_recordset().to_record(), p)
+        self.assertIs(p1.one(), p1)
+        self.assertIs(p1.to_record(), p1)
+        self.assertIs(p1.to_recordset().to_record(), p1)
 
         # the recordsets only encapsulate the records
         qs = self.Partner.recordset(list(ps))
