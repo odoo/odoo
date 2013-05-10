@@ -60,6 +60,7 @@ You can manage:
         'hr_data.xml',
         'res_config_view.xml',
         'mail_hr_view.xml',
+        'res_users_view.xml',
     ],
     'demo': ['hr_demo.xml'],
     'test': [
