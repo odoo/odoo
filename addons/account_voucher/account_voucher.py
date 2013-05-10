@@ -243,7 +243,7 @@ class account_voucher(osv.osv):
     def onchange_line_ids(self, cr, uid, ids, line_dr_ids, line_cr_ids, amount, voucher_currency, type, context=None):
         context = context or {}
         if not line_dr_ids and not line_cr_ids:
-            return {'value':{'writeoff_amount': 0.0, 'is_multi_currency': False}}
+            return {'value':{'writeoff_amount': 0.0}}
         line_osv = self.pool.get("account.voucher.line")
         line_dr_ids = resolve_o2m_operations(cr, uid, line_osv, line_dr_ids, ['amount'], context)
         line_cr_ids = resolve_o2m_operations(cr, uid, line_osv, line_cr_ids, ['amount'], context)
@@ -1226,7 +1226,7 @@ class account_voucher(osv.osv):
                         # if the rate is specified on the voucher, it will be used thanks to the special keys in the context
                         # otherwise we use the rates of the system
                         amount_currency = currency_obj.compute(cr, uid, company_currency, line.move_line_id.currency_id.id, move_line['debit']-move_line['credit'], context=ctx)
-                if line.amount == line.amount_unreconciled and line.move_line_id.currency_id.id == voucher_currency:
+                if line.amount == line.amount_unreconciled:
                     sign = voucher.type in ('payment', 'purchase') and -1 or 1
                     foreign_currency_diff = sign * line.move_line_id.amount_residual_currency + amount_currency
 
