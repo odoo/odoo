@@ -129,7 +129,7 @@ class resource_calendar(osv.osv):
                         d2 = datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(m)), int((m%1) * 60))
                         result.append((d1, d2))
                         current_hour = hour_from
-                        todo -= hour_to - m
+                        todo -= (m-hour_from)
             dt_from -= timedelta(days=1)
             current_hour = 24
             maxrecur -= 1
@@ -181,7 +181,7 @@ class resource_calendar(osv.osv):
                             d2 = datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(hour_to)), int((hour_to%1) * 60))
                             result.append((d1, d2))
                             current_hour = hour_to
-                            todo -= hour_to - m
+                            todo -= (m-hour_from)
                 dt_from += timedelta(days=1)
                 current_hour = 0
                 maxrecur -= 1
