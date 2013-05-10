@@ -109,11 +109,11 @@ class resource_calendar(osv.osv):
         result = []
         maxrecur = 100
         current_hour = dt_from.hour
-        while float_compare(todo,0) and maxrecur:
+        while float_compare(todo, 0, 4) and maxrecur:
             cr.execute("select hour_from,hour_to from resource_calendar_attendance where dayofweek='%s' and calendar_id=%s order by hour_from desc", (dt_from.weekday(),id))
             for (hour_from,hour_to) in cr.fetchall():
                 leave_flag  = False
-                if (hour_from<current_hour) and (todo>0):
+                if (hour_from<current_hour) and float_compare(todo, 0, 4):
                     m = min(hour_to, current_hour)
                     if (m-hour_from)>todo:
                         hour_from = m-todo
@@ -162,10 +162,10 @@ class resource_calendar(osv.osv):
             result = []
             maxrecur = 100
             current_hour = dt_from.hour
-            while float_compare(todo,0) and maxrecur:
+            while float_compare(todo, 0, 4) and maxrecur:
                 for (hour_from,hour_to) in [(item['hour_from'], item['hour_to']) for item in hours_by_cal[id] if item['dayofweek'] == str(dt_from.weekday())]:
                     leave_flag  = False
-                    if (hour_to>current_hour) and (todo>0):
+                    if (hour_to>current_hour) and float_compare(todo, 0, 4):
                         m = max(hour_from, current_hour)
                         if (hour_to-m)>todo:
                             hour_to = m+todo
