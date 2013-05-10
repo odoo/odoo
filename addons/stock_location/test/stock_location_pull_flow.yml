@@ -166,7 +166,7 @@
   I create a procurement order.
 -
   !record {model: procurement.order, id: procurement_order_test0}:
-    company_id: base.main_company
+    company_id: stock.res_company_1
     date_planned: !eval time.strftime('%Y-%m-%d %H:%M:%S')
     location_id: stock.stock_location_shop0
     name: Testing pulled flow
@@ -187,7 +187,6 @@
   !python {model: procurement.order.compute.all}: |
     proc_obj = self.pool.get('procurement.order')
     proc_obj._procure_confirm(cr,uid)
-
 -
   I check the new procurement order has been created .
 -

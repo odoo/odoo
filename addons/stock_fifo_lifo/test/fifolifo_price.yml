@@ -207,6 +207,8 @@
   !python {model: stock.partial.picking}: |
     pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo_usd")).picking_ids
     print pick_ids
+    print uid, context
+    print self.pool.get('res.users').browse(cr, uid, uid).company_id.id
     partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
     print partial_id
     self.do_partial(cr, uid, [partial_id])
