@@ -349,6 +349,16 @@ class TestAPI(common.TransactionCase):
         self.assertEqual(p, ps[0])
         self.assertEqual(p.to_recordset(), ps)
 
+        # conversion between record and recordset within the same scope must
+        # preserve record instances
+        self.assertIs(p.to_record(), p)
+        self.assertIs(p.to_recordset().to_record(), p)
+
+        # the recordsets only encapsulate the records
+        qs = self.Partner.recordset(list(ps))
+        for p, q in zip(ps, qs):
+            self.assertIs(p, q)
+
     @mute_logger('openerp.osv.orm')
     def test_80_contains(self):
         """ Test membership on recordset. """

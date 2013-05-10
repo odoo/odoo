@@ -5271,40 +5271,54 @@ class BaseModel(object):
     ]
 
     def null(self):
-        """ make a null instance attached to the current scope """
+        """ Return a null instance attached to the current scope. """
         scope = scope_proxy.current
         return self._make_instance(_id=False, _scope=scope, _data={})
 
-    def record(self, id):
-        """ make a record instance attached to the current scope """
-        if not id:
-            return self.null()
-        # retrieve the record instance from the cache attached to scope
+    def record(self, arg):
+        """ Return a record instance corresponding to `arg` (record or record
+            id) and attached to the current scope.
+        """
         scope = scope_proxy.current
-        model_cache = scope.cache[self._name]
-        rec = model_cache.get(id)
-        if rec is None:
-            # the instance does not exist yet, create it and put it in cache
-            rec = self._make_instance(_id=id, _scope=scope, _data={})
-            model_cache[id] = rec
-        return rec
+        if isinstance(arg, Record):
+            if arg._scope is scope:
+                # Important: self.record(arg) must be idempotent when applied in
+                # the same scope. This property is used to preserve the record's
+                # cache when converting between record and recordset.
+                return arg
+            arg = arg._id
+        if not arg:
+            return self.null()
 
-    def recordset(self, ids=None):
-        """ make a recordset instance attached to the current scope """
-        ids = map(int, ids or ())
-        records = tuple(self.record(id) for id in ids)
+        # arg is a record id; retrieve the corresponding record in the cache
+        model_cache = scope.cache[self._name]
+        record = model_cache.get(arg)
+        if record is None:
+            # the instance does not exist yet; create it and put it in cache
+            record = self._make_instance(_id=arg, _scope=scope, _data={})
+            model_cache[arg] = record
+        return record
+
+    def recordset(self, args=()):
+        """ Return a recordset instance corresponding to `args` (collection of
+            records or record ids) and attached to the current scope.
+        """
+        # Important: if args is a collection of record instances in the current
+        # scope, then the result only encapsulates those record instances. See
+        # method record() above.
+        records = tuple(map(self.record, args))
         return self._make_instance(_records=records, _scope=scope_proxy.current)
 
     def is_null(self):
-        """ test whether self is a null instance """
-        return not bool(getattr(self, '_id', True))
+        """ Test whether self is a null instance. """
+        return not getattr(self, '_id', True)
 
     def is_record(self):
-        """ test whether `self` is a record instance (possibly null) """
+        """ Test whether `self` is a record instance (possibly null). """
         return hasattr(self, '_id')
 
     def is_recordset(self):
-        """ test whether `self` is a recordset instance """
+        """ Test whether `self` is a recordset instance. """
         return hasattr(self, '_records')
 
     def to_record(self):
@@ -5329,7 +5343,7 @@ class BaseModel(object):
                 return self.recordset()
         elif self.is_record():
             with self._scope:
-                return self.recordset((self._id,))
+                return self.recordset((self,))
         else:
             raise except_orm("ValueError", "Expected record or recordset: %s" % self)
 
@@ -5382,9 +5396,9 @@ class BaseModel(object):
         """ Return the concatenation of two recordsets as a recordset. """
         if self._name != other._name:
             raise except_orm("ValueError", "Mixing apples and oranges: %s, %s" % (self, other))
-        ids = self.to_recordset().unbrowse() + other.to_recordset().unbrowse()
+        recs = tuple(self.to_recordset()) + tuple(other.to_recordset())
         with self._scope:
-            return self.recordset(ids)
+            return self.recordset(recs)
 
     def __eq__(self, other):
         """ Test equality between two records, two recordsets or two models. """
@@ -5503,13 +5517,15 @@ class BaseModel(object):
         result = self.read(field_names, load="_classic_write")
 
         # update record caches
+        recs = []
         for data in result:
             rec = self.record(data['id'])
             for field in field_names:
                 rec._data[field] = converter[field](data[field])
+            recs.append(rec)
 
         # return the fetched records
-        return self.recordset([data['id'] for data in result])
+        return self.recordset(recs)
 
     def _set_field(self, field_name, value):
         """ Assign the field `field_name` of `self` to `value`.
