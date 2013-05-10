@@ -28,10 +28,9 @@
     'installable': True,
     'auto_install': False,
     'js': [
-           'static/lib/gapi/client.js',
-           'static/src/js/gdocs.js',
-           ],
-#    'qweb': ['static/src/xml/gdocs.xml'],
+        'static/lib/gapi/client.js',
+        'static/src/js/gdocs.js',
+    ],
     'data': [
         'security/ir.model.access.csv',
         'res_config_user_view.xml'
@@ -39,7 +38,7 @@
     'demo': [
         'google_docs_demo.xml'
     ],
-    'depends': ['crm'],
+    'depends': ['base_setup'],
     'description': """
 Integrate Google document with OpenERP.
 =======================================

@@ -28,8 +28,37 @@ from urlparse import urlparse
 
 _logger = logging.getLogger(__name__)
 
-class google_docs_ir_attachment(osv.osv):
-    _inherit = 'ir.attachment'
+class config(osv.osv):
+    _name = 'google.docs.config'
+    _description = "Google Drive templates config"
+    
+    def get_google_doc_name(self, cr, uid, ids, res_id, context=None):
+        pool_model = self.pool.get("ir.model")
+        res = {}
+        for config in self.browse(cr, SUPERUSER_ID, ids, context=context):
+            res_model = config.model_id
+            model_ids = pool_model.search(cr, uid, [('model', '=', res_model)])
+            if not model_ids:
+                continue
+            model = pool_model.browse(cr, uid, model_ids[0], context=context)
+            model_name = model.name
+            filter_name = config.filter_id and config.filter_id.name or False
+            record = self.pool.get(res_model).read(cr, uid, res_id, [], context=context)
+            record.update({'model': model_name, 'filter':filter_name})
+            name_gdocs = config.name_template or "%(name)s_%(model)s_%(filter)s_gdrive"
+            try:
+                name_gdocs = name_gdocs % record
+            except:
+                raise osv.except_osv(_('Key Error!'), _("Your Google Doc Name Pattern's key does not found in object."))
+            
+            attach_pool = self.pool.get("ir.attachment")
+            attach_ids = attach_pool.search(cr, uid, [('res_model', '=', res_model), ('name', '=', name_gdocs), ('res_id', '=', res_id)])
+            url = False
+            if attach_ids:
+                attachment = attach_pool.browse(cr, uid, attach_ids[0], context)
+                url = attachment.url
+            res[config.id] = {'name':name_gdocs, 'url': url}
+        return res
     
     def get_google_docs_config(self, cr, uid, res_model, res_id, context=None):
         '''
@@ -45,11 +74,10 @@ class google_docs_ir_attachment(osv.osv):
         '''
         if not res_id:
             raise osv.except_osv(_('Google Drive Error!'), _("Creating google drive may only be done by one at a time."))
-        pool_gdoc_config = self.pool.get('google.docs.config')
         # check if a model is configured with a template
-        config_ids = pool_gdoc_config.search(cr, uid, [('model_id', '=', res_model)], context=context)
+        config_ids = self.search(cr, uid, [('model_id', '=', res_model)], context=context)
         configs = []
-        for config  in pool_gdoc_config.browse(cr, SUPERUSER_ID, config_ids, context=context):
+        for config  in self.browse(cr, SUPERUSER_ID, config_ids, context=context):
             if config.filter_id:
                 if (config.filter_id.user_id and config.filter_id.user_id.id != uid):
                     #Private
@@ -74,38 +102,6 @@ class google_docs_ir_attachment(osv.osv):
             record_ids = model.search(cr, uid, domain, context=ctx)
         return record_ids
     
-class config(osv.osv):
-    _name = 'google.docs.config'
-    _description = "Google Drive templates config"
-    
-    def get_google_doc_name(self, cr, uid, ids, res_id, context=None):
-        pool_model = self.pool.get("ir.model")
-        res = {}
-        for config in self.browse(cr, SUPERUSER_ID, ids, context=context):
-            res_model = config.model_id
-            model_ids = pool_model.search(cr, uid, [('model','=',res_model)])
-            if not model_ids:
-                continue
-            model = pool_model.browse(cr, uid, model_ids[0], context=context)
-            model_name = model.name
-            filter_name = config.filter_id and config.filter_id.name or False
-            record = self.pool.get(res_model).read(cr, uid, res_id, [], context=context)
-            record.update({'model': model_name,'filter':filter_name})
-            name_gdocs = config.name_template or "%(name)s_%(model)s_%(filter)s_gdrive"
-            try:
-                name_gdocs = name_gdocs % record
-            except:
-                raise osv.except_osv(_('Key Error!'), _("Your Google Doc Name Pattern's key does not found in object."))
-            
-            attach_pool = self.pool.get("ir.attachment")
-            attach_ids = attach_pool.search(cr, uid, [('res_model','=',res_model),('name','=',name_gdocs),('res_id','=',res_id)])
-            url = False
-            if attach_ids:
-                attachment = attach_pool.browse(cr, uid, attach_ids[0], context)
-                url = attachment.url
-            res[config.id] = {'name':name_gdocs, 'url': url}
-        return res
-    
     def _list_all_models(self, cr, uid, context=None):
         cr.execute("SELECT model, name from ir_model order by name")
         return cr.fetchall()
@@ -118,7 +114,7 @@ class config(osv.osv):
                 url = urlparse(template_url)
                 res = url.path.split('/')
                 resource = res[1]
-                if res[1]== "spreadsheet":
+                if res[1] == "spreadsheet":
                     key = url.query.split('=')[1]
                 else:
                     key = res[3]
@@ -139,8 +135,8 @@ class config(osv.osv):
         'model_id': fields.selection(_list_all_models, 'Model', required=True),
         'filter_id' : fields.many2one('ir.filters', 'Filter'),
         'gdocs_template_url': fields.char('Template URL', required=True, size=1024),
-        'gdocs_resource_id' : fields.function(_resource_get,type="char" ,string='Resource Id'),
-        'google_client_id' : fields.function(_client_id_get,type="char" ,string='Google Client '),
+        'gdocs_resource_id' : fields.function(_resource_get, type="char" , string='Resource Id'),
+        'google_client_id' : fields.function(_client_id_get, type="char" , string='Google Client '),
         'name_template': fields.char('Google Drive Name Pattern', size=64, help='Choose how the new google drive will be named, on google side. Eg. gdoc_%(field_name)s', required=True),
     }
 
@@ -155,6 +151,7 @@ class config(osv.osv):
     _defaults = {
         'name_template': '%(name)s_%(model)s_%(filter)s_gdrive',
     }
+    
     def _check_model_id(self, cr, uid, ids, context=None):
         config_id = self.browse(cr, uid, ids[0], context=context)
         if config_id.filter_id.id and config_id.model_id != config_id.filter_id.model_id:
@@ -162,14 +159,13 @@ class config(osv.osv):
         return True
 
     _constraints = [
-        (_check_model_id, 'Model of selected filter is not matching with model of current template.', ['model_id','filter_id']),
+        (_check_model_id, 'Model of selected filter is not matching with model of current template.', ['model_id', 'filter_id']),
     ]
 
 config()
 
-
 class res_company(osv.osv):
     _inherit = "res.company"
     _columns = {
-        'google_client_id': fields.char('Google Client ID', size=200),
+        'google_client_id': fields.char('Google Client ID', size=200, help="Go to 'Google APIs console' and create 'OAuth 2.0 Client ID'."),
     }

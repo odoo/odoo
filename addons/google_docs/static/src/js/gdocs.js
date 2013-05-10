@@ -26,7 +26,7 @@ openerp.google_docs = function (instance, m) {
             }
             if (res_id) {
                 view.sidebar_eval_context().done(function (context) {
-                    var ds = new instance.web.DataSet(this, 'ir.attachment', context);
+                    var ds = new instance.web.DataSet(this, 'google.docs.config', context);
                     ds.call('get_google_docs_config', [view.dataset.model, res_id, context]).done(function (r) {
                         if (!_.isEmpty(r)) {
                             _.each(r, function (res) {
@@ -49,30 +49,29 @@ openerp.google_docs = function (instance, m) {
                 });
             }
         },
-        fetch: function(model, fields, domain, ctx){
+        
+        fetch: function (model, fields, domain, ctx) {
             return new instance.web.Model(model).query(fields).filter(domain).context(ctx).all()
         },
+        
         on_google_doc: function (doc_item) {
-        	var self = this;
-        	self.config = doc_item;
-        	var loaded = self.fetch('google.docs.config',['gdocs_resource_id','google_client_id'],[['id','=',doc_item.config_id]]) 
-            .then(function(configs){
-            	var ds = new instance.web.DataSet(self, 'google.docs.config');
+            var self = this;
+            self.config = doc_item;
+            var loaded = self.fetch('google.docs.config', ['gdocs_resource_id', 'google_client_id'], [['id', '=', doc_item.config_id]])
+                .then(function (configs) {
+                var ds = new instance.web.DataSet(self, 'google.docs.config');
                 ds.call('get_google_doc_name', [[doc_item.config_id], doc_item.res_id]).done(function (r) {
                     if (!_.isEmpty(r)) {
-                    	self.OAUTHURL = 'https://accounts.google.com/o/oauth2/auth?';
-         	            self.VALIDURL = 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=';
-         	            self.SCOPES = 'https://www.googleapis.com/auth/drive';
-         	            self.CLIENT_ID = configs[0].google_client_id;//'39623646228-4de6gmcai1n3mj14h08bcir2u42ln07e.apps.googleusercontent.com';
-         	            //self.GDOCS_TEMPLATE_URL = configs[0].gdocs_template_url;//'https://docs.google.com/document/d/1FOqv2iDaRcjdDz577dECgVvqhYN7bgAg3vB9M7DiCdM/edit';
-         	            self.gdoc_name = r[doc_item.config_id]['name'];
-         	            //var pattern = /(\/d\/)(.[^/]*)/;
-         	            self.GDOCS_TEMPLATE_ID = configs[0].gdocs_resource_id;//self.GDOCS_TEMPLATE_URL.match(pattern)[2];
-         	            self.gdoc_url = r[doc_item.config_id]['url'];
-         	            self.handleClientLoad();
-         	            
+                        self.OAUTHURL = 'https://accounts.google.com/o/oauth2/auth?';
+                        self.VALIDURL = 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=';
+                        self.SCOPES = 'https://www.googleapis.com/auth/drive';
+                        self.CLIENT_ID = configs[0].google_client_id;
+                        self.GDOC_NAME = r[doc_item.config_id]['name'];
+                        self.GDOCS_TEMPLATE_ID = configs[0].gdocs_resource_id;
+                        self.GDOC_URL = r[doc_item.config_id]['url'];
+                        self.handleClientLoad();
                     }
-                }); 
+                });
             });
         },
         
@@ -94,6 +93,7 @@ openerp.google_docs = function (instance, m) {
         },
         
         handleAuthResult: function (self, authResult) {
+        	
             if (authResult && !authResult.error) {
                 self.clientLoad(self);
             } else {
@@ -101,19 +101,19 @@ openerp.google_docs = function (instance, m) {
                     'client_id': self.CLIENT_ID,
                     'scope': self.SCOPES,
                     'immediate': false
-                },
-                    self.handleAuthResult);
+                },function (authResult) {
+                    self.handleAuthResult(self, authResult)
+                });
             }
         },
         
         clientLoad: function (self) {
             gapi.client.load('drive', 'v2', function () {
-            	if (self.gdoc_url == false){ 
-            		self.copyFile(self.config, self.GDOCS_TEMPLATE_ID, self.gdoc_name);
-            	}
-            	else{
-            		window.open(self.gdoc_url, '_newtab');
-            	}
+                if (self.GDOC_URL == false) {
+                    self.copyFile(self.config, self.GDOCS_TEMPLATE_ID, self.GDOC_NAME);
+                } else {
+                    window.open(self.GDOC_URL, '_blank');
+                }
             });
         },
         
@@ -131,16 +131,16 @@ openerp.google_docs = function (instance, m) {
                     'fileId': resp.id
                 });
                 get_new_file.execute(function (file) {
-                	var ds = new instance.web.DataSet(self, 'ir.attachment');
-                	vals = {
-	                	'res_model': config.res_model,
-	                    'res_id': config.res_id,
-	                    'type': 'url',
-	                    'name': copyTitle,
-	                    'url': file.alternateLink
-                	}
+                    var ds = new instance.web.DataSet(self, 'ir.attachment');
+                    vals = {
+                        'res_model': config.res_model,
+                        'res_id': config.res_id,
+                        'type': 'url',
+                        'name': copyTitle,
+                        'url': file.alternateLink
+                    }
                     ds.call('create', [vals]).done(function (r) {
-                    	window.open(file.alternateLink, '_newtab');
+                        window.open(file.alternateLink, '_blank');
                     });
                 });
             });
