@@ -102,7 +102,7 @@ class product_product (osv.osv):
 
 class stock_move(osv.osv):
     _inherit = 'stock.move'
-    _columns = {'qty_remaining': fields.float("Remaining"),
+    _columns = {'qty_remaining': fields.float("Remaining Qty"),
                 'matching_ids_in': fields.one2many('stock.move.matching', 'move_in_id'),
                 'matching_ids_out':fields.one2many('stock.move.matching', 'move_out_id'),
                 }
@@ -140,9 +140,9 @@ class stock_move(osv.osv):
             #Check we are using the right company
             company_id = move.company_id.id
             ctx = context.copy()
+            ctx['force_company'] = company_id
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             if company_id != user.company_id.id:
-                ctx['force_company'] = company_id
                 product = product_obj.browse(cr, uid, move.product_id.id, context=ctx)
             cost_method = product.cost_method
             uom_id = product.uom_id.id
@@ -154,7 +154,7 @@ class stock_move(osv.osv):
 
                 #get_stock_matchings will convert to currency and UoM of this stock move
                 tuples = product_obj.get_stock_matchings_fifolifo(cr, uid, [product.id], product_qty, cost_method == 'fifo', 
-                                                                  product_uom, move.company_id.currency_id.id, context=context) #Always currency of the company
+                                                                  product_uom, move.company_id.currency_id.id, context=ctx) #Always currency of the company
                 print "TUPLES:", tuples
                 price_amount = 0.0
                 amount = 0.0
