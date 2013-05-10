@@ -2382,10 +2382,10 @@ class stock_move(osv.osv):
                             self.action_done(cr, uid, [move.move_dest_id.id], context=context)
 
             #TODO: Create stock move matchings if still necessary
-            match_obj = self.pool.get("stock.move.matching")
-            matches = match_obj.search(cr, uid, [("move_out_id", "=", move.id)], context = context)
-            if not matches: 
-                fifo = not (move.product_id.cost_method == 'lifo')
+#             match_obj = self.pool.get("stock.move.matching")
+#             matches = match_obj.search(cr, uid, [("move_out_id", "=", move.id)], context = context)
+#             if not matches: 
+#                 fifo = not (move.product_id.cost_method == 'lifo')
                 #matchings = self.pool.get("product.product').get_stock_matchings_fifolifo(cr, uid, [move.product_id.id], move.product_qty, fifo, move.uom_id.id, False)
                 #for match in matchings:
                     
