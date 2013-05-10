@@ -1631,11 +1631,11 @@ class stock_move(osv.osv):
         return True
 #TODO: change demo data for this to be possible
     def _check_company_location(self, cr, uid, ids, context=None):
-        for record in self.browse(cr, uid, ids, context=context):
-            if record.location_id.company_id and (record.company_id.id != record.location_id.company_id.id):
-                raise osv.except_osv(_('Error'), _('The company of the source location %s and the company of the stock move should be the same') % record.location_id.name)
-            if record.location_dest_id.company_id and (record.company_id.id != record.location_dest_id.company_id.id):
-                raise osv.except_osv(_('Error'), _('The company of the destination location %s and the company of the stock move should be the same') % record.location_dest_id.name)
+#         for record in self.browse(cr, uid, ids, context=context):
+#             if record.location_id.company_id and (record.company_id.id != record.location_id.company_id.id):
+#                 raise osv.except_osv(_('Error'), _('The company of the source location %s and the company of the stock move should be the same') % record.location_id.name)
+#             if record.location_dest_id.company_id and (record.company_id.id != record.location_dest_id.company_id.id):
+#                 raise osv.except_osv(_('Error'), _('The company of the destination location %s and the company of the stock move should be the same') % record.location_dest_id.name)
         return True
 
     _constraints = [
