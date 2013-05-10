@@ -281,7 +281,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
                 var filter = evt[this.color_field];
                 if (filter) {
                     if(this.fields[this.color_field].selection) {
-                        filter = selection_label[filter];
+                        filter = (typeof filter === 'object') ? selection_label[filter[0]] : selection_label[filter];
                     }
                     var filter_value = (typeof filter === 'object') ? filter[0] : filter;
                     if (typeof(fn_filter) === 'function' && !fn_filter(filter_value)) {
