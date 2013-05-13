@@ -78,14 +78,17 @@ class Field(object):
     @classmethod
     def from_column(cls, column):
         """ return a field for the low-level field `column` """
-        if cls is Field:
-            # delegate to the Field subclass corresponding to the column type
-            if column._type in cls._class_by_type:
-                return cls._class_by_type[column._type].from_column(column)
-            else:
-                raise NotImplementedError()
-        # generic implementation for subclasses
+        # delegate to the subclass corresponding to the column type, or Field
+        # for unknown column types
+        field_class = cls._class_by_type.get(column._type, Field)
+        return field_class._from_column(column)
+
+    @classmethod
+    def _from_column(cls, column):
+        # generic implementation
         kwargs = dict((attr, getattr(column, attr)) for attr in cls._attrs)
+        if cls is Field:
+            kwargs['type'] = column._type
         return cls(**kwargs)
 
     def to_column(self):
@@ -143,7 +146,7 @@ class Float(Field):
     _attrs = Field._attrs + ('digits',)
 
     @classmethod
-    def from_column(cls, column):
+    def _from_column(cls, column):
         column.digits_change(scope.cr)      # determine column.digits
         kwargs = dict((attr, getattr(column, attr)) for attr in cls._attrs)
         return cls(**kwargs)
@@ -298,7 +301,7 @@ class Many2one(Field):
         super(Many2one, self).__init__(comodel=comodel, string=string, **kwargs)
 
     @classmethod
-    def from_column(cls, column):
+    def _from_column(cls, column):
         kwargs = dict((attr, getattr(column, attr)) for attr in cls._attrs)
         kwargs['comodel'] = column._obj
         return cls(**kwargs)
@@ -333,7 +336,7 @@ class One2many(Field):
             comodel=comodel, inverse=inverse, string=string, **kwargs)
 
     @classmethod
-    def from_column(cls, column):
+    def _from_column(cls, column):
         kwargs = dict((attr, getattr(column, attr)) for attr in cls._attrs)
         # beware when getting parameters: column may be a function field
         kwargs['comodel'] = column._obj
@@ -371,7 +374,7 @@ class Many2many(Field):
             column1=column1, column2=column2, string=string, **kwargs)
 
     @classmethod
-    def from_column(cls, column):
+    def _from_column(cls, column):
         kwargs = dict((attr, getattr(column, attr)) for attr in cls._attrs)
         # beware when getting parameters: column may be a function field
         kwargs['comodel'] = column._obj

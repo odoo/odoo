@@ -706,20 +706,20 @@ class BaseModel(object):
                     field.depends = getattr(compute_method, '_depends', ())
 
         # interface columns with new-style fields
-        for attr in set(cls._columns) - set(cls._fields):
+        for attr in sorted(cls._columns):
+            if attr in cls._fields:
+                continue
             column = cls._columns[attr]
-            try:
-                field = Field.from_column(column)
-            except NotImplementedError:
-                pass
-            else:
-                field.set_model_name(cls._name, attr)
+            field = Field.from_column(column)
+            field.set_model_name(cls._name, attr)
 
-                # add field as an attribute and in _fields (for reflection)
-                if not hasattr(cls, attr):
-                    _logger.debug("Create field for column %s.%s", cls._name, attr)
-                    setattr(cls, attr, field)
-                cls._fields[attr] = field
+            # add field as an attribute and in _fields (for reflection)
+            cls._fields[attr] = field
+            if not hasattr(cls, attr):
+                _logger.debug("Create field for column %s.%s", cls._name, attr)
+                setattr(cls, attr, field)
+            else:
+                _logger.warning("In model %r, member %r is not a field", cls._name, attr)
 
         # triggers to recompute stored function fields on other models
         #   cls._recompute = {trigger_field: [(model, field, path), ...], ...}
@@ -735,10 +735,6 @@ class BaseModel(object):
             cls._original_module = cls._module
         obj = object.__new__(cls)
         obj.__init__(pool, cr)
-
-        # check for name clashes between member and column names
-        for attr in sorted(set(dir(obj)) & set(obj._all_columns) - set(obj._fields)):
-            _logger.warning("Model %s has both a field and a member named %r", obj, attr)
 
         return obj
 
