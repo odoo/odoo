@@ -80,5 +80,11 @@
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
+    <record model="ir.rule" id="stock_move_matching_comp_rule">
+        <field name="name">Stock move matching</field>
+        <field name="model_id" ref="model_stock_move_matching"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">[('1','=','1')]</field>
+    </record>
 </data>
 </openerp>

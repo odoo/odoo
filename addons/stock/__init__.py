@@ -25,5 +25,6 @@ import product
 import report
 import wizard
 import res_config
+import stock_fifo_lifo
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

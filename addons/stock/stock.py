@@ -1204,7 +1204,6 @@ class stock_picking(osv.osv):
 
 
 
-    # FIXME: needs refactoring, this code is partially duplicated in stock_move.do_partial()!
     def do_partial(self, cr, uid, ids, partial_datas, context=None):
         """ Makes partial picking and moves done.
         @param partial_datas : Dictionary containing details of partial picking
@@ -1229,7 +1228,7 @@ class stock_picking(osv.osv):
             move_product_qty, prodlot_ids, product_avail, partial_qty, product_uoms = {}, {}, {}, {}, {}
             
             move_ids = [x.id for x in pick.move_lines]
-            move_obj.price_computation(cr, uid, move_ids, partial_datas, context=context)
+            #move_obj.price_computation(cr, uid, move_ids, partial_datas, context=context)
             
             for move in pick.move_lines:
                 if move.state in ('done', 'cancel'):
@@ -1631,11 +1630,11 @@ class stock_move(osv.osv):
         return True
 #TODO: change demo data for this to be possible
     def _check_company_location(self, cr, uid, ids, context=None):
-#         for record in self.browse(cr, uid, ids, context=context):
-#             if record.location_id.company_id and (record.company_id.id != record.location_id.company_id.id):
-#                 raise osv.except_osv(_('Error'), _('The company of the source location %s and the company of the stock move should be the same') % record.location_id.name)
-#             if record.location_dest_id.company_id and (record.company_id.id != record.location_dest_id.company_id.id):
-#                 raise osv.except_osv(_('Error'), _('The company of the destination location %s and the company of the stock move should be the same') % record.location_dest_id.name)
+        for record in self.browse(cr, uid, ids, context=context):
+            if record.location_id.company_id and (record.company_id.id != record.location_id.company_id.id):
+                raise osv.except_osv(_('Error'), _('The company of the source location %s and the company of the stock move should be the same') % record.location_id.name)
+            if record.location_dest_id.company_id and (record.company_id.id != record.location_dest_id.company_id.id):
+                raise osv.except_osv(_('Error'), _('The company of the destination location %s and the company of the stock move should be the same') % record.location_dest_id.name)
         return True
 
     _constraints = [
@@ -2361,6 +2360,8 @@ class stock_move(osv.osv):
             self.action_confirm(cr, uid, todo, context=context)
             todo = []
 
+        #Do price calculation on moves
+        self.price_calculation(cr, uid, ids, context=context)
         for move in self.browse(cr, uid, ids, context=context):
             if move.state in ['done','cancel']:
                 continue
@@ -2658,7 +2659,84 @@ class stock_move(osv.osv):
 
         return res
 
-
+    def price_calculation(self, cr, uid, ids, context=None):
+        '''
+        This method puts the right price on the stock move
+        '''
+        product_obj = self.pool.get('product.product')
+        currency_obj = self.pool.get('res.currency')
+        matching_obj = self.pool.get('stock.move.matching')
+        uom_obj = self.pool.get('product.uom')
+        
+        product_avail = {}
+        for move in self.browse(cr, uid, ids, context=context):
+            # Initialize variables
+            product_qty = move.product_qty
+            product_uom = move.product_uom.id
+            company_id = move.company_id.id
+            ctx = context.copy()
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+            if company_id != user.company_id.id:
+                ctx['force_company'] = move.company_id.id
+            product = product_obj.browse(cr, uid, move.product_id.id, context=ctx)
+            cost_method = product.cost_method
+            product_uom_qty = uom_obj._compute_qty(cr, uid, product_uom, product_qty, product.uom_id.id)
+            
+            # Check if out -> do stock move matchings and if fifo/lifo -> update price
+            if move.location_id.usage == 'internal' and move.location_dest_id.usage != 'internal':
+                
+                fifo = (cost_method != 'lifo')
+                tuples = product_obj.get_stock_matchings_fifolifo(cr, uid, [product.id], product_qty, fifo, 
+                                                                  product_uom, move.company_id.currency_id.id, context=ctx)
+                price_amount = 0.0
+                amount = 0.0
+                #Write stock matchings
+                for match in tuples: 
+                    matchvals = {'move_in_id': match[0], 'qty': match[1], 
+                                 'move_out_id': move.id, 'price_unit_out': match[2]}
+                    match_id = matching_obj.create(cr, uid, matchvals, context=context)
+                    move_in = self.browse(cr, uid, match[0], context=context)
+                    #Reduce remaining quantity
+                    self.write(cr, uid, match[0], { 'qty_remaining': move_in.qty_remaining - match[3]}, context=context)
+                    price_amount += match[1] * match[2]
+                    amount += match[1]
+                #Write price on out move
+                if product.qty_available >= product_uom_qty and product.cost_method in ['fifo', 'lifo']:
+                    self.write(cr, uid, move.id, {'price_unit': price_amount / amount}, context=context)
+                    product_obj.write(cr, uid, product.id, {'standard_price': price_amount / product_uom_qty}, context=ctx)
+                else:
+                    new_price = uom_obj._compute_price(cr, uid, product.uom_id.id, product.standard_price,
+                            product_uom)
+                    self.write(cr, uid, move.id, {'price_unit': new_price}, context=ctx)
+                    
+                    
+            if not product.id in product_avail:
+                    product_avail[product.id] = product.qty_available
+            #Check if in => if price 0.0, take standard price / Update price when average price and price on move != standard price
+            if move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal':
+                if move.price_unit == 0.0:
+                    new_price = uom_obj._compute_price(cr, uid, product.uom_id.id, product.standard_price, product_uom)
+                    self.write(cr, uid, move.id, {'price_unit': new_price}, context=ctx)
+                elif product.cost_method == 'average':
+                    if product_avail[product.id] >= 0.0:
+                        amount_unit = product.standard_price
+                        move_product_price = uom_obj._compute_price(cr, uid, product_uom, move.price_unit, product.uom_id.id)
+                        new_std_price = ((amount_unit * product_avail[product.id])\
+                                + (move_product_price * product_uom_qty))/(product_avail[product.id] + product_uom_qty)
+                    product_obj.write(cr, uid, [product.id], {'standard_price': new_std_price}, context=ctx)
+                product_avail[product.id] += product.qty_available
+                
+            #This could be made optional
+            if move.location_id.usage == 'internal' and move.location_dest_id.usage != 'internal' and cost_method == 'average' and move.move_returned_from:
+                move_orig = move.move_returned_from
+                new_price = uom_obj._compute_price(cr, uid, move_orig.product_uom, move_orig.price_unit, product.uom_id.id)
+                if (product_avail[product.id]- product_uom_qty) >= 0.0:
+                    amount_unit = product.standard_price
+                    new_std_price = ((amount_unit * product_avail[product.id])\
+                                     - (new_price * product_uom_qty))/(product_avail[product.id] - product_uom_qty)
+                    self.write(cr, uid, [move.id],{'price_unit': move_orig.price_unit,})
+                    product_obj.write(cr, uid, [product.id], {'standard_price': new_std_price}, context=ctx)
+                product_avail[product.id] -= product_uom_qty
 
     def price_computation(self, cr, uid, ids, partial_datas, context=None):
         '''
@@ -2765,7 +2843,7 @@ class stock_move(osv.osv):
         
         #Let us do the price calculation
         move_ids = [x.id for x in self.browse(cr, uid, ids, context=context)]
-        self.price_computation(cr, uid, move_ids, partial_datas, context=context)
+        #self.price_computation(cr, uid, move_ids, partial_datas, context=context)
 
         for move in self.browse(cr, uid, ids, context=context):
             if move.state in ('done', 'cancel'):
