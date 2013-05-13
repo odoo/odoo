@@ -55,6 +55,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
                  @return:
 
             """
+            inv_obj = self.pool.get('account.invoice')
             a = order.partner_id.property_account_receivable.id
             if order.partner_id and order.partner_id.property_payment_term.id:
                 pay_term = order.partner_id.property_payment_term.id
@@ -76,7 +77,8 @@ class sale_order_line_make_invoice(osv.osv_memory):
                 'company_id': order.company_id and order.company_id.id or False,
                 'date_invoice': fields.date.today(),
             }
-            inv_id = self.pool.get('account.invoice').create(cr, uid, inv)
+            inv_id = inv_obj.create(cr, uid, inv)
+            inv_obj.button_reset_taxes(cr, uid, [inv_id], context=context)
             return inv_id
 
         sales_order_line_obj = self.pool.get('sale.order.line')
