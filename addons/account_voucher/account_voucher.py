@@ -880,6 +880,12 @@ class account_voucher(osv.osv):
         else:
             currency_id = journal.company_id.currency_id.id
         vals['value'].update({'currency_id': currency_id})
+        #in case we want to register the payment directly from an invoice, it's confusing to allow to switch the journal 
+        #without seeing that the amount is expressed in the journal currency, and not in the invoice currency. So to avoid
+        #this common mistake, we simply reset the amount to 0 if the currency is not the invoice currency.
+        if context.get('payment_expected_currency') and currency_id != context.get('payment_expected_currency'):
+            vals['value']['amount'] = 0
+            amount = 0
         res = self.onchange_partner_id(cr, uid, ids, partner_id, journal_id, amount, currency_id, ttype, date, context)
         for key in res.keys():
             vals[key].update(res[key])
