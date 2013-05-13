@@ -5548,10 +5548,16 @@ class BaseModel(object):
         if self.is_null():
             return
 
-        # store value in database
-        if field_name in self._all_columns:
-            column = self._all_columns[field_name].column
-            self.write({field_name: column.cache_to_write(value)})
+        with self._scope:
+            # adapt value to the cache level
+            if field_name in self._fields:
+                field = self._fields[field_name]
+                value = field.record_to_cache(value)
+
+            # store value in database
+            if field_name in self._all_columns:
+                column = self._all_columns[field_name].column
+                self.write({field_name: column.cache_to_write(value)})
 
         # store value in cache (here because write() invalidates the cache!)
         self._data[field_name] = value
