@@ -216,7 +216,7 @@ class reference(_column):
         return False
 
     def cache_to_write(self, value):
-        return "%s,%s" % (value._name, value._id) if value else False
+        return "%s,%s" % (value._name, value._record_id) if value else False
 
     @classmethod
     def _as_display_name(cls, field, cr, uid, obj, value, context=None):
@@ -525,7 +525,7 @@ class many2one(_column):
         return scope.model(self._obj).record(value)
 
     def cache_to_write(self, value):
-        return value._id
+        return value._record_id
 
     @classmethod
     def _as_display_name(cls, field, cr, uid, obj, value, context=None):

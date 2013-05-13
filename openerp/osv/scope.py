@@ -252,7 +252,7 @@ class Cache(defaultdict):
             record = cache[model_name][record_id]
 
             # access the value of a field of record (if present)
-            value = record._data[field_name]
+            value = record._record_cache[field_name]
     """
     def __init__(self):
         super(Cache, self).__init__(dict)
@@ -273,7 +273,7 @@ class Cache(defaultdict):
         for model, fields, ids in spec:
             model_cache = self[model]
             for record in get_values(model_cache, ids):
-                drop_values(record._data, fields)
+                drop_values(record._record_cache, fields)
             if fields is None:
                 drop_values(model_cache, ids)
 
@@ -286,16 +286,17 @@ class Cache(defaultdict):
             # read the records and fields that are present in the cache
             model = proxy.model(model_name)
             recs = model.recordset(model_cache.itervalues())
-            fields = set(f for rec in recs for f in rec._data if f in model._all_columns)
+            fields = set(f for rec in recs for f in rec._record_cache) & \
+                     set(model._all_columns)
             result = recs.read(list(fields), load="_classic_write")
 
             # compare the result with the content of the cache
             for data in result:
                 rec = model.record(data['id'])
-                for field, value in rec._data.iteritems():
+                for field, value in rec._record_cache.iteritems():
                     column = model._all_columns[field].column
                     if column.read_to_cache(data[field]) != value:
-                        invalids.append((rec, rec._data, data))
+                        invalids.append((rec, rec._record_cache, data))
                         break
 
         if invalids:

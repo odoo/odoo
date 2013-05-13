@@ -5260,16 +5260,16 @@ class BaseModel(object):
 
     # specific attributes used by record, recordset and null instances
     INSTANCE_ATTRIBUTES = [
-        '_id',                          # a record refers to its id
-        '_data',                        # a record holds its own cache
-        '_records',                     # a recordset refers to its records
-        '_scope',                       # instances are attached to a scope
+        '_scope',                   # instances are attached to a scope
+        '_record_id',               # a record refers to its id
+        '_record_cache',            # a record holds a cache for its own fields
+        '_records',                 # a recordset refers to its records
     ]
 
     def null(self):
         """ Return a null instance attached to the current scope. """
         scope = scope_proxy.current
-        return self._make_instance(_id=False, _scope=scope, _data={})
+        return self._make_instance(_record_id=False, _scope=scope, _record_cache={})
 
     def record(self, arg):
         """ Return a record instance corresponding to `arg` (record or record
@@ -5282,7 +5282,7 @@ class BaseModel(object):
                 # the same scope. This property is used to preserve the record's
                 # cache when converting between record and recordset.
                 return arg
-            arg = arg._id
+            arg = arg._record_id
         if not arg:
             return self.null()
 
@@ -5291,7 +5291,7 @@ class BaseModel(object):
         record = model_cache.get(arg)
         if record is None:
             # the instance does not exist yet; create it and put it in cache
-            record = self._make_instance(_id=arg, _scope=scope, _data={})
+            record = self._make_instance(_record_id=arg, _scope=scope, _record_cache={})
             model_cache[arg] = record
         return record
 
@@ -5307,11 +5307,11 @@ class BaseModel(object):
 
     def is_null(self):
         """ Test whether self is a null instance. """
-        return not getattr(self, '_id', True)
+        return not getattr(self, '_record_id', True)
 
     def is_record(self):
         """ Test whether `self` is a record instance (possibly null). """
-        return hasattr(self, '_id')
+        return hasattr(self, '_record_id')
 
     def is_recordset(self):
         """ Test whether `self` is a recordset instance. """
@@ -5361,13 +5361,13 @@ class BaseModel(object):
         if self._scope is scope_proxy.current:
             return self
         if self.is_record():
-            return self.record(self._id)
+            return self.record(self._record_id)
         else:
             return self.recordset(self)
 
     def unbrowse(self):
         """ Return the `id`/`ids` corresponding to a record/recordset/null instance. """
-        return map(int, self._records) if self.is_recordset() else self._id
+        return map(int, self._records) if self.is_recordset() else self._record_id
 
     def __nonzero__(self):
         """ Test whether `self` is nonempty and not null. """
@@ -5413,7 +5413,7 @@ class BaseModel(object):
         """ Test equality between two records, two recordsets or two models. """
         if self.is_record() and isinstance(other, Record):
             # compare two records or nulls
-            return (self._name, self._id) == (other._name, other._id)
+            return (self._name, self._record_id) == (other._name, other._record_id)
         elif self.is_recordset() and isinstance(other, Recordset):
             # compare two recordsets
             return (self._name, self._records) == (other._name, other._records)
@@ -5433,10 +5433,10 @@ class BaseModel(object):
             raise except_orm("ValueError", "Expected record: %s" % self)
 
         if field_name == 'id':
-            return self._id
+            return self._record_id
 
-        if field_name in self._data:
-            return self._data[field_name]
+        if field_name in self._record_cache:
+            return self._record_cache[field_name]
 
         with self._scope:
             recomputing = scope_proxy.recomputing(self._name)
@@ -5451,13 +5451,13 @@ class BaseModel(object):
                     # a "pure" function field, simply evaluate it on self
                     assert field.compute
                     getattr(self, field.compute)()
-                    return self._data[field_name]
+                    return self._record_cache[field_name]
 
-                if field.compute and self._id in recomputing.get(field_name, ()):
+                if field.compute and self._record_id in recomputing.get(field_name, ()):
                     # field is stored and must be recomputed (in batch!)
                     recs = self.recordset(recomputing[field_name]).exists()
                     getattr(recs, field.compute)()
-                    return self._data[field_name]
+                    return self._record_cache[field_name]
 
             # handle the case of low-level fields
             column = self._all_columns[field_name].column
@@ -5473,12 +5473,12 @@ class BaseModel(object):
 
             # make sure that self is in cache
             model_cache = self._scope.cache[self._name]
-            model_cache[self._id] = self
+            model_cache[self._record_id] = self
 
             # fetch the record of this model without field_name in their cache
-            fetch_ids = set(rec._id
+            fetch_ids = set(rec._record_id
                 for rec in model_cache.itervalues()
-                if field_name not in rec._data)
+                if field_name not in rec._record_cache)
 
             # prefetch all classic and many2one fields if column is one of them
             # Note: do not prefetch fields when self.pool._init is True, because
@@ -5493,24 +5493,24 @@ class BaseModel(object):
             # do not fetch the records/fields that have to be recomputed
             for fname in list(fetch_fields):
                 recompute_ids = recomputing.get(fname, set())
-                if self._id in recompute_ids:
+                if self._record_id in recompute_ids:
                     fetch_fields.discard(fname)     # do not fetch that field at all
                 else:
                     fetch_ids -= recompute_ids      # do not fetch those records
 
             # fetch and check result
-            assert field_name in fetch_fields and self._id in fetch_ids
+            assert field_name in fetch_fields and self._record_id in fetch_ids
             fetch_recs = self.recordset(fetch_ids)
             fetched = fetch_recs._fetch_fields(list(fetch_fields))
             if self not in fetched:
                 raise except_orm("AccessError", "%s does not exist." % self)
 
-            if field_name not in self._data:
+            if field_name not in self._record_cache:
                 # How did this happen? Could be a missing model due to custom fields used too soon.
                 _logger.warning("Unknown field %r in %s" % (field_name, self))
                 raise KeyError(field_name)
 
-            return self._data[field_name]
+            return self._record_cache[field_name]
 
     @api.recordset
     def _fetch_fields(self, field_names):
@@ -5530,7 +5530,7 @@ class BaseModel(object):
         for data in result:
             rec = self.record(data['id'])
             for field in field_names:
-                rec._data[field] = converter[field](data[field])
+                rec._record_cache[field] = converter[field](data[field])
             recs.append(rec)
 
         # return the fetched records
@@ -5556,7 +5556,7 @@ class BaseModel(object):
                 self.write({field_name: column.cache_to_write(value)})
 
         # store value in cache (here because write() invalidates the cache!)
-        self._data[field_name] = value
+        self._record_cache[field_name] = value
 
     def __getitem__(self, key):
         """ If `self` is a record, return the value of the field named `key`.
@@ -5607,7 +5607,7 @@ class BaseModel(object):
 
     def __int__(self):
         if self.is_record():
-            return self._id
+            return self._record_id
         else:
             raise except_orm("ValueError", "Expected record: %s" % self)
 
@@ -5616,7 +5616,7 @@ class BaseModel(object):
         if self.is_null():
             return "%s.null()" % model_name
         elif self.is_record():
-            return "%s.record(%d)" % (model_name, self._id)
+            return "%s.record(%d)" % (model_name, self._record_id)
         elif self.is_recordset():
             return "%s.recordset(%s)" % (model_name, self.unbrowse())
         else:
@@ -5629,7 +5629,7 @@ class BaseModel(object):
 
     def __hash__(self):
         if self.is_record():
-            return hash((self._name, self._id))
+            return hash((self._name, self._record_id))
         elif self.is_recordset():
             return hash((self._name, tuple(self.unbrowse())))
         else:
