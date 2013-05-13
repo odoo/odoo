@@ -35,6 +35,7 @@ import common
 
 import openerp
 from openerp.osv.fields import float as float_field, function as function_field, datetime as datetime_field
+from openerp.osv.scope import proxy as scope
 from openerp.tools.translate import _
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
@@ -158,9 +159,9 @@ class rml_parse(object):
     def setLang(self, lang):
         self.localcontext['lang'] = lang
         self.lang_dict_called = False
-        # UGLY: change the context directly in the records' context dictionary
-        for obj in self.objects:
-            obj.scope.context['lang'] = lang
+        # change the scope of self.objects
+        with scope(self.cr, self.uid, self.localcontext):
+            self.objects = self.objects.scoped()
 
     def _get_lang_dict(self):
         pool_lang = self.pool['res.lang']
