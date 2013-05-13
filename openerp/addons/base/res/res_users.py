@@ -281,10 +281,9 @@ class res_users(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         user_id = super(res_users, self).create(cr, uid, vals, context=context)
-        #User->Partner Company has to be Same as User Company, instaed logged in users. 
-        user = self.read(cr, uid, user_id, ['partner_id', 'company_id'], context=context)
-        company_id = self._get_company( cr, uid, context=context, uid2=user['id'])
-        self.pool.get('res.partner').write(cr,uid, user['partner_id'][0], {'company_id':company_id})
+        user = self.browse(cr, uid, user_id, context=context)
+        if user.partner_id.company_id: 
+            user.partner_id.write({'company_id': user.company_id.id})
         return user_id
 
     def write(self, cr, uid, ids, values, context=None):
@@ -301,13 +300,11 @@ class res_users(osv.osv):
                 uid = 1 # safe fields only, so we write as super-user to bypass access rights
 
         res = super(res_users, self).write(cr, uid, ids, values, context=context)
-        #User->Partner Company has to be Same as User Company, instaed logged in users.
         if 'company_id' in values:
-            partner_pool = self.pool.get('res.partner')
-            for user in self.read(cr, uid, ids, ['partner_id', 'company_id'], context=context):
-                company_id = self._get_company( cr, uid, context=context, uid2=user['id'])
-                partner_pool.write(cr,uid, user['partner_id'][0], {'company_id':company_id})
-
+            for user in self.browse(cr, uid, ids, context=context):
+                # if partner is global we keep it that way
+                if user.partner_id.company_id and user.partner_id.company_id.id != values.get('company_id'): 
+                    user.partner_id.write({'company_id': user.company_id.id})
         # clear caches linked to the users
         self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
         clear = partial(self.pool.get('ir.rule').clear_cache, cr)

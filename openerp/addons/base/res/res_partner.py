@@ -488,6 +488,17 @@ class res_partner(osv.osv, format_address):
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
+        #res.partner must only allow to set the company_id of a partner if it
+        #is the same as the company of all users that inherit from this partner
+        #(this is to allow the code from res_users to write to the partner!) or
+        #if setting the company_id to False (this is compatible with any user company)
+        if 'company_id' in vals and vals.get('company_id'):
+            user_pool = self.pool.get('res.users')
+            for partner in ids:
+                uspa = user_pool.search(cr, uid, [('partner_id', '=', partner)], context=context)
+                usco = set([user.company_id.id for user in user_pool.browse(cr, uid, uspa, context=context)])
+                if usco and len(usco) > 1:
+                    raise osv.except_osv(_("Warning"),_("You can not chnage the partner company as the partner has mutiple user linked with different companies."))
         result = super(res_partner,self).write(cr, uid, ids, vals, context=context)
         for partner in self.browse(cr, uid, ids, context=context):
             self._fields_sync(cr, uid, partner, vals, context)
