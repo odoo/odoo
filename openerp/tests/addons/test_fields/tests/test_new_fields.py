@@ -158,26 +158,30 @@ class TestNewFields(common.TransactionCase):
         """ test relation fields """
         outer_scope = scope.current
         demo = self.User.search([('login', '=', 'demo')]).to_record()
-        alpha, beta = self.Partner.search([], limit=2)
+
+        # retrieve two partners with children
+        alpha, beta = self.Partner.search([('child_ids', '!=', False)], limit=2)
+        alpha1 = alpha.child_ids[0]
 
         # check scope of records
-        self.assertEqual(alpha._scope, outer_scope)
+        self.assertEqual(alpha1._scope, outer_scope)
         self.assertEqual(beta._scope, outer_scope)
 
         with scope(demo) as inner_scope:
             self.assertNotEqual(inner_scope, outer_scope)
 
-            # assign alpha's parent in inner scope
-            alpha.parent_id = beta.scoped()
+            # assign alpha1's parent to a record in inner scope
+            inner_beta = beta.scoped()
+            alpha1.parent_id = inner_beta
 
-            # both alpha and its parent field must be in outer scope
-            self.assertEqual(alpha._scope, outer_scope)
-            self.assertEqual(alpha.parent_id._scope, outer_scope)
+            # both alpha1 and its parent field must be in outer scope
+            self.assertEqual(alpha1._scope, outer_scope)
+            self.assertEqual(alpha1.parent_id._scope, outer_scope)
 
-            # migrate alpha into the current scope, and check again
-            gamma = alpha.scoped()
-            self.assertEqual(gamma._scope, inner_scope)
-            self.assertEqual(gamma.parent_id._scope, inner_scope)
+            # migrate alpha1 into the current scope, and check again
+            inner_alpha1 = alpha1.scoped()
+            self.assertEqual(inner_alpha1._scope, inner_scope)
+            self.assertEqual(inner_alpha1.parent_id._scope, inner_scope)
 
     def test_24_reference(self):
         """ test reference fields. """
