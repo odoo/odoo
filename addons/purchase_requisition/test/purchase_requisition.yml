@@ -8,7 +8,7 @@
     product_id: product.product_product_13
     qty: 15
     uom_id: product.product_uom_unit
-    warehouse_id: stock.stock_warehouse_shop0
+    warehouse_id: stock.warehouse0
 -
   !python {model: make.procurement}: |
     self.make_procurement(cr, uid, [ref('procurement_product_hdd3')], context)
