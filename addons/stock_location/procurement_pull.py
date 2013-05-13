@@ -65,6 +65,8 @@ class procurement_order(osv.osv):
                 'note': _('Picking for pulled procurement coming from original location %s, pull rule %s, via original Procurement %s (#%d)') % (proc.location_id.name, line.name, proc.name, proc.id),
                 'invoice_state': line.invoice_state,
             })
+            
+            print "COmpany_id line:", line.company_id
             move_id = move_obj.create(cr, uid, {
                 'name': line.name,
                 'picking_id': picking_id,
