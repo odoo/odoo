@@ -5429,8 +5429,10 @@ class BaseModel(object):
 
     def _get_field(self, field_name):
         """ read the field `field_name` on a record instance """
+        if field_name not in itertools.chain(MAGIC_COLUMNS, self._fields, self._all_columns):
+            raise KeyError(field_name)
         if not self.is_record():
-            raise except_orm("ValueError", "Expected record: %s" % self)
+            raise ValueError("Expected record: %s" % self)
 
         if field_name == 'id':
             return self._record_id
