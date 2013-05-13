@@ -177,7 +177,7 @@ class Multicorn(object):
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.setblocking(0)
         self.socket.bind(self.address)
-        self.socket.listen(8)
+        self.socket.listen(8*self.population)
 
     def stop(self, graceful=True):
         if graceful:
