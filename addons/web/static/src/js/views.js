@@ -1369,8 +1369,8 @@ instance.web.View = instance.web.Widget.extend({
             }
             args.push(context);
             return dataset.call_button(action_data.name, args).then(handler).then(function () {
-                if (self.ViewManager.ActionManager) {
-                    self.ViewManager.ActionManager.__parentedParent.menu.do_reload_needaction();
+                if (instance.webclient) {
+                    instance.webclient.menu.do_reload_needaction();
                 }
             });
         } else if (action_data.type=="action") {
