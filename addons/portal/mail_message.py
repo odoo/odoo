@@ -48,7 +48,7 @@ class mail_message(osv.Model):
         group_ids = self.pool.get('res.users').browse(cr, uid, uid, context=context).groups_id
         group_user_id = self.pool.get("ir.model.data").get_object_reference(cr, uid, 'base', 'group_user')[1]
         if group_user_id not in [group.id for group in group_ids]:
-            cr.execute('SELECT DISTINCT id FROM "%s" WHERE type = %%s AND subtype_id != NULL AND id = ANY (%%s)' % (self._table), ('comment', ids,))
+            cr.execute('SELECT DISTINCT id FROM "%s" WHERE type = %%s AND subtype_id IS NULL AND id = ANY (%%s)' % (self._table), ('comment', ids,))
             if cr.fetchall():
                 raise orm.except_orm(_('Access Denied'),
                         _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \

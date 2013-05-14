@@ -150,3 +150,10 @@ class test_portal(TestMailBase):
         msg_ids = self.mail_message.search(cr, self.user_chell_id, [('model', '=', 'mail.group'), ('res_id', '=', group_port_id)])
         self.assertEqual(set(msg_ids), set([msg1_id, msg2_id, msg3_id, msg5_id]),
                         'mail_message: portal user has access to messages he should not read')
+
+        # Do: Chell read messages she can read
+        self.mail_message.read(cr, self.user_chell_id, msg_ids, ['body', 'type', 'subtype_id'])
+
+        # Do: Chell read a message she should not be able to read
+        with self.assertRaises(except_orm):
+            self.mail_message.read(cr, self.user_chell_id, [msg4_id], ['body', 'type', 'subtype_id'])
