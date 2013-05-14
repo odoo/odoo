@@ -1252,8 +1252,8 @@
                             <field name="location_dest_id" groups="stock.group_locations"/>
                             <field name="partner_id" context="{'contact_display':'partner'}"
                                 groups="stock.group_locations"/>
-                            <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
-                            <field name="date"/>
+                            <field name="date_expected" on_change="onchange_date(date,date_expected)" attrs="{'invisible': [('state', '=', 'done')]}"/>
+                            <field name="date" attrs="{'invisible': [('state', '!=', 'done')]}"/>
                         </group>
                         <group string="Traceability"
                             groups="stock.group_tracking_lot">

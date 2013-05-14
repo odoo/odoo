@@ -29,7 +29,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp import netsvc
 from openerp import tools
-from openerp.tools import float_compare, DEFAULT_SERVER_DATETIME_FORMAT, server_to_local_timestamp
+from openerp.tools import float_compare, DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.decimal_precision as dp
 import logging
 _logger = logging.getLogger(__name__)
@@ -2334,32 +2334,6 @@ class stock_move(osv.osv):
                          'line_id': move_lines,
                          'ref': move.picking_id and move.picking_id.name})
 
-    #Should be add in server/tools/misc.py in trunk
-    def server_to_local_timestamp_info(self, str_date, src_format, context=None):
-        """
-        Convert a source timestamp string into a destination timestamp string, attempting to apply the
-        correct offset if both the server and local timezone are recognized, or no
-        offset at all if they aren't.
-        This will return a string representing the date in the timezone of the user with the details of
-        which timezone is used (for example UTC+0200 (CEST)) 
-
-        @param src_date: the str value containing the timestamp in the server timezone.
-        @param src_format: the format to use when parsing the server timestamp.
-        @param context: context to be used (should contain the user local timezone)
-
-        @return local/client formatted timestamp, expressed in the local/client timezone if possible
-                and add information about that timezone.
-                example: str_date = '2013-03-10 10:35:00' (if server timezone is UTC), if user is in UTC+0200
-                    return: '2013-03-10 10:35:00 UTC+0200 (CEST)'
-        """
-        if not str_date:
-            return False
-        if not context:
-            context = {}
-        dst_format = src_format + ' UTC%z (%Z)'
-        return server_to_local_timestamp(str_date, src_format, dst_format, context.get('tz') or 'UTC')
-
-
     def action_done(self, cr, uid, ids, context=None):
         """ Makes the move done and if all moves are done, it will finish the picking.
         @return:
@@ -2385,10 +2359,6 @@ class stock_move(osv.osv):
 
             if move.picking_id:
                 picking_ids.append(move.picking_id.id)
-                #add a message in chatter to say that product has been received
-                user_time = self.server_to_local_timestamp_info(fields.datetime.now(), DEFAULT_SERVER_DATETIME_FORMAT, context=context)
-                message = _('Product \'%s\' has been received at \'%s\'') % (move.name, user_time)
-                move.picking_id.message_post(body = message)
             if move.move_dest_id.id and (move.state != 'done'):
                 # Downstream move should only be triggered if this move is the last pending upstream move
                 other_upstream_move_ids = self.search(cr, uid, [('id','!=',move.id),('state','not in',['done','cancel']),
