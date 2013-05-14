@@ -45,13 +45,17 @@ from openerp import api, scope, models, fields
 class res_partner(models.Model):
     _inherit = 'res.partner'
 
-    number_of_employees = fields.Integer()
+    number_of_employees = fields.Integer(compute='default_number_of_employees')
     some_float_field = fields.Float(digits=(10,2))
     some_reference_field = fields.Reference(selection='_references_models')
 
     name_size = fields.Integer(compute='compute_name_size', store=False)
     children_count = fields.Integer(compute='compute_children_count', store=True)
     has_sibling = fields.Integer(compute='compute_has_sibling', store=True)
+
+    @api.record
+    def default_number_of_employees(self):
+        self.number_of_employees = 1
 
     @api.model
     def _references_models(self):

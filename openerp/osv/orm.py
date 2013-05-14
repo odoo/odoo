@@ -322,6 +322,11 @@ def get_pg_type(f, type_override=None):
     return pg_type
 
 
+class Draft(object):
+    """ A class of special record ids for draft records. """
+    pass
+
+
 class MetaModel(api.Meta):
     """ Metaclass for the models.
 
@@ -5369,6 +5374,13 @@ class BaseModel(object):
         """ Return the `id`/`ids` corresponding to a record/recordset/null instance. """
         return map(int, self._records) if self.is_recordset() else self._record_id
 
+    def draft(self):
+        """ Return a draft record attached to the current scope. """
+        return self.record(Draft())
+
+    def is_draft(self):
+        return isinstance(getattr(self, '_record_id', None), Draft)
+
     def __nonzero__(self):
         """ Test whether `self` is nonempty and not null. """
         return bool(self._records) if self.is_recordset() else not self.is_null()
@@ -5448,6 +5460,15 @@ class BaseModel(object):
             if field:
                 if self.is_null():
                     return field.null()
+
+                if self.is_draft():
+                    try:
+                        # evaluate the compute method to get a default value
+                        getattr(self, field.compute)()
+                        return self._record_cache[field_name]
+                    except Exception:
+                        # no computed value, return the null value
+                        return field.null()
 
                 if not field.store:
                     # a "pure" function field, simply evaluate it on self
@@ -5546,7 +5567,7 @@ class BaseModel(object):
         if self.is_null():
             return
 
-        if field_name in self._all_columns:
+        if not self.is_draft() and field_name in self._all_columns:
             # store value in database
             column = self._all_columns[field_name].column
             with self._scope:
