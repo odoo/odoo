@@ -5269,7 +5269,7 @@ class BaseModel(object):
     def null(self):
         """ Return a null instance attached to the current scope. """
         scope = scope_proxy.current
-        return self._make_instance(_record_id=False, _scope=scope, _record_cache={})
+        return self._make_instance(_scope=scope, _record_id=False, _record_cache={})
 
     def record(self, arg):
         """ Return a record instance corresponding to `arg` (record or record
@@ -5291,7 +5291,7 @@ class BaseModel(object):
         record = model_cache.get(arg)
         if record is None:
             # the instance does not exist yet; create it and put it in cache
-            record = self._make_instance(_record_id=arg, _scope=scope, _record_cache={})
+            record = self._make_instance(_scope=scope, _record_id=arg, _record_cache={})
             model_cache[arg] = record
         return record
 
@@ -5303,7 +5303,7 @@ class BaseModel(object):
         # scope, then the result only encapsulates those record instances. See
         # method record() above.
         records = tuple(map(self.record, args))
-        return self._make_instance(_records=records, _scope=scope_proxy.current)
+        return self._make_instance(_scope=scope_proxy.current, _records=records)
 
     def is_null(self):
         """ Test whether self is a null instance. """
@@ -5546,15 +5546,10 @@ class BaseModel(object):
         if self.is_null():
             return
 
-        with self._scope:
-            # adapt value to the cache level
-            if field_name in self._fields:
-                field = self._fields[field_name]
-                value = field.record_to_cache(value)
-
+        if field_name in self._all_columns:
             # store value in database
-            if field_name in self._all_columns:
-                column = self._all_columns[field_name].column
+            column = self._all_columns[field_name].column
+            with self._scope:
                 self.write({field_name: column.cache_to_write(value)})
 
         # store value in cache (here because write() invalidates the cache!)

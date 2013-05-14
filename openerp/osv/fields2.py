@@ -106,6 +106,9 @@ class Field(object):
     def __set__(self, instance, value):
         """ set the value of field `self` for the record `instance` """
         assert instance._name == self.model
+        # adapt value to the cache level (must be in record's scope!)
+        with instance._scope:
+            value = self.record_to_cache(value)
         return instance._set_field(self.name, value)
 
     def null(self):
