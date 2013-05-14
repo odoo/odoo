@@ -3,13 +3,6 @@
     <data>
 
         <act_window
-            context="{'product_id': active_id}"
-            id="act_stock_product_location_open"
-            name="Stock by Location"
-            res_model="stock.location"
-            src_model="product.product"/>
-
-        <act_window
             domain="[('tracking_id', '=', active_id)]"
             id="act_stock_tracking_lot_2_stock_report_tracklots"
             name="Stock" res_model="stock.report.tracklots"

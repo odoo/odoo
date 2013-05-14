@@ -25,7 +25,6 @@ from dateutil.relativedelta import relativedelta
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp import netsvc
 
 class hr_timesheet_sheet(osv.osv):
     _name = "hr_timesheet_sheet.sheet"
@@ -93,8 +92,7 @@ class hr_timesheet_sheet(osv.osv):
             self.check_employee_attendance_state(cr, uid, sheet.id, context=context)
             di = sheet.user_id.company_id.timesheet_max_difference
             if (abs(sheet.total_difference) < di) or not di:
-                wf_service = netsvc.LocalService("workflow")
-                wf_service.trg_validate(uid, 'hr_timesheet_sheet.sheet', sheet.id, 'confirm', cr)
+                self.signal_confirm(cr, uid, [sheet.id])
             else:
                 raise osv.except_osv(_('Warning!'), _('Please verify that the total difference of the sheet is lower than %.2f.') %(di,))
         return True
@@ -192,9 +190,7 @@ class hr_timesheet_sheet(osv.osv):
 
     def action_set_to_draft(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state': 'draft'})
-        wf_service = netsvc.LocalService('workflow')
-        for id in ids:
-            wf_service.trg_create(uid, self._name, id, cr)
+        self.create_workflow(cr, uid, ids)
         return True
 
     def name_get(self, cr, uid, ids, context=None):
@@ -217,6 +213,7 @@ class hr_timesheet_sheet(osv.osv):
 
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
         department_id =  False
+        user_id = False
         if employee_id:
             empl_id = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context)
             department_id = empl_id.department_id.id
@@ -330,7 +327,6 @@ class hr_timesheet_line(osv.osv):
         return dict([(el, self.on_change_account_id(cr, uid, ids, el, context.get('user_id', uid))) for el in account_ids])
 
 
-hr_timesheet_line()
 
 class hr_attendance(osv.osv):
     _inherit = "hr.attendance"
@@ -428,7 +424,6 @@ class hr_attendance(osv.osv):
                 raise osv.except_osv(_('Error!'), _('You cannot modify an entry in a confirmed timesheet'))
         return True
 
-hr_attendance()
 
 class hr_timesheet_sheet_sheet_day(osv.osv):
     _name = "hr_timesheet_sheet.sheet.day"
@@ -508,7 +503,6 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
                         GROUP BY name, sheet_id
                 )) AS bar""")
 
-hr_timesheet_sheet_sheet_day()
 
 
 class hr_timesheet_sheet_sheet_account(osv.osv):
@@ -542,7 +536,6 @@ class hr_timesheet_sheet_sheet_account(osv.osv):
             group by l.account_id, s.id, l.to_invoice
         )""")
 
-hr_timesheet_sheet_sheet_account()
 
 
 
@@ -561,7 +554,6 @@ class res_company(osv.osv):
         'timesheet_max_difference': lambda *args: 0.0
     }
 
-res_company()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -19,9 +19,12 @@
 #
 ##############################################################################
 
+import logging
+
 from openerp.osv import fields, osv
-from openerp import pooler
 from openerp.tools.translate import _
+
+_logger = logging.getLogger(__name__)
 
 class sale_configuration(osv.osv_memory):
     _inherit = 'sale.config.settings'
@@ -45,14 +48,17 @@ class sale_configuration(osv.osv_memory):
             implied_group='product.group_sale_pricelist',
             help="""Allows to manage different prices based on rules per category of customers.
 Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
-        'group_uom':fields.boolean("Allow using different units of measures",
+        'group_uom':fields.boolean("Allow using different units of measure",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
         'group_discount_per_so_line': fields.boolean("Allow setting a discount on the sales order lines",
             implied_group='sale.group_discount_per_so_line',
             help="Allows you to apply some discount per sales order line."),
+        'group_product_variant': fields.boolean("Support multiple variants per products  ",
+            implied_group='product.group_product_variant',
+            help="""Allow to manage several variants per product. As an example, if you  sell T-Shirts, for the same "Linux T-Shirt", you may have variants on  sizes or colors; S, M, L, XL, XXL."""),
         'module_warning': fields.boolean("Allow configuring alerts by customer or products",
-            help="""Allow to configure notification on products and trigger them when a user wants to sale a given product or a given customer.
+            help="""Allow to configure notification on products and trigger them when a user wants to sell a given product or a given customer.
 Example: Product: this product is deprecated, do not purchase more than 5.
                 Supplier: don't forget to ask for an express delivery."""),
         'module_sale_margin': fields.boolean("Display margins on sales orders",
@@ -81,8 +87,12 @@ Example: Product: this product is deprecated, do not purchase more than 5.
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
             res['time_unit'] = user.company_id.project_time_mode_id.id
         else:
-            product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
-            res['time_unit'] = product.uom_id.id
+            try:
+                product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
+                res['time_unit'] = product.uom_id.id
+            except ValueError:
+                # keep default value in that case
+                _logger.warning("Product with xml_id 'product.product_product_consultant' not found")
         return res
 
     def _get_default_time_unit(self, cr, uid, context=None):
@@ -98,16 +108,11 @@ Example: Product: this product is deprecated, do not purchase more than 5.
         wizard = self.browse(cr, uid, ids)[0]
 
         if wizard.time_unit:
-            product = False
             try:
                 product = ir_model_data.get_object(cr, uid, 'product', 'product_product_consultant')
-            except:
-                #product with xml_id product_product_consultant has not been found. Don't do anything except logging the exception
-                import logging
-                _logger = logging.getLogger(__name__)
-                _logger.warning("Warning, product with xml_id 'product_product_consultant' hasn't been found")
-            if product:
                 product.write({'uom_id': wizard.time_unit.id, 'uom_po_id': wizard.time_unit.id})
+            except ValueError:
+                _logger.warning("Product with xml_id 'product.product_product_consultant' not found, UoMs not updated!")
 
         if wizard.module_project and wizard.time_unit:
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
@@ -138,6 +143,8 @@ class account_config_settings(osv.osv_memory):
 
     def onchange_sale_analytic_plans(self, cr, uid, ids, module_sale_analytic_plans, context=None):
         """ change group_analytic_account_for_sales following module_sale_analytic_plans """
+        if not module_sale_analytic_plans:
+            return {}
         return {'value': {'group_analytic_account_for_sales': module_sale_analytic_plans}}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

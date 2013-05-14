@@ -32,8 +32,8 @@
             <field name="arch" type="xml">
                 <tree editable="bottom" string="Product Moves">
                     <field name="product_id" />
+                    <field name="prodlot_id" groups="stock.group_production_lot"/>
                     <field name="quantity" />
-                    
                 </tree>
             </field>
         </record>
@@ -45,6 +45,7 @@
                 <form string="Return Picking Memory" version="7.0">
                     <group col="4">
                         <field name="product_id" />
+                        <field name="prodlot_id" groups="stock.group_production_lot"/>
                         <field name="quantity" />
                     </group>
                  </form>

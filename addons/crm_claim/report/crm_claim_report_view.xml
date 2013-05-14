@@ -11,7 +11,8 @@
                <tree string="Claims" create="false">
                     <field name="name" invisible="1"/>
                     <field name="month" invisible="1"/>
-                    <field name="section_id" invisible="1"/>
+                    <field name="section_id" invisible="1"
+                            groups="base.group_multi_salesteams"/>
                     <field name="user_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
@@ -61,9 +62,10 @@
                     <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="user_id" string="Salesperson"/>
-                    <field name="section_id" string="Sales Team" context="{'invisible_section': False}"/>
+                    <field name="section_id" string="Sales Team" context="{'invisible_section': False}"
+                            groups="base.group_multi_salesteams"/>
                     <group  expand="0" string="Extended Filters...">
-                        <field name="partner_id"/>
+                        <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                         <field name="stage_id" domain="[('section_ids', '=', 'section_id')]"/>
                         <field name="categ_id" domain="[('object_id.model', '=', 'crm.claim')]"/>
                         <field name="priority"/>

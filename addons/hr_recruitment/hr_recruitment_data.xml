@@ -470,11 +470,13 @@
     <record id="mt_stage_changed" model="mail.message.subtype">
         <field name="name">Stage Changed</field>
         <field name="res_model">hr.applicant</field>
+        <field name="default" eval="False"/>
         <field name="description">Stage changed</field>
     </record>
     <record id="mt_applicant_hired" model="mail.message.subtype">
         <field name="name">Applicant Hired</field>
         <field name="res_model">hr.applicant</field>
+        <field name="default" eval="False"/>
         <field name="description">Applicant hired</field>
     </record>
     <record id="mt_applicant_refused" model="mail.message.subtype">

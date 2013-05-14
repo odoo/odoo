@@ -2,8 +2,10 @@
   In order to test the PDF reports defined on a Point Of Sale,we will print a POS Detail Summary Report
 -
   !python {model: pos.order}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.pos.details_summary').create(cr, uid, [ref('point_of_sale.pos_order_pos1')], {}, {})
+    import os
+    import openerp.report
+    from openerp import tools
+    data, format = openerp.report.render_report(cr, uid, [ref('point_of_sale.pos_order_pos1')], 'pos.details_summary', {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-details_summary report'+format), 'wb+').write(data)
 
@@ -11,8 +13,10 @@
   In order to test the PDF reports defined on a Point Of Sale, we will print a POS Invoice Report
 -
   !python {model: pos.order}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.pos.invoice').create(cr, uid, [ref('point_of_sale.pos_order_pos1')], {}, {})
+    import os
+    import openerp.report
+    from openerp import tools
+    data, format = openerp.report.render_report(cr, uid, [ref('point_of_sale.pos_order_pos1')], 'pos.invoice', {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-invoice report'+format), 'wb+').write(data)
 
@@ -20,8 +24,10 @@
   In order to test the PDF reports defined on a Point Of Sale, we will print a POS Lines Report
 -
   !python {model: pos.order}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.pos.lines').create(cr, uid, [ref('point_of_sale.pos_order_pos1')], {}, {})
+    import os
+    import openerp.report
+    from openerp import tools
+    data, format = openerp.report.render_report(cr, uid, [ref('point_of_sale.pos_order_pos1')], 'pos.lines', {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-lines report'+format), 'wb+').write(data)
 
@@ -29,8 +35,10 @@
   In order to test the PDF reports defined on a Point of Sale, we will print a POS Receipt Report
 -
   !python {model: pos.order}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.pos.receipt').create(cr, uid, [ref('point_of_sale.pos_order_pos1')], {}, {})
+    import os
+    import openerp.report
+    from openerp import tools
+    data, format = openerp.report.render_report(cr, uid, [ref('point_of_sale.pos_order_pos1')], 'pos.receipt', {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-receipt report'+format), 'wb+').write(data)
 
@@ -42,32 +50,38 @@
     ctx={}
     ctx.update({'model': 'ir.ui.menu','active_ids': []})
     data_dict = {'date_start': time.strftime('%Y-%m-%d'), 'date_end': time.strftime('%Y-%m-%d'), 'user_ids': [(6,0,[ref('base.user_root')])]}
-    from tools import test_reports
+    from openerp.tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_report_pos_details',wiz_data=data_dict, context=ctx, our_module='point_of_sale')
 
 -
   In order to test the PDF reports defined on a Point of Sale, we will print a POS Sales User Report
 -
   !python {model: pos.order}: |
-    import netsvc, tools, os, time
+    import os, time
+    import openerp.report
+    from openerp import tools
     data_dict = {'model':'ir.ui.menu', 'form':{'date_start': time.strftime('%Y-%m-%d'), 'date_end': time.strftime('%Y-%m-%d'),'user_id':[ref('base.user_root')] }}
-    (data, format) = netsvc.LocalService('report.pos.sales.user').create(cr, uid, [ref('point_of_sale.pos_order_pos1')], data_dict, {})
+    data, format = openerp.report.render_report(cr, uid, [ref('point_of_sale.pos_order_pos1')], 'pos.sales.user', data_dict, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-sales_user_report'+format), 'wb+').write(data)
 -
   In order to test the PDF reports defined on a Point of Sale, we will print a POS Payment Report
 -
   !python {model: pos.order}: |
-    import netsvc, tools, os, time
-    (data, format) = netsvc.LocalService('report.pos.payment.report').create(cr, uid, [ref('point_of_sale.pos_order_pos0')], {}, {})
+    import os, time
+    import openerp.report
+    from openerp import tools
+    data, format = openerp.report.render_report(cr, uid, [ref('point_of_sale.pos_order_pos0')], 'pos.payment.report', {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-payment_report'+format), 'wb+').write(data)
 -
   In order to test the PDF reports defined on a Point of Sale, we will print a POS Payment User Report
 -
   !python {model: pos.order}: |
-    import netsvc, tools, os, time
+    import os, time
+    import openerp.report
+    from openerp import tools
     data_dict = {'model':'ir.ui.menu', 'form':{'user_id':[ref('base.user_root'),ref('base.user_demo')] }}
-    (data, format) = netsvc.LocalService('report.pos.payment.report.user').create(cr, uid, [ref('point_of_sale.pos_order_pos1')], data_dict, {})
+    data, format = openerp.report.render_report(cr, uid, [ref('point_of_sale.pos_order_pos1')], 'pos.payment.report.user', data_dict, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-payment_user_report'+format), 'wb+').write(data)

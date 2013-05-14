@@ -87,7 +87,6 @@ class HeaderHTML(osv.osv):
                 help="Select Proper Paper size"
         )
     }
-HeaderHTML()
 
 class HeaderImage(osv.osv):
     """Logo allows you to define multiple logo per company"""
@@ -98,6 +97,5 @@ class HeaderImage(osv.osv):
         'name' : fields.char('Name', size=128, required =True, help="Name of Image"),
         'type' : fields.char('Type', size=32, required =True, help="Image type(png,gif,jpeg)")
     }
-HeaderImage()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

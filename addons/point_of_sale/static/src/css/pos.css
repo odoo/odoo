@@ -233,7 +233,9 @@
     font-style: italic;
     cursor:pointer;
 }
-
+.point-of-sale .oe_pos_synch-notification.oe_inactive{
+    cursor: default;
+}
 .point-of-sale .oe_pos_synch-notification .oe_status_red{
     display:inline-block;
     cursor:pointer;
@@ -542,7 +544,9 @@
     background: -webkit-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
     background:    -moz-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
     background:     -ms-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
-    background:         linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
+    /* for some reason the -90deg orientation doesn't match the -webkit-linear-gradient. It should be 180deg here.
+     * webkit also insists on rendering *both* gradients instead of only the native one. So it doesn't looks right. ugh. 
+    background:         linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1)); */
     /*background:#FFF;*/
     padding: 3px;
     padding-top: 15px;
@@ -607,7 +611,9 @@
     background: -webkit-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
     background:    -moz-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
     background:     -ms-linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
+    /* troublesome in latest webkit
     background:         linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1));
+    */
     /*background:#FFF;*/
     padding: 3px;
     padding-top:15px;
@@ -991,12 +997,20 @@
     margin-bottom:10px;
 }
 .point-of-sale .order .summary .line{
+    float: right;
     margin-right:15px;
+    margin-left: 15px;
     padding-top:5px;
     border-top: solid 2px;
     border-color:#777;
 }
+.point-of-sale .order .summary .line .subentry{
+    font-size: 10px;
+    font-weight: normal;
+    text-align: center;
+}
 .point-of-sale .order .summary .line.empty{
+    text-align: right;
     border-color:#BBB;
     color:#999;
 }

@@ -118,6 +118,5 @@ class account_payment_populate_statement(osv.osv_memory):
                 line_obj.write(cr, uid, [line.id], {'bank_statement_line_id': st_line_id})
         return {'type': 'ir.actions.act_window_close'}
 
-account_payment_populate_statement()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

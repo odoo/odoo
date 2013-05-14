@@ -11,7 +11,7 @@
                     <field name="user_id" on_change="onchange_user_product_id(user_id, product_id)"/>
                     <field name="product_id" on_change="onchange_user_product_id(user_id, product_id)" domain="[('type','=','service')]"/>
                     <field name="price"/>
-                    <field name="uom_id"/>
+                    <field name="uom_id" groups="product.group_uom"/>
                 </tree>
             </field>
         </record>
@@ -25,7 +25,7 @@
                         <field name="user_id" on_change="onchange_user_product_id(user_id, product_id)"/>
                         <field name="product_id" domain="[('type','=','service')]" on_change="onchange_user_product_id(user_id, product_id)"/>
                         <field name="price"/>
-                        <field name="uom_id"/>
+                        <field name="uom_id" groups="product.group_uom"/>
                     </group>
                 </form>
             </field>

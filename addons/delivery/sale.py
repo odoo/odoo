@@ -76,7 +76,6 @@ class sale_order(osv.osv):
         return self.write(cr, uid, ids, {'carrier_id': False}, context=context)
         #return {'type': 'ir.actions.act_window_close'} action reload?
 
-sale_order()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

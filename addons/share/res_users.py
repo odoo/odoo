@@ -34,7 +34,6 @@ class res_groups(osv.osv):
         domain.append(('share', '=', False))
         return super(res_groups, self).get_application_groups(cr, uid, domain=domain, context=context)
 
-res_groups()
 
 class res_users(osv.osv):
     _name = 'res.users'
@@ -43,6 +42,5 @@ class res_users(osv.osv):
         'share': fields.boolean('Share User', readonly=True,
                     help="External user with limited access, created only for the purpose of sharing data.")
      }
-res_users()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

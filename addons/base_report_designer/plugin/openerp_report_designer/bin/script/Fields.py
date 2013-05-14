@@ -209,13 +209,13 @@ class Fields(unohelper.Base, XJobExecutor ):
         key.sort()
         myval=None
         if not sVar.find("/")==-1:
-	    myval=sVar[:sVar.find("/")]
+            myval=sVar[:sVar.find("/")]
         else:
             myval=sVar
         if myval in key:
             if (res[myval]['type'] in ['many2one']):
                 sObject = res[myval]['relation']
-		return self.getRes(sock,res[myval]['relation'], sVar[sVar.find("/")+1:])
+                return self.getRes(sock,res[myval]['relation'], sVar[sVar.find("/")+1:])
             else:
                 return sObject
 

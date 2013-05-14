@@ -89,6 +89,12 @@ TODO:
               'header_view.xml',
               'ir_report_view.xml',
     ],
+    'demo': [
+        "report/webkit_report_demo.xml",
+    ],
+    'test': [
+        "test/print.yml",
+    ],
     'installable': True,
     'auto_install': False,
     'images': ['images/companies_webkit.jpeg','images/header_html.jpeg','images/header_img.jpeg'],

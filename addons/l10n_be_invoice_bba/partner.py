@@ -44,9 +44,13 @@ class res_partner(osv.osv):
             help='Select Algorithm to generate the Structured Communication on Outgoing Invoices.' ),
     }
 
+    def _commercial_fields(self, cr, uid, context=None):
+        return super(res_partner, self)._commercial_fields(cr, uid, context=context) + \
+            ['out_inv_comm_type', 'out_inv_comm_algorithm']
+
+
     _default = {
         'out_inv_comm_type': 'none',
     }
-res_partner()    
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
