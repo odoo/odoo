@@ -1,13 +1,11 @@
 -
-  Set a product as using average price. TODO do we need to fill its standard_price?
+  Set a product as using average price. 
 -
   !record {model: product.product, id: product_average_icecream}:
     default_code: AVG
     name: Average Ice Cream
     type: product
     categ_id: product.product_category_1
-    list_price: 100.0
-    standard_price: 70.0
     uom_id: product.product_uom_kgm
     uom_po_id: product.product_uom_kgm
     procure_method: make_to_stock
@@ -17,7 +15,7 @@
     property_stock_account_output: account.o_income
     description: Average Ice Cream can be mass-produced and thus is widely available in developed parts of the world. Ice cream can be purchased in large cartons (vats and squrounds) from supermarkets and grocery stores, in smaller quantities from ice cream shops, convenience stores, and milk bars, and in individual servings from small carts or vans at public events.
 - 
-  I create a draft Purchase Order for first in move for 10 pieces at 60€
+  I create a draft Purchase Order for first incoming shipment for 10 pieces at 60€
 - 
   !record {model: purchase.order, id: purchase_order_average1}:
     partner_id: base.res_partner_3
@@ -30,7 +28,7 @@
         price_unit: 60.0
         name: 'Average Ice Cream'
 - 
-  I create a draft Purchase Order for second shipment for 30 pieces at 80€
+  I create a draft Purchase Order for second incoming shipment for 30 pieces at 80€
 - 
   !record {model: purchase.order, id: purchase_order_average2}:
     partner_id: base.res_partner_3
@@ -60,16 +58,15 @@
 -
   !python {model: stock.partial.picking}: |
     pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_average1")).picking_ids
-    print pick_ids
     partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
-    
     self.do_partial(cr, uid, [partial_id])
 - 
-  Check the standard price of the product (average icecream). TOD0 you could check the qty_available with an assert. TODO the error message if the assert fails is wrong
+  Check the standard price of the product (average icecream). 
 - 
   !python {model: product.product}: |
-    print self.browse(cr, uid, ref("product_average_icecream")).qty_available
-    assert self.browse(cr, uid, ref("product_average_icecream")).standard_price == 60.0, 'Standard price should not change while receiving products!'
+    product = self.browse(cr, uid, ref("product_average_icecream")
+    assert product.qty_available == 10.0, 'Wrong quantity in stock after first reception'
+    assert product.standard_price == 60.0, 'Standard price should be the price of the first reception!'
 - 
   Process the reception of purchase order 2
 - 
@@ -81,14 +78,15 @@
   Check the standard price  TODO the error message if the assert fails is wrong
 - 
   !python {model: product.product}: |
-    assert self.browse(cr, uid, ref("product_average_icecream")).standard_price == 75.0, 'Standard price should not change while receiving products!'
+    assert self.browse(cr, uid, ref("product_average_icecream")).standard_price == 75.0, 
+    'After second reception, the standard price should be the weighted average of the 2 receptions'
 - 
-  Let us send some goods
+  Create picking to send some goods
 - 
   !record {model: stock.picking, id: outgoing_average_shipment}:
     type: out
 - 
-  Picking needs movement from stock
+  Create move for picking
 - 
   !record {model: stock.move, id: outgoing_shipment_average_icecream}:
     picking_id: outgoing_average_shipment
@@ -110,8 +108,8 @@
   Check the standard price (60 * 10 + 30 * 80) / 40 = 75.0 did not change
 - 
   !python {model: product.product}: |
-    assert self.browse(cr, uid, ref("product_average_icecream")).standard_price == 75.0, 'Standard price as average price of second reception incorrect!'
-    assert self.browse(cr, uid, ref("product_average_icecream")).qty_available == 20.0, 'Pieces were not picked correctly'
+    assert self.browse(cr, uid, ref("product_average_icecream")).standard_price == 75.0, 'Standard price should not have changed with outgoing picking!'
+    assert self.browse(cr, uid, ref("product_average_icecream")).qty_available == 20.0, 'Pieces were not picked correctly as the quantity on hand is wrong'
 - 
   Make a new purchase order with 500 g Average Ice Cream at a price of 100 TODO the unit_price is 1 here
 - 
@@ -137,9 +135,9 @@
     partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
     self.do_partial(cr, uid, [partial_id])
 - 
-  Check price is (75.0*20 + 500) / 20.5 = 97.56097561 TODO assert the qty available, remove print statements, write some more explicit assertion error messages
+  Check price is (75.0*20 + 500) / 20.5 = 97.56097561
 - 
   !python {model: product.product}: |
-    print self.browse(cr, uid, ref("product_average_icecream")).qty_available
-    print self.browse(cr, uid, ref("product_average_icecream")).standard_price
+    product = self.browse(cr, uid, ref("product_average_icecream")) 
+    assert product.qty_available == 20.5, 'Reception of purchase order in grams leads to wrong quantity in stock'
     assert round(self.browse(cr, uid, ref("product_average_icecream")).standard_price, 2) == 97.56, 'Standard price as average price of third reception with other UoM incorrect!'

@@ -1628,7 +1628,7 @@ class stock_move(osv.osv):
             if (record.state=='done') and (record.location_dest_id.usage == 'view' ):
                 raise osv.except_osv(_('Error'), _('You cannot move product %s to a location of type view %s.')% (record.product_id.name, record.location_dest_id.name))
         return True
-#TODO: change demo data for this to be possible
+
     def _check_company_location(self, cr, uid, ids, context=None):
         for record in self.browse(cr, uid, ids, context=context):
             if record.location_id.company_id and (record.company_id.id != record.location_id.company_id.id):
@@ -2990,6 +2990,7 @@ class stock_inventory(osv.osv):
                         'product_uom': line.product_uom.id,
                         'prodlot_id': lot_id,
                         'date': inv.date,
+                        'company_id': line.location_id.company_id.id
                     }
 
                     if change > 0:

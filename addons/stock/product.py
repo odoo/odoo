@@ -197,7 +197,11 @@ class product_product(osv.osv):
         return res
 
     def _get_locations_from_context(self, cr, uid, ids, context=None):
-        #TODO add some docstring
+        '''
+        Parses the context and returns a list of location_ids based on it.
+        It will return all stock locations when no parameters are given
+        Possible parameters are shop, warehouse, location, force_company, compute_child
+        '''
         if context is None:
             context = {}
         location_obj = self.pool.get('stock.location')
@@ -234,25 +238,22 @@ class product_product(osv.osv):
 
         # build the list of ids of children of the location given by id
         if context.get('compute_child',True):
-            print location_ids
-            print context.get("force_company", False)
             if context.get('force_company', False):
                 child_location_ids = location_obj.search(cr, uid, [('location_id', 'child_of', location_ids), ('company_id', '=', context['force_company'])])
             else:
                 child_location_ids = location_obj.search(cr, uid, [('location_id', 'child_of', location_ids)])
             location_ids = child_location_ids or location_ids
-            print location_ids
-        
-        
         return location_ids
 
 
     def _get_date_query(self, cr, uid, ids, context):
-        #TODO add some docstring
+        '''
+            Parses the context and returns the dates query string needed to be processed in _get_product_available
+            It searches for a from_date and to_date
+        '''
         from_date = context.get('from_date',False)
         to_date = context.get('to_date',False)
         date_str = False
-        date_values = False
         whereadd = []
         
         if from_date and to_date:
@@ -271,15 +272,14 @@ class product_product(osv.osv):
 
 
     def get_product_available(self, cr, uid, ids, context=None):
-        """ Finds whether product is available or not in particular warehouse.
-        @return: Dictionary of values
+        """ Finds the quantity available of product(s) depending on parameters in the context
+        for date, location, state (allows e.g. for calculating future stock), what,
+        production lot
+        @return: Dictionary of values for every product id
         """
         #TODO complete the docstring with possible keys in context + their effect
         if context is None:
             context = {}
-        location_obj = self.pool.get('stock.location')
-        warehouse_obj = self.pool.get('stock.warehouse')
-        shop_obj = self.pool.get('sale.shop')
         
         states = context.get('states',[])
         what = context.get('what',())
