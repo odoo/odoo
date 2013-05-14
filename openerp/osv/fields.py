@@ -627,7 +627,7 @@ class one2many(_column):
         return obj.pool[self._obj].name_search(cr, uid, value, domain, operator, context=context,limit=limit)
 
     def read_to_cache(self, value):
-        return scope.model(self._obj).recordset(value)
+        return scope.model(self._obj).recordset(value or ())
 
     def cache_to_write(self, value):
         return [(6, 0, value.unbrowse())]
@@ -822,7 +822,7 @@ class many2many(_column):
         return obj.pool[self._obj].search(cr, uid, args+self._domain+[('name', operator, value)], offset, limit, context=context)
 
     def read_to_cache(self, value):
-        return scope.model(self._obj).recordset(value)
+        return scope.model(self._obj).recordset(value or ())
 
     def cache_to_write(self, value):
         return [(6, 0, value.unbrowse())]
