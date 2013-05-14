@@ -27,6 +27,7 @@ from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 from openerp.tools import float_compare
+from openerp.report import report_sxw
 
 class res_currency(osv.osv):
     _inherit = "res.currency"
@@ -293,6 +294,36 @@ class account_voucher(osv.osv):
             res[voucher.id] =  self.pool.get('res.currency').compute(cr, uid, voucher.currency_id.id, voucher.company_id.currency_id.id, voucher.amount, context=ctx)
         return res
 
+    def _get_currency_help_label(self, cr, uid, currency_id, payment_rate, payment_rate_currency_id, context=None):
+        """
+        This function builds a string to help the users to understand the behavior of the payment rate fields they can specify on the voucher. 
+        This string is only used to improve the usability in the voucher form view and has no other effect.
+
+        :param currency_id: the voucher currency
+        :type currency_id: integer
+        :param payment_rate: the value of the payment_rate field of the voucher
+        :type payment_rate: float
+        :param payment_rate_currency_id: the value of the payment_rate_currency_id field of the voucher
+        :type payment_rate_currency_id: integer
+        :return: translated string giving a tip on what's the effect of the current payment rate specified
+        :rtype: str
+        """
+        rml_parser = report_sxw.rml_parse(cr, uid, 'currency_help_label', context=context)
+        currency_pool = self.pool.get('res.currency')
+        currency_str = payment_rate_str = ''
+        if currency_id:
+            currency_str = rml_parser.formatLang(1, currency_obj=currency_pool.browse(cr, uid, currency_id, context=context))
+        if payment_rate_currency_id:
+            payment_rate_str  = rml_parser.formatLang(payment_rate, currency_obj=currency_pool.browse(cr, uid, payment_rate_currency_id, context=context))
+        currency_help_label = _('At the operation date, the exchange rate was\n%s = %s') % (currency_str, payment_rate_str)
+        return currency_help_label
+
+    def _fnct_currency_help_label(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for voucher in self.browse(cr, uid, ids, context=context):
+            res[voucher.id] = self._get_currency_help_label(cr, uid, voucher.currency_id.id, voucher.payment_rate, voucher.payment_rate_currency_id.id, context=context)
+        return res
+
     _name = 'account.voucher'
     _description = 'Accounting Voucher'
     _inherit = ['mail.thread']
@@ -364,6 +395,7 @@ class account_voucher(osv.osv):
             help='The specific rate that will be used, in this voucher, between the selected currency (in \'Payment Rate Currency\' field)  and the voucher currency.'),
         'paid_amount_in_company_currency': fields.function(_paid_amount_in_company_currency, string='Paid Amount in Company Currency', type='float', readonly=True),
         'is_multi_currency': fields.boolean('Multi Currency Voucher', help='Fields with internal purpose only that depicts if the voucher is a multi currency one or not'),
+        'currency_help_label': fields.function(_fnct_currency_help_label, type='text', string="Helping Sentence", help="This sentence helps you to know how to specify the payment rate by giving you the direct effect it has"), 
     }
     _defaults = {
         'active': True,
@@ -536,7 +568,7 @@ class account_voucher(osv.osv):
         return default
 
     def onchange_rate(self, cr, uid, ids, rate, amount, currency_id, payment_rate_currency_id, company_id, context=None):
-        res =  {'value': {'paid_amount_in_company_currency': amount}}
+        res =  {'value': {'paid_amount_in_company_currency': amount, 'currency_help_label': self._get_currency_help_label(cr, uid, currency_id, rate, payment_rate_currency_id, context=context)}}
         if rate and amount and currency_id:
             company_currency = self.pool.get('res.company').browse(cr, uid, company_id, context=context).currency_id
             #context should contain the date, the payment currency and the payment rate specified on the voucher
@@ -815,7 +847,7 @@ class account_voucher(osv.osv):
         if context is None:
             context = {}
         res = {'value': {}}
-        if currency_id and currency_id == payment_rate_currency_id:
+        if currency_id:
             #set the default payment rate of the voucher and compute the paid amount in company currency
             ctx = context.copy()
             ctx.update({'date': date})

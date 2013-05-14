@@ -46,6 +46,9 @@
                 </search>
             </field>
         </record>
+
+        <!-- TODO: merge the 3 voucher form views of this file into a single view -->
+        <!-- Low priority view... If we open a voucher from a m2o, for example. -->
         <record model="ir.ui.view" id="view_low_priority_payment_form">
             <field name="name">account.voucher.payment.low.priority.form</field>
             <field name="model">account.voucher</field>
@@ -119,6 +122,7 @@
             </field>
         </record>
 
+        <!-- Supplier Payment -->
         <record model="ir.ui.view" id="view_vendor_payment_form">
             <field name="name">account.voucher.payment.form</field>
             <field name="model">account.voucher</field>
@@ -193,12 +197,16 @@
                                     <field name="narration" colspan="2" nolabel="1"/>
                                 </group>
                                 <group>
-                                    <group col="4" attrs="{'invisible':[('is_multi_currency','=',False)]}">
-                                        <separator string="Currency Options" colspan="4"/>
+                                    <group col="2" attrs="{'invisible':[('is_multi_currency','=',False)]}">
+                                        <separator string="Currency Options" colspan="2"/>
                                         <field name="is_multi_currency" invisible="1"/>
-                                        <field name="payment_rate" required="1" colspan="3" on_change="onchange_amount(amount, payment_rate, partner_id, journal_id, currency_id, type, date, payment_rate_currency_id, company_id, context)"/>
-                                        <field name="payment_rate_currency_id" colspan="1" nolabel="1" on_change="onchange_payment_rate_currency(currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context)" groups="base.group_multi_currency"/>
-                                        <field name="paid_amount_in_company_currency" colspan="4" invisible="1"/>
+					<label for="payment_rate" colspan="1"/>
+					<div>
+                                            <field name="payment_rate" required="1" class="oe_inline" on_change="onchange_amount(amount, payment_rate, partner_id, journal_id, currency_id, type, date, payment_rate_currency_id, company_id, context)"/>
+                                            <field name="payment_rate_currency_id" class="oe_inline" on_change="onchange_payment_rate_currency(currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context)" groups="base.group_multi_currency"/>
+                                        </div>
+                                        <field name="currency_help_label" colspan="2" nolabel="1" class="oe_grey"/>
+                                        <field name="paid_amount_in_company_currency" colspan="2" invisible="1"/>
                                     </group>
                                     <group col="2">
                                         <separator string="Payment Options" colspan="2"/>
@@ -282,6 +290,7 @@
         <menuitem action="action_vendor_payment" icon="STOCK_JUSTIFY_FILL" sequence="12"
             id="menu_action_vendor_payment"  parent="account.menu_finance_payables"/>
 
+        <!-- Register Payment Form (old Pay Invoice wizard) -->
         <record model="ir.ui.view" id="view_vendor_receipt_dialog_form">
             <field name="name">account.voucher.receipt.dialog.form</field>
             <field name="model">account.voucher</field>
@@ -392,6 +401,7 @@
         </record>
 
 
+        <!-- Customer Payment -->
         <record model="ir.ui.view" id="view_vendor_receipt_form">
             <field name="name">account.voucher.receipt.form</field>
             <field name="model">account.voucher</field>
@@ -474,8 +484,12 @@
                                 </group>
                                 <group col="4" attrs="{'invisible':[('is_multi_currency','=',False)]}">
                                     <field name="is_multi_currency" invisible="1"/>
-                                    <field name="payment_rate" required="1" colspan="3" on_change="onchange_amount(amount, payment_rate, partner_id, journal_id, currency_id, type, date, payment_rate_currency_id, company_id, context)"/>
-                                    <field name="payment_rate_currency_id" colspan="1" nolabel="1" on_change="onchange_payment_rate_currency(currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context)" groups="base.group_multi_currency"/>
+				    <label for="payment_rate" colspan="1"/>
+				    <div>
+                                        <field name="payment_rate" required="1" class="oe_inline" on_change="onchange_amount(amount, payment_rate, partner_id, journal_id, currency_id, type, date, payment_rate_currency_id, company_id, context)"/>
+                                        <field name="payment_rate_currency_id" class="oe_inline" on_change="onchange_payment_rate_currency(currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context)" groups="base.group_multi_currency"/>
+                                    </div>
+                                    <field name="currency_help_label" colspan="2" nolabel="1" class="oe_grey"/>
                                     <field name="paid_amount_in_company_currency" colspan="4" invisible="1"/>
                                 </group>
                                 <group>
