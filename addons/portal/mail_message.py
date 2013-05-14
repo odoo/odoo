@@ -33,9 +33,9 @@ class mail_message(osv.Model):
             all no discussion message if uid is a portal user.
         """
         group_ids = self.pool.get('res.users').browse(cr, uid, uid, context=context).groups_id
-        if any(group.is_portal for group in group_ids):
-            subtype_id = self.pool.get("ir.model.data").get_object_reference(cr, uid, 'mail', 'mt_comment')[1]
-            args = ['&', ('subtype_id', '=', subtype_id)] + args
+        group_user_id = self.pool.get("ir.model.data").get_object_reference(cr, uid, 'base', 'group_user')[1]
+        if group_user_id not in [group.id for group in group_ids]:
+            args = ['&', '|', ('type', '!=', 'comment'), ('subtype_id', '!=', False)] + list(args)
 
         return super(mail_message, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
             context=context, count=False, access_rights_uid=access_rights_uid)
@@ -46,9 +46,9 @@ class mail_message(osv.Model):
                 - raise if the type is not 'comment' or 'email'
         """
         group_ids = self.pool.get('res.users').browse(cr, uid, uid, context=context).groups_id
-        if any(group.is_portal for group in group_ids):
-            subtype_id = self.pool.get("ir.model.data").get_object_reference(cr, uid, 'mail', 'mt_comment')[1]
-            cr.execute('SELECT DISTINCT id FROM "%s" WHERE subtype_id != %s AND id = ANY (%%s)' % (self._table, subtype_id), (ids,))
+        group_user_id = self.pool.get("ir.model.data").get_object_reference(cr, uid, 'base', 'group_user')[1]
+        if group_user_id not in [group.id for group in group_ids]:
+            cr.execute('SELECT DISTINCT id FROM "%s" WHERE type = %%s AND subtype_id != NULL AND id = ANY (%%s)' % (self._table), ('comment', ids,))
             if cr.fetchall():
                 raise orm.except_orm(_('Access Denied'),
                         _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
