@@ -74,7 +74,17 @@ class format_address(object):
 
 
 def _tz_get(self,cr,uid, context=None):
-    return [(x, x) for x in pytz.all_timezones]
+    #the timezone with name Etc/GMT+x are different than GMT+x, Etc/GMT+x actually is UTC-x and not UTC+x
+    #not a bug but an historical fact. Can be confusing, so we put those at the end of the list so that
+    #user won't get to much confused if they find in the list their country first
+    tz = []
+    etc_tz = []
+    for x in pytz.all_timezones:
+        if x.startswith('Etc/'):
+            etc_tz.append((x, x))
+        else:
+            tz.append((x, x))
+    return tz+etc_tz
 
 class res_partner_category(osv.osv):
 
