@@ -322,7 +322,7 @@ def get_pg_type(f, type_override=None):
     return pg_type
 
 
-class Draft(object):
+class DraftId(object):
     """ A class of special record ids for draft records. """
     pass
 
@@ -5376,10 +5376,10 @@ class BaseModel(object):
 
     def draft(self):
         """ Return a draft record attached to the current scope. """
-        return self.record(Draft())
+        return self.record(DraftId())
 
     def is_draft(self):
-        return isinstance(getattr(self, '_record_id', None), Draft)
+        return isinstance(getattr(self, '_record_id', None), DraftId)
 
     def __nonzero__(self):
         """ Test whether `self` is nonempty and not null. """
@@ -5501,7 +5501,7 @@ class BaseModel(object):
             # fetch the record of this model without field_name in their cache
             fetch_ids = set(rec._record_id
                 for rec in model_cache.itervalues()
-                if field_name not in rec._record_cache)
+                if not rec.is_draft() and field_name not in rec._record_cache)
 
             # prefetch all classic and many2one fields if column is one of them
             # Note: do not prefetch fields when self.pool._init is True, because
@@ -5766,6 +5766,14 @@ class Recordset(object):
     class __metaclass__(type):
         def __instancecheck__(self, inst):
             return isinstance(inst, BaseModel) and inst.is_recordset()
+
+class Draft(object):
+    """ Pseudo-class for testing draft instances:
+        ``isinstance(x, Draft)`` returns ``True`` if ``x`` is a draft record.
+    """
+    class __metaclass__(type):
+        def __instancecheck__(self, inst):
+            return isinstance(inst, BaseModel) and inst.is_draft()
 
 # extra definitions for backward compatibility
 browse_null = Null
