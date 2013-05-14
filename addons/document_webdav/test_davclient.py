@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 #
 # Copyright P. Christeas <p_christ@hol.gr> 2008,2009
