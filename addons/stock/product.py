@@ -229,17 +229,19 @@ class product_product(osv.osv):
             if not wids:
                 return False
             for w in warehouse_obj.browse(cr, uid, wids, context=context):
-                if not context.get('force_company', False) or w.lot_stock_id.company_id == context['force_company']:
+                if not context.get('force_company', False) or w.lot_stock_id.company_id.id == context['force_company']:
                     location_ids.append(w.lot_stock_id.id)
 
         # build the list of ids of children of the location given by id
         if context.get('compute_child',True):
+            print location_ids
+            print context.get("force_company", False)
             if context.get('force_company', False):
                 child_location_ids = location_obj.search(cr, uid, [('location_id', 'child_of', location_ids), ('company_id', '=', context['force_company'])])
             else:
                 child_location_ids = location_obj.search(cr, uid, [('location_id', 'child_of', location_ids)])
             location_ids = child_location_ids or location_ids
-        
+            print location_ids
         
         
         return location_ids

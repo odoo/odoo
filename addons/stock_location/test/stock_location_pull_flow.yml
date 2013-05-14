@@ -141,25 +141,23 @@
         location_id: stock.stock_location_shop0
         location_src_id: stock.stock_location_shop1
         name: E001
-        partner_address_id: base.res_partner_address_2
         picking_type: out
         procure_method: make_to_stock
         type_proc: move
         company_id: stock.res_company_1
       - invoice_state: none
         location_id: stock.stock_location_shop1
-        location_src_id: stock.stock_location_suppliers
+        location_src_id: stock.stock_location_intermediatelocation0
         name: E002
-        partner_address_id: base.res_partner_address_7
         picking_type: out
         procure_method: make_to_stock
         type_proc: move
         company_id: stock.res_company_1
       - invoice_state: none
-        location_id: stock.stock_location_suppliers
+        location_id: stock.stock_location_intermediatelocation0
         location_src_id: stock.stock_location_stock
         name: E003
-        type_proc: buy
+        type_proc: move
         company_id: base.main_company
     property_stock_inventory: stock.location_inventory
     property_stock_procurement: stock.location_procurement
