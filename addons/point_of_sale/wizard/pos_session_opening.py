@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 
 from openerp import netsvc
 from openerp.osv import osv, fields
