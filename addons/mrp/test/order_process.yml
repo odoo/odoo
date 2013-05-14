@@ -183,7 +183,10 @@
     order = self.browse(cr, uid, ref("mrp_production_test1"))
     assert order.state == 'done', "Production order should be closed."
 -
-  I check Total Costs at End of Production.
+  I check Total Costs at End of Production as a manager.
+-
+  !context
+    uid: 'res_users_mrp_manager'
 -
   !python {model: mrp.production}: |
     order = self.browse(cr, uid, ref("mrp_production_test1"))
@@ -217,6 +220,9 @@
                 assert line.product_uom_id.id == wc.product_id.uom_id.id, "UOM is not correspond."
 -
   I print a "BOM Structure".
+-
+  !context
+    uid: 'res_users_mrp_user'
 -
   !python {model: mrp.production}: |
     import os
