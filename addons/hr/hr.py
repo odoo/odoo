@@ -215,9 +215,11 @@ class hr_employee(osv.osv):
         'last_login': fields.related('user_id', 'date', type='datetime', string='Latest Connection', readonly=1),
     }
 
-    _order='name_related'
+    _order = 'name_related'
 
     def create(self, cr, uid, data, context=None):
+        if context is None:
+            context = {}
         create_ctx = dict(context, mail_create_nolog=True)
         employee_id = super(hr_employee, self).create(cr, uid, data, context=create_ctx)
         employee = self.browse(cr, uid, employee_id, context=context)
