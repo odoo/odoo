@@ -179,10 +179,13 @@ class res_company(osv.osv):
             return {'value':{'country_id': self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id }}
         return {}
     def on_change_country(self, cr, uid, ids, country_id, context=None):
+        res = {'domain': {'state_id': []}}
         currency_id = self._get_euro(cr, uid, context=context)
         if country_id:
             currency_id = self.pool.get('res.country').browse(cr, uid, country_id, context=context).currency_id.id
-        return {'value': {'currency_id': currency_id, 'state_id': False},'domain':{'state_id': [('country_id','=',country_id)]}}
+            res['domain'] = {'state_id': [('country_id','=',country_id)]}
+        res['value'] = {'currency_id': currency_id}
+        return res
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False, access_rights_uid=None):
