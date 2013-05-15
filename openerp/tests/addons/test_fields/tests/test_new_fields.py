@@ -199,7 +199,7 @@ class TestNewFields(common.TransactionCase):
         with self.assertRaises(ValueError):
             alpha.some_reference_field = self.scope.user.company_id
 
-    def test_draft(self):
+    def test_30_draft(self):
         """ test draft records. """
         # create a draft partner
         draft = self.Partner.draft()
@@ -217,4 +217,12 @@ class TestNewFields(common.TransactionCase):
         self.assertEqual(draft.number_of_employees, 1)
         self.assertEqual(draft.name_size, 3)
         self.assertEqual(draft.children_count, 2)
+
+    def test_31_defaults(self):
+        """ test default values. """
+        fields = ['name', 'active']
+        defaults = self.Partner.default_get(fields)
+
+        self.assertEqual(defaults.get('name', False), False)
+        self.assertEqual(defaults['active'], True)
 

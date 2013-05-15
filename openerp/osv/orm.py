@@ -1398,83 +1398,49 @@ class BaseModel(object):
         # trigger view init hook
         self.view_init(cr, uid, fields_list, context)
 
-        if not context:
-            context = {}
+        context = scope_proxy.context
         defaults = {}
 
-        # get the default values for the inherited fields
-        for t in self._inherits.keys():
-            defaults.update(self.pool[t].default_get(cr, uid, fields_list, context))
-
-        # get the default values defined in the object
-        for f in fields_list:
-            if f in self._defaults:
-                if callable(self._defaults[f]):
-                    defaults[f] = self._defaults[f](self, cr, uid, context)
-                else:
-                    defaults[f] = self._defaults[f]
-
-            fld_def = ((f in self._columns) and self._columns[f]) \
-                    or ((f in self._inherit_fields) and self._inherit_fields[f][2]) \
-                    or False
-
-            if isinstance(fld_def, fields.property):
-                property_obj = self.pool.get('ir.property')
-                prop_value = property_obj.get(cr, uid, f, self._name, context=context)
-                if prop_value:
-                    if isinstance(prop_value, Record):
-                        defaults[f] = prop_value.id
-                    else:
-                        defaults[f] = prop_value
-                else:
-                    if f not in defaults:
-                        defaults[f] = False
-
-        # get the default values set by the user and override the default
-        # values defined in the object
+        property_obj = self.pool.get('ir.property')
         ir_values_obj = self.pool.get('ir.values')
-        res = ir_values_obj.get(cr, uid, 'default', False, [self._name])
-        for id, field, field_value in res:
-            if field in fields_list:
-                fld_def = (field in self._columns) and self._columns[field] or self._inherit_fields[field][2]
-                if fld_def._type == 'many2one':
-                    obj = self.pool[fld_def._obj]
-                    if not obj.search(cr, uid, [('id', '=', field_value or False)]):
-                        continue
-                if fld_def._type == 'many2many':
-                    obj = self.pool[fld_def._obj]
-                    field_value2 = []
-                    for i in range(len(field_value or [])):
-                        if not obj.search(cr, uid, [('id', '=',
-                            field_value[i])]):
-                            continue
-                        field_value2.append(field_value[i])
-                    field_value = field_value2
-                if fld_def._type == 'one2many':
-                    obj = self.pool[fld_def._obj]
-                    field_value2 = []
-                    for i in range(len(field_value or [])):
-                        field_value2.append({})
-                        for field2 in field_value[i]:
-                            if field2 in obj._columns.keys() and obj._columns[field2]._type == 'many2one':
-                                obj2 = self.pool[obj._columns[field2]._obj]
-                                if not obj2.search(cr, uid,
-                                        [('id', '=', field_value[i][field2])]):
-                                    continue
-                            elif field2 in obj._inherit_fields.keys() and obj._inherit_fields[field2][2]._type == 'many2one':
-                                obj2 = self.pool[obj._inherit_fields[field2][2]._obj]
-                                if not obj2.search(cr, uid,
-                                        [('id', '=', field_value[i][field2])]):
-                                    continue
-                            # TODO add test for many2many and one2many
-                            field_value2[i][field2] = field_value[i][field2]
-                    field_value = field_value2
-                defaults[field] = field_value
+        ir_values_dict = dict(
+            (f, v) for i, f, v in ir_values_obj.get_defaults(self._name))
 
-        # get the default values from the context
-        for key in context or {}:
-            if key.startswith('default_') and (key[8:] in fields_list):
-                defaults[key[8:]] = context[key]
+        for f in fields_list:
+            cinfo = self._all_columns[f]
+            column = cinfo.column
+
+            # 1. look up context
+            key = 'default_' + f
+            if key in context:
+                defaults[f] = context[key]
+                continue
+
+            # 2. look up ir_values
+            if f in ir_values_dict:
+                defaults[f] = ir_values_dict[f]
+                continue
+
+            # 3. look up property fields
+            if isinstance(column, fields.property):
+                value = property_obj.get(cr, uid, f, self._name, context=context)
+                if isinstance(value, BaseModel):
+                    value = value.unbrowse()
+                defaults[f] = value
+                continue
+
+            # 4. look up _defaults
+            if f in self._defaults:
+                value = self._defaults[f]
+                if callable(value):
+                    value = value(self, cr, uid, context)
+                defaults[f] = value
+                continue
+
+            # 5. look up parent model
+            if cinfo.parent_model:
+                defaults.update(self.pool[cinfo.parent_model].default_get([f]))
+
         return defaults
 
     def fields_get_keys(self, cr, user, context=None):
