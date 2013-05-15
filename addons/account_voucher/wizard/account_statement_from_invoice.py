@@ -94,7 +94,7 @@ class account_statement_from_invoice_lines(osv.osv_memory):
                             'account_id': result['value'].get('account_id', statement.journal_id.default_credit_account_id.id),
                             'company_id': statement.company_id.id,
                             'currency_id': statement.currency.id,
-                            'date': line.date,
+                            'date': statement.date,
                             'amount': sign*amount,
                             'payment_rate': result['value']['payment_rate'],
                             'payment_rate_currency_id': result['value']['payment_rate_currency_id'],
@@ -119,7 +119,7 @@ class account_statement_from_invoice_lines(osv.osv_memory):
                 'statement_id': statement_id,
                 'ref': line.ref,
                 'voucher_id': voucher_id,
-                'date': time.strftime('%Y-%m-%d'),
+                'date': statement.date,
             }, context=context)
         return {'type': 'ir.actions.act_window_close'}
 

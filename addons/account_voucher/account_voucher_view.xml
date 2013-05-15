@@ -221,6 +221,9 @@
                 <field name="amount" position="attributes">
                     <attribute name="on_change">onchange_amount(amount)</attribute>
                 </field>
+                <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/tree/field[@name='date']" position="attributes">
+                    <attribute name="on_change">onchange_line_date(date)</attribute>
+                </xpath>
             </field>
         </record>
 

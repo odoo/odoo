@@ -1645,6 +1645,13 @@ account_bank_statement()
 
 class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
+    
+    def onchange_line_date(self, cr, uid, ids, date, context=None):
+        voucher_obj = self.pool.get('account.voucher')
+        for statement_line in self.browse(cr, uid, ids, context=context):
+            if statement_line.voucher_id:
+                voucher_obj.write(cr, uid, [statement_line.voucher_id.id], {'date': date}, context=context)
+        return {}
 
     def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
         res = super(account_bank_statement_line, self).onchange_partner_id(cr, uid, ids, partner_id, context=context)
