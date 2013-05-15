@@ -679,56 +679,61 @@
 /* ------------- WALL SIDEBAR ------------- */
 
 .openerp .oe_mail_wall .oe_mail_wall_aside {
-    margin-top: 15px;
+    margin: 16px;
     position: relative;
     display: inline-block;
     vertical-align: top;
     width: 260px;
 }
-
 .openerp .oe_mail_wall_aside .oe_sidebar_suggestion {
     background-color: #EDEDF6;
     border-radius: 2px;
-    padding: 10px;
+    padding-top: 1px;
 }
-.openerp .oe_mail_wall_aside .oe_suggestion_display {
+.openerp .oe_sidebar_suggestion .oe_suggest_title h2 {
     font-size: 14px;
     font-weight: bold;
     margin-left: 10px;
+    padding: 0px;
 }
-.openerp .oe_mail_wall_aside .oe_suggested_item {
+.openerp .oe_sidebar_suggestion .oe_suggest_items .oe_suggested_item {
     border-radius: 2px;
     width: 100%;
     margin-left: 10px;
     min-height: 67px;  /* image_small 66x66px */
 }
-.openerp .oe_mail_wall_aside .oe_item_image {
+.openerp .oe_sidebar_suggestion .oe_suggest_items .oe_suggested_item_image {
     float: left;
     padding-right: 10px;
 }
-.openerp .oe_mail_wall_aside .oe_item_image_content {
+.openerp .oe_sidebar_suggestion .oe_suggest_items .oe_suggested_item_image img {
     border-radius: 2px;
     border: solid 1px rgba(0,0,0,0.03);
 }
-.openerp .oe_mail_wall_aside .oe_suggestion_action {
+.openerp .oe_sidebar_suggestion .oe_suggest_items .oe_suggested_item_content button {
     margin-top: 10px;
 }
-.openerp .oe_mail_wall_aside .oe_remove_suggested_item,
-.openerp .oe_mail_wall_aside .oe_remove_suggestion {
-    visibility: hidden;
-    width: 3%;
-    float: right;
-    margin-right: 10px;
-}
-.openerp .oe_mail_wall_aside .oe_suggested_item:hover .oe_remove_suggested_item > span,
-.openerp .oe_mail_wall_aside .oe_suggestion_display:hover .oe_remove_suggestion > span {
-    visibility: visible;
-}
-.openerp .oe_mail_wall_aside .oe_item,.oe_suggestion_display {
-    width: 90%;
-}
-.openerp .oe_mail_wall_aside .oe_item .oe_item_name {
+.openerp .oe_sidebar_suggestion .oe_suggest_items .oe_suggested_item_content a.oe_suggestion_item_name {
     text-overflow: ellipsis;
     overflow: hidden;
     width: 90%;
 }
+.openerp .oe_sidebar_suggestion .oe_suggest_title a.oe_suggestion_remove {
+    line-height: 15px;
+    margin-top: -2px;
+    float: right;
+    visibility: hidden;
+    margin-right: 7px;
+}
+.openerp .oe_sidebar_suggestion .oe_suggest_items .oe_suggested_item_content a.oe_suggestion_remove_item {
+    line-height: 15px;
+    margin-top: -2px;
+    float: right;
+    visibility: hidden;
+    margin-right: 16px;
+}
+.openerp .oe_sidebar_suggestion .oe_suggest_title:hover a.oe_suggestion_remove,
+.openerp .oe_sidebar_suggestion .oe_suggest_items:hover a.oe_suggestion_remove_item {
+    visibility: visible;
+}
+

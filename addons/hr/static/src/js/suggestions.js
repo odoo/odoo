@@ -3,89 +3,76 @@ openerp.hr = function(session) {
     var QWeb = session.web.qweb;
 
     var suggestions = session.suggestions;
-    var removed_suggested_employee = session.removed_suggested_employee = [];
-    suggestions.Employees = session.mail.Wall.include({
+    var removed_suggested_employee = session.suggestions.removed_suggested_employee = [];
+
+    suggestions.Employees = session.web.Widget.extend({
         events: {
-            'click .oe_remove_suggestion_employees': "remove_suggestion_employees",
-            'click .oe_remove_suggested_employee': "remove_suggested_employee",
-            'click .oe_follow_employee': "follow_employee",
-            'click .oe_open_employee': "open_employee"
+            'click .oe_suggestion_remove.oe_suggestion_employee': 'stop_employee_suggestion',
+            'click .oe_suggestion_remove_item.oe_suggestion_employee': 'remove_employee_suggestion',
+            'click .oe_suggestion_follow': 'follow_employee',
         },
-        init: function (parent, action) {
-            var self = this;
-            this._super(parent, action);
-            this.deferred = $.Deferred();
+
+        init: function () {
+            this._super(this, arguments);
             this.hr_employee = new session.web.DataSetSearch(this, 'hr.employee');
             this.res_users = new session.web.DataSetSearch(this, 'res.users');
-            this.suggestions = [];
+            this.employees = [];
         },
-        start: function() {
-            var tmp = this._super.apply(this, arguments);
-            var self = this;
 
-            var res = self.get_suggested_employee();
-            $.when(res).done(function() {});
-            return tmp;
+        start: function () {
+            this._super.apply(this, arguments);
+            return this.fetch_suggested_employee();
         },
-        get_suggested_employee: function () {
+
+        fetch_suggested_employee: function () {
             var self = this;
-            var employee = self.hr_employee.call('get_suggested_thread', {'removed_suggested_threads':removed_suggested_employee}).then(function(res) {
-                _(res).each(function(result) {
+            var employee = self.hr_employee.call('get_suggested_thread', {'removed_suggested_threads': removed_suggested_employee}).then(function (res) {
+                _(res).each(function (result) {
                     result['image']=self.session.url('/web/binary/image', {model: 'hr.employee', field: 'image_small', id: result.id});
                 });
-                self.suggestions = res;
+                self.employees = res;
             });
-            return $.when(employee).done(function() {
-                self.$el.find('.oe_suggestions_employees').html( QWeb.render("hr.suggestions.employee", {'widget': self}) );
-                if (self.suggestions.length === 0) {
-                    self.$(".oe_sidebar_employee").hide();
-                }
-            });
+            return $.when(employee).done(this.proxy('display_suggested_employees'));
         },
-        renderFollowButtons: function() {
-            var self = this;
-            self.dfm = new session.web.form.DefaultFieldManager(self);
-            // Generate a FieldMonetary for each .oe_goal_field_monetary
-            self.$el.find(".oe_follow_employee").each(function() {
-                follower_field = new session.mail_followers.Followers(self.dfm, {
-                    attrs: {
-                        view: self.view
-                    }
-                });
-                follower_field.set('value', parseInt($(this).text(), 10));
-                // follower_field.replace($(this));
-            });
+
+        display_suggested_employees: function () {
+            var suggested_employees = this.$('.oe_sidebar_suggestion.oe_suggestion_employee');
+            if (suggested_employees) {
+                suggested_employees.remove();
+            }
+            if (this.employees.length === 0) {
+                return this.$el.empty();
+            }
+            return this.$el.empty().html(QWeb.render('hr.suggestions.employees', {'widget': this}));
         },
-        open_employee:function(event) {
+
+        follow_employee: function (event) {
             var self = this;
-            var id = JSON.parse($(event.currentTarget).attr("id"));
-            action = {
-                type: 'ir.actions.act_window',
-                res_model: 'hr.employee',
-                res_id: id,
-                views: [[false, 'form']],
-                target: 'current'
-            };
-            this.do_action(action);
-        },
-        follow_employee:function(event) {
-            var self = this;
-            employee_id = parseInt($(event.currentTarget).attr('id'), 10);
+            var employee_id = parseInt($(event.currentTarget).attr('id'), 10);
             return this.hr_employee.call('message_subscribe_users', [[employee_id], [this.session.uid], undefined]).then(function(res) {
-                self.get_suggested_employee();
+                self.fetch_suggested_employee();
             });
         },
-        remove_suggested_employee: function(event) {
-            var self = this;
+
+        remove_employee_suggestion: function (event) {
             removed_suggested_employee.push($(event.currentTarget).attr('id'));
-            self.get_suggested_employee();
+            return this.fetch_suggested_employee();
         },
-        remove_suggestion_employees: function(event) {
+
+        stop_employee_suggestion: function (event) {
             var self = this;
             return this.res_users.call('stop_showing_employees_suggestions', [this.session.uid]).then(function(res) {
-                self.$(".oe_sidebar_employee").hide();
+                self.$(".oe_sidebar_suggestion.oe_suggestion_employee").hide();
             });
         }
+    });
+
+    session.mail.WallSidebar.include({
+        start: function () {
+            this._super.apply(this, arguments);
+            var sug_employees = new suggestions.Employees(this);
+            return sug_employees.appendTo(this.$('.oe_suggestions_employees'));
+        },
     });
 
 };
