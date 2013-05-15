@@ -324,7 +324,8 @@ def get_pg_type(f, type_override=None):
 
 class DraftId(object):
     """ A class of special record ids for draft records. """
-    pass
+    def __str__(self):
+        return "<draft %d>" % id(self)
 
 
 class MetaModel(api.Meta):
@@ -5338,7 +5339,10 @@ class BaseModel(object):
 
     def unbrowse(self):
         """ Return the `id`/`ids` corresponding to a record/recordset/null instance. """
-        return map(int, self._records) if self.is_recordset() else self._record_id
+        if self.is_record():
+            return False if self.is_draft() else self._record_id
+        else:
+            return map(int, self._records)
 
     def draft(self):
         """ Return a draft record attached to the current scope. """
@@ -5567,6 +5571,14 @@ class BaseModel(object):
                 return self._records[key]
         else:
             raise except_orm("ValueError", "Expected record or recordset: %s" % self)
+
+    def __setitem__(self, key, value):
+        """ Assign the field `key` to `value` in record `self`. """
+        field = self._fields.get(key)
+        if field:
+            return field.__set__(self, value)
+        # fallback
+        self._set_field(key, value)
 
     def __getattr__(self, name):
         if name.startswith('signal_'):
