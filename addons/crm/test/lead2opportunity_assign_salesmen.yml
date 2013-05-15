@@ -24,45 +24,38 @@
     name: 'Test lead 4'
     contact_name: 'Fabrice Lepoilu'
     stage_id: stage_lead1
-    context: {'no_reset_password': True}
 -
   !record {model: crm.lead, id: test_crm_lead_05}:
     type: 'lead'
     name: 'Test lead 5'
     contact_name: 'Fabrice Lepoilu'
     stage_id: stage_lead1
-    context: {'no_reset_password': True}
 -
   !record {model: crm.lead, id: test_crm_lead_06}:
     type: 'lead'
     name: 'Test lead 6'
     partner_name: 'Agrolait SuperSeed SA'
     stage_id: stage_lead1
-    context: {'no_reset_password': True}
 -
   !record {model: res.users, id: test_res_user_01}:
     name: 'Test user A'
     login: 'tua'
     new_password: 'tua'
-    context: {'no_reset_password': True}
 -
   !record {model: res.users, id: test_res_user_02}:
     name: 'Test user B'
     login: 'tub'
     new_password: 'tub'
-    context: {'no_reset_password': True}
 -
   !record {model: res.users, id: test_res_user_03}:
     name: 'Test user C'
     login: 'tuc'
     new_password: 'tuc'
-    context: {'no_reset_password': True}
 -
   !record {model: res.users, id: test_res_user_04}:
     name: 'Test user D'
     login: 'tud'
     new_password: 'tud'
-    context: {'no_reset_password': True}
 -
   I create a mass convert wizard and convert all the leads.
 -
