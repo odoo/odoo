@@ -72,6 +72,14 @@
             <field name="signal"></field>
             <field name="condition">picking_id and picking_id.state=='done'</field>
         </record>
+        
+        <record id="prod_trans_in_production_done_jap_final" model="workflow.transition">
+            <field name="act_from" ref="prod_act_ready"/>
+            <field name="act_to" ref="prod_act_done"/>
+            <field name="signal">button_produce_done</field>
+            <field name="condition">not move_lines and test_production_done()</field>
+        </record>
+                
         <record id="prod_trans_ready_in_production" model="workflow.transition">
             <field name="act_from" ref="prod_act_ready"/>
             <field name="act_to" ref="prod_act_in_production"/>

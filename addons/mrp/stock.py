@@ -158,6 +158,8 @@ class StockMove(osv.osv):
                 product_data = production_obj.browse(cr, uid, production_ids[0])
                 if product_data.move_created_ids2 and product_data.move_lines2 and move.state=='done':
                     wf_service.trg_validate(uid, 'mrp.production', product_data.id, 'button_produce_done', cr)
+                elif not product_data.move_lines2 and move.state=='done':
+                    wf_service.trg_validate(uid, 'mrp.production', product_data.id, 'button_produce_done', cr)                    
         return res    
 
 StockMove()

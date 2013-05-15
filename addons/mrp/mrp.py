@@ -647,6 +647,8 @@ class mrp_production(osv.osv):
 
         for (production_id,name) in self.name_get(cr, uid, ids):
             production = self.browse(cr, uid, production_id)
+            if not production.move_prod_id and not production.move_lines:
+                move_obj.write(cr, uid, [i.id for i in production.move_created_ids], {'state': 'assigned'})            
             if production.move_prod_id and production.move_prod_id.location_id.id != production.location_dest_id.id:
                 move_obj.write(cr, uid, [production.move_prod_id.id],
                         {'location_id': production.location_dest_id.id})
@@ -775,9 +777,6 @@ class mrp_production(osv.osv):
             for new_parent_id in new_parent_ids:
                 stock_mov_obj.write(cr, uid, [raw_product.id], {'move_history_ids': [(4,new_parent_id)]})
         wf_service = netsvc.LocalService("workflow")
-        for componant in production.bom_id.bom_lines:
-            if componant.product_id.type == 'service' and not production.move_lines and not production.move_lines2:
-                wf_service.trg_validate(uid, 'mrp.production', production_id, 'button_produce', cr)        
         wf_service.trg_validate(uid, 'mrp.production', production_id, 'button_produce_done', cr)
         return True
 
