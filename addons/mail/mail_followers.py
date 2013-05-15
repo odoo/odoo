@@ -88,7 +88,7 @@ class mail_notification(osv.Model):
                 continue
             partner = notification.partner_id
             # If partners_to_notify specified: restrict to them
-            if partners_to_notify and partner.id not in partners_to_notify:
+            if partners_to_notify is not None and partner.id not in partners_to_notify:
                 continue
             # Do not send to partners without email address defined
             if not partner.email:

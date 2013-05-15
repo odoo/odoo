@@ -41,6 +41,7 @@ class invoice(osv.osv):
             'target': 'new',
             'domain': '[]',
             'context': {
+                'payment_expected_currency': inv.currency_id.id,
                 'default_partner_id': self.pool.get('res.partner')._find_accounting_partner(inv.partner_id).id,
                 'default_amount': inv.type in ('out_refund', 'in_refund') and -inv.residual or inv.residual,
                 'default_reference': inv.name,
