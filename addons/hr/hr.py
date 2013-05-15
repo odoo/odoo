@@ -19,10 +19,12 @@
 #
 ##############################################################################
 
-from openerp import addons
 import logging
+
+from openerp.modules.module import get_module_resource
 from openerp.osv import fields, osv
 from openerp import tools
+
 _logger = logging.getLogger(__name__)
 
 class hr_employee_category(osv.osv):
@@ -219,7 +221,7 @@ class hr_employee(osv.osv):
             (model, mail_group_id) = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'group_all_employees')
             employee = self.browse(cr, uid, employee_id, context=context)
             self.pool.get('mail.group').message_post(cr, uid, [mail_group_id],
-                body='Welcome to %s! Please help them take the first steps with OpenERP!' % (employee.name),
+                body='Welcome to %s! Please help him/her take the first steps with OpenERP!' % (employee.name),
                 subtype='mail.mt_comment', context=context)
         except:
             pass # group deleted: do not push a message
@@ -259,7 +261,7 @@ class hr_employee(osv.osv):
         return {'value': {'work_email' : work_email}}
 
     def _get_default_image(self, cr, uid, context=None):
-        image_path = addons.get_module_resource('hr', 'static/src/img', 'default_image.png')
+        image_path = get_module_resource('hr', 'static/src/img', 'default_image.png')
         return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     _defaults = {

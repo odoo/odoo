@@ -200,6 +200,9 @@ class res_users(osv.Model):
                     'partner_id': partner.id,
                     'email': values.get('email') or values.get('login'),
                 })
+                if partner.company_id:
+                    values['company_id'] = partner.company_id.id
+                    values['company_ids'] = [(6,0,[partner.company_id.id])]
                 self._signup_create_user(cr, uid, values, context=context)
         else:
             # no token, sign up an external user
