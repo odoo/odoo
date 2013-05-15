@@ -265,12 +265,12 @@ class res_users(osv.Model):
             self.pool.get('email.template').send_mail(cr, uid, template.id, user.id, True, context=context)
 
     def create(self, cr, uid, values, context=None):
+        if context is None:
+            context = {}
         # overridden to automatically invite user to sign up
         user_id = super(res_users, self).create(cr, uid, values, context=context)
         user = self.browse(cr, uid, user_id, context=context)
-        if user.email and (not context or not context.get('no_reset_password')):
-            if not context:
-                context = {}
+        if user.email and not context.get('no_reset_password'):
             context.update({'create_user': True})
             self.action_reset_password(cr, uid, [user.id], context=context)
         return user_id
