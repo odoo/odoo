@@ -28,6 +28,8 @@ from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 
 class account_analytic_account(osv.osv):
+    _order = "parent_left"
+    _parent_order = "name"
     _name = 'account.analytic.account'
     _inherit = ['mail.thread']
     _description = 'Analytic Account'
@@ -184,6 +186,7 @@ class account_analytic_account(osv.osv):
         'parent_id': fields.many2one('account.analytic.account', 'Parent Analytic Account', select=2),
         'child_ids': fields.one2many('account.analytic.account', 'parent_id', 'Child Accounts'),
         'child_complete_ids': fields.function(_child_compute, relation='account.analytic.account', string="Account Hierarchy", type='many2many'),
+        'parent_left': fields.integer('Parent Left', select=1),
         'line_ids': fields.one2many('account.analytic.line', 'account_id', 'Analytic Entries'),
         'balance': fields.function(_debit_credit_bal_qtty, type='float', string='Balance', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
         'debit': fields.function(_debit_credit_bal_qtty, type='float', string='Debit', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
@@ -253,7 +256,6 @@ class account_analytic_account(osv.osv):
     def check_recursion(self, cr, uid, ids, context=None, parent=None):
         return super(account_analytic_account, self)._check_recursion(cr, uid, ids, context=context, parent=parent)
 
-    _order = 'name asc'
     _constraints = [
         (check_recursion, 'Error! You cannot create recursive analytic accounts.', ['parent_id']),
     ]
