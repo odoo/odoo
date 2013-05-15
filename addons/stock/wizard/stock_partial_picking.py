@@ -127,19 +127,21 @@ class stock_partial_picking(osv.osv_memory):
     def _product_cost_for_average_update(self, cr, uid, move):
         """Returns product cost and currency ID for the given move, suited for re-computing
            the average product cost.
-
+ 
            :return: map of the form::
-
+ 
                 {'cost': 123.34,
                  'currency': 42}
         """
         # Currently, the cost on the product form is supposed to be expressed in the currency
         # of the company owning the product. If not set, we fall back to the picking's company,
         # which should work in simple cases.
-        product_currency_id = move.product_id.company_id.currency_id and move.product_id.company_id.currency_id.id
-        picking_currency_id = move.picking_id.company_id.currency_id and move.picking_id.company_id.currency_id.id
-        return {'cost': move.product_id.standard_price,
-                'currency': product_currency_id or picking_currency_id or False}
+        
+        # need to take the standard_price from the correct company
+        move2 = self.pool.get("stock.move").browse(cr, uid, move.id, context={'force_company': move.company_id.id}) 
+        
+        return {'cost': move2.product_id.standard_price, 
+                'currency':  False}
 
     def _partial_move_for(self, cr, uid, move):
         partial_move = {
@@ -169,7 +171,7 @@ class stock_partial_picking(osv.osv_memory):
             line_uom = wizard_line.product_uom
             move_id = wizard_line.move_id.id
 
-            #Quantiny must be Positive
+            #Quantity must be Positive
             if wizard_line.quantity < 0:
                 raise osv.except_osv(_('Warning!'), _('Please provide proper Quantity.'))
 
@@ -190,6 +192,7 @@ class stock_partial_picking(osv.osv_memory):
                 without_rounding_qty = (wizard_line.quantity / line_uom.factor) * initial_uom.factor
                 if float_compare(qty_in_initial_uom, without_rounding_qty, precision_rounding=initial_uom.rounding) != 0:
                     raise osv.except_osv(_('Warning!'), _('The rounding of the initial uom does not allow you to ship "%s %s", as it would let a quantity of "%s %s" to ship and only roundings of "%s %s" is accepted by the uom.') % (wizard_line.quantity, line_uom.name, wizard_line.move_id.product_qty - without_rounding_qty, initial_uom.name, initial_uom.rounding, initial_uom.name))
+                stock_move.write(cr, uid, [move_id], {'price_unit': wizard_line.cost, 'price_currency_id': False})
             else:
                 seq_obj_name =  'stock.picking.' + picking_type
                 move_id = stock_move.create(cr,uid,{'name' : self.pool.get('ir.sequence').get(cr, uid, seq_obj_name),
@@ -200,6 +203,7 @@ class stock_partial_picking(osv.osv_memory):
                                                     'location_id' : wizard_line.location_id.id,
                                                     'location_dest_id' : wizard_line.location_dest_id.id,
                                                     'picking_id': partial.picking_id.id,
+                                                    'price_unit': wizard_line.cost,
                                                     },context=context)
                 stock_move.action_confirm(cr, uid, [move_id], context)
             partial_data['move%s' % (move_id)] = {
@@ -211,14 +215,7 @@ class stock_partial_picking(osv.osv_memory):
             if (picking_type == 'in') and (wizard_line.product_id.cost_method != 'standard'):
                 #TODO Maybe better ways to get company or main currency
                 #TODO Should not this currency be calculated at the date of the purchase order?  (not the case now?)
-                if wizard_line.location_id.company_id:
-                    company = wizard_line.location_id.company_id
-                else:
-                    company = wizard_line.location_dest_id.company_id
-                currency_obj = self.pool.get("res.currency")
-                new_price = currency_obj.compute(cr, uid, wizard_line.currency.id, company.currency_id.id, 
-                                                     wizard_line.cost, round=False)
-                partial_data['move%s' % (wizard_line.move_id.id)].update(product_price=new_price,)
+                partial_data['move%s' % (wizard_line.move_id.id)].update(product_price=wizard_line.cost,)
         stock_picking.do_partial(cr, uid, [partial.picking_id.id], partial_data, context=context)
         return {'type': 'ir.actions.act_window_close'}
 

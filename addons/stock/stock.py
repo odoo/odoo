@@ -675,6 +675,7 @@ class stock_picking(osv.osv):
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
     ]
 
+    
     def action_process(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -1225,10 +1226,8 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids, context=context):
             new_picking = None
             complete, too_many, too_few = [], [], []
-            move_product_qty, prodlot_ids, product_avail, partial_qty, product_uoms = {}, {}, {}, {}, {}
-            
-            move_ids = [x.id for x in pick.move_lines]
-            #move_obj.price_computation(cr, uid, move_ids, partial_datas, context=context)
+            move_product_qty, prodlot_ids, partial_qty, product_uoms = {}, {}, {}, {}
+
             
             for move in pick.move_lines:
                 if move.state in ('done', 'cancel'):
@@ -1238,7 +1237,6 @@ class stock_picking(osv.osv):
                 move_product_qty[move.id] = product_qty
                 product_uom = partial_data.get('product_uom',False)
                 product_price = partial_data.get('product_price',0.0)
-                product_currency = partial_data.get('product_currency',False)
                 prodlot_id = partial_data.get('prodlot_id')
                 prodlot_ids[move.id] = prodlot_id
                 product_uoms[move.id] = product_uom
@@ -1272,7 +1270,7 @@ class stock_picking(osv.osv):
                             'picking_id' : new_picking,
                             'state': 'assigned',
                             'move_dest_id': False,
-                            'price_unit': move.price_unit,
+                            'price_unit': product_price,
                             'product_uom': product_uoms[move.id]
                     }
                     prodlot_id = prodlot_ids[move.id]
@@ -2687,7 +2685,7 @@ class stock_move(osv.osv):
                 
                 fifo = (cost_method != 'lifo')
                 tuples = product_obj.get_stock_matchings_fifolifo(cr, uid, [product.id], product_qty, fifo, 
-                                                                  product_uom, move.company_id.currency_id.id, context=ctx)
+                                                                  product_uom, move.company_id.currency_id.id, context=ctx) #TODO Would be better to use price_currency_id for migration?
                 price_amount = 0.0
                 amount = 0.0
                 #Write stock matchings
@@ -2740,89 +2738,6 @@ class stock_move(osv.osv):
                     product_obj.write(cr, uid, [product.id], {'standard_price': new_std_price}, context=ctx)
                 product_avail[product.id] -= product_uom_qty
 
-    def price_computation(self, cr, uid, ids, partial_datas, context=None):
-        '''
-         This method will update the price of the products according to the stock moves
-         If multiple stock moves have the same product, it will take into account
-         the fact that the other was already processed with the product_avail list
-        '''
-        product_obj = self.pool.get('product.product')
-        currency_obj = self.pool.get('res.currency')
-        uom_obj = self.pool.get('product.uom')
-        
-        product_avail = {}
-        for move in self.browse(cr, uid, ids, context=context):
-            partial_data = partial_datas.get('move%s'%(move.id), {})
-            product_qty = partial_data.get('product_qty',0.0)
-            product_uom = partial_data.get('product_uom',False)
-            product_price = partial_data.get('product_price',0.0)
-            product_currency = partial_data.get('product_currency',False)
-            product = product_obj.browse(cr, uid, move.product_id.id, context=context)
-
-            #Check we are using the right company
-            company_id = move.company_id.id
-            ctx = context.copy()
-            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-            if company_id != user.company_id.id:
-                ctx['force_company'] = move.company_id.id
-                product = product_obj.browse(cr, uid, move.product_id.id, context=ctx)
-            cost_method = product.cost_method
-            #Check if cost_method used needs update
-            avg_in_update = (move.picking_id.type == 'in') and (cost_method == 'average')
-            avg_out_update = (move.picking_id.type == 'out') and (cost_method == 'average') and (move.move_returned_from)
-            if avg_in_update or avg_out_update:
-                
-                # If no price from picking, use cost price from product
-                if product_price == 0.0:
-                    product_price = product.price_get('standard_price', context=ctx)[product.id]
-                
-                move_currency_id = move.company_id.currency_id.id
-                ctx['currency_id'] = move_currency_id
-                qty = uom_obj._compute_qty(cr, uid, product_uom, product_qty, product.uom_id.id)
-
-                if not product.id in product_avail:
-                    product_avail[product.id] = product.qty_available
-
-                if qty > 0:
-                    if avg_in_update:
-                        new_price = currency_obj.compute(cr, uid, product_currency,
-                            move_currency_id, product_price)
-                        new_price = uom_obj._compute_price(cr, uid, product_uom, new_price,
-                            product.uom_id.id)
-                        if product.qty_available <= 0:
-                            new_std_price = new_price
-                        else:
-                            amount_unit = product.price_get('standard_price', context=ctx)[product.id]
-                            new_std_price = ((amount_unit * product_avail[product.id])\
-                                + (new_price * qty))/(product_avail[product.id] + qty)
-                    elif avg_out_update:
-                        move_orig = move.move_returned_from
-                        new_price = currency_obj.compute(cr, uid, product_currency,
-                            move_currency_id, move_orig.price_unit)
-                        new_price = uom_obj._compute_price(cr, uid, product_uom, new_price,
-                            product.uom_id.id)
-                        if (product_avail[product.id]- qty) > 0:
-                            amount_unit = product.price_get('standard_price', context=ctx)[product.id]
-                            new_std_price = ((amount_unit * product_avail[product.id])\
-                                             - (new_price * qty))/(product_avail[product.id] - qty)
-                    
-                    #Adjust product available with the right amount
-
-                    if avg_out_update:
-                        product_avail[product.id] -= qty
-                    else:
-                        product_avail[product.id] += qty
-                    
-                    # Write the field according to price type field, company dependence in ctx
-                    product_obj.write(cr, uid, [product.id], {'standard_price': new_std_price}, context=ctx)
-
-                    # Record the values that were chosen in the wizard, so they can be
-                    # used for inventory valuation if real-time valuation is enabled.
-                    self.write(cr, uid, [move.id],
-                            {'price_unit': product_price,
-                             'price_currency_id': product_currency})
-            return True
-
 
     # FIXME: needs refactoring, this code is partially duplicated in stock_picking.do_partial()!
     def do_partial(self, cr, uid, ids, partial_datas, context=None):
@@ -2841,11 +2756,8 @@ class stock_move(osv.osv):
             context = {}
 
         complete, too_many, too_few = [], [], []
-        move_product_qty, prodlot_ids, product_avail, partial_qty, product_uoms = {}, {}, {}, {}, {}
+        move_product_qty, prodlot_ids, partial_qty, product_uoms = {}, {}, {}, {}
         
-        #Let us do the price calculation
-        move_ids = [x.id for x in self.browse(cr, uid, ids, context=context)]
-        #self.price_computation(cr, uid, move_ids, partial_datas, context=context)
 
         for move in self.browse(cr, uid, ids, context=context):
             if move.state in ('done', 'cancel'):
@@ -2876,7 +2788,7 @@ class stock_move(osv.osv):
                             'picking_id' : move.picking_id.id,
                             'state': 'assigned',
                             'move_dest_id': False,
-                            'price_unit': move.price_unit,
+                            'price_unit': product_price,
                             }
                 prodlot_id = prodlot_ids[move.id]
                 if prodlot_id:

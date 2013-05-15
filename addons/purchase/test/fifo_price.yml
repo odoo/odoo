@@ -172,7 +172,7 @@
     version_id:
       - name: v1.0
         items_id:
-            - name: 20% Discount given by my supplier
+            - name: First version
               sequence: 1
               price_min_margin: 2
               price_max_margin: 5
@@ -186,16 +186,17 @@
   !record {model: purchase.order, id: purchase_order_fifo_usd}:
     partner_id: base.res_partner_3
     location_id: stock.stock_location_stock
+    pricelist_id: supplier_pricelist_usd
     order_line:
       - product_id: product_fifo_icecream
         product_qty: 30.0
         product_uom: product.product_uom_kgm
-        price_unit: 116.88
+        price_unit: 150.0
         name: 'FIFO Ice Cream'
       - product_id: product_fifo_icecream
         product_qty: 10.0
         product_uom: product.product_uom_kgm
-        price_unit: 116.877045348
+        price_unit: 150.0
 - 
   I confirm the purchase order in USD
 -
