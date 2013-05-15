@@ -1,6 +1,7 @@
 code,id,name,parent_id:id
 ,vat_code_chart_root,Tassazione,
 IVC,template_ivacode_pagata,IVA a credito,vat_code_chart_root
+IVCN,template_ivacode_pagata_ind,IVA a credito indetraibile,vat_code_chart_root
 IVC0,template_ivacode_pagata_0,Fuori Campo IVA (credito),template_ivacode_pagata
 IVCI,template_impcode_pagata,IVA a credito (imponibile),vat_code_chart_root
 IVC0I,template_impcode_pagata_0,Fuori Campo IVA (credito) (imponibile),template_impcode_pagata
@@ -8,23 +9,29 @@ IVCart15,template_ivacode_pagata_art15,Escluso Art.15 (credito),template_ivacode
 IVCart15I,template_impcode_pagata_art15,Escluso Art.15. (credito) (imponibile),template_impcode_pagata
 IVC10,template_ivacode_pagata_10,IVA a credito 10%,template_ivacode_pagata
 IVC10I,template_impcode_pagata_10,IVA a credito 10% (imponibile),template_impcode_pagata
-IVC10ind,template_ivacode_pagata_10ind,IVA a credito 10% indetraibile,template_ivacode_pagata
+IVC10ind,template_ivacode_pagata_10ind,IVA a credito 10% indetraibile,template_ivacode_pagata_ind
 IVC10Iind,template_impcode_pagata_10ind,IVA a credito 10% indetraibile (imponibile),template_impcode_pagata
-IVC20ind,template_ivacode_pagata_20ind,IVA a credito 20% indetraibile,template_ivacode_pagata
+IVC20ind,template_ivacode_pagata_20ind,IVA a credito 20% indetraibile,template_ivacode_pagata_ind
 IVC20Iind,template_impcode_pagata_20ind,IVA a credito 20% indetraibile (imponibile),template_impcode_pagata
-IVC4ind,template_ivacode_pagata_4ind,IVA a credito 4% indetraibile,template_ivacode_pagata
+IVC4ind,template_ivacode_pagata_4ind,IVA a credito 4% indetraibile,template_ivacode_pagata_ind
 IVC4Iind,template_impcode_pagata_4ind,IVA a credito 4% indetraibile (imponibile),template_impcode_pagata
 IVC20det10,template_ivacode_pagata_20det10,IVA a credito 20% detraibile 10%,template_ivacode_pagata
+IVC20Ndet10,template_ivacode_pagata_20det10ind,IVA a credito 20% detraibile 10% (indetraibile),template_ivacode_pagata_ind
 IVC20Idet10,template_impcode_pagata_20det10,IVA a credito 20% detraibile 10% (imponibile),template_impcode_pagata
 IVC20det15,template_ivacode_pagata_20det15,IVA a credito 20% detraibile 15%,template_ivacode_pagata
+IVC20Ndet15,template_ivacode_pagata_20det15ind,IVA a credito 20% detraibile 15% (indetraibile),template_ivacode_pagata_ind
 IVC20Idet15,template_impcode_pagata_20det15,IVA a credito 20% detraibile 15% (imponibile),template_impcode_pagata
 IVC20det40,template_ivacode_pagata_20det40,IVA a credito 20% detraibile 40%,template_ivacode_pagata
+IVC20Ndet40,template_ivacode_pagata_20det40ind,IVA a credito 20% detraibile 40% (indetraibile),template_ivacode_pagata_ind
 IVC20Idet40,template_impcode_pagata_20det40,IVA a credito 20% detraibile 40% (imponibile),template_impcode_pagata
 IVC20det50,template_ivacode_pagata_20det50,IVA a credito 20% detraibile 50%,template_ivacode_pagata
+IVC20Ndet50,template_ivacode_pagata_20det50ind,IVA a credito 20% detraibile 50% (indetraibile),template_ivacode_pagata_ind
 IVC20Idet50,template_impcode_pagata_20det50,IVA a credito 20% detraibile 50% (imponibile),template_impcode_pagata
 IVC10det50,template_ivacode_pagata_10det50,IVA a credito 10% detraibile 50%,template_ivacode_pagata
+IVC10Ndet50,template_ivacode_pagata_10det50ind,IVA a credito 10% detraibile 50% (indetraibile),template_ivacode_pagata_ind
 IVC10Idet50,template_impcode_pagata_10det50,IVA a credito 10% detraibile 50% (imponibile),template_impcode_pagata
 IVC4det50,template_ivacode_pagata_4det50,IVA a credito 4% detraibile 50%,template_ivacode_pagata
+IVC4Ndet50,template_ivacode_pagata_4det50ind,IVA a credito 4% detraibile 50% (indetraibile),template_ivacode_pagata_ind
 IVC4Idet50,template_impcode_pagata_4det50,IVA a credito 4% detraibile 50% (imponibile),template_impcode_pagata
 IVC20,template_ivacode_pagata_20,IVA a credito 20%,template_ivacode_pagata
 IVC20I,template_impcode_pagata_20,IVA a credito 20% (imponibile),template_impcode_pagata
@@ -54,13 +61,17 @@ IVD12,template_ivacode_riscossa_12,IVA  a debito 12%,template_ivacode_riscossa
 IVD12I,template_impcode_riscossa_12,IVA  a debito 12% (imponibile),template_impcode_riscossa
 IVD2,template_ivacode_riscossa_2,IVA  a debito 2%,template_ivacode_riscossa
 IVD2I,template_impcode_riscossa_2,IVA  a debito 2% (imponibile),template_impcode_riscossa
-IVC21ind,template_ivacode_pagata_21ind,IVA a credito 21% indetraibile,template_ivacode_pagata
+IVC21ind,template_ivacode_pagata_21ind,IVA a credito 21% indetraibile,template_ivacode_pagata_ind
 IVC21Iind,template_impcode_pagata_21ind,IVA a credito 21% indetraibile (imponibile),template_impcode_pagata
 IVC21det10,template_ivacode_pagata_21det10,IVA a credito 21% detraibile 10%,template_ivacode_pagata
+IVC21Ndet10,template_ivacode_pagata_21det10ind,IVA a credito 21% detraibile 10% (indetraibile),template_ivacode_pagata_ind
 IVC21Idet10,template_impcode_pagata_21det10,IVA a credito 21% detraibile 10% (imponibile),template_impcode_pagata
 IVC21det15,template_ivacode_pagata_21det15,IVA a credito 21% detraibile 15%,template_ivacode_pagata
+IVC21Ndet15,template_ivacode_pagata_21det15ind,IVA a credito 21% detraibile 15% (indetraibile),template_ivacode_pagata_ind
 IVC21Idet15,template_impcode_pagata_21det15,IVA a credito 21% detraibile 15% (imponibile),template_impcode_pagata
 IVC21det40,template_ivacode_pagata_21det40,IVA a credito 21% detraibile 40%,template_ivacode_pagata
+IVC21Ndet40,template_ivacode_pagata_21det40ind,IVA a credito 21% detraibile 40% (indetraibile),template_ivacode_pagata_ind
 IVC21Idet40,template_impcode_pagata_21det40,IVA a credito 21% detraibile 40% (imponibile),template_impcode_pagata
 IVC21det50,template_ivacode_pagata_21det50,IVA a credito 21% detraibile 50%,template_ivacode_pagata
+IVC21Ndet50,template_ivacode_pagata_21det50ind,IVA a credito 21% detraibile 50% (indetraibile),template_ivacode_pagata_ind
 IVC21Idet50,template_impcode_pagata_21det50,IVA a credito 21% detraibile 50% (imponibile),template_impcode_pagata
