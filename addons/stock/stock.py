@@ -2718,11 +2718,13 @@ class stock_move(osv.osv):
                     new_price = uom_obj._compute_price(cr, uid, product.uom_id.id, product.standard_price, product_uom)
                     self.write(cr, uid, move.id, {'price_unit': new_price}, context=ctx)
                 elif product.cost_method == 'average':
-                    if product_avail[product.id] >= 0.0:
+                    if product_avail[product.id] >= 0.0: #Could put > instead
                         amount_unit = product.standard_price
                         move_product_price = uom_obj._compute_price(cr, uid, product_uom, move.price_unit, product.uom_id.id)
                         new_std_price = ((amount_unit * product_avail[product.id])\
                                 + (move_product_price * product_uom_qty))/(product_avail[product.id] + product_uom_qty)
+                    else:
+                        new_std_price = move.price_unit
                     product_obj.write(cr, uid, [product.id], {'standard_price': new_std_price}, context=ctx)
                 product_avail[product.id] += product.qty_available
                 

@@ -64,7 +64,7 @@
   Check the standard price of the product (average icecream). 
 - 
   !python {model: product.product}: |
-    product = self.browse(cr, uid, ref("product_average_icecream")
+    product = self.browse(cr, uid, ref("product_average_icecream"))
     assert product.qty_available == 10.0, 'Wrong quantity in stock after first reception'
     assert product.standard_price == 60.0, 'Standard price should be the price of the first reception!'
 - 
@@ -78,8 +78,7 @@
   Check the standard price  TODO the error message if the assert fails is wrong
 - 
   !python {model: product.product}: |
-    assert self.browse(cr, uid, ref("product_average_icecream")).standard_price == 75.0, 
-    'After second reception, the standard price should be the weighted average of the 2 receptions'
+    assert self.browse(cr, uid, ref("product_average_icecream")).standard_price == 75.0, 'After second reception, the standard price should be the weighted average of the 2 receptions'
 - 
   Create picking to send some goods
 - 

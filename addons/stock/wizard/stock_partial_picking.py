@@ -218,7 +218,7 @@ class stock_partial_picking(osv.osv_memory):
                 currency_obj = self.pool.get("res.currency")
                 new_price = currency_obj.compute(cr, uid, wizard_line.currency.id, company.currency_id.id, 
                                                      wizard_line.cost, round=False)
-                partial_data['move%s' % (wizard_line.move_id.id)].update(product_price=wizard_line.cost,)
+                partial_data['move%s' % (wizard_line.move_id.id)].update(product_price=new_price,)
         stock_picking.do_partial(cr, uid, [partial.picking_id.id], partial_data, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
