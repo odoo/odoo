@@ -160,9 +160,9 @@
                                 </group>
                                 <group string="Email Interface" attrs="{'invisible': [('alias_domain', '=', False)]}">
                                     <div>
-                                        <field name="alias_id" invisible="1" required="0"/>
+                                        <field name="alias_id" invisible="1" />
                                         <label for="alias_name" class="oe_edit_only "/>
-                                        <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" class="oe_inline"/>
+                                        <field name="alias_name" class="oe_inline" />@<field name="alias_domain" class="oe_inline"/>
                                     </div>
                                 </group>
                             </group>
