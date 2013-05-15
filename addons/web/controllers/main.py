@@ -281,8 +281,9 @@ def concat_files(file_list, reader=None, intersperse=""):
 
     if reader is None:
         def reader(f):
-            with open(f, 'rb') as fp:
-                return fp.read()
+            import codecs
+            with codecs.open(f, 'rb', "utf-8-sig") as fp:
+                return fp.read().encode("utf-8")
 
     files_content = []
     for fname in file_list:
