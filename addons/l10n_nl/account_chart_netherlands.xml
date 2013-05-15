@@ -4402,6 +4402,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
         </record>
         <record id="btw_I_21" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="sequence">20</field>
             <field name="name">Inkopen import binnen EU hoog</field>
             <field name="description">21% BTW import binnen EU</field>
             <field eval="0.21" name="amount"/>
