@@ -346,6 +346,7 @@
                     <field name="color"/>
                     <field name="priority_count"/>
                     <field name="manager_id"/>
+                    <field name="survey_id"/>
                     <field name="message_summary"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -370,7 +371,12 @@
                                        <span t-if="widget.values.priority_count.value.total_application lt 2"><t t-esc="Math.round(widget.values.priority_count.value.total_application)"/> Application</span>
                                     </div>
                                   </a>
-                                  <div class="oe_kanban_footer_left oe_job_message"><t t-raw="record.message_summary.raw_value"/></div>
+                                  <!-- <div class="oe_kanban_footer_left oe_job_message"><t t-raw="record.message_summary.raw_value"/></div> -->
+                                    <div class="oe_kanban_footer_right">
+                                        <a t-if="widget.values.survey_id.value" data-name="action_print_survey" data-type="object" class=" oe_kanban_action oe_kanban_action_a">Print Interview</a>
+                                        <a t-if="(widget.values.no_of_recruitment.value lt 1) and (widget.values.survey_id.value)"> | </a>
+                                        <a  t-if="widget.values.no_of_recruitment.value lt 1" data-name="job_recruitement" data-type="object" class=" oe_kanban_action oe_kanban_action_a">Launch Recruitment</a>
+                                    </div>
                                 </div>
                             </div>
                         </t>
