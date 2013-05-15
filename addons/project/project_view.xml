@@ -158,13 +158,6 @@
                                     <field name="currency_id" groups="base.group_multi_currency" required="1"/>
                                     <field name="parent_id" string="Parent" help="Append this project to another one using analytic accounts hierarchy" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}" />
                                 </group>
-                                <group string="Email Interface" attrs="{'invisible': [('alias_domain', '=', False)]}">
-                                    <div>
-                                        <field name="alias_id" invisible="1" />
-                                        <label for="alias_name" class="oe_edit_only "/>
-                                        <field name="alias_name" class="oe_inline" />@<field name="alias_domain" class="oe_inline"/>
-                                    </div>
-                                </group>
                             </group>
                         </page>
                         <page string="Project Stages" attrs="{'invisible': [('use_tasks', '=', False)]}" name="project_stages">
