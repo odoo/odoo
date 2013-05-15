@@ -10,10 +10,10 @@
     - state == 'open'
     - no_of_recruitment == 0
 -
-  Now, Recruitement is started so I start recruitement of Job Postion of "Developer" Profile.
+  Now, Recruitment is started so I start recruitment of Job Postion of "Developer" Profile.
 -    
   !python {model: hr.job}: |
-    self.job_recruitement(cr, uid, [ref('job_developer')])
+    self.job_recruitment(cr, uid, [ref('job_developer')])
 -
   I check 'state' and number of 'Expected in Recruitment' after initiating the recruitment
 -
