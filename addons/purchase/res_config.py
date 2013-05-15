@@ -67,11 +67,9 @@ Example: Product: this product is deprecated, do not purchase more than 5.
 
     def onchange_purchase_analytic_plans(self, cr, uid, ids, module_purchase_analytic_plans, context=None):
         """ change group_analytic_account_for_purchases following module_purchase_analytic_plans """
-
         if not module_purchase_analytic_plans:
             return {}
         return {'value': {'group_analytic_account_for_purchases': module_purchase_analytic_plans}}
-
 
 
 
