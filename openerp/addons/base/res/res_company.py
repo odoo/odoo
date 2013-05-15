@@ -176,14 +176,13 @@ class res_company(osv.osv):
         return {'value': {'rml_footer': res, 'rml_footer_readonly': res}}
     def onchange_state(self, cr, uid, ids, state_id, context=None):
         if state_id:
-            country_id = self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id
-            return {'value':{'country_id':country_id}}
+            return {'value':{'country_id': self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id }}
         return {}
     def on_change_country(self, cr, uid, ids, country_id, context=None):
         currency_id = self._get_euro(cr, uid, context=context)
         if country_id:
             currency_id = self.pool.get('res.country').browse(cr, uid, country_id, context=context).currency_id.id
-        return {'value': {'currency_id': currency_id}}
+        return {'value': {'currency_id': currency_id, 'state_id': False},'domain':{'state_id': [('country_id','=',country_id)]}}
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False, access_rights_uid=None):
