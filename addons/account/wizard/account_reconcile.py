@@ -148,7 +148,6 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
             context['analytic_id'] = data['analytic_id'][0]
         if context['date_p']:
             date = context['date_p']
-
         ids = period_obj.find(cr, uid, dt=date, context=context)
         if ids:
             period_id = ids[0]
