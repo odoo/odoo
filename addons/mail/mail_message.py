@@ -233,6 +233,8 @@ class mail_message(osv.Model):
             :param bool read: set notification as (un)read
             :param bool create_missing: create notifications for missing entries
                 (i.e. when acting on displayed messages not notified)
+
+            :return number of message mark as read
         """
         notification_obj = self.pool.get('mail.notification')
         user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
@@ -243,14 +245,16 @@ class mail_message(osv.Model):
 
         # all message have notifications: already set them as (un)read
         if len(notif_ids) == len(msg_ids) or not create_missing:
-            return notification_obj.write(cr, uid, notif_ids, {'read': read}, context=context)
+            notification_obj.write(cr, uid, notif_ids, {'read': read}, context=context)
+            return len(notif_ids)
 
         # some messages do not have notifications: find which one, create notification, update read status
         notified_msg_ids = [notification.message_id.id for notification in notification_obj.browse(cr, uid, notif_ids, context=context)]
         to_create_msg_ids = list(set(msg_ids) - set(notified_msg_ids))
         for msg_id in to_create_msg_ids:
             notification_obj.create(cr, uid, {'partner_id': user_pid, 'read': read, 'message_id': msg_id}, context=context)
-        return notification_obj.write(cr, uid, notif_ids, {'read': read}, context=context)
+        notification_obj.write(cr, uid, notif_ids, {'read': read}, context=context)
+        return len(notif_ids)
 
     def set_message_starred(self, cr, uid, msg_ids, starred, create_missing=True, context=None):
         """ Set messages as (un)starred. Technically, the notifications related
@@ -366,6 +370,7 @@ class mail_message(osv.Model):
 
         return {'id': message.id,
                 'type': message.type,
+                'subtype': message.subtype_id.name if message.subtype_id else False,
                 'body': body_html,
                 'model': message.model,
                 'res_id': message.res_id,
@@ -767,7 +772,7 @@ class mail_message(osv.Model):
         attachments_to_delete = []
         for message in self.browse(cr, uid, ids, context=context):
             for attach in message.attachment_ids:
-                if attach.res_model == self._name and attach.res_id == message.id:
+                if attach.res_model == self._name and (attach.res_id == message.id or attach.res_id == 0):
                     attachments_to_delete.append(attach.id)
         if attachments_to_delete:
             self.pool.get('ir.attachment').unlink(cr, uid, attachments_to_delete, context=context)

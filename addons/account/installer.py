@@ -23,10 +23,16 @@ import datetime
 from dateutil.relativedelta import relativedelta
 import logging
 from operator import itemgetter
-from os.path import join as opj
 import time
+import urllib2
+import urlparse
 
-from openerp import netsvc, tools
+try:
+    import simplejson as json
+except ImportError:
+    import json     # noqa
+
+from openerp.release import serie
 from openerp.tools.translate import _
 from openerp.osv import fields, osv
 
@@ -38,13 +44,28 @@ class account_installer(osv.osv_memory):
 
     def _get_charts(self, cr, uid, context=None):
         modules = self.pool.get('ir.module.module')
+
+        # try get the list on apps server
+        try:
+            apps_server = self.pool.get('ir.config_parameter').get_param(cr, uid, 'apps.server', 'https://apps.openerp.com')
+
+            up = urlparse.urlparse(apps_server)
+            url = '{0.scheme}://{0.netloc}/apps/charts?serie={1}'.format(up, serie)
+
+            j = urllib2.urlopen(url, timeout=3).read()
+            apps_charts = json.loads(j)
+
+            charts = dict(apps_charts)
+        except Exception:
+            charts = dict()
+
         # Looking for the module with the 'Account Charts' category
         category_name, category_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'module_category_localization_account_charts')
         ids = modules.search(cr, uid, [('category_id', '=', category_id)], context=context)
-        charts = list(
-            sorted(((m.name, m.shortdesc)
-                    for m in modules.browse(cr, uid, ids, context=context)),
-                   key=itemgetter(1)))
+        if ids:
+            charts.update((m.name, m.shortdesc) for m in modules.browse(cr, uid, ids, context=context))
+
+        charts = sorted(charts.items(), key=itemgetter(1))
         charts.insert(0, ('configurable', _('Custom')))
         return charts
 
@@ -117,7 +138,7 @@ class account_installer(osv.osv_memory):
 
     def execute(self, cr, uid, ids, context=None):
         self.execute_simple(cr, uid, ids, context)
-        super(account_installer, self).execute(cr, uid, ids, context=context)
+        return super(account_installer, self).execute(cr, uid, ids, context=context)
 
     def execute_simple(self, cr, uid, ids, context=None):
         if context is None:
@@ -150,7 +171,7 @@ class account_installer(osv.osv_memory):
         chart = self.read(cr, uid, ids, ['charts'],
                           context=context)[0]['charts']
         _logger.debug('Installing chart of accounts %s', chart)
-        return modules | set([chart])
+        return (modules | set([chart])) - set(['has_default_company', 'configurable'])
 
 account_installer()
 

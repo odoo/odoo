@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2013-04-04 18:17+0000\n"
+"Last-Translator: Samuli Kivistö <samuli.kivisto@harppaus.fi>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:58+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-04-05 06:23+0000\n"
+"X-Generator: Launchpad (build 16550)\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
 msgid "Analytic Accounting for Purchases"
-msgstr ""
+msgstr "Ostojen analysointi"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_config_settings
@@ -49,7 +49,7 @@ msgstr "Oletushinnasto ostoille"
 #. module: purchase
 #: report:purchase.order:0
 msgid "Tel :"
-msgstr ""
+msgstr "Puh :"
 
 #. module: purchase
 #: help:purchase.order,pricelist_id:0
@@ -69,7 +69,7 @@ msgstr "Päivä"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Cancel Order"
-msgstr ""
+msgstr "Peruuta tilaus"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -79,7 +79,7 @@ msgstr "Päivän tilaus"
 #. module: purchase
 #: help:purchase.order,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Jos valittu, uudet viestit vaativat huomiosi."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_inventory
@@ -109,7 +109,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:1024
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "Konfiguraatio virhe!"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:587
@@ -134,7 +134,7 @@ msgstr "Oston standardihinta"
 #: code:addons/purchase/purchase.py:1011
 #, python-format
 msgid "No supplier defined for this product !"
-msgstr ""
+msgstr "Tuotteelle ei ole määritelty toimittajaa!"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_picking_tree4_picking_to_invoice
@@ -188,7 +188,7 @@ msgstr "Toimitusosoite:"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Confirm Order"
-msgstr ""
+msgstr "Vahvista tilaus"
 
 #. module: purchase
 #: field:purchase.config.settings,module_warning:0
@@ -205,7 +205,7 @@ msgstr "Tilauksen viite"
 #. module: purchase
 #: view:purchase.config.settings:0
 msgid "Invoicing Process"
-msgstr ""
+msgstr "Laskutusprosessi"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_approvingpurchaseorder0
@@ -231,12 +231,12 @@ msgstr ""
 #: code:addons/purchase/purchase.py:260
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
-msgstr ""
+msgstr "Poistaaksesi ostotilaus, se pitää ensin perua."
 
 #. module: purchase
 #: view:product.product:0
 msgid "When you sell this product, OpenERP will trigger"
-msgstr ""
+msgstr "Kun myyt tämän tuotteen, openERP muistuttaa"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -246,7 +246,7 @@ msgstr "Hyväksytyt ostotilaukset"
 #. module: purchase
 #: model:email.template,subject:purchase.email_template_edi_purchase
 msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
-msgstr ""
+msgstr "${object.company_id.name} Tilaus (Ref ${object.name or 'n/a' })"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -277,7 +277,7 @@ msgstr ""
 #: field:purchase.order.line,state:0
 #: view:purchase.report:0
 msgid "Status"
-msgstr ""
+msgstr "Tila"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -337,7 +337,7 @@ msgstr ""
 #. module: purchase
 #: view:product.product:0
 msgid "When you sell this service to a customer,"
-msgstr ""
+msgstr "Kun myyt tämän palvelun asiakkaalle,"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
@@ -355,7 +355,7 @@ msgstr "Tarjoukset"
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Do you want to generate the supplier invoices?"
-msgstr ""
+msgstr "Haluatko luoda toimittajan laskut?"
 
 #. module: purchase
 #: field:purchase.order.line,product_qty:0
@@ -372,7 +372,7 @@ msgstr "Talouskanta"
 #. module: purchase
 #: field:purchase.config.settings,default_invoice_method:0
 msgid "Default invoicing control method"
-msgstr ""
+msgstr "Oletusarvoinen laskutuksen ohjauskeino"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_picking_in
@@ -444,7 +444,7 @@ msgstr "Suunniteltu päivämäärä"
 #. module: purchase
 #: field:purchase.order,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Valuutta"
 
 #. module: purchase
 #: field:purchase.order,journal_id:0
@@ -471,17 +471,17 @@ msgstr "Ostotilaukset jotka sisältävät laskuttamattomia rivejä"
 #: view:product.product:0
 #: field:product.template,purchase_ok:0
 msgid "Can be Purchased"
-msgstr ""
+msgstr "Voidaan ostaa"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
 msgid "Incoming  Products"
-msgstr ""
+msgstr "Saapuvat tuotteet"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Request for Quotation "
-msgstr ""
+msgstr "Tarjouspyyntö "
 
 #. module: purchase
 #: help:purchase.order,partner_ref:0
@@ -496,7 +496,7 @@ msgstr ""
 #: view:purchase.order.group:0
 #: view:purchase.order.line_invoice:0
 msgid "or"
-msgstr ""
+msgstr "tai"
 
 #. module: purchase
 #: field:res.company,po_lead:0
@@ -517,12 +517,12 @@ msgstr ""
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
 msgid "RFQ Approved"
-msgstr ""
+msgstr "Tarjouspyyntö hyväksytty"
 
 #. module: purchase
 #: view:purchase.config.settings:0
 msgid "Apply"
-msgstr ""
+msgstr "Käytä"
 
 #. module: purchase
 #: field:purchase.order,amount_untaxed:0
@@ -541,17 +541,17 @@ msgstr ""
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
 msgid "RFQ Confirmed"
-msgstr ""
+msgstr "Tarjouspyyntö Vahvistettu"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Customer Address"
-msgstr ""
+msgstr "Asiakkaan Osoite"
 
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "RFQ Sent"
-msgstr ""
+msgstr "Tarjouspyyntö Lähetetty"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -603,12 +603,12 @@ msgstr "Ostotilaukset jotka ovat luonnostilassa"
 #. module: purchase
 #: view:product.product:0
 msgid "Suppliers"
-msgstr ""
+msgstr "Toimittajat"
 
 #. module: purchase
 #: view:product.product:0
 msgid "To Purchase"
-msgstr ""
+msgstr "Ostettava"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -630,7 +630,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Invoices and Receptions"
-msgstr ""
+msgstr "Laskut ja Varastokirjaukset"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_packinginvoice0
@@ -649,7 +649,7 @@ msgstr "Rivien lukumäärä"
 #: code:addons/purchase/wizard/purchase_line_invoice.py:106
 #, python-format
 msgid "Define expense account for this product: \"%s\" (id:%d)."
-msgstr ""
+msgstr "Määritä kulutili tälle Tuotteelle: \"%s\" (id:%d)."
 
 #. module: purchase
 #: view:purchase.order:0

@@ -62,6 +62,7 @@
                     <field name="user_id" string="Salesperson"/>
                     <field name="section_id" string="Sales Team" context="{'invisible_section': False}"/>   
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <group expand="0" string="Extended Filters..."  groups="base.group_no_one">
                         <field name="priority" string="Priority"/>
                         <field name="categ_id"/>

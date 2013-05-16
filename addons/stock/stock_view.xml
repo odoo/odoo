@@ -807,7 +807,7 @@
                     <filter icon="terp-check" name="available" string="Ready" domain="[('state','=','assigned')]" help="Assigned Internal Moves"/>
                     <filter icon="terp-camera_test" name="confirmed" string="Waiting" domain="[('state','=','confirmed')]" help="Confirmed Internal Moves"/>
                     <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Pickings already processed"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="product_id"/>
                     <field name="stock_journal_id"/>
                     <group expand="0" string="Group By...">
@@ -934,6 +934,7 @@
                     <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order"/>
                     <separator/>
                     <filter icon="terp-dolar" name="to_invoice" string="To Invoice" domain="[('invoice_state','=','2binvoiced')]" help="Delivery orders to invoice"/>
+                    <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="stock_journal_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <group expand="0" string="Group By...">
@@ -1059,6 +1060,7 @@
                     <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order"/>
                     <separator/>
                     <filter string="To Invoice" name="to_invoice" icon="terp-dolar" domain="[('invoice_state', '=', '2binvoiced')]"/>
+                    <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="stock_journal_id"/>
                     <field name="product_id"/>
                     <group expand="0" string="Group By...">
@@ -1250,8 +1252,8 @@
                             <field name="location_dest_id" groups="stock.group_locations"/>
                             <field name="partner_id" context="{'contact_display':'partner'}"
                                 groups="stock.group_locations"/>
-                            <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
-                            <field name="date" groups="base.group_no_one"/>
+                            <field name="date_expected" on_change="onchange_date(date,date_expected)" attrs="{'invisible': [('state', '=', 'done')]}"/>
+                            <field name="date" attrs="{'invisible': [('state', '!=', 'done')]}"/>
                         </group>
                         <group string="Traceability"
                             groups="stock.group_tracking_lot">
@@ -1370,7 +1372,7 @@
                     <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders processed Today or planned for Today"/>
                     <field name="product_id"/>
                     <field name="name" string="Location" filter_domain="['|',('location_id','ilike',self),('location_dest_id','ilike',self)]"/>
-                    <field name="partner_id" string="Partner"  filter_domain="[('picking_id.partner_id','ilike',self)]"/>
+                    <field name="partner_id" string="Partner"  filter_domain="[('picking_id.partner_id','child_of',self)]"/>
                     <field name="prodlot_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Product" name="by_product" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'product_id'}"/>

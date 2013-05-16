@@ -236,6 +236,11 @@ class res_partner(osv.osv):
         'last_reconciliation_date': fields.datetime('Latest Full Reconciliation Date', help='Date on which the partner accounting entries were fully reconciled last time. It differs from the last date where a reconciliation has been made for this partner, as here we depict the fact that nothing more was to be reconciled at this date. This can be achieved in 2 different ways: either the last unreconciled debit/credit entry of this partner was reconciled, either the user pressed the button "Nothing more to reconcile" during the manual reconciliation process.')
     }
 
+    def _commercial_fields(self, cr, uid, context=None):
+        return super(res_partner, self)._commercial_fields(cr, uid, context=context) + \
+            ['debit_limit', 'property_account_payable', 'property_account_receivable', 'property_account_position',
+             'property_payment_term', 'property_supplier_payment_term', 'last_reconciliation_date']
+
 res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

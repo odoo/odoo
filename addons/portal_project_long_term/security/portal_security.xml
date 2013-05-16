@@ -3,14 +3,17 @@
     <data>
 
         <record id="portal_project_long_term_rule" model="ir.rule">
-            <field name="name">Portal Personal Long term project</field>
-            <field ref="project_long_term.model_project_phase" name="model_id"/>
-            <field name="domain_force">['|',('project_id.message_follower_ids','in', [user.partner_id.id]),('task_ids.message_follower_ids','in', [user.partner_id.id])]</field>
+            <field name="name">Project/Phase: portal users: public or portal and following</field>
+            <field name="model_id" ref="project_long_term.model_project_phase"/>
+            <field name="domain_force">[('project_id.privacy_visibility', 'in', ['public', 'portal'])]</field>
             <field name="groups" eval="[(4, ref('portal.group_portal'))]"/>
-            <field eval="1" name="perm_unlink"/>
-            <field eval="1" name="perm_write"/>
-            <field eval="1" name="perm_read"/>
-            <field eval="0" name="perm_create"/>
+        </record>
+
+        <record model="ir.rule" id="project_phase_anonymous_rule">
+            <field name="name">Project/Phase: anonymous users: public only</field>
+            <field name="model_id" ref="project_long_term.model_project_phase"/>
+            <field name="domain_force">[('project_id.privacy_visibility', '=', 'public')]</field>
+            <field name="groups" eval="[(4, ref('portal.group_anonymous'))]"/>
         </record>
 
     </data>

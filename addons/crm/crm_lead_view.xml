@@ -152,7 +152,7 @@
                             -->
                         </group>
                         <group>
-                            <field name="user_id"/>
+                            <field name="user_id" on_change="on_change_user(user_id, context)"/>
                             <label for="section_id"/>
                             <div>
                                 <field name="section_id"/>
@@ -328,7 +328,7 @@
                     <field name="categ_ids" string="Category" filter_domain="[('categ_ids','ilike',self)]"/>
                     <field name="section_id" context="{'invisible_section': False, 'default_section_id': self}"/>
                     <field name="user_id"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="create_date"/>
                     <field name="country_id" context="{'invisible_country': False}"/>
                     <separator/>
@@ -427,7 +427,7 @@
                             </group>
 
                             <group>
-                                <field name="user_id"/>
+                                <field name="user_id" on_change="on_change_user(user_id, context)"/>
                                 <label for="section_id"/>
                                 <div>
                                     <field name="section_id" widget="selection"/>
@@ -546,7 +546,7 @@
                     <field name="categ_ids" string="Category" filter_domain="[('categ_ids','ilike', self)]"/>
                     <field name="section_id" context="{'invisible_section': False, 'default_section_id': self}"/>
                     <field name="user_id"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <separator/>
                     <filter string="New" name="new" domain="[('state','=','draft')]" help="New Opportunities"/>
                     <filter string="In Progress" name="open" domain="[('state','=','open')]" help="Open Opportunities"/>

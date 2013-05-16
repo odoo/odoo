@@ -41,7 +41,7 @@
         <field name="arch" type="xml">
             <tree string="Applicants" fonts="bold:message_unread==True" colors="grey:state in ('cancel','done');blue:state=='pending'">
                 <field name="message_unread" invisible="1"/>
-                <field name="create_date" groups="base.group_no_one"/>
+                <field name="create_date"/>
                 <field name="name" string="Subject"/>
                 <field name="partner_name"/>
                 <field name="email_from"/>
@@ -198,7 +198,7 @@
                     <filter string="Appreciation" domain="[]" context="{'group_by':'priority'}"/>
                     <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
                     <filter string="Source" domain="[]" context="{'group_by':'source_id'}"/>
-                    <filter string="Creation Date" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
+                    <filter string="Creation Date" domain="[]" context="{'group_by':'create_date'}"/>
                 </group>
            </search>
         </field>

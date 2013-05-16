@@ -370,18 +370,6 @@ class account_invoice(osv.osv):
         context['view_id'] = view_id
         return context
 
-    def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
-        try:
-            return super(account_invoice, self).create(cr, uid, vals, context)
-        except Exception, e:
-            if '"journal_id" viol' in e.args[0]:
-                raise orm.except_orm(_('Configuration Error!'),
-                     _('There is no Sale/Purchase Journal(s) defined.'))
-            else:
-                raise orm.except_orm(_('Unknown Error!'), str(e))
-
     def invoice_print(self, cr, uid, ids, context=None):
         '''
         This function prints the invoice and mark it as sent, so that we can see more easily the next step of the workflow
@@ -1272,9 +1260,7 @@ class account_invoice(osv.osv):
             ref = invoice.reference
         else:
             ref = self._convert_ref(cr, uid, invoice.number)
-        partner = invoice.partner_id
-        if partner.parent_id and not partner.is_company:
-            partner = partner.parent_id
+        partner = self.pool['res.partner']._find_accounting_partner(invoice.partner_id)
         # Pay attention to the sign for both debit/credit AND amount_currency
         l1 = {
             'debit': direction * pay_amount>0 and direction * pay_amount,
@@ -1745,15 +1731,17 @@ class res_partner(osv.osv):
         'invoice_ids': fields.one2many('account.invoice.line', 'partner_id', 'Invoices', readonly=True),
     }
 
-    def _find_accounting_partner(self, part):
+    def _find_accounting_partner(self, partner):
         '''
         Find the partner for which the accounting entries will be created
         '''
+        # FIXME: after 7.0, to replace by function field partner.commercial_partner_id
+
         #if the chosen partner is not a company and has a parent company, use the parent for the journal entries
         #because you want to invoice 'Agrolait, accounting department' but the journal items are for 'Agrolait'
-        if part.parent_id and not part.is_company:
-            part = part.parent_id
-        return part
+        while not partner.is_company and partner.parent_id:
+            partner = partner.parent_id
+        return partner
 
     def copy(self, cr, uid, id, default=None, context=None):
         default = default or {}

@@ -6,28 +6,110 @@ openerp.web_linkedin = function(instance) {
     var QWeb = instance.web.qweb;
     var _t = instance.web._t;
     
+    /*
+    * instance.web_linkedin.tester.test_authentication()
+    * Call check if the Linkedin session is open or open a connection popup
+    * return a deferrer :
+    *   - resolve if the authentication is true
+    *   - reject if the authentication is wrong or when the user logout
+    */
     instance.web_linkedin.LinkedinTester = instance.web.Class.extend({
         init: function() {
             this.linkedin_added = false;
             this.linkedin_def = $.Deferred();
             this.auth_def = $.Deferred();
         },
+        error_catcher: function (callback) {
+            var self = this;
+            if (!this.realError) {
+                this.realError = Error;
+                this.window_onerror = window.onerror;
+            }
+            if (!callback) {
+                Error = self.realError;
+                return false;
+            }
+            this.callback = callback;
+            window.onerror = function(message, fileName, lineNumber) {
+                if (!window.onerror.prototype.catched) {
+                    self.window_onerror(message, fileName, lineNumber);
+                }
+                if (self.realError != Error) {
+                    window.onerror.prototype.catched = false;
+                } else {
+                    window.onerror = self.window_onerror;
+                }
+            };
+            window.onerror.prototype.catched = false;
+            Error = function (message, fileName, lineNumber) {
+                this.name = message;
+                this.message = message;
+                this.fileName = fileName;
+                this.lineNumber = lineNumber;
+                this.caller = Error.caller.toString();
+                window.onerror.prototype.catched = self.callback.apply(self, [this]);
+                return this;
+            };
+            Error.prototype.toString = function () {return this.name;};
+        },
+        linkedin_disabled: function(error) {
+            this.linkedin_def.reject();
+            this.auth_def.reject();
+            IN = false;
+            instance.web.dialog($(QWeb.render("LinkedIn.DisabledWarning", {'error': error})), {
+                title: _t("LinkedIn is not enabled"),
+                buttons: [
+                    {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
+                ]
+            });
+        },
         test_linkedin: function() {
             var self = this;
             return this.test_api_key().then(function() {
-                if (self.linkedin_added)
-                    return self.linkedin_def.promise();
+                if (self.linkedin_added) {
+                    return self.linkedin_def;
+                }
+                self.$linkedin = $('<div class="oe_linkedin_login_hidden" style="display:none;"><script type="in/Login"></script></div>');
+
+                self.error_catcher(function (error) {
+                    if (!!error.caller.match(/API Key is invalid/)) {
+                        self.linkedin_disabled(error);
+                        self.$linkedin.remove();
+                        console.debug("LinkedIn JavaScript removed.");
+                        self.linkedin_added = false;
+                        self.error_catcher(false);
+                        return true;
+                    } else {
+                        return false;
+                    }
+                });
+                window.setTimeout(function () {self.error_catcher(false);}, 5000);
+
+                $("body").append(self.$linkedin);
                 var tag = document.createElement('script');
                 tag.type = 'text/javascript';
                 tag.src = "https://platform.linkedin.com/in.js";
-                tag.innerHTML = 'api_key : ' + self.api_key + '\nauthorize : true\nscope: r_network r_contactinfo';
+                tag.innerHTML = 'api_key : ' + self.api_key + '\nauthorize : true\nscope: r_network r_basicprofile'; // r_contactinfo r_fullprofile r_emailaddress';
+                
                 document.getElementsByTagName('head')[0].appendChild(tag);
                 self.linkedin_added = true;
-                $(tag).load(function() {
+                $(tag).load(function(event) {
+                    console.debug("LinkedIn JavaScript inserted.");
+                    IN.Event.on(IN, "frameworkLoaded", function() {
+                        self.error_catcher(false);
+                        console.debug("LinkedIn DOM node inserted and frameworkLoaded.");
+                    });
+                    IN.Event.on(IN, "systemReady", function() {
+                        self.linkedin_def.resolve();
+                        console.debug("LinkedIn systemReady.");
+                    });
                     IN.Event.on(IN, "auth", function() {
                         self.auth_def.resolve();
                     });
-                    self.linkedin_def.resolve();
+                    IN.Event.on(IN, "logout", function() {
+                        self.auth_def.reject();
+                        self.auth_def = $.Deferred();
+                    });
                 });
                 return self.linkedin_def.promise();
             });
@@ -47,6 +129,14 @@ openerp.web_linkedin = function(instance) {
             });
         },
         test_authentication: function() {
+            var self = this;
+           this.linkedin_def.done(function () {
+                if (IN.User.isAuthorized()) {
+                    self.auth_def.resolve();
+                } else {
+                    IN.User.authorize();
+                }
+            });
             return this.auth_def.promise();
         },
     });
@@ -75,14 +165,6 @@ openerp.web_linkedin = function(instance) {
                 pop.on("selected", this, function(entity) {
                     self.selected_entity(entity);
                 });
-            }).fail(_.bind(this.linkedin_disabled, this));
-        },
-        linkedin_disabled: function() {
-            instance.web.dialog($(QWeb.render("LinkedIn.DisabledWarning")), {
-                title: _t("LinkedIn is not enabled"),
-                buttons: [
-                    {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
-                ]
             });
         },
         selected_entity: function(entity) {

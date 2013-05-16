@@ -148,8 +148,6 @@ openerp_mail_followers = function(session, mail) {
             }).then(self.proxy('display_generic'));
         },
         _format_followers: function(count){
-            // TDE note: why redefining _t ?
-            function _t(str) { return str; }
             var str = '';
             if(count <= 0){
                 str = _t('No followers');

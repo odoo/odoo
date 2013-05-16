@@ -8,19 +8,19 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:39+0000\n"
-"PO-Revision-Date: 2013-03-18 03:06+0000\n"
+"PO-Revision-Date: 2013-05-02 09:56+0000\n"
 "Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:39+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-05-03 06:29+0000\n"
+"X-Generator: Launchpad (build 16598)\n"
 
 #. module: fleet
 #: selection:fleet.vehicle,fuel_type:0
 msgid "Hybrid"
-msgstr ""
+msgstr "Karma"
 
 #. module: fleet
 #: model:fleet.vehicle.tag,name:fleet.vehicle_tag_compact
@@ -79,7 +79,7 @@ msgstr "Plaka: dan '%s' to '%s'"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_38
 msgid "Resurface Rotors"
-msgstr ""
+msgstr "Disk Yüzey Tornalama"
 
 #. module: fleet
 #: view:fleet.vehicle.cost:0
@@ -132,7 +132,7 @@ msgstr "Direksiyon Hortumunun Değiştirilmesi"
 #. module: fleet
 #: view:fleet.vehicle.log.contract:0
 msgid "Odometer details"
-msgstr "KilometreSayac Detayları"
+msgstr "Kilometre Sayacı Ayrıntıları"
 
 #. module: fleet
 #: view:fleet.vehicle:0
@@ -216,7 +216,7 @@ msgstr "Servisler"
 #: help:fleet.vehicle.cost,odometer:0
 #: help:fleet.vehicle.cost,odometer_id:0
 msgid "Odometer measure of the vehicle at the moment of this log"
-msgstr ""
+msgstr "Araçın bu kayıt anındaki odometre ölçümü"
 
 #. module: fleet
 #: view:fleet.vehicle.log.contract:0
@@ -243,14 +243,14 @@ msgstr "Toplam Maliyet"
 #. module: fleet
 #: selection:fleet.service.type,category:0
 msgid "Both"
-msgstr ""
+msgstr "İkisi de"
 
 #. module: fleet
 #: field:fleet.vehicle.log.contract,cost_id:0
 #: field:fleet.vehicle.log.fuel,cost_id:0
 #: field:fleet.vehicle.log.services,cost_id:0
 msgid "Automatically created field to link to parent fleet.vehicle.cost"
-msgstr ""
+msgstr "Ana fleet.vehicle.cost bağlantılı olarak otomatik oluşturulan alan"
 
 #. module: fleet
 #: view:fleet.vehicle.log.contract:0
@@ -260,7 +260,7 @@ msgstr "Sözleşmeyi Sonlandır"
 #. module: fleet
 #: help:fleet.vehicle.cost,parent_id:0
 msgid "Parent cost to this current cost"
-msgstr ""
+msgstr "Bu geçerli maliyetin ana maliyeti"
 
 #. module: fleet
 #: help:fleet.vehicle.log.contract,cost_frequency:0
@@ -270,7 +270,7 @@ msgstr "Yenileme maliyet sıklığı"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_1
 msgid "Calculation Benefit In Kind"
-msgstr ""
+msgstr "Tür Olarak Hesaplanma Faydası"
 
 #. module: fleet
 #: help:fleet.vehicle.log.contract,expiration_date:0
@@ -278,6 +278,8 @@ msgid ""
 "Date when the coverage of the contract expirates (by default, one year after "
 "begin date)"
 msgstr ""
+"Sözleşme kapsamı süresinin dolduğu tarih (varsayılan olarak, başlama "
+"tarihinden bir yıl sonra)"
 
 #. module: fleet
 #: view:fleet.vehicle.log.fuel:0
@@ -306,7 +308,7 @@ msgstr "Kullanıcı"
 #. module: fleet
 #: help:fleet.vehicle.cost,vehicle_id:0
 msgid "Vehicle concerned by this log"
-msgstr ""
+msgstr "Bu kayıtı ilgilendiren araç"
 
 #. module: fleet
 #: field:fleet.vehicle.log.contract,cost_amount:0
@@ -389,7 +391,7 @@ msgstr "Servis Türü"
 #. module: fleet
 #: help:fleet.vehicle,transmission:0
 msgid "Transmission Used by the vehicle"
-msgstr ""
+msgstr "Bu araç tarafından Kullanılan Aktarma"
 
 #. module: fleet
 #: code:addons/fleet/fleet.py:740
@@ -402,12 +404,12 @@ msgstr "Sözleşme Yenileme"
 #. module: fleet
 #: view:fleet.vehicle:0
 msgid "show the odometer logs for this vehicle"
-msgstr "Bu araç için kilometre sayacı günlükleri göster"
+msgstr "bu araç için kilometre sayacı kayıtlarını göster"
 
 #. module: fleet
 #: help:fleet.vehicle,odometer_unit:0
 msgid "Unit of the odometer "
-msgstr "Kilometre Sayac Birimi "
+msgstr "Kilometre Sayacı Birimi "
 
 #. module: fleet
 #: view:fleet.vehicle.log.services:0
@@ -427,7 +429,7 @@ msgstr "Tamir ve bakım"
 #. module: fleet
 #: help:fleet.vehicle.log.contract,purchaser_id:0
 msgid "Person to which the contract is signed for"
-msgstr ""
+msgstr "Sözleşmenin imzalandığı kişi"
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_act
@@ -445,6 +447,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Yeni bir sözleşme oluşturmak için tıklayın. \n"
+"              </p><p>\n"
+"                Bütün sözleşmelerinizi (kiralama, sigorta, v.b.) ilişkili "
+"hizmetleriyle,\n"
+"                maliyetleriyle birlikte yönetin. Sözleşmelerinizin "
+"yenilenmesi gerektiğinde\n"
+"                OpenERP otomatikman sizi uyaracaktır.\n"
+"              </p><p>\n"
+"                Her sözleşme (örn.: kiralama) birçok hizmet içerebilir\n"
+"                (onarım, sigorta, periyodik bakım).\n"
+"              </p>\n"
+"            "
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_service_type
@@ -480,6 +495,8 @@ msgid ""
 "$('.oe_picture').load(function() { if($(this).width() > $(this).height()) { "
 "$(this).addClass('oe_employee_picture_wide') } });"
 msgstr ""
+"$('.oe_picture').load(function() { if($(this).width() > $(this).height()) { "
+"$(this).addClass('oe_employee_picture_wide') } });"
 
 #. module: fleet
 #: view:board.board:0
@@ -498,6 +515,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Yeni bir maliyet oluşturmak için tıklayın.\n"
+"              </p><p>\n"
+"                OpenERP değişik araçlarınızın maliyetlerini yönetmenizi\n"
+"                sağlar. Maliyetler hizmetlerden, sözleşmelerden (sabit ya da "
+"yinelenen),\n"
+"                ve akaryakıt kayıtlarından otomatikman oluşturulur.\n"
+"              </p>\n"
+"            "
 
 #. module: fleet
 #: view:fleet.vehicle:0
@@ -507,7 +533,7 @@ msgstr "Bu araç için yakıt günlükleri göster"
 #. module: fleet
 #: field:fleet.vehicle.log.contract,purchaser_id:0
 msgid "Contractor"
-msgstr "Yüklenici"
+msgstr "Sorumlu"
 
 #. module: fleet
 #: field:fleet.vehicle,license_plate:0
@@ -533,7 +559,7 @@ msgstr "Fatura Referans"
 #. module: fleet
 #: field:fleet.vehicle,message_follower_ids:0
 msgid "Followers"
-msgstr "Takipçiler"
+msgstr "İzleyiciler"
 
 #. module: fleet
 #: field:fleet.vehicle,location:0
@@ -553,7 +579,7 @@ msgstr "Sözleşme Durumları"
 #. module: fleet
 #: field:fleet.vehicle,contract_renewal_total:0
 msgid "Total of contracts due or overdue minus one"
-msgstr ""
+msgstr "Günü gelen ya da günü eksi bir gün geçen sözleşmelerin toplamı"
 
 #. module: fleet
 #: field:fleet.vehicle.cost,cost_subtype_id:0
@@ -563,7 +589,7 @@ msgstr "Türü"
 #. module: fleet
 #: field:fleet.vehicle,contract_renewal_overdue:0
 msgid "Has Contracts Overdued"
-msgstr ""
+msgstr "Günü Geçen Sözleşmeler Var"
 
 #. module: fleet
 #: field:fleet.vehicle.cost,amount:0
@@ -601,6 +627,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Sohbetçi özetini (mesaj sayısı, ...) barındırır. Bu özet kanban "
+"görünümlerine eklenmek üzere doğrudan html biçimindedir."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_5
@@ -675,6 +703,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Bir araç durumu oluşturmak için tıklayın.\n"
+"              </p><p>\n"
+"                Her aracın durumunu izlemek için geçerli durumunu\n"
+"                özelleştirebilirsiniz. Örnek: Etkin, Onarımda, Satıldı.\n"
+"              </p>\n"
+"            "
 
 #. module: fleet
 #: view:fleet.vehicle:0
@@ -736,6 +771,10 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Yeni bir marka oluşturmak için tıklayın.\n"
+"              </p>\n"
+"            "
 
 #. module: fleet
 #: field:fleet.vehicle.log.contract,start_date:0
@@ -765,7 +804,7 @@ msgstr "Kar lastikleri"
 #. module: fleet
 #: help:fleet.vehicle.cost,date:0
 msgid "Date when the cost has been executed"
-msgstr ""
+msgstr "Maliyetin yapıldığı tarih"
 
 #. module: fleet
 #: view:fleet.vehicle.cost:0
@@ -794,6 +833,8 @@ msgid ""
 "Create a new contract automatically with all the same informations except "
 "for the date that will start at the end of current contract"
 msgstr ""
+"Mevcut sözleşme sonunda başlayacak tarih hariç hepsi aynı bilgileri otomatik "
+"olarak yeni bir sözleşme oluşturur"
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,state:0
@@ -854,7 +895,7 @@ msgstr "Fren Kaliper Değişimi"
 #. module: fleet
 #: field:fleet.vehicle,odometer:0
 msgid "Last Odometer"
-msgstr "Son KilometreSayacı"
+msgstr "Son Kilometre Sayacı"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_act
@@ -890,7 +931,7 @@ msgstr "Araçın kulandığı yakıt"
 #. module: fleet
 #: view:fleet.vehicle.log.contract:0
 msgid "Set Contract In Progress"
-msgstr ""
+msgstr "Sözleşmeyi sürüyor olarak ayarla"
 
 #. module: fleet
 #: field:fleet.vehicle.cost,odometer_unit:0
@@ -901,7 +942,7 @@ msgstr "Birim"
 #. module: fleet
 #: field:fleet.vehicle,message_is_follower:0
 msgid "Is a Follower"
-msgstr "Bir Takipçisi mi"
+msgstr "Bir İzleyicidir"
 
 #. module: fleet
 #: field:fleet.vehicle,horsepower:0
@@ -956,6 +997,8 @@ msgid ""
 "This field holds the image used as logo for the brand, limited to "
 "1024x1024px."
 msgstr ""
+"Bu alan markanın logosu olarak kullanılan resmi tutar, 1024x1024px olarak "
+"sınırlıdır."
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_11
@@ -981,7 +1024,7 @@ msgstr "Aylık Servis Maliyetleri"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_9
 msgid "Assistance"
-msgstr ""
+msgstr "Yardım"
 
 #. module: fleet
 #: field:fleet.vehicle.log.fuel,price_per_liter:0
@@ -1079,7 +1122,7 @@ msgstr "Fren Balatası Değişimi"
 #: view:fleet.vehicle.log.fuel:0
 #: view:fleet.vehicle.log.services:0
 msgid "Odometer Details"
-msgstr "KilometreSayac Detayları"
+msgstr "Kilometre Sayacı Ayrıntıları"
 
 #. module: fleet
 #: field:fleet.vehicle,driver_id:0
@@ -1093,6 +1136,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is "
 "required."
 msgstr ""
+"Markanın küçük boyutlu fotoğraf. Otomatik olarak korunmuş en boy oranına "
+"sahip, bir 64x64px görüntü olarak yeniden boyutlandırılır. Her yerde küçük "
+"bir resim gereklidir bu alanı kullanın."
 
 #. module: fleet
 #: view:board.board:0
@@ -1117,7 +1163,7 @@ msgstr "Servis Detayları"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_15
 msgid "Residual value (Excluding VAT)"
-msgstr ""
+msgstr "Kalan tutar (KDV Hariç)"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_7
@@ -1127,7 +1173,7 @@ msgstr "Alternatör Değiştirme"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_3
 msgid "A/C Diagnosis"
-msgstr ""
+msgstr "A/C Diagnostik"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_23
@@ -1157,7 +1203,7 @@ msgstr "Bu araç için tüm maliyetleri gösterir"
 #. module: fleet
 #: view:fleet.vehicle.odometer:0
 msgid "Odometer Values Per Month"
-msgstr "Aylık KilometreSayac Değerleri"
+msgstr "Aylık Kilometre Sayaç Değerleri"
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_model_act
@@ -1170,6 +1216,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Yeni bir model oluşturmak için tıklayın.\n"
+"              </p><p>\n"
+"                Her marka (Audi) için birçok model (örn. A3, A4) "
+"tanımlayabilirsiniz.\n"
+"              </p>\n"
+"            "
 
 #. module: fleet
 #: model:ir.actions.act_window,help:fleet.fleet_vehicle_act
@@ -1188,6 +1241,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Yeni bir araç eklemek için tıklayın. \n"
+"              </p><p>\n"
+"                Filonuzu her araçla ilgili sözleşmelerin, hizmetlerin, "
+"sabit\n"
+"                ve yinelenen maliyetlerin, odyometrelerin ve yakıt "
+"fişlerinin\n"
+"                kayıtlarını tutarak yönetebileceksiniz.\n"
+"            </p><p>\n"
+"                OpenERP sözleşmelerinizin ve hizmetlerinizin yenilenmesi\n"
+"                gerektiğinde sizi uyaracaktır.\n"
+"              </p>\n"
+"            "
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_13
@@ -1222,6 +1288,20 @@ msgid ""
 "              </div>\n"
 "            "
 msgstr ""
+"<div class=\"oe_empty_custom_dashboard\">\n"
+"                  <p>\n"
+"                    <b>Filo panosu boştur.</b>\n"
+"                  </p><p>\n"
+"                    İlk raporunuzu bu panoya eklemek için, herhangi bir\n"
+"                    menüye gidin, liste ya da grafik görünümüne geçin ve\n"
+"                    ve genişletilmiş arama seçeneklerinde <i>'Panoya\n"
+"                    Ekle'</i> ye tıklayın.\n"
+"                  </p><p>\n"
+"                    Arama seçeneklerini kullanarak, panoya eklemeden\n"
+"                    önce verileri süzebilir ve gruplandırabilirsiniz.\n"
+"                  </p>\n"
+"              </div>\n"
+"            "
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_12
@@ -1273,7 +1353,7 @@ msgstr "Araçlar"
 #. module: fleet
 #: selection:fleet.vehicle,odometer_unit:0
 msgid "Miles"
-msgstr ""
+msgstr "Mil"
 
 #. module: fleet
 #: help:fleet.vehicle.log.contract,cost_generated:0
@@ -1281,6 +1361,9 @@ msgid ""
 "Costs paid at regular intervals, depending on the cost frequency. If the "
 "cost frequency is set to unique, the cost will be logged at the start date"
 msgstr ""
+"Maliyet sıklığına bağlı olarak düzenli aralıklarla ödenen maliyetler. "
+"Maliyet sıklığı eşsiz olarak ayarlanırsa, maliyet başlama tarihinde kayıta "
+"alınır"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_17
@@ -1331,7 +1414,7 @@ msgstr "Toplam giderler (KDV Hariç)"
 #. module: fleet
 #: field:fleet.vehicle.cost,odometer_id:0
 msgid "Odometer"
-msgstr "KilometreSayacı"
+msgstr "Kilometre Sayacı"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_45
@@ -1352,7 +1435,7 @@ msgstr "SatınAlan"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_3
 msgid "Tax roll"
-msgstr ""
+msgstr "Vergi kayıtları"
 
 #. module: fleet
 #: view:fleet.vehicle.model:0
@@ -1372,6 +1455,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field in form views or some "
 "kanban views."
 msgstr ""
+"Markanın orta ölçekli logosu. Otomatik olarak korunmuş en boy oranına sahip, "
+"bir 128x128px görüntü olarak yeniden boyutlandırılır. Form görünümleri ya da "
+"kanban görünümlerinde bu alanı kullanın."
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,cost_frequency:0
@@ -1382,17 +1468,17 @@ msgstr "Haftalık"
 #: view:fleet.vehicle:0
 #: view:fleet.vehicle.odometer:0
 msgid "Odometer Logs"
-msgstr "KilometreSayac Kayıtları"
+msgstr "Kilometre Sayacı Kayıtları"
 
 #. module: fleet
 #: field:fleet.vehicle,acquisition_date:0
 msgid "Acquisition Date"
-msgstr ""
+msgstr "Alım Tarihi"
 
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_odometer
 msgid "Odometer log for a vehicle"
-msgstr "Bir araç için Kilometre sayacı günlüğü"
+msgstr "Bir aracın kilometre sayacı kaydı"
 
 #. module: fleet
 #: field:fleet.vehicle.cost,cost_type:0
@@ -1408,7 +1494,7 @@ msgstr "Yaz lastikleri"
 #. module: fleet
 #: field:fleet.vehicle,contract_renewal_due_soon:0
 msgid "Has Contracts to renew"
-msgstr ""
+msgstr "Yenilecek Sözleşmeler var"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_31
@@ -1476,7 +1562,7 @@ msgstr "Şanzıman Filtre Değişimi"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_10
 msgid "Replacement Vehicle"
-msgstr ""
+msgstr "Yedek Araç"
 
 #. module: fleet
 #: selection:fleet.vehicle.log.contract,state:0
@@ -1502,7 +1588,7 @@ msgstr "Aylık Maliyet"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_18
 msgid "Touring Assistance"
-msgstr ""
+msgstr "Tur Yardımı"
 
 #. module: fleet
 #: field:fleet.vehicle,power:0
@@ -1513,7 +1599,7 @@ msgstr "Güç (kW)"
 #: code:addons/fleet/fleet.py:418
 #, python-format
 msgid "State: from '%s' to '%s'"
-msgstr ""
+msgstr "Durumu: '%s' ten '%s' e"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_2
@@ -1574,7 +1660,7 @@ msgstr "Radyatör Tamiri"
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_log_contract
 msgid "Contract information on a vehicle"
-msgstr ""
+msgstr "Bir aracın sözleşme bilgileri"
 
 #. module: fleet
 #: field:fleet.vehicle.log.contract,days_left:0
@@ -1584,7 +1670,7 @@ msgstr "Uyarı Tarihi"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_19
 msgid "Residual value in %"
-msgstr ""
+msgstr "Kalan tutar % olarak"
 
 #. module: fleet
 #: view:fleet.vehicle:0
@@ -1644,7 +1730,7 @@ msgstr "Fiyat"
 #: field:fleet.vehicle.cost,odometer:0
 #: field:fleet.vehicle.odometer,value:0
 msgid "Odometer Value"
-msgstr "KilometreSayac Değeri"
+msgstr "Kilometre Sayaç Değeri"
 
 #. module: fleet
 #: view:fleet.vehicle:0
@@ -1686,7 +1772,7 @@ msgstr "Kalorifer Fan Motoru Değiştirme"
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_odometer_act
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_odometer_menu
 msgid "Vehicles Odometer"
-msgstr "Araç KilomtreSayacları"
+msgstr "Araç Kilomtre Sayacı"
 
 #. module: fleet
 #: help:fleet.vehicle.log.contract,notes:0
@@ -1847,6 +1933,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Yeni bir hizmet türü oluşturmak için tıklayın.\n"
+"              </p><p>\n"
+"                Her hizmet sözleşmelerde hem bağımsız bir servis olarak ya "
+"da birlikte kullanılabilir.\n"
+"              </p>\n"
+"            "
 
 #. module: fleet
 #: view:board.board:0
@@ -1857,7 +1950,7 @@ msgstr "Servisi Maliyetleri"
 #: code:addons/fleet/fleet.py:47
 #, python-format
 msgid "Emptying the odometer value of a vehicle is not allowed."
-msgstr "Bir aracın kilometre sayacı değeri boşaltılması yasaktır."
+msgstr "Bir aracın kilometre sayacı değerinin boşaltılmasına izin verilmez."
 
 #. module: fleet
 #: help:fleet.vehicle,seats:0
@@ -1877,12 +1970,12 @@ msgstr "Maliyet"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_39
 msgid "Rotate Tires"
-msgstr ""
+msgstr "Lastikler"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_42
 msgid "Starter Replacement"
-msgstr ""
+msgstr "Marş Değişimi"
 
 #. module: fleet
 #: view:fleet.vehicle.cost:0
@@ -1898,7 +1991,7 @@ msgstr "Araç plaka numarasını (ie:araba için plaka numarası)"
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_contract_state
 msgid "Contains the different possible status of a leasing contract"
-msgstr ""
+msgstr "Bir kiralama sözleşmesinin değişik olası durumlarını içerir"
 
 #. module: fleet
 #: view:fleet.vehicle:0
@@ -1915,13 +2008,15 @@ msgstr "Toplam"
 msgid ""
 "Choose wheter the service refer to contracts, vehicle services or both"
 msgstr ""
+"Hizmetin sözleşmelerle mi, araç hizmetleriyle mi ya da her ikisiyle de mi "
+"ilgili olduunu seçin"
 
 #. module: fleet
 #: help:fleet.vehicle.cost,cost_type:0
 msgid "For internal purpose only"
-msgstr ""
+msgstr "Yalnızca iç amaçlar için"
 
 #. module: fleet
 #: help:fleet.vehicle.state,sequence:0
 msgid "Used to order the note stages"
-msgstr ""
+msgstr "Not aşamalarını sıralamak için kullanılır"

@@ -98,8 +98,8 @@
                                 <field class="oe_inline" name="ca_to_invoice" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td class="oe_timesheet_action" attrs="{'invisible': ['|',('invoice_on_timesheets','=',False),('type','=','template')]}">
                                 <span attrs="{'invisible': [('ca_to_invoice','=',0.0)]}" class="oe_grey">
-                                    <button name="%(hr_timesheet_invoice.action_hr_timesheet_invoice_create_final)d"
-                                        type="action"
+                                    <button name="hr_to_invoice_timesheets"
+                                        type="object"
                                         class="oe_link"
                                         string="⇒ Invoice"/>
                                     or view 
@@ -186,7 +186,7 @@
                 <search string="Contracts">
                     <field name="name" filter_domain="['|', ('name','ilike',self),('code','ilike',self)]" string="Contract"/>
                     <field name="date"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="manager_id"/>
                     <field name="parent_id"/>
                     <filter name="open" string="In Progress" domain="[('state','in',('open','draft'))]" help="Contracts in progress (open, draft)"/>

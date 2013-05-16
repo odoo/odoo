@@ -84,7 +84,8 @@ class account_move_line_reconcile(osv.osv_memory):
             context = {}
 
         date = time.strftime('%Y-%m-%d')
-        ids = period_obj.find(cr, uid, dt=date, context=context)
+        ctx = dict(context or {}, account_period_prefer_normal=True)
+        ids = period_obj.find(cr, uid, dt=date, context=ctx)
         if ids:
             period_id = ids[0]
         account_move_line_obj.reconcile(cr, uid, context['active_ids'], 'manual', account_id,
@@ -149,7 +150,7 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
             context['analytic_id'] = data['analytic_id'][0]
         if context['date_p']:
             date = context['date_p']
-
+        context['account_period_prefer_normal'] = True
         ids = period_obj.find(cr, uid, dt=date, context=context)
         if ids:
             period_id = ids[0]

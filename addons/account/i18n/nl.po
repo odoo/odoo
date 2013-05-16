@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-03-31 12:57+0000\n"
+"PO-Revision-Date: 2013-05-01 19:40+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-01 05:31+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-05-02 06:08+0000\n"
+"X-Generator: Launchpad (build 16580)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -191,10 +191,10 @@ msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                klik hier om een fiscale periode toe te voegen.\n"
 "              </p><p>\n"
-"                Een fiscale periode is vaak een maand of een kwartaal. "
-"Normaal\n"
-"                zal dit gelijk zijn met de periode van uw Belasting "
-"aangifte.\n"
+"                Een fiscale periode is vaak een maand of een kwartaal. Deze "
+"kan\n"
+"                gelijk zijn met de periode van uw belasting aangifte, maar "
+"dat hoeft niet.\n"
 "              </p>\n"
 "            "
 
@@ -401,7 +401,7 @@ msgstr "Selecteer de grootboekrekeningen die afgeletterd moeten worden."
 #. module: account
 #: help:account.config.settings,group_analytic_accounting:0
 msgid "Allows you to use the analytic accounting."
-msgstr "stelt u in staat kostenplaatsen te gebruiken"
+msgstr "Stelt u in staat kostenplaatsen te gebruiken"
 
 #. module: account
 #: view:account.invoice:0
@@ -518,15 +518,12 @@ msgstr ""
 "Als u 'Afronden per regel' selecteert: voor elke BTW rekening wordt het BTW "
 "bedrag eerst berekend en afgerond voor elke  factuurregel. Vervolgens worden "
 "deze afgeronde bedragen opgeteld, wat leidt tot het totale bedrag voor deze "
-"belasting.\r\n"
-"\r\n"
-"Als u 'Globaal afronden' selecteert: voor elke BTW rekening wordt het BTW "
-"bedrag berekend voor elke factuurregel. Vervolgens zullen deze bedragen "
-"worden opgeteld en uiteindelijk wordt dit totale BTW bedrag afgerond.\r\n"
-"\r\n"
-"Als u verkoopt met BTW inbegrepen, moet u kiezen voor 'afronden per regel', "
-"omdat U zeker wilt zijn dat de subtotalen van \r\n"
-"uw (BTW inbegrepen) regels gelijk zijn aan het totale bedrag met BTW."
+"belasting. Als u 'Globaal afronden' selecteert: voor elke BTW rekening wordt "
+"het BTW bedrag berekend voor elke factuurregel. Vervolgens zullen deze "
+"bedragen worden opgeteld en uiteindelijk wordt dit totale BTW bedrag "
+"afgerond. Als u verkoopt met BTW inbegrepen, moet u kiezen voor 'afronden "
+"per regel', omdat u zeker wilt zijn dat de subtotalen van uw (BTW "
+"inbegrepen) regels gelijk zijn aan het totale bedrag met BTW."
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
@@ -803,7 +800,7 @@ msgstr ""
 #: code:addons/account/report/account_partner_balance.py:297
 #, python-format
 msgid "Receivable Accounts"
-msgstr "Debiteuren"
+msgstr "Debiteuren rekening"
 
 #. module: account
 #: view:account.config.settings:0
@@ -1015,7 +1012,7 @@ msgid ""
 "            "
 msgstr ""
 "<p>\n"
-"                    Geen boekingen gevonden.\n"
+"                    Geen boekingsregels gevonden.\n"
 "                </p>\n"
 "            "
 
@@ -1349,7 +1346,7 @@ msgstr "Begin van de periode"
 #. module: account
 #: view:account.tax:0
 msgid "Refunds"
-msgstr "Credits"
+msgstr "Credit facturen"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_confirmstatementfromdraft0
@@ -1643,7 +1640,7 @@ msgstr "Bankafschrift"
 #. module: account
 #: field:res.partner,property_account_receivable:0
 msgid "Account Receivable"
-msgstr "Debiteuren"
+msgstr "Debiteuren rekening"
 
 #. module: account
 #: code:addons/account/account.py:612
@@ -1694,7 +1691,7 @@ msgstr "Aantal items"
 #. module: account
 #: field:account.automatic.reconcile,max_amount:0
 msgid "Maximum write-off amount"
-msgstr "Maximaal af te boeken bedrag"
+msgstr "Maximaal afschrijf bedrag"
 
 #. module: account
 #. openerp-web
@@ -2930,7 +2927,7 @@ msgstr "IKB"
 #. module: account
 #: field:product.template,supplier_taxes_id:0
 msgid "Supplier Taxes"
-msgstr "Inkoopbelastingen"
+msgstr "Inkoop belastingen"
 
 #. module: account
 #: view:res.partner:0
@@ -3235,7 +3232,7 @@ msgstr ""
 #. module: account
 #: field:account.move.line.reconcile,writeoff:0
 msgid "Write-Off amount"
-msgstr "Af te boeken bedrag"
+msgstr "Afschrijf bedrag"
 
 #. module: account
 #: field:account.bank.statement,message_unread:0
@@ -3609,7 +3606,7 @@ msgstr "Model"
 #. module: account
 #: help:account.invoice.tax,base_code_id:0
 msgid "The account basis of the tax declaration."
-msgstr "De grootboekrekening van de belastingverklaring"
+msgstr "De grootboekrekening van de belastingaangifte"
 
 #. module: account
 #: selection:account.account,type:0
@@ -3755,10 +3752,10 @@ msgstr ""
 "    \n"
 "    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
 "       &nbsp;&nbsp;<strong>REFERENTIES</strong><br />\n"
-"       &nbsp;&nbsp;Invoice number: <strong>${object.number}</strong><br />\n"
-"       &nbsp;&nbsp;Invoice total: <strong>${object.amount_total} "
+"       &nbsp;&nbsp;Factuurnummer: <strong>${object.number}</strong><br />\n"
+"       &nbsp;&nbsp;Factuur totaal: <strong>${object.amount_total} "
 "${object.currency_id.name}</strong><br />\n"
-"       &nbsp;&nbsp;Invoice date: ${object.date_invoice}<br />\n"
+"       &nbsp;&nbsp;Factuurdatum: ${object.date_invoice}<br />\n"
 "       % if object.origin:\n"
 "       &nbsp;&nbsp;Order referentie: ${object.origin}<br />\n"
 "       % endif\n"
@@ -4221,7 +4218,7 @@ msgstr "Concept factuur"
 #. module: account
 #: view:account.config.settings:0
 msgid "Options"
-msgstr "Optie's"
+msgstr "Opties"
 
 #. module: account
 #: field:account.aged.trial.balance,period_length:0
@@ -4285,7 +4282,7 @@ msgstr "Belastingbedrag"
 #. module: account
 #: view:account.move.line:0
 msgid "Unreconciled Journal Items"
-msgstr "Onafgeletterde boekingen"
+msgstr "Onafgeletterde boekingsregels"
 
 #. module: account
 #: selection:account.account.type,close_method:0
@@ -4833,7 +4830,7 @@ msgstr ""
 #. module: account
 #: view:account.move.line:0
 msgid "Posted Journal Items"
-msgstr "Geboekte boekingen"
+msgstr "Geboekte boekingsregels"
 
 #. module: account
 #: field:account.move.line,blocked:0
@@ -5005,7 +5002,7 @@ msgstr "Rek. type"
 #. module: account
 #: selection:account.journal,type:0
 msgid "Bank and Checks"
-msgstr "Bank en Cheques."
+msgstr "Bank en Cheques"
 
 #. module: account
 #: field:account.account.template,note:0
@@ -5046,7 +5043,7 @@ msgstr "Grondslag"
 msgid ""
 "You have to provide an account for the write off/exchange difference entry."
 msgstr ""
-"U dient ene rekening op te geven voor boeken van het betaal- en/of "
+"U dient een rekening op te geven voor het boeken van het betaal- en/of "
 "koersverschil."
 
 #. module: account
@@ -5208,7 +5205,7 @@ msgstr "Creditfacturen"
 #: view:account.move.line:0
 #: model:ir.actions.act_window,name:account.action_account_manual_reconcile
 msgid "Journal Items to Reconcile"
-msgstr "Af te letteren boekingen"
+msgstr "Af te letteren boekingsregels"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
@@ -5559,7 +5556,7 @@ msgstr "Vandaag afgeletterde relaties"
 #. module: account
 #: help:account.invoice.tax,tax_code_id:0
 msgid "The tax basis of the tax declaration."
-msgstr "De grondslag van de belastingverklaring."
+msgstr "De grondslag van de belastingaangifte"
 
 #. module: account
 #: view:account.addtmpl.wizard:0
@@ -6385,18 +6382,17 @@ msgid ""
 "            "
 msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
-"                Klik voor het maken van een journaalpost.\n"
+"                Klik voor het maken van een boeking.\n"
 "              </p><p>\n"
-"                Een journaalpost bestaat uit verschillende boekingen. Elk "
+"                Een boeking bestaat uit verschillende boekingregels. Elk "
 "daarvan \n"
 "                is ofwel een debet- of een credit-transactie. \n"
 "                </p><p>\n"
-"               OpenERP genereert automatisch één journaalpost per "
-"financieel\n"
+"               OpenERP genereert automatisch één boeking per financieel\n"
 "               boekstuk: factuur, credit factuur, betaling aan een "
 "leverancier, bankafschrift, etc.).\n"
-"               U hoeft dus alleen/hoofdzakelijk handmatige journaalposten "
-"aan te maken \n"
+"               U hoeft dus alleen/hoofdzakelijk handmatige boekingen  aan te "
+"maken \n"
 "               voor memoriaal boekingen.\n"
 "              </p>\n"
 "            "
@@ -6522,7 +6518,7 @@ msgstr "Rekening automatisch afletteren"
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Journal Item"
-msgstr "Journaal item"
+msgstr "Boeking"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear_close
@@ -6569,7 +6565,7 @@ msgstr "Mutatienaam (id): %s (%s)"
 #: code:addons/account/account_move_line.py:882
 #, python-format
 msgid "Write-Off"
-msgstr "Boek af"
+msgstr "Afschrijving"
 
 #. module: account
 #: view:account.entries.report:0
@@ -6964,7 +6960,7 @@ msgstr ""
 #. module: account
 #: field:product.template,taxes_id:0
 msgid "Customer Taxes"
-msgstr "Belastingen"
+msgstr "Verkoop belastingen"
 
 #. module: account
 #: help:account.model,name:0
@@ -7132,7 +7128,7 @@ msgstr "Annuleer"
 #: model:account.account.type,name:account.data_account_type_receivable
 #: selection:account.entries.report,type:0
 msgid "Receivable"
-msgstr "Debiteuren"
+msgstr "Debiteuren rekening"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -8125,7 +8121,7 @@ msgstr "Referentie klant"
 #. module: account
 #: field:account.account.template,parent_id:0
 msgid "Parent Account Template"
-msgstr "Bovenliggerde grootboekkaart template"
+msgstr "Bovenliggerde grootboekrekening sjabloon"
 
 #. module: account
 #: report:account.invoice:0
@@ -8187,7 +8183,7 @@ msgstr "Totaalbedrag dat deze klant aan u verschuldigd is."
 #. module: account
 #: view:account.move.line:0
 msgid "Unbalanced Journal Items"
-msgstr "Boekingen in onbelans"
+msgstr "Boekingsregel niet in balans"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.open_account_charts_modules
@@ -10167,7 +10163,7 @@ msgstr "Start periode"
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_central_journal
 msgid "Central Journal"
-msgstr "Centraal dagboek"
+msgstr "Dagboek samenvatting"
 
 #. module: account
 #: field:account.aged.trial.balance,direction_selection:0
@@ -10741,7 +10737,7 @@ msgstr "Code/Datum"
 #: model:ir.model,name:account.model_account_move_line
 #: model:ir.ui.menu,name:account.menu_action_account_moves_all
 msgid "Journal Items"
-msgstr "Dagboekregels"
+msgstr "Boekingsregels"
 
 #. module: account
 #: view:accounting.report:0
@@ -11106,7 +11102,7 @@ msgstr "Niet-gerealiseerde winst of verlies"
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "States"
-msgstr "Provincies"
+msgstr "Statussen"
 
 #. module: account
 #: help:product.category,property_account_income_categ:0
@@ -11275,7 +11271,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:1059
 #, python-format
 msgid "Unable to change tax!"
-msgstr "Niet ongeluk om belasting te wijzigen"
+msgstr "Het is niet mogelijk om de belasting te wijzigen"
 
 #. module: account
 #: constraint:account.bank.statement:0
@@ -11317,7 +11313,7 @@ msgstr "Ga naar volgende relatie"
 #: view:account.automatic.reconcile:0
 #: view:account.move.line.reconcile.writeoff:0
 msgid "Write-Off Move"
-msgstr "Afboekingen"
+msgstr "Afschrijvingen"
 
 #. module: account
 #: model:process.node,note:account.process_node_paidinvoice0
@@ -11397,7 +11393,7 @@ msgstr "Afgeletterde transacties"
 #. module: account
 #: model:ir.model,name:account.model_report_account_receivable
 msgid "Receivable accounts"
-msgstr "Debiteuren"
+msgstr "Debiteuren rekening"
 
 #. module: account
 #: selection:account.model.line,date_maturity:0
@@ -11812,7 +11808,7 @@ msgstr "Bankrekening"
 #: model:ir.actions.act_window,name:account.action_account_central_journal
 #: model:ir.model,name:account.model_account_central_journal
 msgid "Account Central Journal"
-msgstr "Centraal dagboek"
+msgstr "Dagboek samenvatting"
 
 #. module: account
 #: report:account.overdue:0
@@ -11827,7 +11823,7 @@ msgstr "Toekomst"
 #. module: account
 #: view:account.move.line:0
 msgid "Search Journal Items"
-msgstr "Zoek boekingen"
+msgstr "Zoek boekingsregels"
 
 #. module: account
 #: help:account.tax,base_sign:0
