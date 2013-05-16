@@ -780,17 +780,13 @@ class Database(openerpweb.Controller):
         password, db = operator.itemgetter(
             'drop_pwd', 'drop_db')(
                 dict(map(operator.itemgetter('name', 'value'), fields)))
-        error = {'error':_('Could not drop database !'), 'title': _('Drop Database') }
+        
         try:
-            proxy = req.session.proxy("db")
-            if db in proxy.list(True):
-                return proxy.drop(password, db)
-            else:
-                 error.update({'error': "Database '%s' does not exist !" % db})
+            if req.session.proxy("db").drop(password, db):return True
         except xmlrpclib.Fault, e:
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
-                error.update({'error': e.faultCode})
-        return error
+                return {'error': e.faultCode, 'title': 'Drop Database'}
+        return {'error': _('Could not drop database !'), 'title': _('Drop Database')}
 
     @openerpweb.httprequest
     def backup(self, req, backup_db, backup_pwd, token):
