@@ -364,8 +364,8 @@ class test_mail(TestMailBase):
                             'message_post: notification email sent to more than one email address instead of a precise partner')
             self.assertIn(sent_email['email_to'][0], test_emailto,
                             'message_post: notification email email_to incorrect')
-            self.assertEqual(sent_email['reply_to'], '"Followers of Pigs" <r@r>',
-                            'message_post: notification email reply_to incorrect: should name Followers of Pigs, and have raoul email')
+            self.assertEqual(sent_email['reply_to'], 'r@r',  # was '"Followers of Pigs" <r@r>', but makes no sense
+                            'message_post: notification email reply_to incorrect: should have raoul email')
             self.assertEqual(_mail_subject, sent_email['subject'],
                             'message_post: notification email subject incorrect')
             self.assertIn(html_sanitize(_body2), sent_email['body'],
