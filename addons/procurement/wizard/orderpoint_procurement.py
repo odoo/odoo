@@ -68,6 +68,5 @@ class procurement_compute(osv.osv_memory):
         threaded_calculation.start()
         return {'type': 'ir.actions.act_window_close'}
 
-procurement_compute()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

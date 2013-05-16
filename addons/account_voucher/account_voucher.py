@@ -40,7 +40,6 @@ class res_company(osv.osv):
             domain="[('type', '=', 'other')]",),
     }
 
-res_company()
 
 class account_config_settings(osv.osv_memory):
     _inherit = 'account.config.settings'
@@ -85,7 +84,7 @@ class account_voucher(osv.osv):
         if context is None: context = {}
         if context.get('period_id', False):
             return context.get('period_id')
-        periods = self.pool.get('account.period').find(cr, uid)
+        periods = self.pool.get('account.period').find(cr, uid, context=context)
         return periods and periods[0] or False
 
     def _make_journal_search(self, cr, uid, ttype, context=None):
@@ -1488,7 +1487,6 @@ class account_voucher_line(osv.osv):
             'type':ttype
         })
         return values
-account_voucher_line()
 
 class account_bank_statement(osv.osv):
     _inherit = 'account.bank.statement'
@@ -1540,7 +1538,6 @@ class account_bank_statement(osv.osv):
                     raise osv.except_osv(_('Unable to change journal !'), _('You can not change the journal as you already reconciled some statement lines!'))
         return super(account_bank_statement, self).write(cr, uid, ids, vals, context=context)
 
-account_bank_statement()
 
 class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
@@ -1594,7 +1591,6 @@ class account_bank_statement_line(osv.osv):
         voucher_obj.unlink(cr, uid, unlink_ids, context=context)
         return super(account_bank_statement_line, self).unlink(cr, uid, ids, context=context)
 
-account_bank_statement_line()
 
 def resolve_o2m_operations(cr, uid, target_osv, operations, fields, context):
     results = []

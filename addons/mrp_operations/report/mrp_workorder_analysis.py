@@ -71,6 +71,5 @@ class mrp_workorder(osv.osv):
                     w.costs_hour, mp.product_id, mp.name, wl.state, wl.date_planned, wl.production_id, wl.workcenter_id
         )""")
 
-mrp_workorder()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

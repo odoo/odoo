@@ -32,6 +32,5 @@ class event_confirm(osv.osv_memory):
         self.pool.get('event.event').do_confirm(cr, uid, context.get('event_ids', []), context=context)
         return {'type': 'ir.actions.act_window_close'}
 
-event_confirm()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

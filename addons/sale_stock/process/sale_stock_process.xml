@@ -65,17 +65,6 @@
 
 
         <!--
-            Process Condition
-        -->
-
-        <record id="process_condition_conditionafterdelivery0" model="process.condition">
-            <field name="model_id" ref="sale.model_sale_order"/>
-            <field name="node_id" ref="process_node_invoiceafterdelivery0"/>
-            <field eval="&quot;&quot;&quot;object.order_policy=='postpaid'&quot;&quot;&quot;" name="model_states"/>
-            <field eval="&quot;&quot;&quot;condition_after_delivery&quot;&quot;&quot;" name="name"/>
-        </record>
-
-        <!--
             Process Transition
         -->
         
@@ -106,7 +95,7 @@
         <record id="process_transition_invoiceafterdelivery0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Create Invoice&quot;&quot;&quot;" name="name"/>
-            <field eval="&quot;&quot;&quot;The invoice is created automatically if the shipping policy is 'Invoice from pick' or 'Invoice on order after delivery'.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;If the sale order was set to create the invoice 'On Delivery Order', then an invoice is automatically created based on what you delivered. If you rather want to create your invoice based on your sale order, you can set the sale order to create invoice 'On Demand', then track and process the sales order that have been fully delivered and invoice them from there.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="process_node_invoiceafterdelivery0"/>
             <field model="process.node" name="source_node_id" ref="process_node_packinglist0"/>
         </record>

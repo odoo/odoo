@@ -37,6 +37,5 @@ class account_state_open(osv.osv_memory):
             obj_invoice.signal_open_test(cr, uid, context['active_ids'][0])
         return {'type': 'ir.actions.act_window_close'}
 
-account_state_open()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
