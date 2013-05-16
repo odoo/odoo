@@ -2896,7 +2896,7 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
             var domain = instance.web.pyeval.eval('domain', this.build_domain()) || [];
             if (! _.isEqual(self.domain, domain)) {
                 self.domain = domain;
-                var ds = new instance.web.DataSet(self, self.field.relation);
+                var ds = new instance.web.DataSetStatic(self, self.field.relation, self.build_context());
                 ds.call('search', [self.domain])
                     .then(function (records) {
                         ds.name_get(records).then(function (records) {
