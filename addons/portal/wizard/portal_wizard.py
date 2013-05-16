@@ -83,33 +83,16 @@ class wizard(osv.osv_memory):
 
     def onchange_portal_id(self, cr, uid, ids, portal_id, context=None):
         # for each partner, determine corresponding portal.wizard.user records
-        context = dict(context or {}, active_test=False)
         res_partner = self.pool.get('res.partner')
         res_users = self.pool.get('res.users')
         partner_ids = context and context.get('active_ids') or []
         contact_ids = set()
         user_changes = []
-        emails_used = []
-        partners_used = []
         for partner in res_partner.browse(cr, SUPERUSER_ID, partner_ids, context):
             stack = [partner]
             while stack:
                 contact = stack.pop(0)
-                if contact.id in partners_used:
-                    continue
-                partners_used.append(contact.id)
                 stack.extend(contact.child_ids)
-                if contact.email in emails_used:
-                    continue
-                # make sure that each contact appears at most once in the list
-                if not contact.user_id:
-                    # search user with the same login/email
-                    domain = [('partner_id', '!=', contact.id), ('login', '=', contact.email)]
-                    user_ids = res_users.search(cr, uid, domain, context=context)
-                    user = user_ids and res_users.browse(cr, uid, user_ids[0], context=context) or False
-                    if user:
-                        contact = user.partner_id
-                        stack.extend(contact.child_ids)
                 if contact.id not in contact_ids:
                     contact_ids.add(contact.id)
                     in_portal = False
@@ -120,7 +103,6 @@ class wizard(osv.osv_memory):
                         'email': contact.email,
                         'in_portal': in_portal,
                     }))
-                    emails_used.append(contact.email)
         return {'value': {'user_ids': user_changes}}
 
     def action_apply(self, cr, uid, ids, context=None):
