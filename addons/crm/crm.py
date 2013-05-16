@@ -177,7 +177,7 @@ class crm_case_section(osv.osv):
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
-        create_context = dict(context, alias_model_name=self._name)
+        create_context = dict(context, alias_model_name='crm.lead')
         section_id = super(crm_case_section, self).create(cr, uid, vals, context=create_context)
         section = self.browse(cr, uid, section_id, context=context)
         self.pool.get('mail.alias').write(cr, uid, [section.alias_id.id], {'alias_defaults': {'section_id': section_id, 'type': 'lead'}}, context=context)
