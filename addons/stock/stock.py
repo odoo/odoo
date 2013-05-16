@@ -2306,7 +2306,7 @@ class stock_move(osv.osv):
             if context is None:
                 context = {}
             src_company_ctx = dict(context,force_company=move.location_id.company_id.id)
-            dest_company_ctx = dict(context,force_company=move.location_dest_id.company_id.id)
+            dest_company_ctx = dict(context,force_company=move.location_dest_id.company_id.id) # pas besoin
             account_moves = []
             # Outgoing moves (or cross-company output part)
             if move.location_id.company_id \

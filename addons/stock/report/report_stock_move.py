@@ -23,7 +23,6 @@ from openerp import tools
 from openerp.osv import fields,osv
 from openerp.addons.decimal_precision import decimal_precision as dp
 
-
 class report_stock_move(osv.osv):
     _name = "report.stock.move"
     _description = "Moves Statistics"
@@ -227,5 +226,102 @@ CREATE OR REPLACE view report_stock_inventory AS (
         """)
 
 
+
+
+class report_stock_valuation(osv.osv):
+    _name = "report.stock.valuation"
+    _description = "Stock Valuation Statistics"
+    _auto = False
+    _order = 'date desc'
+    _columns = {
+        'date': fields.datetime('Date', readonly=True),
+        'year': fields.char('Year', size=4, readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
+            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
+            ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
+        'partner_id':fields.many2one('res.partner', 'Partner', readonly=True),
+        'product_id':fields.many2one('product.product', 'Product', readonly=True),
+        'product_categ_id':fields.many2one('product.category', 'Product Category', readonly=True),
+        'location_id': fields.many2one('stock.location', 'Location', readonly=True),
+        'prodlot_id': fields.many2one('stock.production.lot', 'Lot', readonly=True),
+        'company_id': fields.many2one('res.company', 'Company', readonly=True),
+        'product_qty':fields.float('Quantity',  digits_compute=dp.get_precision('Product Unit of Measure'), readonly=True),
+        'value' : fields.float('Total Value',  digits_compute=dp.get_precision('Account'), required=True),
+        'move_value' : fields.float('Total Value',  digits_compute=dp.get_precision('Account'), required=True),
+        'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'Status', readonly=True, select=True,
+              help='When the stock move is created it is in the \'Draft\' state.\n After that it is set to \'Confirmed\' state.\n If stock is available state is set to \'Avaiable\'.\n When the picking it done the state is \'Done\'.\
+              \nThe state is \'Waiting\' if the move is waiting for another one.'),
+        'location_type': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production'), ('transit', 'Transit Location for Inter-Companies Transfers')], 'Location Type', required=True),
+        'scrap_location': fields.boolean('scrap'),
+        'name': fields.text('Name', readonly=True),
+        'price_unit': fields.float('Unit price', digits_compute=dp.get_precision('Account'))
+    }
+
+    def init(self, cr):
+        tools.drop_view_if_exists(cr, 'report_stock_valuation')
+        cr.execute("""
+CREATE OR REPLACE view report_stock_valuation AS (
+    (SELECT
+        min(mm.id) as id, m.date as date,
+        to_char(m.date, 'YYYY') as year,
+        to_char(m.date, 'MM') as month,
+        m.partner_id as partner_id, m.location_id as location_id,
+        m.product_id as product_id, pt.categ_id as product_categ_id, l.usage as location_type, l.scrap_location as scrap_location,
+        m.company_id,
+        m.state as state, m.prodlot_id as prodlot_id,
+        p.name as name, 
+        CASE WHEN ipcm.value_text in ('fifo','lifo') THEN coalesce(mm.price_unit_out * pu2.factor / pu.factor, 0.0) 
+            ELSE coalesce(m.price_unit * pu2.factor / pu.factor::decimal, 0.0) END AS price_unit,  
+        coalesce(sum(-ip.value_float * m.product_qty * pu.factor / pu2.factor)::decimal, 0.0) as value,
+        CASE WHEN ipcm.value_text in ('fifo', 'lifo') THEN coalesce(sum(-mm.price_unit_out * mm.qty)::decimal, 0.0) 
+            ELSE coalesce(sum(-m.price_unit * mm.qty)::decimal, 0.0) END as move_value, 
+        coalesce(sum(-mm.qty * pu.factor / pu2.factor)::decimal, 0.0) as product_qty
+    FROM
+        stock_move_matching mm, stock_move m
+            LEFT JOIN stock_picking p ON (m.picking_id=p.id)
+            LEFT JOIN product_product pp ON (m.product_id=pp.id)
+                LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
+                    LEFT JOIN ir_property ip ON (ip.name='standard_price' AND ip.res_id=CONCAT('product.template,',pt.id) AND ip.company_id=m.company_id)
+                    LEFT JOIN ir_property ipcm ON (ipcm.name='cost_method' and ipcm.res_id=CONCAT('product.template,',pt.id) AND ipcm.company_id=m.company_id)
+                LEFT JOIN product_uom pu ON (pt.uom_id=pu.id)
+                LEFT JOIN product_uom pu2 ON (m.product_uom=pu2.id)
+            LEFT JOIN product_uom u ON (m.product_uom=u.id)
+            LEFT JOIN stock_location l ON (m.location_id=l.id)
+            WHERE m.state != 'cancel' and mm.move_out_id=m.id
+    GROUP BY
+        p.name, mm.id, mm.move_out_id, m.id, m.product_id, m.product_uom, pt.categ_id, m.partner_id, m.location_id,  m.location_dest_id,
+        m.prodlot_id, m.date, m.state, l.usage, l.scrap_location, m.company_id, pt.uom_id, to_char(m.date, 'YYYY'), to_char(m.date, 'MM'), 
+        pu2.factor, pu.factor, ipcm.value_text
+) UNION ALL (
+    SELECT
+        -min(m.id) as id, m.date as date,
+        to_char(m.date, 'YYYY') as year,
+        to_char(m.date, 'MM') as month,
+        m.partner_id as partner_id, m.location_dest_id as location_id,
+        m.product_id as product_id, pt.categ_id as product_categ_id, l.usage as location_type, l.scrap_location as scrap_location,
+        m.company_id,
+        m.state as state, m.prodlot_id as prodlot_id,
+        p.name as name, coalesce(m.price_unit * pu2.factor / pu.factor, 0.0) as price_unit,
+        coalesce(sum(ip.value_float * m.product_qty * pu.factor / pu2.factor)::decimal, 0.0) as value,
+        coalesce(sum(m.price_unit * m.product_qty)::decimal, 0.0) as move_value, 
+        coalesce(sum(m.product_qty * pu.factor / pu2.factor)::decimal, 0.0) as product_qty
+    FROM
+        stock_move m
+            LEFT JOIN stock_picking p ON (m.picking_id=p.id)
+            LEFT JOIN product_product pp ON (m.product_id=pp.id)
+                LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
+                    LEFT JOIN ir_property ip ON (ip.name='standard_price' AND ip.res_id=CONCAT('product.template,',pt.id) AND ip.company_id=m.company_id)
+                LEFT JOIN product_uom pu ON (pt.uom_id=pu.id)
+                LEFT JOIN product_uom pu2 ON (m.product_uom=pu2.id)
+            LEFT JOIN product_uom u ON (m.product_uom=u.id)
+            LEFT JOIN stock_location l ON (m.location_dest_id=l.id)
+            WHERE m.state != 'cancel'
+    GROUP BY
+        p.name, m.id, m.product_id, m.product_uom, pt.categ_id, m.partner_id, m.location_id, m.location_dest_id,
+        m.prodlot_id, m.date, m.state, l.usage, l.scrap_location, m.company_id, pt.uom_id, to_char(m.date, 'YYYY'), to_char(m.date, 'MM'), 
+        pu2.factor, pu.factor
+    )
+);
+        """)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

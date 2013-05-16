@@ -39,7 +39,7 @@ class purchase_config_settings(osv.osv_memory):
         'group_uom':fields.boolean("Manage different units of measure for products",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
-        'group_costing_method':fields.boolean("Compute product cost price based on average cost",
+        'group_costing_method':fields.boolean("Compute product cost price based on average/FIFO/LIFO cost",
             implied_group='product.group_costing_method',
             help="""Allows you to compute product cost price based on average cost."""),
         'module_warning': fields.boolean("Alerts by products or supplier",
