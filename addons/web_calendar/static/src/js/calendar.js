@@ -265,8 +265,9 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         //To parse Events we have to convert date Format
         var res_events = [],
             sidebar_items = {};
-        var selection_label = {};
+        var selection_label;
         if(this.fields[this.color_field].selection) {
+            selection_label = {};
             _(this.fields[this.color_field].selection).each(function(value){
                 selection_label[value[0]] = value[1];
             });
@@ -280,16 +281,19 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
             if (this.color_field) {
                 var filter = evt[this.color_field];
                 if (filter) {
-                    if(this.fields[this.color_field].selection) {
-                        filter = selection_label[filter];
+                    if (typeof filter !== 'object') {
+                        filter = [filter, filter];
                     }
-                    var filter_value = (typeof filter === 'object') ? filter[0] : filter;
+                    if (selection_label) {
+                        filter[1] = selection_label[filter[0]];
+                    }
+                    var filter_value = filter[0];
                     if (typeof(fn_filter) === 'function' && !fn_filter(filter_value)) {
                         continue;
                     }
                     var filter_item = {
                         value: filter_value,
-                        label: (typeof filter === 'object') ? filter[1] : filter,
+                        label: filter[1],
                         color: this.get_color(filter_value)
                     };
                     if (!sidebar_items[filter_value]) {
