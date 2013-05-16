@@ -167,18 +167,6 @@ class res_partner(osv.osv, format_address):
     _description = 'Partner'
     _name = "res.partner"
 
-    def read(self, cr, uid, ids, fields=None, context=None,load='_classic_read'):
-        if context is None:
-            context = {}
-        data = super(res_partner, self).read(cr, uid, ids, fields=fields,context=context, load=load)
-        if isinstance(data, list):
-            for obj in data:
-                parent_id = obj.get('parent_id')
-                parent_address = obj.get('use_parent_address')
-                if parent_id and parent_address and isinstance(parent_id,tuple):
-                    obj.update(self.onchange_address(cr, uid, [obj['id']], parent_address, parent_id[0], context)['value'])
-        return data
-
     def _address_display(self, cr, uid, ids, name, args, context=None):
         res = {}
         for partner in self.browse(cr, uid, ids, context=context):
