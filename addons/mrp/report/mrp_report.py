@@ -86,16 +86,18 @@ class report_mrp_inout(osv.osv):
                     on (pp.id = sm.product_id)
                 left join product_template pt
                     on (pt.id = pp.product_tmpl_id)
-                LEFT JOIN ir_property ip 
-                    ON (ip.name='standard_price' AND ip.res_id=CONCAT('product.template,',pt.id) AND ip.company_id=sm.company_id)
                 left join stock_location sl
                     on ( sl.id = sm.location_id)
                 left join stock_location sl2
-                    on ( sl2.id = sm.location_dest_id)
+                    on ( sl2.id = sm.location_dest_id),
+                ir_property ip
                 where
                     sm.state in ('waiting','confirmed','assigned')
+                and
+                    ip.name='standard_price' AND ip.res_id=CONCAT('product.template,',pt.id) AND (ip.company_id=sm.company_id OR ip.company_id IS NULL)
                 group by
-                    to_char(sm.date,'YYYY:IW')
+                    to_char(sm.date,'YYYY:IW'), ip.company_id
+                    order by ip.company_id ASC LIMIT 1 
             )""")
 
 
