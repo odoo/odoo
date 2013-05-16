@@ -23,13 +23,18 @@ import urlparse
 
 from openerp.osv import osv, fields
 
+
 class project_configuration(osv.TransientModel):
     _inherit = 'base.config.settings'
 
     _columns = {
-        'alias_domain' : fields.char('Alias Domain',
+        'alias_domain': fields.char('Alias Domain',
                                      help="If you have setup a catch-all email domain redirected to "
                                           "the OpenERP server, enter the domain name here."),
+        'alias_catchall': fields.char('Catchall Email Alias',
+            help="Define the default email that will handle replies to document "
+                    "not having their specific email alias defined. Only the left "
+                    "part is required.")
     }
 
     def get_default_alias_domain(self, cr, uid, ids, context=None):
@@ -46,3 +51,14 @@ class project_configuration(osv.TransientModel):
         config_parameters = self.pool.get("ir.config_parameter")
         for record in self.browse(cr, uid, ids, context=context):
             config_parameters.set_param(cr, uid, "mail.catchall.domain", record.alias_domain or '', context=context)
+
+    def get_default_alias_catchall(self, cr, uid, ids, context=None):
+        alias_catchall = self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.alias", context=context)
+        if not alias_catchall:
+            return {}
+        return {'alias_catchall': alias_catchall}
+
+    def set_alias_catchall(self, cr, uid, ids, context=None):
+        config_parameters = self.pool.get("ir.config_parameter")
+        for record in self.browse(cr, uid, ids, context=context):
+            config_parameters.set_param(cr, uid, "mail.catchall.alias", record.alias_catchall or '', context=context)

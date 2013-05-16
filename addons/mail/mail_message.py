@@ -743,7 +743,7 @@ class mail_message(osv.Model):
         default_starred = context.pop('default_starred', False)
         # generate message_id, to redirect answers to the right discussion thread
         if not values.get('message_id') and values.get('reply_to'):
-            values['message_id'] = tools.generate_tracking_message_id('reply_to-%(model)s' % values)
+            values['message_id'] = tools.generate_tracking_message_id('reply_to')
         elif not values.get('message_id') and values.get('res_id') and values.get('model'):
             values['message_id'] = tools.generate_tracking_message_id('%(res_id)s-%(model)s' % values)
         elif not values.get('message_id'):
