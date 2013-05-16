@@ -84,7 +84,6 @@ class wizard(osv.osv_memory):
     def onchange_portal_id(self, cr, uid, ids, portal_id, context=None):
         # for each partner, determine corresponding portal.wizard.user records
         res_partner = self.pool.get('res.partner')
-        res_users = self.pool.get('res.users')
         partner_ids = context and context.get('active_ids') or []
         contact_ids = set()
         user_changes = []
