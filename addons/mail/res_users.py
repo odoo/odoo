@@ -40,10 +40,6 @@ class res_users(osv.Model):
                  "emails will appear in the user's notifications."),
     }
 
-    _defaults = {
-        'alias_domain': False,  # always hide alias during creation
-    }
-
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights on notification_email_send
             and alias fields. Access rights are disabled by default, but allowed
@@ -62,7 +58,7 @@ class res_users(osv.Model):
         """ Installation hook: aliases, partner following themselves """
         # create aliases for all users and avoid constraint errors
         res = self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(res_users, self)._auto_init,
-            self._columns['alias_id'], 'login', alias_force_key='id', context=context)
+            self._name, self._columns['alias_id'], 'login', alias_force_key='id', context=context)
         return res
 
     def create(self, cr, uid, data, context=None):
@@ -71,10 +67,10 @@ class res_users(osv.Model):
         if context is None:
             context = {}
 
-        create_context = dict(context, alias_model_name=self._name)
+        create_context = dict(context, alias_model_name=self._name, alias_parent_model_name=self._name)
         user_id = super(res_users, self).create(cr, uid, data, context=create_context)
         user = self.browse(cr, uid, user_id, context=context)
-        self.pool.get('mail.alias').write(cr, SUPERUSER_ID, [user.alias_id.id], {"alias_force_thread_id": user_id}, context)
+        self.pool.get('mail.alias').write(cr, SUPERUSER_ID, [user.alias_id.id], {"alias_force_thread_id": user_id, "alias_parent_thread_id": user_id}, context)
 
         # create a welcome message
         self._create_welcome_message(cr, uid, user, context=context)

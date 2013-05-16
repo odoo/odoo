@@ -93,7 +93,6 @@ class mail_group(osv.Model):
         'public': 'groups',
         'group_public_id': _get_default_employee_group,
         'image': _get_default_image,
-        'alias_domain': False,  # always hide alias during creation
     }
 
     def _generate_header_description(self, cr, uid, group, context=None):
@@ -127,10 +126,10 @@ class mail_group(osv.Model):
         vals['menu_id'] = menu_id
 
         # Create group and alias
-        create_context = dict(context, alias_model_name=self._name)
+        create_context = dict(context, alias_model_name=self._name, alias_parent_model_name=self._name)
         mail_group_id = super(mail_group, self).create(cr, uid, vals, context=create_context)
         group = self.browse(cr, uid, mail_group_id, context=context)
-        self.pool.get('mail.alias').write(cr, uid, [group.alias_id.id], {"alias_force_thread_id": mail_group_id}, context)
+        self.pool.get('mail.alias').write(cr, uid, [group.alias_id.id], {"alias_force_thread_id": mail_group_id, 'alias_parent_thread_id': mail_group_id}, context)
         group = self.browse(cr, uid, mail_group_id, context=context)
 
         # Create client action for this group and link the menu to it

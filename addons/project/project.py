@@ -534,14 +534,15 @@ def Project():
         if context is None:
             context = {}
         # Prevent double project creation when 'use_tasks' is checked + alias management
-        create_context = dict(context, project_creation_in_progress=True, alias_model_name=vals.get('alias_model', 'project.task'))
+        create_context = dict(context, project_creation_in_progress=True,
+                                alias_model_name=vals.get('alias_model', 'project.task'), alias_parent_model_name=self._name)
 
         if vals.get('type', False) not in ('template', 'contract'):
             vals['type'] = 'contract'
 
         project_id = super(project, self).create(cr, uid, vals, context=create_context)
         project_rec = self.browse(cr, uid, project_id, context=context)
-        self.pool.get('mail.alias').write(cr, uid, [project_rec.alias_id.id], {'alias_defaults': {'project_id': project_id}}, context)
+        self.pool.get('mail.alias').write(cr, uid, [project_rec.alias_id.id], {'alias_parent_thread_id': project_id, 'alias_defaults': {'project_id': project_id}}, context)
         return project_id
 
     def write(self, cr, uid, ids, vals, context=None):

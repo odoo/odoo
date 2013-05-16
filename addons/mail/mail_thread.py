@@ -594,7 +594,6 @@ class mail_thread(osv.AbstractModel):
         """
         assert isinstance(message, Message), 'message must be an email.message.Message at this point'
         found_routes = []
-        DEFAULT_CONTACT_SETTINGS = 'everyone'
         fallback_model = model
         avoid_assert = False
 
@@ -636,7 +635,7 @@ class mail_thread(osv.AbstractModel):
                 if model_obj.exists(cr, uid, thread_id) and hasattr(model_obj, 'message_update'):
                     _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to model: %s, thread_id: %s, custom_values: %s, uid: %s',
                                     email_from, email_to, message_id, model, thread_id, custom_values, uid)
-                    found_routes = [(model, thread_id, DEFAULT_CONTACT_SETTINGS, custom_values, uid)]
+                    found_routes = [(model, thread_id, custom_values, uid, None)]
 
         # 2. Reply to a private message
         if not found_routes and in_reply_to:
@@ -648,7 +647,7 @@ class mail_thread(osv.AbstractModel):
                 message = self.pool.get('mail.message').browse(cr, uid, message_ids[0], context=context)
                 _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to a private message: %s, custom_values: %s, uid: %s',
                                 email_from, email_to, message_id, message.id, custom_values, uid)
-                found_routes = [(message.model, message.res_id, DEFAULT_CONTACT_SETTINGS, custom_values, uid)]
+                found_routes = [(message.model, message.res_id, custom_values, uid, None)]
 
         # 3. Look for a matching mail.alias entry
         local_parts = [e.split('@')[0] for e in tools.email_split(rcpt_tos)]
@@ -665,8 +664,7 @@ class mail_thread(osv.AbstractModel):
                     # user_id = self._message_find_user_id(cr, uid, message, context=context)
                     user_id = uid
                     _logger.info('No matching user_id for the alias %s', alias.alias_name)
-                found_routes.append((alias.alias_model_id.model, alias.alias_force_thread_id, \
-                                alias.alias_contact, eval(alias.alias_defaults), user_id))
+                found_routes.append((alias.alias_model_id.model, alias.alias_force_thread_id, eval(alias.alias_defaults), user_id, alias))
             if found_routes:
                 _logger.info('Routing mail from %s to %s with Message-Id %s: direct alias match: %r',
                                 email_from, email_to, message_id, found_routes)
@@ -682,7 +680,7 @@ class mail_thread(osv.AbstractModel):
                     thread_id = int(thread_id)
                 except:
                     thread_id = False
-            found_routes = [(fallback_model, thread_id, DEFAULT_CONTACT_SETTINGS, custom_values, uid)]
+            found_routes = [(fallback_model, thread_id, custom_values, uid, None)]
             _logger.info('Routing mail from %s to %s with Message-Id %s: fallback to model:%s, thread_id:%s, custom_values:%s, uid:%s',
                         email_from, email_to, message_id, fallback_model, thread_id, custom_values, uid)
 
@@ -690,7 +688,7 @@ class mail_thread(osv.AbstractModel):
         valid_routes = []
         author_id = False
         for route in found_routes:
-            model, thread_id, contact = route[0], route[1], route[2]
+            model, thread_id, alias = route[0], route[1], route[4]
             model_pool = self.pool.get(model)
 
             # check related document effectively exists
@@ -712,15 +710,19 @@ class mail_thread(osv.AbstractModel):
                     message_dict['author_id'] = author_id
 
             # route contact settings
-            if contact == 'followers' and thread_id:
-                obj = self.browse(cr, uid, id, context=context)
+            if alias and alias.alias_contact == 'followers' and (thread_id or alias.alias_parent_thread_id):
+                print alias, alias.alias_contact
+                if thread_id:
+                    obj = self.pool[model].browse(cr, uid, thread_id, context=context)
+                else:
+                    obj = self.pool[alias.alias_parent_model_id.model].browse(cr, uid, alias.alias_parent_thread_id, context=context)
                 if not author_id or not author_id in obj.message_follower_ids:
                     _logger.warning('Routing mail with Message-Id %s: route %s: alias %s restricted to internal followers, skipping',
                                         message_id, route, alias.alias_name)
                     create_bounce_email()
                     avoid_assert = True
                     continue
-            elif (contact == 'followers' or contact == 'partners') and not author_id:
+            elif alias and alias.alias_contact == 'partners' and not author_id:
                 _logger.warning('Routing mail with Message-Id %s: route %s: alias %s does not accept unknown sender, skipping',
                                     message_id, route, alias.alias_name)
                 create_bounce_email()
@@ -728,7 +730,7 @@ class mail_thread(osv.AbstractModel):
                 continue
 
             # update route
-            valid_routes.append((model, thread_id, route[3], route[4]))
+            valid_routes.append((model, thread_id, route[2], route[3]))
 
         # AssertionError if no routes found and if no bounce occured
         assert valid_routes or avoid_assert, \

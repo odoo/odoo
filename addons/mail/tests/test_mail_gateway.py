@@ -148,6 +148,8 @@ class TestMailgateway(TestMailBase):
             'alias_name': 'groups',
             'alias_user_id': False,
             'alias_model_id': self.mail_group_model_id,
+            'alias_parent_model_id': self.mail_group_model_id,
+            'alias_parent_thread_id': self.group_pigs_id,
             'alias_contact': 'everyone'})
 
         # --------------------------------------------------
