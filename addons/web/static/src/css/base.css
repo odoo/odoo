@@ -2711,6 +2711,32 @@
   -o-transform: rotate(45deg);
   transform: rotate(45deg);
 }
+.openerp ul.oe_form_status .oe_folded .label, .openerp ul.oe_form_status_clickable .oe_folded .label {
+  padding-bottom: 8px;
+}
+.openerp ul.oe_form_status .oe_folded ul, .openerp ul.oe_form_status_clickable .oe_folded ul {
+  position: absolute;
+  border-top: 1px solid #cacaca;
+  float: none;
+  top: 30px;
+  right: 0;
+  display: none;
+}
+.openerp ul.oe_form_status .oe_folded ul li, .openerp ul.oe_form_status_clickable .oe_folded ul li {
+  margin: 0;
+  border-left: 1px solid #cacaca;
+  display: block;
+}
+.openerp ul.oe_form_status .oe_folded ul li.label, .openerp ul.oe_form_status_clickable .oe_folded ul li.label {
+  border: 0;
+  padding-left: 24px;
+}
+.openerp ul.oe_form_status .oe_folded ul li:last-child, .openerp ul.oe_form_status_clickable .oe_folded ul li:last-child {
+  border-bottom: 1px solid #cacaca;
+}
+.openerp ul.oe_form_status .oe_folded:hover ul, .openerp ul.oe_form_status_clickable .oe_folded:hover ul {
+  display: block;
+}
 .openerp ul.oe_form_status li.oe_active, .openerp ul.oe_form_status_clickable li.oe_active {
   background-color: #5382b9;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#729fcf), to(#3465a4));

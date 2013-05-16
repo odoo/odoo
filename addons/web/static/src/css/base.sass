@@ -2155,6 +2155,27 @@ $sheet-padding: 16px
                     @include skew-gradient(#fcfcfc, #dedede)
                     @include radius(3px)
                     @include transform(rotate(45deg))
+        .oe_folded
+            .label
+                padding-bottom: 8px
+            ul
+                position: absolute
+                border-top: 1px solid #cacaca
+                float: none
+                top: 30px
+                right: 0
+                display: none
+                li
+                    margin: 0
+                    border-left: 1px solid #cacaca
+                    display: block
+                li.label
+                    border: 0
+                    padding-left: 24px
+                li:last-child
+                    border-bottom: 1px solid #cacaca
+            &:hover ul
+                display: block
         li.oe_active
             @include vertical-gradient(#729fcf, #3465a4)
             > .arrow span
