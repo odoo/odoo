@@ -374,9 +374,9 @@
                                   </a>
                                   <!-- <div class="oe_kanban_footer_left oe_job_message"><t t-raw="record.message_summary.raw_value"/></div> -->
                                     <div class="oe_kanban_footer_right">
-                                        <a t-if="widget.values.survey_id.value" data-name="action_print_survey" data-type="object" class=" oe_kanban_action oe_kanban_action_a">Print Interview</a>
-                                        <a t-if="(widget.values.no_of_recruitment.value lt 1) and (widget.values.survey_id.value)"> | </a>
+                                        <a t-if="widget.values.survey_id.value" data-name="action_print_survey" data-type="object" class=" oe_kanban_action oe_kanban_action_a">Print Interview | </a>
                                         <a  t-if="widget.values.no_of_recruitment.value lt 1" data-name="job_recruitment" data-type="object" class=" oe_kanban_action oe_kanban_action_a">Launch Recruitment</a>
+                                        <a  t-if="widget.values.no_of_recruitment.value gt 0" data-name="job_open" data-type="object" class=" oe_kanban_action oe_kanban_action_a">Recruitment Done</a>
                                     </div>
                                 </div>
                             </div>
