@@ -77,7 +77,7 @@
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Contacts">
-                    <field name="name"/>
+                    <field name="display_name"/>
                     <field name="function" invisible="1"/>
                     <field name="phone"/>
                     <field name="email"/>
@@ -138,8 +138,8 @@
                         </h1>
                         <field name="parent_id"
                             placeholder="Company"
-                            domain="[('is_company', '=', True)]" context="{'default_is_company': True}"
-                            attrs="{'invisible': [('is_company','=', True)]}"
+                            domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'default_supplier': supplier}"
+                            attrs="{'invisible': [('is_company','=', True),('parent_id', '=', False)]}"
                             on_change="onchange_address(use_parent_address, parent_id)"/>
                         <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
                     </div>
@@ -151,21 +151,24 @@
                             <div attrs="{'invisible': [('parent_id','=', False)]}" name="div_type">
                                 <field class="oe_inline"
                                     name="type"/>
-                                <label for="use_parent_address" class="oe_edit_only"/>
-                                <field name="use_parent_address" class="oe_edit_only oe_inline"
-                                    on_change="onchange_address(use_parent_address, parent_id)"/>
                             </div>
 
                             <label for="street" string="Address"/>
                             <div>
-                                <field name="street" placeholder="Street..."/>
-                                <field name="street2"/>
+                                <field name="use_parent_address" class="oe_edit_only oe_inline"
+                                       on_change="onchange_address(use_parent_address, parent_id)"
+                                       attrs="{'invisible': [('parent_id','=', False)]}"/>
+                                <label for="use_parent_address" class="oe_edit_only" attrs="{'invisible': [('parent_id','=', False)]}"/>
+                                <button name="open_parent" type="object" string="(edit company address)" class="oe_link oe_edit_only"
+                                        attrs="{'invisible': ['|',('parent_id','=', False),('use_parent_address','=',False)]}"/>
+                                <field name="street" placeholder="Street..."  attrs="{'readonly': [('use_parent_address','=',True)]}"/>
+                                <field name="street2"  attrs="{'readonly': [('use_parent_address','=',True)]}"/>
                                 <div class="address_format">
-                                    <field name="city" placeholder="City" style="width: 40%%"/>
-                                    <field name="state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}' on_change="onchange_state(state_id)"/>
-                                    <field name="zip" placeholder="ZIP" style="width: 20%%"/>
+                                    <field name="city" placeholder="City" style="width: 40%%" attrs="{'readonly': [('use_parent_address','=',True)]}"/>
+                                    <field name="state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}' on_change="onchange_state(state_id)" attrs="{'readonly': [('use_parent_address','=',True)]}"/>
+                                    <field name="zip" placeholder="ZIP" style="width: 20%%" attrs="{'readonly': [('use_parent_address','=',True)]}"/>
                                 </div>
-                                <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}'/>
+                                <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}' attrs="{'readonly': [('use_parent_address','=',True)]}"/>
                             </div>
                             <field name="website" widget="url" placeholder="e.g. www.openerp.com"/>
                         </group>
@@ -182,8 +185,8 @@
                     </group>
 
                     <notebook colspan="4">
-                        <page string="Contacts" attrs="{'invisible': [('is_company','=',False)]}">
-                            <field name="child_ids" context="{'default_parent_id': active_id}" mode="kanban">
+                        <page string="Contacts" attrs="{'invisible': [('is_company','=',False), ('child_ids', '=', [])]}" autofocus="autofocus">
+                            <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier}">
                                 <kanban>
                                     <field name="color"/>
                                     <field name="name"/>
@@ -249,17 +252,41 @@
                                     </templates>
                                 </kanban>
                                 <form string="Contact" version="7.0">
-                                    <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
-                                    <div class="oe_title">
+                                    <sheet>
+                                        <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
+                                        <div class="oe_title">
+                                            <label for="name" class="oe_edit_only"/>
+                                            <h1><field name="name" style="width: 70%%"/></h1>
+                                            <field name="category_id" widget="many2many_tags" placeholder="Tags..." style="width: 70%%"/>
+                                        </div>
                                         <group>
-                                            <field name="name"/>
-                                            <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
                                             <field name="function" placeholder="e.g. Sales Director"/>
                                             <field name="email"/>
                                             <field name="phone"/>
                                             <field name="mobile"/>
                                         </group>
-                                    </div>
+                                        <div>
+                                            <field name="use_parent_address"/><label for="use_parent_address"/>
+                                        </div>
+                                        <group>
+                                            <label for="type"/>
+                                            <div name="div_type">
+                                                <field class="oe_inline" name="type"/>
+                                            </div>
+                                            <label for="street" string="Address" attrs="{'invisible': [('use_parent_address','=', True)]}"/>
+                                            <div attrs="{'invisible': [('use_parent_address','=', True)]}" name="div_address">
+                                                <field name="street" placeholder="Street..."/>
+                                                <field name="street2"/>
+                                                <div class="address_format">
+                                                    <field name="city" placeholder="City" style="width: 40%%"/>
+                                                    <field name="state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}' on_change="onchange_state(state_id)"/>
+                                                    <field name="zip" placeholder="ZIP" style="width: 20%%"/>
+                                                </div>
+                                                <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}'/>
+                                            </div>
+                                        </group>
+                                        <field name="supplier" invisible="True"/>
+                                    </sheet>
                                 </form>
                             </field>
                         </page>
@@ -330,7 +357,7 @@
             <field name="arch" type="xml">
                 <kanban>
                     <field name="color"/>
-                    <field name="name"/>
+                    <field name="display_name"/>
                     <field name="title"/>
                     <field name="email"/>
                     <field name="parent_id"/>
@@ -363,7 +390,7 @@
                                     </t>
                                 </a>
                                 <div class="oe_kanban_details">
-                                    <h4 class="oe_partner_heading"><a type="open"><field name="name"/></a></h4>
+                                    <h4 class="oe_partner_heading"><a type="open"><field name="display_name"/></a></h4>
                                     <div class="oe_kanban_partner_categories"/>
                                     <div class="oe_kanban_partner_links"/>
                                     <ul>
