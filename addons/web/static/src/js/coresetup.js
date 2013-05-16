@@ -555,8 +555,8 @@ instance.web.qweb.default_dict = {
 instance.web.qweb.preprocess_node = function() {
     // Note that 'this' is the Qweb Node
     switch (this.node.nodeType) {
-        case 3:
-        case 4:
+        case Node.TEXT_NODE:
+        case Node.CDATA_SECTION_NODE:
             // Text and CDATAs
             var translation = this.node.parentNode.attributes['t-translation'];
             if (translation && translation.value === 'off') {
@@ -567,7 +567,7 @@ instance.web.qweb.preprocess_node = function() {
                 this.node.data = match[1] + instance.web._t(match[2]) + match[3];
             }
             break;
-        case 1:
+        case Node.ELEMENT_NODE:
             // Element
             var attr, attrs = ['label', 'title', 'alt', 'placeholder'];
             while (attr = attrs.pop()) {
