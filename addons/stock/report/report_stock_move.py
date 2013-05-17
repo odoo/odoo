@@ -315,7 +315,8 @@ CREATE OR REPLACE view report_stock_valuation AS (
         coalesce(sum(m.product_qty * pu.factor / pu2.factor)::decimal, 0.0) as product_qty, 
         l.usage as location_dest_type, 
         l_other.usage as location_src_type, 
-        1.0 as inventory_value
+        CASE WHEN ipcm.value_text in ('fifo','lifo') THEN coalesce(sum(m.price_unit * m.qty_remaining)::decimal, 0.0) 
+            ELSE coalesce(sum(ip.value_float * m.qty_remaining)::decimal, 0.0) END as inventory_value
     FROM
         stock_move m
             LEFT JOIN stock_picking p ON (m.picking_id=p.id)
@@ -332,7 +333,7 @@ CREATE OR REPLACE view report_stock_valuation AS (
     GROUP BY
         p.name, m.id, m.product_id, m.product_uom, pt.categ_id, m.partner_id, m.location_id, m.location_dest_id,
         m.prodlot_id, m.date, m.state, l.usage, l.scrap_location, m.company_id, pt.uom_id, to_char(m.date, 'YYYY'), to_char(m.date, 'MM'), 
-        pu2.factor, pu.factor, m.qty_remaining, l_other.usage
+        pu2.factor, pu.factor, m.qty_remaining, l_other.usage, ipcm.value_text, ip.value_float
     )
 );
         """)
