@@ -980,7 +980,8 @@ class account_invoice(osv.osv):
                 'line_id': line,
                 'journal_id': journal_id,
                 'date': date,
-                'narration':inv.comment
+                'narration': inv.comment,
+                'company_id': inv.company_id.id,
             }
             period_id = inv.period_id and inv.period_id.id or False
             ctx.update(company_id=inv.company_id.id,

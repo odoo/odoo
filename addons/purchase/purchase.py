@@ -641,7 +641,7 @@ class purchase_order(osv.osv):
             'product_uom': order_line.product_uom.id,
             'product_uos': order_line.product_uom.id,
             'date': self.date_to_datetime(cr, uid, order.date_order, context),
-            'date_expected': self.date_to_datetime(cr, uid, order.date_order, context),
+            'date_expected': self.date_to_datetime(cr, uid, order_line.date_planned, context),
             'location_id': order.partner_id.property_stock_supplier.id,
             'location_dest_id': order.location_id.id,
             'picking_id': picking_id,
