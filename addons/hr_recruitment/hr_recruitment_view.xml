@@ -366,13 +366,14 @@
                                     <div class="oe_job oe_kanban_ellipsis"><field name="department_id"/></div>
                                     <img t-if="record.department_id.raw_value" t-att-src="kanban_image('hr.employee', 'image_small', widget.values.manager_id.value.id)" t-att-title="record.manager_id.value.name" class="oe_kanban_avatar"/>
                                     <div class="oe_name"><t t-esc="record.manager_id.value.name"/></div>
-                                    <div style="margin-top:25px;margin-bottom:7px;"><t t-esc="Math.round(record.no_of_recruitment.raw_value)"/> Expected in Recruitment</div>
-                                    <div class="oe_application">
-                                       <span t-if="widget.values.priority_count.value.total_application gt 1"><t t-esc="Math.round(widget.values.priority_count.value.total_application)"/> Applications</span>
-                                       <span t-if="widget.values.priority_count.value.total_application lt 2"><t t-esc="Math.round(widget.values.priority_count.value.total_application)"/> Application</span>
-                                    </div>
+                                    <t t-if="!widget.values.no_of_recruitment.value lt 1">
+                                      <div class="oe_application">
+                                        <span t-if="widget.values.priority_count.value.total_application gt 1"><t t-esc="Math.round(widget.values.priority_count.value.total_application)"/> Applications</span>
+                                        <span t-if="widget.values.priority_count.value.total_application lt 2"><t t-esc="Math.round(widget.values.priority_count.value.total_application)"/> Application</span>
+                                      </div>
+                                      <div style="margin-top: 6px;color: #4c4c4c;"><t t-esc="Math.round(record.no_of_recruitment.raw_value)"/> Expected in Recruitment</div>
+                                    </t>
                                   </a>
-                                  <!-- <div class="oe_kanban_footer_left oe_job_message"><t t-raw="record.message_summary.raw_value"/></div> -->
                                     <div class="oe_kanban_footer_right">
                                         <a t-if="widget.values.survey_id.value" data-name="action_print_survey" data-type="object" class=" oe_kanban_action oe_kanban_action_a">Print Interview | </a>
                                         <a  t-if="widget.values.no_of_recruitment.value lt 1" data-name="job_recruitment" data-type="object" class=" oe_kanban_action oe_kanban_action_a">Launch Recruitment</a>
