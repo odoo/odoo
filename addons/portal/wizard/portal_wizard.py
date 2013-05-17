@@ -167,7 +167,9 @@ class wizard_user(osv.osv_memory):
                     user.write({'active': True, 'groups_id': [(4, portal.id)]})
                     # prepare for the signup process
                     user.partner_id.signup_prepare()
-                    wizard_user = self.browse(cr, SUPERUSER_ID, wizard_user.id, context)
+                if wizard_user.partner_id.email != wizard_user.email:
+                    wizard_user.partner_id.write({'email': wizard_user.email})
+                wizard_user.refresh()
                 self._send_email(cr, uid, wizard_user, context)
             else:
                 # remove the user (if it exists) from the portal group
@@ -196,8 +198,6 @@ class wizard_user(osv.osv_memory):
         """
         res_users = self.pool.get('res.users')
         create_context = dict(context or {}, noshortcut=True)       # to prevent shortcut creation
-        if wizard_user.partner_id.email != wizard_user.email:
-            wizard_user.partner_id.write({'email': wizard_user.email})
         values = {
             'email': extract_email(wizard_user.email),
             'login': extract_email(wizard_user.email),
