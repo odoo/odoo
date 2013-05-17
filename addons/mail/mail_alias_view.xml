@@ -12,11 +12,12 @@
                         <h2><field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline"/></h2>
                         <group>
                             <field name="alias_model_id"/>
-                            <field name="alias_user_id"/>
                             <field name="alias_force_thread_id"/>
+                            <field name="alias_defaults"/>
+                            <field name="alias_contact"/>
+                            <field name="alias_user_id"/>
                             <field name="alias_parent_model_id"/>
                             <field name="alias_parent_thread_id"/>
-                            <field name="alias_defaults"/>
                         </group>
                         <button name="open_document" string="Open Document" type="object"
                                 attrs="{'invisible': ['|', ('alias_model_id', '=', False), ('alias_force_thread_id', '=', False)]}"/>
