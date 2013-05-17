@@ -111,7 +111,8 @@ class hr_job(osv.osv):
                 'hr.employee': (_get_job_position, ['job_id'], 10),
             },
             multi='no_of_employee'),
-        'no_of_recruitment': fields.float('Expected in Recruitment', help='Number of new employees you expect to recruit.'),
+        'no_of_recruitment': fields.float('Expected New Employee', help='Number of new employees you expect to recruit.'),
+        'no_of_hired_employee':fields.float('Hired Employee', help='Number of hired employees.'),
         'employee_ids': fields.one2many('hr.employee', 'job_id', 'Employees', groups='base.group_user'),
         'description': fields.text('Job Description'),
         'requirements': fields.text('Requirements'),
@@ -128,6 +129,7 @@ class hr_job(osv.osv):
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id)', 'The name of the job position must be unique per company!'),
+        ('hired_employee_check', "CHECK ( no_of_hired_employee <= no_of_recruitment )", "Number of hired employee must be less than expected number of employee in recruitment."),
     ]
 
 
@@ -136,6 +138,9 @@ class hr_job(osv.osv):
             context = {}
         return {'value': {'expected_employees': no_of_recruitment + no_of_employee}}
 
+    def action_hired_employee(self, cr, uid, id, value, context=None):
+        return self.write(cr, uid, [id], {'no_of_hired_employee': value}, context=context)
+
     def job_recruitment(self, cr, uid, ids, *args):
         for job in self.browse(cr, uid, ids):
             no_of_recruitment = job.no_of_recruitment == 0 and 1 or job.no_of_recruitment
@@ -143,7 +148,7 @@ class hr_job(osv.osv):
         return True
 
     def job_open(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state': 'open', 'no_of_recruitment': 0})
+        self.write(cr, uid, ids, {'state': 'open', 'no_of_recruitment': 0,'no_of_hired_employee': 0})
         return True
 
 

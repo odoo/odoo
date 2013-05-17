@@ -337,6 +337,7 @@
                             <group>
                                 <field name="no_of_employee" groups="base.group_user"/>
                                 <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)"/>
+                                <field name="no_of_hired_employee" attrs="{'invisible':[('state','=','open')]}"/>
                                 <field name="expected_employees" groups="base.group_user"/>
                             </group>
                             <group>
