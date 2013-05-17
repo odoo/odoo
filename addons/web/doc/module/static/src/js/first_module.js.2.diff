@@ -4,8 +4,8 @@
  // static/src/js/first_module.js
  openerp.web_example = function (instance) {
 -    console.log("Module loaded");
-+    instance.web.client_actions.add('example.action', 'instance.web_example.action');
-+    instance.web_example.action = function (parent, action) {
++    instance.web.client_actions.add('example.action', 'instance.web_example.Action');
++    instance.web_example.Action = function (parent, action) {
 +        console.log("Executed the action", action);
 +    };
  };
