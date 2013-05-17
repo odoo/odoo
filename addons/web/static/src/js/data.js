@@ -112,24 +112,27 @@ instance.web.Query = instance.web.Class.extend({
      * @returns {jQuery.Deferred<Array<openerp.web.QueryGroup>> | null}
      */
     group_by: function (grouping) {
-        if (grouping === undefined) {
-            return null;
+        var ctx = instance.web.pyeval.eval(
+            'context', this._model.context(this._context));
+
+        // undefined passed in explicitly (!)
+        if (_.isUndefined(grouping)) {
+            grouping = [];
         }
 
         if (!(grouping instanceof Array)) {
             grouping = _.toArray(arguments);
         }
-        if (_.isEmpty(grouping)) { return null; }
+        if (_.isEmpty(grouping) && !ctx['group_by_no_leaf']) {
+            return null;
+        }
 
         var self = this;
-
-        var ctx = instance.web.pyeval.eval(
-            'context', this._model.context(this._context));
         return this._model.call('read_group', {
             groupby: grouping,
             fields: _.uniq(grouping.concat(this._fields || [])),
             domain: this._model.domain(this._filter),
-            context: this._model.context(this._context),
+            context: ctx,
             offset: this._offset,
             limit: this._limit,
             orderby: instance.web.serialize_sort(this._order_by) || false
@@ -325,7 +328,7 @@ instance.web.Model = instance.web.Class.extend({
      * Fetches the model's domain, combined with the provided domain if any
      *
      * @param {Array} [domain] to combine with the model's internal domain
-     * @returns The model's internal domain, or the AND-ed union of the model's internal domain and the provided domain
+     * @returns {instance.web.CompoundDomain} The model's internal domain, or the AND-ed union of the model's internal domain and the provided domain
      */
     domain: function (domain) {
         if (!domain) { return this._domain; }
@@ -337,7 +340,7 @@ instance.web.Model = instance.web.Class.extend({
      * combined with the provided context if any
      *
      * @param {Object} [context] to combine with the model's internal context
-     * @returns The union of the user's context and the model's internal context, as well as the provided context if any. In that order.
+     * @returns {instance.web.CompoundContext} The union of the user's context and the model's internal context, as well as the provided context if any. In that order.
      */
     context: function (context) {
         return new instance.web.CompoundContext(
@@ -481,9 +484,12 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
      * Creates a new record in db
      *
      * @param {Object} data field values to set on the new record
+     * @param {Object} options Dictionary that can contain the following keys:
+     *   - readonly_fields: Values from readonly fields that were updated by
+     *     on_changes. Only used by the BufferedDataSet to make the o2m work correctly.
      * @returns {$.Deferred}
      */
-    create: function(data) {
+    create: function(data, options) {
         return this._model.call('create', [data], {context: this.get_context()});
     },
     /**
@@ -491,8 +497,10 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
      *
      * @param {Number|String} id identifier for the record to alter
      * @param {Object} data field values to write into the record
-     * @param {Function} callback function called with operation result
-     * @param {Function} error_callback function called in case of write error
+     * @param {Object} options Dictionary that can contain the following keys:
+     *   - context: The context to use in the server-side call.
+     *   - readonly_fields: Values from readonly fields that were updated by
+     *     on_changes. Only used by the BufferedDataSet to make the o2m work correctly.
      * @returns {$.Deferred}
      */
     write: function (id, data, options) {
@@ -599,6 +607,9 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
     alter_ids: function(n_ids) {
         this.ids = n_ids;
     },
+    remove_ids: function (ids) {
+        this.alter_ids(_(this.ids).difference(ids));
+    },
     /**
      * Resequence records.
      *
@@ -696,22 +707,28 @@ instance.web.DataSetSearch =  instance.web.DataSet.extend({
     get_domain: function (other_domain) {
         this._model.domain(other_domain);
     },
+    alter_ids: function (ids) {
+        this._super(ids);
+        if (this.index !== null && this.index >= this.ids.length) {
+            this.index = this.ids.length > 0 ? this.ids.length - 1 : 0;
+        }
+    },
+    remove_ids: function (ids) {
+        var before = this.ids.length;
+        this._super(ids);
+        if (this._length) {
+            this._length -= (before - this.ids.length);
+        }
+    },
     unlink: function(ids, callback, error_callback) {
         var self = this;
         return this._super(ids).done(function(result) {
-            self.ids = _(self.ids).difference(ids);
-            if (self._length) {
-                self._length -= 1;
-            }
-            if (self.index !== null) {
-                self.index = self.index <= self.ids.length - 1 ?
-                    self.index : (self.ids.length > 0 ? self.ids.length -1 : 0);
-            }
+            self.remove_ids( ids);
             self.trigger("dataset_changed", ids, callback, error_callback);
         });
     },
     size: function () {
-        if (this._length !== undefined) {
+        if (this._length != null) {
             return this._length;
         }
         return this._super();
@@ -732,10 +749,13 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
             self.last_default_get = res;
         });
     },
-    create: function(data) {
-        var cached = {id:_.uniqueId(this.virtual_id_prefix), values: data,
-            defaults: this.last_default_get};
-        this.to_create.push(_.extend(_.clone(cached), {values: _.clone(cached.values)}));
+    create: function(data, options) {
+        var cached = {
+            id:_.uniqueId(this.virtual_id_prefix),
+            values: _.extend({}, data, (options || {}).readonly_fields || {}),
+            defaults: this.last_default_get
+        };
+        this.to_create.push(_.extend(_.clone(cached), {values: _.clone(data)}));
         this.cache.push(cached);
         return $.Deferred().resolve(cached.id).promise();
     },
@@ -762,7 +782,7 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
             cached = {id: id, values: {}};
             this.cache.push(cached);
         }
-        $.extend(cached.values, record.values);
+        $.extend(cached.values, _.extend({}, record.values, (options || {}).readonly_fields || {}));
         if (dirty)
             this.trigger("dataset_changed", id, data, options);
         return $.Deferred().resolve(true).promise();
@@ -860,8 +880,16 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         }
         return completion.promise();
     },
-    call_button: function (method, args) {
-        var id = args[0][0], index;
+    /**
+     * Invalidates caching of a record in the dataset to ensure the next read
+     * of that record will hit the server.
+     *
+     * Of use when an action is going to remote-alter a record which will then
+     * need to be reloaded, e.g. action button.
+     *
+     * @param {Object} id record to remove from the BDS's cache
+     */
+    evict_record: function (id) {
         for(var i=0, len=this.cache.length; i<len; ++i) {
             var record = this.cache[i];
             // if record we call the button upon is in the cache
@@ -871,7 +899,14 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
                 break;
             }
         }
+    },
+    call_button: function (method, args) {
+        this.evict_record(args[0][0]);
         return this._super(method, args);
+    },
+    exec_workflow: function (id, signal) {
+        this.evict_record(id);
+        return this._super(id, signal);
     },
     alter_ids: function(n_ids) {
         this._super(n_ids);
@@ -903,9 +938,9 @@ instance.web.ProxyDataSet = instance.web.DataSetSearch.extend({
             return this._super.apply(this, arguments);
         }
     },
-    create: function(data) {
+    create: function(data, options) {
         if (this.create_function) {
-            return this.create_function(data, this._super);
+            return this.create_function(data, options, this._super);
         } else {
             return this._super.apply(this, arguments);
         }
@@ -946,7 +981,10 @@ instance.web.CompoundContext = instance.web.Class.extend({
     },
     get_eval_context: function () {
         return this.__eval_context;
-    }
+    },
+    eval: function() {
+        return instance.web.pyeval.eval('context', this, undefined, {no_user_context: true});
+    },
 });
 
 instance.web.CompoundDomain = instance.web.Class.extend({
@@ -969,7 +1007,10 @@ instance.web.CompoundDomain = instance.web.Class.extend({
     },
     get_eval_context: function() {
         return this.__eval_context;
-    }
+    },
+    eval: function() {
+        return instance.web.pyeval.eval('domain', this);
+    },
 });
 
 instance.web.DropMisordered = instance.web.Class.extend({

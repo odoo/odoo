@@ -321,9 +321,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                             .appendTo($this.empty())
                             .click(function (e) {e.stopPropagation();})
                             .append('<option value="80">80</option>' +
-                                    '<option value="100">100</option>' +
                                     '<option value="200">200</option>' +
                                     '<option value="500">500</option>' +
+                                    '<option value="2000">2000</option>' +
                                     '<option value="NaN">' + _t("Unlimited") + '</option>')
                             .change(function () {
                                 var val = parseInt($select.val(), 10);
@@ -578,7 +578,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         this.no_leaf = !!context['group_by_no_leaf'];
         this.grouped = !!group_by;
 
-        return this.load_view(context).then(
+        return this.alive(this.load_view(context)).then(
             this.proxy('reload_content'));
     },
     /**
@@ -897,8 +897,9 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
 
         this.record_callbacks = {
             'remove': function (event, record) {
-                var $row = self.$current.children(
-                    '[data-id=' + record.get('id') + ']');
+                var id = record.get('id');
+                self.dataset.remove_ids([id])
+                var $row = self.$current.children('[data-id=' + id + ']');
                 var index = $row.data('index');
                 $row.remove();
             },
@@ -1188,7 +1189,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
     }
 });
 instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.web.ListView.Groups# */{
-    passtrough_events: 'action deleted row_link',
+    passthrough_events: 'action deleted row_link',
     /**
      * Grouped display for the ListView. Handles basic DOM events and interacts
      * with the :js:class:`~DataGroup` bound to it.
@@ -1408,7 +1409,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
             // can have selections spanning multiple links
             var selection = self.get_selection();
             $this.trigger(e, [selection.ids, selection.records]);
-        }).bind(this.passtrough_events, function (e) {
+        }).bind(this.passthrough_events, function (e) {
             // additional positional parameters are provided to trigger as an
             // Array, following the event type or event object, but are
             // provided to the .bind event handler as *args.
@@ -2214,7 +2215,7 @@ instance.web.list.Binary = instance.web.list.Column.extend({
         if (value && value.substr(0, 10).indexOf(' ') == -1) {
             download_url = "data:application/octet-stream;base64," + value;
         } else {
-            download_url = this.session.url('/web/binary/saveas', {model: options.model, field: this.id, id: options.id});
+            download_url = instance.session.url('/web/binary/saveas', {model: options.model, field: this.id, id: options.id});
             if (this.filename) {
                 download_url += '&filename_field=' + this.filename;
             }

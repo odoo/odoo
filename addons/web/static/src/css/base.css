@@ -1,4 +1,4 @@
-@charset "UTF-8";
+@charset "utf-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -355,6 +355,12 @@
   float: right;
   margin-left: 8px;
 }
+.openerp .oe_text_center {
+  text-align: center;
+}
+.openerp .oe_text_left {
+  text-align: left;
+}
 .openerp .oe_text_right {
   text-align: right;
 }
@@ -538,6 +544,29 @@
 .openerp .oe_tag_dark {
   background: #7c7bad;
   color: #eeeeee;
+}
+.openerp .oe_form_field_radio.oe_horizontal {
+  white-space: nowrap;
+}
+.openerp .oe_form_field_radio.oe_horizontal label {
+  display: inline-block;
+  text-align: center;
+  height: 16px;
+}
+.openerp .oe_form_field_radio.oe_vertical label {
+  margin-left: 4px;
+}
+.openerp .oe_form_field_radio.oe_form_required .oe_radio_input {
+  border: 2px solid transparent;
+  display: inline-block;
+  height: 12px;
+  width: 12px;
+  vertical-align: bottom;
+  border-radius: 10px;
+  margin: 1px 0;
+}
+.openerp .oe_form_field_radio.oe_form_required.oe_form_invalid .oe_radio_input {
+  border-color: red;
 }
 .openerp .oe_tags {
   margin-bottom: 1px;
@@ -1416,7 +1445,13 @@
   display: inline-block;
   overflow: hidden;
 }
+.openerp .oe_view_manager {
+  display: table;
+  height: inherit;
+  width: 100%;
+}
 .openerp .oe_view_manager .oe_view_manager_body {
+  display: table-row;
   height: inherit;
 }
 .openerp .oe_view_manager .oe_view_manager_view_kanban {
@@ -1692,6 +1727,7 @@
   font-size: 1px;
   letter-spacing: -1px;
   color: transparent;
+  text-shadow: none;
   font-weight: normal;
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
@@ -1801,7 +1837,7 @@
 }
 .openerp .oe_searchview .oe_searchview_drawer {
   position: absolute;
-  z-index: 100;
+  z-index: 2;
   margin-top: 4px;
   top: 100%;
   right: -1px;
@@ -2094,6 +2130,9 @@
 .openerp .oe_form_invisible {
   display: none !important;
 }
+.openerp .oe_form_editable .oe_read_only {
+  display: none !important;
+}
 .openerp .oe_form_readonly .oe_edit_only, .openerp .oe_form_readonly .oe_form_field:empty {
   display: none !important;
 }
@@ -2223,6 +2262,26 @@
 .openerp .oe_form .oe_subtotal_footer label.oe_form_label_help {
   font-weight: normal;
 }
+.openerp .oe_form .oe_form_box_info {
+  background: #ffee99;
+  border-bottom: 1px solid #ccbb66;
+  padding: 4px;
+}
+.openerp .oe_form .oe_form_box_info > p {
+  margin: auto;
+}
+.openerp .oe_form .oe_form_box_warning {
+  background: #bd362f;
+  border-bottom: 1px solid #990000;
+  padding: 4px;
+}
+.openerp .oe_form .oe_form_box_warning * {
+  color: white;
+  text-shadow: none;
+}
+.openerp .oe_form .oe_form_box_warning > p {
+  margin: auto;
+}
 .openerp .oe_form .oe_form_button {
   margin: 2px;
 }
@@ -2303,6 +2362,13 @@
 .openerp .oe_form .oe_form_field_text {
   width: 100%;
 }
+.openerp .oe_form .oe_form_field_text .oe_form_text_content {
+  text-overflow: ellipsis;
+  display: inline-block;
+  white-space: pre-wrap;
+  overflow-x: hidden;
+  width: 100%;
+}
 .openerp .oe_form .oe_form_field_char input,
 .openerp .oe_form .oe_form_field_url input,
 .openerp .oe_form .oe_form_field_email input,
@@ -2324,6 +2390,7 @@
   width: 100%;
   display: inline-block;
   padding: 2px 2px 2px 0px;
+  vertical-align: top;
 }
 .openerp .oe_form .oe_form_field input {
   margin: 0px;
@@ -2340,6 +2407,7 @@
   background: white;
   min-width: 60px;
   color: #1f1f1f;
+  font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif;
 }
 .openerp .oe_form input[readonly], .openerp .oe_form select[readonly], .openerp .oe_form textarea[readonly], .openerp .oe_form input[disabled], .openerp .oe_form select[disabled] {
   background: #e5e5e5 !important;
@@ -2354,6 +2422,7 @@
   -moz-border-radius: 0px;
   -webkit-border-radius: 0px;
   border-radius: 0px;
+  color: #4c4c4c;
 }
 .openerp .oe_form textarea.oe_inline[disabled] {
   border-left: 8px solid #eeeeee;
@@ -2367,7 +2436,6 @@
   white-space: nowrap;
 }
 .openerp .oe_form .oe_form_field_boolean {
-  padding-top: 4px;
   width: auto;
 }
 .openerp .oe_form .oe_datepicker_container {
@@ -2429,10 +2497,10 @@
   width: 7em;
 }
 .openerp .oe_form_editable .oe_form .oe_form_field_date input {
-  width: 7.5em;
+  width: 100px;
 }
 .openerp .oe_form_editable .oe_form .oe_form_field_datetime input {
-  width: 11.5em;
+  width: 150px;
 }
 .openerp .oe_hidden_input_file {
   position: relative;
@@ -2979,6 +3047,7 @@
   font-size: 1px;
   letter-spacing: -1px;
   color: transparent;
+  text-shadow: none;
   font-weight: normal;
   margin-right: 7px;
 }
@@ -3089,13 +3158,39 @@
   color: #333333;
 }
 
+@-moz-document url-prefix() {
+  .openerp .oe_view_manager .oe_view_manager_switch li {
+    line-height: 21px;
+  }
+  .openerp .oe_searchview .oe_searchview_search {
+    top: -1px;
+  }
+  .openerp .oe_form_field_many2one .oe_m2o_cm_button {
+    line-height: 18px;
+  }
+  .openerp .oe_secondary_submenu {
+    line-height: 14px;
+  }
+  .openerp .oe_webclient .oe_star_on, .openerp .oe_webclient .oe_star_off {
+    top: 0px;
+  }
+}
+
 .kitten-mode-activated {
-  background-image: url(http://placekitten.com/g/1365/769);
   background-size: cover;
   background-attachment: fixed;
 }
 .kitten-mode-activated > * {
   opacity: 0.7;
+}
+
+.loading-kitten {
+  -moz-border-radius: 15px;
+  -webkit-border-radius: 15px;
+  border-radius: 15px;
+  -moz-box-shadow: 0 0 5px 5px #999999;
+  -webkit-box-shadow: 0 0 5px 5px #999999;
+  box-shadow: 0 0 5px 5px #999999;
 }
 
 div.ui-widget-overlay {
@@ -3143,6 +3238,17 @@ div.ui-widget-overlay {
   border-radius: 3px;
 }
 
+.openerp .db_option_table td {
+  padding-bottom: 10px !important;
+}
+
+.openerp_ie .placeholder {
+  color: #afafb6 !important;
+  font-style: italic !important;
+}
+.openerp_ie .oe_form_binary_file {
+  width: 80px;
+}
 .openerp_ie .oe_form_field_boolean input {
   background: white;
 }
@@ -3160,6 +3266,9 @@ div.ui-widget-overlay {
 .openerp_ie .oe_header_row button.oe_highlight {
   padding-top: 0;
   padding-bottom: 0;
+}
+.openerp_ie .oe_view_manager_view_kanban {
+  display: table-cell;
 }
 .openerp_ie .oe_view_manager_buttons button.oe_write_full {
   padding-top: 0;

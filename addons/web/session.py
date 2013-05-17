@@ -38,6 +38,7 @@ class Model(object):
         self.proxy = self.session.proxy('object')
 
     def __getattr__(self, method):
+        self.session.assert_valid()
         def proxy(*args, **kw):
             result = self.proxy.execute_kw(self.session._db, self.session._uid, self.session._password, self.model, method, args, kw)
             # reorder read
@@ -109,8 +110,8 @@ class OpenERPSession(object):
         if self._uid and not force:
             return
         # TODO use authenticate instead of login
-        uid = self.proxy("common").login(self._db, self._login, self._password)
-        if not uid:
+        self._uid = self.proxy("common").login(self._db, self._login, self._password)
+        if not self._uid:
             raise AuthenticationError("Authentication failure")
 
     def ensure_valid(self):
@@ -121,7 +122,6 @@ class OpenERPSession(object):
                 self._uid = None
 
     def execute(self, model, func, *l, **d):
-        self.assert_valid()
         model = self.model(model)
         r = getattr(model, func)(*l, **d)
         return r

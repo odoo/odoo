@@ -265,6 +265,12 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         //To parse Events we have to convert date Format
         var res_events = [],
             sidebar_items = {};
+        var selection_label = {};
+        if(this.fields[this.color_field].selection) {
+            _(this.fields[this.color_field].selection).each(function(value){
+                selection_label[value[0]] = value[1];
+            });
+        }
         for (var e = 0; e < events.length; e++) {
             var evt = events[e];
             if (!evt[this.date_start]) {
@@ -274,6 +280,9 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
             if (this.color_field) {
                 var filter = evt[this.color_field];
                 if (filter) {
+                    if(this.fields[this.color_field].selection) {
+                        filter = selection_label[filter];
+                    }
                     var filter_value = (typeof filter === 'object') ? filter[0] : filter;
                     if (typeof(fn_filter) === 'function' && !fn_filter(filter_value)) {
                         continue;
@@ -339,9 +348,13 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
     },
     get_event_data: function(event_obj) {
         var data = {
-            name: event_obj.text
+            name: event_obj.text || scheduler.locale.labels.new_event
         };
-        data[this.date_start] = instance.web.datetime_to_str(event_obj.start_date);
+        if (this.fields[this.date_start].type == 'date') {
+            data[this.date_start] = instance.web.date_to_str(event_obj.start_date)
+        }else {
+            data[this.date_start] = instance.web.datetime_to_str(event_obj.start_date)
+        }
         if (this.date_stop) {
             data[this.date_stop] = instance.web.datetime_to_str(event_obj.end_date);
         }
@@ -414,6 +427,20 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
             self.slow_create(event_id, event_obj);
         });
     },
+    get_form_popup_infos: function() {
+        var parent = this.getParent();
+        var infos = {
+            view_id: false,
+            title: this.name,
+        };
+        if (parent instanceof instance.web.ViewManager) {
+            infos.view_id = parent.get_view_id('form');
+            if (parent instanceof instance.web.ViewManagerAction && parent.action && parent.action.name) {
+                infos.title = parent.action.name;
+            }
+        }
+        return infos;
+    },
     slow_create: function(event_id, event_obj) {
         var self = this;
         if (this.current_mode() === 'month') {
@@ -431,9 +458,11 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         });
         var something_saved = false;
         var pop = new instance.web.form.FormOpenPopup(this);
+        var pop_infos = this.get_form_popup_infos();
         pop.show_element(this.dataset.model, null, this.dataset.get_context(defaults), {
-            title: _t("Create: ") + ' ' + this.name,
+            title: _.str.sprintf(_t("Create: %s"), pop_infos.title),
             disable_multiple_selection: true,
+            view_id: pop_infos.view_id,
         });
         pop.on('closed', self, function() {
             if (!something_saved) {
@@ -465,9 +494,11 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
             });
         } else {
             var pop = new instance.web.form.FormOpenPopup(this);
+            var pop_infos = this.get_form_popup_infos();
             var id_from_dataset = this.dataset.ids[index]; // dhtmlx scheduler loses id's type
             pop.show_element(this.dataset.model, id_from_dataset, this.dataset.get_context(), {
-                title: _t("Edit: ") + this.name
+                title: _.str.sprintf(_t("Edit: %s"), pop_infos.title),
+                view_id: pop_infos.view_id,
             });
             pop.on('write_completed', self, function(){
                 self.reload_event(id_from_dataset);
