@@ -362,6 +362,9 @@ class One2many(Field):
             return value.scoped()
         raise ValueError("Wrong value for %s.%s: %s" % (self.model, self.name, value))
 
+    def record_to_read(self, value):
+        return value.unbrowse()
+
 
 class Many2many(Field):
     """ Many2many field. """
@@ -403,6 +406,9 @@ class Many2many(Field):
         if isinstance(value, Recordset) and value._name == self.comodel:
             return value.scoped()
         raise ValueError("Wrong value for %s.%s: %s" % (self.model, self.name, value))
+
+    def record_to_read(self, value):
+        return value.unbrowse()
 
 
 # imported here to avoid dependency cycle issues

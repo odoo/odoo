@@ -80,3 +80,12 @@ class res_partner(models.Model):
     def compute_has_sibling(self):
         self.has_sibling = self.parent_id.children_count >= 2
 
+    computed_company = fields.Many2one('res.company', compute='compute_relations', store=False)
+    computed_companies = fields.Many2many('res.company', compute='compute_relations', store=False)
+
+    @api.record
+    @api.depends('company_id')
+    def compute_relations(self):
+        self.computed_company = self.company_id
+        self.computed_companies = self.company_id.to_recordset()
+
