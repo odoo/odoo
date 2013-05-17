@@ -200,18 +200,22 @@ class ir_sequence(openerp.osv.osv.osv):
         force_company = context.get('force_company')
         if not force_company:
             force_company = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
-        sequences = self.read(cr, uid, seq_ids, ['company_id','implementation','number_next','prefix','suffix','padding'])
+        sequences = self.read(cr, uid, seq_ids, ['name','company_id','implementation','number_next','prefix','suffix','padding'])
         preferred_sequences = [s for s in sequences if s['company_id'] and s['company_id'][0] == force_company ]
         seq = preferred_sequences[0] if preferred_sequences else sequences[0]
         if seq['implementation'] == 'standard':
             cr.execute("SELECT nextval('ir_sequence_%03d')" % seq['id'])
             seq['number_next'] = cr.fetchone()
+            cr.execute("UPDATE ir_sequence SET number_next=%s WHERE id=%s ", (seq['number_next'], seq['id'],))
         else:
             cr.execute("SELECT number_next FROM ir_sequence WHERE id=%s FOR UPDATE NOWAIT", (seq['id'],))
             cr.execute("UPDATE ir_sequence SET number_next=number_next+number_increment WHERE id=%s ", (seq['id'],))
         d = self._interpolation_dict()
-        interpolated_prefix = self._interpolate(seq['prefix'], d)
-        interpolated_suffix = self._interpolate(seq['suffix'], d)
+        try:
+            interpolated_prefix = self._interpolate(seq['prefix'], d)
+            interpolated_suffix = self._interpolate(seq['suffix'], d)
+        except ValueError:
+            raise osv.except_osv(_('Warning'), _('Invalid prefix or suffix for sequence \'%s\'') % (seq.get('name')))
         return interpolated_prefix + '%%0%sd' % seq['padding'] % seq['number_next'] + interpolated_suffix
 
     def next_by_id(self, cr, uid, sequence_id, context=None):
