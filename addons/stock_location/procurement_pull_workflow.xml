@@ -19,5 +19,12 @@
             <field name="act_from" ref="act_move"/>
             <field name="act_to" ref="procurement.act_make_done"/>
     </record>
+
+
+    <!-- Overwrite the default stop condition of the procurement in order to take into account its new activity 
+         and not skipping the chained stock/move creation -->
+    <record id="procurement.trans_confirm_mto_make_done" model="workflow.transition">
+            <field name="condition">not check_produce() and not check_buy() and not check_move()</field>
+    </record>
      </data>
 </openerp>

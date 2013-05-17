@@ -66,7 +66,6 @@ class procurement_order(osv.osv):
                 'invoice_state': line.invoice_state,
             })
             
-            print "COmpany_id line:", line.company_id
             move_id = move_obj.create(cr, uid, {
                 'name': line.name,
                 'picking_id': picking_id,

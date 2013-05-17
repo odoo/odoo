@@ -2,19 +2,13 @@
   In order to test the product pushed flow , I create account ,partner,product,shipment
   Push flow specification indicates which location is chained with which location.
 -
-  I create product category.
--
-  !record {model: product.category, id: product_category_computer0}:
-    name: Computer
-
--
   I create Supplier.
 -
   !record {model: res.partner, id: res_partner_microlinktechnologies0}:
     street: Kailash Vaibhav, Parksite
     name: Micro Link Technologies
-    property_account_payable: account_account_payable0
-    property_account_receivable: account_account_receivable0
+    property_account_payable: account.a_pay
+    property_account_receivable: account.a_recv
     supplier: true
     is_company: true
 
@@ -35,7 +29,6 @@
   Stock Input to Quality test and Quality test -Stock  .
 -
   !record {model: product.product, id: product_product_hpcdwriters01}:
-    categ_id: product_category_computer0
     cost_method: standard
     list_price: 1000.0
     mes_type: fixed
