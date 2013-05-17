@@ -374,6 +374,10 @@
                                       <div style="margin-top: 6px;color: #4c4c4c;"><t t-esc="Math.round(record.no_of_recruitment.raw_value)"/> Expected in Recruitment</div>
                                     </t>
                                   </a>
+                                  <div class="oe_kanban_footer_left oe_job_message"><t t-raw="record.message_summary.raw_value"/></div>
+                                  <t t-if="widget.values.no_of_recruitment.value lt 1">
+                                        <div style="padding-top: 10px;"><p>To start a recruitment phase for this job position,<b>click here</b></p><img src="/hr_recruitment/static/src/img/down1.png" style="margin-top: -24px; width: 22px;height: 22px;float: right;padding-right: 88px;"/> </div>
+                                  </t>
                                     <div class="oe_kanban_footer_right">
                                         <a t-if="widget.values.survey_id.value" data-name="action_print_survey" data-type="object" class=" oe_kanban_action oe_kanban_action_a">Print Interview | </a>
                                         <a  t-if="widget.values.no_of_recruitment.value lt 1" data-name="job_recruitment" data-type="object" class=" oe_kanban_action oe_kanban_action_a">Launch Recruitment</a>
