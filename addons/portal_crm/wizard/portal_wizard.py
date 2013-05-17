@@ -19,5 +19,23 @@
 #
 ##############################################################################
 
-import contact
-import wizard
+import logging
+
+from openerp.osv import osv
+from openerp.tools.translate import _
+
+_logger = logging.getLogger(__name__)
+
+class wizard_user(osv.osv_memory):
+    _inherit = 'portal.wizard.user'
+
+    def action_apply(self, cr, uid, ids, context=None):
+        try:
+            return super(wizard_user, self).action_apply(cr, uid, ids, context)
+        except osv.except_osv, e:
+            raise osv.except_osv(e[0], "%s\n\n%s" % (e[1], _("To resolve this error, you can:\
+                Change and use an other contact's email adresse;  \
+                Select other contacts; \
+                Use the partner merge action (more option of the contacts list) to merge the identical partners.")))
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
