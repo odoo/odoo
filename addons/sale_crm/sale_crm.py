@@ -29,6 +29,12 @@ class sale_order(osv.osv):
             domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]")
     }
 
+    def _prepare_invoice(self, cr, uid, order, lines, context=None):
+        invoice_vals = super(sale_order, self)._prepare_invoice(cr, uid, order, lines, context=context)
+        if order.section_id and order.section_id.id:
+            invoice_vals['section_id'] = order.section_id.id
+        return invoice_vals
+
 
 class res_users(osv.Model):
     _inherit = 'res.users'
