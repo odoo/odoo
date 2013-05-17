@@ -74,14 +74,11 @@ class hr_job(osv.osv):
 
     def _no_of_employee(self, cr, uid, ids, name, args, context=None):
         res = {}
-        applicant_obj = self.pool.get('hr.applicant')
         for job in self.browse(cr, uid, ids, context=context):
             nb_employees = len(job.employee_ids or [])
-            job_ids = len(applicant_obj.search(cr, uid, [('job_id', '=', job.id)], context=context))
             res[job.id] = {
                 'no_of_employee': nb_employees,
                 'expected_employees': nb_employees + job.no_of_recruitment,
-                'no_of_application':job_ids
             }
         return res
 
@@ -107,9 +104,6 @@ class hr_job(osv.osv):
                 'hr.job': (lambda self,cr,uid,ids,c=None: ids, ['no_of_recruitment'], 10),
                 'hr.employee': (_get_job_position, ['job_id'], 10),
             },
-            multi='no_of_employee'),
-        'no_of_application': fields.function(_no_of_employee, type="integer" ,string='Total Number of Application',
-            help='Expected number of employees for this job position after new recruitment.',
             multi='no_of_employee'),
         'no_of_employee': fields.function(_no_of_employee, string="Current Number of Employees",
             help='Number of employees currently occupying this job position.',
