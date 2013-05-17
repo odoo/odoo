@@ -1,7 +1,7 @@
 openerp.google_docs = function (instance, m) {
     var _t = instance.web._t,
         QWeb = instance.web.qweb;
-    
+
     instance.web.Sidebar.include({
         start: function () {
             var self = this;
@@ -9,6 +9,7 @@ openerp.google_docs = function (instance, m) {
             this._super.apply(this, arguments);
             var view = self.getParent();
             var result;
+            this.check_url();
             if (view.fields_view.type == "form") {
                 ids = []
                 view.on("load_record", self, function (r) {
@@ -17,7 +18,36 @@ openerp.google_docs = function (instance, m) {
                 });
             }
         },
-        
+        check_url: function () {
+            /* This function check URL and if there is 'state' object (dictionary) sent by google,
+             * it will fetch file 'exportIds' from 'state' object and redirect to corresponding record in openerp
+             */ 
+            self = this;
+            var state = this.getUrlVars();
+            if (state) {
+                file_obj = JSON.parse(state);
+                var loaded = self.fetch('ir.attachment', ['res_model', 'res_id', 'url', 'name'], [['url', 'ilike', '%' + file_obj.exportIds[0] + '%']])
+                    .then(function (att) {
+                    console.log(att);
+                    if (att.length != 0) {
+                        url = window.location.href.replace(/(\&)(.*)/, "");
+                        url = url + "#id=" + att[0].res_id + "&model=" + att[0].res_model;
+                        $('body').hide();
+                        window.open(url, '_self');
+                    }
+                });
+            }
+        },
+        getUrlVars: function () {
+            var parts=unescape(window.location.href);
+            var n=parts.match(/(state=)(.*})/);
+            if(n && n.length>2){
+                return n[2];
+            }
+            else{
+                return false
+            }
+        },
         add_gdoc_items: function (view, res_id) {
             var self = this;
             var gdoc_item = _.indexOf(_.pluck(self.items.other, 'classname'), 'oe_share_gdoc');
@@ -49,11 +79,11 @@ openerp.google_docs = function (instance, m) {
                 });
             }
         },
-        
+
         fetch: function (model, fields, domain, ctx) {
             return new instance.web.Model(model).query(fields).filter(domain).context(ctx).all()
         },
-        
+
         on_google_doc: function (doc_item) {
             var self = this;
             self.config = doc_item;
@@ -64,7 +94,7 @@ openerp.google_docs = function (instance, m) {
                     if (!_.isEmpty(r)) {
                         self.OAUTHURL = 'https://accounts.google.com/o/oauth2/auth?';
                         self.VALIDURL = 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=';
-                        self.SCOPES = 'https://www.googleapis.com/auth/drive';
+                        self.SCOPES = 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/drive.install';
                         self.CLIENT_ID = configs[0].google_client_id;
                         self.GDOC_NAME = r[doc_item.config_id]['name'];
                         self.GDOCS_TEMPLATE_ID = configs[0].gdocs_resource_id;
@@ -74,14 +104,14 @@ openerp.google_docs = function (instance, m) {
                 });
             });
         },
-        
+
         handleClientLoad: function () {
             var self = this;
             window.setTimeout(function () {
                 self.checkAuth(self)
             }, 1);
         },
-        
+
         checkAuth: function (self) {
             gapi.auth.authorize({
                 'client_id': self.CLIENT_ID,
@@ -91,9 +121,9 @@ openerp.google_docs = function (instance, m) {
                 self.handleAuthResult(self, authResult)
             });
         },
-        
+
         handleAuthResult: function (self, authResult) {
-        	
+
             if (authResult && !authResult.error) {
                 self.clientLoad(self);
             } else {
@@ -101,12 +131,12 @@ openerp.google_docs = function (instance, m) {
                     'client_id': self.CLIENT_ID,
                     'scope': self.SCOPES,
                     'immediate': false
-                },function (authResult) {
+                }, function (authResult) {
                     self.handleAuthResult(self, authResult)
                 });
             }
         },
-        
+
         clientLoad: function (self) {
             gapi.client.load('drive', 'v2', function () {
                 if (self.GDOC_URL == false) {
@@ -116,10 +146,14 @@ openerp.google_docs = function (instance, m) {
                 }
             });
         },
-        
+
         copyFile: function (config, originFileId, copyTitle) {
+            discription = window.location.href;
+            discription = discription.replace(/(\&)?menu_id(.*)/, "");
+            discription = discription.replace(/(\&)?action(.*)/, "");
             var body = {
-                'title': copyTitle
+                'title': copyTitle,
+                "description": 'Click Below link for open record in OpenERP\n' + discription,
             };
             var request = gapi.client.drive.files.copy({
                 'fileId': originFileId,
