@@ -764,6 +764,8 @@ class account_invoice(osv.osv):
         return move_lines
 
     def check_tax_lines(self, cr, uid, inv, compute_taxes, ait_obj):
+        # work around bug lp:1111298 : problem in multicompany setting when accessing inv.company_id.currency_id
+        company_currency = self.pool['res.company'].browse(cr, uid, inv.company_id.id).currency_id
         if not inv.tax_line:
             for tax in compute_taxes.values():
                 ait_obj.create(cr, uid, tax)
@@ -777,7 +779,7 @@ class account_invoice(osv.osv):
                 if not key in compute_taxes:
                     raise osv.except_osv(_('Warning!'), _('Global taxes defined, but they are not in invoice lines !'))
                 base = compute_taxes[key]['base']
-                if abs(base - tax.base) > inv.company_id.currency_id.rounding:
+                if abs(base - tax.base) > company_currency.rounding:
                     raise osv.except_osv(_('Warning!'), _('Tax base different!\nClick on compute to update the tax base.'))
             for key in compute_taxes:
                 if not key in tax_key:
@@ -864,7 +866,8 @@ class account_invoice(osv.osv):
             ctx.update({'lang': inv.partner_id.lang})
             if not inv.date_invoice:
                 self.write(cr, uid, [inv.id], {'date_invoice': fields.date.context_today(self,cr,uid,context=context)}, context=ctx)
-            company_currency = inv.company_id.currency_id.id
+            # work around bug lp:1111298 : problem in multicompany setting when accessing inv.company_id.currency_id
+            company_currency = self.pool['res.company'].browse(cr, uid, inv.company_id.id).currency_id.id
             # create the analytical lines
             # one move line per invoice line
             iml = self._get_analytic_lines(cr, uid, inv.id, context=ctx)
