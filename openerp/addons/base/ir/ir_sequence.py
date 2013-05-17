@@ -106,6 +106,7 @@ class ir_sequence(openerp.osv.osv.osv):
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'ir.sequence', context=c),
         'number_increment': 1,
         'number_next': 1,
+        'number_next_actual': 1,
         'padding' : 0,
     }
 
@@ -158,7 +159,12 @@ class ir_sequence(openerp.osv.osv.osv):
         if number_increment == 0:
              raise osv.except_osv(_('Warning!'),_("Increment number must not be zero."))
         assert isinstance(id, (int, long))
-        statement = ("ALTER SEQUENCE ir_sequence_%03d INCREMENT BY %d" % (id, number_increment))
+        seq_name = 'ir_sequence_%03d' % (id,)
+        cr.execute("SELECT relname FROM pg_class WHERE relkind = %s AND relname=%s", ('S', seq_name))
+        if not cr.fetchone():
+            # sequence is not created yet, we're inside create() so ignore it, will be set later
+            return
+        statement = "ALTER SEQUENCE %s INCREMENT BY %d" % (seq_name, number_increment)
         if number_next is not None:
             statement += " RESTART WITH %d" % (number_next, )
         cr.execute(statement)
