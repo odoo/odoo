@@ -151,9 +151,7 @@ class product_pricelist(osv.osv):
         if context is None:
             context = {}
 
-        date = time.strftime('%Y-%m-%d')
-        if 'date' in context:
-            date = context['date']
+        date = context.get('date') or time.strftime('%Y-%m-%d')
 
         currency_obj = self.pool.get('res.currency')
         product_obj = self.pool.get('product.product')
