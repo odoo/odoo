@@ -346,7 +346,9 @@
                     <field name="color"/>
                     <field name="priority_count"/>
                     <field name="manager_id"/>
+                    <field name="survey_id"/>
                     <field name="message_summary"/>
+                    <field name="state"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_job oe_kanban_card oe_kanban_global_click">
@@ -376,6 +378,11 @@
                                   <t t-if="widget.values.no_of_recruitment.value lt 1">
                                         <div style="padding-top: 10px;"><p>To start a recruitment phase for this job position,<b>click here</b></p><img src="/hr_recruitment/static/src/img/down1.png" style="margin-top: -24px; width: 22px;height: 22px;float: right;padding-right: 88px;"/> </div>
                                   </t>
+                                    <div class="oe_kanban_footer_right">
+                                        <a t-if="widget.values.survey_id.value" data-name="action_print_survey" data-type="object" class=" oe_kanban_action oe_kanban_action_a">Print Interview | </a>
+                                        <a  t-if="widget.values.no_of_recruitment.value lt 1" data-name="job_recruitment" data-type="object" class=" oe_kanban_action oe_kanban_action_a">Launch Recruitment</a>
+                                        <a  t-if="widget.values.no_of_recruitment.value gt 0" data-name="job_open" data-type="object" class=" oe_kanban_action oe_kanban_action_a">Recruitment Done</a>
+                                    </div>
                                 </div>
                             </div>
                         </t>

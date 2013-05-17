@@ -117,7 +117,7 @@ class hr_job(osv.osv):
         'requirements': fields.text('Requirements'),
         'department_id': fields.many2one('hr.department', 'Department'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'state': fields.selection([('open', 'No Recruitment'), ('recruit', 'Recruitement in Progress')], 'Status', readonly=True, required=True,
+        'state': fields.selection([('open', 'No Recruitment'), ('recruit', 'Recruitment in Progress')], 'Status', readonly=True, required=True,
             help="By default 'In position', set it to 'In Recruitment' if recruitment process is going on for this job position."),
         'color': fields.integer('Color Index'),
     }
@@ -136,7 +136,7 @@ class hr_job(osv.osv):
             context = {}
         return {'value': {'expected_employees': no_of_recruitment + no_of_employee}}
 
-    def job_recruitement(self, cr, uid, ids, *args):
+    def job_recruitment(self, cr, uid, ids, *args):
         for job in self.browse(cr, uid, ids):
             no_of_recruitment = job.no_of_recruitment == 0 and 1 or job.no_of_recruitment
             self.write(cr, uid, [job.id], {'state': 'recruit', 'no_of_recruitment': no_of_recruitment})
