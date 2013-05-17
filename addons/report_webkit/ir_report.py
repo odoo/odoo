@@ -37,10 +37,10 @@ from webkit_report import WebKitParser
 class ir_actions_report_xml(orm.Model):
     _inherit = 'ir.actions.report.xml'
     _columns = {
-        'webkit_header': fields.property('ir.header_webkit',
+        'webkit_header': fields.property(
             type='many2one', relation='ir.header_webkit',
             string='Webkit Header', help="The header linked to the report",
-            view_load=True, required=True),
+            required=True),
         'webkit_debug': fields.boolean('Webkit debug',
             help="Enable the webkit engine debugger"),
         'report_webkit_data': fields.text('Webkit Template',

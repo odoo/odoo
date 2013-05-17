@@ -302,13 +302,13 @@ class product_template(osv.osv):
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
         #TODO: why is there a first empty arg? relation='' could be written server side, no?
         #TODO: put back decimal precision
-        'standard_price': fields.property('', type = 'float', view_load=True, 
+        'standard_price': fields.property(type = 'float',
                                           help="Cost price of the product used for standard stock valuation in accounting and used as a base price on purchase orders.", 
                                           groups="base.group_user", string="Cost"),
         'volume': fields.float('Volume', help="The volume in m3."),
         'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The gross weight in Kg."),
         'weight_net': fields.float('Net Weight', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
-        'cost_method': fields.property('', type='selection', view_load=True, selection = [('standard','Standard Price'), ('average','Average Price'), ('fifo', 'FIFO price'), ('lifo', 'LIFO price')],
+        'cost_method': fields.property(type='selection', selection = [('standard','Standard Price'), ('average','Average Price'), ('fifo', 'FIFO price'), ('lifo', 'LIFO price')],
             help="Standard Price: The cost price is manually updated at the end of a specific period (usually every year). \nAverage Price: The cost price is recomputed at each incoming shipment.", 
             string="Costing Method"),
         'warranty': fields.float('Warranty'),
