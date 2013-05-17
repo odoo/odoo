@@ -150,7 +150,7 @@ class ir_sequence(openerp.osv.osv.osv):
         # object depends on it.
         cr.execute("DROP SEQUENCE IF EXISTS %s RESTRICT " % names)
 
-    def _alter_sequence(self, cr, id, number_increment, number_next=0):
+    def _alter_sequence(self, cr, id, number_increment, number_next=None):
         """ Alter a PostreSQL sequence.
 
         There is no access rights check.
@@ -159,7 +159,7 @@ class ir_sequence(openerp.osv.osv.osv):
              raise osv.except_osv(_('Warning!'),_("Increment number must not be zero."))
         assert isinstance(id, (int, long))
         statement = ("ALTER SEQUENCE ir_sequence_%03d INCREMENT BY %d" % (id, number_increment))
-        if number_next:
+        if number_next is not None:
             statement += " RESTART WITH %d" % (number_next, )
         cr.execute(statement)
 
