@@ -88,10 +88,8 @@ class wizard(osv.osv_memory):
         contact_ids = set()
         user_changes = []
         for partner in res_partner.browse(cr, SUPERUSER_ID, partner_ids, context):
-            stack = [partner]
-            while stack:
-                contact = stack.pop(0)
-                stack.extend(contact.child_ids)
+            for contact in (partner.child_ids or [partner]):
+                # make sure that each contact appears at most once in the list
                 if contact.id not in contact_ids:
                     contact_ids.add(contact.id)
                     in_portal = False
@@ -133,7 +131,41 @@ class wizard_user(osv.osv_memory):
         return id
 
     def action_apply(self, cr, uid, ids, context=None):
-        for wizard_user in self.browse(cr, SUPERUSER_ID, ids, context):
+        res_users = self.pool.get('res.users')
+        wizards = self.browse(cr, SUPERUSER_ID, ids, context)
+        emails = []
+        error_empty = []
+        error_emails = []
+        error_user = []
+        ctx = dict(context or {}, active_test=False)
+        for wizard_user in wizards:
+            email = wizard_user.partner_id.email
+            if not email:
+                error_empty.append(wizard_user.partner_id)
+            elif email in emails:
+                error_emails.append(email)
+            user = res_users.search(cr, SUPERUSER_ID, [('partner_id', '!=', wizard_user.partner_id.id), ('login', '=', email)], context=ctx)
+            if user:
+                error_user.append((wizard_user.partner_id, res_users.browse(cr, SUPERUSER_ID, user[0], context=ctx).partner_id,))
+            emails.append(email)
+
+        error_msg = ""
+        if error_empty:
+            error_msg = _("%sSome contacts don't have email address: \n%r") % (error_msg, map(lambda p: p.name_get()[0], error_empty))
+        if error_emails:
+            if error_msg:
+                error_msg += '\n\n'
+            error_msg = _("%sYou have more than one email address equal to: \n%r") % (error_msg, error_emails)
+        if error_user:
+            if error_msg:
+                error_msg += '\n\n'
+            error_msg = _("%sSome contact have the same email address than an other contact who have already an user's access: \n%s") % \
+                                (error_msg, [(p_u[0].id, p_u[0].name, '=>', p_u[1].id, p_u[1].name) for p_u in error_user])
+        if error_msg:
+            raise osv.except_osv(_('Contacts Error'), error_msg)
+
+        for wizard_user in wizards:
+            print wizard_user
             portal = wizard_user.wizard_id.portal_id
             user = self._retrieve_user(cr, SUPERUSER_ID, wizard_user, context)
             if wizard_user.in_portal:
@@ -145,7 +177,7 @@ class wizard_user(osv.osv_memory):
                     # prepare for the signup process
                     user.partner_id.signup_prepare()
                     wizard_user = self.browse(cr, SUPERUSER_ID, wizard_user.id, context)
-                    self._send_email(cr, uid, wizard_user, context)
+                self._send_email(cr, uid, wizard_user, context)
             else:
                 # remove the user (if it exists) from the portal group
                 if user and (portal in user.groups_id):
