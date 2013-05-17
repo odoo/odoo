@@ -13,6 +13,7 @@ from openerp.tools import mute_logger
 # Validation Library https://pypi.python.org/pypi/validate_email/1.1
 from .validate_email import validate_email
 
+import openerp
 from openerp.osv import osv, orm
 from openerp.osv import fields
 from openerp.osv.orm import browse_record
@@ -216,8 +217,8 @@ class MergePartnerAutomatic(osv.TransientModel):
             if proxy is None:
                 return
             domain = [(field_model, '=', 'res.partner'), (field_id, '=', src.id)]
-            ids = proxy.search(cr, uid, domain, context=context)
-            return proxy.write(cr, uid, ids, {field_id: dst_partner.id}, context=context)
+            ids = proxy.search(cr, openerp.SUPERUSER_ID, domain, context=context)
+            return proxy.write(cr, openerp.SUPERUSER_ID, ids, {field_id: dst_partner.id}, context=context)
 
         update_records = functools.partial(update_records, context=context)
 
@@ -231,9 +232,9 @@ class MergePartnerAutomatic(osv.TransientModel):
 
         proxy = self.pool['ir.model.fields']
         domain = [('ttype', '=', 'reference')]
-        record_ids = proxy.search(cr, uid, domain, context=context)
+        record_ids = proxy.search(cr, openerp.SUPERUSER_ID, domain, context=context)
 
-        for record in proxy.browse(cr, uid, record_ids, context=context):
+        for record in proxy.browse(cr, openerp.SUPERUSER_ID, record_ids, context=context):
             proxy_model = self.pool[record.model]
 
             field_type = proxy_model._columns.get(record.name).__class__._type
@@ -245,11 +246,11 @@ class MergePartnerAutomatic(osv.TransientModel):
                 domain = [
                     (record.name, '=', 'res.partner,%d' % partner.id)
                 ]
-                model_ids = proxy_model.search(cr, uid, domain, context=context)
+                model_ids = proxy_model.search(cr, openerp.SUPERUSER_ID, domain, context=context)
                 values = {
                     record.name: 'res.partner,%d' % dst_partner.id,
                 }
-                proxy_model.write(cr, uid, model_ids, values, context=context)
+                proxy_model.write(cr, openerp.SUPERUSER_ID, model_ids, values, context=context)
 
     def _update_values(self, cr, uid, src_partners, dst_partner, context=None):
         _logger.debug('_update_values for dst_partner: %s for src_partners: %r', dst_partner.id, list(map(operator.attrgetter('id'), src_partners)))
@@ -285,6 +286,9 @@ class MergePartnerAutomatic(osv.TransientModel):
         if len(partner_ids) < 2:
             return
 
+        if openerp.SUPERUSER_ID != uid and len([partner.email for partner in proxy.browse(cr, uid, partner_ids, context=context)]) > 1:
+            raise osv.except_osv(_('Error'), _("All contacts must have the same email address. Only your Administrator can merge several contacts with different email address."))
+
         if dst_partner and dst_partner.id in partner_ids:
             src_partners = proxy.browse(cr, uid, [id for id in partner_ids if id != dst_partner.id], context=context)
         else:
@@ -293,6 +297,10 @@ class MergePartnerAutomatic(osv.TransientModel):
             src_partners = ordered_partners[:-1]
         _logger.info("dst_partner: %s", dst_partner.id)
 
+        if openerp.SUPERUSER_ID != uid and self._model_is_installed(cr, uid, 'account.move.line', context=context) and \
+                self.pool.get('account.move.line').search(cr, openerp.SUPERUSER_ID, [('partner_id', 'in', [partner.id for partner in src_partners])], context=context):
+            raise osv.except_osv(_('Error'), _("Only one contact can have Journal Items, and this contact must be the destination contact. Only your Administrator can merge several contacts with Journal Items."))
+
         call_it = lambda function: function(cr, uid, src_partners, dst_partner,
                                             context=context)
 
@@ -300,11 +308,10 @@ class MergePartnerAutomatic(osv.TransientModel):
         call_it(self._update_reference_fields)
         call_it(self._update_values)
 
-        _logger.info("---merged---")
+        _logger.info('(uid = %s) merged the partners %r with %s', uid, list(map(operator.attrgetter('id'), src_partners)), dst_partner.id)
 
         for partner in src_partners:
             partner.unlink()
-
 
     def clean_emails(self, cr, uid, context=None):
         """
@@ -756,4 +763,3 @@ class MergePartnerAutomatic(osv.TransientModel):
                             WHERE id != %s AND email LIKE '%%%s'
                     """ % (id, id, email))
         return False
-
