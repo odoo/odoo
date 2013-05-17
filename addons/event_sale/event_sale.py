@@ -92,12 +92,3 @@ class sale_order_line(osv.osv):
         return super(sale_order_line, self).button_confirm(cr, uid, ids, context=context)
 
 sale_order_line()
-
-class event_registration(osv.osv):
-    _inherit = 'event.registration'
-
-    def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification', subtype=None, parent_id=False, attachments=None, context=None, content_subtype='html', **kwargs):
-        """ Overrides mail_thread message_post so that we can set the message note when
-            a new registration create on the event sale.
-        """
-        return super(event_registration, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)
