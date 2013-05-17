@@ -32,9 +32,10 @@ class project_configuration(osv.TransientModel):
                                      help="If you have setup a catch-all email domain redirected to "
                                           "the OpenERP server, enter the domain name here."),
         'alias_catchall': fields.char('Catchall Email Alias',
-            help="Define the default email that will handle replies to document "
-                    "not having their specific email alias defined. Only the left "
-                    "part is required.")
+            help="Define the default email that will be used as reply_to address "
+                    "with the mailgateway to handle replies to the document "
+                    "discussions not having their specific email alias defined. "
+                    "Only the left part is required.")
     }
 
     def get_default_alias_domain(self, cr, uid, ids, context=None):
