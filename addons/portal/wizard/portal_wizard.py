@@ -159,6 +159,8 @@ class wizard_user(osv.osv_memory):
         for wizard_user in wizards:
             portal = wizard_user.wizard_id.portal_id
             user = self._retrieve_user(cr, SUPERUSER_ID, wizard_user, context)
+            if wizard_user.partner_id.email != wizard_user.email:
+                wizard_user.partner_id.write({'email': wizard_user.email})
             if wizard_user.in_portal:
                 # create a user if necessary, and make sure it is in the portal group
                 if not user:
@@ -167,8 +169,6 @@ class wizard_user(osv.osv_memory):
                     user.write({'active': True, 'groups_id': [(4, portal.id)]})
                     # prepare for the signup process
                     user.partner_id.signup_prepare()
-                if wizard_user.partner_id.email != wizard_user.email:
-                    wizard_user.partner_id.write({'email': wizard_user.email})
                 wizard_user.refresh()
                 self._send_email(cr, uid, wizard_user, context)
             else:
