@@ -234,7 +234,7 @@ class wizard_user(osv.osv_memory):
         mail_mail = self.pool.get('mail.mail')
         mail_values = {
             'email_from': this_user.email,
-            'email_to': wizard_user.email,
+            'email_to': user.email,
             'subject': _(WELCOME_EMAIL_SUBJECT) % data,
             'body_html': '<pre>%s</pre>' % (_(WELCOME_EMAIL_BODY) % data),
             'state': 'outgoing',
