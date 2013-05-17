@@ -58,12 +58,13 @@ class product_product (osv.osv):
             currency_id = self.pool.get('res.company').browse(cr, uid, company_id, context=context).currency_id.id
         if fifo:
             move_in_ids = move_obj.search(cr, uid, [('company_id','=', company_id), ('qty_remaining', '>', 0), ('state', '=', 'done'), 
-                                             ('type', '=', 'in'), ('product_id', '=', product.id)], 
+                                             ('location_id.usage', '!=', 'internal'), ('location_dest_id.usage', '=', 'internal'), ('product_id', '=', product.id)], 
                                        order = 'date', context=context)
         else: 
             move_in_ids = move_obj.search(cr, uid, [('company_id','=', company_id), ('qty_remaining', '>', 0), ('state', '=', 'done'), 
-                                             ('type', '=', 'in'), ('product_id', '=', product.id)], 
+                                             ('location_id.usage', '!=', 'internal'), ('location_dest_id.usage', '=', 'internal'), ('product_id', '=', product.id)], 
                                        order = 'date desc', context=context)
+
         tuples = []
         qty_to_go = qty
         for move in move_obj.browse(cr, uid, move_in_ids, context=context):
