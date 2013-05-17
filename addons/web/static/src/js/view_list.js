@@ -895,8 +895,9 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
 
         this.record_callbacks = {
             'remove': function (event, record) {
-                var $row = self.$current.children(
-                    '[data-id=' + record.get('id') + ']');
+                var id = record.get('id');
+                self.dataset.remove_ids([id])
+                var $row = self.$current.children('[data-id=' + id + ']');
                 var index = $row.data('index');
                 $row.remove();
             },
