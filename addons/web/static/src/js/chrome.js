@@ -380,7 +380,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
         var fetch_langs = this.rpc("/web/session/get_lang_list", {}).done(function(result) {
             self.lang_list = result;
         });
-        return $.when(fetch_langs).done(function(){fetch_db.always(self.do_render)});
+        return $.when(fetch_db, fetch_langs).always(self.do_render);
     },
     do_render: function() {
         var self = this;
