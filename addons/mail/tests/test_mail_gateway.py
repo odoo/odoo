@@ -179,7 +179,8 @@ class TestMailgateway(TestMailBase):
                         'mail_mail: reply_to should equal to mail_message.email_from when having no document or default alias')
 
         # Data: set catchall domain
-        self.registry('ir.config_parameter').set_param(self.cr, self.uid, 'mail.catchall.domain', 'schlouby.fr')
+        self.registry('ir.config_parameter').set_param(cr, uid, 'mail.catchall.domain', 'schlouby.fr')
+        self.registry('ir.config_parameter').unlink(cr, uid, self.registry('ir.config_parameter').search(cr, uid, [('key', '=', 'mail.catchall.alias')]))
 
         # Do: create a mail_mail based on the previous mail_message
         mail_id = self.mail_mail.create(cr, uid, {'mail_message_id': msg_id, 'state': 'cancel'})
