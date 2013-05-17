@@ -203,8 +203,6 @@ class split_in_production_lot(osv.osv_memory):
         production_obj.write(cr, uid, production_ids, {'move_lines': [(4, m) for m in new_moves]})
         return new_moves
 
-    
-
 split_in_production_lot()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
