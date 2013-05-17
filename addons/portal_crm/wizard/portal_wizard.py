@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2011 OpenERP S.A (<http://www.openerp.com>).
+#    OpenERP, Open Source Business Applications
+#    Copyright (c) 2012-TODAY OpenERP S.A. <http://openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -33,9 +33,9 @@ class wizard_user(osv.osv_memory):
         try:
             return super(wizard_user, self).action_apply(cr, uid, ids, context)
         except osv.except_osv, e:
-            raise osv.except_osv(e[0], "%s\n\n%s" % (e[1], _("To resolve this error, you can:\
-                Change and use an other contact's email adresse;  \
-                Select other contacts; \
-                Use the partner merge action (more option of the contacts list) to merge the identical partners.")))
+            if "Contact" in e[0]:
+                raise osv.except_osv(e[0], "%s %s" % (e[1], _("Use the partner merge action (more option of the contacts list) to merge the identical partners.")))
+            else:
+                raise e
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

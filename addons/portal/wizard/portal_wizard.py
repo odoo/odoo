@@ -139,33 +139,32 @@ class wizard_user(osv.osv_memory):
         error_user = []
         ctx = dict(context or {}, active_test=False)
         for wizard_user in wizards:
-            email = wizard_user.partner_id.email
-            if not email:
-                error_empty.append(wizard_user.partner_id)
-            elif email in emails:
-                error_emails.append(email)
-            user = res_users.search(cr, SUPERUSER_ID, [('partner_id', '!=', wizard_user.partner_id.id), ('login', '=', email)], context=ctx)
-            if user:
-                error_user.append((wizard_user.partner_id, res_users.browse(cr, SUPERUSER_ID, user[0], context=ctx).partner_id,))
-            emails.append(email)
+            if wizard_user.in_portal:
+                email = extract_email(wizard_user.partner_id.email)
+                if not email:
+                    error_empty.append(wizard_user.partner_id)
+                elif email in emails:
+                    error_emails.append(email)
+                user = res_users.search(cr, SUPERUSER_ID, [('partner_id', '!=', wizard_user.partner_id.id), ('login', '=', email)], context=ctx)
+                if user:
+                    error_user.append((wizard_user.partner_id, res_users.browse(cr, SUPERUSER_ID, user[0], context=ctx).partner_id,))
+                emails.append(email)
 
-        error_msg = ""
+        error_msg = []
         if error_empty:
-            error_msg = _("%sSome contacts don't have email address: \n%r") % (error_msg, map(lambda p: p.name_get()[0], error_empty))
+            error_msg.append("%s\n%r" % (_("Some contacts don't have valid email address: "), [p.display_name for p in error_empty]))
         if error_emails:
-            if error_msg:
-                error_msg += '\n\n'
-            error_msg = _("%sYou have more than one email address equal to: \n%r") % (error_msg, error_emails)
+            error_msg.append("%s\n%r" % (_("You have more than one email address equal to:"), error_emails))
         if error_user:
-            if error_msg:
-                error_msg += '\n\n'
-            error_msg = _("%sSome contact have the same email address than an other contact who have already an user's access: \n%s") % \
-                                (error_msg, [(p_u[0].id, p_u[0].name, '=>', p_u[1].id, p_u[1].name) for p_u in error_user])
+            error_msg.append("%s\n%s" % (_("Some contact have the same email address than an other contact who have already an user's access:"),
+                                (error_msg, [(p_u[0].id, p_u[0].name, '=>', p_u[1].id, p_u[1].name) for p_u in error_user])))
         if error_msg:
-            raise osv.except_osv(_('Contacts Error'), error_msg)
+            error_msg.append(_("To resolve this error, you can:\
+                Change and use an other contact's email adresse;  \
+                Select other contacts; "))
+            raise osv.except_osv(_('Contacts Error'), "\n\n".join(error_msg))
 
         for wizard_user in wizards:
-            print wizard_user
             portal = wizard_user.wizard_id.portal_id
             user = self._retrieve_user(cr, SUPERUSER_ID, wizard_user, context)
             if wizard_user.in_portal:
@@ -205,12 +204,15 @@ class wizard_user(osv.osv_memory):
         """
         res_users = self.pool.get('res.users')
         create_context = dict(context or {}, noshortcut=True)       # to prevent shortcut creation
+        print extract_email(wizard_user.email)
         values = {
+            'email': extract_email(wizard_user.email),
             'login': extract_email(wizard_user.email),
             'partner_id': wizard_user.partner_id.id,
             'groups_id': [(6, 0, [])],
             'share': True,
         }
+        print values
         user_id = res_users.create(cr, uid, values, context=create_context)
         return res_users.browse(cr, uid, user_id, context)
 
