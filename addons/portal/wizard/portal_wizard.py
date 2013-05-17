@@ -122,14 +122,6 @@ class wizard_user(osv.osv_memory):
         'in_portal': fields.boolean('In Portal'),
     }
 
-    def create(self, cr, uid, values, context=None):
-        """ overridden to update the partner's email (if necessary) """
-        id = super(wizard_user, self).create(cr, uid, values, context)
-        wuser = self.browse(cr, uid, id, context)
-        if wuser.partner_id.email != wuser.email:
-            wuser.partner_id.write({'email': wuser.email})
-        return id
-
     def action_apply(self, cr, uid, ids, context=None):
         res_users = self.pool.get('res.users')
         wizards = self.browse(cr, SUPERUSER_ID, ids, context)
@@ -140,7 +132,7 @@ class wizard_user(osv.osv_memory):
         ctx = dict(context or {}, active_test=False)
         for wizard_user in wizards:
             if wizard_user.in_portal:
-                email = extract_email(wizard_user.partner_id.email)
+                email = extract_email(wizard_user.email)
                 if not email:
                     error_empty.append(wizard_user.partner_id)
                 elif email in emails:
@@ -204,7 +196,8 @@ class wizard_user(osv.osv_memory):
         """
         res_users = self.pool.get('res.users')
         create_context = dict(context or {}, noshortcut=True)       # to prevent shortcut creation
-        print extract_email(wizard_user.email)
+        if wizard_user.partner_id.email != wizard_user.email:
+            wizard_user.partner_id.write({'email': wizard_user.email})
         values = {
             'email': extract_email(wizard_user.email),
             'login': extract_email(wizard_user.email),
@@ -212,7 +205,6 @@ class wizard_user(osv.osv_memory):
             'groups_id': [(6, 0, [])],
             'share': True,
         }
-        print values
         user_id = res_users.create(cr, uid, values, context=create_context)
         return res_users.browse(cr, uid, user_id, context)
 
@@ -242,7 +234,7 @@ class wizard_user(osv.osv_memory):
         mail_mail = self.pool.get('mail.mail')
         mail_values = {
             'email_from': this_user.email,
-            'email_to': user.email,
+            'email_to': wizard_user.email,
             'subject': _(WELCOME_EMAIL_SUBJECT) % data,
             'body_html': '<pre>%s</pre>' % (_(WELCOME_EMAIL_BODY) % data),
             'state': 'outgoing',
