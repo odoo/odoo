@@ -206,10 +206,25 @@ class TestMailgateway(TestMailBase):
         self.assertIn('test.sylvie.lelitre@agrolait.com', sent_emails[0].get('email_to'),
                             'message_process: bounce email on Partners alias should have original email sender as recipient')
 
+        # Do: incoming email from an unknown partner on a Partners only alias -> bounce
+        self._init_mock_build_email()
+        self.mail_alias.write(cr, uid, [alias_id], {'alias_contact': 'partners'})
+        frog_groups = format_and_process(MAIL_TEMPLATE, to='groups@example.com, other3@gmail.com')
+        # Test: no group created
+        self.assertTrue(len(frog_groups) == 0)
+        # Test: email bounced
+        sent_emails = self._build_email_kwargs_list
+        self.assertEqual(len(sent_emails), 1,
+                            'message_process: incoming email on Partners alias should send a bounce email')
+        self.assertIn('Frogs', sent_emails[0].get('subject'),
+                            'message_process: bounce email on Followers alias should contain the original subject')
+        self.assertIn('test.sylvie.lelitre@agrolait.com', sent_emails[0].get('email_to'),
+                            'message_process: bounce email on Followers alias should have original email sender as recipient')
+
         # Do: incoming email from an unknown partner on a Followers only alias -> bounce
         self._init_mock_build_email()
         self.mail_alias.write(cr, uid, [alias_id], {'alias_contact': 'followers'})
-        frog_groups = format_and_process(MAIL_TEMPLATE, to='groups@example.com, other3@gmail.com')
+        frog_groups = format_and_process(MAIL_TEMPLATE, to='groups@example.com, other4@gmail.com')
         # Test: no group created
         self.assertTrue(len(frog_groups) == 0)
         # Test: email bounced
@@ -226,7 +241,7 @@ class TestMailgateway(TestMailBase):
         p1id = self.res_partner.create(cr, uid, {'name': 'Sylvie Lelitre', 'email': 'test.sylvie.lelitre@agrolait.com'})
         p2id = self.res_partner.create(cr, uid, {'name': 'Other Poilvache', 'email': 'other@gmail.com'})
         self._init_mock_build_email()
-        frog_groups = format_and_process(MAIL_TEMPLATE, to='groups@example.com, other4@gmail.com')
+        frog_groups = format_and_process(MAIL_TEMPLATE, to='groups@example.com, other@gmail.com')
         sent_emails = self._build_email_kwargs_list
         # Test: one group created by Raoul
         self.assertEqual(len(frog_groups), 1, 'message_process: a new mail.group should have been created')
@@ -238,7 +253,7 @@ class TestMailgateway(TestMailBase):
         self.assertEqual(len(frog_group.message_ids), 1,
                             'message_process: newly created group should have the incoming email in message_ids')
         msg = frog_group.message_ids[0]
-        # Test: message: unknown email address -> message has email_from, not author_id
+        # Test: message: author found
         self.assertEqual(p1id, msg.author_id.id,
                             'message_process: message on created group should have Sylvie as author_id')
         self.assertIn('Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>', msg.email_from,
@@ -248,14 +263,17 @@ class TestMailgateway(TestMailBase):
         self.assertEqual(frog_follower_ids, set([p1id]),
                             'message_process: newly created group should have 1 follower (author, not creator, not recipients)')
         # Test: sent emails: no-one, no bounce effet
+        sent_emails = self._build_email_kwargs_list
         self.assertEqual(len(sent_emails), 0,
                             'message_process: should not bounce incoming emails')
         # Data: unlink group
         frog_group.unlink()
 
-        # Do: incoming email from a known partner that is also an user that can create a mail.group
-        self.res_users.create(cr, uid, {'partner_id': p1id, 'login': 'sylvie', 'groups_id': [(6, 0, [self.group_employee_id])]})
-        frog_groups = format_and_process(MAIL_TEMPLATE, to='groups@example.com, other@gmail.com')
+        # Do: incoming email from a not follower Partner on a Followers only alias -> ok
+        self._init_mock_build_email()
+        self.mail_alias.write(cr, uid, [alias_id], {'alias_contact': 'followers'})
+        self.mail_group.message_subscribe(cr, uid, [self.group_pigs_id], [p1id])
+        frog_groups = format_and_process(MAIL_TEMPLATE, to='groups@example.com, other6@gmail.com')
         # Test: one group created by Raoul (or Sylvie maybe, if we implement it)
         self.assertEqual(len(frog_groups), 1, 'message_process: a new mail.group should have been created')
         frog_group = self.mail_group.browse(cr, uid, frog_groups[0])
@@ -267,11 +285,60 @@ class TestMailgateway(TestMailBase):
         self.assertEqual(frog_follower_ids, set([p1id]),
                             'message_process: newly created group should have 1 follower (author, not creator, not recipients)')
         # Test: sent emails: no-one, no bounce effet
+        sent_emails = self._build_email_kwargs_list
         self.assertEqual(len(sent_emails), 0,
                             'message_process: should not bounce incoming emails')
 
         # --------------------------------------------------
-        # Test2: discussion update
+        # Test2: update-like alias
+        # --------------------------------------------------
+
+        # Do: Pigs alias is restricted, should bounce
+        self._init_mock_build_email()
+        self.mail_group.write(cr, uid, [frog_group.id], {'alias_name': 'frogs', 'alias_contact': 'followers', 'alias_force_thread_id': frog_group.id})
+        frog_groups = format_and_process(MAIL_TEMPLATE, email_from='other@gmail.com',
+                                            msg_id='<1198923581.41972151344608186760.JavaMail.diff1@agrolait.com>',
+                                            to='frogs@example.com>', subject='Re: news')
+        # Test: no group 'Re: news' created, still only 1 Frogs group
+        self.assertEqual(len(frog_groups), 0,
+                            'message_process: reply on Frogs should not have created a new group with new subject')
+        frog_groups = self.mail_group.search(cr, uid, [('name', '=', 'Frogs')])
+        self.assertEqual(len(frog_groups), 1,
+                            'message_process: reply on Frogs should not have created a duplicate group with old subject')
+        frog_group = self.mail_group.browse(cr, uid, frog_groups[0])
+        # Test: email bounced
+        sent_emails = self._build_email_kwargs_list
+        self.assertEqual(len(sent_emails), 1,
+                            'message_process: incoming email on Followers alias should send a bounce email')
+        self.assertIn('Re: news', sent_emails[0].get('subject'),
+                            'message_process: bounce email on Followers alias should contain the original subject')
+
+        # Do: Pigs alias is restricted, should accept Followers
+        self._init_mock_build_email()
+        self.mail_group.message_subscribe(cr, uid, [frog_group.id], [p2id])
+        self.mail_group.write(cr, uid, [frog_group.id], {'alias_name': 'frogs', 'alias_contact': 'followers'})
+        frog_groups = format_and_process(MAIL_TEMPLATE, email_from='other@gmail.com',
+                                            msg_id='<1198923581.41972151344608186799.JavaMail.diff1@agrolait.com>',
+                                            to='frogs@example.com>', subject='Re: cats')
+        # Test: no group 'Re: news' created, still only 1 Frogs group
+        self.assertEqual(len(frog_groups), 0,
+                            'message_process: reply on Frogs should not have created a new group with new subject')
+        frog_groups = self.mail_group.search(cr, uid, [('name', '=', 'Frogs')])
+        self.assertEqual(len(frog_groups), 1,
+                            'message_process: reply on Frogs should not have created a duplicate group with old subject')
+        frog_group = self.mail_group.browse(cr, uid, frog_groups[0])
+        # Test: one new message
+        self.assertEqual(len(frog_group.message_ids), 2, 'message_process: group should contain 2 messages after reply')
+        # Test: sent emails: 1 (Sylvie copy of the incoming email, but no bounce)
+        sent_emails = self._build_email_kwargs_list
+        self.assertEqual(len(sent_emails), 1,
+                            'message_process: one email should have been generated')
+        self.assertIn('test.sylvie.lelitre@agrolait.com', sent_emails[0].get('email_to')[0],
+                            'message_process: email should be sent to Sylvie')
+        self.mail_group.message_unsubscribe(cr, uid, [frog_group.id], [p2id])
+
+        # --------------------------------------------------
+        # Test3: discussion and replies
         # --------------------------------------------------
 
         # Do: even with a wrong destination, a reply should end up in the correct thread
@@ -287,7 +354,7 @@ class TestMailgateway(TestMailBase):
                             'message_process: reply on Frogs should not have created a duplicate group with old subject')
         frog_group = self.mail_group.browse(cr, uid, frog_groups[0])
         # Test: one new message
-        self.assertEqual(len(frog_group.message_ids), 2, 'message_process: group should contain 2 messages after reply')
+        self.assertEqual(len(frog_group.message_ids), 3, 'message_process: group should contain 2 messages after reply')
         # Test: author (and not recipient) added as follower
         frog_follower_ids = set([p.id for p in frog_group.message_follower_ids])
         self.assertEqual(frog_follower_ids, set([p1id, p2id]),
@@ -305,20 +372,18 @@ class TestMailgateway(TestMailBase):
                             'message_process: reply on Frogs should not have created a duplicate group with old subject')
         frog_group = self.mail_group.browse(cr, uid, frog_groups[0])
         # Test: no new message
-        self.assertEqual(len(frog_group.message_ids), 2, 'message_process: message with already existing message_id should not have been duplicated')
+        self.assertEqual(len(frog_group.message_ids), 3, 'message_process: message with already existing message_id should not have been duplicated')
         # Test: message_id is still unique
         msg_ids = self.mail_message.search(cr, uid, [('message_id', 'ilike', '<1198923581.41972151344608186760.JavaMail.diff1@agrolait.com>')])
         self.assertEqual(len(msg_ids), 1,
                             'message_process: message with already existing message_id should not have been duplicated')
 
         # --------------------------------------------------
-        # Test3: email_from and partner finding
+        # Test4: email_from and partner finding
         # --------------------------------------------------
 
         # Data: extra partner with Raoul's email -> test the 'better author finding'
         extra_partner_id = self.res_partner.create(cr, uid, {'name': 'A-Raoul', 'email': 'test_raoul@email.com'})
-        # extra_user_id = self.res_users.create(cr, uid, {'name': 'B-Raoul', 'email': self.user_raoul.email})
-        # extra_user_pid = self.res_users.browse(cr, uid, extra_user_id).partner_id.id
 
         # Do: post a new message, with a known partner -> duplicate emails -> partner
         format_and_process(MAIL_TEMPLATE, email_from='Lombrik Lubrik <test_raoul@email.com>',
@@ -363,7 +428,7 @@ class TestMailgateway(TestMailBase):
         self.res_users.write(cr, uid, self.user_raoul_id, {'email': raoul_email})
 
         # --------------------------------------------------
-        # Test4: misc gateway features
+        # Test5: misc gateway features
         # --------------------------------------------------
 
         # Do: incoming email with model that does not accepts incoming emails must raise
