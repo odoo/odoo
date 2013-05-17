@@ -616,8 +616,8 @@ class mail_thread(osv.AbstractModel):
             mail_mail = self.pool.get('mail.mail')
             mail_id = mail_mail.create(cr, uid, {
                                 'body_html': '<div><p>Hello,</p>'
-                                    '<p>The following email sent to %s cannot be accepted because this address'
-                                    'is private. Only known contacts are allowed to contact this address.</p></div>'
+                                    '<p>The following email sent to %s cannot be accepted because this is '
+                                    'a private email address. Only allowed people can contact us at this address.</p></div>'
                                     '<blockquote>%s</blockquote>' % (message.get('to'), message_dict.get('body')),
                                 'subject': 'Re: %s' % message.get('subject'),
                                 'email_to': message.get('from'),
@@ -711,12 +711,11 @@ class mail_thread(osv.AbstractModel):
 
             # route contact settings
             if alias and alias.alias_contact == 'followers' and (thread_id or alias.alias_parent_thread_id):
-                print alias, alias.alias_contact
                 if thread_id:
                     obj = self.pool[model].browse(cr, uid, thread_id, context=context)
                 else:
                     obj = self.pool[alias.alias_parent_model_id.model].browse(cr, uid, alias.alias_parent_thread_id, context=context)
-                if not author_id or not author_id in obj.message_follower_ids:
+                if not author_id or not author_id in [fol.id for fol in obj.message_follower_ids]:
                     _logger.warning('Routing mail with Message-Id %s: route %s: alias %s restricted to internal followers, skipping',
                                         message_id, route, alias.alias_name)
                     create_bounce_email()
