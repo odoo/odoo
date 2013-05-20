@@ -61,7 +61,7 @@ class account_bank_statement(osv.osv):
         return res
 
     def _get_period(self, cr, uid, context=None):
-        periods = self.pool.get('account.period').find(cr, uid,context=context)
+        periods = self.pool.get('account.period').find(cr, uid, context=context)
         if periods:
             return periods[0]
         return False

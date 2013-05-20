@@ -23,10 +23,16 @@ import datetime
 from dateutil.relativedelta import relativedelta
 import logging
 from operator import itemgetter
-from os.path import join as opj
 import time
+import urllib2
+import urlparse
 
-from openerp import tools
+try:
+    import simplejson as json
+except ImportError:
+    import json     # noqa
+
+from openerp.release import serie
 from openerp.tools.translate import _
 from openerp.osv import fields, osv
 
@@ -38,13 +44,28 @@ class account_installer(osv.osv_memory):
 
     def _get_charts(self, cr, uid, context=None):
         modules = self.pool.get('ir.module.module')
+
+        # try get the list on apps server
+        try:
+            apps_server = self.pool.get('ir.config_parameter').get_param(cr, uid, 'apps.server', 'https://apps.openerp.com')
+
+            up = urlparse.urlparse(apps_server)
+            url = '{0.scheme}://{0.netloc}/apps/charts?serie={1}'.format(up, serie)
+
+            j = urllib2.urlopen(url, timeout=3).read()
+            apps_charts = json.loads(j)
+
+            charts = dict(apps_charts)
+        except Exception:
+            charts = dict()
+
         # Looking for the module with the 'Account Charts' category
         category_name, category_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'module_category_localization_account_charts')
         ids = modules.search(cr, uid, [('category_id', '=', category_id)], context=context)
-        charts = list(
-            sorted(((m.name, m.shortdesc)
-                    for m in modules.browse(cr, uid, ids, context=context)),
-                   key=itemgetter(1)))
+        if ids:
+            charts.update((m.name, m.shortdesc) for m in modules.browse(cr, uid, ids, context=context))
+
+        charts = sorted(charts.items(), key=itemgetter(1))
         charts.insert(0, ('configurable', _('Custom')))
         return charts
 
@@ -57,9 +78,9 @@ class account_installer(osv.osv_memory):
                  "country."),
         'date_start': fields.date('Start Date', required=True),
         'date_stop': fields.date('End Date', required=True),
-        'period': fields.selection([('month', 'Monthly'), ('3months','3 Monthly')], 'Periods', required=True),
+        'period': fields.selection([('month', 'Monthly'), ('3months', '3 Monthly')], 'Periods', required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'has_default_company' : fields.boolean('Has Default Company', readonly=True),
+        'has_default_company': fields.boolean('Has Default Company', readonly=True),
     }
 
     def _default_company(self, cr, uid, context=None):
@@ -78,30 +99,29 @@ class account_installer(osv.osv_memory):
         'has_default_company': _default_has_default_company,
         'charts': 'configurable'
     }
-    
+
     def get_unconfigured_cmp(self, cr, uid, context=None):
         """ get the list of companies that have not been configured yet
         but don't care about the demo chart of accounts """
-        cmp_select = []
         company_ids = self.pool.get('res.company').search(cr, uid, [], context=context)
         cr.execute("SELECT company_id FROM account_account WHERE active = 't' AND account_account.parent_id IS NULL AND name != %s", ("Chart For Automated Tests",))
         configured_cmp = [r[0] for r in cr.fetchall()]
         return list(set(company_ids)-set(configured_cmp))
-    
+
     def check_unconfigured_cmp(self, cr, uid, context=None):
         """ check if there are still unconfigured companies """
         if not self.get_unconfigured_cmp(cr, uid, context=context):
             raise osv.except_osv(_('No unconfigured company !'), _("There is currently no company without chart of account. The wizard will therefore not be executed."))
-    
+
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        if context is None:context = {}
-        res = super(account_installer, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
+        if context is None: context = {}
+        res = super(account_installer, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
         cmp_select = []
         # display in the widget selection only the companies that haven't been configured yet
         unconfigured_cmp = self.get_unconfigured_cmp(cr, uid, context=context)
         for field in res['fields']:
             if field == 'company_id':
-                res['fields'][field]['domain'] = [('id','in',unconfigured_cmp)]
+                res['fields'][field]['domain'] = [('id', 'in', unconfigured_cmp)]
                 res['fields'][field]['selection'] = [('', '')]
                 if unconfigured_cmp:
                     cmp_select = [(line.id, line.name) for line in self.pool.get('res.company').browse(cr, uid, unconfigured_cmp)]
@@ -117,7 +137,7 @@ class account_installer(osv.osv_memory):
 
     def execute(self, cr, uid, ids, context=None):
         self.execute_simple(cr, uid, ids, context)
-        super(account_installer, self).execute(cr, uid, ids, context=context)
+        return super(account_installer, self).execute(cr, uid, ids, context=context)
 
     def execute_simple(self, cr, uid, ids, context=None):
         if context is None:
@@ -129,8 +149,8 @@ class account_installer(osv.osv_memory):
                 if not f_ids:
                     name = code = res['date_start'][:4]
                     if int(name) != int(res['date_stop'][:4]):
-                        name = res['date_start'][:4] +'-'+ res['date_stop'][:4]
-                        code = res['date_start'][2:4] +'-'+ res['date_stop'][2:4]
+                        name = res['date_start'][:4] + '-' + res['date_stop'][:4]
+                        code = res['date_start'][2:4] + '-' + res['date_stop'][2:4]
                     vals = {
                         'name': name,
                         'code': code,
@@ -150,7 +170,7 @@ class account_installer(osv.osv_memory):
         chart = self.read(cr, uid, ids, ['charts'],
                           context=context)[0]['charts']
         _logger.debug('Installing chart of accounts %s', chart)
-        return modules | set([chart])
+        return (modules | set([chart])) - set(['has_default_company', 'configurable'])
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
