@@ -1380,50 +1380,46 @@ class property(function):
         return res
 
     def _get_by_id(self, obj, cr, uid, prop_name, ids, context=None):
-        prop = obj.pool.get('ir.property')
-        vids = [obj._name + ',' + str(oid) for oid in  ids]
-
-        domain = [('fields_id.model', '=', obj._name), ('fields_id.name', 'in', prop_name)]
-        #domain = prop._get_domain(cr, uid, prop_name, obj._name, context)
-        if vids:
-            domain = [('res_id', 'in', vids)] + domain
-        return prop.search(cr, uid, domain, context=context)
+        property_pool = obj.pool.get('ir.property')
+        company_pool = obj.pool.get('res.company')
+        reference = [obj._name + ',' + str(oid) for oid in  ids]
+        def_id = self._field_get(cr, uid, obj._name, prop_name)
+        company_id  = company_pool._company_default_get(cr, uid, obj._name, def_id, context=context)
+        #match the prop value on current user company to match 
+        #property get and write based on current user company,
+        domain = [('fields_id.model', '=', obj._name), 
+                  ('fields_id.name', '=', prop_name),
+                  ('company_id', '=', company_id)]
+        #add reference for more accurate property result, if any.
+        if reference:
+            domain.extend([('res_id', 'in', reference)])
+        return property_pool.search(cr, uid, domain, context=context)
+    
+    def _create_property(self, obj, cr, uid, id, prop_name, id_val, old_ids, context):
+        company_pool = obj.pool.get('res.company')
+        property_pool = obj.pool.get('ir.property')
+        if old_ids: 
+            property_pool.unlink(cr, uid, old_ids, context)
+        def_id = self._field_get(cr, uid, obj._name, prop_name)
+        company_id = company_pool._company_default_get(cr, uid, obj._name, def_id, context=context)
+        property_field = obj.pool.get('ir.model.fields').browse(cr, uid, def_id, context=context)
+        return property_pool.create(cr, uid, {
+            'name': property_field.name,
+            'value': id_val,
+            'res_id': obj._name+','+str(id),
+            'company_id': company_id,
+            'fields_id': def_id,
+            'type': self._type,
+        }, context=context)
 
     # TODO: to rewrite more clean
     def _fnct_write(self, obj, cr, uid, id, prop_name, id_val, obj_dest, context=None):
-        if context is None:
-            context = {}
-
-        nids = self._get_by_id(obj, cr, uid, [prop_name], [id], context)
-        if nids:
-            cr.execute('DELETE FROM ir_property WHERE id IN %s', (tuple(nids),))
-
-        default_val = self._get_default(obj, cr, uid, prop_name, context)
-
-        property_create = False
-        if isinstance(default_val, openerp.osv.orm.browse_record):
-            if default_val.id != id_val:
-                property_create = True
-        elif default_val != id_val:
-            property_create = True
-
-        if property_create:
-            def_id = self._field_get(cr, uid, obj._name, prop_name)
-            company = obj.pool.get('res.company')
-            cid = company._company_default_get(cr, uid, obj._name, def_id,
-                                               context=context)
-            propdef = obj.pool.get('ir.model.fields').browse(cr, uid, def_id,
-                                                             context=context)
-            prop = obj.pool.get('ir.property')
-            return prop.create(cr, uid, {
-                'name': propdef.name,
-                'value': id_val,
-                'res_id': obj._name+','+str(id),
-                'company_id': cid,
-                'fields_id': def_id,
-                'type': self._type,
-            }, context=context)
-        return False
+        #check the result of ir.property.get() for existing prop field value
+        default_val = self._get_defaults(obj, cr, uid, [prop_name], context=None)[prop_name]
+        #if values found same skip the unlinking the creation and creation of new records
+        if (isinstance(default_val, openerp.osv.orm.browse_record) and default_val.id != id_val) or (default_val != id_val):
+            old_ids = self._get_by_id(obj, cr, uid, prop_name, [id], context)
+            return self._create_property(obj, cr, uid, id, prop_name, id_val, old_ids, context)  
 
     def _fnct_read(self, obj, cr, uid, ids, prop_names, obj_dest, context=None):
         prop = obj.pool.get('ir.property')
