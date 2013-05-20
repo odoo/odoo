@@ -1261,12 +1261,11 @@
             <field name="model">account.move</field>
             <field name="arch" type="xml">
                 <form string="Account Entry" version="7.0">
-                <header>
-                    <button name="button_validate" states="draft" string="Post" type="object" class="oe_highlight" groups="account.group_account_invoice"/>
-                    <button name="button_cancel" states="posted" string="Cancel Entry" type="object" groups="account.group_account_invoice"/>
-                    <field name="state" widget="statusbar"/>
-                </header>
-                <sheet string="Journal Entries" >
+                    <header>
+                        <button name="button_validate" states="draft" string="Post" type="object" class="oe_highlight" groups="account.group_account_invoice"/>
+                        <button name="button_cancel" states="posted" string="Cancel Entry" type="object" groups="account.group_account_invoice"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
                     <label for="name" class="oe_edit_only" attrs="{'invisible':[('name','=','/')]}"/>
                     <h1>
                         <field name="name" readonly="True" attrs="{'invisible':[('name','=','/')]}"/>
@@ -1375,7 +1374,6 @@
                             <field name="narration" colspan="4" placeholder="Add an internal note..." nolabel="1" height="50"/>
                         </page>
                     </notebook>
-                    </sheet>
                 </form>
             </field>
         </record>
@@ -2257,7 +2255,7 @@
                     <group>
                         <group>
                             <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection" domain="[('type', '=', 'cash')]" />
-                            <field name="user_id" readonly="1" string="Responsible"/>
+                            <field name="user_id" attrs="{'readonly':[('state','!=','draft')]}" string="Responsible"/>
                             <field name="total_entry_encoding"/>
                             <field name='company_id' widget="selection" groups="base.group_multi_company" />
                         </group>
