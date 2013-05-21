@@ -152,7 +152,8 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="context">{
                     'search_default_section_id': [active_id],
-                    'default_section_id': active_id, 'show_address': 1,
+                    'default_section_id': active_id,
+                    'show_address': 1,
                 }
             </field>
             <field name="domain">[('state','in',('draft','sent','cancel'))]</field>
@@ -183,7 +184,7 @@
                 ('type', '=', 'out_invoice')]</field>
             <field name="context">{
                     'search_default_section_id': [active_id],
-                    'default_section_id': active_id},
+                    'default_section_id': active_id,
                     'default_type':'out_invoice',
                     'type':'out_invoice',
                     'journal_type': 'sale',
