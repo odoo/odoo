@@ -33,6 +33,7 @@ import threading
 
 from osv import osv
 from osv import fields
+from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
 from openerp.tools import html2text
 import openerp.tools as tools
@@ -416,11 +417,11 @@ class ir_mail_server(osv.osv):
         # Get SMTP Server Details from Mail Server
         mail_server = None
         if mail_server_id:
-            mail_server = self.browse(cr, uid, mail_server_id)
+            mail_server = self.browse(cr, SUPERUSER_ID, mail_server_id)
         elif not smtp_server:
-            mail_server_ids = self.search(cr, uid, [], order='sequence', limit=1)
+            mail_server_ids = self.search(cr, SUPERUSER_ID, [], order='sequence', limit=1)
             if mail_server_ids:
-                mail_server = self.browse(cr, uid, mail_server_ids[0])
+                mail_server = self.browse(cr, SUPERUSER_ID, mail_server_ids[0])
         else:
             # we were passed an explicit smtp_server or nothing at all
             smtp_server = smtp_server or tools.config.get('smtp_server')
