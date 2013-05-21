@@ -1,0 +1,14 @@
+
+-
+  Set the current user as multicompany user
+-
+  !context
+    'uid': 'stock.multicompany_user'
+-
+  check no error on getting default stock.move values for internal move
+-
+  !python {model: stock.move}:
+    context['picking_type'] = 'internal'
+    defaults = self.default_get(cr, uid, ['location_id', 'location_dest_id', 'type'], context)
+    assert defaults == {'location_id': False, 'location_dest_id': False, 'type': 'internal'}
+
