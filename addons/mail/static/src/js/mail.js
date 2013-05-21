@@ -1841,7 +1841,6 @@ openerp.mail = function (session) {
             this._super(parent, action);
 
             this.action = _.clone(action);
-            // debugger
             this.domain = this.action.params.domain || this.action.domain || [];
             this.context = _.extend(this.action.params.context || {}, this.action.context || {});
 
@@ -1852,7 +1851,6 @@ openerp.mail = function (session) {
                     continue;
                 }
                 this.context['search_default_' + key] = this.action.context.params[key];
-                console.log(this.context);
             }
             for (var key in this.context) {
                 if (key.match(/^search_default_/)) {
