@@ -413,7 +413,8 @@ class share_wizard(osv.TransientModel):
                 relation_model_id = model_obj.search(cr, UID_ROOT, [('model','=',coldef._obj)])[0]
                 relation_model_browse = model_obj.browse(cr, UID_ROOT, relation_model_id, context=context)
                 relation_osv = self.pool.get(coldef._obj)
-                if coltype == 'one2many':
+                #skip virtual one2many fields (related, ...) as there is no reverse relationship
+                if coltype == 'one2many' and hasattr(coldef, '_fields_id'):
                     # don't record reverse path if it's not a real m2o (that happens, but rarely)
                     dest_model_ci = relation_osv._all_columns
                     reverse_rel = coldef._fields_id
