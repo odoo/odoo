@@ -116,21 +116,20 @@ class wizard_user(osv.osv_memory):
     _description = 'Portal User Config'
 
     _columns = {
-        'wizard_id': fields.many2one('portal.wizard', string='Wizard', required=True),
+        'wizard_id': fields.many2one('portal.wizard', string='Wizard', required=True, ondelete='cascade'),
         'partner_id': fields.many2one('res.partner', string='Contact', required=True, readonly=True),
         'email': fields.char(size=240, string='Email'),
         'in_portal': fields.boolean('In Portal'),
     }
 
-    def action_apply(self, cr, uid, ids, context=None):
+    def get_error_messages(self, cr, uid, ids, context=None):
         res_users = self.pool.get('res.users')
-        wizards = self.browse(cr, SUPERUSER_ID, ids, context)
         emails = []
         error_empty = []
         error_emails = []
         error_user = []
         ctx = dict(context or {}, active_test=False)
-        for wizard_user in wizards:
+        for wizard_user in self.browse(cr, SUPERUSER_ID, ids, context):
             if wizard_user.in_portal:
                 email = extract_email(wizard_user.email)
                 if not email:
@@ -144,19 +143,24 @@ class wizard_user(osv.osv_memory):
 
         error_msg = []
         if error_empty:
-            error_msg.append("%s\n%r" % (_("Some contacts don't have valid email address: "), [p.display_name for p in error_empty]))
+            error_msg.append("%s\n%s" % (_("Some contacts don't have valid email address: "), '\n'.join([p.display_name for p in error_empty])))
         if error_emails:
-            error_msg.append("%s\n%r" % (_("You have more than one email address equal to:"), error_emails))
+            error_msg.append("%s\n%s" % (_("You have more than one email address equal to:"), '\n'.join(error_emails)))
         if error_user:
             error_msg.append("%s\n%s" % (_("Some contact have the same email address than an other contact who have already an user's access:"),
-                                (error_msg, [(p_u[0].id, p_u[0].name, '=>', p_u[1].id, p_u[1].name) for p_u in error_user])))
+                                '\n'.join([(p_u[0].id, p_u[0].name, '=>', p_u[1].id, p_u[1].name) for p_u in error_user])))
         if error_msg:
             error_msg.append(_("To resolve this error, you can:\
                 Change and use an other contact's email adresse;  \
                 Select other contacts; "))
+        return error_msg
+
+    def action_apply(self, cr, uid, ids, context=None):
+        error_msg = self.get_error_messages(cr, uid, ids, context=context)
+        if error_msg:
             raise osv.except_osv(_('Contacts Error'), "\n\n".join(error_msg))
 
-        for wizard_user in wizards:
+        for wizard_user in self.browse(cr, SUPERUSER_ID, ids, context):
             portal = wizard_user.wizard_id.portal_id
             user = self._retrieve_user(cr, SUPERUSER_ID, wizard_user, context)
             if wizard_user.partner_id.email != wizard_user.email:

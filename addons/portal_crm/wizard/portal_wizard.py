@@ -26,16 +26,14 @@ from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
+
 class wizard_user(osv.osv_memory):
     _inherit = 'portal.wizard.user'
 
-    def action_apply(self, cr, uid, ids, context=None):
-        try:
-            return super(wizard_user, self).action_apply(cr, uid, ids, context)
-        except osv.except_osv, e:
-            if "Contact" in e[0]:
-                raise osv.except_osv(e[0], "%s %s" % (e[1], _("Use the partner merge action (more option of the contacts list) to merge the identical partners.")))
-            else:
-                raise e
+    def get_error_messages(self, cr, uid, ids, context=None):
+        error_msg = super(wizard_user, self).get_error_messages(cr, uid, ids, context)
+        if error_msg:
+            error_msg[-1] = '%s %s' % (error_msg[-1], _("Use the partner merge action (more option of the contacts list) to merge the identical partners."))
+        return error_msg
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
