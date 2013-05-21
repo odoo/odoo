@@ -28,7 +28,7 @@ class stock_fill_inventory(osv.osv_memory):
 
     def _default_location(self, cr, uid, ids, context=None):
         try:
-            loc_model, location_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_stock')
+            location_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock').id
         except ValueError, e:
             return False
         return location_id or False

@@ -25,7 +25,7 @@ import time
 from operator import itemgetter
 from itertools import groupby
 
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
 from openerp import netsvc
 from openerp import tools
@@ -1700,7 +1700,11 @@ class stock_move(osv.osv):
             elif picking_type == 'out':
                 location_xml_id = 'stock_location_customers'
             if location_xml_id:
-                location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
+                try:
+                    location_id = mod_obj.get_object(cr, uid, 'stock', location_xml_id).id
+                except (orm.except_orm, ValueError):
+                    # likely the user does not have read access on the location
+                    location_id = False
         return location_id
 
     def _default_location_source(self, cr, uid, context=None):
@@ -1729,7 +1733,11 @@ class stock_move(osv.osv):
             elif picking_type in ('out', 'internal'):
                 location_xml_id = 'stock_location_stock'
             if location_xml_id:
-                location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
+                try:
+                    location_id = mod_obj.get_object(cr, uid, 'stock', location_xml_id).id
+                except (orm.except_orm, ValueError):
+                    # likely the user does not have read access on the location
+                    location_id = False
         return location_id
 
     def _default_destination_address(self, cr, uid, context=None):
@@ -1947,9 +1955,17 @@ class stock_move(osv.osv):
         elif type == 'out':
             location_source_id = 'stock_location_stock'
             location_dest_id = 'stock_location_customers'
-        source_location = mod_obj.get_object_reference(cr, uid, 'stock', location_source_id)
-        dest_location = mod_obj.get_object_reference(cr, uid, 'stock', location_dest_id)
-        return {'value':{'location_id': source_location and source_location[1] or False, 'location_dest_id': dest_location and dest_location[1] or False}}
+        try:
+            source_location_id = mod_obj.get_object(cr, uid, 'stock', location_source_id).id
+        except (orm.except_orm, ValueError):
+            # likely the user does not have read access on the location
+            source_location_id = False
+        try:
+            dest_location_id = mod_obj.get_object(cr, uid, 'stock', location_dest_id).id
+        except (orm.except_orm, ValueError):
+            # likely the user does not have read access on the location
+            dest_location_id = False
+        return {'value':{'location_id': source_location_id, 'location_dest_id': dest_location_id}}
 
     def onchange_date(self, cr, uid, ids, date, date_expected, context=None):
         """ On change of Scheduled Date gives a Move date.
@@ -2883,8 +2899,12 @@ class stock_inventory_line(osv.osv):
     }
 
     def _default_stock_location(self, cr, uid, context=None):
-        stock_location = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock')
-        return stock_location.id
+        try:
+            stock_location_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock').id
+        except (ValueError, orm.except_orm):
+            # likely the user does not have read access on the location
+            stock_location_id = False
+        return stock_location_id
 
     _defaults = {
         'location_id': _default_stock_location
@@ -2923,12 +2943,20 @@ class stock_warehouse(osv.osv):
     }
 
     def _default_lot_input_stock_id(self, cr, uid, context=None):
-        lot_input_stock = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock')
-        return lot_input_stock.id
+        try:
+            lot_input_stock_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock').id
+        except (ValueError, orm.except_orm):
+            # likely the user does not have read access on the location
+            lot_input_stock_id = False
+        return lot_input_stock_id
 
     def _default_lot_output_id(self, cr, uid, context=None):
-        lot_output = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_output')
-        return lot_output.id
+        try:
+            lot_output_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_output').id
+        except (ValueError, orm.except_orm):
+            # likely the user does not have read access on the location
+            lot_output_id = False
+        return lot_output_id
 
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.inventory', context=c),
