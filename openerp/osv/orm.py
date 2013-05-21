@@ -5562,7 +5562,11 @@ class BaseModel(object):
                 assert list(rs2) == list(rs[10:20])
         """
         if self.is_record():
-            return self._get_field(key)
+            if key in self._fields:
+                # important: calling the field's getter is mandatory
+                return self._fields[key].__get__(self, self.__class__)
+            else:
+                return self._get_field(key)
         elif self.is_recordset():
             if isinstance(key, slice):
                 with self._scope:

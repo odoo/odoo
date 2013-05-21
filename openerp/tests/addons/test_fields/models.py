@@ -89,3 +89,5 @@ class res_partner(models.Model):
         self.computed_company = self.company_id
         self.computed_companies = self.company_id.to_recordset()
 
+    company_name = fields.Related('company_id', 'name')
+

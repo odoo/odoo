@@ -25,7 +25,7 @@ import base64
 from copy import copy
 from datetime import date, datetime
 
-from openerp.tools import float_round, ustr, html_sanitize
+from openerp.tools import float_round, ustr, html_sanitize, lazy_property
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
 
@@ -409,6 +409,63 @@ class Many2many(Field):
 
     def record_to_read(self, value):
         return value.unbrowse()
+
+
+class Related(Field):
+    """ Related field. """
+    store = False               # by default related fields are not stored
+    related = None              # sequence of field names
+
+    def __init__(self, *args, **kwargs):
+        assert args, "Related field must be given a sequence of field names"
+        super(Related, self).__init__(related=args, **kwargs)
+        assert not self.store
+
+    @lazy_property
+    def related_field(self):
+        """ determine the related field corresponding to `self` """
+        rec = scope.model(self.model).null()
+        for name in self.related[:-1]:
+            rec = rec[name].null()
+        return rec._fields[self.related[-1]]
+
+    @lazy_property
+    def type(self):
+        return self.related_field.type
+
+    def __getattr__(self, name):
+        # delegate getattr on related field
+        return getattr(self.related_field, name)
+
+    @classmethod
+    def _from_column(cls, column):
+        raise NotImplementedError()
+
+    def to_column(self):
+        raise NotImplementedError()
+
+    def __get__(self, instance, owner):
+        if instance is None:
+            return self
+        # traverse the caches, and delegate to the last record
+        for name in self.related[:-1]:
+            instance = instance[name].to_record()
+        return instance[self.related[-1]]
+
+    def __set__(self, instance, value):
+        # traverse the caches, and delegate to the last record
+        for name in self.related[:-1]:
+            instance = instance[name].to_record()
+        instance[self.related[-1]] = value
+
+    def null(self):
+        return self.related_field.null()
+
+    def record_to_cache(self, value):
+        return self.related_field.record_to_cache(value)
+
+    def record_to_read(self, value):
+        return self.related_field.record_to_read(value)
 
 
 # imported here to avoid dependency cycle issues

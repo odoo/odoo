@@ -20,10 +20,27 @@
 #
 ##############################################################################
 
-__all__ = ['synchronized']
+__all__ = ['synchronized', 'lazy_property']
 
 from functools import wraps
 from inspect import getsourcefile
+
+
+class lazy_property(object):
+    """ Decorator for a lazy property of an object, i.e., an object attribute
+        that is determined by the result of a method call evaluated once.
+    """
+    def __init__(self, fget):
+        self.fget = fget
+        self.name = fget.__name__
+
+    def __get__(self, obj, cls):
+        if obj is None:
+            return None
+        value = self.fget(obj)
+        setattr(obj, self.name, value)
+        return value
+
 
 def synchronized(lock_attr='_lock'):
     def decorator(func):

@@ -199,6 +199,26 @@ class TestNewFields(common.TransactionCase):
         with self.assertRaises(ValueError):
             alpha.some_reference_field = self.scope.user.company_id
 
+    def test_25_related(self):
+        """ test related fields. """
+        partner = self.Partner.search([('company_id', '!=', False)], limit=1)[0]
+        company = partner.company_id
+
+        # check value of related field
+        self.assertEqual(partner.company_name, company.name)
+        self.assertEqual(partner['company_name'], company.name)
+
+        # change company name, and check result
+        company.name = 'Foo'
+        self.assertEqual(partner.company_name, 'Foo')
+        self.assertEqual(partner['company_name'], 'Foo')
+
+        # change company name via related field, and check result
+        partner.company_name = 'Bar'
+        self.assertEqual(company.name, 'Bar')
+        self.assertEqual(partner.company_name, 'Bar')
+        self.assertEqual(partner['company_name'], 'Bar')
+
     def test_30_read(self):
         """ test computed fields as returned by read(). """
         alpha = self.Partner.search([], limit=1).one()
