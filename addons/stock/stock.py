@@ -2293,52 +2293,73 @@ class stock_move(osv.osv):
         
 
 
-    def _create_product_valuation_moves(self, cr, uid, move, context=None):
+    def _create_product_valuation_moves(self, cr, uid, move, matches, context=None):
         """
-        Generate the appropriate accounting moves if the product being moves is subject
-        to real_time valuation tracking, and the source or destination location is
-        a transit location or is outside of the company.
+        Generate the appropriate accounting moves if the product being moved is subject
+        to real_time valuation tracking, and the source or the destination location is internal (not both)
+        This means an in or out move. 
+        
+        Depending on the matches it will create the necessary moves
         """
         ctx = context.copy()
         ctx['force_company'] = move.company_id.id
         valuation = self.pool.get("product.product").browse(cr, uid, move.product_id.id, context=ctx).valuation
+        move_obj = self.pool.get('account.move')
         if valuation == 'real_time':
             if context is None:
                 context = {}
-            src_company_ctx = dict(context,force_company=move.location_id.company_id.id)
-            dest_company_ctx = dict(context,force_company=move.location_dest_id.company_id.id) # pas besoin
+            company_ctx = dict(context,force_company=move.company_id.id)
+            journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(cr, uid, move, context=company_ctx)
+            reference_amount, reference_currency_id = self._get_reference_accounting_values_for_valuation(cr, uid, move, context=company_ctx)
             account_moves = []
             # Outgoing moves (or cross-company output part)
             if move.location_id.company_id \
-                and (move.location_id.usage == 'internal' and move.location_dest_id.usage != 'internal'\
-                     or move.location_id.company_id != move.location_dest_id.company_id):
-                journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(cr, uid, move, src_company_ctx)
-                reference_amount, reference_currency_id = self._get_reference_accounting_values_for_valuation(cr, uid, move, src_company_ctx)
+                and (move.location_id.usage == 'internal' and move.location_dest_id.usage != 'internal'):
                 #returning goods to supplier
                 if move.location_dest_id.usage == 'supplier':
-                    account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, acc_valuation, acc_src, reference_amount, reference_currency_id, 'out', context=context))]
+                    account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, matches, acc_valuation, acc_src, reference_amount, reference_currency_id, 'out', context=company_ctx))]
                 else:
-                    account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, acc_valuation, acc_dest, reference_amount, reference_currency_id, 'out', context=context))]
+                    account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, matches, acc_valuation, acc_dest, reference_amount, reference_currency_id, 'out', context=company_ctx))]
 
             # Incoming moves (or cross-company input part)
             if move.location_dest_id.company_id \
-                and (move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal'\
-                     or move.location_id.company_id != move.location_dest_id.company_id):
-                journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(cr, uid, move, dest_company_ctx)
-                reference_amount, reference_currency_id = self._get_reference_accounting_values_for_valuation(cr, uid, move, src_company_ctx)
+                and (move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal'):
                 #goods return from customer
                 if move.location_id.usage == 'customer':
-                    account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, acc_dest, acc_valuation, reference_amount, reference_currency_id, 'in', context=context))]
+                    account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, matches, acc_dest, acc_valuation, reference_amount, reference_currency_id, 'in', context=company_ctx))]
                 else:
-                    account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, acc_src, acc_valuation, reference_amount, reference_currency_id, 'in', context=context))]
-            move_obj = self.pool.get('account.move')
+                    account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, matches, acc_src, acc_valuation, reference_amount, reference_currency_id, 'in', context=company_ctx))]
+            if matches and move.product_id.cost_method in ('fifo', 'lifo'):
+                outs = {}
+                match_obj = self.pool.get("stock.move.matching")
+                for match in match_obj.browse(cr, uid, matches, context=context):
+                    if match.move_out_id.id in outs:
+                        outs[match.move_out_id.id] += [match.id]
+                    else:
+                        outs[match.move_out_id.id] = [match.id]
+                #When in stock was negative, you will get matches for the in also:
+                account_moves_neg = []
+                for out_mov in self.browse(cr, uid, outs.keys(), context=context):
+                    journal_id_out, acc_src_out, acc_dest_out, acc_valuation_out = self._get_accounting_data_for_valuation(cr, uid, out_mov, context=company_ctx)
+                    reference_amount_out, reference_currency_id_out = self._get_reference_accounting_values_for_valuation(cr, uid, out_mov, context=company_ctx)
+                    if out_mov.location_dest_id.usage == 'supplier':
+                        # Is not the way it should be with acc_valuation
+                        account_moves_neg += [(journal_id_out, self._create_account_move_line(cr, uid, out_mov, outs[out_mov.id], acc_valuation_out, acc_src_out, reference_amount_out, reference_currency_id_out, 'out', context=company_ctx))]
+                    else:
+                        account_moves_neg += [(journal_id_out, self._create_account_move_line(cr, uid, out_mov, outs[out_mov.id], acc_valuation_out, acc_dest_out, reference_amount_out, reference_currency_id_out, 'out', context=company_ctx))]
+                #Create account moves for outs which made stock go negative
+                for j_id, move_lines in account_moves_neg:
+                    move_obj.create(cr, uid,
+                                    {'journal_id': j_id, 
+                                     'line_id': move_lines, 
+                                     'ref': out_mov.picking_id and out_mov.picking_id.name,
+                                     })
             for j_id, move_lines in account_moves:
                 move_obj.create(cr, uid,
                         {
                          'journal_id': j_id,
                          'line_id': move_lines,
                          'ref': move.picking_id and move.picking_id.name})
-
 
     def action_done(self, cr, uid, ids, context=None):
         """ Makes the move done and if all moves are done, it will finish the picking.
@@ -2359,7 +2380,7 @@ class stock_move(osv.osv):
             todo = []
 
         #Do price calculation on moves
-        self.price_calculation(cr, uid, ids, context=context)
+        matchresults = self.price_calculation(cr, uid, ids, context=context)
         for move in self.browse(cr, uid, ids, context=context):
             if move.state in ['done','cancel']:
                 continue
@@ -2380,9 +2401,7 @@ class stock_move(osv.osv):
                         if move.move_dest_id.auto_validate:
                             self.action_done(cr, uid, [move.move_dest_id.id], context=context)
 
-                    
-
-            self._create_product_valuation_moves(cr, uid, move, context=context)
+            self._create_product_valuation_moves(cr, uid, move, move.id in matchresults and matchresults[move.id] or [], context=context)
             if move.state not in ('confirmed','done','assigned'):
                 todo.append(move.id)
 
@@ -2398,7 +2417,7 @@ class stock_move(osv.osv):
 
         return True
 
-    def _create_account_move_line(self, cr, uid, move, src_account_id, dest_account_id, reference_amount, reference_currency_id, type='', context=None):
+    def _create_account_move_line(self, cr, uid, move, matches, src_account_id, dest_account_id, reference_amount, reference_currency_id, type='', context=None):
         """
         Generate the account.move.line values to post to track the stock valuation difference due to the
         processing of the given stock move.
@@ -2406,15 +2425,15 @@ class stock_move(osv.osv):
         move_list = []
         # Consists of access rights 
         # TODO Check if amount_currency is not needed
+        match_obj = self.pool.get("stock.move.matching")
         if type == 'out' and move.product_id.cost_method in ['fifo', 'lifo']:
-            match_obj = self.pool.get("stock.move.matching")
-            matches = match_obj.search(cr, uid, [('move_out_id','=', move.id)], context=context)
             for match in match_obj.browse(cr, uid, matches, context=context):
-                move_in = match.move_in_id
                 move_list += [(match.qty, match.qty * match.price_unit_out)]
+        elif type == 'in' and move.product_id.cost_method in ['fifo', 'lifo']:
+            move_list = [(move.product_qty, reference_amount)]
         else:
             move_list = [(move.product_qty, reference_amount)]
-            
+
         res = []
         for item in move_list:
             # prepare default values considering that the destination accounts have the reference_currency_id as their main currency
@@ -2652,7 +2671,12 @@ class stock_move(osv.osv):
 
     def price_calculation(self, cr, uid, ids, context=None):
         '''
-        This method puts the right price on the stock move
+        This method puts the right price on the stock move, 
+        adapts the price on the product when necessary
+        and creates the necessary stock move matchings
+        
+        It returns a list of tuples with (move_id, match_id) 
+        
         '''
         product_obj = self.pool.get('product.product')
         currency_obj = self.pool.get('res.currency')
@@ -2660,8 +2684,10 @@ class stock_move(osv.osv):
         uom_obj = self.pool.get('product.uom')
         
         product_avail = {}
+        res = {}
         for move in self.browse(cr, uid, ids, context=context):
             # Initialize variables
+            res[move.id] = []
             product_qty = move.product_qty
             product_uom = move.product_uom.id
             company_id = move.company_id.id
@@ -2686,6 +2712,7 @@ class stock_move(osv.osv):
                     matchvals = {'move_in_id': match[0], 'qty': match[1], 
                                  'move_out_id': move.id, 'price_unit_out': match[2]}
                     match_id = matching_obj.create(cr, uid, matchvals, context=context)
+                    res[move.id].append(match_id)
                     move_in = self.browse(cr, uid, match[0], context=context)
                     #Reduce remaining quantity
                     self.write(cr, uid, match[0], { 'qty_remaining': move_in.qty_remaining - match[3]}, context=context)
@@ -2725,7 +2752,6 @@ class stock_move(osv.osv):
                                                       ('product_id', '=', move.product_id.id), ('qty_remaining', '>', 0.0)], order='date', context=ctx)
                     qty_to_go = move.product_qty
                     for out_mov in self.browse(cr, uid, moves, context=ctx):
-                        print "Show how to match for negative stock"
                         out_qty_converted =  uom_obj._compute_qty(cr, uid, out_mov.product_uom.id, out_mov.qty_remaining, move.product_uom.id)
                         qty = 0.0
                         if out_qty_converted <= qty_to_go:
@@ -2737,6 +2763,8 @@ class stock_move(osv.osv):
                         matchvals = {'move_in_id': move.id, 'qty': qty, 
                                      'move_out_id': out_mov.id, 'price_unit_out': new_price}
                         match_id = matching_obj.create(cr, uid, matchvals, context=context)
+
+                        res[move.id].append(match_id)
                         qty_to_go -= qty
                         #Need to re-calculate total price of every out_move if FIFO/LIFO
                         if cost_method in ['fifo', 'lifo']:
@@ -2765,7 +2793,7 @@ class stock_move(osv.osv):
                     self.write(cr, uid, [move.id],{'price_unit': move_orig.price_unit,})
                     product_obj.write(cr, uid, [product.id], {'standard_price': new_std_price}, context=ctx)
                 product_avail[product.id] -= product_uom_qty
-
+        return res
 
     # FIXME: needs refactoring, this code is partially duplicated in stock_picking.do_partial()!
     def do_partial(self, cr, uid, ids, partial_datas, context=None):
