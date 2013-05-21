@@ -89,23 +89,75 @@ class product_product (osv.osv):
         return tuples
 
 class stock_move(osv.osv):
+    
+    def _get_moves(self, cr, uid, ids, context=None):
+        res = []
+        #search_dom = ['|', '&', ('location_id.usage','=', 'internal'), ('location_dest_id.usage','!=', 'internal'), '&', ('location_id.usage', '=')]
+        #res_ids = self.search(cr, uid, [], context=context)
+        for move in self.browse(cr, uid, ids, context=context):
+            move_inorout = move.location_id and move.location_dest_id
+            move_inorout = move_inorout and ((move.location_id.usage == 'internal' and move.location_dest_id.usage != 'internal') or (move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal' ))
+            if move_inorout:
+                res.append(move.id)
+        return res
+
+
+    def _get_moves_from_matchings(self, cr, uid, ids, context=None):
+        match_obj = self.pool.get("stock.move.matching")
+        res = {}
+        for match in match_obj.browse(cr, uid, ids, context=context):
+            if match.move_out_id.id not in res:
+                res[match.move_out_id.id] = True
+            if match.move_in_id.id not in res:
+                res[match.move_in_id.id] = True
+        return res.keys()
+
+    def _get_qty_remaining (self, cr, uid, ids, field_names, arg, context=None):
+        '''
+        This function calculates how much of the stock move that still needs to be matched
+        '''
+        match_obj = self.pool.get("stock.move.matching")
+        uom_obj = self.pool.get("product.uom")
+        res = {}
+        for move in self.browse(cr, uid, ids, context=context):
+            move_out = move.location_id.usage == 'internal' and move.location_dest_id.usage != 'internal'
+            move_in = move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal'
+            if move_in:
+                #Search all matchings
+                matches = match_obj.search(cr, uid, [('move_in_id', '=', move.id)], context=context)
+                qty = move.product_qty
+                for match in match_obj.browse(cr, uid, matches, context=context):
+                    qty -= uom_obj._compute_qty(cr, uid, match.move_out_id.product_uom.id, match.qty, move.product_uom.id)
+                res[move.id] = qty
+            elif move_out:
+                #Search all matchings, but from the other side
+                matches = match_obj.search(cr, uid, [('move_out_id', '=', move.id)], context=context)
+                qty = move.product_qty
+                for match in match_obj.browse(cr, uid, matches, context=context):
+                    qty -= match.qty
+                res[move.id] = qty
+        return res
     _inherit = 'stock.move'
-    _columns = {'qty_remaining': fields.float("Remaining Qty"),
+    _columns = {'qty_remaining': fields.function(_get_qty_remaining, type="float", string="Remaining quantity to be matched", 
+                                                 store = {'stock.move.matching': (_get_moves_from_matchings, ['qty', 'move_in_id', 'move_out_id'], 10),
+                                                          'stock.move':  (_get_moves, ['product_qty', 'product_uom', 'location_id', 'location_dest_id', 'company_id'], 10)}), #locations and company_id not necessary?
                 'matching_ids_in': fields.one2many('stock.move.matching', 'move_in_id'),
                 'matching_ids_out':fields.one2many('stock.move.matching', 'move_out_id'),
                 }
-    
-    def create(self, cr, uid, vals, context=None):
-        if 'product_qty' in vals:
-            vals['qty_remaining'] = vals['product_qty']
-        res = super(stock_move, self).create(cr, uid, vals, context=context)
-        return res
 
-    def write(self, cr, uid, ids, vals, context=None):
-        if 'product_qty' in vals:
-            vals['qty_remaining'] = vals['product_qty']
-        res = super(stock_move, self).write(cr, uid, ids, vals, context=context)
-        return res
+
+
+#     def create(self, cr, uid, vals, context=None):
+#         if 'product_qty' in vals:
+#             vals['qty_remaining'] = vals['product_qty']
+#         res = super(stock_move, self).create(cr, uid, vals, context=context)
+#         return res
+# 
+#     def write(self, cr, uid, ids, vals, context=None):
+#         if 'product_qty' in vals:
+#             vals['qty_remaining'] = vals['product_qty']
+#         res = super(stock_move, self).write(cr, uid, ids, vals, context=context)
+#         return res
 
 
 class stock_move_matching(osv.osv):
@@ -114,8 +166,8 @@ class stock_move_matching(osv.osv):
     _columns = {
         'move_in_id': fields.many2one('stock.move', 'Stock move in', required=True),
         'move_out_id': fields.many2one('stock.move', 'Stock move out', required=True),
-        'qty': fields.float('Quantity', required=True), 
+        'qty': fields.float('Quantity in UoM of out', required=True), 
         'price_unit':fields.related('move_in_id', 'price_unit', string="Unit price", type="float"),
-        'price_unit_out': fields.float('Unit price out') 
+        'price_unit_out': fields.float('Unit price out'), 
     }
 

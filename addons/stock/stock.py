@@ -2714,14 +2714,11 @@ class stock_move(osv.osv):
                     match_id = matching_obj.create(cr, uid, matchvals, context=context)
                     res[move.id].append(match_id)
                     move_in = self.browse(cr, uid, match[0], context=context)
-                    #Reduce remaining quantity
-                    self.write(cr, uid, match[0], { 'qty_remaining': move_in.qty_remaining - match[3]}, context=context)
                     price_amount += match[1] * match[2]
                     amount += match[1]
                 #Write price on out move
                 if product.qty_available >= product_uom_qty and product.cost_method in ['fifo', 'lifo']:
-                    self.write(cr, uid, move.id, {'price_unit': price_amount / amount, 
-                                                  'qty_remaining': move.qty_remaining - amount}, context=context)
+                    self.write(cr, uid, move.id, {'price_unit': price_amount / amount}, context=context)
                     product_obj.write(cr, uid, product.id, {'standard_price': price_amount / product_uom_qty}, context=ctx)
                 else:
                     new_price = uom_obj._compute_price(cr, uid, product.uom_id.id, product.standard_price,
@@ -2774,8 +2771,7 @@ class stock_move(osv.osv):
                             for match in matching_obj.browse(cr, uid, matches, context=context):
                                 in_mov = self.browse(cr, uid, match.move_in_id.id, context=context)
                                 amount += uom_obj._compute_qty(cr, uid, in_mov.product_uom.id, in_mov.product_qty, out_mov.product_uom.id)
-                                total_price += amount * uom_obj._compute_price(cr, uid, in_mov.product_uom.id, in_mov.price_unit,
-                                out_mov.product_uom.id)
+                                total_price += amount * uom_obj._compute_price(cr, uid, in_mov.product_uom.id, in_mov.price_unit, out_mov.product_uom.id)
                             if amount > 0.0:
                                 self.write(cr, uid, [out_mov.id], {'price_unit': total_price / amount}, context=context)
                                 product_obj.write(cr, uid, [product.id], {'standard_price': total_price / amount}, context=ctx)
