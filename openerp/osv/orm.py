@@ -711,22 +711,6 @@ class BaseModel(object):
                     compute_method = getattr(cls, field.compute)
                     field.depends = getattr(compute_method, '_depends', ())
 
-        # interface columns with new-style fields
-        for attr in sorted(cls._columns):
-            if attr in cls._fields:
-                continue
-            column = cls._columns[attr]
-            field = Field.from_column(column)
-            field.set_model_name(cls._name, attr)
-
-            # add field as an attribute and in _fields (for reflection)
-            cls._fields[attr] = field
-            if not hasattr(cls, attr):
-                _logger.debug("Create field for column %s.%s", cls._name, attr)
-                setattr(cls, attr, field)
-            else:
-                _logger.warning("In model %r, member %r is not a field", cls._name, attr)
-
         # triggers to recompute stored function fields on other models
         #   cls._recompute = {trigger_field: [(model, field, path), ...], ...}
         #
@@ -781,7 +765,6 @@ class BaseModel(object):
             # If _log_access is not specified, it is the same value as _auto.
             self._log_access = getattr(self, "_auto", True)
 
-        self._columns = self._columns.copy()
         for store_field in self._columns:
             f = self._columns[store_field]
             if hasattr(f, 'digits_change'):
@@ -3242,6 +3225,30 @@ class BaseModel(object):
                 res[col] = (table, self._inherits[table], other._inherit_fields[col][2], other._inherit_fields[col][3])
         self._inherit_fields = res
         self._all_columns = self._get_column_infos()
+
+        # interface columns and inherited fields with new-style fields
+        new_fields = {}
+        for parent_model, parent_field in self._inherits.iteritems():
+            for attr in self.pool[parent_model]._fields:
+                new_fields[attr] = Related(parent_field, attr, interface=True)
+        for attr, column in self._columns.iteritems():
+            new_fields[attr] = Field.from_column(column)
+
+        # update the model with the new fields
+        cls = self.__class__
+        for attr, field in new_fields.iteritems():
+            old_field = cls._fields.get(attr)
+            if not old_field or old_field.interface:
+                # replace old_field if it is an interface
+                field.set_model_name(cls._name, attr)
+                cls._fields[attr] = field
+                # add field as an attribute if possible
+                if getattr(cls, attr, None) is old_field:
+                    _logger.debug("Create field for column %s.%s", cls._name, attr)
+                    setattr(cls, attr, field)
+                else:
+                    _logger.warning("In model %r, member %r is not a field", cls._name, attr)
+
         self._inherits_reload_src()
 
 
@@ -3430,6 +3437,7 @@ class BaseModel(object):
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         """ Read records with given ids with the given fields.
+            As a side-effect, the result is stored in the corresponding records' cache.
 
         :param cr: database cursor
         :param user: current user id
@@ -3458,19 +3466,27 @@ class BaseModel(object):
             old_fields = set(self._columns)
             new_fields = set(self._fields) - old_fields
         else:
-            new_fields = set(fields) & (set(self._fields) - set(self._columns))
-            old_fields = set(fields) - new_fields
+            old_fields = set(fields) & set(self._columns)
+            new_fields = set(fields) - old_fields
 
         # read old-style fields with (low-level) method _read_flat
         select = self.browse(ids)
         result = select.to_recordset()._read_flat(list(old_fields), load=load)
 
+        # associate each result to its corresponding record
+        record_values = [(self.record(values['id']), values) for values in result]
+
+        # update record caches
+        for f in old_fields:
+            read_to_cache = self._columns[f].read_to_cache
+            for record, values in record_values:
+                record._record_cache[f] = read_to_cache(values[f])
+
         # read new-style fields with records
         for f in new_fields:
-            field_format = self._fields[f].record_to_read
-            for values in result:
-                rec = self.record(values['id'])
-                values[f] = field_format(rec[f])
+            record_to_read = self._fields[f].record_to_read
+            for record, values in record_values:
+                values[f] = record_to_read(record[f])
 
         return result if select.is_recordset() else (bool(result) and result[0])
 
@@ -5510,24 +5526,12 @@ class BaseModel(object):
         """ fetch the given fields of `self` in the record cache, and
             return the records actually fetched
         """
-        # for efficiency, index converter functions by field name
-        converter = dict(
-            (field, self._all_columns[field].column.read_to_cache)
-            for field in field_names)
-
         # read the (old-style only) fields
+        # the method read is supposed to fetch the cache with the results
         result = self.read(field_names, load="_classic_write")
 
-        # update record caches
-        recs = []
-        for data in result:
-            rec = self.record(data['id'])
-            for field in field_names:
-                rec._record_cache[field] = converter[field](data[field])
-            recs.append(rec)
-
         # return the fetched records
-        return self.recordset(recs)
+        return self.recordset(self.record(data['id']) for data in result)
 
     def _set_field(self, field_name, value):
         """ Assign the field `field_name` of `self` to `value`.
@@ -5863,6 +5867,6 @@ PGERROR_TO_OE = defaultdict(
 
 # keep those imports here to avoid dependency cycle errors
 import expression
-from fields2 import Field
+from fields2 import Field, Related
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

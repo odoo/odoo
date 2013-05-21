@@ -43,6 +43,8 @@ class Field(object):
     """ Base class of all fields. """
     __metaclass__ = MetaField
 
+    interface = False           # whether the field is created by the ORM
+
     name = None                 # name of the field
     model = None                # name of the model of this field
     type = None                 # type of the field (string)
@@ -77,11 +79,13 @@ class Field(object):
 
     @classmethod
     def from_column(cls, column):
-        """ return a field for the low-level field `column` """
+        """ return a field for interfacing the low-level field `column` """
         # delegate to the subclass corresponding to the column type, or Field
         # for unknown column types
         field_class = cls._class_by_type.get(column._type, Field)
-        return field_class._from_column(column)
+        field = field_class._from_column(column)
+        field.interface = True
+        return field
 
     @classmethod
     def _from_column(cls, column):

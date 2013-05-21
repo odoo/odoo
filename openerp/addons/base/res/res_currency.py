@@ -22,6 +22,7 @@
 import re
 import time
 
+from openerp import api, fields as fields2
 from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools import float_round, float_is_zero, float_compare
@@ -64,7 +65,6 @@ class res_currency(osv.osv):
         'rounding': fields.float('Rounding Factor', digits=(12,6)),
         'active': fields.boolean('Active'),
         'company_id':fields.many2one('res.company', 'Company'),
-        'date': fields.date('Date'),
         'base': fields.boolean('Base'),
         'position': fields.selection([('after','After Amount'),('before','Before Amount')], 'Symbol Position', help="Determines where the currency symbol should be placed after or before the amount.")
     }
@@ -95,19 +95,12 @@ class res_currency(osv.osv):
                           ON res_currency
                           (name, (COALESCE(company_id,-1)))""")
 
-    def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
-        res = super(res_currency, self).read(cr, user, ids, fields, context, load)
-        currency_rate_obj = self.pool.get('res.currency.rate')
-        values = res
-        if not isinstance(values, list):
-            values = [values]
-        for r in values:
-            if r.__contains__('rate_ids'):
-                rates=r['rate_ids']
-                if rates:
-                    currency_date = currency_rate_obj.read(cr, user, rates[0], ['name'])['name']
-                    r['date'] = currency_date
-        return res
+    date = fields2.Date(compute='compute_date', store=True)
+
+    @api.record
+    @api.depends('rate_ids.name')
+    def compute_date(self):
+        self.date = self.rate_ids.to_record().name
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         if not args:

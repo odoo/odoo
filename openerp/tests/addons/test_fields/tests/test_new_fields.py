@@ -219,6 +219,15 @@ class TestNewFields(common.TransactionCase):
         self.assertEqual(partner.company_name, 'Bar')
         self.assertEqual(partner['company_name'], 'Bar')
 
+    def test_26_inherited(self):
+        """ test inherited fields. """
+        # a bunch of fields are inherited from res_partner
+        for user in self.User.search([]):
+            partner = user.partner_id
+            for field in ('is_company', 'name', 'email', 'country_id'):
+                self.assertEqual(getattr(user, field), getattr(partner, field))
+                self.assertEqual(user[field], partner[field])
+
     def test_30_read(self):
         """ test computed fields as returned by read(). """
         alpha = self.Partner.search([], limit=1).one()
