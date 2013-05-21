@@ -191,7 +191,7 @@ class crm_case_section(osv.osv):
             help="The first contact you get with a potential customer is a lead you qualify before converting it into a real business opportunity. Check this box to manage leads in this sales team."),
 
         'target_duration': fields.selection([("monthly", "Monthly"), ("quarterly", "Quarterly"), ("semesterly", "Semesterly"), ("annually", "Annually")],
-            string='Report Duration View', required=True),
+            string='Report Duration', required=True),
         'target_duration_txt': fields.function(_get_target_duration_txt,
             string='Duration',
             type="string", readonly=True),

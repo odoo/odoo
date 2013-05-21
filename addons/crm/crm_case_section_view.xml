@@ -99,8 +99,8 @@
                                         <small><span class="oe_e" style="float: none;">%%</span><t t-raw="record.alias_id.raw_value[1]"/></small>
                                     </div>
                                     <div class="oe_items_list">
-                                        <div class="oe_salesteams_leads">
-                                            <a t-if="record.use_leads.raw_value" name="%(crm_case_form_view_salesteams_lead)d" type="action">Leads</a>
+                                        <div class="oe_salesteams_leads" t-if="record.use_leads.raw_value">
+                                            <a name="%(crm_case_form_view_salesteams_lead)d" type="action">Leads</a>
                                             <a name="%(action_report_crm_lead)d" type="action" class="oe_sparkline_bar_link"><field name="open_lead_per_duration" widget="sparkline_bar">Number of opening leads per duration.<br/>(last one is <t t-esc="record.target_duration_txt.value"/>).<br/>Click to see a detailed analysis of leads.</field></a>
                                         </div><div class="oe_salesteams_opportunities">
                                             <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action">Opportunities</a>
@@ -161,9 +161,9 @@
                 <form string="Sales Team" version="7.0">
                     <sheet>
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only" string="Project Name"/>
+                            <label for="name" class="oe_edit_only" string="Sales team"/>
                             <h1>
-                                <field name="name" string="Project Name"/>
+                                <field name="name" string="Sales team"/>
                             </h1>
                             <div name="group_alias"
                                     attrs="{'invisible': [('alias_domain', '=', False)]}">
@@ -183,12 +183,11 @@
                         <group>
                             <group>
                                 <field name="parent_id"/>
-                                <field name="resource_calendar_id"/>
                                 <field name="active"/>
                             </group>
                             <group>
                                 <field name="user_id"/>
-                                <field name="code"/>
+                                <field name="change_responsible"/>
                             </group>
                             <group colspan="4" col="2">
                                 <field name="target_duration" widget="radio"/>
@@ -198,11 +197,7 @@
                             </group>
                         </group>
                         <notebook colspan="4">
-                            <page string="Sales Team">
-                               <group>
-                                    <field name="change_responsible"/>
-                                </group>
-                                <separator string="Team Members"/>
+                            <page string="Team Members">
                                 <field name="member_ids" widget="many2many_kanban">
                                     <kanban quick_create="false" create="true">
                                         <field name="name"/>
