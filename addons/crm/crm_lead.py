@@ -274,7 +274,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'date_closed': fields.datetime('Closed', readonly=True),
         'stage_id': fields.many2one('crm.case.stage', 'Stage', track_visibility='onchange',
-                        domain="['&', '&', ('fold', '=', False), ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"),
+                        domain="['&', ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"),
         'user_id': fields.many2one('res.users', 'Salesperson', select=True, track_visibility='onchange'),
         'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
@@ -1051,6 +1051,14 @@ class crm_lead(base_stage, format_address, osv.osv):
             prefix = 'Scheduled'
         suffix = ' %s' % phonecall.description
         message = _("%s a call for %s.%s") % (prefix, phonecall.date, suffix)
+        return self.message_post(cr, uid, ids, body=message, context=context)
+
+    def log_meeting(self, cr, uid, ids, meeting_subject, meeting_date, duration, context=None):
+        if not duration:
+            duration = _('unknown')
+        else:
+            duration = str(duration)
+        message = _("Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)") % (meeting_date, meeting_subject, duration)
         return self.message_post(cr, uid, ids, body=message, context=context)
 
     def onchange_state(self, cr, uid, ids, state_id, context=None):
