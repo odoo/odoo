@@ -126,8 +126,9 @@
                     <field name="parent_id"/>
                     <field name="user_id"/>
                     <field name="note"/>
+                    <filter name="my" string="My" domain="['|', ('member_ids', '=', uid), ('user_id', '=', uid)]"/>
                     <group expand="0" string="Group By...">
-                        <filter string="parent_id" domain="[]" context="{'group_by':'parent_id'}"/>
+                        <filter string="Parent Sales Teams" domain="[]" context="{'group_by':'parent_id'}"/>
                     </group>
                 </search>
             </field>
@@ -140,6 +141,7 @@
             <field name="res_model">crm.case.section</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'search_default_my': True}</field>
             <field name="view_id" ref="crm_case_section_salesteams_view_kanban"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
