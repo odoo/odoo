@@ -19,7 +19,11 @@
             <field name="gdocs_template_url">https://docs.google.com/spreadsheet/ccc?key=0Ah2qnrLAoZmUdGRvdVdmS1VoSDctWk1kd18taGZ4ckE#gid=0</field>
             <field name="name_template">%(name)s_%(model)s_%(filter)s_gdrive</field>
         </record>
-
+        
+         <record id="template_google_client_id" model="ir.config_parameter">
+            <field name="key">google_client_id</field>
+            <field name="value">-</field>
+        </record>
     </data>
 </openerp>
 

@@ -126,8 +126,8 @@ class config(osv.osv):
     def _client_id_get(self, cr, uid, ids, name, arg, context=None):
         result = {}
         for config_id in ids:
-            user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid)
-            result[config_id] = user.company_id.google_client_id
+            config = self.pool['ir.config_parameter']
+            result[config_id] = config.get_param(cr, SUPERUSER_ID, 'google_client_id')
         return result
 
     _columns = {
@@ -163,9 +163,3 @@ class config(osv.osv):
     ]
 
 config()
-
-class res_company(osv.osv):
-    _inherit = "res.company"
-    _columns = {
-        'google_client_id': fields.char('Google Client ID', size=200, help="Go to 'Google APIs console' and create 'OAuth 2.0 Client ID'."),
-    }
