@@ -153,8 +153,8 @@ class wizard_user(osv.osv_memory):
                                 '\n- '.join(['%s <%s>' % (p.display_name, p.email) for p in error_user])))
         if error_msg:
             error_msg.append(_("To resolve this error, you can: \n"
-                "- Correct the email addresses of the relevant contacts\n"
-                "- Choose other contacts to merge"))
+                "- Correct the emails of the relevant contacts\n"
+                "- Grant access only to contacts with unique emails"))
         return error_msg
 
     def action_apply(self, cr, uid, ids, context=None):
