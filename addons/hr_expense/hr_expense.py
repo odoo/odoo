@@ -279,7 +279,6 @@ class hr_expense_expense(osv.osv):
             tax_code_found= False
             
             #Calculate tax according to default tax on product
-            
             taxes = []
             #Taken from product_id_onchange in account.invoice
             if line.product_id:
@@ -316,8 +315,12 @@ class hr_expense_expense(osv.osv):
                 tax_code_found = True
                 res[-1]['tax_code_id'] = tax_code_id
                 res[-1]['tax_amount'] = cur_obj.compute(cr, uid, exp.currency_id.id, company_currency, tax_amount, context={'date': exp.date_confirm})
-                
-                #Will create the tax here as we don't have the access 
+                ## 
+                is_price_include = tax_obj.read(cr,uid,tax['id'],['price_include'],context)['price_include']
+                if is_price_include:
+                    ## We need to deduce the price for the tax
+                    res[-1]['price'] = res[-1]['price']  - (tax['amount'] * tax['base_sign'] or 0.0)
+                #Will create the tax here as we don't have the access
                 assoc_tax = {
                              'type':'tax',
                              'name':tax['name'],
