@@ -449,6 +449,70 @@ class mail_thread(osv.AbstractModel):
         ir_attachment_obj.unlink(cr, uid, attach_ids, context=context)
         return True
 
+    def _get_formview_action(self, cr, uid, id, model=None, context=None):
+        """ Return an action to open the document. This method is meant to be
+            overridden in addons that want to give specific view ids for example.
+
+            :param int id: id of the document to open
+            :param string model: specific model that overrides self._name
+        """
+        return {
+                'type': 'ir.actions.act_window',
+                'res_model': model or self._name,
+                'view_type': 'form',
+                'view_mode': 'form',
+                'views': [(False, 'form')],
+                'target': 'current',
+                'res_id': id,
+            }
+
+    def _get_inbox_action_xml_id(self, cr, uid, context=None):
+        """ When redirecting towards the Inbox, choose which action xml_id has
+            to be fetched. This method is meant to be inherited, at least in portal
+            because portal users have a different Inbox action than classic users. """
+        return ('mail', 'action_mail_inbox_feeds')
+
+    def message_redirect_action(self, cr, uid, context=None):
+        """ For a given message, return an action that either
+            - opens the form view of the related document if model, res_id, and
+              read access to the document
+            - opens the Inbox with a default search on the conversation if model,
+              res_id
+            - opens the Inbox with context propagated
+
+        """
+        if context is None:
+            context = {}
+
+        # default action is the Inbox action
+        self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
+        act_model, act_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, *self._get_inbox_action_xml_id(cr, uid, context=context))
+        action = self.pool.get(act_model).read(cr, uid, act_id, [])
+
+        # if msg_id specified: try to redirect to the document or fallback on the Inbox
+        msg_id = context.get('params', {}).get('message_id')
+        if not msg_id:
+            return action
+        msg = self.pool.get('mail.message').browse(cr, uid, msg_id, context=context)
+        if msg.model and msg.res_id:
+            action.update({
+                'context': {
+                    'search_default_model': msg.model,
+                    'search_default_res_id': msg.res_id,
+                }
+            })
+            if self.pool.get(msg.model).check_access_rights(cr, uid, 'read', raise_exception=False):
+                try:
+                    model_obj = self.pool.get(msg.model)
+                    model_obj.check_access_rule(cr, uid, [msg.res_id], 'read', context=context)
+                    if not hasattr(model_obj, '_get_formview_action'):
+                        action = self.pool.get('mail.thread')._get_formview_action(cr, uid, msg.res_id, model=msg.model, context=context)
+                    else:
+                        action = model_obj._get_formview_action(cr, uid, msg.res_id, context=context)
+                except (osv.except_osv, orm.except_orm):
+                    pass
+        return action
+
     #------------------------------------------------------
     # Email specific
     #------------------------------------------------------

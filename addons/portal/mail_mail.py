@@ -28,11 +28,10 @@ class mail_mail(osv.Model):
     """ Update of mail_mail class, to add the signin URL to notifications. """
     _inherit = 'mail.mail'
 
-    def send_get_mail_body_footer(self, cr, uid, mail, partner=None, context=None):
-        """ add a signin link inside the body of a mail.mail
-            :param mail: mail.mail browse_record
-            :param partner: browse_record of the specific recipient partner
-            :return: the resulting body_html
+    def _get_partner_access_link(self, cr, uid, mail, partner=None, context=None):
+        """ Generate URLs for links in mails:
+            - partner is not an user: signup_url
+            - partner is an user: fallback on classic URL
         """
         if context is None:
             context = {}
@@ -44,4 +43,4 @@ class mail_mail(osv.Model):
                                                                     context=contex_signup)[partner.id]
             return _("""<small>Access your messages and documents through <a style='color:inherit' href="%s">our Customer Portal</a></small>""") % signup_url
         else:
-            return super(mail_mail, self).send_get_mail_body_footer(cr, uid, mail, partner=partner, context=context)
+            return super(mail_mail, self)._get_partner_access_link(cr, uid, mail, partner=partner, context=context)
