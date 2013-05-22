@@ -10,5 +10,5 @@
   !python {model: stock.move}: |
     context['picking_type'] = 'internal'
     defaults = self.default_get(cr, uid, ['location_id', 'location_dest_id', 'type'], context)
-    assert defaults == {'location_id': False, 'location_dest_id': False, 'type': 'internal'}
+    assert defaults == {'location_id': False, 'location_dest_id': False, 'type': 'internal'}, "did not get the correct default (got: %s)" % defaults
 
