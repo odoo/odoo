@@ -11,7 +11,7 @@
                     <field name="date"/>
                     <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                     <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
-                    <field name="partner_id" string="Customer"/>
+                    <field name="partner_id" string="Customer" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="journal_id" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/>
                     <field name="period_id"/>
                     <group expand="0" string="Group By...">
@@ -34,7 +34,7 @@
                     <field name="date"/>
                     <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                     <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
-                    <field name="partner_id" string="Supplier"/>
+                    <field name="partner_id" string="Supplier" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="journal_id" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/>
                     <field name="period_id"/>
                     <group expand="0" string="Group By...">
@@ -126,7 +126,7 @@
                 <form string="Voucher Payment" version="7.0">
                 <header>
                     <button name="proforma_voucher" string="Validate" states="draft" invisible="context.get('line_type', False)" class="oe_highlight"/>
-                    <button name="cancel_voucher" string="Cancel" states="draft,proforma"  invisible="context.get('line_type', False)"/>
+                    <button name="cancel_voucher" string="Cancel Voucher" states="draft,proforma"  invisible="context.get('line_type', False)"/>
                     <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" invisible="context.get('line_type', False)" confirm="Are you sure to unreconcile and cancel this record ?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" invisible="context.get('line_type', False)"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
@@ -394,7 +394,7 @@
                 <form string="Receipt" version="7.0">
                 <header invisible="context.get('line_type', False)">
                     <button name="proforma_voucher" string="Validate" states="draft" class="oe_highlight"/>
-                    <button name="cancel_voucher" string="Cancel" states="draft,proforma"/>
+                    <button name="cancel_voucher" string="Cancel Receipt" states="draft,proforma"/>
                     <button name="cancel_voucher" string="Unreconcile" type="object" states="posted" confirm="Are you sure to unreconcile and cancel this record ?"/>
                     <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>

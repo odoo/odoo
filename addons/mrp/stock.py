@@ -45,7 +45,7 @@ class StockMove(osv.osv):
         procurement_obj = self.pool.get('procurement.order')
         product_obj = self.pool.get('product.product')
         processed_ids = [move.id]
-        if move.product_id.supply_method == 'produce' and move.product_id.procure_method == 'make_to_order':
+        if move.product_id.supply_method == 'produce':
             bis = bom_obj.search(cr, uid, [
                 ('product_id','=',move.product_id.id),
                 ('bom_id','=',False),
@@ -145,7 +145,6 @@ class StockMove(osv.osv):
                 res.append(new_move)
         return res
 
-StockMove()
 
 
 class StockPicking(osv.osv):
@@ -162,7 +161,6 @@ class StockPicking(osv.osv):
             todo.extend(move_obj._action_explode(cr, uid, move))
         return list(set(todo))
 
-StockPicking()
 
 
 class split_in_production_lot(osv.osv_memory):
@@ -179,6 +177,5 @@ class split_in_production_lot(osv.osv_memory):
         production_obj.write(cr, uid, production_ids, {'move_lines': [(4, m) for m in new_moves]})
         return new_moves
 
-split_in_production_lot()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

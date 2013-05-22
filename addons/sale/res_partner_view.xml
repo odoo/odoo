@@ -63,14 +63,34 @@
             <field name="arch" type="xml">
                 <xpath expr="//label[@for='type']" position="attributes">
                     <attribute name="groups">sale.group_delivery_invoice_address</attribute>
-                </xpath>
-                <xpath expr="//label[@for='type']" position="attributes">
                     <attribute name="invisible">False</attribute>
                 </xpath>
                 <xpath expr="//div[@name='div_type']" position="attributes">
                     <attribute name="invisible">False</attribute>
+                    <attribute name="groups">sale.group_delivery_invoice_address</attribute>
                 </xpath>
-                <xpath expr="//div[@name='div_type']" position="attributes">
+                <xpath expr="//field[@name='use_parent_address']" position="attributes">
+                    <attribute name="invisible">False</attribute>
+                    <attribute name="groups">sale.group_delivery_invoice_address</attribute>
+                </xpath>
+                <xpath expr="//label[@for='use_parent_address']" position="attributes">
+                    <attribute name="invisible">False</attribute>
+                    <attribute name="groups">sale.group_delivery_invoice_address</attribute>
+                </xpath>
+                <xpath expr="//field[@name='child_ids']//field[@name='use_parent_address']" position="attributes">
+                    <attribute name="invisible">False</attribute>
+                    <attribute name="groups">sale.group_delivery_invoice_address</attribute>
+                </xpath>
+                <xpath expr="//field[@name='child_ids']//label[@for='use_parent_address']" position="attributes">
+                    <attribute name="invisible">False</attribute>
+                    <attribute name="groups">sale.group_delivery_invoice_address</attribute>
+                </xpath>
+                <xpath expr="//field[@name='child_ids']//div[@name='div_type']" position="attributes">
+                    <attribute name="invisible">False</attribute>
+                    <attribute name="groups">sale.group_delivery_invoice_address</attribute>
+                </xpath>
+                <xpath expr="//field[@name='child_ids']//label[@for='type']" position="attributes">
+                    <attribute name="invisible">False</attribute>
                     <attribute name="groups">sale.group_delivery_invoice_address</attribute>
                 </xpath>
             </field>

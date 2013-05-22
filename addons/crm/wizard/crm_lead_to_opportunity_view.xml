@@ -22,7 +22,7 @@
                                 <field name="phone"/>
                                 <field name="stage_id"/>
                                 <field name="user_id"/>
-                                <field name="section_id"/>
+                                <field name="section_id" groups="base.group_multi_salesteams"/>
                             </tree>
                         </field>
                     </group>
@@ -68,13 +68,13 @@
                                 <field name="phone"/>
                                 <field name="stage_id"/>
                                 <field name="user_id"/>
-                                <field name="section_id"/>
+                                <field name="section_id" groups="base.group_multi_salesteams"/>
                             </tree>
                         </field>
                     </group>
 
                     <group string="Assign opportunities to" attrs="{'invisible': [('name', '=', '')]}">
-                        <field name="section_id"/>
+                        <field name="section_id" groups="base.group_multi_salesteams"/>
                         <field name="user_ids" widget="many2many_tags"/>
                     </group>
 

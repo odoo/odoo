@@ -194,7 +194,6 @@ class purchase_requisition_line(osv.osv):
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.requisition.line', context=c),
     }
-purchase_requisition_line()
 
 class purchase_order(osv.osv):
     _inherit = "purchase.order"
@@ -216,7 +215,6 @@ class purchase_order(osv.osv):
                     po.requisition_id.tender_done(context=context)
         return res
 
-purchase_order()
 
 class product_product(osv.osv):
     _inherit = 'product.product'
@@ -228,7 +226,6 @@ class product_product(osv.osv):
         'purchase_requisition': False
     }
 
-product_product()
 
 class procurement_order(osv.osv):
 
@@ -261,6 +258,5 @@ class procurement_order(osv.osv):
             res = super(procurement_order, self).make_po(cr, uid, ids, context=context)
         return res
 
-procurement_order()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

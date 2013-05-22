@@ -2,29 +2,6 @@
 <openerp>
     <data>
 
-        <!-- View used in the wizard -->
-        <record id="view_move_line_form" model="ir.ui.view">
-            <field name="name">account.move.line.form.inherit</field>
-            <field name="model">account.move.line</field>
-            <field name="inherit_id" ref="account.view_move_line_form"/>
-            <field name="arch" type="xml">
-                <field name="reconcile_partial_id" position="after">
-                    <field name="amount_to_pay"/>
-                </field>
-            </field>
-        </record>
-
-        <!-- <record model="ir.ui.view" id="view_move_line_tree_wiz">
-            <field name="name">account.move.line.tree</field>
-            <field name="model">account.move.line</field>
-            <field name="inherit_id" ref="account.view_move_line_tree"/>
-            <field name="arch" type="xml">
-                <field name="reconcile" position="after">
-                    <field name="amount_to_pay"/>
-                </field>
-            </field>
-        </record> -->
-
         <menuitem id="menu_main_payment" name="Payment" parent="account.menu_finance" sequence="7"/>
 
         <record id="view_payment_mode_search" model="ir.ui.view">
@@ -88,7 +65,7 @@
                     <button name="open" states="draft" string="Confirm Payments" class="oe_highlight"/>
                     <button name="set_done" states="open" string="Make Payments" type="object" class="oe_highlight"/>
                     <button name="set_to_draft" states="cancel" string="Set to draft" type="object"/>
-                    <button name="cancel" states="draft,open" string="Cancel"/>
+                    <button name="cancel" states="draft,open" string="Cancel Payments"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open"/>
                 </header>
                 <sheet string="Payment order">
@@ -116,7 +93,7 @@
                             <notebook>
                                 <page string="Payment">
                                     <group col="4">
-                                        <field name="move_line_id" on_change="onchange_move_line(move_line_id,parent.mode,parent.date_prefered,parent.date_scheduled,currency,company_currency)" domain="[('reconcile_id','=', False), ('credit', '>',0),('amount_to_pay','>',0)] "/>
+                                        <field name="move_line_id" on_change="onchange_move_line(move_line_id,parent.mode,parent.date_prefered,parent.date_scheduled,currency,company_currency)" domain="[('reconcile_id','=', False), ('credit', '>',0),('amount_residual','>',0)] "/>
                                         <separator colspan="4" string="Transaction Information"/>
                                         <field name="date"/>
                                         <label for="amount_currency" groups="base.group_multi_currency"/>
@@ -242,7 +219,7 @@
                         <page string="Payment">
                             <group col="4">
                                 <field name="order_id"/>
-                                <field name="move_line_id" on_change="onchange_move_line(move_line_id, False, currency, company_currency)" domain="[('reconcile_id','=', False), ('credit', '>',0),('amount_to_pay','>',0)]"/>
+                                <field name="move_line_id" on_change="onchange_move_line(move_line_id, False, currency, company_currency)" domain="[('reconcile_id','=', False), ('credit', '>',0),('amount_residual','>',0)]"/>
                                 <separator colspan="4" string="Transaction Information"/>
                                 <field name="date"/>
                                 <label for="amount_currency" groups="base.group_multi_currency"/>

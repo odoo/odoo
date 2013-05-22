@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-12 04:55+0000\n"
-"X-Generator: Launchpad (build 16420)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:22+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -129,10 +129,10 @@ msgid "March"
 msgstr "Március"
 
 #. module: sale
-#: code:addons/sale/sale.py:559
+#: code:addons/sale/sale.py:567
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
-msgstr "Először törölje a megrendelés összes számla mellékletét."
+msgstr "Először vonja vissza a megrendelés összes számla mellékletét."
 
 #. module: sale
 #: view:sale.order:0
@@ -167,7 +167,7 @@ msgstr "Ki nem számlázott, de kiszállított tételek"
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
 msgid "Quotation confirmed"
-msgstr "Árajánlat visszaigazolva"
+msgstr "Árajánlat megerősítve"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -195,7 +195,7 @@ msgstr "Szállítási cím"
 #: field:sale.report,analytic_account_id:0
 #: field:sale.shop,project_id:0
 msgid "Analytic Account"
-msgstr "Analitikus/elemző könyvelés"
+msgstr "Gyűjtő/elemző könyvelés"
 
 #. module: sale
 #: field:sale.config.settings,module_sale_journal:0
@@ -215,6 +215,7 @@ msgstr "Nap"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
+#: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Rendelés visszavonása"
 
@@ -292,11 +293,12 @@ msgid "Project"
 msgstr "Projekt"
 
 #. module: sale
-#: code:addons/sale/sale.py:360
-#: code:addons/sale/sale.py:501
-#: code:addons/sale/sale.py:592
-#: code:addons/sale/sale.py:755
-#: code:addons/sale/sale.py:772
+#: code:addons/sale/sale.py:185
+#: code:addons/sale/sale.py:368
+#: code:addons/sale/sale.py:509
+#: code:addons/sale/sale.py:600
+#: code:addons/sale/sale.py:763
+#: code:addons/sale/sale.py:780
 #, python-format
 msgid "Error!"
 msgstr "Hiba!"
@@ -352,7 +354,7 @@ msgstr "Megrendelés sorok melyek összefüggenk az én megrendeléseimmel"
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Quotation Sent"
-msgstr "Elküldött mennyiség"
+msgstr "Árajánlat elküldve"
 
 #. module: sale
 #: model:ir.model,name:sale.model_mail_compose_message
@@ -432,9 +434,9 @@ msgid "Tax"
 msgstr "ÁFA"
 
 #. module: sale
-#: code:addons/sale/sale.py:270
-#: code:addons/sale/sale.py:812
-#: code:addons/sale/sale.py:976
+#: code:addons/sale/sale.py:278
+#: code:addons/sale/sale.py:820
+#: code:addons/sale/sale.py:983
 #, python-format
 msgid "Invalid Action!"
 msgstr "Érvénytelen lépés!"
@@ -450,11 +452,11 @@ msgid ""
 "    but waiting for the scheduler to run on the order date."
 msgstr ""
 "Az árajánlatkérés vagy a megrendelés állapotát adja.              \n"
-"A kizárás állapot automatikusan beállított egy megszakítás művelet "
+"A kizárás állapot automatikusan beállított egy visszavonás művelet "
 "elvégzésekkor               egy számla érvényesítésekor (Számla kizárás) "
 "vagy a kiválogatási lista műveletekben (Szállítási kizárás).\n"
-"A 'Ütemezésre várakozás' állapot lesz beállítva, ha a számla visszaigazolt   "
-"            de vár egy, a megrendelés dátumára futó ütemezésre."
+"A 'Ütemezésre várakozás' állapot lesz beállítva, ha a számla megerősített    "
+"                        de vár egy, a megrendelés dátumára futó ütemezésre."
 
 #. module: sale
 #: field:sale.report,date_confirm:0
@@ -494,13 +496,13 @@ msgid "Fax :"
 msgstr "Fax:"
 
 #. module: sale
-#: code:addons/sale/sale.py:270
+#: code:addons/sale/sale.py:278
 #, python-format
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it before !"
 msgstr ""
-"Ahhoz, hogy törölni tudjon egy visszaigazolt megrendelést, először meg kell "
-"szakítani azt !"
+"Ahhoz, hogy törölni tudjon egy megerősített megrendelést, először vissza "
+"kell vonnia azt !"
 
 #. module: sale
 #: view:sale.order:0
@@ -520,8 +522,8 @@ msgid "Contract Features"
 msgstr "Szerződés tulajdonságai"
 
 #. module: sale
-#: code:addons/sale/sale.py:280
-#: code:addons/sale/sale.py:578
+#: code:addons/sale/sale.py:288
+#: code:addons/sale/sale.py:586
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
@@ -589,10 +591,11 @@ msgid "Prepare invoices based on timesheets"
 msgstr "Az időkimutatások alapján készítsen elő számlát"
 
 #. module: sale
-#: code:addons/sale/sale.py:812
+#: code:addons/sale/sale.py:820
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
-msgstr "Nem tud megrendelési sor megszakítani amelyik már számlázva volt."
+msgstr ""
+"Nem tud olyan megrendelési sort visszavonni amelyik már számlázva volt."
 
 #. module: sale
 #: view:account.invoice.report:0
@@ -625,7 +628,7 @@ msgstr "Megrendelés visszaigazolva"
 #. module: sale
 #: view:sale.order:0
 msgid "Sales Order that haven't yet been confirmed"
-msgstr "Megrendelés mely még nem lett visszaigazolva"
+msgstr "Megrendelés mely még nem lett megerősítve"
 
 #. module: sale
 #: view:sale.order:0
@@ -649,7 +652,7 @@ msgid "Disc.(%)"
 msgstr "Áreng. (%)"
 
 #. module: sale
-#: code:addons/sale/sale.py:756
+#: code:addons/sale/sale.py:764
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr ""
@@ -664,7 +667,7 @@ msgstr "Számlasorok"
 #: view:sale.report:0
 #: field:sale.report,price_total:0
 msgid "Total Price"
-msgstr "Teljes ár"
+msgstr "Összérték"
 
 #. module: sale
 #: help:account.config.settings,group_analytic_account_for_sales:0
@@ -700,7 +703,7 @@ msgid "Make Invoices"
 msgstr "Számlák készítése"
 
 #. module: sale
-#: code:addons/sale/res_config.py:89
+#: code:addons/sale/res_config.py:97
 #, python-format
 msgid "Hour"
 msgstr "Óra"
@@ -809,14 +812,14 @@ msgid ""
 msgstr ""
 "* A 'Terv' állapot beállított, ha az idevonatkozó megrendelés tervezet "
 "állapotú.                     \n"
-"* A 'Visszaigazolt' állapot beállított, ha az idevonatkozó megrendelés "
-"visszaigazolt.                    \n"
+"* A 'Megerősített' állapot beállított, ha az idevonatkozó megrendelés "
+"megerősített.                    \n"
 "* A 'Kifogás' állapot beállított, ha az idevonatkozó megrendelés kifogásolt. "
 "                   \n"
 "* A 'Elvégzett' állapot beállított, ha az idevonatkozó megrendelés sor "
 "kiválogatott.                     \n"
-"* A 'Megszakított' állapot beállított, ha az idevonatkozó megrendelést egy "
-"felhasználó megszakította."
+"* A 'Visszavon' állapot beállított, ha az idevonatkozó megrendelést egy "
+"felhasználó visszavonta."
 
 #. module: sale
 #: view:sale.config.settings:0
@@ -824,7 +827,7 @@ msgid "Default Options"
 msgstr "Alapértelmezett lehetőségek"
 
 #. module: sale
-#: code:addons/sale/sale.py:953
+#: code:addons/sale/sale.py:960
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:91
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:95
 #, python-format
@@ -886,7 +889,7 @@ msgid "Sales Order done"
 msgstr "Megrendelés elvégezve"
 
 #. module: sale
-#: code:addons/sale/sale.py:361
+#: code:addons/sale/sale.py:369
 #, python-format
 msgid "Please define sales journal for this company: \"%s\" (id:%d)."
 msgstr ""
@@ -942,7 +945,7 @@ msgid "Sales Make Invoice"
 msgstr "Számla generálása értékesítésből"
 
 #. module: sale
-#: code:addons/sale/sale.py:300
+#: code:addons/sale/sale.py:308
 #, python-format
 msgid "Pricelist Warning!"
 msgstr "Árlista figyelmeztés!"
@@ -963,7 +966,7 @@ msgid ""
 msgstr ""
 "Nem készíthet számlát ehhez a megrendelés sorhoz, az alábbi okok egyikének "
 "következtében:\n"
-"1. A megrendelés sorának állapota: \"Tervezet\" vagy \"Mégsem\".\n"
+"1. A megrendelés sorának állapota: \"Tervezet\" vagy \"Visszavont\".\n"
 "2.  A megrendelési sor már kiszámlázásra került."
 
 #. module: sale
@@ -1020,7 +1023,7 @@ msgid "Category of Product"
 msgstr "Termékkaterógia"
 
 #. module: sale
-#: code:addons/sale/sale.py:558
+#: code:addons/sale/sale.py:566
 #, python-format
 msgid "Cannot cancel this sales order!"
 msgstr "Nem lehet megszakítani ezt a megrendelést!"
@@ -1077,10 +1080,10 @@ msgid "Open Sale Menu"
 msgstr "Értékesítési menü megnyitása"
 
 #. module: sale
-#: code:addons/sale/sale.py:592
+#: code:addons/sale/sale.py:600
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
-msgstr "Nem tud visszaigazolni sor nélküli megrendelést"
+msgstr "Nem tud megerősíteni sor nélküli megrendelést"
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -1088,7 +1091,7 @@ msgid "In Progress"
 msgstr "Folyamatban"
 
 #. module: sale
-#: code:addons/sale/sale.py:857
+#: code:addons/sale/sale.py:865
 #, python-format
 msgid "No Customer Defined !"
 msgstr "Nincs vevő megadva!"
@@ -1241,7 +1244,7 @@ msgid ""
 "Sales Order Lines that are confirmed, done or in exception state and haven't "
 "yet been invoiced"
 msgstr ""
-"Megrendelési sorok, melyek visszaigazoltak, elvégzettek vagy kifogásolt "
+"Megrendelési sorok, melyek megerősítettek, elvégzettek vagy kifogásolt "
 "állapotú és még nincs számlázva"
 
 #. module: sale
@@ -1415,7 +1418,7 @@ msgstr ""
 "folyamatban\""
 
 #. module: sale
-#: code:addons/sale/sale.py:935
+#: code:addons/sale/sale.py:942
 #, python-format
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
@@ -1432,7 +1435,7 @@ msgstr ""
 "igényt."
 
 #. module: sale
-#: code:addons/sale/sale.py:948
+#: code:addons/sale/sale.py:955
 #, python-format
 msgid "No valid pricelist line found ! :"
 msgstr "Nem alálható érvényes árlista sor ! :"
@@ -1517,7 +1520,7 @@ msgid "TVA :"
 msgstr "ÁFA:"
 
 #. module: sale
-#: code:addons/sale/sale.py:441
+#: code:addons/sale/sale.py:449
 #, python-format
 msgid "Customer Invoices"
 msgstr "Kimenő számlák"
@@ -1525,7 +1528,7 @@ msgstr "Kimenő számlák"
 #. module: sale
 #: model:process.node,note:sale.process_node_order0
 msgid "Confirmed sales order to invoice."
-msgstr "megerősített értékesítési megbízás, amely számlázható."
+msgstr "Megerősített vásárlói megrendelés, amely számlázható."
 
 #. module: sale
 #: field:sale.order.line,sequence:0
@@ -1543,7 +1546,7 @@ msgid "Sales"
 msgstr "Értékesítés"
 
 #. module: sale
-#: code:addons/sale/sale.py:301
+#: code:addons/sale/sale.py:309
 #, python-format
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
@@ -1604,11 +1607,9 @@ msgstr "Az én megrendeléseim sorai"
 #: model:process.transition.action,name:sale.process_transition_action_cancel0
 #: view:sale.advance.payment.inv:0
 #: view:sale.make.invoice:0
-#: view:sale.order:0
-#: view:sale.order.line:0
 #: view:sale.order.line.make.invoice:0
 msgid "Cancel"
-msgstr "Törlés"
+msgstr "Visszavonás"
 
 #. module: sale
 #: field:sale.order,message_follower_ids:0
@@ -1616,7 +1617,7 @@ msgid "Followers"
 msgstr "Követők"
 
 #. module: sale
-#: code:addons/sale/sale.py:937
+#: code:addons/sale/sale.py:944
 #, python-format
 msgid "No Pricelist ! : "
 msgstr "Nincs árlista ! : "
@@ -1677,7 +1678,7 @@ msgid "Shipping address :"
 msgstr "Szállítási cím:"
 
 #. module: sale
-#: code:addons/sale/sale.py:502
+#: code:addons/sale/sale.py:510
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
@@ -1707,7 +1708,7 @@ msgid "Use contracts management"
 msgstr "Szerződés szervezés használata"
 
 #. module: sale
-#: code:addons/sale/sale.py:945
+#: code:addons/sale/sale.py:952
 #, python-format
 msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
@@ -1850,6 +1851,90 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Tisztlet${object.partner_id.name},</p>\n"
+"    \n"
+"    <p>Ez itt ${object.state in ('draft', 'sent') and 'quotation' or 'order "
+"confirmation'} ${object.company_id.name} vállalattól: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
+"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.client_order_ref:\n"
+"       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
+"       % endif\n"
+"       % if object.user_id:\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or "
+"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    % if object.paypal_url:\n"
+"    <br/>\n"
+"    <p>It is also possible to directly pay with Paypal:</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${object.paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"        </a>\n"
+"    % endif\n"
+"\n"
+"    <br/>\n"
+"    <p>If you have any question, do not hesitate to contact us.</p>\n"
+"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1867,7 +1952,7 @@ msgstr "A végösszeg."
 #. module: sale
 #: view:sale.order:0
 msgid "Confirm Sale"
-msgstr "Értékesítés jóváhagyás"
+msgstr "Értékesítés megerősítés"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:96
@@ -1984,7 +2069,7 @@ msgid "sale.group_delivery_invoice_address"
 msgstr "sale.group_delivery_invoice_address"
 
 #. module: sale
-#: code:addons/sale/sale.py:773
+#: code:addons/sale/sale.py:781
 #, python-format
 msgid ""
 "There is no Fiscal Position defined or Income category account defined for "
@@ -2208,7 +2293,7 @@ msgstr "Értékesítési megbízásból"
 #. module: sale
 #: view:sale.order.line:0
 msgid "Confirmed sales order lines, not yet delivered"
-msgstr "Visszaigazolt megrendelési sorok, amik még nem kiszálítottak"
+msgstr "Megerősített megrendelési sorok, amik még nem kiszálítottak"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleinvoice0
@@ -2234,7 +2319,7 @@ msgid "Some order lines"
 msgstr "Néhány megrendelés sor"
 
 #. module: sale
-#: code:addons/sale/sale.py:976
+#: code:addons/sale/sale.py:983
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
 msgstr ""
@@ -2309,7 +2394,7 @@ msgstr ""
 "                Ez a sale_margin modult telepíti."
 
 #. module: sale
-#: code:addons/sale/sale.py:857
+#: code:addons/sale/sale.py:865
 #, python-format
 msgid ""
 "Before choosing a product,\n"

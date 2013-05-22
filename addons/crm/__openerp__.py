@@ -81,6 +81,8 @@ Dashboard for CRM will include:
         'crm_lead_view.xml',
         'crm_lead_menu.xml',
 
+        'crm_case_section_view.xml',
+
         'crm_meeting_menu.xml',
 
         'crm_phonecall_view.xml',
@@ -95,6 +97,7 @@ Dashboard for CRM will include:
         'board_crm_view.xml',
 
         'res_config_view.xml',
+        'base_partner_merge_view.xml',
     ],
     'demo': [
         'crm_demo.xml',
@@ -103,20 +106,37 @@ Dashboard for CRM will include:
         'crm_action_rule_demo.xml',
     ],
     'test': [
-        'test/process/communication_with_customer.yml',
-        'test/process/lead2opportunity2win.yml',
-        'test/process/lead2opportunity_assign_salesmen.yml',
-        'test/process/merge_opportunity.yml',
-        'test/process/cancel_lead.yml',
-        'test/process/segmentation.yml',
-        'test/process/phonecalls.yml',
-        'test/ui/crm_demo.yml',
-        'test/ui/duplicate_lead.yml',
-        'test/ui/delete_lead.yml',
+        'test/crm_lead_message.yml',
+        'test/lead2opportunity2win.yml',
+        'test/lead2opportunity_assign_salesmen.yml',
+        'test/crm_lead_merge.yml',
+        'test/crm_lead_cancel.yml',
+        'test/segmentation.yml',
+        'test/phonecalls.yml',
+        'test/crm_lead_onchange.yml',
+        'test/crm_lead_copy.yml',
+        'test/crm_lead_unlink.yml',
+    ],
+    'css': [
+        'static/src/css/crm.css'
+    ],
+    'js': [
+        'static/src/js/crm.js'
     ],
     'installable': True,
     'application': True,
     'auto_install': False,
-    'images': ['images/crm_dashboard.png', 'images/customers.png','images/leads.png','images/opportunities_kanban.png','images/opportunities_form.png','images/opportunities_calendar.png','images/opportunities_graph.png','images/logged_calls.png','images/scheduled_calls.png','images/stages.png'],
+    'images': [
+        'images/crm_dashboard.png',
+        'images/customers.png',
+        'images/leads.png',
+        'images/opportunities_kanban.png',
+        'images/opportunities_form.png',
+        'images/opportunities_calendar.png',
+        'images/opportunities_graph.png',
+        'images/logged_calls.png',
+        'images/scheduled_calls.png',
+        'images/stages.png',
+    ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

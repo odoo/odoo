@@ -19,7 +19,9 @@
 #
 ##############################################################################
 
+from datetime import datetime
 from openerp.osv import osv, fields
+
 
 class sale_order(osv.osv):
     _inherit = 'sale.order'
@@ -30,11 +32,56 @@ class sale_order(osv.osv):
     }
 
 
+class crm_case_section(osv.osv):
+    _inherit = 'crm.case.section'
+
+    def _get_sum_month_invoice(self, cr, uid, ids, field_name, arg, context=None):
+        res = dict.fromkeys(ids, 0)
+        obj = self.pool.get('account.invoice.report')
+        when = datetime.today()
+        for section_id in ids:
+            invoice_ids = obj.search(cr, uid, [("section_id", "=", section_id), ('state', 'not in', ['draft', 'cancel']), ('year', '=', when.year), ('month', '=', when.month > 9 and when.month or "0%s" % when.month)], context=context)
+            for invoice in obj.browse(cr, uid, invoice_ids, context=context):
+                res[section_id] += invoice.price_total
+        return res
+
+    _columns = {
+        'quotation_ids': fields.one2many('sale.order', 'section_id',
+            string='Quotations', readonly=True,
+            domain=[('state', 'in', ['draft', 'sent', 'cancel'])]),
+        'sale_order_ids': fields.one2many('sale.order', 'section_id',
+            string='Sale Orders', readonly=True,
+            domain=[('state', 'not in', ['draft', 'sent', 'cancel'])]),
+        'invoice_ids': fields.one2many('account.invoice', 'section_id',
+            string='Invoices', readonly=True,
+            domain=[('state', 'not in', ['draft', 'cancel'])]),
+        'sum_month_invoice': fields.function(_get_sum_month_invoice,
+            string='Total invoiced this month',
+            type='integer', readonly=True),
+    }
+
+
 class res_users(osv.Model):
     _inherit = 'res.users'
     _columns = {
         'default_section_id': fields.many2one('crm.case.section', 'Default Sales Team'),
     }
+
+
+class sale_crm_lead(osv.Model):
+    _inherit = 'crm.lead'
+
+    def on_change_user(self, cr, uid, ids, user_id, context=None):
+        """ Override of on change user_id on lead/opportunity; when having sale
+            the new logic is :
+            - use user.default_section_id
+            - or fallback on previous behavior """
+        if user_id:
+            user = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
+            if user.default_section_id and user.default_section_id.id:
+                return {'value': {'section_id': user.default_section_id.id}}
+        return super(sale_crm_lead, self).on_change_user(cr, uid, ids, user_id, context=context)
+
 
 class account_invoice(osv.osv):
     _inherit = 'account.invoice'
@@ -42,7 +89,7 @@ class account_invoice(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
     _defaults = {
-        'section_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).default_section_id.id or False,
+        'section_id': lambda self, cr, uid, c=None: self.pool.get('res.users').browse(cr, uid, uid, c).default_section_id.id or False,
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -128,7 +128,6 @@ class pos_make_payment(osv.osv_memory):
         'amount': _default_amount,
     }
 
-pos_make_payment()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

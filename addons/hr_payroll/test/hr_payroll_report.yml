@@ -5,7 +5,8 @@
 -
   !python {model: hr.payslip}: |
     import os
-    from openerp import netsvc, tools
-    (data, format) = netsvc.LocalService('report.payslip.pdf').create(cr, uid, [ref('hr_payroll.hr_payslip_salaryslipofbonamyforjune0')], {}, {})
+    import openerp.report
+    from openerp import tools
+    data, format = openerp.report.render_report(cr, uid, [ref('hr_payroll.hr_payslip_salaryslipofbonamyforjune0')], 'payslip.pdf', {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'hr_payroll-payslip_report.'+format), 'wb+').write(data)
