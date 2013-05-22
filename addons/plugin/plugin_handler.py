@@ -110,7 +110,7 @@ class plugin_handler(osv.osv_memory):
             model_obj.message_post(cr, uid, [res_id],
                             body=msg.get('body'),
                             subject=msg.get('subject'),
-                            type='email',
+                            type='comment' if model == 'res.partner' else 'email',
                             parent_id=msg.get('parent_id'),
                             attachments=msg.get('attachments'))
             notify = _("Mail successfully pushed")
