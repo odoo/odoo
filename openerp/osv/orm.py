@@ -5482,7 +5482,7 @@ class BaseModel(object):
 
             # make sure that self is in cache
             model_cache = self._scope.cache[self._name]
-            model_cache[self._record_id] = self
+            assert model_cache.get(self._record_id) is self
 
             # fetch the record of this model without field_name in their cache
             fetch_ids = set(rec._record_id

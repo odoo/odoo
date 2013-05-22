@@ -270,12 +270,18 @@ class Cache(defaultdict):
         if spec is None:
             spec = [(model, None, None) for model in self]
 
+        # The invalidation drops data from the records' own cache. However, it
+        # never removes records from the cache itself, even if those records
+        # have been deleted from the database. Removing records would cause a
+        # subtle issue in the cache prefetching: the record instances that are
+        # fetched are the ones in the cache, but not necessarily the ones that
+        # the program uses to read the records. As a consequence, when using a
+        # record out of the cache, its already-fetched data is lost, and the
+        # record data has to be fetched again from the database!
         for model, fields, ids in spec:
             model_cache = self[model]
             for record in get_values(model_cache, ids):
                 drop_values(record._record_cache, fields)
-            if fields is None:
-                drop_values(model_cache, ids)
 
     def check(self):
         """ self-check for validating the cache """
