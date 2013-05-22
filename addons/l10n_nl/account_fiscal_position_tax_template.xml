@@ -90,6 +90,13 @@
             <field name="tax_dest_id" ref="l10n_nl.btw_I_overig"/>
         </record>
         
+        <record id="position_tax_transferred" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_transferred"/>
+            <field name="tax_src_id" ref="l10n_nl.btw_21_buy"/>
+            <field name="tax_dest_id" ref="l10n_nl.btw_ink_0"/>
+        </record>
+
+
         <!-- Again, Belgian schema has 17 (!) more records. Missing VAT 0
              and separation of goods and services .. -->
 
