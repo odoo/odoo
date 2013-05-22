@@ -1,0 +1,16 @@
+-
+  Set the current user as multicompany user
+-
+  !context
+    uid: 'stock.multicompany_user'
+
+-
+  check no error on getting default mrp.production values in multicompany setting
+-
+  !python {model: mrp.production}: |
+    location_obj = self.pool.get('stock.location')
+    fields = ['location_src_id', 'location_dest_id']
+    defaults = self.default_get(cr, uid, ['location_id', 'location_dest_id', 'type'], context)
+    for field in fields:
+        if defaults[field] != False:
+            assert location_obj.check_access_rule(cr, uid, defaults[field], 'read', context), "unreadable location %s" % field
