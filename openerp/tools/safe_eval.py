@@ -198,7 +198,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
         raise ValueError("safe_eval does not allow direct evaluation of code objects.")
 
     if '__subclasses__' in expr:
-       raise ValueError('expression not allowed (__subclasses__)')
+        raise ValueError('expression not allowed (__subclasses__)')
 
     if globals_dict is None:
         globals_dict = {}
