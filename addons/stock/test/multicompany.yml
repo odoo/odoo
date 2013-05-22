@@ -3,12 +3,21 @@
   Set the current user as multicompany user
 -
   !context
-    'uid': 'stock.multicompany_user'
+    uid: 'stock.multicompany_user'
 -
   check no error on getting default stock.move values for internal move
 -
   !python {model: stock.move}: |
+    multicomp_user = ref('stock.multicompany_user')
     context['picking_type'] = 'internal'
+    log('multicompany user: %s, uid: %s', multicomp_user, uid)
+    log('current context: %s', context)
+    defaults = self.default_get(cr, multicomp_user, ['location_id', 'location_dest_id', 'type'], context)
+    assertion_msg = "did not get the correct default (got: %s)" % defaults
+    log('got defaults: %s', defaults)
+    assert defaults == {'location_id': False, 'location_dest_id': False, 'type': 'internal'}, assertion_msg
     defaults = self.default_get(cr, uid, ['location_id', 'location_dest_id', 'type'], context)
-    assert defaults == {'location_id': False, 'location_dest_id': False, 'type': 'internal'}, "did not get the correct default (got: %s)" % defaults
+    assertion_msg = "did not get the correct default with uid %s (got: %s)" % (uid, defaults)
+    log('got defaults: %s', defaults)
+    assert defaults == {'location_id': False, 'location_dest_id': False, 'type': 'internal'}, assertion_msg
 
