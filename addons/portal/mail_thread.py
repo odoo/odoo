@@ -35,10 +35,9 @@ class mail_thread(osv.AbstractModel):
               res_id
             - opens the Inbox with context propagated
         """
-        # if uid is a portal user -> action is different
-        portal_model, group_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'portal', 'group_portal')
         cur_user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
-        if group_id in [g.id for g in cur_user.groups_id]:
+        # if uid is a portal user -> action is different
+        if any(group.is_portal for group in cur_user.groups_id):
             return ('portal', 'action_mail_inbox_feeds_portal')
         else:
             return super(mail_thread, self)._get_inbox_action_xml_id(cr, uid, context=context)
