@@ -286,8 +286,8 @@ class MergePartnerAutomatic(osv.TransientModel):
         if len(partner_ids) < 2:
             return
 
-        if openerp.SUPERUSER_ID != uid and len([partner.email for partner in proxy.browse(cr, uid, partner_ids, context=context)]) > 1:
-            raise osv.except_osv(_('Error'), _("All contacts must have the same email address. Only your Administrator can merge several contacts with different email address."))
+        if openerp.SUPERUSER_ID != uid and len(set(partner.email for partner in proxy.browse(cr, uid, partner_ids, context=context))) > 1:
+            raise osv.except_osv(_('Error'), _("All contacts must have the same email. Only the Administrator can merge contacts with different emails."))
 
         if dst_partner and dst_partner.id in partner_ids:
             src_partners = proxy.browse(cr, uid, [id for id in partner_ids if id != dst_partner.id], context=context)
@@ -299,7 +299,7 @@ class MergePartnerAutomatic(osv.TransientModel):
 
         if openerp.SUPERUSER_ID != uid and self._model_is_installed(cr, uid, 'account.move.line', context=context) and \
                 self.pool.get('account.move.line').search(cr, openerp.SUPERUSER_ID, [('partner_id', 'in', [partner.id for partner in src_partners])], context=context):
-            raise osv.except_osv(_('Error'), _("Only one contact can have Journal Items, and this contact must be the destination contact. Only your Administrator can merge several contacts with Journal Items."))
+            raise osv.except_osv(_('Error'), _("Only the destination contact may be linked to existing Journal Items. Please ask the Administrator if you need to merge several contacts linked to existing Journal Items."))
 
         call_it = lambda function: function(cr, uid, src_partners, dst_partner,
                                             context=context)
