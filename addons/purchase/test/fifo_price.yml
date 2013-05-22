@@ -181,7 +181,7 @@
 - 
   Purchase order in usd
 - 
-  I create a draft Purchase Order for 30000 g at 0.150 USD
+  I create a draft Purchase Order for 30000 g at 0.150 USD/g and 10 kg at 150 USD/kg
 - 
   !record {model: purchase.order, id: purchase_order_fifo_usd}:
     partner_id: base.res_partner_3
@@ -255,10 +255,11 @@
     return_id = self.create(cr, uid, {}, context={'active_model':'stock.picking', 'active_id': pick_ids[0].id})
     res = self.create_returns(cr, uid, [return_id], context={'active_id': pick_ids[0].id})
     return_move_id = self.pool.get("stock.move").search(cr, uid, [('move_returned_from','=', pick_ids[0].move_lines[0].id)])
-    
     movepick_obj = self.pool.get("stock.partial.move")
     movepick_id = movepick_obj.create(cr, uid, {}, context={'active_model': 'stock.move', 'active_ids': return_move_id})
     movepick_obj.do_partial(cr, uid, [movepick_id])
+    import pdb
+    pdb.set_trace()
 - 
   Check rounded price is 150.0 / 1.2834
 - 

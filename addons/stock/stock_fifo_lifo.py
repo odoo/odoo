@@ -36,7 +36,7 @@ class product_product (osv.osv):
             (move_in_id, qty in uom of move out, price (converted to move out), qty in uom of move in
             This should be called for only one product at a time
             UoMs and currencies from the corresponding moves are converted towards that given in the params
-            It is good to use force_company in the header
+            It is good to use force_company in the context
         '''
         assert len(ids) == 1, _('Only the fifolifo stock matchings of one product can be calculated at a time.')
         uom_obj = self.pool.get('product.uom')
@@ -64,7 +64,6 @@ class product_product (osv.osv):
             move_in_ids = move_obj.search(cr, uid, [('company_id','=', company_id), ('qty_remaining', '>', 0), ('state', '=', 'done'), 
                                              ('location_id.usage', '!=', 'internal'), ('location_dest_id.usage', '=', 'internal'), ('product_id', '=', product.id)], 
                                        order = 'date desc', context=context)
-
         tuples = []
         qty_to_go = qty
         for move in move_obj.browse(cr, uid, move_in_ids, context=context):
@@ -78,8 +77,7 @@ class product_product (osv.osv):
                                                  move.price_unit, round=False)
             else:
                 new_price = move.price_unit
-            new_price = uom_obj._compute_price(cr, uid, uom_from, new_price,
-                            product_uom_id)
+            new_price = uom_obj._compute_price(cr, uid, uom_from, new_price, product_uom_id)
             if qty_to_go - product_qty >= 0: 
                 tuples.append((move.id, product_qty, new_price, qty_from),)
                 qty_to_go -= product_qty
@@ -125,6 +123,8 @@ class stock_move(osv.osv):
             if move_in:
                 #Search all matchings
                 matches = match_obj.search(cr, uid, [('move_in_id', '=', move.id)], context=context)
+                print [(x.move_in_id.product_qty, x.qty, x.move_in_id.price_unit, x.move_in_id.date) for x in match_obj.browse(cr, uid, matches, context=context)]
+
                 qty = move.product_qty
                 for match in match_obj.browse(cr, uid, matches, context=context):
                     qty -= uom_obj._compute_qty(cr, uid, match.move_out_id.product_uom.id, match.qty, move.product_uom.id)
@@ -132,9 +132,13 @@ class stock_move(osv.osv):
             elif move_out:
                 #Search all matchings, but from the other side
                 matches = match_obj.search(cr, uid, [('move_out_id', '=', move.id)], context=context)
+                print [(x.move_in_id.product_qty, x.qty, x.move_in_id.price_unit, x.move_in_id.date) for x in match_obj.browse(cr, uid, matches, context=context)]
                 qty = move.product_qty
                 for match in match_obj.browse(cr, uid, matches, context=context):
                     qty -= match.qty
+                    if qty < 0:
+                        import pdb
+                        pdb.set_trace()
                 res[move.id] = qty
         return res
     _inherit = 'stock.move'
@@ -145,19 +149,6 @@ class stock_move(osv.osv):
                 'matching_ids_out':fields.one2many('stock.move.matching', 'move_out_id'),
                 }
 
-
-
-#     def create(self, cr, uid, vals, context=None):
-#         if 'product_qty' in vals:
-#             vals['qty_remaining'] = vals['product_qty']
-#         res = super(stock_move, self).create(cr, uid, vals, context=context)
-#         return res
-# 
-#     def write(self, cr, uid, ids, vals, context=None):
-#         if 'product_qty' in vals:
-#             vals['qty_remaining'] = vals['product_qty']
-#         res = super(stock_move, self).write(cr, uid, ids, vals, context=context)
-#         return res
 
 
 class stock_move_matching(osv.osv):

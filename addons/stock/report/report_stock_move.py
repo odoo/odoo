@@ -275,10 +275,20 @@ CREATE OR REPLACE view report_stock_valuation AS (
         m.state as state, m.prodlot_id as prodlot_id,
         p.name as name, 
         CASE WHEN ipcm.value_text in ('fifo','lifo') THEN coalesce(mm.price_unit_out * pu2.factor / pu.factor, 0.0) 
-            ELSE coalesce(m.price_unit * pu2.factor / pu.factor::decimal, 0.0) END AS price_unit,  
+            ELSE coalesce(m.price_unit * pu2.factor / pu.factor::decimal, 0.0) END AS price_unit,
         coalesce(sum(-ip.value_float * m.product_qty * pu.factor / pu2.factor)::decimal, 0.0) as value,
-        CASE WHEN ipcm.value_text in ('fifo', 'lifo') THEN coalesce(sum(-mm.price_unit_out * mm.qty)::decimal, 0.0) 
-            ELSE coalesce(sum(-m.price_unit * mm.qty)::decimal, 0.0) END as move_value, 
+        CASE WHEN ipcm.value_text IS NOT NULL THEN 
+            CASE WHEN ipcm.value_text in ('fifo', 'lifo') THEN coalesce(sum(-mm.price_unit_out * mm.qty)::decimal, 0.0) 
+                ELSE coalesce(sum(-m.price_unit * mm.qty)::decimal, 0.0) END 
+        ELSE 
+            CASE WHEN ipcmdef.value_text IS NOT NULL THEN
+                CASE WHEN ipcmdef.value_text in ('fifo', 'lifo') THEN coalesce(sum(-mm.price_unit_out * mm.qty)::decimal, 0.0) 
+                    ELSE coalesce(sum(-m.price_unit * mm.qty)::decimal, 0.0) END 
+            ELSE
+                CASE WHEN ipcmdef2.value_text in ('fifo', 'lifo') THEN coalesce(sum(-mm.price_unit_out * mm.qty)::decimal, 0.0) 
+                    ELSE coalesce(sum(-m.price_unit * mm.qty)::decimal, 0.0) END 
+            END
+        END as move_value, 
         coalesce(sum(-mm.qty * pu.factor / pu2.factor)::decimal, 0.0) as product_qty,
         l_other.usage as location_dest_type, 
         l.usage as location_src_type,
@@ -290,16 +300,21 @@ CREATE OR REPLACE view report_stock_valuation AS (
                 LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
                     LEFT JOIN ir_property ip ON (ip.name='standard_price' AND ip.res_id=CONCAT('product.template,',pt.id) AND ip.company_id=m.company_id)
                     LEFT JOIN ir_property ipcm ON (ipcm.name='cost_method' and ipcm.res_id=CONCAT('product.template,',pt.id) AND ipcm.company_id=m.company_id)
+                    LEFT JOIN ir_property ip_def ON (ip_def.name='standard_price' AND ip_def.res_id IS NULL AND ip_def.company_id=m.company_id)
+                    LEFT JOIN ir_property ip_def2 ON (ip_def2.name='standard_price' AND ip_def2.res_id IS NULL AND ip_def2.company_id IS NULL)
+                    LEFT JOIN ir_property ipcmdef ON (ipcmdef.name='cost_method' AND ipcmdef.res_id IS NULL AND ipcmdef.company_id=m.company_id)
+                    LEFT JOIN ir_property ipcmdef2 ON (ipcmdef2.name='cost_method' AND ipcmdef2.res_id IS NULL AND ipcmdef2.company_id IS NULL)
                 LEFT JOIN product_uom pu ON (pt.uom_id=pu.id)
                 LEFT JOIN product_uom pu2 ON (m.product_uom=pu2.id)
             LEFT JOIN product_uom u ON (m.product_uom=u.id)
             LEFT JOIN stock_location l ON (m.location_id=l.id)
-            LEFT JOIN stock_location l_other ON (m.location_dest_id=l_other.id) 
+            LEFT JOIN stock_location l_other ON (m.location_dest_id=l_other.id)
             WHERE m.state != 'cancel' and mm.move_out_id=m.id
     GROUP BY
         p.name, mm.id, mm.move_out_id, m.id, m.product_id, m.product_uom, pt.categ_id, m.partner_id, m.location_id,  m.location_dest_id,
         m.prodlot_id, m.date, m.state, l.usage, l.scrap_location, m.company_id, pt.uom_id, to_char(m.date, 'YYYY'), to_char(m.date, 'MM'), 
-        pu2.factor, pu.factor, ipcm.value_text, m.qty_remaining, l_other.usage
+        pu2.factor, pu.factor, ipcm.value_text, m.qty_remaining, l_other.usage, 
+        ipcmdef.value_text, ipcmdef2.value_text
 ) UNION ALL (
     SELECT
         -min(m.id) as id, m.date as date,
@@ -322,18 +337,20 @@ CREATE OR REPLACE view report_stock_valuation AS (
             LEFT JOIN stock_picking p ON (m.picking_id=p.id)
             LEFT JOIN product_product pp ON (m.product_id=pp.id)
                 LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
-                    LEFT JOIN ir_property ip ON (ip.name='standard_price' AND ip.res_id=CONCAT('product.template,',pt.id) AND ip.company_id=m.company_id)
-                    LEFT JOIN ir_property ipcm ON (ipcm.name='cost_method' AND ipcm.res_id=CONCAT('product.tempalte,',pt.id) AND ipcm.company_id=m.company_id)
                 LEFT JOIN product_uom pu ON (pt.uom_id=pu.id)
                 LEFT JOIN product_uom pu2 ON (m.product_uom=pu2.id)
             LEFT JOIN product_uom u ON (m.product_uom=u.id)
             LEFT JOIN stock_location l ON (m.location_dest_id=l.id)
-            LEFT JOIN stock_location l_other ON (m.location_id=l_other.id)
-            WHERE m.state != 'cancel'
+            LEFT JOIN stock_location l_other ON (m.location_id=l_other.id), 
+            ir_property ip, ir_property ipcm
+            WHERE m.state != 'cancel' and
+                  ip.name='standard_price' AND (ip.res_id = CONCAT('product.template,',pt.id) or ip.res_id IS NULL) AND (ip.company_id=m.company_id OR ip.company_id IS NULL) and
+                  ipcm.name='cost_method' AND (ipcm.res_id = CONCAT('product.template,',pt.id) or ipcm.res_id IS NULL) AND (ipcm.company_id=m.company_id OR ipcm.company_id IS NULL) 
     GROUP BY
         p.name, m.id, m.product_id, m.product_uom, pt.categ_id, m.partner_id, m.location_id, m.location_dest_id,
         m.prodlot_id, m.date, m.state, l.usage, l.scrap_location, m.company_id, pt.uom_id, to_char(m.date, 'YYYY'), to_char(m.date, 'MM'), 
-        pu2.factor, pu.factor, m.qty_remaining, l_other.usage, ipcm.value_text, ip.value_float
+        pu2.factor, pu.factor, m.qty_remaining, l_other.usage, ipcm.value_text, ip.value_float, ip.company_id, ipcm.company_id, ip.res_id, ipcm.res_id
+    order by ip.res_id ASC, ip.company_id ASC, ipcm.res_id ASC, ipcm.company_id
     )
 );
         """)
