@@ -25,7 +25,7 @@
 import re
 
 component_re = re.compile(r'(\d+ | [a-z]+ | \.| -)', re.VERBOSE)
-replace = {'pre':'c', 'preview':'c','-':'final-','_':'final-','rc':'c','dev':'@'}.get
+replace = {'pre':'c', 'preview':'c','-':'final-','_':'final-','rc':'c','dev':'@','saas':'','~':''}.get
 
 def _parse_version_parts(s):
     for part in component_re.split(s):
