@@ -38,6 +38,7 @@ class groups(osv.osv):
     _name = "res.groups"
     _description = "Access Groups"
     _rec_name = 'full_name'
+    _order = 'name'
 
     def _get_full_name(self, cr, uid, ids, field, arg, context=None):
         res = {}
