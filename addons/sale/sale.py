@@ -400,10 +400,6 @@ class sale_order(osv.osv):
     def _make_invoice(self, cr, uid, order, lines, context=None):
         inv_obj = self.pool.get('account.invoice')
         obj_invoice_line = self.pool.get('account.invoice.line')
-        if context is None:
-            context = {}
-        if order.section_id:
-            context.update({'default_section_id': order.section_id.id})
         invoiced_sale_line_ids = self.pool.get('sale.order.line').search(cr, uid, [('order_id', '=', order.id), ('invoiced', '=', True)], context=context)
         from_line_invoice_ids = []
         for invoiced_sale_line_id in self.pool.get('sale.order.line').browse(cr, uid, invoiced_sale_line_ids, context=context):
