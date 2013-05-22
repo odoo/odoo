@@ -17,7 +17,7 @@
         for field in fields:
             if defaults[field] != False:
                 assert location_obj.check_access_rule(cr, uid, defaults[field], 'read', context), "unreadable location %s" % field
-        assert defaults['type'] == type}, "wrong move type"
+        assert defaults['type'] == type, "wrong move type"
 
 -
   check onchange_move_type does not return unreadable in multicompany setting
