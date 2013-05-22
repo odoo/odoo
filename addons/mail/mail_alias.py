@@ -170,6 +170,9 @@ class mail_alias(osv.Model):
             :param alias_defaults: dict, keys = mail.alias columns, values = child
                 model column name used for default values (i.e. {'job_id': 'id'})
         """
+        if context is None:
+            context = {}
+
         # disable the unique alias_id not null constraint, to avoid spurious warning during
         # super.auto_init. We'll reinstall it afterwards.
         alias_id_column.required = False

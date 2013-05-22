@@ -41,7 +41,7 @@
     currency: base.USD
     company_id: base.main_company
 -
-  I create an invoice 
+  On the first of January, I create an invoice of 1000€
 -
   !record {model: account.invoice, id: account_invoice_eur_usd}:
     account_id: account.a_recv
@@ -79,7 +79,7 @@
   !context
     'type': 'receipt'
 -
-  I create the voucher of payment with values 1350 USD, journal USD,
+  On the first of February, I create the voucher of payment with values 1350 USD, journal USD,
 -
   !record {model: account.voucher, id: account_voucher_eur_usd_case, view: view_vendor_receipt_form}:
     account_id: account.cash
