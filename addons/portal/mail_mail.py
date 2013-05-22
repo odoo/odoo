@@ -33,9 +33,14 @@ class mail_mail(osv.Model):
             - partner is not an user: signup_url
             - partner is an user: fallback on classic URL
         """
+        if context is None:
+            context = {}
+        partner_obj = self.pool.get('res.partner')
         if partner and not partner.user_ids:
-            contex_signup = dict(context or {}, signup_valid=True)
-            partner = self.pool.get('res.partner').browse(cr, SUPERUSER_ID, partner.id, context=contex_signup)
-            return _("""<small>Access your messages and documents through <a style='color:inherit' href="%s">our Customer Portal</a></small>""") % partner.signup_url
+            contex_signup = dict(context, signup_valid=True)
+            signup_url = partner_obj._get_signup_url_for_action(cr, SUPERUSER_ID, [partner.id],
+                                                                    action='login', model=mail.model, res_id=mail.res_id,
+                                                                    context=contex_signup)[partner.id]
+            return _("""<small>Access your messages and documents through <a style='color:inherit' href="%s">our Customer Portal</a></small>""") % signup_url
         else:
             return super(mail_mail, self)._get_partner_access_link(cr, uid, mail, partner=partner, context=context)

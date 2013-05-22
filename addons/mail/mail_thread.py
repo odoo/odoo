@@ -523,7 +523,7 @@ class mail_thread(osv.AbstractModel):
         return ["%s@%s" % (record['alias_name'], record['alias_domain'])
                     if record.get('alias_domain') and record.get('alias_name')
                     else False
-                    for record in self.read(cr, uid, ids, ['alias_name', 'alias_domain'], context=context)]
+                    for record in self.read(cr, SUPERUSER_ID, ids, ['alias_name', 'alias_domain'], context=context)]
 
     #------------------------------------------------------
     # Mail gateway
@@ -1264,19 +1264,35 @@ class mail_thread(osv.AbstractModel):
         """ Add partners to the records followers. """
         user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
         if set(partner_ids) == set([user_pid]):
-            self.check_access_rights(cr, uid, 'read')
+            try:
+                self.check_access_rights(cr, uid, 'read')
+            except (osv.except_osv, orm.except_orm):
+                return
         else:
             self.check_access_rights(cr, uid, 'write')
 
+        # subscribe partners
         self.write(cr, SUPERUSER_ID, ids, {'message_follower_ids': [(4, pid) for pid in partner_ids]}, context=context)
-        # if subtypes are not specified (and not set to a void list), fetch default ones
-        if subtype_ids is None:
-            subtype_obj = self.pool.get('mail.message.subtype')
-            subtype_ids = subtype_obj.search(cr, uid, [('default', '=', True), '|', ('res_model', '=', self._name), ('res_model', '=', False)], context=context)
-        # update the subscriptions
+
+        # subtype specified: update the subscriptions
         fol_obj = self.pool.get('mail.followers')
-        fol_ids = fol_obj.search(cr, SUPERUSER_ID, [('res_model', '=', self._name), ('res_id', 'in', ids), ('partner_id', 'in', partner_ids)], context=context)
-        fol_obj.write(cr, SUPERUSER_ID, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
+        if subtype_ids is not None:
+            fol_ids = fol_obj.search(cr, SUPERUSER_ID, [('res_model', '=', self._name), ('res_id', 'in', ids), ('partner_id', 'in', partner_ids)], context=context)
+            fol_obj.write(cr, SUPERUSER_ID, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
+        # no subtypes: default ones for new subscription, do not update existing subscriptions
+        else:
+            # search new subscriptions: subtype_ids is False
+            fol_ids = fol_obj.search(cr, SUPERUSER_ID, [
+                            ('res_model', '=', self._name),
+                            ('res_id', 'in', ids),
+                            ('partner_id', 'in', partner_ids),
+                            ('subtype_ids', '=', False)
+                        ], context=context)
+            if fol_ids:
+                subtype_obj = self.pool.get('mail.message.subtype')
+                subtype_ids = subtype_obj.search(cr, uid, [('default', '=', True), '|', ('res_model', '=', self._name), ('res_model', '=', False)], context=context)
+                fol_obj.write(cr, SUPERUSER_ID, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
+
         return True
 
     def message_unsubscribe_users(self, cr, uid, ids, user_ids=None, context=None):
