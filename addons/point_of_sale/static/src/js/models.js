@@ -323,7 +323,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
     module.Product = Backbone.Model.extend({
         get_image_url: function(){
-            return instance.session.url('/web/binary/image', {model: 'product.product', field: 'image', id: this.get('id')});
+            return instance.session.url('/web/binary/image', {model: 'product.product', field: 'image_medium', id: this.get('id')});
         },
     });
 
