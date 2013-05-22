@@ -1004,7 +1004,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
     switch_mode: function (view_type, no_store, options) {
         var self = this;
 
-        return $.when(this._super.apply(this, arguments)).done(function () {
+        return this.alive($.when(this._super.apply(this, arguments))).done(function () {
             var controller = self.views[self.active_view].controller;
             self.$el.find('.oe_debug_view').html(QWeb.render('ViewManagerDebug', {
                 view: controller,

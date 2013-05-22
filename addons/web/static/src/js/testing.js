@@ -176,9 +176,9 @@ openerp.testing = {};
         });
 
         QUnit.module(testing.current_module + '.' + name, {_oe: options});
-        body(testing.case);
+        body(testing['case']);
     };
-    testing.case = function (name, options, callback) {
+    testing['case'] = function (name, options, callback) {
         if (_.isFunction(options)) {
             callback = options;
             options = {};

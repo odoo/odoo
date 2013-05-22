@@ -123,6 +123,7 @@ $sheet-padding: 16px
     font-size: 1px
     letter-spacing: -1px
     color: transparent
+    text-shadow: none
     font-weight: normal
     &:before
         font: 21px "mnmliconsRegular"
@@ -133,6 +134,7 @@ $sheet-padding: 16px
     font-size: 1px
     letter-spacing: -1px
     color: transparent
+    text-shadow: none
     font-weight: normal
     &:before
         font: $size "entypoRegular"
@@ -1735,6 +1737,7 @@ $sheet-padding: 16px
     // FormView.header {{{
     .oe_form header
         position: relative
+        z-index: 1
         border-bottom: 1px solid #cacaca
         padding-left: 2px
         @include vertical-gradient(#fcfcfc, #dedede)
@@ -1983,9 +1986,9 @@ $sheet-padding: 16px
             .oe_form_field_float input
                 width: 7em
             .oe_form_field_date input
-                width: 7.5em
+                width: 100px
             .oe_form_field_datetime input
-                width: 11.5em
+                width: 150px
     // }}}
     // FormView.fields_binary {{{
     /* http://www.quirksmode.org/dom/inputfile.html
@@ -2122,16 +2125,16 @@ $sheet-padding: 16px
             margin: 0 -18px 0 0
             padding: 0
             @include vertical-gradient(#fcfcfc, #dedede)
-            &:first-child .label
+            &:first-child > .label
                 border-left: 1px solid #cacaca
                 padding-left: 14px
             &:last-child
                 border-right: 1px solid #cacaca
-                .label
+                > .label
                     padding-right: 14px
-                .arrow
+                > .arrow
                     display: none
-            .label
+            > .label
                 color: #4c4c4c
                 text-shadow: 0 1px 1px #fcfcfc, 0 -1px 1px #dedede
                 padding: 7px
@@ -2139,7 +2142,7 @@ $sheet-padding: 16px
                 padding-left: 24px
                 margin: 0
                 position: relative
-            .arrow
+            > .arrow
                 width: 17px
                 display: inline-block
                 vertical-align: top
@@ -2156,11 +2159,32 @@ $sheet-padding: 16px
                     @include skew-gradient(#fcfcfc, #dedede)
                     @include radius(3px)
                     @include transform(rotate(45deg))
+        .oe_folded
+            .label
+                padding-bottom: 8px
+            ul
+                position: absolute
+                border-top: 1px solid #cacaca
+                float: none
+                top: 30px
+                right: 0
+                display: none
+                li
+                    margin: 0
+                    border-left: 1px solid #cacaca
+                    display: block
+                li.label
+                    border: 0
+                    padding-left: 24px
+                li:last-child
+                    border-bottom: 1px solid #cacaca
+            &:hover ul
+                display: block
         li.oe_active
             @include vertical-gradient(#729fcf, #3465a4)
-            .arrow span
+            > .arrow span
                 @include skew-gradient(#729fcf, #3465a4)
-            .label
+            > .label
                 color: white
                 text-shadow: 0 1px 1px #729fcf, 0 -1px 1px #3465a4
     ul.oe_form_status_clickable
@@ -2168,18 +2192,18 @@ $sheet-padding: 16px
             cursor: pointer
             &:hover
                 @include vertical-gradient(darken(#fcfcfc, 8%), darken(#dedede, 8%))
-                .label
+                > .label
                     text-shadow: 0 -1px 1px #fcfcfc, 0 1px 1px #dedede
-                .arrow span
+                > .arrow span
                     @include vertical-gradient(darken(#fcfcfc, 8%), darken(#dedede, 8%))
-            .label
+            > .label
                 color: $link-color
         li.oe_active
             &:hover
                 @include vertical-gradient(darken(#729fcf, 10%), darken(#3465a4, 10%))
-                .label
+                > .label
                     text-shadow: 0 -1px 1px #729fcf, 0 1px 1px #3465a4
-                .arrow span
+                > .arrow span
                     @include skew-gradient(darken(#729fcf, 10%), darken(#3465a4, 10%))
     // }}}
     // FormView.one2many {{{
@@ -2562,6 +2586,8 @@ div.ui-widget-overlay
     .placeholder
         color: $tag-border !important
         font-style: italic !important
+    .oe_form_binary_file
+        width: 80px
     .oe_form_field_boolean input
         background: #fff
     .db_option_table .oe_form_field_selection
@@ -2642,26 +2668,26 @@ div.ui-widget-overlay
             &:last-child
                 overflow: hidden
                 border-right: 1px solid #cacaca
-                .label
+                > .label
                     padding-right: 14px
                     border-right: none
-                .arrow
+                > .arrow
                     display: inline-block
                     opacity: 0
                     filter: alpha(opacity = 0)
                     border: none
                     width: 0
                     border-right: none 
-        .label
-            border-bottom: 1px solid #cacaca
-            background: transparent
-        .arrow
-            span
-                background-color: #fefefe !important
+            > .label
+                border-bottom: 1px solid #cacaca
+                background: transparent
+            > .arrow
+                span
+                    background-color: #fefefe !important
         li.oe_active
-            .label
+            > .label
                 border-bottom: 1px solid #729fcf
-            .arrow span
+            > .arrow span
                 background-color: #729fcf !important
 
     // jquery ui for ie

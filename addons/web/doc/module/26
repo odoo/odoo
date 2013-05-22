@@ -1,0 +1,38 @@
+Index: web_example/static/src/tests/timer.js
+===================================================================
+--- web_example.orig/static/src/tests/timer.js
++++ web_example/static/src/tests/timer.js
+@@ -42,4 +42,33 @@ openerp.testing.section('timer', functio
+             w.format_time(84092336),
+             '23:21:32');
+     });
++    test('update_counter', function (instance, $fixture) {
++        var w = new instance.web_example.Action();
++        // $fixture is a DOM tree whose content gets cleaned up before
++        // each test, so we can add whatever we need to it
++        $fixture.append('<div class="oe_web_example_timer">');
++        // Then set it on the widget
++        w.setElement($fixture);
++
++        // Update the counter with a known value
++        w.update_counter(22733958);
++        // And check the DOM matches
++        strictEqual($fixture.text(), '06:18:53');
++
++        w.update_counter(73451828)
++        strictEqual($fixture.text(), '20:24:11');
++    });
++    test('display_record', function (instance, $fixture) {
++        var w = new instance.web_example.Action();
++        $fixture.append('<ol class="oe_web_example_saved">')
++        w.setElement($fixture);
++
++        w.display_record({time: 41676639});
++        w.display_record({time: 84092336});
++
++        var $lis = $fixture.find('li');
++        strictEqual($lis.length, 2, "should have printed 2 records");
++        strictEqual($lis[0].textContent, '11:34:36');
++        strictEqual($lis[1].textContent, '23:21:32');
++    });
+ });
