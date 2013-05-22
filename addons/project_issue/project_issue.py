@@ -270,7 +270,7 @@ class project_issue(base_stage, osv.osv):
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'stage_id': fields.many2one ('project.task.type', 'Stage',
                         track_visibility='onchange',
-                        domain="['&', ('fold', '=', False), ('project_ids', '=', project_id)]"),
+                        domain="[('project_ids', '=', project_id)]"),
         'project_id':fields.many2one('project.project', 'Project', track_visibility='onchange'),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
