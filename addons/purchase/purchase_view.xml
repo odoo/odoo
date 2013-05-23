@@ -270,7 +270,7 @@
                     <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]" help="Purchase order which are in the exception state"/>
                     <separator/>
                     <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not Invoiced" domain="[('invoice_ids','=', False)]" help="Purchase orders that include lines not invoiced."/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <field name="product_id"/>
                     <field name="create_uid"/>
                     <group expand="0" string="Group By...">
@@ -297,7 +297,7 @@
                     <filter icon="terp-emblem-important" name="exception" string="Exception" domain="[('state','in',('except_invoice','except_picking'))]" help="Purchase orders which are in exception state"/>
                     <separator/>
                     <filter icon="terp-gtk-go-back-rtl" name="not_invoiced" string="Not Invoiced" domain="[('invoice_ids','=', False)]" help="Purchase orders that include lines not invoiced."/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <field name="product_id"/>
                     <field name="create_uid"/>
                     <group expand="0" string="Group By...">
@@ -481,7 +481,7 @@
                 <search string="Search Purchase Order">
                     <field name="order_id"/>
                     <field name="product_id"/>
-                    <field name="partner_id" string="Supplier"/>
+                    <field name="partner_id" string="Supplier" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <group expand="0" string="Group By...">
                         <filter string="Supplier" icon="terp-partner" domain="[]" context="{'group_by' : 'partner_id'}" />
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by' : 'product_id'}" />

@@ -69,7 +69,7 @@
                     <filter icon="terp-personal-" string="Non Assigned Tasks to users" help="Non Assigned Tasks to users" domain="[('user_id','=',False)]"/>
                     <field name="project_id"/>
                     <field name="user_id"/>
-                    <field name="partner_id" />
+                    <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <group expand="0" string="Extended Filters...">
                         <field name="priority"/>
                         <field name="company_id" groups="base.group_multi_company"/>
