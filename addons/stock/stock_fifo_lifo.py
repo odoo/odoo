@@ -29,6 +29,41 @@ class product_product (osv.osv):
     _inherit = "product.product"
 
 
+    #Need to change stock moves/product when changing cost method
+    def write(self, cr, uid, ids, vals, context=None):
+        if "cost_method" in vals:
+            move_obj = self.pool.get("stock.move")
+            uom_obj = self.pool.get("product.uom")
+            prod_obj = self.pool.get("product.product")
+            #TODO Need force_company in context?
+            if 'force_company' not in context:
+                company_id = self.pool.get("res.users").browse(cr, uid, uid, context=context).company_id.id
+                
+            else:
+                company_id = context['force_company']
+            for prod in self.browse(cr, uid, ids, context=context):
+                if prod.cost_method == 'average':
+                    mov_ids = move_obj.search(cr, uid, [('company_id', '=', company_id), ('state', '=', 'done'), ('qty_remaining', '>', 0.0)], context=context)
+                    #TODO Need to convert to all prices to UoM of stock move
+                    for move in move_obj.browse(cr, uid, mov_ids, context=context):
+                        new_price = uom_obj._compute_price(cr, uid, move.product_uom.id, move.price_unit, prod.uom_id.id)
+                        move.write({'price_unit': new_price})
+                #We need to recalculate the average on all products from all stock moves in
+                if vals["cost_method"] == 'average':
+                    #Search all done in moves
+                    mov_ids = move_obj.search(cr, uid, [('company_id', '=', company_id), ('state', '=', 'done'), ('location_dest_id.usage', '=', 'internal'), 
+                                                        ('location_id.usage', '!=', 'internal')], context=context)
+                    qty = 0.0
+                    total_price = 0.0
+                    for move in move_obj.browse(cr, uid, mov_ids, context=context):
+                        total_price += move.product_qty * move.price_unit
+                        qty += uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, prod.uom_id.id)
+                        print "Qty and Total Price:", qty, total_price
+                    if qty > 0.0:
+                        prod_obj.write(cr, uid, [prod.id], {'standard_price': total_price / qty}, context=context)
+        res = super(product_product, self).write(cr, uid, ids, vals, context=context)
+        return res
+    
     def get_stock_matchings_fifolifo(self, cr, uid, ids, qty, fifo, product_uom_id = False, currency_id = False, context=None):
         '''
             This method returns a list of tuples with quantities from stock in moves
@@ -136,9 +171,6 @@ class stock_move(osv.osv):
                 qty = move.product_qty
                 for match in match_obj.browse(cr, uid, matches, context=context):
                     qty -= match.qty
-#                     if qty < 0:
-#                         import pdb
-#                         pdb.set_trace()
                 res[move.id] = qty
         return res
     _inherit = 'stock.move'

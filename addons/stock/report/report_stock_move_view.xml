@@ -208,7 +208,8 @@
                 <field name="date"/>
                 <field name="price_unit"/>
                 <field name="product_qty" sum="Total quantity"/>
-                <field name="move_value" sum="Total value"/>
+                <field name="fifo_value" sum="Total FIFO value"/>
+                <field name="avg_value" sum="Total AVG value"/>
            </tree>
         </field>
     </record>
@@ -219,7 +220,7 @@
          <field name="arch" type="xml">
              <graph string="Stock Valuation Analysis" type="bar">
                  <field name="product_id"/>
-                 <field name="move_value"/>
+                 <field name="fifo_value"/>
              </graph>
          </field>
     </record>

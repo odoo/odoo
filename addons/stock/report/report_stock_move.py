@@ -232,6 +232,7 @@ class report_stock_valuation(osv.osv):
     _name = "report.stock.valuation"
     _description = "Stock Valuation Statistics"
     _auto = False
+        
     _order = 'date desc'
     _columns = {
         'date': fields.datetime('Date', readonly=True),
@@ -246,8 +247,8 @@ class report_stock_valuation(osv.osv):
         'prodlot_id': fields.many2one('stock.production.lot', 'Lot', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'product_qty':fields.float('Quantity',  digits_compute=dp.get_precision('Product Unit of Measure'), readonly=True),
-        'value' : fields.float('Total Value',  digits_compute=dp.get_precision('Account'), required=True),
-        'move_value' : fields.float('Total Value',  digits_compute=dp.get_precision('Account'), required=True),
+        'fifo_value' : fields.float('FIFO Value',  digits_compute=dp.get_precision('Account'), required=True),
+        'avg_value' : fields.float('Average Value',  digits_compute=dp.get_precision('Account'), required=True),
         'inventory_value': fields.float('Inventory Value'), 
         'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'Status', readonly=True, select=True,
               help='When the stock move is created it is in the \'Draft\' state.\n After that it is set to \'Confirmed\' state.\n If stock is available state is set to \'Avaiable\'.\n When the picking it done the state is \'Done\'.\
@@ -263,11 +264,10 @@ class report_stock_valuation(osv.osv):
         'related': fields.related('match', 'picking_id', 'name', type='text', readonly=True), 
         #'funct': fields.function(_get_properties, type='float')
     }
-    def _get_properties(self, cr, uid, ids, context=None):
-        products = {}
-        for stockval in self.browse(cr, uid, ids, context=context):
-            products[stockval.product_id] = True
+    
 
+        
+        
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_stock_valuation')
         cr.execute("""
@@ -282,21 +282,9 @@ CREATE OR REPLACE view report_stock_valuation AS (
         m.state as state, m.prodlot_id as prodlot_id,
         p.name as name, 
         mm.move_in_id as match, 
-        CASE WHEN ipcm.value_text in ('fifo','lifo') THEN coalesce(mm.price_unit_out * pu2.factor / pu.factor, 0.0) 
-            ELSE coalesce(m.price_unit * pu2.factor / pu.factor::decimal, 0.0) END AS price_unit,
-        coalesce(sum(-ip.value_float * m.product_qty * pu.factor / pu2.factor)::decimal, 0.0) as value,
-        CASE WHEN ipcm.value_text IS NOT NULL THEN 
-            CASE WHEN ipcm.value_text in ('fifo', 'lifo') THEN coalesce(sum(-mm.price_unit_out * mm.qty)::decimal, 0.0) 
-                ELSE coalesce(sum(-m.price_unit * mm.qty)::decimal, 0.0) END 
-        ELSE 
-            CASE WHEN ipcmdef.value_text IS NOT NULL THEN
-                CASE WHEN ipcmdef.value_text in ('fifo', 'lifo') THEN coalesce(sum(-mm.price_unit_out * mm.qty)::decimal, 0.0) 
-                    ELSE coalesce(sum(-m.price_unit * mm.qty)::decimal, 0.0) END 
-            ELSE
-                CASE WHEN ipcmdef2.value_text in ('fifo', 'lifo') THEN coalesce(sum(-mm.price_unit_out * mm.qty)::decimal, 0.0) 
-                    ELSE coalesce(sum(-m.price_unit * mm.qty)::decimal, 0.0) END 
-            END
-        END as move_value, 
+        coalesce(m.price_unit * pu2.factor / pu.factor, 0.0) as price_unit,
+        coalesce(sum(-mm.price_unit_out * mm.qty)::decimal, 0.0) as fifo_value,
+        coalesce(sum(-m.price_unit * mm.qty)::decimal, 0.0) as avg_value,  
         coalesce(sum(-mm.qty * pu.factor / pu2.factor)::decimal, 0.0) as product_qty,
         l_other.usage as location_dest_type, 
         l.usage as location_src_type,
@@ -306,12 +294,7 @@ CREATE OR REPLACE view report_stock_valuation AS (
             LEFT JOIN stock_picking p ON (m.picking_id=p.id)
             LEFT JOIN product_product pp ON (m.product_id=pp.id)
                 LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
-                    LEFT JOIN ir_property ip ON (ip.name='standard_price' AND ip.res_id=CONCAT('product.template,',pt.id) AND ip.company_id=m.company_id)
-                    LEFT JOIN ir_property ipcm ON (ipcm.name='cost_method' and ipcm.res_id=CONCAT('product.template,',pt.id) AND ipcm.company_id=m.company_id)
-                    LEFT JOIN ir_property ip_def ON (ip_def.name='standard_price' AND ip_def.res_id IS NULL AND ip_def.company_id=m.company_id)
-                    LEFT JOIN ir_property ip_def2 ON (ip_def2.name='standard_price' AND ip_def2.res_id IS NULL AND ip_def2.company_id IS NULL)
-                    LEFT JOIN ir_property ipcmdef ON (ipcmdef.name='cost_method' AND ipcmdef.res_id IS NULL AND ipcmdef.company_id=m.company_id)
-                    LEFT JOIN ir_property ipcmdef2 ON (ipcmdef2.name='cost_method' AND ipcmdef2.res_id IS NULL AND ipcmdef2.company_id IS NULL)
+                    
                 LEFT JOIN product_uom pu ON (pt.uom_id=pu.id)
                 LEFT JOIN product_uom pu2 ON (m.product_uom=pu2.id)
             LEFT JOIN product_uom u ON (m.product_uom=u.id)
@@ -321,8 +304,7 @@ CREATE OR REPLACE view report_stock_valuation AS (
     GROUP BY
         p.name, mm.id, mm.move_out_id, m.id, m.product_id, m.product_uom, pt.categ_id, m.partner_id, m.location_id,  m.location_dest_id,
         m.prodlot_id, m.date, m.state, l.usage, l.scrap_location, m.company_id, pt.uom_id, to_char(m.date, 'YYYY'), to_char(m.date, 'MM'), 
-        pu2.factor, pu.factor, ipcm.value_text, m.qty_remaining, l_other.usage, 
-        ipcmdef.value_text, ipcmdef2.value_text
+        pu2.factor, pu.factor, m.qty_remaining, l_other.usage
 ) UNION ALL (
     SELECT
         -min(m.id) as id, m.date as date,
@@ -334,13 +316,12 @@ CREATE OR REPLACE view report_stock_valuation AS (
         m.state as state, m.prodlot_id as prodlot_id,
         p.name as name, 0 as match,  
         coalesce(m.price_unit * pu2.factor / pu.factor, 0.0) as price_unit,
-        coalesce(sum(ip.value_float * m.product_qty * pu.factor / pu2.factor)::decimal, 0.0) as value,
-        coalesce(sum(m.price_unit * m.product_qty)::decimal, 0.0) as move_value, 
+        coalesce(sum(m.price_unit * m.product_qty)::decimal, 0.0) as fifo_value,
+        coalesce(sum(m.price_unit * m.product_qty)::decimal, 0.0) as avg_value,  
         coalesce(sum(m.product_qty * pu.factor / pu2.factor)::decimal, 0.0) as product_qty, 
         l.usage as location_dest_type, 
         l_other.usage as location_src_type, 
-        CASE WHEN ipcm.value_text in ('fifo','lifo') THEN coalesce(sum(m.price_unit * m.qty_remaining)::decimal, 0.0) 
-            ELSE coalesce(sum(ip.value_float * m.qty_remaining)::decimal, 0.0) END as inventory_value
+        coalesce(sum(m.price_unit * m.qty_remaining)::decimal, 0.0) as inventory_value
     FROM
         stock_move m
             LEFT JOIN stock_picking p ON (m.picking_id=p.id)
@@ -350,16 +331,12 @@ CREATE OR REPLACE view report_stock_valuation AS (
                 LEFT JOIN product_uom pu2 ON (m.product_uom=pu2.id)
             LEFT JOIN product_uom u ON (m.product_uom=u.id)
             LEFT JOIN stock_location l ON (m.location_dest_id=l.id)
-            LEFT JOIN stock_location l_other ON (m.location_id=l_other.id), 
-            ir_property ip, ir_property ipcm
-            WHERE m.state != 'cancel' and
-                  ip.name='standard_price' AND (ip.res_id = CONCAT('product.template,',pt.id) or ip.res_id IS NULL) AND (ip.company_id=m.company_id OR ip.company_id IS NULL) and
-                  ipcm.name='cost_method' AND (ipcm.res_id = CONCAT('product.template,',pt.id) or ipcm.res_id IS NULL) AND (ipcm.company_id=m.company_id OR ipcm.company_id IS NULL) 
+            LEFT JOIN stock_location l_other ON (m.location_id=l_other.id) 
+            WHERE m.state != 'cancel'  
     GROUP BY
         p.name, m.id, m.product_id, m.product_uom, pt.categ_id, m.partner_id, m.location_id, m.location_dest_id,
         m.prodlot_id, m.date, m.state, l.usage, l.scrap_location, m.company_id, pt.uom_id, to_char(m.date, 'YYYY'), to_char(m.date, 'MM'), 
-        pu2.factor, pu.factor, m.qty_remaining, l_other.usage, ipcm.value_text, ip.value_float, ip.company_id, ipcm.company_id, ip.res_id, ipcm.res_id
-    order by ip.res_id ASC, ip.company_id ASC, ipcm.res_id ASC, ipcm.company_id
+        pu2.factor, pu.factor, m.qty_remaining, l_other.usage
     )
 );
         """)
