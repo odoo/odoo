@@ -112,24 +112,27 @@ instance.web.Query = instance.web.Class.extend({
      * @returns {jQuery.Deferred<Array<openerp.web.QueryGroup>> | null}
      */
     group_by: function (grouping) {
-        if (grouping === undefined) {
-            return null;
+        var ctx = instance.web.pyeval.eval(
+            'context', this._model.context(this._context));
+
+        // undefined passed in explicitly (!)
+        if (_.isUndefined(grouping)) {
+            grouping = [];
         }
 
         if (!(grouping instanceof Array)) {
             grouping = _.toArray(arguments);
         }
-        if (_.isEmpty(grouping)) { return null; }
+        if (_.isEmpty(grouping) && !ctx['group_by_no_leaf']) {
+            return null;
+        }
 
         var self = this;
-
-        var ctx = instance.web.pyeval.eval(
-            'context', this._model.context(this._context));
         return this._model.call('read_group', {
             groupby: grouping,
             fields: _.uniq(grouping.concat(this._fields || [])),
             domain: this._model.domain(this._filter),
-            context: this._model.context(this._context),
+            context: ctx,
             offset: this._offset,
             limit: this._limit,
             orderby: instance.web.serialize_sort(this._order_by) || false
@@ -325,7 +328,7 @@ instance.web.Model = instance.web.Class.extend({
      * Fetches the model's domain, combined with the provided domain if any
      *
      * @param {Array} [domain] to combine with the model's internal domain
-     * @returns The model's internal domain, or the AND-ed union of the model's internal domain and the provided domain
+     * @returns {instance.web.CompoundDomain} The model's internal domain, or the AND-ed union of the model's internal domain and the provided domain
      */
     domain: function (domain) {
         if (!domain) { return this._domain; }
@@ -337,7 +340,7 @@ instance.web.Model = instance.web.Class.extend({
      * combined with the provided context if any
      *
      * @param {Object} [context] to combine with the model's internal context
-     * @returns The union of the user's context and the model's internal context, as well as the provided context if any. In that order.
+     * @returns {instance.web.CompoundContext} The union of the user's context and the model's internal context, as well as the provided context if any. In that order.
      */
     context: function (context) {
         return new instance.web.CompoundContext(
@@ -604,6 +607,9 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
     alter_ids: function(n_ids) {
         this.ids = n_ids;
     },
+    remove_ids: function (ids) {
+        this.alter_ids(_(this.ids).difference(ids));
+    },
     /**
      * Resequence records.
      *
@@ -701,22 +707,28 @@ instance.web.DataSetSearch =  instance.web.DataSet.extend({
     get_domain: function (other_domain) {
         this._model.domain(other_domain);
     },
+    alter_ids: function (ids) {
+        this._super(ids);
+        if (this.index !== null && this.index >= this.ids.length) {
+            this.index = this.ids.length > 0 ? this.ids.length - 1 : 0;
+        }
+    },
+    remove_ids: function (ids) {
+        var before = this.ids.length;
+        this._super(ids);
+        if (this._length) {
+            this._length -= (before - this.ids.length);
+        }
+    },
     unlink: function(ids, callback, error_callback) {
         var self = this;
         return this._super(ids).done(function(result) {
-            self.ids = _(self.ids).difference(ids);
-            if (self._length) {
-                self._length -= 1;
-            }
-            if (self.index !== null) {
-                self.index = self.index <= self.ids.length - 1 ?
-                    self.index : (self.ids.length > 0 ? self.ids.length -1 : 0);
-            }
+            self.remove_ids( ids);
             self.trigger("dataset_changed", ids, callback, error_callback);
         });
     },
     size: function () {
-        if (this._length !== undefined) {
+        if (this._length != null) {
             return this._length;
         }
         return this._super();

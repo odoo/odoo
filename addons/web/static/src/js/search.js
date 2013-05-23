@@ -326,7 +326,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             }
         },
         'autocompleteopen': function () {
-            this.$el.autocomplete('widget').css('z-index', 3);
+            this.$el.autocomplete('widget').css('z-index', 1004);
         },
     },
     /**
@@ -1039,7 +1039,9 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
         facet.values.each(function (v) {
             var i = _(self.filters).indexOf(v.get('value'));
             if (i === -1) { return; }
-            $filters.eq(i).addClass('oe_selected');
+            $filters.filter(function () {
+                return Number($(this).data('index')) === i;
+            }).addClass('oe_selected');
         });
     },
     /**
@@ -1129,7 +1131,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
         });
     },
     toggle_filter: function (e) {
-        this.toggle(this.filters[$(e.target).index()]);
+        this.toggle(this.filters[Number($(e.target).data('index'))]);
     },
     toggle: function (filter) {
         this.view.query.toggle(this.make_facet([this.make_value(filter)]));
@@ -1337,20 +1339,22 @@ instance.web.search.CharField = instance.web.search.Field.extend( /** @lends ins
     }
 });
 instance.web.search.NumberField = instance.web.search.Field.extend(/** @lends instance.web.search.NumberField# */{
-    value_from: function () {
-        if (!this.$el.val()) {
-            return null;
-        }
-        var val = this.parse(this.$el.val()),
-          check = Number(this.$el.val());
-        if (isNaN(val) || val !== check) {
-            this.$el.addClass('error');
-            throw new instance.web.search.Invalid(
-                this.attrs.name, this.$el.val(), this.error_message);
-        }
-        this.$el.removeClass('error');
-        return val;
-    }
+    complete: function (value) {
+        var val = this.parse(value);
+        if (isNaN(val)) { return $.when(); }
+        var label = _.str.sprintf(
+            _t("Search %(field)s for: %(value)s"), {
+                field: '<em>' + this.attrs.string + '</em>',
+                value: '<strong>' + _.str.escapeHTML(value) + '</strong>'});
+        return $.when([{
+            label: label,
+            facet: {
+                category: this.attrs.string,
+                field: this,
+                values: [{label: value, value: val}]
+            }
+        }]);
+    },
 });
 /**
  * @class

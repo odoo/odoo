@@ -614,6 +614,59 @@ openerp.testing.section('search.completions', {
             {relation: 'dummy.model'}, view);
         return f.complete("bob");
     });
+    test('Integer: invalid', {asserts: 1}, function (instance) {
+        var view = {inputs: []};
+        var f = new instance.web.search.IntegerField(
+            {attrs: {string: "Dummy"}}, {}, view);
+        return f.complete("qux")
+            .done(function (completions) {
+                ok(!completions, "non-number => no completion");
+            });
+    });
+    test('Integer: non-zero', {asserts: 5}, function (instance) {
+        var view = {inputs: []};
+        var f = new instance.web.search.IntegerField(
+            {attrs: {string: "Dummy"}}, {}, view);
+        return f.complete("-2")
+            .done(function (completions) {
+                equal(completions.length, 1, "number fields provide 1 completion only");
+                var facet = new instance.web.search.Facet(completions[0].facet);
+                equal(facet.get('category'), f.attrs.string);
+                equal(facet.get('field'), f);
+                var value = facet.values.at(0);
+                equal(value.get('label'), "-2");
+                equal(value.get('value'), -2);
+            });
+    });
+    test('Integer: zero', {asserts: 3}, function (instance) {
+        var view = {inputs: []};
+        var f = new instance.web.search.IntegerField(
+            {attrs: {string: "Dummy"}}, {}, view);
+        return f.complete("0")
+            .done(function (completions) {
+                equal(completions.length, 1, "number fields provide 1 completion only");
+                var facet = new instance.web.search.Facet(completions[0].facet);
+                var value = facet.values.at(0);
+                equal(value.get('label'), "0");
+                equal(value.get('value'), 0);
+            });
+    });
+    test('Float: non-zero', {asserts: 5}, function (instance) {
+        var view = {inputs: []};
+        var f = new instance.web.search.FloatField(
+            {attrs: {string: "Dummy"}}, {}, view);
+        return f.complete("42.37")
+            .done(function (completions) {
+                equal(completions.length, 1, "float fields provide 1 completion only");
+                var facet = new instance.web.search.Facet(completions[0].facet);
+                equal(facet.get('category'), f.attrs.string);
+                equal(facet.get('field'), f);
+                var value = facet.values.at(0);
+                equal(value.get('label'), "42.37");
+                equal(value.get('value'), 42.37);
+            });
+    });
+    
 });
 openerp.testing.section('search.serialization', {
     dependencies: ['web.search'],
@@ -1361,7 +1414,7 @@ openerp.testing.section('search.invisible', {
         }, ['<search>',
                 '<field name="field0"/>',
                 '<field name="field1" modifiers="{&quot;invisible&quot;: true}"/>',
-            '</search>'].join());
+            '</search>'].join(''));
         return view.appendTo($fix)
         .then(function () {
             var done = $.Deferred();
@@ -1380,7 +1433,7 @@ openerp.testing.section('search.invisible', {
             '<search>',
                 '<filter string="filter 0"/>',
                 '<filter string="filter 1" modifiers="{&quot;invisible&quot;: true}"/>',
-            '</search>'].join());
+            '</search>'].join(''));
         return view.appendTo($fix)
         .then(function () {
             var $fs = $fix.find('.oe_searchview_filters ul');
@@ -1398,6 +1451,26 @@ openerp.testing.section('search.invisible', {
                             "should complete filter 0");
             });
             return done;
+        });
+    });
+    test('invisible-previous-sibling', {asserts: 3}, function (instance, $fix, mock) {
+        var view = makeView(instance, mock, {}, [
+            '<search>',
+                '<filter string="filter 0" context="{&quot;test&quot;: 0}"/>',
+                '<filter string="filter 1" modifiers="{&quot;invisible&quot;: true}" context="{&quot;test&quot;: 1}"/>',
+                '<filter string="filter 2" modifiers="{&quot;invisible&quot;: true}" context="{&quot;test&quot;: 2}"/>',
+                '<filter string="filter 3" context="{&quot;test&quot;: 3}"/>',
+            '</search>'].join(''));
+        return view.appendTo($fix)
+        .done(function () {
+            // Select filter 3
+            $fix.find('.oe_searchview_filters ul li:contains("filter 3")').click();
+            equal(view.query.length, 1, "should have selected a filter");
+            var facet = view.query.at(0);
+            strictEqual(facet.values.at(0).get('label'), "filter 3",
+                        "should have correctly labelled the facet");
+            deepEqual(view.build_search_data().contexts, [{test: 3}],
+                      "should have built correct context");
         });
     });
     // Invisible filter groups should not appear in the drawer

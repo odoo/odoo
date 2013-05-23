@@ -241,6 +241,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     } else if (state.active_id) {
                         add_context.active_ids = [state.active_id];
                     }
+                    add_context.params = state;
                     this.null_action();
                     action_loaded = this.do_action(state.action, { additional_context: add_context });
                     $.when(action_loaded || null).done(function() {
@@ -1004,7 +1005,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
     switch_mode: function (view_type, no_store, options) {
         var self = this;
 
-        return $.when(this._super.apply(this, arguments)).done(function () {
+        return this.alive($.when(this._super.apply(this, arguments))).done(function () {
             var controller = self.views[self.active_view].controller;
             self.$el.find('.oe_debug_view').html(QWeb.render('ViewManagerDebug', {
                 view: controller,
