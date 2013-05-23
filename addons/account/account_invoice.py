@@ -635,6 +635,26 @@ class account_invoice(osv.osv):
         self.create_workflow(cr, uid, ids)
         return True
 
+    # ----------------------------------------
+    # Mail related methods
+    # ----------------------------------------
+
+    def _get_formview_action(self, cr, uid, id, context=None):
+        """ Update form view id of action to open the invoice """
+        action = super(account_invoice, self)._get_formview_action(cr, uid, id, context=context)
+        obj = self.browse(cr, uid, id, context=context)
+        if obj.type == 'in_invoice':
+            model, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'invoice_supplier_form')
+            action.update({
+                'views': [(view_id, 'form')],
+                })
+        else:
+            model, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'invoice_form')
+            action.update({
+                'views': [(view_id, 'form')],
+                })
+        return action
+
     # Workflow stuff
     #################
 
@@ -722,7 +742,7 @@ class account_invoice(osv.osv):
         inv = self.browse(cr, uid, id)
         cur_obj = self.pool.get('res.currency')
 
-        company_currency = inv.company_id.currency_id.id
+        company_currency = self.pool['res.company'].browse(cr, uid, inv.company_id.id).currency_id.id
         if inv.type in ('out_invoice', 'in_refund'):
             sign = 1
         else:
@@ -769,6 +789,7 @@ class account_invoice(osv.osv):
         return move_lines
 
     def check_tax_lines(self, cr, uid, inv, compute_taxes, ait_obj):
+        company_currency = self.pool['res.company'].browse(cr, uid, inv.company_id.id).currency_id
         if not inv.tax_line:
             for tax in compute_taxes.values():
                 ait_obj.create(cr, uid, tax)
@@ -782,7 +803,7 @@ class account_invoice(osv.osv):
                 if not key in compute_taxes:
                     raise osv.except_osv(_('Warning!'), _('Global taxes defined, but they are not in invoice lines !'))
                 base = compute_taxes[key]['base']
-                if abs(base - tax.base) > inv.company_id.currency_id.rounding:
+                if abs(base - tax.base) > company_currency.rounding:
                     raise osv.except_osv(_('Warning!'), _('Tax base different!\nClick on compute to update the tax base.'))
             for key in compute_taxes:
                 if not key in tax_key:
@@ -869,7 +890,7 @@ class account_invoice(osv.osv):
             ctx.update({'lang': inv.partner_id.lang})
             if not inv.date_invoice:
                 self.write(cr, uid, [inv.id], {'date_invoice': fields.date.context_today(self,cr,uid,context=context)}, context=ctx)
-            company_currency = inv.company_id.currency_id.id
+            company_currency = self.pool['res.company'].browse(cr, uid, inv.company_id.id).currency_id.id
             # create the analytical lines
             # one move line per invoice line
             iml = self._get_analytic_lines(cr, uid, inv.id, context=ctx)
@@ -985,7 +1006,8 @@ class account_invoice(osv.osv):
                 'line_id': line,
                 'journal_id': journal_id,
                 'date': date,
-                'narration':inv.comment
+                'narration': inv.comment,
+                'company_id': inv.company_id.id,
             }
             period_id = inv.period_id and inv.period_id.id or False
             ctx.update(company_id=inv.company_id.id)
@@ -1517,8 +1539,7 @@ class account_invoice_line(osv.osv):
         if context is None:
             context = {}
         inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id, context=context)
-        company_currency = inv.company_id.currency_id.id
-
+        company_currency = self.pool['res.company'].browse(cr, uid, inv.company_id.id).currency_id.id
         for line in inv.invoice_line:
             mres = self.move_line_get_item(cr, uid, line, context)
             if not mres:
@@ -1662,8 +1683,7 @@ class account_invoice_tax(osv.osv):
         cur_obj = self.pool.get('res.currency')
         inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id, context=context)
         cur = inv.currency_id
-        company_currency = inv.company_id.currency_id.id
-
+        company_currency = self.pool['res.company'].browse(cr, uid, inv.company_id.id).currency_id.id
         for line in inv.invoice_line:
             for tax in tax_obj.compute_all(cr, uid, line.invoice_line_tax_id, (line.price_unit* (1-(line.discount or 0.0)/100.0)), line.quantity, line.product_id, inv.partner_id)['taxes']:
                 val={}
