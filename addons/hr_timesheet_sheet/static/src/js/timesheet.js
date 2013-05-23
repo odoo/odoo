@@ -163,24 +163,41 @@ openerp.hr_timesheet_sheet = function(instance) {
                 this.dfm = undefined;
             }
         },
+        is_valid_value:function(value){
+            var split_value = value.split(":");
+            var wrong_value = true;
+            if (split_value.length > 2)return false;
+            _.detect(split_value,function(num){
+                if(isNaN(num)){
+                    wrong_value = false;
+                }
+            })
+            return wrong_value;
+        },
         display_data: function() {
             var self = this;
             self.$el.html(QWeb.render("hr_timesheet_sheet.WeeklyTimesheet", {widget: self}));
             _.each(self.accounts, function(account) {
                 _.each(_.range(account.days.length), function(day_count) {
                     if (!self.get('effective_readonly')) {
-                        self.get_box(account, day_count).val(self.sum_box(account, day_count)).change(function() {
-                            var num = Number($(this).val());
+                        self.get_box(account, day_count).val(self.sum_box(account, day_count, true)).change(function() {
+                            var num = $(this).val();
+                            if (self.is_valid_value(num)){
+                                num = Number(self.parse_client(num));
+                            } 
                             if (isNaN(num)) {
-                                $(this).val(self.sum_box(account, day_count));
+                                $(this).val(self.sum_box(account, day_count, true));
                             } else {
                                 account.days[day_count].lines[0].unit_amount += num - self.sum_box(account, day_count);
                                 self.display_totals();
                                 self.sync();
+                                 if(!isNaN($(this).val())){
+                                    $(this).val(self.sum_box(account, day_count, true));
+                                }
                             }
                         });
                     } else {
-                        self.get_box(account, day_count).html(self.sum_box(account, day_count));
+                        self.get_box(account, day_count).html(self.sum_box(account, day_count, true));
                     }
                 });
             });
@@ -247,12 +264,12 @@ openerp.hr_timesheet_sheet = function(instance) {
         get_super_total: function() {
             return this.$('.oe_timesheet_weekly_supertotal');
         },
-        sum_box: function(account, day_count) {
+        sum_box: function(account, day_count, setter) {
             var line_total = 0;
             _.each(account.days[day_count].lines, function(line) {
                 line_total += line.unit_amount;
             });
-            return line_total;
+            return (setter)?this.format_client(line_total):line_total;
         },
         display_totals: function() {
             var self = this;
@@ -266,18 +283,26 @@ openerp.hr_timesheet_sheet = function(instance) {
                     day_tots[day_count] += sum;
                     super_tot += sum;
                 });
-                self.get_total(account).html(acc_tot);
+                self.get_total(account).html(self.format_client(acc_tot));
             });
             _.each(_.range(self.dates.length), function(day_count) {
-                self.get_day_total(day_count).html(day_tots[day_count]);
+                self.get_day_total(day_count).html(self.format_client(day_tots[day_count]));
             });
-            self.get_super_total().html(super_tot);
+            self.get_super_total().html(self.format_client(super_tot));
         },
         sync: function() {
             var self = this;
             self.setting = true;
             self.set({sheets: this.generate_o2m_value()});
             self.setting = false;
+        },
+        //converts hour value to float
+        parse_client: function(value) {
+            return instance.web.parse_value(value, { type:"float_time" });
+        },
+        //converts float value to hour
+        format_client:function(value){
+            return instance.web.format_value(value, { type:"float_time" });
         },
         generate_o2m_value: function() {
             var self = this;
