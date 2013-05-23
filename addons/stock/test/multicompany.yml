@@ -14,8 +14,9 @@
     for type in ('in', 'internal', 'out'):
         context['picking_type'] = type
         defaults = self.default_get(cr, uid, ['location_id', 'location_dest_id', 'type'], context)
+        log('type: %s got defaults: %s', type, defaults)
         for field in fields:
-            if defaults[field] != False:
+            if defaults.get(field):
                 try:
                     location_obj.check_access_rule(cr, uid, defaults[field], 'read', context)
                 except Exception, exc:
@@ -30,8 +31,9 @@
     fields = ['location_id', 'location_dest_id']
     for type in ('in', 'internal', 'out'):
         result = self.onchange_move_type(cr, uid, [], type, context)['value']
+        log('type: %s got: %s', type, result)
         for field in fields:
-            if result[field] != False:
+            if result.get(field):
                 try:
                     location_obj.check_access_rule(cr, uid, result[field], 'read', context)
                 except Exception, exc:
@@ -43,9 +45,10 @@
   !python {model: stock.fill.inventory}: |
     location_obj = self.pool.get('stock.location')
     defaults = self.default_get(cr, uid, ['location_id'], context)
-    if defaults['location_id'] != False:
+    log('got defaults: %s', defaults)
+    if defaults.get('location_id'):
         try:
-            location_obj.check_access_rule(cr, uid, defaults['location_id'], 'read'
+            location_obj.check_access_rule(cr, uid, defaults['location_id'], 'read', context)
         except Exception, exc:
             assert False, "unreadable source location: %s" % exc
 
@@ -53,12 +56,13 @@
   check default locations for warehouse in multicompany setting
 -
   !python {model: stock.warehouse}: |
+    location_obj = self.pool.get('stock.location')
     fields = ['lot_input_id', 'lot_stock_id', 'lot_output_id']
     defaults = self.default_get(cr, uid, fields, context)
+    log('got defaults: %s', defaults)
     for field in fields:
-        for field in fields:
-            if defaults[field] != False:
-                try:
-                    location_obj.check_access_rule(cr, uid, defaults[field], 'read', context)
-                except Exception, exc:
-                    assert False, "unreadable default %s: %s" % (field, exc)
+        if defaults.get(field):
+            try:
+                location_obj.check_access_rule(cr, uid, defaults[field], 'read', context)
+            except Exception, exc:
+                assert False, "unreadable default %s: %s" % (field, exc)
