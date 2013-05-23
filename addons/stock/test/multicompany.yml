@@ -31,9 +31,9 @@
     for type in ('in', 'internal', 'out'):
         result = self.onchange_move_type(cr, uid, [], type, context)['value']
         for field in fields:
-            if defaults[field] != False:
+            if result[field] != False:
                 try:
-                    location_obj.check_access_rule(cr, uid, defaults[field], 'read', context)
+                    location_obj.check_access_rule(cr, uid, result[field], 'read', context)
                 except Exception, exc:
                     assert False, "unreadable location %s: %s" % (field, exc)
 
