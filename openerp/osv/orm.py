@@ -420,7 +420,7 @@ class browse_record(object):
                 for field_name, field_column in fields_to_fetch:
                     if field_column._type == 'many2one':
                         if result_line[field_name]:
-                            obj = self._table.pool.get(field_column._obj)
+                            obj = self._table.pool[field_column._obj]
                             if isinstance(result_line[field_name], (list, tuple)):
                                 value = result_line[field_name][0]
                             else:
@@ -450,7 +450,7 @@ class browse_record(object):
                         else:
                             new_data[field_name] = browse_null()
                     elif field_column._type in ('one2many', 'many2many') and len(result_line[field_name]):
-                        new_data[field_name] = self._list_class([browse_record(self._cr, self._uid, id, self._table.pool.get(field_column._obj), self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process) for id in result_line[field_name]], self._context)
+                        new_data[field_name] = self._list_class([browse_record(self._cr, self._uid, id, self._table.pool[field_column._obj], self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process) for id in result_line[field_name]], self._context)
                     elif field_column._type == 'reference':
                         if result_line[field_name]:
                             if isinstance(result_line[field_name], browse_record):
@@ -459,7 +459,7 @@ class browse_record(object):
                                 ref_obj, ref_id = result_line[field_name].split(',')
                                 ref_id = long(ref_id)
                                 if ref_id:
-                                    obj = self._table.pool.get(ref_obj)
+                                    obj = self._table.pool[ref_obj]
                                     new_data[field_name] = browse_record(self._cr, self._uid, ref_id, obj, self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process)
                                 else:
                                     new_data[field_name] = browse_null()
@@ -867,10 +867,10 @@ class BaseModel(object):
                 raise TypeError('_name is mandatory in case of multiple inheritance')
 
             for parent_name in ((type(parent_names)==list) and parent_names or [parent_names]):
-                parent_model = pool.get(parent_name)
-                if not parent_model:
+                if parent_name not in pool:
                     raise TypeError('The model "%s" specifies an unexisting parent class "%s"\n'
                         'You may need to add a dependency on the parent class\' module.' % (name, parent_name))
+                parent_model = pool[parent_name]
                 if not getattr(cls, '_original_module', None) and name == parent_model._name:
                     cls._original_module = parent_model._original_module
                 parent_class = parent_model.__class__
@@ -1028,7 +1028,7 @@ class BaseModel(object):
                 'required': bool(field['required']),
                 'readonly': bool(field['readonly']),
                 'domain': eval(field['domain']) if field['domain'] else None,
-                'size': field['size'],
+                'size': field['size'] or None,
                 'ondelete': field['on_delete'],
                 'translate': (field['translate']),
                 'manual': True,
@@ -1095,7 +1095,7 @@ class BaseModel(object):
             return ''
 
         def selection_field(in_field):
-            col_obj = self.pool.get(in_field.keys()[0])
+            col_obj = self.pool[in_field.keys()[0]]
             if f[i] in col_obj._columns.keys():
                 return  col_obj._columns[f[i]]
             elif f[i] in col_obj._inherits.keys():
@@ -1183,10 +1183,10 @@ class BaseModel(object):
                                 if not data[fpos]:
                                     dt = ''
                                     for rr in r:
-                                        name_relation = self.pool.get(rr._table_name)._rec_name
+                                        name_relation = self.pool[rr._table_name]._rec_name
                                         if isinstance(rr[name_relation], browse_record):
                                             rr = rr[name_relation]
-                                        rr_name = self.pool.get(rr._table_name).name_get(cr, uid, [rr.id], context=context)
+                                        rr_name = self.pool[rr._table_name].name_get(cr, uid, [rr.id], context=context)
                                         rr_name = rr_name and rr_name[0] and rr_name[0][1] or ''
                                         dt += tools.ustr(rr_name or '') + ','
                                     data[fpos] = dt[:-1]
@@ -1199,7 +1199,7 @@ class BaseModel(object):
                     i += 1
                 if i == len(f):
                     if isinstance(r, browse_record):
-                        r = self.pool.get(r._table_name).name_get(cr, uid, [r.id], context=context)
+                        r = self.pool[r._table_name].name_get(cr, uid, [r.id], context=context)
                         r = r and r[0] and r[0][1] or ''
                     data[fpos] = tools.ustr(r or '')
         return [data] + lines
@@ -1570,8 +1570,7 @@ class BaseModel(object):
 
         # get the default values for the inherited fields
         for t in self._inherits.keys():
-            defaults.update(self.pool.get(t).default_get(cr, uid, fields_list,
-                context))
+            defaults.update(self.pool[t].default_get(cr, uid, fields_list, context))
 
         # get the default values defined in the object
         for f in fields_list:
@@ -1605,11 +1604,11 @@ class BaseModel(object):
             if field in fields_list:
                 fld_def = (field in self._columns) and self._columns[field] or self._inherit_fields[field][2]
                 if fld_def._type == 'many2one':
-                    obj = self.pool.get(fld_def._obj)
+                    obj = self.pool[fld_def._obj]
                     if not obj.search(cr, uid, [('id', '=', field_value or False)]):
                         continue
                 if fld_def._type == 'many2many':
-                    obj = self.pool.get(fld_def._obj)
+                    obj = self.pool[fld_def._obj]
                     field_value2 = []
                     for i in range(len(field_value or [])):
                         if not obj.search(cr, uid, [('id', '=',
@@ -1618,18 +1617,18 @@ class BaseModel(object):
                         field_value2.append(field_value[i])
                     field_value = field_value2
                 if fld_def._type == 'one2many':
-                    obj = self.pool.get(fld_def._obj)
+                    obj = self.pool[fld_def._obj]
                     field_value2 = []
                     for i in range(len(field_value or [])):
                         field_value2.append({})
                         for field2 in field_value[i]:
                             if field2 in obj._columns.keys() and obj._columns[field2]._type == 'many2one':
-                                obj2 = self.pool.get(obj._columns[field2]._obj)
+                                obj2 = self.pool[obj._columns[field2]._obj]
                                 if not obj2.search(cr, uid,
                                         [('id', '=', field_value[i][field2])]):
                                     continue
                             elif field2 in obj._inherit_fields.keys() and obj._inherit_fields[field2][2]._type == 'many2one':
-                                obj2 = self.pool.get(obj._inherit_fields[field2][2]._obj)
+                                obj2 = self.pool[obj._inherit_fields[field2][2]._obj]
                                 if not obj2.search(cr, uid,
                                         [('id', '=', field_value[i][field2])]):
                                     continue
@@ -1649,7 +1648,7 @@ class BaseModel(object):
         # TODO I believe this loop can be replace by
         # res.extend(self._inherit_fields.key())
         for parent in self._inherits:
-            res.extend(self.pool.get(parent).fields_get_keys(cr, user, context))
+            res.extend(self.pool[parent].fields_get_keys(cr, user, context))
         return res
 
     def _rec_name_fallback(self, cr, uid, context=None):
@@ -1745,7 +1744,7 @@ class BaseModel(object):
                 new_xml = etree.fromstring(encode(xml))
                 ctx = context.copy()
                 ctx['base_model_name'] = self._name
-                xarch, xfields = self.pool.get(node.get('object')).__view_look_dom_arch(cr, user, new_xml, view_id, ctx)
+                xarch, xfields = self.pool[node.get('object')].__view_look_dom_arch(cr, user, new_xml, view_id, ctx)
                 views['form'] = {
                     'arch': xarch,
                     'fields': xfields
@@ -1763,7 +1762,7 @@ class BaseModel(object):
                     column = False
 
                 if column:
-                    relation = self.pool.get(column._obj)
+                    relation = self.pool[column._obj] if column._obj else None
 
                     children = False
                     views = {}
@@ -1899,13 +1898,13 @@ class BaseModel(object):
         fields = {}
         if node.tag == 'diagram':
             if node.getchildren()[0].tag == 'node':
-                node_model = self.pool.get(node.getchildren()[0].get('object'))
+                node_model = self.pool[node.getchildren()[0].get('object')]
                 node_fields = node_model.fields_get(cr, user, None, context)
                 fields.update(node_fields)
                 if not node.get("create") and not node_model.check_access_rights(cr, user, 'create', raise_exception=False):
                     node.set("create", 'false')
             if node.getchildren()[1].tag == 'arrow':
-                arrow_fields = self.pool.get(node.getchildren()[1].get('object')).fields_get(cr, user, None, context)
+                arrow_fields = self.pool[node.getchildren()[1].get('object')].fields_get(cr, user, None, context)
                 fields.update(arrow_fields)
         else:
             fields = self.fields_get(cr, user, None, context)
@@ -2446,7 +2445,7 @@ class BaseModel(object):
                         res[lang][f] = self._columns[f].string
         for table in self._inherits:
             cols = intersect(self._inherit_fields.keys(), fields)
-            res2 = self.pool.get(table).read_string(cr, uid, id, langs, cols, context)
+            res2 = self.pool[table].read_string(cr, uid, id, langs, cols, context)
         for lang in res2:
             if lang in res:
                 res[lang]['code'] = lang
@@ -2465,7 +2464,7 @@ class BaseModel(object):
         for table in self._inherits:
             cols = intersect(self._inherit_fields.keys(), vals)
             if cols:
-                self.pool.get(table).write_string(cr, uid, id, langs, vals, context)
+                self.pool[table].write_string(cr, uid, id, langs, vals, context)
         return True
 
     def _add_missing_default_values(self, cr, uid, values, context=None):
@@ -2726,7 +2725,7 @@ class BaseModel(object):
         :param query: query object on which the JOIN should be added
         """
         inherits_field = current_model._inherits[parent_model_name]
-        parent_model = self.pool.get(parent_model_name)
+        parent_model = self.pool[parent_model_name]
         parent_alias, parent_alias_statement = query.add_join((current_model._table, parent_model._table, inherits_field, 'id', inherits_field), implicit=True)
         return parent_alias
 
@@ -2743,7 +2742,7 @@ class BaseModel(object):
         parent_alias = '"%s"' % current_table._table
         while field in current_table._inherit_fields and not field in current_table._columns:
             parent_model_name = current_table._inherit_fields[field][0]
-            parent_table = self.pool.get(parent_model_name)
+            parent_table = self.pool[parent_model_name]
             parent_alias = self._inherits_join_add(current_table, parent_model_name, query)
             current_table = parent_table
         return '%s."%s"' % (parent_alias, field)
@@ -3142,7 +3141,7 @@ class BaseModel(object):
                                 _schema.debug(msg, self._table, k, f._type)
 
                             if isinstance(f, fields.many2one):
-                                dest_model = self.pool.get(f._obj)
+                                dest_model = self.pool[f._obj]
                                 if dest_model._table != 'ir_actions':
                                     self._m2o_fix_foreign_key(cr, self._table, k, dest_model, f.ondelete)
 
@@ -3177,9 +3176,9 @@ class BaseModel(object):
 
                             # and add constraints if needed
                             if isinstance(f, fields.many2one):
-                                if not self.pool.get(f._obj):
+                                if f._obj not in self.pool:
                                     raise except_orm('Programming Error', 'There is no reference available for %s' % (f._obj,))
-                                dest_model = self.pool.get(f._obj)
+                                dest_model = self.pool[f._obj]
                                 ref = dest_model._table
                                 # ir_actions is inherited so foreign key doesn't work on it
                                 if ref != 'ir_actions':
@@ -3299,9 +3298,8 @@ class BaseModel(object):
 
     def _o2m_raise_on_missing_reference(self, cr, f):
         # TODO this check should be a method on fields.one2many.
-
-        other = self.pool.get(f._obj)
-        if other:
+        if f._obj in self.pool:
+            other = self.pool[f._obj]
             # TODO the condition could use fields_get_keys().
             if f._fields_id not in other._columns.keys():
                 if f._fields_id not in other._inherit_fields.keys():
@@ -3312,9 +3310,9 @@ class BaseModel(object):
         self._save_relation_table(cr, m2m_tbl)
         cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (m2m_tbl,))
         if not cr.dictfetchall():
-            if not self.pool.get(f._obj):
+            if f._obj not in self.pool:
                 raise except_orm('Programming Error', 'Many2Many destination model does not exist: `%s`' % (f._obj,))
-            dest_model = self.pool.get(f._obj)
+            dest_model = self.pool[f._obj]
             ref = dest_model._table
             cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL, "%s" INTEGER NOT NULL, UNIQUE("%s","%s"))' % (m2m_tbl, col1, col2, col1, col2))
             # create foreign key references with ondelete=cascade, unless the targets are SQL views
@@ -3419,7 +3417,7 @@ class BaseModel(object):
         """
         res = {}
         for table in self._inherits:
-            other = self.pool.get(table)
+            other = self.pool[table]
             for col in other._columns.keys():
                 res[col] = (table, self._inherits[table], other._columns[col], table)
             for col in other._inherit_fields.keys():
@@ -3503,7 +3501,7 @@ class BaseModel(object):
 
         translation_obj = self.pool.get('ir.translation')
         for parent in self._inherits:
-            res.update(self.pool.get(parent).fields_get(cr, user, allfields, context))
+            res.update(self.pool[parent].fields_get(cr, user, allfields, context))
 
         for f, field in self._columns.iteritems():
             if (allfields and f not in allfields) or \
@@ -3537,6 +3535,14 @@ class BaseModel(object):
                         res[f]['selection'] = sel2
 
         return res
+
+    def get_empty_list_help(self, cr, user, help, context=None):
+        """ Generic method giving the help message displayed when having
+            no result to display in a list or kanban view. By default it returns
+            the help given in parameter that is generally the help message
+            defined in the action.
+        """
+        return help
 
     def check_field_access_rights(self, cr, user, operation, fields, context=None):
         """
@@ -3669,7 +3675,7 @@ class BaseModel(object):
             cols = [x for x in intersect(self._inherit_fields.keys(), fields_to_read) if x not in self._columns.keys()]
             if not cols:
                 continue
-            res2 = self.pool.get(table).read(cr, user, [x[col] for x in res], cols, context, load)
+            res2 = self.pool[table].read(cr, user, [x[col] for x in res], cols, context, load)
 
             res3 = {}
             for r in res2:
@@ -4009,9 +4015,9 @@ class BaseModel(object):
             if ir_value_ids:
                 ir_values_obj.unlink(cr, uid, ir_value_ids, context=context)
 
-        for order, object, store_ids, fields in result_store:
-            if object != self._name:
-                obj = self.pool.get(object)
+        for order, obj_name, store_ids, fields in result_store:
+            if obj_name != self._name:
+                obj = self.pool[obj_name]
                 cr.execute('select id from '+obj._table+' where id IN %s', (tuple(store_ids),))
                 rids = map(lambda x: x[0], cr.fetchall())
                 if rids:
@@ -4175,7 +4181,7 @@ class BaseModel(object):
                 # TODO: optimize
                 for f in direct:
                     if self._columns[f].translate:
-                        src_trans = self.pool.get(self._name).read(cr, user, ids, [f])[0][f]
+                        src_trans = self.pool[self._name].read(cr, user, ids, [f])[0][f]
                         if not src_trans:
                             src_trans = vals[f]
                             # Inserting value to DB
@@ -4211,7 +4217,7 @@ class BaseModel(object):
                     v[val] = vals[val]
                     unknown_fields.remove(val)
             if v:
-                self.pool.get(table).write(cr, user, nids, v, context)
+                self.pool[table].write(cr, user, nids, v, context)
 
         if unknown_fields:
             _logger.warning(
@@ -4277,8 +4283,8 @@ class BaseModel(object):
         result.sort()
 
         done = {}
-        for order, object, ids_to_update, fields_to_recompute in result:
-            key = (object, tuple(fields_to_recompute))
+        for order, model_name, ids_to_update, fields_to_recompute in result:
+            key = (model_name, tuple(fields_to_recompute))
             done.setdefault(key, {})
             # avoid to do several times the same computation
             todo = []
@@ -4286,7 +4292,7 @@ class BaseModel(object):
                 if id not in done[key]:
                     done[key][id] = True
                     todo.append(id)
-            self.pool.get(object)._store_set_values(cr, user, todo, fields_to_recompute, context)
+            self.pool[model_name]._store_set_values(cr, user, todo, fields_to_recompute, context)
 
         self.step_workflow(cr, user, ids, context=context)
         return True
@@ -4379,9 +4385,9 @@ class BaseModel(object):
             parent_context.pop('no_store_function', None)
 
             if record_id is None or not record_id:
-                record_id = self.pool.get(table).create(cr, user, tocreate[table], context=parent_context)
+                record_id = self.pool[table].create(cr, user, tocreate[table], context=parent_context)
             else:
-                self.pool.get(table).write(cr, user, [record_id], tocreate[table], context=parent_context)
+                self.pool[table].write(cr, user, [record_id], tocreate[table], context=parent_context)
 
             upd0 += ',' + self._inherits[table]
             upd1 += ',%s'
@@ -4451,7 +4457,6 @@ class BaseModel(object):
             upd1 += ",%s,(now() at time zone 'UTC'),%s,(now() at time zone 'UTC')"
             upd2.extend((user, user))
         cr.execute('insert into "'+self._table+'" (id'+upd0+") values ("+str(id_new)+upd1+')', tuple(upd2))
-        self.check_access_rule(cr, user, [id_new], 'create', context=context)
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
 
         if self._parent_store and not context.get('defer_parent_store_computation'):
@@ -4493,10 +4498,10 @@ class BaseModel(object):
             result += self._store_get_values(cr, user, [id_new], vals.keys(), context)
             result.sort()
             done = []
-            for order, object, ids, fields2 in result:
-                if not (object, ids, fields2) in done:
-                    self.pool.get(object)._store_set_values(cr, user, ids, fields2, context)
-                    done.append((object, ids, fields2))
+            for order, model_name, ids, fields2 in result:
+                if not (model_name, ids, fields2) in done:
+                    self.pool[model_name]._store_set_values(cr, user, ids, fields2, context)
+                    done.append((model_name, ids, fields2))
 
         if self._log_create and not (context and context.get('no_store_function', False)):
             message = self._description + \
@@ -4504,6 +4509,7 @@ class BaseModel(object):
                 self.name_get(cr, user, [id_new], context=context)[0][1] + \
                 "' " + _("created.")
             self.log(cr, user, id_new, message, True, context=context)
+        self.check_access_rule(cr, user, [id_new], 'create', context=context)
         self.create_workflow(cr, user, [id_new], context=context)
         return id_new
 
@@ -4720,7 +4726,7 @@ class BaseModel(object):
                     # to reach the parent table (if it was not JOINed yet in the query)
                     parent_alias = child_object._inherits_join_add(child_object, parent_model, query)
                     # inherited rules are applied on the external table -> need to get the alias and replace
-                    parent_table = self.pool.get(parent_model)._table
+                    parent_table = self.pool[parent_model]._table
                     added_clause = [clause.replace('"%s"' % parent_table, '"%s"' % parent_alias) for clause in added_clause]
                     # change references to parent_table to parent_alias, because we now use the alias to refer to the table
                     new_tables = []
@@ -4775,7 +4781,7 @@ class BaseModel(object):
             return
 
         # figure out the applicable order_by for the m2o
-        dest_model = self.pool.get(order_field_column._obj)
+        dest_model = self.pool[order_field_column._obj]
         m2o_order = dest_model._order
         if not regex_order.match(m2o_order):
             # _order is complex, can't use it here, so we default to _rec_name
@@ -4811,8 +4817,8 @@ class BaseModel(object):
                 order_field = order_split[0].strip()
                 order_direction = order_split[1].strip() if len(order_split) == 2 else ''
                 inner_clause = None
-                if order_field == 'id':
-                    order_by_elements.append('"%s"."id" %s' % (self._table, order_direction))
+                if order_field == 'id' or (self._log_access and order_field in LOG_ACCESS_COLUMNS.keys()):
+                    order_by_elements.append('"%s"."%s" %s' % (self._table, order_field, order_direction))
                 elif order_field in self._columns:
                     order_column = self._columns[order_field]
                     if order_column._classic_read:
@@ -4822,7 +4828,7 @@ class BaseModel(object):
                     else:
                         continue  # ignore non-readable or "non-joinable" fields
                 elif order_field in self._inherit_fields:
-                    parent_obj = self.pool.get(self._inherit_fields[order_field][3])
+                    parent_obj = self.pool[self._inherit_fields[order_field][3]]
                     order_column = parent_obj._columns[order_field]
                     if order_column._classic_read:
                         inner_clause = self._inherits_join_calc(order_field, query)
@@ -4830,6 +4836,8 @@ class BaseModel(object):
                         inner_clause = self._generate_m2o_order_by(order_field, query)
                     else:
                         continue  # ignore non-readable or "non-joinable" fields
+                else:
+                    raise ValueError( _("Sorting field %s not found on model %s") %( order_field, self._name))
                 if inner_clause:
                     if isinstance(inner_clause, list):
                         for clause in inner_clause:
@@ -4895,7 +4903,7 @@ class BaseModel(object):
         if not args:
             args = []
         if field in self._inherit_fields:
-            return self.pool.get(self._inherit_fields[field][0]).distinct_field_get(cr, uid, field, value, args, offset, limit)
+            return self.pool[self._inherit_fields[field][0]].distinct_field_get(cr, uid, field, value, args, offset, limit)
         else:
             return self._columns[field].search(cr, self, args, field, value, offset, limit, uid)
 
@@ -4949,9 +4957,9 @@ class BaseModel(object):
                 if field_to_other in default:
                     # all the fields of 'other' are given by the record: default[field_to_other],
                     # except the ones redefined in self
-                    blacklist.update(set(self.pool.get(other)._all_columns) - set(self._columns))
+                    blacklist.update(set(self.pool[other]._all_columns) - set(self._columns))
                 else:
-                    blacklist_given_fields(self.pool.get(other))
+                    blacklist_given_fields(self.pool[other])
         blacklist_given_fields(self)
 
         res = dict(default)
@@ -4966,7 +4974,7 @@ class BaseModel(object):
             elif field._type == 'many2one':
                 res[f] = data[f] and data[f][0]
             elif field._type == 'one2many':
-                other = self.pool.get(field._obj)
+                other = self.pool[field._obj]
                 # duplicate following the order of the ids because we'll rely on
                 # it later for copying translations in copy_translation()!
                 lines = [other.copy_data(cr, uid, line_id, context=context) for line_id in sorted(data[f])]
@@ -4998,7 +5006,7 @@ class BaseModel(object):
         for field_name, field_def in fields.items():
             # we must recursively copy the translations for o2o and o2m
             if field_def['type'] == 'one2many':
-                target_obj = self.pool.get(field_def['relation'])
+                target_obj = self.pool[field_def['relation']]
                 old_record, new_record = self.read(cr, uid, [old_id, new_id], [field_name], context=context)
                 # here we rely on the order of the ids to match the translations
                 # as foreseen in copy_data()
@@ -5086,20 +5094,18 @@ class BaseModel(object):
         :param parent: optional parent field name (default: ``self._parent_name = parent_id``)
         :return: **True** if the operation can proceed safely, or **False** if an infinite loop is detected.
         """
-
         if not parent:
             parent = self._parent_name
-        ids_parent = ids[:]
-        query = 'SELECT distinct "%s" FROM "%s" WHERE id IN %%s' % (parent, self._table)
-        while ids_parent:
-            ids_parent2 = []
-            for i in range(0, len(ids), cr.IN_MAX):
-                sub_ids_parent = ids_parent[i:i+cr.IN_MAX]
-                cr.execute(query, (tuple(sub_ids_parent),))
-                ids_parent2.extend(filter(None, map(lambda x: x[0], cr.fetchall())))
-            ids_parent = ids_parent2
-            for i in ids_parent:
-                if i in ids:
+
+        # must ignore 'active' flag, ir.rules, etc. => direct SQL query
+        query = 'SELECT "%s" FROM "%s" WHERE id = %%s' % (parent, self._table)
+        for id in ids:
+            current_id = id
+            while current_id is not None:
+                cr.execute(query, (current_id,))
+                result = cr.fetchone()
+                current_id = result[0] if result else None
+                if current_id == id:
                     return False
         return True
 
@@ -5267,7 +5273,7 @@ class BaseModel(object):
                 result, record_ids = [], list(command[2])
 
         # read the records and apply the updates
-        other_model = self.pool.get(self._all_columns[field_name].column._obj)
+        other_model = self.pool[self._all_columns[field_name].column._obj]
         for record in other_model.read(cr, uid, record_ids, fields=fields, context=context):
             record.update(updates.get(record['id'], {}))
             result.append(record)

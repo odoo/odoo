@@ -44,7 +44,7 @@ openerp.base = function(instance) {
                             } else {
                                 sessionStorage.removeItem('apps.login');
                                 sessionStorage.removeItem('apps.access_token');
-                                client.bind_crendentials(client.dbname, 'anonymous', 'anonymous');
+                                client.bind_credentials(client.dbname, 'anonymous', 'anonymous');
                                 client.authenticate().then(
                                    function() {     /* done */
                                     d.resolve(client);
@@ -56,7 +56,8 @@ openerp.base = function(instance) {
                     });
 
                 };
-                i.src = _.str.sprintf('%s/web/static/src/img/sep-a.gif', client.origin);
+                var ts = new Date().getTime();
+                i.src = _.str.sprintf('%s/web/static/src/img/sep-a.gif?%s', client.origin, ts);
                 return d.promise();
             };
             if (instance.base.apps_client) {
@@ -96,7 +97,7 @@ openerp.base = function(instance) {
                     client.replace(self.$el).
                         done(function() {
                             client.$el.removeClass('openerp');
-                            client.do_action(self.remote_action_id);
+                            client.do_action(self.remote_action_id, {hide_breadcrumb: true});
                         });
                 }).
                 fail(function(client) {

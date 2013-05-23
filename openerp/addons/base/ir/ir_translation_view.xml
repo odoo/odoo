@@ -14,7 +14,7 @@
                         domain="[('comments', 'like', 'openerp-web')]"/>
                     <field name="name" operator="="/>
                     <field name="lang"/>
-                    <field name="src"/>
+                    <field name="source"/>
                     <field name="value"/>
                 </search>
             </field>
@@ -38,7 +38,7 @@
                             <field name="res_id"/>
                         </group>
                         <group string="Source Term">
-                           <field name="src" nolabel="1" height="400"/>
+                           <field name="source" nolabel="1" height="400"/>
                         </group>
                         <group string="Translation">
                            <field name="value" nolabel="1" height="400"/>
@@ -55,7 +55,7 @@
             <field name="model">ir.translation</field>
             <field name="arch" type="xml">
                 <tree string="Translations" editable="top">
-                    <field name="src"/>
+                    <field name="source"/>
                     <field name="value"/>
                     <field name="name"/>
                     <field name="lang"/>

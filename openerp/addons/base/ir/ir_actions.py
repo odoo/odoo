@@ -185,9 +185,9 @@ class act_window(osv.osv):
 
     def _check_model(self, cr, uid, ids, context=None):
         for action in self.browse(cr, uid, ids, context):
-            if not self.pool.get(action.res_model):
+            if action.res_model not in self.pool:
                 return False
-            if action.src_model and not self.pool.get(action.src_model):
+            if action.src_model and action.src_model not in self.pool:
                 return False
         return True
 
@@ -240,9 +240,9 @@ class act_window(osv.osv):
         'name': fields.char('Action Name', size=64, translate=True),
         'type': fields.char('Action Type', size=32, required=True),
         'view_id': fields.many2one('ir.ui.view', 'View Ref.', ondelete='cascade'),
-        'domain': fields.char('Domain Value', size=250,
+        'domain': fields.char('Domain Value',
             help="Optional domain filtering of the destination data, as a Python expression"),
-        'context': fields.char('Context Value', size=250, required=True,
+        'context': fields.char('Context Value', required=True,
             help="Context dictionary as Python expression, empty by default (Default: {})"),
         'res_id': fields.integer('Record ID', help="Database ID of record to open in form view, when ``view_mode`` is set to 'form' only"),
         'res_model': fields.char('Destination Model', size=64, required=True,
@@ -284,6 +284,36 @@ class act_window(osv.osv):
         'auto_search':True,
         'multi': False,
     }
+
+    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
+        """ call the method get_empty_list_help of the model and set the window action help message
+        """
+        ids_int = isinstance(ids, (int, long))
+        if ids_int:
+            ids = [ids]
+        results = super(act_window, self).read(cr, uid, ids, fields=fields, context=context, load=load)
+
+        if not fields or 'help' in fields:
+            context = dict(context or {})
+            eval_dict = {
+                'active_model': context.get('active_model'),
+                'active_id': context.get('active_id'),
+                'active_ids': context.get('active_ids'),
+                'uid': uid,
+            }
+            for res in results:
+                model = res.get('res_model')
+                if model and self.pool.get(model):
+                    try:
+                        with tools.mute_logger("openerp.tools.safe_eval"):
+                            eval_context = eval(res['context'] or "{}", eval_dict) or {}
+                    except Exception:
+                        continue
+                    custom_context = dict(context, **eval_context)
+                    res['help'] = self.pool.get(model).get_empty_list_help(cr, uid, res.get('help', ""), context=custom_context)
+        if ids_int:
+            return results[0]
+        return results
 
     def for_xml_id(self, cr, uid, module, xml_id, context=None):
         """ Returns the act_window object created for the provided xml_id
@@ -530,7 +560,7 @@ class actions_server(osv.osv):
     }
 
     def get_email(self, cr, uid, action, context):
-        obj_pool = self.pool.get(action.model_id.model)
+        obj_pool = self.pool[action.model_id.model]
         id = context.get('active_id')
         obj = obj_pool.browse(cr, uid, id)
 
@@ -550,7 +580,7 @@ class actions_server(osv.osv):
         return obj
 
     def get_mobile(self, cr, uid, action, context):
-        obj_pool = self.pool.get(action.model_id.model)
+        obj_pool = self.pool[action.model_id.model]
         id = context.get('active_id')
         obj = obj_pool.browse(cr, uid, id)
 
@@ -574,7 +604,7 @@ class actions_server(osv.osv):
             context = {}
 
         def merge(match):
-            obj_pool = self.pool.get(action.model_id.model)
+            obj_pool = self.pool[action.model_id.model]
             id = context.get('active_id')
             obj = obj_pool.browse(cr, uid, id)
             exp = str(match.group()[2:-2]).strip()
@@ -607,7 +637,7 @@ class actions_server(osv.osv):
         user = self.pool.get('res.users').browse(cr, uid, uid)
         for action in self.browse(cr, uid, ids, context):
             obj = None
-            obj_pool = self.pool.get(action.model_id.model)
+            obj_pool = self.pool[action.model_id.model]
             if context.get('active_model') == action.model_id.model and context.get('active_id'):
                 obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
             cxt = {
@@ -628,11 +658,10 @@ class actions_server(osv.osv):
             if action.state=='client_action':
                 if not action.action_id:
                     raise osv.except_osv(_('Error'), _("Please specify an action to launch !"))
-                return self.pool.get(action.action_id.type)\
-                    .read(cr, uid, action.action_id.id, context=context)
+                return self.pool[action.action_id.type].read(cr, uid, action.action_id.id, context=context)
 
             if action.state=='code':
-                eval(action.code, cxt, mode="exec", nocopy=True) # nocopy allows to return 'action'
+                eval(action.code.strip(), cxt, mode="exec", nocopy=True) # nocopy allows to return 'action'
                 if 'action' in cxt:
                     return cxt['action']
 
@@ -708,16 +737,16 @@ class actions_server(osv.osv):
 
                 if not action.write_id:
                     if not action.srcmodel_id:
-                        obj_pool = self.pool.get(action.model_id.model)
+                        obj_pool = self.pool[action.model_id.model]
                         obj_pool.write(cr, uid, [context.get('active_id')], res)
                     else:
                         write_id = context.get('active_id')
-                        obj_pool = self.pool.get(action.srcmodel_id.model)
+                        obj_pool = self.pool[action.srcmodel_id.model]
                         obj_pool.write(cr, uid, [write_id], res)
 
                 elif action.write_id:
-                    obj_pool = self.pool.get(action.srcmodel_id.model)
-                    rec = self.pool.get(action.model_id.model).browse(cr, uid, context.get('active_id'))
+                    obj_pool = self.pool[action.srcmodel_id.model]
+                    rec = self.pool[action.model_id.model].browse(cr, uid, context.get('active_id'))
                     id = eval(action.write_id, {'object': rec})
                     try:
                         id = int(id)
@@ -739,10 +768,10 @@ class actions_server(osv.osv):
                         expr = exp.value
                     res[exp.col1.name] = expr
 
-                obj_pool = self.pool.get(action.srcmodel_id.model)
+                obj_pool = self.pool[action.srcmodel_id.model]
                 res_id = obj_pool.create(cr, uid, res)
                 if action.record_id:
-                    self.pool.get(action.model_id.model).write(cr, uid, [context.get('active_id')], {action.record_id.name:res_id})
+                    self.pool[action.model_id.model].write(cr, uid, [context.get('active_id')], {action.record_id.name:res_id})
 
             if action.state == 'object_copy':
                 res = {}
@@ -756,7 +785,7 @@ class actions_server(osv.osv):
 
                 model = action.copy_object.split(',')[0]
                 cid = action.copy_object.split(',')[1]
-                obj_pool = self.pool.get(model)
+                obj_pool = self.pool[model]
                 obj_pool.copy(cr, uid, int(cid), res)
 
         return False
@@ -813,7 +842,7 @@ Launch Manually Once: after having been launched manually, it sets automatically
         # Load action
         act_type = self.pool.get('ir.actions.actions').read(cr, uid, wizard.action_id.id, ['type'], context=context)
 
-        res = self.pool.get(act_type['type']).read(cr, uid, wizard.action_id.id, [], context=context)
+        res = self.pool[act_type['type']].read(cr, uid, wizard.action_id.id, [], context=context)
         if act_type['type'] != 'ir.actions.act_window':
             return res
         res.setdefault('context','{}')

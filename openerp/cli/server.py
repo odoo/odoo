@@ -98,6 +98,8 @@ def preload_registry(dbname):
         openerp.modules.registry.RegistryManager.new(dbname, update_module=update_module)
     except Exception:
         _logger.exception('Failed to initialize database `%s`.', dbname)
+        return False
+    return True
 
 def run_test_file(dbname, test_file):
     """ Preload a registry, possibly run a test file, and start the cron."""
@@ -220,15 +222,7 @@ def quit_on_signals():
         os.unlink(config['pidfile'])
     sys.exit(0)
 
-def configure_babel_localedata_path():
-    # Workaround: py2exe and babel.
-    if hasattr(sys, 'frozen'):
-        import babel
-        babel.localedata._dirname = os.path.join(os.path.dirname(sys.executable), 'localedata')
-
 def main(args):
-    os.environ["TZ"] = "UTC"
-
     check_root_user()
     openerp.tools.config.parse_config(args)
 
@@ -245,8 +239,6 @@ def main(args):
     report_configuration()
 
     config = openerp.tools.config
-
-    configure_babel_localedata_path()
 
     setup_signal_handlers(signal_handler)
 
@@ -271,12 +263,14 @@ def main(args):
         else:
             openerp.service.start_services()
 
+    rc = 0
     if config['db_name']:
         for dbname in config['db_name'].split(','):
-            preload_registry(dbname)
+            if not preload_registry(dbname):
+                rc += 1
 
     if config["stop_after_init"]:
-        sys.exit(0)
+        sys.exit(rc)
 
     _logger.info('OpenERP server is running, waiting for connections...')
     quit_on_signals()

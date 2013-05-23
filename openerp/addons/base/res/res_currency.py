@@ -30,7 +30,11 @@ from openerp.tools.translate import _
 CURRENCY_DISPLAY_PATTERN = re.compile(r'(\w+)\s*(?:\((.*)\))?')
 
 class res_currency(osv.osv):
+
     def _current_rate(self, cr, uid, ids, name, arg, context=None):
+        return self._get_current_rate(cr, uid, ids, name, arg, context=context)
+
+    def _get_current_rate(self, cr, uid, ids, name, arg, context=None):
         if context is None:
             context = {}
         res = {}
@@ -49,7 +53,7 @@ class res_currency(osv.osv):
                 id, rate = cr.fetchall()[0]
                 res[id] = rate
             else:
-                res[id] = 0
+                raise osv.except_osv(_('Error!'),_("No currency rate associated for currency %d for the given period" % (id)))
         return res
     _name = "res.currency"
     _description = "Currency"

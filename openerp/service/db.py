@@ -37,7 +37,7 @@ def _initialize_db(id, db_name, demo, lang, user_password):
                 cr = None
 
         registry = openerp.modules.registry.RegistryManager.new(
-            db_name, demo, self_actions[id], update_module=True)[1]
+            db_name, demo, self_actions[id], update_module=True)
 
         try:
             cr = openerp.sql_db.db_connect(db_name).cursor()
@@ -197,18 +197,26 @@ def exp_drop(db_name):
     return True
 
 @contextlib.contextmanager
-def _set_pg_password_in_environment():
-    """ On Win32, pg_dump (and pg_restore) require that
-    :envvar:`PGPASSWORD` be set
+def _set_pg_password_in_environment(self):
+    """ On systems where pg_restore/pg_dump require an explicit
+    password (i.e. when not connecting via unix sockets, and most
+    importantly on Windows), it is necessary to pass the PG user
+    password in the environment or in a special .pgpass file.
 
     This context management method handles setting
-    :envvar:`PGPASSWORD` iif win32 and the envvar is not already
+    :envvar:`PGPASSWORD` if it is not already
     set, and removing it afterwards.
+
+    See also http://www.postgresql.org/docs/8.4/static/libpq-envars.html
+    
+    .. note:: This is not thread-safe, and should never be enabled for
+         SaaS (giving SaaS users the super-admin password is not a good idea
+         anyway)
     """
-    if os.name != 'nt' or os.environ.get('PGPASSWORD'):
+    if os.environ.get('PGPASSWORD') or not tools.config['db_password']:
         yield
     else:
-        os.environ['PGPASSWORD'] = openerp.tools.config['db_password']
+        os.environ['PGPASSWORD'] = tools.config['db_password']
         try:
             yield
         finally:
@@ -234,7 +242,7 @@ def exp_dump(db_name):
         if not data or res:
             _logger.error(
                     'DUMP DB: %s failed! Please verify the configuration of the database password on the server. '
-                    'It should be provided as a -w <PASSWD> command-line option, or as `db_password` in the '
+                    'You may need to create a .pgpass file for authentication, or specify `db_password` in the '
                     'server configuration file.\n %s', db_name, data)
             raise Exception, "Couldn't dump database"
         _logger.info('DUMP DB successful: %s', db_name)
