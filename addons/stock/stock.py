@@ -1737,7 +1737,7 @@ class stock_move(osv.osv):
             if location_xml_id:
                 try:
                     location = mod_obj.get_object(cr, uid, 'stock', location_xml_id)
-                    location.check_access_rule('read', context=context)
+                    location._model.check_access_rule(cr, uid, [location.id], 'read', context=context)
                     location_id = location.id
                 except (orm.except_orm, ValueError):
                     # likely the user does not have read access on the location
@@ -1961,14 +1961,14 @@ class stock_move(osv.osv):
             location_dest_id = 'stock_location_customers'
         try:
             location = mod_obj.get_object(cr, uid, 'stock', location_source_id)
-            location.check_access_rule('read', context=context)
+            location._model.check_access_rule(cr, uid, [location.id], 'read', context=context)
             source_location_id = location.id
         except (orm.except_orm, ValueError):
             # likely the user does not have read access on the location
             source_location_id = False
         try:
             location = mod_obj.get_object(cr, uid, 'stock', location_dest_id)
-            location.check_access_rule('read', context=context)
+            location._model.check_access_rule(cr, uid, [location.id], 'read', context=context)
             dest_location_id = location.id
         except (orm.except_orm, ValueError):
             # likely the user does not have read access on the location
@@ -2909,7 +2909,7 @@ class stock_inventory_line(osv.osv):
     def _default_stock_location(self, cr, uid, context=None):
         try:
             location = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock')
-            location.check_access_rule('read', context=context)
+            location._model.check_access_rule(cr, uid, [location.id], 'read', context=context)
             stock_location_id = location.id
         except (ValueError, orm.except_orm):
             # likely the user does not have read access on the location
@@ -2955,7 +2955,7 @@ class stock_warehouse(osv.osv):
     def _default_lot_input_stock_id(self, cr, uid, context=None):
         try:
             lot_input_stock = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock')
-            lot_input_stock.check_access_rule('read', context=context)
+            lot_input_stock._model.check_access_rule(cr, uid, [lot_input_stock.id], 'read', context=context)
             lot_input_stock_id = lot_input_stock.id
         except (ValueError, orm.except_orm):
             # likely the user does not have read access on the location
@@ -2965,7 +2965,7 @@ class stock_warehouse(osv.osv):
     def _default_lot_output_id(self, cr, uid, context=None):
         try:
             lot_output = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_output')
-            lot_output.check_access_rule('read', context=context)
+            lot_output._model.check_access_rule(cr, uid, [lot_output.id], 'read', context=context)
             lot_output_id = lot_output.id
         except (ValueError, orm.except_orm):
             # likely the user does not have read access on the location

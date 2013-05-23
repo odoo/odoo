@@ -411,7 +411,7 @@ class mrp_production(osv.osv):
     def _src_id_default(self, cr, uid, ids, context=None):
         try:
             src_location = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock', context=context)
-            src_location.check_access_rule('read', context=context)
+            src_location._model.check_access_rule(cr, uid, [src_location.id], 'read', context=context)
         except (orm.except_orm, ValueError):
             # no read access
             return False
@@ -420,7 +420,7 @@ class mrp_production(osv.osv):
     def _dest_id_default(self, cr, uid, ids, context=None):
         try:
             dest_location = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock', context=context)
-            dest_location.check_access_rule('read', context=context)
+            dest_location._model.check_access_rule(cr, uid, [dest_location.id], 'read', context=context)
         except (orm.except_orm, ValueError):
             # no read access
             return False
