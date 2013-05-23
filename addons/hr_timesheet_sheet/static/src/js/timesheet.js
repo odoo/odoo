@@ -165,14 +165,14 @@ openerp.hr_timesheet_sheet = function(instance) {
         },
         is_valid_value:function(value){
             var split_value = value.split(":");
-            var wrong_value = true;
+            var valid_value = true;
             if (split_value.length > 2)return false;
             _.detect(split_value,function(num){
                 if(isNaN(num)){
-                    wrong_value = false;
+                    valid_value = false;
                 }
             })
-            return wrong_value;
+            return valid_value;
         },
         display_data: function() {
             var self = this;
@@ -264,12 +264,12 @@ openerp.hr_timesheet_sheet = function(instance) {
         get_super_total: function() {
             return this.$('.oe_timesheet_weekly_supertotal');
         },
-        sum_box: function(account, day_count, setter) {
+        sum_box: function(account, day_count, show_value_in_hour) {
             var line_total = 0;
             _.each(account.days[day_count].lines, function(line) {
                 line_total += line.unit_amount;
             });
-            return (setter)?this.format_client(line_total):line_total;
+            return (show_value_in_hour)?this.format_client(line_total):line_total;
         },
         display_totals: function() {
             var self = this;
