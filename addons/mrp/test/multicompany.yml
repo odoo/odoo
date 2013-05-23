@@ -13,4 +13,7 @@
     defaults = self.default_get(cr, uid, ['location_id', 'location_dest_id', 'type'], context)
     for field in fields:
         if defaults[field] != False:
-            assert location_obj.check_access_rule(cr, uid, defaults[field], 'read', context), "unreadable location %s" % field
+            try:
+                location_obj.check_access_rule(cr, uid, defaults[field], 'read', context)
+            except Exception, exc:
+                assert False, "unreadable location %s: %s" % (field, exc)

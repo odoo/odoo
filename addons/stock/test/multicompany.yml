@@ -16,7 +16,10 @@
         defaults = self.default_get(cr, uid, ['location_id', 'location_dest_id', 'type'], context)
         for field in fields:
             if defaults[field] != False:
-                assert location_obj.check_access_rule(cr, uid, defaults[field], 'read', context), "unreadable location %s" % field
+                try:
+                    location_obj.check_access_rule(cr, uid, defaults[field], 'read', context)
+                except Exception, exc:
+                    assert False, "unreadable location %s: %s" % (field, exc)
         assert defaults['type'] == type, "wrong move type"
 
 -
@@ -29,7 +32,10 @@
         result = self.onchange_move_type(cr, uid, [], type, context)['value']
         for field in fields:
             if defaults[field] != False:
-                assert location_obj.check_access_rule(cr, uid, defaults[field], 'read', context), "unreadable default %s" % field
+                try:
+                    location_obj.check_access_rule(cr, uid, defaults[field], 'read', context)
+                except Exception, exc:
+                    assert False, "unreadable location %s: %s" % (field, exc)
 
 -
   check default location readability for stock_fill_inventory in multicompany setting
@@ -38,7 +44,10 @@
     location_obj = self.pool.get('stock.location')
     defaults = self.default_get(cr, uid, ['location_id'], context)
     if defaults['location_id'] != False:
-        assert location_obj.check_access_rule(cr, uid, defaults['location_id'], 'read', context), "unreadable default source location"
+        try:
+            location_obj.check_access_rule(cr, uid, defaults['location_id'], 'read'
+        except Exception, exc:
+            assert False, "unreadable source location: %s" % exc
 
 -
   check default locations for warehouse in multicompany setting
@@ -49,4 +58,7 @@
     for field in fields:
         for field in fields:
             if defaults[field] != False:
-                assert location_obj.check_access_rule(cr, uid, defaults[field], 'read', context), "unreadable default %s" % field
+                try:
+                    location_obj.check_access_rule(cr, uid, defaults[field], 'read', context)
+                except Exception, exc:
+                    assert False, "unreadable default %s: %s" % (field, exc)
