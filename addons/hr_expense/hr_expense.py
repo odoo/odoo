@@ -55,10 +55,7 @@ class hr_expense_expense(osv.osv):
 
     def _get_currency(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, [uid], context=context)[0]
-        if user.company_id:
-            return user.company_id.currency_id.id
-        else:
-            return self.pool.get('res.currency').search(cr, uid, [('rate','=',1.0)], context=context)[0]
+        return user.company_id.currency_id.id
 
     _name = "hr.expense.expense"
     _inherit = ['mail.thread']
@@ -95,11 +92,13 @@ class hr_expense_expense(osv.osv):
             ('cancelled', 'Refused'),
             ('confirm', 'Waiting Approval'),
             ('accepted', 'Approved'),
-            ('done', 'Done'),
+            ('done', 'Waiting Payment'),
+            ('paid', 'Paid'),
             ],
             'Status', readonly=True, track_visibility='onchange',
             help='When the expense request is created the status is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the status is \'Waiting Confirmation\'.\
-            \nIf the admin accepts it, the status is \'Accepted\'.\n If a receipt is made for the expense request, the status is \'Done\'.'),
+            \nIf the admin accepts it, the status is \'Accepted\'.\n If the accounting entries are made for the expense request, the status is \'Waiting Payment\'.'),
+
     }
     _defaults = {
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'hr.employee', context=c),
@@ -109,6 +108,12 @@ class hr_expense_expense(osv.osv):
         'user_id': lambda cr, uid, id, c={}: id,
         'currency_id': _get_currency,
     }
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default.update(account_move_id=False)
+        return super(hr_expense_expense, self).copy(cr, uid, id, default=default, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):
@@ -320,7 +325,6 @@ class hr_expense_expense(osv.osv):
                 if is_price_include:
                     ## We need to deduce the price for the tax
                     res[-1]['price'] = res[-1]['price']  - (tax['amount'] * tax['base_sign'] or 0.0)
-                #Will create the tax here as we don't have the access
                 assoc_tax = {
                              'type':'tax',
                              'name':tax['name'],
@@ -451,5 +455,27 @@ class hr_expense_line(osv.osv):
         return res
 
 hr_expense_line()
+
+class account_move_line(osv.osv):
+    _inherit = "account.move.line"
+
+    def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context=None):
+        res = super(account_move_line, self).reconcile(cr, uid, ids, type=type, writeoff_acc_id=writeoff_acc_id, writeoff_period_id=writeoff_period_id, writeoff_journal_id=writeoff_journal_id, context=context)
+        #when making a full reconciliation of account move lines 'ids', we may need to recompute the state of some hr.expense
+        account_move_ids = [aml.move_id.id for aml in self.browse(cr, uid, ids, context=context)]
+        expense_obj = self.pool.get('hr.expense.expense')
+        currency_obj = self.pool.get('res.currency')
+        if account_move_ids:
+            expense_ids = expense_obj.search(cr, uid, [('account_move_id', 'in', account_move_ids)], context=context)
+            for expense in expense_obj.browse(cr, uid, expense_ids, context=context):
+                if expense.state == 'done':
+                    #making the postulate it has to be set paid, then trying to invalidate it
+                    new_status_is_paid = True
+                    for aml in expense.account_move_id.line_id:
+                        if aml.account_id.type == 'payable' and not currency_obj.is_zero(cr, uid, expense.company_id.currency_id, aml.amount_residual):
+                            new_status_is_paid = False
+                    if new_status_is_paid:
+                        expense_obj.write(cr, uid, [expense.id], {'state': 'paid'}, context=context)
+        return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
