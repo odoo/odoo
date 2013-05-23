@@ -97,7 +97,7 @@ class res_company(osv.osv):
             address_data = part_obj.address_get(cr, uid, [company.partner_id.id], adr_pref=['default'])
             address = address_data['default']
             if address:
-                part_obj.write(cr, uid, [address], {name: value or False})
+                part_obj.write(cr, uid, [address], {name: value or False}, context=context)
             else:
                 part_obj.create(cr, uid, {name: value or False, 'parent_id': company.partner_id.id}, context=context)
         return True
@@ -253,7 +253,7 @@ class res_company(osv.osv):
         vals.update({'partner_id': partner_id})
         self.cache_restart(cr)
         company_id = super(res_company, self).create(cr, uid, vals, context=context)
-        obj_partner.write(cr, uid, partner_id, {'company_id': company_id}, context=context)
+        obj_partner.write(cr, uid, [partner_id], {'company_id': company_id}, context=context)
         return company_id
 
     def write(self, cr, uid, ids, values, context=None):
