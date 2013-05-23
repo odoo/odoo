@@ -37,5 +37,30 @@
         <field eval="0" name="perm_read"/>
         <field eval="1" name="perm_create"/>
     </record>
+    
+     <record id="ir_rule_readpublicdocuments0" model="ir.rule">
+        <field name="model_id" ref="base.model_ir_attachment"/>
+        <field name="domain_force">['|','|','|',('parent_id','=',False) , ('parent_id.group_ids','in',[g.id for g in user.groups_id]), ('parent_id.user_id', '=', user.id), '&amp;', ('parent_id.user_id', '=', False), ('parent_id.group_ids','=',False),  '|','|', ('company_id','=',False), ('company_id','child_of',[user.company_id.id]),('company_id.child_ids','child_of',[user.company_id.id])]</field>
+        <field name="name">Read public documents</field>
+        <field eval="0" name="global"/>
+        <field eval="[(6,0,[ref('base.group_user')])]" name="groups"/>
+        <field eval="0" name="perm_unlink"/>
+        <field eval="0" name="perm_write"/>
+        <field eval="1" name="perm_read"/>
+        <field eval="0" name="perm_create"/>
+    </record>
+    
+    <record id="ir_rule_documentmodifyowndocuments0" model="ir.rule">
+        <field name="model_id" ref="base.model_ir_attachment"/>
+        <field name="domain_force">[ '|', ('parent_id.user_id', '=', user.id), '&amp;', ('parent_id.group_ids','in',[g.id for g in user.groups_id]), ('parent_id.user_id','=',False), '|','|', ('company_id','=',False), ('company_id','child_of',[user.company_id.id]),('company_id.child_ids','child_of',[user.company_id.id])]</field>
+        <field name="name">Document modify own document</field>
+        <field eval="0" name="global"/>
+        <field eval="[(6,0,[ref('base.group_document_user')])]" name="groups"/>
+        <field eval="1" name="perm_unlink"/>
+        <field eval="1" name="perm_write"/>
+        <field eval="0" name="perm_read"/>
+        <field eval="1" name="perm_create"/>
+    </record>
+    
 </data>
 </openerp>
