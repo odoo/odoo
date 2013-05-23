@@ -30,6 +30,7 @@ __all__ = [
 
 from collections import defaultdict
 from contextlib import contextmanager
+from pprint import pformat
 from werkzeug.local import Local, release_local
 
 # werkzeug "context" variable to store the stack of scopes
@@ -287,26 +288,25 @@ class Cache(defaultdict):
         """ self-check for validating the cache """
         assert proxy.cache is self
 
-        invalids = []
-        for model_name, model_cache in self.items():
-            # read the records and fields that are present in the cache
-            model = proxy.model(model_name)
-            recs = model.recordset(model_cache.itervalues())
-            fields = set(f for rec in recs for f in rec._record_cache) & \
-                     set(model._all_columns)
-            result = recs.read(list(fields), load="_classic_write")
+        # take apart the caches of all records present in the cache, and replace
+        # them by empty ones
+        rec_cache = {}
+        for model_cache in self.values():
+            for rec in model_cache.values():
+                rec_cache[rec] = rec._record_cache
+                rec._record_cache = {}
 
-            # compare the result with the content of the cache
-            for data in result:
-                rec = model.record(data['id'])
-                for field, value in rec._record_cache.iteritems():
-                    column = model._all_columns[field].column
-                    if column.read_to_cache(data[field]) != value:
-                        invalids.append((rec, rec._record_cache, data))
-                        break
+        # re-fetch the records, and compare with their former cache
+        invalids = []
+        for model_cache in self.values():
+            for rec in model_cache.values():
+                for field, value in rec_cache[rec].iteritems():
+                    if rec[field] != value:
+                        invalids.append((rec, field, {'cached': value, 'fetched': rec[field]}))
+                        continue
 
         if invalids:
-            raise Exception('Invalid cache for %s' % invalids)
+            raise Exception('Invalid cache for records\n' + pformat(invalids))
 
 
 # keep those imports here in order to handle cyclic dependencies correctly
