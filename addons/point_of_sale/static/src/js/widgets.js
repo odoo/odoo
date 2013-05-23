@@ -319,7 +319,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 this.payment_line.set_amount(amount);
             }
         },
-        checkAmount:function(e){
+        checkAmount: function(e){
             if (e.which !== 0 && e.charCode !== 0) {
                 if(isNaN(String.fromCharCode(e.charCode))){
                     return (String.fromCharCode(e.charCode) === "." && e.currentTarget.value.toString().split(".").length < 2)?true:false;
@@ -1115,4 +1115,3 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         }
     });
 }
-
