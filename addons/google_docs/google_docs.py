@@ -202,8 +202,8 @@ class config(osv.osv):
 
 config()
 
-class res_users(osv.osv):
-    _inherit = "res.users"
+class base_config_settings(osv.osv):
+    _inherit = "base.config.settings"
     
     def onchange_authorization_code(self, cr, uid, ids, authorization_code, context=None):
         res = {}
@@ -222,7 +222,16 @@ class res_users(osv.osv):
             if 'refresh_token' in content.keys():
                 ir_config.set_param(cr, uid, 'google_refresh_token', content['refresh_token'])
         return res
+    
+    def get_default_authorization_code(self, cr, uid, ids, context=None):
+        authorization_code = self.pool.get("ir.config_parameter").get_param(cr, uid, "authorization_code", context=context)
+        return {'authorization_code': authorization_code}
 
+    def set_authorization_code(self, cr, uid, ids, context=None):
+        config_parameters = self.pool.get("ir.config_parameter")
+        for record in self.browse(cr, uid, ids, context=context):
+            config_parameters.set_param(cr, uid, "authorization_code", record.authorization_code or '', context=context)
+    
     _columns = {
-        'authorization_code': fields.char('Authorization Code', size=124),
+        'authorization_code': fields.char('Google Authorization Code', size=124),
     }
