@@ -168,18 +168,18 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.orderlinewidgets = [];
         },
         set_numpad_state: function(numpadState) {
-            if (this.numpadState) {
-                this.numpadState.unbind('set_value', this.set_value);
-            }
-            this.numpadState = numpadState;
-            if (this.numpadState) {
-                this.numpadState.bind('set_value', this.set_value, this);
-                this.numpadState.reset();
-            }
+        	if (this.numpadState) {
+        		this.numpadState.unbind('set_value', this.set_value);
+        	}
+        	this.numpadState = numpadState;
+        	if (this.numpadState) {
+        		this.numpadState.bind('set_value', this.set_value, this);
+        		this.numpadState.reset();
+        	}
         },
         set_value: function(val) {
-            var order = this.pos.get('selectedOrder');
-            if (order.get('orderLines').length !== 0) {
+        	var order = this.pos.get('selectedOrder');
+        	if (order.get('orderLines').length !== 0) {
                 var mode = this.numpadState.get('mode');
                 if( mode === 'quantity'){
                     order.getSelectedLine().set_quantity(val);
@@ -188,9 +188,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 }else if( mode === 'price'){
                     order.getSelectedLine().set_unit_price(val);
                 }
-            } else {
-                this.pos.get('selectedOrder').destroy();
-            }
+        	} else {
+        	    this.pos.get('selectedOrder').destroy();
+        	}
         },
         change_selected_order: function() {
             this.currentOrderLines.unbind();
@@ -235,7 +235,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                         model: orderLine,
                         order: this.pos.get('selectedOrder'),
                 });
-                line.on('order_line_selected', self, self.update_numpad);
+            	line.on('order_line_selected', self, self.update_numpad);
                 line.on('order_line_refreshed', self, self.update_summary);
                 line.appendTo($content);
                 self.orderlinewidgets.push(line);
@@ -328,8 +328,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             return true
         },
         changedAmount: function() {
-            if (this.amount !== this.payment_line.get_amount()){
-                this.renderElement();
+        	if (this.amount !== this.payment_line.get_amount()){
+        		this.renderElement();
             }
         },
         renderElement: function() {
@@ -337,7 +337,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.name =   this.payment_line.get_cashregister().get('journal_id')[1];
             this._super();
             this.$('input').keypress(_.bind(this.checkAmount, this))
-            .keyup(function(event){
+			.keyup(function(event){
                 self.changeAmount(event);
             });
             this.$('.delete-payment-line').click(function() {
@@ -1115,3 +1115,4 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         }
     });
 }
+
