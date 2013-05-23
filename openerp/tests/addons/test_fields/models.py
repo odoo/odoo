@@ -67,10 +67,8 @@ class res_partner(models.Model):
         for rec in self:
             rec.name_size = len(rec.name)
 
-    # Note: we introduce this weird dependency in order to catch changes on both
-    # fields 'child_ids' and 'parent_id'
     @api.record
-    @api.depends('child_ids.parent_id')
+    @api.depends('child_ids')
     def compute_children_count(self):
         self.children_count = len(self.child_ids)
 

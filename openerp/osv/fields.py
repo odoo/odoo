@@ -1611,19 +1611,6 @@ class column_info(object):
             if the column is inherited, name of the original parent model that
             contains it i.e in case of multilevel inheritance, ``None`` for
             local columns.
-
-        .. attribute:: equivalents
-
-            a set of (`model_name`, `field_name`) pairs that are `equivalent` to
-            the current field, in the sense that they all inherit from a common
-            field (which is in the set, too). This is useful for invalidating
-            the record cache.
-
-        .. attribute:: inverses
-
-            a set of (`model_name`, `field_name`) pairs that are inverses of the
-            current field; it is nonempty for relation fields only. This is
-            useful for invalidating the record cache.
     """
     def __init__(self, name, column, parent_model=None, parent_column=None, original_parent=None):
         self.name = name
@@ -1631,8 +1618,6 @@ class column_info(object):
         self.parent_model = parent_model
         self.parent_column = parent_column
         self.original_parent = original_parent
-        self.equivalents = set()
-        self.inverses = set()
 
     def __str__(self):
         return '%s(%s, %s, %s, %s, %s)' % (

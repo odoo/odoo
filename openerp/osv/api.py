@@ -119,11 +119,8 @@ class Meta(type):
 
 def depends(*args):
     """ Return a decorator that specifies the field dependencies of a "compute"
-        method (for new-style function fields).
-
-        Each argument must be a string that consists in a dot-separated sequence
-        of field names. One may use ``*`` as the last field name in the sequence
-        to mean "all fields of the corresponding model".
+        method (for new-style function fields). Each argument must be a string
+        that consists in a dot-separated sequence of field names.
     """
     def decorate(method):
         method._depends = args

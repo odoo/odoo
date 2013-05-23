@@ -3262,17 +3262,6 @@ class BaseModel(object):
             result[k] = fields.column_info(k, col, parent, m2o, original_parent)
         for k, col in self._columns.iteritems():
             result[k] = fields.column_info(k, col)
-
-        # process cinfo equivalences
-        for k, cinfo in result.iteritems():
-            if cinfo.original_parent:
-                # make equivalents and inverses identical for equivalent fields
-                parent_cinfo = self.pool[cinfo.original_parent]._all_columns[k]
-                cinfo.equivalents = parent_cinfo.equivalents
-                cinfo.inverses = parent_cinfo.inverses
-            # make the field equivalent to itself at least
-            cinfo.equivalents.add((self._name, k))
-
         return result
 
     def _inherits_check(self):
@@ -3288,53 +3277,46 @@ class BaseModel(object):
 
     def after_create_instance(self):
         """ method called on all models after their creation """
-        # populate the set inverses in self._all_columns
-        for field, cinfo in self._all_columns.iteritems():
-            column = cinfo.column
-
-            if isinstance(column, fields.one2many):
-                # take the corresponding many2one, and mark them inverse of each other
-                other = self.pool[column._obj]
-                cinfo2 = other._all_columns[column._fields_id]
-                cinfo.inverses.update(cinfo2.equivalents)
-                cinfo2.inverses.update(cinfo.equivalents)
-
-            elif isinstance(column, fields.many2many):
-                # find the inverse many2many in the other model, and mark it as inverse
-                other = self.pool[column._obj]
-                for field2, cinfo2 in other._all_columns.iteritems():
-                    column2 = cinfo2.column
-                    if isinstance(column2, fields.many2many) and column2._rel == column._rel:
-                        cinfo.inverses.update(cinfo2.equivalents)
-                        break
-
         # determine triggers to recompute function fields
-        def add_recompute_trigger(model, fname, path, dep_model, dep_fname):
-            """ add trigger on dep_model/dep_fname to recompute model/fname """
+        def add_trigger(field, path, model, fname):
+            """ add trigger on field model/fname to recompute field """
             path_str = '.'.join(path) if path else 'id'
-            dep_model._recompute[dep_fname].add((model._name, fname, path_str))
-            _logger.debug("Add trigger on field %s.%s to recompute field %s.%s",
-                          dep_model._name, dep_fname, model._name, fname)
+            model._recompute[fname].add((field.model, field.name, path_str))
+            _logger.debug(
+                "Add trigger on field %s.%s to recompute field %s.%s",
+                model._name, fname, field.model, field.name)
 
         for fname, field in self._fields.iteritems():
             for dependency in field.depends:
-                fs = dependency.split('.')      # sequence of field names
-                inst = self.null()              # null instance that represents a model
-                path = []                       # field sequence from 'self' to 'inst'
+                # stack of field names to traverse from top to bottom
+                dep_stack = list(reversed(dependency.split('.')))
 
-                # traverse all fields in sequence but last
-                for f in fs[:-1]:
-                    add_recompute_trigger(self, fname, path, inst, f)
-                    # move on to the next instance
-                    inst = inst[f].null()
-                    path.append(f)
+                model = self            # model instance reached so far
+                path = []               # sequence of field names from 'self' to 'model'
 
-                # add trigger on last field(s) in sequence
-                if fs[-1] == '*':
-                    for f in inst._all_columns:
-                        add_recompute_trigger(self, fname, path, inst, f)
-                else:
-                    add_recompute_trigger(self, fname, path, inst, fs[-1])
+                while dep_stack:
+                    dep = dep_stack.pop()
+                    dep_field = model._fields[dep]
+
+                    # expand related fields to put triggers on 'real' fields
+                    if isinstance(dep_field, Related):
+                        dep_stack.extend(reversed(dep_field.related))
+                        continue
+
+                    # add a recompute trigger on field dep
+                    add_trigger(field, path, model, dep)
+
+                    # move on to the next model, if dep_field is relational
+                    if not dep_field.relational:
+                        break
+                    model = self.pool[dep_field.comodel]
+                    path.append(dep)
+
+                    # add a recompute trigger on dep's inverse field
+                    if dep_field.inverse:
+                        add_trigger(field, path, model, dep_field.inverse)
+
+                assert not dep_stack
 
     def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
         """ Return the definition of each field.
@@ -5640,27 +5622,25 @@ class BaseModel(object):
         """
         pass
 
-    def invalidate_cache(self, fields=None, ids=None):
+    def invalidate_cache(self, fnames=None, ids=None):
         """ Invalidate the record caches after some records have been modified.
 
-            :param fields: the list of modified fields, or ``None`` for all fields
+            :param fnames: the list of modified fields, or ``None`` for all fields
             :param ids: the list of modified record ids, or ``None`` for all
         """
-        if fields is None and ids is None:
+        if fnames is None and ids is None:
             return scope_proxy.invalidate_cache()
 
-        # determine equivalent and inverse fields (grouped by model)
-        iter_fields = self._all_columns if fields is None else fields
-        model_fields = defaultdict(set)
-        for field in iter_fields:
-            cinfo = self._all_columns[field]
-            equivalents = cinfo.equivalents - set([(self._name, field)])
-            for m, f in itertools.chain(equivalents, cinfo.inverses):
-                model_fields[m].add(f)
+        # base spec for cache invalidation
+        spec = [(self._name, fnames, ids)]
 
-        # add them in spec, and invalidate the cache
-        spec = [(self._name, fields, ids)] + \
-               [(m, fs, None) for m, fs in model_fields.iteritems()]
+        # augment spec to invalidate inverse fields
+        for fname in (self._fields if fnames is None else fnames):
+            field = self._fields[fname]
+            if field.relational and field.inverse:
+                spec.append((field.comodel, [field.inverse], None))
+
+        # invalidate the spec
         scope_proxy.invalidate_cache(spec)
 
     @api.recordset

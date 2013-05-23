@@ -48,6 +48,7 @@ class Field(object):
     name = None                 # name of the field
     model = None                # name of the model of this field
     type = None                 # type of the field (string)
+    relational = False          # whether the field is a relational one
 
     store = True                # whether the field is stored in database
     compute = None              # name of model method that computes value
@@ -68,7 +69,12 @@ class Field(object):
 
     def copy(self):
         """ make a copy of `self` (used for field inheritance among models) """
-        return copy(self)
+        field = copy(self)
+        # reset all lazy properties
+        for attr, value in field.__class__.__dict__.iteritems():
+            if isinstance(value, lazy_property):
+                field.__dict__.pop(attr, None)
+        return field
 
     def set_model_name(self, model, name):
         """ assign the model and field names of `self` """
@@ -302,10 +308,21 @@ class Reference(Selection):
 class Many2one(Field):
     """ Many2one field. """
     type = 'many2one'
+    relational = True
     comodel = None                      # model of values
 
     def __init__(self, comodel, string=None, **kwargs):
         super(Many2one, self).__init__(comodel=comodel, string=string, **kwargs)
+
+    @lazy_property
+    def inverse(self):
+        # retrieve the name of the inverse field, if it exists
+        comodel = scope.model(self.comodel)
+        for field in comodel._fields.itervalues():
+            if isinstance(field, One2many) and \
+                    field.comodel == self.model and field.inverse == self.name:
+                return field.name
+        return None
 
     @classmethod
     def _from_column(cls, column):
@@ -335,6 +352,7 @@ class Many2one(Field):
 class One2many(Field):
     """ One2many field. """
     type = 'one2many'
+    relational = True
     comodel = None                      # model of values
     inverse = None                      # name of inverse field
 
@@ -373,6 +391,7 @@ class One2many(Field):
 class Many2many(Field):
     """ Many2many field. """
     type = 'many2many'
+    relational = True
     comodel = None                      # model of values
     relation = None                     # name of table
     column1 = None                      # column of table referring to model
@@ -382,6 +401,18 @@ class Many2many(Field):
                 string=None, **kwargs):
         super(Many2many, self).__init__(comodel=comodel, relation=relation,
             column1=column1, column2=column2, string=string, **kwargs)
+
+    @lazy_property
+    def inverse(self):
+        if not self.compute:
+            # retrieve the name of the inverse field, if it exists
+            comodel = scope.model(self.comodel)
+            expected = (self.relation, self.column2, self.column1)
+            for field in comodel._fields.itervalues():
+                if isinstance(field, Many2many) and \
+                        (field.relation, field.column1, field.column2) == expected:
+                    return field.name
+        return None
 
     @classmethod
     def _from_column(cls, column):
@@ -462,14 +493,17 @@ class Related(Field):
             instance = instance[name].to_record()
         instance[self.related[-1]] = value
 
+    @lazy_property
     def null(self):
-        return self.related_field.null()
+        return self.related_field.null
 
-    def record_to_cache(self, value):
-        return self.related_field.record_to_cache(value)
+    @lazy_property
+    def record_to_cache(self):
+        return self.related_field.record_to_cache
 
-    def record_to_read(self, value):
-        return self.related_field.record_to_read(value)
+    @lazy_property
+    def record_to_read(self):
+        return self.related_field.record_to_read
 
 
 # imported here to avoid dependency cycle issues

@@ -28,7 +28,9 @@ from inspect import getsourcefile
 
 class lazy_property(object):
     """ Decorator for a lazy property of an object, i.e., an object attribute
-        that is determined by the result of a method call evaluated once.
+        that is determined by the result of a method call evaluated once. To
+        reevaluate the property, simply delete the attribute on the object, and
+        get it again.
     """
     def __init__(self, fget):
         self.fget = fget
