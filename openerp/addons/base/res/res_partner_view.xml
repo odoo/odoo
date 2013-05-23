@@ -138,7 +138,7 @@
                         </h1>
                         <field name="parent_id"
                             placeholder="Company"
-                            domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'default_supplier': supplier}"
+                            domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'default_supplier': supplier, 'default_customer': customer}"
                             attrs="{'invisible': [('is_company','=', True),('parent_id', '=', False)]}"
                             on_change="onchange_address(use_parent_address, parent_id)"/>
                         <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
