@@ -516,27 +516,13 @@ class hr_job(osv.osv):
             res[position.id] = {'priority1': priority1, 'priority2': priority2, 'priority3': priority3, 'total_application':len(rate_ids)}
         return res
 
-    def _get_department_mgr(self, cr, uid, ids, name, args, context=None):
-        """Get manager image for specific job position.
-        """
-        res = {}
-        employee_obj = self.pool.get('hr.employee')
-        for obj_job in self.browse(cr, uid,ids, context=context):
-            res[obj_job.id] = {}
-            if obj_job.department_id:
-                emp_ids = employee_obj.search(cr, uid, [('id', '=', obj_job.department_id.manager_id.id)], context=context)
-                if emp_ids:
-                    for employee in employee_obj.browse(cr, uid, emp_ids, context=context):
-                        res[obj_job.id] = {'id':employee.id, 'name': employee.name}
-        return res
-
     _columns = {
         'survey_id': fields.many2one('survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
                                     help="Email alias for this job position. New emails will automatically "
                                          "create new applicants for this job position."),
         'priority_count': fields.function(_count_priority, string='Total Priority Employees', type="char"),
-        'manager_id': fields.function(_get_department_mgr, string='Department Manager', type="char"),#manager image in kanban
+        'manager_id': fields.related('department_id', 'manager_id', type='many2one', string='Department Manager', relation='hr.employee', readonly=True, store=True),
         'alias_prefix': fields.char("Alias Name Prefix For Jobs",help="Default Prefix for Alias name of jobs"),
     }
     _defaults = {

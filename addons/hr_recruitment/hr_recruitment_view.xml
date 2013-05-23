@@ -374,7 +374,7 @@
                                     <div class="oe_job oe_kanban_ellipsis">
                                         <field name="department_id"/>
                                     </div>
-                                    <img t-att-src="kanban_image('hr.employee', 'image', record.manager_id.value.id, {'preview_image': 'image_small'})" t-att-title="record.manager_id.value.name" class="oe_kanban_avatar"/>
+                                    <img t-att-src="kanban_image('hr.employee', 'image', record.manager_id.raw_value, {'preview_image': 'image_small'})" t-att-title="record.manager_id.value.name" class="oe_kanban_avatar"/>
                                     <div class="oe_name">
                                         <t t-esc="record.manager_id.value.name"/>
                                     </div>
