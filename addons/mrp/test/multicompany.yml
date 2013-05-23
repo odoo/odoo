@@ -15,6 +15,6 @@
     for field in fields:
         if defaults.get(field):
             try:
-                location_obj.check_access_rule(cr, uid, defaults[field], 'read', context)
+                location_obj.check_access_rule(cr, uid, [defaults[field]], 'read', context)
             except Exception, exc:
                 assert False, "unreadable location %s: %s" % (field, exc)

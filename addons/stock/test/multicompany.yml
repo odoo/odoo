@@ -18,7 +18,7 @@
         for field in fields:
             if defaults.get(field):
                 try:
-                    location_obj.check_access_rule(cr, uid, defaults[field], 'read', context)
+                    location_obj.check_access_rule(cr, uid, [defaults[field]], 'read', context)
                 except Exception, exc:
                     assert False, "unreadable location %s: %s" % (field, exc)
         assert defaults['type'] == type, "wrong move type"
@@ -35,7 +35,7 @@
         for field in fields:
             if result.get(field):
                 try:
-                    location_obj.check_access_rule(cr, uid, result[field], 'read', context)
+                    location_obj.check_access_rule(cr, uid, [result[field]], 'read', context)
                 except Exception, exc:
                     assert False, "unreadable location %s: %s" % (field, exc)
 
@@ -48,7 +48,7 @@
     log('got defaults: %s', defaults)
     if defaults.get('location_id'):
         try:
-            location_obj.check_access_rule(cr, uid, defaults['location_id'], 'read', context)
+            location_obj.check_access_rule(cr, uid, [defaults['location_id']], 'read', context)
         except Exception, exc:
             assert False, "unreadable source location: %s" % exc
 
@@ -63,6 +63,6 @@
     for field in fields:
         if defaults.get(field):
             try:
-                location_obj.check_access_rule(cr, uid, defaults[field], 'read', context)
+                location_obj.check_access_rule(cr, uid, [defaults[field]], 'read', context)
             except Exception, exc:
                 assert False, "unreadable default %s: %s" % (field, exc)
