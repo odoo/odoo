@@ -5389,7 +5389,7 @@ class BaseModel(object):
             If `self` is a recordset, test whether `item` is a record in `self`.
         """
         if self.is_record():
-            return item == 'id' or item in self._all_columns
+            return item == 'id' or item in self._fields
         elif self.is_recordset():
             if isinstance(item, Record) and item._name == self._name:
                 return item in self._records
@@ -5425,101 +5425,97 @@ class BaseModel(object):
     def __ne__(self, other):
         return not self == other
 
-    def _get_field(self, field_name):
-        """ read the field `field_name` on a record instance """
-        if field_name not in itertools.chain(MAGIC_COLUMNS, self._fields, self._all_columns):
-            raise KeyError(field_name)
+    def _get_field(self, name):
+        """ read the field with the given `name` on a record instance """
         if not self.is_record():
             raise ValueError("Expected record: %s" % self)
 
-        if field_name == 'id':
+        if name == 'id':
             return self._record_id
 
-        if field_name in self._record_cache:
-            return self._record_cache[field_name]
+        if name in self._record_cache:
+            return self._record_cache[name]
 
         with self._scope:
-            recomputing = scope_proxy.recomputing(self._name)
-
-            # handle the case of high-level fields
-            field = self._fields.get(field_name)
-            if field:
-                if self.is_null():
-                    return field.null()
-
-                if self.is_draft():
-                    try:
-                        # evaluate the compute method to get a default value
-                        getattr(self, field.compute)()
-                        return self._record_cache[field_name]
-                    except Exception:
-                        # no computed value, return the null value
-                        return field.null()
-
-                if not field.store:
-                    # a "pure" function field, simply evaluate it on self
-                    assert field.compute
-                    getattr(self, field.compute)()
-                    return self._record_cache[field_name]
-
-                if field.compute and self._record_id in recomputing.get(field_name, ()):
-                    # field is stored and must be recomputed (in batch!)
-                    recs = self.recordset(recomputing[field_name]).exists()
-                    getattr(recs, field.compute)()
-                    return self._record_cache[field_name]
-
-            # handle the case of low-level fields
-            column = self._all_columns[field_name].column
+            # handle high-level fields
+            field = self._fields[name]
 
             if self.is_null():
-                # return False, null or recordset, depending on the field's type
-                return column.read_to_cache(False)
+                return field.null()
+
+            if self.is_draft():
+                try:
+                    # evaluate the compute method to get a default value
+                    getattr(self, field.compute)()
+                    return self._record_cache[name]
+                except Exception:
+                    # no computed value, return the null value
+                    self._record_cache[name] = field.null()
+                    return self._record_cache[name]
+
+            if not field.store:
+                # a "pure" function field, simply evaluate it on self
+                assert field.compute
+                getattr(self, field.compute)()
+                return self._record_cache[name]
+
+            recomputing = scope_proxy.recomputing(self._name)
+            if recomputing and field.compute and \
+                    self._record_id in recomputing.get(name, ()):
+                # field is stored and must be recomputed (in batch!)
+                recs = self.recordset(recomputing[name]).exists()
+                getattr(recs, field.compute)()
+                return self._record_cache[name]
+
+            # handle the case of low-level fields
+            column = self._columns[name]
 
             if isinstance(column, fields.function) and not column.store:
                 # a pure function field: simply evaluate it for self
-                value = self.read([field_name], load="_classic_write")[field_name]
+                value = self.read([name], load="_classic_write")[name]
                 return column.read_to_cache(value)
 
             # make sure that self is in cache
             model_cache = self._scope.cache[self._name]
             assert model_cache.get(self._record_id) is self
 
-            # fetch the record of this model without field_name in their cache
+            # fetch the record of this model without name in their cache
             fetch_ids = set(rec._record_id
                 for rec in model_cache.itervalues()
-                if not rec.is_draft() and field_name not in rec._record_cache)
+                if not rec.is_draft() and name not in rec._record_cache)
 
             # prefetch all classic and many2one fields if column is one of them
             # Note: do not prefetch fields when self.pool._init is True, because
             # some columns may be missing from the database!
             if column._prefetch and not self.pool._init:
                 fetch_fields = set(fname
-                    for fname, cinfo in self._all_columns.iteritems()
-                    if cinfo.column._classic_write)
+                    for fname, fcolumn in self._columns.iteritems()
+                    if fcolumn._classic_write)
             else:
-                fetch_fields = set((field_name,))
+                fetch_fields = set((name,))
 
             # do not fetch the records/fields that have to be recomputed
-            for fname in list(fetch_fields):
-                recompute_ids = recomputing.get(fname, set())
-                if self._record_id in recompute_ids:
-                    fetch_fields.discard(fname)     # do not fetch that field at all
-                else:
-                    fetch_ids -= recompute_ids      # do not fetch those records
+            if recomputing:
+                for fname in list(fetch_fields):
+                    recompute_ids = recomputing.get(fname, set())
+                    if self._record_id in recompute_ids:
+                        fetch_fields.discard(fname)     # do not fetch that field at all
+                    else:
+                        fetch_ids -= recompute_ids      # do not fetch those records
 
             # fetch and check result
-            assert field_name in fetch_fields and self._record_id in fetch_ids
+            assert name in fetch_fields and self._record_id in fetch_ids
             fetch_recs = self.recordset(fetch_ids)
             fetched = fetch_recs._fetch_fields(list(fetch_fields))
             if self not in fetched:
                 raise except_orm("AccessError", "%s does not exist." % self)
 
-            if field_name not in self._record_cache:
+            if name not in self._record_cache:
                 # How did this happen? Could be a missing model due to custom fields used too soon.
-                _logger.warning("Unknown field %r in %s" % (field_name, self))
-                raise KeyError(field_name)
+                _logger.warning("Unknown field %r in %s" % (name, self))
+                raise KeyError(name)
 
-            return self._record_cache[field_name]
+            return self._record_cache[name]
 
     @api.recordset
     def _fetch_fields(self, field_names):
@@ -5533,22 +5529,22 @@ class BaseModel(object):
         # return the fetched records
         return self.recordset(self.record(data['id']) for data in result)
 
-    def _set_field(self, field_name, value):
-        """ Assign the field `field_name` of `self` to `value`.
+    def _set_field(self, name, value):
+        """ Assign the field `name` of `self` to `value`.
             The value is assigned in the records cache, and if the field is
             stored, the value is also written to the database.
         """
         if self.is_null():
             return
 
-        if not self.is_draft() and field_name in self._all_columns:
+        if not self.is_draft() and name in self._columns:
             # store value in database
-            column = self._all_columns[field_name].column
             with self._scope:
-                self.write({field_name: column.cache_to_write(value)})
+                column = self._columns[name]
+                self.write({name: column.cache_to_write(value)})
 
         # store value in cache (here because write() invalidates the cache!)
-        self._record_cache[field_name] = value
+        self._record_cache[name] = value
 
     def __getitem__(self, key):
         """ If `self` is a record, return the value of the field named `key`.
@@ -5567,7 +5563,7 @@ class BaseModel(object):
         """
         if self.is_record():
             if key in self._fields:
-                # important: calling the field's getter is mandatory
+                # important: one must call the field's getter
                 return self._fields[key].__get__(self, self.__class__)
             else:
                 return self._get_field(key)
@@ -5582,11 +5578,8 @@ class BaseModel(object):
 
     def __setitem__(self, key, value):
         """ Assign the field `key` to `value` in record `self`. """
-        field = self._fields.get(key)
-        if field:
-            return field.__set__(self, value)
-        # fallback
-        self._set_field(key, value)
+        # important: one must call the field's setter
+        return self._fields[key].__set__(self, value)
 
     def __getattr__(self, name):
         if name.startswith('signal_'):
