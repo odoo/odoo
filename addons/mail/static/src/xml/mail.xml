@@ -144,7 +144,9 @@
             <t t-foreach='widget.recipients' t-as='recipient'>
                 <label t-attf-title="Add as recipient and follower (reason: #{recipient.reason})">
                     <input type="checkbox" t-att-checked="recipient.checked ? 'checked' : undefined" t-att-data="recipient.email_address"/>
-                    <t t-raw="recipient.name"/> (<t t-raw="recipient.email_address"/>)
+                    <t t-raw="recipient.name"/> 
+                    <t t-if="recipient.email_address">(<t t-raw="recipient.email_address"/>)</t>
+                    <t t-if="!recipient.email_address">(no email address)</t>
                 </label>
             </t>
         </div>

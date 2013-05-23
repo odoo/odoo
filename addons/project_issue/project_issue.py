@@ -270,7 +270,7 @@ class project_issue(base_stage, osv.osv):
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'stage_id': fields.many2one ('project.task.type', 'Stage',
                         track_visibility='onchange',
-                        domain="['&', ('fold', '=', False), ('project_ids', '=', project_id)]"),
+                        domain="[('project_ids', '=', project_id)]"),
         'project_id':fields.many2one('project.project', 'Project', track_visibility='onchange'),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
@@ -495,10 +495,10 @@ class project_issue(base_stage, osv.osv):
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):
         recipients = super(project_issue, self).message_get_suggested_recipients(cr, uid, ids, context=context)
         for issue in self.browse(cr, uid, ids, context=context):
-            if issue.partner_id:
-                self._message_add_suggested_recipient(cr, uid, recipients, issue, partner=issue.partner_id, reason=_('Customer'))
-            elif issue.email_from:
+            if issue.email_from:
                 self._message_add_suggested_recipient(cr, uid, recipients, issue, email=issue.email_from, reason=_('Customer Email'))
+            elif issue.partner_id:
+                self._message_add_suggested_recipient(cr, uid, recipients, issue, partner=issue.partner_id, reason=_('Customer'))
         return recipients
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):

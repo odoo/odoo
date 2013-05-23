@@ -204,8 +204,8 @@ function openerp_pos_db(instance, module){
                     this.packagings_by_product_id[pack.product_id[0]] = [];
                 }
                 this.packagings_by_product_id[pack.product_id[0]].push(pack);
-                if(pack.ean13){
-                    this.packagings_by_ean13[pack.ean13] = pack;
+                if(pack.ean){
+                    this.packagings_by_ean13[pack.ean] = pack;
                 }
             }
         },
