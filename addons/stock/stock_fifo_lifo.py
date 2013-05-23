@@ -136,9 +136,9 @@ class stock_move(osv.osv):
                 qty = move.product_qty
                 for match in match_obj.browse(cr, uid, matches, context=context):
                     qty -= match.qty
-                    if qty < 0:
-                        import pdb
-                        pdb.set_trace()
+#                     if qty < 0:
+#                         import pdb
+#                         pdb.set_trace()
                 res[move.id] = qty
         return res
     _inherit = 'stock.move'

@@ -258,8 +258,6 @@
     movepick_obj = self.pool.get("stock.partial.move")
     movepick_id = movepick_obj.create(cr, uid, {}, context={'active_model': 'stock.move', 'active_ids': return_move_id})
     movepick_obj.do_partial(cr, uid, [movepick_id])
-    import pdb
-    pdb.set_trace()
 - 
   Check rounded price is 150.0 / 1.2834
 - 
