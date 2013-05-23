@@ -385,7 +385,7 @@ class sale_order(osv.osv):
             'partner_id': order.partner_invoice_id.id,
             'journal_id': journal_ids[0],
             'invoice_line': [(6, 0, lines)],
-            'currency_id': order.pricelist_id.currency_id.id,
+            'currency_id': order.currency_id.id,
             'comment': order.note,
             'payment_term': order.payment_term and order.payment_term.id or False,
             'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
