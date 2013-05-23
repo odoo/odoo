@@ -33,5 +33,6 @@ class hr_applicant_settings(osv.osv_memory):
             fetchmail_model='hr.applicant', fetchmail_name='Incoming HR Applications',   
             help ="""Allow applicants to send their job application to an email address (jobs@mycompany.com),
                 and create automatically application documents in the system."""),
+        'default_alias_prefix': fields.char('Default Alias Prefix for Jobs', default_model='hr.job'),
     }
 

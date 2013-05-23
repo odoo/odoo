@@ -25,6 +25,12 @@
                         <label for="module_document_ftp"/>
                     </div>
                 </div>
+                <xpath expr="//div/div[@name='hr_recruitment']" position="after">
+                    <div attrs="{'invisible': [('module_hr_recruitment','=',False)]}">
+                        <label for="default_alias_prefix"/>
+                        <field name="default_alias_prefix" class="oe_inline"/>
+                    </div>
+                </xpath>
             </field>
         </record>
     </data>

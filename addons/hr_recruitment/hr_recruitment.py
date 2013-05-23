@@ -537,6 +537,7 @@ class hr_job(osv.osv):
                                          "create new applicants for this job position."),
         'priority_count': fields.function(_count_priority, string='Total Priority Employees', type="char"),
         'manager_id': fields.function(_get_department_mgr, string='Department Manager', type="char"),#manager image in kanban
+        'alias_prefix': fields.char("Alias Name Prefix For Jobs",help="Default Prefix for Alias name of jobs"),
     }
     _defaults = {
         'alias_domain': False, # always hide alias during creation
@@ -555,7 +556,7 @@ class hr_job(osv.osv):
             alias_id = mail_alias.create_unique_alias(cr, uid,
                           # Using '+' allows using subaddressing for those who don't
                           # have a catchall domain setup.
-                          {'alias_name': 'jobs+'+vals['name']},
+                          {'alias_name': vals['alias_prefix']+'+'+vals['name']},
                           model_name="hr.applicant",
                           context=context)
             vals['alias_id'] = alias_id

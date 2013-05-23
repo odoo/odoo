@@ -317,6 +317,7 @@
                         attrs="{'invisible': [('alias_domain', '=', False)]}">
                     <label for="alias_id" string="Email Alias"/>
                     <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/>
+                    <field name="alias_prefix" invisible="1"/>
                     <span name="edit_alias" class="oe_edit_only">
                         <field name="alias_name" class="oe_inline"
                                 attrs="{'required': [('alias_id', '!=', False)]}"/>
@@ -356,35 +357,52 @@
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                     <span class="oe_e">í</span>
                                     <ul class="oe_dropdown_menu">
-                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit...</a></li></t>
-                                        <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
+                                        <t t-if="widget.view.is_action_enabled('edit')">
+                                            <li><a type="edit">Edit...</a></li>
+                                        </t>
+                                        <t t-if="widget.view.is_action_enabled('delete')">
+                                            <li><a type="delete">Delete</a></li>
+                                        </t>
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                     </ul>
                                 </div>
                                 <div class = "oe_kanban_content">
                                     <h3 class="oe_kanban_ellipsis"><field name="name"/></h3>
                                     <div class="oe_kanban_alias" t-if="record.alias_id.value">
-                                        <span class="oe_e">%%</span><small><field name="alias_id"/></small>
+                                        <a title="Mail" t-att-href="'mailto:'+record.alias_id.value">
+                                            <span class="oe_e">%%</span><small><field name="alias_id"/></small>
+                                        </a>
                                     </div>
-                                    <div class="oe_job oe_kanban_ellipsis"><field name="department_id"/></div>
-                                    <img t-att-src="kanban_image('hr.employee', 'image_small', widget.values.manager_id.value.id)" t-att-title="record.manager_id.value.name" class="oe_kanban_avatar"/>
-                                    <div class="oe_name"><t t-esc="record.manager_id.value.name"/></div>
-                                    <t t-if="widget.values.no_of_recruitment.value gt 0">
-                                      <div class="oe_application">
-                                        <a t-if="widget.values.priority_count.value.total_application gt 1"><t t-esc="Math.round(widget.values.priority_count.value.total_application)"/> Applications</a>
-                                        <a t-if="widget.values.priority_count.value.total_application lt 2"><t t-esc="Math.round(widget.values.priority_count.value.total_application)"/> Application</a>
-                                      </div>
-                                      <div style="margin-top: 6px;color: #4c4c4c;"><t t-esc="Math.round(record.no_of_recruitment.raw_value)"/> Expected New Employees</div>
-                                      <field state="recruit" name="no_of_recruitment" widget="gage" style="width:167px; height: 102px;" options="{'min_field': 'no_of_hired_employee','max_field': 'no_of_recruitment', 'label_field': 'no_of_hired_employee', 'action_change': 'action_hired_employee'}">Forecast</field>
+                                    <div class="oe_job oe_kanban_ellipsis">
+                                        <field name="department_id"/>
+                                    </div>
+                                    <img t-att-src="kanban_image('hr.employee', 'image', record.manager_id.value.id, {'preview_image': 'image_small'})" t-att-title="record.manager_id.value.name" class="oe_kanban_avatar"/>
+                                    <div class="oe_name">
+                                        <t t-esc="record.manager_id.value.name"/>
+                                    </div>
+                                    <t t-if="record.no_of_recruitment.value gt 0">
+                                        <div class="oe_application">
+                                            <a name="%(hr_job_applications)d" type="action" >
+                                                <div t-if="record.priority_count.value.total_application gt 1" ><t t-esc="Math.round(record.priority_count.value.total_application)"/> Applications</div>
+                                                <div t-if="record.priority_count.value.total_application lt 2" ><t t-esc="Math.round(record.priority_count.value.total_application)"/> Application</div>
+                                            </a>
+                                        </div>
+                                        <div style="margin-top: 6px;color: #4c4c4c;"><t t-esc="Math.round(record.no_of_recruitment.raw_value)"/> Expected New Employees</div>
+                                        <field state="recruit" name="no_of_recruitment" widget="gage" style="width:167px; height: 102px;" options="{'min_field': 'no_of_hired_employee','max_field': 'no_of_recruitment', 'label_field': 'no_of_hired_employee', 'action_change': 'action_hired_employee'}">Forecast</field>
                                     </t>
-                                  <div class="oe_kanban_footer_left oe_job_message"><t t-raw="record.message_summary.raw_value"/></div>
-                                  <t t-if="widget.values.no_of_recruitment.value lt 1">
-                                        <div style="padding-top: 13px;"><p style="font-size: 14px;color: gray;">To start a recruitment phase for this job position,<b>click here</b></p><img src="/hr_recruitment/static/src/img/down1.png" style="margin-top: -24px; width: 25px;height: 25px;float: right;padding-right: 88px;"/> </div>
-                                  </t>
+                                    <div class="oe_kanban_footer_left oe_job_message">
+                                        <t t-raw="record.message_summary.raw_value"/>
+                                    </div>
+                                    <t t-if="record.no_of_recruitment.value lt 1">
+                                        <div style="padding-top: 13px;">
+                                            <p style="font-size: 14px;color: gray;">To start a recruitment phase for this job position,<b>click here</b></p>
+                                            <img src="/hr_recruitment/static/src/img/down1.png" style="margin-top: -24px; width: 25px;height: 25px;float: right;padding-right: 88px;"/>
+                                        </div>
+                                    </t>
                                     <div class="oe_job_launch">
-                                        <a t-if="widget.values.survey_id.value" data-name="action_print_survey" data-type="object" class=" oe_kanban_action oe_kanban_action_a">Print Interview | </a>
-                                        <a t-if="widget.values.no_of_recruitment.value lt 1" data-name="job_recruitment" data-type="object" class=" oe_kanban_action oe_kanban_action_a ">Launch Recruitment</a>
-                                        <a t-if="widget.values.no_of_recruitment.value gt 0" data-name="job_open" data-type="object" class=" oe_kanban_action oe_kanban_action_a ">Recruitment Done</a>
+                                        <a t-if="record.survey_id.value" data-name="action_print_survey" data-type="object" class=" oe_kanban_action oe_kanban_action_a">Print Interview | </a>
+                                        <a t-if="record.no_of_recruitment.value lt 1" data-name="job_recruitment" data-type="object" class=" oe_kanban_action oe_kanban_action_a ">Launch Recruitment</a>
+                                        <a t-if="record.no_of_recruitment.value gt 0" data-name="job_open" data-type="object" class=" oe_kanban_action oe_kanban_action_a ">Recruitment Done</a>
                                     </div>
                                 </div>
                             </div>
