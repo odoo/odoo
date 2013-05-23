@@ -259,7 +259,14 @@ class report_stock_valuation(osv.osv):
         'qty_remaining': fields.float('Qty remaining'),
         'location_dest_type': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production'), ('transit', 'Transit Location for Inter-Companies Transfers')], 'Location Destination Type', required=True), 
         'location_src_type': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production'), ('transit', 'Transit Location for Inter-Companies Transfers')], 'Location Source Type', required=True),
+        'match': fields.many2one('stock.move', 'Match', readonly=True),
+        'related': fields.related('match', 'picking_id', 'name', type='text', readonly=True), 
+        #'funct': fields.function(_get_properties, type='float')
     }
+    def _get_properties(self, cr, uid, ids, context=None):
+        products = {}
+        for stockval in self.browse(cr, uid, ids, context=context):
+            products[stockval.product_id] = True
 
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_stock_valuation')
@@ -274,6 +281,7 @@ CREATE OR REPLACE view report_stock_valuation AS (
         m.company_id, m.qty_remaining as qty_remaining, 
         m.state as state, m.prodlot_id as prodlot_id,
         p.name as name, 
+        mm.move_in_id as match, 
         CASE WHEN ipcm.value_text in ('fifo','lifo') THEN coalesce(mm.price_unit_out * pu2.factor / pu.factor, 0.0) 
             ELSE coalesce(m.price_unit * pu2.factor / pu.factor::decimal, 0.0) END AS price_unit,
         coalesce(sum(-ip.value_float * m.product_qty * pu.factor / pu2.factor)::decimal, 0.0) as value,
@@ -324,7 +332,8 @@ CREATE OR REPLACE view report_stock_valuation AS (
         m.product_id as product_id, pt.categ_id as product_categ_id, l.usage as location_type, l.scrap_location as scrap_location,
         m.company_id, m.qty_remaining as qty_remaining, 
         m.state as state, m.prodlot_id as prodlot_id,
-        p.name as name, coalesce(m.price_unit * pu2.factor / pu.factor, 0.0) as price_unit,
+        p.name as name, 0 as match,  
+        coalesce(m.price_unit * pu2.factor / pu.factor, 0.0) as price_unit,
         coalesce(sum(ip.value_float * m.product_qty * pu.factor / pu2.factor)::decimal, 0.0) as value,
         coalesce(sum(m.price_unit * m.product_qty)::decimal, 0.0) as move_value, 
         coalesce(sum(m.product_qty * pu.factor / pu2.factor)::decimal, 0.0) as product_qty, 
