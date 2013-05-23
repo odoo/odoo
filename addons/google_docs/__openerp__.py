@@ -33,7 +33,8 @@
     ],
     'data': [
         'security/ir.model.access.csv',
-        'res_config_user_view.xml'
+        'res_config_user_view.xml',
+        'google_docs_data.xml'
     ],
     'demo': [
         'google_docs_demo.xml'

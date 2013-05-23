@@ -80,7 +80,39 @@
                 </xpath>
             </field>
         </record>
-
+        
+        <record id="view_users_gogole_form" model="ir.ui.view">
+            <field name="name">res.users.google.form1</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Google Authorization Code" attrs="{'invisible': [('id', '!=', 1)]}">
+                        <group string="Google Authorization Code">
+                            <group >
+                                <field name="authorization_code" on_change="onchange_authorization_code(authorization_code)"/>
+                            </group>
+                            <group>
+                                <a href="https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/drive&amp;redirect_uri=urn:ietf:wg:oauth:2.0:oob&amp;response_type=code&amp;client_id=39623646228-eg3ggo3mk6o40m7rguobi3rkl9frh4tb.apps.googleusercontent.com" target="_blank" class="oe_link"><b>Generate Authorization Code</b></a>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+        <record id="view_users_gogole_preference" model="ir.ui.view">
+            <field name="name">res.users.google.form2</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='preferences']" position="after">
+                        <group string="Google Account" attrs="{'invisible': [('id', '!=', 1)]}">
+                            <field name="authorization_code" on_change="onchange_authorization_code(authorization_code)"/>
+                            <a href="https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/drive&amp;redirect_uri=urn:ietf:wg:oauth:2.0:oob&amp;response_type=code&amp;client_id=39623646228-eg3ggo3mk6o40m7rguobi3rkl9frh4tb.apps.googleusercontent.com" target="_blank" class="oe_link"><b>Generate Authorization Code</b></a>
+                        </group>
+                </xpath>
+            </field>
+        </record>
 
         <menuitem name='Google Drive configuration' id='menu_gdocs_config' parent='base.menu_administration' />
         <menuitem id='menu_gdocs_model_config' parent='menu_gdocs_config' action='action_google_docs_users_config' />

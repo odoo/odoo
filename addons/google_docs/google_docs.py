@@ -26,13 +26,17 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from urlparse import urlparse
 
+from httplib2 import Http
+import urllib
+import json
+
 _logger = logging.getLogger(__name__)
 
 class config(osv.osv):
     _name = 'google.docs.config'
     _description = "Google Drive templates config"
     
-    def get_google_doc_name(self, cr, uid, ids, res_id, context=None):
+    def get_google_doc_name(self, cr, uid, ids, res_id, tamplate_id, context=None):
         pool_model = self.pool.get("ir.model")
         res = {}
         for config in self.browse(cr, SUPERUSER_ID, ids, context=context):
@@ -57,7 +61,41 @@ class config(osv.osv):
             if attach_ids:
                 attachment = attach_pool.browse(cr, uid, attach_ids[0], context)
                 url = attachment.url
-            res[config.id] = {'name':name_gdocs, 'url': url}
+            else:
+                url = self.copy_doc(cr, uid, ids, res_id, tamplate_id, name_gdocs, res_model, context)
+            res[config.id] = {'url': url}
+        return res
+    
+    def copy_doc(self, cr, uid, ids, res_id, tamplate_id, name_gdocs, res_model, context=None):
+        ir_config = self.pool[ 'ir.config_parameter' ]
+        google_client_id = ir_config.get_param(cr, SUPERUSER_ID, 'google_client_id')
+        google_client_secret = ir_config.get_param(cr, SUPERUSER_ID, 'google_client_secret')
+        google_refresh_token = ir_config.get_param(cr, SUPERUSER_ID, 'google_refresh_token')
+        google_web_base_url = ir_config.get_param(cr, SUPERUSER_ID, 'web.base.url')
+        
+        #For Getting New Access Token With help of old Refresh Token 
+        headers = {"Content-type": "application/x-www-form-urlencoded"}
+        data = dict(client_id = google_client_id, 
+                    refresh_token = google_refresh_token, 
+                    client_secret = google_client_secret, 
+                    grant_type = "refresh_token")
+        data = urllib.urlencode(data) 
+        resp, content = Http().request("https://accounts.google.com/o/oauth2/token", "POST", data, headers)
+        content = json.loads(content)
+        
+        # Copy template in to drive with help of new access token
+        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+        record_url = "Click on link to open Record in OpenERP\n %s/?db=%s#id=%s&model=%s" %(google_web_base_url, cr.dbname, res_id, res_model ) 
+        data = {"title": name_gdocs, "description": record_url}
+        request_url = "https://www.googleapis.com/drive/v2/files/%s/copy?access_token=%s" % (tamplate_id, content['access_token'])
+        resp, content = Http().request(request_url, "POST", json.dumps(data), headers)
+        content = json.loads(content)
+        res = False
+        if 'alternateLink' in content.keys():
+            attach_pool = self.pool.get("ir.attachment")
+            attach_vals = {'res_model': res_model, 'name': name_gdocs, 'res_id': res_id, 'type': 'url', 'url':content['alternateLink']}
+            attach_pool.create(cr, uid, attach_vals)
+            res = content['alternateLink']
         return res
     
     def get_google_docs_config(self, cr, uid, res_model, res_id, context=None):
@@ -163,3 +201,28 @@ class config(osv.osv):
     ]
 
 config()
+
+class res_users(osv.osv):
+    _inherit = "res.users"
+    
+    def onchange_authorization_code(self, cr, uid, ids, authorization_code, context=None):
+        res = {}
+        if authorization_code:
+            ir_config = self.pool['ir.config_parameter']
+            google_client_id = ir_config.get_param(cr, SUPERUSER_ID, 'google_client_id')
+            google_client_secret = ir_config.get_param(cr, SUPERUSER_ID, 'google_client_secret')
+            google_redirect_uri = ir_config.get_param(cr, SUPERUSER_ID, 'google_redirect_uri')
+            
+            #Get the Refresh Token From Google And store it in ir.config_parameter 
+            headers = {"Content-type": "application/x-www-form-urlencoded"}
+            data = dict(code=authorization_code, client_id=google_client_id, client_secret=google_client_secret,redirect_uri=google_redirect_uri,grant_type="authorization_code")
+            data = urllib.urlencode(data) 
+            resp, content = Http().request("https://accounts.google.com/o/oauth2/token", "POST", data,headers)
+            content=json.loads(content)
+            if 'refresh_token' in content.keys():
+                ir_config.set_param(cr, uid, 'google_refresh_token', content['refresh_token'])
+        return res
+
+    _columns = {
+        'authorization_code': fields.char('Authorization Code', size=124),
+    }
