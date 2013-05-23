@@ -1702,7 +1702,7 @@ class stock_move(osv.osv):
             if location_xml_id:
                 try:
                     location = mod_obj.get_object(cr, uid, 'stock', location_xml_id, context=context)
-                    location.check_access_rule('read', context=context)
+                    location._model.check_access_rule(cr, uid, [location.id], 'read', context=context)
                     location_id = location.id
                 except (orm.except_orm, ValueError):
                     # likely the user does not have read access on the location
