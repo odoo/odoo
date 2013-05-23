@@ -118,20 +118,32 @@ class Field(object):
         assert instance._name == self.model
         # adapt value to the cache level (must be in record's scope!)
         with instance._scope:
-            value = self.record_to_cache(value)
+            value = self.convert_value(value)
         return instance._set_field(self.name, value)
 
     def null(self):
         """ return the null value for this field """
         return False
 
-    def record_to_cache(self, value):
-        """ convert `value` from the record level to the cache level """
+    def convert_value(self, value):
+        """ convert `value` (from an assignment) to the cache level """
         return value
 
-    def record_to_read(self, value):
-        """ convert `value` from the record level to a value as returned by
+    def convert_from_read(self, value):
+        """ convert `value` from method :meth:`openerp.osv.orm.BaseModel.read`
+            to the cache level
+        """
+        return value
+
+    def convert_to_read(self, value):
+        """ convert `value` from the cache to a value as returned by method
             :meth:`openerp.osv.orm.BaseModel.read`
+        """
+        return value
+
+    def convert_to_write(self, value):
+        """ convert `value` from the cache to a valid value for method
+            :meth:`openerp.osv.orm.BaseModel.write`
         """
         return value
 
@@ -140,7 +152,7 @@ class Boolean(Field):
     """ Boolean field. """
     type = 'boolean'
 
-    def record_to_cache(self, value):
+    def convert_value(self, value):
         return bool(value)
 
 
@@ -148,7 +160,7 @@ class Integer(Field):
     """ Integer field. """
     type = 'integer'
 
-    def record_to_cache(self, value):
+    def convert_value(self, value):
         return int(value or 0)
 
 
@@ -169,7 +181,7 @@ class Float(Field):
             self.digits = self.digits(scope.cr)
         return super(Float, self).to_column()
 
-    def record_to_cache(self, value):
+    def convert_value(self, value):
         # apply rounding here, otherwise value in cache may be wrong!
         if self.digits:
             return float_round(float(value or 0.0), precision_digits=self.digits[1])
@@ -182,7 +194,7 @@ class _String(Field):
     translate = False
     _attrs = Field._attrs + ('translate',)
 
-    def record_to_cache(self, value):
+    def convert_value(self, value):
         return bool(value) and ustr(value)
 
 
@@ -192,7 +204,7 @@ class Char(_String):
     size = None
     _attrs = _String._attrs + ('size',)
 
-    def record_to_cache(self, value):
+    def convert_value(self, value):
         return bool(value) and ustr(value)[:self.size]
 
 
@@ -205,7 +217,7 @@ class Html(_String):
     """ Html field. """
     type = 'html'
 
-    def record_to_cache(self, value):
+    def convert_value(self, value):
         return bool(value) and html_sanitize(value)
 
 
@@ -213,7 +225,7 @@ class Date(Field):
     """ Date field. """
     type = 'date'
 
-    def record_to_cache(self, value):
+    def convert_value(self, value):
         if isinstance(value, (date, datetime)):
             value = value.strftime(DEFAULT_SERVER_DATE_FORMAT)
         elif value:
@@ -225,7 +237,7 @@ class Datetime(Field):
     """ Datetime field. """
     type = 'datetime'
 
-    def record_to_cache(self, value):
+    def convert_value(self, value):
         if isinstance(value, (date, datetime)):
             value = value.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         elif value:
@@ -237,7 +249,7 @@ class Binary(Field):
     """ Binary field. """
     type = 'binary'
 
-    def record_to_cache(self, value):
+    def convert_value(self, value):
         if value:
             base64.b64decode(value)             # check value format
         return value or False
@@ -274,7 +286,7 @@ class Selection(Field):
             value = value(scope.model(self.model))
         return [item[0] for item in value]
 
-    def record_to_cache(self, value):
+    def convert_value(self, value):
         if value is None or value is False:
             return False
         if value in self.get_values():
@@ -297,12 +309,24 @@ class Reference(Selection):
         """
         super(Reference, self).__init__(selection=selection, string=string, **kwargs)
 
-    def record_to_cache(self, value):
+    def convert_value(self, value):
         if value is None or value is False:
             return False
         if isinstance(value, Record) and value._name in self.get_values():
             return value.scoped()
         raise ValueError("Wrong value for %s.%s: %r" % (self.model, self.name, value))
+
+    def convert_from_read(self, value):
+        if value:
+            res_model, res_id = value.split(',')
+            return scope.model(res_model).record(int(res_id))
+        return False
+
+    def convert_to_read(self, value):
+        return "%s,%s" % (value._name, value._record_id) if value else False
+
+    def convert_to_write(self, value):
+        return "%s,%s" % (value._name, value._record_id) if value else False
 
 
 class Many2one(Field):
@@ -338,15 +362,23 @@ class Many2one(Field):
     def null(self):
         return scope.model(self.comodel).null()
 
-    def record_to_cache(self, value):
+    def convert_value(self, value):
         if value is None or value is False:
             return self.null()
         if isinstance(value, Record) and value._name == self.comodel:
             return value.scoped()
         raise ValueError("Wrong value for %s.%s: %r" % (self.model, self.name, value))
 
-    def record_to_read(self, value):
+    def convert_from_read(self, value):
+        if isinstance(value, tuple):
+            value = value[0]
+        return scope.model(self.comodel).record(value)
+
+    def convert_to_read(self, value):
         return bool(value) and value.name_get()
+
+    def convert_to_write(self, value):
+        return value._record_id
 
 
 class One2many(Field):
@@ -377,15 +409,21 @@ class One2many(Field):
     def null(self):
         return scope.model(self.comodel).recordset()
 
-    def record_to_cache(self, value):
+    def convert_value(self, value):
         if value is None or value is False:
             return self.null()
         if isinstance(value, Recordset) and value._name == self.comodel:
             return value.scoped()
         raise ValueError("Wrong value for %s.%s: %s" % (self.model, self.name, value))
 
-    def record_to_read(self, value):
+    def convert_from_read(self, value):
+        return scope.model(self.comodel).recordset(value or ())
+
+    def convert_to_read(self, value):
         return value.unbrowse()
+
+    def convert_to_write(self, value):
+        return [(6, 0, value.unbrowse())]
 
 
 class Many2many(Field):
@@ -435,15 +473,21 @@ class Many2many(Field):
     def null(self):
         return scope.model(self.comodel).recordset()
 
-    def record_to_cache(self, value):
+    def convert_value(self, value):
         if value is None or value is False:
             return self.null()
         if isinstance(value, Recordset) and value._name == self.comodel:
             return value.scoped()
         raise ValueError("Wrong value for %s.%s: %s" % (self.model, self.name, value))
 
-    def record_to_read(self, value):
+    def convert_from_read(self, value):
+        return scope.model(self.comodel).recordset(value or ())
+
+    def convert_to_read(self, value):
         return value.unbrowse()
+
+    def convert_to_write(self, value):
+        return [(6, 0, value.unbrowse())]
 
 
 class Related(Field):
@@ -498,12 +542,20 @@ class Related(Field):
         return self.related_field.null
 
     @lazy_property
-    def record_to_cache(self):
-        return self.related_field.record_to_cache
+    def convert_value(self):
+        return self.related_field.convert_value
 
     @lazy_property
-    def record_to_read(self):
-        return self.related_field.record_to_read
+    def convert_from_read(self):
+        return self.related_field.convert_from_read
+
+    @lazy_property
+    def convert_to_read(self):
+        return self.related_field.convert_to_read
+
+    @lazy_property
+    def convert_to_write(self):
+        return self.related_field.convert_to_write
 
 
 # imported here to avoid dependency cycle issues

@@ -3460,15 +3460,15 @@ class BaseModel(object):
 
         # update record caches
         for f in old_fields:
-            read_to_cache = self._columns[f].read_to_cache
+            convert = self._fields[f].convert_from_read
             for record, values in record_values:
-                record._record_cache[f] = read_to_cache(values[f])
+                record._record_cache[f] = convert(values[f])
 
         # read new-style fields with records
         for f in new_fields:
-            record_to_read = self._fields[f].record_to_read
+            convert = self._fields[f].convert_to_read
             for record, values in record_values:
-                values[f] = record_to_read(record[f])
+                values[f] = convert(record[f])
 
         return result if select.is_recordset() else (bool(result) and result[0])
 
@@ -5455,7 +5455,7 @@ class BaseModel(object):
             if isinstance(column, fields.function) and not column.store:
                 # a pure function field: simply evaluate it for self
                 value = self.read([name], load="_classic_write")[name]
-                return column.read_to_cache(value)
+                return field.convert_from_read(value)
 
             # make sure that self is in cache
             model_cache = self._scope.cache[self._name]
@@ -5522,8 +5522,8 @@ class BaseModel(object):
         if not self.is_draft() and name in self._columns:
             # store value in database
             with self._scope:
-                column = self._columns[name]
-                self.write({name: column.cache_to_write(value)})
+                field = self._fields[name]
+                self.write({name: field.convert_to_write(value)})
 
         # store value in cache (here because write() invalidates the cache!)
         self._record_cache[name] = value
