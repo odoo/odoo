@@ -166,12 +166,13 @@ openerp.hr_timesheet_sheet = function(instance) {
         is_valid_value:function(value){
             var split_value = value.split(":");
             var valid_value = true;
-            if (split_value.length > 2)return false;
+            if (split_value.length > 2)
+                return false;
             _.detect(split_value,function(num){
                 if(isNaN(num)){
                     valid_value = false;
                 }
-            })
+            });
             return valid_value;
         },
         display_data: function() {
@@ -183,15 +184,15 @@ openerp.hr_timesheet_sheet = function(instance) {
                         self.get_box(account, day_count).val(self.sum_box(account, day_count, true)).change(function() {
                             var num = $(this).val();
                             if (self.is_valid_value(num)){
-                                num = Number(self.parse_client(num));
-                            } 
+                                num = (num == 0)?0:Number(self.parse_client(num));
+                            }
                             if (isNaN(num)) {
                                 $(this).val(self.sum_box(account, day_count, true));
                             } else {
                                 account.days[day_count].lines[0].unit_amount += num - self.sum_box(account, day_count);
                                 self.display_totals();
                                 self.sync();
-                                 if(!isNaN($(this).val())){
+                                if(!isNaN($(this).val())){
                                     $(this).val(self.sum_box(account, day_count, true));
                                 }
                             }
@@ -269,7 +270,7 @@ openerp.hr_timesheet_sheet = function(instance) {
             _.each(account.days[day_count].lines, function(line) {
                 line_total += line.unit_amount;
             });
-            return (show_value_in_hour)?this.format_client(line_total):line_total;
+            return (show_value_in_hour && line_total != 0)?this.format_client(line_total):line_total;
         },
         display_totals: function() {
             var self = this;
