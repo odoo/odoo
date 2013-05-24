@@ -719,7 +719,7 @@ class account_journal(osv.osv):
         'user_id': fields.many2one('res.users', 'User', help="The user responsible for this journal"),
         'groups_id': fields.many2many('res.groups', 'account_journal_group_rel', 'journal_id', 'group_id', 'Groups'),
         'currency': fields.many2one('res.currency', 'Currency', help='The currency used to enter statement'),
-        'entry_posted': fields.boolean('Autopost Created Moves', help='Check this box to automatically post entries of this journal. Note that legally, some entries are automatically posted when the source document is validated (Invoices), whatever the status of this field.'),
+        'entry_posted': fields.boolean('Autopost Created Moves', help='Check this box to automatically post entries of this journal. Note that legally, some entries may be automatically posted when the source document is validated (Invoices), whatever the status of this field.'),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=1, help="Company related to this journal"),
         'allow_date':fields.boolean('Check Date in Period', help= 'If set to True then do not accept the entry if the entry date is not into the period dates'),
 
