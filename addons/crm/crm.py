@@ -148,23 +148,20 @@ class crm_case_section(osv.osv):
 
     def _get_won_opportunity_per_duration(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, [])
-        lead_obj = self.pool.get('crm.lead')
+        obj = self.pool.get('crm.lead')
         first_day = date.today().replace(day=1)
 
         for section in self.browse(cr, uid, ids, context=context):
             dates = [first_day + relativedelta(months=-(MONTHS[section.target_duration]*(key+1)-1)) for key in range(0, 5)]
-            nb_leads = []
+            rates = []
             for when in range(0, 5):
                 domain = [("section_id", "=", section.id), ('state', '=', 'done'), ('type', '=', 'opportunity'), ('date_closed', '>=', dates[when].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
                 if when:
                     domain += [('date_closed', '<', dates[when-1].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
-                rate = 0
-                opportunity_ids = lead_obj.search(cr, uid, domain, context=context)
-                for opportunity in lead_obj.browse(cr, uid, opportunity_ids, context=context):
-                    rate += opportunity.planned_revenue
-                nb_leads.append(rate)
-            nb_leads.reverse()
-            res[section.id] = nb_leads
+                group_obj = obj.read_group(cr, uid, domain, ['planned_revenue', 'section_id'], "section_id", context=context)
+                rates.append(group_obj and group_obj[0]['planned_revenue'] or 0)
+            rates.reverse()
+            res[section.id] = rates
         return res
 
     _columns = {

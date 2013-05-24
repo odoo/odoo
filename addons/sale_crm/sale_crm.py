@@ -61,18 +61,20 @@ class crm_case_section(osv.osv):
 
         for section in self.browse(cr, uid, ids, context=context):
             dates = [first_day + relativedelta(months=-(MONTHS[section.target_duration]*(key+1)-1)) for key in range(0, 5)]
-            rate_invoice = []
+            rates = []
             for when in range(0, 5):
                 domain = [("section_id", "=", section.id), ('state', 'in', ['draft', 'sent']), ('date_order', '>=', dates[when].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
                 if when:
                     domain += [('date_order', '<', dates[when-1].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
-                rate = 0
-                order_ids = obj.search(cr, uid, domain, context=context)
-                for order in obj.browse(cr, uid, order_ids, context=context):
-                    rate += order.amount_total
-                rate_invoice.append(rate)
-            rate_invoice.reverse()
-            res[section.id] = rate_invoice
+                # rate = 0
+                # order_ids = obj.search(cr, uid, domain, context=context)
+                # for order in obj.browse(cr, uid, order_ids, context=context):
+                #     rate += order.amount_total
+                # rates.append(rate)
+                group_obj = obj.read_group(cr, uid, domain, ['amount_total', 'section_id'], "section_id", context=context)
+                rates.append(group_obj and group_obj[0]['amount_total'] or 0)
+            rates.reverse()
+            res[section.id] = rates
         return res
 
     def _get_validate_saleorder_per_duration(self, cr, uid, ids, field_name, arg, context=None):
@@ -82,18 +84,15 @@ class crm_case_section(osv.osv):
 
         for section in self.browse(cr, uid, ids, context=context):
             dates = [first_day + relativedelta(months=-(MONTHS[section.target_duration]*(key+1)-1)) for key in range(0, 5)]
-            rate_invoice = []
+            rates = []
             for when in range(0, 5):
                 domain = [("section_id", "=", section.id), ('state', 'not in', ['draft', 'sent']), ('date_confirm', '>=', dates[when].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
                 if when:
                     domain += [('date_confirm', '<', dates[when-1].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
-                rate = 0
-                order_ids = obj.search(cr, uid, domain, context=context)
-                for order in obj.browse(cr, uid, order_ids, context=context):
-                    rate += order.amount_total
-                rate_invoice.append(rate)
-            rate_invoice.reverse()
-            res[section.id] = rate_invoice
+                group_obj = obj.read_group(cr, uid, domain, ['amount_total', 'section_id'], "section_id", context=context)
+                rates.append(group_obj and group_obj[0]['amount_total'] or 0)
+            rates.reverse()
+            res[section.id] = rates
         return res
 
     def _get_sent_invoice_per_duration(self, cr, uid, ids, field_name, arg, context=None):
@@ -103,18 +102,15 @@ class crm_case_section(osv.osv):
 
         for section in self.browse(cr, uid, ids, context=context):
             dates = [first_day + relativedelta(months=-(MONTHS[section.target_duration]*(key+1)-1)) for key in range(0, 5)]
-            rate_invoice = []
+            rates = []
             for when in range(0, 5):
                 domain = [("section_id", "=", section.id), ('state', 'not in', ['draft', 'cancel']), ('date', '>=', dates[when].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
                 if when:
                     domain += [('date', '<', dates[when-1].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
-                rate = 0
-                invoice_ids = obj.search(cr, uid, domain, context=context)
-                for invoice in obj.browse(cr, uid, invoice_ids, context=context):
-                    rate += invoice.price_total
-                rate_invoice.append(rate)
-            rate_invoice.reverse()
-            res[section.id] = rate_invoice
+                group_obj = obj.read_group(cr, uid, domain, ['price_total', 'section_id'], "section_id", context=context)
+                rates.append(group_obj and group_obj[0]['price_total'] or 0)
+            rates.reverse()
+            res[section.id] = rates
         return res
 
     _columns = {
