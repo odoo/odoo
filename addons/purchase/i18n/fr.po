@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-05-07 09:56+0000\n"
-"Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
+"PO-Revision-Date: 2013-05-21 15:57+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-05-08 06:18+0000\n"
-"X-Generator: Launchpad (build 16598)\n"
+"X-Launchpad-Export-Date: 2013-05-22 05:27+0000\n"
+"X-Generator: Launchpad (build 16626)\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
@@ -157,6 +158,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Ici, vous pouvez suivre toutes les réceptions de bons de "
+"commande\n"
+"                pour lesquelles la facturation est \"basée sur les "
+"livraisons entrantes\",\n"
+"                et pour lesquelles vous n'avez pas encore reçu de facture "
+"fournisseur.\n"
+"                Vous pouvez générer une facture fournisseur basée sur ces "
+"livraisons.\n"
+"              </p>\n"
+"            "
 
 #. module: purchase
 #: view:purchase.report:0
@@ -331,6 +343,20 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Cliquez pour créer une facture 'Brouillon'.\n"
+"          </p><p>\n"
+"            Utilisez ce menu pour contrôler les factures à recevoir de vos\n"
+"            fournisseurs. OpenERP génère des factures 'Brouillon' depuis "
+"vos\n"
+"            bons de commande ou vos réceptions, en fonction du paramétrage.\n"
+"          </p><p>\n"
+"            Une fois que vous avez reçu la facture de votre fournisseur, "
+"vous\n"
+"            pouvez la comparer avec votre facture 'Brouillon' et la "
+"valider.\n"
+"          </p>\n"
+"        "
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -409,6 +435,19 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Cliquez ici pour enregistrer une facture fournisseur.\n"
+"                </p><p>\n"
+"                    Les factures fournisseur peuvent être pré-générées en se "
+"basant\n"
+"                    sur les bons de commande ou les réceptions. Ceci vous "
+"permet de\n"
+"                    contrôler les factures que vous recevez de la part de "
+"votre\n"
+"                    fournisseur avec les documents 'Brouillon' dans "
+"OpenERP.\n"
+"                </p>\n"
+"            "
 
 #. module: purchase
 #: view:purchase.order:0
@@ -451,6 +490,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Ici vous pouvez suivre toutes les lignes de bons de "
+"commandes où\n"
+"                la facturation est \"basée sur les lignes de commandes\", et "
+"pour\n"
+"                lesquelles vous n'avez pas encore reçu la facture. Vous "
+"pouvez\n"
+"                générer une facture 'Brouillon' basée sur les lignes de "
+"cette liste.\n"
+"              </p>\n"
+"            "
 
 #. module: purchase
 #: field:purchase.order.line,date_planned:0
@@ -481,7 +531,7 @@ msgstr "Réservation"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase orders that include lines not invoiced."
-msgstr "Commmande d'achat qui possèdent des lignes non facturées"
+msgstr "Bons de commande qui possèdent des lignes non facturées"
 
 #. module: purchase
 #: view:product.product:0
@@ -647,6 +697,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliquez pour créer un devis qui sera converti en bon de "
+"commande. \n"
+"              </p><p>\n"
+"                Utiliser ce menu pour chercher vos bons de commande par\n"
+"                références, fournisseurs, produits, etc. Pour chaque bon de "
+"commande,\n"
+"                vous pouvez suivre la discussion avec le fournisseur, \n"
+"                contrôler les produits reçus et contrôler les factures "
+"fournisseur.\n"
+"              </p>\n"
+"            "
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -695,7 +757,7 @@ msgstr "Indique qu'une réception de marchandise a été effectuée."
 #: code:addons/purchase/purchase.py:586
 #, python-format
 msgid "Unable to cancel this purchase order."
-msgstr "Impossible d'annuler ce bon de commande d'achat"
+msgstr "Impossible d'annuler ce bon de commande"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_invoice
@@ -728,8 +790,8 @@ msgid ""
 "Unique number of the purchase order, computed automatically when the "
 "purchase order is created."
 msgstr ""
-"Identifiant unique du bon de commande d'achat, calculé automatiquement lors "
-"de sa création."
+"Identifiant unique du bon de commande, calculé automatiquement lors de sa "
+"création."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
@@ -938,7 +1000,7 @@ msgstr "Délai de validation"
 #. module: purchase
 #: view:purchase.config.settings:0
 msgid "Supplier Features"
-msgstr ""
+msgstr "Fonctionnalités fournisseur"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1223,7 +1285,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Select an Open Sales Order"
-msgstr ""
+msgstr "Sélectionnez un bon de commande ouvert."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
@@ -1280,12 +1342,12 @@ msgstr "Statistiques sur les bons de commandes"
 #: view:purchase.order:0
 #: field:purchase.order,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Messages non lus"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
 msgid "Unit of Measure Categories"
-msgstr ""
+msgstr "Catégories d'unités de mesure"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1298,6 +1360,8 @@ msgid ""
 "Reference of the document that generated this purchase order request; a "
 "sales order or an internal procurement request."
 msgstr ""
+"Référence du document qui a généré cette commande d'achat; une commande de "
+"vente ou une demande d'approvisionnement interne."
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -1517,6 +1581,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliquez pour ajouter une version de la liste de prix.\n"
+"              </p><p>\n"
+"                Une liste de prix peut avoir plusieurs versions, chacune "
+"étant\n"
+"                valable pour une certaine durée. Il peut y avoir par exemple "
+"des\n"
+"                versions : \"Prix de base\", \"Prix 2010\", \"Prix 2011\", "
+"\"Ventes d'été\", etc.\n"
+"              </p>\n"
+"            "
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_line_invoice
@@ -1566,7 +1641,7 @@ msgstr "Configurer les achats"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Untaxed"
-msgstr ""
+msgstr "Hors-taxe"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_createpackinglist0
@@ -1596,7 +1671,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.config.settings,module_purchase_double_validation:0
 msgid "Force two levels of approvals"
-msgstr ""
+msgstr "Forcer deux niveaux de validation"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase_type
@@ -1655,6 +1730,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliquez pour créer une demande de prix.\n"
+"              </p><p>\n"
+"                Le devis contient l'historique de la discussion/négociation "
+"\n"
+"                que vous avez eu avec votre fournisseur. Une fois confirmé,\n"
+"                un devis est converti en bon de commande.\n"
+"              </p><p>\n"
+"                Plusieurs propositions de bons de commande sont créées\n"
+"                automatiquement par OpenERP basé sur les besoins.\n"
+"              </p>\n"
+"            "
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
@@ -1737,7 +1824,7 @@ msgstr "Confirmation"
 #. module: purchase
 #: report:purchase.order:0
 msgid "TIN :"
-msgstr ""
+msgstr "TIN :"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
@@ -1756,6 +1843,14 @@ msgid ""
 "* The 'Cancelled' status is set automatically when user cancel purchase "
 "order."
 msgstr ""
+" * L'état 'Brouillon' est défini automatiquement quand un bon de commande "
+"est en brouillon.\n"
+"* L'état 'Confirmée' est défini automatiquement quand un bon de commande est "
+"confirmé.\n"
+"* L'état 'Terminée' est défini automatiquement quand le bon de commande est "
+"terminé.\n"
+"* L'état 'Annulée' est défini automatiquement quand un utilisateur annule le "
+"bon de commande."
 
 #. module: purchase
 #: field:purchase.order,invoiced:0
@@ -1805,6 +1900,10 @@ msgid ""
 "lines on a purchase order between several accounts and analytic plans.\n"
 "                This installs the module purchase_analytic_plans."
 msgstr ""
+"Permet à l'utilisateur de gérer plusieurs plans analytiques. Ceci vous "
+"permet de diviser les lignes d'un bon de commande entre plusieurs comptes et "
+"plans analytiques.\n"
+"                Ceci installe le module 'purchase_analytic_plans'."
 
 #. module: purchase
 #: field:purchase.order,location_id:0
@@ -1923,6 +2022,13 @@ msgid ""
 "paid and received, the status becomes 'Done'. If a cancel action occurs in "
 "the invoice or in the reception of goods, the status becomes in exception."
 msgstr ""
+"L'état d'un bon de commande ou d'une demande de prix. Un devis est un bon de "
+"commande à l'état 'Brouillon'. Ensuite, la commande est confirmée par un "
+"utilisateur, le statut passe à 'Confirmé'. Ensuite, le supplier doit "
+"confirmer la commande pour que l'état passe à 'Approuvé'. Dès que le bon de "
+"commande est payé et reçu, l'état devient 'Terminé'. Si une action "
+"d'annulation est faite dans la facture ou lors de la réception, le statut "
+"devient 'En erreur'."
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -2032,7 +2138,7 @@ msgstr ""
 #. module: purchase
 #: model:email.template,report_name:purchase.email_template_edi_purchase
 msgid "RFQ_${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "RFQ_${(object.name or '').replace('/','_')}"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:956
@@ -2062,6 +2168,9 @@ msgid ""
 "amount.\n"
 "                This installs the module purchase_double_validation."
 msgstr ""
+"Fournit un mécanisme de double validation des bons de commande qui dépassent "
+"un montant minimum.\n"
+"                Ceci installe le module 'purchase_double_validation'."
 
 #. module: purchase
 #: code:addons/purchase/edi/purchase_order.py:132
@@ -2121,7 +2230,7 @@ msgstr "Liste des produits commandés"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Incoming Shipments & Invoices"
-msgstr "Factures & Bons de Réception"
+msgstr "Factures & bons de réception"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -2335,7 +2444,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Résumé"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_pricelist_version_action
