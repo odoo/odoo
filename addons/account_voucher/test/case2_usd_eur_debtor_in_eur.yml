@@ -201,7 +201,7 @@
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    assert (move_line.amount_residual_currency == 55.56 and move_line.amount_residual == 20) , "Residual amount is not correct for first Invoice"
+    assert (move_line.amount_residual_currency == 55.56 and move_line.amount_residual == 20) , "Residual amount is not correct for first Invoice. Got %s USD (%s EUR)" %(move_line.amount_residual_currency, move_line.amount_residual)
 -
   I check the residual amuont of Invoice2, should be 22.22 in residual currency and 10 in amount_residual
 -

@@ -105,10 +105,17 @@ class crm_lead_forward_to_partner(osv.TransientModel):
         """ Forward the lead to a partner """
         if context is None:
             context = {}
+        # TDE FIX in 7.0: force mass_mailing mode; this way, the message will be
+        # send only to partners; default subtype of mass_mailing is indeed False
+        # Chatter will show 'logged a note', but partner_ids (aka, the assigned partner)
+        # will effectively receive the message if present in the composition window
+        self.write(cr, uid, ids, {'composition_mode': 'mass_mail'}, context=context)
         res = {'type': 'ir.actions.act_window_close'}
         wizard = self.browse(cr, uid, ids[0], context=context)
         if wizard.model not in ('crm.lead'):
             return res
+        if context.get('active_ids') is None:
+            context['active_ids'] = [wizard.res_id]
 
         lead = self.pool[wizard.model]
         lead_ids = wizard.res_id and [wizard.res_id] or []
@@ -116,6 +123,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
         if wizard.composition_mode == 'mass_mail':
             lead_ids = context and context.get('active_ids', []) or []
             value = self.default_get(cr, uid, ['body', 'email_to', 'email_cc', 'subject', 'history_mode'], context=context)
+            value.pop('composition_mode')
             self.write(cr, uid, ids, value, context=context)
 
         return self.send_mail(cr, uid, ids, context=context)
