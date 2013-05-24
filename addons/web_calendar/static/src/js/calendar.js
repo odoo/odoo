@@ -15,6 +15,12 @@
                 old_scheduler_dblclick.apply(this, arguments);
             }
         };
+
+        scheduler._click.dhx_cal_today_button = function() {
+            if (scheduler.callEvent("onBeforeTodayDisplayed", [])) {
+                scheduler.setCurrentView( scheduler.date.date_part(new Date()) );
+            }
+        };
     }
 }());
 
