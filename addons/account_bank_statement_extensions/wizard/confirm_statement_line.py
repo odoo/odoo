@@ -32,6 +32,5 @@ class confirm_statement_line(osv.osv_memory):
         line_obj.write(cr, uid, line_ids, {'state': 'confirm'}, context=context)
         return {}
 
-confirm_statement_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

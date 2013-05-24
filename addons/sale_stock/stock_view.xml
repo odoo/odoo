@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="stock_picking_inherit_sale" model="ir.ui.view">
-            <field name="name">stock.picking.form</field>
-            <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="stock.view_picking_form"/>
-            <field name="arch" type="xml">
-                <field name="move_type" position="before">
-                    <field name="sale_id"/>
-                </field>
-            </field>
-        </record>
 
         <record id="stock_move_sale" model="ir.ui.view">
             <field name="name">stock.move.form</field>
@@ -51,7 +41,7 @@
 
         <record id="stock_picking_out_inherit_sale" model="ir.ui.view">
             <field name="name">Outgoing picking Inherited</field>
-            <field name="model">stock.picking</field>
+            <field name="model">stock.picking.out</field>
             <field name="inherit_id" ref="stock.view_picking_out_form"/>
             <field name="arch" type="xml">
                 <field name="move_type" position="after">

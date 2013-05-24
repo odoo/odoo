@@ -22,7 +22,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #
 ##############################################################################
 
@@ -52,6 +52,5 @@ class account_bilan_report(osv.osv_memory):
         data['form']['fiscalyear_id'] = self.browse(cr, uid, ids)[0].fiscalyear_id.id
         return {'type': 'ir.actions.report.xml', 'report_name': 'l10n.fr.bilan', 'datas': data}
 
-account_bilan_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

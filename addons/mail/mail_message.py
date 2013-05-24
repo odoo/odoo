@@ -76,9 +76,9 @@ class mail_message(osv.Model):
         # TDE note: regroup by model/ids, to have less queries to perform
         result = dict.fromkeys(ids, False)
         for message in self.read(cr, uid, ids, ['model', 'res_id'], context=context):
-            if not message.get('model') or not message.get('res_id') or not self.pool.get(message['model']):
+            if not message.get('model') or not message.get('res_id') or message['model'] not in self.pool:
                 continue
-            result[message['id']] = self.pool.get(message['model']).name_get(cr, SUPERUSER_ID, [message['res_id']], context=context)[0][1]
+            result[message['id']] = self.pool[message['model']].name_get(cr, SUPERUSER_ID, [message['res_id']], context=context)[0][1]
         return result
 
     def _get_to_read(self, cr, uid, ids, name, arg, context=None):
@@ -236,6 +236,8 @@ class mail_message(osv.Model):
             :param bool read: set notification as (un)read
             :param bool create_missing: create notifications for missing entries
                 (i.e. when acting on displayed messages not notified)
+
+            :return number of message mark as read
         """
         notification_obj = self.pool.get('mail.notification')
         user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
@@ -246,14 +248,16 @@ class mail_message(osv.Model):
 
         # all message have notifications: already set them as (un)read
         if len(notif_ids) == len(msg_ids) or not create_missing:
-            return notification_obj.write(cr, uid, notif_ids, {'read': read}, context=context)
+            notification_obj.write(cr, uid, notif_ids, {'read': read}, context=context)
+            return len(notif_ids)
 
         # some messages do not have notifications: find which one, create notification, update read status
         notified_msg_ids = [notification.message_id.id for notification in notification_obj.browse(cr, uid, notif_ids, context=context)]
         to_create_msg_ids = list(set(msg_ids) - set(notified_msg_ids))
         for msg_id in to_create_msg_ids:
             notification_obj.create(cr, uid, {'partner_id': user_pid, 'read': read, 'message_id': msg_id}, context=context)
-        return notification_obj.write(cr, uid, notif_ids, {'read': read}, context=context)
+        notification_obj.write(cr, uid, notif_ids, {'read': read}, context=context)
+        return len(notif_ids)
 
     def set_message_starred(self, cr, uid, msg_ids, starred, create_missing=True, context=None):
         """ Set messages as (un)starred. Technically, the notifications related
@@ -268,19 +272,25 @@ class mail_message(osv.Model):
         domain = [('partner_id', '=', user_pid), ('message_id', 'in', msg_ids)]
         if not create_missing:
             domain += [('starred', '=', not starred)]
+        values = {
+            'starred': starred
+        }
+        if starred:
+            values['read'] = False
+ 
         notif_ids = notification_obj.search(cr, uid, domain, context=context)
 
         # all message have notifications: already set them as (un)starred
         if len(notif_ids) == len(msg_ids) or not create_missing:
-            notification_obj.write(cr, uid, notif_ids, {'starred': starred}, context=context)
+            notification_obj.write(cr, uid, notif_ids, values, context=context)
             return starred
 
         # some messages do not have notifications: find which one, create notification, update starred status
         notified_msg_ids = [notification.message_id.id for notification in notification_obj.browse(cr, uid, notif_ids, context=context)]
         to_create_msg_ids = list(set(msg_ids) - set(notified_msg_ids))
         for msg_id in to_create_msg_ids:
-            notification_obj.create(cr, uid, {'partner_id': user_pid, 'starred': starred, 'message_id': msg_id}, context=context)
-        notification_obj.write(cr, uid, notif_ids, {'starred': starred}, context=context)
+            notification_obj.create(cr, uid, dict(values, partner_id=user_pid, message_id=msg_id), context=context)
+        notification_obj.write(cr, uid, notif_ids, values, context=context)
         return starred
 
     #------------------------------------------------------
@@ -363,6 +373,7 @@ class mail_message(osv.Model):
 
         return {'id': message.id,
                 'type': message.type,
+                'subtype': message.subtype_id.name if message.subtype_id else False,
                 'body': body_html,
                 'model': message.model,
                 'res_id': message.res_id,
@@ -563,7 +574,7 @@ class mail_message(osv.Model):
 
     def _find_allowed_model_wise(self, cr, uid, doc_model, doc_dict, context=None):
         doc_ids = doc_dict.keys()
-        allowed_doc_ids = self.pool.get(doc_model).search(cr, uid, [('id', 'in', doc_ids)], context=context)
+        allowed_doc_ids = self.pool[doc_model].search(cr, uid, [('id', 'in', doc_ids)], context=context)
         return set([message_id for allowed_doc_id in allowed_doc_ids for message_id in doc_dict[allowed_doc_id]])
 
     def _find_allowed_doc_ids(self, cr, uid, model_ids, context=None):
@@ -711,7 +722,7 @@ class mail_message(osv.Model):
         model_record_ids = _generate_model_record_ids(message_values, other_ids)
         document_related_ids = []
         for model, doc_dict in model_record_ids.items():
-            model_obj = self.pool.get(model)
+            model_obj = self.pool[model]
             mids = model_obj.exists(cr, uid, doc_dict.keys())
             if operation in ['create', 'write', 'unlink']:
                 model_obj.check_access_rights(cr, uid, 'write')
@@ -736,7 +747,7 @@ class mail_message(osv.Model):
         default_starred = context.pop('default_starred', False)
         # generate message_id, to redirect answers to the right discussion thread
         if not values.get('message_id') and values.get('reply_to'):
-            values['message_id'] = tools.generate_tracking_message_id('reply_to-%(model)s' % values)
+            values['message_id'] = tools.generate_tracking_message_id('reply_to')
         elif not values.get('message_id') and values.get('res_id') and values.get('model'):
             values['message_id'] = tools.generate_tracking_message_id('%(res_id)s-%(model)s' % values)
         elif not values.get('message_id'):
@@ -767,7 +778,7 @@ class mail_message(osv.Model):
         attachments_to_delete = []
         for message in self.browse(cr, uid, ids, context=context):
             for attach in message.attachment_ids:
-                if attach.res_model == self._name and attach.res_id == message.id:
+                if attach.res_model == self._name and (attach.res_id == message.id or attach.res_id == 0):
                     attachments_to_delete.append(attach.id)
         if attachments_to_delete:
             self.pool.get('ir.attachment').unlink(cr, uid, attachments_to_delete, context=context)

@@ -1112,7 +1112,7 @@
                     <field name="ref"/>
                     <field name="statement_id" invisible="1"/>
                     <field name="partner_id" on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"/>
-                    <field name="account_id" options='{"no_open":True}' domain="[('journal_id','=',journal_id), ('company_id', '=', company_id)]" on_change="onchange_account_id(account_id)"/>
+                    <field name="account_id" options='{"no_open":True}' domain="[('journal_id','=',journal_id), ('company_id', '=', company_id)]" on_change="onchange_account_id(account_id, partner_id, context)"/>
                     <field name="account_tax_id" options='{"no_open":True}' invisible="context.get('journal_type', False) not in ['sale','sale_refund','purchase','purchase_refund','general']"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('type','not in',['view','template'])]" invisible="not context.get('analytic_journal_id',False)"/>
                     <field name="move_id" required="0"/>
@@ -1194,7 +1194,12 @@
             sequence="1"
             groups="group_account_user"
         />
-
+        <record id="action_account_moves_all_tree" model="ir.actions.act_window">
+            <field name="name">Journal Items</field>
+            <field name="res_model">account.move.line</field>
+            <field name="context">{'search_default_partner_id': [active_id], 'default_partner_id': active_id}</field>
+            <field name="view_id" ref="view_move_line_tree"/>
+        </record>
         <record id="view_move_line_tree_reconcile" model="ir.ui.view">
             <field name="model">account.move.line</field>
             <field eval="24" name="priority"/>
@@ -1288,7 +1293,7 @@
                                     <group col="6" colspan="4">
                                         <field name="name"/>
                                         <field name="ref"/>
-                                        <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
+                                        <field name="partner_id" on_change="onchange_partner_id(False, partner_id, account_id, debit, credit, date, journal_id, context)"/>
 
                                         <field name="journal_id"/>
                                         <field name="period_id"/>
@@ -1352,7 +1357,7 @@
                                 <tree colors="blue:state == 'draft';black:state == 'posted'" editable="top" string="Journal Items">
                                     <field name="invoice"/>
                                     <field name="name"/>
-                                    <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,parent.date,parent.journal_id)"/>
+                                    <field name="partner_id" on_change="onchange_partner_id(False, partner_id, account_id, debit, credit, parent.date, parent.journal_id, context)"/>
                                     <field name="account_id" domain="[('journal_id','=',parent.journal_id),('company_id', '=', parent.company_id)]"/>
                                     <field name="date_maturity"/>
                                     <field name="debit" sum="Total Debit"/>
@@ -1771,23 +1776,6 @@
             </field>
         </record>
 
-        <!-- res.partner links -->
-        <act_window
-            context="{'search_default_unreconciled':True, 'search_default_partner_id':[active_id], 'default_partner_id': active_id}"
-            domain="[('account_id.reconcile', '=', True),('account_id.type', 'in', ['receivable', 'payable'])]"
-            id="act_account_partner_account_move_all"
-            name="Receivables &amp; Payables"
-            res_model="account.move.line"
-            src_model="res.partner"/>
-
-        <act_window 
-            context="{'search_default_partner_id':[active_id], 'default_partner_id': active_id}"
-            id="act_account_partner_account_move"
-            name="Journal Items"
-            res_model="account.move.line"
-            src_model="res.partner"
-            groups="account.group_account_user"/>
-
         <!-- Account Templates -->
         <menuitem
             id="account_template_folder"
@@ -2123,10 +2111,8 @@
                         <group attrs="{'invisible': [('only_one_chart_template','=',True)]}">
                             <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)" domain="[('visible','=', True)]"/>
                         </group>
-                        <group groups="base.group_multi_company">
-                            <field name="company_id" widget="selection" on_change="onchange_company_id(company_id)"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
-                        </group>
                         <group>
+                            <field name="company_id" widget="selection" on_change="onchange_company_id(company_id)"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
                             <field name="currency_id" class="oe_inline"/>
                             <field name="sale_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
                             <label for="sale_tax_rate" string="Sale Tax" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>

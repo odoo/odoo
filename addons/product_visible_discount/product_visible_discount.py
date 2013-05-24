@@ -33,7 +33,6 @@ class product_pricelist(osv.osv):
          'visible_discount': True,
     }
 
-product_pricelist()
 
 class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
@@ -95,7 +94,6 @@ class sale_order_line(osv.osv):
                 result['discount'] = 0.0
         return res
 
-sale_order_line()
 
 class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
@@ -161,6 +159,5 @@ class account_invoice_line(osv.osv):
                     result['discount']=0.0
         return res
 
-account_invoice_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

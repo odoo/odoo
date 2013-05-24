@@ -591,7 +591,7 @@ property or property parameter."),
 
         for vals in self.browse(cr, uid, ids, context=context):
             if vals.ref and vals.ref.user_id:
-                mod_obj = self.pool.get(vals.ref._name)
+                mod_obj = self.pool[vals.ref._name]
                 res=mod_obj.read(cr,uid,[vals.ref.id],['duration','class'],context)
                 defaults = {'user_id': vals.user_id.id, 'organizer_id': vals.ref.user_id.id,'duration':res[0]['duration'],'class':res[0]['class']}
                 mod_obj.copy(cr, uid, vals.ref.id, default=defaults, context=context)
@@ -632,7 +632,6 @@ property or property parameter."),
         res = super(calendar_attendee, self).create(cr, uid, vals, context=context)
         return res
 
-calendar_attendee()
 
 class res_alarm(osv.osv):
     """Resource Alarm """
@@ -684,7 +683,7 @@ true, it will allow you to hide the event alarm information without removing it.
         ir_obj = self.pool.get('ir.model')
         model_id = ir_obj.search(cr, uid, [('model', '=', model)])[0]
 
-        model_obj = self.pool.get(model)
+        model_obj = self.pool[model]
         for data in model_obj.browse(cr, uid, ids, context=context):
 
             basic_alarm = data.alarm_id
@@ -754,7 +753,7 @@ true, it will allow you to hide the event alarm information without removing it.
         alarm_obj = self.pool.get('calendar.alarm')
         ir_obj = self.pool.get('ir.model')
         model_id = ir_obj.search(cr, uid, [('model', '=', model)])[0]
-        model_obj = self.pool.get(model)
+        model_obj = self.pool[model]
         for data in model_obj.browse(cr, uid, ids, context=context):
             alarm_ids = alarm_obj.search(cr, uid, [('model_id', '=', model_id), ('res_id', '=', data.id)])
             if alarm_ids:
@@ -763,7 +762,6 @@ true, it will allow you to hide the event alarm information without removing it.
                             where id=%%s' % model_obj._table,(data.id,))
         return True
 
-res_alarm()
 
 class calendar_alarm(osv.osv):
     _name = 'calendar.alarm'
@@ -853,13 +851,15 @@ class calendar_alarm(osv.osv):
         for alarm in self.browse(cr, uid, alarm_ids, context=context):
             next_trigger_date = None
             update_vals = {}
-            model_obj = self.pool.get(alarm.model_id.model)
+            model_obj = self.pool[alarm.model_id.model]
             res_obj = model_obj.browse(cr, uid, alarm.res_id, context=context)
             re_dates = []
 
             if hasattr(res_obj, 'rrule') and res_obj.rrule:
                 event_date = datetime.strptime(res_obj.date, '%Y-%m-%d %H:%M:%S')
-                recurrent_dates = get_recurrent_dates(res_obj.rrule, res_obj.exdate, event_date, res_obj.exrule)
+                #exdate is a string and we need a list
+                exdate = res_obj.exdate and res_obj.exdate.split(',') or []
+                recurrent_dates = get_recurrent_dates(res_obj.rrule, exdate, event_date, res_obj.exrule)
 
                 trigger_interval = alarm.trigger_interval
                 if trigger_interval == 'days':
@@ -916,7 +916,6 @@ From:
             self.write(cr, uid, [alarm.id], update_vals)
         return True
 
-calendar_alarm()
 
 
 class calendar_event(osv.osv):
@@ -1608,7 +1607,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         """
         return self.write(cr, uid, ids, {'state': 'confirmed'}, context)
 
-calendar_event()
 
 class calendar_todo(osv.osv):
     """ Calendar Task """
@@ -1657,7 +1655,6 @@ class calendar_todo(osv.osv):
     __attribute__ = {}
 
 
-calendar_todo()
 
 
 class ir_values(osv.osv):
@@ -1702,7 +1699,6 @@ class ir_values(osv.osv):
         return super(ir_values, self).get(cr, uid, key, key2, new_model, \
                          meta, context, res_id_req, without_user, key2_req)
 
-ir_values()
 
 class ir_model(osv.osv):
 
@@ -1728,7 +1724,6 @@ class ir_model(osv.osv):
                 val['id'] = base_calendar_id2real_id(val['id'])
         return isinstance(ids, (str, int, long)) and data[0] or data
 
-ir_model()
 
 original_exp_report = openerp.service.report.exp_report
 

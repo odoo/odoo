@@ -699,7 +699,6 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
                 'location_dest_id': scrap_location_ids and scrap_location_ids[0] or False,
                 }}
 
-mrp_repair_line()
 
 class mrp_repair_fee(osv.osv, ProductChangeMixin):
     _name = 'mrp.repair.fee'
@@ -741,5 +740,4 @@ class mrp_repair_fee(osv.osv, ProductChangeMixin):
         'to_invoice': lambda *a: True,
     }
 
-mrp_repair_fee()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

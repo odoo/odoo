@@ -259,17 +259,14 @@ class account_analytic_account(osv.osv):
             return res
 
         if child_ids:
-            cr.execute("SELECT account_analytic_line.account_id, COALESCE(SUM(amount), 0.0) \
-                    FROM account_analytic_line \
-                    JOIN account_analytic_journal \
-                        ON account_analytic_line.journal_id = account_analytic_journal.id  \
-                    WHERE account_analytic_line.account_id IN %s \
-                        AND account_analytic_journal.type = 'sale' \
-                    GROUP BY account_analytic_line.account_id", (child_ids,))
-            for account_id, sum in cr.fetchall():
-                res[account_id] = round(sum,2)
+            #Search all invoice lines not in cancelled state that refer to this analytic account
+            inv_line_obj = self.pool.get("account.invoice.line")
+            inv_lines = inv_line_obj.search(cr, uid, ['&', ('account_analytic_id', 'in', child_ids), ('invoice_id.state', '!=', 'cancel')], context=context)
+            for line in inv_line_obj.browse(cr, uid, inv_lines, context=context):
+                res[line.account_analytic_id.id] += line.price_subtotal
         for acc in self.browse(cr, uid, res.keys(), context=context):
             res[acc.id] = res[acc.id] - (acc.timesheet_ca_invoiced or 0.0)
+
         res_final = res
         return res_final
 
@@ -352,11 +349,10 @@ class account_analytic_account(osv.osv):
             res[account.id] = 0.0
             sale_ids = sale_obj.search(cr, uid, [('project_id','=', account.id), ('state', '=', 'manual')], context=context)
             for sale in sale_obj.browse(cr, uid, sale_ids, context=context):
-                if not sale.invoiced:
-                    res[account.id] += sale.amount_untaxed
-                    for invoice in sale.invoice_ids:
-                        if invoice.state not in ('draft', 'cancel'):
-                            res[account.id] -= invoice.amount_untaxed
+                res[account.id] += sale.amount_untaxed
+                for invoice in sale.invoice_ids:
+                    if invoice.state != 'cancel':
+                        res[account.id] -= invoice.amount_untaxed
         return res
 
     def _timesheet_ca_invoiced_calc(self, cr, uid, ids, name, arg, context=None):
@@ -633,6 +629,21 @@ class account_analytic_account(osv.osv):
         except ValueError:
             pass
         return result
+
+
+    def hr_to_invoice_timesheets(self, cr, uid, ids, context=None):
+        domain = [('invoice_id','=',False),('to_invoice','!=',False), ('journal_id.type', '=', 'general'), ('account_id', 'in', ids)]
+        names = [record.name for record in self.browse(cr, uid, ids, context=context)]
+        name = _('Timesheets to Invoice of %s') % ','.join(names)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': name,
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'domain' : domain,
+            'res_model': 'account.analytic.line',
+            'nodestroy': True,
+        }
 
     def _prepare_invoice(self, cr, uid, contract, context=None):
         context = context or {}
