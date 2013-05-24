@@ -5,7 +5,6 @@ openerp.hr_recruitment = function (openerp) {
         var self = this;
         
         var parent = self.getParent();
-        console.log("thisss >>>>>>>>>>>>",parent.record[this.options.label_field])
         var unique_id = _.uniqueId("JustGage");
         var label = this.options.label_field ? parent.record[this.options.label_field].string : "";
         var value = parent.values.no_of_hired_employee.value;
