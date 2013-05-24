@@ -1399,18 +1399,17 @@ class BaseModel(object):
             return
 
         # 2. look up ir_values
-        ir_values_obj = self.pool.get('ir.values')
-        ir_values_dict = dict(
-            (f, v) for i, f, v in ir_values_obj.get_defaults(self._name))
+        #    Note: performance is good, because get_defaults_dict is cached!
+        ir_values_dict = self.pool['ir.values'].get_defaults_dict(self._name)
         if name in ir_values_dict:
             self._set_field(name, field.convert_from_read(ir_values_dict[name]))
             return
 
         # 3. look up property fields
+        #    TODO: get rid of this one
         column = self._columns.get(name)
         if isinstance(column, fields.property):
-            property_obj = self.pool.get('ir.property')
-            self[name] = property_obj.get(cr, uid, name, self._name, context=context)
+            self[name] = self.pool['ir.property'].get(name, self._name)
             return
 
         # 4. look up _defaults
