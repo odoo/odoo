@@ -198,8 +198,14 @@ class res_users(osv.osv):
     def _check_company(self, cr, uid, ids, context=None):
         return all(((this.company_id in this.company_ids) or not this.company_ids) for this in self.browse(cr, uid, ids, context))
 
+    def _check_email(self, cr, uid, ids, context=None):
+        return all(not this.email or tools.email_split(this.email)
+                    for this in self.browse(cr, uid, ids, context)
+            )
+
     _constraints = [
         (_check_company, 'The chosen company is not in the allowed companies for this user', ['company_id', 'company_ids']),
+        (_check_email, 'The email address does not seem to be valid.', ['email'])
     ]
 
     _sql_constraints = [
