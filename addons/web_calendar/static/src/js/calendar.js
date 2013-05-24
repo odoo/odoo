@@ -4,9 +4,9 @@
 
 (function() {
     // Monkey patch dhtml scheduler in order to fix a bug.
-    // It manually implements some kind of dbl click event
-    // bubbling but fails to do it properly.
     if (this.scheduler) {
+        // It manually implements some kind of dbl click event
+        // bubbling but fails to do it properly.
         var old_scheduler_dblclick = scheduler._on_dbl_click;
         scheduler._on_dbl_click = function(e, src) {
             if (src && !src.className) {
@@ -16,6 +16,8 @@
             }
         };
 
+        // It uses the date+time format, leading to month range being between
+        // 1/5 08:53 - 1/6 08:52 instead of 1/5 00:00 - 31/5 23:59
         scheduler._click.dhx_cal_today_button = function() {
             if (scheduler.callEvent("onBeforeTodayDisplayed", [])) {
                 scheduler.setCurrentView( scheduler.date.date_part(new Date()) );
