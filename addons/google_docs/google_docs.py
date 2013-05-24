@@ -233,5 +233,5 @@ class base_config_settings(osv.osv):
             config_parameters.set_param(cr, uid, "authorization_code", record.authorization_code or '', context=context)
     
     _columns = {
-        'authorization_code': fields.char('Google Authorization Code', size=124),
+        'authorization_code': fields.char('Paste Generated "Authorization Code" from google to here', size=124),
     }
