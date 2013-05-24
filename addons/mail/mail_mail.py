@@ -292,7 +292,7 @@ class mail_mail(osv.Model):
             'email_to': email_to,
         }
 
-    def send(self, cr, uid, ids, auto_commit=False, context=None):
+    def send(self, cr, uid, ids, auto_commit=False, raise_exception=False, context=None):
         """ Sends the selected emails immediately, ignoring their current
             state (mails that have already been sent should not be passed
             unless they should actually be re-sent).
@@ -303,6 +303,9 @@ class mail_mail(osv.Model):
             :param bool auto_commit: whether to force a commit of the mail status
                 after sending each mail (meant only for scheduler processing);
                 should never be True during normal transactions (default: False)
+            :param bool raise_exception: whether to raise an exception if the
+                email sending process has failed; auto_commit is taken into
+                account.
             :return: True
         """
         ir_mail_server = self.pool.get('ir.mail_server')
@@ -349,8 +352,12 @@ class mail_mail(osv.Model):
                 if mail_sent:
                     self._postprocess_sent_message(cr, uid, mail, context=context)
             except Exception:
-                _logger.exception('failed sending mail.mail %s', mail.id)
-                mail.write({'state': 'exception'})
+                if not raise_exception or auto_commit:
+                    _logger.exception('failed sending mail.mail %s', mail.id)
+                    mail.write({'state': 'exception'})
+                    cr.commit()
+                if raise_exception:
+                    raise
 
             if auto_commit == True:
                 cr.commit()
