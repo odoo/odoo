@@ -378,6 +378,8 @@ class Many2one(Field):
         return bool(value) and value.name_get()
 
     def convert_to_write(self, value):
+        if value.is_draft():
+            return value.get_draft_values()
         return value._record_id
 
 
@@ -423,7 +425,13 @@ class One2many(Field):
         return value.unbrowse()
 
     def convert_to_write(self, value):
-        return [(6, 0, value.unbrowse())]
+        result = [(5,)]
+        for record in value:
+            if record.is_draft():
+                result.append((0, 0, record.get_draft_values()))
+            else:
+                result.append((4, record._record_id))
+        return result
 
 
 class Many2many(Field):
@@ -487,7 +495,13 @@ class Many2many(Field):
         return value.unbrowse()
 
     def convert_to_write(self, value):
-        return [(6, 0, value.unbrowse())]
+        result = [(5,)]
+        for record in value:
+            if record.is_draft():
+                result.append((0, 0, record.get_draft_values()))
+            else:
+                result.append((4, record._record_id))
+        return result
 
 
 class Related(Field):

@@ -322,12 +322,6 @@ def get_pg_type(f, type_override=None):
     return pg_type
 
 
-class DraftId(object):
-    """ A class of special record ids for draft records. """
-    def __str__(self):
-        return "<draft %d>" % id(self)
-
-
 class MetaModel(api.Meta):
     """ Metaclass for the models.
 
@@ -5246,7 +5240,7 @@ class BaseModel(object):
             id) and attached to the current scope.
         """
         scope = scope_proxy.current
-        if isinstance(arg, Record):
+        if isinstance(arg, BaseModel):
             if arg._scope is scope:
                 # Important: self.record(arg) must be idempotent when applied in
                 # the same scope. This property is used to preserve the record's
@@ -5338,16 +5332,36 @@ class BaseModel(object):
     def unbrowse(self):
         """ Return the `id`/`ids` corresponding to a record/recordset/null instance. """
         if self.is_record():
-            return False if self.is_draft() else self._record_id
+            return self._record_id
         else:
             return map(int, self._records)
 
     def draft(self):
         """ Return a draft record attached to the current scope. """
-        return self.record(DraftId())
+        #
+        # Draft records have two (disjoint) cache dictionaries:
+        #  * _record_cache, the normal cache, comes from the database only;
+        #  * _record_draft contains the draft values set on the record.
+        #
+        # Draft records are not stored into the scope cache.
+        #
+        scope = scope_proxy.current
+        return self._make_instance(_scope=scope, _record_id=False,
+                                   _record_cache={}, _record_draft={})
 
     def is_draft(self):
-        return isinstance(getattr(self, '_record_id', None), DraftId)
+        """ Test whether `self` is a draft record. """
+        return hasattr(self, '_record_draft')
+
+    def get_draft_values(self):
+        """ Return the draft values of `self` as a dictionary mapping field
+            names to values in the format accepted by method :meth:`write`.
+        """
+        result = {}
+        for name, value in self._record_draft.iteritems():
+            field = self._fields[name]
+            result[name] = field.convert_to_write(value)
+        return result
 
     def __nonzero__(self):
         """ Test whether `self` is nonempty and not null. """
@@ -5422,18 +5436,20 @@ class BaseModel(object):
             # handle high-level fields
             field = self._fields[name]
 
-            if self.is_null():
-                return field.null()
-
             if self.is_draft():
-                try:
+                if name in self._record_draft:
+                    return self._record_draft[name]
+
+                if field.compute:
                     # evaluate the compute method to get a default value
                     getattr(self, field.compute)()
-                    return self._record_cache[name]
-                except Exception:
-                    # no computed value, return the null value
-                    self._record_cache[name] = field.null()
-                    return self._record_cache[name]
+                    return self._record_draft[name]
+
+                # no computed value, return the null value
+                return field.null()
+
+            if self.is_null():
+                return field.null()
 
             if not field.store:
                 # a "pure" function field, simply evaluate it on self
@@ -5463,8 +5479,8 @@ class BaseModel(object):
 
             # fetch the record of this model without name in their cache
             fetch_ids = set(rec._record_id
-                for rec in model_cache.itervalues()
-                if not rec.is_draft() and name not in rec._record_cache)
+                            for rec in model_cache.itervalues()
+                            if name not in rec._record_cache)
 
             # prefetch all classic and many2one fields if column is one of them
             # Note: do not prefetch fields when self.pool._init is True, because
@@ -5516,10 +5532,16 @@ class BaseModel(object):
             The value is assigned in the records cache, and if the field is
             stored, the value is also written to the database.
         """
+        if self.is_draft():
+            # store the value in the draft cache, and keep caches disjoint
+            self._record_draft[name] = value
+            self._record_cache.pop(name, False)
+            return
+
         if self.is_null():
             return
 
-        if not self.is_draft() and name in self._columns:
+        if name in self._columns:
             # store value in database
             with self._scope:
                 field = self._fields[name]

@@ -61,11 +61,10 @@ class res_partner(models.Model):
     def _references_models(self):
         return [('res.partner', 'Partner'), ('res.users', 'User')]
 
-    @api.recordset
+    @api.record
     @api.depends('name')
     def compute_name_size(self):
-        for rec in self:
-            rec.name_size = len(rec.name)
+        self.name_size = len(self.name)
 
     @api.record
     @api.depends('child_ids')
