@@ -384,7 +384,6 @@
             <field name="arch" type="xml">
                 <search string="Jobs">
                     <field name="name" string="Job"/>
-                    <filter icon="terp-mail-message-new" string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <filter icon="terp-camera_test" domain="[('state','=','open')]" string="In Position" help="In Position"/>
                     <filter icon="terp-personal+"  domain="[('state','=','recruit')]" string="In Recruitment" help="In Recruitment"/>
                     <field name="department_id"/>

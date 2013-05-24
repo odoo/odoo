@@ -345,7 +345,7 @@
                     <field name="department_id"/>
                     <field name="no_of_recruitment"/>
                     <field name="color"/>
-                    <field name="priority_count"/>
+                    <field name="application_count"/>
                     <field name="no_of_hired_employee"/>
                     <field name="manager_id"/>
                     <field name="survey_id"/>
@@ -383,8 +383,8 @@
                                     <t t-if="record.state.raw_value == 'recruit'">
                                         <div class="oe_application">
                                             <a name="%(hr_job_applications)d" type="action" >
-                                                <div t-if="record.priority_count.value.total_application gt 1" ><t t-esc="Math.round(record.priority_count.value.total_application)"/> Applications</div>
-                                                <div t-if="record.priority_count.value.total_application lt 2" ><t t-esc="Math.round(record.priority_count.value.total_application)"/> Application</div>
+                                                <div t-if="record.application_count.value gt 1" ><t t-esc="record.application_count.value"/> Applications</div>
+                                                <div t-if="record.application_count.value lt 2" ><t t-esc="record.application_count.value"/> Application</div>
                                             </a>
                                         </div>
                                         <div style="margin-top: 6px;color: #4c4c4c;"><t t-esc="Math.round(record.no_of_recruitment.raw_value)"/> Expected New Employees</div>
