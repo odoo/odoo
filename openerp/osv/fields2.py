@@ -147,6 +147,16 @@ class Field(object):
         """
         return value
 
+    def compute_default(self, record):
+        """ assign the default value of field `self` to `record` """
+        if self.compute:
+            getattr(record, self.compute)()
+        else:
+            # Do not store the null value in record._record_draft, since it is
+            # not a "forced" null value. Instead, put it in the regular cache.
+            # The purpose is to not make it visible in record._record_draft.
+            record._record_cache[self.name] = self.null()
+
 
 class Boolean(Field):
     """ Boolean field. """
@@ -348,6 +358,12 @@ class Many2one(Field):
                 return field.name
         return None
 
+    @lazy_property
+    def inherits(self):
+        """ Whether `self` implements inheritance between model and comodel. """
+        model = scope.model(self.model)
+        return self.name in model._inherits.itervalues()
+
     @classmethod
     def _from_column(cls, column):
         kwargs = dict((attr, getattr(column, attr)) for attr in cls._attrs)
@@ -378,9 +394,16 @@ class Many2one(Field):
         return bool(value) and value.name_get()
 
     def convert_to_write(self, value):
-        if value.is_draft():
-            return value.get_draft_values()
         return value._record_id
+
+    def compute_default(self, record):
+        super(Many2one, self).compute_default(record)
+        if self.inherits:
+            # special case: fields that implement inheritance between models
+            value = record[self.name]
+            if value.is_null() and not value.is_draft():
+                # put a draft record instead of the null record
+                record[self.name] = scope.model(self.comodel).draft()
 
 
 class One2many(Field):

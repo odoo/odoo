@@ -1357,69 +1357,72 @@ class BaseModel(object):
             self._invalids.clear()
 
     def default_get(self, cr, uid, fields_list, context=None):
-        """
-        Returns default values for the fields in fields_list.
+        """ Return default values for the fields in `fields_list`. Default
+            values are determined by the context, user defaults, and the model
+            itself.
 
-        :param fields_list: list of fields to get the default values for (example ['field1', 'field2',])
-        :type fields_list: list
-        :param context: optional context dictionary - it may contains keys for specifying certain options
-                        like ``context_lang`` (language) or ``context_tz`` (timezone) to alter the results of the call.
-                        It may contain keys in the form ``default_XXX`` (where XXX is a field name), to set
-                        or override a default value for a field.
-                        A special ``bin_size`` boolean flag may also be passed in the context to request the
-                        value of all fields.binary columns to be returned as the size of the binary instead of its
-                        contents. This can also be selectively overriden by passing a field-specific flag
-                        in the form ``bin_size_XXX: True/False`` where ``XXX`` is the name of the field.
-                        Note: The ``bin_size_XXX`` form is new in OpenERP v6.0.
-        :return: dictionary of the default values (set on the object model class, through user preferences, or in the context)
+            :param fields_list: a list of field names
+            :return: a dictionary mapping each field name to its corresponding
+                default value; the keys of the dictionary are the fields in
+                `fields_list` that have a default value different from ``False``.
+
+            This method should not be overridden. In order to change the
+            mechanism for determining default values, you should override method
+            :meth:`add_default_value` instead.
         """
         # trigger view init hook
         self.view_init(cr, uid, fields_list, context)
 
-        context = scope_proxy.context
-        defaults = {}
+        # use a draft record to determine default values
+        draft = self.draft()
+        for name in fields_list:
+            draft[name]                 # force evaluation of defaults
 
-        property_obj = self.pool.get('ir.property')
+        # retrieve defaults from draft values
+        draft_values = draft.get_draft_values()
+        return dict((name, draft_values[name])
+                    for name in fields_list if name in draft_values)
+
+    def add_default_value(self, name):
+        """ Set the default value of field `name` to the draft record `self`.
+            The value must be assigned to `self` as ``self.field = value`` or
+            ``self[name] = value``.
+        """
+        assert self.is_draft(), "Expected draft record: %s" % self
+        cr, uid, context = scope_proxy
+        field = self._fields[name]
+
+        # 1. look up context
+        key = 'default_' + name
+        if key in context:
+            self._set_field(name, field.convert_from_read(context[key]))
+            return
+
+        # 2. look up ir_values
         ir_values_obj = self.pool.get('ir.values')
         ir_values_dict = dict(
             (f, v) for i, f, v in ir_values_obj.get_defaults(self._name))
+        if name in ir_values_dict:
+            self._set_field(name, field.convert_from_read(ir_values_dict[name]))
+            return
 
-        for f in fields_list:
-            cinfo = self._all_columns[f]
-            column = cinfo.column
+        # 3. look up property fields
+        column = self._columns.get(name)
+        if isinstance(column, fields.property):
+            property_obj = self.pool.get('ir.property')
+            self[name] = property_obj.get(cr, uid, name, self._name, context=context)
+            return
 
-            # 1. look up context
-            key = 'default_' + f
-            if key in context:
-                defaults[f] = context[key]
-                continue
+        # 4. look up _defaults
+        if name in self._defaults:
+            value = self._defaults[name]
+            if callable(value):
+                value = value(self, cr, uid, context)
+            self._set_field(name, field.convert_from_read(value))
+            return
 
-            # 2. look up ir_values
-            if f in ir_values_dict:
-                defaults[f] = ir_values_dict[f]
-                continue
-
-            # 3. look up property fields
-            if isinstance(column, fields.property):
-                value = property_obj.get(cr, uid, f, self._name, context=context)
-                if isinstance(value, BaseModel):
-                    value = value.unbrowse()
-                defaults[f] = value
-                continue
-
-            # 4. look up _defaults
-            if f in self._defaults:
-                value = self._defaults[f]
-                if callable(value):
-                    value = value(self, cr, uid, context)
-                defaults[f] = value
-                continue
-
-            # 5. look up parent model
-            if cinfo.parent_model:
-                defaults.update(self.pool[cinfo.parent_model].default_get([f]))
-
-        return defaults
+        # 5. delegate to field
+        field.compute_default(self)
 
     def fields_get_keys(self, cr, user, context=None):
         res = self._columns.keys()
@@ -5433,20 +5436,16 @@ class BaseModel(object):
             return self._record_cache[name]
 
         with self._scope:
-            # handle high-level fields
-            field = self._fields[name]
-
             if self.is_draft():
+                if name not in self._record_draft:
+                    self.add_default_value(name)
                 if name in self._record_draft:
                     return self._record_draft[name]
+                else:
+                    return self._record_cache[name]
 
-                if field.compute:
-                    # evaluate the compute method to get a default value
-                    getattr(self, field.compute)()
-                    return self._record_draft[name]
-
-                # no computed value, return the null value
-                return field.null()
+            # handle high-level fields
+            field = self._fields[name]
 
             if self.is_null():
                 return field.null()

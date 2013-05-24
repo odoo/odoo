@@ -256,15 +256,18 @@ class TestNewFields(common.TransactionCase):
         self.assertEqual(draft.child_ids, children)
 
         # check computed values of fields
+        self.assertEqual(draft.active, True)
         self.assertEqual(draft.number_of_employees, 1)
         self.assertEqual(draft.name_size, 3)
         self.assertEqual(draft.children_count, 2)
 
     def test_41_defaults(self):
         """ test default values. """
-        fields = ['name', 'active']
+        fields = ['name', 'active', 'number_of_employees', 'name_size']
         defaults = self.Partner.default_get(fields)
 
-        self.assertEqual(defaults.get('name', False), False)
+        self.assertFalse(defaults.get('name'))
+        self.assertFalse(defaults.get('name_size'))
         self.assertEqual(defaults['active'], True)
+        self.assertEqual(defaults['number_of_employees'], 1)
 

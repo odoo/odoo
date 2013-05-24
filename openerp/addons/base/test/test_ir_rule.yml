@@ -124,7 +124,7 @@
     Modify the global rule on res_company which triggers a recursive check
     of the rules on company.
 -
-    !record {model: ir.rule, id: base.res_company_rule}:
+    !record {model: ir.rule, id: res_company_rule}:
         domain_force: "[('id','child_of',[user.company_id.id])]"
 -
     Read as demo user the partners (exercising the global company rule).

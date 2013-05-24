@@ -64,7 +64,7 @@ class res_partner(models.Model):
     @api.record
     @api.depends('name')
     def compute_name_size(self):
-        self.name_size = len(self.name)
+        self.name_size = len(self.name or '')
 
     @api.record
     @api.depends('child_ids')
