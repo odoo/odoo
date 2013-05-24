@@ -381,28 +381,29 @@
                                         </div>
                                     </div>
                                     <t t-if="record.state.raw_value == 'recruit'">
-                                        <div class="oe_application">
+                                        <div class="oe_applications">
                                             <a name="%(hr_job_applications)d" type="action" >
-                                                <div t-if="record.application_count.value gt 1" ><t t-esc="record.application_count.value"/> Applications</div>
-                                                <div t-if="record.application_count.value lt 2" ><t t-esc="record.application_count.value"/> Application</div>
+                                                <div t-if="record.application_count.value gt 1"><t t-esc="record.application_count.value"/> Applications</div>
+                                                <div t-if="record.application_count.value lt 2"><t t-esc="record.application_count.value"/> Application</div>
                                             </a>
                                         </div>
-                                        <div style="margin-top: 6px;color: #4c4c4c;"><t t-esc="Math.round(record.no_of_recruitment.raw_value)"/> Expected New Employees</div>
+                                        <div class="oe_new_recruitment">
+                                            <div t-if="record.no_of_recruitment.raw_value gt 1"><t t-esc="record.no_of_recruitment.raw_value"/> Expected New Employees</div>
+                                            <div t-if="record.no_of_recruitment.raw_value lt 2"><t t-esc="record.no_of_recruitment.raw_value"/> Expected New Employee</div>
+                                        </div>
                                         <field state="recruit" name="no_of_recruitment" widget="gage" style="width:167px; height: 102px;" options="{'min_field': 'no_of_hired_employee','max_field': 'no_of_recruitment', 'label_field': 'no_of_hired_employee', 'action_change': 'action_hired_employee'}">Forecast</field>
                                     </t>
-                                    <div class="oe_kanban_footer_left oe_job_message">
-                                        <t t-raw="record.message_summary.raw_value"/>
-                                    </div>
                                     <t t-if="record.state.raw_value == 'open'">
                                         <div class="oe_start_recruitment">
                                             <p>To start a recruitment phase for this job position,<b>click here</b></p>
                                             <img src="/hr_recruitment/static/src/img/down1.png"/>
                                         </div>
                                     </t>
-                                    <div class="oe_job_launch">
-                                        <a t-if="record.survey_id.raw_value" data-name="action_print_survey" data-type="object" class=" oe_kanban_action oe_kanban_action_a">Print Interview | </a>
-                                        <a t-if="record.state.raw_value == 'open'" data-name="job_recruitment" data-type="object" class=" oe_kanban_action oe_kanban_action_a ">Launch Recruitment</a>
-                                        <a t-if="record.state.raw_value == 'recruit'" data-name="job_open" data-type="object" class=" oe_kanban_action oe_kanban_action_a ">Recruitment Done</a>
+                                    <div class="oe_launch_recruitment">
+                                        <a t-if="record.survey_id.raw_value" data-name="action_print_survey" data-type="object" class="oe_kanban_action">Print Interview</a>
+                                        <a t-if="record.survey_id.raw_value"> | </a>
+                                        <a t-if="record.state.raw_value == 'open'" data-name="job_recruitment" data-type="object" class="oe_kanban_action">Launch Recruitment</a>
+                                        <a t-if="record.state.raw_value == 'recruit'" data-name="job_open" data-type="object" class="oe_kanban_action">Recruitment Done</a>
                                     </div>
                                 </div>
                             </div>

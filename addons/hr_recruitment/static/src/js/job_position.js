@@ -3,12 +3,11 @@ openerp.hr_recruitment = function (openerp) {
   openerp.hr_recruitment.GaugeWidget = openerp.web_kanban.AbstractField.extend({
     start: function() {
         var self = this;
-        
         var parent = self.getParent();
         var unique_id = _.uniqueId("JustGage");
         var label = this.options.label_field ? parent.record[this.options.label_field].string : "";
         var value = parent.values.no_of_hired_employee.value;
-        //var min_value = parent.no_of_employee.value;
+        var flag_open = false;
         this.$el.empty()
             .attr('style', this.$node.attr('style') + ';float: right;margin-top: -84px;margin-right: -31px;')
             .attr('id', unique_id);
@@ -31,7 +30,6 @@ openerp.hr_recruitment = function (openerp) {
                 "#a9d70b"
             ],
         });
-                var flag_open = false;
         if (self.options.action_change) {
             self.$el.click(function (event) {
                 event.stopPropagation();
@@ -53,9 +51,7 @@ openerp.hr_recruitment = function (openerp) {
                                     parent.view.dataset.call(self.options.action_change, [parent.id, $input.val()]).then(function () {
                                         parent.do_reload();
                                     });
-                                } else {
-                                    $div.remove();
-                                }
+                                } else { $div.remove();}
                             }
                         })
                         .click(function (event) {
