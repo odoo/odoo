@@ -44,6 +44,12 @@ class sale_order(osv.osv):
             context = dict(context or {}, default_section_id= order.section_id.id)
         return super(sale_order, self)._make_invoice(cr, uid, order, lines, context=context)
 
+    def _prepare_invoice(self, cr, uid, order, lines, context=None):
+        invoice_vals = super(sale_order, self)._prepare_invoice(cr, uid, order, lines, context=context)
+        if order.section_id and order.section_id.id:
+            invoice_vals['section_id'] = order.section_id.id
+        return invoice_vals
+
 
 class crm_case_section(osv.osv):
     _inherit = 'crm.case.section'

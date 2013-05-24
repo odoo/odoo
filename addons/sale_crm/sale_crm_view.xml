@@ -16,6 +16,11 @@
             </field>
         </record>
 
+        <!-- add needaction_menu_ref to reload quotation needaction when opportunity needaction is reloaded -->
+        <record model="ir.actions.act_window" id="crm.crm_case_category_act_oppor11">
+            <field name="context">{'stage_type': 'opportunity', 'default_type': 'opportunity', 'default_user_id': uid, 'needaction_menu_ref': 'sale.menu_sale_quotations'}</field>
+        </record>
+
         <record model="ir.ui.view" id="sale_view_inherit123">
             <field name="name">sale.order.inherit</field>
             <field name="model">sale.order</field>
