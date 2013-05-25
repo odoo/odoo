@@ -236,6 +236,10 @@ POSTGRES_CONFDELTYPES = {
 def intersect(la, lb):
     return filter(lambda x: x in lb, la)
 
+def same_name(f, g):
+    """ Test whether functions `f` and `g` are identical or have the same name """
+    return f == g or getattr(f, '__name__', 0) == getattr(g, '__name__', 1)
+
 def fix_import_export_id_paths(fieldname):
     """
     Fixes the id fields in import and exports, and splits field paths
@@ -606,9 +610,6 @@ class BaseModel(object):
         this method. This is probably unnecessary.
 
         """
-        attributes = ['_columns', '_defaults', '_inherits', '_constraints',
-            '_sql_constraints']
-
         parent_names = getattr(cls, '_inherit', None)
         if parent_names:
             parent_names = parent_names if isinstance(parent_names, list) else [parent_names]
@@ -627,46 +628,46 @@ class BaseModel(object):
                 if not getattr(cls, '_original_module', None) and name == parent_model._name:
                     cls._original_module = parent_model._original_module
                 parent_class = parent_model.__class__
-                nattr = {}
-                for s in attributes:
-                    new = copy.copy(getattr(parent_model, s, {}))
-                    if s == '_columns':
-                        # Don't _inherit custom fields.
-                        for c in new.keys():
-                            if new[c].manual:
-                                del new[c]
-                        # Duplicate float fields because they have a .digits
-                        # cache (which must be per-registry, not server-wide).
-                        for c in new.keys():
-                            if new[c]._type == 'float':
-                                new[c] = copy.copy(new[c])
-                    if hasattr(new, 'update'):
-                        new.update(cls.__dict__.get(s, {}))
-                    elif s=='_constraints':
-                        for c in cls.__dict__.get(s, []):
-                            exist = False
-                            for c2 in range(len(new)):
-                                #For _constraints, we should check field and methods as well
-                                if new[c2][2]==c[2] and (new[c2][0] == c[0] \
-                                        or getattr(new[c2][0],'__name__', True) == \
-                                            getattr(c[0],'__name__', False)):
-                                    # If new class defines a constraint with
-                                    # same function name, we let it override
-                                    # the old one.
 
-                                    new[c2] = c
-                                    exist = True
-                                    break
-                            if not exist:
-                                new.append(c)
-                    else:
-                        new.extend(cls.__dict__.get(s, []))
-                    nattr[s] = new
+                # don't inherit custom fields, and duplicate inherited fields
+                # because some have a per-registry cache (like float)
+                columns = dict(
+                    (key, copy.copy(val))
+                    for key, val in getattr(parent_class, '_columns', {}).iteritems()
+                    if not val.manual)
+                columns.update(getattr(cls, '_columns', {}))
 
-                # Keep links to non-inherited constraints, e.g. useful when exporting translations
-                nattr['_register'] = False
-                nattr['_local_constraints'] = cls.__dict__.get('_constraints', [])
-                nattr['_local_sql_constraints'] = cls.__dict__.get('_sql_constraints', [])
+                defaults = dict(getattr(parent_class, '_defaults', {}))
+                defaults.update(getattr(cls, '_defaults', {}))
+
+                inherits = dict(getattr(parent_class, '_inherits', {}))
+                inherits.update(getattr(cls, '_inherits', {}))
+
+                old_constraints = getattr(parent_class, '_constraints', [])
+                new_constraints = getattr(cls, '_constraints', [])
+                # filter out from old_constraints the ones overridden by a
+                # constraint with the same function name in new_constraints
+                constraints = new_constraints + [oldc
+                    for oldc in old_constraints
+                    if not any(newc[2] == oldc[2] and same_name(newc[0], oldc[0])
+                               for newc in new_constraints)
+                ]
+
+                sql_constraints = getattr(cls, '_sql_constraints', []) + \
+                    getattr(parent_class, '_sql_constraints', [])
+
+                nattr = {
+                    '_register': False,
+                    '_columns': columns,
+                    '_defaults': defaults,
+                    '_inherits': inherits,
+                    '_constraints': constraints,
+                    '_sql_constraints': sql_constraints,
+                    # Keep links to non-inherited constraints; this is useful
+                    # for instance when exporting translations
+                    '_local_constraints': cls.__dict__.get('_constraints', []),
+                    '_local_sql_constraints': cls.__dict__.get('_sql_constraints', []),
+                }
 
                 cls = type(name, (cls, parent_class), nattr)
         else:
