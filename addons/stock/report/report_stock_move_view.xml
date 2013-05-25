@@ -211,6 +211,7 @@
                 <field name="product_qty" sum="Total quantity"/>
                 <field name="fifo_value" sum="Total FIFO value"/>
                 <field name="avg_value" sum="Total AVG value"/>
+                <field name="inventory_value" sum="Inventory value"/>
            </tree>
         </field>
     </record>
@@ -248,7 +249,7 @@
                     <field name="location_type"/>
                     <field name="date"/>
                     <filter icon="terp-go-home" name="location_type_scrap" string="Scrap" domain="[('scrap_location','=','True')]"/>
-                    <filter name="inmovesremaining" string="In moves remaining" domain="[('location_src_type','!=','internal'), ('location_dest_type','=', 'internal'), ()]"/>
+                    <filter name="inmovesremaining" string="In moves remaining" domain="[('location_src_type','!=','internal'), ('location_dest_type','=', 'internal'), ('qty_remaining', '>', 0.0)]"/>
                 </group>
                 <group expand="1" string="Group By..." >
                     <filter string="Partner" name="group_partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
