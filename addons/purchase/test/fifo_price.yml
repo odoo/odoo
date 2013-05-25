@@ -17,7 +17,7 @@
     property_stock_account_output: account.o_income
     description: FIFO Ice Cream can be mass-produced and thus is widely available in developed parts of the world. Ice cream can be purchased in large cartons (vats and squrounds) from supermarkets and grocery stores, in smaller quantities from ice cream shops, convenience stores, and milk bars, and in individual servings from small carts or vans at public events.
 - 
-  I create a draft Purchase Order for first in move for 10 kg at 60 euro
+  I create a draft Purchase Order for first in move for 10 kg at 50 euro
 - 
   !record {model: purchase.order, id: purchase_order_fifo1}:
     partner_id: base.res_partner_3
@@ -52,12 +52,15 @@
   !assert {model: purchase.order, id: purchase_order_fifo1}:
     - state == 'approved'
 - 
-  Process the reception of purchase order 1
+  Process the reception of purchase order 1 and set date
 -
   !python {model: stock.partial.picking}: |
     pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo1")).picking_ids
     partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
     self.do_partial(cr, uid, [partial_id])
+    from datetime import *
+    #for move in pick_ids[0].move_lines:
+    #  self.pool.get("stock.move").write(cr, uid, [move.id], {'date': (datetime.now()+timedelta(1)).strftime('%Y-%m-%d %H:%M:%S')})
 - 
   Check the standard price of the product (fifo icecream)
 - 
@@ -181,7 +184,7 @@
 - 
   Purchase order in usd
 - 
-  I create a draft Purchase Order for 30000 g at 0.150 USD/g and 10 kg at 150 USD/kg
+  I create a draft Purchase Order for 30 kg at 0.150 USD/g and 10 kg at 150 USD/kg
 - 
   !record {model: purchase.order, id: purchase_order_fifo_usd}:
     partner_id: base.res_partner_3
@@ -213,7 +216,7 @@
     print partial_id
     self.do_partial(cr, uid, [partial_id])
 - 
-  We create delivery order of 49500 gram
+  We create delivery order of 49.500 kg
 - 
   !record {model: stock.picking, id: outgoing_fifo_shipment_cur}:
     type: out
@@ -223,8 +226,8 @@
   !record {model: stock.move, id: outgoing_shipment_fifo_icecream_cur}:
     picking_id: outgoing_fifo_shipment_cur
     product_id: product_fifo_icecream
-    product_uom: product.product_uom_gram
-    product_qty: 49500
+    product_uom: product.product_uom_kgm
+    product_qty: 49.500
     type: out
 - 
   Process the delivery of the outgoing shipment
@@ -248,7 +251,7 @@
     for move in self.pool.get("stock.move").browse(cr, uid, list):
       print move.price_unit, move.product_qty, move.qty_remaining, move.type, move.date
 - 
-  Do a delivery of an extra 10 kg INSTEAD OF RETURN
+  Do a delivery of an extra 10 kg
 - 
   !record {model: stock.picking, id: outgoing_fifo_shipment_ret}:
     type: out
@@ -275,7 +278,6 @@
   Check rounded price is 150.0 / 1.2834
 - 
   !python {model: product.product}: |
-    print round(self.browse(cr, uid, ref("product_fifo_icecream")).standard_price, 2)
     assert round(self.browse(cr, uid, ref("product_fifo_icecream")).standard_price) == round(150.0 / 1.2834)
 - 
   Print price
@@ -288,7 +290,7 @@
     for move in self.pool.get("stock.move").browse(cr, uid, list):
       print move.price_unit, move.product_qty, move.qty_remaining, move.type, move.date
 - 
-  Let us create some outs to get negative stock. Create outpicking.  We create delivery order of 100 kg
+  Let us create some outs to get negative stock. Create outpicking.  We create delivery order of 200 kg, but will pick only 100 kg
 - 
   !record {model: stock.picking, id: outgoing_fifo_shipment_neg}:
     type: out
@@ -299,10 +301,10 @@
     picking_id: outgoing_fifo_shipment_neg
     product_id: product_fifo_icecream
     product_uom: product.product_uom_kgm
-    product_qty: 100.0
+    product_qty: 200.0
     type: out
 - 
-  Let us create another out of 50 kg
+  Let us create another out of 400 kg, but will pick only 50 kg
 - 
   !record {model: stock.picking, id: outgoing_fifo_shipment_neg2}:
     type: out
@@ -313,15 +315,19 @@
     picking_id: outgoing_fifo_shipment_neg2
     product_id: product_fifo_icecream
     product_uom: product.product_uom_kgm
-    product_qty: 50.0
+    product_qty: 400.0
     type: out
 - 
   Process the delivery of the outgoing shipments
 - 
   !python {model: stock.partial.picking}: |
     partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [ref("outgoing_fifo_shipment_neg")], 'default_type':'out'})
+    line = self.browse(cr, uid, partial_id, context=context).move_ids[0]
+    self.pool.get("stock.partial.picking.line").write(cr, uid, [line.id], {'quantity':100})
     self.do_partial(cr, uid, [partial_id])
     partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [ref("outgoing_fifo_shipment_neg2")], 'default_type':'out'})
+    line = self.browse(cr, uid, partial_id, context=context).move_ids[0]
+    self.pool.get("stock.partial.picking.line").write(cr, uid, [line.id], {'quantity':50})
     self.do_partial(cr, uid, [partial_id])
 - 
   Print price
@@ -334,7 +340,7 @@
     for move in self.pool.get("stock.move").browse(cr, uid, list):
       print move.price_unit, move.product_qty, move.qty_remaining, move.type, move.date
 - 
-  Receive purchase order with 100 kgm FIFO Ice Cream at 50 euro/kg
+  Receive purchase order with 50 kg FIFO Ice Cream at 50 euro/kg
 - 
   !record {model: purchase.order, id: purchase_order_fifo_neg}:
     partner_id: base.res_partner_3
@@ -342,7 +348,7 @@
     pricelist_id: 1
     order_line:
       - product_id: product_fifo_icecream
-        product_qty: 100.0
+        product_qty: 50.0
         product_uom: product.product_uom_categ_kgm
         price_unit: 50.0
         name: 'FIFO Ice Cream'
@@ -358,13 +364,12 @@
     partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
     self.do_partial(cr, uid, [partial_id])
 - 
-  Assert price on product is 50
+  Assert price on product is still the old price as the out move has not been received fully yet
 - 
   !python {model: product.product}: |
-    assert self.browse(cr, uid, ref("product_fifo_icecream")).standard_price == 50.0
-  
+    assert round(self.browse(cr, uid, ref("product_fifo_icecream")).standard_price) == round(150.0 / 1.2834)
 - 
-  Receive purchase order with 100 kgm FIFO Ice Cream at 80 euro/kg   
+  Receive purchase order with 60 kg FIFO Ice Cream at 80 euro/kg   
 - 
   !record {model: purchase.order, id: purchase_order_fifo_neg2}:
     partner_id: base.res_partner_3
@@ -372,7 +377,7 @@
     pricelist_id: 1
     order_line:
       - product_id: product_fifo_icecream
-        product_qty: 100.0
+        product_qty: 60.0
         product_uom: product.product_uom_categ_kgm
         price_unit: 80
         name: 'FIFO Ice Cream'
@@ -388,12 +393,12 @@
     partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [pick_ids[0].id]})
     self.do_partial(cr, uid, [partial_id])
 - 
-  Print price
+  The price of the product should have changed back to 65.0 
 - 
   !python {model: product.product}: |
     print self.browse(cr, uid, ref("product_fifo_icecream")).standard_price
     print self.browse(cr, uid, ref("product_fifo_icecream")).qty_available
     print self.browse(cr, uid, ref("product_fifo_icecream"), context={'force_company': 1}).qty_available
-    list = self.pool.get("stock.move").search(cr, uid, [('product_id','=', ref("product_fifo_icecream"))])
+    list = self.pool.get("stock.move").search(cr, uid, [('product_id','=', ref("product_fifo_icecream"))], order='date')
     for move in self.pool.get("stock.move").browse(cr, uid, list):
       print move.price_unit, move.product_qty, move.qty_remaining, move.type, move.date

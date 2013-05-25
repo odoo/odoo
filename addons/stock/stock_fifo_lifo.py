@@ -38,27 +38,25 @@ class product_product (osv.osv):
             #TODO Need force_company in context?
             if 'force_company' not in context:
                 company_id = self.pool.get("res.users").browse(cr, uid, uid, context=context).company_id.id
-                
             else:
                 company_id = context['force_company']
             for prod in self.browse(cr, uid, ids, context=context):
                 if prod.cost_method == 'average':
-                    mov_ids = move_obj.search(cr, uid, [('company_id', '=', company_id), ('state', '=', 'done'), ('qty_remaining', '>', 0.0)], context=context)
+                    mov_ids = move_obj.search(cr, uid, [('product_id', '=', prod.id), ('company_id', '=', company_id), ('state', '=', 'done'), ('qty_remaining', '>', 0.0)], context=context)
                     #TODO Need to convert to all prices to UoM of stock move
                     for move in move_obj.browse(cr, uid, mov_ids, context=context):
-                        new_price = uom_obj._compute_price(cr, uid, move.product_uom.id, move.price_unit, prod.uom_id.id)
-                        move.write({'price_unit': new_price})
+                        new_price = uom_obj._compute_price(cr, uid, move.product_uom.id, prod.standard_price, prod.uom_id.id)
+                        move_obj.write(cr, uid, [move.id], {'price_unit': new_price}, context=context)
                 #We need to recalculate the average on all products from all stock moves in
                 if vals["cost_method"] == 'average':
                     #Search all done in moves
-                    mov_ids = move_obj.search(cr, uid, [('company_id', '=', company_id), ('state', '=', 'done'), ('location_dest_id.usage', '=', 'internal'), 
+                    mov_ids = move_obj.search(cr, uid, [('product_id', '=', prod.id), ('company_id', '=', company_id), ('state', '=', 'done'), ('location_dest_id.usage', '=', 'internal'), 
                                                         ('location_id.usage', '!=', 'internal')], context=context)
                     qty = 0.0
                     total_price = 0.0
                     for move in move_obj.browse(cr, uid, mov_ids, context=context):
                         total_price += move.product_qty * move.price_unit
                         qty += uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, prod.uom_id.id)
-                        print "Qty and Total Price:", qty, total_price
                     if qty > 0.0:
                         prod_obj.write(cr, uid, [prod.id], {'standard_price': total_price / qty}, context=context)
         res = super(product_product, self).write(cr, uid, ids, vals, context=context)
@@ -158,16 +156,13 @@ class stock_move(osv.osv):
             if move_in:
                 #Search all matchings
                 matches = match_obj.search(cr, uid, [('move_in_id', '=', move.id)], context=context)
-                print [(x.move_in_id.product_qty, x.qty, x.move_in_id.price_unit, x.move_in_id.date) for x in match_obj.browse(cr, uid, matches, context=context)]
-
                 qty = move.product_qty
                 for match in match_obj.browse(cr, uid, matches, context=context):
                     qty -= uom_obj._compute_qty(cr, uid, match.move_out_id.product_uom.id, match.qty, move.product_uom.id)
                 res[move.id] = qty
             elif move_out:
-                #Search all matchings, but from the other side
+                #Search all matchings, but from the out side
                 matches = match_obj.search(cr, uid, [('move_out_id', '=', move.id)], context=context)
-                print [(x.move_in_id.product_qty, x.qty, x.move_in_id.price_unit, x.move_in_id.date) for x in match_obj.browse(cr, uid, matches, context=context)]
                 qty = move.product_qty
                 for match in match_obj.browse(cr, uid, matches, context=context):
                     qty -= match.qty
@@ -182,15 +177,40 @@ class stock_move(osv.osv):
                 }
 
 
-
 class stock_move_matching(osv.osv):
     _name = "stock.move.matching"
     _description = "Stock move matchings"
+    
+    
+    def _get_unit_price_out (self, cr, uid, ids, field_names, arg, context=None):
+        res = {}
+        uom_obj = self.pool.get("product.uom")
+        for match in self.browse(cr, uid, ids, context=context):
+            res[match.id] = uom_obj._compute_price(cr, uid, match.move_in_id.product_uom.id, match.price_unit, match.move_out_id.product_uom.id)
+        return res
+
+    def _get_matches(self, cr, uid, ids, context=None):
+        res = []
+        move_obj = self.pool.get("stock.move")
+        for move in move_obj.browse(cr, uid, ids, context=context):
+            move_in = move.location_id and move.location_dest_id and move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal'
+            if move_in:
+                matches = self.pool.get("stock.move.matching").search(cr, uid, [('move_in_id', '=', move.id)], context=context)
+                res += matches
+        return res
+
+    def _get_selfmatches(self, cr, uid, ids, context=None):
+        return ids
+
+
     _columns = {
         'move_in_id': fields.many2one('stock.move', 'Stock move in', required=True),
         'move_out_id': fields.many2one('stock.move', 'Stock move out', required=True),
         'qty': fields.float('Quantity in UoM of out', required=True), 
         'price_unit':fields.related('move_in_id', 'price_unit', string="Unit price", type="float"),
-        'price_unit_out': fields.float('Unit price out'), 
+        'price_unit_out': fields.function(_get_unit_price_out, type="float", string="Price in UoM of out move", 
+                                                 store = {'stock.move':  (_get_matches, ['price_unit', 'product_uom'], 10), 
+                                                          'stock.move.matching': (_get_selfmatches, ['move_in_id', 'qty', 'move_out_id'], 10)},), 
     }
+    
 

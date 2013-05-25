@@ -261,8 +261,7 @@ class report_stock_valuation(osv.osv):
         'location_dest_type': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production'), ('transit', 'Transit Location for Inter-Companies Transfers')], 'Location Destination Type', required=True), 
         'location_src_type': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production'), ('transit', 'Transit Location for Inter-Companies Transfers')], 'Location Source Type', required=True),
         'match': fields.many2one('stock.move', 'Match', readonly=True),
-        'related': fields.related('match', 'picking_id', 'name', type='text', readonly=True), 
-        #'funct': fields.function(_get_properties, type='float')
+        'related_move_in': fields.related('match', 'picking_id', 'name', type='text', readonly=True), 
     }
     
 

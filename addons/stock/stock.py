@@ -2676,7 +2676,7 @@ class stock_move(osv.osv):
         and creates the necessary stock move matchings
         
         It returns a list of tuples with (move_id, match_id) 
-        
+        which can be used for generating the accounting entries
         '''
         product_obj = self.pool.get('product.product')
         currency_obj = self.pool.get('res.currency')
@@ -2698,6 +2698,9 @@ class stock_move(osv.osv):
             product = product_obj.browse(cr, uid, move.product_id.id, context=ctx)
             cost_method = product.cost_method
             product_uom_qty = uom_obj._compute_qty(cr, uid, product_uom, product_qty, product.uom_id.id)
+            if not product.id in product_avail:
+                    product_avail[product.id] = product.qty_available
+            
             
             # Check if out -> do stock move matchings and if fifo/lifo -> update price
             if move.location_id.usage == 'internal' and move.location_dest_id.usage != 'internal':
@@ -2705,13 +2708,12 @@ class stock_move(osv.osv):
                 fifo = (cost_method != 'lifo')
                 tuples = product_obj.get_stock_matchings_fifolifo(cr, uid, [product.id], product_qty, fifo, 
                                                                   product_uom, move.company_id.currency_id.id, context=ctx) #TODO Would be better to use price_currency_id for migration?
-                print tuples
                 price_amount = 0.0
                 amount = 0.0
                 #Write stock matchings
                 for match in tuples: 
                     matchvals = {'move_in_id': match[0], 'qty': match[1], 
-                                 'move_out_id': move.id, 'price_unit_out': match[2]}
+                                 'move_out_id': move.id}
                     match_id = matching_obj.create(cr, uid, matchvals, context=context)
                     res[move.id].append(match_id)
                     move_in = self.browse(cr, uid, match[0], context=context)
@@ -2725,10 +2727,10 @@ class stock_move(osv.osv):
                     new_price = uom_obj._compute_price(cr, uid, product.uom_id.id, product.standard_price,
                             product_uom)
                     self.write(cr, uid, move.id, {'price_unit': new_price}, context=ctx)
-                    
-                    
-            if not product.id in product_avail:
-                    product_avail[product.id] = product.qty_available
+                #Adjust product_avail when not average and move returned from
+                if (not move.move_returned_from or product.cost_method != 'average'):
+                    product_avail[product.id] -= product_uom_qty
+            
             #Check if in => if price 0.0, take standard price / Update price when average price and price on move != standard price
             if move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal':
                 if move.price_unit == 0.0:
@@ -2743,25 +2745,26 @@ class stock_move(osv.osv):
                     else:
                         new_std_price = move.price_unit
                     product_obj.write(cr, uid, [product.id], {'standard_price': new_std_price}, context=ctx)
-                # Should create the stock move matchings for outs for the negative stock
+                # Should create the stock move matchings for previous outs for the negative stock that can be matched with is in
                 if product_avail[product.id] < 0.0:
                     #Search for most recent out moves until at least one matching has been found => order date desc
                     moves = self.search(cr, uid, [('company_id', '=', move.company_id.id), ('state','=', 'done'), ('location_id.usage','=','internal'), ('location_dest_id.usage', '!=', 'internal'), 
                                                       ('product_id', '=', move.product_id.id), ('qty_remaining', '>', 0.0)], order='date', context=ctx)
                     qty_to_go = move.product_qty
                     for out_mov in self.browse(cr, uid, moves, context=ctx):
+                        if qty_to_go <= 0.0:
+                            break
                         out_qty_converted =  uom_obj._compute_qty(cr, uid, out_mov.product_uom.id, out_mov.qty_remaining, move.product_uom.id)
                         qty = 0.0
                         if out_qty_converted <= qty_to_go:
                             qty = out_qty_converted
                         elif qty_to_go > 0.0: 
                             qty = qty_to_go
-                        new_price = uom_obj._compute_price(cr, uid, move.product_uom.id, move.price_unit,
-                            out_mov.product_uom.id)
-                        matchvals = {'move_in_id': move.id, 'qty': qty, 
-                                     'move_out_id': out_mov.id, 'price_unit_out': new_price}
+                        #revert_qty = uom_obj._compute_qty(cr, uid, move.product_uom.id, qty, out_mov.product_uom.id)
+                        revert_qty = (qty / out_qty_converted) * out_mov.qty_remaining
+                        matchvals = {'move_in_id': move.id, 'qty': revert_qty, 
+                                     'move_out_id': out_mov.id}
                         match_id = matching_obj.create(cr, uid, matchvals, context=context)
-
                         res[move.id].append(match_id)
                         qty_to_go -= qty
                         #Need to re-calculate total price of every out_move if FIFO/LIFO
@@ -2770,15 +2773,17 @@ class stock_move(osv.osv):
                             amount = 0.0
                             total_price = 0.0
                             for match in matching_obj.browse(cr, uid, matches, context=context):
-                                in_mov = self.browse(cr, uid, match.move_in_id.id, context=context)
-                                amount += uom_obj._compute_qty(cr, uid, in_mov.product_uom.id, in_mov.product_qty, out_mov.product_uom.id)
-                                total_price += amount * uom_obj._compute_price(cr, uid, in_mov.product_uom.id, in_mov.price_unit, out_mov.product_uom.id)
+                                amount += match.qty 
+                                total_price += match.qty * match.price_unit_out
                             if amount > 0.0:
                                 self.write(cr, uid, [out_mov.id], {'price_unit': total_price / amount}, context=context)
-                                product_obj.write(cr, uid, [product.id], {'standard_price': total_price / amount}, context=ctx)
-
-                product_avail[product.id] += product.qty_available
-                
+                                if amount >= out_mov.product_qty:
+                                    print "Update product when negative"
+                                    print total_price
+                                    print amount
+                                    print out_mov.product_qty
+                                    product_obj.write(cr, uid, [product.id], {'standard_price': total_price / amount}, context=ctx)
+                product_avail[product.id] += product_uom_qty
             #The return of average products at average price could be made optional
             if move.location_id.usage == 'internal' and move.location_dest_id.usage != 'internal' and cost_method == 'average' and move.move_returned_from:
                 move_orig = move.move_returned_from
