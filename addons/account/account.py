@@ -1871,6 +1871,12 @@ class account_tax_code(osv.osv):
 
 account_tax_code()
 
+def get_precision_tax():
+    def change_digit_tax(cr):
+        res = pooler.get_pool(cr.dbname).get('decimal.precision').precision_get(cr, SUPERUSER_ID, 'Account')
+        return (16, res+3)
+    return change_digit_tax
+
 class account_tax(osv.osv):
     """
     A tax object.
@@ -1890,12 +1896,6 @@ class account_tax(osv.osv):
         default = default.copy()
         default.update({'name': name + _(' (Copy)')})
         return super(account_tax, self).copy_data(cr, uid, id, default=default, context=context)
-
-    def get_precision_tax():
-        def change_digit_tax(cr):
-            res = pooler.get_pool(cr.dbname).get('decimal.precision').precision_get(cr, SUPERUSER_ID, 'Account')
-            return (16, res+2)
-        return change_digit_tax
 
     _name = 'account.tax'
     _description = 'Tax'
@@ -2822,7 +2822,7 @@ class account_tax_template(osv.osv):
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
         'name': fields.char('Tax Name', size=64, required=True),
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the taxes lines from lower sequences to higher ones. The order is important if you have a tax that has several tax children. In this case, the evaluation order is important."),
-        'amount': fields.float('Amount', required=True, digits=(14,4), help="For Tax Type percent enter % ratio between 0-1."),
+        'amount': fields.float('Amount', required=True, digits_compute=get_precision_tax(), help="For Tax Type percent enter % ratio between 0-1."),
         'type': fields.selection( [('percent','Percent'), ('fixed','Fixed'), ('none','None'), ('code','Python Code'), ('balance','Balance')], 'Tax Type', required=True),
         'applicable_type': fields.selection( [('true','True'), ('code','Python Code')], 'Applicable Type', required=True, help="If not applicable (computed through a Python code), the tax won't appear on the invoice."),
         'domain':fields.char('Domain', size=32, help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."),
