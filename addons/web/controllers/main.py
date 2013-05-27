@@ -772,20 +772,11 @@ class Database(openerpweb.Controller):
     @openerpweb.jsonrequest
     def duplicate(self, req, fields):
         params = dict(map(operator.itemgetter('name', 'value'), fields))
-        return req.session.proxy("db").duplicate_database(
-            params['super_admin_pwd'],
-            params['db_original_name'],
-            params['db_name'])
-
-    @openerpweb.jsonrequest
-    def duplicate(self, req, fields):
-        params = dict(map(operator.itemgetter('name', 'value'), fields))
         duplicate_attrs = (
             params['super_admin_pwd'],
             params['db_original_name'],
             params['db_name'],
         )
-
         return req.session.proxy("db").duplicate_database(*duplicate_attrs)
 
     @openerpweb.jsonrequest
@@ -793,9 +784,9 @@ class Database(openerpweb.Controller):
         password, db = operator.itemgetter(
             'drop_pwd', 'drop_db')(
                 dict(map(operator.itemgetter('name', 'value'), fields)))
-
+        
         try:
-            return req.session.proxy("db").drop(password, db)
+            if req.session.proxy("db").drop(password, db):return True
         except xmlrpclib.Fault, e:
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
                 return {'error': e.faultCode, 'title': 'Drop Database'}
