@@ -112,7 +112,7 @@ class hr_job(osv.osv):
             },
             multi='no_of_employee'),
         'no_of_recruitment': fields.float('Expected New Employee', help='Number of new employees you expect to recruit.'),
-        'no_of_hired_employee':fields.float('Hired Employee', help='Number of hired employees.'),
+        'no_of_hired_employee':fields.float('Hired Employee', help='Number of hired employees during this recruitment phase.'),
         'employee_ids': fields.one2many('hr.employee', 'job_id', 'Employees', groups='base.group_user'),
         'description': fields.text('Job Description'),
         'requirements': fields.text('Requirements'),

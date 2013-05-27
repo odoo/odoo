@@ -26,9 +26,11 @@
                     </div>
                 </div>
                 <xpath expr="//div/div[@name='hr_recruitment']" position="after">
-                    <div attrs="{'invisible': [('module_hr_recruitment','=',False)]}">
-                        <label for="default_alias_prefix"/>
-                        <field name="default_alias_prefix" class="oe_inline"/>
+                    <div attrs="{'invisible': ['|',('module_hr_recruitment','=',False),('alias_domain', '=', False)]}">
+                        <label string="Alias for Jobs"/>
+                        <field name="alias_prefix" class="oe_inline" attrs="{'required': [('alias_domain', '!=', False)]}"/>
+                        @
+                        <field name="alias_domain" class="oe_inline" readonly="1"/>
                     </div>
                 </xpath>
             </field>

@@ -33,6 +33,36 @@ class hr_applicant_settings(osv.osv_memory):
             fetchmail_model='hr.applicant', fetchmail_name='Incoming HR Applications',   
             help ="""Allow applicants to send their job application to an email address (jobs@mycompany.com),
                 and create automatically application documents in the system."""),
-        'default_alias_prefix': fields.char('Default Alias Prefix for Jobs', default_model='hr.job'),
+        'alias_prefix': fields.char('Default Alias Name for Jobs'),
+        'alias_domain' : fields.char('Alias Domain'),
     }
 
+    def get_default_alias_prefix(self, cr, uid, ids, context=None):
+        alias_name = ''
+        mail_alias = self.pool.get('mail.alias')
+        model_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'hr.applicant')], context=context)
+        alias_ids = mail_alias.search(cr, uid, [('alias_model_id', '=', model_ids[0])], context=context)
+        if alias_ids:
+            alias_name = mail_alias.browse(cr, uid, alias_ids[0], context=context).alias_name
+        return {'alias_prefix': alias_name}
+
+    def set_default_alias_prefix(self, cr, uid, ids, context=None):
+        mail_alias = self.pool.get('mail.alias')
+        record = self.browse(cr, uid, ids[0], context=context)
+        if record.alias_prefix:
+            model_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'hr.applicant')], context=context)
+            alias_ids = mail_alias.search(cr, uid, [('alias_model_id', '=', model_ids[0])], context=context)
+            if alias_ids:
+                mail_alias.write(cr, uid, alias_ids[0],{'alias_name': record.alias_prefix}, context=context)
+            else:
+                mail_alias.create_unique_alias(cr, uid, {'alias_name': record.alias_prefix}, model_name="hr.applicant", context=context)
+
+    def get_default_alias_domain(self, cr, uid, ids, context=None):
+        alias_domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.domain", context=context)
+        if not alias_domain:
+            domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "web.base.url", context=context)
+            try:
+                alias_domain = urlparse.urlsplit(domain).netloc.split(':')[0]
+            except Exception:
+                pass
+        return {'alias_domain': alias_domain}

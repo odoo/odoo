@@ -312,20 +312,6 @@
                         attrs="{'invisible':[('survey_id','=',False)]}"/>
                 </div>
             </field>
-            <xpath expr="//div[@class='oe_title']//h1" position="after">
-                <div name="group_alias"
-                        attrs="{'invisible': [('alias_domain', '=', False)]}">
-                    <label for="alias_id" string="Email Alias"/>
-                    <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/>
-                    <field name="alias_prefix" invisible="1"/>
-                    <span name="edit_alias" class="oe_edit_only">
-                        <field name="alias_name" class="oe_inline"
-                                attrs="{'required': [('alias_id', '!=', False)]}"/>
-                        @
-                        <field name="alias_domain" class="oe_inline" readonly="1"/>
-                    </span>
-                </div>
-            </xpath>
         </field>
     </record>
     
@@ -368,8 +354,8 @@
                                 </div>
                                 <div class = "oe_kanban_content">
                                     <h3 class="oe_kanban_ellipsis"><field name="name"/></h3>
-                                    <div class="oe_kanban_alias" t-if=" record.alias_id.value">
-                                        <span class="oe_e">%%</span><small><field name="alias_id"/></small>
+                                    <div class="oe_kanban_alias" t-if=" record.job_alias.value">
+                                        <span class="oe_e">%%</span><small><field name="job_alias"/></small>
                                     </div>
                                     <div class="oe_department">
                                         <div class="oe_job oe_kanban_ellipsis">
