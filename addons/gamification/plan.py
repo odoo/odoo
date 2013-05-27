@@ -597,7 +597,7 @@ class gamification_goal_plan(osv.Model):
         user = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
         message = "%s has joined the challenge" % user.name
         self.message_post(cr, uid, plan_ids, body=message, context=context)
-        self.write(cr, uid, plan_ids, {'proposed_user_ids': [(3, user_id)], 'user_id': [(4, user_id)]}, context=context)
+        self.write(cr, uid, plan_ids, {'proposed_user_ids': [(3, user_id)], 'user_ids': [(4, user_id)]}, context=context)
         return self.generate_goals_from_plan(cr, uid, plan_ids, context=context)
 
     def discard_challenge(self, cr, uid, plan_ids, context=None, user_id=None):
