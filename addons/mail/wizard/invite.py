@@ -75,7 +75,7 @@ class invite_wizard(osv.osv_memory):
             model_name = ir_model.name_get(cr, uid, model_ids, context=context)[0][1]
 
             # send an email if option checked and if a message exists (do not send void emails)
-            if wizard.send_mail and wizard.message:
+            if wizard.send_mail and wizard.message and not wizard.message == '<br>':  # when deleting the message, cleditor keeps a <br>
                 # add signature
                 # FIXME 8.0: use notification_email_send, send a wall message and let mail handle email notification + message box
                 signature_company = self.pool.get('mail.notification').get_signature_footer(cr, uid, user_id=uid, res_model=wizard.res_model, res_id=wizard.res_id, context=context)

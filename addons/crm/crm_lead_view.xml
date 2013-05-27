@@ -556,7 +556,7 @@
                     <filter string="Lost" name="lost" domain="[('state','=','cancel')]"/>
                     <filter string="Unassigned" name="unassigned" domain="[('user_id','=', False)]" help="No salesperson"/>
                     <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]" help="Unread messages"/>
-                    <filter string="Assigned to Me"
+                    <filter string="Mine" name="assigned_to_me"
                             domain="[('user_id','=',uid)]" context="{'invisible_section': False}"
                             help="Opportunities that are assigned to me"/>
                     <filter string="Assigned to My Team(s)"
