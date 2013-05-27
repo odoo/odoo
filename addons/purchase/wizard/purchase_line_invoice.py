@@ -64,7 +64,6 @@ class purchase_line_invoice(osv.osv_memory):
 
 
             def make_invoice_by_partner(partner, orders, lines_ids):
-
                 """
                     create a new invoice for one supplier
                     @param partner : The object partner

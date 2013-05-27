@@ -68,7 +68,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
                 'account_id': a,
                 'partner_id': order.partner_invoice_id.id,
                 'invoice_line': [(6, 0, lines)],
-                'currency_id' : order.currency_id.id,
+                'currency_id' : order.pricelist_id.currency_id.id,
                 'comment': order.note,
                 'payment_term': pay_term,
                 'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
