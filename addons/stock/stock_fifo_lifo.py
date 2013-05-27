@@ -90,13 +90,16 @@ class product_product (osv.osv):
         if not currency_id:
             currency_id = self.pool.get('res.company').browse(cr, uid, company_id, context=context).currency_id.id
         if fifo:
-            move_in_ids = move_obj.search(cr, uid, [('company_id','=', company_id), ('qty_remaining', '>', 0), ('state', '=', 'done'), 
-                                             ('location_id.usage', '!=', 'internal'), ('location_dest_id.usage', '=', 'internal'), ('product_id', '=', product.id)], 
-                                       order = 'date', context=context)
+            order = 'date, id'
         else: 
-            move_in_ids = move_obj.search(cr, uid, [('company_id','=', company_id), ('qty_remaining', '>', 0), ('state', '=', 'done'), 
-                                             ('location_id.usage', '!=', 'internal'), ('location_dest_id.usage', '=', 'internal'), ('product_id', '=', product.id)], 
-                                       order = 'date desc', context=context)
+            order = 'date desc, id'
+        move_in_ids = move_obj.search(cr, uid, [('company_id','=', company_id), 
+                                                ('qty_remaining', '>', 0), 
+                                                ('state', '=', 'done'), 
+                                                ('location_id.usage', '!=', 'internal'), 
+                                                ('location_dest_id.usage', '=', 'internal'), 
+                                                ('product_id', '=', product.id)], 
+                                       order = order, context=context)
         tuples = []
         qty_to_go = qty
         for move in move_obj.browse(cr, uid, move_in_ids, context=context):
@@ -117,6 +120,8 @@ class product_product (osv.osv):
             else:
                 tuples.append((move.id, qty_to_go, new_price, qty_from * qty_to_go / product_qty),)
                 break
+        if tuples == [] and move_in_ids != []:
+            raise osv.except_osv(_('Error'), 'Not possible that there are no tuples when move ins')
         return tuples
 
 class stock_move(osv.osv):
