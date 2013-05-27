@@ -2708,7 +2708,7 @@ class stock_move(osv.osv):
                 
                 fifo = (cost_method != 'lifo')
                 tuples = product_obj.get_stock_matchings_fifolifo(cr, uid, [product.id], product_qty, fifo, 
-                                                                  product_uom, move.company_id.currency_id.id, context=ctx) #TODO Would be better to use price_currency_id for migration?
+                                                                  product_uom, move.company_id.currency_id.id, context=context) #TODO Would be better to use price_currency_id for migration?
                 price_amount = 0.0
                 amount = 0.0
                 #Write stock matchings
