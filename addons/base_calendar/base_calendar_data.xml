@@ -135,4 +135,73 @@
             <field eval="'(False,)'" name="args" />
         </record>
     </data>
+    <data>
+        <!--Email template -->
+        <record id="email_template_meeting_invitation" model="email.template">
+            <field name="name">Meeting Invitation</field>
+            <field name="email_from">${object.user_id.email or ''}</field>
+            <field name="subject">Meeting Invitation</field>
+            <field name="email_to" >${object.email}</field>
+            <field name="model_id" ref="base_calendar.model_calendar_attendee"/>
+            
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[<html><head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<title>%(name)s</title>
+<style> 
+
+.table_body
+{
+margin-left: 60px;
+width: 50%%; 
+font-family: Arial, Sans-serif; 
+border: 0px Solid #ccc; 
+background-color: #f6f6f6"
+}
+.link
+{
+margin-left: 150px
+}
+.circle
+</style>
+</head>
+<body>
+<table   cellspacing="0" cellpadding="0" border="0"   style = "margin-left: 200px  display:block;  border:2px solid #8E0000;  background: #F8F8F8; border-radius: 0px;  width: 550px;  height: 340px; ">
+ 
+         <tr>
+ <td  style = "display: block;  border: 2px solid #8E0000;  height: 45px; width: 550px;  background : #8E0000;  border-radius: 0px; margin-left: 0px;  margin-top: 0px;  text-align: center;  font-family: Arial, Sans-serif;  border: 0px Solid  #ccc;  font-size: 20px;  color:#FFFFFF; ">  
+          <div style="text-align: center" > <b>%(name)s </b> </div> </td></tr>
+        <tr>
+        <td> <div > <b> Hello <i> %(usr)s </i>, </b> <br/>
+ %(organizer)s invited you for the %(name)s meeting of %(company)s </div></td></tr> 
+    <tr><td>
+          <table cellspacing="0" cellpadding="0" border="0"  style="margin-left: 60px;  width: 50%%;  font-family: Arial, Sans-serif;  
+border: 0px Solid #ccc;  background: #F8F8F8">
+           <tr valign="top">
+                <td> <b>When : </b></td>
+                <td colspan="1"> <div>%(time)s </div> </td>
+                <td colspan="2"> <div>%(tz)s </div> </td>  </tr>
+           <tr valign="top">
+                <td> <div><b>Where :</b></div> </td>
+                <td colspan="1"> <div>%(location)s</div> </td> 
+                <td colspan="2"> <div><a href="%(map)s"/>View Map</a></div> </td> </tr>
+                     
+            <tr valign="top">
+                <td> <div><b>What :</b></div> </td>
+                 <td colspan="3"> <div>%(description)s</div> </td> </tr>
+            <tr valign="top">
+                <td> <div><b>Attendees:</b></div> </td>
+                <td colspan="3"> <div>%(attendees)s</div> </td> </tr> 
+             </table></td></tr>
+           <tr >
+             <td style="margin-left: 200px"> <a href="%(url)s" />Accept</a>  |  <a  href="%(url)s"//>Decline</a> </td> </tr>
+             </tr>
+             <td><div >Sent by %(responsible)s from %(company)s.View this meeting detail <a >directly in OpenERP</a> </div> </td> 
+            </tr>
+</body>
+</html>
+            
+            ]]></field>
+        </record>
+    </data>
 </openerp>

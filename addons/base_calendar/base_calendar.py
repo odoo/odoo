@@ -127,96 +127,6 @@ def _links_get(self, cr, uid, context=None):
     res = obj.read(cr, uid, ids, ['object', 'name'], context=context)
     return [(r['object'], r['name']) for r in res]
 
-html_invitation = """
-<html>
-<head>
-<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-<title>%(name)s</title>
-</head>
-<body>
-<table border="0" cellspacing="10" cellpadding="0" width="100%%"
-    style="font-family: Arial, Sans-serif; font-size: 14">
-    <tr>
-        <td width="100%%">Hello,</td>
-    </tr>
-    <tr>
-        <td width="100%%">You are invited for <i>%(company)s</i> Event.</td>
-    </tr>
-    <tr>
-        <td width="100%%">Below are the details of event. Hours and dates expressed in %(timezone)s time.</td>
-    </tr>
-</table>
-
-<table cellspacing="0" cellpadding="5" border="0" summary=""
-    style="width: 90%%; font-family: Arial, Sans-serif; border: 1px Solid #ccc; background-color: #f6f6f6">
-    <tr valign="center" align="center">
-        <td bgcolor="DFDFDF">
-        <h3>%(name)s</h3>
-        </td>
-    </tr>
-    <tr>
-        <td>
-        <table cellpadding="8" cellspacing="0" border="0"
-            style="font-size: 14" summary="Eventdetails" bgcolor="f6f6f6"
-            width="90%%">
-            <tr>
-                <td width="21%%">
-                <div><b>Start Date</b></div>
-                </td>
-                <td><b>:</b></td>
-                <td>%(start_date)s</td>
-                <td width="15%%">
-                <div><b>End Date</b></div>
-                </td>
-                <td><b>:</b></td>
-                <td width="25%%">%(end_date)s</td>
-            </tr>
-            <tr valign="top">
-                <td><b>Description</b></td>
-                <td><b>:</b></td>
-                <td colspan="3">%(description)s</td>
-            </tr>
-            <tr valign="top">
-                <td>
-                <div><b>Location</b></div>
-                </td>
-                <td><b>:</b></td>
-                <td colspan="3">%(location)s</td>
-            </tr>
-            <tr valign="top">
-                <td>
-                <div><b>Event Attendees</b></div>
-                </td>
-                <td><b>:</b></td>
-                <td colspan="3">
-                <div>
-                <div>%(attendees)s</div>
-                </div>
-                </td>
-            </tr>
-        </table>
-        </td>
-    </tr>
-</table>
-<table border="0" cellspacing="10" cellpadding="0" width="100%%"
-    style="font-family: Arial, Sans-serif; font-size: 14">
-    <tr>
-        <td width="100%%">From:</td>
-    </tr>
-    <tr>
-        <td width="100%%">%(user)s</td>
-    </tr>
-    <tr valign="top">
-        <td width="100%%">-<font color="a7a7a7">-------------------------</font></td>
-    </tr>
-    <tr>
-        <td width="100%%"> <font color="a7a7a7">%(sign)s</font></td>
-    </tr>
-</table>
-</body>
-</html>
-"""
-
 class calendar_attendee(osv.osv):
     """
     Calendar Attendee Information
@@ -494,6 +404,39 @@ property or property parameter."),
         res = cal.serialize()
         return res
 
+    def get_feedback(self, cr, uid, ids,context=None):
+#         partner_obj =  self.browse(cr,uid, ids,context=context)
+#         url = []
+#         for event_id in  self.browse(cr, uid, ids, context):
+#             event_id = event_id.ref.id
+#         for partner in partner_obj:
+#             if partner and partner.user_id:
+#                 related_user = partner.user_id
+#                 base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+#                 query = {'db': cr.dbname}
+#                 fragment = {
+#                     'login': related_user.login,
+#                     'model': "crm.meeting",
+#                     'view_type' : "form",
+#                     'id': event_id,
+#                     }
+#                 url = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
+#             else :
+#                 url = "https://openerp.my.openerp.com/#"
+        for event_id in  self.browse(cr, uid, ids, context):
+            event_id = event_id.ref.id
+        document = self.browse(cr, uid, ids[0], context=context)
+        print "DOCS ITS CALLED Documents -----------------------------------------",document
+        partner = document.partner_id
+        print "partner id",partner
+        action = 'base_calendar.action_view_event'
+        print "ACTION -------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>.",action
+        partner.signup_prepare()
+        print "PARTNER UPER OF URTLLLLLLLLLLLLLLLL -------------------------------------------.......................", partner.signup_prepare()
+        a = partner._get_signup_url_for_action(action=action, view_type='form', res_id=event_id)[partner.id]
+        print "SIG N UP RETUR",a  
+        return partner._get_signup_url_for_action(action=action, view_type='form', res_id=event_id)[partner.id]
+
     def _send_mail(self, cr, uid, ids, mail_to, email_from=tools.config.get('email_from', False), context=None):
         """
         Send mail for event invitation to event attendees.
@@ -506,46 +449,65 @@ property or property parameter."),
             sign = '<br>'.join(sign and sign.split('\n') or [])
             res_obj = att.ref
             if res_obj:
-                att_infos = []
+                att = []
+                att_mail = []
                 sub = res_obj.name
                 other_invitation_ids = self.search(cr, uid, [('ref', '=', res_obj._name + ',' + str(res_obj.id))])
 
                 for att2 in self.browse(cr, uid, other_invitation_ids):
-                    att_infos.append(((att2.user_id and att2.user_id.name) or \
+                  
+                    att.append(((att2.user_id and att2.user_id.name) or \
                                  (att2.partner_id and att2.partner_id.name) or \
-                                    att2.email) + ' - Status: ' + att2.state.title())
-                #dates and times are gonna be expressed in `tz` time (local timezone of the `uid`)
+                                    att2.email))
+                    att_mail.append(att2.email)
                 tz = context.get('tz', pytz.timezone('UTC'))
-                #res_obj.date and res_obj.date_deadline are in UTC in database so we use context_timestamp() to transform them in the `tz` timezone
-                date_start = fields.datetime.context_timestamp(cr, uid, datetime.strptime(res_obj.date, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
-                date_stop = False
-                if res_obj.date_deadline:
-                    date_stop = fields.datetime.context_timestamp(cr, uid, datetime.strptime(res_obj.date_deadline, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
-                body_vals = {'name': res_obj.name,
-                            'start_date': date_start,
-                            'end_date': date_stop,
-                            'timezone': tz,
-                            'description': res_obj.description or '-',
-                            'location': res_obj.location or '-',
-                            'attendees': '<br>'.join(att_infos),
-                            'user': res_obj.user_id and res_obj.user_id.name or 'OpenERP User',
-                            'sign': sign,
-                            'company': company
-                }
-                body = html_invitation % body_vals
-                if mail_to and email_from:
-                    ics_file = self.get_ics_file(cr, uid, res_obj, context=context)
-                    vals = {'email_from': email_from,
-                            'email_to': mail_to,
-                            'state': 'outgoing',
-                            'subject': sub,
-                            'body_html': body,
-                            'auto_delete': True}
+                allday = False
+                date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(res_obj.date, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
+                date_deadline = fields.datetime.context_timestamp(cr, uid, datetime.strptime(res_obj.date_deadline, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
+                if res_obj.allday:
+                    time =  "AllDay" + "," + date.strftime('%B-%d-%Y')
+                    tz = ''
+                elif res_obj.duration < 24:
+                    duration =  date + timedelta(hours= res_obj.duration)
+                    time =  date.strftime('%B-%d-%Y')  + " at (" + date.strftime('%H-%M') + " To " + duration.strftime('%H-%M') + ")"
+                else :
+                    time =  date.strftime('%B-%d-%Y')  + " at " + date.strftime('%H-%M') + " To \n" +  date_deadline.strftime('%B-%d-%Y') + " at " + date_deadline.strftime('%H-%M')
+                attendees = ''
+               
+                for mail_to in att_mail:
+                    mail_to = mail_to
+                    attendees = mail_to + "," +  attendees
+                    footer = self.get_feedback(cr, uid, ids, context=context)
+                    map_url = "http://maps.google.com/maps?oi=map&q="
+                    body_vals = {'name': res_obj.name,
+                                 'usr': mail_to,
+                                 'responsible': res_obj.user_id and res_obj.user_id.name or 'OpenERP User',
+                                 'company': company,
+                                 'description': res_obj.description or '-',
+                                 'attendees': res_obj.organizer + " - Organizer, " + attendees,
+                                 'time': time,
+                                 'tz': tz,
+                                 'location': res_obj.location or '-',
+                                 'map' : map_url + '+' + str(res_obj.location or '-'),
+                                 'organizer': res_obj.organizer,
+                                'url' : footer,
+                    }
+                    body_id = self.pool.get('email.template').search(cr, uid, [('subject', '=', 'Meeting Invitation')], context=context)
+                    body = self.pool.get('email.template').browse(cr, uid, body_id[0], context=context).body_html % body_vals
+                    if mail_to and email_from:
+                        ics_file = self.get_ics_file(cr, uid, res_obj, context=context)
+                        vals = {'email_from': email_from,
+                                'email_to': mail_to,
+                                'state': 'outgoing',
+                                'subject': sub,
+                                'body_html': body,
+                                'auto_delete': True}
                     if ics_file:
                         vals['attachment_ids'] = [(0,0,{'name': 'invitation.ics',
                                                         'datas_fname': 'invitation.ics',
                                                         'datas': str(ics_file).encode('base64')})]
-                    self.pool.get('mail.mail').create(cr, uid, vals, context=context)
+                    mail_id= self.pool.get('mail.mail').create(cr, uid, vals, context=context)
+                    self.pool.get('mail.mail').send(cr, uid, [mail_id], context=context)
             return True
 
     def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
