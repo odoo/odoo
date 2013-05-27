@@ -643,15 +643,15 @@ class mrp_production(osv.osv):
         @return: True
         """
         move_obj = self.pool.get('stock.move')
-        self.write(cr, uid, ids, {'state': 'ready'})
+        self.write(cr, uid, ids, {'state': 'ready'}, context=context)
 
         for (production_id,name) in self.name_get(cr, uid, ids):
-            production = self.browse(cr, uid, production_id)
+            production = self.browse(cr, uid, production_id, context=context)
             if not production.move_prod_id and not production.move_lines:
-                move_obj.write(cr, uid, [i.id for i in production.move_created_ids], {'state': 'assigned'})            
+                move_obj.write(cr, uid, [i.id for i in production.move_created_ids], {'state': 'assigned'}, context=context)
             if production.move_prod_id and production.move_prod_id.location_id.id != production.location_dest_id.id:
                 move_obj.write(cr, uid, [production.move_prod_id.id],
-                        {'location_id': production.location_dest_id.id})
+                        {'location_id': production.location_dest_id.id}, context=context)
         return True
 
     def action_production_end(self, cr, uid, ids, context=None):
