@@ -3389,6 +3389,11 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             this.alive(dataset.name_get([self.get("value")])).done(function(data) {
                 self.display_value["" + self.get("value")] = data[0][1];
                 self.render_value(true);
+            }).fail( function (data, event) {
+                // avoid displaying crash errors when having an invisible field
+                if (self.get('effective_invisible')) {
+                    event.preventDefault();
+                }
             });
         }
     },
