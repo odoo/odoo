@@ -63,6 +63,7 @@ class report_mrp_inout(osv.osv):
     _columns = {
         'date': fields.char('Week', size=64, required=True),
         'value': fields.float('Stock value', required=True, digits=(16,2)),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
     }
 
     def init(self, cr):
@@ -72,14 +73,15 @@ class report_mrp_inout(osv.osv):
                     min(sm.id) as id,
                     to_char(sm.date,'YYYY:IW') as date,
                     sum(case when (sl.usage='internal') then
-                        ip.value_float * sm.product_qty
+                        sm.price_unit * sm.product_qty
                     else
                         0.0
                     end - case when (sl2.usage='internal') then
-                        ip.value_float * sm.product_qty
+                        sm.price_unit * sm.product_qty
                     else
                         0.0
-                    end) as value
+                    end) as value, 
+                    sm.company_id
                 from
                     stock_move sm
                 left join product_product pp
@@ -89,15 +91,11 @@ class report_mrp_inout(osv.osv):
                 left join stock_location sl
                     on ( sl.id = sm.location_id)
                 left join stock_location sl2
-                    on ( sl2.id = sm.location_dest_id),
-                ir_property ip
+                    on ( sl2.id = sm.location_dest_id)
                 where
-                    sm.state in ('waiting','confirmed','assigned')
-                and
-                    ip.name='standard_price' AND ip.res_id=CONCAT('product.template,',pt.id) AND (ip.company_id=sm.company_id OR ip.company_id IS NULL)
+                    sm.state = 'done'
                 group by
-                    to_char(sm.date,'YYYY:IW'), ip.company_id
-                    order by ip.company_id ASC LIMIT 1 
+                    to_char(sm.date,'YYYY:IW'), sm.company_id
             )""")
 
 
