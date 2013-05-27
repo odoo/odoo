@@ -93,8 +93,7 @@ class product_product (osv.osv):
             order = 'date, id'
         else: 
             order = 'date desc, id'
-        move_in_ids = move_obj.search(cr, uid, [('company_id','=', company_id), 
-                                                ('qty_remaining', '>', 0.0), 
+        move_in_ids = move_obj.search(cr, uid, [('qty_remaining', '>', 0.0), 
                                                 ('state', '=', 'done'), 
                                                 ('location_id.usage', '!=', 'internal'), 
                                                 ('location_dest_id.usage', '=', 'internal'), 
