@@ -2332,7 +2332,7 @@ class stock_move(osv.osv):
                         {
                          'journal_id': j_id,
                          'line_id': move_lines,
-                         'ref': move.picking_id and move.picking_id.name})
+                         'ref': move.picking_id and move.picking_id.name}, context=context)
 
     def action_done(self, cr, uid, ids, context=None):
         """ Makes the move done and if all moves are done, it will finish the picking.
