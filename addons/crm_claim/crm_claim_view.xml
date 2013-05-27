@@ -218,7 +218,7 @@
         </record>
 
 
-        <record model="ir.actions.act_window" id="crm_case_categ_claim1">
+        <record model="ir.actions.act_window" id="crm_case_claim_partner_action">
             <field name="name">Claims</field>
             <field name="res_model">crm.claim</field>
             <field name="view_type">form</field>
@@ -226,11 +226,17 @@
             <field name="view_id" ref="crm_case_claims_tree_view"/>
             <field name="context">{"stage_type":'claim'}</field>
             <field name="search_view_id" ref="crm_claim.view_crm_case_claims_filter"/>
-            <field name="help">Record and track your customers' claims. Claims may be linked to a sales order or a lot. You can send emails with attachments and keep the full history for a claim (emails sent, intervention type and so on). Claims may automatically be linked to an email address using the mail gateway module.</field>
+            <field name="help">
+                <p class="oe_view_nocontent_create">
+                    Click to create a new claim.
+                </p><p>
+                    Record and track your customers' claims. Claims may be linked to a sales order or a lot. You can send emails with attachments and keep the full history for a claim (emails sent, intervention type and so on). Claims may automatically be linked to an email address using the mail gateway module.
+                </p>
+            </field>
         </record>
         
         <!--  Partners inherited form -->
-         <record id="view_claim_res_partner_info_form" model="ir.ui.view">
+        <record id="view_claim_res_partner_info_form" model="ir.ui.view">
             <field name="name">res.partner.claim.info.form</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
@@ -238,7 +244,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
                     <button type="action"
-                        name="%(crm_case_categ_claim1)d"
+                        name="%(crm_case_claim_partner_action)d"
                         string="Claims"
                         context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}"
                         groups="base.group_sale_salesman" />
