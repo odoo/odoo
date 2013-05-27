@@ -1001,8 +1001,7 @@ class account_period(osv.osv):
     def find(self, cr, uid, dt=None, context=None):
         if context is None: context = {}
         if not dt:
-            dt = fields.date.context_today(self,cr,uid,context=context)
-#CHECKME: shouldn't we check the state of the period?
+            dt = fields.date.context_today(self, cr, uid, context=context)
         args = [('date_start', '<=' ,dt), ('date_stop', '>=', dt)]
         if context.get('company_id', False):
             args.append(('company_id', '=', context['company_id']))
@@ -1010,7 +1009,7 @@ class account_period(osv.osv):
             company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
             args.append(('company_id', '=', company_id))
         result = []
-        if context.get('account_period_prefer_normal'):
+        if context.get('account_period_prefer_normal', True):
             # look for non-special periods first, and fallback to all if no result is found
             result = self.search(cr, uid, args + [('special', '=', False)], context=context)
         if not result:
@@ -1214,7 +1213,7 @@ class account_move(osv.osv):
         return res
 
     def _get_period(self, cr, uid, context=None):
-        ctx = dict(context or {}, account_period_prefer_normal=True)
+        ctx = dict(context or {})
         period_ids = self.pool.get('account.period').find(cr, uid, context=ctx)
         return period_ids[0]
 
@@ -1671,7 +1670,7 @@ class account_move_reconcile(osv.osv):
                 elif reconcile.line_partial_ids:
                     first_partner = reconcile.line_partial_ids[0].partner_id.id
                     move_lines = reconcile.line_partial_ids
-                if any([line.partner_id.id != first_partner for line in move_lines]):
+                if any([(line.account_id.type in ('receivable', 'payable') and line.partner_id.id != first_partner) for line in move_lines]):
                     return False
         return True
 
@@ -1786,7 +1785,7 @@ class account_tax_code(osv.osv):
         if context.get('period_id', False):
             period_id = context['period_id']
         else:
-            period_id = self.pool.get('account.period').find(cr, uid)
+            period_id = self.pool.get('account.period').find(cr, uid, context=context)
             if not period_id:
                 return dict.fromkeys(ids, 0.0)
             period_id = period_id[0]

@@ -26,7 +26,7 @@ openerp.account = function (instance) {
             if (this.partners) {
                 this.$el.prepend(QWeb.render("AccountReconciliation", {widget: this}));
                 this.$(".oe_account_recon_previous").click(function() {
-                    self.current_partner = (self.current_partner - 1) % self.partners.length;
+                    self.current_partner = (((self.current_partner - 1) % self.partners.length) + self.partners.length) % self.partners.length;
                     self.search_by_partner();
                 });
                 this.$(".oe_account_recon_next").click(function() {
