@@ -2726,9 +2726,9 @@ class stock_move(osv.osv):
                         self.write(cr, uid, move.id, {'price_unit': price_amount / amount}, context=context)
                         product_obj.write(cr, uid, product.id, {'standard_price': price_amount / product_uom_qty}, context=ctx)
                     else:
-                        raise osv.except_osv(_('Error'), "You should tell me " + tuples + self.search(cr, uid, [('company_id','=', company_id), ('qty_remaining', '>', 0), ('state', '=', 'done'), 
+                        raise osv.except_osv(_('Error'), "You should tell me " + str(tuples) + str(self.search(cr, uid, [('company_id','=', company_id), ('qty_remaining', '>', 0), ('state', '=', 'done'), 
                                              ('location_id.usage', '!=', 'internal'), ('location_dest_id.usage', '=', 'internal'), ('product_id', '=', product.id)], 
-                                       order = 'date', context=context))
+                                       order = 'date', context=context)))
                 else:
                     new_price = uom_obj._compute_price(cr, uid, product.uom_id.id, product.standard_price,
                             product_uom)

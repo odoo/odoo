@@ -331,6 +331,8 @@
     self.do_partial(cr, uid, [partial_id])
     from datetime import *
     self.pool.get("stock.move").write(cr, uid, [ref("outgoing_shipment_fifo_icecream_neg2")], {'date': (datetime.now()+timedelta(seconds=3)).strftime('%Y-%m-%d %H:%M:%S')})
+    print self.pool.get("stock.move").browse(cr, uid, ref("outgoing_shipment_fifo_icecream_neg2")).date
+    print self.pool.get("stock.move").browse(cr, uid, ref("outgoing_shipment_fifo_icecream_neg")).date
 - 
   Print price
 - 
