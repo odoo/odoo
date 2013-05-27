@@ -329,7 +329,7 @@
     line = self.browse(cr, uid, partial_id, context=context).move_ids[0]
     self.pool.get("stock.partial.picking.line").write(cr, uid, [line.id], {'quantity':50})
     self.do_partial(cr, uid, [partial_id])
-    from datetime import datetime.now(), timedelta #INVALID SYNTAX
+    from datetime import *
     picking_id = self.pool.get("stock.picking").browse(cr, uid, ref("outgoing_fifo_shipment_neg2")).backorder_id.id
     mov_ids = self.pool.get("stock.move").search(cr, uid, [('picking_id', '=', picking_id)])
     self.pool.get("stock.move").write(cr, uid, mov_ids, {'date': (datetime.now()+timedelta(seconds=3)).strftime('%Y-%m-%d %H:%M:%S')})
