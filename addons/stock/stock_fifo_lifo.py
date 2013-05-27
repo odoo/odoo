@@ -122,6 +122,8 @@ class product_product (osv.osv):
                 break
         if tuples == [] and move_in_ids != []:
             raise osv.except_osv(_('Error'), 'Not possible that there are no tuples when move ins')
+        else:
+            raise osv.except_osv(_('Warning'), str(move_in_ids) + str(tuples) + str(qty) + " " + str(qty_to_go))
         return tuples
 
 class stock_move(osv.osv):
