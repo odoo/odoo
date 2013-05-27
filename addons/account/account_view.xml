@@ -407,6 +407,7 @@
                             <field name="default_credit_account_id" attrs="{'required':[('type','in',('cash', 'bank'))]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             <field name="currency" groups="base.group_multi_currency"/>
                             <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active"/>
                         </group>
                     </group>
                     <notebook>

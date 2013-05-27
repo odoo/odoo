@@ -734,7 +734,7 @@ class account_journal(osv.osv):
         'entry_posted': fields.boolean('Skip \'Draft\' State for Manual Entries', help='Check this box if you don\'t want new journal entries to pass through the \'draft\' state and instead goes directly to the \'posted state\' without any manual validation. \nNote that journal entries that are automatically created by the system are always skipping that state.'),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=1, help="Company related to this journal"),
         'allow_date':fields.boolean('Check Date in Period', help= 'If set to True then do not accept the entry if the entry date is not into the period dates'),
-
+        'active': fields.boolean('Active', select=True),
         'profit_account_id' : fields.many2one('account.account', 'Profit Account'),
         'loss_account_id' : fields.many2one('account.account', 'Loss Account'),
         'internal_account_id' : fields.many2one('account.account', 'Internal Transfers Account', select=1),
@@ -746,6 +746,7 @@ class account_journal(osv.osv):
         'with_last_closing_balance' : False,
         'user_id': lambda self, cr, uid, context: uid,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
+        'active': True,
     }
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, company_id)', 'The code of the journal must be unique per company !'),
