@@ -389,8 +389,7 @@ class gamification_goal(osv.Model):
                         views = [(view_id, mode)]
                         break
                 action['views'] = views
-            # doesn't seem to work if not in popup
-            action['target'] = 'new'
+
             return action
 
         if goal.computation_mode == 'manually':

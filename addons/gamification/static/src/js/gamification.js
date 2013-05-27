@@ -29,8 +29,7 @@ openerp.gamification = function(instance) {
                     goal_action['action'] = res;
                 });
                 $.when(goal_action).done(function() {
-                    var action_manager = new instance.web.ActionManager(this);
-                    var action = action_manager.do_action(goal_action.action);
+                    var action = self.do_action(goal_action.action);
                     $.when(action).done(function () {
                         new instance.web.Model('gamification.goal').call('update', [[goal_id]]).then(function(res) {
                             self.get_goal_todo_info();
@@ -46,8 +45,7 @@ openerp.gamification = function(instance) {
                     plan_action['action'] = res;
                 });
                 $.when(plan_action).done(function() {
-                    var action_manager = new instance.web.ActionManager(this);
-                    action_manager.do_action(plan_action.action).done(function () {
+                    self.do_action(plan_action.action).done(function () {
                         self.get_goal_todo_info();
                     });
                 });
