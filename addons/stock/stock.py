@@ -2329,31 +2329,32 @@ class stock_move(osv.osv):
                     account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, matches, acc_dest, acc_valuation, reference_amount, reference_currency_id, 'in', context=company_ctx))]
                 else:
                     account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, matches, acc_src, acc_valuation, reference_amount, reference_currency_id, 'in', context=company_ctx))]
-            if matches and move.product_id.cost_method in ('fifo', 'lifo'):
-                outs = {}
-                match_obj = self.pool.get("stock.move.matching")
-                for match in match_obj.browse(cr, uid, matches, context=context):
-                    if match.move_out_id.id in outs:
-                        outs[match.move_out_id.id] += [match.id]
-                    else:
-                        outs[match.move_out_id.id] = [match.id]
-                #When in stock was negative, you will get matches for the in also:
-                account_moves_neg = []
-                for out_mov in self.browse(cr, uid, outs.keys(), context=context):
-                    journal_id_out, acc_src_out, acc_dest_out, acc_valuation_out = self._get_accounting_data_for_valuation(cr, uid, out_mov, context=company_ctx)
-                    reference_amount_out, reference_currency_id_out = self._get_reference_accounting_values_for_valuation(cr, uid, out_mov, context=company_ctx)
-                    if out_mov.location_dest_id.usage == 'supplier':
-                        # Is not the way it should be with acc_valuation
-                        account_moves_neg += [(journal_id_out, self._create_account_move_line(cr, uid, out_mov, outs[out_mov.id], acc_valuation_out, acc_src_out, reference_amount_out, reference_currency_id_out, 'out', context=company_ctx))]
-                    else:
-                        account_moves_neg += [(journal_id_out, self._create_account_move_line(cr, uid, out_mov, outs[out_mov.id], acc_valuation_out, acc_dest_out, reference_amount_out, reference_currency_id_out, 'out', context=company_ctx))]
-                #Create account moves for outs which made stock go negative
-                for j_id, move_lines in account_moves_neg:
-                    move_obj.create(cr, uid,
-                                    {'journal_id': j_id, 
-                                     'line_id': move_lines, 
-                                     'ref': out_mov.picking_id and out_mov.picking_id.name,
-                                     })
+                if matches and move.product_id.cost_method in ('fifo', 'lifo'):
+                    print "Generate accounting entries of negative matches"
+                    outs = {}
+                    match_obj = self.pool.get("stock.move.matching")
+                    for match in match_obj.browse(cr, uid, matches, context=context):
+                        if match.move_out_id.id in outs:
+                            outs[match.move_out_id.id] += [match.id]
+                        else:
+                            outs[match.move_out_id.id] = [match.id]
+                    #When in stock was negative, you will get matches for the in also:
+                    account_moves_neg = []
+                    for out_mov in self.browse(cr, uid, outs.keys(), context=context):
+                        journal_id_out, acc_src_out, acc_dest_out, acc_valuation_out = self._get_accounting_data_for_valuation(cr, uid, out_mov, context=company_ctx)
+                        reference_amount_out, reference_currency_id_out = self._get_reference_accounting_values_for_valuation(cr, uid, out_mov, context=company_ctx)
+                        if out_mov.location_dest_id.usage == 'supplier':
+                            # Is not the way it should be with acc_valuation
+                            account_moves_neg += [(journal_id_out, self._create_account_move_line(cr, uid, out_mov, outs[out_mov.id], acc_valuation_out, acc_src_out, reference_amount_out, reference_currency_id_out, 'out', context=company_ctx))]
+                        else:
+                            account_moves_neg += [(journal_id_out, self._create_account_move_line(cr, uid, out_mov, outs[out_mov.id], acc_valuation_out, acc_dest_out, reference_amount_out, reference_currency_id_out, 'out', context=company_ctx))]
+                    #Create account moves for outs which made stock go negative
+                    for j_id, move_lines in account_moves_neg:
+                        move_obj.create(cr, uid,
+                                        {'journal_id': j_id, 
+                                         'line_id': move_lines, 
+                                         'ref': out_mov.picking_id and out_mov.picking_id.name,
+                                         })
             for j_id, move_lines in account_moves:
                 move_obj.create(cr, uid,
                         {
