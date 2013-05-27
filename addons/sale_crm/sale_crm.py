@@ -19,17 +19,11 @@
 #
 ##############################################################################
 
-from datetime import date
+from datetime import date, datetime
 from openerp import tools
 from dateutil.relativedelta import relativedelta
 from openerp.osv import osv, fields
 
-MONTHS = {
-    "monthly": 1,
-    "semesterly": 3,
-    "semiannually": 6,
-    "annually": 12
-}
 
 class sale_order(osv.osv):
     _inherit = 'sale.order'
@@ -57,60 +51,40 @@ class crm_case_section(osv.osv):
     def _get_created_quotation_per_duration(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, [])
         obj = self.pool.get('sale.order')
-        first_day = date.today().replace(day=1)
-
+        today = date.today().replace(day=1)
+        begin = (today + relativedelta(months=-5)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
         for section in self.browse(cr, uid, ids, context=context):
-            dates = [first_day + relativedelta(months=-(MONTHS[section.target_duration]*(key+1)-1)) for key in range(0, 5)]
-            rates = []
-            for when in range(0, 5):
-                domain = [("section_id", "=", section.id), ('state', 'in', ['draft', 'sent']), ('date_order', '>=', dates[when].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
-                if when:
-                    domain += [('date_order', '<', dates[when-1].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
-                # rate = 0
-                # order_ids = obj.search(cr, uid, domain, context=context)
-                # for order in obj.browse(cr, uid, order_ids, context=context):
-                #     rate += order.amount_total
-                # rates.append(rate)
-                group_obj = obj.read_group(cr, uid, domain, ['amount_total', 'section_id'], "section_id", context=context)
-                rates.append(group_obj and group_obj[0]['amount_total'] or 0)
-            rates.reverse()
-            res[section.id] = rates
+            domain = [("section_id", "=", section.id), ('state', 'in', ['draft', 'sent']), ('date_order', '>=', begin)]
+            group_obj = obj.read_group(cr, uid, domain, ['amount_total', "date_order"], "date_order", context=context)
+            group_list = [group['amount_total'] for group in group_obj]
+            nb_month = group_obj and relativedelta(today, datetime.strptime(group_obj[-1]['__domain'][0][2], '%Y-%m-%d')).months or 0
+            res[section.id] = [0]*(5 - len(group_list) - nb_month) + group_list + [0]*nb_month
         return res
 
     def _get_validate_saleorder_per_duration(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, [])
         obj = self.pool.get('sale.order')
-        first_day = date.today().replace(day=1)
-
+        today = date.today().replace(day=1)
+        begin = (today + relativedelta(months=-5)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
         for section in self.browse(cr, uid, ids, context=context):
-            dates = [first_day + relativedelta(months=-(MONTHS[section.target_duration]*(key+1)-1)) for key in range(0, 5)]
-            rates = []
-            for when in range(0, 5):
-                domain = [("section_id", "=", section.id), ('state', 'not in', ['draft', 'sent']), ('date_confirm', '>=', dates[when].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
-                if when:
-                    domain += [('date_confirm', '<', dates[when-1].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
-                group_obj = obj.read_group(cr, uid, domain, ['amount_total', 'section_id'], "section_id", context=context)
-                rates.append(group_obj and group_obj[0]['amount_total'] or 0)
-            rates.reverse()
-            res[section.id] = rates
+            domain = [("section_id", "=", section.id), ('state', 'not in', ['draft', 'sent']), ('date_confirm', '>=', begin)]
+            group_obj = obj.read_group(cr, uid, domain, ['amount_total', "date_confirm"], "date_confirm", context=context)
+            group_list = [group['amount_total'] for group in group_obj]
+            nb_month = group_obj and relativedelta(today, datetime.strptime(group_obj[-1]['__domain'][0][2], '%Y-%m-%d')).months or 0
+            res[section.id] = [0]*(5 - len(group_list) - nb_month) + group_list + [0]*nb_month
         return res
 
     def _get_sent_invoice_per_duration(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, [])
         obj = self.pool.get('account.invoice.report')
-        first_day = date.today().replace(day=1)
-
+        today = date.today().replace(day=1)
+        begin = (today + relativedelta(months=-5)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
         for section in self.browse(cr, uid, ids, context=context):
-            dates = [first_day + relativedelta(months=-(MONTHS[section.target_duration]*(key+1)-1)) for key in range(0, 5)]
-            rates = []
-            for when in range(0, 5):
-                domain = [("section_id", "=", section.id), ('state', 'not in', ['draft', 'cancel']), ('date', '>=', dates[when].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
-                if when:
-                    domain += [('date', '<', dates[when-1].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
-                group_obj = obj.read_group(cr, uid, domain, ['price_total', 'section_id'], "section_id", context=context)
-                rates.append(group_obj and group_obj[0]['price_total'] or 0)
-            rates.reverse()
-            res[section.id] = rates
+            domain = [("section_id", "=", section.id), ('state', 'not in', ['draft', 'cancel']), ('date', '>=', begin)]
+            group_obj = obj.read_group(cr, uid, domain, ['price_total', "date"], "date", context=context)
+            group_list = [group['price_total'] for group in group_obj]
+            nb_month = group_obj and relativedelta(today, datetime.strptime(group_obj[-1]['__domain'][0][2], '%Y-%m-%d')).months or 0
+            res[section.id] = [0]*(5 - len(group_list) - nb_month) + group_list + [0]*nb_month
         return res
 
     _columns = {

@@ -23,7 +23,7 @@ from openerp import tools
 from openerp.osv import fields
 from openerp.osv import osv
 from openerp.tools.translate import _
-from datetime import date
+from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 
 MAX_LEVEL = 15
@@ -42,20 +42,6 @@ AVAILABLE_PRIORITIES = [
     ('4', 'Low'),
     ('5', 'Lowest'),
 ]
-
-DURATION_TXT = {
-    "monthly": _("month"),
-    "quarterly": _("quarter"),
-    "semesterly": _("semester"),
-    "annually": _("year")
-}
-
-MONTHS = {
-    "monthly": 1,
-    "quarterly": 3,
-    "semesterly": 6,
-    "annually": 12
-}
 
 class crm_case_channel(osv.osv):
     _name = "crm.case.channel"
@@ -123,45 +109,30 @@ class crm_case_section(osv.osv):
     def get_full_name(self, cr, uid, ids, field_name, arg, context=None):
         return dict(self.name_get(cr, uid, ids, context=context))
 
-    def _get_target_duration_txt(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict.fromkeys(ids, "")
-        for section in self.browse(cr, uid, ids, context=context):
-            res[section.id] = DURATION_TXT[section.target_duration]
-        return res
-
     def _get_open_lead_per_duration(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, [])
-        lead_obj = self.pool.get('crm.lead')
-        first_day = date.today().replace(day=1)
-
+        obj = self.pool.get('crm.lead')
+        today = date.today().replace(day=1)
+        begin = (today + relativedelta(months=-5)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
         for section in self.browse(cr, uid, ids, context=context):
-            dates = [first_day + relativedelta(months=-(MONTHS[section.target_duration]*(key+1)-1)) for key in range(0, 5)]
-            nb_leads = []
-            for when in range(0, 5):
-                domain = [("section_id", "=", section.id), '|', ('type', '=', 'lead'), ('date_open', '!=', None), ('create_date', '>=', dates[when].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
-                if when:
-                    domain += [('create_date', '<', dates[when-1].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
-                nb_leads.append(lead_obj.search(cr, uid, domain, context=context, count=True))
-            nb_leads.reverse()
-            res[section.id] = nb_leads
+            domain = [("section_id", "=", section.id), '|', ('type', '=', 'lead'), ('date_open', '!=', None), ('create_date', '>=', begin)]
+            group_obj = obj.read_group(cr, uid, domain, ["create_date"], "create_date", context=context)
+            group_list = [group['create_date_count'] for group in group_obj]
+            nb_month = group_obj and relativedelta(today, datetime.strptime(group_obj[-1]['__domain'][0][2], '%Y-%m-%d')).months or 0
+            res[section.id] = [0]*(5 - len(group_list) - nb_month) + group_list + [0]*nb_month
         return res
 
     def _get_won_opportunity_per_duration(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, [])
         obj = self.pool.get('crm.lead')
-        first_day = date.today().replace(day=1)
-
+        today = date.today().replace(day=1)
+        begin = (today + relativedelta(months=-5)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
         for section in self.browse(cr, uid, ids, context=context):
-            dates = [first_day + relativedelta(months=-(MONTHS[section.target_duration]*(key+1)-1)) for key in range(0, 5)]
-            rates = []
-            for when in range(0, 5):
-                domain = [("section_id", "=", section.id), ('state', '=', 'done'), ('type', '=', 'opportunity'), ('date_closed', '>=', dates[when].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
-                if when:
-                    domain += [('date_closed', '<', dates[when-1].strftime(tools.DEFAULT_SERVER_DATE_FORMAT))]
-                group_obj = obj.read_group(cr, uid, domain, ['planned_revenue', 'section_id'], "section_id", context=context)
-                rates.append(group_obj and group_obj[0]['planned_revenue'] or 0)
-            rates.reverse()
-            res[section.id] = rates
+            domain = [("section_id", "=", section.id), '|', ('type', '=', 'opportunity'), ('date_open', '!=', None), ('create_date', '>=', begin)]
+            group_obj = obj.read_group(cr, uid, domain, ['planned_revenue', "create_date"], "create_date", context=context)
+            group_list = [group['planned_revenue'] for group in group_obj]
+            nb_month = group_obj and relativedelta(today, datetime.strptime(group_obj[-1]['__domain'][0][2], '%Y-%m-%d')).months or 0
+            res[section.id] = [0]*(5 - len(group_list) - nb_month) + group_list + [0]*nb_month
         return res
 
     _columns = {
@@ -187,12 +158,6 @@ class crm_case_section(osv.osv):
         'use_leads': fields.boolean('Leads',
             help="The first contact you get with a potential customer is a lead you qualify before converting it into a real business opportunity. Check this box to manage leads in this sales team."),
 
-        'target_duration': fields.selection([("monthly", "Monthly"), ("quarterly", "Quarterly"), ("semesterly", "Semesterly"), ("annually", "Annually")],
-            string='Report Duration', required=True),
-        'target_duration_txt': fields.function(_get_target_duration_txt,
-            string='Duration',
-            type="string", readonly=True),
-
         'open_lead_per_duration': fields.function(_get_open_lead_per_duration, string='Open Leads per duration', type="string", readonly=True),
         'won_opportunity_per_duration': fields.function(_get_won_opportunity_per_duration, string='Revenue of opporunities whon per duration', type="string", readonly=True)
     }
@@ -205,7 +170,6 @@ class crm_case_section(osv.osv):
         'active': 1,
         'stage_ids': _get_stage_common,
         'use_leads': True,
-        'target_duration': "monthly",
     }
 
     _sql_constraints = [

@@ -78,7 +78,6 @@
                     <field name="note"/>
                     <field name="alias_id"/>
                     <field name="color"/>
-                    <field name="target_duration_txt"/>
                     <field name="open_lead_per_duration"/>
                     <field name="won_opportunity_per_duration"/>
                     <templates>
@@ -100,10 +99,10 @@
                                     <div class="oe_items_list">
                                         <div class="oe_salesteams_leads" t-if="record.use_leads.raw_value">
                                             <a name="%(crm_case_form_view_salesteams_lead)d" type="action">Leads</a>
-                                            <a name="%(action_report_crm_lead)d" type="action" class="oe_sparkline_bar_link"><field name="open_lead_per_duration" widget="sparkline_bar">Number of opening leads per duration.<br/>(last one is <t t-esc="record.target_duration_txt.value"/>).<br/>Click to see a detailed analysis of leads.</field></a>
+                                            <a name="%(action_report_crm_lead)d" type="action" class="oe_sparkline_bar_link"><field name="open_lead_per_duration" widget="sparkline_bar">Number of opening leads per month.<br/>Click to see a detailed analysis of leads.</field></a>
                                         </div><div class="oe_salesteams_opportunities">
                                             <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action">Opportunities</a>
-                                            <a name="%(action_report_crm_opportunity)d" type="action"><field name="won_opportunity_per_duration" widget="sparkline_bar">Revenue of won opportunities per duration.<br/>(last one is <t t-esc="record.target_duration_txt.value"/>).<br/>Click to see a detailed analysis of opportunities.</field></a>
+                                            <a name="%(action_report_crm_opportunity)d" type="action"><field name="won_opportunity_per_duration" widget="sparkline_bar">Revenue of won opportunities per month.<br/>Click to see a detailed analysis of opportunities.</field></a>
                                         </div>
                                     </div>
                                 </div>
@@ -189,9 +188,6 @@
                             <group>
                                 <field name="user_id"/>
                                 <field name="change_responsible"/>
-                            </group>
-                            <group colspan="4" col="2">
-                                <field name="target_duration" widget="radio"/>
                             </group>
                             <group colspan="4" attrs="{'invisible': [('use_leads', '=', False)]}">
                                 
