@@ -153,14 +153,12 @@ class StockMove(osv.osv):
         production_obj = self.pool.get('mrp.production')
         wf_service = netsvc.LocalService("workflow")
         for move in self.browse(cr, uid, ids, context=context):
-            production_ids = production_obj.search(cr, uid, [('move_created_ids', 'in', [move.id])])
+            production_ids = production_obj.search(cr, uid, [('move_created_ids', 'in', [move.id])], context=context)
             if production_ids:
-                product_data = production_obj.browse(cr, uid, production_ids[0])
-                if product_data.move_created_ids2 and product_data.move_lines2 and move.state=='done':
+                product_data = production_obj.browse(cr, uid, production_ids[0], context=context)
+                if product_data.move_created_ids2 and move.state=='done':
                     wf_service.trg_validate(uid, 'mrp.production', product_data.id, 'button_produce_done', cr)
-                elif not product_data.move_lines2 and move.state=='done':
-                    wf_service.trg_validate(uid, 'mrp.production', product_data.id, 'button_produce_done', cr)                    
-        return res    
+        return res
 
 StockMove()
 
@@ -184,7 +182,7 @@ class StockPicking(osv.osv):
         for pick in self.browse(cr, uid, ids, context=context):
             if not pick.move_lines:
                 return False
-        return res    
+        return res
 
 StockPicking()
 
