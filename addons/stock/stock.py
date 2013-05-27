@@ -2722,8 +2722,13 @@ class stock_move(osv.osv):
                     amount += match[1]
                 #Write price on out move
                 if product.qty_available >= product_uom_qty and product.cost_method in ['fifo', 'lifo']:
-                    self.write(cr, uid, move.id, {'price_unit': price_amount / amount}, context=context)
-                    product_obj.write(cr, uid, product.id, {'standard_price': price_amount / product_uom_qty}, context=ctx)
+                    if amount > 0:
+                        self.write(cr, uid, move.id, {'price_unit': price_amount / amount}, context=context)
+                        product_obj.write(cr, uid, product.id, {'standard_price': price_amount / product_uom_qty}, context=ctx)
+                    else:
+                        raise osv.except_osv(_('Error'), "You should tell me " + tuples + self.search(cr, uid, [('company_id','=', company_id), ('qty_remaining', '>', 0), ('state', '=', 'done'), 
+                                             ('location_id.usage', '!=', 'internal'), ('location_dest_id.usage', '=', 'internal'), ('product_id', '=', product.id)], 
+                                       order = 'date', context=context))
                 else:
                     new_price = uom_obj._compute_price(cr, uid, product.uom_id.id, product.standard_price,
                             product_uom)
@@ -2779,10 +2784,6 @@ class stock_move(osv.osv):
                             if amount > 0.0:
                                 self.write(cr, uid, [out_mov.id], {'price_unit': total_price / amount}, context=context)
                                 if amount >= out_mov.product_qty:
-                                    print "Update product when negative"
-                                    print total_price
-                                    print amount
-                                    print out_mov.product_qty
                                     product_obj.write(cr, uid, [product.id], {'standard_price': total_price / amount}, context=ctx)
                 product_avail[product.id] += product_uom_qty
             #The return of average products at average price could be made optional
