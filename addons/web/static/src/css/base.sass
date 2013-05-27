@@ -1649,6 +1649,15 @@ $sheet-padding: 16px
     .oe_form_dropdown_section
         position: relative
         display: inline-block
+    .oe_form_editable
+        .oe_form_required
+            &.oe_form_field_one2many, &.oe_form_field_many2many
+                table.oe_list_content
+                    background-color: #d2d2ff !important
+        .oe_form_invalid
+            &.oe_form_field_one2many, &.oe_form_field_many2many
+                table.oe_list_content
+                    background-color: #ff6666 !important
     .oe_form_invalid
         input, select, textarea
             background-color: #F66 !important
