@@ -850,9 +850,9 @@ openerp.mail = function (session) {
 
         on_checked_recipient: function (event) {
             var $input = $(event.target);
-            var email = $input.attr("data");
+            var full_name = $input.attr("data");
             _.each(this.recipients, function (recipient) {
-                if (recipient.email_address == email) {
+                if (recipient.full_name == full_name) {
                     recipient.checked = $input.is(":checked");
                 }
             });
