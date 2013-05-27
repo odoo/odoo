@@ -1114,6 +1114,23 @@ class account_invoice(osv.osv):
                         (ref, move_id))
         return True
 
+    def action_proforma(self, cr, uid, ids, context=None):
+        """
+        Check if all taxes are present with the correct base amount
+        on creating a proforma invoice. This leaves room for manual
+        corrections of the tax amount.
+        """
+        if not ids:
+            return True
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        ait_obj = self.pool.get('account.invoice.tax')
+        for inv in self.browse(cr, uid, ids, context=context):
+            compute_taxes = ait_obj.compute(cr, uid, inv.id, context=context)
+            self.check_tax_lines(cr, uid, inv, compute_taxes, ait_obj)
+        return self.write(
+            cr, uid, ids, {'state': 'proforma2'}, context=context)
+
     def action_cancel(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
