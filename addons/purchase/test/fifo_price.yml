@@ -330,7 +330,9 @@
     self.pool.get("stock.partial.picking.line").write(cr, uid, [line.id], {'quantity':50})
     self.do_partial(cr, uid, [partial_id])
     from datetime import *
-    self.pool.get("stock.move").write(cr, uid, [ref("outgoing_shipment_fifo_icecream_neg2")], {'date': (datetime.now()+timedelta(seconds=3)).strftime('%Y-%m-%d %H:%M:%S')})
+    mov_ids = self.pool.get("stock.move").search(cr, uid, [('backorder_id', '=', ref("outgoing_fifo_shipment_neg2"))])
+    self.pool.get("stock.move").write(cr, uid, mov_ids, {'date': (datetime.now()+timedelta(seconds=3)).strftime('%Y-%m-%d %H:%M:%S')})
+    print [(x.date, x.product_qty) for x in self.pool.get("stock.move").browse(cr, uid, mov_ids)]
     print self.pool.get("stock.move").browse(cr, uid, ref("outgoing_shipment_fifo_icecream_neg2")).date
     print self.pool.get("stock.move").browse(cr, uid, ref("outgoing_shipment_fifo_icecream_neg")).date
 - 

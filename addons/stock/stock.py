@@ -2728,7 +2728,7 @@ class stock_move(osv.osv):
                     else:
                         raise osv.except_osv(_('Error'), "You should tell me " + str(tuples) + str(self.search(cr, uid, [('company_id','=', company_id), ('qty_remaining', '>', 0), ('state', '=', 'done'), 
                                              ('location_id.usage', '!=', 'internal'), ('location_dest_id.usage', '=', 'internal'), ('product_id', '=', product.id)], 
-                                       order = 'date', context=context)))
+                                       order = 'date', context=context)) + str(product_qty) + str(product_uom) + str(move.company_id.currency_id.id))
                 else:
                     new_price = uom_obj._compute_price(cr, uid, product.uom_id.id, product.standard_price,
                             product_uom)
