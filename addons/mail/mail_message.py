@@ -144,6 +144,7 @@ class mail_message(osv.Model):
         'author_id': fields.many2one('res.partner', 'Author', select=1,
             ondelete='set null',
             help="Author of the message. If not set, email_from may hold an email address that did not match any partner."),
+        'author_avatar': fields.related('author_id', 'image_small', type="binary", string="Author's Avatar"),
         'partner_ids': fields.many2many('res.partner', string='Recipients'),
         'notified_partner_ids': fields.many2many('res.partner', 'mail_notification',
             'message_id', 'partner_id', 'Notified partners',
@@ -277,7 +278,7 @@ class mail_message(osv.Model):
         }
         if starred:
             values['read'] = False
- 
+
         notif_ids = notification_obj.search(cr, uid, domain, context=context)
 
         # all message have notifications: already set them as (un)starred
@@ -384,6 +385,7 @@ class mail_message(osv.Model):
                 'parent_id': parent_id,
                 'is_private': is_private,
                 'author_id': False,
+                'author_avatar': message.author_avatar,
                 'is_author': False,
                 'partner_ids': [],
                 'vote_nb': vote_nb,
@@ -514,7 +516,6 @@ class mail_message(osv.Model):
         message_unload_ids = message_unload_ids if message_unload_ids is not None else []
         if message_unload_ids:
             domain += [('id', 'not in', message_unload_ids)]
-        notification_obj = self.pool.get('mail.notification')
         limit = limit or self._message_read_limit
         message_tree = {}
         message_list = []
