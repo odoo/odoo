@@ -1217,19 +1217,19 @@ class Binary(openerpweb.Controller):
         headers = [('Content-Type', 'image/png')]
         etag = req.httprequest.headers.get('If-None-Match')
         hashed_session = hashlib.md5(req.session_id).hexdigest()
+        retag = hashed_session
         id = None if not id else simplejson.loads(id)
         if type(id) is list:
             id = id[0] # m2o
-        if etag:
-            if not id and hashed_session == etag:
-                return werkzeug.wrappers.Response(status=304)
-            else:
-                date = Model.read([id], [last_update], req.context)[0].get(last_update)
-                if hashlib.md5(date).hexdigest() == etag:
-                    return werkzeug.wrappers.Response(status=304)
-
-        retag = hashed_session
         try:
+            if etag:
+                if not id and hashed_session == etag:
+                    return werkzeug.wrappers.Response(status=304)
+                else:
+                    date = Model.read([id], [last_update], req.context)[0].get(last_update)
+                    if hashlib.md5(date).hexdigest() == etag:
+                        return werkzeug.wrappers.Response(status=304)
+
             if not id:
                 res = Model.default_get([field], req.context).get(field)
                 image_base64 = res
