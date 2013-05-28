@@ -314,4 +314,34 @@ instance.web.auto_date_to_str = function(value, type) {
     }
 };
 
+/**
+ * performs a half up rounding with arbitrary precision, correcting for float loss of precision
+ * See the corresponding float_round() in server/tools/float_utils.py for more info
+ * @param {Number} the value to be rounded
+ * @param {Number} a non zero precision parameter. eg: 0.01 rounds to two digits.
+ */
+instance.web.round_precision = function(value, precision){
+    if(!value){
+        return 0;
+    }else if(!precision){
+        throw new Error('round_precision(...):  Cannot round value: '+value+' with a precision of zero (or undefined)');
+    }
+    var normalized_value = value / precision;
+    var epsilon_magnitude = Math.log(Math.abs(normalized_value))/Math.log(2);
+    var epsilon = Math.pow(2, epsilon_magnitude - 53);
+    normalized_value += normalized_value >= 0 ? epsilon : -epsilon;
+    var rounded_value = Math.round(normalized_value);
+    return rounded_value * precision;
+};
+
+/**
+ * performs a half up rounding with a fixed amount of decimals, correcting for float loss of precision
+ * See the corresponding float_round() in server/tools/float_utils.py for more info
+ * @param {Number} the value to be rounded
+ * @param {Number} the number of decimals. eg: round_decimals(3.141592,2) -> 3.14
+ */
+instance.web.round_decimals = function(value, decimals){
+    return instance.web.round_precision(value, Math.pow(10,-decimals));
+};
+
 };
