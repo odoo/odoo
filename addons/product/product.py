@@ -303,14 +303,14 @@ class product_template(osv.osv):
         'rental': fields.boolean('Can be Rent'),
         'categ_id': fields.many2one('product.category','Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
-        #TODO: why is there a first empty arg? relation='' could be written server side, no?
-        #TODO: put back decimal precision
+        #TODO: put back decimal precision ?
         'standard_price': fields.property(type = 'float',
                                           help="Cost price of the product used for standard stock valuation in accounting and used as a base price on purchase orders.", 
                                           groups="base.group_user", string="Cost"),
         'volume': fields.float('Volume', help="The volume in m3."),
         'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The gross weight in Kg."),
         'weight_net': fields.float('Net Weight', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
+        #TODO: put back required = True ?
         'cost_method': fields.property(type='selection', selection = [('standard','Standard Price'), ('average','Average Price'), ('fifo', 'FIFO price'), ('lifo', 'LIFO price')],
             help="Standard Price: The cost price is manually updated at the end of a specific period (usually every year). \nAverage Price: The cost price is recomputed at each incoming shipment.", 
             string="Costing Method"),
@@ -331,7 +331,6 @@ class product_template(osv.osv):
         'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type'),
         'seller_ids': fields.one2many('product.supplierinfo', 'product_id', 'Supplier'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
-        
     }
 
     def _get_uom_id(self, cr, uid, *args):

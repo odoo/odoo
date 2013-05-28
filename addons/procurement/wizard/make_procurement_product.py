@@ -67,7 +67,6 @@ class make_procurement(osv.osv_memory):
 
         for proc in self.browse(cr, uid, ids, context=context):
             wh = wh_obj.browse(cr, uid, proc.warehouse_id.id, context=context)
-            print "Company,", wh.company_id
             procure_id = procurement_obj.create(cr, uid, {
                 'name':'INT: '+str(user),
                 'date_planned': proc.date_planned,

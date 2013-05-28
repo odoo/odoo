@@ -52,6 +52,7 @@ class product_product(osv.osv):
             elif invoice_state == 'draft_open_paid':
                 states = ('draft', 'open', 'paid')
 
+            #TODO: here we keep the property
             sqlstr="""select
                     sum(l.price_unit * l.quantity)/sum(l.quantity) as avg_unit_price,
                     sum(l.quantity) as num_qty,
