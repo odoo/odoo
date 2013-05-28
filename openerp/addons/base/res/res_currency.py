@@ -77,6 +77,7 @@ class res_currency(osv.osv):
         'position' : 'after',
         'rounding': 0.01,
         'accuracy': 4,
+        'company_id': False,
     }
     _sql_constraints = [
         # this constraint does not cover all cases due to SQL NULL handling for company_id,

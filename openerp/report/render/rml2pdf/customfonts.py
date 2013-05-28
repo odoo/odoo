@@ -56,7 +56,9 @@ CustomTTFonts = [ ('Helvetica',"DejaVu Sans", "DejaVuSans.ttf", 'normal'),
         ('Courier',"FreeMono", "FreeMono.ttf", 'normal'),
         ('Courier',"FreeMono Bold", "FreeMonoBold.ttf", 'bold'),
         ('Courier',"FreeMono Oblique", "FreeMonoOblique.ttf", 'italic'),
-        ('Courier',"FreeMono BoldOblique", "FreeMonoBoldOblique.ttf", 'bolditalic'),]
+        ('Courier',"FreeMono BoldOblique", "FreeMonoBoldOblique.ttf", 'bolditalic'),
+        ('Sun-ExtA',"Sun-ExtA", "sun-exta.ttf", 'normal'),
+]
 
 
 TTFSearchPath_Linux = [
