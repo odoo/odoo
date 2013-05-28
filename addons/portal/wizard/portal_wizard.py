@@ -130,7 +130,7 @@ class wizard_user(osv.osv_memory):
         error_user = []
         ctx = dict(context or {}, active_test=False)
         for wizard_user in self.browse(cr, SUPERUSER_ID, ids, context):
-            if wizard_user.in_portal and not self._retrieve_user(cr, uid, wizard_user, context):
+            if wizard_user.in_portal and not self._retrieve_user(cr, SUPERUSER_ID, wizard_user, context):
                 email = extract_email(wizard_user.email)
                 if not email:
                     error_empty.append(wizard_user.partner_id)
