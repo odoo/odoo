@@ -19,7 +19,7 @@
   !python {model: stock.picking}: |
     import netsvc
     delivery_orders = self.search(cr, uid, [('sale_id','=',ref("sale.sale_order_8"))])
-    last_delivery_order_id = delivery_orders[0]
+    last_delivery_order_id = delivery_orders[-1]
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'stock.picking', last_delivery_order_id, 'button_cancel', cr)
 -
