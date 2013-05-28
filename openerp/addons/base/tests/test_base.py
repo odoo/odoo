@@ -61,6 +61,24 @@ class test_base(common.TransactionCase):
         self.assertEqual(p1.phone, p1phone, 'Phone should be preserved after address sync')
         self.assertEqual(p1.type, 'contact', 'Type should be preserved after address sync')
         self.assertEqual(p1.email, 'denis.bladesmith@ghoststep.com', 'Email should be preserved after sync')
+
+        # turn off sync
+        p1street = 'Different street, 42'
+        p1.write({'street': p1street,
+                  'use_parent_address': False})
+        p1.refresh(), ghoststep.refresh() 
+        self.assertEqual(p1.street, p1street, 'Address fields must not be synced after turning sync off')
+        self.assertNotEqual(ghoststep.street, p1street, 'Parent address must never be touched')
+
+        # turn on sync again       
+        p1.write({'use_parent_address': True})
+        p1.refresh()
+        self.assertEqual(p1.street, ghoststep.street, 'Address fields must be synced again')
+        self.assertEqual(p1.phone, p1phone, 'Phone should be preserved after address sync')
+        self.assertEqual(p1.type, 'contact', 'Type should be preserved after address sync')
+        self.assertEqual(p1.email, 'denis.bladesmith@ghoststep.com', 'Email should be preserved after sync')
+
+        # Modify parent, sync to children
         ghoststreet = 'South Street, 25'
         ghoststep.write({'street': ghoststreet})
         p1.refresh()

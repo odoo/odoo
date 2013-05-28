@@ -462,7 +462,7 @@ class res_partner(osv.osv, format_address):
         """ Sync commercial fields and address fields from company and to children after create/update,
         just as if those were all modeled as fields.related to the parent """
         # 1. From UPSTREAM: sync from parent
-        if update_values.get('parent_id') or update_values.get('use_company_address'):
+        if update_values.get('parent_id') or update_values.get('use_parent_address'):
             # 1a. Commercial fields: sync if parent changed
             if update_values.get('parent_id'):
                 self._commercial_sync_from_company(cr, uid, partner, context=context)
