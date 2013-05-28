@@ -92,11 +92,11 @@ class report_stock_move(osv.osv):
                             ELSE 0.0
                             END AS in_qty,
                         CASE WHEN sp.type in ('out') THEN
-                            sum(sm.product_qty * pu.factor / pu2.factor) * ip.value_float
+                            sum(sm.product_qty * sm.price_unit)
                             ELSE 0.0
                             END AS out_value,
                         CASE WHEN sp.type in ('in') THEN
-                            sum(sm.product_qty * pu.factor / pu2.factor) * ip.value_float
+                            sum(sm.product_qty * sm.price_unit)
                             ELSE 0.0
                             END AS in_value,
                         min(sm.id) as sm_id,
@@ -126,7 +126,6 @@ class report_stock_move(osv.osv):
                         LEFT JOIN product_uom pu ON (sm.product_uom=pu.id)
                           LEFT JOIN product_uom pu2 ON (sm.product_uom=pu2.id)
                         LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
-                          LEFT JOIN ir_property ip ON (ip.name='standard_price' AND ip.res_id=CONCAT('product.template,',pt.id) AND ip.company_id=sm.company_id)
                     GROUP BY
                         sm.id,sp.type, sm.date,sm.partner_id,
                         sm.product_id,sm.state,sm.product_uom,sm.date_expected,
@@ -179,15 +178,13 @@ CREATE OR REPLACE view report_stock_inventory AS (
         m.product_id as product_id, pt.categ_id as product_categ_id, l.usage as location_type, l.scrap_location as scrap_location,
         m.company_id,
         m.state as state, m.prodlot_id as prodlot_id,
-
-        coalesce(sum(-ip.value_float * m.product_qty * pu.factor / pu2.factor)::decimal, 0.0) as value,
+        coalesce(sum(-m.price_unit * m.product_qty)::decimal, 0.0) as value,
         coalesce(sum(-m.product_qty * pu.factor / pu2.factor)::decimal, 0.0) as product_qty
     FROM
         stock_move m
             LEFT JOIN stock_picking p ON (m.picking_id=p.id)
             LEFT JOIN product_product pp ON (m.product_id=pp.id)
                 LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
-                    LEFT JOIN ir_property ip ON (ip.name='standard_price' AND ip.res_id=CONCAT('product.template,',pt.id) AND ip.company_id=m.company_id)
                 LEFT JOIN product_uom pu ON (pt.uom_id=pu.id)
                 LEFT JOIN product_uom pu2 ON (m.product_uom=pu2.id)
             LEFT JOIN product_uom u ON (m.product_uom=u.id)
@@ -205,14 +202,13 @@ CREATE OR REPLACE view report_stock_inventory AS (
         m.product_id as product_id, pt.categ_id as product_categ_id, l.usage as location_type, l.scrap_location as scrap_location,
         m.company_id,
         m.state as state, m.prodlot_id as prodlot_id,
-        coalesce(sum(ip.value_float * m.product_qty * pu.factor / pu2.factor)::decimal, 0.0) as value,
+        coalesce(sum(m.price_unit * m.product_qty)::decimal, 0.0) as value,
         coalesce(sum(m.product_qty * pu.factor / pu2.factor)::decimal, 0.0) as product_qty
     FROM
         stock_move m
             LEFT JOIN stock_picking p ON (m.picking_id=p.id)
             LEFT JOIN product_product pp ON (m.product_id=pp.id)
                 LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
-                    LEFT JOIN ir_property ip ON (ip.name='standard_price' AND ip.res_id=CONCAT('product.template,',pt.id) AND ip.company_id=m.company_id)
                 LEFT JOIN product_uom pu ON (pt.uom_id=pu.id)
                 LEFT JOIN product_uom pu2 ON (m.product_uom=pu2.id)
             LEFT JOIN product_uom u ON (m.product_uom=u.id)

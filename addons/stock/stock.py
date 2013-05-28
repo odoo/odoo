@@ -2701,7 +2701,6 @@ class stock_move(osv.osv):
             if not product.id in product_avail:
                     product_avail[product.id] = product.qty_available
             
-            
             # Check if out -> do stock move matchings and if fifo/lifo -> update price
             if move.location_id.usage == 'internal' and move.location_dest_id.usage != 'internal':
                 
@@ -2720,14 +2719,14 @@ class stock_move(osv.osv):
                     price_amount += match[1] * match[2]
                     amount += match[1]
                 #Write price on out move
-                if product.qty_available >= product_uom_qty and product.cost_method in ['fifo', 'lifo']:
+                if product_avail[product.id] >= product_uom_qty and product.cost_method in ['fifo', 'lifo']:
                     if amount > 0:
                         self.write(cr, uid, move.id, {'price_unit': price_amount / amount}, context=context)
                         product_obj.write(cr, uid, product.id, {'standard_price': price_amount / product_uom_qty}, context=ctx)
                     else:
                         raise osv.except_osv(_('Error'), "Something went wrong finding stock moves " + str(tuples) + str(self.search(cr, uid, [('company_id','=', company_id), ('qty_remaining', '>', 0), ('state', '=', 'done'), 
                                              ('location_id.usage', '!=', 'internal'), ('location_dest_id.usage', '=', 'internal'), ('product_id', '=', product.id)], 
-                                       order = 'date', context=context)) + str(product_qty) + str(product_uom) + str(move.company_id.currency_id.id))
+                                       order = 'date, id', context=context)) + str(product_qty) + str(product_uom) + str(move.company_id.currency_id.id))
                 else:
                     new_price = uom_obj._compute_price(cr, uid, product.uom_id.id, product.standard_price,
                             product_uom)
@@ -2754,7 +2753,7 @@ class stock_move(osv.osv):
                 if product_avail[product.id] < 0.0:
                     #Search for most recent out moves until at least one matching has been found => order date desc
                     moves = self.search(cr, uid, [('company_id', '=', move.company_id.id), ('state','=', 'done'), ('location_id.usage','=','internal'), ('location_dest_id.usage', '!=', 'internal'), 
-                                                      ('product_id', '=', move.product_id.id), ('qty_remaining', '>', 0.0)], order='date', context=ctx)
+                                                      ('product_id', '=', move.product_id.id), ('qty_remaining', '>', 0.0)], order='date, id', context=ctx)
                     qty_to_go = move.product_qty
                     for out_mov in self.browse(cr, uid, moves, context=ctx):
                         if qty_to_go <= 0.0:
