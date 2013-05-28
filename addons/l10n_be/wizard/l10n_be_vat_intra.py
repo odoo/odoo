@@ -202,11 +202,11 @@ class partner_vat_intra(osv.osv_memory):
                                         'vatnum': row['vat'][2:].replace(' ','').upper(),
                                         'vat': row['vat'],
                                         'country': row['vat'][:2],
-                                        'amount': amt,
+                                        'amount': '%.2f' % amt,
                                         'intra_code': row['intra_code'],
                                         'code': intra_code})
 
-        xmldict.update({'dnum': dnum, 'clientnbr': str(seq), 'amountsum': amount_sum, 'partner_wo_vat': p_count})
+        xmldict.update({'dnum': dnum, 'clientnbr': str(seq), 'amountsum': '%.2f' % amount_sum, 'partner_wo_vat': p_count})
         return xmldict
 
     def create_xml(self, cursor, user, ids, context=None):
