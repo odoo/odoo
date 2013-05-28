@@ -504,44 +504,46 @@ class hr_job(osv.osv):
     _columns = {
         'survey_id': fields.many2one('survey', 'Interview Form', help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job"),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
-                                     help="Email alias for this job position. New emails will automatically "
-                                          "create new applicants for this job position."),
+                                    help="Email alias for this job position. New emails will automatically "
+                                         "create new applicants for this job position."),
         'application_count': fields.function(_application_count, type='integer', string="Total Applications"),
         'manager_id': fields.related('department_id', 'manager_id', type='many2one', string='Department Manager', relation='hr.employee', readonly=True, store=True),
     }
+    _defaults = {
+        'alias_domain': False, # always hide alias during creation
     }
-     _defaults = {
-         'alias_domain': False, # always hide alias during creation
-     }
-  
-     def _auto_init(self, cr, context=None):
-         """Installation hook to create aliases for all jobs and avoid constraint errors."""
-         res = self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(hr_job,self)._auto_init,
-             self._columns['alias_id'], 'name', alias_prefix='job+', alias_defaults={'job_id': 'id'}, context=context)
-         return res
-  
-     def create(self, cr, uid, vals, context=None):
-         mail_alias = self.pool.get('mail.alias')
-         if not vals.get('alias_id'):
-             vals.pop('alias_name', None) # prevent errors during copy()
-             alias_id = mail_alias.create_unique_alias(cr, uid,
-                           # Using '+' allows using subaddressing for those who don't
-                           # have a catchall domain setup.
-                           {'alias_name': 'jobs+'+vals['name']},
-                           model_name="hr.applicant",
-                           context=context)
-             vals['alias_id'] = alias_id
-         res = super(hr_job, self).create(cr, uid, vals, context)
-         mail_alias.write(cr, uid, [vals['alias_id']], {"alias_defaults": {'job_id': res}}, context)
-         return res
-  
-     def unlink(self, cr, uid, ids, context=None):
-         # Cascade-delete mail aliases as well, as they should not exist without the job position.
-         mail_alias = self.pool.get('mail.alias')
-         alias_ids = [job.alias_id.id for job in self.browse(cr, uid, ids, context=context) if job.alias_id]
-         res = super(hr_job, self).unlink(cr, uid, ids, context=context)
-         mail_alias.unlink(cr, uid, alias_ids, context=context)
-         return res
+
+    def _auto_init(self, cr, context=None):
+        """Installation hook to create aliases for all jobs and avoid constraint errors."""
+        if context is None:
+            context = {}
+        alias_context = dict(context, alias_model_name='hr.applicant')
+        res = self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(hr_job, self)._auto_init,
+            self._columns['alias_id'], 'name', alias_prefix='job+', alias_defaults={'job_id': 'id'}, context=alias_context)
+        return res
+
+    def create(self, cr, uid, vals, context=None):
+        mail_alias = self.pool.get('mail.alias')
+        if not vals.get('alias_id'):
+            vals.pop('alias_name', None) # prevent errors during copy()
+            alias_id = mail_alias.create_unique_alias(cr, uid,
+                          # Using '+' allows using subaddressing for those who don't
+                          # have a catchall domain setup.
+                          {'alias_name': 'jobs+'+vals['name']},
+                          model_name="hr.applicant",
+                          context=context)
+            vals['alias_id'] = alias_id
+        res = super(hr_job, self).create(cr, uid, vals, context)
+        mail_alias.write(cr, uid, [vals['alias_id']], {"alias_defaults": {'job_id': res}}, context)
+        return res
+
+    def unlink(self, cr, uid, ids, context=None):
+        # Cascade-delete mail aliases as well, as they should not exist without the job position.
+        mail_alias = self.pool.get('mail.alias')
+        alias_ids = [job.alias_id.id for job in self.browse(cr, uid, ids, context=context) if job.alias_id]
+        res = super(hr_job, self).unlink(cr, uid, ids, context=context)
+        mail_alias.unlink(cr, uid, alias_ids, context=context)
+        return res
 
     def action_print_survey(self, cr, uid, ids, context=None):
         if context is None:
