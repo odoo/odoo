@@ -58,7 +58,7 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
             implied_group='product.group_product_variant',
             help="""Allow to manage several variants per product. As an example, if you  sell T-Shirts, for the same "Linux T-Shirt", you may have variants on  sizes or colors; S, M, L, XL, XXL."""),
         'module_warning': fields.boolean("Allow configuring alerts by customer or products",
-            help="""Allow to configure notification on products and trigger them when a user wants to sale a given product or a given customer.
+            help="""Allow to configure notification on products and trigger them when a user wants to sell a given product or a given customer.
 Example: Product: this product is deprecated, do not purchase more than 5.
                 Supplier: don't forget to ask for an express delivery."""),
         'module_sale_margin': fields.boolean("Display margins on sales orders",

@@ -25,6 +25,7 @@ from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 from os.path import join as opj
 
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT as DF
 from openerp.tools.translate import _
 from openerp.osv import fields, osv
 from openerp import tools
@@ -132,12 +133,43 @@ class account_config_settings(osv.osv_memory):
         count = self.pool.get('res.company').search_count(cr, uid, [], context=context)
         return bool(count == 1)
 
+    def _get_default_fiscalyear_data(self, cr, uid, company_id, context=None):
+        """Compute default period, starting and ending date for fiscalyear
+        - if in a fiscal year, use its period, starting and ending date
+        - if past fiscal year, use its period, and new dates [ending date of the latest +1 day ; ending date of the latest +1 year]
+        - if no fiscal year, use monthly, 1st jan, 31th dec of this year
+        :return: (date_start, date_stop, period) at format DEFAULT_SERVER_DATETIME_FORMAT
+        """
+        fiscalyear_ids = self.pool.get('account.fiscalyear').search(cr, uid,
+                [('date_start', '<=', time.strftime(DF)), ('date_stop', '>=', time.strftime(DF)),
+                 ('company_id', '=', company_id)])
+        if fiscalyear_ids:
+            # is in a current fiscal year, use this one
+            fiscalyear = self.pool.get('account.fiscalyear').browse(cr, uid, fiscalyear_ids[0], context=context)
+            if len(fiscalyear.period_ids) == 5:  # 4 periods of 3 months + opening period
+                period = '3months'
+            else:
+                period = 'month'
+            return (fiscalyear.date_start, fiscalyear.date_stop, period)
+        else:
+            past_fiscalyear_ids = self.pool.get('account.fiscalyear').search(cr, uid,
+                [('date_stop', '<=', time.strftime(DF)), ('company_id', '=', company_id)])
+            if past_fiscalyear_ids:
+                # use the latest fiscal, sorted by (start_date, id)
+                latest_year = self.pool.get('account.fiscalyear').browse(cr, uid, past_fiscalyear_ids[-1], context=context)
+                latest_stop = datetime.datetime.strptime(latest_year.date_stop, DF)
+                if len(latest_year.period_ids) == 5:
+                    period = '3months'
+                else:
+                    period = 'month'
+                return ((latest_stop+datetime.timedelta(days=1)).strftime(DF), latest_stop.replace(year=latest_stop.year+1).strftime(DF), period)
+            else:
+                return (time.strftime('%Y-01-01'), time.strftime('%Y-12-31'), 'month')
+
+
     _defaults = {
         'company_id': _default_company,
         'has_default_company': _default_has_default_company,
-        'date_start': lambda *a: time.strftime('%Y-01-01'),
-        'date_stop': lambda *a: time.strftime('%Y-12-31'),
-        'period': 'month',
     }
 
     def create(self, cr, uid, values, context=None):
@@ -161,6 +193,7 @@ class account_config_settings(osv.osv_memory):
             fiscalyear_count = self.pool.get('account.fiscalyear').search_count(cr, uid,
                 [('date_start', '<=', time.strftime('%Y-%m-%d')), ('date_stop', '>=', time.strftime('%Y-%m-%d')),
                  ('company_id', '=', company_id)])
+            date_start, date_stop, period = self._get_default_fiscalyear_data(cr, uid, company_id, context=context)
             values = {
                 'expects_chart_of_accounts': company.expects_chart_of_accounts,
                 'currency_id': company.currency_id.id,
@@ -170,6 +203,9 @@ class account_config_settings(osv.osv_memory):
                 'has_fiscal_year': bool(fiscalyear_count),
                 'chart_template_id': False,
                 'tax_calculation_rounding_method': company.tax_calculation_rounding_method,
+                'date_start': date_start,
+                'date_stop': date_stop,
+                'period': period,
             }
             # update journals and sequences
             for journal_type in ('sale', 'sale_refund', 'purchase', 'purchase_refund'):
