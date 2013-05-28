@@ -108,7 +108,7 @@ class payment_order_create(osv.osv_memory):
         context.update({'line_ids': line_ids})
         model_data_ids = mod_obj.search(cr, uid,[('model', '=', 'ir.ui.view'), ('name', '=', 'view_create_payment_order_lines')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-        return {'name': ('Entrie Lines'),
+        return {'name': _('Entry Lines'),
                 'context': context,
                 'view_type': 'form',
                 'view_mode': 'form',
