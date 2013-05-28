@@ -1197,6 +1197,17 @@ class task(base_stage, osv.osv):
         return [task.project_id.message_get_reply_to()[0] if task.project_id else False
                     for task in self.browse(cr, uid, ids, context=context)]
 
+    def check_mail_message_access(self, cr, uid, mids, operation, model_obj=None, context=None):
+        """ mail.message document permission rule: can post a new message if can read
+            because of portal document. """
+        if not model_obj:
+            model_obj = self
+        if operation == 'create':
+            model_obj.check_access_rights(cr, uid, 'read')
+            model_obj.check_access_rule(cr, uid, mids, 'read', context=context)
+        else:
+            return super(task, self).check_mail_message_access(cr, uid, mids, operation, model_obj=model_obj, context=context)
+
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Override to updates the document according to the email. """
         if custom_values is None: custom_values = {}
@@ -1205,7 +1216,7 @@ class task(base_stage, osv.osv):
             'planned_hours': 0.0,
         }
         defaults.update(custom_values)
-        return super(task,self).message_new(cr, uid, msg, custom_values=defaults, context=context)
+        return super(task, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
 
     def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
         """ Override to update the task according to the email. """

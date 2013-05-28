@@ -725,12 +725,10 @@ class mail_message(osv.Model):
         for model, doc_dict in model_record_ids.items():
             model_obj = self.pool[model]
             mids = model_obj.exists(cr, uid, doc_dict.keys())
-            if operation in ['create', 'write', 'unlink']:
-                model_obj.check_access_rights(cr, uid, 'write')
-                model_obj.check_access_rule(cr, uid, mids, 'write', context=context)
+            if hasattr(model_obj, 'check_mail_message_access'):
+                model_obj.check_mail_message_access(cr, uid, mids, operation, context=context)
             else:
-                model_obj.check_access_rights(cr, uid, operation)
-                model_obj.check_access_rule(cr, uid, mids, operation, context=context)
+                self.pool['mail.thread'].check_mail_message_access(cr, uid, mids, operation, model_obj=model_obj, context=context)
             document_related_ids += [mid for mid, message in message_values.iteritems()
                 if message.get('model') == model and message.get('res_id') in mids]
 

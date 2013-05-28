@@ -449,6 +449,20 @@ class mail_thread(osv.AbstractModel):
         ir_attachment_obj.unlink(cr, uid, attach_ids, context=context)
         return True
 
+    def check_mail_message_access(self, cr, uid, mids, operation, model_obj=None, context=None):
+        """ mail.message check permission rules for related document. This method is
+            meant to be inherited in order to implement addons-specific behavior.
+            A common behavior would be to allow creating messages when having read
+            access rule on the document, for portal document such as issues. """
+        if not model_obj:
+            model_obj = self
+        if operation in ['create', 'write', 'unlink']:
+            model_obj.check_access_rights(cr, uid, 'write')
+            model_obj.check_access_rule(cr, uid, mids, 'write', context=context)
+        else:
+            model_obj.check_access_rights(cr, uid, operation)
+            model_obj.check_access_rule(cr, uid, mids, operation, context=context)
+
     #------------------------------------------------------
     # Email specific
     #------------------------------------------------------

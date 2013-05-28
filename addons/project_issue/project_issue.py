@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from openerp.addons.base_status.base_stage import base_stage
 from openerp.addons.project.project import _TASK_STATE
 from openerp.addons.crm import crm
@@ -492,6 +493,17 @@ class project_issue(base_stage, osv.osv):
         return [issue.project_id.message_get_reply_to()[0] if issue.project_id else False
                     for issue in self.browse(cr, uid, ids, context=context)]
 
+    def check_mail_message_access(self, cr, uid, mids, operation, model_obj=None, context=None):
+        """ mail.message document permission rule: can post a new message if can read
+            because of portal document. """
+        if not model_obj:
+            model_obj = self
+        if operation == 'create':
+            model_obj.check_access_rights(cr, uid, 'read')
+            model_obj.check_access_rule(cr, uid, mids, 'read', context=context)
+        else:
+            return super(project_issue, self).check_mail_message_access(cr, uid, mids, operation, model_obj=model_obj, context=context)
+
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):
         recipients = super(project_issue, self).message_get_suggested_recipients(cr, uid, ids, context=context)
         try:
@@ -563,13 +575,10 @@ class project_issue(base_stage, osv.osv):
         """
         if context is None:
             context = {}
-        
         res = super(project_issue, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)
-        
         if thread_id:
-            self.write(cr, uid, thread_id, {'date_action_last': time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)    
-        
-        return res   
+            self.write(cr, SUPERUSER_ID, thread_id, {'date_action_last': time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
+        return res
 
 
 class project(osv.Model):
