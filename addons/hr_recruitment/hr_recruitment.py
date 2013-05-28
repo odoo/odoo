@@ -322,7 +322,6 @@ class hr_applicant(base_stage, osv.Model):
         category = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'categ_meet_interview', context)
         res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'base_calendar', 'action_crm_meeting', context)
         res['context'] = {
-            'default_applicant_id':applicant.id,
             'default_partner_ids': applicant.partner_id and [applicant.partner_id.id] or False,
             'default_user_id': uid,
             'default_name': applicant.name,
@@ -576,15 +575,11 @@ class applicant_category(osv.osv):
 
 class crm_meeting(osv.Model):
     _inherit = 'crm.meeting'
-    _columns = {
-    'applicant_id': fields.many2one ('hr.applicant', 'Recruitment')
-    }
 
     def create(self, cr, uid, vals, context=None):
         meeting_id = super(crm_meeting, self).create(cr, uid, vals, context=context)
         obj_meeting = self.browse(cr, uid, meeting_id, context=context)
-        if obj_meeting.applicant_id:
-            self.pool.get('hr.applicant').log_meeting(cr, uid, [obj_meeting.applicant_id.id] , obj_meeting.name, obj_meeting.date,obj_meeting.duration, context=context)
+        self.pool.get('hr.applicant').log_meeting(cr, uid, context.get('active_ids',[]), obj_meeting.name, obj_meeting.date, obj_meeting.duration, context=context)
         return meeting_id
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
