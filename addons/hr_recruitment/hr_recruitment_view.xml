@@ -354,7 +354,7 @@
                                 </div>
                                 <div class = "oe_kanban_content">
                                     <h3 class="oe_kanban_ellipsis"><field name="name"/></h3>
-                                    <div class="oe_kanban_alias" t-if=" record.job_alias.value">
+                                    <div class="oe_kanban_alias oe_kanban_ellipsis" t-if=" record.job_alias.value">
                                         <span class="oe_e">%%</span><small><field name="job_alias"/></small>
                                     </div>
                                     <div class="oe_department">
@@ -377,7 +377,7 @@
                                             <div t-if="record.no_of_recruitment.raw_value gt 1"><t t-esc="record.no_of_recruitment.raw_value"/> Expected New Employees</div>
                                             <div t-if="record.no_of_recruitment.raw_value lt 2"><t t-esc="record.no_of_recruitment.raw_value"/> Expected New Employee</div>
                                         </div>
-                                        <field state="recruit" name="no_of_recruitment" widget="gage" style="width:167px; height: 102px;" options="{'min_field': 'no_of_hired_employee','max_field': 'no_of_recruitment', 'label_field': 'no_of_hired_employee', 'action_change': 'action_hired_employee'}">Forecast</field>
+                                        <field state="recruit" name="no_of_recruitment" widget="gage" style="width:200px; height:130px;" options="{'min_field': 'no_of_hired_employee','max_field': 'no_of_recruitment', 'label_field': 'no_of_hired_employee', 'action_change': 'action_hired_employee'}">Forecast</field>
                                     </t>
                                     <t t-if="record.state.raw_value == 'open'">
                                         <div class="oe_start_recruitment">
