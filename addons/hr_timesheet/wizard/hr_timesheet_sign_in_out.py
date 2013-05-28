@@ -32,7 +32,7 @@ class hr_so_project(osv.osv_memory):
         'date_start': fields.datetime('Starting Date', readonly=True),
         'date': fields.datetime('Closing Date'),
         'analytic_amount': fields.float('Minimum Analytic Amount'),
-        'name': fields.char('Employees name', size=32, required=True, readonly=True),
+        'name': fields.char('Employees Name', size=32, required=True, readonly=True),
         'state': fields.related('emp_id', 'state', string='Current Status', type='char', required=True, readonly=True),
         'server_date': fields.datetime('Current Date', required=True, readonly=True),
         'emp_id': fields.many2one('hr.employee', 'Employee ID')
