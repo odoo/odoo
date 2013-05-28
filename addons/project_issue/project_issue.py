@@ -23,7 +23,7 @@ from openerp.addons.base_status.base_stage import base_stage
 from openerp.addons.project.project import _TASK_STATE
 from openerp.addons.crm import crm
 from datetime import datetime
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
 import binascii
 import time
@@ -489,11 +489,14 @@ class project_issue(base_stage, osv.osv):
 
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):
         recipients = super(project_issue, self).message_get_suggested_recipients(cr, uid, ids, context=context)
-        for issue in self.browse(cr, uid, ids, context=context):
-            if issue.partner_id:
-                self._message_add_suggested_recipient(cr, uid, recipients, issue, partner=issue.partner_id, reason=_('Customer'))
-            elif issue.email_from:
-                self._message_add_suggested_recipient(cr, uid, recipients, issue, email=issue.email_from, reason=_('Customer Email'))
+        try:
+            for issue in self.browse(cr, uid, ids, context=context):
+                if issue.partner_id:
+                    self._message_add_suggested_recipient(cr, uid, recipients, issue, partner=issue.partner_id, reason=_('Customer'))
+                elif issue.email_from:
+                    self._message_add_suggested_recipient(cr, uid, recipients, issue, email=issue.email_from, reason=_('Customer Email'))
+        except (osv.except_osv, orm.except_orm):  # no read access rights -> just ignore suggested recipients because this imply modifying followers
+            pass
         return recipients
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
