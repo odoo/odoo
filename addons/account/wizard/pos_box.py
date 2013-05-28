@@ -22,7 +22,7 @@ class CashBox(osv.osv_memory):
 
         records = self.pool.get(active_model).browse(cr, uid, active_ids, context=context)
 
-        return self._run(cr, uid, ids, records, context=None)
+        return self._run(cr, uid, ids, records, context=context)
 
     def _run(self, cr, uid, ids, records, context=None):
         for box in self.browse(cr, uid, ids, context=context):
