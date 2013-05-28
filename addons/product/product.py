@@ -157,7 +157,7 @@ class product_uom(osv.osv):
         ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!')
     ]
 
-    def _compute_qty(self, cr, uid, from_uom_id, qty, to_uom_id=False):
+    def _compute_qty(self, cr, uid, from_uom_id, qty, to_uom_id=False, round=True):
         if not from_uom_id or not qty or not to_uom_id:
             return qty
         uoms = self.browse(cr, uid, [from_uom_id, to_uom_id])
@@ -165,9 +165,9 @@ class product_uom(osv.osv):
             from_unit, to_unit = uoms[0], uoms[-1]
         else:
             from_unit, to_unit = uoms[-1], uoms[0]
-        return self._compute_qty_obj(cr, uid, from_unit, qty, to_unit)
+        return self._compute_qty_obj(cr, uid, from_unit, qty, to_unit, round=round)
 
-    def _compute_qty_obj(self, cr, uid, from_unit, qty, to_unit, context=None):
+    def _compute_qty_obj(self, cr, uid, from_unit, qty, to_unit, round=True, context=None):
         if context is None:
             context = {}
         if from_unit.category_id.id <> to_unit.category_id.id:
@@ -177,7 +177,10 @@ class product_uom(osv.osv):
                 return qty
         amount = qty / from_unit.factor
         if to_unit:
-            amount = rounding(amount * to_unit.factor, to_unit.rounding)
+            if round:
+                amount = rounding(amount * to_unit.factor, to_unit.rounding)
+            else:
+                amount = amount * to_unit.factor
         return amount
 
     def _compute_price(self, cr, uid, from_uom_id, price, to_uom_id=False):

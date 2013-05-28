@@ -2694,11 +2694,10 @@ class stock_move(osv.osv):
             company_id = move.company_id.id
             ctx = context.copy()
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-            if company_id != user.company_id.id:
-                ctx['force_company'] = move.company_id.id
+            ctx['force_company'] = move.company_id.id
             product = product_obj.browse(cr, uid, move.product_id.id, context=ctx)
             cost_method = product.cost_method
-            product_uom_qty = uom_obj._compute_qty(cr, uid, product_uom, product_qty, product.uom_id.id)
+            product_uom_qty = uom_obj._compute_qty(cr, uid, product_uom, product_qty, product.uom_id.id, round=False)
             if not product.id in product_avail:
                     product_avail[product.id] = product.qty_available
             
@@ -2708,7 +2707,7 @@ class stock_move(osv.osv):
                 
                 fifo = (cost_method != 'lifo')
                 tuples = product_obj.get_stock_matchings_fifolifo(cr, uid, [product.id], product_qty, fifo, 
-                                                                  product_uom, move.company_id.currency_id.id, context=context) #TODO Would be better to use price_currency_id for migration?
+                                                                  product_uom, move.company_id.currency_id.id, context=ctx) #TODO Would be better to use price_currency_id for migration?
                 price_amount = 0.0
                 amount = 0.0
                 #Write stock matchings
@@ -2760,7 +2759,7 @@ class stock_move(osv.osv):
                     for out_mov in self.browse(cr, uid, moves, context=ctx):
                         if qty_to_go <= 0.0:
                             break
-                        out_qty_converted =  uom_obj._compute_qty(cr, uid, out_mov.product_uom.id, out_mov.qty_remaining, move.product_uom.id)
+                        out_qty_converted =  uom_obj._compute_qty(cr, uid, out_mov.product_uom.id, out_mov.qty_remaining, move.product_uom.id, round=False)
                         qty = 0.0
                         if out_qty_converted <= qty_to_go:
                             qty = out_qty_converted

@@ -56,7 +56,7 @@ class product_product (osv.osv):
                     total_price = 0.0
                     for move in move_obj.browse(cr, uid, mov_ids, context=context):
                         total_price += move.product_qty * move.price_unit
-                        qty += uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, prod.uom_id.id)
+                        qty += uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, prod.uom_id.id, round=False)
                     if qty > 0.0:
                         prod_obj.write(cr, uid, [prod.id], {'standard_price': total_price / qty}, context=context)
         res = super(product_product, self).write(cr, uid, ids, vals, context=context)
@@ -92,8 +92,9 @@ class product_product (osv.osv):
         if fifo:
             order = 'date, id'
         else: 
-            order = 'date desc, id'
-        move_in_ids = move_obj.search(cr, uid, [('qty_remaining', '>', 0.0), 
+            order = 'date desc, id desc' #id also for yml tests
+        move_in_ids = move_obj.search(cr, uid, [('company_id', '=', company_id), 
+                                                ('qty_remaining', '>', 0.0), 
                                                 ('state', '=', 'done'), 
                                                 ('location_id.usage', '!=', 'internal'), 
                                                 ('location_dest_id.usage', '=', 'internal'), 
@@ -105,7 +106,7 @@ class product_product (osv.osv):
             #Convert to UoM of product each time
             uom_from = move.product_uom.id
             qty_from = move.qty_remaining
-            product_qty = uom_obj._compute_qty(cr, uid, uom_from, qty_from, product_uom_id)
+            product_qty = uom_obj._compute_qty(cr, uid, uom_from, qty_from, product_uom_id, round=False)
             #Convert currency from in move currency id to out move currency
             if move.price_currency_id and (move.price_currency_id.id != currency_id):
                 new_price = currency_obj.compute(cr, uid, move.price_currency_id.id, currency_id, 
@@ -160,7 +161,7 @@ class stock_move(osv.osv):
                 matches = match_obj.search(cr, uid, [('move_in_id', '=', move.id)], context=context)
                 qty = move.product_qty
                 for match in match_obj.browse(cr, uid, matches, context=context):
-                    qty -= uom_obj._compute_qty(cr, uid, match.move_out_id.product_uom.id, match.qty, move.product_uom.id)
+                    qty -= uom_obj._compute_qty(cr, uid, match.move_out_id.product_uom.id, match.qty, move.product_uom.id, round=False)
                 res[move.id] = qty
             elif move_out:
                 #Search all matchings, but from the out side
