@@ -31,7 +31,7 @@
                 <search string="Analytic Account">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Analytic Account"/>
                     <field name="date"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="manager_id"/>
                     <field name="parent_id"/>
                     <field name="user_id"/>
@@ -77,6 +77,7 @@
             <field name="name">Analytic Accounts</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.analytic.account</field>
+            <field name="context">{}</field> <!-- repair invalid context by setting empty one -->
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_account_analytic_account_tree"/>

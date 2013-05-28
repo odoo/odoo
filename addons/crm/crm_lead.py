@@ -23,8 +23,9 @@ from openerp.addons.base_status.base_stage import base_stage
 import crm
 from datetime import datetime
 from operator import itemgetter
-from openerp.osv import fields, osv
+from openerp.osv import fields, osv, orm
 import time
+from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.tools.translate import _
 from openerp.tools import html2plaintext
@@ -274,7 +275,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'date_closed': fields.datetime('Closed', readonly=True),
         'stage_id': fields.many2one('crm.case.stage', 'Stage', track_visibility='onchange',
-                        domain="['&', '&', ('fold', '=', False), ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"),
+                        domain="['&', ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"),
         'user_id': fields.many2one('res.users', 'Salesperson', select=True, track_visibility='onchange'),
         'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
@@ -980,15 +981,28 @@ class crm_lead(base_stage, format_address, osv.osv):
     def message_get_reply_to(self, cr, uid, ids, context=None):
         """ Override to get the reply_to of the parent project. """
         return [lead.section_id.message_get_reply_to()[0] if lead.section_id else False
-                    for lead in self.browse(cr, uid, ids, context=context)]
+                    for lead in self.browse(cr, SUPERUSER_ID, ids, context=context)]
+
+    def _get_formview_action(self, cr, uid, id, context=None):
+        action = super(crm_lead, self)._get_formview_action(cr, uid, id, context=context)
+        obj = self.browse(cr, uid, id, context=context)
+        if obj.type == 'opportunity':
+            model, view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm', 'crm_case_form_view_oppor')
+            action.update({
+                'views': [(view_id, 'form')],
+                })
+        return action
 
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):
         recipients = super(crm_lead, self).message_get_suggested_recipients(cr, uid, ids, context=context)
-        for lead in self.browse(cr, uid, ids, context=context):
-            if lead.partner_id:
-                self._message_add_suggested_recipient(cr, uid, recipients, lead, partner=lead.partner_id, reason=_('Customer'))
-            elif lead.email_from:
-                self._message_add_suggested_recipient(cr, uid, recipients, lead, email=lead.email_from, reason=_('Customer Email'))
+        try:
+            for lead in self.browse(cr, uid, ids, context=context):
+                if lead.partner_id:
+                    self._message_add_suggested_recipient(cr, uid, recipients, lead, partner=lead.partner_id, reason=_('Customer'))
+                elif lead.email_from:
+                    self._message_add_suggested_recipient(cr, uid, recipients, lead, email=lead.email_from, reason=_('Customer Email'))
+        except (osv.except_osv, orm.except_orm):  # no read access rights -> just ignore suggested recipients because this imply modifying followers
+            pass
         return recipients
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
@@ -1051,6 +1065,14 @@ class crm_lead(base_stage, format_address, osv.osv):
             prefix = 'Scheduled'
         suffix = ' %s' % phonecall.description
         message = _("%s a call for %s.%s") % (prefix, phonecall.date, suffix)
+        return self.message_post(cr, uid, ids, body=message, context=context)
+
+    def log_meeting(self, cr, uid, ids, meeting_subject, meeting_date, duration, context=None):
+        if not duration:
+            duration = _('unknown')
+        else:
+            duration = str(duration)
+        message = _("Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)") % (meeting_date, meeting_subject, duration)
         return self.message_post(cr, uid, ids, body=message, context=context)
 
     def onchange_state(self, cr, uid, ids, state_id, context=None):
