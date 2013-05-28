@@ -29,7 +29,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp import netsvc
 from openerp import tools
-from openerp.tools import float_compare
+from openerp.tools import float_compare, DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.decimal_precision as dp
 import logging
 _logger = logging.getLogger(__name__)
@@ -647,7 +647,7 @@ class stock_picking(osv.osv):
         ),
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
                  store=True, type='datetime', string='Scheduled Time', select=1, help="Scheduled time for the shipment to be processed"),
-        'date': fields.datetime('Time', help="Creation time, usually the time of the order.", select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
+        'date': fields.datetime('Creation Date', help="Creation date, usually the time of the order.", select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'date_done': fields.datetime('Date of Transfer', help="Date of Completion", states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
                  store=True, type='datetime', string='Max. Expected Date', select=2),
@@ -2323,7 +2323,6 @@ class stock_move(osv.osv):
                          'line_id': move_lines,
                          'ref': move.picking_id and move.picking_id.name})
 
-
     def action_done(self, cr, uid, ids, context=None):
         """ Makes the move done and if all moves are done, it will finish the picking.
         @return:
@@ -2369,7 +2368,7 @@ class stock_move(osv.osv):
         if todo:
             self.action_confirm(cr, uid, todo, context=context)
 
-        self.write(cr, uid, move_ids, {'state': 'done', 'date': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
+        self.write(cr, uid, move_ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
         for id in move_ids:
              wf_service.trg_trigger(uid, 'stock.move', id, cr)
 
@@ -2412,14 +2411,14 @@ class stock_move(osv.osv):
         # or if it's the same as that of the secondary amount being posted.
         account_obj = self.pool.get('account.account')
         src_acct, dest_acct = account_obj.browse(cr, uid, [src_account_id, dest_account_id], context=context)
-        src_main_currency_id = src_acct.company_id.currency_id.id
-        dest_main_currency_id = dest_acct.company_id.currency_id.id
+        src_main_currency_id = src_acct.currency_id and src_acct.currency_id.id or src_acct.company_id.currency_id.id
+        dest_main_currency_id = dest_acct.currency_id and dest_acct.currency_id.id or dest_acct.company_id.currency_id.id
         cur_obj = self.pool.get('res.currency')
         if reference_currency_id != src_main_currency_id:
             # fix credit line:
             credit_line_vals['credit'] = cur_obj.compute(cr, uid, reference_currency_id, src_main_currency_id, reference_amount, context=context)
             if (not src_acct.currency_id) or src_acct.currency_id.id == reference_currency_id:
-                credit_line_vals.update(currency_id=reference_currency_id, amount_currency=reference_amount)
+                credit_line_vals.update(currency_id=reference_currency_id, amount_currency=-reference_amount)
         if reference_currency_id != dest_main_currency_id:
             # fix debit line:
             debit_line_vals['debit'] = cur_obj.compute(cr, uid, reference_currency_id, dest_main_currency_id, reference_amount, context=context)
