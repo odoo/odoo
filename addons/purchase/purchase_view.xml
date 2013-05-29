@@ -163,22 +163,20 @@
                 <header>
                     <button name="bid_received" states="sent" string="Bid Received" class="oe_highlight"/>
                     <button name="wkf_send_rfq" states="draft" string="Send RFQ by Email" type="object" context="{'send_rfq':True}" class="oe_highlight"/>
-                    <button name="wkf_send_rfq" states="sent" string="Send RFQ by Email" type="object" context="{'send_rfq':True}"/>
-                    <button name="print_quotation" string="Print" type="object" states="draft" class="oe_highlight" groups="base.group_user"/>
-                    <button name="print_quotation" string="Print" type="object" states="sent" groups="base.group_user"/>
+                    <button name="wkf_send_rfq" states="sent" string="Re-Send RFQ by Email" type="object" context="{'send_rfq':True}"/>
+                    <button name="print_quotation" string="Print RFQ" type="object" states="draft" class="oe_highlight" groups="base.group_user"/>
+                    <button name="print_quotation" string="Re-Print RFQ" type="object" states="sent" groups="base.group_user"/>
                     <button name="purchase_confirm" states="draft" string="Confirm Order"/>
                     <button name="purchase_confirm" states="bid" string="Confirm Order" class="oe_highlight"/>
-                    <button name="wkf_send_rfq" states="confirmed" string="Resend RFQ" type="object" class="oe_highlight"/>
-                    <button name="action_cancel" states="approved,except_picking,except_invoice" string="Cancel Order" type="object" />
                     <button name="picking_ok" states="except_picking" string="Manually Corrected"/>
                     <button name="invoice_ok" states="except_invoice" string="Manually Corrected"/>
                     <button name="purchase_approve" states="confirmed" string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager"/>
+                    <button name="wkf_send_rfq" states="confirmed, approved" string="Send PO by Email" type="object" context="{'send_rfq':False}"/>
                     <button name="view_picking" string="Receive Products" type="object" attrs="{'invisible': ['|', ('shipped','=',True), ('state','!=', 'approved')]}" class="oe_highlight"/>
                     <button name="view_invoice" string="Receive Invoice" type="object" attrs="{'invisible': ['|', ('invoice_method','=','picking'), '|', ('state','!=', 'approved'), ('invoiced','=',True) ]}" class="oe_highlight"/>
-                    <button name="wkf_send_rfq" states="approved" string="Send PO by Email" type="object" context="{'send_rfq':False}"/>
-                    <button name="print_quotation" string="Print" type="object" states="approved" groups="base.group_user"/>
                     <button name="action_cancel_draft" states="cancel,sent,confirmed" string="Set to Draft" type="object" />
                     <button name="purchase_cancel" states="draft,confirmed,sent,bid" string="Cancel Order"/>
+                    <button name="action_cancel" states="approved,except_picking,except_invoice" string="Cancel Order" type="object" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,bid,approved,done" statusbar_colors='{"except_picking":"red","except_invoice":"red","confirmed":"blue"}' readonly="1"/>
                 </header>
                 <sheet>
