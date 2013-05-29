@@ -378,8 +378,8 @@
                                     <img t-att-src="kanban_image('hr.employee', 'image', record.manager_id.raw_value, {'preview_image': 'image_small'})" t-att-title="record.manager_id.value.name" class="oe_kanban_avatar"/>
                                     <t t-if="record.state.raw_value == 'recruit'">
                                         <div class="oe_applications">
-                                            <a name="%(hr_job_applications)d" type="action" t-if="record.application_count.value gt 1"><t t-esc="record.application_count.value"/> Applications</a>
-                                            <a name="%(hr_job_applications)d" type="action" t-if="record.application_count.value lt 2"><t t-esc="record.application_count.value"/> Application</a>
+                                            <a name="%(hr_job_applications)d" type="action" t-if="record.application_count.value gt 1" class="oe_link"><t t-esc="record.application_count.value"/> Applications</a>
+                                            <a name="%(hr_job_applications)d" type="action" t-if="record.application_count.value lt 2" class="oe_link"><t t-esc="record.application_count.value"/> Application</a>
                                         </div>
                                         <field state="recruit" name="no_of_recruitment" widget="gage" style="width:200px; height:130px;" options="{'min_field': 'no_of_hired_employee','max_field': 'no_of_recruitment', 'label_field': 'no_of_hired_employee', 'action_change': 'action_hired_employee'}">Forecast</field>
                                     </t>
