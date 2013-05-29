@@ -241,14 +241,20 @@ class mail_thread(osv.AbstractModel):
             context = {}
         thread_id = super(mail_thread, self).create(cr, uid, values, context=context)
 
+        # automatic logging unless asked not to (mainly for various testing purpose)
+        if not context.get('mail_create_nolog'):
+            self.message_post(cr, uid, thread_id, body=_('%s created') % (self._description), context=context)
+
         # subscribe uid unless asked not to
         if not context.get('mail_create_nosubscribe'):
             self.message_subscribe_users(cr, uid, [thread_id], [uid], context=context)
         self.message_auto_subscribe(cr, uid, [thread_id], values.keys(), context=context)
 
-        # automatic logging unless asked not to (mainly for various testing purpose)
-        if not context.get('mail_create_nolog'):
-            self.message_post(cr, uid, thread_id, body=_('Document created'), context=context)
+        # track values
+        tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=context)
+        if tracked_fields:
+            initial_values = {thread_id: dict((item, False) for item in tracked_fields)}
+            self.message_track(cr, uid, [thread_id], tracked_fields, initial_values, context=context)
         return thread_id
 
     def write(self, cr, uid, ids, values, context=None):
