@@ -97,10 +97,8 @@ class config(osv.osv):
                 attach_vals = {'res_model': res_model, 'name': name_gdocs, 'res_id': res_id, 'type': 'url', 'url':content['alternateLink']}
                 attach_pool.create(cr, uid, attach_vals)
                 res = content['alternateLink']
-        elif uid==1:
-            raise self.pool.get('res.config.settings').get_config_warning(cr, _("You haven't configured 'Authorization Code' generated from google, Please generate and configure it in %%(menu:base_setup.menu_general_configuration)s."), context=context)
         else:
-            raise osv.except_osv(_('Google Drive Configuration Error!'), _("'Authorization Code' is not configured yet, Please Contact Administrator"))
+            raise self.pool.get('res.config.settings').get_config_warning(cr, _("You haven't configured 'Authorization Code' generated from google, Please generate and configure it in %%(menu:base_setup.menu_general_configuration)s."), context=context)
         return res
     
     def get_google_docs_config(self, cr, uid, res_model, res_id, context=None):

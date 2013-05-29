@@ -76,6 +76,7 @@
                 <xpath expr="//div[@name='google_docs']" position="after">
                     <div attrs="{'invisible': [('module_google_docs','=',False)]}">
                         <p class="oe_gray" >
+                            <!-- Need to generate client id, redirect url from Google Account (API console) and replace below link. Limitation on Number of request: 10 lacks per day. -->
                             Click here to <a href="https://accounts.google.com/o/oauth2/auth?scope=https://www.googleapis.com/auth/drive&amp;redirect_uri=urn:ietf:wg:oauth:2.0:oob&amp;response_type=code&amp;client_id=39623646228-eg3ggo3mk6o40m7rguobi3rkl9frh4tb.apps.googleusercontent.com" target="_blank"><b>Generate Google Authorization Code</b></a><br/>
                             <group>
                                 <field  name="authorization_code" on_change="onchange_authorization_code(authorization_code)"/>
