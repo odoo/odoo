@@ -16,6 +16,7 @@
                     <field name="user_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
+                    <field name="opportunity_id" invisible="1"/>
                     <field name="state" invisible="1"/>
                     <field name="categ_id" invisible="1"/>
                     <field name="day" invisible="1"/>
@@ -72,6 +73,7 @@
                         <filter string="Salesperson" name="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Sales Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}" />
                         <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}" />
+                        <filter string="Lead/Opportunity" icon="terp-personal+" context="{'group_by':'opportunity_id'}" />
                         <filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
                         <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'categ_id'}" />
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}" />
