@@ -563,7 +563,7 @@ class Root(object):
         controllers and configure them.  """
 
         for addons_path in openerp.modules.module.ad_paths:
-            for module in sorted(os.listdir(addons_path)):
+            for module in sorted(os.listdir(str(addons_path))):
                 if module not in addons_module:
                     manifest_path = os.path.join(addons_path, module, '__openerp__.py')
                     path_static = os.path.join(addons_path, module, 'static')
@@ -614,6 +614,9 @@ class Root(object):
                         elif exposed == 'http':
                             _logger.debug("Dispatch http to %s %s %s", ps, c, method_name)
                             return lambda request: HttpRequest(request).dispatch(method)
+                    if method_name != "index":
+                        method_name = "index"
+                        continue
                 ps, _slash, method_name = ps.rpartition('/')
                 if not ps and method_name:
                     ps = '/'
