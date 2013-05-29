@@ -39,7 +39,11 @@ class pad_common(osv.osv_memory):
         #if create with content
         if "field_name" in context and "model" in context and "object_id" in context:
             myPad = EtherpadLiteClient( pad["key"], pad["server"]+'/api')
-            myPad.createPad(path)
+            try:
+                myPad.createPad(path)
+            except urllib2.URLError:
+                raise osv.except_osv(_("Error"), _("Pad creation fail, \
+                either there is a problem with your pad server URL or with your connection."))
 
             #get attr on the field model
             model = self.pool.get(context["model"])
