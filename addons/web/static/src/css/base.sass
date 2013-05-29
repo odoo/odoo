@@ -1701,6 +1701,15 @@ $sheet-padding: 16px
             display: none !important
         .oe_form .oe_form_field_date
             width: auto
+        .oe_form_field_boolean.boolean
+            position: relative
+            top: -20px
+            width: 14px
+            height: 14px
+            z-index: 10000
+            // IE needs a color in order for the layer to respond to mouse events
+            backgroundColor: "#fff"
+            opacity: 0
     // Sheet and padding
     .oe_form_nosheet
         margin: 16px
