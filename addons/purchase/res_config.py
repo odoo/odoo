@@ -54,6 +54,10 @@ Example: Product: this product is deprecated, do not purchase more than 5.
             help="""Purchase Requisitions are used when you want to request quotations from several suppliers for a given set of products.
             You can configure per product if you directly do a Request for Quotation
             to one supplier or if you want a purchase requisition to negotiate with several suppliers."""),
+        'group_advance_purchase_requisition': fields.boolean("Manage multiple bidding on purchase requisition",
+            implied_group='purchase.group_advance_bidding',
+            help="""In the process of a public bidding, You can analyse the bidding lines and choose for each product from 
+            where you want to buy it as well as the quantity"""),
         'module_purchase_analytic_plans': fields.boolean('Use multiple analytic accounts on purchase orders',
             help ="""Allows the user to maintain several analysis plans. These let you split lines on a purchase order between several accounts and analytic plans.
                 This installs the module purchase_analytic_plans."""),

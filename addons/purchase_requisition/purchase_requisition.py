@@ -57,7 +57,7 @@ class purchase_requisition(osv.osv):
         'po_line_ids': fields.function(_get_po_line, method=True, type='one2many', relation='purchase.order.line', string='Products by supplier'),
         'line_ids' : fields.one2many('purchase.requisition.line','requisition_id','Products to Purchase',states={'done': [('readonly', True)]}),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),        
-        'state': fields.selection([('draft','New'),('in_progress','Sent to Suppliers'),('open','Choose Lines'),('cancel','Cancelled'),('done','Purchase Done')],
+        'state': fields.selection([('draft','New'),('in_progress','Sent to Suppliers'),('open','Choose Lines'),('cancel','Cancelled'),('done','PO Created')],
             'Status', track_visibility='onchange', required=True)
     }
     _defaults = {
@@ -205,28 +205,38 @@ class purchase_requisition(osv.osv):
         """
         po = self.pool.get('purchase.order')
         poline = self.pool.get('purchase.order.line')
+        wf_service = netsvc.LocalService("workflow")
         id_per_supplier = {}
         tender = self.browse(cr, uid, id, context=context)[0]
+        if tender.state == 'done':
+            raise osv.except_osv(_('Warning!'), _('You have already generate the purchase order(s).'))
         for po_line in tender.po_line_ids:
-            if po_line.state == 'confirmed':
+            #only take into account confirmed line that does not belong to already confirmed purchase order
+            if po_line.state == 'confirmed' and po_line.order_id.state in ['draft', 'sent', 'bid', 'cancel']:
                 partner = po_line.partner_id.id
                 if id_per_supplier.get(partner):
                     id_per_supplier[partner].append(po_line.id)
                 else:
                     id_per_supplier[partner] = [po_line]
 
-        #TODO generate po based on supplier and check if a draft po is complete before creating a new one
+        #generate po based on supplier and cancel all previous RFQ
         for supplier, product_line in id_per_supplier.items():
-            #duplicate po_line and change product_qty if needed
-            line_ids = []
-            for line in product_line:
-                line_ids.append(poline.copy(cr, uid, line.id, default = {'product_qty': line.quantity_bid}, context=context))
             #copy a quotation for this supplier and change order_line then validate it
-            quotation_copy_id = po.search(cr, uid, [('requisition_id', '=', tender.id), ('partner_id', '=', supplier)], limit=1)
-            new_po = po.copy(cr, uid, quotation_copy_id, default = {'order_line': line_ids}, context=context)
+            quotation_id = po.search(cr, uid, [('requisition_id', '=', tender.id), ('partner_id', '=', supplier)], limit=1)[0]
+            new_po = po.copy(cr, uid, quotation_id, default = {'order_line': []}, context=context)
+            #duplicate po_line and change product_qty if needed and associate them to newly created PO
+            for line in product_line:
+                poline.copy(cr, uid, line.id, default = {'product_qty': line.quantity_bid, 'order_id': new_po}, context=context)
+                #set previous confirmed line to draft
+                poline.action_draft(cr, uid, line.id, context=context)
             #use workflow to set new PO state to confirm
-
-            #TODO set previous line to cancel
+            wf_service.trg_validate(uid, 'purchase.order', new_po, 'purchase_confirm', cr)
+            
+        #cancel other orders
+        for quotation in tender.purchase_ids:
+            if quotation.state in ['draft', 'sent', 'bid']:
+                wf_service.trg_validate(uid, 'purchase.order', quotation.id, 'purchase_cancel', cr)
+            
 
 class purchase_requisition_line(osv.osv):
 
@@ -301,6 +311,9 @@ class purchase_order_line(osv.osv):
             if not element.quantity_bid:
                 self.write(cr, uid, ids, {'quantity_bid': element.product_qty}, context=context)
         return True
+
+    def generate_po(self, cr, uid, id, context=None):
+        print '-----------------------------------------'
 
 class product_product(osv.osv):
     _inherit = 'product.product'
