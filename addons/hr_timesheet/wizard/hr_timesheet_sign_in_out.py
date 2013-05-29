@@ -19,7 +19,6 @@
 #
 ##############################################################################
 import time
-from lxml import etree
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
