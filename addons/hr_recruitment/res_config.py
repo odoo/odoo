@@ -40,20 +40,31 @@ class hr_applicant_settings(osv.osv_memory):
     def get_default_alias_prefix(self, cr, uid, ids, context=None):
         alias_name = ''
         mail_alias = self.pool.get('mail.alias')
-        alias = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'mail_alias_jobs')
-        if alias:
-            alias_name = alias.alias_name
+        try:
+            alias_name = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'mail_alias_jobss').alias_name
+        except Exception:
+            model_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'hr.applicant')], context=context)
+            alias_ids = mail_alias.search(cr, uid, [('alias_model_id', '=', model_ids[0]),('alias_defaults', '=', '{}')], context=context)
+            if alias_ids:
+                alias_name = mail_alias.browse(cr, uid, alias_ids[0], context=context).alias_name
         return {'alias_prefix': alias_name}
 
     def set_default_alias_prefix(self, cr, uid, ids, context=None):
         mail_alias = self.pool.get('mail.alias')
         record = self.browse(cr, uid, ids[0], context=context)
         if record.alias_prefix:
-            alias = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'mail_alias_jobs')
-            if alias:
-                alias.write({'alias_name': record.alias_prefix})
-            else:
-                mail_alias.create_unique_alias(cr, uid, {'alias_name': record.alias_prefix}, model_name="hr.applicant", context=context)
+            try:
+                alias = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'mail_alias_jobs')
+                if alias:
+                    alias.write({'alias_name': record.alias_prefix})
+            except Exception:
+                model_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'hr.applicant')], context=context)
+                alias_ids = mail_alias.search(cr, uid, [('alias_model_id', '=', model_ids[0]),('alias_defaults', '=', '{}')], context=context)
+                if alias_ids:
+                    mail_alias.write(cr, uid, alias_ids[0], {'alias_name': record.alias_prefix}, context=context)
+                else:
+                    mail_alias.create_unique_alias(cr, uid, {'alias_name': record.alias_prefix}, model_name="hr.applicant", context=context)
+        return True
 
     def get_default_alias_domain(self, cr, uid, ids, context=None):
         alias_domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.domain", context=context)
