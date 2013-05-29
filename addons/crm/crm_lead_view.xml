@@ -330,7 +330,7 @@
                     <field name="categ_ids" string="Category" filter_domain="[('categ_ids','ilike',self)]"/>
                     <field name="section_id" context="{'invisible_section': False}" groups="base.group_multi_salesteams"/>
                     <field name="user_id"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="create_date"/>
                     <field name="country_id" context="{'invisible_country': False}"/>
                     <separator/>
@@ -548,7 +548,7 @@
                     <field name="categ_ids" string="Category" filter_domain="[('categ_ids','ilike', self)]"/>
                     <field name="section_id" context="{'invisible_section': False}" groups="base.group_multi_salesteams"/>
                     <field name="user_id"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <separator/>
                     <filter string="New" name="new" domain="[('state','=','draft')]" help="New Opportunities"/>
                     <filter string="In Progress" name="open" domain="[('state','=','open')]" help="Open Opportunities"/>
@@ -556,7 +556,7 @@
                     <filter string="Lost" name="lost" domain="[('state','=','cancel')]"/>
                     <filter string="Unassigned" name="unassigned" domain="[('user_id','=', False)]" help="No salesperson"/>
                     <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]" help="Unread messages"/>
-                    <filter string="Assigned to Me"
+                    <filter string="Mine" name="assigned_to_me"
                             domain="[('user_id','=',uid)]" context="{'invisible_section': False}"
                             help="Opportunities that are assigned to me"/>
                     <filter string="Assigned to My Team(s)"
@@ -606,6 +606,23 @@
             allowing to have a well formed email template (context action considered as set). -->
         <record id="email_template_opportunity_mail" model="email.template">
             <field name="ref_ir_act_window" ref="crm.action_lead_mass_mail"/>
+        </record>
+
+        <record id="action_mark_as_lost" model="ir.actions.server">
+            <field name="name">Mark As Lost</field>
+            <field name="model_id" ref="model_crm_lead"/>
+            <field name="state">code</field>
+            <field name="code">
+                if context.get('active_model') == 'crm.lead' and context.get('active_ids'):
+                    self.case_cancel(cr, uid, context['active_ids'], context=context)
+            </field>
+        </record>
+
+        <record id="ir_mark_as_lost" model="ir.values">
+            <field eval="'client_action_multi'" name="key2"/>
+            <field eval="'crm.lead'" name="model"/>
+            <field name="name">Mark As Lost</field>
+            <field eval="'ir.actions.server,%d'%action_mark_as_lost" name="value"/>
         </record>
 
     </data>

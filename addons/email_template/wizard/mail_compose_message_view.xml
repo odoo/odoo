@@ -28,7 +28,7 @@
                         <div>Use template
                             <!--FIX: To avoid css issue of many2one field in footer temporary used oe_form (BUG:1152464)-->
                             <field name="template_id" nolabel="1" class='oe_inline'
-                                on_change="onchange_template_id(template_id, composition_mode, model, res_id, context)" domain="[('model_id','=',context.get('default_model'))]"/>
+                                on_change="onchange_template_id(template_id, composition_mode, model, res_id, context)" domain="[('model_id.model','=',model)]"/>
                         </div>
                         <button icon="/email_template/static/src/img/email_template_save.png"
                             type="object" name="save_as_template" string="Save as new template" class="oe_link"
