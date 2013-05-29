@@ -162,15 +162,15 @@ class stock_return_picking(osv.osv_memory):
         returned_lines = 0
         
 #        Create new picking for returned products
+
+        seq_obj_name = 'stock.picking'
+        new_type = 'internal'
         if pick.type =='out':
             new_type = 'in'
+            seq_obj_name = 'stock.picking.in'
         elif pick.type =='in':
             new_type = 'out'
-        else:
-            new_type = 'internal'
-        seq_obj_name = 'stock.picking.' + new_type
-        if new_type == 'internal': 
-            seq_obj_name = 'stock.picking'
+            seq_obj_name = 'stock.picking.out'
         new_pick_name = self.pool.get('ir.sequence').get(cr, uid, seq_obj_name)
         new_picking = pick_obj.copy(cr, uid, pick.id, {
                                         'name': _('%s-%s-return') % (new_pick_name, pick.name),
