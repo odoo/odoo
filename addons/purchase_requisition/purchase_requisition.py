@@ -32,6 +32,18 @@ class purchase_requisition(osv.osv):
     _name = "purchase.requisition"
     _description="Purchase Requisition"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
+
+    def _get_po_line(self, cr, uid, ids, field_names, arg=None, context=None):
+        result = {}
+        if not ids: return result
+        for id in ids:
+            result.setdefault(id, [])
+        for element in self.browse(cr, uid, ids, context=context):
+            for po in element.purchase_ids:
+                for po_line in po.order_line:
+                    result[po_line.order_id.requisition_id.id].append(po_line.id)
+        return result
+
     _columns = {
         'name': fields.char('Requisition Reference', size=32,required=True),
         'origin': fields.char('Source Document', size=32),
@@ -42,9 +54,10 @@ class purchase_requisition(osv.osv):
         'description': fields.text('Description'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'purchase_ids' : fields.one2many('purchase.order','requisition_id','Purchase Orders',states={'done': [('readonly', True)]}),
+        'po_line_ids': fields.function(_get_po_line, method=True, type='one2many', relation='purchase.order.line', string='Products by supplier'),
         'line_ids' : fields.one2many('purchase.requisition.line','requisition_id','Products to Purchase',states={'done': [('readonly', True)]}),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),        
-        'state': fields.selection([('draft','New'),('in_progress','Sent to Suppliers'),('cancel','Cancelled'),('done','Purchase Done')],
+        'state': fields.selection([('draft','New'),('in_progress','Sent to Suppliers'),('open','Choose Lines'),('cancel','Cancelled'),('done','Purchase Done')],
             'Status', track_visibility='onchange', required=True)
     }
     _defaults = {
@@ -77,10 +90,14 @@ class purchase_requisition(osv.osv):
     def tender_in_progress(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state':'in_progress'} ,context=context)
 
+    def tender_open(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state':'open'} ,context=context)
+
     def tender_reset(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'draft'})
 
     def tender_done(self, cr, uid, ids, context=None):
+        self.generate_po(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state':'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
     def _planned_date(self, requisition, delay=0.0):
@@ -114,6 +131,25 @@ class purchase_requisition(osv.osv):
             qty = max(qty,seller_qty)
         date_planned = self._planned_date(requisition_line.requisition_id, seller_delay)
         return seller_price, qty, default_uom_po_id, date_planned
+
+    def open_product_line(self, cr, uid, ids, context=None):
+        """ This opens product line view to view all lines from the different quotations, groupby default by product and partner to show comparaison
+            between supplier price
+            @return: the product line tree view
+        """
+        if context is None:
+            context = {}
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'purchase_requisition','purchase_line_tree', context=context)
+        res['context'] = context
+        po_ids_browse = self.browse(cr, uid, ids, context=context)[0].po_line_ids
+        po_ids=[]
+        for po in po_ids_browse:
+            po_ids.append(po.id)
+        res['context'].update({
+            'search_default_groupby_product' : True,
+        })
+        res['domain'] = [('id','in', po_ids)]
+        return res
 
     def make_purchase_order(self, cr, uid, ids, partner_id, context=None):
         """
@@ -163,6 +199,20 @@ class purchase_requisition(osv.osv):
                 
         return res
 
+    def generate_po(self, cr, uid, id, context=None):
+        """
+        Generate all purchase order based on selected lines, should only be called on one tender at a time
+        """
+        id_per_supplier = {}
+        for po_line in self.browse(cr, uid, id, context=context)[0].po_line_ids:
+            if po_line.state == 'confirmed':
+                partner = po_line.partner_id.id
+                if id_per_supplier.get(partner):
+                    id_per_supplier[partner].append(po_line.id)
+                else:
+                    id_per_supplier[partner] = [po_line.id]
+
+        #TODO generate po based on supplier and check if a draft po is complete before creating a new one
 
 class purchase_requisition_line(osv.osv):
 
@@ -174,7 +224,9 @@ class purchase_requisition_line(osv.osv):
         'product_id': fields.many2one('product.product', 'Product' ),
         'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure'),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
-        'requisition_id' : fields.many2one('purchase.requisition','Purchase Requisition', ondelete='cascade'),
+        'po_line_buy': fields.many2one('purchase.order.line', 'Purchase Order Line'),
+        'requisition_id': fields.many2one('purchase.requisition','Purchase Requisition', ondelete='cascade'),
+        'po_line_ids': fields.related('requisition_id', 'po_line_ids', string='PO lines', readonly=True, type="one2many"),
         'company_id': fields.related('requisition_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
     }
 
@@ -217,6 +269,24 @@ class purchase_order(osv.osv):
         return res
 
 purchase_order()
+
+class purchase_order_line(osv.osv):
+    _inherit = 'purchase.order.line'
+
+    #TODO add field function to get same value as product_qty wherever quantity_bid is zero, with an inverse fct to write on quantity_bid
+    _columns= {
+        'quantity_bid': fields.float('Quantity Bid', digits_compute=dp.get_precision('Product Unit of Measure')),
+    }
+
+    def action_draft(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state': 'draft'}, context=context)
+
+    def action_confirm(self, cr, uid, ids, context=None):
+        super(purchase_order_line, self).action_confirm(cr, uid, ids, context=context)
+        for element in self.browse(cr, uid, ids, context=context):
+            if not element.quantity_bid:
+                self.write(cr, uid, ids, {'quantity_bid': element.product_qty}, context=context)
+        return True
 
 class product_product(osv.osv):
     _inherit = 'product.product'

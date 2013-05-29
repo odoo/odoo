@@ -154,8 +154,9 @@ class purchase_order(osv.osv):
     STATE_SELECTION = [
         ('draft', 'Draft PO'),
         ('sent', 'RFQ Sent'),
+        ('bid', 'Bid Received'),
         ('confirmed', 'Waiting Approval'),
-        ('approved', 'Purchase Order'),
+        ('approved', 'Purchase Confirmed'),
         ('except_picking', 'Shipping Exception'),
         ('except_invoice', 'Invoice Exception'),
         ('done', 'Done'),
@@ -226,6 +227,8 @@ class purchase_order(osv.osv):
         'create_uid':  fields.many2one('res.users', 'Responsible'),
         'company_id': fields.many2one('res.company','Company',required=True,select=1, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal'),
+        'bid_date': fields.date('Bid Received On', readonly=True, help="Date on which the bid was received"),
+        'bid_validity': fields.date('Bid Valid Until', help="Date on which the bid expired"),
     }
     _defaults = {
         'date_order': fields.date.context_today,
@@ -395,6 +398,9 @@ class purchase_order(osv.osv):
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': fields.date.context_today(self,cr,uid,context=context)})
         return True
 
+    def wkf_bid_received(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state':'bid', 'bid_date': fields.date.context_today(self,cr,uid,context=context)})
+
     def print_confirm(self,cr,uid,ids,context=None):
         print "Confirmed"
 
@@ -408,9 +414,14 @@ class purchase_order(osv.osv):
         '''
         This function opens a window to compose an email, with the edi purchase template message loaded by default
         '''
+        if not context:
+            context= {}
         ir_model_data = self.pool.get('ir.model.data')
         try:
-            template_id = ir_model_data.get_object_reference(cr, uid, 'purchase', 'email_template_edi_purchase')[1]
+            if context.get('send_rfq', False):
+                template_id = ir_model_data.get_object_reference(cr, uid, 'purchase', 'email_template_edi_purchase')[1]
+            else:
+                template_id = ir_model_data.get_object_reference(cr, uid, 'purchase', 'email_template_edi_purchase_done')[1]
         except ValueError:
             template_id = False
         try:
@@ -864,7 +875,8 @@ class purchase_order_line(osv.osv):
         'invoice_lines': fields.many2many('account.invoice.line', 'purchase_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.boolean('Invoiced', readonly=True),
         'partner_id': fields.related('order_id','partner_id',string='Partner',readonly=True,type="many2one", relation="res.partner", store=True),
-        'date_order': fields.related('order_id','date_order',string='Order Date',readonly=True,type="date")
+        'date_order': fields.related('order_id','date_order',string='Order Date',readonly=True,type="date"),
+        'lead_time': fields.float('Delivery Lead Time', help="Average delay in days to deliver this product."),
 
     }
     _defaults = {
@@ -1195,8 +1207,10 @@ class mail_mail(osv.Model):
 
     def _postprocess_sent_message(self, cr, uid, mail, context=None):
         if mail.model == 'purchase.order':
-            wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'purchase.order', mail.res_id, 'send_rfq', cr)
+            obj = self.pool.get('purchase.order').browse(cr, uid, mail.res_id, context=context)
+            if obj.state == 'draft':
+                wf_service = netsvc.LocalService("workflow")
+                wf_service.trg_validate(uid, 'purchase.order', mail.res_id, 'send_rfq', cr)
         return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context)
 
 

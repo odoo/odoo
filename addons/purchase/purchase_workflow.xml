@@ -19,6 +19,12 @@
             <field name="kind">function</field>
             <field name="action">write({'state':'sent'})</field>
         </record>
+        <record id="act_bid" model="workflow.activity">
+            <field name="wkf_id" ref="purchase_order"/>
+            <field name="name">bid</field>
+            <field name="kind">function</field>
+            <field name="action">wkf_bid_received()</field>
+        </record>
         <record id="act_confirmed" model="workflow.activity">
             <field name="wkf_id" ref="purchase_order"/>
             <field name="name">confirmed</field>
@@ -103,13 +109,23 @@
             <field name="act_to" ref="act_sent"/>
             <field name="signal">send_rfq</field>
         </record>
-        <record id="trans_sent_confirmed" model="workflow.transition">
-            <field name="act_from" ref="act_sent"/>
+        <record id="trans_bid_confirmed" model="workflow.transition">
+            <field name="act_from" ref="act_bid"/>
             <field name="act_to" ref="act_confirmed"/>
             <field name="signal">purchase_confirm</field>
         </record>
+        <record id="trans_sent_bid" model="workflow.transition">
+            <field name="act_from" ref="act_sent"/>
+            <field name="act_to" ref="act_bid"/>
+            <field name="signal">bid_received</field>
+        </record>
         <record id="trans_sent_cancel" model="workflow.transition">
             <field name="act_from" ref="act_sent"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="signal">purchase_cancel</field>
+        </record>
+        <record id="trans_bid_cancel" model="workflow.transition">
+            <field name="act_from" ref="act_bid"/>
             <field name="act_to" ref="act_cancel"/>
             <field name="signal">purchase_cancel</field>
         </record>

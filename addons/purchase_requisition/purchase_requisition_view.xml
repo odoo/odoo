@@ -31,12 +31,17 @@
             <form string="Purchase Requisition" version="7.0">
             <header>
                 <button name="tender_in_progress" states="draft" string="Send to Suppliers" type="object" class="oe_highlight"/>
-                <button name="tender_reset" states="done,cancel" string="Reset to Draft" type="object" />
-                <button name="tender_done" states="in_progress" string="Purchase Done" type="object" class="oe_highlight"/>
+                <button name="tender_open" states="in_progress" string="Choosing Supplier(s)" type="object" class="oe_highlight"/>
+                <button name="tender_reset" states="cancel" string="Reset to Draft" type="object" />
+                <button name="tender_done" states="open" string="Make Purchase" type="object" class="oe_highlight"/>
                 <button name="tender_cancel" states="draft,in_progress" string="Cancel Requisition" type="object" />
-                <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,done" statusbar_colors='{"in_progress":"blue"}'/>
+                <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,open,done" statusbar_colors='{"in_progress":"blue"}'/>
             </header>
             <sheet>
+                <div class="oe_right oe_button_box" style="margin-top: 10px">
+                    <button name="open_product_line" type="object" string="View Products Lines"
+                        attrs="{'invisible': [('state', 'not in', ('open','done'))]}"/>
+                </div>
                 <div class="oe_edit_only">
                     <label for="name" class="oe_inline"/>
                     <label for="origin" class="oe_inline"/>
@@ -78,7 +83,7 @@
                         <div class="oe_right oe_button_box" style="margin-top: 10px">
                             <button name="%(action_purchase_requisition_partner)d" type="action"
                                 string="Request a Quotation" icon="gtk-execute"
-                                attrs="{'invisible': [('line_ids','=',False),('state', 'not in', ('in_progress'))]}"/>
+                                attrs="{'invisible': ['|', ('line_ids','=',[]),('state', 'in', ('open','done'))]}"/>
                         </div>
                         <separator string="Quotations"/>
                         <field name="purchase_ids" readonly="1">
@@ -205,6 +210,47 @@
             name="Purchase orders"
             res_model="purchase.order"
             src_model="purchase.requisition"/>
+
+
+    <record id="purchase_order_line_tree_tender" model="ir.ui.view">
+            <field name="name">purchase.order.line.tree.tender</field>
+            <field name="model">purchase.order.line</field>
+            <field name="arch" type="xml">
+                <tree string="Purchase Order Lines" create="false" colors="blue:state == 'confirmed';gray:state == 'cancel'">
+                    <field name="name"/>
+                    <field name="partner_id" string="Supplier" />
+                    <field name="product_id"/>
+                    <field name="price_unit"/>
+                    <field name="product_qty"/>
+                    <field name="quantity_bid"/>
+                    <field name="product_uom" groups="product.group_uom"/>
+                    <field name="price_subtotal"/>
+                    <field name="lead_time" />
+                    <field name="state" invisible="1"/>
+                    <field name="invoiced" invisible="1"/>
+                    <button name="action_draft" states="confirmed" type="object" string="Cancel Bid" icon="gtk-cancel"/>
+                    <button name="%(action_bid_line_qty)d" type="action" states="draft" string="Change Quantity" icon="gtk-ok"/>
+                    <button name="action_confirm" states="draft" type="object" string="Confirm Order" icon="gtk-apply"/>
+                </tree>
+            </field>
+    </record>
+
+    <record id="purchase_line_tree" model="ir.actions.act_window">
+            <field name="name">Bid Lines</field>
+            <field name="res_model">purchase.order.line</field>
+            <field name="context">{"search_default_groupby_product" : True,}</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="purchase.purchase_order_line_search"/>
+    </record>
+    
+    <record id="purchase_line_tree_action" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="purchase_order_line_tree_tender"/>
+            <field name="act_window_id" ref="purchase_line_tree"/>
+    </record>
+
 
     </data>
 </openerp>

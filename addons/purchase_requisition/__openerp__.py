@@ -36,6 +36,7 @@ keep track and order all your purchase orders.
     'demo': ['purchase_requisition_demo.xml'],
     'data': ['security/purchase_tender.xml',
               'wizard/purchase_requisition_partner_view.xml',
+              'wizard/bid_line_qty_view.xml',
               'purchase_requisition_data.xml',
               'purchase_requisition_view.xml',
               'purchase_requisition_report.xml',
