@@ -378,20 +378,14 @@
                                     <img t-att-src="kanban_image('hr.employee', 'image', record.manager_id.raw_value, {'preview_image': 'image_small'})" t-att-title="record.manager_id.value.name" class="oe_kanban_avatar"/>
                                     <t t-if="record.state.raw_value == 'recruit'">
                                         <div class="oe_applications">
-                                            <a name="%(hr_job_applications)d" type="action" >
-                                                <div t-if="record.application_count.value gt 1"><t t-esc="record.application_count.value"/> Applications</div>
-                                                <div t-if="record.application_count.value lt 2"><t t-esc="record.application_count.value"/> Application</div>
-                                            </a>
-                                        </div>
-                                        <div class="oe_new_recruitment">
-                                            <div t-if="(record.no_of_recruitment.raw_value - record.no_of_hired_employee.raw_value) gt 1"><t t-esc="record.no_of_recruitment.raw_value - record.no_of_hired_employee.raw_value"/> Expected New Employees</div>
-                                            <div t-if="(record.no_of_recruitment.raw_value - record.no_of_hired_employee.raw_value) lt 2"><t t-esc="record.no_of_recruitment.raw_value - record.no_of_hired_employee.raw_value"/> Expected New Employee</div>
+                                            <a name="%(hr_job_applications)d" type="action" t-if="record.application_count.value gt 1"><t t-esc="record.application_count.value"/> Applications</a>
+                                            <a name="%(hr_job_applications)d" type="action" t-if="record.application_count.value lt 2"><t t-esc="record.application_count.value"/> Application</a>
                                         </div>
                                         <field state="recruit" name="no_of_recruitment" widget="gage" style="width:200px; height:130px;" options="{'min_field': 'no_of_hired_employee','max_field': 'no_of_recruitment', 'label_field': 'no_of_hired_employee', 'action_change': 'action_hired_employee'}">Forecast</field>
                                     </t>
                                     <t t-if="record.state.raw_value == 'open'">
                                         <div class="oe_start_recruitment">
-                                            <p>To start the recruitment,<b>click here</b></p>
+                                            <p>To start the recruitment, <b>click here</b></p>
                                             <img src="/hr_recruitment/static/src/img/down1.png"/>
                                         </div>
                                     </t>
@@ -415,6 +409,7 @@
             <field name="res_model">hr.job</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'search_default_in_recruitment': 1}</field>
         </record>
 
     <!-- Stage Tree View -->

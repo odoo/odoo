@@ -9,7 +9,7 @@ openerp.hr_recruitment = function (openerp) {
         var value = parent.values.no_of_hired_employee.value;
         var flag_open = false;
         this.$el.empty()
-            .attr('style', this.$node.attr('style') + ';float: right; margin-top: -110px; margin-right: -30px;')
+            .attr('style', this.$node.attr('style') + ';float: right; margin-top: -105px; margin-right: -30px;')
             .attr('id', unique_id);
         this.gage = new JustGage({
             id: unique_id,
