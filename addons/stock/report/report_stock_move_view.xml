@@ -117,8 +117,10 @@
                 <field name="product_id" invisible="1"/>
                 <field name="prodlot_id" invisible="1"/>
                 <field name="state" invisible="1"/>
-                <field name="product_qty" sum="Total quantity"/>
-                <field name="value" sum="Total value"/>
+                <field name="ref"/>
+                <field name="date"/>
+                <field name="product_qty" sum="Total Quantity in Stock"/>
+                <field name="inventory_value" sum="Total Inventory Value"/>
            </tree>
         </field>
     </record>
@@ -129,7 +131,7 @@
          <field name="arch" type="xml">
              <graph string="Inventory Analysis" type="bar">
                  <field name="product_id"/>
-                 <field name="product_qty"/>
+                 <field name="inventory_value"/>
              </graph>
          </field>
     </record>
@@ -180,7 +182,7 @@
         <field name="view_mode">tree,graph</field>
         <field name="search_view_id"  eval="False"/>
         <field name="context">{'contact_display': 'partner', 'search_default_real':1,
-'search_default_year':1,'search_default_month':1, 'search_default_location_type_internal':1,'search_default_group_product':1,'group_by':[], 'group_by_no_leaf':1}</field>
+'search_default_year':1,'search_default_month':1, 'search_default_location_type_internal':1,'search_default_group_product':1,'group_by':[], 'group_by_no_leaf':0}</field>
         <field name="help">Inventory Analysis allows you to easily check and analyse your company stock levels. Sort and group by selection criteria in order to better analyse and manage your company  activities.</field>
     </record>
     <menuitem action="action_stock_inventory_report"
@@ -209,9 +211,7 @@
                 <field name="date"/>
                 <field name="price_unit"/>
                 <field name="product_qty" sum="Total quantity"/>
-                <field name="fifo_value" sum="Total FIFO value"/>
-                <field name="avg_value" sum="Total AVG value"/>
-                <field name="inventory_value" sum="Inventory value"/>
+                <field name="value" sum="Total AVG value"/>
            </tree>
         </field>
     </record>
@@ -222,7 +222,7 @@
          <field name="arch" type="xml">
              <graph string="Stock Valuation Analysis" type="bar">
                  <field name="product_id"/>
-                 <field name="fifo_value"/>
+                 <field name="value"/>
              </graph>
          </field>
     </record>
@@ -263,8 +263,6 @@
                     <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
                     <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
                     <filter string="Price" context="{'group_by': 'price_unit'}"/>
-                </group>
-                <group string="Extra group by">
                     <filter string="Ref" context="{'group_by': 'name'}"/>
                 </group>
             </search>
@@ -272,39 +270,17 @@
     </record>
 
     <record id="action_stock_valuation_report" model="ir.actions.act_window">
-        <field name="name">Stock Valuation Analysis</field>
+        <field name="name">Stock Move Valuation</field>
         <field name="res_model">report.stock.valuation</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
         <field name="search_view_id"  eval="False"/>
         <field name="context">{'contact_display': 'partner', 'search_default_real':1,
-'search_default_year':1,'search_default_month':1, 'search_default_location_type_internal':1,'search_default_group_product':1,'group_by':[], 'group_by_no_leaf':0}</field>
+'search_default_year':1,'search_default_month':1, 'search_default_location_type_internal':1,'group_by':[]}</field>
         <field name="help">Stock Valuation Analysis allows you to easily check and analyse your company stock levels. The difference with the Inventory Analysis, is that 
              the stock is calculated based on the prices of the stock moves depending on the costing method of the product (FIFO/LIFO/Average/standard) and not just the standard price of the product.   
              Sort and group by selection criteria in order to better analyse and manage your company activities.  </field>
     </record>
-    
-    
-    <record id="action_stock_inventory_valuation_report" model="ir.actions.act_window">
-        <field name="name">Stock Inventory Valuation Analysis</field>
-        <field name="res_model">report.stock.valuation</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,graph</field>
-        <field name="search_view_id"  eval="False"/>
-        <field name="context">{'contact_display': 'partner', 'search_default_real':1,
-'search_default_year':1,'search_default_month':1, 'search_default_location_type_internal':1,'search_default_group_product':1,'group_by':[], 'group_by_no_leaf':0}</field>
-        <field name="help">Stock Valuation Analysis allows you to easily check and analyse your company stock levels. The difference with the Inventory Analysis, is that 
-             the stock is calculated based on the prices of the stock moves depending on the costing method of the product (FIFO/LIFO/Average/standard) and not just the standard price of the product.   
-             Sort and group by selection criteria in order to better analyse and manage your company activities.  </field>
-    </record>
-
-
-    <menuitem action="action_stock_inventory_valuation_report"
-        id="menu_action_stock_inventory_valuation_report"
-        parent="next_id_61" sequence="4"/>
-    <menuitem action="action_stock_valuation_report"
-        id="menu_action_stock_valuation_report"
-        parent="next_id_61" sequence="4"/>
-    
+    <menuitem action="action_stock_valuation_report" id="menu_action_move_match" parent="menu_traceability" sequence="3" groups="stock.group_locations"/>
 </data>
 </openerp>

@@ -129,7 +129,7 @@ class report_stock_move(osv.osv):
                     GROUP BY
                         sm.id,sp.type, sm.date,sm.partner_id,
                         sm.product_id,sm.state,sm.product_uom,sm.date_expected,
-                        sm.product_id,ip.value_float, sm.picking_id, sm.product_qty,
+                        sm.product_id, sm.picking_id, sm.product_qty,
                         sm.company_id,sm.product_qty, sm.location_id,sm.location_dest_id,pu.factor,pt.categ_id, sp.stock_journal_id)
                     AS al
                     GROUP BY
@@ -146,6 +146,53 @@ class report_stock_inventory(osv.osv):
     _name = "report.stock.inventory"
     _description = "Stock Statistics"
     _auto = False
+    _order = 'date desc'
+    
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
+        #print "D", domain, "\nG", groupby, "\nF", fields
+        res = super(report_stock_inventory, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
+        #import pprint
+        #pprint.pprint(res)
+        #import pdb;pdb.set_trace()
+        product_obj = self.pool.get("product.product")
+        for line in res:
+            if '__domain' in line:
+                lines = self.search(cr, uid, line['__domain'], context=context)
+                inv_value = 0.0
+                for line2 in self.browse(cr, uid, lines, context=context):
+                    inv_value += line2.inventory_value
+                line['inventory_value'] = inv_value
+        return res
+    
+    def _calc_moves(self, cr, uid, ids, name, attr, context=None):
+        product_obj = self.pool.get("product.product")
+        res = {}
+        proddict = {}
+        # Fill proddict with the products we will need browse records from (optimization)
+        lines = self.browse(cr, uid, ids, context=context)
+        for line in lines:
+            if not line.company_id.id in proddict:
+                proddict[line.company_id.id] = {}
+            proddict[line.company_id.id][line.product_id.id] = True
+        prodbrow = {}
+        # Fill prodbrow with browse records needed from proddict
+        for prodelem in proddict.keys():
+            ctx = context.copy()
+            ctx['force_company'] = prodelem
+            prods = product_obj.browse(cr, uid, proddict[prodelem].keys(), context=ctx)
+            for prod in prods:
+                prodbrow[(prodelem, prod.id)] = prod
+        # use prodbrow and exisiting value on the report lines to calculate the inventory_value on the report lines
+        for line in lines:
+            ctx = context.copy()
+            ctx['force_company'] = line.company_id.id
+            prod = product_obj.browse(cr, uid, line.product_id.id, context=ctx)
+            if prodbrow[(line.company_id.id, line.product_id.id)].cost_method in ('fifo', 'lifo'):
+                res[line.id] = line.value
+            else:
+                res[line.id] = prodbrow[(line.company_id.id, line.product_id.id)].standard_price * line.product_qty
+        return res
+    
     _columns = {
         'date': fields.datetime('Date', readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
@@ -158,52 +205,32 @@ class report_stock_inventory(osv.osv):
         'location_id': fields.many2one('stock.location', 'Location', readonly=True),
         'prodlot_id': fields.many2one('stock.production.lot', 'Lot', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'product_qty':fields.float('Quantity',  digits_compute=dp.get_precision('Product Unit of Measure'), readonly=True),
+        'product_qty':fields.float('Quantity',  digits_compute=dp.get_precision('Product Unit of Measure'), help="Qty Remaining", readonly=True),
         'value' : fields.float('Total Value',  digits_compute=dp.get_precision('Account'), required=True),
         'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'Status', readonly=True, select=True,
               help='When the stock move is created it is in the \'Draft\' state.\n After that it is set to \'Confirmed\' state.\n If stock is available state is set to \'Avaiable\'.\n When the picking it done the state is \'Done\'.\
               \nThe state is \'Waiting\' if the move is waiting for another one.'),
         'location_type': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production'), ('transit', 'Transit Location for Inter-Companies Transfers')], 'Location Type', required=True),
         'scrap_location': fields.boolean('scrap'),
+        'inventory_value': fields.function(_calc_moves, string="Inventory Value", type='float', readonly=True), 
+        'ref':fields.text('Reference', readonly=True)
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_stock_inventory')
         cr.execute("""
 CREATE OR REPLACE view report_stock_inventory AS (
-    (SELECT
-        min(m.id) as id, m.date as date,
-        to_char(m.date, 'YYYY') as year,
-        to_char(m.date, 'MM') as month,
-        m.partner_id as partner_id, m.location_id as location_id,
-        m.product_id as product_id, pt.categ_id as product_categ_id, l.usage as location_type, l.scrap_location as scrap_location,
-        m.company_id,
-        m.state as state, m.prodlot_id as prodlot_id,
-        coalesce(sum(-m.price_unit * m.product_qty)::decimal, 0.0) as value,
-        coalesce(sum(-m.product_qty * pu.factor / pu2.factor)::decimal, 0.0) as product_qty
-    FROM
-        stock_move m
-            LEFT JOIN stock_picking p ON (m.picking_id=p.id)
-            LEFT JOIN product_product pp ON (m.product_id=pp.id)
-                LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
-                LEFT JOIN product_uom pu ON (pt.uom_id=pu.id)
-                LEFT JOIN product_uom pu2 ON (m.product_uom=pu2.id)
-            LEFT JOIN product_uom u ON (m.product_uom=u.id)
-            LEFT JOIN stock_location l ON (m.location_id=l.id)
-            WHERE m.state != 'cancel'
-    GROUP BY
-        m.id, m.product_id, m.product_uom, pt.categ_id, m.partner_id, m.location_id,  m.location_dest_id,
-        m.prodlot_id, m.date, m.state, l.usage, l.scrap_location, m.company_id, pt.uom_id, to_char(m.date, 'YYYY'), to_char(m.date, 'MM')
-) UNION ALL (
+    
     SELECT
-        -m.id as id, m.date as date,
+        m.id as id, m.date as date,
         to_char(m.date, 'YYYY') as year,
         to_char(m.date, 'MM') as month,
         m.partner_id as partner_id, m.location_dest_id as location_id,
         m.product_id as product_id, pt.categ_id as product_categ_id, l.usage as location_type, l.scrap_location as scrap_location,
         m.company_id,
         m.state as state, m.prodlot_id as prodlot_id,
-        coalesce(sum(m.price_unit * m.product_qty)::decimal, 0.0) as value,
-        coalesce(sum(m.product_qty * pu.factor / pu2.factor)::decimal, 0.0) as product_qty
+        coalesce(sum(m.price_unit * m.qty_remaining)::decimal, 0.0) as value,
+        coalesce(sum(m.qty_remaining * pu.factor / pu2.factor)::decimal, 0.0) as product_qty, 
+        p.name as ref
     FROM
         stock_move m
             LEFT JOIN stock_picking p ON (m.picking_id=p.id)
@@ -216,8 +243,7 @@ CREATE OR REPLACE view report_stock_inventory AS (
             WHERE m.state != 'cancel'
     GROUP BY
         m.id, m.product_id, m.product_uom, pt.categ_id, m.partner_id, m.location_id, m.location_dest_id,
-        m.prodlot_id, m.date, m.state, l.usage, l.scrap_location, m.company_id, pt.uom_id, to_char(m.date, 'YYYY'), to_char(m.date, 'MM')
-    )
+        m.prodlot_id, m.date, m.state, l.usage, l.scrap_location, m.company_id, pt.uom_id, to_char(m.date, 'YYYY'), to_char(m.date, 'MM'), p.name
 );
         """)
 
@@ -229,6 +255,9 @@ class report_stock_valuation(osv.osv):
     _description = "Stock Valuation Statistics"
     _auto = False
         
+        
+    
+    
     _order = 'date desc'
     _columns = {
         'date': fields.datetime('Date', readonly=True),
@@ -243,23 +272,20 @@ class report_stock_valuation(osv.osv):
         'prodlot_id': fields.many2one('stock.production.lot', 'Lot', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'product_qty':fields.float('Quantity',  digits_compute=dp.get_precision('Product Unit of Measure'), readonly=True),
-        'fifo_value' : fields.float('FIFO Value',  digits_compute=dp.get_precision('Account'), required=True),
-        'avg_value' : fields.float('Average Value',  digits_compute=dp.get_precision('Account'), required=True),
-        'inventory_value': fields.float('Inventory Value'), 
+        'value' : fields.float('Value',  digits_compute=dp.get_precision('Account'), required=True), 
         'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'Status', readonly=True, select=True,
               help='When the stock move is created it is in the \'Draft\' state.\n After that it is set to \'Confirmed\' state.\n If stock is available state is set to \'Avaiable\'.\n When the picking it done the state is \'Done\'.\
               \nThe state is \'Waiting\' if the move is waiting for another one.'),
         'location_type': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production'), ('transit', 'Transit Location for Inter-Companies Transfers')], 'Location Type', required=True),
         'scrap_location': fields.boolean('scrap'),
-        'name': fields.text('Name', readonly=True),
+        'name': fields.text('Reference', readonly=True),
         'price_unit': fields.float('Unit price', digits_compute=dp.get_precision('Account')), 
         'qty_remaining': fields.float('Qty remaining'),
         'location_dest_type': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production'), ('transit', 'Transit Location for Inter-Companies Transfers')], 'Location Destination Type', required=True), 
         'location_src_type': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production'), ('transit', 'Transit Location for Inter-Companies Transfers')], 'Location Source Type', required=True),
         'match': fields.many2one('stock.move', 'Match', readonly=True),
-        'related_move_in': fields.related('match', 'picking_id', 'name', type='text', readonly=True), 
+        'related_move_in': fields.related('match', 'picking_id', 'name', type='text', string="Original move", readonly=True), 
     }
-    
 
         
         
@@ -277,13 +303,11 @@ CREATE OR REPLACE view report_stock_valuation AS (
         m.state as state, m.prodlot_id as prodlot_id,
         p.name as name, 
         mm.move_in_id as match, 
-        coalesce(m.price_unit * pu2.factor / pu.factor, 0.0) as price_unit,
-        coalesce(sum(-mm.price_unit_out * mm.qty)::decimal, 0.0) as fifo_value,
-        coalesce(sum(-m.price_unit * mm.qty)::decimal, 0.0) as avg_value,  
+        coalesce(mm.price_unit_out * pu2.factor / pu.factor, 0.0) as price_unit,
+        coalesce(sum(-mm.price_unit_out * mm.qty)::decimal, 0.0) as value,
         coalesce(sum(-mm.qty * pu.factor / pu2.factor)::decimal, 0.0) as product_qty,
         l_other.usage as location_dest_type, 
-        l.usage as location_src_type,
-        0.0 as inventory_value
+        l.usage as location_src_type
     FROM
         stock_move_matching mm, stock_move m
             LEFT JOIN stock_picking p ON (m.picking_id=p.id)
@@ -311,12 +335,10 @@ CREATE OR REPLACE view report_stock_valuation AS (
         m.state as state, m.prodlot_id as prodlot_id,
         p.name as name, 0 as match,  
         coalesce(m.price_unit * pu2.factor / pu.factor, 0.0) as price_unit,
-        coalesce(sum(m.price_unit * m.product_qty)::decimal, 0.0) as fifo_value,
-        coalesce(sum(m.price_unit * m.product_qty)::decimal, 0.0) as avg_value,  
+        coalesce(sum(m.price_unit * m.product_qty)::decimal, 0.0) as value,  
         coalesce(sum(m.product_qty * pu.factor / pu2.factor)::decimal, 0.0) as product_qty, 
         l.usage as location_dest_type, 
-        l_other.usage as location_src_type, 
-        coalesce(sum(m.price_unit * m.qty_remaining)::decimal, 0.0) as inventory_value
+        l_other.usage as location_src_type
     FROM
         stock_move m
             LEFT JOIN stock_picking p ON (m.picking_id=p.id)
