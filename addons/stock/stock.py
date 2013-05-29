@@ -2702,8 +2702,9 @@ class stock_move(osv.osv):
                     product_avail[product.id] = product.qty_available
             
             # Check if out -> do stock move matchings and if fifo/lifo -> update price
+            # only update the cost price on the product form on stock moves of type == 'out' because if a valuation has to be made without PO, 
+            # for inventories for example we want to use the last value used for an outgoing move
             if move.location_id.usage == 'internal' and move.location_dest_id.usage != 'internal':
-                
                 fifo = (cost_method != 'lifo')
                 tuples = product_obj.get_stock_matchings_fifolifo(cr, uid, [product.id], product_qty, fifo, 
                                                                   product_uom, move.company_id.currency_id.id, context=ctx) #TODO Would be better to use price_currency_id for migration?
