@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-08 04:53+0000\n"
-"X-Generator: Launchpad (build 16482)\n"
+"X-Launchpad-Export-Date: 2013-05-29 06:27+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: base
 #: model:res.country,name:base.sh
@@ -37,14 +37,14 @@ msgid "Tasks-Mail Integration"
 msgstr "Feladat-levél beillesztés"
 
 #. module: base
-#: code:addons/fields.py:643
+#: code:addons/fields.py:652
 #, python-format
 msgid ""
 "The second argument of the many2many field %s must be a SQL table !You used "
 "%s, which is not a valid SQL table name."
 msgstr ""
-"A második bizonyítás a many2many mezőhöz %s egy SQL táblának kell lennie!Ezt "
-"lett használva %s, ami nem érvényes SQL tábla név."
+"A második bizonyításnak a many2many mezőhöz %s egy SQL táblának kell lennie! "
+"Ezt használta %s, ami nem érvényes SQL tábla név."
 
 #. module: base
 #: field:ir.ui.view,arch:0
@@ -123,8 +123,8 @@ msgid ""
 "Helps you manage your projects and tasks by tracking them, generating "
 "plannings, etc..."
 msgstr ""
-"Segít Önnek a projektjei és feladatai menedzselésében, azok "
-"nyomonkövetésével, tervezések készítésével, stb..."
+"Segít Önnek a projektjei és feladatai kezelésében, azok nyomon követésével, "
+"tervezések készítésével, stb..."
 
 #. module: base
 #: field:ir.actions.act_window,display_menu_tip:0
@@ -176,7 +176,7 @@ msgid ""
 msgstr ""
 "A feltételes tartomány ahhoz, hogy korlátozni lehessen az összefüggések "
 "mezőinek lehetséges értékei, mint megadott Python kifejezést ami a háromágú "
-"listát rja le. Például: [('szín','=','piros')]"
+"listát írja le. Például: [('szín','=','piros')]"
 
 #. module: base
 #: field:res.partner,ref:0
@@ -211,13 +211,13 @@ msgstr "Árfolyamok a szerződéseken"
 #. module: base
 #: code:addons/base/ir/ir_sequence.py:104
 #: code:addons/base/ir/ir_sequence.py:130
-#: code:addons/base/res/res_users.py:467
+#: code:addons/base/res/res_users.py:473
 #, python-format
 msgid "Warning!"
 msgstr "Figyelem!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:399
+#: code:addons/base/ir/ir_model.py:406
 #, python-format
 msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
@@ -227,7 +227,7 @@ msgstr ""
 "kódon keresztül, lehetőleg egyéni modul szerkesztésével!"
 
 #. module: base
-#: code:addons/osv.py:132
+#: code:addons/osv.py:151
 #, python-format
 msgid "Constraint Error"
 msgstr "Kényszerítés hiba"
@@ -238,7 +238,7 @@ msgid "ir.ui.view.custom"
 msgstr "ir.ui.view.custom"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:368
+#: code:addons/base/ir/ir_model.py:375
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
 msgstr "Nem megengedett a \"%s\" ritka mező átnevezése"
@@ -249,7 +249,7 @@ msgid "Swaziland"
 msgstr "Szváziföld"
 
 #. module: base
-#: code:addons/orm.py:4485
+#: code:addons/orm.py:4486
 #, python-format
 msgid "created."
 msgstr "létrehozva."
@@ -358,7 +358,7 @@ msgid ""
 "  - tree_but_open\n"
 "For defaults, an optional condition"
 msgstr ""
-"A műveletekhez, egy a lehetséges végrehajtási egységegból: \n"
+"A műveletekhez, egy a lehetséges végrehajtási egységegből: \n"
 "  - client_action_multi ; kliens_művelet_többszörös\n"
 "  - client_print_multi ; kliens_nyomtatás_többszörös\n"
 "  - client_action_relate ; kliens_művelet_összefüggő\n"
@@ -397,7 +397,7 @@ msgstr "Partner kapcsolati felelős"
 #. module: base
 #: model:ir.module.category,name:base.module_category_customer_relationship_management
 msgid "Customer Relationship Management"
-msgstr "Ügyfél kapcsolati irányítás"
+msgstr "Ügyfélkapcsolat kezelés"
 
 #. module: base
 #: view:ir.module.module:0
@@ -405,15 +405,15 @@ msgid "Extra"
 msgstr "Extra"
 
 #. module: base
-#: code:addons/orm.py:2648
+#: code:addons/orm.py:2649
 #, python-format
 msgid "Invalid group_by"
-msgstr "Invalid group_by"
+msgstr "Hibás csoportosítás"
 
 #. module: base
 #: field:ir.module.category,child_ids:0
 msgid "Child Applications"
-msgstr "Alárendelt/gyermek alkalmazások"
+msgstr "Alárendelt alkalmazások"
 
 #. module: base
 #: field:res.partner,credit_limit:0
@@ -456,7 +456,7 @@ msgstr "%(bank_name)s: %(acc_number)s"
 #. module: base
 #: view:ir.actions.todo:0
 msgid "Config Wizard Steps"
-msgstr "Konfigurációs Varázsló Lépések"
+msgstr "Konfigurációs Varázsló Lépései"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view_sc
@@ -487,14 +487,13 @@ msgstr ""
 "képernyőn látható."
 
 #. module: base
-#: code:addons/orm.py:4152
+#: code:addons/orm.py:4153
 #, python-format
 msgid ""
 "One of the records you are trying to modify has already been deleted "
 "(Document type: %s)."
 msgstr ""
-"One of the records you are trying to modify has already been deleted "
-"(Document type: %s)."
+"Az egyik módosítani kívánt rekord már törölve lett (Dokumentum típus: %s)."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pad_project
@@ -523,10 +522,10 @@ msgid ""
 "and reference view. The result is returned as an ordered list of pairs "
 "(view_id,view_mode)."
 msgstr ""
-"Ez a hivatkozási mező számítja ki a nézetek lista elrendezését amit be kell "
+"Ez a hivatkozási mező számítja ki a nézetek lista elrendezését, amit be kell "
 "kapcsolni, ha ki szeretnénk jelezni a művelet eredményét, összesített nézet "
 "módot, nézeteket és a hivatkozási nézetet a képernyőre. Az eredményt "
-"visszakapjuk, mint egy megrendelési páros lista (nézet_id,nézet_mód)."
+"visszakapjuk, mint egy megrendelési páros listát (nézet_id,nézet_mód)."
 
 #. module: base
 #: model:res.country,name:base.tv
@@ -565,14 +564,14 @@ msgid "Romania"
 msgstr "Románia"
 
 #. module: base
-#: code:addons/base/res/res_users.py:307
+#: code:addons/base/res/res_users.py:311
 #, python-format
 msgid ""
 "You can not remove the admin user as it is used internally for resources "
 "created by OpenERP (updates, module installation, ...)"
 msgstr ""
-"Az admin felhasználót nem lehet törölni, mivel a szoftver több funkciója ezt "
-"használja (frissítések, modul telepítés, stb.)"
+"Az adminisztrátor felhasználót nem lehet törölni, mivel a szoftver több "
+"funkciója ezt használja (frissítések, modul telepítés, stb.)"
 
 #. module: base
 #: view:ir.values:0
@@ -696,7 +695,7 @@ msgid ""
 "You can use this field for quick search."
 msgstr ""
 "Két betűs ISO országkód.\n"
-"Ez a mező gyorskereséshez használható."
+"Ez a mező gyors kereséshez használható."
 
 #. module: base
 #: model:res.country,name:base.pw
@@ -719,7 +718,8 @@ msgstr "Lefordítatlan"
 msgid ""
 "Context dictionary as Python expression, empty by default (Default: {})"
 msgstr ""
-"Context dictionary as Python expression, empty by default (Default: {})"
+"Összefüggés szótár mint Python kifejezés, Alapállapotban üres "
+"(Alapértelmezett: {})"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_action_wizard
@@ -734,7 +734,7 @@ msgid "Miscellaneous Suppliers"
 msgstr "Egyéb beszállítók"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:339
+#: code:addons/base/ir/ir_model.py:345
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
 msgstr "Egyéni mező nevének 'x_'-el kell kezdődnie!"
@@ -775,13 +775,13 @@ msgstr "Model leírás"
 msgid ""
 "Optional model name of the objects on which this action should be visible"
 msgstr ""
-"Opcionális modelnév azon objektumoknak, amelyeken ez a művelet látható kell "
-"hogy legyen"
+"Választható modellnév azon objektumoknak, amelyeken ez a művelet látható "
+"kell hogy legyen"
 
 #. module: base
 #: field:workflow.transition,trigger_expr_id:0
 msgid "Trigger Expression"
-msgstr "Trigger Expression"
+msgstr "Kifejezés kapcsolása"
 
 #. module: base
 #: model:res.country,name:base.jo
@@ -913,7 +913,7 @@ msgstr "Albán / Shqip"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_opportunity
 msgid "Opportunities"
-msgstr "Lehetőségek"
+msgstr "Esélyek"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_export
@@ -952,7 +952,7 @@ msgstr ""
 #. module: base
 #: view:res.users:0
 msgid "Email Preferences"
-msgstr "Email preferencia"
+msgstr "Email kiválasztás"
 
 #. module: base
 #: model:ir.module.module,description:base.module_audittrail
@@ -1127,7 +1127,7 @@ msgstr ""
 #. module: base
 #: view:res.lang:0
 msgid "%B - Full month name."
-msgstr "%B - Hónap hosszú neve."
+msgstr "%B - Hónap teljes neve."
 
 #. module: base
 #: field:ir.actions.todo,type:0
@@ -1156,8 +1156,8 @@ msgid ""
 "Language with code \"%s\" is not defined in your system !\n"
 "Define it through the Administration menu."
 msgstr ""
-"Language with code \"%s\" is not defined in your system !\n"
-"Define it through the Administration menu."
+"Nyelv kód ezzel a kóddal \"%s\" nincs meghatározva a rendszerben!\n"
+"Határozza meg az Adminisztrációs menüben."
 
 #. module: base
 #: model:res.country,name:base.gu
@@ -1165,16 +1165,16 @@ msgid "Guam (USA)"
 msgstr "Guam (USA)"
 
 #. module: base
-#: code:addons/base/res/res_users.py:467
+#: code:addons/base/res/res_users.py:473
 #, python-format
 msgid "Setting empty passwords is not allowed for security reasons!"
 msgstr "Üres jelszó beállítása biztonsági okokból nem engedélyezett!"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:212
+#: code:addons/base/ir/ir_mail_server.py:214
 #, python-format
 msgid "Connection test failed!"
-msgstr "Csatlakozás teszt nem sikerült!"
+msgstr "Sikertelen a csatlakozási teszt!"
 
 #. module: base
 #: selection:ir.actions.server,state:0
@@ -1205,10 +1205,10 @@ msgid "Transitions"
 msgstr "Átmenetek"
 
 #. module: base
-#: code:addons/orm.py:4917
+#: code:addons/orm.py:4918
 #, python-format
 msgid "Record #%d of %s not found, cannot copy!"
-msgstr "Record #%d of %s not found, cannot copy!"
+msgstr "A  #%d rekord ebből %s nem található, nem másolható!"
 
 #. module: base
 #: field:ir.module.module,contributors:0
@@ -1365,7 +1365,7 @@ msgid "Marshall Islands"
 msgstr "Marshall-szigetek"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:423
+#: code:addons/base/ir/ir_model.py:430
 #, python-format
 msgid "Changing the model of a field is forbidden!"
 msgstr "Nem lehet megváltoztatni egy mezőhöz tartozó model-t!"
@@ -1382,7 +1382,7 @@ msgid "Search"
 msgstr "Keresés"
 
 #. module: base
-#: code:addons/osv.py:135
+#: code:addons/osv.py:154
 #, python-format
 msgid ""
 "The operation cannot be completed, probably due to the following:\n"
@@ -1390,10 +1390,9 @@ msgid ""
 "reference it\n"
 "- creation/update: a mandatory field is not correctly set"
 msgstr ""
-"The operation cannot be completed, probably due to the following:\n"
-"- deletion: you may be trying to delete a record while other records still "
-"reference it\n"
-"- creation/update: a mandatory field is not correctly set"
+"A művelet nem végezhető el, valószínűleg a következők miatt:\n"
+"- törlés: rekordot szeretne törölni, de arra még van hivatkozás\n"
+"- létrehozás/frissítés: egy szükséges mező nincs rendesen beállítva/kitöltve"
 
 #. module: base
 #: field:ir.module.category,parent_id:0
@@ -1404,7 +1403,7 @@ msgstr "Szülő alkalmazás"
 #: code:addons/base/res/res_users.py:131
 #, python-format
 msgid "Operation Canceled"
-msgstr "Művelet Visszavonva"
+msgstr "Művelet visszavonva"
 
 #. module: base
 #: help:base.language.export,lang:0
@@ -1419,7 +1418,7 @@ msgstr "Dokumentum kezelési rendszer"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_claim
 msgid "Claims Management"
-msgstr "Igények kezelése"
+msgstr "Reklamációs igények kezelése"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_purchase_management
@@ -1660,7 +1659,7 @@ msgid "On Create"
 msgstr "Létrehozáskor"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:906
+#: code:addons/base/ir/ir_model.py:914
 #, python-format
 msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
@@ -2149,7 +2148,7 @@ msgid "Formula"
 msgstr "Formula"
 
 #. module: base
-#: code:addons/base/res/res_users.py:307
+#: code:addons/base/res/res_users.py:311
 #, python-format
 msgid "Can not remove root user!"
 msgstr "A root felhasználót nem lehet eltávolítani"
@@ -2183,8 +2182,8 @@ msgstr ""
 #: code:addons/base/ir/ir_filters.py:36
 #: code:addons/base/res/res_partner.py:314
 #: code:addons/base/res/res_users.py:92
-#: code:addons/base/res/res_users.py:331
-#: code:addons/base/res/res_users.py:333
+#: code:addons/base/res/res_users.py:335
+#: code:addons/base/res/res_users.py:337
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (másolat)"
@@ -2667,7 +2666,7 @@ msgstr ""
 "'űrlap', 'fa', 'naptár', etc. (Alapértelmezett: fa, űrlap)"
 
 #. module: base
-#: code:addons/orm.py:3842
+#: code:addons/orm.py:3843
 #, python-format
 msgid "A document was modified since you last viewed it (%s:%d)"
 msgstr "A document was modified since you last viewed it (%s:%d)"
@@ -2719,14 +2718,14 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Hibabejelentés kezelése.\n"
+"Ügyfélszolgálat kezelése.\n"
 "====================\n"
 "\n"
-"Mint a követelések felvitele és feldolgozása, Hibabejelentés és támogatás jó "
-"eszközök a\n"
+"Mint a reklamációk felvitele és feldolgozása, Ügyfélszolgálat és támogatás "
+"jó eszközök a\n"
 "beavatkozás nyomon követésére. Ez a menü legjobban a szóbeli kommunikációhoz "
 "alkalmazkodik,\n"
-"ami nem szükségszerűen kapcsolódik egy követeléshez. Válasszon ki egy "
+"ami nem szükségszerűen kapcsolódik egy jótálláshoz. Válasszon ki egy "
 "ügyfelet, adjon hozzá megjegyzést\n"
 "és kategorizálja a beavatkozást egy csatornával és egy prioritási szinttel.\n"
 "    "
@@ -2814,7 +2813,7 @@ msgid "Madagascar"
 msgstr "Madagaszkár"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:126
+#: code:addons/base/ir/ir_model.py:127
 #, python-format
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
@@ -2847,7 +2846,7 @@ msgstr "Ötletek"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_crm
 msgid "Opportunity to Quotation"
-msgstr "Lehetőség árajánlat adásra"
+msgstr "Árajánlat adás az esélyre"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_analytic_plans
@@ -3125,21 +3124,21 @@ msgid "Client Logs"
 msgstr "Ügyfél naplók"
 
 #. module: base
-#: code:addons/orm.py:2020
-#: code:addons/orm.py:2031
+#: code:addons/orm.py:2021
+#: code:addons/orm.py:2032
 #, python-format
 msgid "Invalid Object Architecture!"
 msgstr "Invalid Object Architecture!"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:366
-#: code:addons/base/ir/ir_model.py:368
-#: code:addons/base/ir/ir_model.py:398
-#: code:addons/base/ir/ir_model.py:412
-#: code:addons/base/ir/ir_model.py:414
-#: code:addons/base/ir/ir_model.py:416
+#: code:addons/base/ir/ir_model.py:373
+#: code:addons/base/ir/ir_model.py:375
+#: code:addons/base/ir/ir_model.py:405
+#: code:addons/base/ir/ir_model.py:419
+#: code:addons/base/ir/ir_model.py:421
 #: code:addons/base/ir/ir_model.py:423
-#: code:addons/base/ir/ir_model.py:426
+#: code:addons/base/ir/ir_model.py:430
+#: code:addons/base/ir/ir_model.py:433
 #: code:addons/base/module/wizard/base_update_translations.py:39
 #, python-format
 msgid "Error!"
@@ -3242,7 +3241,7 @@ msgid "Master Procurement Schedule"
 msgstr "Fő beszerzési ütemterv"
 
 #. module: base
-#: code:addons/base/res/res_users.py:668
+#: code:addons/base/res/res_users.py:674
 #: model:ir.model,name:base.model_ir_module_category
 #: field:ir.module.module,application:0
 #: field:res.groups,category_id:0
@@ -3310,7 +3309,7 @@ msgid "Params storage"
 msgstr "Paraméterek tárolása"
 
 #. module: base
-#: code:addons/base/module/module.py:526
+#: code:addons/base/module/module.py:525
 #, python-format
 msgid "Can not upgrade module '%s'. It is not installed."
 msgstr "A(z) '%s' modult nem lehet frissíteni, mivel nincs telepítve."
@@ -3356,13 +3355,13 @@ msgstr ""
 "    "
 
 #. module: base
-#: code:addons/report_sxw.py:441
+#: code:addons/report_sxw.py:443
 #, python-format
 msgid "Unknown report type: %s"
 msgstr "Ismeretlen kimutatás típus: %s"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:334
+#: code:addons/base/ir/ir_model.py:340
 #, python-format
 msgid "For selection fields, the Selection Options must be given!"
 msgstr "A kiválasztás mezőkhöz a Kiválasztás opciót meg kell adni!"
@@ -3520,7 +3519,7 @@ msgid "Administration Dashboard"
 msgstr "Adminisztrátori Dashboard/Műszerfal"
 
 #. module: base
-#: code:addons/orm.py:4684
+#: code:addons/orm.py:4685
 #, python-format
 msgid ""
 "Invalid \"order\" specified. A valid \"order\" specification is a comma-"
@@ -3565,7 +3564,7 @@ msgid "Access Controls"
 msgstr "Hozzáférés vezérlés"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:275
+#: code:addons/base/ir/ir_model.py:278
 #, python-format
 msgid ""
 "The Selection Options expression is not a valid Pythonic expression.Please "
@@ -3676,7 +3675,7 @@ msgid "Products Manufacturers"
 msgstr "Termékek gyártói"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:237
+#: code:addons/base/ir/ir_mail_server.py:239
 #, python-format
 msgid "SMTP-over-SSL mode unavailable"
 msgstr "SSL-en-keresztüli-SMTP mód nem elérhető"
@@ -4184,7 +4183,7 @@ msgstr ""
 "Ha nincs beállítva, alapértelmezett értékként szolgál az új erőforrásoknak"
 
 #. module: base
-#: code:addons/orm.py:4245
+#: code:addons/orm.py:4246
 #, python-format
 msgid "Recursivity Detected."
 msgstr "Recursivity Detected."
@@ -4255,7 +4254,7 @@ msgid "Company Name"
 msgstr "Cég neve"
 
 #. module: base
-#: code:addons/orm.py:2807
+#: code:addons/orm.py:2808
 #, python-format
 msgid ""
 "Invalid value for reference field \"%s.%s\" (last part must be a non-zero "
@@ -4378,7 +4377,7 @@ msgid "M."
 msgstr "Úr"
 
 #. module: base
-#: code:addons/base/module/module.py:645
+#: code:addons/base/module/module.py:644
 #, python-format
 msgid ""
 "Can not create the module file:\n"
@@ -4476,7 +4475,7 @@ msgid "Email Gateway"
 msgstr "Email átjáró"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:465
+#: code:addons/base/ir/ir_mail_server.py:469
 #, python-format
 msgid ""
 "Mail delivery failed via SMTP server '%s'.\n"
@@ -4597,7 +4596,7 @@ msgid "EAN13"
 msgstr "EAN13"
 
 #. module: base
-#: code:addons/orm.py:2246
+#: code:addons/orm.py:2247
 #, python-format
 msgid "Invalid Architecture!"
 msgstr "Érvénytelen felépítés!"
@@ -5162,6 +5161,7 @@ msgstr ""
 
 #. module: base
 #: field:ir.actions.server,srcmodel_id:0
+#: view:ir.filters:0
 #: field:ir.filters,model_id:0
 #: view:ir.model:0
 #: field:ir.model,model:0
@@ -5242,7 +5242,7 @@ msgid "%c - Appropriate date and time representation."
 msgstr "%c - Pontos dátum és idő."
 
 #. module: base
-#: code:addons/base/res/res_config.py:387
+#: code:addons/base/res/res_config.py:388
 #, python-format
 msgid ""
 "Your database is now fully configured.\n"
@@ -5428,7 +5428,7 @@ msgid "System Configuration Done"
 msgstr "Rendszer konfigurálása kész"
 
 #. module: base
-#: code:addons/orm.py:1539
+#: code:addons/orm.py:1540
 #, python-format
 msgid "Error occurred while validating the field(s) %s: %s"
 msgstr "Hiba a mező(k) ellenőrzése során %s: %s"
@@ -5654,7 +5654,7 @@ msgid "Security"
 msgstr "Biztonság"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:366
+#: code:addons/base/ir/ir_model.py:373
 #, python-format
 msgid "Changing the storing system for field \"%s\" is not allowed."
 msgstr "A \"%s\" mező tároló rendszerének megváltoztatása nem megengedett."
@@ -5854,7 +5854,7 @@ msgid "Apply For Delete"
 msgstr "Alkalmazás törléshez"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:414
+#: code:addons/base/ir/ir_model.py:421
 #, python-format
 msgid "Cannot rename column to %s, because that column already exists!"
 msgstr ""
@@ -5872,7 +5872,7 @@ msgid "Decimal Separator"
 msgstr "Tizedes elválasztó"
 
 #. module: base
-#: code:addons/base/module/module.py:415
+#: code:addons/base/module/module.py:414
 #: view:ir.module.module:0
 #, python-format
 msgid "Install"
@@ -6151,9 +6151,12 @@ msgstr ""
 #: field:res.currency.rate.type,name:0
 #: field:res.groups,name:0
 #: field:res.lang,name:0
+#: view:res.partner:0
 #: field:res.partner,name:0
+#: view:res.partner.bank:0
 #: field:res.partner.bank.type,name:0
 #: field:res.request.link,name:0
+#: view:res.users:0
 #: field:workflow,name:0
 #: field:workflow.activity,name:0
 msgid "Name"
@@ -7001,7 +7004,7 @@ msgid "OpenERP Tweets"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:503
+#: code:addons/base/module/module.py:502
 #: view:ir.module.module:0
 #, python-format
 msgid "Uninstall"
@@ -7020,7 +7023,7 @@ msgstr "Feladat"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_anonymization
 msgid "Database Anonymization"
-msgstr "Adatbázis  névtelenítése"
+msgstr "Adatbázis  névtelenítése/titkosítása"
 
 #. module: base
 #: selection:ir.mail_server,smtp_encryption:0
@@ -7224,7 +7227,7 @@ msgid "Time Format"
 msgstr "Idő Formátum"
 
 #. module: base
-#: code:addons/orm.py:2246
+#: code:addons/orm.py:2247
 #, python-format
 msgid "There is no view of type '%s' defined for the structure!"
 msgstr "There is no view of type '%s' defined for the structure!"
@@ -7247,7 +7250,6 @@ msgstr "Kimutatás xml"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_module_open_categ
-#: model:ir.actions.act_window,name:base.open_module_tree
 #: field:ir.module.category,module_ids:0
 #: view:ir.module.module:0
 #: model:ir.ui.menu,name:base.menu_management
@@ -7420,7 +7422,7 @@ msgid "ir.attachment"
 msgstr "ir.attachment"
 
 #. module: base
-#: code:addons/orm.py:4347
+#: code:addons/orm.py:4348
 #, python-format
 msgid ""
 "You cannot perform this operation. New Record Creation is not allowed for "
@@ -7891,7 +7893,7 @@ msgstr ""
 "vagy a Felhasználói menüben), hogy megváltoztasd a jelszavadat."
 
 #. module: base
-#: code:addons/orm.py:2020
+#: code:addons/orm.py:2021
 #, python-format
 msgid "Insufficient fields for Calendar View!"
 msgstr "Naptár nézethez nem elégségesek a mezők!"
@@ -7923,6 +7925,7 @@ msgstr "Átmenet"
 
 #. module: base
 #: field:ir.cron,active:0
+#: field:ir.mail_server,active:0
 #: field:ir.model.access,active:0
 #: field:ir.rule,active:0
 #: field:ir.sequence,active:0
@@ -8242,6 +8245,7 @@ msgstr "Kínai (CN) / 简体中文"
 #: field:res.bank,street:0
 #: field:res.company,street:0
 #: field:res.partner,street:0
+#: view:res.partner.bank:0
 #: field:res.partner.bank,street:0
 msgid "Street"
 msgstr "Utca"
@@ -8507,7 +8511,7 @@ msgstr ""
 "Üzleti menü.\n"
 "===================\n"
 "\n"
-"Telepítőt tartalmaz az üzletiügyvitel modulokhoz.\n"
+"Telepítőt tartalmaz az üzleti ügyvitel modulokhoz.\n"
 "    "
 
 #. module: base
@@ -8558,7 +8562,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_config.py:349
+#: code:addons/base/res/res_config.py:350
 #, python-format
 msgid ""
 "\n"
@@ -8782,7 +8786,7 @@ msgstr ""
 "kell lennie, vagy egy rekord ID egyész számmal rendelkező mezőnek)"
 
 #. module: base
-#: code:addons/base/module/module.py:540
+#: code:addons/base/module/module.py:539
 #, python-format
 msgid ""
 "You try to upgrade a module that depends on the module: %s.\n"
@@ -9237,7 +9241,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/orm.py:2817
+#: code:addons/orm.py:2818
 #, python-format
 msgid "The value \"%s\" for the field \"%s.%s\" is not in the selection"
 msgstr "A \"%s\" érték ehhez a mezőhöz \"%s.%s\" nincs a választásban"
@@ -9333,7 +9337,7 @@ msgid "Mexico"
 msgstr "Mexikó"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:440
+#: code:addons/base/ir/ir_mail_server.py:444
 #, python-format
 msgid "Missing SMTP Server"
 msgstr "Nem található  SMTP Szerver"
@@ -9524,7 +9528,7 @@ msgid "Selectable"
 msgstr "választható"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:219
+#: code:addons/base/ir/ir_mail_server.py:221
 #, python-format
 msgid "Everything seems properly set up!"
 msgstr "Ugy néz ki minden megfelelően beállítva!"
@@ -9600,8 +9604,8 @@ msgid "bank_bic"
 msgstr "bank_bic"
 
 #. module: base
-#: code:addons/orm.py:4245
-#: code:addons/orm.py:4346
+#: code:addons/orm.py:4246
+#: code:addons/orm.py:4347
 #, python-format
 msgid "UserError"
 msgstr "UserError"
@@ -9627,7 +9631,7 @@ msgid "United Arab Emirates"
 msgstr "Egyesült Arab Emirátusok"
 
 #. module: base
-#: code:addons/orm.py:3960
+#: code:addons/orm.py:3961
 #, python-format
 msgid ""
 "Unable to delete this document because it is used as a default property"
@@ -9669,7 +9673,7 @@ msgid "Reunion (French)"
 msgstr "Réunion (Francia)"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:416
+#: code:addons/base/ir/ir_model.py:423
 #, python-format
 msgid ""
 "New column name must still start with x_ , because it is a custom field!"
@@ -9974,8 +9978,8 @@ msgid "Solomon Islands"
 msgstr "Salamon-szigetek"
 
 #. module: base
-#: code:addons/orm.py:4151
-#: code:addons/orm.py:4684
+#: code:addons/orm.py:4152
+#: code:addons/orm.py:4685
 #, python-format
 msgid "AccessError"
 msgstr "Hozzáférési hiba"
@@ -10035,7 +10039,7 @@ msgid "Report"
 msgstr "Kimutatás"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:238
+#: code:addons/base/ir/ir_mail_server.py:240
 #, python-format
 msgid ""
 "Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS "
@@ -10285,7 +10289,7 @@ msgid "Models"
 msgstr "Modellek"
 
 #. module: base
-#: code:addons/base/ir/ir_cron.py:247
+#: code:addons/base/ir/ir_cron.py:254
 #, python-format
 msgid "Record cannot be modified right now"
 msgstr "A rekordot most nem lehet módosítani"
@@ -10348,7 +10352,7 @@ msgid "%H - Hour (24-hour clock) [00,23]."
 msgstr "%H - Óra (24 órás) [00,23]."
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:477
+#: code:addons/base/ir/ir_mail_server.py:481
 #, python-format
 msgid ""
 "Your server does not seem to support SSL, you may want to try STARTTLS "
@@ -10363,7 +10367,7 @@ msgid "res.widget"
 msgstr "res.widget"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:342
+#: code:addons/base/ir/ir_model.py:348
 #, python-format
 msgid "Model %s does not exist!"
 msgstr "A %s model nem létezik!"
@@ -10663,7 +10667,7 @@ msgstr ""
 "más nézetekhez"
 
 #. module: base
-#: code:addons/base/res/res_config.py:386
+#: code:addons/base/res/res_config.py:387
 #, python-format
 msgid "Click 'Continue' to configure the next addon..."
 msgstr ""
@@ -10766,6 +10770,7 @@ msgstr ""
 #. module: base
 #: view:ir.attachment:0
 #: view:ir.cron:0
+#: view:ir.filters:0
 #: view:ir.model.access:0
 #: view:ir.model.data:0
 #: view:ir.model.fields:0
@@ -11071,7 +11076,7 @@ msgid "Kind"
 msgstr "Fajta"
 
 #. module: base
-#: code:addons/orm.py:4646
+#: code:addons/orm.py:4647
 #, python-format
 msgid "This method does not exist anymore"
 msgstr "This method does not exist anymore"
@@ -11296,10 +11301,10 @@ msgid ""
 "Adds a Claim link to the delivery order.\n"
 msgstr ""
 "\n"
-"Készítsen jótállási ügyet egy szállítási kézbesítési bizonylatból.\n"
+"Készítsen reklamációs ügyet egy szállítási kézbesítési bizonylatból.\n"
 "=====================================\n"
 "\n"
-"Egy jótálási linket ad a kézbesítési bizonylathoz.\n"
+"Egy Reklamációs elérési utat ad a kézbesítési bizonylathoz.\n"
 
 #. module: base
 #: view:ir.model:0
@@ -11427,10 +11432,15 @@ msgid "%m - Month number [01,12]."
 msgstr "%m - Hónap számmal [01,12]."
 
 #. module: base
+#: view:res.bank:0
 #: field:res.bank,city:0
+#: view:res.company:0
 #: field:res.company,city:0
+#: view:res.partner:0
 #: field:res.partner,city:0
+#: view:res.partner.bank:0
 #: field:res.partner.bank,city:0
+#: view:res.users:0
 msgid "City"
 msgstr "Város"
 
@@ -11946,8 +11956,8 @@ msgid "Problem in configuration `Record Id` in Server Action!"
 msgstr "Probléma a 'Rekord Azonosító' beállításánál a Szerver müveletben!"
 
 #. module: base
-#: code:addons/orm.py:2806
-#: code:addons/orm.py:2816
+#: code:addons/orm.py:2807
+#: code:addons/orm.py:2817
 #, python-format
 msgid "ValidateError"
 msgstr "Jóváhagyásihiba"
@@ -12375,6 +12385,7 @@ msgstr "Az alábbi modulok nincsenek telepítve vagy ismeretlenek: %s"
 #: field:change.password.user,user_id:0
 #: view:ir.cron:0
 #: field:ir.cron,user_id:0
+#: view:ir.filters:0
 #: field:ir.filters,user_id:0
 #: field:ir.ui.view.custom,user_id:0
 #: field:ir.values,user_id:0
@@ -12460,8 +12471,8 @@ msgstr ""
 "    "
 
 #. module: base
-#: code:addons/osv.py:153
-#: code:addons/osv.py:155
+#: code:addons/osv.py:172
+#: code:addons/osv.py:174
 #, python-format
 msgid "Integrity Error"
 msgstr "Integritási hiba"
@@ -12477,7 +12488,7 @@ msgid "workflow"
 msgstr "workflow"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:293
+#: code:addons/base/ir/ir_model.py:296
 #, python-format
 msgid "Size of the field can never be less than 1 !"
 msgstr "A mező mérete nem lehet kisebb 1-nél!"
@@ -12756,14 +12767,15 @@ msgstr ""
 "Ez a modul szükséges a Thuderbird Plug-in helyes működéséhez.\n"
 "====================================================================\n"
 "\n"
-"A plugin lehetővé teszi email és mellékletei archíválását a kiválasztott\n"
+"A plug-in lehetővé teszi email és mellékletei archiválását a kiválasztott\n"
 "OpenERP objektumhoz. Választhat egy partnert, egy feladatot,\n"
-"egy projektet/tevet, egy analitikus/elemző számlát, vagy bármely más "
+"egy projektet/tervet, egy analitikus/elemző számlát, vagy bármely más "
 "objektumot\n"
 "és hozzáadhatja a kiválasztott emailt mint egy .eml fájlt a kiválasztott "
 "rekord mellékletéhez. \n"
-"Létre tudja hozni a dokumentumokat a CRM elsőségekből,\n"
-"HR Pályázóból és Projekt ügyek kiválasztott emailjéből.\n"
+"Létre tudja hozni a dokumentumokat a CRM érdeklődésekből,\n"
+"Emberi erőforrás (HR) jelentkezőből és Projekt ügyek kiválasztott "
+"leveléből.\n"
 "      "
 
 #. module: base
@@ -12848,7 +12860,7 @@ msgid "Table Ref."
 msgstr "Táblázat Ref."
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:469
+#: code:addons/base/ir/ir_mail_server.py:473
 #, python-format
 msgid "Mail delivery failed"
 msgstr "EMail továbbítás megszakadt"
@@ -12875,7 +12887,7 @@ msgid "Object"
 msgstr "Objektum"
 
 #. module: base
-#: code:addons/osv.py:150
+#: code:addons/osv.py:169
 #, python-format
 msgid ""
 "\n"
@@ -13010,7 +13022,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:426
+#: code:addons/base/ir/ir_model.py:433
 #, python-format
 msgid ""
 "Changing the type of a column is not yet supported. Please drop it and "
@@ -13114,8 +13126,13 @@ msgid "Report Type"
 msgstr "Kimutatás típus"
 
 #. module: base
+#: view:res.bank:0
+#: view:res.company:0
 #: view:res.country.state:0
+#: view:res.partner:0
 #: field:res.partner,state_id:0
+#: view:res.partner.bank:0
+#: view:res.users:0
 msgid "State"
 msgstr "Állapot"
 
@@ -13188,7 +13205,7 @@ msgid "workflow.triggers"
 msgstr "workflow.triggers"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:84
+#: code:addons/base/ir/ir_model.py:85
 #, python-format
 msgid "Invalid search criterions"
 msgstr "Érvénytelen keresési kritériumok"
@@ -13647,7 +13664,7 @@ msgid "Occitan (FR, post 1500) / Occitan"
 msgstr "Okcitán (FR, 1500 után) / Occitan"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:212
+#: code:addons/base/ir/ir_mail_server.py:214
 #, python-format
 msgid ""
 "Here is what we got instead:\n"
@@ -13907,7 +13924,7 @@ msgid "Body"
 msgstr "Törzs"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:219
+#: code:addons/base/ir/ir_mail_server.py:221
 #, python-format
 msgid "Connection test succeeded!"
 msgstr "Kapcsolat teszt sikeres!"
@@ -13948,7 +13965,7 @@ msgstr ""
 "nem állandó-e (osv.osv_memory)"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:441
+#: code:addons/base/ir/ir_mail_server.py:445
 #, python-format
 msgid ""
 "Please define at least one SMTP server, or provide the SMTP parameters "
@@ -14023,6 +14040,7 @@ msgid "User - All Leads"
 msgstr ""
 
 #. module: base
+#: view:res.partner.bank:0
 #: field:res.partner.bank,acc_number:0
 msgid "Account Number"
 msgstr "Bankszámlaszám"
@@ -14142,7 +14160,7 @@ msgstr ""
 "Demo adat az értékesítési_kampányhoz.\n"
 "============================================\n"
 "\n"
-"Demó adatokat hoz létre mint vezetők, kampányok és az értékesítési_kampány "
+"Demó adatokat hoz létre mint érdeklődések, kampányok az értékesítési_kampány "
 "modul részeihez.\n"
 "    "
 
@@ -14154,7 +14172,7 @@ msgid "Kanban"
 msgstr "Kanban"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:289
+#: code:addons/base/ir/ir_model.py:292
 #, python-format
 msgid ""
 "The Selection Options expression is must be in the [('key','Label'), ...] "
@@ -14546,7 +14564,7 @@ msgstr ""
 #. module: base
 #: field:res.company,vat:0
 msgid "Tax ID"
-msgstr "Adó azonosító"
+msgstr "Közösségi adószám"
 
 #. module: base
 #: field:ir.model.fields,field_description:0
@@ -14616,8 +14634,8 @@ msgid "Update Module List"
 msgstr "Modullista frissítése"
 
 #. module: base
-#: code:addons/base/res/res_users.py:679
-#: code:addons/base/res/res_users.py:819
+#: code:addons/base/res/res_users.py:685
+#: code:addons/base/res/res_users.py:825
 #: selection:res.partner,type:0
 #: view:res.users:0
 #, python-format
@@ -14677,7 +14695,7 @@ msgid "Auto-Refresh"
 msgstr "Automatikus frissítés"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:84
+#: code:addons/base/ir/ir_model.py:85
 #, python-format
 msgid "The osv_memory field can only be compared with = and != operator."
 msgstr ""
@@ -14754,7 +14772,7 @@ msgid "Delivery Costs"
 msgstr "Szállítási költségek"
 
 #. module: base
-#: code:addons/base/ir/ir_cron.py:248
+#: code:addons/base/ir/ir_cron.py:255
 #, python-format
 msgid ""
 "This cron task is currently being executed and may not be modified, please "
@@ -14828,27 +14846,27 @@ msgstr ""
 #: code:addons/base/ir/ir_actions.py:606
 #: code:addons/base/ir/ir_actions.py:702
 #: code:addons/base/ir/ir_actions.py:705
-#: code:addons/base/ir/ir_model.py:164
-#: code:addons/base/ir/ir_model.py:274
-#: code:addons/base/ir/ir_model.py:288
-#: code:addons/base/ir/ir_model.py:318
-#: code:addons/base/ir/ir_model.py:334
-#: code:addons/base/ir/ir_model.py:339
-#: code:addons/base/ir/ir_model.py:342
+#: code:addons/base/ir/ir_model.py:165
+#: code:addons/base/ir/ir_model.py:277
+#: code:addons/base/ir/ir_model.py:291
+#: code:addons/base/ir/ir_model.py:321
+#: code:addons/base/ir/ir_model.py:340
+#: code:addons/base/ir/ir_model.py:345
+#: code:addons/base/ir/ir_model.py:348
 #: code:addons/base/ir/ir_translation.py:341
 #: code:addons/base/module/module.py:320
 #: code:addons/base/module/module.py:362
 #: code:addons/base/module/module.py:366
 #: code:addons/base/module/module.py:372
-#: code:addons/base/module/module.py:500
-#: code:addons/base/module/module.py:526
-#: code:addons/base/module/module.py:540
-#: code:addons/base/module/module.py:645
+#: code:addons/base/module/module.py:499
+#: code:addons/base/module/module.py:525
+#: code:addons/base/module/module.py:539
+#: code:addons/base/module/module.py:644
 #: code:addons/base/res/res_currency.py:193
 #: code:addons/base/res/res_users.py:98
 #: code:addons/custom.py:555
-#: code:addons/orm.py:785
-#: code:addons/orm.py:3960
+#: code:addons/orm.py:787
+#: code:addons/orm.py:3961
 #, python-format
 msgid "Error"
 msgstr "Hiba"
@@ -15111,7 +15129,7 @@ msgid "Serbian (Cyrillic) / српски"
 msgstr "Szerb (cirill) / српски"
 
 #. module: base
-#: code:addons/orm.py:2649
+#: code:addons/orm.py:2650
 #, python-format
 msgid ""
 "Invalid group_by specification: \"%s\".\n"
@@ -15328,7 +15346,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_lead
 msgid "Leads & Opportunities"
-msgstr "Lehetőségek"
+msgstr "Érdeklődések & Lehetőségek"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -15807,7 +15825,7 @@ msgstr ""
 "ezt az átmenetet."
 
 #. module: base
-#: code:addons/orm.py:785
+#: code:addons/orm.py:787
 #, python-format
 msgid "Serialization field `%s` not found for sparse field `%s`!"
 msgstr "Soros művelet mező `%s` nem található az elszórt mezőkhöz `%s`!"
@@ -15820,7 +15838,7 @@ msgstr "Jamaika"
 #. module: base
 #: field:res.partner,color:0
 msgid "Color Index"
-msgstr "Szín mutató"
+msgstr "Szín meghatározó"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_category_form
@@ -15831,10 +15849,10 @@ msgid ""
 "also belong to his parent category."
 msgstr ""
 "Rendszerezze a partner kategóriákat annak érdekében, hogy hatékonyabban "
-"tudja osztályozni őket a nyomonkövetési és analitikai célokra. Egy partner "
-"több kategóriához is tartozhat és a kategóriák hierarchikus szerkezettel is "
-"rendelkezhetnek: egy partner, aki egy adott kategóriához tartozik szintén "
-"tartozhat a szülőkategóriához is."
+"tudja osztályozni őket a nyomonkövetési és analitikai, elemzési célokra. Egy "
+"partner több kategóriához is tartozhat és a kategóriák hierarchikus "
+"szerkezettel is rendelkezhetnek: egy partner, aki egy adott kategóriához "
+"tartozik, szintén tartozhat a szülőkategóriához is."
 
 #. module: base
 #: model:res.country,name:base.az
@@ -15842,7 +15860,7 @@ msgid "Azerbaijan"
 msgstr "Azerbajdzsán"
 
 #. module: base
-#: code:addons/base/ir/ir_mail_server.py:476
+#: code:addons/base/ir/ir_mail_server.py:480
 #: code:addons/base/res/res_partner.py:439
 #, python-format
 msgid "Warning"
@@ -16057,13 +16075,18 @@ msgstr "Thunderbird kiegészítő plug-in"
 
 #. module: base
 #: model:ir.model,name:base.model_res_country
+#: view:res.bank:0
 #: field:res.bank,country:0
+#: view:res.company:0
 #: field:res.company,country_id:0
 #: view:res.country:0
 #: field:res.country.state,country_id:0
+#: view:res.partner:0
 #: field:res.partner,country:0
 #: field:res.partner,country_id:0
+#: view:res.partner.bank:0
 #: field:res.partner.bank,country_id:0
+#: view:res.users:0
 msgid "Country"
 msgstr "Ország"
 
@@ -16150,7 +16173,7 @@ msgid "Japan"
 msgstr "Japán"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:412
+#: code:addons/base/ir/ir_model.py:419
 #, python-format
 msgid "Can only rename one column at a time!"
 msgstr "Egyszerre csak egy oszlopot lehet átnevezni!"
@@ -16434,8 +16457,8 @@ msgid ""
 "Manage relations with prospects and customers using leads, opportunities, "
 "requests or issues."
 msgstr ""
-"Összefüggések kezelése lehetőségekkel és vásárlókkal a vezérszereplők, "
-"lehetőségek, igények és kérdések használatával."
+"Összefüggések kezelése a vásárlókkal és azok érdeklődéseivel, "
+"lehetőségeikkel, igényeikkel és ügyeikkel."
 
 #. module: base
 #: selection:res.partner.address,type:0
@@ -16464,7 +16487,7 @@ msgid "Workflow Instances"
 msgstr "Munkafolyamat példányok"
 
 #. module: base
-#: code:addons/base/res/res_partner.py:532
+#: code:addons/base/res/res_partner.py:531
 #, python-format
 msgid "Partners: "
 msgstr "Partnerek: "
