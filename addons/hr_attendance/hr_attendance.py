@@ -108,7 +108,7 @@ class hr_employee(osv.osv):
                         AND hr_attendance.name = foo.name) \
                 WHERE hr_attendance.employee_id IN %s',(tuple(ids),))
         for res in cr.fetchall():
-            result[res[1]] = res[0] == 'sign_in' and 'Present' or 'Absent'
+            result[res[1]] = res[0] == 'sign_in' and 'present' or 'absent'
         return result
     
     def _last_sign(self, cr, uid, ids, name, args, context=None):
@@ -152,8 +152,8 @@ class hr_employee(osv.osv):
         warning_sign = {'sign_in': _('Sign In'), 'sign_out': _('Sign Out')}
         for employee in self.browse(cr, uid, ids, context=context):
             if not action:
-                if employee.state == 'Present': action = 'sign_out'
-                if employee.state == 'Absent': action = 'sign_in'
+                if employee.state == 'present': action = 'sign_out'
+                if employee.state == 'absent': action = 'sign_in'
 
             if not self._action_check(cr, uid, employee.id, action_date, context):
                 raise osv.except_osv(_('Warning'), _('You tried to %s with a date anterior to another event !\nTry to contact the HR Manager to correct attendances.')%(warning_sign[action],))
