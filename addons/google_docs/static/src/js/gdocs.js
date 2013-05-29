@@ -34,7 +34,7 @@ openerp.google_docs = function (instance, m) {
                                     self.items.other.splice(g_item, 1);
                                 }
                                 self.add_items('other', [{
-                                        label: res.name+ '<img style="height:20px;width:20px;float:right;" src="google_docs/static/src/img/drive_icon.png"/>',
+                                        label: res.name+ '<img style="position:absolute;right:5px;height:20px;width:20px;" title="Google Drive" src="google_docs/static/src/img/drive_icon.png"/>',
                                         config_id: res.id,
                                         res_id: res_id,
                                         res_model: view.dataset.model,

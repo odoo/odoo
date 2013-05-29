@@ -84,18 +84,23 @@ class config(osv.osv):
         content = json.loads(content)
         
         # Copy template in to drive with help of new access token
-        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-        record_url = "Click on link to open Record in OpenERP\n %s/?db=%s#id=%s&model=%s" %(google_web_base_url, cr.dbname, res_id, res_model ) 
-        data = {"title": name_gdocs, "description": record_url}
-        request_url = "https://www.googleapis.com/drive/v2/files/%s/copy?access_token=%s" % (tamplate_id, content['access_token'])
-        resp, content = Http().request(request_url, "POST", json.dumps(data), headers)
-        content = json.loads(content)
-        res = False
-        if 'alternateLink' in content.keys():
-            attach_pool = self.pool.get("ir.attachment")
-            attach_vals = {'res_model': res_model, 'name': name_gdocs, 'res_id': res_id, 'type': 'url', 'url':content['alternateLink']}
-            attach_pool.create(cr, uid, attach_vals)
-            res = content['alternateLink']
+        if content.has_key('access_token'):
+            headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+            record_url = "Click on link to open Record in OpenERP\n %s/?db=%s#id=%s&model=%s" %(google_web_base_url, cr.dbname, res_id, res_model ) 
+            data = {"title": name_gdocs, "description": record_url}
+            request_url = "https://www.googleapis.com/drive/v2/files/%s/copy?access_token=%s" % (tamplate_id, content['access_token'])
+            resp, content = Http().request(request_url, "POST", json.dumps(data), headers)
+            content = json.loads(content)
+            res = False
+            if 'alternateLink' in content.keys():
+                attach_pool = self.pool.get("ir.attachment")
+                attach_vals = {'res_model': res_model, 'name': name_gdocs, 'res_id': res_id, 'type': 'url', 'url':content['alternateLink']}
+                attach_pool.create(cr, uid, attach_vals)
+                res = content['alternateLink']
+        elif uid==1:
+            raise self.pool.get('res.config.settings').get_config_warning(cr, _("You haven't configured 'Authorization Code' generated from google, Please generate and configure it in %%(menu:base_setup.menu_general_configuration)s."), context=context)
+        else:
+            raise osv.except_osv(_('Google Drive Configuration Error!'), _("'Authorization Code' is not configured yet, Please Contact Administrator"))
         return res
     
     def get_google_docs_config(self, cr, uid, res_model, res_id, context=None):
