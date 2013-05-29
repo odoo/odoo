@@ -376,11 +376,20 @@ class product_pricelist_item(osv.osv):
         result.append((-2, _('Supplier Prices on the product form')))
         return result
 
+    def _default_get(self, cr, uid, fields, context=None):
+        result = self._price_field_get(cr,uid,context)
+        if fields.get('type') == 'purchase':
+            base_value = [item for item in result if 'Cost Price' in item]
+            return base_value[0]
+        else:
+            base_value = [item for item in result if 'Public Price' in item]
+            return base_value[0]
+
     _name = "product.pricelist.item"
     _description = "Pricelist item"
     _order = "sequence, min_quantity desc"
     _defaults = {
-        'base': lambda *a: 1,
+        'base': _default_get,
         'min_quantity': lambda *a: 0,
         'sequence': lambda *a: 5,
         'price_discount': lambda *a: 0,
