@@ -264,7 +264,6 @@ class crm_phonecall(base_state, osv.osv):
             'default_partner_id': phonecall.partner_id and phonecall.partner_id.id or False,
             'default_user_id': uid,
             'default_email_from': phonecall.email_from,
-            'default_state': 'open',
             'default_name': phonecall.name,
         }
         return res
