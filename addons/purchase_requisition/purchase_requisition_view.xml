@@ -216,7 +216,7 @@
             <field name="name">purchase.order.line.tree.tender</field>
             <field name="model">purchase.order.line</field>
             <field name="arch" type="xml">
-                <tree string="Purchase Order Lines" create="false" colors="blue:state == 'confirmed';gray:state == 'cancel'">
+                <tree string="Purchase Order Lines" create="false" colors="blue:state == 'confirmed';gray:state == 'cancel'" options="{'generate_po': True}">
                     <field name="name"/>
                     <field name="partner_id" string="Supplier" />
                     <field name="product_id"/>

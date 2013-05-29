@@ -203,16 +203,30 @@ class purchase_requisition(osv.osv):
         """
         Generate all purchase order based on selected lines, should only be called on one tender at a time
         """
+        po = self.pool.get('purchase.order')
+        poline = self.pool.get('purchase.order.line')
         id_per_supplier = {}
-        for po_line in self.browse(cr, uid, id, context=context)[0].po_line_ids:
+        tender = self.browse(cr, uid, id, context=context)[0]
+        for po_line in tender.po_line_ids:
             if po_line.state == 'confirmed':
                 partner = po_line.partner_id.id
                 if id_per_supplier.get(partner):
                     id_per_supplier[partner].append(po_line.id)
                 else:
-                    id_per_supplier[partner] = [po_line.id]
+                    id_per_supplier[partner] = [po_line]
 
         #TODO generate po based on supplier and check if a draft po is complete before creating a new one
+        for supplier, product_line in id_per_supplier.items():
+            #duplicate po_line and change product_qty if needed
+            line_ids = []
+            for line in product_line:
+                line_ids.append(poline.copy(cr, uid, line.id, default = {'product_qty': line.quantity_bid}, context=context))
+            #copy a quotation for this supplier and change order_line then validate it
+            quotation_copy_id = po.search(cr, uid, [('requisition_id', '=', tender.id), ('partner_id', '=', supplier)], limit=1)
+            new_po = po.copy(cr, uid, quotation_copy_id, default = {'order_line': line_ids}, context=context)
+            #use workflow to set new PO state to confirm
+
+            #TODO set previous line to cancel
 
 class purchase_requisition_line(osv.osv):
 
