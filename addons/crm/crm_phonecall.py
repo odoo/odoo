@@ -261,11 +261,12 @@ class crm_phonecall(base_state, osv.osv):
         res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid, 'base_calendar', 'action_crm_meeting', context)
         res['context'] = {
             'default_phonecall_id': phonecall.id,
-            'default_partner_id': phonecall.partner_id and phonecall.partner_id.id or False,
             'default_user_id': uid,
             'default_email_from': phonecall.email_from,
             'default_name': phonecall.name,
         }
+        if phonecall.partner_id and phonecall.partner_id.email:
+            res['context']['default_partner_ids']= [phonecall.partner_id] and [phonecall.partner_id.id] or False
         return res
 
     def action_button_convert2opportunity(self, cr, uid, ids, context=None):
