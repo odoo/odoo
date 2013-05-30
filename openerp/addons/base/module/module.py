@@ -32,6 +32,7 @@ import urllib
 import urllib2
 import zipfile
 import zipimport
+import lxml.html
 
 try:
     from cStringIO import StringIO
@@ -156,7 +157,12 @@ class module(osv.osv):
             if path:
                 desc_file = tools.file_open(path, 'rb')
                 try:
-                    res[module.id] = desc_file.read()
+                    doc = desc_file.read()
+                    html = lxml.html.document_fromstring(doc)
+                    for element in html.iterlinks():
+                        if element.get('src'):
+                            element.set('src', "%s/static/description/%s" % (module.name, element.get('src')))
+                    res[module.id] = lxml.html.tostring(html)
                 finally:
                     desc_file.close()
             else:
