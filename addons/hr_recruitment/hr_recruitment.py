@@ -496,8 +496,8 @@ class hr_job(osv.osv):
         """Calculate total Applications per job"""
         res = dict.fromkeys(ids, 0)
         applicant_obj = self.pool.get('hr.applicant')
-        applicant_ids = applicant_obj.search(cr, uid, [('job_id', 'in', ids)])
-        for applicant in applicant_obj.browse(cr, uid, applicant_ids, context):
+        applicant_ids = applicant_obj.search(cr, uid, [('job_id', 'in', ids)], context=context)
+        for applicant in applicant_obj.browse(cr, uid, applicant_ids, context=context):
             res[applicant.job_id.id] += 1
         return res
 

@@ -41,7 +41,7 @@ class hr_applicant_settings(osv.osv_memory):
         alias_name = ''
         mail_alias = self.pool.get('mail.alias')
         try:
-            alias_name = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'mail_alias_jobss').alias_name
+            alias_name = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'mail_alias_jobs').alias_name
         except Exception:
             model_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'hr.applicant')], context=context)
             alias_ids = mail_alias.search(cr, uid, [('alias_model_id', '=', model_ids[0]),('alias_defaults', '=', '{}')], context=context)
