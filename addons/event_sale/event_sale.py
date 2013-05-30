@@ -70,6 +70,8 @@ class sale_order_line(osv.osv):
         '''
         create registration with sales order
         '''
+        if context is None:
+            context = {}
         registration_obj = self.pool.get('event.registration')
         sale_obj = self.pool.get('sale.order')
         for order_line in self.browse(cr, uid, ids, context=context):
@@ -83,7 +85,8 @@ class sale_order_line(osv.osv):
                     'origin': order_line.order_id.name,
                     'event_id': order_line.event_id.id,
                 }
+                message = _("The registration has been created for event <i>%s</i> from the Sale Order %s. ") % (order_line.event_id.name, order_line.order_id.name)
+                context.update({'mail_create_nolog': True, 'message': message })
                 registration_id = registration_obj.create(cr, uid, dic, context=context)
-                message = _("The registration %s has been created from the Sales Order %s.") % (registration_id, order_line.order_id.name)
                 registration_obj.message_post(cr, uid, [registration_id], body=message, context=context)
         return super(sale_order_line, self).button_confirm(cr, uid, ids, context=context)
