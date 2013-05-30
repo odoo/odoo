@@ -24,16 +24,13 @@ instance.web.DataExport = instance.web.Dialog.extend({
         this._super.apply(this, arguments);
         self.$el.removeClass('ui-dialog-content ui-widget-content');
         self.$el.find('#add_field').click(function() {
-            var $selected = self.$('#field-tree-structure tr.ui-selected');
-            if ($selected) {
-                var fld = $selected.find('a');
-                for (var i = 0; i < fld.length; i++) {
-                    var id = $(fld[i]).attr('id').split('-')[1];
-                    var string = $(fld[i]).attr('string');
+            self.$('#field-tree-structure tr.ui-selected')
+                .removeClass('ui-selected')
+                .find('a').each(function () {
+                    var id = $(this).attr('id').split('-')[1];
+                    var string = $(this).attr('string');
                     self.add_field(id, string);
-                }
-                self.$el.find('#field-tree-structure tr').removeClass('ui-selected');
-            }
+                });
         });
         self.$el.find('#remove_field').click(function() {
             self.$el.find('#fields_list option:selected').remove();
@@ -50,7 +47,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
             var import_comp = self.$el.find("#import_compat").val();
             self.rpc("/web/export/get_fields", {
                 model: self.dataset.model,
-                import_compat: Boolean(import_comp)
+                import_compat: !!import_comp,
             }).done(function (records) {
                 got_fields.resolve();
                 self.on_show_data(records);
@@ -355,14 +352,13 @@ instance.web.DataExport = instance.web.Dialog.extend({
         }
     },
     get_fields: function() {
-        var export_field = [];
-        this.$el.find("#fields_list option").each(function() {
-            export_field.push($(this).val());
-        });
-        if (!export_field.length) {
+        var export_fields = this.$("#fields_list option").map(function() {
+            return $(this).val();
+        }).get();
+        if (!export_fields.length) {
             alert(_t("Please select fields to save export list..."));
         }
-        return export_field;
+        return export_fields;
     },
     on_click_export_data: function() {
         var self = this;
@@ -391,10 +387,9 @@ instance.web.DataExport = instance.web.Dialog.extend({
                 fields: exported_fields,
                 ids: ids_to_export,
                 domain: this.dataset.domain,
-                import_compat: Boolean(
-                    this.$el.find("#import_compat").val())
+                import_compat: !!this.$el.find("#import_compat").val(),
             })},
-            complete: instance.web.unblockUI
+            complete: instance.web.unblockUI,
         });
     },
     close: function() {
