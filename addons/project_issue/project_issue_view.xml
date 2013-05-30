@@ -375,8 +375,8 @@
             <field name="priority" eval="40"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
-                    <button type="action" string="Issues" attrs="{'invisible': [('customer', '=', False)]}"
-                        name="%(act_project_project_2_project_issue_all)d" 
+                    <button class="oe_inline" type="action" string="Issues" attrs="{'invisible': [('customer', '=', False)]}"
+                        name="%(act_project_project_2_project_issue_all)d"
                         context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}" groups="project.group_project_user"/>
                 </xpath>
             </field>

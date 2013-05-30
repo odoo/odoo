@@ -243,7 +243,7 @@
             <field name="priority" eval="40"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
-                    <button type="action"
+                    <button class="oe_inline" type="action"
                         name="%(crm_case_claim_partner_action)d"
                         string="Claims"
                         context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}"
