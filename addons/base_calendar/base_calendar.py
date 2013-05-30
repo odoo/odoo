@@ -404,39 +404,6 @@ property or property parameter."),
         res = cal.serialize()
         return res
 
-    def get_feedback(self, cr, uid, ids,context=None):
-#         partner_obj =  self.browse(cr,uid, ids,context=context)
-#         url = []
-#         for event_id in  self.browse(cr, uid, ids, context):
-#             event_id = event_id.ref.id
-#         for partner in partner_obj:
-#             if partner and partner.user_id:
-#                 related_user = partner.user_id
-#                 base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-#                 query = {'db': cr.dbname}
-#                 fragment = {
-#                     'login': related_user.login,
-#                     'model': "crm.meeting",
-#                     'view_type' : "form",
-#                     'id': event_id,
-#                     }
-#                 url = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
-#             else :
-#                 url = "https://openerp.my.openerp.com/#"
-        for event_id in  self.browse(cr, uid, ids, context):
-            event_id = event_id.ref.id
-        document = self.browse(cr, uid, ids[0], context=context)
-        print "DOCS ITS CALLED Documents -----------------------------------------",document
-        partner = document.partner_id
-        print "partner id",partner
-        action = 'base_calendar.action_view_event'
-        print "ACTION -------------------------------------------------->>>>>>>>>>>>>>>>>>>>>>>>>>.",action
-        partner.signup_prepare()
-        print "PARTNER UPER OF URTLLLLLLLLLLLLLLLL -------------------------------------------.......................", partner.signup_prepare()
-        a = partner._get_signup_url_for_action(action=action, view_type='form', res_id=event_id)[partner.id]
-        print "SIG N UP RETUR",a  
-        return partner._get_signup_url_for_action(action=action, view_type='form', res_id=event_id)[partner.id]
-
     def _send_mail(self, cr, uid, ids, mail_to, email_from=tools.config.get('email_from', False), context=None):
         """
         Send mail for event invitation to event attendees.
@@ -444,22 +411,19 @@ property or property parameter."),
         @return: True
         """
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.name
+        company_address = self.pool.get('res.company').browse(cr, uid, uid, context=context).street
         for att in self.browse(cr, uid, ids, context=context):
-            sign = att.sent_by_uid and att.sent_by_uid.signature or ''
-            sign = '<br>'.join(sign and sign.split('\n') or [])
             res_obj = att.ref
             if res_obj:
-                att = []
-                att_mail = []
+                att = {}
+                att_info = []
                 sub = res_obj.name
                 other_invitation_ids = self.search(cr, uid, [('ref', '=', res_obj._name + ',' + str(res_obj.id))])
 
                 for att2 in self.browse(cr, uid, other_invitation_ids):
-                  
-                    att.append(((att2.user_id and att2.user_id.name) or \
-                                 (att2.partner_id and att2.partner_id.name) or \
-                                    att2.email))
-                    att_mail.append(att2.email)
+                    att_info.append(att2.user_id and att2.user_id.name or att2.partner_id and att2.partner_id.name or att2.email)
+                    att[att2.user_id and att2.user_id.name or att2.partner_id and att2.partner_id.name or att2.email] = att2.email
+                
                 tz = context.get('tz', pytz.timezone('UTC'))
                 allday = False
                 date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(res_obj.date, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
@@ -472,32 +436,35 @@ property or property parameter."),
                     time =  date.strftime('%B-%d-%Y')  + " at (" + date.strftime('%H-%M') + " To " + duration.strftime('%H-%M') + ")"
                 else :
                     time =  date.strftime('%B-%d-%Y')  + " at " + date.strftime('%H-%M') + " To \n" +  date_deadline.strftime('%B-%d-%Y') + " at " + date_deadline.strftime('%H-%M')
-                attendees = ''
-               
-                for mail_to in att_mail:
-                    mail_to = mail_to
-                    attendees = mail_to + "," +  attendees
-                    footer = self.get_feedback(cr, uid, ids, context=context)
-                    map_url = "http://maps.google.com/maps?oi=map&q="
-                    body_vals = {'name': res_obj.name,
-                                 'usr': mail_to,
+                map_url = "http://maps.google.com/maps?oi=map&q="
+#               a = """<div style="background: #228B22; width: 10px; height: 10px; border-radius: 50%;"/>"""
+#                b = """<dl style="background: #BDBDBD; width: 10px; height: 10px; border-radius: 50%;"/>"""
+                
+#                 attendee= """<s style = " font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px" >(%s) You, (%s) <span style= "color:#A9A9A9; ont-size: 10px">- Organizer </br></span>%s</div>""" % (a, res_obj.organizer,)
+                footer = ''
+                attendee = ''
+                for user in att:
+                    #attendee = b +  attendee + user
+                    #print "List of ATtendeedss ---------------------->", attendee
+                    body_vals = {'user': user,
+                                 'name': res_obj.name,
                                  'responsible': res_obj.user_id and res_obj.user_id.name or 'OpenERP User',
                                  'company': company,
                                  'description': res_obj.description or '-',
-                                 'attendees': res_obj.organizer + " - Organizer, " + attendees,
+                                 'attendees':  ', ' + .join(att_info),
                                  'time': time,
                                  'tz': tz,
-                                 'location': res_obj.location or '-',
-                                 'map' : map_url + '+' + str(res_obj.location or '-'),
+                                 'location': res_obj.location or company_address,
+                                 'map' : map_url + '+' + str(res_obj.location or company_address),
                                  'organizer': res_obj.organizer,
-                                'url' : footer,
-                    }
+                                 'url' : footer,
+                        }
                     body_id = self.pool.get('email.template').search(cr, uid, [('subject', '=', 'Meeting Invitation')], context=context)
                     body = self.pool.get('email.template').browse(cr, uid, body_id[0], context=context).body_html % body_vals
-                    if mail_to and email_from:
+                    if att[user] and email_from:
                         ics_file = self.get_ics_file(cr, uid, res_obj, context=context)
                         vals = {'email_from': email_from,
-                                'email_to': mail_to,
+                                'email_to': att[user],
                                 'state': 'outgoing',
                                 'subject': sub,
                                 'body_html': body,
