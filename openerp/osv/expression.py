@@ -757,7 +757,7 @@ class expression(object):
             field_path = left.split('.', 1)
             field = working_model._columns.get(field_path[0])
             if field and field._obj:
-                relational_model = working_model.pool.get(field._obj)
+                relational_model = working_model.pool[field._obj]
             else:
                 relational_model = None
 
@@ -786,11 +786,11 @@ class expression(object):
                 # comments about inherits'd fields
                 #  { 'field_name': ('parent_model', 'm2o_field_to_reach_parent',
                 #                    field_column_obj, origina_parent_model), ... }
-                next_model = working_model.pool.get(working_model._inherit_fields[field_path[0]][0])
+                next_model = working_model.pool[working_model._inherit_fields[field_path[0]][0]]
                 leaf.add_join_context(next_model, working_model._inherits[next_model._name], 'id', working_model._inherits[next_model._name])
                 push(leaf)
 
-            elif not field and left == 'id' and operator == 'child_of':
+            elif left == 'id' and operator == 'child_of':
                 ids2 = to_ids(right, working_model, context)
                 dom = child_of_domain(left, ids2, working_model)
                 for dom_leaf in reversed(dom):

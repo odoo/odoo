@@ -120,6 +120,8 @@ setuptools.setup(
           'docutils',
           'feedparser',
           'gdata',
+          'gevent',
+          'gevent-psycopg2',
           'Jinja2',
           'lxml', # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
           'mako',

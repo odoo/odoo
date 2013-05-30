@@ -769,7 +769,7 @@ class YamlInterpreter(object):
 
     def process_delete(self, node):
         assert getattr(node, 'model'), "Attribute %s of delete tag is empty !" % ('model',)
-        if self.pool.get(node.model):
+        if node.model in self.pool:
             if node.search:
                 ids = self.pool[node.model].search(self.cr, self.uid, eval(node.search, self.eval_context))
             else:

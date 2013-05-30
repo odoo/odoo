@@ -22,6 +22,7 @@
 """ Models registries.
 
 """
+from collections import Mapping
 from contextlib import contextmanager
 import logging
 import threading
@@ -35,7 +36,7 @@ from openerp.tools import assertion_report
 
 _logger = logging.getLogger(__name__)
 
-class Registry(object):
+class Registry(Mapping):
     """ Model registry for a particular database.
 
     The registry is essentially a mapping between model names and model
@@ -44,6 +45,7 @@ class Registry(object):
     """
 
     def __init__(self, db_name):
+        super(Registry, self).__init__()
         self.models = {}    # model name/model instance mapping
         self._sql_error = {}
         self._store_function = {}
@@ -80,6 +82,26 @@ class Registry(object):
         self.has_unaccent = openerp.tools.config['unaccent'] and has_unaccent
         cr.close()
 
+    #
+    # Mapping abstract methods implementation
+    # => mixin provides methods keys, items, values, get, __eq__, and __ne__
+    #
+    def __len__(self):
+        """ Return the size of the registry. """
+        return len(self.models)
+
+    def __iter__(self):
+        """ Return an iterator over all model names. """
+        return iter(self.models)
+
+    def __contains__(self, model_name):
+        """ Test whether the model with the given name exists. """
+        return model_name in self.models
+
+    def __getitem__(self, model_name):
+        """ Return the model with the given name or raise KeyError if it doesn't exist."""
+        return self.models[model_name]
+
     def do_parent_store(self, cr):
         for o in self._init_parent:
             self.get(o)._parent_store_compute(cr)
@@ -87,19 +109,11 @@ class Registry(object):
 
     def obj_list(self):
         """ Return the list of model names in this registry."""
-        return self.models.keys()
+        return self.keys()
 
     def add(self, model_name, model):
         """ Add or replace a model in the registry."""
         self.models[model_name] = model
-
-    def get(self, model_name):
-        """ Return a model for a given name or None if it doesn't exist."""
-        return self.models.get(model_name)
-
-    def __getitem__(self, model_name):
-        """ Return a model for a given name or raise KeyError if it doesn't exist."""
-        return self.models[model_name]
 
     def load(self, cr, module):
         """ Load a given module in the registry.

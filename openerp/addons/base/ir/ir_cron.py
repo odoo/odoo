@@ -31,8 +31,11 @@ from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
+from openerp.modules import load_information_from_description_file
 
 _logger = logging.getLogger(__name__)
+
+BASE_VERSION = load_information_from_description_file('base')['version']
 
 def str2tuple(s):
     return eval('tuple(%s)' % (s or ''))
@@ -125,21 +128,23 @@ class ir_cron(osv.osv):
             args = str2tuple(args)
             openerp.modules.registry.RegistryManager.check_registry_signaling(cr.dbname)
             registry = openerp.registry(cr.dbname)
-            model = registry.get(model_name)
-            if model and hasattr(model, method_name):
-                method = getattr(model, method_name)
-                log_depth = (None if _logger.isEnabledFor(logging.DEBUG) else 1)
-                netsvc.log(_logger, logging.DEBUG, 'cron.object.execute', (cr.dbname,uid,'*',model_name,method_name)+tuple(args), depth=log_depth)
-                if _logger.isEnabledFor(logging.DEBUG):
-                    start_time = time.time()
-                method(cr, uid, *args)
-                if _logger.isEnabledFor(logging.DEBUG):
-                    end_time = time.time()
-                    _logger.debug('%.3fs (%s, %s)' % (end_time - start_time, model_name, method_name))
-                openerp.modules.registry.RegistryManager.signal_caches_change(cr.dbname)
+            if model_name in registry:
+                model = registry[model_name]
+                if hasattr(model, method_name):
+                    log_depth = (None if _logger.isEnabledFor(logging.DEBUG) else 1)
+                    netsvc.log(_logger, logging.DEBUG, 'cron.object.execute', (cr.dbname,uid,'*',model_name,method_name)+tuple(args), depth=log_depth)
+                    if _logger.isEnabledFor(logging.DEBUG):
+                        start_time = time.time()
+                    getattr(model, method_name)(cr, uid, *args)
+                    if _logger.isEnabledFor(logging.DEBUG):
+                        end_time = time.time()
+                        _logger.debug('%.3fs (%s, %s)' % (end_time - start_time, model_name, method_name))
+                    openerp.modules.registry.RegistryManager.signal_caches_change(cr.dbname)
+                else:
+                    msg = "Method `%s.%s` does not exist." % (model_name, method_name)
+                    _logger.warning(msg)
             else:
-                msg = "Method `%s.%s` does not exist." % (model_name, method_name) \
-                    if model else "Model `%s` does not exist." % model_name
+                msg = "Model `%s` does not exist." % model_name
                 _logger.warning(msg)
         except Exception, e:
             self._handle_callback_exception(cr, uid, model_name, method_name, args, job_id, e)
@@ -193,12 +198,17 @@ class ir_cron(osv.osv):
         cr = db.cursor()
         jobs = []
         try:
-            # Careful to compare timestamps with 'UTC' - everything is UTC as of v6.1.
-            cr.execute("""SELECT * FROM ir_cron
-                          WHERE numbercall != 0
-                              AND active AND nextcall <= (now() at time zone 'UTC')
-                          ORDER BY priority""")
-            jobs = cr.dictfetchall()
+            # Make sure the database we poll has the same version as the code of base
+            cr.execute("SELECT 1 FROM ir_module_module WHERE name=%s AND latest_version=%s", ('base', BASE_VERSION))
+            if cr.fetchone():
+                # Careful to compare timestamps with 'UTC' - everything is UTC as of v6.1.
+                cr.execute("""SELECT * FROM ir_cron
+                              WHERE numbercall != 0
+                                  AND active AND nextcall <= (now() at time zone 'UTC')
+                              ORDER BY priority""")
+                jobs = cr.dictfetchall()
+            else:
+                _logger.warning('Skipping database %s as its base version is not %s.', db_name, BASE_VERSION)
         except psycopg2.ProgrammingError, e:
             if e.pgcode == '42P01':
                 # Class 42 — Syntax Error or Access Rule Violation; 42P01: undefined_table

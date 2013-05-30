@@ -138,8 +138,8 @@ def check(f):
                             last_quote_begin = errortxt.rfind('"', 0, last_quote_end)
                             model_name = table = errortxt[last_quote_begin+1:last_quote_end].strip()
                         model = table.replace("_",".")
-                        model_obj = registry.get(model)
-                        if model_obj:
+                        if model in registry:
+                            model_obj = registry[model]
                             model_name = model_obj._description or model_obj._name
                         msg += _('\n\n[object with reference: %s - %s]') % (model_name, model)
                     except Exception:

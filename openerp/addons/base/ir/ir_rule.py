@@ -65,7 +65,7 @@ class ir_rule(osv.osv):
         return res
 
     def _check_model_obj(self, cr, uid, ids, context=None):
-        return not any(self.pool.get(rule.model_id.model).is_transient() for rule in self.browse(cr, uid, ids, context))
+        return not any(self.pool[rule.model_id.model].is_transient() for rule in self.browse(cr, uid, ids, context))
 
     def _check_model_name(self, cr, uid, ids, context=None):
         # Don't allow rules on rules records (this model).
@@ -153,9 +153,9 @@ class ir_rule(osv.osv):
             # involve objects on which the real uid has no acces rights.
             # This means also there is no implicit restriction (e.g. an object
             # references another object the user can't see).
-            query = self.pool.get(model_name)._where_calc(cr, SUPERUSER_ID, dom, active_test=False)
+            query = self.pool[model_name]._where_calc(cr, SUPERUSER_ID, dom, active_test=False)
             return query.where_clause, query.where_clause_params, query.tables
-        return [], [], ['"'+self.pool.get(model_name)._table+'"']
+        return [], [], ['"' + self.pool[model_name]._table + '"']
 
     def unlink(self, cr, uid, ids, context=None):
         res = super(ir_rule, self).unlink(cr, uid, ids, context=context)

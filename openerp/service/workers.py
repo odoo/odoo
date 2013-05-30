@@ -182,7 +182,7 @@ class Multicorn(object):
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.setblocking(0)
         self.socket.bind(self.address)
-        self.socket.listen(8)
+        self.socket.listen(8*self.population)
         # long polling socket
         self.long_polling_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.long_polling_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -241,6 +241,9 @@ class Worker(object):
         self.request_max = multi.limit_request
         self.request_count = 0
 
+    def setproctitle(self, title=""):
+        setproctitle('openerp: %s %s %s' % (self.__class__.__name__, self.pid, title))
+
     def close(self):
         os.close(self.watchdog_pipe[0])
         os.close(self.watchdog_pipe[1])
@@ -290,7 +293,7 @@ class Worker(object):
 
     def start(self):
         self.pid = os.getpid()
-        setproctitle('openerp: %s %s' % (self.__class__.__name__, self.pid))
+        self.setproctitle()
         _logger.info("Worker %s (%s) alive", self.__class__.__name__, self.pid)
         # Reseed the random number generator
         random.seed()
@@ -370,7 +373,16 @@ class WorkerLongPolling(Worker):
         Worker.start(self)
         from gevent.wsgi import WSGIServer
         self.server = WSGIServer(self.multi.long_polling_socket, self.multi.app)
-        self.server.serve_forever()
+        self.server.start()
+
+    def stop(self):
+        self.server.stop()
+
+    def sleep(self):
+        time.sleep(1)
+
+    def process_work(self):
+        pass
 
 class WorkerBaseWSGIServer(werkzeug.serving.BaseWSGIServer):
     """ werkzeug WSGI Server patched to allow using an external listen socket
@@ -413,6 +425,7 @@ class WorkerCron(Worker):
         if len(db_names):
             self.db_index = (self.db_index + 1) % len(db_names)
             db_name = db_names[self.db_index]
+            self.setproctitle(db_name)
             if rpc_request_flag:
                 start_time = time.time()
                 start_rss, start_vms = psutil.Process(os.getpid()).get_memory_info()
@@ -422,6 +435,7 @@ class WorkerCron(Worker):
                 import openerp.addons.base as base
                 acquired = base.ir.ir_cron.ir_cron._acquire_job(db_name)
                 if not acquired:
+                    openerp.modules.registry.RegistryManager.delete(db_name)
                     break
             # dont keep cursors in multi database mode
             if len(db_names) > 1:
