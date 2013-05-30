@@ -149,11 +149,7 @@ class report_stock_inventory(osv.osv):
     _order = 'date desc'
     
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
-        #print "D", domain, "\nG", groupby, "\nF", fields
         res = super(report_stock_inventory, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
-        #import pprint
-        #pprint.pprint(res)
-        #import pdb;pdb.set_trace()
         product_obj = self.pool.get("product.product")
         for line in res:
             if '__domain' in line:
@@ -213,7 +209,9 @@ class report_stock_inventory(osv.osv):
         'location_type': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production'), ('transit', 'Transit Location for Inter-Companies Transfers')], 'Location Type', required=True),
         'scrap_location': fields.boolean('scrap'),
         'inventory_value': fields.function(_calc_moves, string="Inventory Value", type='float', readonly=True), 
-        'ref':fields.text('Reference', readonly=True)
+        'ref':fields.text('Reference', readonly=True), 
+        'location_dest_type': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production'), ('transit', 'Transit Location for Inter-Companies Transfers')], 'Location Destination Type'), 
+        'location_src_type': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production'), ('transit', 'Transit Location for Inter-Companies Transfers')], 'Location Source Type'),
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_stock_inventory')
@@ -230,7 +228,9 @@ CREATE OR REPLACE view report_stock_inventory AS (
         m.state as state, m.prodlot_id as prodlot_id,
         coalesce(sum(m.price_unit * m.qty_remaining)::decimal, 0.0) as value,
         coalesce(sum(m.qty_remaining * pu.factor / pu2.factor)::decimal, 0.0) as product_qty, 
-        p.name as ref
+        p.name as ref,
+        l.usage as location_dest_type, 
+        l_other.usage as location_src_type
     FROM
         stock_move m
             LEFT JOIN stock_picking p ON (m.picking_id=p.id)
@@ -240,10 +240,11 @@ CREATE OR REPLACE view report_stock_inventory AS (
                 LEFT JOIN product_uom pu2 ON (m.product_uom=pu2.id)
             LEFT JOIN product_uom u ON (m.product_uom=u.id)
             LEFT JOIN stock_location l ON (m.location_dest_id=l.id)
+            LEFT JOIN stock_location l_other ON (m.location_id=l_other.id)
             WHERE m.state != 'cancel'
     GROUP BY
         m.id, m.product_id, m.product_uom, pt.categ_id, m.partner_id, m.location_id, m.location_dest_id,
-        m.prodlot_id, m.date, m.state, l.usage, l.scrap_location, m.company_id, pt.uom_id, to_char(m.date, 'YYYY'), to_char(m.date, 'MM'), p.name
+        m.prodlot_id, m.date, m.state, l.usage, l_other.usage, l.scrap_location, m.company_id, pt.uom_id, to_char(m.date, 'YYYY'), to_char(m.date, 'MM'), p.name
 );
         """)
 
@@ -281,8 +282,8 @@ class report_stock_valuation(osv.osv):
         'name': fields.text('Reference', readonly=True),
         'price_unit': fields.float('Unit price', digits_compute=dp.get_precision('Account')), 
         'qty_remaining': fields.float('Qty remaining'),
-        'location_dest_type': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production'), ('transit', 'Transit Location for Inter-Companies Transfers')], 'Location Destination Type', required=True), 
-        'location_src_type': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production'), ('transit', 'Transit Location for Inter-Companies Transfers')], 'Location Source Type', required=True),
+        'location_dest_type': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production'), ('transit', 'Transit Location for Inter-Companies Transfers')], 'Location Destination Type'), 
+        'location_src_type': fields.selection([('supplier', 'Supplier Location'), ('view', 'View'), ('internal', 'Internal Location'), ('customer', 'Customer Location'), ('inventory', 'Inventory'), ('procurement', 'Procurement'), ('production', 'Production'), ('transit', 'Transit Location for Inter-Companies Transfers')], 'Location Source Type'),
         'match': fields.many2one('stock.move', 'Match', readonly=True),
         'related_move_in': fields.related('match', 'picking_id', 'name', type='text', string="Original move", readonly=True), 
     }
@@ -313,7 +314,6 @@ CREATE OR REPLACE view report_stock_valuation AS (
             LEFT JOIN stock_picking p ON (m.picking_id=p.id)
             LEFT JOIN product_product pp ON (m.product_id=pp.id)
                 LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
-                    
                 LEFT JOIN product_uom pu ON (pt.uom_id=pu.id)
                 LEFT JOIN product_uom pu2 ON (m.product_uom=pu2.id)
             LEFT JOIN product_uom u ON (m.product_uom=u.id)
