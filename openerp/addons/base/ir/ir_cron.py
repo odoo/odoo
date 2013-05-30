@@ -409,7 +409,7 @@ class ir_cron(osv.osv):
                             class W(object):
                                 alive = True
                             worker = W()
-                            openerp.wsgi.core.post_request(worker, 'dummy', 'dummy')
+                            openerp.wsgi.core.post_request(worker, 'dummy')
                             if not worker.alive:
                                 return
                         if not acquired:
