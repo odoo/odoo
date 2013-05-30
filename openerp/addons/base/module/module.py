@@ -159,7 +159,7 @@ class module(osv.osv):
                 try:
                     doc = desc_file.read()
                     html = lxml.html.document_fromstring(doc)
-                    for element in html.iterlinks():
+                    for element, attribute, link, pos in html.iterlinks():
                         if element.get('src'):
                             element.set('src', "%s/static/description/%s" % (module.name, element.get('src')))
                     res[module.id] = lxml.html.tostring(html)
@@ -486,7 +486,6 @@ class module(osv.osv):
         function(cr, uid, ids, context=context)
 
         cr.commit()
-        openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         registry = openerp.modules.registry.RegistryManager.new(cr.dbname, update_module=True)
 
         config = registry['res.config'].next(cr, uid, [], context=context) or {}
