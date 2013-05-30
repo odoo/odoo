@@ -57,9 +57,9 @@ You can define the different phases of interviews and easily rate the applicant 
         'board_hr_recruitment_statistical_view.xml',
         'hr_recruitment_installer_view.xml',
         'res_config_view.xml',
-        'hr_recruitment_data.xml'
+        'hr_recruitment_data.xml',
     ],
-    'demo': ['hr_recruitment_demo.yml'],
+    'demo': ['hr_recruitment_demo.xml'],
     'js': [
         'static/src/js/job_position.js',
         'static/lib/justgage.js',
