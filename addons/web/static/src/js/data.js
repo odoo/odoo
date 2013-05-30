@@ -490,7 +490,12 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
      * @returns {$.Deferred}
      */
     create: function(data, options) {
-        return this._model.call('create', [data], {context: this.get_context()});
+        var self = this;
+        return this._model.call('create', [data], {
+            context: this.get_context()
+        }).done(function () {
+            self.trigger('dataset_changed', data, options)
+        });
     },
     /**
      * Saves the provided data in an existing db record
@@ -505,7 +510,12 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
      */
     write: function (id, data, options) {
         options = options || {};
-        return this._model.call('write', [[id], data], {context: this.get_context(options.context)}).done(this.trigger('dataset_changed', id, data, options));
+        var self = this;
+        return this._model.call('write', [[id], data], {
+            context: this.get_context(options.context)
+        }).done(function () {
+            self.trigger('dataset_changed', id, data, options)
+        });
     },
     /**
      * Deletes an existing record from the database
@@ -513,7 +523,12 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
      * @param {Number|String} ids identifier of the record to delete
      */
     unlink: function(ids) {
-        return this._model.call('unlink', [ids], {context: this.get_context()}).done(this.trigger('dataset_changed', ids));
+        var self = this;
+        return this._model.call('unlink', [ids], {
+            context: this.get_context()
+        }).done(function () {
+            self.trigger('dataset_changed', ids)
+        });
     },
     /**
      * Calls an arbitrary RPC method
