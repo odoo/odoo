@@ -376,16 +376,20 @@ instance.web.DataExport = instance.web.Dialog.extend({
             alert(_t("Please select fields to export..."));
             return;
         }
-
         exported_fields.unshift({name: 'id', label: 'External ID'});
+
         var export_format = this.$el.find("#export_format").val();
+        var ids_to_export = this.$('#export_selection_only').prop('checked')
+                ? this.getParent().get_selected_ids()
+                : this.dataset.ids;
+
         instance.web.blockUI();
         this.session.get_file({
             url: '/web/export/' + export_format,
             data: {data: JSON.stringify({
                 model: this.dataset.model,
                 fields: exported_fields,
-                ids: this.dataset.ids,
+                ids: ids_to_export,
                 domain: this.dataset.domain,
                 import_compat: Boolean(
                     this.$el.find("#import_compat").val())
