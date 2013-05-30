@@ -2423,8 +2423,8 @@ class stock_move(osv.osv):
         # or if it's the same as that of the secondary amount being posted.
         account_obj = self.pool.get('account.account')
         src_acct, dest_acct = account_obj.browse(cr, uid, [src_account_id, dest_account_id], context=context)
-        src_main_currency_id = src_acct.currency_id and src_acct.currency_id.id or src_acct.company_id.currency_id.id
-        dest_main_currency_id = dest_acct.currency_id and dest_acct.currency_id.id or dest_acct.company_id.currency_id.id
+        src_main_currency_id = src_acct.company_id.currency_id.id
+        dest_main_currency_id = dest_acct.company_id.currency_id.id
         cur_obj = self.pool.get('res.currency')
         if reference_currency_id != src_main_currency_id:
             # fix credit line:
