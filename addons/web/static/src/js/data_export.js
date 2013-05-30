@@ -4,6 +4,25 @@ var QWeb = instance.web.qweb,
 instance.web.DataExport = instance.web.Dialog.extend({
     template: 'ExportTreeView',
     dialog_title: {toString: function () { return _t("Export Data"); }},
+    events: {
+        'click #add_field': function () {
+            var self = this;
+            this.$('#field-tree-structure tr.ui-selected')
+                .removeClass('ui-selected')
+                .find('a').each(function () {
+                    var id = $(this).attr('id').split('-')[1];
+                    var string = $(this).attr('string');
+                    self.add_field(id, string);
+                });
+        },
+        'click #remove_field': function () {
+            this.$('#fields_list option:selected').remove();
+        },
+        'click #remove_all_field': function () {
+            this.$('#fields_list').empty();
+        },
+        'click #export_new_list': 'on_show_save_list',
+    },
     init: function(parent, dataset) {
         var self = this;
         var options = {
@@ -23,22 +42,6 @@ instance.web.DataExport = instance.web.Dialog.extend({
         var self = this;
         this._super.apply(this, arguments);
         self.$el.removeClass('ui-dialog-content ui-widget-content');
-        self.$el.find('#add_field').click(function() {
-            self.$('#field-tree-structure tr.ui-selected')
-                .removeClass('ui-selected')
-                .find('a').each(function () {
-                    var id = $(this).attr('id').split('-')[1];
-                    var string = $(this).attr('string');
-                    self.add_field(id, string);
-                });
-        });
-        self.$el.find('#remove_field').click(function() {
-            self.$el.find('#fields_list option:selected').remove();
-        });
-        self.$el.find('#remove_all_field').click(function() {
-            self.$el.find('#fields_list').empty();
-        });
-        this.$el.find('#export_new_list').click(this.on_show_save_list);
 
         var got_fields = new $.Deferred();
         this.$el.find('#import_compat').change(function() {
