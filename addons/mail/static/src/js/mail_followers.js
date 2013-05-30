@@ -82,6 +82,7 @@ openerp_mail_followers = function(session, mail) {
         on_edit_subtype: function(event) {
             var self = this;
             var partner_id = $(event.target).data('id');
+            $('div.oe_edit_actions').remove();
             self.$dialog = new session.web.dialog($('<div class="oe_edit_actions">'), {
                             modal: true,
                             width: 'auto',
