@@ -85,9 +85,13 @@ class config(osv.osv):
         
         # Copy template in to drive with help of new access token
         if content.has_key('access_token'):
+            request_url = "https://www.googleapis.com/drive/v2/files/%s?fields=parents/id&access_token=%s" % (tamplate_id, content['access_token'])
+            resp, parents = Http().request(request_url, "GET")
+            parents_dict = json.loads(parents)
+
             headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
             record_url = "Click on link to open Record in OpenERP\n %s/?db=%s#id=%s&model=%s" %(google_web_base_url, cr.dbname, res_id, res_model ) 
-            data = {"title": name_gdocs, "description": record_url}
+            data = {"title": name_gdocs, "description": record_url, "parents":parents_dict['parents']}
             request_url = "https://www.googleapis.com/drive/v2/files/%s/copy?access_token=%s" % (tamplate_id, content['access_token'])
             resp, content = Http().request(request_url, "POST", json.dumps(data), headers)
             content = json.loads(content)
