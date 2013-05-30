@@ -153,14 +153,15 @@ class module(osv.osv):
     def _get_desc(self, cr, uid, ids, field_name=None, arg=None, context=None):
         res = dict.fromkeys(ids, '')
         for module in self.browse(cr, uid, ids, context=context):
-            path = addons.get_module_resource(module.name, 'description.html')
+            path = addons.get_module_resource(module.name, 'static/description/description.html')
             if path:
+                print path
                 desc_file = tools.file_open(path, 'rb')
                 try:
                     doc = desc_file.read()
                     html = lxml.html.document_fromstring(doc)
                     for element, attribute, link, pos in html.iterlinks():
-                        if element.get('src'):
+                        if element.get('src') and not '//' in element.get('src') and not 'static/' in element.get('src'):
                             element.set('src', "%s/static/description/%s" % (module.name, element.get('src')))
                     res[module.id] = lxml.html.tostring(html)
                 finally:
