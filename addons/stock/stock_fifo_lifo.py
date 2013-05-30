@@ -23,69 +23,88 @@ from openerp import tools
 from openerp.osv import osv, fields
 
 
-#TODO: remove this module and put everything in existing core modules (purchase, stock, product...)
+#TODO: remove this FILE and put everything in existing core modules (purchase, stock, product...)
 class product_product (osv.osv):
     _name = "product.product"
     _inherit = "product.product"
 
+    def _compute_and_set_avg_price(self, cr, uid, prod, company_id, context=None):
+        """
+        This method is called when we modify the cost method of a product 'prod' from something to 'average'. At that time, we
+        will compute and set the current average price on the product.
 
-    #Need to change stock moves/product when changing cost method
+        :param prod: browse_record(product.product)
+        :param company_id: ID of the company to consider
+        """
+        move_obj = self.pool.get("stock.move")
+        uom_obj = self.pool.get("product.uom")
+        qty = 0.0
+        total_price = 0.0
+        #search all outgoing stock moves and count the total cost and total quantity
+        mov_ids = move_obj.search(cr, uid, [('product_id', '=', prod.id), ('company_id', '=', company_id), ('state', '=', 'done'), ('location_dest_id.usage', '=', 'internal'), ('location_id.usage', '!=', 'internal')], context=context)
+        for move in move_obj.browse(cr, uid, mov_ids, context=context):
+            total_price += move.product_qty * move.price_unit
+            qty += uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, prod.uom_id.id, round=False)
+        if qty > 0.0:
+            self.write(cr, uid, [prod.id], {'standard_price': total_price / qty}, context=context)
+
+    def _update_moves_set_avg_price(self, cr, uid, prod, company_id, context=None):
+        """
+        This method is called when we modify the cost method of a product 'prod' from average to something else. At that time, we
+        will set the current average price on all the stock moves with a positive remaining quantity.
+
+        :param prod: browse_record(product.product)
+        :param company_id: ID of the company to consider
+        """
+        move_obj = self.pool.get("stock.move")
+        uom_obj = self.pool.get("product.uom")
+        mov_ids = move_obj.search(cr, uid, [('product_id', '=', prod.id), ('company_id', '=', company_id), ('state', '=', 'done'), ('qty_remaining', '>', 0.0)], context=context)
+        for move in move_obj.browse(cr, uid, mov_ids, context=context):
+            #convert the average price of the product into the stock move uom
+            new_price = uom_obj._compute_price(cr, uid, move.product_uom.id, prod.standard_price, prod.uom_id.id)
+            move_obj.write(cr, uid, [move.id], {'price_unit': new_price}, context=context)
+
     def write(self, cr, uid, ids, vals, context=None):
+        if context is None:
+            context = {}
+        #If we changed the cost method of the product, we may need to do some operation on stock moves or on the product itself
         if "cost_method" in vals:
-            move_obj = self.pool.get("stock.move")
-            uom_obj = self.pool.get("product.uom")
-            prod_obj = self.pool.get("product.product")
-            #TODO Need force_company in context?
-            if 'force_company' not in context:
-                company_id = self.pool.get("res.users").browse(cr, uid, uid, context=context).company_id.id
-            else:
-                company_id = context['force_company']
+            company_id = context.get('force_company', self.pool.get("res.users").browse(cr, uid, uid, context=context).company_id.id)
             for prod in self.browse(cr, uid, ids, context=context):
-                if prod.cost_method == 'average':
-                    mov_ids = move_obj.search(cr, uid, [('product_id', '=', prod.id), ('company_id', '=', company_id), ('state', '=', 'done'), ('qty_remaining', '>', 0.0)], context=context)
-                    #TODO Need to convert to all prices to UoM of stock move
-                    for move in move_obj.browse(cr, uid, mov_ids, context=context):
-                        new_price = uom_obj._compute_price(cr, uid, move.product_uom.id, prod.standard_price, prod.uom_id.id)
-                        move_obj.write(cr, uid, [move.id], {'price_unit': new_price}, context=context)
-                #We need to recalculate the average on all products from all stock moves in
-                if vals["cost_method"] == 'average':
-                    #Search all done in moves
-                    mov_ids = move_obj.search(cr, uid, [('product_id', '=', prod.id), ('company_id', '=', company_id), ('state', '=', 'done'), ('location_dest_id.usage', '=', 'internal'), 
-                                                        ('location_id.usage', '!=', 'internal')], context=context)
-                    qty = 0.0
-                    total_price = 0.0
-                    for move in move_obj.browse(cr, uid, mov_ids, context=context):
-                        total_price += move.product_qty * move.price_unit
-                        qty += uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, prod.uom_id.id, round=False)
-                    if qty > 0.0:
-                        prod_obj.write(cr, uid, [prod.id], {'standard_price': total_price / qty}, context=context)
-        res = super(product_product, self).write(cr, uid, ids, vals, context=context)
-        return res
+                if prod.cost_method == 'average' and vals['cost_method'] != 'average':
+                    #If we are changing the cost_method from 'average' to something else, we need to store the current average price
+                    #on all the done stock move that have a remaining quantity to be matched (mostly incomming stock moves but it may
+                    #include OUT stock moves as well if the stock went into negative) because their further valuation needs to be done
+                    #using this price.
+                    self._update_moves_set_avg_price(cr, uid, prod, company_id, context=context)
+                elif vals["cost_method"] == 'average' and prod.cost_method != 'average':
+                    #If we are changing the cost_method from anything to 'average', we need to compute the current average price 
+                    #and set it on the product as standard_price.
+                    self._compute_and_set_avg_price(cr, uid, prod, company_id, context=context)
+        return super(product_product, self).write(cr, uid, ids, vals, context=context)
     
-    def get_stock_matchings_fifolifo(self, cr, uid, ids, qty, fifo, product_uom_id = False, currency_id = False, context=None):
+    def get_stock_matchings_fifolifo(self, cr, uid, ids, qty, fifo, product_uom_id=False, currency_id=False, context=None):
+        #TODO: document the parameters (what is fifo? what's its type and is it used for?)...
+        #TODO: check if possible to refactore and to split this big method into several smaller
         '''
-            This method returns a list of tuples with quantities from stock in moves
-            These are the quantities that would go out theoretically according to the fifo or lifo method if qty needs to go out
-            (move_in_id, qty in uom of move out, price (converted to move out), qty in uom of move in
-            This should be called for only one product at a time
-            UoMs and currencies from the corresponding moves are converted towards that given in the params
-            It is good to use force_company in the context
+        This method returns a list of tuples with quantities from stock in moves
+        These are the quantities that would go out theoretically according to the fifo or lifo method if qty needs to go out
+        (move_in_id, qty in uom of move out, price (converted to move out), qty in uom of move in
+        This should be called for only one product at a time
+        UoMs and currencies from the corresponding moves are converted towards that given in the params
+        It is good to use force_company in the context
         '''
-        assert len(ids) == 1, _('Only the fifolifo stock matchings of one product can be calculated at a time.')
+        assert len(ids) == 1, 'Only the fifolifo stock matchings of one product can be calculated at a time.'
+        if context is None:
+            context = {}
         uom_obj = self.pool.get('product.uom')
+        move_obj = self.pool.get('stock.move')
         currency_obj = self.pool.get('res.currency')
         
         product = self.browse(cr, uid, ids, context=context)[0]
-        move_obj = self.pool.get('stock.move')
-
         if not product_uom_id: 
             product_uom_id = product.uom_id.id
-        
-        if 'force_company' in context:
-            company_id = context['force_company']
-        else:
-            #Would be better not to have to go here
-            company_id = product.company_id.id
+        company_id = context.get('force_company', product.company_id.id)
 
         if not currency_id:
             currency_id = self.pool.get('res.company').browse(cr, uid, company_id, context=context).currency_id.id
@@ -122,29 +141,18 @@ class product_product (osv.osv):
                 break
         return tuples
 
+
 class stock_move(osv.osv):
+    _inherit = 'stock.move'
     
-    def _get_moves(self, cr, uid, ids, context=None):
-        res = []
-        #search_dom = ['|', '&', ('location_id.usage','=', 'internal'), ('location_dest_id.usage','!=', 'internal'), '&', ('location_id.usage', '=')]
-        #res_ids = self.search(cr, uid, [], context=context)
-        for move in self.browse(cr, uid, ids, context=context):
-            move_inorout = move.location_id and move.location_dest_id
-            move_inorout = move_inorout and ((move.location_id.usage == 'internal' and move.location_dest_id.usage != 'internal') or (move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal' ))
-            if move_inorout:
-                res.append(move.id)
-        return res
-
-
     def _get_moves_from_matchings(self, cr, uid, ids, context=None):
+        #TOCHECK: self == match_obj ?
         match_obj = self.pool.get("stock.move.matching")
-        res = {}
+        res = set()
         for match in match_obj.browse(cr, uid, ids, context=context):
-            if match.move_out_id.id not in res:
-                res[match.move_out_id.id] = True
-            if match.move_in_id.id not in res:
-                res[match.move_in_id.id] = True
-        return res.keys()
+            res.add(match.move_out_id.id)
+            res.add(match.move_in_id.id)
+        return list(res)
 
     def _get_qty_remaining (self, cr, uid, ids, field_names, arg, context=None):
         '''
@@ -154,36 +162,36 @@ class stock_move(osv.osv):
         uom_obj = self.pool.get("product.uom")
         res = {}
         for move in self.browse(cr, uid, ids, context=context):
-            move_out = move.location_id.usage == 'internal' and move.location_dest_id.usage != 'internal'
-            move_in = move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal'
-            if move_in:
-                #Search all matchings
+            qty = move.product_qty
+            if move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal':
+                # for incomming moves, the remaining quantity is the quantity what hasn't been matched yet with outgoing moves
                 matches = match_obj.search(cr, uid, [('move_in_id', '=', move.id)], context=context)
-                qty = move.product_qty
                 for match in match_obj.browse(cr, uid, matches, context=context):
                     qty -= uom_obj._compute_qty(cr, uid, match.move_out_id.product_uom.id, match.qty, move.product_uom.id, round=False)
-                res[move.id] = qty
-            elif move_out:
-                #Search all matchings, but from the out side
+            elif move.location_id.usage == 'internal' and move.location_dest_id.usage != 'internal':
+                # for outgoing moves, we need to compute the remaining quantity to manage the negative stocks.
+                # We do that in the same way that for incomming moves.
                 matches = match_obj.search(cr, uid, [('move_out_id', '=', move.id)], context=context)
-                qty = move.product_qty
                 for match in match_obj.browse(cr, uid, matches, context=context):
+                    # we don't need to call uom_obj.compute() as the qty on the matching is already in the uom of the out move
                     qty -= match.qty
-                res[move.id] = qty
+            else:
+                # we don't use remaining quantity on internal moves (no matching are created)
+                qty = 0
+            res[move.id] = qty
         return res
-    _inherit = 'stock.move'
+
     _columns = {'qty_remaining': fields.function(_get_qty_remaining, type="float", string="Remaining quantity to be matched", 
                                                  store = {'stock.move.matching': (_get_moves_from_matchings, ['qty', 'move_in_id', 'move_out_id'], 10),
-                                                          'stock.move':  (_get_moves, ['product_qty', 'product_uom', 'location_id', 'location_dest_id', 'company_id'], 10)}), #locations and company_id not necessary?
+                                                          'stock.move':  (lambda self, cr, uid, ids, ctx: ids, ['product_qty', 'product_uom', 'location_id', 'location_dest_id'], 10)}),
                 'matching_ids_in': fields.one2many('stock.move.matching', 'move_in_id'),
                 'matching_ids_out':fields.one2many('stock.move.matching', 'move_out_id'),
-                }
+    }
 
 
 class stock_move_matching(osv.osv):
     _name = "stock.move.matching"
     _description = "Stock move matchings"
-    
     
     def _get_unit_price_out (self, cr, uid, ids, field_names, arg, context=None):
         res = {}
@@ -193,18 +201,13 @@ class stock_move_matching(osv.osv):
         return res
 
     def _get_matches(self, cr, uid, ids, context=None):
-        res = []
+        move_in_ids = []
+        #TOCHECK : self == move_obj i think
         move_obj = self.pool.get("stock.move")
         for move in move_obj.browse(cr, uid, ids, context=context):
-            move_in = move.location_id and move.location_dest_id and move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal'
-            if move_in:
-                matches = self.pool.get("stock.move.matching").search(cr, uid, [('move_in_id', '=', move.id)], context=context)
-                res += matches
-        return res
-
-    def _get_selfmatches(self, cr, uid, ids, context=None):
-        return ids
-
+            if move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal':
+                move_in_ids.append(move.id)
+        return self.pool.get("stock.move.matching").search(cr, uid, [('move_in_id', 'in', move_in_ids)], context=context)
 
     _columns = {
         'move_in_id': fields.many2one('stock.move', 'Stock move in', required=True),
@@ -212,8 +215,8 @@ class stock_move_matching(osv.osv):
         'qty': fields.float('Quantity in UoM of out', required=True), 
         'price_unit':fields.related('move_in_id', 'price_unit', string="Unit price", type="float"),
         'price_unit_out': fields.function(_get_unit_price_out, type="float", string="Price in UoM of out move", 
-                                                 store = {'stock.move':  (_get_matches, ['price_unit', 'product_uom'], 10), 
-                                                          'stock.move.matching': (_get_selfmatches, ['move_in_id', 'qty', 'move_out_id'], 10)},), 
+                                                 store = {'stock.move': (_get_matches, ['price_unit', 'product_uom'], 10), 
+                                                          'stock.move.matching': (lambda self, cr, uid, ids, ctx: ids, ['move_in_id', 'qty', 'move_out_id'], 10)},), 
     }
-    
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
