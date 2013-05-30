@@ -6,13 +6,13 @@ instance.web.DataExport = instance.web.Dialog.extend({
     dialog_title: {toString: function () { return _t("Export Data"); }},
     init: function(parent, dataset) {
         var self = this;
-        options = {
-            buttons : [
-                {text: _t("Close"), click: function() { self.close(); }},
-                {text: _t("Export To File"), click: function() { self.on_click_export_data(); }}
+        var options = {
+            buttons: [
+                {text: _t("Close"), click: function () { self.close(); }},
+                {text: _t("Export To File"), click: function () { self.on_click_export_data(); }}
             ],
-            close: function(event, ui){ self.close();}
-        }
+            close: function () { self.close();}
+        };
         this._super(parent, options);
         this.records = {};
         this.dataset = dataset;
@@ -24,8 +24,9 @@ instance.web.DataExport = instance.web.Dialog.extend({
         this._super.apply(this, arguments);
         self.$el.removeClass('ui-dialog-content ui-widget-content');
         self.$el.find('#add_field').click(function() {
-            if ($('#field-tree-structure tr.ui-selected')) {
-                var fld = self.$el.find('#field-tree-structure tr.ui-selected').find('a');
+            var $selected = self.$('#field-tree-structure tr.ui-selected');
+            if ($selected) {
+                var fld = $selected.find('a');
                 for (var i = 0; i < fld.length; i++) {
                     var id = $(fld[i]).attr('id').split('-')[1];
                     var string = $(fld[i]).attr('string');
@@ -79,7 +80,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
         var self = this;
         if (self.$el.find('#saved_export_list').is(':hidden')) {
             self.$el.find('#ExistsExportList').show();
-            return;
+            return $.when();
         }
         return this.exports.read_slice(['name'], {
             domain: [['resource', '=', this.dataset.model]]
@@ -192,7 +193,6 @@ instance.web.DataExport = instance.web.Dialog.extend({
     },
     on_show_data: function(result, after) {
         var self = this;
-        var imp_cmpt = Boolean(self.$el.find("#import_compat").val());
 
         if (after) {
             var current_tr = self.$el.find("tr[id='treerow-" + after + "']");
@@ -220,15 +220,16 @@ instance.web.DataExport = instance.web.Dialog.extend({
                         frst_click = self.$el.find("tr[id^='treerow-']")[self.row_index-1];
                         $(frst_click).addClass("ui-selected");
                     } else {
+                        var i;
                         if (this.rowIndex >=self.row_index) {
-                            for (var i = (self.row_index-1); i < this.rowIndex; i++) {
+                            for (i = (self.row_index-1); i < this.rowIndex; i++) {
                                 scnd_click = self.$el.find("tr[id^='treerow-']")[i];
                                 if (!$(scnd_click).find('#tree-column').hasClass("oe_export_readonlyfield")) {
                                     $(scnd_click).addClass("ui-selected");
                                 }
                             }
                         } else {
-                            for (var i = (self.row_index-1); i >= (this.rowIndex-1); i--) {
+                            for (i = (self.row_index-1); i >= (this.rowIndex-1); i--) {
                                 scnd_click = self.$el.find("tr[id^='treerow-']")[i];
                                 if (!$(scnd_click).find('#tree-column').hasClass("oe_export_readonlyfield")) {
                                     $(scnd_click).addClass("ui-selected");
@@ -263,6 +264,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
             self.$el.find("tr[id='treerow-" + record.id + "']").keydown(function(e) {
                 var keyCode = e.keyCode || e.which;
                 var arrow = {left: 37, up: 38, right: 39, down: 40 };
+                var elem;
                 switch (keyCode) {
                     case arrow.left:
                         if ($(this).hasClass('open')) {
@@ -275,7 +277,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
                         }
                         break;
                     case arrow.up:
-                        var elem = this;
+                        elem = this;
                         $(elem).removeClass("ui-selected");
                         while (!$(elem).prev().is(":visible")) {
                             elem = $(elem).prev();
@@ -286,7 +288,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
                         $(elem).prev().find('a').focus();
                         break;
                     case arrow.down:
-                        var elem = this;
+                        elem = this;
                         $(elem).removeClass("ui-selected");
                         while(!$(elem).next().is(":visible")) {
                             elem = $(elem).next();
