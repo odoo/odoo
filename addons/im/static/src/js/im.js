@@ -284,6 +284,10 @@ openerp.im = function(instance) {
             return this.activated;
         },
         create_ting: function() {
+            if (typeof(Audio) === "undefined") {
+                this.ting = {play: function() {}};
+                return;
+            }
             var kitten = jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined;
             this.ting = new Audio(instance.webclient.session.origin + "/im/static/src/audio/" + (kitten ? "purr" : "Ting") +
                 (new Audio().canPlayType("audio/ogg; codecs=vorbis") ? ".ogg" : ".mp3"));

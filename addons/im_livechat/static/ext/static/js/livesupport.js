@@ -268,6 +268,10 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
             return this.activated;
         },
         create_ting: function() {
+            if (typeof(Audio) === "undefined") {
+                this.ting = {play: function() {}};
+                return;
+            }
             this.ting = new Audio(new Audio().canPlayType("audio/ogg; codecs=vorbis") ?
                 require.toUrl("../audio/Ting.ogg") :
                 require.toUrl("../audio/Ting.mp3")
