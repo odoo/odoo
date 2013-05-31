@@ -162,7 +162,7 @@ class module(osv.osv):
                     html = lxml.html.document_fromstring(doc)
                     for element, attribute, link, pos in html.iterlinks():
                         if element.get('src') and not '//' in element.get('src') and not 'static/' in element.get('src'):
-                            element.set('src', "%s/static/description/%s" % (module.name, element.get('src')))
+                            element.set('src', "/%s/static/description/%s" % (module.name, element.get('src')))
                     res[module.id] = lxml.html.tostring(html)
                 finally:
                     desc_file.close()
