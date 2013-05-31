@@ -145,16 +145,5 @@ class stock_invoice_onshipping(osv.osv_memory):
               type = inv_type,
               context=context)
         return res
-        
-    def fields_view_get(self, cr, uid, view_id=None, view_type="form", context=None, toolbar=False, submenu=False):
-        if context is None:
-            context = {}
-        group_field_visible = False
-        if context.get('active_ids'):
-            if len(context.get('active_ids')) == 1:
-                group_field_visible = True
-        context.update({'group_field_visible' : group_field_visible})
-        return super(stock_invoice_onshipping, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
