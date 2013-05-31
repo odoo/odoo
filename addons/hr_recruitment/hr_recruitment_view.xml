@@ -357,7 +357,7 @@
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_job oe_kanban_card oe_kanban_global_click">
-                                <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban oe_custom">
                                     <span class="oe_e">í</span>
                                     <ul class="oe_dropdown_menu">
                                         <t t-if="widget.view.is_action_enabled('edit')">
@@ -385,7 +385,7 @@
                                             <a name="%(hr_job_applications)d" type="action" t-if="record.application_count.value gt 1" class="oe_link"><t t-esc="record.application_count.value"/> Applications</a>
                                             <a name="%(hr_job_applications)d" type="action" t-if="record.application_count.value lt 2" class="oe_link"><t t-esc="record.application_count.value"/> Application</a>
                                         </div>
-                                        <field state="recruit" name="no_of_recruitment" widget="gage" style="width:200px; height:130px;" options="{'min_field': 'no_of_hired_employee','max_field': 'no_of_recruitment', 'label_field': 'no_of_hired_employee', 'action_change': 'action_hired_employee'}">Forecast</field>
+                                        <field state="recruit" name="no_of_recruitment" widget="gage" options="{'min_field': 'no_of_hired_employee','max_field': 'no_of_recruitment', 'label_field': 'no_of_hired_employee', 'action_change': 'action_hired_employee'}">Forecast</field>
                                     </t>
                                     <t t-if="record.state.raw_value == 'open'">
                                         <div class="oe_start_recruitment">

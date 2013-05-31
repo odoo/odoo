@@ -9,8 +9,8 @@ openerp.hr_recruitment = function (openerp) {
         var value = parent.values.no_of_hired_employee.value;
         var flag_open = false;
         this.$el.empty()
-            .attr('style', this.$node.attr('style') + ';float: right; margin-top: -105px; margin-right: -30px;')
-            .attr('id', unique_id);
+            .attr('id', unique_id)
+            .attr('class','oe_justgage');
         this.gage = new JustGage({
             id: unique_id,
             node: this.$el[0],
@@ -40,7 +40,7 @@ openerp.hr_recruitment = function (openerp) {
                 if (!self.$el.find(".oe_justgage_edit").size()) {
                     var $svg = self.$el.find('svg');
                     $div = $('<div class="oe_justgage_edit" style="text-align: center; z-index: 1; position: absolute; width: ' + $svg.outerWidth() + 'px; top: ' + ($svg.outerHeight()/2-5) + 'px;"/>');
-                    $input = $('<input style="text-align: center; width: ' + ($svg.outerWidth()-40) + 'px; margin: auto;"/>').val(value);
+                    $input = $('<input style="text-align: center; width: ' + ($svg.outerWidth()/2) + 'px; margin: auto;"/>').val(value);
                     $div.append($input);
                     self.$el.prepend($div)
                     $input.focus()
