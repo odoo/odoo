@@ -57,9 +57,10 @@ class purchase_requisition(osv.osv):
         'po_line_ids': fields.function(_get_po_line, method=True, type='one2many', relation='purchase.order.line', string='Products by supplier'),
         'line_ids' : fields.one2many('purchase.requisition.line','requisition_id','Products to Purchase',states={'done': [('readonly', True)]}),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),        
-        'state': fields.selection([('draft','New'),('in_progress','Sent to Suppliers'),('open','Choosing Lines'),('done','PO Created'),('cancel','Cancelled')],
+        'state': fields.selection([('draft','Draft Tender'),('in_progress','Sent to Suppliers'),('open','Choosing Lines'),('done','PO Created'),('cancel','Cancelled')],
             'Status', track_visibility='onchange', required=True),
         'multiple_rfq_per_supplier': fields.boolean('Multiple RFQ per supplier'),
+        'account_analytic_id':fields.many2one('account.analytic.account', 'Analytic Account',),
     }
     _defaults = {
         'date_start': lambda *args: time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -82,13 +83,18 @@ class purchase_requisition(osv.osv):
     
     def tender_cancel(self, cr, uid, ids, context=None):
         purchase_order_obj = self.pool.get('purchase.order')
+        #try to set all associated quotations to cancel state
         for purchase in self.browse(cr, uid, ids, context=context):
             for purchase_id in purchase.purchase_ids:
-                if str(purchase_id.state) in('draft'):
-                    purchase_order_obj.action_cancel(cr,uid,[purchase_id.id])
+                purchase_order_obj.action_cancel(cr,uid,[purchase_id.id])
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def tender_in_progress(self, cr, uid, ids, context=None):
+        #check if all quotations are not in a draft state before going to that state
+        for purchase in self.browse(cr, uid, ids, context=context):
+            for purchase_id in purchase.purchase_ids:
+                if purchase_id.state == 'draft':
+                    raise osv.except_osv(_('Warning!'), _('You still have some quotation(s) in draft state.'))
         return self.write(cr, uid, ids, {'state':'in_progress'} ,context=context)
 
     def tender_open(self, cr, uid, ids, context=None):
@@ -195,6 +201,7 @@ class purchase_requisition(osv.osv):
                     'price_unit': seller_price,
                     'date_planned': date_planned,
                     'taxes_id': [(6, 0, taxes)],
+                    'account_analytic_id':requisition.account_analytic_id.id,
                 }, context=context)
                 
         return res
@@ -362,8 +369,7 @@ class purchase_order_line(osv.osv):
     def generate_po(self, cr, uid, active_id, context=None):
         #call generate_po from tender with active_id
         self.pool.get('purchase.requisition').generate_po(cr, uid, [active_id], context=context)
-        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'purchase_requisition','action_purchase_requisition', context=context)
-        return res
+        return True
         
 
 class product_product(osv.osv):
