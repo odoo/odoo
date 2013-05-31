@@ -379,6 +379,9 @@ class WorkerLongPolling(Worker):
         gevent.monkey.patch_all()
         import gevent_psycopg2
         gevent_psycopg2.monkey_patch()
+        from openerp.modules.registry import RegistryManager
+        from gevent.coros import RLock
+        RegistryManager.registries_lock = RLock()
 
         Worker.start(self)
         self.multi.socket.close()
