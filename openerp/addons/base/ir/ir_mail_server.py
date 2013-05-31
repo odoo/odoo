@@ -472,7 +472,7 @@ class ir_mail_server(osv.osv):
                                                                              e.__class__.__name__,
                                                                              tools.ustr(e))
             _logger.exception(msg)
-            raise MailDeliveryException(_("Mail delivery failed"), msg)
+            raise MailDeliveryException(_("Mail Delivery Failed"), msg)
         return message_id
 
     def on_change_encryption(self, cr, uid, ids, smtp_encryption):
