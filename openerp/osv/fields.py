@@ -1379,11 +1379,11 @@ class property(function):
             res[prop_name] = prop.get(cr, uid, prop_name, obj._name, context=context)
         return res
 
-    def _get_by_id(self, obj, cr, uid, prop_name, ids, context=None):
+    def _get_by_id(self, obj, cr, uid, prop_name, ids, context=None, company_id=False):
         prop = obj.pool.get('ir.property')
         vids = [obj._name + ',' + str(oid) for oid in  ids]
 
-        domain = [('fields_id.model', '=', obj._name), ('fields_id.name', 'in', prop_name)]
+        domain = [('fields_id.model', '=', obj._name), ('fields_id.name', 'in', prop_name), ('company_id', '=' ,company_id)]
         #domain = prop._get_domain(cr, uid, prop_name, obj._name, context)
         if vids:
             domain = [('res_id', 'in', vids)] + domain
@@ -1394,6 +1394,10 @@ class property(function):
         if context is None:
             context = {}
 
+        def_id = self._field_get(cr, uid, obj._name, prop_name)
+        company = obj.pool.get('res.company')
+        cid = company._company_default_get(cr, uid, obj._name, def_id,
+                                               context=context)
         nids = self._get_by_id(obj, cr, uid, [prop_name], [id], context)
         if nids:
             cr.execute('DELETE FROM ir_property WHERE id IN %s', (tuple(nids),))
@@ -1408,10 +1412,6 @@ class property(function):
             property_create = True
 
         if property_create:
-            def_id = self._field_get(cr, uid, obj._name, prop_name)
-            company = obj.pool.get('res.company')
-            cid = company._company_default_get(cr, uid, obj._name, def_id,
-                                               context=context)
             propdef = obj.pool.get('ir.model.fields').browse(cr, uid, def_id,
                                                              context=context)
             prop = obj.pool.get('ir.property')
