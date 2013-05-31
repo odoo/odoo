@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-05-09 10:13+0000\n"
+"PO-Revision-Date: 2013-05-30 09:41+0000\n"
 "Last-Translator: Gilles Major (OpenERP) <gim@openerp.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-05-10 06:51+0000\n"
-"X-Generator: Launchpad (build 16598)\n"
+"X-Launchpad-Export-Date: 2013-05-31 07:00+0000\n"
+"X-Generator: Launchpad (build 16660)\n"
 
 #. module: mail
 #: view:mail.followers:0
@@ -205,6 +205,9 @@ msgid ""
 " %s won't be notified of any email or discussion on this document. Do you "
 "really want to remove him from the followers ?"
 msgstr ""
+"Attention! \n"
+" %s ne sera plus averti des courriels ou discussions sur ce document. Voulez-"
+"vous vraiment le retirer des abonnées ?"
 
 #. module: mail
 #. openerp-web
@@ -719,6 +722,9 @@ msgid ""
 "You won't be notified of any email or discussion on this document. Do you "
 "really want to unfollow this document ?"
 msgstr ""
+"Attention !\n"
+"Vous ne serez plus avertis des courriels ou discussions liés à ce document. "
+"Voulez-vous vraiment ne plus suivre ce document?"
 
 #. module: mail
 #: model:ir.actions.client,help:mail.action_mail_to_me_feeds
@@ -870,7 +876,7 @@ msgstr "Sous-types de messages"
 #: code:addons/mail/static/src/xml/mail.xml:57
 #, python-format
 msgid "Log a note"
-msgstr ""
+msgstr "Enregistrer une note"
 
 #. module: mail
 #: selection:mail.compose.message,type:0
@@ -996,7 +1002,7 @@ msgstr "Propriétaire"
 #: code:addons/mail/res_partner.py:49
 #, python-format
 msgid "Partner Profile"
-msgstr ""
+msgstr "Profil du partenaire"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message
@@ -1145,7 +1151,7 @@ msgstr "Notifications"
 #. module: mail
 #: view:mail.alias:0
 msgid "Search Alias"
-msgstr ""
+msgstr "Chercher l'alias"
 
 #. module: mail
 #: help:mail.alias,alias_force_thread_id:0
@@ -1293,7 +1299,7 @@ msgstr ""
 #. module: mail
 #: view:mail.group:0
 msgid "Group Form"
-msgstr ""
+msgstr "Formulaire de groupe"
 
 #. module: mail
 #: field:mail.compose.message,starred:0
@@ -1325,6 +1331,8 @@ msgstr "Abonné(e)"
 msgid ""
 "Unfortunately this email alias is already used, please choose a unique one"
 msgstr ""
+"Malheureusement, cet alias de courriel est déjà utilisé : veuillez utiliser "
+"un alias unique"
 
 #. module: mail
 #: help:mail.alias,alias_user_id:0
@@ -1346,7 +1354,7 @@ msgstr "Et"
 #: code:addons/mail/mail_thread.py:111
 #, python-format
 msgid "You have %d unread messages"
-msgstr ""
+msgstr "Vous avez %d nouveaux messages"
 
 #. module: mail
 #: field:mail.compose.message,message_id:0
@@ -1387,7 +1395,7 @@ msgstr ""
 #. module: mail
 #: view:mail.mail:0
 msgid "Cancel Email"
-msgstr ""
+msgstr "Annuler le courriel"
 
 #. module: mail
 #. openerp-web
@@ -1496,6 +1504,8 @@ msgid ""
 "This group is visible by non members.             Invisible groups can add "
 "members through the invite button."
 msgstr ""
+"Ce groupe est visible pour les non-membres. Les groupes invisibles peuvent "
+"ajouter des membres grâce au bouton d'invitation."
 
 #. module: mail
 #: model:mail.group,name:mail.group_board
@@ -1586,6 +1596,10 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    Aucun message dans ce groupe.\n"
+"                </p>\n"
+"            "
 
 #. module: mail
 #. openerp-web
@@ -1602,6 +1616,10 @@ msgid ""
 "installed\n"
 "                                    the portal module."
 msgstr ""
+"Ce groupe est visible par tout le monde,\n"
+"                                    y compris vos clients si vous avez "
+"installé\n"
+"                                    le module \"Portail\"."
 
 #. module: mail
 #. openerp-web
@@ -1613,7 +1631,7 @@ msgstr "Remettre dans 'À faire'"
 #. module: mail
 #: view:mail.group:0
 msgid "Send a message to the group"
-msgstr ""
+msgstr "Envoyer un message au groupe"
 
 #. module: mail
 #: field:mail.group,name:0
@@ -1623,7 +1641,7 @@ msgstr ""
 #. module: mail
 #: view:mail.group:0
 msgid "Topics discussed in this group..."
-msgstr ""
+msgstr "Sujets discutés dans ce groupe..."
 
 #. module: mail
 #: field:res.partner,notification_email_send:0
@@ -1753,7 +1771,7 @@ msgstr "Destinataires en copie carbone (Cc)"
 #. module: mail
 #: field:mail.alias,alias_domain:0
 msgid "Alias domain"
-msgstr ""
+msgstr "Domaine d'alias"
 
 #. module: mail
 #: code:addons/mail/update.py:93
@@ -1780,6 +1798,15 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    <b>Rien à faire.</b>\n"
+"                </p><p>\n"
+"                    Quand vous traitez des messages dans votre boîte de "
+"réception, vous pouvez en marquer certains\n"
+"                    comme <i>À faire</i>. Depuis ce menu, vous pouvez "
+"traitez tous vos messages \"À faire\".\n"
+"                </p>\n"
+"            "
 
 #. module: mail
 #: selection:mail.mail,state:0
@@ -1834,7 +1861,7 @@ msgstr "Sous-types"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias
 msgid "Email Aliases"
-msgstr ""
+msgstr "Alias courriel"
 
 #. module: mail
 #: field:mail.group,image_small:0
