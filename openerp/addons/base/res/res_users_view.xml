@@ -102,7 +102,10 @@
                             <h1><field name="name"/></h1>
                             <field name="email" invisible="1"/>
                             <label for="login" class="oe_edit_only" string="Email Address"/>
-                            <h2><field name="login" on_change="on_change_login(login)"/></h2>
+                            <h2>
+                                <field name="login" on_change="on_change_login(login)"
+                                        placeholder="email@yourcompany.com"/>
+                            </h2>
                             <label for="company_id" class="oe_edit_only" groups="base.group_multi_company"/>
                             <field name="company_id" context="{'user_preference': 0}" groups="base.group_multi_company"/>
                         </div>
@@ -113,8 +116,8 @@
                                 <field name="groups_id" readonly="1" widget="many2many_tags" style="display: inline;"/> You will be able to define additional access rights by editing the newly created user under the Settings / Users menu.
                             </div>
                             <field name="phone" placeholder="e.g. +32.81.81.37.00"/>
-                            <field name="mobile"/>
-                            <field name="fax"/>
+                            <field name="mobile" placeholder="e.g. +32.479.19.28.37"/>
+                            <field name="fax" placeholder="e.g. +32.81.81.37.10"/>
                         </group>
                     </sheet>
                 </form>
