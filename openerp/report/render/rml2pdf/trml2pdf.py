@@ -137,7 +137,7 @@ class PageCount(platypus.Flowable):
 
     def draw(self):
         self.canv.beginForm("pageCount%d" % self.story_count)
-        self.canv.setFont("Helvetica", utils.unit_get(str(8)))
+        self.canv.setFont("DejaVu Sans", utils.unit_get(str(8)))
         self.canv.drawString(0, 0, str(self.canv.getPageNumber()))
         self.canv.endForm()
 
