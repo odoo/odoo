@@ -61,7 +61,7 @@ class pos_config(osv.osv):
         'iface_cashdrawer' : fields.boolean('Cashdrawer Interface'),
         'iface_payment_terminal' : fields.boolean('Payment Terminal Interface'),
         'iface_electronic_scale' : fields.boolean('Electronic Scale Interface'),
-        'iface_vkeyboard' : fields.boolean('Virtual Keyboard Interface'),
+        'iface_vkeyboard': fields.boolean('Virtual Keyboard Interface'),
         'iface_print_via_proxy' : fields.boolean('Print via Proxy'),
 
         'state' : fields.selection(POS_CONFIG_STATE, 'Status', required=True, readonly=True),
@@ -1333,7 +1333,7 @@ class product_product(osv.osv):
         'available_in_pos': fields.boolean('Available in the Point of Sale', help='Check if you want this product to appear in the Point of Sale'), 
         'pos_categ_id': fields.many2one('pos.category','Point of Sale Category',
             help="The Point of Sale Category this products belongs to. Those categories are used to group similar products and are specific to the Point of Sale."),
-        'to_weight' : fields.boolean('To Weigh', help="Check if the product should be weighted (mainly used with self check-out interface)."),
+        'to_weight': fields.boolean('To Weigh', help="Check if the product should be weighted (mainly used with self check-out interface)."),
     }
 
     def _default_pos_categ_id(self, cr, uid, context=None):
