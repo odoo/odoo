@@ -31,10 +31,20 @@
         assert line.product_uom_id.id == procurement.product_uom.id, "UOM is not correspond."
         assert line.product_qty == procurement.product_qty, "Quantity is not correspond."
 -
-  I open another requisition.
+  I send the purchase order associated to the requisition.
+-
+  !python {model: purchase.requisition}: |
+    po = self.pool.get('purchase.order')
+    for element in self.browse(cr, uid, [ref("requisition1")], context=context):
+      for purchase in element.purchase_ids:
+        po.write(cr, uid, purchase.id, {'state': 'sent'}, context=context)
+
+-
+  I open another requisition and set tender state to choose bidding line.
 -
   !python {model: purchase.requisition}: |
     self.tender_in_progress(cr, uid, [ref("requisition1")], context=context)
+    self.tender_open(cr, uid, [ref("requisition1")], context=context)
 - 
   Supplier send one RFQ so I create requisition request of that supplier.
 -
