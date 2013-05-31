@@ -5,10 +5,7 @@ import openerp.addons.web.controllers.main as webmain
 class crm_meetting_importstatus(oeweb.Controller):
     _cp_path = '/meeting'
     @oeweb.httprequest
-    def meeting_invitation(self, req, dbname='test',res_id,uid):
-        url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        safe_url = urllib.quote_plus(url,debname,res_id,uid,':/?&;=')
-        
+    def meeting_invitation(self, req, db='may_29'):
         return webmain.html_template % {
             'js': "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in webmain.manifest_list(req, 'js',db= db)),
             'css': "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in webmain.manifest_list(req, 'css', db=db)),
