@@ -9,6 +9,7 @@ openerp.pad = function(instance) {
             this.on("change:configured", this, this.switch_configured);
         },
         initialize_content: function() {
+            var self = this;
             this.switch_configured();
             this.$('.oe_pad_switch').click(function() {
                 self.$el.toggleClass('oe_pad_fullscreen');

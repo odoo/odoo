@@ -50,11 +50,12 @@
             </field>
         </record>
 
-        <record id="action_account_analytic_account_form" model="ir.actions.act_window">
+        <record id="action_open_partner_analytic_accounts" model="ir.actions.act_window">
             <field name="context">{'search_default_partner_id': [active_id], 'default_partner_id': active_id}</field>
             <field name="name">Contracts/Analytic Accounts</field>
             <field name="res_model">account.analytic.account</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_account_analytic_account_tree"/>
+            <field name="search_view_id" ref="view_account_analytic_account_search"/>
         </record>
         <record model="ir.ui.view" id="partner_view_buttons">
             <field name="name">partner.view.buttons</field>
@@ -67,7 +68,7 @@
                         name="%(account.action_invoice_tree)d" 
                         context="{'search_default_partner_id': active_id,'default_partner_id': active_id}" groups="account.group_account_invoice"/>
                     <button type="action" string="Journal Items" name="%(account.action_account_moves_all_tree)d" groups="account.group_account_user"/>
-                    <button type="action" string="Contracts/Analytic Accounts" name="%(account.action_account_analytic_account_form)d" 
+                    <button type="action" string="Contracts/Analytic Accounts" name="%(account.action_open_partner_analytic_accounts)d"
                             groups="analytic.group_analytic_accounting"/>
                 </xpath>
             </field>

@@ -50,6 +50,7 @@ class hr_payroll_structure(osv.osv):
         'note': fields.text('Description'),
         'parent_id':fields.many2one('hr.payroll.structure', 'Parent'),
         'children_ids':fields.one2many('hr.payroll.structure', 'parent_id', 'Children'),
+        'rule_ids':fields.many2many('hr.salary.rule', 'hr_structure_salary_rule_rel', 'struct_id', 'rule_id', 'Salary Rules'),
     }
 
     def _get_parent(self, cr, uid, context=None):
@@ -67,6 +68,10 @@ class hr_payroll_structure(osv.osv):
         'parent_id': _get_parent,
     }
 
+    _constraints = [
+        (osv.osv._check_recursion, 'Error ! You cannot create a recursive Salary Structure.', ['parent_id']) 
+    ]
+        
     def copy(self, cr, uid, id, default=None, context=None):
         """
         Create a new record in hr_payroll_structure model from existing one
@@ -937,13 +942,6 @@ class hr_payslip_line(osv.osv):
         'rate': 100.0,
     }
 
-
-class hr_payroll_structure(osv.osv):
-
-    _inherit = 'hr.payroll.structure'
-    _columns = {
-        'rule_ids':fields.many2many('hr.salary.rule', 'hr_structure_salary_rule_rel', 'struct_id', 'rule_id', 'Salary Rules'),
-    }
 
 
 class hr_employee(osv.osv):
