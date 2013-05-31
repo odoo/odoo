@@ -78,8 +78,8 @@
                     <field name="note"/>
                     <field name="alias_id"/>
                     <field name="color"/>
-                    <field name="open_lead_per_duration"/>
-                    <field name="won_opportunity_per_duration"/>
+                    <field name="monthly_open_leads"/>
+                    <field name="monthly_planned_revenue"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_kanban_crm_salesteams">
@@ -99,10 +99,11 @@
                                     <div class="oe_items_list">
                                         <div class="oe_salesteams_leads" t-if="record.use_leads.raw_value">
                                             <a name="%(crm_case_form_view_salesteams_lead)d" type="action">Leads</a>
-                                            <a name="%(action_report_crm_lead)d" type="action" class="oe_sparkline_bar_link"><field name="open_lead_per_duration" widget="sparkline_bar">Number of opening leads per month.<br/>Click to see a detailed analysis of leads.</field></a>
-                                        </div><div class="oe_salesteams_opportunities">
+                                            <a name="%(action_report_crm_lead)d" type="action" class="oe_sparkline_bar_link"><field name="monthly_open_leads" widget="sparkline_bar">Open Leads per Month<br/>Click to see a detailed analysis of leads.</field></a>
+                                        </div>
+                                        <div class="oe_salesteams_opportunities">
                                             <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action">Opportunities</a>
-                                            <a name="%(action_report_crm_opportunity)d" type="action"><field name="won_opportunity_per_duration" widget="sparkline_bar">Revenue of won opportunities per month.<br/>Click to see a detailed analysis of opportunities.</field></a>
+                                            <a name="%(action_report_crm_opportunity)d" type="action"><field name="monthly_planned_revenue" widget="sparkline_bar">Planned Revenue per Month<br/>Click to see a detailed analysis of opportunities.</field></a>
                                         </div>
                                     </div>
                                 </div>
@@ -182,15 +183,13 @@
                         </div>
                         <group>
                             <group>
-                                <field name="parent_id"/>
-                                <field name="active"/>
+                                <field name="user_id"/>
+                                <field name="code"/>
                             </group>
                             <group>
-                                <field name="user_id"/>
+                                <field name="parent_id"/>
                                 <field name="change_responsible"/>
-                            </group>
-                            <group colspan="4" attrs="{'invisible': [('use_leads', '=', False)]}">
-                                
+                                <field name="active"/>
                             </group>
                         </group>
                         <notebook colspan="4">

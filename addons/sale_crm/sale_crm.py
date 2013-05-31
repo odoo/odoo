@@ -19,9 +19,10 @@
 #
 ##############################################################################
 
-from datetime import date, datetime
+from datetime import date
+from dateutil import relativedelta
+
 from openerp import tools
-from dateutil.relativedelta import relativedelta
 from openerp.osv import osv, fields
 
 
@@ -48,65 +49,51 @@ class sale_order(osv.osv):
 class crm_case_section(osv.osv):
     _inherit = 'crm.case.section'
 
-    def _get_created_quotation_per_duration(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict.fromkeys(ids, [])
+    def _get_sale_orders_data(self, cr, uid, ids, field_name, arg, context=None):
         obj = self.pool.get('sale.order')
-        today = date.today().replace(day=1)
-        begin = (today + relativedelta(months=-5)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-        for section in self.browse(cr, uid, ids, context=context):
-            domain = [("section_id", "=", section.id), ('state', 'in', ['draft', 'sent']), ('date_order', '>=', begin)]
-            group_obj = obj.read_group(cr, uid, domain, ['amount_total', "date_order"], "date_order", context=context)
-            group_list = [group['amount_total'] for group in group_obj]
-            nb_month = group_obj and relativedelta(today, datetime.strptime(group_obj[-1]['__domain'][0][2], '%Y-%m-%d')).months or 0
-            res[section.id] = [0]*(5 - len(group_list) - nb_month) + group_list + [0]*nb_month
+        res = dict.fromkeys(ids, False)
+        month_begin = date.today().replace(day=1)
+        groupby_begin = (month_begin + relativedelta.relativedelta(months=-4)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        for id in ids:
+            res[id] = dict()
+            created_domain = [('section_id', '=', id), ('state', 'in', ['draft', 'sent']), ('date_order', '>=', groupby_begin)]
+            res[id]['monthly_quoted'] = self.__get_bar_values(cr, uid, obj, created_domain, ['amount_total', 'date_order'], 'amount_total', 'date_order', context=context)
+            validated_domain = [('section_id', '=', id), ('state', 'not in', ['draft', 'sent']), ('date_confirm', '>=', groupby_begin)]
+            res[id]['monthly_confirmed'] = self.__get_bar_values(cr, uid, obj, validated_domain, ['amount_total', 'date_confirm'], 'amount_total', 'date_confirm', context=context)
         return res
 
-    def _get_validate_saleorder_per_duration(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict.fromkeys(ids, [])
-        obj = self.pool.get('sale.order')
-        today = date.today().replace(day=1)
-        begin = (today + relativedelta(months=-5)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-        for section in self.browse(cr, uid, ids, context=context):
-            domain = [("section_id", "=", section.id), ('state', 'not in', ['draft', 'sent']), ('date_confirm', '>=', begin)]
-            group_obj = obj.read_group(cr, uid, domain, ['amount_total', "date_confirm"], "date_confirm", context=context)
-            group_list = [group['amount_total'] for group in group_obj]
-            nb_month = group_obj and relativedelta(today, datetime.strptime(group_obj[-1]['__domain'][0][2], '%Y-%m-%d')).months or 0
-            res[section.id] = [0]*(5 - len(group_list) - nb_month) + group_list + [0]*nb_month
-        return res
-
-    def _get_sent_invoice_per_duration(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict.fromkeys(ids, [])
+    def _get_invoices_data(self, cr, uid, ids, field_name, arg, context=None):
         obj = self.pool.get('account.invoice.report')
-        today = date.today().replace(day=1)
-        begin = (today + relativedelta(months=-5)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-        for section in self.browse(cr, uid, ids, context=context):
-            domain = [("section_id", "=", section.id), ('state', 'not in', ['draft', 'cancel']), ('date', '>=', begin)]
-            group_obj = obj.read_group(cr, uid, domain, ['price_total', "date"], "date", context=context)
-            group_list = [group['price_total'] for group in group_obj]
-            nb_month = group_obj and relativedelta(today, datetime.strptime(group_obj[-1]['__domain'][0][2], '%Y-%m-%d')).months or 0
-            res[section.id] = [0]*(5 - len(group_list) - nb_month) + group_list + [0]*nb_month
+        res = dict.fromkeys(ids, False)
+        month_begin = date.today().replace(day=1)
+        groupby_begin = (month_begin + relativedelta.relativedelta(months=-4)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        for id in ids:
+            created_domain = [('section_id', '=', id), ('state', 'not in', ['draft', 'cancel']), ('date', '>=', groupby_begin)]
+            res[id] = self.__get_bar_values(cr, uid, obj, created_domain, ['price_total', 'date'], 'price_total', 'date', context=context)
         return res
 
     _columns = {
-        'quotation_ids': fields.one2many('sale.order', 'section_id',
-            string='Quotations', readonly=True,
-            domain=[('state', 'in', ['draft', 'sent', 'cancel'])]),
-        'sale_order_ids': fields.one2many('sale.order', 'section_id',
-            string='Sale Orders', readonly=True,
-            domain=[('state', 'not in', ['draft', 'sent', 'cancel'])]),
-        'invoice_ids': fields.one2many('account.invoice', 'section_id',
-            string='Invoices', readonly=True,
-            domain=[('state', 'not in', ['draft', 'cancel'])]),
-
-        'forecast': fields.integer(string='Total forecast'),
-        'target_invoice': fields.integer(string='Invoicing Target'),
-        'created_quotation_per_duration': fields.function(_get_created_quotation_per_duration, string='Rate of created quotation per duration', type="string", readonly=True),
-        'validate_saleorder_per_duration': fields.function(_get_validate_saleorder_per_duration, string='Rate of validate sales orders per duration', type="string", readonly=True),
-        'sent_invoice_per_duration': fields.function(_get_sent_invoice_per_duration, string='Rate of sent invoices per duration', type="string", readonly=True),
+        'invoiced_forecast': fields.integer(string='Invoice Forecast',
+            help="Forecast of the invoice revenue for the current month. This is the amount the sales \n"
+                    "team should invoice this month. It is used to compute the progression ratio \n"
+                    " of the current and forecast revenue on the kanban view."),
+        'invoiced_target': fields.integer(string='Invoice Target',
+            help="Target of invoice revenue for the current month. This is the amount the sales \n"
+                    "team estimates to be able to invoice this month."),
+        'monthly_quoted': fields.function(_get_sale_orders_data,
+            type='string', readonly=True, multi='_get_sale_orders_data',
+            string='Rate of created quotation per duration'),
+        'monthly_confirmed': fields.function(_get_sale_orders_data,
+            type='string', readonly=True, multi='_get_sale_orders_data',
+            string='Rate of validate sales orders per duration'),
+        'monthly_invoiced': fields.function(_get_invoices_data,
+            type='string', readonly=True,
+            string='Rate of sent invoices per duration'),
     }
 
     def action_forecast(self, cr, uid, id, value, context=None):
-        return self.write(cr, uid, [id], {'forecast': value}, context=context)
+        return self.write(cr, uid, [id], {'invoiced_forecast': value}, context=context)
+
 
 class res_users(osv.Model):
     _inherit = 'res.users'

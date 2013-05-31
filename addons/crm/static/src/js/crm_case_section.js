@@ -15,7 +15,16 @@ openerp.crm = function(openerp) {
             var self = this;
             var title = this.$node.html();
             setTimeout(function () {
-                self.$el.sparkline(self.field.value, {type: 'bar', barWidth: 5} );
+                var value = _.pluck(self.field.value, 'value');
+                var tooltips = _.pluck(self.field.value, 'tooltip');
+                self.$el.sparkline(value, {
+                    type: 'bar',
+                    barWidth: 5,
+                    tooltipFormat: '{{offset:offset}} {{value}}',
+                    tooltipValueLookups: {
+                        'offset': tooltips
+                    },
+                });
                 self.$el.tipsy({'delayIn': 0, 'html': true, 'title': function(){return title}, 'gravity': 'n'});
             }, 0);
         },
