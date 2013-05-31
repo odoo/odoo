@@ -27,6 +27,7 @@ from openerp import SUPERUSER_ID
 from openerp.osv import osv, orm, fields
 from openerp.tools import html_email_clean
 from openerp.tools.translate import _
+from HTMLParser import HTMLParser
 
 _logger = logging.getLogger(__name__)
 
@@ -43,6 +44,19 @@ def decode(text):
         text = decode_header(text.replace('\r', ''))
         return ''.join([tools.ustr(x[0], x[1]) for x in text])
 
+class MLStripper(HTMLParser):
+    def __init__(self):
+        self.reset()
+        self.fed = []
+    def handle_data(self, d):
+        self.fed.append(d)
+    def get_data(self):
+        return ''.join(self.fed)
+
+def strip_tags(html):
+    s = MLStripper()
+    s.feed(html)
+    return s.get_data()
 
 class mail_message(osv.Model):
     """ Messages model: system notification (replacing res.log notifications),
@@ -125,7 +139,7 @@ class mail_message(osv.Model):
             ids = [ids]
         res = []
         for message in self.browse(cr, uid, ids, context=context):
-            name = '%s: %s' % (message.subject or '', message.body or '')
+            name = '%s: %s' % (message.subject or '', strip_tags(message.body or '') or '')
             res.append((message.id, self._shorten_name(name.lstrip(' :'))))
         return res
 
