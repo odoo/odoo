@@ -23,11 +23,12 @@ import urlparse
 
 from openerp.osv import osv, fields
 
+
 class project_configuration(osv.TransientModel):
     _inherit = 'base.config.settings'
 
     _columns = {
-        'alias_domain' : fields.char('Alias Domain',
+        'alias_domain': fields.char('Alias Domain',
                                      help="If you have setup a catch-all email domain redirected to "
                                           "the OpenERP server, enter the domain name here."),
     }
