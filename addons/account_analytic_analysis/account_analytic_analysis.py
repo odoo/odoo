@@ -478,7 +478,7 @@ class account_analytic_account(osv.osv):
         'remaining_hours': fields.function(_remaining_hours_calc, type='float', string='Remaining Time',
             help="Computed using the formula: Maximum Time - Total Worked Time"),
         'remaining_hours_to_invoice': fields.function(_remaining_hours_to_invoice_calc, type='float', string='Remaining Time',
-            help="Computed using the formula: Maximum Time - Total Invoiced Time"),
+            help="Computed using the formula: Expected on timesheets - Total invoiced on timesheets"),
         'fix_price_to_invoice': fields.function(_fix_price_to_invoice_calc, type='float', string='Remaining Time',
             help="Sum of quotations for this contract."),
         'timesheet_ca_invoiced': fields.function(_timesheet_ca_invoiced_calc, type='float', string='Remaining Time',
