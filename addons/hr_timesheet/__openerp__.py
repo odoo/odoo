@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Timesheets',
+    'name': 'Time Tracking',
     'version': '1.0',
     'category': 'Human Resources',
     'sequence': 23,
