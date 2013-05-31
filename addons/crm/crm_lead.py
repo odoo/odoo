@@ -673,8 +673,9 @@ class crm_lead(base_stage, format_address, osv.osv):
                 merged_data['stage_id'] = section_stage_ids and section_stage_ids[0] or False
         # Write merged data into first opportunity
         self.write(cr, uid, [highest.id], merged_data, context=context)
-        # Delete tail opportunities
-        self.unlink(cr, uid, [x.id for x in tail_opportunities], context=context)
+        # Delete tail opportunities 
+        # We use the SUPERUSER to avoid access rights issues because as the user had the rights to see the records it should be safe to do so
+        self.unlink(cr, SUPERUSER_ID, [x.id for x in tail_opportunities], context=context)
 
         return highest.id
 
