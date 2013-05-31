@@ -21,5 +21,6 @@
 
 import base_calendar
 import crm_meeting
+import service
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

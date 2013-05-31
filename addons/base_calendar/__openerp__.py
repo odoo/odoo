@@ -47,6 +47,9 @@ If you need to manage your meetings, you should install the CRM module.
         'base_calendar_data.xml',
         'crm_meeting_data.xml',
     ],
+    'js': [
+        'static/src/js/*.js'
+    ],
     'test' : ['test/base_calendar_test.yml'],
     'installable': True,
     'application': True,

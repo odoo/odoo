@@ -31,7 +31,8 @@ import time
 
 from openerp import tools, SUPERUSER_ID
 import openerp.service.report
-
+from urllib import urlencode
+from urlparse import urljoin
 months = {
     1: "January", 2: "February", 3: "March", 4: "April", \
     5: "May", 6: "June", 7: "July", 8: "August", 9: "September", \
@@ -403,6 +404,25 @@ property or property parameter."),
             attendee_add.value = 'MAILTO:' + (attendee.email or '')
         res = cal.serialize()
         return res
+    def meeting_invitation(self, cr, uid, ids,context=None):
+        partner_obj =  self.browse(cr,uid, ids,context=context)
+        for event_id in  self.browse(cr, uid, ids, context):
+            event_id = event_id.ref.id
+        for partner in partner_obj:
+            if partner and partner.user_id:
+                related_user = partner.user_id
+                base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+                query = {'db': cr.dbname}
+                fragment = {
+                    'login': related_user.login,
+                    'model': "crm.meeting",
+                    'view_type' : "form",
+                    'res_id': event_id,
+                     }
+                url = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
+            else :
+                url = "https://openerp.my.openerp.com/#"
+        return url
 
     def _send_mail(self, cr, uid, ids, mail_to, email_from=tools.config.get('email_from', False), context=None):
         """
@@ -411,7 +431,6 @@ property or property parameter."),
         @return: True
         """
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.name
-        company_address = self.pool.get('res.company').browse(cr, uid, uid, context=context).street
         for att in self.browse(cr, uid, ids, context=context):
             res_obj = att.ref
             if res_obj:
@@ -436,16 +455,12 @@ property or property parameter."),
                     time =  date.strftime('%B-%d-%Y')  + " at (" + date.strftime('%H-%M') + " To " + duration.strftime('%H-%M') + ")"
                 else :
                     time =  date.strftime('%B-%d-%Y')  + " at " + date.strftime('%H-%M') + " To \n" +  date_deadline.strftime('%B-%d-%Y') + " at " + date_deadline.strftime('%H-%M')
-                map_url = "http://maps.google.com/maps?oi=map&q="
-#               a = """<div style="background: #228B22; width: 10px; height: 10px; border-radius: 50%;"/>"""
-#                b = """<dl style="background: #BDBDBD; width: 10px; height: 10px; border-radius: 50%;"/>"""
-                
-#                 attendee= """<s style = " font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px" >(%s) You, (%s) <span style= "color:#A9A9A9; ont-size: 10px">- Organizer </br></span>%s</div>""" % (a, res_obj.organizer,)
-                footer = ''
-                attendee = ''
+                footer = self.meeting_invitation(cr, uid, ids, context=context)
+                map = ''
+                if res_obj.location:
+                    map_url = "http://maps.google.com/maps?oi=map&q=" + '+'  + str(res_obj.location),
+                    map = """<span style= "color:#A9A9A9; "> (<a href="%s">View Map</a>)</span>""" % map_url
                 for user in att:
-                    #attendee = b +  attendee + user
-                    #print "List of ATtendeedss ---------------------->", attendee
                     body_vals = {'user': user,
                                  'name': res_obj.name,
                                  'responsible': res_obj.user_id and res_obj.user_id.name or 'OpenERP User',
@@ -454,8 +469,8 @@ property or property parameter."),
                                  'attendees':  ', ' .join(att_info),
                                  'time': time,
                                  'tz': tz,
-                                 'location': res_obj.location or company_address,
-                                 'map' : map_url + '+' + str(res_obj.location or company_address),
+                                 'location': res_obj.location or '-',
+                                 'map' : map or '',
                                  'organizer': res_obj.organizer,
                                  'url' : footer,
                         }
