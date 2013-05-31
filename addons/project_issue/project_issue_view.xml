@@ -367,17 +367,36 @@
             </field>
         </record>
 
+        <record id="act_res_partner_2_project_issue" model="ir.actions.act_window">
+            <field name="res_model">project.issue</field>
+            <field name="view_type">form</field>
+            <field name="name">Issues</field>
+            <field name="view_mode">kanban,tree,form,calendar,graph</field>
+            <field name="context">{
+                    'search_default_partner_id': active_id,
+                    'default_partner_id': active_id
+                    } 
+            </field>
+            <field name="help" type="html">
+                <p>
+                    The OpenERP issues tacker allows you to efficiantly manage things
+                    like internal requests, software development bugs, customer
+                    complaints, project troubles, material breakdowns, etc.
+                </p>
+            </field>
+        </record>
+
         <!-- res.partner -->
         <record model="ir.ui.view" id="res_partner_issues_button_view">
             <field name="name">res.partner.issues.button.view</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form" />
-            <field name="priority" eval="40"/>
+            <field name="priority" eval="50"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
                     <button class="oe_inline" type="action" string="Issues" attrs="{'invisible': [('customer', '=', False)]}"
-                        name="%(act_project_project_2_project_issue_all)d"
-                        context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}" groups="project.group_project_user"/>
+                        name="%(act_res_partner_2_project_issue)d"
+                        groups="project.group_project_user"/>
                 </xpath>
             </field>
         </record>
