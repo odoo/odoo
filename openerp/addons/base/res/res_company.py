@@ -274,7 +274,7 @@ class res_company(osv.osv):
     <frame id="first" x1="28.0" y1="28.0" width="%s" height="%s"/>
     <stylesheet>
        <!-- Set here the default font to use for all <para> tags -->
-       <parastyle name='Normal' fontName="DejaVu Sans"/>
+       <paraStyle name='Normal' fontName="DejaVu Sans"/>
     </stylesheet>
     <pageGraphics>
         <fill color="black"/>
@@ -312,7 +312,7 @@ class res_company(osv.osv):
         <frame id="first" x1="1.3cm" y1="3.0cm" height="%s" width="19.0cm"/>
          <stylesheet>
             <!-- Set here the default font to use for all <para> tags -->
-            <parastyle name='Normal' fontName="DejaVu Sans"/>
+            <paraStyle name='Normal' fontName="DejaVu Sans"/>
             <paraStyle name="main_footer" fontSize="8.0" alignment="CENTER"/>
             <paraStyle name="main_header" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
          </stylesheet>
