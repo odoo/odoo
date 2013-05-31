@@ -412,6 +412,9 @@ openerp.im = function(instance) {
                 return;
             }
             var mes = this.$("input").val();
+            if (! mes.trim()) {
+                return;
+            }
             this.$("input").val("");
             var send_it = _.bind(function() {
                 var model = new instance.web.Model("im.message");

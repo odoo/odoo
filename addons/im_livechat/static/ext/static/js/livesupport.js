@@ -399,6 +399,9 @@ define(["nova", "underscore", "oeclient", "require", "jquery",
                 return;
             }
             var mes = this.$("input").val();
+            if (! mes.trim()) {
+                return;
+            }
             this.$("input").val("");
             var send_it = _.bind(function() {
                 var model = connection.getModel("im.message");
