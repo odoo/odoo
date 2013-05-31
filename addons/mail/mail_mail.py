@@ -28,7 +28,6 @@ from urlparse import urljoin
 from openerp import tools
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
-from openerp.osv.orm import except_orm
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -93,31 +92,41 @@ class mail_mail(osv.Model):
         """ Return a specific reply_to: alias of the document through message_get_reply_to
             or take the email_from
         """
+        # if value specified: directly return it
         if values.get('reply_to'):
             return values.get('reply_to')
-        email_reply_to = False
 
-        # model, res_id: comes from values OR related message
-        model = values.get('model')
-        res_id = values.get('res_id')
-        if values.get('mail_message_id') and (not model or not res_id):
+        mailgateway = True  # tells whether the answer will go through the mailgateway, leading to the formatting of reply_to <Followers of ...>
+        ir_config_parameter = self.pool.get("ir.config_parameter")
+        catchall_domain = ir_config_parameter.get_param(cr, uid, "mail.catchall.domain", context=context)
+
+        # model, res_id, email_from, reply_to: comes from values OR related message
+        message = None
+        if values.get('mail_message_id'):
             message = self.pool.get('mail.message').browse(cr, uid, values.get('mail_message_id'), context=context)
-            if not model:
-                model = message.model
-            if not res_id:
-                res_id = message.res_id
+        model = values.get('model', message and message.model or False)
+        res_id = values.get('res_id', message and message.res_id or False)
+        email_from = values.get('email_from', message and message.email_from or False)
+        email_reply_to = message and message.reply_to or False
 
         # if model and res_id: try to use ``message_get_reply_to`` that returns the document alias
-        if model and res_id and hasattr(self.pool[model], 'message_get_reply_to'):
+        if not email_reply_to and model and res_id and hasattr(self.pool[model], 'message_get_reply_to'):
             email_reply_to = self.pool[model].message_get_reply_to(cr, uid, [res_id], context=context)[0]
+        # no alias reply_to -> catchall alias
+        if not email_reply_to:
+            catchall_alias = ir_config_parameter.get_param(cr, uid, "mail.catchall.alias", context=context)
+            if catchall_domain and catchall_alias:
+                email_reply_to = '%s@%s' % (catchall_alias, catchall_domain)
         # no alias reply_to -> reply_to will be the email_from, only the email part
-        if not email_reply_to and values.get('email_from'):
-            emails = tools.email_split(values.get('email_from'))
+        if not email_reply_to and email_from:
+            emails = tools.email_split(email_from)
             if emails:
                 email_reply_to = emails[0]
+                if emails[0].split('@')[1] != catchall_domain:
+                    mailgateway = False
 
         # format 'Document name <email_address>'
-        if email_reply_to and model and res_id:
+        if email_reply_to and model and res_id and mailgateway:
             document_name = self.pool[model].name_get(cr, SUPERUSER_ID, [res_id], context=context)[0]
             if document_name:
                 # sanitize document name
@@ -195,6 +204,36 @@ class mail_mail(osv.Model):
             self.unlink(cr, SUPERUSER_ID, [mail.id], context=context)
         return True
 
+    #------------------------------------------------------
+    # mail_mail formatting, tools and send mechanism
+    #------------------------------------------------------
+
+    # TODO in 8.0(+): maybe factorize this to enable in modules link generation
+    # independently of mail_mail model
+    # TODO in 8.0(+): factorize doc name sanitized and 'Followers of ...' formatting
+    # because it begins to appear everywhere
+
+    def _get_partner_access_link(self, cr, uid, mail, partner=None, context=None):
+        """ Generate URLs for links in mails:
+            - partner is an user and has read access to the document: direct link to document with model, res_id
+        """
+        if partner and partner.user_ids:
+            base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+            # the parameters to encode for the query and fragment part of url
+            query = {'db': cr.dbname}
+            fragment = {
+                'login': partner.user_ids[0].login,
+                'action': 'mail.action_mail_redirect',
+            }
+            if mail.notification:
+                fragment.update({
+                        'message_id': mail.mail_message_id.id,
+                    })
+            url = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
+            return _("""<small>Access your messages and documents <a style='color:inherit' href="%s">in OpenERP</a></small>""") % url
+        else:
+            return None
+
     def send_get_mail_subject(self, cr, uid, mail, force=False, partner=None, context=None):
         """ If subject is void and record_name defined: '<Author> posted on <Resource>'
 
@@ -202,35 +241,11 @@ class mail_mail(osv.Model):
             :param browse_record mail: mail.mail browse_record
             :param browse_record partner: specific recipient partner
         """
-        if force or (not mail.subject and mail.model and mail.res_id):
+        if (force or not mail.subject) and mail.record_name:
             return 'Re: %s' % (mail.record_name)
+        elif (force or not mail.subject) and mail.parent_id and mail.parent_id.subject:
+            return 'Re: %s' % (mail.parent_id.subject)
         return mail.subject
-
-    def send_get_mail_body_footer(self, cr, uid, mail, partner=None, context=None):
-        """ Return a specific footer for the ir_email body.  The main purpose of this method
-            is to be inherited by Portal, to add modify the link for signing in, in
-            each notification email a partner receives.
-        """
-        body_footer = ""
-        # partner is a user, link to a related document (incentive to install portal)
-        if partner and partner.user_ids and mail.model and mail.res_id \
-                and self.check_access_rights(cr, partner.user_ids[0].id, 'read', raise_exception=False):
-            related_user = partner.user_ids[0]
-            try:
-                self.pool[mail.model].check_access_rule(cr, related_user.id, [mail.res_id], 'read', context=context)
-                base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-                # the parameters to encode for the query and fragment part of url
-                query = {'db': cr.dbname}
-                fragment = {
-                    'login': related_user.login,
-                    'model': mail.model,
-                    'id': mail.res_id,
-                }
-                url = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
-                body_footer = _("""<small>Access this document <a style='color:inherit' href="%s">directly in OpenERP</a></small>""") % url
-            except except_orm, e:
-                pass
-        return body_footer
 
     def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
         """ Return a specific ir_email body. The main purpose of this method
@@ -241,9 +256,10 @@ class mail_mail(osv.Model):
         """
         body = mail.body_html
 
-        # add footer
-        body_footer = self.send_get_mail_body_footer(cr, uid, mail, partner=partner, context=context)
-        body = tools.append_content_to_html(body, body_footer, plaintext=False, container_tag='div')
+        # generate footer
+        link = self._get_partner_access_link(cr, uid, mail, partner, context=context)
+        if link:
+            body = tools.append_content_to_html(body, link, plaintext=False, container_tag='div')
         return body
 
     def send_get_email_dict(self, cr, uid, mail, partner=None, context=None):

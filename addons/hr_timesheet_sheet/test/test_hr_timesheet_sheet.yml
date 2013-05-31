@@ -60,10 +60,12 @@
 -
   !python {model: hr_timesheet_sheet.sheet}: |
     uid = ref('base.user_root')
+    from openerp import netsvc
     try:
         self.button_confirm(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], {"active_ids":
           [ref("hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form")],"active_id": ref("hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form"),
           })
+        assert True, "The validation of the timesheet was unexpectedly accepted despite the 2:30 hours of difference"
     except:
         pass
 -
@@ -86,7 +88,7 @@
   !record {model: res.company, id: base.main_company}:
     timesheet_max_difference: 1.00
 -
-  I tried again to confirm the timesheet after modification.
+  I try again to confirm the timesheet after modification.
 -
   !python {model: hr_timesheet_sheet.sheet}: |
         uid = ref('base.user_root')
