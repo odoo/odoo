@@ -110,7 +110,7 @@ class NumberedCanvas(canvas.Canvas):
         if not self.pages.get(key,False):
             while not self.pages.get(key,False):
                 key += 1
-        self.setFont("Helvetica", 8)
+        self.setFont("DejaVu Sans", 8)
         self.drawRightString((self._pagesize[0]-30), (self._pagesize[1]-40),
             " %(this)i / %(total)i" % {
                'this': self._pageNumber+1,
@@ -137,7 +137,7 @@ class PageCount(platypus.Flowable):
 
     def draw(self):
         self.canv.beginForm("pageCount%d" % self.story_count)
-        self.canv.setFont("Helvetica", utils.unit_get(str(8)))
+        self.canv.setFont("DejaVu Sans", utils.unit_get(str(8)))
         self.canv.drawString(0, 0, str(self.canv.getPageNumber()))
         self.canv.endForm()
 
