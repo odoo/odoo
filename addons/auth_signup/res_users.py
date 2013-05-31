@@ -270,6 +270,13 @@ class res_users(osv.Model):
                 raise osv.except_osv(_("Cannot send email: user has no email address."), user.name)
             try:
                 self.pool.get('email.template').send_mail(cr, uid, template.id, user.id, force_send=True, raise_exception=True, context=context)
+            except AssertionError as e:
+                # get the args of the original error, wrap into a value and throw a MailDeliveryException
+                # that is an except_orm, with name and value as args
+                value = '. '.join(e.args)
+                if 'one valid recipient address should be specified' in e.args[0]:
+                    value += '. Please check that the user\'s email address is valid.'
+                raise MailDeliveryException(_("Mail Delivery Failed"), value)
             except MailDeliveryException:
                 raise
 
