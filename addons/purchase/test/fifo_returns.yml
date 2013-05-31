@@ -75,7 +75,6 @@
     return_id = self.create(cr, uid, {}, context={'active_model':'stock.picking', 'active_id': pick_ids[0].id})
     res = self.create_returns(cr, uid, [return_id], context={'active_id': pick_ids[0].id})
     return_move_id = self.pool.get("stock.move").search(cr, uid, [('move_returned_from','=', pick_ids[0].move_lines[0].id)])
-    
     movepick_obj = self.pool.get("stock.partial.move")
     movepick_id = movepick_obj.create(cr, uid, {}, context={'active_model': 'stock.move', 'active_ids': return_move_id})
     movepick_obj.do_partial(cr, uid, [movepick_id])
@@ -83,15 +82,4 @@
   Check the standard price of the product (fifo return icecream) changed to 70.0
 - 
   !python {model: product.product}: |
-    print self.browse(cr, uid, ref("product_fiforet_icecream")).standard_price
     assert self.browse(cr, uid, ref("product_fiforet_icecream")).standard_price == 70.0, 'Standard price should have changed to 70.0!'
-- 
-  Print price
-- 
-  !python {model: product.product}: |
-    print self.browse(cr, uid, ref("product_fiforet_icecream")).standard_price
-    print self.browse(cr, uid, ref("product_fiforet_icecream")).qty_available
-    print self.browse(cr, uid, ref("product_fiforet_icecream"), context={'force_company': 1}).qty_available
-    list = self.pool.get("stock.move").search(cr, uid, [('product_id','=', ref("product_fiforet_icecream"))])
-    for move in self.pool.get("stock.move").browse(cr, uid, list):
-      print move.price_unit, move.product_qty, move.qty_remaining, move.type, move.date

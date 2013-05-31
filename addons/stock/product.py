@@ -462,7 +462,6 @@ class product_product(osv.osv):
         'track_outgoing': fields.boolean('Track Outgoing Lots', help="Forces to specify a Serial Number for all moves containing this product and going to a Customer Location"),
         'location_id': fields.dummy(string='Location', relation='stock.location', type='many2one'),
         'warehouse_id': fields.dummy(string='Warehouse', relation='stock.warehouse', type='many2one'),
-        #TODO: why first arg is empty?
         'valuation':fields.property(type='selection', selection=[('manual_periodic', 'Periodical (manual)'),
                                         ('real_time','Real Time (automated)'),], string = 'Inventory Valuation',
                                         help="If real-time valuation is enabled for a product, the system will automatically write journal entries corresponding to stock moves." \
