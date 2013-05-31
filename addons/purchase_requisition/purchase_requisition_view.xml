@@ -31,16 +31,17 @@
             <form string="Purchase Requisition" version="7.0">
             <header>
                 <button name="tender_in_progress" states="draft" string="Send to Suppliers" type="object" class="oe_highlight"/>
-                <button name="tender_open" states="in_progress" string="Choosing Supplier(s)" type="object" class="oe_highlight"/>
+                <button name="tender_open" states="in_progress" string="Choose supplier(s)" type="object" class="oe_highlight"/>
                 <button name="tender_reset" states="cancel" string="Reset to Draft" type="object" />
-                <button name="tender_done" states="open" string="Make Purchase" type="object" class="oe_highlight"/>
+                <button name="open_product_line" states="open" string="Choose product lines" type="object" class="oe_highlight" groups="purchase.group_advance_bidding"/>
+                <button name="generate_po" states="open" string="Make Purchase" type="object" class="oe_highlight"/>
                 <button name="tender_cancel" states="draft,in_progress" string="Cancel Requisition" type="object" />
                 <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,open,done" statusbar_colors='{"in_progress":"blue"}'/>
             </header>
             <sheet>
                 <div class="oe_right oe_button_box" style="margin-top: 10px">
                     <button name="open_product_line" type="object" string="View Products Lines"
-                        attrs="{'invisible': [('state', 'not in', ('open','done'))]}"/>
+                        attrs="{'invisible': [('state', 'not in', ('open','done'))]}" groups="purchase.group_advance_bidding"/>
                 </div>
                 <div class="oe_edit_only">
                     <label for="name" class="oe_inline"/>
@@ -55,6 +56,7 @@
                     <group>
                         <field name="user_id"/>
                         <field name="exclusive"/>
+                        <field name="multiple_rfq_per_supplier"/>
                     </group>
                     <group>
                         <field name="date_start"/>

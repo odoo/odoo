@@ -57,8 +57,9 @@ class purchase_requisition(osv.osv):
         'po_line_ids': fields.function(_get_po_line, method=True, type='one2many', relation='purchase.order.line', string='Products by supplier'),
         'line_ids' : fields.one2many('purchase.requisition.line','requisition_id','Products to Purchase',states={'done': [('readonly', True)]}),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),        
-        'state': fields.selection([('draft','New'),('in_progress','Sent to Suppliers'),('open','Choose Lines'),('cancel','Cancelled'),('done','PO Created')],
-            'Status', track_visibility='onchange', required=True)
+        'state': fields.selection([('draft','New'),('in_progress','Sent to Suppliers'),('open','Choosing Lines'),('done','PO Created'),('cancel','Cancelled')],
+            'Status', track_visibility='onchange', required=True),
+        'multiple_rfq_per_supplier': fields.boolean('Multiple RFQ per supplier'),
     }
     _defaults = {
         'date_start': lambda *args: time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -97,7 +98,6 @@ class purchase_requisition(osv.osv):
         return self.write(cr, uid, ids, {'state': 'draft'})
 
     def tender_done(self, cr, uid, ids, context=None):
-        self.generate_po(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state':'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
     def _planned_date(self, requisition, delay=0.0):
@@ -166,7 +166,7 @@ class purchase_requisition(osv.osv):
         supplier_pricelist = supplier.property_product_pricelist_purchase or False
         res = {}
         for requisition in self.browse(cr, uid, ids, context=context):
-            if supplier.id in filter(lambda x: x, [rfq.state <> 'cancel' and rfq.partner_id.id or None for rfq in requisition.purchase_ids]):
+            if not requisition.multiple_rfq_per_supplier and supplier.id in filter(lambda x: x, [rfq.state <> 'cancel' and rfq.partner_id.id or None for rfq in requisition.purchase_ids]):
                  raise osv.except_osv(_('Warning!'), _('You have already one %s purchase order for this partner, you must cancel this purchase order to create a new quotation.') % rfq.state)
             location_id = requisition.warehouse_id.lot_input_id.id
             purchase_id = purchase_order.create(cr, uid, {
@@ -199,6 +199,18 @@ class purchase_requisition(osv.osv):
                 
         return res
 
+    def check_valid_quotation(self, cr, uid, quotation, context=None):
+        """
+        Check if a quotation has all his order lines bid in order to confirm it if its the case
+        return True if all order line have been selected during bidding process, else return False
+
+        args : 'quotation' must be a browse record
+        """
+        for line in quotation.order_line:
+            if line.state != 'confirmed' or line.product_qty != line.quantity_bid:
+                return False
+        return True
+
     def generate_po(self, cr, uid, id, context=None):
         """
         Generate all purchase order based on selected lines, should only be called on one tender at a time
@@ -210,6 +222,23 @@ class purchase_requisition(osv.osv):
         tender = self.browse(cr, uid, id, context=context)[0]
         if tender.state == 'done':
             raise osv.except_osv(_('Warning!'), _('You have already generate the purchase order(s).'))
+
+        confirm = False
+        #check that we have at least confirm one line
+        for po_line in tender.po_line_ids:
+            if po_line.state == 'confirmed':
+                confirm = True
+                break
+        if not confirm:
+            raise osv.except_osv(_('Warning!'), _('You have no line selected for buying.'))
+
+        #check for complete RFQ
+        for quotation in tender.purchase_ids:
+            if (self.check_valid_quotation(cr, uid, quotation, context=context)):
+                #use workflow to set PO state to confirm
+                wf_service.trg_validate(uid, 'purchase.order', quotation.id, 'purchase_confirm', cr)
+
+        #get other confirmed lines per supplier
         for po_line in tender.po_line_ids:
             #only take into account confirmed line that does not belong to already confirmed purchase order
             if po_line.state == 'confirmed' and po_line.order_id.state in ['draft', 'sent', 'bid', 'cancel']:
@@ -236,6 +265,10 @@ class purchase_requisition(osv.osv):
         for quotation in tender.purchase_ids:
             if quotation.state in ['draft', 'sent', 'bid']:
                 wf_service.trg_validate(uid, 'purchase.order', quotation.id, 'purchase_cancel', cr)
+
+        #set tender to state done
+        self.tender_done(cr, uid, id, context=context)
+        return True
             
 
 class purchase_requisition_line(osv.osv):
@@ -273,8 +306,23 @@ purchase_requisition_line()
 
 class purchase_order(osv.osv):
     _inherit = "purchase.order"
+
+    def _belong_to_bid_group(self, cr, uid, ids, field_names, arg=None, context=None):
+        belong = False
+        group_bid_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'purchase', 'group_advance_bidding')[1]
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        for group in user.groups_id:
+            if group.id == group_bid_id:
+                belong = True
+        result = {}
+        if not ids: return result
+        for id in ids:
+            result.setdefault(id, belong)
+        return result
+
     _columns = {
-        'requisition_id' : fields.many2one('purchase.requisition','Purchase Requisition')
+        'requisition_id' : fields.many2one('purchase.requisition','Purchase Requisition'),
+        'advance_bidding_group': fields.function(_belong_to_bid_group, method=True, type='boolean', string="Belong to advance bidding group"),
     }
 
     def wkf_confirm_order(self, cr, uid, ids, context=None):
@@ -297,7 +345,6 @@ purchase_order()
 class purchase_order_line(osv.osv):
     _inherit = 'purchase.order.line'
 
-    #TODO add field function to get same value as product_qty wherever quantity_bid is zero, with an inverse fct to write on quantity_bid
     _columns= {
         'quantity_bid': fields.float('Quantity Bid', digits_compute=dp.get_precision('Product Unit of Measure')),
     }
@@ -312,8 +359,12 @@ class purchase_order_line(osv.osv):
                 self.write(cr, uid, ids, {'quantity_bid': element.product_qty}, context=context)
         return True
 
-    def generate_po(self, cr, uid, id, context=None):
-        print '-----------------------------------------'
+    def generate_po(self, cr, uid, active_id, context=None):
+        #call generate_po from tender with active_id
+        self.pool.get('purchase.requisition').generate_po(cr, uid, [active_id], context=context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'purchase_requisition','action_purchase_requisition', context=context)
+        return res
+        
 
 class product_product(osv.osv):
     _inherit = 'product.product'

@@ -22,7 +22,7 @@ openerp.purchase_requisition = function(instance) {
         },
         generate_purchase_order: function () {
             var self = this;
-            new instance.web.Model(self.dataset.model).call("generate_po",[""]);
+            new instance.web.Model(self.dataset.model).call("generate_po",[self.dataset.context.active_id,self.dataset.context]);
         },
     });
 }

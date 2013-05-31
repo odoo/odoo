@@ -271,6 +271,13 @@ class purchase_order(osv.osv):
 
         return super(purchase_order, self).unlink(cr, uid, unlink_ids, context=context)
 
+    def set_order_line_status(self, cr, uid, ids, status, context=None):
+        line = self.pool.get('purchase.order.line')
+        for order in self.browse(cr, uid, ids, context=context):
+            for order_line in order.order_line:
+                line.write(cr, uid, order_line.id, {'state': status}, context=context)
+        return True
+
     def button_dummy(self, cr, uid, ids, context=None):
         return True
 
@@ -500,11 +507,16 @@ class purchase_order(osv.osv):
             return False
         self.write(cr, uid, ids, {'state':'draft','shipped':0})
         wf_service = netsvc.LocalService("workflow")
+        self.set_order_line_status(cr, uid, ids, 'draft', context=context)
         for p_id in ids:
             # Deleting the existing instance of workflow for PO
             wf_service.trg_delete(uid, 'purchase.order', p_id, cr)
             wf_service.trg_create(uid, 'purchase.order', p_id, cr)
         return True
+
+    def wkf_po_done(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'state': 'done'}, context=context)
+        self.set_order_line_status(cr, uid, ids, 'done', context=context)
 
     def action_invoice_create(self, cr, uid, ids, context=None):
         """Generates invoice for given ids of purchase orders and links that invoice ID to purchase order.
@@ -583,6 +595,10 @@ class purchase_order(osv.osv):
                     return True
         return False
 
+    def wkf_action_cancel(self, cr, uid, ids, context=None):
+        self.write(cr,uid,ids,{'state':'cancel'})
+        self.set_order_line_status(cr, uid, ids, 'cancel', context=context)
+
     def action_cancel(self, cr, uid, ids, context=None):
         wf_service = netsvc.LocalService("workflow")
         for purchase in self.browse(cr, uid, ids, context=context):
@@ -601,7 +617,7 @@ class purchase_order(osv.osv):
                 if inv:
                     wf_service.trg_validate(uid, 'account.invoice', inv.id, 'invoice_cancel', cr)
         self.write(cr,uid,ids,{'state':'cancel'})
-
+        self.set_order_line_status(cr, uid, ids, 'cancel', context=context)
         for (id, name) in self.name_get(cr, uid, ids):
             wf_service.trg_validate(uid, 'purchase.order', id, 'purchase_cancel', cr)
         return True
