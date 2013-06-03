@@ -146,7 +146,7 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <page string="Sales &amp; Purchases" position="inside">
-                    <group colspan="2" col="2">
+                    <group colspan="2" col="2" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}">
                         <separator string="Invoicing" colspan="2"/>
                         <field name="property_invoice_type"/>
                     </group>

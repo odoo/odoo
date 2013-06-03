@@ -9,10 +9,10 @@ from __future__ import with_statement
 import openerp
 from openerp.osv import fields, osv
 from openerp import tools
+from openerp.modules.module import get_module_resource
 from openerp.tools.translate import _
 from openerp.report.render import render
 from openerp.report.interface import report_int
-from openerp import addons
 import tempfile
 import os
 
@@ -53,7 +53,7 @@ class report_custom(report_int):
         try:
             tmp_file = tempfile.mkstemp(".pdf")[1]
             try:
-                tools.pdf_utils.fill_pdf(addons.get_module_resource('l10n_lu','wizard', '2008_DECL_F_M10.pdf'), tmp_file, result)
+                tools.pdf_utils.fill_pdf(get_module_resource('l10n_lu','wizard', '2008_DECL_F_M10.pdf'), tmp_file, result)
                 with open(tmp_file, "r") as ofile:
                     self.obj = external_pdf(ofile.read())
             finally:

@@ -2,6 +2,12 @@
 <openerp>
   <data>
 
+    <record model="note.stage" id="note_stage_00">
+      <field name="name">New</field>
+      <field name="sequence" eval="0"/>
+      <field name="user_id" eval="ref('base.user_root')"/>
+    </record>
+
     <record model="note.stage" id="note_stage_01">
       <field name="name">Today</field>
       <field name="sequence">1</field>

@@ -292,9 +292,14 @@ class product_template(osv.osv):
     _columns = {
         'name': fields.char('Name', size=128, required=True, translate=True, select=True),
         'product_manager': fields.many2one('res.users','Product Manager'),
-        'description': fields.text('Description',translate=True),
-        'description_purchase': fields.text('Purchase Description',translate=True),
-        'description_sale': fields.text('Sale Description',translate=True),
+        'description': fields.text('Description',translate=True,
+            help="A precise description of the Product, used only for internal information purposes."),
+        'description_purchase': fields.text('Purchase Description',translate=True,
+            help="A description of the Product that you want to communicate to your suppliers. "
+                 "This description will be copied to every Purchase Order, Reception and Supplier Invoice/Refund."),
+        'description_sale': fields.text('Sale Description',translate=True,
+            help="A description of the Product that you want to communicate to your customers. "
+                 "This description will be copied to every Sale Order, Delivery Order and Customer Invoice/Refund"),
         'type': fields.selection([('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Consumable are product where you don't manage stock, a service is a non-material product provided by a company or an individual."),
         'produce_delay': fields.float('Manufacturing Lead Time', help="Average delay in days to produce this product. In the case of multi-level BOM, the manufacturing lead times of the components will be added."),
         'rental': fields.boolean('Can be Rent'),
@@ -518,6 +523,13 @@ class product_product(osv.osv):
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
+    def _get_name_template_ids(self, cr, uid, ids, context=None):
+        result = set()
+        template_ids = self.pool.get('product.product').search(cr, uid, [('product_tmpl_id', 'in', ids)])
+        for el in template_ids:
+            result.add(el)
+        return list(result)
+
     _defaults = {
         'active': lambda *a: 1,
         'price_extra': lambda *a: 0.0,
@@ -549,7 +561,11 @@ class product_product(osv.osv):
         'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Product Price')),
         'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Product Price')),
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
-        'name_template': fields.related('product_tmpl_id', 'name', string="Template Name", type='char', size=128, store=True, select=True),
+        'name_template': fields.related('product_tmpl_id', 'name', string="Template Name", type='char', size=128, store={
+            'product.template': (_get_name_template_ids, ['name'], 10),
+            'product.product': (lambda self, cr, uid, ids, c=None: ids, [], 10),
+
+            }, select=True),
         'color': fields.integer('Color Index'),
         # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Image",
