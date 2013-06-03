@@ -91,9 +91,9 @@ openerp_mail_followers = function(session, mail) {
                             buttons: [
                                     { text: _t("Apply"), click: function() { 
                                         self.do_update_subscription(event, partner_id);
-                                        $(this).remove();
+                                        $(this).dialog("close");
                                     }},
-                                    { text: _t("Cancel"), click: function() { $(this).remove(); }}
+                                    { text: _t("Cancel"), click: function() { $(this).dialog("close"); }}
                                 ],
                     });
              return self.fetch_subtypes(partner_id);
@@ -291,6 +291,7 @@ openerp_mail_followers = function(session, mail) {
             var self = this;
 
             var checklist = new Array();
+            this.ds_model.call('check_access_rights', ['write','read'])
             var subtype_checkbox = _(this.$('.oe_actions input[type="checkbox"]'))
              if (partner_id) {
                 subtype_checkbox = _($('.oe_edit_actions input[type="checkbox"]'))
