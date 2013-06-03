@@ -491,7 +491,7 @@ class account_bank_statement(osv.osv):
       ctx = (context or {}).copy()
       ctx['journal_id'] = self.browse(cr, uid, ids[0], context=context).journal_id.id
       return {
-        'name':'Journal Items',
+        'name':_('Journal Items'),
         'view_type':'form',
         'view_mode':'tree',
         'res_model':'account.move.line',
