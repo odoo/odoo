@@ -31,6 +31,8 @@
 ##############################################################################
 
 from openerp import pooler
+from openerp.osv import orm
+from tools.translate import _
 
 class WebKitHelper(object):
     """Set of usefull report helper"""
@@ -70,7 +72,12 @@ class WebKitHelper(object):
                                           self.uid, 
                                           domain)
         if not header_img_id :
-            return u''
+            msg = _("No header image named '%s' found.") % name
+            if company_id:
+                company_obj = self.pool.get('res.company')
+                company = company_obj.browse(self.cursor, self.uid, company_id)
+                msg = _("No header image named '%s' found for company %s.") % (name, company.name)
+            raise orm.except_orm('Error', msg)
         if isinstance(header_img_id, list):
             header_img_id = header_img_id[0]
 
