@@ -577,9 +577,8 @@ class crm_meeting(osv.Model):
     _inherit = 'crm.meeting'
 
     def create(self, cr, uid, vals, context=None):
-        meeting_id = super(crm_meeting, self).create(cr, uid, vals, context=context)
-        obj_meeting = self.browse(cr, uid, meeting_id, context=context)
-        self.pool.get('hr.applicant').log_meeting(cr, uid, context.get('active_ids',[]), obj_meeting.name, obj_meeting.date, obj_meeting.duration, context=context)
-        return meeting_id
+        if 'active_ids' in context and 'active_model' in context and context['active_model'] == 'hr.applicant':
+            self.pool.get('hr.applicant').log_meeting(cr, uid, context['active_ids'], vals['name'], vals['date'], vals['duration'], context=context)
+        return super(crm_meeting, self).create(cr, uid, vals, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
