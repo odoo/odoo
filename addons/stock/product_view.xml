@@ -134,9 +134,9 @@
                 <field name="standard_price" position="replace" version="7.0">
                     <label string="Cost Price" for="standard_price" align="1.0" groups="base.group_user"/>
                     <div groups="base.group_user">
-                        <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}" nolabel="1"/>
+                        <field name="standard_price" attrs="{'readonly':[('valuation','=','real_time'), ('cost_method', 'in', ['standard', 'average'])]}" nolabel="1"/>
                         <button name="%(action_view_change_standard_price)d" string="- update"
-                            type="action" attrs="{'invisible':[('cost_method','&lt;&gt;','average')]}"
+                            type="action" attrs="{'invisible':['|', ('valuation','!=', 'real_time'), ('cost_method', 'not in', ['standard', 'average'])]}"
                             class="oe_link" groups="product.group_costing_method"/>
                     </div>
                 </field>
