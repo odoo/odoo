@@ -352,7 +352,7 @@ class account_asset_asset(osv.osv):
             context = {}
         context.update({'search_default_asset_id': ids, 'default_asset_id': ids})
         return {
-            'name':_('journal items'),
+            'name': _('Journal Items'),
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.move.line',
