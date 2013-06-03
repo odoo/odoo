@@ -867,6 +867,24 @@ class purchase_order_line(osv.osv):
             res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
         return res
 
+    def _set_lead_time(self, cr, uid, ids, name, value, arg, context=None):
+        if not value: return False
+        date_planned = self.browse(cr, uid, ids, context=context)[0].date_planned
+        date = _get_date_planned(self, cr, uid, False, date_planned, value, context=None)
+        self.write(cr, uid, ids, {'lead_time': value, 'date_planned': date}, context=context)
+        return True
+
+    def _get_product_lead_time(self, cr, uid, ids, field_name, arg, context=None):
+        res={}
+        products = self.browse(cr, uid, ids, context=context)
+        for product in products:
+            supplierdelay = 0
+            for supplier in product.product_id.seller_ids:
+                if product.partner_id and (supplier.name.id == product.partner_id):
+                    supplierdelay = float(supplier.delay)
+            res[product.id] = float(product.lead_time) or supplierdelay
+        return res
+
     _columns = {
         'name': fields.text('Description', required=True),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
@@ -891,12 +909,14 @@ class purchase_order_line(osv.osv):
         'partner_id': fields.related('order_id','partner_id',string='Partner',readonly=True,type="many2one", relation="res.partner", store=True),
         'date_order': fields.related('order_id','date_order',string='Order Date',readonly=True,type="date"),
         'lead_time': fields.float('Delivery Lead Time', help="Average delay in days to deliver this product."),
+        'product_lead_time': fields.function(_get_product_lead_time, fnct_inv=_set_lead_time, type='float', string='Delivery Lead Time', help="Average delay in days to deliver this product.")
 
     }
     _defaults = {
         'product_qty': lambda *a: 1.0,
         'state': lambda *args: 'draft',
         'invoiced': lambda *a: 0,
+        'lead_time': 0,
     }
     _table = 'purchase_order_line'
     _name = 'purchase.order.line'
@@ -910,7 +930,7 @@ class purchase_order_line(osv.osv):
 
     def onchange_product_uom(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
             partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
-            name=False, price_unit=False, context=None):
+            name=False, price_unit=False, lead_time=False, context=None):
         """
         onchange handler of product_uom.
         """
@@ -920,7 +940,7 @@ class purchase_order_line(osv.osv):
             partner_id, date_order=date_order, fiscal_position_id=fiscal_position_id, date_planned=date_planned,
             name=name, price_unit=price_unit, context=context)
 
-    def _get_date_planned(self, cr, uid, supplier_info, date_order_str, context=None):
+    def _get_date_planned(self, cr, uid, supplier_info, date_order_str, lead_time, context=None):
         """Return the datetime value to use as Schedule Date (``date_planned``) for
            PO Lines that correspond to the given product.supplierinfo,
            when ordered at `date_order_str`.
@@ -933,6 +953,8 @@ class purchase_order_line(osv.osv):
            :return: desired Schedule Date for the PO line
         """
         supplier_delay = int(supplier_info.delay) if supplier_info else 0
+        if lead_time:
+            supplierdelay = lead_time
         return datetime.strptime(date_order_str, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(days=supplier_delay)
 
     def _check_product_uom_group(self, cr, uid, context=None):
@@ -943,7 +965,7 @@ class purchase_order_line(osv.osv):
 
     def onchange_product_id(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
             partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
-            name=False, price_unit=False, context=None):
+            name=False, price_unit=False, lead_time=False, context=None):
         """
         onchange handler of product_id.
         """
@@ -1011,11 +1033,15 @@ class purchase_order_line(osv.osv):
                     if qty:
                         res['warning'] = {'title': _('Warning!'), 'message': _('The selected supplier has a minimal quantity set to %s %s, you should not purchase less.') % (supplierinfo.min_qty, supplierinfo.product_uom.name)}
                     qty = min_qty
-        dt = self._get_date_planned(cr, uid, supplierinfo, date_order, context=context).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        dt = self._get_date_planned(cr, uid, supplierinfo, date_order, lead_time, context=context).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         qty = qty or 1.0
         res['value'].update({'date_planned': date_planned or dt})
         if qty:
             res['value'].update({'product_qty': qty})
+
+        # - determine lead time value for product
+        product_lead_time = lead_time or supplierinfo.delay if supplierinfo else 0
+        res['value'].update({'product_lead_time': product_lead_time})
 
         # - determine price_unit and taxes_id
         if pricelist_id:
