@@ -956,7 +956,7 @@ class task(base_stage, osv.osv):
             if task.child_ids:
                 for child in task.child_ids:
                     if child.state in ['draft', 'open', 'pending']:
-                        raise osv.except_osv(_("Error !"), _("You can not done a parent task.\nPlease cancel or complete child task first."))
+                        raise osv.except_osv(_("Error!"), _("You can not done a parent task.\nPlease cancel or complete child task first."))
         return True
 
     def action_close(self, cr, uid, ids, context=None):
