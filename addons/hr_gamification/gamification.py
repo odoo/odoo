@@ -106,7 +106,7 @@ class hr_grant_badge_wizard(osv.TransientModel):
             if uid == wiz.user_id.id:
                 raise osv.except_osv(_('Warning!'), _('You can not send a badge to yourself'))
 
-            if badge_obj.can_grant_badge(cr, uid,
+            if badge_obj._can_grant_badge(cr, uid,
                                          user_from_id=uid,
                                          badge_id=wiz.badge_id.id,
                                          context=context):
@@ -119,9 +119,8 @@ class hr_grant_badge_wizard(osv.TransientModel):
                 }
                 badge_user = badge_user_obj.create(cr, uid, values, context=context)
 
-                user_from = self.pool.get('res.users').browse(cr, uid, uid, context=context)
 
-                badge_obj.send_badge(cr, uid, wiz.badge_id.id, [badge_user], user_from=user_from, context=context)
+                badge_obj.send_badge(cr, uid, wiz.badge_id.id, [badge_user], user_from=uid, context=context)
 
         return {}
 
