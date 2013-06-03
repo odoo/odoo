@@ -197,7 +197,7 @@ def exp_drop(db_name):
     return True
 
 @contextlib.contextmanager
-def _set_pg_password_in_environment(self):
+def _set_pg_password_in_environment():
     """ On systems where pg_restore/pg_dump require an explicit
     password (i.e. when not connecting via unix sockets, and most
     importantly on Windows), it is necessary to pass the PG user
@@ -213,10 +213,10 @@ def _set_pg_password_in_environment(self):
          SaaS (giving SaaS users the super-admin password is not a good idea
          anyway)
     """
-    if os.environ.get('PGPASSWORD') or not tools.config['db_password']:
+    if os.environ.get('PGPASSWORD') or not openerp.tools.config['db_password']:
         yield
     else:
-        os.environ['PGPASSWORD'] = tools.config['db_password']
+        os.environ['PGPASSWORD'] = openerp.tools.config['db_password']
         try:
             yield
         finally:
