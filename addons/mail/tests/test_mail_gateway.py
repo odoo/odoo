@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.addons.mail.tests.test_mail_base import TestMailBase
+from openerp.tools import mute_logger
 
 MAIL_TEMPLATE = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
@@ -123,6 +124,107 @@ class TestMailgateway(TestMailBase):
         self.assertEqual(partner_info['partner_id'], p_b_id,
                         'mail_thread: message_find_partner_from_emails wrong partner found')
 
+    def test_05_mail_message_mail_mail(self):
+        """ Tests designed for testing email values based on mail.message, aliases, ... """
+        cr, uid = self.cr, self.uid
+
+        # Data: clean catchall domain
+        param_ids = self.registry('ir.config_parameter').search(cr, uid, [('key', '=', 'mail.catchall.domain')])
+        self.registry('ir.config_parameter').unlink(cr, uid, param_ids)
+
+        # Do: create a mail_message with a reply_to, without message-id
+        msg_id = self.mail_message.create(cr, uid, {'subject': 'Subject', 'body': 'Body', 'reply_to': 'custom@example.com'})
+        msg = self.mail_message.browse(cr, uid, msg_id)
+        # Test: message content
+        self.assertIn('reply_to', msg.message_id,
+                        'mail_message: message_id should be specific to a mail_message with a given reply_to')
+        self.assertEqual('custom@example.com', msg.reply_to,
+                        'mail_message: incorrect reply_to')
+        # Do: create a mail_mail with the previous mail_message and specified reply_to
+        mail_id = self.mail_mail.create(cr, uid, {'mail_message_id': msg_id, 'reply_to': 'other@example.com', 'state': 'cancel'})
+        mail = self.mail_mail.browse(cr, uid, mail_id)
+        # Test: mail_mail content
+        self.assertEqual(mail.reply_to, 'other@example.com',
+                        'mail_mail: reply_to should be equal to the one coming from creation values')
+        # Do: create a mail_mail with the previous mail_message
+        mail_id = self.mail_mail.create(cr, uid, {'mail_message_id': msg_id, 'state': 'cancel'})
+        mail = self.mail_mail.browse(cr, uid, mail_id)
+        # Test: mail_mail content
+        self.assertEqual(mail.reply_to, msg.reply_to,
+                        'mail_mail: reply_to should be equal to the one coming from the mail_message')
+
+        # Do: create a mail_message without a reply_to
+        msg_id = self.mail_message.create(cr, uid, {'subject': 'Subject', 'body': 'Body', 'model': 'mail.group', 'res_id': self.group_pigs_id, 'email_from': False})
+        msg = self.mail_message.browse(cr, uid, msg_id)
+        # Test: message content
+        self.assertIn('mail.group', msg.message_id,
+                        'mail_message: message_id should contain model')
+        self.assertIn('%s' % self.group_pigs_id, msg.message_id,
+                        'mail_message: message_id should contain res_id')
+        self.assertFalse(msg.reply_to,
+                        'mail_message: should not generate a reply_to address when not specified')
+        # Do: create a mail_mail based on the previous mail_message
+        mail_id = self.mail_mail.create(cr, uid, {'mail_message_id': msg_id, 'state': 'cancel'})
+        mail = self.mail_mail.browse(cr, uid, mail_id)
+        # Test: mail_mail content
+        self.assertFalse(mail.reply_to,
+                        'mail_mail: reply_to should not have been guessed')
+        # Update message
+        self.mail_message.write(cr, uid, [msg_id], {'email_from': 'someone@example.com'})
+        msg.refresh()
+        # Do: create a mail_mail based on the previous mail_message
+        mail_id = self.mail_mail.create(cr, uid, {'mail_message_id': msg_id, 'state': 'cancel'})
+        mail = self.mail_mail.browse(cr, uid, mail_id)
+        # Test: mail_mail content
+        self.assertEqual(mail.reply_to, msg.email_from,
+                        'mail_mail: reply_to should equal to mail_message.email_from when having no document or default alias')
+
+        # Data: set catchall domain
+        self.registry('ir.config_parameter').set_param(cr, uid, 'mail.catchall.domain', 'schlouby.fr')
+        self.registry('ir.config_parameter').unlink(cr, uid, self.registry('ir.config_parameter').search(cr, uid, [('key', '=', 'mail.catchall.alias')]))
+
+        # Do: create a mail_mail based on the previous mail_message
+        mail_id = self.mail_mail.create(cr, uid, {'mail_message_id': msg_id, 'state': 'cancel'})
+        mail = self.mail_mail.browse(cr, uid, mail_id)
+        # Test: mail_mail content
+        self.assertEqual(mail.reply_to, '"Followers of Pigs" <group+pigs@schlouby.fr>',
+                        'mail_mail: reply_to should equal the mail.group alias')
+
+        # Update message
+        self.mail_message.write(cr, uid, [msg_id], {'res_id': False, 'email_from': 'someone@schlouby.fr'})
+        msg.refresh()
+        # Do: create a mail_mail based on the previous mail_message
+        mail_id = self.mail_mail.create(cr, uid, {'mail_message_id': msg_id, 'state': 'cancel'})
+        mail = self.mail_mail.browse(cr, uid, mail_id)
+        # Test: mail_mail content
+        self.assertEqual(mail.reply_to, msg.email_from,
+                        'mail_mail: reply_to should equal the mail_message email_from')
+
+        # Data: set catchall alias
+        self.registry('ir.config_parameter').set_param(self.cr, self.uid, 'mail.catchall.alias', 'gateway')
+
+        # Do: create a mail_mail based on the previous mail_message
+        mail_id = self.mail_mail.create(cr, uid, {'mail_message_id': msg_id, 'state': 'cancel'})
+        mail = self.mail_mail.browse(cr, uid, mail_id)
+        # Test: mail_mail content
+        self.assertEqual(mail.reply_to, 'gateway@schlouby.fr',
+                        'mail_mail: reply_to should equal the catchall email alias')
+
+        # Do: create a mail_mail
+        mail_id = self.mail_mail.create(cr, uid, {'state': 'cancel'})
+        mail = self.mail_mail.browse(cr, uid, mail_id)
+        # Test: mail_mail content
+        self.assertEqual(mail.reply_to, 'gateway@schlouby.fr',
+                        'mail_mail: reply_to should equal the catchall email alias')
+
+        # Do: create a mail_mail
+        mail_id = self.mail_mail.create(cr, uid, {'state': 'cancel', 'reply_to': 'someone@example.com'})
+        mail = self.mail_mail.browse(cr, uid, mail_id)
+        # Test: mail_mail content
+        self.assertEqual(mail.reply_to, 'someone@example.com',
+                        'mail_mail: reply_to should equal the rpely_to given to create')
+
+    @mute_logger('openerp.addons.mail.mail_thread', 'openerp.osv.orm')
     def test_10_message_process(self):
         """ Testing incoming emails processing. """
         cr, uid, user_raoul = self.cr, self.uid, self.user_raoul
@@ -365,6 +467,7 @@ class TestMailgateway(TestMailBase):
         self.assertEqual(msg.body, '<pre>\nPlease call me as soon as possible this afternoon!\n\n--\nSylvie\n</pre>',
                             'message_process: plaintext incoming email incorrectly parsed')
 
+    @mute_logger('openerp.addons.mail.mail_thread', 'openerp.osv.orm')
     def test_20_thread_parent_resolution(self):
         """ Testing parent/child relationships are correctly established when processing incoming mails """
         cr, uid = self.cr, self.uid

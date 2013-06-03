@@ -35,11 +35,35 @@
         <record model="ir.ui.view" id="portal_hr_kanban_view_employees">
             <field name="name">HR - Employess Kanban</field>
             <field name="model">hr.employee</field>
-            <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@class='oe_employee_details']" position="inside">
-                    <t t-if="record.public_info.raw_value"><field name="public_info"/></t>
-                </xpath>
+                <kanban>
+                    <field name="last_login"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_employee_vignette">
+                                <div class="oe_employee_image">
+                                    <a type="open"><img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.value)" class="oe_employee_picture"/></a>
+                                </div>
+                                <div class="oe_employee_details">
+                                    <h4>
+                                        <a type="open"><field name="name"/></a>
+                                    </h4>
+                                    <ul>
+                                        <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
+                                        <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
+                                        <li t-if="record.work_phone.raw_value">Tel: <field name="work_phone"/></li>
+                                        <li t-if="record.mobile_phone.raw_value">Mobile: <field name="mobile_phone"/></li>
+                                        <li t-if="record.work_email.raw_value"><a t-attf-href="mailto:#{record.work_email.value}"><field name="work_email"/></a></li>
+                                        <li t-if="record.public_info.raw_value"><field name="public_info"/></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <script>
+                                $('.oe_employee_picture').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_employee_picture_wide') } });
+                            </script>
+                        </t>
+                    </templates>
+                </kanban>
             </field>
         </record>
 
