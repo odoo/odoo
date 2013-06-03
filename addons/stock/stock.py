@@ -2651,6 +2651,57 @@ class stock_move(osv.osv):
 
         return res
 
+
+    def _generate_negative_stock_matchings(self, cr, uid, ids, product, context=None):
+        """
+        This method generates the stock move matches for out moves of product with qty remaining
+        according to the in move
+        force_company should be in context already
+        | ids : id of in move
+        | product: browse record of product
+        Returns: 
+        | List of matches
+        """
+        assert len(ids) == 1, _("Only generate negative stock matchings one by one")
+        move = self.browse(cr, uid, ids, context=context)[0]
+        cost_method = product.cost_method
+        matching_obj = self.pool.get("stock.move.matching")
+        product_obj = self.pool.get("product.product")
+        uom_obj = self.pool.get("product.uom")
+        res = []
+        #Search for the most recent out moves
+        moves = self.search(cr, uid, [('company_id', '=', move.company_id.id), ('state','=', 'done'), ('location_id.usage','=','internal'), ('location_dest_id.usage', '!=', 'internal'), 
+                                          ('product_id', '=', move.product_id.id), ('qty_remaining', '>', 0.0)], order='date, id', context=context)
+        qty_to_go = move.product_qty
+        for out_mov in self.browse(cr, uid, moves, context=context):
+            if qty_to_go <= 0.0:
+                break
+            out_qty_converted =  uom_obj._compute_qty(cr, uid, out_mov.product_uom.id, out_mov.qty_remaining, move.product_uom.id, round=False)
+            qty = 0.0
+            if out_qty_converted <= qty_to_go:
+                qty = out_qty_converted
+            elif qty_to_go > 0.0: 
+                qty = qty_to_go
+            revert_qty = (qty / out_qty_converted) * out_mov.qty_remaining
+            matchvals = {'move_in_id': move.id, 'qty': revert_qty, 
+                         'move_out_id': out_mov.id}
+            match_id = matching_obj.create(cr, uid, matchvals, context=context)
+            res.append(match_id)
+            qty_to_go -= qty
+            #Need to re-calculate total price of every out_move if FIFO/LIFO
+            if cost_method in ['fifo', 'lifo']:
+                matches = matching_obj.search(cr, uid, [('move_out_id', '=', out_mov.id)], context=context)
+                amount = 0.0
+                total_price = 0.0
+                for match in matching_obj.browse(cr, uid, matches, context=context):
+                    amount += match.qty 
+                    total_price += match.qty * match.price_unit_out
+                if amount > 0.0:
+                    self.write(cr, uid, [out_mov.id], {'price_unit': total_price / amount}, context=context)
+                    if amount >= out_mov.product_qty:
+                        product_obj.write(cr, uid, [product.id], {'standard_price': total_price / amount}, context=context)
+        return res
+
     def price_calculation(self, cr, uid, ids, context=None):
         '''
         This method puts the right price on the stock move, 
@@ -2658,7 +2709,7 @@ class stock_move(osv.osv):
         and creates the necessary stock move matchings
         
         It returns a list of tuples with (move_id, match_id) 
-        which can be used for generating the accounting entries
+        which is used for generating the accounting entries when FIFO/LIFO
         '''
         product_obj = self.pool.get('product.product')
         currency_obj = self.pool.get('res.currency')
@@ -2697,7 +2748,6 @@ class stock_move(osv.osv):
                                  'move_out_id': move.id}
                     match_id = matching_obj.create(cr, uid, matchvals, context=context)
                     res[move.id].append(match_id)
-                    move_in = self.browse(cr, uid, match[0], context=context)
                     price_amount += match[1] * match[2]
                     amount += match[1]
                 #Write price on out move
@@ -2722,47 +2772,18 @@ class stock_move(osv.osv):
                     new_price = uom_obj._compute_price(cr, uid, product.uom_id.id, product.standard_price, move_uom)
                     self.write(cr, uid, move.id, {'price_unit': new_price}, context=ctx)
                 elif product.cost_method == 'average':
-                    if product_avail[product.id] >= 0.0: #TODO: Could put > instead
+                    move_product_price = uom_obj._compute_price(cr, uid, move_uom, move.price_unit, product.uom_id.id)
+                    if product_avail[product.id] > 0.0:
                         amount_unit = product.standard_price
-                        move_product_price = uom_obj._compute_price(cr, uid, move_uom, move.price_unit, product.uom_id.id)
                         new_std_price = ((amount_unit * product_avail[product.id])\
                                 + (move_product_price * product_uom_qty))/(product_avail[product.id] + product_uom_qty)
                     else:
-                        new_std_price = uom_obj._compute_price(cr, uid, move_uom, move.price_unit, product.uom_id.id)
+                        new_std_price = move_product_price
                     product_obj.write(cr, uid, [product.id], {'standard_price': new_std_price}, context=ctx)
                 # Should create the stock move matchings for previous outs for the negative stock that can be matched with is in
                 if product_avail[product.id] < 0.0:
-                    #Search for most recent out moves until at least one matching has been found => order date desc
-                    moves = self.search(cr, uid, [('company_id', '=', move.company_id.id), ('state','=', 'done'), ('location_id.usage','=','internal'), ('location_dest_id.usage', '!=', 'internal'), 
-                                                      ('product_id', '=', move.product_id.id), ('qty_remaining', '>', 0.0)], order='date, id', context=ctx)
-                    qty_to_go = move.product_qty
-                    for out_mov in self.browse(cr, uid, moves, context=ctx):
-                        if qty_to_go <= 0.0:
-                            break
-                        out_qty_converted =  uom_obj._compute_qty(cr, uid, out_mov.product_uom.id, out_mov.qty_remaining, move.product_uom.id, round=False)
-                        qty = 0.0
-                        if out_qty_converted <= qty_to_go:
-                            qty = out_qty_converted
-                        elif qty_to_go > 0.0: 
-                            qty = qty_to_go
-                        revert_qty = (qty / out_qty_converted) * out_mov.qty_remaining
-                        matchvals = {'move_in_id': move.id, 'qty': revert_qty, 
-                                     'move_out_id': out_mov.id}
-                        match_id = matching_obj.create(cr, uid, matchvals, context=context)
-                        res[move.id].append(match_id)
-                        qty_to_go -= qty
-                        #Need to re-calculate total price of every out_move if FIFO/LIFO
-                        if cost_method in ['fifo', 'lifo']:
-                            matches = matching_obj.search(cr, uid, [('move_out_id', '=', out_mov.id)], context=context)
-                            amount = 0.0
-                            total_price = 0.0
-                            for match in matching_obj.browse(cr, uid, matches, context=context):
-                                amount += match.qty 
-                                total_price += match.qty * match.price_unit_out
-                            if amount > 0.0:
-                                self.write(cr, uid, [out_mov.id], {'price_unit': total_price / amount}, context=context)
-                                if amount >= out_mov.product_qty:
-                                    product_obj.write(cr, uid, [product.id], {'standard_price': total_price / amount}, context=ctx)
+                    resneg = self._generate_negative_stock_matchings(cr, uid, [move.id], product, context=ctx)
+                    res[move.id] += resneg
                 product_avail[product.id] += product_uom_qty
             #The return of average products at average price (could be made optional)
             if move.location_id.usage == 'internal' and move.location_dest_id.usage != 'internal' and cost_method == 'average' and move.move_returned_from:
