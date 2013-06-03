@@ -79,7 +79,7 @@
                             By <field name="author" class="oe_inline"/>
                         </h3>
                         <div>
-                            <button name="button_immediate_install" states="uninstalled" string="Install" type="object" class="oe_highlight oe_big_purple"/>
+                            <button name="button_immediate_install" states="uninstalled" string="Install" type="object" class="oe_highlight"/>
                             <button name="button_immediate_upgrade" states="installed" string="Upgrade" type="object" class="oe_highlight"/>
                             <button name="button_immediate_uninstall" states="installed" string="Uninstall" type="object"
                                 confirm="Do you confirm the uninstallation of this module? This will permanently erase all data currently stored by the module!"/>
@@ -129,6 +129,7 @@
                     </notebook>
                     </sheet>
                     <field name="description_html" class='oe_app_description oe_styling_v8'/>
+                    <button name="button_immediate_install" states="uninstalled" string="Install" type="object" class="oe_highlight oe_center"/>
                 </form>
             </field>
         </record>

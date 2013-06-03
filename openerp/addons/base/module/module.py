@@ -153,7 +153,7 @@ class module(osv.osv):
     def _get_desc(self, cr, uid, ids, field_name=None, arg=None, context=None):
         res = dict.fromkeys(ids, '')
         for module in self.browse(cr, uid, ids, context=context):
-            path = addons.get_module_resource(module.name, 'static/description/description.html')
+            path = addons.get_module_resource(module.name, 'static/description/index.html')
             if path:
                 print path
                 desc_file = tools.file_open(path, 'rb')
