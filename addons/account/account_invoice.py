@@ -557,10 +557,15 @@ class account_invoice(osv.osv):
 
     def onchange_payment_term_date_invoice(self, cr, uid, ids, payment_term_id, date_invoice):
         res = {}
+        if isinstance(ids, int):
+            ids = [ids]
         if not date_invoice:
             date_invoice = time.strftime('%Y-%m-%d')
-        if not payment_term_id:
-            return {'value':{'date_due': date_invoice}} #To make sure the invoice has a due date when no payment term
+        for invoice_record in self.browse(cr, uid, ids):
+            if not payment_term_id and invoice_record.date_due:
+                return {'value':{'date_due': invoice_record.date_due}} #To make sure the invoice due date should contain due date which is entered by user when there is no payment term defined
+            if not payment_term_id and not invoice_record.date_due:
+                return {'value':{'date_due': date_invoice}} #To make sure that the invoice due date contain current date when there is no payment term and no due date defined
         pterm_list = self.pool.get('account.payment.term').compute(cr, uid, payment_term_id, value=1, date_ref=date_invoice)
         if pterm_list:
             pterm_list = [line[0] for line in pterm_list]
