@@ -33,7 +33,7 @@ Fields
  - ``last_update`` : the date of the last modification of this goal
  - ``computation_mode`` : related field from the linked goal type
  - ``type_description`` : related field from the linked goal type
- - ``type_unit`` : related field from the linked goal type
+ - ``type_suffix`` : related field from the linked goal type
  - ``type_condition`` : related field from the linked goal type
 
 

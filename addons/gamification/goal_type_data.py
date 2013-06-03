@@ -35,8 +35,6 @@ class gamification_goal_type_data(osv.Model):
 
         The model specified in 'xml_id' must inherit from mail.thread
         """
-        if context is None: context = {}
         ref_obj = self.pool.get(xml_id)
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        count = ref_obj.search(cr, uid, [('message_follower_ids', '=', user.partner_id.id)], count=True, context=context)
-        return count
+        return ref_obj.search(cr, uid, [('message_follower_ids', '=', user.partner_id.id)], count=True, context=context)

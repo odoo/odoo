@@ -791,7 +791,7 @@ class gamification_goal_planline(osv.Model):
                 }),
         'type_condition': fields.related('type_id', 'condition', type="selection",
             readonly=True, string="Condition", selection=[('lower', '<='), ('higher', '>=')]),
-        'type_unit': fields.related('type_id', 'unit', type="char", readonly=True, string="Unit"),
+        'type_suffix': fields.related('type_id', 'suffix', type="char", readonly=True, string="Unit"),
         'type_monetary': fields.related('type_id', 'monetary', type="boolean", readonly=True, string="Monetary"),
         'type_full_suffix': fields.related('type_id', 'full_suffix', type="char", readonly=True, string="Suffix"),
     }

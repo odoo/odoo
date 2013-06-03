@@ -41,17 +41,18 @@ class gamification_goal_type(osv.Model):
     """
     _name = 'gamification.goal.type'
     _description = 'Gamification goal type'
+    _order = 'sequence'
 
     def _get_suffix(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict.fromkeys(ids, 0)
-        for goal in self.browse(cr, uid, ids, context):
-            if goal.unit and not goal.monetary:
-                res[goal.id] = goal.unit
+        res = dict.fromkeys(ids, '')
+        for goal in self.browse(cr, uid, ids, context=context):
+            if goal.suffix and not goal.monetary:
+                res[goal.id] = goal.suffix
             elif goal.monetary:
                 # use the current user's company currency
                 user = self.pool.get('res.users').browse(cr, uid, uid, context)
-                if goal.unit:
-                    res[goal.id] = "%s %s" % (user.company_id.currency_id.symbol, goal.unit)
+                if goal.suffix:
+                    res[goal.id] = "%s %s" % (user.company_id.currency_id.symbol, goal.suffix)
                 else:
                     res[goal.id] = user.company_id.currency_id.symbol
             else:
@@ -61,13 +62,9 @@ class gamification_goal_type(osv.Model):
     _columns = {
         'name': fields.char('Goal Type', required=True, translate=True),
         'description': fields.text('Goal Description'),
-
         'monetary': fields.boolean('Monetary Value', help="The target and current value are defined in the company currency."),
-        'unit': fields.char('Suffix',
-            help="The unit of the target and current values", translate=True),
-        'full_suffix': fields.function(_get_suffix, type="char",
-            string="Full Suffix", help="The currency and suffix field"),
-
+        'suffix': fields.char('Suffix', help="The unit of the target and current values", translate=True),
+        'full_suffix': fields.function(_get_suffix, type="char", string="Full Suffix", help="The currency and suffix field"),
         'computation_mode': fields.selection([
                 ('manually', 'Recorded manually'),
                 ('count', 'Automatic: number of records'),
@@ -75,13 +72,12 @@ class gamification_goal_type(osv.Model):
                 ('python', 'Automatic: execute a specific Python code'),
             ],
             string="Computation Mode",
-            required=True),
+            required=True), #TODO: add help tooltip
         'display_mode': fields.selection([
                 ('progress', 'Progressive (using numerical values)'),
                 ('checkbox', 'Checkbox (done or not-done)'),
             ],
             string="Displayed as", required=True),
-
         'model_id': fields.many2one('ir.model',
             string='Model',
             help='The model object for the field to evaluate'),
@@ -96,7 +92,6 @@ class gamification_goal_type(osv.Model):
             required=True),
         'compute_code': fields.char('Compute Code',
             help="The name of the python method that will be executed to compute the current value. See the file gamification/goal_type_data.py for examples."),
-
         'condition': fields.selection([
                 ('higher', 'The higher the better'),
                 ('lower', 'The lower the better')
@@ -104,18 +99,13 @@ class gamification_goal_type(osv.Model):
             string='Goal Performance',
             help='A goal is considered as completed when the current value is compared to the value to reach',
             required=True),
-        'sequence': fields.integer('Sequence',
-            help='Sequence number for ordering',
-            required=True),
-
-        'action_id': fields.many2one('ir.actions.act_window',
-            string="Action",
+        'sequence': fields.integer('Sequence', help='Sequence number for ordering', required=True),
+        'action_id': fields.many2one('ir.actions.act_window', string="Action",
             help="The action that will be called to update the goal value."),
         'res_id_field': fields.char("ID Field of user",
             help="The field name on the user profile (res.users) containing the value for res_id for action.")
     }
 
-    _order = 'sequence'
     _defaults = {
         'sequence': 1,
         'condition': 'higher',
@@ -137,19 +127,13 @@ class gamification_goal(osv.Model):
 
     def _get_completeness(self, cr, uid, ids, field_name, arg, context=None):
         """Return the percentage of completeness of the goal, between 0 and 100"""
-        res = {}
-        for goal in self.browse(cr, uid, ids, context):
-            if goal.type_condition == 'higher':
-                if goal.current > 0:
-                    res[goal.id] = min(100, round(100.0 * goal.current / goal.target_goal, 2))
-                else:
-                    res[goal.id] = 0.0
-            else:
+        res = dict.fromkeys(ids, 0.0)
+        for goal in self.browse(cr, uid, ids, context=context):
+            if goal.type_condition == 'higher' and goal.current > 0:
+                res[goal.id] = min(100, round(100.0 * goal.current / goal.target_goal, 2))
+            elif goal.current < goal.target_goal:
                 # a goal 'lower than' has only two values possible: 0 or 100%
-                if goal.current < goal.target_goal:
-                    res[goal.id] = 100.0
-                else:
-                    res[goal.id] = 0.0
+                res[goal.id] = 100.0
         return res
 
     def on_change_type_id(self, cr, uid, ids, type_id=False, context=None):
@@ -157,8 +141,7 @@ class gamification_goal(osv.Model):
         if not type_id:
             return {'value': {'type_id': False}}
         goal_type = goal_type.browse(cr, uid, type_id, context=context)
-        ret = {'value': {'computation_mode': goal_type.computation_mode, 'type_condition': goal_type.condition}}
-        return ret
+        return {'value': {'computation_mode': goal_type.computation_mode, 'type_condition': goal_type.condition}}
 
     _columns = {
         'type_id': fields.many2one('gamification.goal.type',
@@ -166,7 +149,7 @@ class gamification_goal(osv.Model):
             required=True,
             ondelete="cascade"),
         'user_id': fields.many2one('res.users', string='User', required=True),
-        'planline_id' : fields.many2one('gamification.goal.planline',
+        'planline_id': fields.many2one('gamification.goal.planline',
             string='Goal Planline',
             ondelete="cascade"),
         'plan_id': fields.related('planline_id', 'plan_id',
@@ -207,7 +190,7 @@ class gamification_goal(osv.Model):
 
         'type_description': fields.related('type_id', 'description',
             type='char', string='Type Description', readonly=True),
-        'type_unit': fields.related('type_id', 'unit',
+        'type_suffix': fields.related('type_id', 'suffix',
             type='char', string='Type Description', readonly=True),
         'type_condition': fields.related('type_id', 'condition',
             type='char', string='Type Condition', readonly=True),
@@ -224,6 +207,7 @@ class gamification_goal(osv.Model):
     }
     _order = 'create_date desc, end_date desc, type_id, id'
 
+#TODO code review of this method
     def update(self, cr, uid, ids, context=None):
         """Update the goals to recomputes values and change of states
 
@@ -232,7 +216,6 @@ class gamification_goal(osv.Model):
         If a goal reaches the target value, the status is set to reached
         If the end date is passed (at least +1 day, time not considered) without
         the target value being reached, the goal is set as failed."""
-        if context is None: context = {}
 
         for goal in self.browse(cr, uid, ids, context=context):
             if goal.state in ('draft', 'canceled'):
@@ -250,12 +233,8 @@ class gamification_goal(osv.Model):
 
                         # generate a remind report
                         template_env = TemplateHelper()
-                        body_html = template_env.get_template('reminder.mako').render({'object':goal})
-                        self.message_post(cr, uid, goal.id,
-                            body=body_html,
-                            partner_ids=[goal.user_id.partner_id.id],
-                            context=context,
-                            subtype='mail.mt_comment')
+                        body_html = template_env.get_template('reminder.mako').render({'object': goal})
+                        self.message_post(cr, uid, goal.id, body=body_html, partner_ids=[goal.user_id.partner_id.id], context=context, subtype='mail.mt_comment')
 
             elif goal.type_id.computation_mode == 'python':
                 values = {'cr': cr, 'uid': goal.user_id.id, 'context': context, 'self': self.pool.get('gamification.goal.type')}
@@ -294,10 +273,7 @@ class gamification_goal(osv.Model):
                     towrite = {'current': len(res)}
 
             # check goal target reached
-            if (goal.type_id.condition == 'higher' \
-                and towrite['current'] >= goal.target_goal) \
-            or (goal.type_id.condition == 'lower' \
-                and towrite['current'] <= goal.target_goal):
+            if (goal.type_id.condition == 'higher' and towrite['current'] >= goal.target_goal) or (goal.type_id.condition == 'lower' and towrite['current'] <= goal.target_goal):
                 towrite['state'] = 'reached'
 
             # check goal failure
@@ -418,19 +394,18 @@ class gamification_goal(osv.Model):
         values = {'state': 'reached', 'current': 1}
         self.write(cr, uid, goal_ids, values, context=context)
 
+#TOCHECK: it's totally unclear for me what the 'current' and the update method...
 
 class goal_manual_wizard(osv.TransientModel):
     """Wizard type to update a manual goal"""
     _name = 'gamification.goal.wizard'
     _columns = {
-        'goal_id': fields.many2one("gamification.goal", string='Goal'),
+        'goal_id': fields.many2one("gamification.goal", string='Goal', required=True),
         'current': fields.float('Current'),
     }
 
     def action_update_current(self, cr, uid, ids, context=None):
         """Wizard action for updating the current value"""
-        if context is None:
-            context = {}
 
         goal_obj = self.pool.get('gamification.goal')
 
@@ -442,3 +417,4 @@ class goal_manual_wizard(osv.TransientModel):
             goal_obj.write(cr, uid, [wiz.goal_id.id], towrite, context=context)
             goal_obj.update(cr, uid, [wiz.goal_id.id], context=context)
         return {}
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

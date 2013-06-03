@@ -34,7 +34,7 @@
                                             Target: &lt;=
                                         </t>
                                         <span t-attf-class="#{goal.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="goal.target_goal"/></span>
-                                        <t t-if="goal.type_unit"><t t-esc="goal.type_unit"/></t>
+                                        <t t-if="goal.type_suffix"><t t-esc="goal.type_suffix"/></t>
                                     </div>
                                 </t>
                             </div>
@@ -55,7 +55,7 @@
                                 <t t-if="planline.type_condition == 'lower'">
                                     Target: &lt;=
                                 </t>
-                                <span t-attf-class="#{planline.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="planline.target_goal" /></span><t t-if="planline.type_unit"> <t t-esc="planline.type_unit"/></t>
+                                <span t-attf-class="#{planline.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="planline.target_goal" /></span><t t-if="planline.type_suffix"> <t t-esc="planline.type_suffix"/></t>
                             </div>
                         </div>
                     </div>
@@ -73,11 +73,11 @@
                                         <!-- progress, action on current value -->
                                         <t t-esc="goal.user_name"/><br/>
                                         <t t-if="goal.id != planline.own_goal_id or (planline.computation_mode != 'manually' and !planline.type_action)">
-                                            <span t-attf-class="#{planline.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="goal.current" /></span><t t-if="planline.type_unit"> <t t-esc="planline.type_unit"/></t>
+                                            <span t-attf-class="#{planline.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="goal.current" /></span><t t-if="planline.type_suffix"> <t t-esc="planline.type_suffix"/></t>
                                         </t>
                                         <t t-if="goal.id == planline.own_goal_id and (planline.type_action or planline.computation_mode == 'manually')">
                                             <a class="oe_goal_action" t-att-id="planline.own_goal_id">
-                                                <span t-attf-class="#{planline.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="goal.current" /></span><t t-if="planline.type_unit"> <t t-esc="planline.type_unit"/></t>
+                                                <span t-attf-class="#{planline.type_monetary ? 'oe_goal_field_monetary' : ''}"><t t-esc="goal.current" /></span><t t-if="planline.type_suffix"> <t t-esc="planline.type_suffix"/></t>
                                             </a>
                                         </t>
                                     </t>
