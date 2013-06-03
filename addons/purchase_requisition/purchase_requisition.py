@@ -157,6 +157,35 @@ class purchase_requisition(osv.osv):
         res['domain'] = [('id','in', po_ids)]
         return res
 
+    def _prepare_purchase_order(self, cr, uid, requisition, supplier, context=None):
+        location_id = requisition.warehouse_id.lot_input_id.id
+        return {
+            'origin': requisition.name,
+            'partner_id': supplier.id,
+            'pricelist_id': supplier_pricelist.id,
+            'location_id': location_id,
+            'company_id': requisition.company_id.id,
+            'fiscal_position': supplier.property_account_position and supplier.property_account_position.id or False,
+            'requisition_id':requisition.id,
+            'notes':requisition.description,
+            'warehouse_id':requisition.warehouse_id.id,
+        }
+    def _prepare_purchase_order_line(self, cr, uid, requisition, requisition_line, supplier, context=None):
+        product = requisition_line.product_id
+        seller_price, qty, default_uom_po_id, date_planned = self._seller_details(cr, uid, requisition_line, supplier, context=context)
+        taxes_ids = product.supplier_taxes_id
+        taxes = fiscal_position.map_tax(cr, uid, supplier.property_account_position, taxes_ids)
+        return {
+            'order_id': purchase_id,
+            'name': product.partner_ref,
+            'product_qty': qty,
+            'product_id': product.id,
+            'product_uom': default_uom_po_id,
+            'price_unit': seller_price,
+            'date_planned': date_planned,
+            'taxes_id': [(6, 0, taxes)],
+            'account_analytic_id':requisition.account_analytic_id.id,
+        }
     def make_purchase_order(self, cr, uid, ids, partner_id, context=None):
         """
         Create New RFQ for Supplier
@@ -174,36 +203,10 @@ class purchase_requisition(osv.osv):
         for requisition in self.browse(cr, uid, ids, context=context):
             if not requisition.multiple_rfq_per_supplier and supplier.id in filter(lambda x: x, [rfq.state <> 'cancel' and rfq.partner_id.id or None for rfq in requisition.purchase_ids]):
                  raise osv.except_osv(_('Warning!'), _('You have already one %s purchase order for this partner, you must cancel this purchase order to create a new quotation.') % rfq.state)
-            location_id = requisition.warehouse_id.lot_input_id.id
-            purchase_id = purchase_order.create(cr, uid, {
-                        'origin': requisition.name,
-                        'partner_id': supplier.id,
-                        'pricelist_id': supplier_pricelist.id,
-                        'location_id': location_id,
-                        'company_id': requisition.company_id.id,
-                        'fiscal_position': supplier.property_account_position and supplier.property_account_position.id or False,
-                        'requisition_id':requisition.id,
-                        'notes':requisition.description,
-                        'warehouse_id':requisition.warehouse_id.id ,
-            })
+            purchase_id = purchase_order.create(cr, uid, self._prepare_purchase_order(cr, uid, requisition, supplier, context=context), context=context)
             res[requisition.id] = purchase_id
             for line in requisition.line_ids:
-                product = line.product_id
-                seller_price, qty, default_uom_po_id, date_planned = self._seller_details(cr, uid, line, supplier, context=context)
-                taxes_ids = product.supplier_taxes_id
-                taxes = fiscal_position.map_tax(cr, uid, supplier.property_account_position, taxes_ids)
-                purchase_order_line.create(cr, uid, {
-                    'order_id': purchase_id,
-                    'name': product.partner_ref,
-                    'product_qty': qty,
-                    'product_id': product.id,
-                    'product_uom': default_uom_po_id,
-                    'price_unit': seller_price,
-                    'date_planned': date_planned,
-                    'taxes_id': [(6, 0, taxes)],
-                    'account_analytic_id':requisition.account_analytic_id.id,
-                }, context=context)
-                
+                purchase_order_line.create(cr, uid, self._prepare_purchase_order_line(cr, uid, requisition, requisition_line, supplier, context=context), context=context)
         return res
 
     def check_valid_quotation(self, cr, uid, quotation, context=None):
