@@ -15,6 +15,7 @@
                     </separator>
                     <xpath expr="//button[@string='Install Modules']" position="replace">
                         <button name="action_next" type="object" string="Configure" invisible="context.get('menu',False)" class="oe_highlight"/>
+                        <label string="or" invisible="context.get('menu',False)" class="oe_inline"/>
                     </xpath>
                     <xpath expr="//button[@string='Skip']" position="after">
                         <button string="Ok" class="oe_highlight" special="cancel" invisible="context.get('active_model')"/>
