@@ -160,7 +160,7 @@ class _rml_styles(object,):
             for style in node.findall('paraStyle'):
                 sname = style.get('name')
                 self.styles[sname] = self._para_style_update(style)
-                if sname in self.default_style:
+                if self.default_style.has_key(sname):
                     for key, value in self.styles[sname].items():                    
                         setattr(self.default_style[sname], key, value)
                 else:
