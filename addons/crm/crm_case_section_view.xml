@@ -78,12 +78,12 @@
                     <field name="note"/>
                     <field name="alias_id"/>
                     <field name="color"/>
-                    <field name="open_lead_ids"/>
-                    <field name="open_opportunity_ids"/>
+                    <field name="monthly_open_leads"/>
+                    <field name="monthly_planned_revenue"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_global_click oe_kanban_crm_salesteams">
-                                <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="base.group_user">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_kanban_crm_salesteams">
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="base.group_sale_manager">
                                     <span class="oe_e">í</span>
                                     <ul class="oe_dropdown_menu">
                                         <li t-if="widget.view.is_action_enabled('edit')"><a type="edit">Sales Teams Settings</a></li>
@@ -92,31 +92,46 @@
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content">
-                                    <h4><field name="name"/></h4>
-                                    <div class="oe_kanban_alias" t-if="record.use_leads.raw_value and record.alias_id.value">
-                                        <span class="oe_e">%%</span><small><field name="alias_id"/></small>
+                                    <h4 class="oe_center"><field name="name"/></h4>
+                                    <div class="oe_kanban_alias oe_center" t-if="record.use_leads.raw_value and record.alias_id.value">
+                                        <small><span class="oe_e" style="float: none;">%%</span><t t-raw="record.alias_id.raw_value[1]"/></small>
                                     </div>
                                     <div class="oe_items_list">
-                                        <a t-if="record.use_leads.raw_value" name="%(crm_case_form_view_salesteams_lead)d" type="action">
-                                            <t t-raw="record.open_lead_ids.raw_value.length"/>
-                                            <t t-if="record.open_lead_ids.raw_value.length &gt;= 2">Leads</t>
-                                            <t t-if="record.open_lead_ids.raw_value.length &lt; 2">Lead</t></a>
-                                        <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action">
-                                            <t t-raw="record.open_opportunity_ids.raw_value.length"/>
-                                            <t t-if="record.open_opportunity_ids.raw_value.length &gt;= 2">Opportunities</t>
-                                            <t t-if="record.open_opportunity_ids.raw_value.length &lt; 2">Opportunity</t></a>
-                                    </div>
-                                    <div class="oe_avatars">
-                                        <img t-if="record.user_id.raw_value" t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-data-member_id="record.user_id.raw_value"/>
-                                        <t t-foreach="record.member_ids.raw_value.slice(0,11)" t-as="member">
-                                            <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
-                                        </t>
+                                        <div class="oe_salesteams_leads" t-if="record.use_leads.raw_value">
+                                            <a name="%(crm_case_form_view_salesteams_lead)d" type="action">Leads</a>
+                                            <a name="%(action_report_crm_lead)d" type="action" class="oe_sparkline_bar_link"><field name="monthly_open_leads" widget="sparkline_bar">Open Leads per Month<br/>Click to see a detailed analysis of leads.</field></a>
+                                        </div>
+                                        <div class="oe_salesteams_opportunities">
+                                            <a name="%(crm_case_form_view_salesteams_opportunity)d" type="action">Opportunities</a>
+                                            <a name="%(action_report_crm_opportunity)d" type="action"><field name="monthly_planned_revenue" widget="sparkline_bar">Planned Revenue per Month<br/>Click to see a detailed analysis of opportunities.</field></a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </t>
                     </templates>
                 </kanban>
+            </field>
+        </record>
+
+        <!-- Case Sections Search view -->
+
+        <record id="crm_case_section_salesteams_search" model="ir.ui.view">
+            <field name="name">Case Sections - Search</field>
+            <field name="model">crm.case.section</field>
+            <field name="arch" type="xml">
+                <search string="Salesteams Search">
+                    <field name="name"/>
+                    <field name="parent_id"/>
+                    <field name="user_id"/>
+                    <field name="note"/>
+                    <field name="code"/>
+                    <filter name="personal" string="My Salesteams" domain="['|', ('member_ids', '=', uid), ('user_id', '=', uid)]"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Team Leader" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Parent Sales Teams" domain="[]" context="{'group_by':'parent_id'}"/>
+                    </group>
+                </search>
             </field>
         </record>
 
@@ -127,6 +142,7 @@
             <field name="res_model">crm.case.section</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'search_default_personal': True}</field>
             <field name="view_id" ref="crm_case_section_salesteams_view_kanban"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
@@ -148,9 +164,9 @@
                 <form string="Sales Team" version="7.0">
                     <sheet>
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only" string="Project Name"/>
+                            <label for="name" class="oe_edit_only" string="Sales team"/>
                             <h1>
-                                <field name="name" string="Project Name"/>
+                                <field name="name" string="Salesteam"/>
                             </h1>
                             <div name="group_alias"
                                     attrs="{'invisible': [('alias_domain', '=', False)]}">
@@ -169,24 +185,17 @@
                         </div>
                         <group>
                             <group>
-                                <field name="parent_id"/>
-                                <field name="resource_calendar_id"/>
-                                <field name="active"/>
-                            </group>
-                            <group>
                                 <field name="user_id"/>
                                 <field name="code"/>
                             </group>
-                            <group colspan="4" attrs="{'invisible': [('use_leads', '=', False)]}">
-                                
+                            <group>
+                                <field name="parent_id"/>
+                                <field name="change_responsible"/>
+                                <field name="active"/>
                             </group>
                         </group>
                         <notebook colspan="4">
-                            <page string="Sales Team">
-                               <group>
-                                    <field name="change_responsible"/>
-                                </group>
-                                <separator string="Team Members"/>
+                            <page string="Team Members">
                                 <field name="member_ids" widget="many2many_kanban">
                                     <kanban quick_create="false" create="true">
                                         <field name="name"/>
