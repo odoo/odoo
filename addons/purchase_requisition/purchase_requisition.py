@@ -87,6 +87,7 @@ class purchase_requisition(osv.osv):
         for purchase in self.browse(cr, uid, ids, context=context):
             for purchase_id in purchase.purchase_ids:
                 purchase_order_obj.action_cancel(cr,uid,[purchase_id.id])
+                po.message_post(cr, uid, [quotation.id], body=_('Cancelled by the tender associated to this quotation.'), context=context)
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def tender_in_progress(self, cr, uid, ids, context=None):
@@ -284,10 +285,12 @@ class purchase_requisition(osv.osv):
 
     def cancel_quotation(self, cr, uid, tender, context=None):
         #cancel other orders
+        po = self.pool.get('purchase.order')
         wf_service = netsvc.LocalService("workflow")
         for quotation in tender.purchase_ids:
             if quotation.state in ['draft', 'sent', 'bid']:
                 wf_service.trg_validate(uid, 'purchase.order', quotation.id, 'purchase_cancel', cr)
+                po.message_post(cr, uid, [quotation.id], body=_('Cancelled by the tender associated to this quotation.'), context=context)
         return True
             
 
