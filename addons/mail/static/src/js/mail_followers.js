@@ -198,7 +198,7 @@ openerp_mail_followers = function(session, mail) {
             // truncate number of displayed followers
             var truncated = this.followers.slice(0, this.displayed_nb);
             _(truncated).each(function (record) {
-                self.ds_model.call('check_access_right', [self.session.uid]).then(function(result){
+                self.ds_model.call('check_technical_rights', [self.session.uid]).then(function(result){
                     self.check_access = result;
                     record.avatar_url = mail.ChatterUtils.get_image(self.session, 'res.partner', 'image_small', record.id);
                     $(session.web.qweb.render('mail.followers.partner', {'record': record, 'widget': self})).appendTo(node_user_list);
@@ -291,7 +291,6 @@ openerp_mail_followers = function(session, mail) {
             var self = this;
 
             var checklist = new Array();
-            this.ds_model.call('check_access_rights', ['write','read'])
             var subtype_checkbox = _(this.$('.oe_actions input[type="checkbox"]'))
              if (partner_id) {
                 subtype_checkbox = _($('.oe_edit_actions input[type="checkbox"]'))
