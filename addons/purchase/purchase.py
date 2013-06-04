@@ -616,6 +616,8 @@ class purchase_order(osv.osv):
                         _('You must first cancel all receptions related to this purchase order.'))
                 if inv:
                     wf_service.trg_validate(uid, 'account.invoice', inv.id, 'invoice_cancel', cr)
+        self.write(cr,uid,ids,{'state':'cancel'})
+        self.set_order_line_status(cr, uid, ids, 'cancel', context=context)
         for (id, name) in self.name_get(cr, uid, ids):
             wf_service.trg_validate(uid, 'purchase.order', id, 'purchase_cancel', cr)
         return True

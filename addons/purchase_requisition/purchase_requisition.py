@@ -159,6 +159,7 @@ class purchase_requisition(osv.osv):
 
     def _prepare_purchase_order(self, cr, uid, requisition, supplier, context=None):
         location_id = requisition.warehouse_id.lot_input_id.id
+        supplier_pricelist = supplier.property_product_pricelist_purchase or False
         return {
             'origin': requisition.name,
             'partner_id': supplier.id,
@@ -198,7 +199,6 @@ class purchase_requisition(osv.osv):
         res_partner = self.pool.get('res.partner')
         fiscal_position = self.pool.get('account.fiscal.position')
         supplier = res_partner.browse(cr, uid, partner_id, context=context)
-        supplier_pricelist = supplier.property_product_pricelist_purchase or False
         res = {}
         for requisition in self.browse(cr, uid, ids, context=context):
             if not requisition.multiple_rfq_per_supplier and supplier.id in filter(lambda x: x, [rfq.state <> 'cancel' and rfq.partner_id.id or None for rfq in requisition.purchase_ids]):
