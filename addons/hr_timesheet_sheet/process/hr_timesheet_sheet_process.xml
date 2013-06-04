@@ -100,24 +100,24 @@
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Sign in/out&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;The employee signs in and signs out.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_drafttimesheetsheet0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_attendance0"/>
+            <field name="target_node_id" ref="process_node_drafttimesheetsheet0"/>
+            <field name="source_node_id" ref="process_node_attendance0"/>
         </record>
 
         <record id="process_transition_timesheetdraft0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Service&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;The timesheet line represents the time spent by the employee on a specific service provided.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_drafttimesheetsheet0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_timesheet0"/>
+            <field name="target_node_id" ref="process_node_drafttimesheetsheet0"/>
+            <field name="source_node_id" ref="process_node_timesheet0"/>
         </record>
 
         <record id="process_transition_confirmtimesheet0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Confirmation&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;The employee periodically confirms his own timesheets.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_confirmedtimesheet0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_drafttimesheetsheet0"/>
+            <field name="target_node_id" ref="process_node_confirmedtimesheet0"/>
+            <field name="source_node_id" ref="process_node_drafttimesheetsheet0"/>
             <field eval="[(6,0,[ref('hr_timesheet_sheet.t1')])]" name="transition_ids"/>
         </record>
 
@@ -125,24 +125,24 @@
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Validation&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;The project manager validates the timesheets.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_validatedtimesheet0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_confirmedtimesheet0"/>
+            <field name="target_node_id" ref="process_node_validatedtimesheet0"/>
+            <field name="source_node_id" ref="process_node_confirmedtimesheet0"/>
         </record>
 
         <record id="process_transition_invoiceontimesheet0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Billing&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;The invoice is created based on the timesheet.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_invoiceonwork0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_confirmedtimesheet0"/>
+            <field name="target_node_id" ref="process_node_invoiceonwork0"/>
+            <field name="source_node_id" ref="process_node_confirmedtimesheet0"/>
         </record>
 
         <record id="process_transition_tasktimesheet0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Task timesheet&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Moves task entry into the timesheet line&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_timesheet0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_workontask0"/>
+            <field name="target_node_id" ref="process_node_timesheet0"/>
+            <field name="source_node_id" ref="process_node_workontask0"/>
          </record>
 
         <!--

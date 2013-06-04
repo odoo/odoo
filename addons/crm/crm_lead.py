@@ -367,8 +367,8 @@ class crm_lead(base_stage, format_address, osv.osv):
     def on_change_user(self, cr, uid, ids, user_id, context=None):
         """ When changing the user, also set a section_id or restrict section id
             to the ones user_id is member of. """
-        section_id = False
-        if user_id:
+        section_id = self._get_default_section_id(cr, uid, context=context) or False
+        if user_id and not section_id:
             section_ids = self.pool.get('crm.case.section').search(cr, uid, ['|', ('user_id', '=', user_id), ('member_ids', '=', user_id)], context=context)
             if section_ids:
                 section_id = section_ids[0]
