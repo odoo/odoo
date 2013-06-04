@@ -102,7 +102,7 @@ class config(osv.osv):
                 attach_pool.create(cr, uid, attach_vals)
                 res = content['alternateLink']
         else:
-            raise self.pool.get('res.config.settings').get_config_warning(cr, _("You haven't configured 'Authorization Code' generated from google, Please generate and configure it in %%(menu:base_setup.menu_general_configuration)s."), context=context)
+            raise self.pool.get('res.config.settings').get_config_warning(cr, _("You haven't configured 'Authorization Code' generated from google, Please generate and configure it in %(menu:base_setup.menu_general_configuration)s."), context=context)
         return res
     
     def get_google_docs_config(self, cr, uid, res_model, res_id, context=None):

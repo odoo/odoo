@@ -41,11 +41,10 @@
     ],
     'depends': ['base_setup'],
     'description': """
-Integrate Google document with OpenERP.
-=======================================
+Integrate google document to OpenERP record.
+============================================
 
-This module is used to integrate google document to OpenERP record.
-
-You can configure google accounts from Settings > Users > Users.
+This module allows you to integrate google documents to any of your OpenERP record quickly and easily using OAuth 2.0 for Installed Applications, 
+You can configure your google Authorization Code from Settings > Configuration > General Settings by clicking on "Generate Google Authorization Code"
 """
 }
