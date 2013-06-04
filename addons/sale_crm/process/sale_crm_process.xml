@@ -42,8 +42,8 @@
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Crm opportunity quotation&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Opportunity goes into the quotation&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="sale.process_node_quotation0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_crmopportunity0"/>
+            <field name="target_node_id" ref="sale.process_node_quotation0"/>
+            <field name="source_node_id" ref="process_node_crmopportunity0"/>
         </record>
 
 
@@ -51,24 +51,24 @@
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Opportunity Quotation&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Opportunity convert into quotation&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_crmquotation0"/>
-            <field model="process.node" name="source_node_id" ref="crm.process_node_opportunities0"/>
+            <field name="target_node_id" ref="process_node_crmquotation0"/>
+            <field name="source_node_id" ref="crm.process_node_opportunities0"/>
         </record>
 
         <record id="process_transition_opportunitypricelist0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Opportunity Pricelist&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Opporunity convert to the Pricelist&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_contractpricelist0"/>
-            <field model="process.node" name="source_node_id" ref="crm.process_node_opportunities0"/>
+            <field name="target_node_id" ref="process_node_contractpricelist0"/>
+            <field name="source_node_id" ref="crm.process_node_opportunities0"/>
         </record>
 
         <record id="process_transition_opportunityanalytic0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Opportunity Analytic&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Analytic Account&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_contractanalytic0"/>
-            <field model="process.node" name="source_node_id" ref="crm.process_node_opportunities0"/>
+            <field name="target_node_id" ref="process_node_contractanalytic0"/>
+            <field name="source_node_id" ref="crm.process_node_opportunities0"/>
         </record>
 
         -->
