@@ -157,7 +157,8 @@
                             <label for="section_id" groups="base.group_multi_salesteams"/>
                             <div groups="base.group_multi_salesteams">
                                 <field name="section_id"/>
-                                <button name="case_escalate" string="Escalate" type="object"
+                                <button name="case_escalate" string="Escalate"
+                                        type="object" class="oe_link"
                                         attrs="{'invisible': ['|', ('section_id','=',False), ('state', 'not in', ['draft','open','pending'])]}"/>
                             </div>
                             <field name="type" invisible="1"/>
