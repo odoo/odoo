@@ -153,6 +153,7 @@ class purchase_requisition(osv.osv):
             po_ids.append(po.id)
         res['context'].update({
             'search_default_groupby_product' : True,
+            'search_default_hide_cancelled': True,
         })
         res['domain'] = [('id','in', po_ids)]
         return res
