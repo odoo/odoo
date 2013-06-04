@@ -165,6 +165,9 @@ class res_users(osv.osv):
             deprecated='Use the email field instead of user_email. This field will be removed with OpenERP 7.1.'),
     }
 
+    def on_change_login(self, cr, uid, ids, login, context=None):
+        return {'value': {'email': login}}
+
     def on_change_company_id(self, cr, uid, ids, company_id):
         return {'warning' : {
                     'title': _("Company Switch Warning"),
