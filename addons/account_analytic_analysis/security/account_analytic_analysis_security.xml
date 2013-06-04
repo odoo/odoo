@@ -8,7 +8,7 @@
 
     <record id="group_template_required" model="res.groups">
         <field name="name">Mandatory use of templates in contracts</field>
-        <field name="category_id" ref="base.module_category_sales_management"/>
+        <field name="category_id" ref="base.module_category_hidden"/>
         <field name="comment">the field template of the analytic accounts and contracts will be required.</field>
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>

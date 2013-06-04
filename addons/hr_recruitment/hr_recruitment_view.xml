@@ -41,7 +41,7 @@
         <field name="arch" type="xml">
             <tree string="Applicants" fonts="bold:message_unread==True" colors="grey:state in ('cancel','done');blue:state=='pending'">
                 <field name="message_unread" invisible="1"/>
-                <field name="create_date" groups="base.group_no_one"/>
+                <field name="create_date"/>
                 <field name="name" string="Subject"/>
                 <field name="partner_name"/>
                 <field name="email_from"/>
@@ -107,7 +107,8 @@
                         <field name="type_id" placeholder="Degree"/>
                     </group>
                     <group>
-                        <field name="user_id"/>
+                        <field name="user_id" 
+                            context="{'default_groups_ref': ['base.group_user', 'base.group_hr_manager']}"/>
                         <label for="title_action"/>
                         <div>
                             <field name="date_action"/>
@@ -151,7 +152,7 @@
             </sheet>
             <div class="oe_chatter">
                 <field name="message_follower_ids" widget="mail_followers"/>
-                <field name="message_ids" widget="mail_thread" placeholder="Share a message..."/>
+                <field name="message_ids" widget="mail_thread"/>
             </div>
           </form>
         </field>
@@ -198,7 +199,7 @@
                     <filter string="Appreciation" domain="[]" context="{'group_by':'priority'}"/>
                     <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
                     <filter string="Source" domain="[]" context="{'group_by':'source_id'}"/>
-                    <filter string="Creation Date" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
+                    <filter string="Creation Date" domain="[]" context="{'group_by':'create_date'}"/>
                 </group>
            </search>
         </field>
@@ -237,6 +238,7 @@
                 <field name="title_action"/>
                 <field name="department_id"/>
                 <field name="categ_ids"/>
+                <field name="message_summary"/>
                 <templates>
                     <t t-name="kanban-tooltip">
                         <ul class="oe_kanban_tooltip">
@@ -261,9 +263,14 @@
                                     <i><field name="name"/></i><br/>
                                     <field name="job_id"/><br/>
                                     <t t-if="record.partner_mobile.raw_value">Mobile: <field name="partner_mobile"/><br/></t>
-                                    <t t-if="record.title_action.raw_value"><field name="title_action"/><br/></t>
-                                    <field name="date_action"/>
                                 </div>
+                                <div style="padding-left: 0.5em">
+                                    <t t-if="record.date_action.raw_value and record.date_action.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
+                                    <span t-attf-class="#{red || ''}"><field name="date_action"/></span>
+                                        <t t-if="record.date_action.raw_value"> : </t>
+                                        <field name="title_action"/>
+                                </div>
+                                <div style="width:240px"><field name="categ_ids"/></div>
                                 <div class="oe_kanban_right">
                                     <t t-set="priority" t-value="record.priority.raw_value || 5"/>
                                     <a type="object" name="set_priority" args="['3']" t-if="priority gt 3">
@@ -282,7 +289,7 @@
 
                                 </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:5px;">
-                                    <field name="categ_ids"/>
+                                    <t t-raw="record.message_summary.raw_value"/>
                                 </div>
                             </div>
                             <div class="oe_clear"></div>
@@ -309,11 +316,17 @@
                         attrs="{'invisible':[('survey_id','=',False)]}"/>
                 </div>
             </field>
-            <xpath expr="//div[@class='oe_title']" version="7.0" position="after">
-                <div attrs="{'invisible': [('alias_domain', '=', False)]}">
-                    <field name="alias_id" invisible="1" required="0"/>
-                    <label for="alias_name" class="oe_edit_only"/>
-                    <field name="alias_name" nolabel="1" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" nolabel="1" class="oe_inline"/>
+            <xpath expr="//div[@class='oe_title']//h1" position="after">
+                <div name="group_alias"
+                        attrs="{'invisible': [('alias_domain', '=', False)]}">
+                    <label for="alias_id" string="Email Alias"/>
+                    <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/>
+                    <span name="edit_alias" class="oe_edit_only">
+                        <field name="alias_name" class="oe_inline"
+                                attrs="{'required': [('alias_id', '!=', False)]}"/>
+                        @
+                        <field name="alias_domain" class="oe_inline" readonly="1"/>
+                    </span>
                 </div>
             </xpath>
         </field>
@@ -339,6 +352,7 @@
         <field name="model">hr.recruitment.stage</field>
         <field name="arch" type="xml">
             <form string="Stage" version="7.0">
+                <sheet>
                 <group string="Stage Definition">
                     <group>
                         <field name="name"/>
@@ -352,6 +366,7 @@
                 </group>
                 <separator string="Requirements"/>
                 <field name="requirements"/>
+                </sheet>
             </form>
         </field>
     </record>
@@ -397,10 +412,12 @@
         <field name="model">hr.recruitment.degree</field>
         <field name="arch" type="xml">
             <form string="Degree" version="7.0">
+                <sheet>
                 <group>
                     <field name="name"/>
                     <field name="sequence" groups="base.group_no_one"/>
                 </group>
+                </sheet>
             </form>
         </field>
     </record>
@@ -434,8 +451,12 @@
         <field name="name">hr.recruitment.source.form</field>
         <field name="model">hr.recruitment.source</field>
         <field name="arch" type="xml">
-            <form string="Sources of Applicants">
-                <field name="name"/>
+            <form string="Sources of Applicants" version="7.0">
+                <sheet>
+                <group>
+                    <field name="name"/>
+                </group>
+                </sheet>
             </form>
         </field>
     </record>

@@ -7,11 +7,28 @@
             <field name="model">mail.compose.message</field>
             <field name="inherit_id" ref="mail.email_compose_message_wizard_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='subject']" position="after">
+                    <label string="Template Recipients" for="partner_to"
+                            groups="base.group_no_one"
+                            attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
+                    <div groups="base.group_no_one"
+                            attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}">
+                        <group class="oe_grey">
+                            <!-- <label string="Partners" for="partner_to"/> -->
+                            <field name="partner_to" readonly="1"/>
+                            <!-- <label string="Email To" for="email_to"/> -->
+                            <field name="email_to" readonly="1"/>
+                            <!-- <label string="Email CC" for="email_cc"/> -->
+                            <field name="email_cc" readonly="1"/>
+                        </group>
+                    </div>
+                </xpath>
                 <xpath expr="//footer" position="inside">
-                    <group class="oe_right" col="1">
+                    <group class="oe_right oe_form" col="1">
                         <div>Use template
-                            <field name="template_id" nolabel="1"
-                                on_change="onchange_template_id(template_id, composition_mode, model, res_id, context)"/>
+                            <!--FIX: To avoid css issue of many2one field in footer temporary used oe_form (BUG:1152464)-->
+                            <field name="template_id" nolabel="1" class='oe_inline'
+                                on_change="onchange_template_id(template_id, composition_mode, model, res_id, context)" domain="[('model_id.model','=',model)]"/>
                         </div>
                         <button icon="/email_template/static/src/img/email_template_save.png"
                             type="object" name="save_as_template" string="Save as new template" class="oe_link"

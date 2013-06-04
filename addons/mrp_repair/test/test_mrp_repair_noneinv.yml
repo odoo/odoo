@@ -23,5 +23,5 @@
 -
   !python {model: mrp.repair}: |
      repair_id = self.browse(cr, uid, [ref('mrp_repair_rmrp1')], context=context)[0]
-     assert not repair_id.invoice_id.id, _("Invoice should not be exists for this repair order")
+     assert not repair_id.invoice_id.id, "Invoice should not be exists for this repair order"
 

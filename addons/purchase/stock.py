@@ -29,7 +29,6 @@ class stock_move(osv.osv):
             readonly=True),
     }
 
-stock_move()
 
 #
 # Inherit of picking to add the link to the PO

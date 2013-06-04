@@ -20,12 +20,13 @@
 ##############################################################################
 
 import time
+import pytz
+from openerp import SUPERUSER_ID
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from operator import attrgetter
 
 from openerp.osv import fields, osv
-from openerp import pooler
 from openerp.tools.translate import _
 import openerp.addons.decimal_precision as dp
 from openerp.osv.orm import browse_record, browse_null
@@ -163,6 +164,7 @@ class purchase_order(osv.osv):
         'state': {
             'purchase.mt_rfq_confirmed': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'confirmed',
             'purchase.mt_rfq_approved': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'approved',
+            'purchase.mt_rfq_done': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
         },
     }
     _columns = {
@@ -247,7 +249,11 @@ class purchase_order(osv.osv):
     def create(self, cr, uid, vals, context=None):
         if vals.get('name','/')=='/':
             vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'purchase.order') or '/'
+        if context is None:
+            context = {}
+        context.update({'mail_create_nolog': True})
         order =  super(purchase_order, self).create(cr, uid, vals, context=context)
+        self.message_post(cr, uid, [order], body=_("RFQ created"), context=context)
         return order
 
     def unlink(self, cr, uid, ids, context=None):
@@ -367,7 +373,7 @@ class purchase_order(osv.osv):
             pick_ids += [picking.id for picking in po.picking_ids]
 
         action_model, action_id = tuple(mod_obj.get_object_reference(cr, uid, 'stock', 'action_picking_tree4'))
-        action = self.pool.get(action_model).read(cr, uid, action_id, context=context)
+        action = self.pool[action_model].read(cr, uid, action_id, context=context)
         ctx = eval(action['context'])
         ctx.update({
             'search_default_purchase_id': ids[0]
@@ -422,6 +428,7 @@ class purchase_order(osv.osv):
             'default_composition_mode': 'comment',
         })
         return {
+            'name': _('Compose Email'),
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
@@ -587,11 +594,34 @@ class purchase_order(osv.osv):
         self.signal_purchase_cancel(cr, uid, ids)
         return True
 
+    def date_to_datetime(self, cr, uid, userdate, context=None):
+        """ Convert date values expressed in user's timezone to
+        server-side UTC timestamp, assuming a default arbitrary
+        time of 12:00 AM - because a time is needed.
+    
+        :param str userdate: date string in in user time zone
+        :return: UTC datetime string for server-side use
+        """
+        # TODO: move to fields.datetime in server after 7.0
+        user_date = datetime.strptime(userdate, DEFAULT_SERVER_DATE_FORMAT)
+        if context and context.get('tz'):
+            tz_name = context['tz']
+        else:
+            tz_name = self.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz']
+        if tz_name:
+            utc = pytz.timezone('UTC')
+            context_tz = pytz.timezone(tz_name)
+            user_datetime = user_date + relativedelta(hours=12.0)
+            local_timestamp = context_tz.localize(user_datetime, is_dst=False)
+            user_datetime = local_timestamp.astimezone(utc)
+            return user_datetime.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        return user_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+
     def _prepare_order_picking(self, cr, uid, order, context=None):
         return {
             'name': self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.in'),
             'origin': order.name + ((order.origin and (':' + order.origin)) or ''),
-            'date': order.date_order,
+            'date': self.date_to_datetime(cr, uid, order.date_order, context),
             'partner_id': order.dest_address_id.id or order.partner_id.id,
             'invoice_state': '2binvoiced' if order.invoice_method == 'picking' else 'none',
             'type': 'in',
@@ -609,8 +639,8 @@ class purchase_order(osv.osv):
             'product_uos_qty': order_line.product_qty,
             'product_uom': order_line.product_uom.id,
             'product_uos': order_line.product_uom.id,
-            'date': order_line.date_planned,
-            'date_expected': order_line.date_planned,
+            'date': self.date_to_datetime(cr, uid, order.date_order, context),
+            'date_expected': self.date_to_datetime(cr, uid, order_line.date_planned, context),
             'location_id': order.partner_id.property_stock_supplier.id,
             'location_dest_id': order.location_id.id,
             'picking_id': picking_id,
@@ -673,6 +703,7 @@ class purchase_order(osv.osv):
 
     def picking_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'shipped':1,'state':'approved'}, context=context)
+        self.message_post(cr, uid, ids, body=_("Products received"), context=context)
         return True
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -724,6 +755,9 @@ class purchase_order(osv.osv):
                 list_key.append((field, field_val))
             list_key.sort()
             return tuple(list_key)
+
+        if context is None:
+            context = {}
 
         # Compute what the new orders should contain
 
@@ -788,7 +822,9 @@ class purchase_order(osv.osv):
             order_data['order_line'] = [(0, 0, value) for value in order_data['order_line'].itervalues()]
 
             # create the new order
+            context.update({'mail_create_nolog': True})
             neworder_id = self.create(cr, uid, order_data)
+            self.message_post(cr, uid, [neworder_id], body=_("RFQ created"), context=context)
             orders_info.update({neworder_id: old_ids})
             allorders.append(neworder_id)
 
@@ -916,7 +952,8 @@ class purchase_order_line(osv.osv):
             lang = res_partner.browse(cr, uid, partner_id).lang
             context_partner.update( {'lang': lang, 'partner_id': partner_id} )
         product = product_product.browse(cr, uid, product_id, context=context_partner)
-        name = product.name
+        #call name_get() with partner in the context to eventually match name and description in the seller_ids field
+        dummy, name = product_product.name_get(cr, uid, product_id, context=context_partner)[0]
         if product.description_purchase:
             name += '\n' + product.description_purchase
         res['value'].update({'name': name})
@@ -979,7 +1016,6 @@ class purchase_order_line(osv.osv):
         self.write(cr, uid, ids, {'state': 'confirmed'}, context=context)
         return True
 
-purchase_order_line()
 
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
@@ -1186,5 +1222,28 @@ class mail_compose_message(osv.Model):
             context = dict(context, mail_post_autofollow=True)
             self.pool.get('purchase.order').signal_send_rfq(cr, uid, [context['default_res_id']])
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
+
+
+class account_invoice(osv.Model):
+    """ Override account_invoice to add Chatter messages on the related purchase
+        orders, logging the invoice reception or payment. """
+    _inherit = 'account.invoice'
+
+    def invoice_validate(self, cr, uid, ids, context=None):
+        res = super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
+        purchase_order_obj = self.pool.get('purchase.order')
+        po_ids = purchase_order_obj.search(cr, uid, [('invoice_ids', 'in', ids)], context=context)
+        if po_ids:
+            purchase_order_obj.message_post(cr, uid, po_ids, body=_("Invoice received"), context=context)
+        return res
+
+    def confirm_paid(self, cr, uid, ids, context=None):
+        res = super(account_invoice, self).confirm_paid(cr, uid, ids, context=context)
+        purchase_order_obj = self.pool.get('purchase.order')
+        po_ids = purchase_order_obj.search(cr, uid, [('invoice_ids', 'in', ids)], context=context)
+        if po_ids:
+            purchase_order_obj.message_post(cr, uid, po_ids, body=_("Invoice paid"), context=context)
+        return res
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

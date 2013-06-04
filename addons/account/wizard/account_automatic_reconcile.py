@@ -246,6 +246,5 @@ class account_automatic_reconcile(osv.osv_memory):
             'context': context,
         }
 
-account_automatic_reconcile()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

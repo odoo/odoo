@@ -37,7 +37,7 @@ except ImportError:
     from DAV.davcmd import copyone, copytree, moveone, movetree, delone, deltree
 
 import openerp
-from openerp import pooler, sql_db, netsvc
+from openerp import sql_db
 import openerp.service
 from openerp.tools import misc
 
@@ -494,9 +494,9 @@ class openerp_dav_handler(dav_interface):
             self.parent.auth_provider.checkRequest(self.parent, uri, dbname)
             res = self.parent.auth_provider.auth_creds[dbname]
         user, passwd, dbn2, uid = res
-        db,pool = pooler.get_db_and_pool(dbname)
-        cr = db.cursor()
-        return cr, uid, pool, dbname, uri2
+        registry = openerp.registry(dbname)
+        cr = registery.db.cursor()
+        return cr, uid, registry, dbname, uri2
 
     def uri2object(self, cr, uid, pool, uri):
         if not uid:
