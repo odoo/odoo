@@ -203,7 +203,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Purchase Order">
+                        <page string="Products">
                             <field name="order_line">
                                 <tree string="Purchase Order Lines" editable="bottom">
                                     <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,0,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,product_lead_time,context)"/>
@@ -232,7 +232,14 @@
                             <div class="oe_clear"/>
                             <field name="notes" class="oe_inline" placeholder="Terms and conditions..."/>
                         </page>
-                        <page string="Incoming Shipments &amp; Invoices">
+                        <page string="RFQ &amp; Bid">
+                            <group>
+                                <field name="payment_term_id" widget="selection"/>
+                                <field name="bid_date"/>
+                                <field name="bid_validity"/>
+                            </group>
+                        </page>
+                        <page string="Deliveries &amp; Invoices">
                             <group>
                                 <group>
                                     <field name="dest_address_id" string="Customer Address" on_change="onchange_dest_address_id(dest_address_id)" groups="stock.group_locations"/>
@@ -243,18 +250,11 @@
                                 <group>
                                     <field name="invoice_method"/>
                                     <field name="invoiced"/>
-                                    <field name="payment_term_id" widget="selection"/>
                                     <field name="fiscal_position" attrs="{'readonly': [('invoiced','=', True)]}" />
                                     <!-- We do not need these fields anymore, the information is in open chatter -->
                                     <field name="validator" groups="base.group_no_one"/>
                                     <field name="date_approve" groups="base.group_no_one"/>
                                 </group>
-                            </group>
-                        </page>
-                        <page string="Bid information">
-                            <group>
-                                <field name="bid_date"/>
-                                <field name="bid_validity"/>
                             </group>
                         </page>
                     </notebook>
