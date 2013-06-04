@@ -3853,11 +3853,12 @@ class BaseModel(object):
             # Attempt to distinguish record rule restriction vs deleted records,
             # to provide a more specific error message - check if the missinf
             cr.execute('SELECT id FROM ' + self._table + ' WHERE id IN %s', (tuple(missing_ids),))
-            if cr.rowcount:
+            forbidden_ids = [x[0] for x in cr.fetchall()]
+            if forbidden_ids:
                 # the missing ids are (at least partially) hidden by access rules
                 if uid == SUPERUSER_ID:
                     return
-                _logger.warning('Access Denied by record rules for operation: %s, uid: %s, model: %s', operation, uid, self._name)
+                _logger.warning('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, forbidden_ids, uid, self._name)
                 raise except_orm(_('Access Denied'),
                                  _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
                                     (self._description, operation))
@@ -4817,8 +4818,8 @@ class BaseModel(object):
                 order_field = order_split[0].strip()
                 order_direction = order_split[1].strip() if len(order_split) == 2 else ''
                 inner_clause = None
-                if order_field == 'id':
-                    order_by_elements.append('"%s"."id" %s' % (self._table, order_direction))
+                if order_field == 'id' or (self._log_access and order_field in LOG_ACCESS_COLUMNS.keys()):
+                    order_by_elements.append('"%s"."%s" %s' % (self._table, order_field, order_direction))
                 elif order_field in self._columns:
                     order_column = self._columns[order_field]
                     if order_column._classic_read:
@@ -4836,6 +4837,8 @@ class BaseModel(object):
                         inner_clause = self._generate_m2o_order_by(order_field, query)
                     else:
                         continue  # ignore non-readable or "non-joinable" fields
+                else:
+                    raise ValueError( _("Sorting field %s not found on model %s") %( order_field, self._name))
                 if inner_clause:
                     if isinstance(inner_clause, list):
                         for clause in inner_clause:
@@ -5092,20 +5095,18 @@ class BaseModel(object):
         :param parent: optional parent field name (default: ``self._parent_name = parent_id``)
         :return: **True** if the operation can proceed safely, or **False** if an infinite loop is detected.
         """
-
         if not parent:
             parent = self._parent_name
-        ids_parent = ids[:]
-        query = 'SELECT distinct "%s" FROM "%s" WHERE id IN %%s' % (parent, self._table)
-        while ids_parent:
-            ids_parent2 = []
-            for i in range(0, len(ids), cr.IN_MAX):
-                sub_ids_parent = ids_parent[i:i+cr.IN_MAX]
-                cr.execute(query, (tuple(sub_ids_parent),))
-                ids_parent2.extend(filter(None, map(lambda x: x[0], cr.fetchall())))
-            ids_parent = ids_parent2
-            for i in ids_parent:
-                if i in ids:
+
+        # must ignore 'active' flag, ir.rules, etc. => direct SQL query
+        query = 'SELECT "%s" FROM "%s" WHERE id = %%s' % (parent, self._table)
+        for id in ids:
+            current_id = id
+            while current_id is not None:
+                cr.execute(query, (current_id,))
+                result = cr.fetchone()
+                current_id = result[0] if result else None
+                if current_id == id:
                     return False
         return True
 
