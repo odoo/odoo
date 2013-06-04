@@ -81,6 +81,8 @@ Dashboard for CRM will include:
         'crm_lead_view.xml',
         'crm_lead_menu.xml',
 
+        'crm_case_section_view.xml',
+
         'crm_meeting_menu.xml',
 
         'crm_phonecall_view.xml',
@@ -95,7 +97,6 @@ Dashboard for CRM will include:
         'board_crm_view.xml',
 
         'res_config_view.xml',
-        'crm_case_section_view.xml',
         'base_partner_merge_view.xml',
     ],
     'demo': [
@@ -120,8 +121,8 @@ Dashboard for CRM will include:
         'static/src/css/crm.css'
     ],
     'js': [
+        'static/lib/sparkline/jquery.sparkline.js',
         'static/src/js/crm_case_section.js',
-        'static/lib/sparkline/jquery.sparkline.min.js',
     ],
     'installable': True,
     'application': True,

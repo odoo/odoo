@@ -125,8 +125,9 @@
                     <field name="parent_id"/>
                     <field name="user_id"/>
                     <field name="note"/>
-                    <filter name="my" string="My" domain="['|', ('member_ids', '=', uid), ('user_id', '=', uid)]"/>
+                    <filter name="personal" string="My Salesteams" domain="['|', ('member_ids', '=', uid), ('user_id', '=', uid)]"/>
                     <group expand="0" string="Group By...">
+                        <filter string="Team Leader" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Parent Sales Teams" domain="[]" context="{'group_by':'parent_id'}"/>
                     </group>
                 </search>
@@ -140,7 +141,7 @@
             <field name="res_model">crm.case.section</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="context">{'search_default_my': True}</field>
+            <field name="context">{'search_default_personal': True}</field>
             <field name="view_id" ref="crm_case_section_salesteams_view_kanban"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
@@ -164,7 +165,7 @@
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only" string="Sales team"/>
                             <h1>
-                                <field name="name" string="Sales team"/>
+                                <field name="name" string="Salesteam"/>
                             </h1>
                             <div name="group_alias"
                                     attrs="{'invisible': [('alias_domain', '=', False)]}">
