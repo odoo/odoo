@@ -350,6 +350,31 @@ def httprequest(f):
     return f
 
 #----------------------------------------------------------
+# Local storage of requests
+#----------------------------------------------------------
+_thlocal = threading.local()
+
+class RequestProxy(object):
+    def __getattr__(self, name):
+        return getattr(_thlocal.stack[-1], name)
+    def __setattr__(self, name, val):
+        return setattr(_thlocal.stack[-1], name, val)
+    def __delattr__(self, name):
+        return delattr(_thlocal.stack[-1], name)
+    @classmethod
+    def set_request(cls, request):
+        class with_obj:
+            def __enter__(self):
+                if getattr(_thlocal, "stack", None) is None:
+                    _thlocal.stack = []
+                _thlocal.stack.append(request)
+            def __exit__(self, *args):
+                _thlocal.stack.pop()
+        return with_obj()
+
+request = RequestProxy()
+
+#----------------------------------------------------------
 # Controller registration with a metaclass
 #----------------------------------------------------------
 addons_module = {}
@@ -610,10 +635,18 @@ class Root(object):
                         exposed = getattr(method, 'exposed', False)
                         if exposed == 'json':
                             _logger.debug("Dispatch json to %s %s %s", ps, c, method_name)
-                            return lambda request: JsonRequest(request).dispatch(method)
+                            def fct(request):
+                                req = JsonRequest(request)
+                                with RequestProxy.set_request(req):
+                                    return req.dispatch(method)
+                            return fct
                         elif exposed == 'http':
                             _logger.debug("Dispatch http to %s %s %s", ps, c, method_name)
-                            return lambda request: HttpRequest(request).dispatch(method)
+                            def fct(request):
+                                req = HttpRequest(request)
+                                with RequestProxy.set_request(req):
+                                    return req.dispatch(method)
+                            return fct
                     if method_name != "index":
                         method_name = "index"
                         continue
