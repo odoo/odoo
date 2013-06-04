@@ -27,6 +27,7 @@ from urlparse import urljoin
 
 from openerp import tools
 from openerp import SUPERUSER_ID
+from openerp.addons.base.ir.ir_mail_server import MailDeliveryException
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -304,8 +305,7 @@ class mail_mail(osv.Model):
                 after sending each mail (meant only for scheduler processing);
                 should never be True during normal transactions (default: False)
             :param bool raise_exception: whether to raise an exception if the
-                email sending process has failed; auto_commit is taken into
-                account.
+                email sending process has failed
             :return: True
         """
         ir_mail_server = self.pool.get('ir.mail_server')
@@ -351,12 +351,15 @@ class mail_mail(osv.Model):
                 # see revid:odo@openerp.com-20120622152536-42b2s28lvdv3odyr in 6.1
                 if mail_sent:
                     self._postprocess_sent_message(cr, uid, mail, context=context)
-            except Exception:
-                if not raise_exception or auto_commit:
-                    _logger.exception('failed sending mail.mail %s', mail.id)
-                    mail.write({'state': 'exception'})
-                    cr.commit()
+            except Exception as e:
+                _logger.exception('failed sending mail.mail %s', mail.id)
+                mail.write({'state': 'exception'})
                 if raise_exception:
+                    if isinstance(e, AssertionError):
+                        # get the args of the original error, wrap into a value and throw a MailDeliveryException
+                        # that is an except_orm, with name and value as arguments
+                        value = '. '.join(e.args)
+                        raise MailDeliveryException(_("Mail Delivery Failed"), value)
                     raise
 
             if auto_commit == True:
