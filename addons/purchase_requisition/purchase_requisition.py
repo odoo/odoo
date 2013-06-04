@@ -171,7 +171,8 @@ class purchase_requisition(osv.osv):
             'notes':requisition.description,
             'warehouse_id':requisition.warehouse_id.id,
         }
-    def _prepare_purchase_order_line(self, cr, uid, requisition, requisition_line, supplier, context=None):
+    def _prepare_purchase_order_line(self, cr, uid, requisition, requisition_line, purchase_id, supplier, context=None):
+        fiscal_position = self.pool.get('account.fiscal.position')
         product = requisition_line.product_id
         seller_price, qty, default_uom_po_id, date_planned = self._seller_details(cr, uid, requisition_line, supplier, context=context)
         taxes_ids = product.supplier_taxes_id
@@ -197,7 +198,6 @@ class purchase_requisition(osv.osv):
         purchase_order = self.pool.get('purchase.order')
         purchase_order_line = self.pool.get('purchase.order.line')
         res_partner = self.pool.get('res.partner')
-        fiscal_position = self.pool.get('account.fiscal.position')
         supplier = res_partner.browse(cr, uid, partner_id, context=context)
         res = {}
         for requisition in self.browse(cr, uid, ids, context=context):
@@ -206,7 +206,7 @@ class purchase_requisition(osv.osv):
             purchase_id = purchase_order.create(cr, uid, self._prepare_purchase_order(cr, uid, requisition, supplier, context=context), context=context)
             res[requisition.id] = purchase_id
             for line in requisition.line_ids:
-                purchase_order_line.create(cr, uid, self._prepare_purchase_order_line(cr, uid, requisition, requisition_line, supplier, context=context), context=context)
+                purchase_order_line.create(cr, uid, self._prepare_purchase_order_line(cr, uid, requisition, line, purchase_id, supplier, context=context), context=context)
         return res
 
     def check_valid_quotation(self, cr, uid, quotation, context=None):
