@@ -219,7 +219,9 @@ class WebKitParser(report_sxw):
         template =  False
 
         if report_xml.report_file :
-            path = addons.get_module_resource(*report_xml.report_file.split(os.path.sep))
+            # backward-compatible if path in Windows format
+            report_path = report_xml.report_file.replace("\\", "/")
+            path = addons.get_module_resource(*report_path.split('/'))
             if path and os.path.exists(path) :
                 template = file(path).read()
         if not template and report_xml.report_webkit_data :
