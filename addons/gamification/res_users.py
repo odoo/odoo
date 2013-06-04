@@ -1,6 +1,6 @@
 from openerp.osv import osv
 
-
+#TODO add copyright and last line for vim users
 class res_users_gamification_group(osv.Model):
     """ Update of res.users class
         - if adding groups to an user, check gamification.goal.plan linked to
@@ -25,6 +25,7 @@ class res_users_gamification_group(osv.Model):
             self.pool.get('gamification.goal').changed_users_avatar(cr, uid, ids, context)
         return write_res
 
+#TODO: this method is not clear about what she returns (list of dict but the dict's keys may be different from one to another)... it's doubtfull conceptually. Don't we need some more doc? why is this method looking so overkill?
     def get_goals_todo_info(self, cr, uid, context=None):
         """Return the list of goals assigned to the user, grouped by plan"""
         all_goals_info = []
@@ -67,7 +68,7 @@ class res_users_gamification_group(osv.Model):
                             continue
 
                         vals['goals'].append({
-                            'rank': goal[0]+1,
+                            'rank': goal[0] + 1,
                             'id': goal[1].id,
                             'user_id': goal[1].user_id.id,
                             'user_name': goal[1].user_id.name,
@@ -110,10 +111,10 @@ class res_users_gamification_group(osv.Model):
 
     def get_challenge_suggestions(self, cr, uid, context=None):
         """Return the list of goal plans suggested to the user"""
-        if context is None: context = {}
         plan_info = []
-        plan_ids = self.pool.get('gamification.goal.plan').search(cr, uid, [('proposed_user_ids', 'in', uid), ('state', '=', 'inprogress')], context=context)
-        for plan in self.pool.get('gamification.goal.plan').browse(cr, uid, plan_ids, context=context):
+        goal_plan_obj = self.pool.get('gamification.goal.plan')
+        plan_ids = goal_plan_obj.search(cr, uid, [('proposed_user_ids', 'in', uid), ('state', '=', 'inprogress')], context=context)
+        for plan in goal_plan_obj.browse(cr, uid, plan_ids, context=context):
             values = {
                 'id': plan.id,
                 'name': plan.name,

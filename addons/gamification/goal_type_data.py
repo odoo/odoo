@@ -30,6 +30,7 @@ class gamification_goal_type_data(osv.Model):
     """
     _inherit = 'gamification.goal.type'
 
+#TODO: is it usefull to have this method in a standalone file? why not directly in the computation field of the related goal type?
     def number_following(self, cr, uid, xml_id="mail.thread", context=None):
         """Return the number of 'xml_id' objects the user is following
 

@@ -145,14 +145,11 @@ class gamification_goal(osv.Model):
         return {'value': {'computation_mode': goal_type.computation_mode, 'type_condition': goal_type.condition}}
 
     _columns = {
-        'type_id': fields.many2one('gamification.goal.type',
-            string='Goal Type',
-            required=True,
-            ondelete="cascade"),
+        'type_id': fields.many2one('gamification.goal.type', string='Goal Type', required=True, ondelete="cascade"),
+        #TODO: add some tooltip/grey label in view to explain that people can use 'user_id' in their domain
+        #TODO: actually it would be better to use 'user.id' in the domain definition, because it means user is a browse record and it's more flexible (i can do '[(country_id,=,user.partner_id.country_id.id)])
         'user_id': fields.many2one('res.users', string='User', required=True),
-        'planline_id': fields.many2one('gamification.goal.planline',
-            string='Goal Planline',
-            ondelete="cascade"),
+        'planline_id': fields.many2one('gamification.goal.planline', string='Goal Planline', ondelete="cascade"),
         'plan_id': fields.related('planline_id', 'plan_id',
             string="Plan",
             type='many2one',
@@ -163,12 +160,8 @@ class gamification_goal(osv.Model):
         'target_goal': fields.float('To Reach',
             required=True,
             track_visibility='always'),  # no goal = global index
-        'current': fields.float('Current',
-            required=True,
-            track_visibility='always'),
-        'completeness': fields.function(_get_completeness,
-            type='float',
-            string='Completeness'),
+        'current': fields.float('Current Value', required=True, track_visibility='always'),
+        'completeness': fields.function(_get_completeness, type='float', string='Completeness'),
         'state': fields.selection([
                 ('draft', 'Draft'),
                 ('inprogress', 'In progress'),
@@ -181,24 +174,17 @@ class gamification_goal(osv.Model):
             required=True,
             track_visibility='always'),
 
-        'computation_mode': fields.related('type_id', 'computation_mode',
-            type='char',
-            string="Type computation mode"),
+        'computation_mode': fields.related('type_id', 'computation_mode', type='char', string="Type computation mode"),
         'remind_update_delay': fields.integer('Remind delay',
             help="The number of days after which the user assigned to a manual goal will be reminded. Never reminded if no value is specified."),
         'last_update': fields.date('Last Update',
             help="In case of manual goal, reminders are sent if the goal as not been updated for a while (defined in goal plan). Ignored in case of non-manual goal or goal not linked to a plan."),
 
-        'type_description': fields.related('type_id', 'description',
-            type='char', string='Type Description', readonly=True),
-        'type_suffix': fields.related('type_id', 'suffix',
-            type='char', string='Type Description', readonly=True),
-        'type_condition': fields.related('type_id', 'condition',
-            type='char', string='Type Condition', readonly=True),
-        'type_suffix': fields.related('type_id', 'full_suffix',
-            type="char", string="Suffix", readonly=True),
-        'type_display': fields.related('type_id', 'display_mode',
-            type="char", string="Display Mode", readonly=True),
+        'type_description': fields.related('type_id', 'description', type='char', string='Type Description', readonly=True),
+        'type_suffix': fields.related('type_id', 'suffix', type='char', string='Type Description', readonly=True),
+        'type_condition': fields.related('type_id', 'condition', type='char', string='Type Condition', readonly=True),
+        'type_suffix': fields.related('type_id', 'full_suffix', type="char", string="Suffix", readonly=True),
+        'type_display': fields.related('type_id', 'display_mode', type="char", string="Display Mode", readonly=True),
     }
 
     _defaults = {
@@ -208,7 +194,6 @@ class gamification_goal(osv.Model):
     }
     _order = 'create_date desc, end_date desc, type_id, id'
 
-#TODO code review of this method
     def update(self, cr, uid, ids, context=None):
         """Update the goals to recomputes values and change of states
 
@@ -219,13 +204,16 @@ class gamification_goal(osv.Model):
         the target value being reached, the goal is set as failed."""
 
         for goal in self.browse(cr, uid, ids, context=context):
+            #TODO: towrite may be falsy, to avoid useless write on the object. Please check the whole thing is still working
+            towrite = {}
             if goal.state in ('draft', 'canceled'):
                 # skip if goal draft or canceled
                 continue
 
             if goal.type_id.computation_mode == 'manually':
-                # no comoutation for manual goals, only check for reminders
-                towrite = {'current': goal.current}
+
+                #TODO: put this code section in a separated method
+                # check for remind to update
                 if goal.remind_update_delay and goal.last_update:
                     delta_max = timedelta(days=goal.remind_update_delay)
                     last_update = datetime.strptime(goal.last_update, '%Y-%m-%d').date()
@@ -242,10 +230,9 @@ class gamification_goal(osv.Model):
                 values = {'cr': cr, 'uid': goal.user_id.id, 'context': context, 'self': self.pool.get('gamification.goal.type')}
                 result = safe_eval(goal.type_id.compute_code, values, {})
 
-                if type(result) == float or type(result) == int or type(result) == long:
+                if type(result) in (float, int, long) and result != goal.current:
                     towrite = {'current': result}
                 else:
-                    towrite = {'current': goal.current}
                     _logger.exception(_('Unvalid return content from the evaluation of %s' % str(goal.type_id.compute_code)))
                     # raise osv.except_osv(_('Error!'), _('Unvalid return content from the evaluation of %s' % str(goal.type_id.compute_code)))
 
@@ -254,8 +241,9 @@ class gamification_goal(osv.Model):
                 field_date_name = goal.type_id.field_date_id.name
 
                 # eval the domain with user_id replaced by goal user
-                domain = safe_eval(goal.type_id.domain,
-                                   {'user_id': goal.user_id.id})
+                domain = safe_eval(goal.type_id.domain, {'user_id': goal.user_id.id})  # TODO: {'user_id': goal.user_id} (see above comment)
+
+                #add temporal clause(s) to the domain if fields are filled on the goal
                 if goal.start_date and field_date_name:
                     domain.append((field_date_name, '>=', goal.start_date))
                 if goal.end_date and field_date_name:
@@ -263,26 +251,26 @@ class gamification_goal(osv.Model):
 
                 if goal.type_id.computation_mode == 'sum':
                     field_name = goal.type_id.field_id.name
-                    res = obj.read_group(cr, uid, domain, [field_name],
-                                         [''], context=context)
-                    if res[0][field_name]:
-                        towrite = {'current': res[0][field_name]}
-                    else:
-                        # avoid false when no result
-                        towrite = {'current': 0}
+                    res = obj.read_group(cr, uid, domain, [field_name], [''], context=context)
+                    new_value = res and res[0][field_name] or 0.0
 
                 else:  # computation mode = count
-                    res = obj.search(cr, uid, domain, context=context)
-                    towrite = {'current': len(res)}
+                    new_value = obj.search(cr, uid, domain, context=context, count=True)
+
+                #avoid useless write if the new value is the same as the old one
+                if new_value != goal.current:
+                    towrite = {'current': new_value}
 
             # check goal target reached
-            if (goal.type_id.condition == 'higher' and towrite['current'] >= goal.target_goal) or (goal.type_id.condition == 'lower' and towrite['current'] <= goal.target_goal):
+            #TODO: reached condition is wrong because it should check time constraints.
+            if (goal.type_id.condition == 'higher' and towrite.get('current', goal.current) >= goal.target_goal) or (goal.type_id.condition == 'lower' and towrite.get('current', goal.curren) <= goal.target_goal):
                 towrite['state'] = 'reached'
 
             # check goal failure
             elif goal.end_date and fields.date.today() > goal.end_date:
                 towrite['state'] = 'failed'
-            self.write(cr, uid, [goal.id], towrite, context=context)
+            if towrite:
+                self.write(cr, uid, [goal.id], towrite, context=context)
         return True
 
     def action_start(self, cr, uid, ids, context=None):
@@ -315,6 +303,7 @@ class gamification_goal(osv.Model):
 
     def create(self, cr, uid, vals, context=None):
         """Overwrite the create method to add a 'just_created' field to True"""
+        #TODO: rename just_created into something more explicit (related to the effect, not to the cause) like 'avoid_onchange_log', for example
         context = context or {}
         context['just_created'] = True
         return super(gamification_goal, self).create(cr, uid, vals, context=context)
@@ -350,14 +339,15 @@ class gamification_goal(osv.Model):
         """
         goal = self.browse(cr, uid, goal_id, context=context)
         if goal.type_id.action_id:
+            #open a the action linked on the goal
             action = goal.type_id.action_id.read()[0]
 
             if goal.type_id.res_id_field:
-                current_user = self.pool.get('res.users').browse(cr, uid, uid, context)
-                # eg : company_id.id
+                current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+                # this loop manages the cases where res_id_field is a browse record path (eg : company_id.currency_id.id)
                 field_names = goal.type_id.res_id_field.split('.')
-                res = current_user.__getitem__(field_names[0])
-                for field_name in field_names[1:]:
+                res = current_user
+                for field_name in field_names[:]:
                     res = res.__getitem__(field_name)
                 action['res_id'] = res
 
@@ -368,12 +358,12 @@ class gamification_goal(osv.Model):
                         views = [(view_id, mode)]
                         break
                 action['views'] = views
-
             return action
 
         if goal.computation_mode == 'manually':
+            #open a wizard window to update the value manually
             action = {
-                'name': "Update %s" % goal.type_id.name,
+                'name': _("Update %s") % goal.type_id.name,
                 'id': goal_id,
                 'type': 'ir.actions.act_window',
                 'views': [[False, 'form']],
@@ -384,6 +374,8 @@ class gamification_goal(osv.Model):
             return action
         return False
 
+    #TODO: i find a bit annoying to have this method on the goal class instead of being on only the goal type related.
+    # i wouldn't put this in a dedicated method... well i think something is wrong conceptually with this thing
     def changed_users_avatar(self, cr, uid, ids, context):
         """Warning a user changed his avatar.
 
@@ -392,12 +384,12 @@ class gamification_goal(osv.Model):
         Set the state of every type_base_avatar linked to ids to 'reached' and
         set current value to 1.
         """
+
         goal_type_id = self.pool['ir.model.data'].get_object(cr, uid, 'gamification', 'type_base_avatar', context)
         goal_ids = self.search(cr, uid, [('type_id', '=', goal_type_id.id), ('user_id', 'in', ids)], context=context)
         values = {'state': 'reached', 'current': 1}
         self.write(cr, uid, goal_ids, values, context=context)
 
-#TOCHECK: it's totally unclear for me what the 'current' and the update method...
 
 class goal_manual_wizard(osv.TransientModel):
     """Wizard type to update a manual goal"""

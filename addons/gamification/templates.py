@@ -8,9 +8,13 @@
 
 from jinja2.sandbox import SandboxedEnvironment
 from jinja2 import FileSystemLoader
-    
+
 from urllib import urlencode, quote as quote
 import os.path
+
+#TODO: to check: new dependancies in openerp? fine or not?
+#TODO: to check: if it's ok, i think it would be better directly in the server (tools) so that other modules that doesn't depend on gamification can use it
+#TODO; someone else should check this code, i'm not the good one
 
 class TemplateHelper(SandboxedEnvironment):
 
@@ -18,8 +22,8 @@ class TemplateHelper(SandboxedEnvironment):
 
     def __init__(self):
 
-        super(TemplateHelper,self).__init__(
-            loader=FileSystemLoader(os.path.join(self.GAMIFICATION_PATH,'templates/')),
+        super(TemplateHelper, self).__init__(
+            loader=FileSystemLoader(os.path.join(self.GAMIFICATION_PATH, 'templates/')),
             block_start_string="<%",
             block_end_string="%>",
             variable_start_string="${",
