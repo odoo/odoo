@@ -227,7 +227,6 @@ class purchase_requisition(osv.osv):
         """
         po = self.pool.get('purchase.order')
         poline = self.pool.get('purchase.order.line')
-        wf_service = netsvc.LocalService("workflow")
         id_per_supplier = {}
         tender = self.browse(cr, uid, id, context=context)[0]
         if tender.state == 'done':
@@ -246,7 +245,7 @@ class purchase_requisition(osv.osv):
         for quotation in tender.purchase_ids:
             if (self.check_valid_quotation(cr, uid, quotation, context=context)):
                 #use workflow to set PO state to confirm
-                wf_service.trg_validate(uid, 'purchase.order', quotation.id, 'purchase_confirm', cr)
+                self.trigger_validate_po(cr, uid, quotation.id, context=context)
 
         #get other confirmed lines per supplier
         for po_line in tender.po_line_ids:
@@ -269,15 +268,25 @@ class purchase_requisition(osv.osv):
                 #set previous confirmed line to draft
                 poline.action_draft(cr, uid, line.id, context=context)
             #use workflow to set new PO state to confirm
-            wf_service.trg_validate(uid, 'purchase.order', new_po, 'purchase_confirm', cr)
+            self.trigger_validate_po(cr, uid, new_po, context=context)
             
         #cancel other orders
-        for quotation in tender.purchase_ids:
-            if quotation.state in ['draft', 'sent', 'bid']:
-                wf_service.trg_validate(uid, 'purchase.order', quotation.id, 'purchase_cancel', cr)
+        self.cancel_quotation(cr, uid, tender, context=context)
 
         #set tender to state done
         self.tender_done(cr, uid, id, context=context)
+        return True
+
+    def trigger_validate_po(self, cr, uid, po_id, context=None):
+        wf_service = netsvc.LocalService("workflow")
+        wf_service.trg_validate(uid, 'purchase.order', po_id, 'purchase_confirm', cr)
+
+    def cancel_quotation(self, cr, uid, tender, context=None):
+        #cancel other orders
+        wf_service = netsvc.LocalService("workflow")
+        for quotation in tender.purchase_ids:
+            if quotation.state in ['draft', 'sent', 'bid']:
+                wf_service.trg_validate(uid, 'purchase.order', quotation.id, 'purchase_cancel', cr)
         return True
             
 
