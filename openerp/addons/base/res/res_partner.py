@@ -120,7 +120,7 @@ class res_partner_category(osv.osv):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
-    _description = 'Partner Categories'
+    _description = 'Partner Tags'
     _name = 'res.partner.category'
     _columns = {
         'name': fields.char('Category Name', required=True, size=64, translate=True),
