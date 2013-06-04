@@ -45,12 +45,9 @@
                 </div>
                 <div class="oe_edit_only">
                     <label for="name" class="oe_inline"/>
-                    <label for="origin" class="oe_inline"/>
                 </div>
                 <h1>
                     <field name="name" class="oe_inline"/>
-                    <label string="," attrs="{'invisible':[('origin','=',False)]}"/>
-                    <field name="origin" class="oe_inline" placeholder="e.g. PO0025"/>
                 </h1>
                 <group>
                     <group>
@@ -62,6 +59,7 @@
                     <group>
                         <field name="date_start"/>
                         <field name="date_end"/>
+                        <field name="origin" placeholder="e.g. PO0025"/>
                         <field name="warehouse_id" widget="selection" groups="stock.group_locations"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
