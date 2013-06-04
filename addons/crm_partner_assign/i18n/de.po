@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-09-20 04:59+0000\n"
-"X-Generator: Launchpad (build 15985)\n"
+"X-Launchpad-Export-Date: 2013-05-29 06:56+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,send_to:0
@@ -50,7 +50,7 @@ msgstr "Geplanter Umsatz"
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,nbr:0
 msgid "# of Cases"
-msgstr "# Fälle"
+msgstr "Fälle"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
@@ -66,12 +66,12 @@ msgstr "Vorlage"
 #. module: crm_partner_assign
 #: view:crm.lead:0
 msgid "Forward"
-msgstr "Weiter"
+msgstr "Weiterleiten"
 
 #. module: crm_partner_assign
 #: view:res.partner:0
 msgid "Geo Localize"
-msgstr "Geogr. Lokalisierung"
+msgstr "Geo-Lokalisierung"
 
 #. module: crm_partner_assign
 #: help:crm.lead.forward.to.partner,body:0
@@ -81,7 +81,7 @@ msgstr "Text Version der Mitteilung"
 #. module: crm_partner_assign
 #: view:crm.lead.forward.to.partner:0
 msgid "Body"
-msgstr "Textkörper"
+msgstr "Nachricht"
 
 #. module: crm_partner_assign
 #: selection:crm.lead.report.assign,month:0
@@ -104,7 +104,7 @@ msgid "#Partner"
 msgstr "#Partner"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history:0
+#: selection:crm.lead.forward.to.partner,history_mode:0
 msgid "Whole Story"
 msgstr "Gesamte Historie"
 
@@ -151,9 +151,9 @@ msgid "Message unique identifier"
 msgstr "Eindeutige Identifikation der Nachricht"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history:0
+#: selection:crm.lead.forward.to.partner,history_mode:0
 msgid "Latest email"
-msgstr "Letzte EMail"
+msgstr "Letzte E-Mail"
 
 #. module: crm_partner_assign
 #: field:crm.lead,partner_latitude:0
@@ -208,10 +208,10 @@ msgid "Blind carbon copy message recipients"
 msgstr "Verdeckte Mail Empfänger"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,partner_id:0
-#: selection:crm.lead.forward.to.partner,send_to:0
 #: view:crm.lead.report.assign:0
 #: field:crm.lead.report.assign,partner_assigned_id:0
+#: view:crm.partner.report.assign:0
+#: field:crm.partner.report.assign,partner_id:0
 #: model:ir.model,name:crm_partner_assign.model_res_partner
 msgid "Partner"
 msgstr "Partner"
@@ -240,7 +240,6 @@ msgstr "Von"
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.res_partner_grade_action
 #: model:ir.ui.menu,name:crm_partner_assign.menu_res_partner_grade_action
-#: field:res.partner,grade_id:0
 #: view:res.partner.grade:0
 msgid "Partner Grade"
 msgstr "Partner Einstufung"
@@ -279,12 +278,13 @@ msgid "Overpassed Deadline"
 msgstr "Überschrittene Frist"
 
 #. module: crm_partner_assign
+#: field:crm.lead.forward.to.partner,type:0
 #: field:crm.lead.report.assign,type:0
 msgid "Type"
 msgstr "Typ"
 
 #. module: crm_partner_assign
-#: view:crm.partner.report.assign:0
+#: field:res.partner.activation,name:0
 msgid "Name"
 msgstr "Bezeichnung"
 
@@ -352,7 +352,7 @@ msgid "Related Document model"
 msgstr "Dokumenten-Modell"
 
 #. module: crm_partner_assign
-#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:192
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:74
 #, python-format
 msgid "Fwd"
 msgstr "Weiterleiten"
@@ -369,12 +369,13 @@ msgid "Opportunities Assignment Analysis"
 msgstr "Statistik Kontaktzuweisung"
 
 #. module: crm_partner_assign
+#: view:crm.lead.forward.to.partner:0
 #: view:res.partner:0
 msgid "Cancel"
 msgstr "Abbruch"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,history:0
+#: field:crm.lead.forward.to.partner,history_mode:0
 msgid "Send history"
 msgstr "Sende Fallhistorie"
 
@@ -384,7 +385,6 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
 #: view:res.partner:0
 msgid "Close"
 msgstr "Beenden"
@@ -539,8 +539,6 @@ msgid "Delay to Open"
 msgstr "Durch. Zeit b. Eröffn."
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,send_to:0
-#: field:crm.lead.forward.to.partner,user_id:0
 #: field:crm.lead.report.assign,user_id:0
 #: field:crm.partner.report.assign,user_id:0
 msgid "User"
@@ -734,6 +732,7 @@ msgid "Reply-To"
 msgstr "Antwort an"
 
 #. module: crm_partner_assign
+#: view:crm.lead:0
 #: field:crm.lead,partner_assigned_id:0
 msgid "Assigned Partner"
 msgstr "Zugewiesener Partner"
@@ -751,7 +750,7 @@ msgstr "Verkaufschance"
 #. module: crm_partner_assign
 #: view:crm.lead.forward.to.partner:0
 msgid "Send Mail"
-msgstr "Sende EMail"
+msgstr "E-Mail senden"
 
 #. module: crm_partner_assign
 #: field:crm.lead.report.assign,partner_id:0
@@ -838,11 +837,12 @@ msgid "Error ! You cannot create recursive associated members."
 msgstr "Fehler! Sie können keine rekursive assoziierte Mitglieder anlegen."
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history:0
+#: selection:crm.lead.forward.to.partner,history_mode:0
 msgid "Case Information"
 msgstr "Fall Information"
 
 #. module: crm_partner_assign
+#: field:res.partner.activation,sequence:0
 #: field:res.partner.grade,sequence:0
 msgid "Sequence"
 msgstr "Sequenz"

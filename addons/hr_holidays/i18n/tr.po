@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-11 05:12+0000\n"
-"X-Generator: Launchpad (build 16251)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:02+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -28,7 +28,6 @@ msgstr "Tahsis Türü"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
 msgid "Waiting Second Approval"
 msgstr "İkinci Onayı Bekliyor"
 
@@ -45,10 +44,10 @@ msgstr "İzinlerin Yönetimi"
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Group By..."
-msgstr "Gruplandır..."
+msgstr "Grupla İle..."
 
 #. module: hr_holidays
-#: view:hr.holidays:0
+#: field:hr.holidays,holiday_type:0
 msgid "Allocation Mode"
 msgstr "Tahsis Modu"
 
@@ -56,7 +55,7 @@ msgstr "Tahsis Modu"
 #: view:hr.holidays:0
 #: field:hr.holidays,department_id:0
 msgid "Department"
-msgstr "Bölüm"
+msgstr "Departmen"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.request_approve_holidays
@@ -66,13 +65,14 @@ msgstr "İstek Onayl"
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
+#: model:mail.message.subtype,name:hr_holidays.mt_holidays_refused
 msgid "Refused"
 msgstr "Reddedildi"
 
 #. module: hr_holidays
 #: help:hr.holidays,category_id:0
 msgid "Category of Employee"
-msgstr ""
+msgstr "Personel kategorisi"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -82,12 +82,12 @@ msgstr ""
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Brown"
-msgstr ""
+msgstr "Kahverengi"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Remaining Days"
-msgstr ""
+msgstr "Kalan Günleri"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
@@ -102,7 +102,7 @@ msgstr ""
 #. module: hr_holidays
 #: selection:hr.holidays,holiday_type:0
 msgid "By Employee"
-msgstr ""
+msgstr "Personel Tarafından"
 
 #. module: hr_holidays
 #: help:hr.holidays,employee_id:0
@@ -124,17 +124,17 @@ msgstr ""
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Cyan"
-msgstr ""
+msgstr "Açık Mavi"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Green"
-msgstr ""
+msgstr "Açık Yeşil"
 
 #. module: hr_holidays
 #: field:hr.employee,current_leave_id:0
 msgid "Current Leave Type"
-msgstr ""
+msgstr "Mevcut İzin Türü"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
@@ -152,8 +152,10 @@ msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
-#: view:hr.holidays:0
 #: selection:hr.holidays,state:0
+#: selection:hr.holidays.summary.dept,holiday_type:0
+#: selection:hr.holidays.summary.employee,holiday_type:0
+#: model:mail.message.subtype,name:hr_holidays.mt_holidays_approved
 msgid "Approved"
 msgstr "Onaylanmış"
 
@@ -170,7 +172,7 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Refuse"
-msgstr ""
+msgstr "Reddetme"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:344
@@ -186,12 +188,11 @@ msgid "Confirmed and Validated"
 msgstr ""
 
 #. module: hr_holidays
-#: view:board.board:0
+#: view:hr.employee:0
 #: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
-#: model:ir.ui.menu,name:hr_holidays.menu_hr_reporting_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
 msgid "Leaves"
-msgstr ""
+msgstr "İzinler"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
@@ -201,18 +202,20 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_request_approve_holidays
 msgid "Leave Requests to Approve"
-msgstr ""
+msgstr "İzin için Onay İste"
 
 #. module: hr_holidays
+#: view:hr.holidays.summary.dept:0
+#: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_dept
 #: model:ir.ui.menu,name:hr_holidays.menu_account_central_journal
 msgid "Leaves by Department"
-msgstr ""
+msgstr "İzinler Departmana Göre"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Vazgeçildi"
 
 #. module: hr_holidays
 #: help:hr.holidays,type:0
@@ -232,7 +235,7 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Validation"
-msgstr ""
+msgstr "Onaylama"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:377
@@ -256,28 +259,31 @@ msgid "This area is automatically filled by the user who validate the leave"
 msgstr ""
 
 #. module: hr_holidays
+#: xsl:holidays.summary:0
 #: field:hr.holidays,holiday_status_id:0
 #: field:hr.holidays.remaining.leaves.user,leave_type:0
 #: view:hr.holidays.status:0
 #: field:hr.holidays.status,name:0
 #: field:hr.holidays.summary.dept,holiday_type:0
-#: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
 #: model:ir.model,name:hr_holidays.model_hr_holidays_status
-#: model:ir.ui.menu,name:hr_holidays.menu_open_view_holiday_status
 msgid "Leave Type"
-msgstr ""
+msgstr "İzin Türü"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:199
-#: code:addons/hr_holidays/hr_holidays.py:344
+#: code:addons/hr_holidays/hr_holidays.py:238
+#: code:addons/hr_holidays/hr_holidays.py:249
+#: code:addons/hr_holidays/hr_holidays.py:274
+#: code:addons/hr_holidays/hr_holidays.py:298
+#: code:addons/hr_holidays/hr_holidays.py:421
+#: code:addons/hr_holidays/hr_holidays.py:471
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Uyarı!"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Magenta"
-msgstr ""
+msgstr "Macenta"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:44
@@ -286,10 +292,8 @@ msgid "You have to select at least 1 Department. And try again"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/report/holidays_summary_report.py:114
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
-#, python-format
 msgid "Confirmed"
 msgstr "Onaylandı"
 
@@ -305,20 +309,20 @@ msgid "Confirm"
 msgstr "Onayla"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:384
+#: code:addons/hr_holidays/hr_holidays.py:478
 #, python-format
 msgid "Leave Request for %s"
-msgstr ""
+msgstr "İzni İsteği %s"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "Sum"
-msgstr ""
+msgstr "Toplam"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,remaining_leaves:0
 msgid "Remaining Leaves"
-msgstr ""
+msgstr "Kalan İzinler"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -329,7 +333,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_remaining_leaves_user
 msgid "Total holidays by type"
-msgstr ""
+msgstr "Tipine göre toplam tatil"
 
 #. module: hr_holidays
 #: view:hr.employee:0
@@ -342,34 +346,33 @@ msgstr "Personel"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
 msgid "New"
-msgstr ""
+msgstr "Yeni"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Type"
-msgstr ""
+msgstr "Türü"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Red"
-msgstr ""
+msgstr "Kırmızı"
 
 #. module: hr_holidays
 #: view:hr.holidays.remaining.leaves.user:0
 msgid "Leaves by Type"
-msgstr ""
+msgstr "Türüne göre İzinler"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Salmon"
-msgstr ""
+msgstr "Açık Somon"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Wheat"
-msgstr ""
+msgstr "Buğday"
 
 #. module: hr_holidays
 #: constraint:resource.calendar.leaves:0
@@ -377,20 +380,19 @@ msgid "Error! leave start-date must be lower then leave end-date."
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:382
+#: code:addons/hr_holidays/hr_holidays.py:476
 #, python-format
 msgid "Allocation for %s"
-msgstr ""
+msgstr "Tahsisi %s"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: field:hr.holidays,number_of_days:0
-#: field:hr.holidays,number_of_days_temp:0
 msgid "Number of Days"
-msgstr "Gün Sayısı"
+msgstr "Günlerin Sayısı"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:377
+#: code:addons/hr_holidays/hr_holidays.py:471
 #, python-format
 msgid ""
 "The feature behind the field 'Remaining Legal Leaves' can only be used when "
@@ -405,7 +407,7 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Search Leave Type"
-msgstr ""
+msgstr "İzin Türü Arama"
 
 #. module: hr_holidays
 #: help:hr.holidays,state:0
@@ -432,14 +434,13 @@ msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
-#: selection:hr.holidays,state:0
 msgid "Waiting Approval"
-msgstr ""
+msgstr "Onay Bekleyen"
 
 #. module: hr_holidays
 #: field:hr.holidays.summary.employee,emp:0
 msgid "Employee(s)"
-msgstr ""
+msgstr "Personel (ler)"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,categ_id:0
@@ -451,30 +452,29 @@ msgstr ""
 #. module: hr_holidays
 #: field:hr.holidays,linked_request_ids:0
 msgid "Linked Requests"
-msgstr ""
+msgstr "Linked İstekleri"
 
 #. module: hr_holidays
 #: field:hr.holidays,parent_id:0
 msgid "Parent"
-msgstr ""
+msgstr "Üst"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Lavender"
-msgstr ""
+msgstr "lavanta"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
-#: view:hr.holidays:0
 msgid "Month"
-msgstr ""
+msgstr "Ay"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.open_ask_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays_new
 msgid "Leave Requests"
-msgstr ""
+msgstr "İzin İstekleri"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,limit:0
@@ -489,9 +489,8 @@ msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:0
-#: field:hr.holidays,category_id:0
 msgid "Category"
-msgstr ""
+msgstr "Kategori"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,max_leaves:0
@@ -508,7 +507,7 @@ msgstr ""
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Coral"
-msgstr ""
+msgstr "Açık Mercan"
 
 #. module: hr_holidays
 #: view:hr.holidays.summary.dept:0
@@ -519,12 +518,12 @@ msgstr ""
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Black"
-msgstr ""
+msgstr "Siyah"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_holidays_leaves_assign_legal
 msgid "Allocate Leaves for Employees"
-msgstr "Çalışanlar için İzin Tahsisi"
+msgstr "Personel için İzin Tahsisi"
 
 #. module: hr_holidays
 #: field:resource.calendar.leaves,holiday_id:0
@@ -532,15 +531,14 @@ msgid "Holiday"
 msgstr ""
 
 #. module: hr_holidays
-#: field:hr.holidays,case_id:0
-#: field:hr.holidays.status,categ_id:0
+#: field:hr.holidays,meeting_id:0
 msgid "Meeting"
-msgstr ""
+msgstr "Toplantı"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Ivory"
-msgstr ""
+msgstr "Fildişi"
 
 #. module: hr_holidays
 #: selection:hr.holidays.summary.dept,holiday_type:0
@@ -551,7 +549,7 @@ msgstr "Her ikisi doğrulandı ve onaylandı"
 #. module: hr_holidays
 #: field:hr.holidays.status,leaves_taken:0
 msgid "Leaves Already Taken"
-msgstr ""
+msgstr "Daima Alınan İzinler"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
@@ -572,7 +570,7 @@ msgstr ""
 #. module: hr_holidays
 #: field:hr.holidays.status,active:0
 msgid "Active"
-msgstr "Aktif"
+msgstr "Etkin"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_view_holiday_status_manager_board
@@ -588,24 +586,28 @@ msgstr ""
 #: view:hr.employee:0
 #: field:hr.employee,remaining_leaves:0
 msgid "Remaining Legal Leaves"
-msgstr ""
+msgstr "Kalan Yasal İzinler"
 
 #. module: hr_holidays
 #: field:hr.holidays,manager_id:0
 msgid "First Approval"
-msgstr ""
+msgstr "İlk Onay"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_unpaid
 msgid "Unpaid"
-msgstr ""
+msgstr "Ödenmemiş"
 
 #. module: hr_holidays
+#: xsl:holidays.summary:0
 #: view:hr.holidays:0
+#: view:hr.holidays.summary.employee:0
+#: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_employee
 #: model:ir.actions.act_window,name:hr_holidays.open_company_allocation
+#: model:ir.actions.report.xml,name:hr_holidays.report_holidays_summary
 #: model:ir.ui.menu,name:hr_holidays.menu_open_company_allocation
 msgid "Leaves Summary"
-msgstr ""
+msgstr "İzin Özetleri"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -621,27 +623,27 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.employee:0
 msgid "Assign Leaves"
-msgstr ""
+msgstr "İzin Atamaları"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Blue"
-msgstr ""
+msgstr "Açık Mavi"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "My Department Leaves"
-msgstr ""
+msgstr "Departmen İzinlerim"
 
 #. module: hr_holidays
 #: field:hr.employee,current_leave_state:0
 msgid "Current Leave Status"
-msgstr ""
+msgstr "Mevcut İzin Durum"
 
 #. module: hr_holidays
 #: field:hr.holidays,type:0
 msgid "Request Type"
-msgstr ""
+msgstr "İstek Türü"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,active:0
@@ -663,18 +665,18 @@ msgstr "Genel"
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_comp
 msgid "Compensatory Days"
-msgstr ""
+msgstr "Telafi Günleri"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Yellow"
-msgstr ""
+msgstr "Açık Sarı"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_available_holidays_report
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
 msgid "Leaves Analysis"
-msgstr ""
+msgstr "İzin Analizleri"
 
 #. module: hr_holidays
 #: view:hr.holidays.summary.dept:0
@@ -690,11 +692,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/report/holidays_summary_report.py:117
 #: view:hr.holidays:0
-#: selection:hr.holidays.summary.dept,holiday_type:0
-#: selection:hr.holidays.summary.employee,holiday_type:0
-#, python-format
 msgid "Validated"
 msgstr "Doğrulanmış"
 
@@ -702,18 +700,18 @@ msgstr "Doğrulanmış"
 #: view:hr.holidays:0
 #: selection:hr.holidays,type:0
 msgid "Allocation Request"
-msgstr ""
+msgstr "Tahsis İsteği"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
 msgid "Leave Detail"
-msgstr ""
+msgstr "İzin Ayrıntısı"
 
 #. module: hr_holidays
 #: field:hr.holidays,double_validation:0
 #: field:hr.holidays.status,double_validation:0
 msgid "Apply Double Validation"
-msgstr ""
+msgstr "Çift Doğrulama Uygula"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
@@ -729,13 +727,14 @@ msgstr "Yazdır"
 #. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Details"
-msgstr ""
+msgstr "Detaylar"
 
 #. module: hr_holidays
+#: view:board.board:0
 #: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_leaves_by_month
 msgid "My Leaves"
-msgstr ""
+msgstr "İzinlerim"
 
 #. module: hr_holidays
 #: selection:hr.holidays,holiday_type:0
@@ -743,12 +742,16 @@ msgid "By Employee Category"
 msgstr ""
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:343
 #: view:hr.holidays:0
 #: selection:hr.holidays,type:0
+#: field:resource.calendar.leaves,holiday_id:0
+#, python-format
 msgid "Leave Request"
-msgstr ""
+msgstr "İzni İsteği"
 
 #. module: hr_holidays
+#: view:hr.holidays:0
 #: field:hr.holidays,name:0
 msgid "Description"
 msgstr "Açıklama"
@@ -777,10 +780,9 @@ msgid "You cannot delete a leave which is not in draft state !"
 msgstr ""
 
 #. module: hr_holidays
-#: view:hr.holidays:0
 #: field:hr.holidays,notes:0
 msgid "Reasons"
-msgstr ""
+msgstr "Nedenleri"
 
 #. module: hr_holidays
 #: field:hr.holidays.summary.employee,holiday_type:0
@@ -790,27 +792,28 @@ msgstr "İzin Tipi Seç"
 #. module: hr_holidays
 #: field:hr.holidays.remaining.leaves.user,no_of_leaves:0
 msgid "Remaining leaves"
-msgstr ""
+msgstr "Kalan izni"
 
 #. module: hr_holidays
 #: field:hr.holidays.summary.dept,depts:0
 msgid "Department(s)"
-msgstr ""
+msgstr "Departmen (ler)"
 
 #. module: hr_holidays
 #: field:hr.holidays,manager_id2:0
+#: selection:hr.holidays,state:0
 msgid "Second Approval"
-msgstr ""
+msgstr "İkinci Onay"
 
 #. module: hr_holidays
 #: field:hr.holidays,date_to:0
 msgid "End Date"
-msgstr ""
+msgstr "Bitiş Tarihi"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_sl
 msgid "Sick Leaves"
-msgstr ""
+msgstr "Hastalık İzinleri"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,limit:0
@@ -825,11 +828,12 @@ msgid ""
 "This value is given by the sum of all holidays requests with a negative "
 "value."
 msgstr ""
+"Bu değer, negatif olan tüm tatilleri istekleri toplamı ile verilirdeğer"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Violet"
-msgstr ""
+msgstr "Menekşe"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.hr_holidays_leaves_assign_legal
@@ -841,7 +845,7 @@ msgstr ""
 #. module: hr_holidays
 #: field:hr.holidays.status,max_leaves:0
 msgid "Maximum Allowed"
-msgstr ""
+msgstr "Maksimum İzin"
 
 #. module: hr_holidays
 #: help:hr.holidays,manager_id2:0
@@ -863,52 +867,54 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Approve"
-msgstr ""
+msgstr "Onay"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: field:hr.holidays,date_from:0
 msgid "Start Date"
-msgstr ""
+msgstr "Başlama Tarihi"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays
 msgid "Leave"
-msgstr ""
+msgstr "İzin"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.open_allocation_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_allocation_holidays
 msgid "Allocation Requests"
-msgstr ""
+msgstr "Tahsis İstekleri"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "Color"
-msgstr ""
+msgstr "Renk"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Pink"
-msgstr ""
+msgstr "Açık Pembe"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Manager"
-msgstr ""
+msgstr "Yönetici"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "To Confirm"
-msgstr ""
+msgstr "Onayla"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Year"
-msgstr ""
+msgstr "Yıl"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
+#: selection:hr.holidays,state:0
+#: model:mail.message.subtype,name:hr_holidays.mt_holidays_confirmed
 msgid "To Approve"
-msgstr ""
+msgstr "Onaylama"

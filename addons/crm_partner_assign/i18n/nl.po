@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-08 05:17+0000\n"
-"X-Generator: Launchpad (build 16232)\n"
+"X-Launchpad-Export-Date: 2013-05-29 06:56+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: crm_partner_assign
 #: field:crm.lead.forward.to.partner,send_to:0
@@ -104,7 +104,7 @@ msgid "#Partner"
 msgstr "#Partner"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history:0
+#: selection:crm.lead.forward.to.partner,history_mode:0
 msgid "Whole Story"
 msgstr "Hele verhaal"
 
@@ -151,7 +151,7 @@ msgid "Message unique identifier"
 msgstr "Bericht unieke identifier"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history:0
+#: selection:crm.lead.forward.to.partner,history_mode:0
 msgid "Latest email"
 msgstr "Laatste email"
 
@@ -210,10 +210,10 @@ msgid "Blind carbon copy message recipients"
 msgstr "Blind carbon copy ontvangers van het bericht"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,partner_id:0
-#: selection:crm.lead.forward.to.partner,send_to:0
 #: view:crm.lead.report.assign:0
 #: field:crm.lead.report.assign,partner_assigned_id:0
+#: view:crm.partner.report.assign:0
+#: field:crm.partner.report.assign,partner_id:0
 #: model:ir.model,name:crm_partner_assign.model_res_partner
 msgid "Partner"
 msgstr "Relatie"
@@ -242,10 +242,9 @@ msgstr "Van"
 #. module: crm_partner_assign
 #: model:ir.actions.act_window,name:crm_partner_assign.res_partner_grade_action
 #: model:ir.ui.menu,name:crm_partner_assign.menu_res_partner_grade_action
-#: field:res.partner,grade_id:0
 #: view:res.partner.grade:0
 msgid "Partner Grade"
-msgstr "Partner klasse"
+msgstr "Relatie klasse"
 
 #. module: crm_partner_assign
 #: view:crm.lead.report.assign:0
@@ -281,12 +280,13 @@ msgid "Overpassed Deadline"
 msgstr "Overschreden einddatum"
 
 #. module: crm_partner_assign
+#: field:crm.lead.forward.to.partner,type:0
 #: field:crm.lead.report.assign,type:0
 msgid "Type"
 msgstr "Soort"
 
 #. module: crm_partner_assign
-#: view:crm.partner.report.assign:0
+#: field:res.partner.activation,name:0
 msgid "Name"
 msgstr "Naam"
 
@@ -356,7 +356,7 @@ msgid "Related Document model"
 msgstr "Gerelateerde Document model"
 
 #. module: crm_partner_assign
-#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:192
+#: code:addons/crm_partner_assign/wizard/crm_forward_to_partner.py:74
 #, python-format
 msgid "Fwd"
 msgstr "Doorsturen"
@@ -373,12 +373,13 @@ msgid "Opportunities Assignment Analysis"
 msgstr "Prospect toekenning analyse"
 
 #. module: crm_partner_assign
+#: view:crm.lead.forward.to.partner:0
 #: view:res.partner:0
 msgid "Cancel"
 msgstr "Annuleren"
 
 #. module: crm_partner_assign
-#: field:crm.lead.forward.to.partner,history:0
+#: field:crm.lead.forward.to.partner,history_mode:0
 msgid "Send history"
 msgstr "Verstuur geschiedenis"
 
@@ -388,7 +389,6 @@ msgid "Contact"
 msgstr "Contactpersoon"
 
 #. module: crm_partner_assign
-#: view:crm.lead.forward.to.partner:0
 #: view:res.partner:0
 msgid "Close"
 msgstr "Sluiten"
@@ -543,8 +543,6 @@ msgid "Delay to Open"
 msgstr "Vertraging tot openen"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,send_to:0
-#: field:crm.lead.forward.to.partner,user_id:0
 #: field:crm.lead.report.assign,user_id:0
 #: field:crm.partner.report.assign,user_id:0
 msgid "User"
@@ -739,6 +737,7 @@ msgid "Reply-To"
 msgstr "Antwoord aan"
 
 #. module: crm_partner_assign
+#: view:crm.lead:0
 #: field:crm.lead,partner_assigned_id:0
 msgid "Assigned Partner"
 msgstr "Toegewezen relatie"
@@ -844,11 +843,12 @@ msgstr ""
 "Fout! Het is niet mogelijk om recursieve geassocieerde leden te maken"
 
 #. module: crm_partner_assign
-#: selection:crm.lead.forward.to.partner,history:0
+#: selection:crm.lead.forward.to.partner,history_mode:0
 msgid "Case Information"
 msgstr "Dossier informatie"
 
 #. module: crm_partner_assign
+#: field:res.partner.activation,sequence:0
 #: field:res.partner.grade,sequence:0
 msgid "Sequence"
 msgstr "Volgnummer"

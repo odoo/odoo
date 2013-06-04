@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 10:00+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:19+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: purchase_requisition
 #: sql_constraint:purchase.order:0
@@ -68,6 +68,7 @@ msgstr "Ostotilauspyyntö neuvottelussa"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
+#: field:purchase.requisition.partner,partner_id:0
 msgid "Supplier"
 msgstr "Toimittaja"
 
@@ -166,7 +167,6 @@ msgstr "Useita pyyntöjä"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
-#: field:purchase.requisition.line,product_uom_id:0
 msgid "Product UoM"
 msgstr "Tuotteen mittayksikkö"
 
@@ -227,7 +227,7 @@ msgid "Purchase Requisitions"
 msgstr "Hankintapyynnöt"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:136
+#: code:addons/purchase_requisition/purchase_requisition.py:134
 #, python-format
 msgid ""
 "You have already one %s purchase order for this partner, you must cancel "
@@ -292,7 +292,7 @@ msgid "Purchase Order"
 msgstr "Ostotilaus"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:42
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:41
 #, python-format
 msgid "Error!"
 msgstr "Virhe!"
@@ -421,7 +421,7 @@ msgid "Confirm Purchase Order"
 msgstr "Vahvista ostotilaus"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
+#: view:purchase.requisition.partner:0
 msgid "Cancel"
 msgstr "Peruuta"
 

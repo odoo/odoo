@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-31 05:13+0000\n"
-"X-Generator: Launchpad (build 15887)\n"
+"X-Launchpad-Export-Date: 2013-05-29 06:58+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: email_template
 #: field:email.template,subtype:0
@@ -114,7 +114,7 @@ msgid "Auto Delete"
 msgstr "自動刪除"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:218
+#: code:addons/email_template/email_template.py:231
 #, python-format
 msgid "Warning"
 msgstr "警告"
@@ -307,8 +307,8 @@ msgid "Add Signature"
 msgstr "加入簽名"
 
 #. module: email_template
-#: help:email.template,body_text:0
-#: help:email_template.preview,body_text:0
+#: help:email.template,body:0
+#: help:email_template.preview,body:0
 msgid "Plaintext version of the message (placeholders may be used here)"
 msgstr "Plaintext 消息版本(佔位符可以用在這)"
 
@@ -397,7 +397,7 @@ msgid "Advanced Options"
 msgstr "進階選項"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:183
+#: code:addons/email_template/email_template.py:196
 #, python-format
 msgid "Send Mail (%s)"
 msgstr "傳送郵件 (%s)"
@@ -434,7 +434,8 @@ msgid ""
 msgstr "最後的模板欄位，找到要複製-貼上的區塊"
 
 #. module: email_template
-#: view:email.template:0
+#: field:email.template,attachment_ids:0
+#: field:email_template.preview,attachment_ids:0
 msgid "Attachments"
 msgstr "附件"
 
@@ -648,7 +649,7 @@ msgid "Error ! You cannot create recursive associated members."
 msgstr "錯誤 ! 您不行建立相關成員"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:218
+#: code:addons/email_template/email_template.py:231
 #, python-format
 msgid "Deletion of the action record failed."
 msgstr "刪除的動作記錄失敗"

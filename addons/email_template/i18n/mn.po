@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:42+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2013-05-29 06:58+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: email_template
 #: field:email.template,subtype:0
@@ -114,7 +114,7 @@ msgid "Auto Delete"
 msgstr "Автоматаар устгах"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:218
+#: code:addons/email_template/email_template.py:231
 #, python-format
 msgid "Warning"
 msgstr "Анхааруулга"
@@ -139,7 +139,7 @@ msgstr "Хаанаас"
 #. module: email_template
 #: field:mail.compose.message,template_id:0
 msgid "Template"
-msgstr "Загвар"
+msgstr "Үлгэр"
 
 #. module: email_template
 #: field:email.template,partner_id:0
@@ -316,8 +316,8 @@ msgid "Add Signature"
 msgstr "Гарын үсэг нэмэх"
 
 #. module: email_template
-#: help:email.template,body_text:0
-#: help:email_template.preview,body_text:0
+#: help:email.template,body:0
+#: help:email_template.preview,body:0
 msgid "Plaintext version of the message (placeholders may be used here)"
 msgstr "Зурвасын цэвэр текст хувилбар (энд хувьсагч хэрэглэж болно)"
 
@@ -373,7 +373,7 @@ msgstr ""
 #. module: email_template
 #: model:ir.model,name:email_template.model_email_template
 msgid "Email Templates"
-msgstr "Email Templates"
+msgstr "Имэйл Үлгэрүүд"
 
 #. module: email_template
 #: field:email.template,date:0
@@ -384,7 +384,7 @@ msgstr "Огноо"
 #. module: email_template
 #: model:ir.actions.act_window,name:email_template.wizard_email_template_preview
 msgid "Template Preview"
-msgstr "Загварыг харах"
+msgstr "Үлгэрийг урьдчилан харах"
 
 #. module: email_template
 #: field:email.template,message_id:0
@@ -409,7 +409,7 @@ msgid "Advanced Options"
 msgstr "Advanced Options"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:183
+#: code:addons/email_template/email_template.py:196
 #, python-format
 msgid "Send Mail (%s)"
 msgstr "Мэйл илгээх (%s)"
@@ -447,7 +447,8 @@ msgstr ""
 "Үлгэрийн хүссэн талбартаа copy-paste хийх эцсийн хувьсагчийн илэрхийлэл."
 
 #. module: email_template
-#: view:email.template:0
+#: field:email.template,attachment_ids:0
+#: field:email_template.preview,attachment_ids:0
 msgid "Attachments"
 msgstr "Хавсралтууд"
 
@@ -543,7 +544,7 @@ msgstr "Хамааралтай хэрэглэгч"
 #: model:ir.actions.act_window,name:email_template.action_email_template_tree_all
 #: model:ir.ui.menu,name:email_template.menu_email_templates
 msgid "Templates"
-msgstr "Загвар"
+msgstr "Үлгэрүүд"
 
 #. module: email_template
 #: field:res.partner,opt_out:0
@@ -597,7 +598,7 @@ msgstr "Resource Tracking"
 #. module: email_template
 #: model:ir.model,name:email_template.model_email_template_preview
 msgid "Email Template Preview"
-msgstr "Email Template Preview"
+msgstr "Имэйл Үлгэрийн Урьдчилсан Харагдац"
 
 #. module: email_template
 #: view:email_template.preview:0
@@ -671,7 +672,7 @@ msgid "Error ! You cannot create recursive associated members."
 msgstr "Алдаа ! Тойрч холбогдсон гишүүдийг үүсгэх боломжгүй."
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:218
+#: code:addons/email_template/email_template.py:231
 #, python-format
 msgid "Deletion of the action record failed."
 msgstr "Үйлдлийн бичлэгийг устгах үйлдэл бүтсэнгүй."

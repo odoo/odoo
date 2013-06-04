@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:50+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:07+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -27,7 +27,7 @@ msgid "Previous Activity"
 msgstr "Activité précédente"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:818
+#: code:addons/marketing_campaign/marketing_campaign.py:819
 #, python-format
 msgid "The current step for this item has no email or report to preview."
 msgstr ""
@@ -132,6 +132,7 @@ msgid "Set to Draft"
 msgstr "Mettre en brouillon"
 
 #. module: marketing_campaign
+#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,to_ids:0
 msgid "Next Activities"
 msgstr "Activités suivantes"
@@ -147,7 +148,7 @@ msgid "The interval must be positive or zero"
 msgstr "L'intervalle doit être positif ou égal à zéro"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:818
+#: code:addons/marketing_campaign/marketing_campaign.py:819
 #, python-format
 msgid "No preview"
 msgstr "Pas d’aperçu"
@@ -385,6 +386,7 @@ msgid "Run"
 msgstr "Exécuter"
 
 #. module: marketing_campaign
+#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,from_ids:0
 msgid "Previous Activities"
 msgstr "Activités précédentes"
@@ -410,6 +412,7 @@ msgstr "Message d'erreur"
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_form
 #: view:marketing.campaign:0
+#: view:res.partner:0
 msgid "Campaigns"
 msgstr "Campagnes"
 
@@ -419,7 +422,7 @@ msgid "Interval Unit"
 msgstr "Unité de l'intervalle"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:792
+#: code:addons/marketing_campaign/marketing_campaign.py:793
 #, python-format
 msgid "Email Preview"
 msgstr "Aperçu du courriel"
@@ -467,8 +470,6 @@ msgid "Campaign Segment"
 msgstr "Segment de la campagne"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:0
-#: view:marketing.campaign.segment:0
 #: view:marketing.campaign.workitem:0
 msgid "Cancel"
 msgstr "Annuler"
@@ -489,6 +490,7 @@ msgid "Exceptions"
 msgstr "Exceptions"
 
 #. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
 #: field:res.partner,workitem_ids:0
 msgid "Workitems"
 msgstr "Objets"
@@ -537,6 +539,10 @@ msgid ""
 "for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
 "views."
 msgstr ""
+"Les tâches générées seront liées au partenaire de l'enregistrement. Si "
+"l'enregistrement est le partenaire lui-même, laissez ce champ vide. C'est "
+"utile pour les statistiques, via les vues d'analyse ou de suivi des "
+"campagnes."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -550,7 +556,9 @@ msgid "Next Activity"
 msgstr "Activité suivante"
 
 #. module: marketing_campaign
-#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_stat
+#: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_workitem
+#: model:ir.ui.menu,name:marketing_campaign.menu_action_marketing_campaign_workitem
 msgid "Campaign Follow-up"
 msgstr "Suivi de la campagne"
 
@@ -577,7 +585,7 @@ msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
 
 #. module: marketing_campaign
-#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_stat
+#: view:marketing.campaign:0
 msgid "Campaign Statistics"
 msgstr "Statistiques de campagne"
 
@@ -609,6 +617,12 @@ msgid ""
 "records which have the same value for the unique field as other records that "
 "already entered the campaign."
 msgstr ""
+"Détermine un critère supplémentaire à ajouter au filtre lors de la sélection "
+"de nouveaux enregistrements dans la campagne. \"Pas de doublons\" empêche la "
+"sélection d'enregistrements qui ont déjà été entrés dans la campagne "
+"auparavant. Si un \"champ unique\" est activé dans la campagne, \"Pas de "
+"doublons\" empêchera aussi la sélection d'enregistrements qui ont la même "
+"valeur pour le champ unique que d'autres déjà entrés dans la campagne."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -692,7 +706,6 @@ msgstr "Créé récemment"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,date:0
-#: view:marketing.campaign.workitem:0
 msgid "Date"
 msgstr "Date"
 
@@ -702,7 +715,6 @@ msgid "November"
 msgstr "Novembre"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,condition:0
 msgid "Condition"
 msgstr "Condition"
@@ -777,7 +789,6 @@ msgid "Error"
 msgstr "Erreur"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,server_action_id:0
 msgid "Action"
 msgstr "Action"
@@ -925,8 +936,10 @@ msgid "Campaign Step"
 msgstr "Étape de la campagne"
 
 #. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_segment_opened
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_segment_form
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_segment_form
+#: view:marketing.campaign:0
 #: view:marketing.campaign.segment:0
 msgid "Segments"
 msgstr "Segments"
@@ -952,6 +965,7 @@ msgid "Day(s)"
 msgstr "Jour(s)"
 
 #. module: marketing_campaign
+#: view:marketing.campaign:0
 #: field:marketing.campaign,activity_ids:0
 #: view:marketing.campaign.activity:0
 msgid "Activities"
@@ -974,6 +988,13 @@ msgid ""
 "campaign previously. Only easily comparable fields like textfields, "
 "integers, selections or single relationships may be used."
 msgstr ""
+"Si activé, ce champ aidera les segments qui fonctionne en mode \"Pas de "
+"doublon\" à éviter de sélectionner deux fois des enregistrements similaires. "
+"Les enregistrements similaires sont ceux qui ont la même valeur pour ce "
+"champ unique. Par exemple, en choisissant le champ \"email_from\" pour les "
+"pistes, vous  empêcherez la même campagne d'être ré-envoyée à la même "
+"adresse courriel. Seuls les champs faciles à comparer peuvent être utilisés "
+": les champs texte, les entiers, les sélections ou les relations simple."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:529
@@ -988,6 +1009,7 @@ msgstr "Bienvenu sur le réseau de partenaire OpenERP!"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign
+#: view:marketing.campaign:0
 msgid "Marketing Campaign"
 msgstr "Campagne marketing"
 
@@ -1069,7 +1091,6 @@ msgstr "Mode"
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,activity_id:0
-#: view:marketing.campaign.activity:0
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,activity_id:0
 msgid "Activity"
@@ -1102,7 +1123,6 @@ msgid "Next Synchronization"
 msgstr "Prochaine synchronisation"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:0
 #: field:marketing.campaign.segment,ir_filter_id:0
 msgid "Filter"
 msgstr "Filtrer"
@@ -1136,7 +1156,6 @@ msgstr "Avec confirmation manuelle"
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,total_cost:0
-#: view:marketing.campaign:0
 msgid "Cost"
 msgstr "Coût"
 

@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-23 04:56+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:07+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: mail
 #: field:mail.compose.message,subtype:0 field:mail.message,subtype:0
@@ -41,7 +41,7 @@ msgstr ""
 #. module: mail
 #: view:mail.mail:0
 msgid "Message Details"
-msgstr ""
+msgstr "內容"
 
 #. module: mail
 #: view:mail.thread:0
@@ -52,13 +52,13 @@ msgstr ""
 #: view:mail.alias:0
 #: view:mail.mail:0
 msgid "Group By..."
-msgstr ""
+msgstr "分類方式..."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
 #: view:mail.compose.message:0
 msgid "Compose Email"
-msgstr ""
+msgstr "撰寫郵件"
 
 #. module: mail
 #: help:mail.compose.message,body_text:0 help:mail.message,body_text:0
@@ -69,12 +69,12 @@ msgstr ""
 #. module: mail
 #: view:mail.mail:0
 msgid "Body"
-msgstr ""
+msgstr "內文"
 
 #. module: mail
 #: help:mail.mail,email_to:0
 msgid "Message recipients"
-msgstr ""
+msgstr "收件人"
 
 #. module: mail
 #: field:mail.compose.message,body_text:0 field:mail.message,body_text:0
@@ -86,27 +86,27 @@ msgstr ""
 #: view:mail.mail:0
 #: selection:mail.mail,state:0
 msgid "Received"
-msgstr ""
+msgstr "已接收"
 
 #. module: mail
 #: view:mail.mail:0
 msgid "Thread"
-msgstr ""
+msgstr "討論串"
 
 #. module: mail
 #: field:mail.mail,mail_server_id:0
 msgid "Outgoing mail server"
-msgstr ""
+msgstr "外送郵件伺服器"
 
 #. module: mail
 #: selection:mail.mail,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "已取消"
 
 #. module: mail
 #: field:mail.mail,reply_to:0
 msgid "Reply-To"
-msgstr ""
+msgstr "回覆給"
 
 #. module: mail
 #: help:mail.compose.message,body_html:0 help:mail.message,body_html:0
@@ -117,7 +117,7 @@ msgstr ""
 #. module: mail
 #: field:mail.mail,auto_delete:0
 msgid "Auto Delete"
-msgstr ""
+msgstr "自動刪除"
 
 #. module: mail
 #: help:mail.compose.message,email_bcc:0 help:mail.message,email_bcc:0
@@ -129,13 +129,13 @@ msgstr ""
 #: model:ir.model,name:mail.model_res_partner
 #: view:mail.mail:0
 msgid "Partner"
-msgstr ""
+msgstr "夥伴"
 
 #. module: mail
 #: field:mail.compose.message,subject:0
 #: field:mail.message,subject:0
 msgid "Subject"
-msgstr ""
+msgstr "主題"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:152
@@ -148,23 +148,26 @@ msgstr ""
 #: field:mail.mail,email_from:0
 #: field:mail.message,email_from:0
 msgid "From"
-msgstr ""
+msgstr "來自"
 
 #. module: mail
 #: view:mail.mail:0
 #: view:mail.message.subtype:0
 msgid "Email message"
-msgstr ""
+msgstr "郵件訊息"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:36
 #: view:mail.compose.message:0
+#, python-format
 msgid "Send"
-msgstr ""
+msgstr "傳送"
 
 #. module: mail
 #: view:mail.mail:0
 msgid "Failed"
-msgstr ""
+msgstr "已失敗"
 
 #. module: mail
 #: view:mail.message:0 field:mail.message,state:0
@@ -173,17 +176,17 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:227
+#: code:addons/mail/static/src/xml/mail.xml:245
 #: view:mail.mail:0
 #, python-format
 msgid "Reply"
-msgstr ""
+msgstr "回覆"
 
 #. module: mail
 #: view:mail.mail:0
 #: selection:mail.mail,state:0
 msgid "Sent"
-msgstr ""
+msgstr "已傳送"
 
 #. module: mail
 #: help:mail.compose.message,subtype:0 help:mail.message,subtype:0
@@ -197,7 +200,7 @@ msgstr ""
 #: view:mail.compose.message:0
 #: field:mail.message,partner_ids:0
 msgid "Recipients"
-msgstr ""
+msgstr "收件者"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_compose_message
@@ -210,18 +213,18 @@ msgstr ""
 #: field:mail.message,res_id:0
 #: field:mail.wizard.invite,res_id:0
 msgid "Related Document ID"
-msgstr ""
+msgstr "相關文件 ID"
 
 #. module: mail
 #: view:mail.mail:0
 msgid "Advanced"
-msgstr ""
+msgstr "進階的"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:165
 #, python-format
 msgid "Re:"
-msgstr ""
+msgstr "Re:"
 
 #. module: mail
 #: field:mail.compose.message,model:0 field:mail.message,model:0
@@ -232,12 +235,12 @@ msgstr ""
 #. module: mail
 #: view:mail.mail:0
 msgid "Month"
-msgstr ""
+msgstr "月份"
 
 #. module: mail
 #: view:mail.mail:0
 msgid "Email Search"
-msgstr ""
+msgstr "郵件搜尋"
 
 #. module: mail
 #: help:mail.message,original:0
@@ -252,18 +255,18 @@ msgstr ""
 #. module: mail
 #: view:mail.mail:0
 msgid "Retry"
-msgstr ""
+msgstr "重試"
 
 #. module: mail
 #: view:mail.mail:0
 #: selection:mail.mail,state:0
 msgid "Outgoing"
-msgstr ""
+msgstr "外送"
 
 #. module: mail
 #: view:mail.mail:0
 msgid "Send Now"
-msgstr ""
+msgstr "立即傳送"
 
 #. module: mail
 #: field:mail.message,partner_id:0
@@ -274,18 +277,18 @@ msgstr ""
 #: view:mail.alias:0
 #: view:mail.mail:0
 msgid "User"
-msgstr ""
+msgstr "使用者"
 
 #. module: mail
 #: field:mail.compose.message,date:0
 #: field:mail.message,date:0
 msgid "Date"
-msgstr ""
+msgstr "日期"
 
 #. module: mail
 #: view:mail.mail:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "增加篩選條件..."
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:153
@@ -314,19 +317,19 @@ msgstr ""
 #: field:mail.compose.message,message_id:0
 #: field:mail.message,message_id:0
 msgid "Message-Id"
-msgstr ""
+msgstr "訊息-Id"
 
 #. module: mail
 #: field:mail.compose.message,attachment_ids:0
 #: view:mail.mail:0
 #: field:mail.message,attachment_ids:0
 msgid "Attachments"
-msgstr ""
+msgstr "附件"
 
 #. module: mail
 #: field:mail.mail,email_cc:0
 msgid "Cc"
-msgstr ""
+msgstr "副本"
 
 #. module: mail
 #: code:addons/mail/mail_message.py:159
@@ -342,7 +345,7 @@ msgstr ""
 #. module: mail
 #: field:mail.mail,references:0
 msgid "References"
-msgstr ""
+msgstr "參照"
 
 #. module: mail
 #: field:mail.message,display_text:0
@@ -351,10 +354,9 @@ msgstr ""
 
 #. module: mail
 #: view:mail.compose.message:0
-#: view:mail.mail:0
 #: view:mail.wizard.invite:0
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
 #. module: mail
 #: view:mail.message:0
@@ -383,12 +385,12 @@ msgstr ""
 #. module: mail
 #: view:mail.mail:0
 msgid "Creation Month"
-msgstr ""
+msgstr "建立月份"
 
 #. module: mail
 #: field:mail.mail,email_to:0
 msgid "To"
-msgstr ""
+msgstr "至"
 
 #. module: mail
 #: view:mail.message:0
@@ -424,7 +426,7 @@ msgstr ""
 #: help:mail.compose.message,message_id:0
 #: help:mail.message,message_id:0
 msgid "Message unique identifier"
-msgstr ""
+msgstr "訊息唯一編號"
 
 #. module: mail
 #: view:mail.message:0
@@ -446,7 +448,7 @@ msgstr ""
 #: view:mail.mail:0
 #: view:mail.message:0
 msgid "Emails"
-msgstr ""
+msgstr "電子郵件"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_message
@@ -456,7 +458,7 @@ msgstr ""
 #: field:mail.thread,message_ids:0
 #: field:res.partner,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "訊息"
 
 #. module: mail
 #: field:mail.compose.message,headers:0 field:mail.message,headers:0
@@ -478,7 +480,7 @@ msgstr ""
 #. module: mail
 #: help:mail.mail,references:0
 msgid "Message references, such as identifiers of previous messages"
-msgstr ""
+msgstr "郵件引用，例如前一個郵件的ID"
 
 #. module: mail
 #: constraint:res.partner:0
@@ -488,12 +490,12 @@ msgstr ""
 #. module: mail
 #: help:mail.mail,email_cc:0
 msgid "Carbon copy message recipients"
-msgstr ""
+msgstr "郵件副本收件人"
 
 #. module: mail
 #: selection:mail.mail,state:0
 msgid "Delivery Failed"
-msgstr ""
+msgstr "傳送失敗"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message
@@ -503,12 +505,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread
 msgid "Email Thread"
-msgstr ""
+msgstr "電子郵件討論串"
 
 #. module: mail
 #: field:mail.compose.message,filter_id:0
 msgid "Filters"
-msgstr ""
+msgstr "過濾器"
 
 #. module: mail
 #: code:addons/mail/mail_thread.py:220
@@ -519,4 +521,4 @@ msgstr ""
 #. module: mail
 #: help:mail.mail,reply_to:0
 msgid "Preferred response address for the message"
-msgstr ""
+msgstr "本郵件推薦的回覆地址"

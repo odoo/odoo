@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:54+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:12+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -53,18 +53,20 @@ msgid "Draft procurement of the product and location of that orderpoint"
 msgstr "ドラフトの製品の調達とその発注点の場所"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:291
+#: code:addons/procurement/procurement.py:290
 #, python-format
 msgid "No supplier defined for this product !"
 msgstr "この製品には仕入先が定義されていません。"
 
 #. module: procurement
 #: field:make.procurement,uom_id:0
+#: view:procurement.order:0
 msgid "Unit of Measure"
 msgstr "単位"
 
 #. module: procurement
 #: field:procurement.order,procure_method:0
+#: field:product.template,procure_method:0
 msgid "Procurement Method"
 msgstr "調達方法"
 
@@ -97,7 +99,6 @@ msgstr "販売単位の数量"
 
 #. module: procurement
 #: view:procurement.order:0
-#: field:procurement.order,name:0
 msgid "Reason"
 msgstr "理由"
 
@@ -269,7 +270,7 @@ msgid "Error! You can not create recursive companies."
 msgstr "エラー。再帰的な関係となる会社を作ることはできません。"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:386
+#: code:addons/procurement/procurement.py:370
 #, python-format
 msgid "Procurement '%s' is in exception: "
 msgstr "調達 %s は例外です： "
@@ -310,7 +311,7 @@ msgid "Best price (not yet active!)"
 msgstr "最良価格（まだアクティブでない）"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:111
+#: code:addons/procurement/schedulers.py:110
 #, python-format
 msgid "PROC %d: from stock - %3.2f %-5s - %s"
 msgstr "調達 %d： 元在庫 - %3.2f %-5s - %s"
@@ -365,7 +366,7 @@ msgid "Quantity"
 msgstr "数量"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:379
+#: code:addons/procurement/procurement.py:365
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr "十分な在庫がなく、かつ最小発注点ルールが定義されていません。"
@@ -537,7 +538,6 @@ msgstr ""
 "待たされるかもしれません。"
 
 #. module: procurement
-#: view:procurement.order:0
 #: field:procurement.order,note:0
 msgid "Note"
 msgstr "注記"
@@ -554,6 +554,7 @@ msgstr "ウィザードは調達をスケジュールします。"
 
 #. module: procurement
 #: view:procurement.order:0
+#: field:procurement.order,state:0
 msgid "Status"
 msgstr "状態"
 
@@ -568,7 +569,7 @@ msgid "You try to assign a lot which is not from the same product"
 msgstr "違う製品のロットを割り当てることはできません。"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:383
+#: code:addons/procurement/procurement.py:367
 #, python-format
 msgid "Not enough stock."
 msgstr "十分な在庫ではありません。"
@@ -600,7 +601,7 @@ msgid "No minimum orderpoint rule defined."
 msgstr "最小発注点ルールが定義されていません。"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:151
+#: code:addons/procurement/schedulers.py:133
 #, python-format
 msgid "Automatic OP: %s"
 msgstr "自動発注点：%s"
@@ -671,7 +672,7 @@ msgid "Properties composition"
 msgstr "属性の構成"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:327
+#: code:addons/procurement/procurement.py:311
 #, python-format
 msgid "Data Insufficient !"
 msgstr "データが不足しています。"
@@ -715,8 +716,6 @@ msgstr "完了"
 
 #. module: procurement
 #: view:make.procurement:0
-#: view:procurement.order:0
-#: selection:procurement.order,state:0
 #: view:procurement.order.compute:0
 #: view:procurement.order.compute.all:0
 #: view:procurement.orderpoint.compute:0
@@ -769,13 +768,7 @@ msgid "Procurement Exceptions"
 msgstr "調達の例外"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.act_procurement_2_stock_warehouse_orderpoint
-#: model:ir.actions.act_window,name:procurement.act_product_product_2_stock_warehouse_orderpoint
-#: model:ir.actions.act_window,name:procurement.act_stock_warehouse_2_stock_warehouse_orderpoint
-#: model:ir.actions.act_window,name:procurement.action_orderpoint_form
-#: model:ir.ui.menu,name:procurement.menu_stock_order_points
-#: view:product.product:0
-#: view:stock.warehouse.orderpoint:0
+#: field:product.product,orderpoint_ids:0
 msgid "Minimum Stock Rules"
 msgstr "最小在庫ルール"
 
@@ -811,6 +804,7 @@ msgstr "一時的"
 #. module: procurement
 #: field:mrp.property,description:0
 #: field:mrp.property.group,description:0
+#: field:procurement.order,name:0
 msgid "Description"
 msgstr "説明"
 
@@ -836,6 +830,8 @@ msgstr "製品単位"
 
 #. module: procurement
 #: model:process.node,name:procurement.process_node_serviceonorder0
+#: selection:procurement.order,procure_method:0
+#: selection:product.template,procure_method:0
 msgid "Make to Order"
 msgstr "オーダーの作成"
 
@@ -989,13 +985,13 @@ msgid "Error: Invalid ean code"
 msgstr "エラー：無効な商品識別番号です。"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:152
+#: code:addons/procurement/schedulers.py:134
 #, python-format
 msgid "SCHEDULER"
 msgstr "スケジューラ"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:88
+#: code:addons/procurement/schedulers.py:87
 #, python-format
 msgid "PROC %d: on order - %3.2f %-5s - %s"
 msgstr "調達 %d：オーダー中 - %3.2f %-5s - %s"

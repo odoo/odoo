@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 10:00+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:19+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: purchase_requisition
 #: sql_constraint:purchase.order:0
@@ -64,10 +64,11 @@ msgstr "Stato"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Purchase Requisition in negociation"
-msgstr ""
+msgstr "Richieste D'acquisto in negoziazione"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
+#: field:purchase.requisition.partner,partner_id:0
 msgid "Supplier"
 msgstr "Fornitore"
 
@@ -75,7 +76,7 @@ msgstr "Fornitore"
 #: view:purchase.requisition:0
 #: selection:purchase.requisition,state:0
 msgid "New"
-msgstr ""
+msgstr "Nuovo"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -109,7 +110,7 @@ msgstr "Linea di richiesta d'acquisto"
 #. module: purchase_requisition
 #: view:purchase.order:0
 msgid "Purchase Orders with requisition"
-msgstr ""
+msgstr "Ordini D'acquisto con richiesta"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_product
@@ -120,7 +121,7 @@ msgstr "Prodotto"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Quotations"
-msgstr "Quotazioni"
+msgstr "Preventivi"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -166,7 +167,6 @@ msgstr "Più richieste"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
-#: field:purchase.requisition.line,product_uom_id:0
 msgid "Product UoM"
 msgstr "UoM prodotto"
 
@@ -183,12 +183,12 @@ msgstr "Reimposta come bozza"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Current Purchase Requisition"
-msgstr ""
+msgstr "Richieste d'acquisto correnti"
 
 #. module: purchase_requisition
 #: model:res.groups,name:purchase_requisition.group_purchase_requisition_user
 msgid "User"
-msgstr ""
+msgstr "Utente"
 
 #. module: purchase_requisition
 #: field:purchase.requisition.partner,partner_address_id:0
@@ -224,7 +224,7 @@ msgstr "Quantità"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Unassigned  Requisition"
-msgstr ""
+msgstr "Richieste non assegnate"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
@@ -233,12 +233,14 @@ msgid "Purchase Requisitions"
 msgstr "Richieste di acquisto"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/purchase_requisition.py:136
+#: code:addons/purchase_requisition/purchase_requisition.py:134
 #, python-format
 msgid ""
 "You have already one %s purchase order for this partner, you must cancel "
 "this purchase order to create a new quotation."
 msgstr ""
+"C'è già un %s ordine d'acquisto per questo partner, è necessario annullare "
+"questo ordine di acquisto per creare un nuovo preventivo."
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -303,7 +305,7 @@ msgid "Purchase Order"
 msgstr "Ordine di Acquisto"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:42
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:41
 #, python-format
 msgid "Error!"
 msgstr "Errore!"
@@ -316,7 +318,7 @@ msgstr "Tipo richiesta"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "New Purchase Requisition"
-msgstr ""
+msgstr "Nuove richieste d'acquisto"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -408,7 +410,7 @@ msgstr "Richiesta d'acquisto (esclusiva)"
 #. module: purchase_requisition
 #: model:res.groups,name:purchase_requisition.group_purchase_requisition_manager
 msgid "Manager"
-msgstr ""
+msgstr "Responsabile"
 
 #. module: purchase_requisition
 #: constraint:product.product:0
@@ -432,7 +434,7 @@ msgid "Confirm Purchase Order"
 msgstr "Conferma ordine di acquisto"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
+#: view:purchase.requisition.partner:0
 msgid "Cancel"
 msgstr "Annulla"
 

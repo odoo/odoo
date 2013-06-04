@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-26 04:56+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-05-29 06:53+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -22,7 +22,7 @@ msgid "# Leads"
 msgstr "# Leads"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:880
+#: code:addons/crm/crm_lead.py:881
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
@@ -53,6 +53,7 @@ msgid "Visibility"
 msgstr "Zichtbaarheid"
 
 #. module: crm
+#: view:crm.lead:0
 #: field:crm.lead,title:0
 msgid "Title"
 msgstr "Titel"
@@ -291,6 +292,7 @@ msgid "Campaigns"
 msgstr "Campagnes"
 
 #. module: crm
+#: view:crm.lead:0
 #: field:crm.lead,state_id:0
 msgid "State"
 msgstr "Status"
@@ -322,7 +324,7 @@ msgid "Prospect Partner"
 msgstr "Prospect naar relatie"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:967
+#: code:addons/crm/crm_lead.py:982
 #, python-format
 msgid "No Subject"
 msgstr "Geen onderwerp"
@@ -759,7 +761,7 @@ msgstr ""
 "Propositie, Onderhandeling, Gewonnen/Verloren."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:860
+#: code:addons/crm/crm_lead.py:861
 #: model:crm.case.stage,name:crm.stage_lead2
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
@@ -840,7 +842,7 @@ msgstr ""
 "annuleren in plaats van deze te verwijderen."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:591
+#: code:addons/crm/crm_lead.py:584
 #, python-format
 msgid "From %s : %s"
 msgstr "Van %s : %s"
@@ -908,6 +910,7 @@ msgstr "Niet toegewezen telefoongesprekken"
 
 #. module: crm
 #: view:crm.lead:0
+#: view:crm.lead2opportunity.partner:0
 #: field:crm.lead2opportunity.partner,opportunity_ids:0
 #: field:crm.lead2opportunity.partner.mass,opportunity_ids:0
 #: model:ir.actions.act_window,name:crm.crm_case_category_act_oppor11
@@ -957,7 +960,7 @@ msgid "March"
 msgstr "Maart"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:97
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:89
 #, python-format
 msgid "Warning !"
 msgstr "Waarschuwing!"
@@ -1120,6 +1123,7 @@ msgstr "Fase"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead6
+#: view:crm.lead:0
 msgid "Won"
 msgstr "Gewonnen"
 
@@ -1512,7 +1516,7 @@ msgid "Schedule a Meeting"
 msgstr "Plan een afspraak"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:573
+#: code:addons/crm/crm_lead.py:565
 #, python-format
 msgid "Merged opportunities"
 msgstr "Samengevoegde prospects"
@@ -1559,7 +1563,6 @@ msgid "References"
 msgstr "Referenties"
 
 #. module: crm
-#: view:crm.lead:0
 #: view:crm.lead2opportunity.partner:0
 #: view:crm.lead2opportunity.partner.mass:0
 #: view:crm.merge.opportunity:0
@@ -1898,7 +1901,6 @@ msgstr "Aanmaak jaar"
 
 #. module: crm
 #: view:crm.case.section:0
-#: view:crm.lead:0
 #: field:crm.lead,description:0
 msgid "Notes"
 msgstr "Notities"
@@ -2505,15 +2507,17 @@ msgid "Max Interval"
 msgstr "Max interval"
 
 #. module: crm
+#: view:crm.lead:0
 #: view:crm.lead.report:0
 #: selection:crm.lead.report,state:0
 msgid "Open"
 msgstr "Open"
 
 #. module: crm
+#: view:crm.lead:0
 #: field:crm.lead,city:0
 msgid "City"
-msgstr "Woonplaats"
+msgstr "Plaats"
 
 #. module: crm
 #: view:crm.lead:0 view:res.partner:0
@@ -3645,10 +3649,12 @@ msgid "Phonecalls"
 msgstr "Telefoongesprekken"
 
 #. module: crm
+#: code:addons/crm/crm_lead.py:968
 #: view:crm.lead:0
 #: field:crm.lead2opportunity.partner,partner_id:0
 #: field:crm.lead2opportunity.partner.mass,partner_id:0
 #: field:crm.partner.binding,partner_id:0
+#, python-format
 msgid "Customer"
 msgstr "Klant"
 
@@ -3672,7 +3678,6 @@ msgstr "Februari"
 #: field:crm.case.resource.type,section_id:0
 #: view:crm.case.section:0
 #: field:crm.case.section,name:0
-#: view:crm.lead:0
 #: field:crm.lead,section_id:0
 #: view:crm.lead.report:0
 #: field:crm.lead.report,section_id:0
@@ -3689,6 +3694,7 @@ msgstr "Verkoopteam"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead8
+#: view:crm.lead:0
 msgid "Lost"
 msgstr "Verloren"
 
@@ -3698,6 +3704,7 @@ msgid "Edit"
 msgstr "Bewerken"
 
 #. module: crm
+#: view:crm.lead:0
 #: field:crm.lead,country_id:0
 #: view:crm.lead.report:0
 #: field:crm.lead.report,country_id:0

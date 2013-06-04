@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-15 05:17+0000\n"
-"X-Generator: Launchpad (build 16265)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:14+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -77,12 +77,12 @@ msgid "Mainboard ASUStek A7V8X-X"
 msgstr "Moderbord ASUStek A7V8X-X"
 
 #. module: product
-#: help:product.template,seller_qty:0
+#: help:product.product,seller_qty:0
 msgid "This is minimum quantity to purchase from Main Supplier."
 msgstr "Detta är minsta kvantitet att köpa från huvudleverantör."
 
 #. module: product
-#: model:product.uom,name:product.uom_day
+#: model:product.uom,name:product.product_uom_day
 msgid "Day"
 msgstr "Dag"
 
@@ -111,7 +111,7 @@ msgstr ""
 "försäljning till nuvarande partner"
 
 #. module: product
-#: field:product.template,seller_qty:0
+#: field:product.product,seller_qty:0
 msgid "Supplier Quantity"
 msgstr "Leverantörskvantitet"
 
@@ -129,14 +129,12 @@ msgstr "Varning !"
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_pricelist
 #: model:ir.model,name:product.model_product_pricelist
-#: field:product.product,price:0
 #: field:product.product,pricelist_id:0
 #: view:product.supplierinfo:0
 msgid "Pricelist"
 msgstr "Prislista"
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Base Prices"
 msgstr "Försäljningspriser"
@@ -172,7 +170,7 @@ msgid "Partner"
 msgstr "Företag"
 
 #. module: product
-#: code:addons/product/product.py:143
+#: code:addons/product/product.py:176
 #, python-format
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
@@ -277,7 +275,7 @@ msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
 msgstr "  t ex: 1 * (den här enheten) = förhållande * (referens enhet)"
 
 #. module: product
-#: code:addons/product/product.py:418
+#: code:addons/product/product.py:412
 #, python-format
 msgid "Products: "
 msgstr "Produkter: "
@@ -314,7 +312,7 @@ msgid "EAN13"
 msgstr "EAN13"
 
 #. module: product
-#: field:product.template,seller_id:0
+#: field:product.product,seller_id:0
 msgid "Main Supplier"
 msgstr "Huvudleverantör"
 
@@ -331,6 +329,7 @@ msgstr "Paketering"
 #. module: product
 #: view:product.product:0
 #: field:product.template,categ_id:0
+#: field:product.uom,category_id:0
 msgid "Category"
 msgstr "Kategori"
 
@@ -456,7 +455,6 @@ msgid "Products Price Search"
 msgstr "Produktprissökning"
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 #: field:product.template,description_sale:0
 msgid "Sale Description"
@@ -500,7 +498,7 @@ msgid "Ending date for this pricelist version to be valid."
 msgstr "Slutdatum för prislistans giltighet"
 
 #. module: product
-#: model:product.category,name:product.product_category_0
+#: model:product.category,name:product.product_category_all
 msgid "All products"
 msgstr "Alla produkter"
 
@@ -647,7 +645,6 @@ msgstr "Totalt antal produkter som får plats på en pall eller i en låda."
 
 #. module: product
 #: constraint:product.packaging:0
-#: constraint:product.product:0
 msgid "Error: Invalid ean code"
 msgstr "Fel: felaktig EAN-kod"
 
@@ -716,6 +713,7 @@ msgstr "KIT Hylla 100 cm"
 
 #. module: product
 #: field:product.supplierinfo,name:0
+#: field:product.template,seller_ids:0
 msgid "Supplier"
 msgstr "Leverantör"
 
@@ -783,7 +781,6 @@ msgid "Price List"
 msgstr "Prislista"
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Suppliers"
 msgstr "Leverantörer"
@@ -819,7 +816,7 @@ msgstr ""
 "annars gäller standard måttenhet för produkten."
 
 #. module: product
-#: model:product.category,name:product.product_category_5
+#: model:product.category,name:product.product_category_7
 msgid "Accessories"
 msgstr "Tillbehör"
 
@@ -868,6 +865,7 @@ msgstr "Skriv ut"
 #. module: product
 #: view:product.product:0
 #: field:product.ul,type:0
+#: field:product.uom,uom_type:0
 msgid "Type"
 msgstr "Typ"
 
@@ -909,7 +907,6 @@ msgstr ""
 "produkter"
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Procurement & Locations"
 msgstr "Anskaffning och lagerställen"
@@ -920,7 +917,7 @@ msgid "Kitchen Design Project"
 msgstr "Köksdesign projekt"
 
 #. module: product
-#: model:product.uom,name:product.uom_hour
+#: model:product.uom,name:product.product_uom_hour
 msgid "Hour"
 msgstr "Timme"
 
@@ -968,6 +965,7 @@ msgid "Supplier Information"
 msgstr "Levrantörsinformation"
 
 #. module: product
+#: model:ir.model,name:product.model_res_currency
 #: field:product.price.type,currency_id:0
 #: report:product.pricelist:0
 #: field:product.pricelist,currency_id:0
@@ -1007,7 +1005,7 @@ msgid "Total Package Weight"
 msgstr "Total emballagevikt"
 
 #. module: product
-#: field:product.template,seller_info_id:0
+#: field:product.product,seller_info_id:0
 msgid "unknown"
 msgstr "okänd"
 
@@ -1045,7 +1043,6 @@ msgid "Information about a product supplier"
 msgstr "Leverantörsinformation"
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 #: field:product.template,description_purchase:0
 msgid "Purchase Description"
@@ -1218,11 +1215,8 @@ msgstr "Logistikmässiga enheter"
 #: field:product.category,name:0
 #: field:product.pricelist.type,name:0
 #: field:product.pricelist.version,name:0
-#: view:product.product:0
-#: field:product.product,name_template:0
 #: field:product.template,name:0
 #: field:product.ul,name:0
-#: field:product.uom,name:0
 #: field:product.uom.categ,name:0
 msgid "Name"
 msgstr "Namn"
@@ -1316,6 +1310,9 @@ msgstr "Associerat fält i produktformuläret."
 
 #. module: product
 #: view:product.product:0
+#: view:product.template:0
+#: field:product.template,uom_id:0
+#: field:product.uom,name:0
 msgid "Unit of Measure"
 msgstr "Enhet"
 
@@ -1335,7 +1332,7 @@ msgid "Unit of Sale"
 msgstr "Försäljningsenhet"
 
 #. module: product
-#: help:product.template,seller_delay:0
+#: help:product.product,seller_delay:0
 msgid ""
 "This is the average delay in days between the purchase order confirmation "
 "and the reception of goods for this product and for the default supplier. It "
@@ -1346,12 +1343,12 @@ msgstr ""
 "av schemaläggaren att beställa orderförslag på grundval av ledtider."
 
 #. module: product
-#: help:product.template,seller_id:0
+#: help:product.product,seller_id:0
 msgid "Main Supplier who has highest priority in Supplier List."
 msgstr "Huvudleverantör, den som har högst prioritet i leverantörslistan"
 
 #. module: product
-#: model:product.category,name:product.product_category_6
+#: model:product.category,name:product.product_category_5
 #: view:product.product:0
 msgid "Services"
 msgstr "Tjänster"
@@ -1475,6 +1472,7 @@ msgstr ""
 "post hittas."
 
 #. module: product
+#: view:product.product:0
 #: selection:product.template,type:0
 msgid "Consumable"
 msgstr "Förbrukningsvara"
@@ -1495,7 +1493,6 @@ msgid "Side Panel"
 msgstr "Sidopanel"
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Procurement"
 msgstr "Anskaffning"
@@ -1862,6 +1859,7 @@ msgid "Box 30x40x60"
 msgstr "Låda 30x40x60"
 
 #. module: product
+#: model:product.template,name:product.product_product_consultant_product_template
 #: selection:product.template,type:0
 msgid "Service"
 msgstr "Tjänst"
@@ -1894,7 +1892,7 @@ msgid ""
 msgstr "Pris för att beräkna kundpriset, även kallat katalogpris."
 
 #. module: product
-#: code:addons/product/pricelist.py:376
+#: code:addons/product/pricelist.py:377
 #, python-format
 msgid "Partner section of the product form"
 msgstr "Partner section of the product form"
@@ -1924,7 +1922,7 @@ msgstr ""
 "standardenheten."
 
 #. module: product
-#: model:product.template,description:product.product_product_cpu1_product_template
+#: model:product.template,description:product.product_product_9_product_template
 msgid "This product is configured with example of push/pull flows"
 msgstr "Denna produkt är konfigurerad med exempel på Trycka / Dra flöden"
 
@@ -1950,7 +1948,7 @@ msgid "Pricelist Type"
 msgstr "Prislisttyp"
 
 #. module: product
-#: model:product.category,name:product.product_category_otherproducts0
+#: model:product.category,name:product.product_category_3
 msgid "Other Products"
 msgstr "Andra produkter"
 
@@ -1965,6 +1963,7 @@ msgid "Characteristics"
 msgstr "Karakteristik"
 
 #. module: product
+#: view:product.product:0
 #: field:product.template,sale_ok:0
 msgid "Can be Sold"
 msgstr "Kan säljas"
@@ -1996,7 +1995,7 @@ msgid "t"
 msgstr "t"
 
 #. module: product
-#: model:product.category,name:product.product_category_rawmaterial0
+#: model:product.category,name:product.product_category_10
 msgid "Raw Materials"
 msgstr "Råmeterial"
 
@@ -2074,7 +2073,7 @@ msgid "UoM Categories"
 msgstr "Enhetskategorier"
 
 #. module: product
-#: field:product.template,seller_delay:0
+#: field:product.product,seller_delay:0
 msgid "Supplier Lead Time"
 msgstr "Leverantörens ledtid"
 
@@ -2152,7 +2151,7 @@ msgid "Supplier of the product"
 msgstr "Produktleverantör"
 
 #. module: product
-#: field:product.product,product_image:0
+#: field:product.product,image:0
 msgid "Image"
 msgstr "Bild"
 
@@ -2181,7 +2180,6 @@ msgstr ""
 "bit."
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Descriptions"
 msgstr "Beskrivningar"
@@ -2232,7 +2230,7 @@ msgid "Price Rounding"
 msgstr "Avrundning av pris"
 
 #. module: product
-#: code:addons/product/pricelist.py:178
+#: code:addons/product/pricelist.py:179
 #, python-format
 msgid ""
 "At least one pricelist has no active version !\n"
@@ -2267,7 +2265,6 @@ msgstr "Kan hyras ut"
 
 #. module: product
 #: model:product.price.type,name:product.standard_price
-#: field:product.template,standard_price:0
 msgid "Cost Price"
 msgstr "Kostpris"
 
@@ -2330,7 +2327,6 @@ msgid "Sales Properties"
 msgstr "Försäljningsegenskaper"
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Delays"
 msgstr "Ledtid"
@@ -2350,7 +2346,6 @@ msgstr "Skapande av produkten."
 #: field:product.packaging,name:0
 #: report:product.pricelist:0
 #: view:product.product:0
-#: view:product.template:0
 #: field:product.template,description:0
 msgid "Description"
 msgstr "Beskrivning"
@@ -2372,6 +2367,7 @@ msgstr " ) + "
 
 #. module: product
 #: field:product.template,volume:0
+#: model:product.uom.categ,name:product.product_uom_categ_vol
 msgid "Volume"
 msgstr "Volym"
 
@@ -2382,7 +2378,6 @@ msgstr "Låda"
 
 #. module: product
 #: view:product.product:0
-#: model:res.groups,name:product.group_product_variant
 msgid "Product Variant"
 msgstr "Variant"
 
@@ -2392,7 +2387,8 @@ msgid "Shelves"
 msgstr "Hyllor"
 
 #. module: product
-#: code:addons/product/pricelist.py:375
+#: code:addons/product/pricelist.py:376
+#: field:product.pricelist.item,base_pricelist_id:0
 #, python-format
 msgid "Other Pricelist"
 msgstr "Other Pricelist"
@@ -2407,6 +2403,7 @@ msgstr "Produktmall"
 
 #. module: product
 #: field:product.template,cost_method:0
+#: model:res.groups,name:product.group_costing_method
 msgid "Costing Method"
 msgstr "Metod för kostpris"
 

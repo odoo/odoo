@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-09-27 05:02+0000\n"
-"X-Generator: Launchpad (build 16033)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:22+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: share
 #: field:share.wizard,embed_option_title:0
@@ -53,14 +53,14 @@ msgid "Share Access URL"
 msgstr "Адрес(URL) совместного доступа"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:782
+#: code:addons/share/wizard/share_wizard.py:886
 #, python-format
 msgid "You may use your current login (%s) and password to view them.\n"
 msgstr ""
 "Вы можете использовать ваш текущий логин (%s) и пароль, для их просмотра.\n"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:601
+#: code:addons/share/wizard/share_wizard.py:620
 #, python-format
 msgid "(Modified)"
 msgstr "(Изменено)"
@@ -75,19 +75,21 @@ msgstr ""
 "Документы не вложены, их можно просмотреть онлайн на OpenERP сервере:"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:579
+#: code:addons/share/wizard/share_wizard.py:598
 #, python-format
 msgid "Sharing filter created by user %s (%s) for group %s"
 msgstr ""
 "Фильтр совместного доступа созданный пользователем %s (%s) для группы %s"
 
 #. module: share
-#: field:share.wizard,embed_url:0 field:share.wizard.result.line,share_url:0
+#: field:share.wizard,embed_url:0
+#: field:share.wizard.result.line,share_url:0
 msgid "Share URL"
 msgstr "Адрес совместного доступа"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:776
+#: code:addons/share/wizard/share_wizard.py:848
+#: code:addons/share/wizard/share_wizard.py:880
 #, python-format
 msgid "These are your credentials to access this protected area:\n"
 msgstr "Это ваши учетные данные для доступа к защищенной области:\n"
@@ -106,12 +108,15 @@ msgid "Access info"
 msgstr "Данные доступа"
 
 #. module: share
+#. openerp-web
+#: code:addons/share/static/src/js/share.js:60
 #: view:share.wizard:0
+#, python-format
 msgid "Share"
 msgstr "Совместный доступ"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:551
+#: code:addons/share/wizard/share_wizard.py:570
 #, python-format
 msgid "(Duplicated for modified sharing permissions)"
 msgstr "(Дублирован для измененных прав совместного доступа)"
@@ -137,7 +142,8 @@ msgid "Next"
 msgstr "Далее"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:777
+#: code:addons/share/wizard/share_wizard.py:849
+#: code:addons/share/wizard/share_wizard.py:881
 #, python-format
 msgid "Username"
 msgstr "Пользователь"
@@ -174,7 +180,7 @@ msgstr ""
 "которыми вы хотите поделиться."
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:781
+#: code:addons/share/wizard/share_wizard.py:885
 #, python-format
 msgid ""
 "The documents have been automatically added to your current OpenERP "
@@ -193,7 +199,8 @@ msgid "Share Group"
 msgstr "Группа совместного доступа"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:763
+#: code:addons/share/wizard/share_wizard.py:834
+#: code:addons/share/wizard/share_wizard.py:865
 #, python-format
 msgid "Email required"
 msgstr "Требуется эл. почта"
@@ -225,7 +232,8 @@ msgid "Regular groups only (no share groups"
 msgstr "Только обычные группы (не группы совместного доступа"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:787
+#: code:addons/share/wizard/share_wizard.py:855
+#: code:addons/share/wizard/share_wizard.py:889
 #, python-format
 msgid ""
 "OpenERP is a powerful and user-friendly suite of Business Applications (CRM, "
@@ -260,7 +268,7 @@ msgstr ""
 "строке"
 
 #. module: share
-#: field:share.wizard,embed_code:0 field:share.wizard.result.line,user_id:0
+#: field:share.wizard.result.line,user_id:0
 msgid "unknown"
 msgstr "неизвесно"
 
@@ -287,7 +295,7 @@ msgstr ""
 "пользователя"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:526
+#: code:addons/share/wizard/share_wizard.py:545
 #, python-format
 msgid "(Copy for sharing)"
 msgstr "(Копировать для совместного доступа)"
@@ -298,7 +306,7 @@ msgid "Newly created"
 msgstr "Вновь созданный"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:616
+#: code:addons/share/wizard/share_wizard.py:635
 #, python-format
 msgid "Indirect sharing filter created by user %s (%s) for group %s"
 msgstr ""
@@ -333,7 +341,7 @@ msgid "Groups"
 msgstr "Группы"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:636
+#: code:addons/share/wizard/share_wizard.py:657
 #, python-format
 msgid ""
 "Sorry, the current screen and filter you are trying to share are not "
@@ -351,7 +359,8 @@ msgid "Use this link"
 msgstr "Используйте эту ссылку"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:779
+#: code:addons/share/wizard/share_wizard.py:851
+#: code:addons/share/wizard/share_wizard.py:883
 #, python-format
 msgid "Database"
 msgstr "База данных"
@@ -362,12 +371,13 @@ msgid "Domain"
 msgstr "Ограничение"
 
 #. module: share
-#: view:share.wizard:0 field:share.wizard,result_line_ids:0
+#: view:share.wizard:0
+#: field:share.wizard,result_line_ids:0
 msgid "Summary"
 msgstr "Содержание"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:493
+#: code:addons/share/wizard/share_wizard.py:512
 #, python-format
 msgid "Copied access for sharing"
 msgstr "Скопированы права совместного доступа"
@@ -452,7 +462,7 @@ msgid "Share Wizard"
 msgstr "Мастер совместного доступа"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:740
+#: code:addons/share/wizard/share_wizard.py:792
 #, python-format
 msgid "Shared access created!"
 msgstr "Общий доступ создан!"
@@ -475,14 +485,17 @@ msgid "Access Groups"
 msgstr "Группы доступа"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:778
+#: code:addons/share/wizard/share_wizard.py:850
+#: code:addons/share/wizard/share_wizard.py:882
 #: field:share.wizard.result.line,password:0
 #, python-format
 msgid "Password"
 msgstr "Пароль"
 
 #. module: share
+#: code:addons/share/wizard/share_wizard.py:77
 #: field:share.wizard,new_users:0
+#, python-format
 msgid "Emails"
 msgstr "Эл.почта"
 
@@ -503,7 +516,8 @@ msgid "Personal Message"
 msgstr "Личное сообщение"
 
 #. module: share
-#: code:addons/share/wizard/share_wizard.py:763
+#: code:addons/share/wizard/share_wizard.py:834
+#: code:addons/share/wizard/share_wizard.py:865
 #, python-format
 msgid ""
 "The current user must have an email address configured in User Preferences "
@@ -520,7 +534,7 @@ msgstr "Имя пользователя"
 #. module: share
 #: view:res.users:0
 msgid "Regular users only (no share user)"
-msgstr "Только обычные пользователи (не пользователи совместного доступа)"
+msgstr "Обычные пользователи"
 
 #. module: share
 #: field:share.wizard,access_mode:0

@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:49+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:07+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: mail
 #: field:mail.compose.message,subtype:0 field:mail.message,subtype:0
@@ -39,9 +39,9 @@ msgid "Open Attachments"
 msgstr "Öffne Anhang"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.mail:0
 msgid "Message Details"
-msgstr "Details Nachricht"
+msgstr "Nachrichtenübersicht"
 
 #. module: mail
 #: view:mail.thread:0
@@ -49,9 +49,10 @@ msgid "Communication History"
 msgstr "Kommunikation Geschichte"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.alias:0
+#: view:mail.mail:0
 msgid "Group By..."
-msgstr "Gruppierung..."
+msgstr "Gruppierung ..."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
@@ -66,15 +67,14 @@ msgid "Plain-text version of the message"
 msgstr "Text Version der Mitteilung"
 
 #. module: mail
-#: view:mail.compose.message:0
+#: view:mail.mail:0
 msgid "Body"
 msgstr "Textkörper"
 
 #. module: mail
-#: help:mail.compose.message,email_to:0 help:mail.message,email_to:0
-#: help:mail.message.common,email_to:0
+#: help:mail.mail,email_to:0
 msgid "Message recipients"
-msgstr "Mitteilung Empfänger"
+msgstr "Empfänger der Nachricht"
 
 #. module: mail
 #: field:mail.compose.message,body_text:0 field:mail.message,body_text:0
@@ -83,28 +83,28 @@ msgid "Text contents"
 msgstr "Text Inhalt"
 
 #. module: mail
-#: view:mail.message:0 selection:mail.message,state:0
+#: view:mail.mail:0
+#: selection:mail.mail,state:0
 msgid "Received"
 msgstr "Empfangen"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.mail:0
 msgid "Thread"
 msgstr "Beitrag"
 
 #. module: mail
-#: field:mail.message,mail_server_id:0
+#: field:mail.mail,mail_server_id:0
 msgid "Outgoing mail server"
 msgstr "Ausgehender Mailserver"
 
 #. module: mail
-#: selection:mail.message,state:0
+#: selection:mail.mail,state:0
 msgid "Cancelled"
 msgstr "Storniert"
 
 #. module: mail
-#: field:mail.compose.message,reply_to:0 field:mail.message,reply_to:0
-#: field:mail.message.common,reply_to:0
+#: field:mail.mail,reply_to:0
 msgid "Reply-To"
 msgstr "Antwort an"
 
@@ -115,7 +115,7 @@ msgid "Rich-text/HTML version of the message"
 msgstr "Rich-text/HTML Version der Nachricht"
 
 #. module: mail
-#: field:mail.compose.message,auto_delete:0 field:mail.message,auto_delete:0
+#: field:mail.mail,auto_delete:0
 msgid "Auto Delete"
 msgstr "Autom. Löschen"
 
@@ -126,13 +126,14 @@ msgid "Blind carbon copy message recipients"
 msgstr "Verdeckte Mail Empfänger"
 
 #. module: mail
-#: model:ir.model,name:mail.model_res_partner view:mail.message:0
+#: model:ir.model,name:mail.model_res_partner
+#: view:mail.mail:0
 msgid "Partner"
 msgstr "Partner"
 
 #. module: mail
-#: field:mail.compose.message,subject:0 field:mail.message,subject:0
-#: field:mail.message.common,subject:0
+#: field:mail.compose.message,subject:0
+#: field:mail.message,subject:0
 msgid "Subject"
 msgstr "Betreff"
 
@@ -143,23 +144,28 @@ msgid "On %(date)s, "
 msgstr "Am %(date)s, "
 
 #. module: mail
-#: field:mail.compose.message,email_from:0 field:mail.message,email_from:0
-#: field:mail.message.common,email_from:0
+#: field:mail.compose.message,email_from:0
+#: field:mail.mail,email_from:0
+#: field:mail.message,email_from:0
 msgid "From"
 msgstr "Von"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.mail:0
+#: view:mail.message.subtype:0
 msgid "Email message"
-msgstr "EMail Nachricht"
+msgstr "E-Mail Nachricht"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:36
 #: view:mail.compose.message:0
+#, python-format
 msgid "Send"
 msgstr "Senden"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.mail:0
 msgid "Failed"
 msgstr "Fehlgeschlagen"
 
@@ -169,12 +175,16 @@ msgid "State"
 msgstr "Status"
 
 #. module: mail
-#: view:mail.message:0
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:245
+#: view:mail.mail:0
+#, python-format
 msgid "Reply"
 msgstr "Antworten"
 
 #. module: mail
-#: view:mail.message:0 selection:mail.message,state:0
+#: view:mail.mail:0
+#: selection:mail.mail,state:0
 msgid "Sent"
 msgstr "Gesendet"
 
@@ -187,7 +197,8 @@ msgid ""
 msgstr "Auswahl des Typs der Nachricht, 'HTML' oder 'Text'."
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.compose.message:0
+#: field:mail.message,partner_ids:0
 msgid "Recipients"
 msgstr "Empfänger"
 
@@ -197,18 +208,20 @@ msgid "E-mail composition wizard"
 msgstr "Email-Zusammensetzung Assistent"
 
 #. module: mail
-#: field:mail.compose.message,res_id:0 field:mail.message,res_id:0
-#: field:mail.message.common,res_id:0
+#: field:mail.compose.message,res_id:0
+#: field:mail.followers,res_id:0
+#: field:mail.message,res_id:0
+#: field:mail.wizard.invite,res_id:0
 msgid "Related Document ID"
 msgstr "zugehörige Dokumenten-ID"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.mail:0
 msgid "Advanced"
 msgstr "Erweitert"
 
 #. module: mail
-#: code:addons/mail/wizard/mail_compose_message.py:157
+#: code:addons/mail/wizard/mail_compose_message.py:165
 #, python-format
 msgid "Re:"
 msgstr "Re:"
@@ -220,14 +233,14 @@ msgid "Related Document model"
 msgstr "zugehöriges Dokumenten-Modell"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.mail:0
 msgid "Month"
 msgstr "Monat"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.mail:0
 msgid "Email Search"
-msgstr "Suche EMail"
+msgstr "Suche E-Mail"
 
 #. module: mail
 #: help:mail.message,original:0
@@ -240,17 +253,18 @@ msgid "Partner Name"
 msgstr "Partner Name"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.mail:0
 msgid "Retry"
 msgstr "Wiederholen"
 
 #. module: mail
-#: view:mail.message:0 selection:mail.message,state:0
+#: view:mail.mail:0
+#: selection:mail.mail,state:0
 msgid "Outgoing"
 msgstr "Postausgang"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.mail:0
 msgid "Send Now"
 msgstr "Sofort senden"
 
@@ -260,18 +274,19 @@ msgid "Related partner"
 msgstr "Zugehörige Partner"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.alias:0
+#: view:mail.mail:0
 msgid "User"
 msgstr "Benutzer"
 
 #. module: mail
-#: field:mail.compose.message,date:0 field:mail.message,date:0
-#: field:mail.message.common,date:0
+#: field:mail.compose.message,date:0
+#: field:mail.message,date:0
 msgid "Date"
 msgstr "Datum"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.mail:0
 msgid "Extended Filters..."
 msgstr "Erweiterte Filter..."
 
@@ -299,20 +314,20 @@ msgid "History"
 msgstr "Historie"
 
 #. module: mail
-#: field:mail.compose.message,message_id:0 field:mail.message,message_id:0
-#: field:mail.message.common,message_id:0
+#: field:mail.compose.message,message_id:0
+#: field:mail.message,message_id:0
 msgid "Message-Id"
 msgstr "Nachricht-ID"
 
 #. module: mail
-#: view:mail.compose.message:0 field:mail.compose.message,attachment_ids:0
-#: view:mail.message:0 field:mail.message,attachment_ids:0
+#: field:mail.compose.message,attachment_ids:0
+#: view:mail.mail:0
+#: field:mail.message,attachment_ids:0
 msgid "Attachments"
 msgstr "Anhänge"
 
 #. module: mail
-#: field:mail.compose.message,email_cc:0 field:mail.message,email_cc:0
-#: field:mail.message.common,email_cc:0
+#: field:mail.mail,email_cc:0
 msgid "Cc"
 msgstr "CC"
 
@@ -323,14 +338,13 @@ msgid " on "
 msgstr " EMail von "
 
 #. module: mail
-#: help:mail.message,auto_delete:0
+#: help:mail.mail,auto_delete:0
 msgid "Permanently delete this email after sending it, to save space"
 msgstr ""
-"Dauerhaftes Löschen dieser E-Mail nach dem Absenden, um Platz zu sparen"
+"Dauerhafte Löschung dieser E-Mail nach dem Versand, um Platz zu sparen"
 
 #. module: mail
-#: field:mail.compose.message,references:0 field:mail.message,references:0
-#: field:mail.message.common,references:0
+#: field:mail.mail,references:0
 msgid "References"
 msgstr "Referenzen"
 
@@ -340,7 +354,8 @@ msgid "Display Text"
 msgstr "Textbereich"
 
 #. module: mail
-#: view:mail.compose.message:0 view:mail.message:0
+#: view:mail.compose.message:0
+#: view:mail.wizard.invite:0
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -371,13 +386,12 @@ msgstr ""
 "für einlangende EMails)"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.mail:0
 msgid "Creation Month"
 msgstr "Monat Erstellung"
 
 #. module: mail
-#: field:mail.compose.message,email_to:0 field:mail.message,email_to:0
-#: field:mail.message.common,email_to:0
+#: field:mail.mail,email_to:0
 msgid "To"
 msgstr "An"
 
@@ -414,8 +428,8 @@ msgid "You"
 msgstr "Sie"
 
 #. module: mail
-#: help:mail.compose.message,message_id:0 help:mail.message,message_id:0
-#: help:mail.message.common,message_id:0
+#: help:mail.compose.message,message_id:0
+#: help:mail.message,message_id:0
 msgid "Message unique identifier"
 msgstr "Eindeutige Identifikation der Nachricht"
 
@@ -437,15 +451,20 @@ msgstr ""
 "\t"
 
 #. module: mail
-#: model:ir.actions.act_window,name:mail.act_res_partner_emails
-#: view:mail.message:0 field:res.partner,emails:0
+#: model:ir.actions.act_window,name:mail.action_view_mail_mail
+#: model:ir.ui.menu,name:mail.menu_mail_mail
+#: view:mail.mail:0
+#: view:mail.message:0
 msgid "Emails"
-msgstr "EMails"
+msgstr "E-Mails"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_message
-#: model:ir.ui.menu,name:mail.menu_email_message
+#: model:ir.ui.menu,name:mail.menu_mail_message
+#: field:mail.group,message_ids:0
+#: view:mail.message:0
 #: field:mail.thread,message_ids:0
+#: field:res.partner,message_ids:0
 msgid "Messages"
 msgstr "Nachrichten"
 
@@ -467,8 +486,7 @@ msgid "mail.message.common"
 msgstr "mail.message.common"
 
 #. module: mail
-#: help:mail.compose.message,references:0 help:mail.message,references:0
-#: help:mail.message.common,references:0
+#: help:mail.mail,references:0
 msgid "Message references, such as identifiers of previous messages"
 msgstr "Nachricht Referenzen, wie z. B. Kennungen von vorherigen Nachrichten"
 
@@ -478,13 +496,12 @@ msgid "Error ! You cannot create recursive associated members."
 msgstr "Fehler! Sie können keine rekursive assoziierte Mitglieder anlegen."
 
 #. module: mail
-#: help:mail.compose.message,email_cc:0 help:mail.message,email_cc:0
-#: help:mail.message.common,email_cc:0
+#: help:mail.mail,email_cc:0
 msgid "Carbon copy message recipients"
 msgstr "CC Nachrichten Empfänger"
 
 #. module: mail
-#: selection:mail.message,state:0
+#: selection:mail.mail,state:0
 msgid "Delivery Failed"
 msgstr "Auslieferung gescheitert"
 
@@ -494,9 +511,9 @@ msgid "Email Message"
 msgstr "EMail Nachricht"
 
 #. module: mail
-#: model:ir.model,name:mail.model_mail_thread view:mail.thread:0
+#: model:ir.model,name:mail.model_mail_thread
 msgid "Email Thread"
-msgstr "EMail Thread"
+msgstr "E-Mail Thread"
 
 #. module: mail
 #: field:mail.compose.message,filter_id:0
@@ -510,7 +527,6 @@ msgid "Mail attachment"
 msgstr "Nachrichtenbeilage"
 
 #. module: mail
-#: help:mail.compose.message,reply_to:0 help:mail.message,reply_to:0
-#: help:mail.message.common,reply_to:0
+#: help:mail.mail,reply_to:0
 msgid "Preferred response address for the message"
 msgstr "Bevorzugte Antwortadresse für diese Nachricht"

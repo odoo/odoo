@@ -14,18 +14,18 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:54+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:12+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 "X-Poedit-Language: Czech\n"
 
 #. module: portal
-#: code:addons/portal/wizard/share_wizard.py:51
+#: code:addons/portal/wizard/share_wizard.py:50
 #, python-format
 msgid "Please select at least one user to share with"
 msgstr "Prosíme vyberte nejméně jednoho uživatele, s kterým chcete sdílet"
 
 #. module: portal
-#: code:addons/portal/wizard/share_wizard.py:55
+#: code:addons/portal/wizard/share_wizard.py:54
 #, python-format
 msgid "Please select at least one group to share with"
 msgstr "Prosíme vyberte nejméně jednu skupinu, s kterou chcete sdílet"
@@ -42,7 +42,7 @@ msgid "Existing groups"
 msgstr "Existující skupiny"
 
 #. module: portal
-#: model:ir.model,name:portal.model_res_portal_wizard_user
+#: model:ir.model,name:portal.model_portal_wizard_user
 msgid "Portal User Config"
 msgstr "Nastavení uživatele portálu"
 
@@ -155,16 +155,15 @@ msgid "Portal Widgets"
 msgstr "Pomůcky portálu"
 
 #. module: portal
-#: model:ir.model,name:portal.model_res_portal
-#: model:ir.module.category,name:portal.module_category_portal
-#: view:res.portal:0
-#: field:res.portal.widget,portal_id:0
-#: field:res.portal.wizard,portal_id:0
+#: model:ir.ui.menu,name:portal.portal_menu
+#: field:portal.wizard,portal_id:0
+#: field:res.groups,is_portal:0
+#: model:res.groups,name:portal.group_portal
 msgid "Portal"
 msgstr "Portál"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:35
+#: code:addons/portal/wizard/portal_wizard.py:34
 #, python-format
 msgid "Your OpenERP account at %(company)s"
 msgstr "Váš účet OpenERP v %(company)s"
@@ -204,7 +203,7 @@ msgid "Existing users"
 msgstr "Existující uživatelé"
 
 #. module: portal
-#: field:res.portal.wizard.user,wizard_id:0
+#: field:portal.wizard.user,wizard_id:0
 msgid "Wizard"
 msgstr "Průvodce"
 
@@ -238,7 +237,7 @@ msgid "The language for the user's user interface"
 msgstr "Jazyk pro uživatelské rozhraní uživatelů"
 
 #. module: portal
-#: view:res.portal.wizard:0
+#: view:portal.wizard:0
 msgid "Cancel"
 msgstr "Zrušit"
 
@@ -260,7 +259,7 @@ msgstr ""
 "Následující text bude zahrnut v uvítacím emailu zalsatném uživatelům."
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:135
+#: code:addons/portal/wizard/portal_wizard.py:193
 #, python-format
 msgid "Email required"
 msgstr "Požadován email"
@@ -276,13 +275,13 @@ msgid "Invalid email address"
 msgstr "Neplatná emailová adresa"
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:136
+#: code:addons/portal/wizard/portal_wizard.py:194
 #, python-format
 msgid ""
 "You must have an email address in your User Preferences to send emails."
 msgstr ""
-"Musíte mít emailovou adresu ve vašich uživatelských předvolbách pro zasílání "
-"emailů."
+"Pro zasílání e-mailů musíte mít nastavenu e-mailovou adresu ve vašich "
+"uživatelských předvolbách."
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_ui_menu
@@ -290,9 +289,7 @@ msgid "ir.ui.menu"
 msgstr "ir.ui.menu"
 
 #. module: portal
-#: view:res.portal:0
-#: view:res.portal.wizard:0
-#: field:res.portal.wizard,user_ids:0
+#: field:portal.wizard,user_ids:0
 msgid "Users"
 msgstr "Uživatelé"
 

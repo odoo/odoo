@@ -14,11 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:58+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:16+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: project_long_term
+#: field:account.analytic.account,use_phases:0
 #: model:ir.actions.act_window,name:project_long_term.act_project_phases
+#: view:project.project:0
 msgid "Phases"
 msgstr "Fázisok"
 
@@ -42,12 +44,12 @@ msgstr "Csoportosítás..."
 #. module: project_long_term
 #: field:project.phase,user_ids:0
 msgid "Assigned Users"
-msgstr ""
+msgstr "Kijelölt felhasználók"
 
 #. module: project_long_term
 #: field:project.phase,progress:0
 msgid "Progress"
-msgstr ""
+msgstr "Folyamatok"
 
 #. module: project_long_term
 #: constraint:project.project:0
@@ -59,7 +61,7 @@ msgstr ""
 #. module: project_long_term
 #: view:project.phase:0
 msgid "In Progress Phases"
-msgstr ""
+msgstr "Az előrehaladás fázisaiban"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -90,7 +92,7 @@ msgstr "Nap"
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_user_allocation
 msgid "Phase User Allocation"
-msgstr ""
+msgstr "Felhasználó fázis kiosztása"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_task
@@ -107,6 +109,12 @@ msgid ""
 "users, convert your phases into a series of tasks when you start working on "
 "the project."
 msgstr ""
+"A projectet szét lehet választani külön fázisokra. Minden fázisnak, ki lehet "
+"osztani felhasználókat, leírhat külön feladatokat és hozzárendelheti a "
+"fázisokat az előző vagy következő fázisokhoz, hozzáadhat kikötési dátumot az "
+"automata ütemezőhöz. Használja a hosszú távú tervezőt, ahhoz, hogy "
+"betervezhesse az elérhető felhasználóit, alakítsa át a fázisokat "
+"feladatszériákká mielőtt elkezdene a projecten dolgozni."
 
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
@@ -174,7 +182,7 @@ msgstr "Határidő"
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
 msgid "Compute All My Projects"
-msgstr ""
+msgstr "Összes projektem számítása"
 
 #. module: project_long_term
 #: view:project.compute.phases:0
@@ -191,7 +199,7 @@ msgstr " (másolat)"
 #. module: project_long_term
 #: view:project.user.allocation:0
 msgid "Project User Allocation"
-msgstr ""
+msgstr "Projekt felhasználó kiosztások"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -203,18 +211,18 @@ msgstr "Állapot"
 #: view:project.compute.phases:0
 #: view:project.compute.tasks:0
 msgid "C_ompute"
-msgstr ""
+msgstr "C_ompute"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: selection:project.phase,state:0
 msgid "New"
-msgstr ""
+msgstr "Új"
 
 #. module: project_long_term
 #: help:project.phase,progress:0
 msgid "Computed based on related tasks"
-msgstr ""
+msgstr "A kapcsolódó feladatok alapján számított"
 
 #. module: project_long_term
 #: field:project.phase,product_uom:0
@@ -235,7 +243,7 @@ msgstr "Erőforrások"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "My Projects"
-msgstr ""
+msgstr "Projektjeim"
 
 #. module: project_long_term
 #: help:project.user.allocation,date_start:0
@@ -243,20 +251,20 @@ msgid "Starting Date"
 msgstr "Kezdési dátum"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.project_phase_task_list
+#: view:project.phase:0
 msgid "Related Tasks"
 msgstr "Kapcsolódó feladatok"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "New Phases"
-msgstr ""
+msgstr "Új fázisok"
 
 #. module: project_long_term
 #: code:addons/project_long_term/wizard/project_compute_phases.py:48
 #, python-format
 msgid "Please specify a project to schedule."
-msgstr ""
+msgstr "Kérem határozzon meg egy ütemezni kívánt projektet."
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_start:0
@@ -292,7 +300,7 @@ msgstr ""
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Start Month"
-msgstr ""
+msgstr "Kezdő hónap"
 
 #. module: project_long_term
 #: field:project.phase,date_start:0
@@ -319,7 +327,7 @@ msgstr "Tervezet"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Pending Phases"
-msgstr ""
+msgstr "Függőben lévő fázisok"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -341,7 +349,7 @@ msgstr "Projektfeladatok ütemezése"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Constraints"
-msgstr ""
+msgstr "Feltételek"
 
 #. module: project_long_term
 #: help:project.phase,sequence:0
@@ -365,7 +373,8 @@ msgid "Done"
 msgstr "Kész"
 
 #. module: project_long_term
-#: view:project.phase:0
+#: view:project.compute.phases:0
+#: view:project.compute.tasks:0
 msgid "Cancel"
 msgstr "Mégsem"
 
@@ -395,7 +404,7 @@ msgstr "Munkaidő"
 #: model:ir.ui.menu,name:project_long_term.menu_compute_phase
 #: view:project.compute.phases:0
 msgid "Schedule Phases"
-msgstr ""
+msgstr "Fázisok ütemezése"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -410,9 +419,10 @@ msgstr "Összes óra"
 #. module: project_long_term
 #: view:project.user.allocation:0
 msgid "Users"
-msgstr ""
+msgstr "Felhasználók"
 
 #. module: project_long_term
+#: view:project.project:0
 #: view:project.user.allocation:0
 msgid "Phase"
 msgstr "Szakasz"
@@ -449,6 +459,7 @@ msgid "Tasks Details"
 msgstr "Feladatok részletei"
 
 #. module: project_long_term
+#: view:project.phase:0
 #: field:project.phase,duration:0
 msgid "Duration"
 msgstr "Időtartam"
@@ -456,7 +467,7 @@ msgstr "Időtartam"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Project Users"
-msgstr ""
+msgstr "Project felhasználók"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_phase
@@ -474,6 +485,9 @@ msgid ""
 "view.\n"
 "               "
 msgstr ""
+"Fázisok ütemezése egy kiválasztott vagy mindegyik projekthez/feladathoz. Ez "
+"megnyit egy gantt nézetet.\n"
+"               "
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_phases
@@ -493,7 +507,7 @@ msgstr "Sorszám"
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar_leaves
 msgid "Resource Leaves"
-msgstr ""
+msgstr "Erőforrás leadás"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.action_project_compute_tasks
@@ -508,10 +522,9 @@ msgid "By default in days"
 msgstr "Alapértelmezés szerint napokban megadva."
 
 #. module: project_long_term
-#: view:project.phase:0
 #: field:project.phase,user_force_ids:0
 msgid "Force Assigned Users"
-msgstr ""
+msgstr "Kijelölt felhasználók kényszerítése"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_phase_schedule

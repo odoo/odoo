@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:32+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2013-05-29 06:48+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -38,7 +38,7 @@ msgid "State"
 msgstr "Состояние"
 
 #. module: analytic
-#: field:account.analytic.account,user_id:0
+#: field:account.analytic.account,manager_id:0
 msgid "Account Manager"
 msgstr "Управляющий счётом"
 
@@ -88,7 +88,7 @@ msgstr ""
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "New"
-msgstr ""
+msgstr "Создать"
 
 #. module: analytic
 #: field:account.analytic.account,type:0
@@ -123,7 +123,7 @@ msgid "Company"
 msgstr "Компания"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:138
+#: code:addons/analytic/analytic.py:160
 #, python-format
 msgid ""
 "If you set a company, the currency selected has to be the same as it's "
@@ -242,7 +242,7 @@ msgstr ""
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
-msgstr ""
+msgstr "Аналитический учет"
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
@@ -250,6 +250,8 @@ msgid "Full Account Name"
 msgstr "Полное название счета"
 
 #. module: analytic
+#: view:account.analytic.account:0
+#: selection:account.analytic.account,type:0
 #: field:account.analytic.line,account_id:0
 #: model:ir.model,name:analytic.model_account_analytic_account
 msgid "Analytic Account"
@@ -258,7 +260,7 @@ msgstr "Счет аналитики"
 #. module: analytic
 #: field:account.analytic.account,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Валюта"
 
 #. module: analytic
 #: constraint:account.analytic.line:0

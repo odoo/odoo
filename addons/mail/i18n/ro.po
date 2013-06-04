@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:50+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:07+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: mail
 #: field:mail.compose.message,subtype:0 field:mail.message,subtype:0
@@ -39,7 +39,7 @@ msgid "Open Attachments"
 msgstr "Deschide Atasamente"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.mail:0
 msgid "Message Details"
 msgstr "Detalii mesaj"
 
@@ -49,9 +49,10 @@ msgid "Communication History"
 msgstr "Istoric Comunicare"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.alias:0
+#: view:mail.mail:0
 msgid "Group By..."
-msgstr "Grupeaza dupa..."
+msgstr "Grupează după..."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
@@ -66,13 +67,12 @@ msgid "Plain-text version of the message"
 msgstr "Versiune text-simplu a mesajului"
 
 #. module: mail
-#: view:mail.compose.message:0
+#: view:mail.mail:0
 msgid "Body"
-msgstr "Corp"
+msgstr "Conținut"
 
 #. module: mail
-#: help:mail.compose.message,email_to:0 help:mail.message,email_to:0
-#: help:mail.message.common,email_to:0
+#: help:mail.mail,email_to:0
 msgid "Message recipients"
 msgstr "Destinatari mesaj"
 
@@ -83,30 +83,30 @@ msgid "Text contents"
 msgstr "Cuprins text"
 
 #. module: mail
-#: view:mail.message:0 selection:mail.message,state:0
+#: view:mail.mail:0
+#: selection:mail.mail,state:0
 msgid "Received"
 msgstr "Primit"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.mail:0
 msgid "Thread"
 msgstr "Fir"
 
 #. module: mail
-#: field:mail.message,mail_server_id:0
+#: field:mail.mail,mail_server_id:0
 msgid "Outgoing mail server"
 msgstr "Server trimitere e-mail-uri"
 
 #. module: mail
-#: selection:mail.message,state:0
+#: selection:mail.mail,state:0
 msgid "Cancelled"
-msgstr "Anulat(a)"
+msgstr "Anulat(ă)"
 
 #. module: mail
-#: field:mail.compose.message,reply_to:0 field:mail.message,reply_to:0
-#: field:mail.message.common,reply_to:0
+#: field:mail.mail,reply_to:0
 msgid "Reply-To"
-msgstr "Raspunde"
+msgstr "Răspunde"
 
 #. module: mail
 #: help:mail.compose.message,body_html:0 help:mail.message,body_html:0
@@ -115,9 +115,9 @@ msgid "Rich-text/HTML version of the message"
 msgstr "Rich-text/versiune HTML a mesajului"
 
 #. module: mail
-#: field:mail.compose.message,auto_delete:0 field:mail.message,auto_delete:0
+#: field:mail.mail,auto_delete:0
 msgid "Auto Delete"
-msgstr "Sterge Automat"
+msgstr "Șterge automat"
 
 #. module: mail
 #: help:mail.compose.message,email_bcc:0 help:mail.message,email_bcc:0
@@ -126,13 +126,14 @@ msgid "Blind carbon copy message recipients"
 msgstr "Destinatari blind carbon copy (copie carbon invizibila) ai mesajului"
 
 #. module: mail
-#: model:ir.model,name:mail.model_res_partner view:mail.message:0
+#: model:ir.model,name:mail.model_res_partner
+#: view:mail.mail:0
 msgid "Partner"
 msgstr "Partener"
 
 #. module: mail
-#: field:mail.compose.message,subject:0 field:mail.message,subject:0
-#: field:mail.message.common,subject:0
+#: field:mail.compose.message,subject:0
+#: field:mail.message,subject:0
 msgid "Subject"
 msgstr "Subiect"
 
@@ -143,25 +144,30 @@ msgid "On %(date)s, "
 msgstr "In %(date)s, "
 
 #. module: mail
-#: field:mail.compose.message,email_from:0 field:mail.message,email_from:0
-#: field:mail.message.common,email_from:0
+#: field:mail.compose.message,email_from:0
+#: field:mail.mail,email_from:0
+#: field:mail.message,email_from:0
 msgid "From"
 msgstr "De la"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.mail:0
+#: view:mail.message.subtype:0
 msgid "Email message"
 msgstr "Mesaj e-mail"
 
 #. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:36
 #: view:mail.compose.message:0
+#, python-format
 msgid "Send"
 msgstr "Trimite"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.mail:0
 msgid "Failed"
-msgstr "Esuat"
+msgstr "Eșuat"
 
 #. module: mail
 #: view:mail.message:0 field:mail.message,state:0
@@ -169,12 +175,16 @@ msgid "State"
 msgstr "Stare"
 
 #. module: mail
-#: view:mail.message:0
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:245
+#: view:mail.mail:0
+#, python-format
 msgid "Reply"
-msgstr "Raspunde"
+msgstr "Răspunde"
 
 #. module: mail
-#: view:mail.message:0 selection:mail.message,state:0
+#: view:mail.mail:0
+#: selection:mail.mail,state:0
 msgid "Sent"
 msgstr "Trimis"
 
@@ -189,7 +199,8 @@ msgstr ""
 "atare cuprinsul textului simplu sau textului imbogatit"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.compose.message:0
+#: field:mail.message,partner_ids:0
 msgid "Recipients"
 msgstr "Destinatari"
 
@@ -199,18 +210,20 @@ msgid "E-mail composition wizard"
 msgstr "Asistent compunere e-mail"
 
 #. module: mail
-#: field:mail.compose.message,res_id:0 field:mail.message,res_id:0
-#: field:mail.message.common,res_id:0
+#: field:mail.compose.message,res_id:0
+#: field:mail.followers,res_id:0
+#: field:mail.message,res_id:0
+#: field:mail.wizard.invite,res_id:0
 msgid "Related Document ID"
 msgstr "ID Document Asociat"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.mail:0
 msgid "Advanced"
 msgstr "Avansat"
 
 #. module: mail
-#: code:addons/mail/wizard/mail_compose_message.py:157
+#: code:addons/mail/wizard/mail_compose_message.py:165
 #, python-format
 msgid "Re:"
 msgstr "Re:"
@@ -222,14 +235,14 @@ msgid "Related Document model"
 msgstr "Model Document asociat"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.mail:0
 msgid "Month"
 msgstr "Luna"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.mail:0
 msgid "Email Search"
-msgstr "Cautare e-mail"
+msgstr "Căutare e-mail"
 
 #. module: mail
 #: help:mail.message,original:0
@@ -242,17 +255,18 @@ msgid "Partner Name"
 msgstr "Numele Partenerului"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.mail:0
 msgid "Retry"
-msgstr "Incearca din nou"
+msgstr "Reîncearcă"
 
 #. module: mail
-#: view:mail.message:0 selection:mail.message,state:0
+#: view:mail.mail:0
+#: selection:mail.mail,state:0
 msgid "Outgoing"
-msgstr "Iesire"
+msgstr "Ieșire"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.mail:0
 msgid "Send Now"
 msgstr "Trimite acum"
 
@@ -262,18 +276,19 @@ msgid "Related partner"
 msgstr "Partener asociat"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.alias:0
+#: view:mail.mail:0
 msgid "User"
 msgstr "Utilizator"
 
 #. module: mail
-#: field:mail.compose.message,date:0 field:mail.message,date:0
-#: field:mail.message.common,date:0
+#: field:mail.compose.message,date:0
+#: field:mail.message,date:0
 msgid "Date"
 msgstr "Data"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.mail:0
 msgid "Extended Filters..."
 msgstr "Filtre Extinse..."
 
@@ -301,20 +316,20 @@ msgid "History"
 msgstr "Istoric"
 
 #. module: mail
-#: field:mail.compose.message,message_id:0 field:mail.message,message_id:0
-#: field:mail.message.common,message_id:0
+#: field:mail.compose.message,message_id:0
+#: field:mail.message,message_id:0
 msgid "Message-Id"
 msgstr "Id-Mesaj"
 
 #. module: mail
-#: view:mail.compose.message:0 field:mail.compose.message,attachment_ids:0
-#: view:mail.message:0 field:mail.message,attachment_ids:0
+#: field:mail.compose.message,attachment_ids:0
+#: view:mail.mail:0
+#: field:mail.message,attachment_ids:0
 msgid "Attachments"
-msgstr "Atasamente"
+msgstr "Atașamente"
 
 #. module: mail
-#: field:mail.compose.message,email_cc:0 field:mail.message,email_cc:0
-#: field:mail.message.common,email_cc:0
+#: field:mail.mail,email_cc:0
 msgid "Cc"
 msgstr "Cc (copie carbon)"
 
@@ -325,16 +340,15 @@ msgid " on "
 msgstr " in data de "
 
 #. module: mail
-#: help:mail.message,auto_delete:0
+#: help:mail.mail,auto_delete:0
 msgid "Permanently delete this email after sending it, to save space"
 msgstr ""
-"Sterge definitiv acest mesaj dupa ce il trimite, pentru a economisi spatiu"
+"Șterge definitiv acest mesaj după ce il trimite, pentru a economisi spațiu"
 
 #. module: mail
-#: field:mail.compose.message,references:0 field:mail.message,references:0
-#: field:mail.message.common,references:0
+#: field:mail.mail,references:0
 msgid "References"
-msgstr "Referinte"
+msgstr "Referințe"
 
 #. module: mail
 #: field:mail.message,display_text:0
@@ -342,9 +356,10 @@ msgid "Display Text"
 msgstr "Afiseaza Text"
 
 #. module: mail
-#: view:mail.compose.message:0 view:mail.message:0
+#: view:mail.compose.message:0
+#: view:mail.wizard.invite:0
 msgid "Cancel"
-msgstr "Anuleaza"
+msgstr "Anulează"
 
 #. module: mail
 #: view:mail.message:0
@@ -373,15 +388,14 @@ msgstr ""
 "disponibile doar pentru mesajele primite)"
 
 #. module: mail
-#: view:mail.message:0
+#: view:mail.mail:0
 msgid "Creation Month"
 msgstr "Creare Luna"
 
 #. module: mail
-#: field:mail.compose.message,email_to:0 field:mail.message,email_to:0
-#: field:mail.message.common,email_to:0
+#: field:mail.mail,email_to:0
 msgid "To"
-msgstr "Catre"
+msgstr "Către"
 
 #. module: mail
 #: view:mail.message:0
@@ -416,8 +430,8 @@ msgid "You"
 msgstr "Dumneavoastra"
 
 #. module: mail
-#: help:mail.compose.message,message_id:0 help:mail.message,message_id:0
-#: help:mail.message.common,message_id:0
+#: help:mail.compose.message,message_id:0
+#: help:mail.message,message_id:0
 msgid "Message unique identifier"
 msgstr "Identificator unic mesaj"
 
@@ -439,15 +453,20 @@ msgstr ""
 "\t"
 
 #. module: mail
-#: model:ir.actions.act_window,name:mail.act_res_partner_emails
-#: view:mail.message:0 field:res.partner,emails:0
+#: model:ir.actions.act_window,name:mail.action_view_mail_mail
+#: model:ir.ui.menu,name:mail.menu_mail_mail
+#: view:mail.mail:0
+#: view:mail.message:0
 msgid "Emails"
 msgstr "Email-uri"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_message
-#: model:ir.ui.menu,name:mail.menu_email_message
+#: model:ir.ui.menu,name:mail.menu_mail_message
+#: field:mail.group,message_ids:0
+#: view:mail.message:0
 #: field:mail.thread,message_ids:0
+#: field:res.partner,message_ids:0
 msgid "Messages"
 msgstr "Mesaje"
 
@@ -469,10 +488,9 @@ msgid "mail.message.common"
 msgstr "mesaj.obisnuit.mail"
 
 #. module: mail
-#: help:mail.compose.message,references:0 help:mail.message,references:0
-#: help:mail.message.common,references:0
+#: help:mail.mail,references:0
 msgid "Message references, such as identifiers of previous messages"
-msgstr "Referinte mesaj, cum ar fi identificatorii mesajelor precedente"
+msgstr "Referințe mesaj, cum ar fi identificatorii mesajelor precedente"
 
 #. module: mail
 #: constraint:res.partner:0
@@ -480,15 +498,14 @@ msgid "Error ! You cannot create recursive associated members."
 msgstr "Eroare ! Nu puteti crea membri asociati recursiv."
 
 #. module: mail
-#: help:mail.compose.message,email_cc:0 help:mail.message,email_cc:0
-#: help:mail.message.common,email_cc:0
+#: help:mail.mail,email_cc:0
 msgid "Carbon copy message recipients"
 msgstr "Destinatari mesaj copie carbon (Cc)"
 
 #. module: mail
-#: selection:mail.message,state:0
+#: selection:mail.mail,state:0
 msgid "Delivery Failed"
-msgstr "Livrarea a esuat"
+msgstr "Livrarea a eșuat"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_message
@@ -496,7 +513,7 @@ msgid "Email Message"
 msgstr "Mesaj E-mail"
 
 #. module: mail
-#: model:ir.model,name:mail.model_mail_thread view:mail.thread:0
+#: model:ir.model,name:mail.model_mail_thread
 msgid "Email Thread"
 msgstr "Fir E-mail"
 
@@ -512,7 +529,6 @@ msgid "Mail attachment"
 msgstr "Atasament e-mail"
 
 #. module: mail
-#: help:mail.compose.message,reply_to:0 help:mail.message,reply_to:0
-#: help:mail.message.common,reply_to:0
+#: help:mail.mail,reply_to:0
 msgid "Preferred response address for the message"
-msgstr "Adresa de raspuns preferata pentru mesaj"
+msgstr "Adresa de răspuns preferată pentru mesaj"

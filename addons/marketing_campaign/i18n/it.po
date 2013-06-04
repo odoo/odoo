@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:50+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:07+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -28,7 +28,7 @@ msgid "Previous Activity"
 msgstr "Attività precedente"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:818
+#: code:addons/marketing_campaign/marketing_campaign.py:819
 #, python-format
 msgid "The current step for this item has no email or report to preview."
 msgstr ""
@@ -42,7 +42,7 @@ msgstr "L'attività di transizione A/Da deve essere delle stessa campagna "
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,trigger:0
 msgid "Time"
-msgstr "Orario"
+msgstr "Periodo"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
@@ -68,7 +68,7 @@ msgstr ""
 #. module: marketing_campaign
 #: field:marketing.campaign.transition,trigger:0
 msgid "Trigger"
-msgstr ""
+msgstr "Avvio"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,count:0
@@ -78,7 +78,7 @@ msgstr "# di azioni"
 #. module: marketing_campaign
 #: view:marketing.campaign:0
 msgid "Campaign Editor"
-msgstr ""
+msgstr "Gestione Campagna"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -107,7 +107,7 @@ msgstr "Oggetto"
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Sync mode: only records created after last sync"
-msgstr ""
+msgstr "Modalità sincronizzazione: solo i record creati dopo l'ultima sincro"
 
 #. module: marketing_campaign
 #: model:email.template,body_text:marketing_campaign.email_template_2
@@ -122,6 +122,7 @@ msgid "Set to Draft"
 msgstr "Imposta a \"Bozza\""
 
 #. module: marketing_campaign
+#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,to_ids:0
 msgid "Next Activities"
 msgstr "Prossime attività"
@@ -137,7 +138,7 @@ msgid "The interval must be positive or zero"
 msgstr "L'intervallo deve essere positivo o zero"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:818
+#: code:addons/marketing_campaign/marketing_campaign.py:819
 #, python-format
 msgid "No preview"
 msgstr "Nessuna anteprima"
@@ -162,12 +163,12 @@ msgstr "Transizioni in Uscita"
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Reset"
-msgstr "Reset"
+msgstr "Ripristina"
 
 #. module: marketing_campaign
 #: help:marketing.campaign,object_id:0
 msgid "Choose the resource on which you want this campaign to be run"
-msgstr "Selezionare la risorsa sulla quale volete lanciare questa campagna"
+msgstr "Selezionare la risorsa sulla quale lanciare questa campagna"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,sync_last_date:0
@@ -280,6 +281,8 @@ msgstr ""
 #: help:marketing.campaign.segment,date_next_sync:0
 msgid "Next time the synchronization job is scheduled to run automatically"
 msgstr ""
+"La sincronizzazione è programmata per l'esecuzione automatica al prossimo "
+"passaggio"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -302,7 +305,7 @@ msgstr "Transizioni"
 #. module: marketing_campaign
 #: model:ir.filters,name:marketing_campaign.filter0
 msgid "Partners"
-msgstr ""
+msgstr "Partners"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,keep_if_condition_not_met:0
@@ -330,7 +333,7 @@ msgstr "Report Marketing"
 #: selection:marketing.campaign,state:0
 #: selection:marketing.campaign.segment,state:0
 msgid "New"
-msgstr ""
+msgstr "Nuovo"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,type:0
@@ -362,6 +365,7 @@ msgid "Run"
 msgstr "Esegui"
 
 #. module: marketing_campaign
+#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,from_ids:0
 msgid "Previous Activities"
 msgstr "Attività precedente"
@@ -369,7 +373,7 @@ msgstr "Attività precedente"
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_done:0
 msgid "Date this segment was last closed or cancelled."
-msgstr ""
+msgstr "Ultima data in cui questo segmento è stato chiuso o annullato."
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
@@ -387,6 +391,7 @@ msgstr "Messaggio di Errore"
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_form
 #: view:marketing.campaign:0
+#: view:res.partner:0
 msgid "Campaigns"
 msgstr "Campagne"
 
@@ -396,7 +401,7 @@ msgid "Interval Unit"
 msgstr "Unità di Intervallo"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:792
+#: code:addons/marketing_campaign/marketing_campaign.py:793
 #, python-format
 msgid "Email Preview"
 msgstr "Anteprima email"
@@ -424,6 +429,9 @@ msgid ""
 "reached this point has entailed a certain cost. You can get cost statistics "
 "in the Reporting section"
 msgstr ""
+"Impostare un costo variabile se ogni voce della campagna che ha raggiunto "
+"questo punto ha comportato un costo specifico. E' possibile ottenere "
+"statistiche dei costi nella sezione Reporting"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -441,8 +449,6 @@ msgid "Campaign Segment"
 msgstr "Segmento campagna"
 
 #. module: marketing_campaign
-#: view:marketing.campaign:0
-#: view:marketing.campaign.segment:0
 #: view:marketing.campaign.workitem:0
 msgid "Cancel"
 msgstr "Annulla"
@@ -460,9 +466,10 @@ msgid "Exceptions"
 msgstr "Eccezioni"
 
 #. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
 #: field:res.partner,workitem_ids:0
 msgid "Workitems"
-msgstr ""
+msgstr "Oggetti di Lavoro"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,fixed_cost:0
@@ -477,7 +484,7 @@ msgstr ""
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Newly Modified"
-msgstr ""
+msgstr "Modificato Recentement"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.transition,interval_nbr:0
@@ -488,7 +495,7 @@ msgstr "Valore intervallo"
 #: field:campaign.analysis,revenue:0
 #: field:marketing.campaign.activity,revenue:0
 msgid "Revenue"
-msgstr ""
+msgstr "Ricavo"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -521,7 +528,9 @@ msgid "Next Activity"
 msgstr "Prossima attività"
 
 #. module: marketing_campaign
-#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_stat
+#: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_workitem
+#: model:ir.ui.menu,name:marketing_campaign.menu_action_marketing_campaign_workitem
 msgid "Campaign Follow-up"
 msgstr "Follow up campagna"
 
@@ -546,7 +555,7 @@ msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
 
 #. module: marketing_campaign
-#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_stat
+#: view:marketing.campaign:0
 msgid "Campaign Statistics"
 msgstr "Statistiche campagna"
 
@@ -587,7 +596,7 @@ msgstr "Test in temo reale"
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
 msgid "Test Directly"
-msgstr ""
+msgstr "Test diretto"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,report_directory_id:0
@@ -640,12 +649,12 @@ msgstr "Giugno"
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_email_template
 msgid "Email Templates"
-msgstr ""
+msgstr "Modelli Email"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Sync mode: all records"
-msgstr ""
+msgstr "Modalità sincronizzazione: tutti i record"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
@@ -655,11 +664,10 @@ msgstr "Tutti i  record (no duplicati)"
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Newly Created"
-msgstr ""
+msgstr "Creato Recentemente"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,date:0
-#: view:marketing.campaign.workitem:0
 msgid "Date"
 msgstr "Data"
 
@@ -669,7 +677,6 @@ msgid "November"
 msgstr "Novembre"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,condition:0
 msgid "Condition"
 msgstr "Condizione"
@@ -690,7 +697,7 @@ msgstr ""
 #. module: marketing_campaign
 #: field:marketing.campaign,unique_field_id:0
 msgid "Unique Field"
-msgstr ""
+msgstr "Chiave Unica"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,state:0
@@ -723,7 +730,7 @@ msgstr "Data esecuzione"
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_workitem
 msgid "Campaign Workitem"
-msgstr ""
+msgstr "Oggetto di Lavoro Campagna"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_activity
@@ -744,7 +751,6 @@ msgid "Error"
 msgstr "Errore"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,server_action_id:0
 msgid "Action"
 msgstr "Azione"
@@ -769,14 +775,14 @@ msgstr "Storico"
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Process"
-msgstr ""
+msgstr "Processo"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:530
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
 msgid "Cosmetic"
-msgstr "Cosmetico"
+msgstr "Fittizio"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.transition,trigger:0
@@ -875,8 +881,10 @@ msgid "Campaign Step"
 msgstr "Passi campagna"
 
 #. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_segment_opened
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_segment_form
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_segment_form
+#: view:marketing.campaign:0
 #: view:marketing.campaign.segment:0
 msgid "Segments"
 msgstr "Segmenti"
@@ -902,6 +910,7 @@ msgid "Day(s)"
 msgstr "Giorno(i)"
 
 #. module: marketing_campaign
+#: view:marketing.campaign:0
 #: field:marketing.campaign,activity_ids:0
 #: view:marketing.campaign.activity:0
 msgid "Activities"
@@ -938,6 +947,7 @@ msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign
+#: view:marketing.campaign:0
 msgid "Marketing Campaign"
 msgstr "Campagna Marketing"
 
@@ -977,6 +987,7 @@ msgstr ""
 #: view:marketing.campaign.segment:0
 msgid "Sync mode: only records updated after last sync"
 msgstr ""
+"Modalità sincronizzazione: solo i record aggiornati dopo l'ultima sincro"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,country_id:0
@@ -1013,7 +1024,6 @@ msgstr "Modalità"
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,activity_id:0
-#: view:marketing.campaign.activity:0
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,activity_id:0
 msgid "Activity"
@@ -1040,7 +1050,6 @@ msgid "Next Synchronization"
 msgstr "Prossima sincronizzazione"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:0
 #: field:marketing.campaign.segment,ir_filter_id:0
 msgid "Filter"
 msgstr "Filtro"
@@ -1073,7 +1082,6 @@ msgstr "Con conferma manuale"
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,total_cost:0
-#: view:marketing.campaign:0
 msgid "Cost"
 msgstr "Costo"
 

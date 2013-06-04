@@ -14,19 +14,19 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:40+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2013-05-29 06:55+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
 msgid "# of Cases"
-msgstr "Vak'aların sayısı"
+msgstr "Durum #"
 
 #. module: crm_claim
 #: view:crm.claim:0
 #: view:crm.claim.report:0
 msgid "Group By..."
-msgstr "Grupla..."
+msgstr "Grupla İle..."
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -36,7 +36,7 @@ msgstr "Sorumluluklar"
 #. module: crm_claim
 #: field:crm.claim,date_action_next:0
 msgid "Next Action Date"
-msgstr "Bir sonraki İşlem Tarihi"
+msgstr "Ssonraki İşlem Tarihi"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -58,7 +58,7 @@ msgstr "Çözüm"
 #: view:crm.claim.report:0
 #: field:crm.claim.report,company_id:0
 msgid "Company"
-msgstr "Şirket"
+msgstr "Firma"
 
 #. module: crm_claim
 #: field:crm.claim,email_cc:0
@@ -68,7 +68,7 @@ msgstr "İzleyicilerin E-Postaları"
 #. module: crm_claim
 #: view:crm.claim.report:0
 msgid "#Claim"
-msgstr "Şikayet Sayısı"
+msgstr "#Şikayet"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.crm_claim_stage_act
@@ -115,7 +115,7 @@ msgstr ""
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Claim Description"
-msgstr "Sikayetin Aciklamasi"
+msgstr "Şikayetin Açıklaması"
 
 #. module: crm_claim
 #: field:crm.claim,message_ids:0
@@ -125,18 +125,19 @@ msgstr "Mesajlar"
 #. module: crm_claim
 #: model:crm.case.categ,name:crm_claim.categ_claim1
 msgid "Factual Claims"
-msgstr "Gerçeğe dayalı"
+msgstr "Gerçek Şikayetler"
 
 #. module: crm_claim
 #: selection:crm.claim,state:0
 #: selection:crm.claim.report,state:0
+#: selection:crm.claim.stage,state:0
 msgid "Cancelled"
-msgstr "İptal Edildi"
+msgstr "İptalEdildi"
 
 #. module: crm_claim
 #: model:crm.case.resource.type,name:crm_claim.type_claim2
 msgid "Preventive"
-msgstr "Tedbir/ Önlem"
+msgstr "Önleyici"
 
 #. module: crm_claim
 #: field:crm.claim.report,date_closed:0
@@ -161,7 +162,7 @@ msgstr "Bütün bekleyen Şikayetler"
 #. module: crm_claim
 #: view:crm.claim.report:0
 msgid "# Mails"
-msgstr "Posta sayısı"
+msgstr "# Emailleri"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -173,7 +174,7 @@ msgstr "Taslağa Geri Dönüştür"
 #: field:crm.claim,date_deadline:0
 #: field:crm.claim.report,date_deadline:0
 msgid "Deadline"
-msgstr "Son Teslim Tarihi"
+msgstr "ZamanSınırı"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -182,7 +183,7 @@ msgstr "Son Teslim Tarihi"
 #: field:crm.claim.report,partner_id:0
 #: model:ir.model,name:crm_claim.model_res_partner
 msgid "Partner"
-msgstr "İş ortağı"
+msgstr "Partner"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -193,7 +194,7 @@ msgstr "Şikayeyin ayı"
 #: selection:crm.claim,type_action:0
 #: selection:crm.claim.report,type_action:0
 msgid "Preventive Action"
-msgstr "Önlem/ Tedbir Eylemi"
+msgstr "Önleyici İşlem"
 
 #. module: crm_claim
 #: field:crm.claim.report,section_id:0
@@ -226,6 +227,8 @@ msgstr "Yeni e-posta gönder"
 #: view:crm.claim:0
 #: selection:crm.claim,state:0
 #: view:crm.claim.report:0
+#: model:crm.claim.stage,name:crm_claim.stage_claim1
+#: selection:crm.claim.stage,state:0
 msgid "New"
 msgstr "Yeni"
 
@@ -233,7 +236,7 @@ msgstr "Yeni"
 #: view:crm.claim:0
 #: view:crm.claim.report:0
 msgid "Type"
-msgstr "Tür"
+msgstr "Türü"
 
 #. module: crm_claim
 #: field:crm.claim,email_from:0
@@ -286,6 +289,7 @@ msgid "July"
 msgstr "Temmuz"
 
 #. module: crm_claim
+#: view:crm.claim.stage:0
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_stage_act
 msgid "Claim Stages"
 msgstr "Şikayetin Aşamaları"
@@ -370,7 +374,7 @@ msgstr "Ay"
 #: view:crm.claim.report:0
 #: field:crm.claim.report,type_action:0
 msgid "Action Type"
-msgstr "Eylem Türü"
+msgstr "İşlem Türü"
 
 #. module: crm_claim
 #: field:crm.claim,write_date:0
@@ -397,7 +401,7 @@ msgstr "Kategori"
 #. module: crm_claim
 #: model:crm.case.categ,name:crm_claim.categ_claim2
 msgid "Value Claims"
-msgstr "Fiyat Şikayetleri"
+msgstr "Şikayet Değerleri"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -429,6 +433,7 @@ msgstr "Düşük"
 #: field:crm.claim,date_closed:0
 #: selection:crm.claim,state:0
 #: selection:crm.claim.report,state:0
+#: selection:crm.claim.stage,state:0
 msgid "Closed"
 msgstr "Kapandı"
 
@@ -442,8 +447,9 @@ msgstr "Yanıtla"
 #: selection:crm.claim,state:0
 #: view:crm.claim.report:0
 #: selection:crm.claim.report,state:0
+#: selection:crm.claim.stage,state:0
 msgid "Pending"
-msgstr "Bekliyor"
+msgstr "Bekleyen"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -474,7 +480,7 @@ msgstr "Haziran"
 #. module: crm_claim
 #: view:res.partner:0
 msgid "Partners Claim"
-msgstr "Paydaş Şikayeti"
+msgstr "Partner Şikayetleri"
 
 #. module: crm_claim
 #: field:crm.claim,partner_phone:0
@@ -509,7 +515,7 @@ msgstr "Kapanış"
 #. module: crm_claim
 #: view:crm.claim.report:0
 msgid "Search"
-msgstr "Ara"
+msgstr "Arama"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -541,18 +547,18 @@ msgstr "Şikayet Kategorileri"
 #: view:crm.claim:0
 #: view:crm.claim.report:0
 #: model:ir.actions.act_window,name:crm_claim.act_claim_partner
-#: model:ir.actions.act_window,name:crm_claim.act_claim_partner_address
 #: model:ir.actions.act_window,name:crm_claim.crm_case_categ_claim0
 #: model:ir.ui.menu,name:crm_claim.menu_crm_case_claims
+#: view:res.partner:0
 #: field:res.partner,claims_ids:0
 msgid "Claims"
-msgstr "Sikayetler"
+msgstr "Şikayetler"
 
 #. module: crm_claim
 #: selection:crm.claim,type_action:0
 #: selection:crm.claim.report,type_action:0
 msgid "Corrective Action"
-msgstr "Düzeltici eylemler"
+msgstr "Düzeltici İşlem"
 
 #. module: crm_claim
 #: model:crm.case.categ,name:crm_claim.categ_claim3
@@ -565,6 +571,7 @@ msgid "History"
 msgstr "Geçmiş"
 
 #. module: crm_claim
+#: view:crm.claim:0
 #: model:ir.model,name:crm_claim.model_crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_config_claim
 msgid "Claim"
@@ -590,10 +597,9 @@ msgid "State"
 msgstr "Durum"
 
 #. module: crm_claim
-#: view:crm.claim:0
 #: view:crm.claim.report:0
 msgid "Done"
-msgstr "Tamamlandı"
+msgstr "Biten"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -601,7 +607,6 @@ msgid "Claim Reporter"
 msgstr "Şikayet Raportörü"
 
 #. module: crm_claim
-#: view:crm.claim:0
 #: view:crm.claim.report:0
 msgid "Cancel"
 msgstr "İptal"
@@ -612,7 +617,6 @@ msgid "Close"
 msgstr "Kapat"
 
 #. module: crm_claim
-#: view:crm.claim:0
 #: view:crm.claim.report:0
 #: selection:crm.claim.report,state:0
 msgid "Open"
@@ -626,8 +630,10 @@ msgstr "Yeni Şikayetler"
 #. module: crm_claim
 #: view:crm.claim:0
 #: selection:crm.claim,state:0
+#: model:crm.claim.stage,name:crm_claim.stage_claim5
+#: selection:crm.claim.stage,state:0
 msgid "In Progress"
-msgstr "Sürüyor"
+msgstr "DevamEden"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -673,13 +679,13 @@ msgstr "Açıklama"
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Search Claims"
-msgstr "Şikayet ara"
+msgstr "Şikayet Arama"
 
 #. module: crm_claim
 #: field:crm.claim,section_id:0
 #: view:crm.claim.report:0
 msgid "Sales Team"
-msgstr "Satış Birimi/ Personeli"
+msgstr "Satış Takımı"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -700,15 +706,15 @@ msgid ""
 "automatically be linked to an email address using the mail gateway module."
 msgstr ""
 "Müşterilerinizin şikayetlerini kayıt ve takip edin. Şikayetler bir satış "
-"siparişine ya da gönderilen ürünlerle ilgili olabilir. Ekli e-postalar "
-"gönderebilir ve şikayetlerin geçmiş kayıtlarının tamamını tutabilirsiniz "
-"(gönderilen e-postalar, müdahale tipi vb.). Şikayetler otomatik olarak e-"
-"mail adresi ile ilişkilendirilir."
+"siparişiyle ya da gönderilen ürünlerle ilgili olabilir. Ekleriyle birlikte "
+"eposta gönderebilir ve şikayetlerin geçmiş kayıtlarının tamamını "
+"tutabilirsiniz (gönderilen e-postalar, müdahale tipi vb.). Şikayetler "
+"otomatik olarak eposta adresi ile ilişkilendirilir."
 
 #. module: crm_claim
 #: field:crm.claim.report,email:0
 msgid "# Emails"
-msgstr "E-postaların sayısı"
+msgstr "# E-postaları"
 
 #. module: crm_claim
 #: model:crm.case.stage,name:crm_claim.stage_claim2
@@ -728,7 +734,7 @@ msgstr "Tanımlanan Eylemler"
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Follow Up"
-msgstr "Takip et"
+msgstr "İzleme"
 
 #. module: crm_claim
 #: help:crm.claim,state:0
@@ -778,7 +784,7 @@ msgstr "Benim takip ettiğim vaka(lar)"
 #. module: crm_claim
 #: field:crm.claim,id:0
 msgid "ID"
-msgstr "Kimlik"
+msgstr "ID"
 
 #. module: crm_claim
 #: constraint:res.partner:0
@@ -788,7 +794,7 @@ msgstr "Hata ! kendini çağıran ilişkili üyeler oluşturamazsınız."
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Actions"
-msgstr "Hareketler"
+msgstr "İşlemler"
 
 #. module: crm_claim
 #: selection:crm.claim,priority:0
@@ -813,4 +819,4 @@ msgstr "Tarih Oluştur"
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "In Progress Claims"
-msgstr "Çalışılmakta olan Şikayetler"
+msgstr "DevamEden Şikayetler"

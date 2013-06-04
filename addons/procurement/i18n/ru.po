@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-09-15 05:19+0000\n"
-"X-Generator: Launchpad (build 15944)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:12+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -51,21 +51,23 @@ msgstr "Группировать по ..."
 #. module: procurement
 #: help:stock.warehouse.orderpoint,procurement_draft_ids:0
 msgid "Draft procurement of the product and location of that orderpoint"
-msgstr "Черновик закупки ТМЦ и положение точки заказа"
+msgstr "Черновик снабжения ТМЦ и положение точки заказа"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:291
+#: code:addons/procurement/procurement.py:290
 #, python-format
 msgid "No supplier defined for this product !"
 msgstr "Не задан поставщик для ТМЦ!"
 
 #. module: procurement
 #: field:make.procurement,uom_id:0
+#: view:procurement.order:0
 msgid "Unit of Measure"
 msgstr "Единица измерения"
 
 #. module: procurement
 #: field:procurement.order,procure_method:0
+#: field:product.template,procure_method:0
 msgid "Procurement Method"
 msgstr "Метод снабжения"
 
@@ -98,7 +100,6 @@ msgstr "Количество в е.п."
 
 #. module: procurement
 #: view:procurement.order:0
-#: field:procurement.order,name:0
 msgid "Reason"
 msgstr "Причина"
 
@@ -277,7 +278,7 @@ msgid "Error! You can not create recursive companies."
 msgstr "Ошибка ! Нельзя создать рекурсивные компании."
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:386
+#: code:addons/procurement/procurement.py:370
 #, python-format
 msgid "Procurement '%s' is in exception: "
 msgstr "Снабжение '%s' в исключительной ситуации: "
@@ -318,7 +319,7 @@ msgid "Best price (not yet active!)"
 msgstr "Лучшая цена (не активна!)"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:111
+#: code:addons/procurement/schedulers.py:110
 #, python-format
 msgid "PROC %d: from stock - %3.2f %-5s - %s"
 msgstr "СНАБ %d: из запаса - %3.2f %-5s - %s"
@@ -377,11 +378,10 @@ msgid "Quantity"
 msgstr "Количество"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:379
+#: code:addons/procurement/procurement.py:365
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
-msgstr ""
-"Не достаточный запас и не определено правило минимальной точки заказа."
+msgstr "Не достаточен запас и нет правила минимума точки заказа."
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:137
@@ -561,7 +561,6 @@ msgstr ""
 "режиме, вы должны подождать несколько минут до окончания обработки."
 
 #. module: procurement
-#: view:procurement.order:0
 #: field:procurement.order,note:0
 msgid "Note"
 msgstr "Примечание"
@@ -578,6 +577,7 @@ msgstr "Этот мастер планирует снабжение"
 
 #. module: procurement
 #: view:procurement.order:0
+#: field:procurement.order,state:0
 msgid "Status"
 msgstr "Статус"
 
@@ -592,7 +592,7 @@ msgid "You try to assign a lot which is not from the same product"
 msgstr "Вы пытаетесь назначит партию состоящую из другой продукции"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:383
+#: code:addons/procurement/procurement.py:367
 #, python-format
 msgid "Not enough stock."
 msgstr "Не достаточный запас."
@@ -624,7 +624,7 @@ msgid "No minimum orderpoint rule defined."
 msgstr "Нет правила минимальной точки заказа"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:151
+#: code:addons/procurement/schedulers.py:133
 #, python-format
 msgid "Automatic OP: %s"
 msgstr "Авто точка зак.: %s"
@@ -695,7 +695,7 @@ msgid "Properties composition"
 msgstr "Составление свойств"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:327
+#: code:addons/procurement/procurement.py:311
 #, python-format
 msgid "Data Insufficient !"
 msgstr "Недостаточно данных !"
@@ -739,8 +739,6 @@ msgstr "Сделано"
 
 #. module: procurement
 #: view:make.procurement:0
-#: view:procurement.order:0
-#: selection:procurement.order,state:0
 #: view:procurement.order.compute:0
 #: view:procurement.order.compute.all:0
 #: view:procurement.orderpoint.compute:0
@@ -793,13 +791,7 @@ msgid "Procurement Exceptions"
 msgstr "Проблемы снабжения"
 
 #. module: procurement
-#: model:ir.actions.act_window,name:procurement.act_procurement_2_stock_warehouse_orderpoint
-#: model:ir.actions.act_window,name:procurement.act_product_product_2_stock_warehouse_orderpoint
-#: model:ir.actions.act_window,name:procurement.act_stock_warehouse_2_stock_warehouse_orderpoint
-#: model:ir.actions.act_window,name:procurement.action_orderpoint_form
-#: model:ir.ui.menu,name:procurement.menu_stock_order_points
-#: view:product.product:0
-#: view:stock.warehouse.orderpoint:0
+#: field:product.product,orderpoint_ids:0
 msgid "Minimum Stock Rules"
 msgstr "Правила минимальных запасов"
 
@@ -835,6 +827,7 @@ msgstr "Временный"
 #. module: procurement
 #: field:mrp.property,description:0
 #: field:mrp.property.group,description:0
+#: field:procurement.order,name:0
 msgid "Description"
 msgstr "Описание"
 
@@ -860,6 +853,8 @@ msgstr "Ед. изм."
 
 #. module: procurement
 #: model:process.node,name:procurement.process_node_serviceonorder0
+#: selection:procurement.order,procure_method:0
+#: selection:product.template,procure_method:0
 msgid "Make to Order"
 msgstr "Изготовить на заказ"
 
@@ -1024,13 +1019,13 @@ msgid "Error: Invalid ean code"
 msgstr "Ошибка: Неверный штрих-код"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:152
+#: code:addons/procurement/schedulers.py:134
 #, python-format
 msgid "SCHEDULER"
 msgstr "ПЛАНИРОВЩИК"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:88
+#: code:addons/procurement/schedulers.py:87
 #, python-format
 msgid "PROC %d: on order - %3.2f %-5s - %s"
 msgstr "СНАБ %d: по заказу - %3.2f %-5s - %s"

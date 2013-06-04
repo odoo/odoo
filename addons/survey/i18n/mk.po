@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-02 05:08+0000\n"
-"X-Generator: Launchpad (build 16514)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:25+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: survey
 #: view:survey.print:0
@@ -31,6 +31,8 @@ msgid ""
 "greater than the number of answer.                                      "
 "Please use a number that is smaller than %d."
 msgstr ""
+"Минималниот потребен одговор кој го внесовте е поголем од бројот на "
+"одговорот.   Употребете број кој е помал од %d."
 
 #. module: survey
 #: view:survey.question.wiz:0
@@ -51,6 +53,8 @@ msgid ""
 "your maximum is greater than the number of answer.                           "
 "           Please use a number that is smaller than %d."
 msgstr ""
+"Максималниот потребен одговор кој го внесовте како ваш максимум е поголем од "
+"бројот на одговорот.              Употребете број кој е помал од %d."
 
 #. module: survey
 #: view:survey:0
@@ -68,12 +72,12 @@ msgstr "Карактер"
 #: model:ir.ui.menu,name:survey.menu_survey_form
 #: model:ir.ui.menu,name:survey.menu_surveys
 msgid "Surveys"
-msgstr ""
+msgstr "Анкети"
 
 #. module: survey
 #: field:survey.question,in_visible_answer_type:0
 msgid "Is Answer Type Invisible?"
-msgstr ""
+msgstr "Дали типот на одговор е невидлив?"
 
 #. module: survey
 #: view:survey:0
@@ -91,7 +95,7 @@ msgstr "Резултати:"
 #. module: survey
 #: view:survey.request:0
 msgid "Survey Request"
-msgstr ""
+msgstr "Барање за анкета"
 
 #. module: survey
 #: selection:survey.question,required_type:0
@@ -106,7 +110,7 @@ msgstr ""
 #. module: survey
 #: field:survey.history,date:0
 msgid "Date started"
-msgstr ""
+msgstr "Датум на започнување"
 
 #. module: survey
 #: field:survey,history:0
@@ -186,6 +190,8 @@ msgid ""
 "than the number of answer.                                     Please use a "
 "number that is smaller than %d."
 msgstr ""
+"#Потребниот одговор кој го внесовте е поголем од бројот на одговорот.   "
+"Употребете број кој е помал од %d."
 
 #. module: survey
 #: field:survey.question,tot_resp:0
@@ -195,7 +201,7 @@ msgstr "Целосен одговор"
 #. module: survey
 #: field:survey.tbl.column.heading,name:0
 msgid "Row Number"
-msgstr ""
+msgstr "Број на ред"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_name_wiz
@@ -205,12 +211,12 @@ msgstr "survey.name.wiz"
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_question_form
 msgid "Survey Questions"
-msgstr ""
+msgstr "Прашања за анкета"
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Matrix of Choices (Only One Answers Per Row)"
-msgstr ""
+msgstr "Матрица на избори (само еден одговор на ред)"
 
 #. module: survey
 #: code:addons/survey/survey.py:525
@@ -219,6 +225,8 @@ msgid ""
 "Maximum Required Answer you entered for your maximum is greater than the "
 "number of answer. Please use a number that is smaller than %d."
 msgstr ""
+"Максималниот потребен одговор кој го внесовте како ваш максимум е поголем од "
+"бројот на одговорот. Употребете број кој е помал од %d."
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_question
@@ -226,12 +234,12 @@ msgstr ""
 #: view:survey.page:0
 #: view:survey.question:0
 msgid "Survey Question"
-msgstr ""
+msgstr "Прашање од анкета"
 
 #. module: survey
 #: view:survey.question.column.heading:0
 msgid "Use if question type is rating_scale"
-msgstr ""
+msgstr "Употребете доколку типот на прашањето е rating-scale"
 
 #. module: survey
 #: field:survey.print,page_number:0
@@ -258,7 +266,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model,name:survey.model_survey_history
 msgid "Survey History"
-msgstr ""
+msgstr "Историја на анкети"
 
 #. module: survey
 #: field:survey.response.answer,comment:0
@@ -270,7 +278,7 @@ msgstr "Белешки"
 #: view:survey:0
 #: view:survey.request:0
 msgid "Search Survey"
-msgstr ""
+msgstr "Пребарај анкети"
 
 #. module: survey
 #: field:survey.response.answer,answer:0
@@ -281,7 +289,7 @@ msgstr "Вредност"
 #. module: survey
 #: field:survey.question,column_heading_ids:0
 msgid " Column heading"
-msgstr " НАслов на колона"
+msgstr " Нaслов на колона"
 
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_run_survey_form
@@ -297,28 +305,28 @@ msgstr ""
 #. module: survey
 #: field:survey,tot_comp_survey:0
 msgid "Total Completed Survey"
-msgstr ""
+msgstr "Целосно завршена анкета"
 
 #. module: survey
 #: view:survey.response.answer:0
 msgid "(Use Only Question Type is matrix_of_drop_down_menus)"
-msgstr ""
+msgstr "(Use Only Question Type is matrix_of_drop_down_menus)"
 
 #. module: survey
 #: model:ir.actions.report.xml,name:survey.survey_analysis
 msgid "Survey Statistics"
-msgstr ""
+msgstr "Статистики за анкети"
 
 #. module: survey
 #: selection:survey,state:0
 #: selection:survey.request,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Откажано"
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Rating Scale"
-msgstr ""
+msgstr "Скала за оценување"
 
 #. module: survey
 #: field:survey.question,comment_field_type:0
@@ -387,17 +395,17 @@ msgstr ""
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Multiple Choice (Multiple Answer)"
-msgstr ""
+msgstr "Повеќекратен избор (Повеќекратни одговори)"
 
 #. module: survey
 #: view:survey:0
 msgid "Edit Survey"
-msgstr ""
+msgstr "Уреди анкета"
 
 #. module: survey
 #: view:survey.response.line:0
 msgid "Survey Answer Line"
-msgstr ""
+msgstr "Ставка на одговор на анкета"
 
 #. module: survey
 #: field:survey.question.column.heading,menu_choice:0
@@ -413,7 +421,7 @@ msgstr "Најмогу"
 #: view:survey:0
 #: view:survey.request:0
 msgid "My Survey(s)"
-msgstr ""
+msgstr "Мои анкети"
 
 #. module: survey
 #: field:survey.question,is_validation_require:0
@@ -445,12 +453,12 @@ msgstr "Писмо (8.5\" x 11\")"
 #: view:survey:0
 #: field:survey,responsible_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Одговорен"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_request
 msgid "survey.request"
-msgstr ""
+msgstr "survey.request"
 
 #. module: survey
 #: field:survey.send.invitation,mail_subject:0
@@ -483,7 +491,7 @@ msgstr "Од"
 #: selection:survey.question,comment_valid_type:0
 #: selection:survey.question,validation_type:0
 msgid "Don't Validate Comment Text."
-msgstr ""
+msgstr "Не го потврдувај текстот за коментари"
 
 #. module: survey
 #: selection:survey.question,comment_valid_type:0
@@ -503,7 +511,7 @@ msgstr "Прашање"
 #. module: survey
 #: view:survey.page:0
 msgid "Search Survey Page"
-msgstr ""
+msgstr "Пребарај ја страницата со анкети"
 
 #. module: survey
 #: field:survey.question.wiz,name:0
@@ -562,7 +570,7 @@ msgstr "Ново"
 #. module: survey
 #: field:survey.question,make_comment_field:0
 msgid "Make Comment Field an Answer Choice"
-msgstr ""
+msgstr "Направи го полето за коментари како избор за одговор"
 
 #. module: survey
 #: view:survey:0
@@ -589,7 +597,7 @@ msgstr "Не е завршено"
 #. module: survey
 #: view:survey.print:0
 msgid "Survey Print"
-msgstr ""
+msgstr "Печатење на анкета"
 
 #. module: survey
 #: view:survey.send.invitation:0
@@ -599,7 +607,7 @@ msgstr "Селектирај партнер"
 #. module: survey
 #: field:survey.question,type:0
 msgid "Question Type"
-msgstr ""
+msgstr "Тип на прашање"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_answer.py:126
@@ -628,7 +636,7 @@ msgstr "Врска"
 #: model:ir.model,name:survey.model_survey_type
 #: view:survey.type:0
 msgid "Survey Type"
-msgstr ""
+msgstr "Тип на анкета"
 
 #. module: survey
 #: field:survey.page,sequence:0
@@ -647,7 +655,7 @@ msgstr "Описен текст"
 #. module: survey
 #: field:survey.question,minimum_req_ans:0
 msgid "Minimum Required Answer"
-msgstr ""
+msgstr "Минимален потребен одговор"
 
 #. module: survey
 #: code:addons/survey/survey.py:479
@@ -677,7 +685,7 @@ msgstr "Датум на краен рок"
 #: selection:survey.question,comment_valid_type:0
 #: selection:survey.question,validation_type:0
 msgid "Must Be A Date"
-msgstr ""
+msgstr "Мора да има датум"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_print
@@ -700,7 +708,7 @@ msgstr "Се бара одговор на прашањето"
 #: model:ir.actions.act_window,name:survey.action_survey_request_tree
 #: model:ir.ui.menu,name:survey.menu_survey_type_form1
 msgid "Survey Requests"
-msgstr ""
+msgstr "Барања за анкети"
 
 #. module: survey
 #: code:addons/survey/survey.py:370
@@ -734,6 +742,9 @@ msgid ""
 "your maximum is greater than the number of answer.                           "
 "          Please use a number that is smaller than %d."
 msgstr ""
+"Максималниот потребен одговор кој го внесовте како ваш максимум е поголем од "
+"бројот на одговорот.                         Употребете број кој е помал од "
+"%d."
 
 #. module: survey
 #: view:survey:0
@@ -773,7 +784,7 @@ msgstr "Коментар"
 #: view:survey.response.answer:0
 #: view:survey.response.line:0
 msgid "Survey Answer"
-msgstr ""
+msgstr "Одговор на анкета"
 
 #. module: survey
 #: selection:survey.answer,type:0
@@ -784,7 +795,7 @@ msgstr "Избор"
 #: model:ir.actions.act_window,name:survey.action_browse_survey_response
 #: view:survey:0
 msgid "Answer Survey"
-msgstr ""
+msgstr "Одговори на анкета"
 
 #. module: survey
 #: view:survey:0
@@ -806,7 +817,7 @@ msgstr "_Испрати"
 #. module: survey
 #: help:survey,responsible_id:0
 msgid "User responsible for survey"
-msgstr ""
+msgstr "Одговорен корисник за анкетата"
 
 #. module: survey
 #: field:survey,page_ids:0
@@ -819,7 +830,7 @@ msgstr "Страница"
 #. module: survey
 #: field:survey.question,comment_column:0
 msgid "Add comment column in matrix"
-msgstr ""
+msgstr "Додади колона за коментари во матрицата"
 
 #. module: survey
 #: field:survey.answer,response:0
@@ -830,7 +841,7 @@ msgstr "#Одговор"
 #: field:survey.print,without_pagebreak:0
 #: field:survey.print.answer,without_pagebreak:0
 msgid "Print Without Page Breaks"
-msgstr ""
+msgstr "Печати без преломи на страници"
 
 #. module: survey
 #: view:survey:0
@@ -838,6 +849,7 @@ msgstr ""
 #: view:survey.question:0
 msgid "When the comment is an invalid format, display this error message"
 msgstr ""
+"Кога коментарот има невалиден формат, прикажи ја оваа порака за грешка"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_selection.py:83
@@ -857,7 +869,7 @@ msgstr "Прашања"
 #. module: survey
 #: help:survey,response_user:0
 msgid "Set to one if  you require only one Answer per user"
-msgstr ""
+msgstr "Постави на еден доколку се бара само еден одговор по корисник"
 
 #. module: survey
 #: model:ir.model,name:survey.model_res_users
@@ -879,7 +891,7 @@ msgstr ""
 #. module: survey
 #: field:survey.question,maximum_req_ans:0
 msgid "Maximum Required Answer"
-msgstr ""
+msgstr "Максимален потребен одговор"
 
 #. module: survey
 #: field:survey.name.wiz,page_no:0
@@ -903,7 +915,7 @@ msgstr "и"
 #: model:ir.actions.act_window,name:survey.action_view_survey_print_statistics
 #: view:survey.print.statistics:0
 msgid "Survey Print Statistics"
-msgstr ""
+msgstr "Печати ги статистиките за анкетата"
 
 #. module: survey
 #: field:survey.send.invitation.log,note:0
@@ -916,21 +928,22 @@ msgstr "Лог"
 #: view:survey.question:0
 msgid "When the choices do not add up correctly, display this error message"
 msgstr ""
+"Кога изборите не се додаваат правилно, прикажи ја оваа порака за грешка"
 
 #. module: survey
 #: field:survey,date_close:0
 msgid "Survey Close Date"
-msgstr ""
+msgstr "Датум на затварање на анкета"
 
 #. module: survey
 #: field:survey,date_open:0
 msgid "Survey Open Date"
-msgstr ""
+msgstr "Датум на отварање на анкета"
 
 #. module: survey
 #: field:survey.question.column.heading,in_visible_rating_weight:0
 msgid "Is Rating Scale Invisible ??"
-msgstr ""
+msgstr "Дали скалата за оценување е невидлива ??"
 
 #. module: survey
 #: view:survey.browse.answer:0
@@ -969,7 +982,7 @@ msgstr "Затворено"
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Matrix of Drop-down Menus"
-msgstr ""
+msgstr "Матрица од паѓачки менија"
 
 #. module: survey
 #: view:survey:0
@@ -996,7 +1009,7 @@ msgstr "Одговор"
 #. module: survey
 #: field:survey,max_response_limit:0
 msgid "Maximum Answer Limit"
-msgstr ""
+msgstr "Граница на максимален одговор"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_act_view_survey_send_invitation
@@ -1006,7 +1019,7 @@ msgstr "Испрати покани"
 #. module: survey
 #: field:survey.name.wiz,store_ans:0
 msgid "Store Answer"
-msgstr ""
+msgstr "Зачувај одговор"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1026,7 +1039,7 @@ msgstr "Статус"
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_view_survey_print
 msgid "Print Survey"
-msgstr ""
+msgstr "Печати анкета"
 
 #. module: survey
 #: field:survey,send_response:0
@@ -1053,13 +1066,13 @@ msgstr "Печати одговор"
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Multiple Textboxes"
-msgstr ""
+msgstr "Повеќекратни текстуални полиња"
 
 #. module: survey
 #: selection:survey.print,orientation:0
 #: selection:survey.print.answer,orientation:0
 msgid "Landscape(Horizontal)"
-msgstr ""
+msgstr "Пејсаж(Хоризонтално)"
 
 #. module: survey
 #: field:survey.question,no_of_rows:0
@@ -1069,17 +1082,17 @@ msgstr "Број на редови"
 #. module: survey
 #: view:survey:0
 msgid "Survey Details"
-msgstr ""
+msgstr "Детали за анкетата"
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Multiple Textboxes With Different Type"
-msgstr ""
+msgstr "Повеќекратни текстуални полиња со различен тип"
 
 #. module: survey
 #: view:survey.question.column.heading:0
 msgid "Menu Choices (each choice on separate lines)"
-msgstr ""
+msgstr "Мени Избори (секој избор на одделни ставки)"
 
 #. module: survey
 #: field:survey.response,response_type:0
@@ -1119,12 +1132,12 @@ msgstr "Датум"
 #. module: survey
 #: view:survey:0
 msgid "All New Survey"
-msgstr ""
+msgstr "Целосно нова анкета"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_send_invitation
 msgid "survey.send.invitation"
-msgstr "Copy text \t survey.send.invitation"
+msgstr "survey.send.invitation"
 
 #. module: survey
 #: field:survey.history,user_id:0
@@ -1137,7 +1150,7 @@ msgstr "Корисник"
 #. module: survey
 #: field:survey.name.wiz,transfer:0
 msgid "Page Transfer"
-msgstr ""
+msgstr "Пренос на страница"
 
 #. module: survey
 #: selection:survey.response.line,state:0
@@ -1159,7 +1172,7 @@ msgstr "Колона"
 #. module: survey
 #: model:ir.model,name:survey.model_survey_response_line
 msgid "Survey Response Line"
-msgstr ""
+msgstr "Ставка на одговор на анкета"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_selection.py:80
@@ -1186,22 +1199,22 @@ msgstr ""
 #: field:survey.request,survey_id:0
 #: field:survey.response,survey_id:0
 msgid "Survey"
-msgstr ""
+msgstr "Анкета"
 
 #. module: survey
 #: field:survey.question,in_visible_rating_weight:0
 msgid "Is Rating Scale Invisible?"
-msgstr ""
+msgstr "Дали скалата за оценување е невидлива?"
 
 #. module: survey
 #: selection:survey.answer,type:0
 msgid "Integer"
-msgstr ""
+msgstr "Цел број"
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Numerical Textboxes"
-msgstr ""
+msgstr "Нумерички текстуални полиња"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_question_wiz
@@ -1226,13 +1239,13 @@ msgstr "Код"
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_print_survey_statistics
 msgid "Surveys Statistics"
-msgstr ""
+msgstr "Статистики за анкетите"
 
 #. module: survey
 #: field:survey.print,orientation:0
 #: field:survey.print.answer,orientation:0
 msgid "Orientation"
-msgstr "Аргентина"
+msgstr "Ориентација"
 
 #. module: survey
 #: view:survey:0
@@ -1267,7 +1280,7 @@ msgstr "Секвенца"
 #. module: survey
 #: field:survey.question,comment_label:0
 msgid "Field Label"
-msgstr ""
+msgstr "Етикета на полето"
 
 #. module: survey
 #: view:survey:0
@@ -1283,21 +1296,19 @@ msgstr "Завршено"
 #. module: survey
 #: view:survey:0
 msgid "Test Survey"
-msgstr ""
+msgstr "Тест анкета"
 
 #. module: survey
 #: field:survey.question,rating_allow_one_column_require:0
 msgid "Allow Only One Answer per Column (Forced Ranking)"
-msgstr ""
+msgstr "Овозможи само еден одговор по колона (Присилено рангирање)"
 
 #. module: survey
-#: view:survey:0
 #: view:survey.browse.answer:0
 #: view:survey.name.wiz:0
 #: view:survey.print:0
 #: view:survey.print.answer:0
 #: view:survey.print.statistics:0
-#: view:survey.request:0
 #: view:survey.send.invitation:0
 msgid "Cancel"
 msgstr "Откажи"
@@ -1322,7 +1333,7 @@ msgstr "Отвори"
 #. module: survey
 #: field:survey,tot_start_survey:0
 msgid "Total Started Survey"
-msgstr ""
+msgstr "Целосно започната анкета"
 
 #. module: survey
 #: code:addons/survey/survey.py:517
@@ -1331,11 +1342,13 @@ msgid ""
 "#Required Answer you entered is greater than the number of answer. Please "
 "use a number that is smaller than %d."
 msgstr ""
+"#Потребниот одговор кој го внесовте е поголем од бројот на одговорот. "
+"Употребете број кој е помал од %d."
 
 #. module: survey
 #: help:survey,max_response_limit:0
 msgid "Set to one if survey is answerable only once"
-msgstr ""
+msgstr "Постави на еден доколку анкетата се одговара само еднаш"
 
 #. module: survey
 #: selection:survey.response,state:0
@@ -1345,22 +1358,22 @@ msgstr "Завршено "
 #. module: survey
 #: model:ir.model,name:survey.model_survey_question_column_heading
 msgid "Survey Question Column Heading"
-msgstr ""
+msgstr "Наслов на колона за прашања на анкета"
 
 #. module: survey
 #: field:survey.answer,average:0
 msgid "#Avg"
-msgstr ""
+msgstr "#Средно"
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Matrix of Choices (Multiple Answers Per Row)"
-msgstr ""
+msgstr "Матрица на избори (Повеќекратни одговори на ред)"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_view_survey_name
 msgid "Give Survey Answer"
-msgstr ""
+msgstr "Дадете одговор на анкетата"
 
 #. module: survey
 #: model:ir.model,name:survey.model_res_users
@@ -1372,6 +1385,8 @@ msgstr ""
 msgid ""
 "If this field is empty, all answers of the selected survey will be print."
 msgstr ""
+"Доколку ова поле е празно, сите одговори на избраната анкета ќе бидат "
+"испечатени."
 
 #. module: survey
 #: selection:survey.response.line,state:0
@@ -1382,12 +1397,12 @@ msgstr "Одговорени"
 #: code:addons/survey/wizard/survey_answer.py:445
 #, python-format
 msgid "Complete Survey Answer"
-msgstr ""
+msgstr "Комплетирајте го одговорот на анкетата"
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Comment/Essay Box"
-msgstr ""
+msgstr "Поле за коментар/есеј"
 
 #. module: survey
 #: field:survey.answer,type:0
@@ -1397,7 +1412,7 @@ msgstr "Тип на одговор"
 #. module: survey
 #: field:survey.question,required_type:0
 msgid "Respondent must answer"
-msgstr ""
+msgstr "Испитаникот мора да одговори"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_view_survey_send_invitation
@@ -1414,17 +1429,17 @@ msgstr ""
 #. module: survey
 #: view:survey.question:0
 msgid "Search Question"
-msgstr ""
+msgstr "Пребарувај прашање"
 
 #. module: survey
 #: field:survey,title:0
 msgid "Survey Title"
-msgstr ""
+msgstr "Наслов на анкета"
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Single Textbox"
-msgstr ""
+msgstr "Единечно текстуално поле"
 
 #. module: survey
 #: field:survey,note:0
@@ -1433,7 +1448,7 @@ msgstr ""
 #: field:survey.page,note:0
 #: view:survey.response.line:0
 msgid "Description"
-msgstr ""
+msgstr "Опис"
 
 #. module: survey
 #: view:survey.name.wiz:0
@@ -1443,32 +1458,32 @@ msgstr ""
 #. module: survey
 #: selection:survey.question,required_type:0
 msgid "At Least"
-msgstr ""
+msgstr "Најмалку"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_view_survey_send_invitation_log
 #: model:ir.model,name:survey.model_survey_send_invitation_log
 msgid "survey.send.invitation.log"
-msgstr ""
+msgstr "survey.send.invitation.log"
 
 #. module: survey
 #: selection:survey.print,orientation:0
 #: selection:survey.print.answer,orientation:0
 msgid "Portrait(Vertical)"
-msgstr ""
+msgstr "Портрет(Вертикално)"
 
 #. module: survey
 #: selection:survey.question,comment_valid_type:0
 #: selection:survey.question,validation_type:0
 msgid "Must Be Specific Length"
-msgstr ""
+msgstr "Мора да има одредена должина"
 
 #. module: survey
 #: view:survey:0
 #: view:survey.page:0
 #: field:survey.question,page_id:0
 msgid "Survey Page"
-msgstr ""
+msgstr "Страница за анкети"
 
 #. module: survey
 #: view:survey:0
@@ -1484,6 +1499,8 @@ msgid ""
 "Minimum Required Answer you entered is greater than the number of answer. "
 "Please use a number that is smaller than %d."
 msgstr ""
+"Минималниот потребен одговор кој го внесовте е поголем од бројот на "
+"одговорот. Употребете број кој е помал од %d."
 
 #. module: survey
 #: code:addons/survey/survey.py:453
@@ -1494,13 +1511,13 @@ msgstr ""
 #. module: survey
 #: view:survey:0
 msgid "All Open Survey"
-msgstr ""
+msgstr "Сите отворени анкети"
 
 #. module: survey
 #: model:ir.actions.report.xml,name:survey.survey_browse_response
 #: field:survey.browse.answer,response_id:0
 msgid "Survey Answers"
-msgstr ""
+msgstr "Одговори на анкета"
 
 #. module: survey
 #: view:survey.browse.answer:0
@@ -1510,12 +1527,12 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_print_survey_answer
 msgid "Surveys Answers"
-msgstr ""
+msgstr "одговори на анкети"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.act_survey_pages
 msgid "Pages"
-msgstr ""
+msgstr "Страници"
 
 #. module: survey
 #: code:addons/survey/survey.py:455
@@ -1525,6 +1542,8 @@ msgid ""
 "than the number of answer.                                    Please use a "
 "number that is smaller than %d."
 msgstr ""
+"#Потребниот одговор кој го внесовте е поголем од бројот на одговорот.  "
+"Употребете број кој е помал од %d."
 
 #. module: survey
 #: code:addons/survey/wizard/survey_answer.py:971
@@ -1536,22 +1555,22 @@ msgstr ""
 #: selection:survey.print,paper_size:0
 #: selection:survey.print.answer,paper_size:0
 msgid "Legal (8.5\" x 14\")"
-msgstr ""
+msgstr "Правно (8.5\" x 14\")"
 
 #. module: survey
 #: field:survey.type,name:0
 msgid "Name"
-msgstr ""
+msgstr "Име"
 
 #. module: survey
 #: view:survey.page:0
 msgid "#Questions"
-msgstr ""
+msgstr "#Прашања"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_response
 msgid "survey.response"
-msgstr ""
+msgstr "survey.response"
 
 #. module: survey
 #: field:survey.question,comment_valid_err_msg:0
@@ -1559,7 +1578,7 @@ msgstr ""
 #: field:survey.question,numeric_required_sum_err_msg:0
 #: field:survey.question,validation_valid_err_msg:0
 msgid "Error message"
-msgstr ""
+msgstr "Порака за грешка"
 
 #. module: survey
 #: view:survey.send.invitation:0
@@ -1581,16 +1600,18 @@ msgid ""
 "greater than the number of answer.                                    Please "
 "use a number that is smaller than %d."
 msgstr ""
+"Минималниот потребен одговор кој го внесовте е поголем од бројот на "
+"одговорот.  Употребете број кој е помал од %d."
 
 #. module: survey
 #: field:survey.answer,menu_choice:0
 msgid "Menu Choices"
-msgstr ""
+msgstr "Мени Избори"
 
 #. module: survey
 #: field:survey,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: survey
 #: code:addons/survey/survey.py:487
@@ -1599,52 +1620,53 @@ msgid ""
 "Maximum Required Answer is greater                                     than "
 "Minimum Required Answer"
 msgstr ""
+"Максималниот потребен одговор е поголем  од Минималниот потребен одговор"
 
 #. module: survey
 #: view:survey.send.invitation.log:0
 msgid "User creation"
-msgstr ""
+msgstr "Креирање на корисник"
 
 #. module: survey
 #: selection:survey.question,required_type:0
 msgid "All"
-msgstr ""
+msgstr "Сите"
 
 #. module: survey
 #: selection:survey.question,comment_valid_type:0
 #: selection:survey.question,validation_type:0
 msgid "Must Be An Email Address"
-msgstr ""
+msgstr "Мора да биде e-mail адреса"
 
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Multiple Choice (Only One Answer)"
-msgstr ""
+msgstr "Повеќекратен избор (Само еден одговор)"
 
 #. module: survey
 #: field:survey.answer,in_visible_answer_type:0
 msgid "Is Answer Type Invisible??"
-msgstr ""
+msgstr "Дали типот на одговор е невидлив??"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_print_answer
 msgid "survey.print.answer"
-msgstr ""
+msgstr "survey.print.answer"
 
 #. module: survey
 #: view:survey.answer:0
 msgid "Menu Choices (each choice on separate by lines)"
-msgstr ""
+msgstr "Мени Избори (секој избор одделен по ставки)"
 
 #. module: survey
 #: selection:survey.answer,type:0
 msgid "Float"
-msgstr ""
+msgstr "Децимален"
 
 #. module: survey
 #: view:survey.response.line:0
 msgid "Single Textboxes"
-msgstr ""
+msgstr "Единечни текстуални полиња"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_send_invitation.py:74
@@ -1655,23 +1677,23 @@ msgstr ""
 #. module: survey
 #: field:survey.question.column.heading,rating_weight:0
 msgid "Weight"
-msgstr ""
+msgstr "Тежина"
 
 #. module: survey
 #: selection:survey.answer,type:0
 msgid "Date & Time"
-msgstr ""
+msgstr "Датум и време"
 
 #. module: survey
 #: field:survey.response,date_create:0
 #: field:survey.response.line,date_create:0
 msgid "Create Date"
-msgstr ""
+msgstr "Датум на креирање"
 
 #. module: survey
 #: field:survey.question,column_name:0
 msgid "Column Name"
-msgstr ""
+msgstr "Име на колона"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_page_form
@@ -1679,37 +1701,37 @@ msgstr ""
 #: model:ir.ui.menu,name:survey.menu_survey_page_form1
 #: view:survey.page:0
 msgid "Survey Pages"
-msgstr ""
+msgstr "Страници на анкета"
 
 #. module: survey
 #: field:survey.question,numeric_required_sum:0
 msgid "Sum of all choices"
-msgstr ""
+msgstr "Збир на сите избори"
 
 #. module: survey
 #: selection:survey.question,type:0
 #: view:survey.response.line:0
 msgid "Table"
-msgstr ""
+msgstr "Табела"
 
 #. module: survey
 #: code:addons/survey/survey.py:685
 #, python-format
 msgid "You cannot duplicate the resource!"
-msgstr ""
+msgstr "Не може да се дуплира ресурсот!"
 
 #. module: survey
 #: field:survey.question,comment_minimum_date:0
 #: field:survey.question,validation_minimum_date:0
 msgid "Minimum date"
-msgstr ""
+msgstr "Минимален датум"
 
 #. module: survey
 #: field:survey,response_user:0
 msgid "Maximum Answer per User"
-msgstr ""
+msgstr "Максимален одговор по корисник"
 
 #. module: survey
 #: field:survey.name.wiz,page:0
 msgid "Page Position"
-msgstr ""
+msgstr "Позиција на страницата"

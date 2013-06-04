@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-09-16 04:55+0000\n"
-"X-Generator: Launchpad (build 15944)\n"
+"X-Launchpad-Export-Date: 2013-05-29 06:46+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -24,8 +24,9 @@ msgstr "Pesquisar Cobrança"
 
 #. module: account_followup
 #: view:account_followup.stat:0
+#: view:res.partner:0
 msgid "Group By..."
-msgstr "Agrupar Por..."
+msgstr "Agrupar por..."
 
 #. module: account_followup
 #: view:res.company:0
@@ -34,8 +35,7 @@ msgid "Follow-up Message"
 msgstr "Menagem de Cobrança"
 
 #. module: account_followup
-#: view:account_followup.followup:0
-#: field:account_followup.followup,followup_line:0
+#: field:account_followup.print,followup_id:0
 msgid "Follow-Up"
 msgstr "Cobrança"
 
@@ -100,11 +100,13 @@ msgstr "Empresa"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
+#: code:addons/account_followup/account_followup.py:259
+#, python-format
 msgid "Invoice Date"
 msgstr "Data da Fatura"
 
 #. module: account_followup
-#: field:account.followup.print.all,email_subject:0
+#: field:account_followup.print,email_subject:0
 msgid "Email Subject"
 msgstr "Assunto do E-mail"
 
@@ -134,6 +136,8 @@ msgstr "Ok"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
+#: code:addons/account_followup/account_followup.py:263
+#, python-format
 msgid "Amount"
 msgstr "Valor"
 
@@ -178,7 +182,9 @@ msgid "%(heading)s: Move line header"
 msgstr "%(heading)s: Cabeçalho da linha de movimento"
 
 #. module: account_followup
-#: field:account.followup.print,followup_id:0
+#: view:account_followup.followup:0
+#: field:account_followup.followup,followup_line:0
+#: view:res.partner:0
 msgid "Follow-up"
 msgstr "Cobrança"
 
@@ -191,6 +197,7 @@ msgstr "ICMS"
 #: view:account_followup.stat:0
 #: field:account_followup.stat,partner_id:0
 #: field:account_followup.stat.by.partner,partner_id:0
+#: model:ir.model,name:account_followup.model_res_partner
 msgid "Partner"
 msgstr "Parceiro"
 
@@ -200,12 +207,12 @@ msgid "Date :"
 msgstr "Data :"
 
 #. module: account_followup
-#: field:account.followup.print.all,partner_ids:0
+#: field:account_followup.print,partner_ids:0
 msgid "Partners"
 msgstr "Parceiros"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:142
+#: code:addons/account_followup/wizard/account_followup_print.py:254
 #, python-format
 msgid "Invoices Reminder"
 msgstr "Lembrete de Faturas"
@@ -265,12 +272,12 @@ msgstr "Corpo do e-mail"
 
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
+#: view:account_followup.stat:0
 msgid "Follow-up Level"
 msgstr "Nível de Cobrança"
 
 #. module: account_followup
 #: field:account_followup.stat,date_followup:0
-#: field:account_followup.stat.by.partner,date_followup:0
 msgid "Latest followup"
 msgstr "Última cobrança"
 
@@ -280,7 +287,7 @@ msgid "Select Partners to Remind"
 msgstr "Selecione os Parceiros para o Lembrete"
 
 #. module: account_followup
-#: field:account.followup.print.all,partner_lang:0
+#: field:account_followup.print,partner_lang:0
 msgid "Send Email in Partner Language"
 msgstr "Enviar Email no Idioma do Parceiro"
 
@@ -412,14 +419,14 @@ msgstr ""
 "%s"
 
 #. module: account_followup
-#: help:account.followup.print,date:0
+#: help:account_followup.print,date:0
 msgid ""
 "This field allow you to select a forecast date to plan your follow-ups"
 msgstr ""
 "Este campo permite escolher uma data futura para planejar suas cobranças"
 
 #. module: account_followup
-#: field:account.followup.print,date:0
+#: field:account_followup.print,date:0
 msgid "Follow-up Sending Date"
 msgstr "Data para o Envio da Cobrança"
 
@@ -491,8 +498,7 @@ msgid "Companies"
 msgstr "Empresas"
 
 #. module: account_followup
-#: view:account.followup.print.all:0
-#: field:account.followup.print.all,summary:0
+#: field:account_followup.print,summary:0
 msgid "Summary"
 msgstr "Resumo"
 
@@ -522,6 +528,7 @@ msgid "%(company_currency)s: User's Company Currency"
 msgstr "%(company_currency)s: Moeda da Empresa do Usuário"
 
 #. module: account_followup
+#: field:account.move.line,result:0
 #: view:account_followup.stat:0
 #: field:account_followup.stat,balance:0
 #: field:account_followup.stat.by.partner,balance:0
@@ -561,14 +568,13 @@ msgid "Period"
 msgstr "Período"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:307
+#: code:addons/account_followup/wizard/account_followup_print.py:300
 #, python-format
 msgid "Followup Summary"
 msgstr "Resumo de Cobrança"
 
 #. module: account_followup
-#: view:account.followup.print:0
-#: view:account.followup.print.all:0
+#: view:account_followup.print:0
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -644,8 +650,10 @@ msgid "Followup Level"
 msgstr "Nível de Cobrança"
 
 #. module: account_followup
-#: field:account_followup.followup,description:0
 #: report:account_followup.followup.print:0
+#: field:account_followup.sending.results,description:0
+#: code:addons/account_followup/account_followup.py:260
+#, python-format
 msgid "Description"
 msgstr "Descrição"
 
@@ -665,7 +673,7 @@ msgid "Partner entries"
 msgstr "Lançamentos do parceiro"
 
 #. module: account_followup
-#: help:account.followup.print.all,partner_lang:0
+#: help:account_followup.print,partner_lang:0
 msgid ""
 "Do not change message text, if you want to send email in partner language, "
 "or configure from company"
@@ -681,7 +689,6 @@ msgstr "Itens Recebíveis"
 #. module: account_followup
 #: view:account_followup.stat:0
 #: model:ir.actions.act_window,name:account_followup.action_followup_stat
-#: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
 msgid "Follow-ups Sent"
 msgstr "Cobranças Enviadas"
 
@@ -692,7 +699,6 @@ msgstr "O nome da empresa deve ser exclusivo!"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
-#: field:account_followup.followup.line,name:0
 msgid "Name"
 msgstr "Nome"
 
@@ -789,7 +795,7 @@ msgid "Customer Ref :"
 msgstr "Ref Cliente :"
 
 #. module: account_followup
-#: field:account.followup.print.all,test_print:0
+#: field:account_followup.print,test_print:0
 msgid "Test Print"
 msgstr "Testar Impressão"
 

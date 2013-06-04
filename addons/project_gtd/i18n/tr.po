@@ -13,23 +13,23 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:58+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:16+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "In Progress"
-msgstr ""
+msgstr "DevamEden"
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "Show only tasks having a deadline"
-msgstr ""
+msgstr "Sadece zamanSınırı olan görevleri göster"
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "Reactivate"
-msgstr ""
+msgstr "Yeniden Etkinleştir"
 
 #. module: project_gtd
 #: help:project.task,timebox_id:0
@@ -44,7 +44,7 @@ msgstr ""
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_travel
 msgid "Travel"
-msgstr ""
+msgstr "Seyahat"
 
 #. module: project_gtd
 #: view:project.timebox.empty:0
@@ -54,7 +54,7 @@ msgstr ""
 #. module: project_gtd
 #: view:project.task:0
 msgid "Pending Tasks"
-msgstr ""
+msgstr "Bekleyen Görevler"
 
 #. module: project_gtd
 #: view:project.task:0
@@ -72,12 +72,12 @@ msgstr ""
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_daily
 msgid "Today"
-msgstr ""
+msgstr "Bugün"
 
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_lt
 msgid "Long Term"
-msgstr ""
+msgstr "Uzun Dönem"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_timebox_empty
@@ -87,11 +87,12 @@ msgstr ""
 #. module: project_gtd
 #: view:project.task:0
 msgid "Pending"
-msgstr ""
+msgstr "Bekleyen"
 
 #. module: project_gtd
-#: view:project.gtd.timebox:0 field:project.gtd.timebox,name:0
-#: view:project.task:0 field:project.task,timebox_id:0
+#: view:project.gtd.timebox:0
+#: field:project.gtd.timebox,name:0
+#: field:project.task,timebox_id:0
 msgid "Timebox"
 msgstr ""
 
@@ -111,7 +112,7 @@ msgstr ""
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_timebox_tree
 #: view:project.task:0
 msgid "My Tasks"
-msgstr ""
+msgstr "Görevlerim"
 
 #. module: project_gtd
 #: constraint:project.task:0
@@ -121,7 +122,7 @@ msgstr ""
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_weekly
 msgid "This Week"
-msgstr ""
+msgstr "Bu Hafta"
 
 #. module: project_gtd
 #: view:project.timebox.fill.plan:0
@@ -147,7 +148,7 @@ msgstr ""
 #. module: project_gtd
 #: field:project.gtd.timebox,icon:0
 msgid "Icon"
-msgstr ""
+msgstr "İkon"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_timebox_fill_plan
@@ -157,7 +158,7 @@ msgstr ""
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_task
 msgid "Task"
-msgstr ""
+msgstr "Görev"
 
 #. module: project_gtd
 #: view:project.timebox.fill.plan:0
@@ -167,23 +168,23 @@ msgstr ""
 #. module: project_gtd
 #: field:project.timebox.empty,name:0
 msgid "Name"
-msgstr ""
+msgstr "Adı"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_context_tree
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_contexts
 msgid "Contexts"
-msgstr ""
+msgstr "Bağlamları"
 
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_car
 msgid "Car"
-msgstr ""
+msgstr "Araba"
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "Show Context"
-msgstr ""
+msgstr "Göster Bağlamı"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.action_project_gtd_fill
@@ -201,19 +202,20 @@ msgstr ""
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_timeboxes
 #: view:project.gtd.timebox:0
 msgid "Timeboxes"
-msgstr "Çalışma Zaman Aralığı"
+msgstr "Timeboxes"
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "In Progress and draft tasks"
-msgstr ""
+msgstr "DevamEden ve taslak görevleri"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_gtd_context
-#: view:project.gtd.context:0 field:project.gtd.context,name:0
+#: view:project.gtd.context:0
+#: field:project.gtd.context,name:0
 #: field:project.task,context_id:0
 msgid "Context"
-msgstr ""
+msgstr "Bağlam"
 
 #. module: project_gtd
 #: code:addons/project_gtd/wizard/project_gtd_empty.py:52
@@ -232,24 +234,25 @@ msgid "Office"
 msgstr ""
 
 #. module: project_gtd
-#: field:project.gtd.context,sequence:0 field:project.gtd.timebox,sequence:0
+#: field:project.gtd.context,sequence:0
+#: field:project.gtd.timebox,sequence:0
 msgid "Sequence"
-msgstr "Sıra No"
+msgstr "Sıralama"
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "Show the context field"
-msgstr ""
+msgstr "Bağlam alanında göster"
 
 #. module: project_gtd
 #: help:project.gtd.context,sequence:0
 msgid "Gives the sequence order when displaying a list of contexts."
-msgstr ""
+msgstr "Bağlamlarda bir listesini görüntüleme sırasını verir."
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "Show Deadlines"
-msgstr ""
+msgstr "Göster ZamanSınırı"
 
 #. module: project_gtd
 #: view:project.gtd.timebox:0
@@ -259,7 +262,7 @@ msgstr ""
 #. module: project_gtd
 #: field:project.timebox.fill.plan,task_ids:0
 msgid "Tasks selection"
-msgstr ""
+msgstr "Görev seçimi"
 
 #. module: project_gtd
 #: view:project.task:0
@@ -292,7 +295,7 @@ msgstr ""
 #. module: project_gtd
 #: view:project.task:0
 msgid "For reopening the tasks"
-msgstr ""
+msgstr "veya görevleri yeniden açılması"
 
 #. module: project_gtd
 #: view:project.task:0

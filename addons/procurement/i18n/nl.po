@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-26 04:57+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:12+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -41,7 +41,7 @@ msgid ""
 msgstr ""
 "Activeert de automatische verwerving voor alle producten met een virtuele "
 "voorraad van minder dan 0. Het is beter deze optie niet te gebruiken en "
-"gebruik te maken van de \"Maak op bestelling\" instellingen van producten."
+"gebruik te maken van de \"Maak op order\" instellingen van producten."
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
@@ -277,7 +277,7 @@ msgid "Error! You can not create recursive companies."
 msgstr "Fout! U kunt geen recursieve bedrijven aanmaken."
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:369
+#: code:addons/procurement/procurement.py:370
 #, python-format
 msgid "Procurement '%s' is in exception: "
 msgstr "Bij de verwerving van '%s' is een probleem ontstaan: "
@@ -377,7 +377,7 @@ msgid "Quantity"
 msgstr "Hoeveelheid"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:364
+#: code:addons/procurement/procurement.py:365
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr "Onvoldoende voorraad en geen minimale voorraadregel gedefinieerd."
@@ -597,7 +597,7 @@ msgstr ""
 "U probeert een partij toe te wijzen die niet van hetzelfde product is."
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:366
+#: code:addons/procurement/procurement.py:367
 #, python-format
 msgid "Not enough stock."
 msgstr "Onvoldoende voorraad."
@@ -702,7 +702,7 @@ msgid "Properties composition"
 msgstr "Samenstellingseigenschappen"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:310
+#: code:addons/procurement/procurement.py:311
 #, python-format
 msgid "Data Insufficient !"
 msgstr "Onvoldoende gegevens !"
@@ -746,7 +746,6 @@ msgstr "Verwerkt"
 
 #. module: procurement
 #: view:make.procurement:0
-#: view:procurement.order:0
 #: view:procurement.order.compute:0
 #: view:procurement.order.compute.all:0
 #: view:procurement.orderpoint.compute:0
@@ -756,7 +755,7 @@ msgstr "Annuleren"
 #. module: procurement
 #: field:stock.warehouse.orderpoint,logic:0
 msgid "Reordering Mode"
-msgstr "Bestelmethode"
+msgstr "Aanvulopdracht mode"
 
 #. module: procurement
 #: field:procurement.order,origin:0
@@ -864,7 +863,7 @@ msgstr "Product maateenheid"
 #: selection:procurement.order,procure_method:0
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
-msgstr "Op order maken"
+msgstr "Maak op order"
 
 #. module: procurement
 #: view:procurement.order:0

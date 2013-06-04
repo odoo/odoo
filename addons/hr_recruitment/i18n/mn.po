@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:46+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:03+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -22,11 +22,12 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the case "
 "without removing it."
 msgstr ""
-"'Идэвхтэй эсэх' талбарыг сонголгүй худал утга олгосон бол энэ бичлэгийг "
-"устгахгүй нуух боломжийг олгоно."
+"Хэрэв идэвхтэй талбарыг сонгохгүй бол уг бичлэгийг устгалгүйгээр нуух "
+"боломжтой болно."
 
 #. module: hr_recruitment
-#: view:hr.recruitment.stage:0 field:hr.recruitment.stage,requirements:0
+#: view:hr.recruitment.stage:0
+#: field:hr.recruitment.stage,requirements:0
 msgid "Requirements"
 msgstr "Шаардлагууд"
 
@@ -50,12 +51,12 @@ msgstr "Тохиолдлын дугаар"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Group By..."
-msgstr "Бүлэглэвэл"
+msgstr "Бүлэглэвэл..."
 
 #. module: hr_recruitment
 #: field:hr.applicant,user_email:0
 msgid "User Email"
-msgstr "Хэрэглэгчийн Имэйл"
+msgstr "Хэрэглэгчийн имэйл"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -63,8 +64,10 @@ msgid "Filter and view on next actions and date"
 msgstr "Дараах үйлдэл болон огноогоор шүүж харах"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,department_id:0
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,department_id:0
+#: view:hr.applicant:0
+#: field:hr.applicant,department_id:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,department_id:0
 msgid "Department"
 msgstr "Хэлтэс"
 
@@ -89,7 +92,8 @@ msgid "Pending Jobs"
 msgstr "Хүлээгдэж байгаа ажлууд"
 
 #. module: hr_recruitment
-#: field:hr.applicant,company_id:0 view:hr.recruitment.report:0
+#: field:hr.applicant,company_id:0
+#: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,company_id:0
 msgid "Company"
 msgstr "Компани"
@@ -100,7 +104,7 @@ msgid "No"
 msgstr "Үгүй"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:436
+#: code:addons/hr_recruitment/hr_recruitment.py:445
 #, python-format
 msgid "You must define Applied Job for this applicant."
 msgstr "Энэ горилогчид Өргөдөл гаргасан Ажлыг нь тодорхойлох ёстой."
@@ -137,7 +141,8 @@ msgid "Create Partner"
 msgstr "Харилцагч бүртгэх"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,day:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,day:0
 msgid "Day"
 msgstr "Өдөр"
 
@@ -179,7 +184,7 @@ msgstr "Тэмдэглэлүүд"
 #. module: hr_recruitment
 #: field:hr.applicant,message_ids:0
 msgid "Messages"
-msgstr "Э-мэйл зурвас"
+msgstr "Зурвасууд"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -187,12 +192,14 @@ msgid "Next Actions"
 msgstr "Дараагийн үйлдэл"
 
 #. module: hr_recruitment
-#: field:hr.applicant,salary_expected:0 view:hr.recruitment.report:0
+#: field:hr.applicant,salary_expected:0
+#: view:hr.recruitment.report:0
 msgid "Expected Salary"
-msgstr "Хүсэж байгаа цалин"
+msgstr "Хүсч буй цалин"
 
 #. module: hr_recruitment
-#: field:hr.applicant,job_id:0 field:hr.recruitment.report,job_id:0
+#: field:hr.applicant,job_id:0
+#: field:hr.recruitment.report,job_id:0
 msgid "Applied Job"
 msgstr "Горилсон ажлын байр"
 
@@ -207,7 +214,7 @@ msgid "Color Index"
 msgstr "Өнгөний Индекс"
 
 #. module: hr_recruitment
-#: view:board.board:0 view:hr.applicant:0
+#: view:hr.applicant:0
 #: model:ir.actions.act_window,name:hr_recruitment.action_applicants_status
 msgid "Applicants Status"
 msgstr "Горилогчийн төлөв"
@@ -237,7 +244,7 @@ msgid "Recruitment"
 msgstr "Хүний нөөцийн бүрдүүлэлт"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:436
+#: code:addons/hr_recruitment/hr_recruitment.py:445
 #, python-format
 msgid "Warning!"
 msgstr "Анхааруулга!"
@@ -245,7 +252,7 @@ msgstr "Анхааруулга!"
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_prop:0
 msgid "Salary Proposed"
-msgstr "Санал болгож байгаа цалин"
+msgstr "Санал болгож буй цалин"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -258,7 +265,9 @@ msgid "Avg Proposed Salary"
 msgstr "Санал болгож буй дундаж цалин"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.recruitment.report,available:0
+#: view:hr.applicant:0
+#: field:hr.applicant,availability:0
+#: field:hr.recruitment.report,available:0
 msgid "Availability"
 msgstr "Боломжит хоног"
 
@@ -290,12 +299,12 @@ msgstr "Утасны дуудлага"
 #. module: hr_recruitment
 #: view:hr.recruitment.partner.create:0
 msgid "Convert To Partner"
-msgstr "Харилцагч руу шилжүүлэх"
+msgstr "Харилцагч болгох"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_report
 msgid "Recruitments Statistics"
-msgstr "Хүний нөөцийн бүрдүүлэлтийн үзүүлэлтүүд"
+msgstr "Хүний нөөцийн бүрдүүлэлтийн статистик"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/hr_recruitment.py:476
@@ -324,7 +333,8 @@ msgid "Job Description"
 msgstr "Ажлын байрны тодорхойлолт"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,source_id:0
+#: view:hr.applicant:0
+#: field:hr.applicant,source_id:0
 msgid "Source"
 msgstr "Эх үүсвэр"
 
@@ -340,15 +350,18 @@ msgid "A partner is already defined on this job request."
 msgstr "Энэ ажлын байрын хүсэлтэд харилцагч хэдийн тодорхойлогджээ."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0 selection:hr.recruitment.report,state:0
+#: view:hr.applicant:0
+#: selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0
+#: selection:hr.recruitment.report,state:0
+#: selection:hr.recruitment.stage,state:0
 msgid "New"
 msgstr "Шинэ"
 
 #. module: hr_recruitment
 #: field:hr.applicant,email_from:0
 msgid "Email"
-msgstr "Э-мэйл"
+msgstr "Имэйл"
 
 #. module: hr_recruitment
 #: field:hr.applicant,availability:0
@@ -388,7 +401,8 @@ msgstr ""
 "qualification call, first interview, second interview, refused, hired."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,create_date:0
+#: view:hr.applicant:0
+#: field:hr.applicant,create_date:0
 #: view:hr.recruitment.report:0
 msgid "Creation Date"
 msgstr "Үүсгэсэн огноо"
@@ -397,7 +411,7 @@ msgstr "Үүсгэсэн огноо"
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_hired_employee
 #: model:ir.model,name:hr_recruitment.model_hired_employee
 msgid "Create Employee"
-msgstr "Ажилчин үүсгэх"
+msgstr "Ажилтан үүсгэх"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.job2phonecall,deadline:0
@@ -405,7 +419,8 @@ msgid "Planned Date"
 msgstr "Төлөвлөсөн огноо"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,priority:0
+#: view:hr.applicant:0
+#: field:hr.applicant,priority:0
 #: field:hr.recruitment.report,priority:0
 msgid "Appreciation"
 msgstr "Үнэлгээ"
@@ -418,25 +433,30 @@ msgstr "Анхны Магадлагаа"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Print Interview"
-msgstr "Ярилцлагын хэвлэх"
+msgstr "Ярилцлагыг хэвлэх"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,stage_id:0
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,stage_id:0
+#: view:hr.applicant:0
+#: field:hr.applicant,stage_id:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,stage_id:0
 #: view:hr.recruitment.stage:0
 msgid "Stage"
 msgstr "Үе шат"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0 selection:hr.recruitment.report,state:0
+#: view:hr.applicant:0
+#: selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0
+#: selection:hr.recruitment.report,state:0
+#: selection:hr.recruitment.stage,state:0
 msgid "Pending"
-msgstr "Хүлээгдсэн"
+msgstr "Хүлээгдэж буй"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_job_stage_act
 msgid "Recruitment / Applicants Stages"
-msgstr "Ажилтан авах / Өргөдөл Гаргагчийн Үеүүд"
+msgstr "Ажилд авах / Горилогчийн үе шатууд"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
@@ -446,22 +466,21 @@ msgstr "Докторын зэрэг"
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "July"
-msgstr "7 сар"
+msgstr "7-р сар"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
+#: field:hr.applicant,name:0
 msgid "Subject"
-msgstr "Нэр чиглэл"
+msgstr "Ажлын байр"
 
 #. module: hr_recruitment
 #: field:hr.applicant,email_cc:0
 msgid "Watchers Emails"
-msgstr "Бусад э-мэйл"
+msgstr "Ажиглагчдын имэйлүүд"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-#: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
-#: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
 msgid "Applicants"
 msgstr "Горилогчид"
 
@@ -494,7 +513,7 @@ msgstr "    Сар-1    "
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_exp:0
 msgid "Salary Expected"
-msgstr "Хүсэж байгаа цалин"
+msgstr "Хүсч буй цалин"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant
@@ -504,17 +523,19 @@ msgstr "Горилогч"
 #. module: hr_recruitment
 #: help:hr.recruitment.stage,sequence:0
 msgid "Gives the sequence order when displaying a list of stages."
-msgstr "Үе шатын жагсаалтыг харуулахдаа дараалал олгоно."
+msgstr "Үе шатуудын жагсаалтыг харуулахдаа дарааллыг өгнө."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
+#: code:addons/hr_recruitment/hr_recruitment.py:347
+#: field:hr.applicant,partner_id:0
+#, python-format
 msgid "Contact"
 msgstr "Харилцах хаяг"
 
 #. module: hr_recruitment
 #: help:hr.applicant,salary_expected_extra:0
 msgid "Salary Expected by Applicant, extra advantages"
-msgstr "Өргөдөл гаргагчийн хүсч буй цалин болон нэмэлт хангамжууд"
+msgstr "Горилогчийн хүсч буй цалин ба нэмэлт хангамжууд"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -522,7 +543,7 @@ msgid "Qualification"
 msgstr "Боловсрол"
 
 #. module: hr_recruitment
-#: field:hr.applicant,partner_id:0 view:hr.recruitment.report:0
+#: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,partner_id:0
 msgid "Partner"
 msgstr "Харилцагч"
@@ -530,7 +551,7 @@ msgstr "Харилцагч"
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "March"
-msgstr "3 сар"
+msgstr "3-р сар"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
@@ -547,7 +568,7 @@ msgstr "Үе шатууд"
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "Draft recruitment"
-msgstr "Хүний нөөцийн бүрдүүлэлтийн ноорог"
+msgstr "Ноорог хүний нөөцийн бүрдүүлэлт"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -577,12 +598,12 @@ msgstr "Магадлал"
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "September"
-msgstr "9 сар"
+msgstr "9-р сар"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "December"
-msgstr "12 сар"
+msgstr "12-р сар"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -595,7 +616,8 @@ msgid "Recruitment during last month"
 msgstr "Сүүлийн сарын хүний нөөцийн бүрдүүлэлт"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,month:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,month:0
 msgid "Month"
 msgstr "Сар"
 
@@ -625,7 +647,8 @@ msgid "Yes"
 msgstr "Тийм"
 
 #. module: hr_recruitment
-#: field:hr.applicant,salary_proposed:0 view:hr.recruitment.report:0
+#: field:hr.applicant,salary_proposed:0
+#: view:hr.recruitment.report:0
 msgid "Proposed Salary"
 msgstr "Санал болгосон цалин"
 
@@ -663,15 +686,17 @@ msgstr "Тохиолдлын дугаар"
 #. module: hr_recruitment
 #: field:hr.applicant,date_open:0
 msgid "Opened"
-msgstr "Нээгдсэн огноо"
+msgstr "Нээгдсэн"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "Group By ..."
-msgstr "Бүлэглэх ..."
+msgstr "Бүлэглэвэл ..."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 selection:hr.applicant,state:0
+#: view:hr.applicant:0
+#: selection:hr.applicant,state:0
+#: selection:hr.recruitment.stage,state:0
 msgid "In Progress"
 msgstr "Эхэлсэн"
 
@@ -683,7 +708,7 @@ msgstr "Шинэ болгох"
 #. module: hr_recruitment
 #: help:hr.applicant,salary_expected:0
 msgid "Salary Expected by Applicant"
-msgstr "Горилогчоор ангилсан хүссэн цалин"
+msgstr "Горилогчийн хүссэн цалин"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -697,8 +722,8 @@ msgid ""
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
 msgstr ""
-"Энэ бичлэгт харгалзах орох, гарах бүх э-мэйлийг илгээхийн өмнө СС талбарт "
-"эдгээр э-мэйл хаягуудыг нэмж өгнө. Э-мэйл хаягуудыг таслалаар тусгаарлана."
+"Эдгээр имэйл хаягууд нь тус бичлэгт хамаатай ирэх, явах бүх имэйлийн СС "
+"талбарт нэмэгдэнэ. Имэйл хаягуудыг таслалаар тусгаарлана уу."
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_degree
@@ -706,14 +731,15 @@ msgid "Degrees"
 msgstr "Цол"
 
 #. module: hr_recruitment
-#: field:hr.applicant,date_closed:0 field:hr.recruitment.report,date_closed:0
+#: field:hr.applicant,date_closed:0
+#: field:hr.recruitment.report,date_closed:0
 msgid "Closed"
 msgstr "Хаагдсан"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.stage:0
 msgid "Stage Definition"
-msgstr "Үе шатыг тодорхойлох"
+msgstr "Үе шатын тодорхойлолт"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -728,7 +754,7 @@ msgstr "Асуудал хаагдах дундаж хоног"
 #. module: hr_recruitment
 #: help:hr.applicant,salary_proposed:0
 msgid "Salary Proposed by the Organisation"
-msgstr "Байгууллагаар ангилсан санал болгосон цалин"
+msgstr "Байгууллагаас санал болгосон цалин"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -736,13 +762,15 @@ msgid "Meeting"
 msgstr "Уулзалт"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:347
+#: code:addons/hr_recruitment/hr_recruitment.py:360
 #, python-format
 msgid "No Subject"
 msgstr "Гарчиг үгүй"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
+#: field:hr.applicant,state:0
+#: field:hr.recruitment.report,state:0
+#: field:hr.recruitment.stage,state:0
 msgid "Status"
 msgstr "Төлөв"
 
@@ -754,11 +782,13 @@ msgstr "Харилцаа болон Түүх"
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "August"
-msgstr "8 сар"
+msgstr "8-р сар"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,type_id:0
-#: view:hr.recruitment.degree:0 view:hr.recruitment.report:0
+#: view:hr.applicant:0
+#: field:hr.applicant,type_id:0
+#: view:hr.recruitment.degree:0
+#: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,type_id:0
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
 msgid "Degree"
@@ -777,7 +807,7 @@ msgstr "Нийтлэг э-мэйлүүд"
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "June"
-msgstr "6 сар"
+msgstr "6-р сар"
 
 #. module: hr_recruitment
 #: field:hr.applicant,day_close:0
@@ -793,7 +823,7 @@ msgstr "Хэрэглэгч"
 #: selection:hr.applicant,priority:0
 #: selection:hr.recruitment.report,priority:0
 msgid "Excellent"
-msgstr "Онцсайн"
+msgstr "Гойд сайн"
 
 #. module: hr_recruitment
 #: field:hr.applicant,active:0
@@ -803,7 +833,7 @@ msgstr "Идэвхтэй"
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "November"
-msgstr "11 сар"
+msgstr "11-р сар"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -835,17 +865,17 @@ msgstr "Утасны дуудлагыг төлөвлөх"
 #. module: hr_recruitment
 #: field:hr.applicant,salary_proposed_extra:0
 msgid "Proposed Salary Extra"
-msgstr "Санал болгосон хамгийн их цалин"
+msgstr "Санал болгосон нэмэлт цалин"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "January"
-msgstr "1 сар"
+msgstr "1-р сар"
 
 #. module: hr_recruitment
 #: help:hr.applicant,email_from:0
 msgid "These people will receive email."
-msgstr "Эдгээр хүмүүс э-мэйл хүлээж авна"
+msgstr "Эдгээр хүмүүс имэйл хүлээж авна"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -854,7 +884,8 @@ msgid "Not Good"
 msgstr "Сайн биш"
 
 #. module: hr_recruitment
-#: field:hr.applicant,date:0 field:hr.recruitment.report,date:0
+#: field:hr.applicant,date:0
+#: field:hr.recruitment.report,date:0
 msgid "Date"
 msgstr "Огноо"
 
@@ -909,7 +940,7 @@ msgid ""
 "forget to specify the department if your recruitment process is different "
 "according to the job position."
 msgstr ""
-"Дараах үеүүд танай ажилтайн авах процесстой таарч байгаа эсэхийг хянана уу. "
+"Дараах үеүүд танай ажилтан авах процесстой таарч байгаа эсэхийг хянана уу. "
 "Хэрэв ажлын байраас хамаарч ажилтан авах процесс ялгаатай байдаг бол "
 "хэлтсийг зааж өгөхөө мартаж болохгүй."
 
@@ -940,12 +971,13 @@ msgid "The name of the Degree of Recruitment must be unique!"
 msgstr "Цол үл давхцах байх ёстой!"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,year:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,year:0
 msgid "Year"
 msgstr "Он"
 
 #. module: hr_recruitment
-#: view:hired.employee:0 view:hr.recruitment.job2phonecall:0
+#: view:hired.employee:0
 #: view:hr.recruitment.partner.create:0
 msgid "Cancel"
 msgstr "Цуцлах"
@@ -977,7 +1009,8 @@ msgid "Gives the sequence order when displaying a list of degrees."
 msgstr "Боловсролын түвшинг харах үедээ тэдгээрт дарааллыг олгодог"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,user_id:0
+#: view:hr.applicant:0
+#: field:hr.applicant,user_id:0
 #: view:hr.recruitment.report:0
 msgid "Responsible"
 msgstr "Хариуцагч"
@@ -1002,7 +1035,7 @@ msgstr "LinkedIn"
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "October"
-msgstr "10 сар"
+msgstr "10-р сар"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -1015,7 +1048,8 @@ msgid "Reply"
 msgstr "Хариулах"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
+#: model:crm.meeting.type,name:hr_recruitment.categ_meet_interview
+#: view:hr.job:0
 msgid "Interview"
 msgstr "Ярилцлага"
 
@@ -1032,7 +1066,7 @@ msgstr "Тайлбар"
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "May"
-msgstr "5 сар"
+msgstr "5-р сар"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job5
@@ -1042,11 +1076,13 @@ msgstr "Батлагдсан хөдөлмөрийн гэрээ"
 #. module: hr_recruitment
 #: model:hr.recruitment.source,name:hr_recruitment.source_word
 msgid "Word of Mouth"
-msgstr "Амны Үг"
+msgstr "Аман яриа"
 
 #. module: hr_recruitment
-#: selection:hr.applicant,state:0 selection:hr.recruitment.report,state:0
+#: selection:hr.applicant,state:0
+#: selection:hr.recruitment.report,state:0
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job6
+#: selection:hr.recruitment.stage,state:0
 msgid "Refused"
 msgstr "Татгалзсан"
 
@@ -1057,8 +1093,10 @@ msgid "Applicant '%s' is being hired."
 msgstr "'%s' горилогчийг ажилд авлаа."
 
 #. module: hr_recruitment
-#: selection:hr.applicant,state:0 view:hr.recruitment.report:0
+#: selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0
 #: selection:hr.recruitment.report,state:0
+#: selection:hr.recruitment.stage,state:0
 msgid "Hired"
 msgstr "Ажилд орсон"
 
@@ -1071,7 +1109,7 @@ msgstr "Дундажаар"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
 msgid "Degree of Recruitment"
-msgstr "Боловсролын түвшин"
+msgstr "Хүний нөөц бүрдүүлэлтийн зэрэг"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -1081,10 +1119,11 @@ msgstr "Нээлттэй ажлын байрууд"
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "February"
-msgstr "2 сар"
+msgstr "2-р сар"
 
 #. module: hr_recruitment
-#: field:hr.applicant,name:0 field:hr.recruitment.degree,name:0
+#: field:hr.applicant_category,name:0
+#: field:hr.recruitment.degree,name:0
 #: field:hr.recruitment.stage,name:0
 msgid "Name"
 msgstr "Нэр"
@@ -1102,12 +1141,12 @@ msgstr "2 дахь ярилцлага"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_partner_create
 msgid "Create Partner from job application"
-msgstr "Хүний нөөцийн бүрдүүлэлтийн хүсэлтээс харилцагч үүсгэх"
+msgstr "Ажилд орох өргөдлөөс харилцагч үүсгэх"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "April"
-msgstr "4 сар"
+msgstr "4-р сар"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -1143,7 +1182,7 @@ msgstr "Дараалал"
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bachelor
 msgid "Bachelor Degree"
-msgstr "Баклавр"
+msgstr "Бакалавр"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.job2phonecall,user_id:0
@@ -1163,9 +1202,8 @@ msgstr "Байгууллагын санал болгосон цалин боло
 
 #. module: hr_recruitment
 #: help:hr.recruitment.report,delay_close:0
-#: help:hr.recruitment.report,delay_open:0
 msgid "Number of Days to close the project issue"
-msgstr "Төслийн даалгаврыг хаах хүртэл өдрийн тоо"
+msgstr "Төслийн даалгаврыг хаах хүртэлх хоногийн тоо"
 
 #. module: hr_recruitment
 #: field:hr.applicant,survey:0

@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-14 05:09+0000\n"
-"X-Generator: Launchpad (build 16491)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:21+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: sale
 #: field:sale.config.picking_policy,timesheet:0
@@ -71,6 +71,7 @@ msgstr "Өдөр"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
+#: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Захиалга цуцлах"
 
@@ -289,7 +290,7 @@ msgid "Sales Make Invoice"
 msgstr "Борлуулалтаас Нэхэмжлэх"
 
 #. module: sale
-#: code:addons/sale/sale.py:300
+#: code:addons/sale/sale.py:308
 #, python-format
 msgid "Pricelist Warning!"
 msgstr "Үнийн жагсаалтын Сануулга!"
@@ -354,7 +355,7 @@ msgstr ""
 "үүсдэг."
 
 #. module: sale
-#: code:addons/sale/sale.py:857
+#: code:addons/sale/sale.py:865
 #, python-format
 msgid "No Customer Defined !"
 msgstr "Захиалагч тодорхойлогдоогүй байна !"
@@ -465,7 +466,7 @@ msgstr "Үнийн Саналын Огноо"
 #. module: sale
 #: field:sale.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr "Санхүүгийн орлуулалт"
+msgstr "Санхүүгийн харгалзаа"
 
 #. module: sale
 #: view:sale.order:0
@@ -566,7 +567,7 @@ msgid "Ordered month of the sales order"
 msgstr "Борлуулалтын захиалгын захиалагдсан сар"
 
 #. module: sale
-#: code:addons/sale/sale.py:502
+#: code:addons/sale/sale.py:510
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
@@ -771,7 +772,7 @@ msgid "# of Qty"
 msgstr "Нийт тоо хэмжээ"
 
 #. module: sale
-#: code:addons/sale/res_config.py:89
+#: code:addons/sale/res_config.py:97
 #, python-format
 msgid "Hour"
 msgstr "Цаг"
@@ -808,7 +809,7 @@ msgid "You cannot confirm a sale order which has no line."
 msgstr "Мөр байхгүй борлуулалтын захиалгыг батлах боломжгүй."
 
 #. module: sale
-#: code:addons/sale/sale.py:935
+#: code:addons/sale/sale.py:942
 #, python-format
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
@@ -922,7 +923,7 @@ msgstr ""
 "захиалгын огноо дээр ажиллахыг хүлээж байгаа төлөв юм."
 
 #. module: sale
-#: code:addons/sale/sale.py:948
+#: code:addons/sale/sale.py:955
 #, python-format
 msgid "No valid pricelist line found ! :"
 msgstr "Тохирох үнийн жагсаалт олдсонгүй !"
@@ -984,8 +985,6 @@ msgstr "Миний Борлуулалтын Захиалгын Мөрүүд"
 #: model:process.transition.action,name:sale.process_transition_action_cancel0
 #: view:sale.advance.payment.inv:0
 #: view:sale.make.invoice:0
-#: view:sale.order:0
-#: view:sale.order.line:0
 #: view:sale.order.line.make.invoice:0
 msgid "Cancel"
 msgstr "Цуцлах"
@@ -1419,7 +1418,7 @@ msgid "Invoice Based on Sales Orders"
 msgstr "Захиалга дээр үндэслэсэн нэхэмжлэл"
 
 #. module: sale
-#: code:addons/sale/sale.py:301
+#: code:addons/sale/sale.py:309
 #, python-format
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
@@ -1600,7 +1599,7 @@ msgid "Confirmed sale order lines, not yet delivered"
 msgstr "Батлагдсан боловч хараахан хүргэгдээгүй борлуулалтын мөр"
 
 #. module: sale
-#: code:addons/sale/sale.py:441
+#: code:addons/sale/sale.py:449
 #, python-format
 msgid "Customer Invoices"
 msgstr "Захиалагчийн нэхэмжлэл"
@@ -1943,8 +1942,8 @@ msgid "Sales by Month"
 msgstr "Борлуулалт Сараар"
 
 #. module: sale
-#: code:addons/sale/sale.py:280
-#: code:addons/sale/sale.py:578
+#: code:addons/sale/sale.py:288
+#: code:addons/sale/sale.py:586
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
@@ -2296,7 +2295,7 @@ msgid "Close"
 msgstr "Хаах"
 
 #. module: sale
-#: code:addons/sale/sale.py:937
+#: code:addons/sale/sale.py:944
 #, python-format
 msgid "No Pricelist ! : "
 msgstr "Үнийн жагсаалт алга ! : "

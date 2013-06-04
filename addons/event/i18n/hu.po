@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:43+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2013-05-29 06:58+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: event
 #: view:event.event:0
@@ -65,8 +65,7 @@ msgid "Make Invoices"
 msgstr "Számlák készítése"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
+#: field:event.registration,date_open:0
 msgid "Registration Date"
 msgstr "Regisztráció idopontja"
 
@@ -127,12 +126,8 @@ msgid "Pricelist version for current event."
 msgstr "Árlista verzió az aktuális rendezvényhez"
 
 #. module: event
-#: code:addons/event/wizard/partner_event_registration.py:88
 #: view:event.registration:0
-#: model:ir.actions.act_window,name:event.action_partner_event_registration
 #: model:ir.model,name:event.model_event_registration
-#: view:partner.event.registration:0
-#, python-format
 msgid "Event Registration"
 msgstr "Rendezvény regisztráció"
 
@@ -169,12 +164,12 @@ msgstr "Belső jegyzet hozzáadása"
 #. module: event
 #: view:event.event:0
 msgid "Confirmed events"
-msgstr ""
+msgstr "Visszaigazolt események."
 
 #. module: event
 #: view:report.event.registration:0
 msgid "Event Beginning Date"
-msgstr ""
+msgstr "Esemény kezdő dátuma"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_report_event_registration
@@ -185,6 +180,7 @@ msgid "Events Analysis"
 msgstr "Rendezvények elemzése"
 
 #. module: event
+#: field:event.event,message_ids:0
 #: field:event.registration,message_ids:0
 msgid "Messages"
 msgstr "Üzenetek"
@@ -205,16 +201,15 @@ msgid "Ticket for Opera"
 msgstr "Operajegy"
 
 #. module: event
-#: code:addons/event/event.py:125
 #: view:event.event:0
-#, python-format
 msgid "Confirm Event"
 msgstr "Rendezvény megerősítése"
 
 #. module: event
 #: selection:event.event,state:0
 #: selection:event.registration,state:0
-#: selection:report.event.registration,state:0
+#: selection:report.event.registration,event_state:0
+#: selection:report.event.registration,registration_state:0
 msgid "Cancelled"
 msgstr "Törölt"
 
@@ -279,8 +274,8 @@ msgid "Customer Invoices"
 msgstr "Kimenő számlák"
 
 #. module: event
-#: selection:event.event,state:0
-#: selection:report.event.registration,state:0
+#: selection:report.event.registration,event_state:0
+#: selection:report.event.registration,registration_state:0
 msgid "Draft"
 msgstr "Tervezet"
 
@@ -295,11 +290,9 @@ msgid " Event Type "
 msgstr " Rendezvény típusa "
 
 #. module: event
-#: view:event.event:0
 #: view:event.registration:0
 #: field:event.registration,event_id:0
 #: model:ir.model,name:event.model_event_event
-#: field:partner.event.registration,event_id:0
 #: view:report.event.registration:0
 #: field:report.event.registration,event_id:0
 #: view:res.partner:0
@@ -317,7 +310,8 @@ msgstr "Névjegytáblák"
 #: selection:event.event,state:0
 #: view:event.registration:0
 #: selection:event.registration,state:0
-#: selection:report.event.registration,state:0
+#: selection:report.event.registration,event_state:0
+#: selection:report.event.registration,registration_state:0
 msgid "Confirmed"
 msgstr "Megerősítve"
 
@@ -329,12 +323,13 @@ msgstr "Regisztráció megerősítése"
 #. module: event
 #: view:event.event:0
 msgid "Events in New state"
-msgstr ""
+msgstr "Események új állapottal"
 
 #. module: event
+#: view:event.registration:0
 #: view:report.event.registration:0
 msgid "Confirm"
-msgstr ""
+msgstr "Megerősítés"
 
 #. module: event
 #: view:event.event:0
@@ -377,15 +372,13 @@ msgid "Location"
 msgstr "Helyszín"
 
 #. module: event
-#: view:event.event:0
 #: view:event.registration:0
 #: view:report.event.registration:0
 msgid "New"
-msgstr ""
+msgstr "Új"
 
 #. module: event
 #: field:event.event,register_current:0
-#: view:report.event.registration:0
 msgid "Confirmed Registrations"
 msgstr "Megerősített regisztrációk"
 
@@ -401,7 +394,7 @@ msgid "Type"
 msgstr "Típus"
 
 #. module: event
-#: field:event.registration,email_from:0
+#: field:event.registration,email:0
 msgid "Email"
 msgstr "E-mail"
 
@@ -430,8 +423,8 @@ msgid "Error !"
 msgstr "Hiba !"
 
 #. module: event
-#: field:event.event,name:0
-#: field:event.registration,name:0
+#: field:event.event,message_summary:0
+#: field:event.registration,message_summary:0
 msgid "Summary"
 msgstr "Összegzés"
 
@@ -472,7 +465,7 @@ msgstr "A rendezvény típusa: szeminárium, kiállítás, konferencia, képzés
 #. module: event
 #: view:event.registration:0
 msgid "Confirmed registrations"
-msgstr ""
+msgstr "Visszaigazolt jelentések"
 
 #. module: event
 #: view:event.event:0
@@ -491,7 +484,6 @@ msgstr "Dátumok"
 
 #. module: event
 #: view:event.confirm:0
-#: view:event.confirm.registration:0
 msgid "Confirm Anyway"
 msgstr "Megerősítés mindenféleképpen"
 
@@ -509,8 +501,6 @@ msgstr ""
 #. module: event
 #: view:event.event:0
 #: view:event.registration:0
-#: field:event.registration.badge,registration_id:0
-#: model:ir.actions.act_window,name:event.act_event_list_register_event
 msgid "Registration"
 msgstr "Regisztráció"
 
@@ -522,7 +512,7 @@ msgstr "Rendezvények száma"
 #. module: event
 #: help:event.event,main_speaker_id:0
 msgid "Speaker who will be giving speech at the event."
-msgstr ""
+msgstr "Felszólalók akik beszédet mondanak az eseményen."
 
 #. module: event
 #: help:event.event,state:0
@@ -544,7 +534,6 @@ msgid "Contact"
 msgstr "Kapcsolat"
 
 #. module: event
-#: view:event.event:0
 #: view:event.registration:0
 #: field:event.registration,partner_id:0
 #: model:ir.model,name:event.model_res_partner
@@ -552,11 +541,10 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: event
-#: view:board.board:0
 #: model:ir.actions.act_window,name:event.act_event_reg
 #: view:report.event.registration:0
 msgid "Events Filling Status"
-msgstr ""
+msgstr "Események megtöltésénak állapota"
 
 #. module: event
 #: field:event.make.invoice,grouped:0
@@ -574,7 +562,6 @@ msgid "Events States"
 msgstr ""
 
 #. module: event
-#: view:board.board:0
 #: field:event.event,register_prospect:0
 msgid "Unconfirmed Registrations"
 msgstr "Meg nem erősített regisztrációk"
@@ -596,11 +583,7 @@ msgstr "Naplók"
 
 #. module: event
 #: view:event.event:0
-#: field:event.event,state:0
-#: view:event.registration:0
-#: field:event.registration,state:0
-#: view:report.event.registration:0
-#: field:report.event.registration,state:0
+#: field:event.event,state_id:0
 msgid "State"
 msgstr "Állapot"
 
@@ -638,7 +621,7 @@ msgstr "Rendezvény kész"
 #. module: event
 #: view:event.registration:0
 msgid "Registrations in unconfirmed state"
-msgstr ""
+msgstr "A visszaigazoltalan állapotú jelentkezések"
 
 #. module: event
 #: help:event.event,register_current:0
@@ -709,13 +692,17 @@ msgstr "Lezárt"
 #. module: event
 #: view:report.event.registration:0
 msgid "Events which are in New state"
-msgstr ""
+msgstr "Események, melyeknek új állapotuk van"
 
 #. module: event
 #: view:event.event:0
 #: model:ir.actions.act_window,name:event.action_event_view
+#: model:ir.actions.act_window,name:event.open_board_associations_manager
+#: model:ir.module.category,name:event.module_category_event_management
+#: model:ir.ui.menu,name:event.event_main_menu
+#: model:ir.ui.menu,name:event.menu_board_associations_manager
 #: model:ir.ui.menu,name:event.menu_event_event
-#: model:ir.ui.menu,name:event.menu_event_event_assiciation
+#: model:ir.ui.menu,name:event.menu_reporting_events
 #: view:res.partner:0
 msgid "Events"
 msgstr "Rendezvények"
@@ -787,7 +774,7 @@ msgid "Active"
 msgstr "Aktív"
 
 #. module: event
-#: field:event.registration,date:0
+#: field:event.event,date_begin:0
 msgid "Start Date"
 msgstr "Kezdő dátum"
 
@@ -838,17 +825,13 @@ msgid "Set To Draft"
 msgstr "Beállítás tervezetnek"
 
 #. module: event
-#: code:addons/event/event.py:499
 #: view:event.event:0
 #: view:event.registration:0
 #: view:res.partner:0
-#, python-format
 msgid "Confirm Registration"
 msgstr "Regisztráció megerősítése"
 
 #. module: event
-#: view:event.event:0
-#: view:report.event.registration:0
 #: view:res.partner:0
 msgid "Date"
 msgstr "Dátum"
@@ -866,7 +849,7 @@ msgstr "Megerősítő e-mail levéltörzse"
 #. module: event
 #: view:report.event.registration:0
 msgid "Registrations in confirmed or done state"
-msgstr ""
+msgstr "A jelentkezés visszaigazolt vagy lezárt állapotú"
 
 #. module: event
 #: view:event.registration:0
@@ -918,12 +901,8 @@ msgstr ""
 "Hiba ! A befejezés időpontja nem lehet előbb mint a kezdés időpontja."
 
 #. module: event
-#: code:addons/event/event.py:446
 #: selection:event.event,state:0
-#: view:event.make.invoice:0
-#: selection:event.registration,state:0
-#: selection:report.event.registration,state:0
-#, python-format
+#: selection:report.event.registration,event_state:0
 msgid "Done"
 msgstr "Kész"
 
@@ -945,8 +924,7 @@ msgid "Year"
 msgstr "Év"
 
 #. module: event
-#: code:addons/event/event.py:465
-#, python-format
+#: view:event.confirm:0
 msgid "Cancel"
 msgstr "Mégsem"
 
@@ -983,9 +961,6 @@ msgstr ""
 #. module: event
 #: view:event.event:0
 #: view:event.registration:0
-#: field:event.registration,user_id:0
-#: view:report.event.registration:0
-#: field:report.event.registration,user_id:0
 msgid "Responsible"
 msgstr "Felelős"
 
@@ -1043,10 +1018,7 @@ msgid "Product"
 msgstr "Termék"
 
 #. module: event
-#: view:event.event:0
 #: field:event.event,note:0
-#: view:event.registration:0
-#: field:event.registration,description:0
 msgid "Description"
 msgstr "Leírás"
 
@@ -1056,6 +1028,7 @@ msgid " # No of Confirmed Registrations"
 msgstr " Megerősített regisztrációk száma"
 
 #. module: event
+#: view:event.event:0
 #: model:ir.actions.act_window,name:event.act_register_event_partner
 msgid "Subscribe"
 msgstr "Feliratkozás"
@@ -1113,6 +1086,8 @@ msgid "Beginning Date of Event"
 msgstr "Rendezvény kezdő időpontja"
 
 #. module: event
+#: view:event.event:0
+#: selection:event.event,state:0
 #: selection:event.registration,state:0
 msgid "Unconfirmed"
 msgstr "Nincs megerősítve"
@@ -1124,7 +1099,7 @@ msgid "Auto Registration: [%s] %s"
 msgstr "Automatikus regisztráció: [%s] %s"
 
 #. module: event
-#: field:event.registration,date_deadline:0
+#: field:event.event,date_end:0
 msgid "End Date"
 msgstr "Befejezés dátuma"
 
@@ -1136,11 +1111,12 @@ msgstr "Február"
 #. module: event
 #: view:board.board:0
 msgid "Association Dashboard"
-msgstr ""
+msgstr "Társítási műszerfal"
 
 #. module: event
 #: view:event.event:0
-#: field:event.registration.badge,name:0
+#: field:event.event,name:0
+#: field:event.registration,name:0
 msgid "Name"
 msgstr "Név"
 
@@ -1153,6 +1129,7 @@ msgid "Sale Team"
 msgstr "Értékesítési csapat"
 
 #. module: event
+#: view:event.event:0
 #: field:event.event,country_id:0
 msgid "Country"
 msgstr "Ország"
@@ -1164,11 +1141,7 @@ msgid "Registration is set as Cannot be invoiced"
 msgstr "A regisztráció nem számlázhatóként került beállításra."
 
 #. module: event
-#: code:addons/event/event.py:527
-#: view:event.event:0
-#: view:event.registration:0
 #: view:res.partner:0
-#, python-format
 msgid "Close Registration"
 msgstr "Regisztráció lezárása"
 
@@ -1187,29 +1160,31 @@ msgstr ""
 #. module: event
 #: view:report.event.registration:0
 msgid "Events which are in confirm state"
-msgstr ""
+msgstr "Események melyek visszaigazolt állapotúak"
 
 #. module: event
 #: view:event.event:0
 #: view:event.type:0
+#: field:event.type,name:0
 #: view:report.event.registration:0
-#: field:report.event.registration,type:0
+#: field:report.event.registration,event_type:0
 msgid "Event Type"
 msgstr "Rendezvény típusa"
 
 #. module: event
 #: view:event.event:0
 #: field:event.event,registration_ids:0
+#: model:ir.actions.act_window,name:event.act_event_list_register_event
 #: model:ir.actions.act_window,name:event.action_registration
 #: model:ir.ui.menu,name:event.menu_action_registration
-#: model:ir.ui.menu,name:event.menu_action_registration_association
+#: view:res.partner:0
 msgid "Registrations"
 msgstr "Regisztrációk"
 
 #. module: event
 #: field:event.registration,id:0
 msgid "ID"
-msgstr ""
+msgstr "Azonosító ID"
 
 #. module: event
 #: field:event.event,register_max:0
@@ -1223,7 +1198,8 @@ msgid "Error ! You cannot create recursive associated members."
 msgstr ""
 
 #. module: event
-#: field:report.event.registration,date:0
+#: field:event.registration,event_begin_date:0
+#: field:report.event.registration,event_date:0
 msgid "Event Start Date"
 msgstr "Rendezvény kezdő időpontja"
 

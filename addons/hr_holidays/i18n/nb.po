@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-24 07:38+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:02+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -66,6 +66,7 @@ msgstr "Godta forespørsler ."
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
+#: model:mail.message.subtype,name:hr_holidays.mt_holidays_refused
 msgid "Refused"
 msgstr "Avvist"
 
@@ -155,6 +156,7 @@ msgstr ""
 #: selection:hr.holidays,state:0
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
+#: model:mail.message.subtype,name:hr_holidays.mt_holidays_approved
 msgid "Approved"
 msgstr "Godkjent."
 
@@ -258,23 +260,23 @@ msgid "This area is automatically filled by the user who validate the leave"
 msgstr ""
 
 #. module: hr_holidays
+#: xsl:holidays.summary:0
 #: field:hr.holidays,holiday_status_id:0
 #: field:hr.holidays.remaining.leaves.user,leave_type:0
 #: view:hr.holidays.status:0
 #: field:hr.holidays.status,name:0
 #: field:hr.holidays.summary.dept,holiday_type:0
 #: model:ir.model,name:hr_holidays.model_hr_holidays_status
-#: model:ir.ui.menu,name:hr_holidays.menu_open_view_holiday_status
 msgid "Leave Type"
 msgstr "Etterlate type."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:230
-#: code:addons/hr_holidays/hr_holidays.py:241
-#: code:addons/hr_holidays/hr_holidays.py:266
-#: code:addons/hr_holidays/hr_holidays.py:283
-#: code:addons/hr_holidays/hr_holidays.py:409
-#: code:addons/hr_holidays/hr_holidays.py:485
+#: code:addons/hr_holidays/hr_holidays.py:238
+#: code:addons/hr_holidays/hr_holidays.py:249
+#: code:addons/hr_holidays/hr_holidays.py:274
+#: code:addons/hr_holidays/hr_holidays.py:298
+#: code:addons/hr_holidays/hr_holidays.py:421
+#: code:addons/hr_holidays/hr_holidays.py:471
 #, python-format
 msgid "Warning!"
 msgstr "Advarsel!"
@@ -308,7 +310,7 @@ msgid "Confirm"
 msgstr "Bekreft"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:492
+#: code:addons/hr_holidays/hr_holidays.py:478
 #, python-format
 msgid "Leave Request for %s"
 msgstr "Etterlat forespørsel for %s"
@@ -379,7 +381,7 @@ msgid "Error! leave start-date must be lower then leave end-date."
 msgstr "Feil! la startdato være lavere enn forlate sluttdato."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:490
+#: code:addons/hr_holidays/hr_holidays.py:476
 #, python-format
 msgid "Allocation for %s"
 msgstr "Avsetning for% s"
@@ -387,12 +389,11 @@ msgstr "Avsetning for% s"
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: field:hr.holidays,number_of_days:0
-#: field:hr.holidays,number_of_days_temp:0
 msgid "Number of Days"
 msgstr "Antall dager."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:485
+#: code:addons/hr_holidays/hr_holidays.py:471
 #, python-format
 msgid ""
 "The feature behind the field 'Remaining Legal Leaves' can only be used when "
@@ -466,12 +467,13 @@ msgstr "Lavendel"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
-#: view:hr.holidays:0
 msgid "Month"
 msgstr "Måned."
 
 #. module: hr_holidays
 #: view:hr.holidays:0
+#: model:ir.actions.act_window,name:hr_holidays.open_ask_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays_new
 msgid "Leave Requests"
 msgstr "Etterlat forespørsel."
 
@@ -488,7 +490,6 @@ msgstr "Ansattes Ferier."
 
 #. module: hr_holidays
 #: view:hr.holidays:0
-#: field:hr.holidays,category_id:0
 msgid "Category"
 msgstr "Kategori"
 
@@ -599,6 +600,7 @@ msgid "Unpaid"
 msgstr "Ikke betalt."
 
 #. module: hr_holidays
+#: xsl:holidays.summary:0
 #: view:hr.holidays:0
 #: view:hr.holidays.summary.employee:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_employee
@@ -741,7 +743,7 @@ msgid "By Employee Category"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:328
+#: code:addons/hr_holidays/hr_holidays.py:343
 #: view:hr.holidays:0
 #: selection:hr.holidays,type:0
 #: field:resource.calendar.leaves,holiday_id:0
@@ -750,6 +752,7 @@ msgid "Leave Request"
 msgstr ""
 
 #. module: hr_holidays
+#: view:hr.holidays:0
 #: field:hr.holidays,name:0
 msgid "Description"
 msgstr ""
@@ -879,6 +882,8 @@ msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:0
+#: model:ir.actions.act_window,name:hr_holidays.open_allocation_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_open_allocation_holidays
 msgid "Allocation Requests"
 msgstr ""
 
@@ -910,5 +915,6 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: selection:hr.holidays,state:0
+#: model:mail.message.subtype,name:hr_holidays.mt_holidays_confirmed
 msgid "To Approve"
 msgstr ""

@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:46+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:03+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: hr_payroll_account
 #: field:hr.payslip,move_id:0
@@ -34,8 +34,8 @@ msgid "Expense Journal"
 msgstr "Jurnal de cheltuieli"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:157
-#: code:addons/hr_payroll_account/hr_payroll_account.py:173
+#: code:addons/hr_payroll_account/hr_payroll_account.py:158
+#: code:addons/hr_payroll_account/hr_payroll_account.py:174
 #, python-format
 msgid "Adjustment Entry"
 msgstr "Ajustare Inregistrare"
@@ -58,8 +58,10 @@ msgstr "Fluturas loturi"
 
 #. module: hr_payroll_account
 #: field:hr.contract,journal_id:0
+#: field:hr.payslip,journal_id:0
+#: field:hr.payslip.run,journal_id:0
 msgid "Salary Journal"
-msgstr "Jurnal salariu"
+msgstr "Registru Salarii"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip
@@ -77,24 +79,24 @@ msgstr ""
 #: help:hr.payslip,period_id:0
 msgid "Keep empty to use the period of the validation(Payslip) date."
 msgstr ""
-"Lasati necompletat pentru a folosi perioada pentru data validării (Fluturas "
+"Lasati necompletat pentru a folosi perioada pentru data validarii (Fluturas "
 "de salariu)."
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:171
+#: code:addons/hr_payroll_account/hr_payroll_account.py:172
 #, python-format
 msgid ""
 "The Expense Journal \"%s\" has not properly configured the Debit Account!"
 msgstr ""
-"Jurnalul de cheltuieli \"%s\" nu a configurat corect Contul de Debit!"
+"Registrul de cheltuieli \"%s\" nu a configurat corect Contul de Debit!"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:155
+#: code:addons/hr_payroll_account/hr_payroll_account.py:156
 #, python-format
 msgid ""
 "The Expense Journal \"%s\" has not properly configured the Credit Account!"
 msgstr ""
-"Jurnalul de Cheltuieli \"%s\" nu a configurat corect Contul de Credit!"
+"Registrul de Cheltuieli \"%s\" nu a configurat corect Contul de Credit!"
 
 #. module: hr_payroll_account
 #: field:hr.salary.rule,account_debit:0
@@ -102,7 +104,7 @@ msgid "Debit Account"
 msgstr "Cont de Debit"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:102
+#: code:addons/hr_payroll_account/hr_payroll_account.py:103
 #, python-format
 msgid "Payslip of %s"
 msgstr "Fluturas de salariu al %s"
@@ -127,7 +129,7 @@ msgstr "Impune perioada"
 #. module: hr_payroll_account
 #: field:hr.salary.rule,account_credit:0
 msgid "Credit Account"
-msgstr "Cont de credit"
+msgstr "Cont de Credit"
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_employees
@@ -135,8 +137,8 @@ msgid "Generate payslips for all selected employees"
 msgstr "Generati fluturasii de salariu pentru toti angajatii selectati"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:155
-#: code:addons/hr_payroll_account/hr_payroll_account.py:171
+#: code:addons/hr_payroll_account/hr_payroll_account.py:156
+#: code:addons/hr_payroll_account/hr_payroll_account.py:172
 #, python-format
 msgid "Configuration Error!"
 msgstr "Eroare de configurare!"

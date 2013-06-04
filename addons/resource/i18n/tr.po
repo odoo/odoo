@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-09-08 05:29+0000\n"
-"X-Generator: Launchpad (build 15914)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:20+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: resource
 #: help:resource.calendar.leaves,resource_id:0
@@ -52,6 +52,7 @@ msgstr "İzin Kaynakları"
 #: view:resource.calendar:0
 #: field:resource.calendar,attendance_ids:0
 #: view:resource.calendar.attendance:0
+#: field:resource.calendar.leaves,calendar_id:0
 #: field:resource.resource,calendar_id:0
 msgid "Working Time"
 msgstr "Çalışma Süresi"
@@ -89,7 +90,7 @@ msgid "Resources"
 msgstr "Kaynaklar"
 
 #. module: resource
-#: code:addons/resource/resource.py:392
+#: code:addons/resource/resource.py:389
 #, python-format
 msgid "Make sure the Working time has been configured with proper week days!"
 msgstr ""
@@ -194,7 +195,6 @@ msgid "Resource"
 msgstr "Kaynak"
 
 #. module: resource
-#: view:resource.calendar:0
 #: field:resource.calendar,name:0
 #: field:resource.calendar.attendance,name:0
 #: field:resource.calendar.leaves,name:0
@@ -278,7 +278,7 @@ msgstr "Pazartesi"
 #. module: resource
 #: field:resource.calendar.attendance,hour_to:0
 msgid "Work to"
-msgstr ""
+msgstr "Çalışılacak"
 
 #. module: resource
 #: help:resource.resource,time_efficiency:0
@@ -325,7 +325,7 @@ msgid "(vacation)"
 msgstr "(tatil)"
 
 #. module: resource
-#: code:addons/resource/resource.py:392
+#: code:addons/resource/resource.py:389
 #, python-format
 msgid "Configuration Error!"
 msgstr "Yapılandırma Hatası!"

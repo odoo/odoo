@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-11 05:12+0000\n"
-"X-Generator: Launchpad (build 16251)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:24+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -46,13 +46,15 @@ msgid "Chained Location If Fixed"
 msgstr "Zincirlenmiş Lokasyon Sabit ise"
 
 #. module: stock
-#: view:stock.inventory:0 view:stock.move:0 view:stock.picking:0
+#: view:stock.inventory:0
+#: view:stock.move:0
 msgid "Put in a new pack"
 msgstr "Yeni bir pakete yerleştir"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_traceability.py:54
 #: view:stock.production.lot:0
+#: view:stock.tracking:0
 #, python-format
 msgid "Upstream Traceability"
 msgstr "Üretime Dönük İzlenebilirlik"
@@ -84,8 +86,10 @@ msgid "Orders processed Today or planned for Today"
 msgstr "Bugün işlenen ya da Bugün için planlanan Siparişler"
 
 #. module: stock
-#: view:stock.partial.move.line:0 view:stock.partial.picking:0
-#: field:stock.partial.picking,move_ids:0 view:stock.partial.picking.line:0
+#: view:stock.partial.move.line:0
+#: view:stock.partial.picking:0
+#: field:stock.partial.picking,move_ids:0
+#: view:stock.partial.picking.line:0
 #: view:stock.return.picking.memory:0
 msgid "Product Moves"
 msgstr "Ürün Hareketleri"
@@ -111,7 +115,7 @@ msgstr ""
 "Üretici seri numarasından farklı olması durumunda dahili referans numarası"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_fill_inventory.py:47
+#: code:addons/stock/wizard/stock_fill_inventory.py:59
 #, python-format
 msgid "You cannot perform this operation on more than one Stock Inventories."
 msgstr "Bu işlemi birden fazla stok kalemi üzerinde uygulayamazsınız."
@@ -129,30 +133,36 @@ msgstr ""
 "kullanabilirsiniz."
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:87
+#: code:addons/stock/wizard/stock_change_product_qty.py:91
 #, python-format
 msgid "Quantity cannot be negative."
 msgstr "Miktar eksi olamaz"
 
 #. module: stock
 #: view:stock.picking:0
+#: view:stock.picking.in:0
 msgid "Picking list"
-msgstr "Alım listesi"
+msgstr "Seçim listesi"
 
 #. module: stock
-#: report:lot.stock.overview:0 report:lot.stock.overview_all:0
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
 #: field:report.stock.inventory,product_qty:0
 #: field:report.stock.move,product_qty:0
-#: field:stock.change.product.qty,new_quantity:0
 #: field:stock.inventory.line,product_qty:0
 #: field:stock.inventory.line.split,qty:0
 #: field:stock.inventory.line.split.lines,quantity:0
-#: report:stock.inventory.move:0 field:stock.move,product_qty:0
-#: field:stock.move.consume,product_qty:0 field:stock.move.scrap,product_qty:0
-#: field:stock.move.split,qty:0 field:stock.move.split.lines,quantity:0
+#: report:stock.inventory.move:0
+#: field:stock.move,product_qty:0
+#: field:stock.move.consume,product_qty:0
+#: field:stock.move.scrap,product_qty:0
+#: field:stock.move.split,qty:0
+#: field:stock.move.split.lines,quantity:0
 #: field:stock.partial.move.line,quantity:0
-#: field:stock.partial.picking.line,quantity:0 report:stock.picking.list:0
-#: field:stock.report.prodlots,qty:0 field:stock.report.tracklots,name:0
+#: field:stock.partial.picking.line,quantity:0
+#: report:stock.picking.list:0
+#: field:stock.report.prodlots,qty:0
+#: field:stock.report.tracklots,name:0
 #: field:stock.return.picking.memory,quantity:0
 #: field:stock.split.into,quantity:0
 msgid "Quantity"
@@ -168,7 +178,8 @@ msgstr ""
 "gereken tüm teslimat siparişlerinin listesidir."
 
 #. module: stock
-#: view:report.stock.move:0 field:report.stock.move,day:0
+#: view:report.stock.move:0
+#: field:report.stock.move,day:0
 msgid "Day"
 msgstr "Gün"
 
@@ -183,13 +194,13 @@ msgstr "Ölçü Birimi"
 #: model:ir.actions.act_window,name:stock.action_inventory_form
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 msgid "Physical Inventories"
-msgstr "Fiziksel Stoklar"
+msgstr "Fiziksel Envanterler"
 
 #. module: stock
-#: field:product.category,property_stock_journal:0 view:report.stock.move:0
+#: view:report.stock.move:0
 #: field:stock.change.standard.price,stock_journal:0
 msgid "Stock journal"
-msgstr "Stok Defteri"
+msgstr "Stok Yevmiye"
 
 #. module: stock
 #: view:report.stock.inventory:0 view:report.stock.move:0
@@ -197,7 +208,7 @@ msgid "Current month"
 msgstr "Bu ay"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_move.py:222
+#: code:addons/stock/wizard/stock_move.py:223
 #, python-format
 msgid "Unable to assign all lots to this move!"
 msgstr "Bu harekete bütün partiler atanamıyor."
@@ -211,11 +222,11 @@ msgstr "#%s hareketi için kısmi alım verileri eksik"
 #. module: stock
 #: model:ir.actions.server,name:stock.action_partial_move_server
 msgid "Deliver/Receive Products"
-msgstr "Ürün Alma/Teslim Etme"
+msgstr "Teslimat/Kabul Ürünler"
 
 #. module: stock
 #: code:addons/stock/report/report_stock.py:78
-#: code:addons/stock/report/report_stock.py:135
+#: code:addons/stock/report/report_stock.py:134
 #, python-format
 msgid "You cannot delete any record!"
 msgstr "Hehangi bir kaydı silemezsiniz!"
@@ -223,18 +234,18 @@ msgstr "Hehangi bir kaydı silemezsiniz!"
 #. module: stock
 #: view:stock.picking:0
 msgid "Delivery orders to invoice"
-msgstr "Faturalanacak teslimat emirleri"
+msgstr "Faturalanacak teslimat siparişleri"
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Assigned Delivery Orders"
-msgstr "Atanmış Teslimat Emirleri"
+msgstr "Atanmış Teslimat Sipariş"
 
 #. module: stock
 #: field:stock.partial.move.line,update_cost:0
 #: field:stock.partial.picking.line,update_cost:0
 msgid "Need cost update"
-msgstr "Maliyein güncellenmesi gerekiyor"
+msgstr "Maliyet güncellenme gerekiyor"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_splitinto.py:49
@@ -250,6 +261,8 @@ msgstr ""
 
 #. module: stock
 #: selection:stock.picking,invoice_state:0
+#: selection:stock.picking.in,invoice_state:0
+#: selection:stock.picking.out,invoice_state:0
 msgid "Not Applicable"
 msgstr "Uygulanabilir Değil"
 
@@ -259,9 +272,10 @@ msgid "Other reference or serial number"
 msgstr "Diğer referans veya seri numarası"
 
 #. module: stock
-#: field:stock.move,origin:0 view:stock.picking:0 field:stock.picking,origin:0
+#: view:stock.move:0
+#: view:stock.picking:0
 msgid "Origin"
-msgstr "Menşei"
+msgstr "Orjini"
 
 #. module: stock
 #: view:board.board:0
@@ -277,18 +291,23 @@ msgstr "Faturalandırılmamış"
 #. module: stock
 #: code:addons/stock/wizard/stock_traceability.py:54
 #: view:stock.production.lot:0
+#: view:stock.tracking:0
 #, python-format
 msgid "Downstream Traceability"
 msgstr "Çıkış İzlenebilirliği"
 
 #. module: stock
-#: view:stock.move:0 field:stock.move,picking_id:0 field:stock.picking,name:0
+#: view:stock.move:0
+#: field:stock.move,picking_id:0
+#: field:stock.picking,name:0
+#: field:stock.picking.in,name:0
+#: field:stock.picking.out,name:0
 #: view:stock.production.lot:0
 msgid "Reference"
-msgstr "Kaynak"
+msgstr "Referans"
 
 #. module: stock
-#: code:addons/stock/stock.py:670 code:addons/stock/stock.py:1516
+#: code:addons/stock/stock.py:1548
 #, python-format
 msgid "Products to Process"
 msgstr "İşlenecek Ürünler"
@@ -303,9 +322,9 @@ msgstr ""
 "gerçekleştirilmesine yardımcı olmak üzere sıfırlanacaktır"
 
 #. module: stock
-#: view:stock.partial.move:0 view:stock.partial.picking:0
+#: view:stock.partial.move:0
 msgid "_Validate"
-msgstr "Onayla"
+msgstr "_Onaylama"
 
 #. module: stock
 #: code:addons/stock/stock.py:1149
@@ -314,11 +333,22 @@ msgid "You cannot cancel picking because stock move is in done state !"
 msgstr "Stok hareketi yapıldı durumunda olduğundan alımı iptal edemezsiniz!"
 
 #. module: stock
-#: code:addons/stock/stock.py:2337 code:addons/stock/stock.py:2379
-#: code:addons/stock/stock.py:2440
-#: code:addons/stock/wizard/stock_change_product_qty.py:87
-#: code:addons/stock/wizard/stock_fill_inventory.py:53
-#: code:addons/stock/wizard/stock_partial_picking.py:141
+#: code:addons/stock/stock.py:768
+#: code:addons/stock/stock.py:2475
+#: code:addons/stock/stock.py:2519
+#: code:addons/stock/stock.py:2580
+#: code:addons/stock/wizard/stock_change_product_qty.py:91
+#: code:addons/stock/wizard/stock_fill_inventory.py:124
+#: code:addons/stock/wizard/stock_inventory_merge.py:43
+#: code:addons/stock/wizard/stock_inventory_merge.py:63
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:96
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:98
+#: code:addons/stock/wizard/stock_partial_picking.py:174
+#: code:addons/stock/wizard/stock_partial_picking.py:181
+#: code:addons/stock/wizard/stock_partial_picking.py:192
+#: code:addons/stock/wizard/stock_return_picking.py:102
+#: code:addons/stock/wizard/stock_return_picking.py:109
+#: code:addons/stock/wizard/stock_return_picking.py:208
 #, python-format
 msgid "Warning!"
 msgstr "Uyarı!"
@@ -326,16 +356,20 @@ msgstr "Uyarı!"
 #. module: stock
 #: field:stock.invoice.onshipping,group:0
 msgid "Group by partner"
-msgstr "Paydaşa göre Gruplandır"
+msgstr "Grupla partner ile"
 
 #. module: stock
-#: model:ir.model,name:stock.model_res_partner view:report.stock.inventory:0
-#: field:report.stock.inventory,partner_id:0 view:report.stock.move:0
-#: field:report.stock.move,partner_id:0 view:stock.move:0
-#: field:stock.move,partner_id:0 view:stock.picking:0
+#: model:ir.model,name:stock.model_res_partner
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,partner_id:0
+#: view:report.stock.move:0
+#: field:report.stock.move,partner_id:0
+#: view:stock.move:0
 #: field:stock.picking,partner_id:0
+#: field:stock.picking.in,partner_id:0
+#: field:stock.picking.out,partner_id:0
 msgid "Partner"
-msgstr "Paydaş"
+msgstr "Partner"
 
 #. module: stock
 #: code:addons/stock/stock.py:2119
@@ -375,7 +409,7 @@ msgid "Moves for this pack"
 msgstr "Bu pakete ait hareketler"
 
 #. module: stock
-#: view:stock.picking:0
+#: view:stock.picking.in:0
 msgid "Incoming Shipments Available"
 msgstr "Mevcut Gelen Sevkiyatlar"
 
@@ -383,7 +417,7 @@ msgstr "Mevcut Gelen Sevkiyatlar"
 #: selection:report.stock.inventory,location_type:0
 #: selection:stock.location,usage:0
 msgid "Internal Location"
-msgstr "İç Konum"
+msgstr "Dahili lokasyon"
 
 #. module: stock
 #: view:stock.location.product:0
@@ -414,7 +448,7 @@ msgstr "Muahsebe Bilgisi"
 #. module: stock
 #: field:stock.location,stock_real_value:0
 msgid "Real Stock Value"
-msgstr "Fiili Stok Değeri"
+msgstr "Gerçek Stok Değeri"
 
 #. module: stock
 #: field:report.stock.move,day_diff2:0
@@ -433,14 +467,16 @@ msgstr "Ölçü Birimi"
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
-#: selection:report.stock.move,state:0 view:stock.move:0
-#: selection:stock.move,state:0 view:stock.picking:0
-#: view:stock.production.lot:0 field:stock.production.lot,stock_available:0
+#: selection:report.stock.move,state:0
+#: selection:stock.move,state:0
+#: view:stock.production.lot:0
+#: field:stock.production.lot,stock_available:0
 msgid "Available"
 msgstr "Uygun"
 
 #. module: stock
-#: view:stock.picking:0 field:stock.picking,min_date:0
+#: view:stock.picking:0
+#: view:stock.picking.in:0
 msgid "Expected Date"
 msgstr "Tahmini Tarih"
 
@@ -465,7 +501,7 @@ msgstr "Bu lokasyonda ürün yok."
 #. module: stock
 #: field:stock.warehouse,lot_output_id:0
 msgid "Location Output"
-msgstr "Çıkış Konumu"
+msgstr "Lokasyon Çıkışı"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.split_into
@@ -476,12 +512,12 @@ msgstr "Böl"
 #. module: stock
 #: view:stock.location:0
 msgid "Internal Locations"
-msgstr "İç Konumlar"
+msgstr "Dahili Lokasyonlar"
 
 #. module: stock
 #: field:stock.move,price_currency_id:0
 msgid "Currency for average price"
-msgstr "Ortalama fiyat için para birimi"
+msgstr "Ortalama fiyat için paraBirimi"
 
 #. module: stock
 #: help:product.category,property_stock_valuation_account_id:0
@@ -493,12 +529,16 @@ msgstr ""
 "etkinleştirildiğinde, bu hesap ürünün mevcut değerini tutacaktır."
 
 #. module: stock
-#: field:report.stock.inventory,location_type:0 field:stock.location,usage:0
+#: field:report.stock.inventory,location_type:0
+#: field:stock.location,usage:0
 msgid "Location Type"
-msgstr "Konum Tipi"
+msgstr "Lokasyon Türü"
 
 #. module: stock
-#: help:report.stock.move,type:0 help:stock.picking,type:0
+#: help:report.stock.move,type:0
+#: help:stock.picking,type:0
+#: help:stock.picking.in,type:0
+#: help:stock.picking.out,type:0
 msgid "Shipping type specify, goods coming in or going out."
 msgstr "Sevkiyat tipi belirtimi, giren veya çıkan mallar."
 
@@ -549,8 +589,10 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_picking_tree6
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree6
 #: field:stock.picking,move_lines:0
+#: field:stock.picking.in,move_lines:0
+#: field:stock.picking.out,move_lines:0
 msgid "Internal Moves"
-msgstr "İç Hareketler"
+msgstr "Dahili Hareketler"
 
 #. module: stock
 #: field:stock.move,location_dest_id:0
@@ -560,7 +602,7 @@ msgstr "Hedef Lokasyon"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_partial_move_line
 msgid "stock.partial.move.line"
-msgstr "stok.kısmi.hareket.satır"
+msgstr "stock.partial.move.line"
 
 #. module: stock
 #: code:addons/stock/stock.py:760
@@ -577,10 +619,11 @@ msgstr "Paketleme"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Order(Origin)"
-msgstr "Emir (Menşe)"
+msgstr "Sipariş (Orjini)"
 
 #. module: stock
-#: report:lot.stock.overview:0 report:lot.stock.overview_all:0
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
 msgid "Grand Total:"
 msgstr "Genel Toplam:"
 
@@ -600,26 +643,27 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
 msgid "Inventory Control"
-msgstr "Stok Kontrolü"
+msgstr "Envanter Kontrolü"
 
 #. module: stock
-#: view:stock.location:0 field:stock.location,comment:0
+#: view:stock.location:0
+#: field:stock.location,comment:0
 msgid "Additional Information"
-msgstr "Ek Bilgi"
+msgstr "Ek Bilgisi"
 
 #. module: stock
-#: report:lot.stock.overview:0 report:lot.stock.overview_all:0
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
 msgid "Location / Product"
 msgstr "Lokasyon / Ürün"
 
 #. module: stock
-#: field:stock.move,address_id:0
+#: field:stock.move,partner_id:0
 msgid "Destination Address "
 msgstr "Varış Adresi "
 
 #. module: stock
-#: code:addons/stock/stock.py:1333
-#, python-format
+#: field:product.product,reception_count:0
 msgid "Reception"
 msgstr "Kabul"
 
@@ -647,9 +691,10 @@ msgstr ""
 "verilebilir: kalite kontrol, alım listeleri, paketleme vb."
 
 #. module: stock
-#: field:stock.location,complete_name:0 field:stock.location,name:0
+#: field:stock.location,complete_name:0
+#: field:stock.location,name:0
 msgid "Location Name"
-msgstr "Konum Adı"
+msgstr "Lokasyon Adı"
 
 #. module: stock
 #: model:res.company,overdue_msg:stock.res_company_shop0
@@ -672,7 +717,7 @@ msgstr ""
 #. module: stock
 #: view:stock.inventory:0
 msgid "Posted Inventory"
-msgstr "Gönderilen Stok"
+msgstr "İşlenmiş Envanterler"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_tree4
@@ -720,7 +765,8 @@ msgstr "Ağustos"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_tracking_form
 #: model:ir.model,name:stock.model_stock_tracking
-#: model:ir.ui.menu,name:stock.menu_action_tracking_form view:stock.tracking:0
+#: model:ir.ui.menu,name:stock.menu_action_tracking_form
+#: view:stock.tracking:0
 msgid "Packs"
 msgstr "Paketler"
 
@@ -743,7 +789,7 @@ msgstr "Haziran"
 #. module: stock
 #: field:product.template,property_stock_procurement:0
 msgid "Procurement Location"
-msgstr "Satınalma Konumu"
+msgstr "Tedarik Lokasyonu"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_production_lot_form
@@ -771,6 +817,7 @@ msgid "Location Structure"
 msgstr "Lokasyon Yapısı"
 
 #. module: stock
+#: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "October"
 msgstr "Ekim"
@@ -778,7 +825,7 @@ msgstr "Ekim"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_line
 msgid "Inventory Line"
-msgstr "Stok Kalemi"
+msgstr "Envanter Satırı"
 
 #. module: stock
 #: help:product.category,property_stock_journal:0
@@ -793,15 +840,17 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_partial_picking
 msgid "Process Picking"
-msgstr "İşlem Alma"
+msgstr "Seçim Süreci"
 
 #. module: stock
 #: sql_constraint:stock.picking:0
+#: sql_constraint:stock.picking.in:0
+#: sql_constraint:stock.picking.out:0
 msgid "Reference must be unique per Company!"
 msgstr "Referans her şirket için tekil olmalı!"
 
 #. module: stock
-#: code:addons/stock/product.py:417
+#: code:addons/stock/product.py:447
 #, python-format
 msgid "Future Receptions"
 msgstr "Gelecek Kabuller"
@@ -838,9 +887,9 @@ msgid "Process Now"
 msgstr "Şimdi İşle"
 
 #. module: stock
-#: field:stock.location,address_id:0
+#: field:stock.location,partner_id:0
 msgid "Location Address"
-msgstr "Konum Adresi"
+msgstr "Lokasyon Adresi"
 
 #. module: stock
 #: help:stock.move,prodlot_id:0
@@ -850,7 +899,7 @@ msgstr "Üretim lotu ürüne bir seri numarası vermek için kullanılır"
 #. module: stock
 #: field:stock.warehouse,lot_input_id:0
 msgid "Location Input"
-msgstr "Konum Girişi"
+msgstr "Lokasyon Girişi"
 
 #. module: stock
 #: help:stock.picking,date:0
@@ -865,7 +914,7 @@ msgstr "Periyodik (manuel)"
 #. module: stock
 #: model:stock.location,name:stock.location_procurement
 msgid "Procurements"
-msgstr "Satınalmalar"
+msgstr "Tedarikler"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_3
@@ -889,9 +938,7 @@ msgid "Automatic Move"
 msgstr "Otomatik Hareket"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_view_change_product_quantity
 #: model:ir.model,name:stock.model_stock_change_product_qty
-#: view:stock.change.product.qty:0
 msgid "Change Product Quantity"
 msgstr "Ürün Miktarını Değiştir"
 
@@ -903,24 +950,25 @@ msgstr "bilinmeyen"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_merge
 msgid "Merge Inventory"
-msgstr "Stok Birleştir"
+msgstr "Envanter Birleştir"
 
 #. module: stock
-#: code:addons/stock/product.py:433
+#: code:addons/stock/product.py:463
 #, python-format
 msgid "Future P&L"
-msgstr "Gelecek Kâr ve Zarar"
+msgstr "Gelecek Kâr&Zarar"
 
 #. module: stock
-#: view:board.board:0
-#: model:ir.actions.act_window,name:stock.action_incoming_product_board
 #: model:ir.actions.act_window,name:stock.action_picking_tree4
-#: model:ir.ui.menu,name:stock.menu_action_picking_tree4 view:stock.picking:0
+#: model:ir.model,name:stock.model_stock_picking_in
+#: model:ir.ui.menu,name:stock.menu_action_picking_tree4
+#: view:stock.picking.in:0
 msgid "Incoming Shipments"
 msgstr "Gelen Sevkiyatlar"
 
 #. module: stock
-#: view:report.stock.inventory:0 view:stock.move:0 view:stock.picking:0
+#: view:report.stock.inventory:0
+#: view:stock.move:0
 msgid "Scrap"
 msgstr "Hurda"
 
@@ -940,7 +988,8 @@ msgid "Incoming"
 msgstr "Gelen"
 
 #. module: stock
-#: report:lot.stock.overview:0 report:lot.stock.overview_all:0
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
 #: field:stock.move,price_unit:0
 msgid "Unit Price"
 msgstr "Birim Fiyat"
@@ -948,7 +997,7 @@ msgstr "Birim Fiyat"
 #. module: stock
 #: field:stock.move,date_expected:0
 msgid "Scheduled Date"
-msgstr "Planlanan Tarih"
+msgstr "Zamanlan Tarih"
 
 #. module: stock
 #: view:stock.tracking:0
@@ -958,27 +1007,31 @@ msgstr "Paket Arama"
 #. module: stock
 #: view:stock.picking:0
 msgid "Pickings already processed"
-msgstr "Toplama zaten yürütülmüş"
+msgstr "Seçim zaten yürütülmüş"
 
 #. module: stock
 #: field:stock.partial.move.line,currency:0
 #: field:stock.partial.picking.line,currency:0
 msgid "Currency"
-msgstr "Para birimi"
+msgstr "ParaBirimi"
 
 #. module: stock
-#: view:stock.picking:0 report:stock.picking.list:0
+#: view:stock.picking:0
+#: view:stock.picking.in:0
+#: report:stock.picking.list:0
 msgid "Journal"
 msgstr "Yevmiye"
 
 #. module: stock
-#: code:addons/stock/stock.py:1345
+#: code:addons/stock/stock.py:1409
 #, python-format
 msgid "is scheduled %s."
 msgstr "%s planlanmıştır."
 
 #. module: stock
 #: help:stock.picking,location_id:0
+#: help:stock.picking.in,location_id:0
+#: help:stock.picking.out,location_id:0
 msgid ""
 "Keep empty if you produce at the location where the finished products are "
 "needed.Set a location if you produce at a fixed location. This can be a "
@@ -1001,15 +1054,15 @@ msgstr "İcra Tamamlama Süresi (Gün)"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_partial_move
 msgid "Partial Move Processing Wizard"
-msgstr "Kısmi Hareket İşleme Sihirbazı"
+msgstr "Parsiyel Hareket İşleme Sihirbazı"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_product_location_open
 msgid "Stock by Location"
-msgstr "Konuma göre Stok"
+msgstr "Lokasyona göre Stok"
 
 #. module: stock
-#: help:stock.move,address_id:0
+#: help:stock.move,partner_id:0
 msgid ""
 "Optional address where goods are to be delivered, specifically used for "
 "allotment"
@@ -1062,7 +1115,7 @@ msgstr "Geçen Ay"
 #. module: stock
 #: field:stock.location,parent_left:0
 msgid "Left Parent"
-msgstr "Sol Üst Öğe"
+msgstr "Sol Üst"
 
 #. module: stock
 #: field:product.category,property_stock_valuation_account_id:0
@@ -1070,13 +1123,13 @@ msgid "Stock Valuation Account"
 msgstr "Stok Değerleme Hesabı"
 
 #. module: stock
-#: code:addons/stock/stock.py:1349
+#: code:addons/stock/stock.py:1413
 #, python-format
 msgid "is waiting."
 msgstr "bekliyor."
 
 #. module: stock
-#: constraint:product.product:0
+#: constraint:res.partner:0
 msgid "Error: Invalid ean code"
 msgstr "Hata: Geçersiz kazanç kodu"
 
@@ -1090,7 +1143,7 @@ msgstr "Bu ürün için belirtilen bir stok çıkış hesabı yok: \"%s\" (id: %
 #. module: stock
 #: field:product.template,property_stock_production:0
 msgid "Production Location"
-msgstr "Üretim Konumu"
+msgstr "Üretim Lokasyonu"
 
 #. module: stock
 #: help:stock.picking,address_id:0
@@ -1157,7 +1210,7 @@ msgid "Author"
 msgstr "Yazar"
 
 #. module: stock
-#: code:addons/stock/stock.py:1332
+#: code:addons/stock/stock.py:1401
 #, python-format
 msgid "Delivery Order"
 msgstr "Teslim Emri"
@@ -1165,15 +1218,17 @@ msgstr "Teslim Emri"
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
 msgid "Manual Operation"
-msgstr "Manuel İşlem"
+msgstr "Manuel Opresyon"
 
 #. module: stock
-#: view:stock.location:0 view:stock.move:0
+#: view:stock.location:0
+#: view:stock.move:0
+#: view:stock.picking.in:0
 msgid "Supplier"
 msgstr "Tedarikçi"
 
 #. module: stock
-#: code:addons/stock/stock.py:2727
+#: code:addons/stock/stock.py:2859
 #, python-format
 msgid ""
 "In order to cancel this inventory, you must first unpost related journal "
@@ -1184,6 +1239,8 @@ msgstr ""
 
 #. module: stock
 #: field:stock.picking,date_done:0
+#: field:stock.picking.in,date_done:0
+#: field:stock.picking.out,date_done:0
 msgid "Date Done"
 msgstr "Bitiş Tarihi"
 
@@ -1216,14 +1273,15 @@ msgstr "Mart"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_inventory_line_split
 #: model:ir.model,name:stock.model_stock_inventory_line_split
-#: view:stock.inventory:0 view:stock.inventory.line:0
+#: view:stock.inventory:0
+#: view:stock.inventory.line:0
 msgid "Split inventory lines"
 msgstr "Stok Satırlarını Böl"
 
 #. module: stock
 #: view:stock.inventory:0
 msgid "Physical Inventory"
-msgstr "Fiziksel Stok"
+msgstr "Fiziksel Envanter"
 
 #. module: stock
 #: help:stock.location,chained_picking_type:0
@@ -1250,7 +1308,7 @@ msgstr "Ürün Ölçü Birimi"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations_partner
 msgid "Partner Locations"
-msgstr "Cari Lokasyonu"
+msgstr "Partner Lokasyonu"
 
 #. module: stock
 #: code:addons/stock/report/stock_graph.py:106
@@ -1264,7 +1322,8 @@ msgid "Current year"
 msgstr "Bu yıl"
 
 #. module: stock
-#: view:report.stock.inventory:0 view:report.stock.move:0
+#: view:report.stock.inventory:0
+#: view:report.stock.move:0
 msgid "Total quantity"
 msgstr "Toplam miktar"
 
@@ -1308,7 +1367,7 @@ msgstr ""
 #. module: stock
 #: view:stock.tracking:0
 msgid "Pack Identification"
-msgstr "Paket Kimliği"
+msgstr "Paket Tanımlıyıcı"
 
 #. module: stock
 #: report:stock.picking.list:0
@@ -1318,7 +1377,7 @@ msgstr "Çeki Listesi:"
 #. module: stock
 #: selection:stock.move,state:0
 msgid "Waiting Another Move"
-msgstr "Balka bir Hareket Bekliyor"
+msgstr "Başka bir Hareket Bekliyor"
 
 #. module: stock
 #: help:product.template,property_stock_production:0
@@ -1346,7 +1405,7 @@ msgstr ""
 "kullanılırken)"
 
 #. module: stock
-#: code:addons/stock/stock.py:1350
+#: code:addons/stock/stock.py:1414
 #, python-format
 msgid "is in draft state."
 msgstr "taslak durumunda."
@@ -1363,7 +1422,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.return.picking,invoice_state:0
 msgid "To be refunded/invoiced"
-msgstr "İade edilecek/faturalandırılacak"
+msgstr "İade edilecek/faturalanacak"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop0
@@ -1371,28 +1430,28 @@ msgid "Shop 1"
 msgstr "Mağaza 1"
 
 #. module: stock
-#: view:stock.change.product.qty:0 view:stock.change.standard.price:0
-#: view:stock.fill.inventory:0 view:stock.inventory.merge:0
-#: view:stock.invoice.onshipping:0 view:stock.location.product:0
-#: view:stock.move:0 view:stock.partial.move:0 view:stock.partial.picking:0
-#: view:stock.picking:0 view:stock.return.picking:0 view:stock.split.into:0
+#: view:stock.move:0
+#: view:stock.picking:0
 msgid "_Cancel"
 msgstr "_İptal"
 
 #. module: stock
-#: view:stock.move:0 view:stock.picking:0
+#: view:stock.move:0
+#: view:stock.picking:0
 msgid "Ready"
 msgstr "Hazır"
 
 #. module: stock
 #: view:stock.picking:0
+#: view:stock.picking.in:0
+#: view:stock.picking.out:0
 msgid "Calendar View"
 msgstr "Takvimi Göster"
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Additional Info"
-msgstr "Ek Bilgi"
+msgstr "Ek Bilgisi"
 
 #. module: stock
 #: field:stock.partial.move.line,move_id:0
@@ -1407,12 +1466,12 @@ msgid "From"
 msgstr "Başlangıç"
 
 #. module: stock
-#: view:stock.picking:0
+#: view:stock.picking.in:0
 msgid "Incoming Shipments already processed"
-msgstr "halihazırda işlenmiş Gelen sevkiyatlar"
+msgstr "Halihazırda işlenmiş Gelen sevkiyatlar"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:99
+#: code:addons/stock/wizard/stock_return_picking.py:102
 #, python-format
 msgid "You may only return pickings that are Confirmed, Available or Done!"
 msgstr ""
@@ -1425,7 +1484,10 @@ msgid "Non Assigned Products:"
 msgstr "Atanmamış Ürünler"
 
 #. module: stock
-#: view:stock.picking:0 field:stock.picking,invoice_state:0
+#: view:stock.picking:0
+#: field:stock.picking,invoice_state:0
+#: field:stock.picking.in,invoice_state:0
+#: field:stock.picking.out,invoice_state:0
 msgid "Invoice Control"
 msgstr "Fatura Kontrolü"
 
@@ -1437,16 +1499,18 @@ msgstr "Üretim Lot Revizyonu"
 #. module: stock
 #: view:stock.picking:0
 msgid "Internal Picking List"
-msgstr "Dahili Alım Listesi"
+msgstr "Dahili Seçim Listesi"
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
-#: selection:report.stock.move,state:0 view:stock.picking:0
+#: selection:report.stock.move,state:0
+#: view:stock.picking:0
 msgid "Waiting"
-msgstr "Bekliyor"
+msgstr "Bekleyen"
 
 #. module: stock
-#: view:stock.move:0 view:stock.picking:0
+#: view:stock.move:0
+#: view:stock.move.split:0
 msgid "Split"
 msgstr "Böl"
 
@@ -1464,7 +1528,7 @@ msgstr "Lokasyonda firma belirtilmemiş"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Type"
-msgstr "Tipi"
+msgstr "Türü"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1502,18 +1566,20 @@ msgid "Picking List:"
 msgstr "Alım Listesi:"
 
 #. module: stock
-#: field:stock.inventory,date:0 field:stock.move,create_date:0
-#: field:stock.production.lot,date:0 field:stock.tracking,date:0
+#: field:stock.inventory,date:0
+#: field:stock.move,create_date:0
+#: field:stock.production.lot,date:0
+#: field:stock.tracking,date:0
 msgid "Creation Date"
 msgstr "Oluşturma Tarihi"
 
 #. module: stock
 #: field:report.stock.lines.date,id:0
 msgid "Inventory Line Id"
-msgstr "Envanter Kalem No"
+msgstr "Envanter Satır Id"
 
 #. module: stock
-#: help:stock.location,address_id:0
+#: help:stock.location,partner_id:0
 msgid "Address of  customer or supplier."
 msgstr "Müşteri veya tedarikçini adresi."
 
@@ -1530,7 +1596,7 @@ msgid "Customer Location"
 msgstr "Müşteri Lokasyonu"
 
 #. module: stock
-#: code:addons/stock/stock.py:2312
+#: code:addons/stock/stock.py:2450
 #, python-format
 msgid "You can only delete draft moves."
 msgstr "Sadece taslak hareketlerini silebilirsiniz."
@@ -1562,7 +1628,7 @@ msgid "Analysis including future moves (similar to virtual stock)"
 msgstr "İnceleme gelecekteki hareketleri içerir (sanal stokla aynı)"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action3 view:stock.tracking:0
+#: model:ir.actions.act_window,name:stock.action3
 msgid "Downstream traceability"
 msgstr "Çıkış izlenebilirliği"
 
@@ -1586,20 +1652,22 @@ msgstr ""
 "gizleyebilirsiniz."
 
 #. module: stock
-#: view:stock.move:0 view:stock.picking:0 field:stock.picking,date:0
+#: view:stock.picking:0
+#: view:stock.picking.in:0
 msgid "Order Date"
 msgstr "Sipariş Tarihi"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:88
+#: code:addons/stock/wizard/stock_change_product_qty.py:92
 #, python-format
 msgid "INV: %s"
 msgstr "INV: %s"
 
 #. module: stock
-#: view:stock.location:0 field:stock.location,location_id:0
+#: view:stock.location:0
+#: field:stock.location,location_id:0
 msgid "Parent Location"
-msgstr "Ana Lokasyon"
+msgstr "Üst Lokasyon"
 
 #. module: stock
 #: help:stock.picking,state:0
@@ -1720,6 +1788,7 @@ msgstr "Üretim Lotlarını İzle"
 
 #. module: stock
 #: view:stock.picking:0
+#: view:stock.picking.in:0
 msgid "Is a Back Order"
 msgstr "Birikmiş Sipariş mi (backorder)"
 
@@ -1729,18 +1798,21 @@ msgid "Stock Valuation Account (Outgoing)"
 msgstr "Stok Değerleme Hesabı (Çıkan)"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.act_product_stock_move_open
 #: model:ir.actions.act_window,name:stock.action_move_form2
-#: model:ir.ui.menu,name:stock.menu_action_move_form2 view:stock.inventory:0
-#: view:stock.move:0 view:stock.picking:0 view:stock.production.lot:0
-#: view:stock.tracking:0
+#: model:ir.ui.menu,name:stock.menu_action_move_form2
+#: view:stock.inventory:0
+#: view:stock.move:0
+#: view:stock.production.lot:0
 msgid "Stock Moves"
-msgstr "Stok Hareketi"
+msgstr "Stok Hareketleri"
 
 #. module: stock
 #: selection:report.stock.move,type:0
 #: selection:stock.location,chained_picking_type:0
+#: selection:stock.move,type:0
 #: selection:stock.picking,type:0
+#: selection:stock.picking.in,type:0
+#: selection:stock.picking.out,type:0
 msgid "Sending Goods"
 msgstr "Mal Gönderimi"
 
@@ -1750,9 +1822,9 @@ msgid "Product Categories"
 msgstr "Ürün Kategorileri"
 
 #. module: stock
-#: view:stock.picking:0
+#: view:stock.move:0
 msgid "Cancel Availability"
-msgstr "Kullanılırlığı İptal Et"
+msgstr "Uyguluk İptalli"
 
 #. module: stock
 #: help:stock.move,date_expected:0
@@ -1767,7 +1839,7 @@ msgstr "Oluşan Hareketler"
 #. module: stock
 #: field:stock.location,valuation_in_account_id:0
 msgid "Stock Valuation Account (Incoming)"
-msgstr "Stok Değerleme Hesabı (Girenn)"
+msgstr "Stok Değerleme Hesabı (Gelen)"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_14
@@ -1781,11 +1853,13 @@ msgstr "Lot izleme"
 
 #. module: stock
 #: view:stock.picking:0
+#: view:stock.picking.in:0
 msgid "Back Orders"
 msgstr "Sipariş Bakiyeleri"
 
 #. module: stock
-#: view:product.product:0 view:product.template:0
+#: view:product.product:0
+#: view:product.template:0
 msgid "Counter-Part Locations Properties"
 msgstr "Parça-Sayaç Lokasyon Tercihleri"
 
@@ -1795,10 +1869,10 @@ msgid "Localization"
 msgstr "Lokalizasyon"
 
 #. module: stock
-#: code:addons/stock/product.py:429
+#: code:addons/stock/product.py:459
 #, python-format
 msgid "Delivered Qty"
-msgstr "Teslim Edilen Miktar"
+msgstr "TeslimEdilen Miktar"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.track_line
@@ -1829,23 +1903,28 @@ msgid "Day Planned"
 msgstr "Planlanan Gün"
 
 #. module: stock
-#: view:report.stock.inventory:0 field:report.stock.inventory,date:0
-#: field:report.stock.move,date:0 view:stock.inventory:0
-#: report:stock.inventory.move:0 view:stock.move:0 field:stock.move,date:0
-#: field:stock.partial.move,date:0 field:stock.partial.picking,date:0
-#: view:stock.picking:0
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,date:0
+#: field:report.stock.move,date:0
+#: view:stock.inventory:0
+#: report:stock.inventory.move:0
+#: view:stock.move:0
+#: field:stock.move,date:0
+#: field:stock.partial.move,date:0
+#: field:stock.partial.picking,date:0
 msgid "Date"
 msgstr "Tarih"
 
 #. module: stock
-#: view:report.stock.inventory:0 view:report.stock.move:0
+#: view:report.stock.inventory:0
+#: view:report.stock.move:0
 msgid "Extended Filters..."
 msgstr "Uzatılmış Filtreler..."
 
 #. module: stock
 #: field:stock.warehouse,lot_stock_id:0
 msgid "Location Stock"
-msgstr "Lokasyon Stoğu"
+msgstr "Lokasyon Stok"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:64
@@ -1861,7 +1940,7 @@ msgstr "Performans değerlendirme panosu"
 #. module: stock
 #: field:stock.incoterms,code:0
 msgid "Code"
-msgstr "Kodu"
+msgstr "Kod"
 
 #. module: stock
 #: view:stock.inventory.line.split:0
@@ -1881,10 +1960,11 @@ msgid "You can not remove a lot line !"
 msgstr "Bir lot satırını silemezsiniz!"
 
 #. module: stock
-#: model:ir.model,name:stock.model_stock_move_scrap view:stock.move:0
-#: view:stock.move.scrap:0 view:stock.picking:0
+#: model:ir.model,name:stock.model_stock_move_scrap
+#: view:stock.move:0
+#: view:stock.move.scrap:0
 msgid "Scrap Products"
-msgstr "Iskarta Ürünler"
+msgstr "Hurda Ürünler"
 
 #. module: stock
 #: code:addons/stock/stock.py:1157
@@ -1893,16 +1973,28 @@ msgid "You cannot remove the picking which is in %s state !"
 msgstr "%s durumunda olan bir alımı silemezsiniz!"
 
 #. module: stock
-#: view:stock.inventory.line.split:0 view:stock.move.consume:0
-#: view:stock.move.scrap:0 view:stock.move.split:0 view:stock.picking:0
+#: view:stock.change.product.qty:0
+#: view:stock.change.standard.price:0
+#: view:stock.config.settings:0
+#: view:stock.fill.inventory:0
+#: view:stock.inventory.line.split:0
+#: view:stock.inventory.merge:0
+#: view:stock.invoice.onshipping:0
+#: view:stock.location.product:0
+#: view:stock.move.consume:0
+#: view:stock.move.scrap:0
+#: view:stock.move.split:0
+#: view:stock.partial.move:0
+#: view:stock.partial.picking:0
+#: view:stock.return.picking:0
+#: view:stock.split.into:0
 msgid "Cancel"
 msgstr "İptal"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.act_stock_return_picking
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Alıma Geri Dön"
+msgstr "SeçimListesine GeriDönen"
 
 #. module: stock
 #: view:stock.inventory:0 view:stock.move:0 view:stock.picking:0
@@ -1911,25 +2003,33 @@ msgstr "Üretim Lotlarını Böl"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
-#: field:product.product,location_id:0 view:report.stock.inventory:0
+#: field:product.product,location_id:0
+#: view:report.stock.inventory:0
 #: field:report.stock.inventory,location_id:0
 #: field:stock.change.product.qty,location_id:0
 #: field:stock.fill.inventory,location_id:0
-#: field:stock.inventory.line,location_id:0 report:stock.inventory.move:0
-#: view:stock.location:0 view:stock.move:0
-#: field:stock.move.consume,location_id:0 field:stock.move.scrap,location_id:0
+#: field:stock.inventory.line,location_id:0
+#: report:stock.inventory.move:0
+#: view:stock.move:0
+#: field:stock.move.consume,location_id:0
+#: field:stock.move.scrap,location_id:0
 #: field:stock.partial.move.line,location_id:0
 #: field:stock.partial.picking.line,location_id:0
-#: field:stock.picking,location_id:0 report:stock.picking.list:0
+#: field:stock.picking,location_id:0
+#: field:stock.picking.in,location_id:0
+#: report:stock.picking.list:0
+#: field:stock.picking.out,location_id:0
 #: field:stock.report.prodlots,location_id:0
 #: field:stock.report.tracklots,location_id:0
 msgid "Location"
-msgstr "Konum"
+msgstr "Lokasyon"
 
 #. module: stock
+#: code:addons/stock/stock.py:1852
 #: view:product.template:0
+#, python-format
 msgid "Information"
-msgstr "Bilgi"
+msgstr "Bilgisi"
 
 #. module: stock
 #: report:stock.picking.list:0
@@ -1957,14 +2057,16 @@ msgid "Provide the quantities of the returned products."
 msgstr "İade edilen ürünlerin miktarını girin."
 
 #. module: stock
+#: view:product.product:0
 #: view:stock.change.standard.price:0
 msgid "Cost Price"
-msgstr "Maliyet Bedeli"
+msgstr "Maliyet Fiyatı"
 
 #. module: stock
-#: view:product.product:0 field:product.product,valuation:0
+#: view:product.product:0
+#: field:product.product,valuation:0
 msgid "Inventory Valuation"
-msgstr "Envanter Değerlendirmesi"
+msgstr "Envanter Değerlenme"
 
 #. module: stock
 #: view:stock.move:0
@@ -1972,7 +2074,7 @@ msgid "Orders planned for today"
 msgstr "Bugün için planlanan Siparişler"
 
 #. module: stock
-#: view:stock.move:0 view:stock.picking:0
+#: view:stock.move:0
 msgid "Process Later"
 msgstr "Sonra İşle"
 
@@ -1986,7 +2088,7 @@ msgstr ""
 "bu stok lokasyonu kullanılacaktır"
 
 #. module: stock
-#: field:stock.warehouse,partner_address_id:0
+#: field:stock.warehouse,partner_id:0
 msgid "Owner Address"
 msgstr "Adres Sahibi"
 
@@ -2024,7 +2126,7 @@ msgstr "Fiyat"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking_memory
 msgid "stock.return.picking.memory"
-msgstr "stok.dönüş.toplama.bellek"
+msgstr "stock.return.picking.memory"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -2047,7 +2149,7 @@ msgstr ""
 "mevcut değil: \"%s\" (id: %d)"
 
 #. module: stock
-#: code:addons/stock/product.py:419
+#: code:addons/stock/product.py:449
 #, python-format
 msgid "Received Qty"
 msgstr "Alınan Miktar"
@@ -2067,14 +2169,13 @@ msgstr ""
 "ÖNEK/SERİ [INT_REF]"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_view_stock_fill_inventory
 #: model:ir.model,name:stock.model_stock_fill_inventory
 #: view:stock.fill.inventory:0
 msgid "Import Inventory"
-msgstr "Envanter Al"
+msgstr "Envanter İçeAktar"
 
 #. module: stock
-#: field:stock.incoterms,name:0 field:stock.move,name:0
+#: field:stock.incoterms,name:0
 #: field:stock.warehouse,name:0
 msgid "Name"
 msgstr "Adı"
@@ -2123,10 +2224,11 @@ msgstr "Lojistik sevikayat ünitesi: palet, kutu, paket ..."
 #. module: stock
 #: view:stock.location:0
 msgid "Customer Locations"
-msgstr "Müşteri Konumları"
+msgstr "Müşteri Lokasyonları"
 
 #. module: stock
-#: view:stock.change.product.qty:0 view:stock.change.standard.price:0
+#: view:stock.change.product.qty:0
+#: view:stock.change.standard.price:0
 msgid "_Apply"
 msgstr "_Uygula"
 
@@ -2142,7 +2244,8 @@ msgid "Inventory Location"
 msgstr "Envanter Lokasyonu"
 
 #. module: stock
-#: view:report.stock.inventory:0 view:report.stock.move:0
+#: view:report.stock.inventory:0
+#: view:report.stock.move:0
 msgid "Total value"
 msgstr "Toplam değer"
 
@@ -2178,15 +2281,14 @@ msgstr "Maliyet"
 #: field:product.template,property_stock_account_input:0
 #: field:stock.change.standard.price,stock_account_input:0
 msgid "Stock Input Account"
-msgstr "Stok Giriş Hes."
+msgstr "Stok Giriş Hesabı"
 
 #. module: stock
 #: view:report.stock.move:0
 msgid "Shipping type specify, goods coming in or going out"
-msgstr "Nakliye türü belirtin, giren ya da çıkan ürünler"
+msgstr "Sevkiyat türü belirtin, giren ya da çıkan ürünler"
 
 #. module: stock
-#: model:ir.ui.menu,name:stock.menu_stock_warehouse_mgmt
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
 msgid "Warehouse Management"
 msgstr "Depo Yönetimi"
@@ -2216,11 +2318,15 @@ msgstr ""
 "hareket işleme tarihi"
 
 #. module: stock
-#: view:report.stock.inventory:0 view:report.stock.move:0
-#: view:stock.inventory:0 view:stock.move:0 view:stock.picking:0
+#: view:report.stock.inventory:0
+#: view:report.stock.move:0
+#: view:stock.inventory:0
+#: view:stock.move:0
+#: view:stock.picking:0
+#: view:stock.picking.in:0
 #: view:stock.production.lot:0
 msgid "Group By..."
-msgstr "Şuna göre grupla..."
+msgstr "Grupla İle..."
 
 #. module: stock
 #: view:stock.location:0
@@ -2230,10 +2336,10 @@ msgstr "Zincirlenmiş Lokasyon Bilgisi"
 #. module: stock
 #: model:stock.location,name:stock.location_inventory
 msgid "Inventory loss"
-msgstr "Envanter kaybı"
+msgstr "Envanter zararı"
 
 #. module: stock
-#: code:addons/stock/stock.py:1341
+#: code:addons/stock/stock.py:1405
 #, python-format
 msgid "Document"
 msgstr "Belge"
@@ -2244,13 +2350,19 @@ msgid "Input Picking List"
 msgstr "Giriş Alım Listesi"
 
 #. module: stock
-#: field:stock.move,product_uom:0 field:stock.partial.move.line,product_uom:0
+#: view:stock.inventory:0
+#: field:stock.inventory.line.split,product_uom:0
+#: view:stock.move:0
+#: field:stock.move,product_uom:0
+#: field:stock.move.split,product_uom:0
+#: field:stock.partial.move.line,product_uom:0
 #: field:stock.partial.picking.line,product_uom:0
+#: view:stock.production.lot:0
 msgid "Unit of Measure"
 msgstr "Ölçü Birimi"
 
 #. module: stock
-#: code:addons/stock/product.py:175
+#: code:addons/stock/product.py:196
 #, python-format
 msgid "Products: "
 msgstr "Ürünler: "
@@ -2272,13 +2384,13 @@ msgstr "Güncelle"
 #. module: stock
 #: view:stock.inventory:0
 msgid "Set to Draft"
-msgstr "Taslak Olarak Ayarla"
+msgstr "Taslak Ayarla"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_journal_form
 #: model:ir.ui.menu,name:stock.menu_action_stock_journal_form
 msgid "Stock Journals"
-msgstr "Stok Defterleri"
+msgstr "Stok Yevmiyeleri"
 
 #. module: stock
 #: selection:report.stock.move,type:0
@@ -2296,7 +2408,7 @@ msgstr ""
 #: model:stock.location,name:stock.stock_location_scrapped
 #: field:stock.move,scrapped:0
 msgid "Scrapped"
-msgstr "Iskartaya atıldı"
+msgstr "Hurda"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -2311,29 +2423,37 @@ msgstr "Gelen Lotları İzle"
 #. module: stock
 #: view:board.board:0
 msgid "Warehouse board"
-msgstr "Depo değerlendirme panosu"
+msgstr "Depo panosu"
 
 #. module: stock
-#: code:addons/stock/product.py:439
+#: code:addons/stock/product.py:469
 #, python-format
 msgid "Future Qty"
 msgstr "Gelecek Miktar"
 
 #. module: stock
-#: field:stock.move,note:0 view:stock.picking:0 field:stock.picking,note:0
+#: field:stock.move,note:0
+#: field:stock.picking,note:0
+#: field:stock.picking.in,note:0
+#: field:stock.picking.out,note:0
 msgid "Notes"
 msgstr "Notlar"
 
 #. module: stock
-#: report:lot.stock.overview:0 report:lot.stock.overview_all:0
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
 msgid "Value"
 msgstr "Değer"
 
 #. module: stock
-#: field:report.stock.move,type:0 field:stock.location,chained_picking_type:0
+#: field:report.stock.move,type:0
+#: field:stock.location,chained_picking_type:0
+#: field:stock.move,type:0
 #: field:stock.picking,type:0
+#: field:stock.picking.in,type:0
+#: field:stock.picking.out,type:0
 msgid "Shipping Type"
-msgstr "Sevkiyat Tipi"
+msgstr "Sevkiyat Türü"
 
 #. module: stock
 #: view:stock.move:0
@@ -2344,10 +2464,13 @@ msgstr "Onaylanmış stok hareketleri, Mevcut ya da Bekleyen"
 #: model:ir.actions.act_window,name:stock.act_product_location_open
 #: model:ir.ui.menu,name:stock.menu_product_in_config_stock
 #: model:ir.ui.menu,name:stock.menu_stock_product
-#: model:ir.ui.menu,name:stock.menu_stock_products_menu view:stock.inventory:0
-#: view:stock.partial.move:0 view:stock.partial.picking:0 view:stock.picking:0
+#: model:ir.ui.menu,name:stock.menu_stock_products_menu
+#: view:stock.config.settings:0
+#: view:stock.inventory:0
+#: view:stock.partial.move:0
+#: view:stock.picking:0
 msgid "Products"
-msgstr "Stok Kartları"
+msgstr "Ürünler"
 
 #. module: stock
 #: selection:stock.location,chained_location_type:0
@@ -2361,12 +2484,17 @@ msgstr "Fiyatı Değiştir"
 
 #. module: stock
 #: field:stock.picking,move_type:0
+#: field:stock.picking.in,move_type:0
+#: field:stock.picking.out,move_type:0
 msgid "Delivery Method"
 msgstr "Teslimat Yöntemi"
 
 #. module: stock
 #: help:report.stock.move,location_dest_id:0
-#: help:stock.move,location_dest_id:0 help:stock.picking,location_dest_id:0
+#: help:stock.move,location_dest_id:0
+#: help:stock.picking,location_dest_id:0
+#: help:stock.picking.in,location_dest_id:0
+#: help:stock.picking.out,location_dest_id:0
 msgid "Location where the system will stock the finished products."
 msgstr "Sistemin tamamlanan ürünleri stoklayacağı lokasyon."
 
@@ -2398,6 +2526,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move
+#: view:stock.partial.move:0
 msgid "Stock Move"
 msgstr "Stok Hareketi"
 
@@ -2418,10 +2547,10 @@ msgid "Expected date for the picking to be processed"
 msgstr "İşlenecek alım için beklenen tarih"
 
 #. module: stock
-#: code:addons/stock/product.py:435
+#: code:addons/stock/product.py:465
 #, python-format
 msgid "P&L Qty"
-msgstr "Kâr ve Zarar Miktarı"
+msgstr "Kâr&Zarar Miktarı"
 
 #. module: stock
 #: view:stock.picking:0
@@ -2434,7 +2563,8 @@ msgid "Tracking:"
 msgstr "İzleme:"
 
 #. module: stock
-#: view:stock.production.lot:0 field:stock.production.lot,revisions:0
+#: view:stock.production.lot:0
+#: field:stock.production.lot,revisions:0
 msgid "Revisions"
 msgstr "Revizyonlar"
 
@@ -2470,7 +2600,8 @@ msgstr ""
 "yönetmek için seçim kriterine göre sıralayıp gruplayın."
 
 #. module: stock
-#: help:report.stock.move,location_id:0 help:stock.move,location_id:0
+#: help:report.stock.move,location_id:0
+#: help:stock.move,location_id:0
 msgid ""
 "Sets a location if you produce at a fixed location. This can be a partner "
 "location if you subcontract the manufacturing operations."
@@ -2517,21 +2648,24 @@ msgstr "Öncelik"
 
 #. module: stock
 #: view:stock.move:0
+#: field:stock.move,origin:0
 msgid "Source"
 msgstr "Kaynak"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory
 #: selection:report.stock.inventory,location_type:0
-#: field:stock.inventory.line,inventory_id:0 report:stock.inventory.move:0
+#: field:stock.inventory.line,inventory_id:0
+#: report:stock.inventory.move:0
 #: selection:stock.location,usage:0
 msgid "Inventory"
 msgstr "Envanter"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking
+#: view:stock.picking:0
 msgid "Picking List"
-msgstr "Alım Listesi"
+msgstr "Seçim Listesi"
 
 #. module: stock
 #: sql_constraint:stock.production.lot:0
@@ -2555,7 +2689,7 @@ msgstr "Hata!"
 #: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 msgid "Units of Measure"
-msgstr "Ölçü Birimleri"
+msgstr "Ölçü Birimi"
 
 #. module: stock
 #: selection:stock.location,chained_location_type:0
@@ -2619,16 +2753,21 @@ msgstr "Stok Seviyesi Tahmini"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_journal
-#: field:report.stock.move,stock_journal:0 view:stock.journal:0
-#: field:stock.journal,name:0 field:stock.picking,stock_journal_id:0
+#: field:product.category,property_stock_journal:0
+#: field:report.stock.move,stock_journal:0
+#: view:stock.journal:0
+#: field:stock.journal,name:0
+#: field:stock.picking,stock_journal_id:0
+#: field:stock.picking.in,stock_journal_id:0
+#: field:stock.picking.out,stock_journal_id:0
 msgid "Stock Journal"
-msgstr "Stok Defteri"
+msgstr "Stok Yevmiye"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
 #: selection:stock.location,usage:0
 msgid "Procurement"
-msgstr "Satınalma"
+msgstr "Tedarik"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_4
@@ -2636,47 +2775,54 @@ msgid "Maxtor Suppliers"
 msgstr "Maxtor Tedarikçileri"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:78
-#: code:addons/stock/wizard/stock_change_standard_price.py:107
+#: code:addons/stock/wizard/stock_change_product_qty.py:82
 #, python-format
 msgid "Active ID is not set in Context"
 msgstr "Aktif Kimlik Bağlam bölümünde ayarlanmamış"
 
 #. module: stock
+#: view:stock.move:0
 #: view:stock.picking:0
 msgid "Force Availability"
 msgstr "Kullanılabilir Yap"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.move_scrap view:stock.move.scrap:0
+#: model:ir.actions.act_window,name:stock.move_scrap
+#: view:stock.move.scrap:0
 msgid "Scrap Move"
-msgstr "Iskarta Hareketi"
+msgstr "Hurda Hareketi"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_reception_picking_move
-#: model:ir.ui.menu,name:stock.menu_action_pdct_in view:stock.move:0
+#: code:addons/stock/wizard/stock_partial_picking.py:100
+#, python-format
 msgid "Receive Products"
-msgstr "Ürünleri Al"
+msgstr "Ürün Kabulleri"
 
 #. module: stock
+#: code:addons/stock/wizard/stock_partial_picking.py:102
 #: model:ir.actions.act_window,name:stock.action_out_picking_move
 #: model:ir.ui.menu,name:stock.menu_action_pdct_out
+#, python-format
 msgid "Deliver Products"
-msgstr "Ürünleri Teslim Et"
+msgstr "Teslimat Ürünleri"
 
 #. module: stock
 #: view:stock.location.product:0
 msgid "View Stock of Products"
-msgstr "Ürün Stoğunu Göster"
+msgstr "Ürün Stok Görümümleri"
 
 #. module: stock
-#: view:report.stock.inventory:0 view:report.stock.move:0
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,month:0
+#: view:report.stock.move:0
 #: field:report.stock.move,month:0
 msgid "Month"
 msgstr "Ay"
 
 #. module: stock
 #: help:stock.picking,date_done:0
+#: help:stock.picking.in,date_done:0
+#: help:stock.picking.out,date_done:0
 msgid "Date of Completion"
 msgstr "Tamamlama Tarihi"
 
@@ -2715,21 +2861,28 @@ msgstr "Envanterler"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Todo"
-msgstr "Yapılacak işlemler"
+msgstr "Yapılacak"
 
 #. module: stock
-#: view:report.stock.inventory:0 field:report.stock.inventory,company_id:0
-#: view:report.stock.move:0 field:report.stock.move,company_id:0
-#: field:stock.inventory,company_id:0 field:stock.inventory.line,company_id:0
-#: field:stock.location,company_id:0 field:stock.move,company_id:0
-#: field:stock.picking,company_id:0 field:stock.production.lot,company_id:0
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,company_id:0
+#: view:report.stock.move:0
+#: field:report.stock.move,company_id:0
+#: field:stock.inventory,company_id:0
+#: field:stock.inventory.line,company_id:0
+#: field:stock.location,company_id:0
+#: field:stock.move,company_id:0
+#: field:stock.picking,company_id:0
+#: field:stock.picking.in,company_id:0
+#: field:stock.picking.out,company_id:0
+#: field:stock.production.lot,company_id:0
 #: field:stock.production.lot.revision,company_id:0
 #: field:stock.warehouse,company_id:0
 msgid "Company"
 msgstr "Firma"
 
 #. module: stock
-#: view:stock.move:0 view:stock.picking:0
+#: view:stock.move:0
 msgid "Unit Of Measure"
 msgstr "Ölçü Birimi"
 
@@ -2751,10 +2904,12 @@ msgstr "Negatif veya miktarı sıfır olan bir hareketi kullanamazsınız!"
 #. module: stock
 #: field:stock.location,stock_real:0
 msgid "Real Stock"
-msgstr "Fiili Stok"
+msgstr "Gerçek Stok"
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.action_view_stock_fill_inventory
 #: view:stock.fill.inventory:0
+#: view:stock.inventory:0
 msgid "Fill Inventory"
 msgstr "Envanteri Doldur"
 
@@ -2770,8 +2925,9 @@ msgid "Delivery Counter"
 msgstr "Teslimat Sayacı"
 
 #. module: stock
-#: view:report.stock.inventory:0 field:report.stock.inventory,prodlot_id:0
-#: view:stock.move:0 report:stock.picking.list:0
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,prodlot_id:0
+#: report:stock.picking.list:0
 msgid "Lot"
 msgstr "Lot"
 
@@ -2789,7 +2945,7 @@ msgstr "'%s' stoğu yapılmıştır."
 #. module: stock
 #: field:stock.move,product_uos_qty:0
 msgid "Quantity (UOS)"
-msgstr "Miktar (2.Br.)"
+msgstr "Miktar ((UOS)"
 
 #. module: stock
 #: code:addons/stock/stock.py:1743
@@ -2807,7 +2963,7 @@ msgstr "Kullanılabilir Yap"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Contact Address :"
-msgstr "İletişim Adresi:"
+msgstr "Kontak Adresi :"
 
 #. module: stock
 #: field:stock.move,backorder_id:0
@@ -2815,10 +2971,11 @@ msgid "Back Order"
 msgstr "Sipariş Bakiyesi"
 
 #. module: stock
-#: field:stock.incoterms,active:0 field:stock.location,active:0
+#: field:stock.incoterms,active:0
+#: field:stock.location,active:0
 #: field:stock.tracking,active:0
 msgid "Active"
-msgstr "Aktif"
+msgstr "Etkin"
 
 #. module: stock
 #: view:product.template:0
@@ -2826,10 +2983,10 @@ msgid "Properties"
 msgstr "Özellikler"
 
 #. module: stock
-#: code:addons/stock/stock.py:1082
+#: code:addons/stock/stock.py:1120
 #, python-format
 msgid "Error, no partner !"
-msgstr "Hata, hiç ortak yok!"
+msgstr "Hata, hiç parner yok!"
 
 #. module: stock
 #: field:stock.inventory.line.split.lines,wizard_exist_id:0
@@ -2844,15 +3001,16 @@ msgstr "Ana Sihirbaz"
 #: model:ir.ui.menu,name:stock.menu_action_incoterm_open
 #: view:stock.incoterms:0
 msgid "Incoterms"
-msgstr "Teslim Sekilleri"
+msgstr "Teslimat Şekilleri"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_partial_picking_line
 msgid "stock.partial.picking.line"
-msgstr "stok.kısmi.toplama.satır"
+msgstr "stock.partial.picking.line"
 
 #. module: stock
-#: report:lot.stock.overview:0 report:lot.stock.overview_all:0
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
 #: report:stock.inventory.move:0
 msgid "Total:"
 msgstr "Toplam:"
@@ -2878,12 +3036,14 @@ msgstr ""
 "ürünler de dahil edilecektir."
 
 #. module: stock
+#: view:stock.inventory:0
 #: field:stock.inventory,name:0
 msgid "Inventory Reference"
 msgstr "Envanter Referansı"
 
 #. module: stock
-#: code:addons/stock/stock.py:1334
+#: code:addons/stock/stock.py:1403
+#: code:addons/stock/stock.py:1428
 #, python-format
 msgid "Internal picking"
 msgstr "Dahili alım"
@@ -2899,9 +3059,9 @@ msgid "To"
 msgstr "Bitiş"
 
 #. module: stock
-#: view:stock.move:0 view:stock.picking:0
+#: view:stock.move:0
 msgid "Process"
-msgstr "İşlem"
+msgstr "Süreç"
 
 #. module: stock
 #: field:stock.production.lot.revision,name:0
@@ -2909,16 +3069,21 @@ msgid "Revision Name"
 msgstr "Revizyon Adı"
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.open_board_warehouse
 #: model:ir.model,name:stock.model_stock_warehouse
+#: model:ir.ui.menu,name:stock.menu_board_warehouse
+#: model:ir.ui.menu,name:stock.menu_stock_config_settings
 #: model:ir.ui.menu,name:stock.menu_stock_root
-#: field:product.product,warehouse_id:0 view:stock.warehouse:0
+#: model:ir.ui.menu,name:stock.next_id_61
+#: field:product.product,warehouse_id:0
+#: view:stock.warehouse:0
 msgid "Warehouse"
-msgstr "Depo"
+msgstr "Stok"
 
 #. module: stock
 #: view:stock.inventory:0
 msgid "Confirm Inventory"
-msgstr "Stok Onayla"
+msgstr "Envanter Onaylama"
 
 #. module: stock
 #: view:product.category:0
@@ -2931,12 +3096,16 @@ msgid "Customers Packings"
 msgstr "Tüketici Paketleri"
 
 #. module: stock
-#: selection:report.stock.inventory,state:0 view:report.stock.move:0
-#: selection:report.stock.move,state:0 selection:stock.inventory,state:0
-#: view:stock.move:0 selection:stock.move,state:0 view:stock.picking:0
-#: selection:stock.picking,state:0
+#: selection:report.stock.inventory,state:0
+#: view:report.stock.move:0
+#: selection:report.stock.move,state:0
+#: selection:stock.inventory,state:0
+#: view:stock.move:0
+#: selection:stock.move,state:0
+#: view:stock.picking:0
+#: view:stock.picking.in:0
 msgid "Done"
-msgstr "Bitti"
+msgstr "Biten"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_change_standard_price
@@ -2952,16 +3121,18 @@ msgstr "Sanal Lokasyon"
 
 #. module: stock
 #: selection:stock.picking,invoice_state:0
+#: selection:stock.picking.in,invoice_state:0
+#: selection:stock.picking.out,invoice_state:0
 msgid "To Be Invoiced"
 msgstr "Faturalanacak"
 
 #. module: stock
 #: field:stock.inventory,date_done:0
 msgid "Date done"
-msgstr "Tamamlanan Tarih"
+msgstr "Bitim tarih"
 
 #. module: stock
-#: code:addons/stock/stock.py:1083
+#: code:addons/stock/stock.py:1121
 #, python-format
 msgid ""
 "Please put a partner on the picking list if you want to generate invoice."
@@ -3004,17 +3175,26 @@ msgstr "Stok"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_product
-#: view:report.stock.inventory:0 field:report.stock.inventory,product_id:0
-#: field:report.stock.lines.date,product_id:0 view:report.stock.move:0
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,product_id:0
+#: field:report.stock.lines.date,product_id:0
+#: view:report.stock.move:0
 #: field:report.stock.move,product_id:0
 #: field:stock.change.product.qty,product_id:0
 #: field:stock.inventory.line,product_id:0
-#: field:stock.inventory.line.split,product_id:0 report:stock.inventory.move:0
-#: view:stock.move:0 field:stock.move,product_id:0
-#: field:stock.move.consume,product_id:0 field:stock.move.scrap,product_id:0
+#: field:stock.inventory.line.split,product_id:0
+#: report:stock.inventory.move:0
+#: view:stock.move:0
+#: field:stock.move,product_id:0
+#: field:stock.move.consume,product_id:0
+#: field:stock.move.scrap,product_id:0
 #: field:stock.move.split,product_id:0
 #: field:stock.partial.move.line,product_id:0
-#: field:stock.partial.picking.line,product_id:0 view:stock.production.lot:0
+#: field:stock.partial.picking.line,product_id:0
+#: field:stock.picking,product_id:0
+#: field:stock.picking.in,product_id:0
+#: field:stock.picking.out,product_id:0
+#: view:stock.production.lot:0
 #: field:stock.production.lot,product_id:0
 #: field:stock.report.prodlots,product_id:0
 #: field:stock.report.tracklots,product_id:0
@@ -3025,17 +3205,17 @@ msgstr "Ürün"
 #. module: stock
 #: view:stock.return.picking:0
 msgid "Return"
-msgstr "Geri dön"
+msgstr "Dönen"
 
 #. module: stock
 #: field:stock.return.picking,invoice_state:0
 msgid "Invoicing"
-msgstr "Faturalandırma"
+msgstr "Faturalama"
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Assigned Internal Moves"
-msgstr "Atanmış İç Hareketler"
+msgstr "Atanmış Dahili Hareketler"
 
 #. module: stock
 #: code:addons/stock/stock.py:2379 code:addons/stock/stock.py:2440
@@ -3047,7 +3227,7 @@ msgstr "Lütfen Uygun Bir Miktar girin!"
 #. module: stock
 #: field:stock.move,product_uos:0
 msgid "Product UOS"
-msgstr "Stok 2.Birim"
+msgstr "Ürün UOS"
 
 #. module: stock
 #: field:stock.location,posz:0
@@ -3058,7 +3238,7 @@ msgstr "Yükseklik (Z)"
 #: model:ir.model,name:stock.model_stock_move_consume
 #: view:stock.move.consume:0
 msgid "Consume Products"
-msgstr "Ürünleri Kullan"
+msgstr "Sarf Ürünler"
 
 #. module: stock
 #: code:addons/stock/stock.py:1742
@@ -3069,7 +3249,7 @@ msgstr "Lotta Yetersiz Stok!"
 #. module: stock
 #: field:stock.location,parent_right:0
 msgid "Right Parent"
-msgstr "Sağ Üst Öğe"
+msgstr "Sağ Üst"
 
 #. module: stock
 #: field:stock.picking,address_id:0
@@ -3077,9 +3257,10 @@ msgid "Address"
 msgstr "Adres"
 
 #. module: stock
-#: report:lot.stock.overview:0 report:lot.stock.overview_all:0
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
 msgid "Variants"
-msgstr "Değişkenler"
+msgstr "Varyantlar"
 
 #. module: stock
 #: field:stock.location,posx:0
@@ -3089,27 +3270,30 @@ msgstr "Koridor (X)"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_suppliers
 msgid "Suppliers"
-msgstr "Satıcılar"
+msgstr "Tedarikçiler"
 
 #. module: stock
-#: field:report.stock.inventory,value:0 field:report.stock.move,value:0
+#: field:report.stock.inventory,value:0
+#: field:report.stock.move,value:0
 msgid "Total Value"
-msgstr "Toplam Tutar"
+msgstr "Toplam Değer"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_by_category_stock_form
 msgid "Products by Category"
-msgstr "Kategoriye Göre Ürün"
+msgstr "Ürün Kategorileri"
 
 #. module: stock
 #: selection:stock.picking,state:0
+#: selection:stock.picking.in,state:0
+#: selection:stock.picking.out,state:0
 msgid "Waiting Another Operation"
 msgstr "Başka bir İşlem Bekliyor"
 
 #. module: stock
 #: view:stock.location:0
 msgid "Supplier Locations"
-msgstr "Tedarikçi Konumları"
+msgstr "Tedarikçi Lokasyonları"
 
 #. module: stock
 #: field:stock.partial.move.line,wizard_id:0
@@ -3132,7 +3316,7 @@ msgstr "Lokasyona Göre Ürün"
 #. module: stock
 #: field:stock.fill.inventory,recursive:0
 msgid "Include children"
-msgstr "Alt öğeleri dahil et"
+msgstr "Altı dahil et"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_components
@@ -3172,9 +3356,11 @@ msgid "Pack Reference"
 msgstr "Paket Referans"
 
 #. module: stock
-#: view:report.stock.move:0 field:report.stock.move,location_id:0
+#: view:report.stock.move:0
+#: field:report.stock.move,location_id:0
 #: field:stock.inventory.line.split,location_id:0
-#: field:stock.move,location_id:0 field:stock.move.split,location_id:0
+#: field:stock.move,location_id:0
+#: field:stock.move.split,location_id:0
 msgid "Source Location"
 msgstr "Kaynak Lokasyon"
 
@@ -3214,10 +3400,10 @@ msgid "Virtual Stock Value"
 msgstr "Sanal Stok Değeri"
 
 #. module: stock
-#: view:product.product:0 view:stock.inventory.line.split:0
-#: view:stock.move.split:0
+#: view:product.product:0
+#: view:stock.inventory.line.split:0
 msgid "Lots"
-msgstr "Lot Bilgisi"
+msgstr "Lotlar"
 
 #. module: stock
 #: view:stock.move:0
@@ -3232,6 +3418,8 @@ msgstr "Hedef"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
+#: selection:stock.picking.in,move_type:0
+#: selection:stock.picking.out,move_type:0
 msgid "All at once"
 msgstr "Tümünü birden"
 
@@ -3246,20 +3434,21 @@ msgstr ""
 "hareketlerinde değiştirilemez (Yönetici hariç)"
 
 #. module: stock
-#: code:addons/stock/product.py:445
+#: code:addons/stock/product.py:475
 #, python-format
 msgid "Future Productions"
-msgstr "Sonraki Üretimler"
+msgstr "Gelecek Üretimler"
 
 #. module: stock
 #: view:stock.picking:0
+#: view:stock.picking.in:0
 msgid "To Invoice"
-msgstr "Faturalandırılacak"
+msgstr "Faturalama"
 
 #. module: stock
 #: view:stock.return.picking:0
 msgid "Return lines"
-msgstr "İade kalemleri"
+msgstr "İade satırları"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_lines_date
@@ -3283,7 +3472,7 @@ msgid "Moves for this production lot"
 msgstr "Bu üretim lotu hareketleri"
 
 #. module: stock
-#: view:stock.move:0 view:stock.picking:0
+#: view:stock.move:0
 msgid "Put in current pack"
 msgstr "Mevcut pakete yerleştir"
 
@@ -3327,7 +3516,7 @@ msgstr ""
 #. module: stock
 #: field:stock.location,icon:0
 msgid "Icon"
-msgstr "ikon"
+msgstr "İkon"
 
 #. module: stock
 #: code:addons/stock/stock.py:2311 code:addons/stock/stock.py:2726
@@ -3341,11 +3530,13 @@ msgstr "Kullanıcı Hatası"
 #: field:stock.partial.picking,hide_tracking:0
 #: field:stock.partial.picking.line,tracking:0
 msgid "Tracking"
-msgstr "Takip"
+msgstr "İzleme"
 
 #. module: stock
-#: view:stock.inventory.line.split:0 view:stock.move.consume:0
-#: view:stock.move.scrap:0 view:stock.move.split:0 view:stock.split.into:0
+#: view:stock.inventory.line.split:0
+#: view:stock.move.consume:0
+#: view:stock.move.scrap:0
+#: view:stock.split.into:0
 msgid "Ok"
 msgstr "Tamam"
 
@@ -3358,6 +3549,10 @@ msgid ""
 "default value for all products in this category. It can also directly be set "
 "on each product"
 msgstr ""
+"Gerçek-zamanlı envanter değerlemesi yaparken, hedef konuma özel bir "
+"değerleme hesabı ayarlanmadıkça, çıkan tüm stok hareketlerinin günlük "
+"öğeleri bu hesaba işlenecektir. Bu, bu kategorideki tüm ürünler için "
+"varsayılan değerdir. Aynı zamanda her ürünü de doğrudan ayarlanabilir."
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_8
@@ -3365,15 +3560,27 @@ msgid "Non European Customers"
 msgstr "Avrupalı Olmayan Müşteriler"
 
 #. module: stock
-#: code:addons/stock/product.py:75 code:addons/stock/product.py:89
-#: code:addons/stock/product.py:92 code:addons/stock/product.py:99
-#: code:addons/stock/product.py:120 code:addons/stock/product.py:146
-#: code:addons/stock/stock.py:2116 code:addons/stock/stock.py:2119
-#: code:addons/stock/stock.py:2122 code:addons/stock/stock.py:2125
-#: code:addons/stock/stock.py:2128 code:addons/stock/stock.py:2131
-#: code:addons/stock/stock.py:2445
-#: code:addons/stock/wizard/stock_fill_inventory.py:47
-#: code:addons/stock/wizard/stock_splitinto.py:49
+#: code:addons/stock/product.py:96
+#: code:addons/stock/product.py:110
+#: code:addons/stock/product.py:113
+#: code:addons/stock/product.py:120
+#: code:addons/stock/product.py:141
+#: code:addons/stock/product.py:167
+#: code:addons/stock/report/report_stock.py:78
+#: code:addons/stock/report/report_stock.py:134
+#: code:addons/stock/stock.py:529
+#: code:addons/stock/stock.py:790
+#: code:addons/stock/stock.py:1190
+#: code:addons/stock/stock.py:1199
+#: code:addons/stock/stock.py:2243
+#: code:addons/stock/stock.py:2246
+#: code:addons/stock/stock.py:2249
+#: code:addons/stock/stock.py:2252
+#: code:addons/stock/stock.py:2255
+#: code:addons/stock/stock.py:2258
+#: code:addons/stock/stock.py:2585
+#: code:addons/stock/wizard/stock_fill_inventory.py:59
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:112
 #: code:addons/stock/wizard/stock_splitinto.py:53
 #, python-format
 msgid "Error!"
@@ -3386,21 +3593,26 @@ msgstr "Bu envanterleri birleştirmek istiyor musunuz?"
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
-#: selection:report.stock.move,state:0 selection:stock.inventory,state:0
-#: selection:stock.move,state:0 selection:stock.picking,state:0
+#: selection:report.stock.move,state:0
+#: selection:stock.inventory,state:0
+#: selection:stock.move,state:0
+#: selection:stock.picking,state:0
+#: selection:stock.picking.in,state:0
+#: selection:stock.picking.out,state:0
 msgid "Cancelled"
-msgstr "İptal edildi"
+msgstr "İptalEdildi"
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Confirmed Delivery Orders"
-msgstr "Onaylanmış Teslimat Emirleri"
+msgstr "Onaylanmış Teslimat Siparişleri"
 
 #. module: stock
-#: view:stock.move:0 field:stock.partial.move,picking_id:0
+#: view:stock.move:0
+#: field:stock.partial.move,picking_id:0
 #: field:stock.partial.picking,picking_id:0
 msgid "Picking"
-msgstr "Alım"
+msgstr "SeçimListesi"
 
 #. module: stock
 #: help:stock.picking,move_type:0
@@ -3417,7 +3629,10 @@ msgstr "Bu alım listesi faturalandırma gerektirmez."
 #. module: stock
 #: selection:report.stock.move,type:0
 #: selection:stock.location,chained_picking_type:0
+#: selection:stock.move,type:0
 #: selection:stock.picking,type:0
+#: selection:stock.picking.in,type:0
+#: selection:stock.picking.out,type:0
 msgid "Getting Goods"
 msgstr "Mal Alımı"
 
@@ -3455,7 +3670,7 @@ msgid "Warning"
 msgstr "Uyarı"
 
 #. module: stock
-#: code:addons/stock/stock.py:1348
+#: code:addons/stock/stock.py:1412
 #, python-format
 msgid "is done."
 msgstr "yapıldı."
@@ -3466,10 +3681,10 @@ msgid "Revision Date"
 msgstr "Revizyon Tarihi"
 
 #. module: stock
-#: view:board.board:0
-#: model:ir.actions.act_window,name:stock.action_outgoing_product_board
 #: model:ir.actions.act_window,name:stock.action_picking_tree
-#: model:ir.ui.menu,name:stock.menu_action_picking_tree view:stock.picking:0
+#: model:ir.model,name:stock.model_stock_picking_out
+#: model:ir.ui.menu,name:stock.menu_action_picking_tree
+#: view:stock.picking.out:0
 msgid "Delivery Orders"
 msgstr "Teslimat Siparişleri"
 
@@ -3489,24 +3704,24 @@ msgstr ""
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
-#: selection:report.stock.move,state:0 selection:stock.inventory,state:0
-#: view:stock.picking:0
+#: selection:report.stock.move,state:0
+#: selection:stock.inventory,state:0
 msgid "Confirmed"
 msgstr "Onaylandı"
 
 #. module: stock
+#: view:stock.move:0
 #: view:stock.picking:0
 msgid "Confirm"
-msgstr "Onayla"
+msgstr "Onaylama"
 
 #. module: stock
-#: view:stock.picking:0
+#: view:stock.picking.out:0
 msgid "Check Availability"
-msgstr "Kullanılırlığını Kontrol Et"
+msgstr "Uygunluk Kontrolu"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_merge_inventories
-#: view:stock.inventory.merge:0
 msgid "Merge inventories"
 msgstr "Envanterleri birleştir"
 
@@ -3544,19 +3759,21 @@ msgid "Total outgoing quantity"
 msgstr "Giden toplam miktar"
 
 #. module: stock
-#: selection:stock.move,state:0 selection:stock.picking,state:0
+#: selection:stock.move,state:0
 msgid "New"
 msgstr "Yeni"
 
 #. module: stock
-#: help:stock.partial.move.line,cost:0 help:stock.partial.picking.line,cost:0
+#: help:stock.partial.move.line,cost:0
+#: help:stock.partial.picking.line,cost:0
 msgid "Unit Cost for this product line"
 msgstr "Bu ürün hattı için Birim Maliyet"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_category
 #: view:report.stock.inventory:0
-#: field:report.stock.inventory,product_categ_id:0 view:report.stock.move:0
+#: field:report.stock.inventory,product_categ_id:0
+#: view:report.stock.move:0
 #: field:report.stock.move,categ_id:0
 msgid "Product Category"
 msgstr "Ürün Kategorisi"
@@ -3567,7 +3784,7 @@ msgid "Reporting"
 msgstr "Raporlama"
 
 #. module: stock
-#: code:addons/stock/stock.py:1343
+#: code:addons/stock/stock.py:1407
 #, python-format
 msgid " for the "
 msgstr " için "
@@ -3583,7 +3800,6 @@ msgid "Stock available to be delivered"
 msgstr "Teslim edilecek mevcut stok"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_stock_invoice_onshipping
 #: view:stock.invoice.onshipping:0
 msgid "Create invoice"
 msgstr "Fatura Oluştur"
@@ -3626,7 +3842,7 @@ msgstr ""
 #. module: stock
 #: field:stock.location,chained_journal_id:0
 msgid "Chaining Journal"
-msgstr "Zincirleme Defteri"
+msgstr "Zincirleme Yevmiye"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_picking_list
@@ -3634,7 +3850,7 @@ msgid "Packing list"
 msgstr "Çeki Listesi"
 
 #. module: stock
-#: code:addons/stock/stock.py:738
+#: code:addons/stock/stock.py:768
 #, python-format
 msgid "Not enough stock, unable to reserve the products."
 msgstr "Yeterli stok yok, ürünler rezerve edilemiyor."
@@ -3645,12 +3861,15 @@ msgid "Customers"
 msgstr "Müşteriler"
 
 #. module: stock
-#: selection:stock.move,state:0 selection:stock.picking,state:0
+#: selection:stock.move,state:0
+#: selection:stock.picking,state:0
+#: selection:stock.picking.in,state:0
+#: selection:stock.picking.out,state:0
 msgid "Waiting Availability"
 msgstr "Uygunluk Bekliyor"
 
 #. module: stock
-#: code:addons/stock/stock.py:1347
+#: code:addons/stock/stock.py:1411
 #, python-format
 msgid "is cancelled."
 msgstr "iptal edildi."
@@ -3658,7 +3877,7 @@ msgstr "iptal edildi."
 #. module: stock
 #: view:stock.inventory.line:0
 msgid "Stock Inventory Lines"
-msgstr "Stok Envanter Kalemleri"
+msgstr "Stok Envanter Satırları"
 
 #. module: stock
 #: view:stock.move:0
@@ -3666,10 +3885,10 @@ msgid "Waiting "
 msgstr "Bekliyor "
 
 #. module: stock
-#: code:addons/stock/product.py:427
+#: code:addons/stock/product.py:457
 #, python-format
 msgid "Future Deliveries"
-msgstr "Sonraki Teslimatlar"
+msgstr "Gelecek Teslimatlar"
 
 #. module: stock
 #: view:stock.picking:0
@@ -3677,12 +3896,14 @@ msgid "Additional info"
 msgstr "Ek bilgi"
 
 #. module: stock
-#: view:stock.move:0 field:stock.move,tracking_id:0
+#: view:stock.move:0
+#: field:stock.move,tracking_id:0
+#: view:stock.tracking:0
 msgid "Pack"
 msgstr "Paket"
 
 #. module: stock
-#: view:stock.move:0 view:stock.picking:0
+#: view:stock.move:0
 msgid "Date Expected"
 msgstr "Beklenen Tarih"
 
@@ -3702,6 +3923,7 @@ msgid "Product Template"
 msgstr "Ürün Şablonu"
 
 #. module: stock
+#: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "December"
 msgstr "Aralık"
@@ -3709,7 +3931,7 @@ msgstr "Aralık"
 #. module: stock
 #: view:stock.production.lot:0
 msgid "Available Product Lots"
-msgstr "Mevcut Ürün Partileri"
+msgstr "Mevcut Ürün Lotları"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_move_form2
@@ -3723,9 +3945,10 @@ msgstr ""
 "görmek için, üründe filtreleme yapabilirsiniz."
 
 #. module: stock
-#: view:stock.picking:0
+#: view:stock.picking.in:0
+#: view:stock.picking.out:0
 msgid "Return Products"
-msgstr "Ürünleri İade Et"
+msgstr "Dönen Ürünler"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -3755,18 +3978,24 @@ msgstr "Ürün Hareketleri"
 
 #. module: stock
 #: selection:stock.picking,invoice_state:0
+#: selection:stock.picking.in,invoice_state:0
+#: selection:stock.picking.out,invoice_state:0
 msgid "Invoiced"
 msgstr "Faturalandı"
 
 #. module: stock
 #: field:stock.picking,max_date:0
+#: field:stock.picking.in,max_date:0
+#: field:stock.picking.out,max_date:0
 msgid "Max. Expected Date"
 msgstr "Mak. Beklenen Tarih"
 
 #. module: stock
 #: field:stock.picking,auto_picking:0
+#: field:stock.picking.in,auto_picking:0
+#: field:stock.picking.out,auto_picking:0
 msgid "Auto-Picking"
-msgstr "Otomatik Alım"
+msgstr "Otomatik Seçimlistesi"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop1
@@ -3779,16 +4008,25 @@ msgid "Chaining Type"
 msgstr "Zincirleme Türü"
 
 #. module: stock
-#: view:report.stock.inventory:0 view:report.stock.move:0
-#: selection:report.stock.move,type:0 view:stock.location:0
+#: view:report.stock.inventory:0
+#: view:report.stock.move:0
+#: selection:report.stock.move,type:0
+#: view:stock.location:0
 #: selection:stock.location,chained_picking_type:0
+#: selection:stock.move,type:0
 #: selection:stock.picking,type:0
+#: selection:stock.picking.in,type:0
+#: selection:stock.picking.out,type:0
 msgid "Internal"
 msgstr "Dahili"
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
-#: selection:report.stock.move,state:0 selection:stock.inventory,state:0
+#: selection:report.stock.move,state:0
+#: selection:stock.inventory,state:0
+#: selection:stock.picking,state:0
+#: selection:stock.picking.in,state:0
+#: selection:stock.picking.out,state:0
 msgid "Draft"
 msgstr "Taslak"
 
@@ -3796,7 +4034,7 @@ msgstr "Taslak"
 #: model:ir.actions.report.xml,name:stock.report_stock_inventory_move
 #: report:stock.inventory.move:0
 msgid "Stock Inventory"
-msgstr "Stok Envnteri"
+msgstr "Stok Envanteri"
 
 #. module: stock
 #: help:report.stock.inventory,state:0
@@ -3814,7 +4052,7 @@ msgstr ""
 "Hareket bir başka hareketi bekliyorsa, durum 'Beklemede' olur."
 
 #. module: stock
-#: view:stock.picking:0
+#: view:stock.invoice.onshipping:0
 msgid "Create Invoice"
 msgstr "Fatura Oluştur"
 
@@ -3834,7 +4072,7 @@ msgstr ""
 "kaynak konum olarak, varsayılan yerine bu stok lokasyonu kullanılacaktır"
 
 #. module: stock
-#: code:addons/stock/stock.py:1346
+#: code:addons/stock/stock.py:1410
 #, python-format
 msgid "is ready to process."
 msgstr "işleme hazır."
@@ -3870,6 +4108,7 @@ msgid "None of these picking lists require invoicing."
 msgstr "Bu alım listelerinin hiçbiri faturalandırma gerektirmiyor."
 
 #. module: stock
+#: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "November"
 msgstr "Kasım"
@@ -3882,7 +4121,7 @@ msgstr ""
 "Ürün kategorisinde tanımlanan hiçbir defter mevcut değil: \"%s\" (id: %d)"
 
 #. module: stock
-#: code:addons/stock/product.py:441
+#: code:addons/stock/product.py:471
 #, python-format
 msgid "Unplanned Qty"
 msgstr "Planlanmayan Miktar"
@@ -3923,15 +4162,14 @@ msgid "Move History (parent moves)"
 msgstr "Hareket Geçmşi (üst hareketler)"
 
 #. module: stock
-#: code:addons/stock/product.py:423
+#: code:addons/stock/product.py:453
 #, python-format
 msgid "Future Stock"
 msgstr "Sonraki Stok"
 
 #. module: stock
-#: code:addons/stock/stock.py:513 code:addons/stock/stock.py:1149
-#: code:addons/stock/stock.py:1157
-#: code:addons/stock/wizard/stock_invoice_onshipping.py:112
+#: code:addons/stock/stock.py:1663
+#: code:addons/stock/stock.py:1665
 #, python-format
 msgid "Error"
 msgstr "Hata"
@@ -3953,25 +4191,17 @@ msgstr ""
 "almak için bir lokasyona tıklayabilirsiniz."
 
 #. module: stock
-#: model:res.request.link,name:stock.req_link_tracking
-#: field:stock.change.product.qty,prodlot_id:0
-#: field:stock.inventory.line,prod_lot_id:0
-#: field:stock.inventory.line.split.lines,name:0
-#: field:stock.inventory.line.split.lines,prodlot_id:0
-#: report:stock.inventory.move:0 field:stock.move,prodlot_id:0
-#: field:stock.move.split.lines,name:0
-#: field:stock.move.split.lines,prodlot_id:0
-#: field:stock.partial.move.line,prodlot_id:0
-#: field:stock.partial.picking.line,prodlot_id:0 view:stock.production.lot:0
-#: field:stock.production.lot,name:0
+#: report:stock.inventory.move:0
 msgid "Production Lot"
 msgstr "Üretim Lotu"
 
 #. module: stock
-#: model:ir.ui.menu,name:stock.menu_traceability view:stock.move:0
-#: view:stock.picking:0 view:stock.production.lot:0 view:stock.tracking:0
+#: model:ir.ui.menu,name:stock.menu_traceability
+#: view:stock.config.settings:0
+#: view:stock.move:0
+#: view:stock.tracking:0
 msgid "Traceability"
-msgstr "İzlenebilirlik / Takip Sistemi"
+msgstr "İzlenebilirlik"
 
 #. module: stock
 #: view:stock.picking:0
@@ -3980,14 +4210,16 @@ msgstr "Faturalandırılacak"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_form
-#: model:ir.ui.menu,name:stock.menu_action_location_form view:stock.picking:0
+#: model:ir.ui.menu,name:stock.menu_action_location_form
+#: view:stock.location:0
+#: view:stock.move:0
 msgid "Locations"
 msgstr "Lokasyonlar"
 
 #. module: stock
-#: view:stock.picking:0
+#: view:stock.inventory:0
 msgid "General Information"
-msgstr "Genel Bilgiler"
+msgstr "Genel Bilgisi"
 
 #. module: stock
 #: field:stock.production.lot,prefix:0
@@ -4012,18 +4244,26 @@ msgid ""
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
 msgstr ""
+"Gerçek zamanlı envanter değerlemesi yaparken, gelen bütün stok "
+"hareketlerinin karşıt günlük maddeleri, kaynak konumda özel bir değerleme "
+"hesabı tanımlanıncaya kadar bu hesaba işlenecektir. Ürüne tanımlanmamışsa, "
+"ürün kategorisinden bir tane kullanılır."
 
 #. module: stock
-#: view:stock.move:0 field:stock.partial.move,move_ids:0
+#: view:stock.move:0
+#: field:stock.partial.move,move_ids:0
 #: field:stock.return.picking,product_return_moves:0
 msgid "Moves"
 msgstr "Hareketler"
 
 #. module: stock
-#: view:report.stock.move:0 field:report.stock.move,location_dest_id:0
+#: view:report.stock.move:0
+#: field:report.stock.move,location_dest_id:0
 #: field:stock.partial.move.line,location_dest_id:0
 #: field:stock.partial.picking.line,location_dest_id:0
 #: field:stock.picking,location_dest_id:0
+#: field:stock.picking.in,location_dest_id:0
+#: field:stock.picking.out,location_dest_id:0
 msgid "Dest. Location"
 msgstr "Hedef Lokasyon"
 
@@ -4053,10 +4293,13 @@ msgstr "Üretim"
 #. module: stock
 #: view:stock.split.into:0
 msgid "Split Move"
-msgstr "Hareketi Ayır"
+msgstr "Hareketi Böl"
 
 #. module: stock
+#: field:stock.move,backorder_id:0
 #: field:stock.picking,backorder_id:0
+#: field:stock.picking.in,backorder_id:0
+#: field:stock.picking.out,backorder_id:0
 msgid "Back Order of"
 msgstr "Sipariş Bakiyesi"
 
@@ -4092,7 +4335,9 @@ msgid "Real"
 msgstr "Gerçek"
 
 #. module: stock
-#: report:stock.picking.list:0 view:stock.production.lot.revision:0
+#: field:stock.move,name:0
+#: report:stock.picking.list:0
+#: view:stock.production.lot.revision:0
 #: field:stock.production.lot.revision,description:0
 msgid "Description"
 msgstr "Açıklama"
@@ -4104,7 +4349,7 @@ msgid "May"
 msgstr "Mayıs"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action5 view:stock.tracking:0
+#: model:ir.actions.act_window,name:stock.action5
 msgid "Upstream traceability"
 msgstr "Giriş izlenebilirliği"
 
@@ -4115,7 +4360,7 @@ msgid "Location Content"
 msgstr "Lokasyon İçeriği"
 
 #. module: stock
-#: code:addons/stock/product.py:447
+#: code:addons/stock/product.py:477
 #, python-format
 msgid "Produced Qty"
 msgstr "Üretilen Miktar"
@@ -4125,12 +4370,12 @@ msgstr "Üretilen Miktar"
 #: field:product.template,property_stock_account_output:0
 #: field:stock.change.standard.price,stock_account_output:0
 msgid "Stock Output Account"
-msgstr "Stok Çıkış Hes."
+msgstr "Stok Çıkış Hesabı"
 
 #. module: stock
 #: field:stock.location,chained_location_type:0
 msgid "Chained Location Type"
-msgstr "Zincirlenmiş Lokasyon Tipi"
+msgstr "Zincirlenmiş Lokasyon Türü"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_prodlots
@@ -4138,8 +4383,9 @@ msgid "Stock report by production lots"
 msgstr "Üretim Lotlarına Göre Stok Raporu"
 
 #. module: stock
-#: view:stock.location:0 selection:stock.location,chained_location_type:0
-#: view:stock.move:0
+#: view:stock.location:0
+#: selection:stock.location,chained_location_type:0
+#: view:stock.picking.out:0
 msgid "Customer"
 msgstr "Müşteri"
 
@@ -4165,9 +4411,10 @@ msgid "Convenient Store"
 msgstr "Elverişli Depo"
 
 #. module: stock
-#: field:stock.location,scrap_location:0 view:stock.move.scrap:0
+#: field:stock.location,scrap_location:0
+#: view:stock.move.scrap:0
 msgid "Scrap Location"
-msgstr "Iskarta Lokasyonu"
+msgstr "Hurda Lokasyonu"
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
@@ -4176,14 +4423,14 @@ msgid "April"
 msgstr "Nisan"
 
 #. module: stock
-#: view:report.stock.inventory:0 view:stock.move:0
+#: view:report.stock.inventory:0
 msgid "Future"
-msgstr "Sonraki"
+msgstr "Gelecek"
 
 #. module: stock
 #: field:stock.invoice.onshipping,invoice_date:0
 msgid "Invoiced date"
-msgstr "Faturalandırma Tarihi"
+msgstr "Faturalanma Tarihi"
 
 #. module: stock
 #: code:addons/stock/stock.py:738
@@ -4208,6 +4455,8 @@ msgid ""
 "By default, the pack reference is generated following the sscc standard. "
 "(Serial number + 1 check digit)"
 msgstr ""
+"Varsayılan olarak, paket referansı sscc standartı izlenerek oluşturulur. "
+"(Seri numarası + 1 ondalık işareti)"
 
 #. module: stock
 #: constraint:res.partner:0
@@ -4215,13 +4464,16 @@ msgid "Error ! You cannot create recursive associated members."
 msgstr "Hata ! kendini çağıran ilişkili üyeler oluşturamazsınız."
 
 #. module: stock
-#: code:addons/stock/wizard/stock_partial_picking.py:159
+#: code:addons/stock/wizard/stock_partial_picking.py:192
 #, python-format
 msgid ""
 "The rounding of the initial uom does not allow you to ship \"%s %s\", as it "
 "would let a quantity of \"%s %s\" to ship and only roundings of \"%s %s\" is "
 "accepted by the uom."
 msgstr ""
+"İlk ürün ölçü biriminin yuvarlanması \"%s %s\" sevkiyatına izin vermez, "
+"çünkü ölçü birimi \"%s %s\" miktarın sevkiyatını ve yalnızca \"%s %s\" "
+"miktarın yuvarlanmasını kabul eder."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_move.py:213
@@ -4241,8 +4493,10 @@ msgid "Optional: next stock move when chaining them"
 msgstr "Opsiyonel: zincirlerken sonraki stok hareketi"
 
 #. module: stock
-#: view:report.stock.inventory:0 field:report.stock.inventory,year:0
-#: view:report.stock.move:0 field:report.stock.move,year:0
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,year:0
+#: view:report.stock.move:0
+#: field:report.stock.move,year:0
 msgid "Year"
 msgstr "Yıl"
 
@@ -4252,12 +4506,13 @@ msgid "Physical Locations"
 msgstr "Fiziksel Lokasyon"
 
 #. module: stock
-#: view:stock.picking:0 selection:stock.picking,state:0
+#: view:stock.picking.in:0
 msgid "Ready to Process"
 msgstr "İşlenmeye Hazır"
 
 #. module: stock
-#: help:stock.location,posx:0 help:stock.location,posy:0
+#: help:stock.location,posx:0
+#: help:stock.location,posy:0
 #: help:stock.location,posz:0
 msgid "Optional localization details, for information purpose only"
 msgstr "Opsiyonel lokalizasyon ayrıntıları, sadece bilgi amaçlı"

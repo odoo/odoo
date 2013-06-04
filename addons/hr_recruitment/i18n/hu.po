@@ -8,13 +8,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
 "PO-Revision-Date: 2012-05-23 20:09+0000\n"
-"Last-Translator: Herczeg Péter <herczegp@gmail.com>\n"
+"Last-Translator: Herczeg Péter <hp@erp-cloud.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:46+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:03+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -22,9 +22,12 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the case "
 "without removing it."
 msgstr ""
+"Ha az aktív mező hamisra van állítva, akkor lehetővé teszi az eset "
+"eltüntetését, annak eltávolítása nélkül."
 
 #. module: hr_recruitment
-#: view:hr.recruitment.stage:0 field:hr.recruitment.stage,requirements:0
+#: view:hr.recruitment.stage:0
+#: field:hr.recruitment.stage,requirements:0
 msgid "Requirements"
 msgstr "Követelmények"
 
@@ -33,7 +36,7 @@ msgstr "Követelmények"
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_source_action
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_source
 msgid "Sources of Applicants"
-msgstr ""
+msgstr "Pályázók forrása"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,delay_open:0
@@ -48,7 +51,7 @@ msgstr "Igények száma"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Group By..."
-msgstr "Csoportosítás..."
+msgstr "Csoportosítás ezzel..."
 
 #. module: hr_recruitment
 #: field:hr.applicant,user_email:0
@@ -58,11 +61,13 @@ msgstr "Felhasználó  email címe"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Filter and view on next actions and date"
-msgstr ""
+msgstr "Szűrés és nézet a következő műveletnél és dátumnál"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,department_id:0
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,department_id:0
+#: view:hr.applicant:0
+#: field:hr.applicant,department_id:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,department_id:0
 msgid "Department"
 msgstr "Osztály, részleg"
 
@@ -74,7 +79,7 @@ msgstr "Következő művelet időpontja"
 #. module: hr_recruitment
 #: field:hr.applicant,salary_expected_extra:0
 msgid "Expected Salary Extra"
-msgstr ""
+msgstr "Elvárt extra jövedelem"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -87,7 +92,8 @@ msgid "Pending Jobs"
 msgstr "Függő állások"
 
 #. module: hr_recruitment
-#: field:hr.applicant,company_id:0 view:hr.recruitment.report:0
+#: field:hr.applicant,company_id:0
+#: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,company_id:0
 msgid "Company"
 msgstr "Vállalat"
@@ -98,10 +104,10 @@ msgid "No"
 msgstr "Nem"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:436
+#: code:addons/hr_recruitment/hr_recruitment.py:445
 #, python-format
 msgid "You must define Applied Job for this applicant."
-msgstr ""
+msgstr "Meg kell határoznia egy betöltött állást ehhez a jelentkezőhöz"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -111,7 +117,7 @@ msgstr "Munka"
 #. module: hr_recruitment
 #: field:hr.recruitment.partner.create,close:0
 msgid "Close job request"
-msgstr ""
+msgstr "Állás igénylés lezárása"
 
 #. module: hr_recruitment
 #: field:hr.applicant,day_open:0
@@ -135,7 +141,8 @@ msgid "Create Partner"
 msgstr "Partner létrehozása"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,day:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,day:0
 msgid "Day"
 msgstr "Nap"
 
@@ -162,7 +169,7 @@ msgstr "Visszautasít"
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
 msgid "Master Degree"
-msgstr ""
+msgstr "Mester fokozat"
 
 #. module: hr_recruitment
 #: field:hr.applicant,partner_mobile:0
@@ -185,12 +192,14 @@ msgid "Next Actions"
 msgstr "Következő műveletek"
 
 #. module: hr_recruitment
-#: field:hr.applicant,salary_expected:0 view:hr.recruitment.report:0
+#: field:hr.applicant,salary_expected:0
+#: view:hr.recruitment.report:0
 msgid "Expected Salary"
 msgstr "Várható fizetés"
 
 #. module: hr_recruitment
-#: field:hr.applicant,job_id:0 field:hr.recruitment.report,job_id:0
+#: field:hr.applicant,job_id:0
+#: field:hr.recruitment.report,job_id:0
 msgid "Applied Job"
 msgstr "Alkalmazott állás"
 
@@ -202,10 +211,10 @@ msgstr "Diplomás"
 #. module: hr_recruitment
 #: field:hr.applicant,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Szín meghatározó"
 
 #. module: hr_recruitment
-#: view:board.board:0 view:hr.applicant:0
+#: view:hr.applicant:0
 #: model:ir.actions.act_window,name:hr_recruitment.action_applicants_status
 msgid "Applicants Status"
 msgstr "Pályázók státusza"
@@ -213,12 +222,12 @@ msgstr "Pályázók státusza"
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "My Recruitment"
-msgstr ""
+msgstr "Én toborzásaim"
 
 #. module: hr_recruitment
 #: field:hr.job,survey_id:0
 msgid "Interview Form"
-msgstr ""
+msgstr "Interjú űrlap"
 
 #. module: hr_recruitment
 #: help:hr.job,survey_id:0
@@ -226,6 +235,9 @@ msgid ""
 "Choose an interview form for this job position and you will be able to "
 "print/answer this interview from all applicants who apply for this job"
 msgstr ""
+"Vállaaszon ki egy interjú űrlapot ehhez az álláshoz és akkor ki tudja "
+"nyomtatni/ meg tudja válaszolni ezt az interjút azokkal a jelentkezőkkel "
+"akik jelentkeztek erre az állásra."
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_recruitment
@@ -233,10 +245,10 @@ msgid "Recruitment"
 msgstr "Toborzás"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:436
+#: code:addons/hr_recruitment/hr_recruitment.py:445
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Figyelem!"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_prop:0
@@ -254,7 +266,9 @@ msgid "Avg Proposed Salary"
 msgstr "Átlagos javasolt fizetés"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.recruitment.report,available:0
+#: view:hr.applicant:0
+#: field:hr.applicant,availability:0
+#: field:hr.recruitment.report,available:0
 msgid "Availability"
 msgstr "Elérhetőség"
 
@@ -273,7 +287,7 @@ msgstr "Előző"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
 msgid "Source of Applicants"
-msgstr ""
+msgstr "Jelentkezők forrása"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/wizard/hr_recruitment_phonecall.py:115
@@ -305,7 +319,7 @@ msgstr "Felvétel"
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "Hired employees"
-msgstr ""
+msgstr "Felvett alkalmazottak"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -318,9 +332,10 @@ msgid "Job Description"
 msgstr "Munkaköri leírás"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,source_id:0
+#: view:hr.applicant:0
+#: field:hr.applicant,source_id:0
 msgid "Source"
-msgstr ""
+msgstr "Forrás"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -334,8 +349,11 @@ msgid "A partner is already defined on this job request."
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0 selection:hr.recruitment.report,state:0
+#: view:hr.applicant:0
+#: selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0
+#: selection:hr.recruitment.report,state:0
+#: selection:hr.recruitment.stage,state:0
 msgid "New"
 msgstr "Új"
 
@@ -380,7 +398,8 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,create_date:0
+#: view:hr.applicant:0
+#: field:hr.applicant,create_date:0
 #: view:hr.recruitment.report:0
 msgid "Creation Date"
 msgstr "Létrehozás dátuma"
@@ -389,7 +408,7 @@ msgstr "Létrehozás dátuma"
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_hired_employee
 #: model:ir.model,name:hr_recruitment.model_hired_employee
 msgid "Create Employee"
-msgstr ""
+msgstr "Alkalmazott létrehozás"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.job2phonecall,deadline:0
@@ -397,7 +416,8 @@ msgid "Planned Date"
 msgstr "Tervezett időpont"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,priority:0
+#: view:hr.applicant:0
+#: field:hr.applicant,priority:0
 #: field:hr.recruitment.report,priority:0
 msgid "Appreciation"
 msgstr "Elismerés"
@@ -405,35 +425,40 @@ msgstr "Elismerés"
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
 msgid "Initial Qualification"
-msgstr ""
+msgstr "Elsődleges végzettség"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Print Interview"
-msgstr ""
+msgstr "Interjú kinyomtatás"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,stage_id:0
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,stage_id:0
+#: view:hr.applicant:0
+#: field:hr.applicant,stage_id:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,stage_id:0
 #: view:hr.recruitment.stage:0
 msgid "Stage"
 msgstr "Szakasz"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0 selection:hr.recruitment.report,state:0
+#: view:hr.applicant:0
+#: selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0
+#: selection:hr.recruitment.report,state:0
+#: selection:hr.recruitment.stage,state:0
 msgid "Pending"
 msgstr "Függőben lévő"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_job_stage_act
 msgid "Recruitment / Applicants Stages"
-msgstr ""
+msgstr "Toborzás / Pályázati szakaszok"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
 msgid "Doctoral Degree"
-msgstr ""
+msgstr "Doktorátusi fokozat"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -442,18 +467,17 @@ msgstr "Július"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
+#: field:hr.applicant,name:0
 msgid "Subject"
 msgstr "Tárgy"
 
 #. module: hr_recruitment
 #: field:hr.applicant,email_cc:0
 msgid "Watchers Emails"
-msgstr ""
+msgstr "Email örző"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-#: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
-#: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
 msgid "Applicants"
 msgstr "Pályázók"
 
@@ -493,17 +517,19 @@ msgstr "Pályázó"
 #. module: hr_recruitment
 #: help:hr.recruitment.stage,sequence:0
 msgid "Gives the sequence order when displaying a list of stages."
-msgstr ""
+msgstr "Sorozati rendet ad a szakaszok lista nézetében."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
+#: code:addons/hr_recruitment/hr_recruitment.py:347
+#: field:hr.applicant,partner_id:0
+#, python-format
 msgid "Contact"
 msgstr "Kapcsolat"
 
 #. module: hr_recruitment
 #: help:hr.applicant,salary_expected_extra:0
 msgid "Salary Expected by Applicant, extra advantages"
-msgstr ""
+msgstr "A jelentkező által elvárt fizetés, extra előnyök"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -511,7 +537,7 @@ msgid "Qualification"
 msgstr "Végzettség"
 
 #. module: hr_recruitment
-#: field:hr.applicant,partner_id:0 view:hr.recruitment.report:0
+#: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,partner_id:0
 msgid "Partner"
 msgstr "Partner"
@@ -536,7 +562,7 @@ msgstr "Szakaszok"
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "Draft recruitment"
-msgstr ""
+msgstr "Toborzás tervezet"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -551,7 +577,7 @@ msgstr "Folyamatban"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_form_installer
 msgid "Review Recruitment Stages"
-msgstr ""
+msgstr "Toborzási szakaszok felülvizsgálata"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -584,14 +610,15 @@ msgid "Recruitment during last month"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,month:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,month:0
 msgid "Month"
 msgstr "Hónap"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Unassigned Recruitments"
-msgstr ""
+msgstr "Kijelöletlen toborzások"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -614,14 +641,15 @@ msgid "Yes"
 msgstr "Igen"
 
 #. module: hr_recruitment
-#: field:hr.applicant,salary_proposed:0 view:hr.recruitment.report:0
+#: field:hr.applicant,salary_proposed:0
+#: view:hr.recruitment.report:0
 msgid "Proposed Salary"
 msgstr "Javasolt fizetés"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Schedule Meeting"
-msgstr ""
+msgstr "Találkozó ütemezése"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -660,7 +688,9 @@ msgid "Group By ..."
 msgstr "Csoportosítás..."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 selection:hr.applicant,state:0
+#: view:hr.applicant:0
+#: selection:hr.applicant,state:0
+#: selection:hr.recruitment.stage,state:0
 msgid "In Progress"
 msgstr "Folyamatban"
 
@@ -677,7 +707,7 @@ msgstr "Várható fizetések kérelmezőnként"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "All Initial Jobs"
-msgstr ""
+msgstr "Munden elsődleges állás"
 
 #. module: hr_recruitment
 #: help:hr.applicant,email_cc:0
@@ -686,14 +716,18 @@ msgid ""
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
 msgstr ""
+"Ezek az email címek lesznek hozzáadva a CC /Carbon copy,másolat/ mezőhöz "
+"minden bejövő és kimenő email-hez amit ezzel a feljegyzéssel küld. Több "
+"email felsorolását vesszővel elválasztva adja meg."
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_degree
 msgid "Degrees"
-msgstr ""
+msgstr "Fokozat"
 
 #. module: hr_recruitment
-#: field:hr.applicant,date_closed:0 field:hr.recruitment.report,date_closed:0
+#: field:hr.applicant,date_closed:0
+#: field:hr.recruitment.report,date_closed:0
 msgid "Closed"
 msgstr "Lezárt"
 
@@ -710,7 +744,7 @@ msgstr "Válasz"
 #. module: hr_recruitment
 #: field:hr.recruitment.report,delay_close:0
 msgid "Avg. Delay to Close"
-msgstr ""
+msgstr "Átl. bezárási idő"
 
 #. module: hr_recruitment
 #: help:hr.applicant,salary_proposed:0
@@ -723,13 +757,15 @@ msgid "Meeting"
 msgstr "Találkozó"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:347
+#: code:addons/hr_recruitment/hr_recruitment.py:360
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "Nincs tárgy"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
+#: field:hr.applicant,state:0
+#: field:hr.recruitment.report,state:0
+#: field:hr.recruitment.stage,state:0
 msgid "Status"
 msgstr "Státusz"
 
@@ -744,8 +780,10 @@ msgid "August"
 msgstr "Augusztus"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,type_id:0
-#: view:hr.recruitment.degree:0 view:hr.recruitment.report:0
+#: view:hr.applicant:0
+#: field:hr.applicant,type_id:0
+#: view:hr.recruitment.degree:0
+#: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,type_id:0
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
 msgid "Degree"
@@ -805,7 +843,7 @@ msgstr "Válasz"
 #. module: hr_recruitment
 #: field:hr.recruitment.stage,department_id:0
 msgid "Specific to a Department"
-msgstr ""
+msgstr "Osztályhoz kötődő"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_prop_avg:0
@@ -822,7 +860,7 @@ msgstr "Telefonhívás ütemezése"
 #. module: hr_recruitment
 #: field:hr.applicant,salary_proposed_extra:0
 msgid "Proposed Salary Extra"
-msgstr ""
+msgstr "Javasolt kiegészítő jövedelem"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -841,7 +879,8 @@ msgid "Not Good"
 msgstr "Nem jó"
 
 #. module: hr_recruitment
-#: field:hr.applicant,date:0 field:hr.recruitment.report,date:0
+#: field:hr.applicant,date:0
+#: field:hr.recruitment.report,date:0
 msgid "Date"
 msgstr "Dátum"
 
@@ -858,7 +897,7 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hired.employee:0
 msgid "Would you like to create an employee ?"
-msgstr ""
+msgstr "Létre akar hozni egy alkalmazottat?"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
@@ -889,6 +928,9 @@ msgid ""
 "forget to specify the department if your recruitment process is different "
 "according to the job position."
 msgstr ""
+"Jelölje, ha a következő állapot egyezik a toborzási folyamatával. Ne "
+"felejtse az osztály meghatározását ha a toborzási folyamat különbözik a "
+"betöltendő állástól."
 
 #. module: hr_recruitment
 #: field:hr.applicant,partner_address_id:0
@@ -914,15 +956,16 @@ msgstr "Cég weboldala"
 #. module: hr_recruitment
 #: sql_constraint:hr.recruitment.degree:0
 msgid "The name of the Degree of Recruitment must be unique!"
-msgstr ""
+msgstr "A toborzási fok nevének egyedinek kell lennie!"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,year:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,year:0
 msgid "Year"
 msgstr "Év"
 
 #. module: hr_recruitment
-#: view:hired.employee:0 view:hr.recruitment.job2phonecall:0
+#: view:hired.employee:0
 #: view:hr.recruitment.partner.create:0
 msgid "Cancel"
 msgstr "Mégse"
@@ -946,15 +989,16 @@ msgstr ""
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Subject / Applicant"
-msgstr ""
+msgstr "Tárgy / Jelentkező"
 
 #. module: hr_recruitment
 #: help:hr.recruitment.degree,sequence:0
 msgid "Gives the sequence order when displaying a list of degrees."
-msgstr ""
+msgstr "Sorrendet ad a fokozatok listakénti megjelenítésénél."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,user_id:0
+#: view:hr.applicant:0
+#: field:hr.applicant,user_id:0
 #: view:hr.recruitment.report:0
 msgid "Responsible"
 msgstr "Felelős"
@@ -969,12 +1013,12 @@ msgstr "Toborzás elemzése"
 #. module: hr_recruitment
 #: view:hired.employee:0
 msgid "Create New Employee"
-msgstr ""
+msgstr "Új alkalmazott létrehozása"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.source,name:hr_recruitment.source_linkedin
 msgid "LinkedIn"
-msgstr ""
+msgstr "LinkedIn"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -984,7 +1028,7 @@ msgstr "Október"
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Cases By Stage and Estimates"
-msgstr ""
+msgstr "Szakasz és lehetőségenkénti esetek"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -992,14 +1036,15 @@ msgid "Reply"
 msgstr "Válasz"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
+#: model:crm.meeting.type,name:hr_recruitment.categ_meet_interview
+#: view:hr.job:0
 msgid "Interview"
 msgstr "Interjú"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.source,name:0
 msgid "Source Name"
-msgstr ""
+msgstr "Forrásnév"
 
 #. module: hr_recruitment
 #: field:hr.applicant,description:0
@@ -1019,11 +1064,13 @@ msgstr "Aláírt szerződés"
 #. module: hr_recruitment
 #: model:hr.recruitment.source,name:hr_recruitment.source_word
 msgid "Word of Mouth"
-msgstr ""
+msgstr "Élő szóval"
 
 #. module: hr_recruitment
-#: selection:hr.applicant,state:0 selection:hr.recruitment.report,state:0
+#: selection:hr.applicant,state:0
+#: selection:hr.recruitment.report,state:0
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job6
+#: selection:hr.recruitment.stage,state:0
 msgid "Refused"
 msgstr "Elutasított"
 
@@ -1034,26 +1081,28 @@ msgid "Applicant '%s' is being hired."
 msgstr ""
 
 #. module: hr_recruitment
-#: selection:hr.applicant,state:0 view:hr.recruitment.report:0
+#: selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0
 #: selection:hr.recruitment.report,state:0
+#: selection:hr.recruitment.stage,state:0
 msgid "Hired"
-msgstr ""
+msgstr "Felvett"
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
 #: selection:hr.recruitment.report,priority:0
 msgid "On Average"
-msgstr ""
+msgstr "Átlagon"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
 msgid "Degree of Recruitment"
-msgstr ""
+msgstr "Toborzás mértéke"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Open Jobs"
-msgstr ""
+msgstr "Nyitott állások"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -1061,7 +1110,8 @@ msgid "February"
 msgstr "Február"
 
 #. module: hr_recruitment
-#: field:hr.applicant,name:0 field:hr.recruitment.degree,name:0
+#: field:hr.applicant_category,name:0
+#: field:hr.recruitment.degree,name:0
 #: field:hr.recruitment.stage,name:0
 msgid "Name"
 msgstr "Név"
@@ -1079,7 +1129,7 @@ msgstr "Második interjú"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_partner_create
 msgid "Create Partner from job application"
-msgstr ""
+msgstr "Partner létrehozás az állás jelentkezésből"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -1089,12 +1139,12 @@ msgstr "Április"
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "Pending recruitment"
-msgstr ""
+msgstr "Eldöntetlen toborzás"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.source,name:hr_recruitment.source_monster
 msgid "Monster"
-msgstr ""
+msgstr "Monster/szörny"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_job
@@ -1104,7 +1154,7 @@ msgstr "Álláspozíciók"
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "In progress recruitment"
-msgstr ""
+msgstr "Folyamatban lévő toborzás"
 
 #. module: hr_recruitment
 #: sql_constraint:hr.job:0
@@ -1120,7 +1170,7 @@ msgstr "Sorszám"
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bachelor
 msgid "Bachelor Degree"
-msgstr ""
+msgstr "Tudományos fokozat"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.job2phonecall,user_id:0
@@ -1136,13 +1186,12 @@ msgstr ""
 #. module: hr_recruitment
 #: help:hr.applicant,salary_proposed_extra:0
 msgid "Salary Proposed by the Organisation, extra advantages"
-msgstr ""
+msgstr "Fizetés a szervezet, extra előny által javasolva"
 
 #. module: hr_recruitment
 #: help:hr.recruitment.report,delay_close:0
-#: help:hr.recruitment.report,delay_open:0
 msgid "Number of Days to close the project issue"
-msgstr ""
+msgstr "Az ügy lezárásáig használt napok száma."
 
 #. module: hr_recruitment
 #: field:hr.applicant,survey:0

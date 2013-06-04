@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-23 05:17+0000\n"
-"X-Generator: Launchpad (build 16179)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:04+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: idea
 #: help:idea.category,visibility:0
@@ -57,10 +57,7 @@ msgid "Ideas Analysis"
 msgstr "Analyse des idées"
 
 #. module: idea
-#: view:idea.category:0
 #: view:idea.idea:0
-#: view:idea.vote:0
-#: view:report.vote:0
 msgid "Group By..."
 msgstr "Grouper par ..."
 
@@ -299,8 +296,6 @@ msgstr "Juillet"
 #. module: idea
 #: view:idea.idea:0
 #: selection:idea.idea,state:0
-#: view:report.vote:0
-#: selection:report.vote,idea_state:0
 msgid "Accepted"
 msgstr "Acceptée"
 
@@ -313,7 +308,7 @@ msgstr "Catégories"
 #. module: idea
 #: view:idea.category:0
 msgid "Parent Category"
-msgstr "Catégorie parente"
+msgstr "Catégorie mère"
 
 #. module: idea
 #: field:idea.idea,open_date:0
@@ -369,18 +364,12 @@ msgstr "Mois"
 
 #. module: idea
 #: view:idea.idea:0
-#: model:ir.actions.act_window,name:idea.action_idea_idea_categ_open
-#: model:ir.actions.act_window,name:idea.action_idea_idea_open
 msgid "Open Ideas"
 msgstr "Idées Ouvertes"
 
 #. module: idea
 #: view:idea.category:0
-#: field:idea.category,name:0
 #: view:idea.idea:0
-#: field:idea.idea,category_id:0
-#: view:report.vote:0
-#: field:report.vote,category_id:0
 msgid "Category"
 msgstr "Catégorie"
 
@@ -498,7 +487,7 @@ msgid "idea.idea"
 msgstr "idea.idea"
 
 #. module: idea
-#: field:idea.category,summary:0
+#: field:idea.idea,message_summary:0
 msgid "Summary"
 msgstr "Résumé"
 
@@ -524,8 +513,7 @@ msgstr "Tri par date"
 
 #. module: idea
 #: view:idea.idea:0
-#: field:idea.idea,user_id:0
-#: view:report.vote:0
+#: field:idea.idea,create_uid:0
 msgid "Creator"
 msgstr "Créateur"
 
@@ -563,7 +551,6 @@ msgstr "Ouvrir"
 
 #. module: idea
 #: view:idea.idea:0
-#: view:report.vote:0
 msgid "In Progress"
 msgstr "En cours"
 
@@ -577,7 +564,6 @@ msgstr "Analyse des votes de l'idée"
 #: model:ir.actions.act_window,name:idea.action_idea_idea
 #: model:ir.ui.menu,name:idea.menu_idea_idea
 #: model:ir.ui.menu,name:idea.menu_ideas
-#: model:ir.ui.menu,name:idea.menu_ideas1
 msgid "Ideas"
 msgstr "Idées"
 
@@ -603,9 +589,7 @@ msgid "Comments:"
 msgstr "Commentaires :"
 
 #. module: idea
-#: view:idea.category:0
 #: field:idea.idea,description:0
-#: field:idea.post.vote,note:0
 msgid "Description"
 msgstr "Description"
 
@@ -616,7 +600,6 @@ msgstr "Mai"
 
 #. module: idea
 #: selection:idea.idea,state:0
-#: view:report.vote:0
 msgid "Refused"
 msgstr "Refusée"
 
@@ -676,14 +659,7 @@ msgid "Error ! You cannot create recursive categories."
 msgstr "Erreur! Vous ne pouvez pas créer de catégories récursives."
 
 #. module: idea
-#: field:idea.comment,idea_id:0
-#: field:idea.select,idea_id:0
-#: view:idea.vote:0
-#: field:idea.vote,idea_id:0
-#: field:idea.vote.stat,idea_id:0
-#: model:ir.ui.menu,name:idea.menu_idea_reporting
-#: view:report.vote:0
-#: field:report.vote,idea_id:0
+#: view:idea.idea:0
 msgid "Idea"
 msgstr "Idée"
 

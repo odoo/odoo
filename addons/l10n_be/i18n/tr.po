@@ -13,13 +13,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:48+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:05+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: l10n_be
 #: field:partner.vat.intra,test_xml:0
 msgid "Test XML file"
-msgstr ""
+msgstr "Test XML file"
 
 #. module: l10n_be
 #: view:partner.vat.list_13:0
@@ -27,11 +27,13 @@ msgid "You can remove customers which you do not want in exported xml file"
 msgstr ""
 
 #. module: l10n_be
-#: view:partner.vat_13:0
+#: view:partner.vat:0
 msgid ""
 "This wizard will create an XML file for VAT details and total invoiced "
 "amounts per partner."
 msgstr ""
+"This wizard will create an XML file for VAT details and total invoiced "
+"amounts per partner."
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_tiers_receiv
@@ -69,13 +71,14 @@ msgstr "Dönem"
 #. module: l10n_be
 #: field:partner.vat.intra,period_ids:0
 msgid "Period (s)"
-msgstr ""
+msgstr "Period (s)"
 
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
 #: view:partner.vat.intra:0
+#: view:partner.vat.list:0
 msgid "Save the File with '.xml' extension."
-msgstr ""
+msgstr "Save the File with '.xml' extension."
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_charge
@@ -83,40 +86,37 @@ msgid "Charge"
 msgstr ""
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:47
-#: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:52
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:105
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:109
+#: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:265
 #, python-format
 msgid "Data Insufficient!"
-msgstr ""
+msgstr "Data Insufficient!"
 
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
-#: view:partner.vat.list_13:0
+#: view:partner.vat.list:0
 msgid "Create XML"
-msgstr ""
+msgstr "Create XML"
 
 #. module: l10n_be
-#: model:account.account.type,name:l10n_be.user_type_capitaux
+#: model:account.financial.report,name:l10n_be.account_financial_report_capital2
 msgid "Capital"
-msgstr ""
+msgstr "Capital"
 
 #. module: l10n_be
-#: view:partner.vat.list_13:0
+#: view:partner.vat.list:0
 msgid "Print"
-msgstr ""
+msgstr "Print"
 
 #. module: l10n_be
 #: view:partner.vat.intra:0
 msgid "Save XML"
-msgstr ""
+msgstr "Save XML"
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:219
+#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:258
 #, python-format
 msgid "Save"
-msgstr ""
+msgstr "Save"
 
 #. module: l10n_be
 #: sql_constraint:res.company:0
@@ -126,9 +126,8 @@ msgstr ""
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,msg:0
 #: field:partner.vat.intra,msg:0
-#: field:partner.vat.list_13,msg:0
 msgid "File created"
-msgstr ""
+msgstr "File created"
 
 #. module: l10n_be
 #: view:partner.vat.intra:0
@@ -136,15 +135,15 @@ msgid "_Close"
 msgstr ""
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10n_be_account_vat_declaration.py:131
+#: code:addons/l10n_be/wizard/l10n_be_account_vat_declaration.py:201
 #, python-format
 msgid "Save XML For Vat declaration"
-msgstr ""
+msgstr "Save XML For Vat declaration"
 
 #. module: l10n_be
-#: view:partner.vat.list_13:0
+#: view:partner.vat.list:0
 msgid "Customers"
-msgstr ""
+msgstr "Customers"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_tax_in
@@ -162,10 +161,9 @@ msgid "Vat Declaraion"
 msgstr ""
 
 #. module: l10n_be
-#: view:partner.vat.intra:0
 #: field:partner.vat.intra,no_vat:0
 msgid "Partner With No VAT"
-msgstr ""
+msgstr "Partner With No VAT"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_immo
@@ -175,8 +173,9 @@ msgstr ""
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
 #: view:partner.vat.intra:0
+#: field:partner.vat.intra,tax_code_id:0
 msgid "Company"
-msgstr ""
+msgstr "Company"
 
 #. module: l10n_be
 #: model:ir.model,name:l10n_be.model_partner_vat_13
@@ -186,12 +185,12 @@ msgstr ""
 #. module: l10n_be
 #: model:ir.ui.menu,name:l10n_be.partner_vat_listing
 msgid "Annual Listing Of VAT-Subjected Customers"
-msgstr ""
+msgstr "Annual Listing Of VAT-Subjected Customers"
 
 #. module: l10n_be
-#: view:partner.vat.list_13:0
+#: view:partner.vat.list:0
 msgid "XML File has been Created."
-msgstr ""
+msgstr "XML File has been Created."
 
 #. module: l10n_be
 #: help:l1on_be.vat.declaration,client_nihil:0
@@ -208,29 +207,29 @@ msgstr ""
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,ask_restitution:0
 msgid "Ask Restitution"
-msgstr ""
+msgstr "Ask Restitution"
 
 #. module: l10n_be
 #: model:ir.model,name:l10n_be.model_partner_vat_intra
 #: model:ir.ui.menu,name:l10n_be.l10_be_vat_intra
 msgid "Partner VAT Intra"
-msgstr ""
+msgstr "Partner VAT Intra"
 
 #. module: l10n_be
 #: model:ir.ui.menu,name:l10n_be.l10_be_vat_declaration
 #: view:l1on_be.vat.declaration:0
 msgid "Periodical VAT Declaration"
-msgstr ""
+msgstr "Periodical VAT Declaration"
 
 #. module: l10n_be
 #: view:partner.vat.intra:0
 msgid "Note: "
-msgstr ""
+msgstr "Note: "
 
 #. module: l10n_be
 #: view:partner.vat.intra:0
 msgid "_Preview"
-msgstr ""
+msgstr "_Preview"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_tiers_payable
@@ -239,14 +238,13 @@ msgstr ""
 
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,tax_code_id:0
-#: field:partner.vat.intra,tax_code_id:0
 msgid "Tax Code"
-msgstr ""
+msgstr "Tax Code"
 
 #. module: l10n_be
 #: view:partner.vat.intra:0
 msgid "Periods"
-msgstr ""
+msgstr "Periods"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_produit
@@ -256,12 +254,12 @@ msgstr ""
 #. module: l10n_be
 #: help:partner.vat.intra,test_xml:0
 msgid "Sets the XML output as test file"
-msgstr ""
+msgstr "Sets the XML output as test file"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_view
 msgid "Vue"
-msgstr ""
+msgstr "Vue"
 
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
@@ -271,7 +269,7 @@ msgstr ""
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,ask_payment:0
 msgid "Ask Payment"
-msgstr ""
+msgstr "Ask Payment"
 
 #. module: l10n_be
 #: help:partner.vat.intra,no_vat:0
@@ -280,9 +278,9 @@ msgid ""
 msgstr ""
 
 #. module: l10n_be
-#: field:partner.vat_13,limit_amount:0
+#: field:partner.vat,limit_amount:0
 msgid "Limit Amount"
-msgstr ""
+msgstr "Limit Amount"
 
 #. module: l10n_be
 #: model:ir.model,name:l10n_be.model_res_company
@@ -292,18 +290,19 @@ msgstr ""
 #. module: l10n_be
 #: view:partner.vat.intra:0
 msgid "Create _XML"
-msgstr ""
+msgstr "Create _XML"
 
 #. module: l10n_be
 #: help:partner.vat.intra,period_ids:0
 msgid ""
 "Select here the period(s) you want to include in your intracom declaration"
 msgstr ""
+"Select here the period(s) you want to include in your intracom declaration"
 
 #. module: l10n_be
-#: view:partner.vat_13:0
+#: view:partner.vat:0
 msgid "View Customers"
-msgstr ""
+msgstr "View Customers"
 
 #. module: l10n_be
 #: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:102
@@ -314,12 +313,12 @@ msgstr ""
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
 msgid "Is Last Declaration"
-msgstr ""
+msgstr "Is Last Declaration"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_stock
 msgid "Stock et Encours"
-msgstr ""
+msgstr "Stock et Encours"
 
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,client_nihil:0
@@ -344,17 +343,17 @@ msgstr ""
 #. module: l10n_be
 #: model:ir.ui.menu,name:l10n_be.menu_finance_belgian_statement
 msgid "Belgium Statements"
-msgstr ""
+msgstr "Belgium Statements"
 
 #. module: l10n_be
 #: model:ir.actions.act_window,name:l10n_be.action_vat_intra
 msgid "Partner Vat Intra"
-msgstr ""
+msgstr "Partner Vat Intra"
 
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
 msgid "Declare Periodical VAT"
-msgstr ""
+msgstr "Declare Periodical VAT"
 
 #. module: l10n_be
 #: model:ir.model,name:l10n_be.model_partner_vat_list_13
@@ -364,7 +363,7 @@ msgstr ""
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
 msgid "Save xml"
-msgstr ""
+msgstr "Save xml"
 
 #. module: l10n_be
 #: field:partner.vat.intra,mand_id:0
@@ -374,9 +373,9 @@ msgstr ""
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,file_save:0
 #: field:partner.vat.intra,file_save:0
-#: field:partner.vat.list_13,file_save:0
+#: field:partner.vat.list,file_save:0
 msgid "Save File"
-msgstr ""
+msgstr "Save File"
 
 #. module: l10n_be
 #: help:partner.vat.intra,period_code:0
@@ -391,13 +390,22 @@ msgid ""
 "      YYYY stands for the year (4 positions).\n"
 "    "
 msgstr ""
+"This is where you have to set the period code for the intracom declaration "
+"using the format: ppyyyy\n"
+"      PP can stand for a month: from '01' to '12'.\n"
+"      PP can stand for a trimester: '31','32','33','34'\n"
+"          The first figure means that it is a trimester,\n"
+"          The second figure identify the trimester.\n"
+"      PP can stand for a complete fiscal year: '00'.\n"
+"      YYYY stands for the year (4 positions).\n"
+"    "
 
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,name:0
 #: field:partner.vat.intra,name:0
-#: field:partner.vat.list_13,name:0
+#: field:partner.vat.list,name:0
 msgid "File Name"
-msgstr ""
+msgstr "File Name"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_tax_out
@@ -418,26 +426,27 @@ msgid "No VAT Number Associated with Main Company!"
 msgstr ""
 
 #. module: l10n_be
+#: model:ir.actions.act_window,name:l10n_be.action_vat_declaration
 #: model:ir.model,name:l10n_be.model_l1on_be_vat_declaration
 msgid "Vat Declaration"
-msgstr ""
+msgstr "Vat Declaration"
 
 #. module: l10n_be
 #: view:partner.vat.intra:0
 #: field:partner.vat.intra,country_ids:0
 msgid "European Countries"
-msgstr ""
+msgstr "European Countries"
 
 #. module: l10n_be
-#: model:ir.actions.act_window,name:l10n_be.action_partner_vat_listing_13
-#: view:partner.vat_13:0
+#: model:ir.actions.act_window,name:l10n_be.action_partner_vat_listing
+#: view:partner.vat:0
 msgid "Partner VAT Listing"
-msgstr ""
+msgstr "Partner VAT Listing"
 
 #. module: l10n_be
 #: view:partner.vat.intra:0
 msgid "General Information"
-msgstr ""
+msgstr "General Information"
 
 #. module: l10n_be
 #: view:partner.vat.intra:0
@@ -447,7 +456,7 @@ msgstr ""
 #. module: l10n_be
 #: field:partner.vat.intra,period_code:0
 msgid "Period Code"
-msgstr ""
+msgstr "Period Code"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_financiers
@@ -455,14 +464,17 @@ msgid "Financier"
 msgstr ""
 
 #. module: l10n_be
-#: field:partner.vat_13,year:0
+#: field:partner.vat,year:0
 msgid "Year"
-msgstr ""
+msgstr "Year"
 
 #. module: l10n_be
-#: view:partner.vat_13:0
+#: view:l1on_be.vat.declaration:0
+#: view:partner.vat:0
+#: view:partner.vat.intra:0
+#: view:partner.vat.list:0
 msgid "Cancel"
-msgstr ""
+msgstr "Cancel"
 
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
@@ -472,10 +484,10 @@ msgid "Close"
 msgstr ""
 
 #. module: l10n_be
-#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:105
+#: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:119
 #, python-format
 msgid "Please select at least one Period."
-msgstr ""
+msgstr "Please select at least one Period."
 
 #. module: l10n_be
 #: help:l1on_be.vat.declaration,ask_payment:0
@@ -485,7 +497,7 @@ msgstr ""
 #. module: l10n_be
 #: view:partner.vat.intra:0
 msgid "Partner VAT intra"
-msgstr ""
+msgstr "Partner VAT intra"
 
 #. module: l10n_be
 #: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:47

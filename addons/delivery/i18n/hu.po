@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:41+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2013-05-29 06:57+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -23,7 +23,7 @@ msgid "Order Ref."
 msgstr "Megrendelés hiv."
 
 #. module: delivery
-#: model:product.template,name:delivery.delivery_product_product_template
+#: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Delivery by Poste"
 msgstr "Postai szállítás"
 
@@ -58,6 +58,7 @@ msgstr "Szállítási tarifatáblázatok"
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: field:stock.picking,volume:0
+#: field:stock.picking.out,volume:0
 msgid "Volume"
 msgstr "Térfogat"
 
@@ -69,7 +70,7 @@ msgstr "Tarifatáblázat sor"
 #. module: delivery
 #: help:delivery.carrier,partner_id:0
 msgid "The partner that is doing the delivery service."
-msgstr ""
+msgstr "A partner aki a szállítást biztosítja."
 
 #. module: delivery
 #: model:ir.actions.report.xml,name:delivery.report_shipping
@@ -89,7 +90,7 @@ msgstr "Kiszedés számlázható"
 #. module: delivery
 #: field:delivery.carrier,pricelist_ids:0
 msgid "Advanced Pricing"
-msgstr ""
+msgstr "Bővített árazás"
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
@@ -97,7 +98,6 @@ msgid "Gives the sequence order when displaying a list of delivery grid."
 msgstr "Megadja a szállítási tarifatáblázatok listázási sorrendjét."
 
 #. module: delivery
-#: view:delivery.carrier:0
 #: view:delivery.grid:0
 #: field:delivery.grid,country_ids:0
 msgid "Countries"
@@ -129,7 +129,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.carrier,amount:0
 msgid "Amount"
-msgstr ""
+msgstr "Összeg"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -138,20 +138,16 @@ msgstr "Állandó"
 
 #. module: delivery
 #: field:delivery.carrier,name:0
-#: view:delivery.sale.order:0
-#: field:delivery.sale.order,carrier_id:0
-#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
-#: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 #: field:res.partner,property_delivery_carrier:0
 #: field:sale.order,carrier_id:0
 msgid "Delivery Method"
 msgstr "Szállítási mód"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:213
+#: code:addons/delivery/delivery.py:221
 #, python-format
 msgid "No price available!"
-msgstr ""
+msgstr "Nincs elérhető ár!"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
@@ -160,11 +156,14 @@ msgstr "Készletmozgás"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
+#: field:stock.picking.out,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
 msgstr "Fuvarozó hiv."
 
 #. module: delivery
 #: field:stock.picking,weight_net:0
+#: field:stock.picking.in,weight_net:0
+#: field:stock.picking.out,weight_net:0
 msgid "Net Weight"
 msgstr "Nettó súly"
 
@@ -214,7 +213,7 @@ msgstr "Tétel"
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Transport Company"
-msgstr ""
+msgstr "Szállítmányozó cég"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
@@ -230,7 +229,7 @@ msgstr ""
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Invoiced to"
-msgstr ""
+msgstr "Számlázás ide"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -263,6 +262,8 @@ msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
 msgstr ""
+"Rendelési érték ami után a vevő ingyenes szállítást vehet igénybe, a "
+"vállalat pénznemében kifejezve."
 
 #. module: delivery
 #: code:addons/delivery/stock.py:89
@@ -288,10 +289,10 @@ msgid "To Zip"
 msgstr "Érkezési hely irányítószáma"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:141
+#: code:addons/delivery/delivery.py:147
 #, python-format
 msgid "Default price"
-msgstr ""
+msgstr "Alapértelmezett ár"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_define_delivery_steps_wizard
@@ -301,7 +302,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.carrier,normal_price:0
 msgid "Normal Price"
-msgstr ""
+msgstr "Normál ár"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -320,6 +321,7 @@ msgstr "Súly"
 
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
+#: field:stock.picking.out,number_of_packages:0
 msgid "Number of Packages"
 msgstr "Csomagok száma"
 
@@ -327,8 +329,12 @@ msgstr "Csomagok száma"
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: report:sale.shipping:0
+#: view:stock.move:0
 #: field:stock.move,weight:0
+#: view:stock.picking:0
 #: field:stock.picking,weight:0
+#: field:stock.picking.in,weight:0
+#: field:stock.picking.out,weight:0
 msgid "Weight"
 msgstr "Súly"
 
@@ -338,12 +344,17 @@ msgid ""
 "Check this box if you want to manage delivery prices that depends on the "
 "destination, the weight, the total of the order, etc."
 msgstr ""
+"Jelölje be a négyzetet ha azokat a szállítási árakat akarja kezelni amik "
+"függenek a szállítás célpontjától, súlyától, a megrendelés összértékétől, "
+"stb."
 
 #. module: delivery
 #: help:delivery.carrier,normal_price:0
 msgid ""
 "Keep empty if the pricing depends on the advanced pricing per destination"
 msgstr ""
+"Hagyja üresen ha az ár az előre beírt célállomásonkénti haladó díjszabásától "
+"függjön"
 
 #. module: delivery
 #: constraint:stock.move:0
@@ -351,7 +362,7 @@ msgid "You can not move products from or to a location of the type view."
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:70
+#: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid available !"
 msgstr "Nincs tarifatáblázat!"
@@ -362,8 +373,7 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:53
-#: code:addons/delivery/wizard/delivery_sale_order.py:73
+#: code:addons/delivery/sale.py:57
 #, python-format
 msgid "Order not in draft state !"
 msgstr "A megrendelés nincs tervezet állapotban!"
@@ -423,6 +433,8 @@ msgstr ""
 
 #. module: delivery
 #: sql_constraint:stock.picking:0
+#: sql_constraint:stock.picking.in:0
+#: sql_constraint:stock.picking.out:0
 msgid "Reference must be unique per Company!"
 msgstr ""
 
@@ -453,6 +465,8 @@ msgid ""
 "If the order is more expensive than a certain amount, the customer can "
 "benefit from a free shipping"
 msgstr ""
+"Ha megrendelés sokkal többe kerül mint egy megadott érték, a vevő ingyenes "
+"szállítást vehet igénybe"
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
@@ -466,10 +480,10 @@ msgid "Cancel"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:130
+#: code:addons/delivery/delivery.py:136
 #, python-format
 msgid "Free if more than %.2f"
-msgstr ""
+msgstr "Ingyenes , ha több mint %.2f"
 
 #. module: delivery
 #: sql_constraint:sale.order:0
@@ -510,7 +524,6 @@ msgid "Create Deliveries"
 msgstr "Szálllítások létrehozása"
 
 #. module: delivery
-#: view:delivery.carrier:0
 #: view:delivery.grid:0
 #: field:delivery.grid,state_ids:0
 msgid "States"
@@ -542,7 +555,7 @@ msgid "Price"
 msgstr "Ár"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:70
+#: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid matching for this carrier !"
 msgstr "Nincs ehhez a fuvarozóhoz illeszkedő tarifatáblázat!"
@@ -564,7 +577,7 @@ msgid "="
 msgstr "="
 
 #. module: delivery
-#: code:addons/delivery/stock.py:90
+#: code:addons/delivery/stock.py:91
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
 msgstr "%s (kód: %d) fuvarozónak nincs szállítási tarifatáblázata!"
@@ -572,7 +585,7 @@ msgstr "%s (kód: %d) fuvarozónak nincs szállítási tarifatáblázata!"
 #. module: delivery
 #: view:delivery.carrier:0
 msgid "Pricing Information"
-msgstr ""
+msgstr "Díjszabási információ"
 
 #. module: delivery
 #: selection:delivery.define.delivery.steps.wizard,picking_policy:0
@@ -582,7 +595,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.carrier,use_detailed_pricelist:0
 msgid "Advanced Pricing per Destination"
-msgstr ""
+msgstr "Célállomásonkénti haladó díjszabás"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -590,6 +603,7 @@ msgstr ""
 #: model:ir.model,name:delivery.model_delivery_carrier
 #: report:sale.shipping:0
 #: field:stock.picking,carrier_id:0
+#: field:stock.picking.out,carrier_id:0
 msgid "Carrier"
 msgstr "Fuvarozás"
 
@@ -604,8 +618,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:53
-#: code:addons/delivery/wizard/delivery_sale_order.py:73
+#: code:addons/delivery/sale.py:57
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""

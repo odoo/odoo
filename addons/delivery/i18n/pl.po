@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:41+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2013-05-29 06:57+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -22,7 +22,7 @@ msgid "Order Ref."
 msgstr "Odn. zamówienia"
 
 #. module: delivery
-#: model:product.template,name:delivery.delivery_product_product_template
+#: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Delivery by Poste"
 msgstr "Dostawa pocztą"
 
@@ -45,7 +45,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
-msgstr "Pozycja siatki dostaw"
+msgstr "Pozycja tabeli opłat za dostawy"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -57,6 +57,7 @@ msgstr "Tabela opłat za dostawy"
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: field:stock.picking,volume:0
+#: field:stock.picking.out,volume:0
 msgid "Volume"
 msgstr "Objętość"
 
@@ -68,7 +69,7 @@ msgstr "Pozycja tabeli opłat za dostawy"
 #. module: delivery
 #: help:delivery.carrier,partner_id:0
 msgid "The partner that is doing the delivery service."
-msgstr ""
+msgstr "Partner, który świadczy usługi transportowe."
 
 #. module: delivery
 #: model:ir.actions.report.xml,name:delivery.report_shipping
@@ -88,15 +89,14 @@ msgstr "Pobrania do zafakturowania"
 #. module: delivery
 #: field:delivery.carrier,pricelist_ids:0
 msgid "Advanced Pricing"
-msgstr ""
+msgstr "Ceny zaliczkowe"
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
 msgid "Gives the sequence order when displaying a list of delivery grid."
-msgstr "Ustala kolejność wyświetlania w siatce dostaw"
+msgstr "Ustala kolejność wyświetlania w tabeli opłat za dostawy."
 
 #. module: delivery
-#: view:delivery.carrier:0
 #: view:delivery.grid:0
 #: field:delivery.grid,country_ids:0
 msgid "Countries"
@@ -124,7 +124,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.carrier,amount:0
 msgid "Amount"
-msgstr ""
+msgstr "Kwota"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -133,20 +133,16 @@ msgstr "Stała"
 
 #. module: delivery
 #: field:delivery.carrier,name:0
-#: view:delivery.sale.order:0
-#: field:delivery.sale.order,carrier_id:0
-#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
-#: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 #: field:res.partner,property_delivery_carrier:0
 #: field:sale.order,carrier_id:0
 msgid "Delivery Method"
 msgstr "Metoda dostawy"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:213
+#: code:addons/delivery/delivery.py:221
 #, python-format
 msgid "No price available!"
-msgstr ""
+msgstr "Brak cen!"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
@@ -155,11 +151,14 @@ msgstr "Przesunięcie zapasu"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
+#: field:stock.picking.out,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
 msgstr "Odn. śledzenia przewoźnika"
 
 #. module: delivery
 #: field:stock.picking,weight_net:0
+#: field:stock.picking.in,weight_net:0
+#: field:stock.picking.out,weight_net:0
 msgid "Net Weight"
 msgstr "Waga netto"
 
@@ -187,12 +186,12 @@ msgstr "Operator"
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Zamówienie sprzedaży"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form1
@@ -209,7 +208,7 @@ msgstr "Numer partii"
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Transport Company"
-msgstr ""
+msgstr "Firma transportowa"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
@@ -250,7 +249,7 @@ msgstr "Nazwa"
 #. module: delivery
 #: field:delivery.grid,zip_from:0
 msgid "Start Zip"
-msgstr "Kod pocztowy wysyłki"
+msgstr "Początek kodu"
 
 #. module: delivery
 #: help:delivery.carrier,amount:0
@@ -258,6 +257,7 @@ msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
 msgstr ""
+"Kwota zamówienia uprawniająca do bezpłatnej dostawy wyrażona w walucie firmy."
 
 #. module: delivery
 #: code:addons/delivery/stock.py:89
@@ -276,6 +276,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "grid without removing it."
 msgstr ""
+"Jeśli pole Aktywne jest niezaznaczone, to zamiast usuwać tabelą możesz ją "
+"ukryć."
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
@@ -283,10 +285,10 @@ msgid "To Zip"
 msgstr "Do kodu poczt."
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:141
+#: code:addons/delivery/delivery.py:147
 #, python-format
 msgid "Default price"
-msgstr ""
+msgstr "Cena domyślna"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_define_delivery_steps_wizard
@@ -296,7 +298,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.carrier,normal_price:0
 msgid "Normal Price"
-msgstr ""
+msgstr "Cena Normalna"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -315,6 +317,7 @@ msgstr "Wagi"
 
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
+#: field:stock.picking.out,number_of_packages:0
 msgid "Number of Packages"
 msgstr "Liczba paczek"
 
@@ -322,8 +325,12 @@ msgstr "Liczba paczek"
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: report:sale.shipping:0
+#: view:stock.move:0
 #: field:stock.move,weight:0
+#: view:stock.picking:0
 #: field:stock.picking,weight:0
+#: field:stock.picking.in,weight:0
+#: field:stock.picking.out,weight:0
 msgid "Weight"
 msgstr "Waga"
 
@@ -333,12 +340,15 @@ msgid ""
 "Check this box if you want to manage delivery prices that depends on the "
 "destination, the weight, the total of the order, etc."
 msgstr ""
+"Zaznacz tę opcję, jeśli chcesz aby cena dostawy była zależna od miejsca "
+"dostawy, wagi, sumy zamówienia itp."
 
 #. module: delivery
 #: help:delivery.carrier,normal_price:0
 msgid ""
 "Keep empty if the pricing depends on the advanced pricing per destination"
 msgstr ""
+"Pozostaw puste, jeśli cena zależy zaawansowanej wyceny wg miejsca docelowego."
 
 #. module: delivery
 #: constraint:stock.move:0
@@ -346,10 +356,10 @@ msgid "You can not move products from or to a location of the type view."
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:70
+#: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid available !"
-msgstr "Brak siatek !"
+msgstr "Brak tabel !"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -357,8 +367,7 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:53
-#: code:addons/delivery/wizard/delivery_sale_order.py:73
+#: code:addons/delivery/sale.py:57
 #, python-format
 msgid "Order not in draft state !"
 msgstr "Zamówienie nie jest w stanie Projekt !"
@@ -377,7 +386,7 @@ msgstr ""
 #: field:delivery.carrier,active:0
 #: field:delivery.grid,active:0
 msgid "Active"
-msgstr "Aktywna"
+msgstr "Aktywne"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -417,6 +426,8 @@ msgstr "Ta metoda dostawy będzie stosowana przy fakturowaniu z pobrania."
 
 #. module: delivery
 #: sql_constraint:stock.picking:0
+#: sql_constraint:stock.picking.in:0
+#: sql_constraint:stock.picking.out:0
 msgid "Reference must be unique per Company!"
 msgstr ""
 
@@ -447,6 +458,8 @@ msgid ""
 "If the order is more expensive than a certain amount, the customer can "
 "benefit from a free shipping"
 msgstr ""
+"Jeśli suma zamówienie przekracza pewną kwotę, to klient może mieć bezpłatną "
+"dostawę."
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
@@ -461,10 +474,10 @@ msgid "Cancel"
 msgstr "Anuluj"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:130
+#: code:addons/delivery/delivery.py:136
 #, python-format
 msgid "Free if more than %.2f"
-msgstr ""
+msgstr "Bezpłatnie jeśli więcej niż %.2f"
 
 #. module: delivery
 #: sql_constraint:sale.order:0
@@ -505,7 +518,6 @@ msgid "Create Deliveries"
 msgstr "Utwórz dostawy"
 
 #. module: delivery
-#: view:delivery.carrier:0
 #: view:delivery.grid:0
 #: field:delivery.grid,state_ids:0
 msgid "States"
@@ -522,6 +534,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "carrier without removing it."
 msgstr ""
+"Jeśli pole Aktywne jest niezaznaczone, to możesz ukryć przewoźnika bez "
+"konieczności usuwania go."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
@@ -537,7 +551,7 @@ msgid "Price"
 msgstr "Cena"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:70
+#: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid matching for this carrier !"
 msgstr "Brak tabeli opłat za dostawy dla tego przewoźnika !"
@@ -545,7 +559,7 @@ msgstr "Brak tabeli opłat za dostawy dla tego przewoźnika !"
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
 msgid "Delivery"
-msgstr "Wydanie zewnętrzne"
+msgstr "Dostawa"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -559,7 +573,7 @@ msgid "="
 msgstr "="
 
 #. module: delivery
-#: code:addons/delivery/stock.py:90
+#: code:addons/delivery/stock.py:91
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
 msgstr "Przewoźnik %s (id: %d) nie ma tabeli opłat za dostawy!"
@@ -567,7 +581,7 @@ msgstr "Przewoźnik %s (id: %d) nie ma tabeli opłat za dostawy!"
 #. module: delivery
 #: view:delivery.carrier:0
 msgid "Pricing Information"
-msgstr ""
+msgstr "Informacje o cenach"
 
 #. module: delivery
 #: selection:delivery.define.delivery.steps.wizard,picking_policy:0
@@ -577,7 +591,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.carrier,use_detailed_pricelist:0
 msgid "Advanced Pricing per Destination"
-msgstr ""
+msgstr "Zaawansowany cennik wg miejsc docelowych"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -585,6 +599,7 @@ msgstr ""
 #: model:ir.model,name:delivery.model_delivery_carrier
 #: report:sale.shipping:0
 #: field:stock.picking,carrier_id:0
+#: field:stock.picking.out,carrier_id:0
 msgid "Carrier"
 msgstr "Przewoźnik"
 
@@ -599,8 +614,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:53
-#: code:addons/delivery/wizard/delivery_sale_order.py:73
+#: code:addons/delivery/sale.py:57
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr "Zamówienie musi być w stanie Projekt, aby dodawać pozycje dostaw"

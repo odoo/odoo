@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-06 05:03+0000\n"
-"X-Generator: Launchpad (build 16341)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:12+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -102,7 +102,6 @@ msgstr "Cantidad UdV"
 
 #. module: procurement
 #: view:procurement.order:0
-#: field:procurement.order,name:0
 msgid "Reason"
 msgstr "Motivo"
 
@@ -196,7 +195,7 @@ msgstr "Planificación"
 #. module: procurement
 #: selection:procurement.order,state:0
 msgid "Ready"
-msgstr "Preparada"
+msgstr "Listo"
 
 #. module: procurement
 #: field:procurement.order.compute.all,automatic:0
@@ -281,7 +280,7 @@ msgid "Error! You can not create recursive companies."
 msgstr "¡Error! No puede crear compañías recursivas."
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:395
+#: code:addons/procurement/procurement.py:370
 #, python-format
 msgid "Procurement '%s' is in exception: "
 msgstr "Contratación '%s' está en excepción: "
@@ -382,7 +381,7 @@ msgid "Quantity"
 msgstr "Cantidad"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:390
+#: code:addons/procurement/procurement.py:365
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr "No hay suficiente stock y no existe una regla de stock mínimo."
@@ -600,7 +599,7 @@ msgid "You try to assign a lot which is not from the same product"
 msgstr "Está intentando asignar un lote que no es del mismo producto"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:392
+#: code:addons/procurement/procurement.py:367
 #, python-format
 msgid "Not enough stock."
 msgstr "Stock insuficiente."
@@ -703,7 +702,7 @@ msgid "Properties composition"
 msgstr "Propiedades composición"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:335
+#: code:addons/procurement/procurement.py:311
 #, python-format
 msgid "Data Insufficient !"
 msgstr "¡Datos insuficientes!"
@@ -747,7 +746,6 @@ msgstr "Realizada"
 
 #. module: procurement
 #: view:make.procurement:0
-#: view:procurement.order:0
 #: view:procurement.order.compute:0
 #: view:procurement.order.compute.all:0
 #: view:procurement.orderpoint.compute:0
@@ -836,6 +834,7 @@ msgstr "Temporal"
 #. module: procurement
 #: field:mrp.property,description:0
 #: field:mrp.property.group,description:0
+#: field:procurement.order,name:0
 msgid "Description"
 msgstr "Descripción"
 

@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-17 04:49+0000\n"
-"X-Generator: Launchpad (build 16152)\n"
+"X-Launchpad-Export-Date: 2013-05-29 06:46+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
@@ -181,7 +181,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
-msgstr "Төлбөрийн баримт"
+msgstr "Төлбөрийн захиалга"
 
 #. module: account_payment
 #: constraint:account.move.line:0
@@ -249,6 +249,7 @@ msgstr "Гүйлгээний мэдээлэл"
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
 #: view:payment.mode:0
 #: view:payment.order:0
+#: field:payment.order,mode:0
 msgid "Payment Mode"
 msgstr "Төлбөрийн горим"
 
@@ -295,7 +296,6 @@ msgid "Bank or Cash Journal for the Payment Mode"
 msgstr "Төлбөрийн Горимын Банкны эсвэл Бэлэн мөнгөний Бүртгэл"
 
 #. module: account_payment
-#: report:payment.order:0
 #: selection:payment.order,date_prefered:0
 msgid "Fixed date"
 msgstr "Тогтсон огноо"
@@ -354,7 +354,6 @@ msgid "Bank statement line"
 msgstr "Банкны тайлан тэнцлийн мөр"
 
 #. module: account_payment
-#: report:payment.order:0
 #: selection:payment.order,date_prefered:0
 msgid "Due date"
 msgstr "Эцсийн огноо"
@@ -495,6 +494,7 @@ msgstr "Хайх"
 #. module: account_payment
 #: model:ir.actions.report.xml,name:account_payment.payment_order1
 #: model:ir.model,name:account_payment.model_payment_order
+#: view:payment.order:0
 msgid "Payment Order"
 msgstr "Төлбөрийн баримт"
 
@@ -588,7 +588,6 @@ msgstr "Гүйлгээний утга"
 #. module: account_payment
 #: view:account.payment.make.payment:0
 #: view:account.payment.populate.statement:0
-#: view:payment.order:0
 #: view:payment.order.create:0
 msgid "Cancel"
 msgstr "Цуцлах"

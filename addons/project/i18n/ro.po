@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:57+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:15+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -89,8 +89,7 @@ msgid "Work done"
 msgstr "Munca efectuata"
 
 #. module: project
-#: code:addons/project/project.py:358 code:addons/project/project.py:789
-#: code:addons/project/project.py:1148
+#: code:addons/project/project.py:932
 #, python-format
 msgid "Warning !"
 msgstr "Avertizare !"
@@ -149,7 +148,7 @@ msgstr "Membrii proiectului"
 #. module: project
 #: model:process.node,name:project.process_node_taskbydelegate0
 msgid "Task by delegate"
-msgstr "Sarcina dupa delegat"
+msgstr "Sarcină după delegat"
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -176,7 +175,10 @@ msgstr ""
 "clientului atunci cand o sarcina este inchisa."
 
 #. module: project
-#: view:project.task:0 view:project.task.history.cumulative:0
+#: view:board.board:0
+#: model:ir.actions.act_window,name:project.my_open_tasks_action
+#: view:project.task:0
+#: view:project.task.history.cumulative:0
 msgid "My Tasks"
 msgstr "Sarcinile mele"
 
@@ -186,8 +188,10 @@ msgid "Error ! You cannot create recursive tasks."
 msgstr "Eroare ! Nu puteti crea sarcini recursive."
 
 #. module: project
-#: field:project.task,company_id:0 field:project.task.work,company_id:0
-#: view:report.project.task.user:0 field:report.project.task.user,company_id:0
+#: field:project.task,company_id:0
+#: field:project.task.work,company_id:0
+#: view:report.project.task.user:0
+#: field:report.project.task.user,company_id:0
 msgid "Company"
 msgstr "Compania"
 
@@ -209,7 +213,7 @@ msgstr "Numele etapei"
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_openpendingtask0
 msgid "Set pending"
-msgstr "Setati in asteptare"
+msgstr "Setați în așteptare"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -229,7 +233,7 @@ msgstr "Schimbati Etapa"
 #. module: project
 #: view:project.project:0
 msgid "New Project Based on Template"
-msgstr "Proiect nou bazat pe un Sablon"
+msgstr "Proiect nou bazat pe un Șablon"
 
 #. module: project
 #: constraint:project.project:0
@@ -253,8 +257,8 @@ msgid "My Task"
 msgstr "Sarcina mea"
 
 #. module: project
-#: view:report.project.task.user:0 field:report.project.task.user,day:0
-#: field:task.by.days,day:0
+#: view:report.project.task.user:0
+#: field:report.project.task.user,day:0
 msgid "Day"
 msgstr "Zi"
 
@@ -275,9 +279,13 @@ msgstr "Sarcina ciorna"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task
+#: view:project.config.settings:0
+#: view:project.project:0
+#: view:project.task:0
 #: field:project.task.history,task_id:0
 #: field:project.task.history.cumulative,task_id:0
-#: field:project.task.work,task_id:0 view:report.project.task.user:0
+#: field:project.task.work,task_id:0
+#: view:report.project.task.user:0
 msgid "Task"
 msgstr "Sarcina"
 
@@ -312,7 +320,7 @@ msgid "Project Task Work"
 msgstr "Sarcina de lucru Proiect"
 
 #. module: project
-#: view:project.project:0 view:project.task:0 field:project.task,notes:0
+#: field:project.task,notes:0
 msgid "Notes"
 msgstr "Note"
 
@@ -340,7 +348,8 @@ msgstr ""
 "expres sa nu fie."
 
 #. module: project
-#: field:project.task,name:0 field:report.project.task.user,name:0
+#: field:project.task,name:0
+#: field:report.project.task.user,name:0
 msgid "Task Summary"
 msgstr "Rezumat sarcina"
 
@@ -350,14 +359,14 @@ msgid "Not a Template Task"
 msgstr "Nu este o sarcina sablon"
 
 #. module: project
-#: view:project.task:0 view:res.partner:0
+#: view:res.partner:0
 msgid "Start Task"
-msgstr "Incepeti Sarcina"
+msgstr "Incepeți sarcina"
 
 #. module: project
 #: model:process.node,note:project.process_node_donetask0
 msgid "Task is Completed"
-msgstr "Sarcina este finalizata"
+msgstr "Sarcina este finalizată"
 
 #. module: project
 #: view:project.project:0
@@ -373,15 +382,19 @@ msgid "Show only tasks having a deadline"
 msgstr "Afisati numai sarcinile care au un termen limita"
 
 #. module: project
-#: selection:project.task,state:0 selection:project.task.history,state:0
+#: selection:project.project,state:0
+#: selection:project.task,state:0
+#: selection:project.task.history,state:0
 #: selection:project.task.history.cumulative,state:0
-#: selection:project.vs.hours,state:0
-#: selection:report.project.task.user,state:0 selection:task.by.days,state:0
+#: model:project.task.type,name:project.project_tt_cancel
+#: selection:project.task.type,state:0
+#: selection:report.project.task.user,state:0
 msgid "Cancelled"
 msgstr "Anulat(a)"
 
 #. module: project
-#: field:project.task,date_end:0 field:report.project.task.user,date_end:0
+#: field:project.task,date_end:0
+#: field:report.project.task.user,date_end:0
 msgid "Ending Date"
 msgstr "Data de sfarsit"
 
@@ -398,9 +411,10 @@ msgstr "Treceti la Etapa Urmatoare"
 #. module: project
 #: model:process.node,name:project.process_node_donetask0
 msgid "Done task"
-msgstr "Sarcina efectuata"
+msgstr "Sarcină efectuată"
 
 #. module: project
+#: field:project.project,color:0
 #: field:project.task,color:0
 msgid "Color Index"
 msgstr "Index Culori"
@@ -421,7 +435,9 @@ msgid "Delegates tasks to the other user"
 msgstr "Delegati sarcini celorlalti utilizatori"
 
 #. module: project
-#: view:project.project:0 view:project.task:0 view:report.project.task.user:0
+#: view:project.project:0
+#: view:project.task:0
+#: view:report.project.task.user:0
 msgid "Group By..."
 msgstr "Grupati dupa..."
 
@@ -453,7 +469,6 @@ msgstr "Sarcina '%s' inchisa"
 
 #. module: project
 #: model:ir.model,name:project.model_account_analytic_account
-#: field:project.project,analytic_account_id:0
 msgid "Analytic Account"
 msgstr "Cont Analitic"
 
@@ -463,12 +478,13 @@ msgid "Computed using the sum of the task work done."
 msgstr "Calculat folosind suma sarcinii de lucru efectuate."
 
 #. module: project
-#: view:project.task:0
+#: view:project.config.settings:0
 msgid "Planning"
 msgstr "Planificare"
 
 #. module: project
-#: view:project.task:0 field:project.task,date_deadline:0
+#: view:project.task:0
+#: field:project.task,date_deadline:0
 #: field:report.project.task.user,date_deadline:0
 msgid "Deadline"
 msgstr "Termen limita"
@@ -505,7 +521,8 @@ msgid "New Tasks"
 msgstr "Sarcini noi"
 
 #. module: project
-#: view:report.project.task.user:0 field:report.project.task.user,nbr:0
+#: view:report.project.task.user:0
+#: field:report.project.task.user,nbr:0
 msgid "# of tasks"
 msgstr "# de sarcini"
 
@@ -515,7 +532,7 @@ msgid "Previous"
 msgstr "Precedent(a)"
 
 #. module: project
-#: field:project.vs.hours,user_id:0 field:report.project.task.user,user_id:0
+#: field:report.project.task.user,user_id:0
 msgid "Assigned To"
 msgstr "Atribuit lui"
 
@@ -535,7 +552,8 @@ msgid "Reset as Project"
 msgstr "Resetati ca Proiect"
 
 #. module: project
-#: view:project.project:0 selection:project.vs.hours,state:0
+#: view:project.project:0
+#: selection:project.project,state:0
 msgid "Template"
 msgstr "Sablon"
 
@@ -560,7 +578,8 @@ msgid "From draft state, it will come into the open state."
 msgstr "Din starea de ciorna, va trece in starea deschisa."
 
 #. module: project
-#: view:report.project.task.user:0 field:report.project.task.user,no_of_days:0
+#: view:report.project.task.user:0
+#: field:report.project.task.user,no_of_days:0
 msgid "# of Days"
 msgstr "# de Zile"
 
@@ -570,7 +589,7 @@ msgid "Open Projects"
 msgstr "Proiecte Open"
 
 #. module: project
-#: code:addons/project/project.py:358
+#: code:addons/project/project.py:432
 #, python-format
 msgid "You must assign members on the project '%s' !"
 msgstr "Trebuie sa alocati membri proiectului '%s' !"
@@ -598,9 +617,12 @@ msgid "Project task"
 msgstr "Sarcină proiect"
 
 #. module: project
-#: view:project.task:0 selection:project.task,state:0
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.history,state:0
 #: selection:project.task.history.cumulative,state:0
+#: selection:project.task.type,state:0
 #: view:report.project.task.user:0
 msgid "New"
 msgstr "Nou"
@@ -633,7 +655,9 @@ msgid "Reevaluate"
 msgstr "Reevaluati"
 
 #. module: project
-#: code:addons/project/project.py:597
+#: code:addons/project/project.py:356
+#: code:addons/project/project.py:377
+#: code:addons/project/project.py:709
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copie)"
@@ -650,14 +674,16 @@ msgid "Medium"
 msgstr "Mediu"
 
 #. module: project
-#: view:project.task:0 view:project.task.history.cumulative:0
+#: view:project.task:0
+#: view:project.task.history.cumulative:0
 msgid "Pending Tasks"
 msgstr "Sarcini in asteptare"
 
 #. module: project
-#: view:project.task:0 field:project.task,remaining_hours:0
+#: view:project.task:0
+#: field:project.task,remaining_hours:0
 #: field:project.task.reevaluate,remaining_hours:0
-#: field:project.vs.hours,remaining_hours:0 view:report.project.task.user:0
+#: view:report.project.task.user:0
 #: field:report.project.task.user,remaining_hours:0
 msgid "Remaining Hours"
 msgstr "Ore ramase"
@@ -673,7 +699,8 @@ msgid "Creation Date"
 msgstr "Data crearii"
 
 #. module: project
-#: view:project.task:0 field:project.task.history,remaining_hours:0
+#: view:project.task:0
+#: field:project.task.history,remaining_hours:0
 #: field:project.task.history.cumulative,remaining_hours:0
 msgid "Remaining Time"
 msgstr "Ore ramase"
@@ -691,7 +718,8 @@ msgid "Information"
 msgstr "Informatii"
 
 #. module: project
-#: view:project.task:0 view:project.task.history.cumulative:0
+#: view:project.task:0
+#: view:project.task.history.cumulative:0
 msgid "Unassigned Tasks"
 msgstr "Sarcini nealocate"
 
@@ -710,13 +738,16 @@ msgstr ""
 "proiectelor lui subordonate."
 
 #. module: project
-#: view:project.project:0 view:project.task:0 selection:project.task,state:0
+#: view:project.project:0
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.delegate,state:0
 #: selection:project.task.history,state:0
-#: view:project.task.history.cumulative:0
 #: selection:project.task.history.cumulative,state:0
-#: selection:project.vs.hours,state:0 view:report.project.task.user:0
-#: selection:report.project.task.user,state:0 selection:task.by.days,state:0
+#: selection:project.task.type,state:0
+#: view:report.project.task.user:0
+#: selection:report.project.task.user,state:0
 msgid "Pending"
 msgstr "In asteptare"
 
@@ -726,7 +757,8 @@ msgid "Delegated Title"
 msgstr "Titlu delegat"
 
 #. module: project
-#: view:project.task:0 view:project.task.history.cumulative:0
+#: view:project.task:0
+#: view:project.task.history.cumulative:0
 #: view:report.project.task.user:0
 msgid "My Projects"
 msgstr "Proiectele mele"
@@ -747,24 +779,27 @@ msgid "Burndown Chart of Tasks"
 msgstr "Grafic de sarcini descendent"
 
 #. module: project
-#: field:project.task,date_start:0 field:report.project.task.user,date_start:0
+#: field:project.task,date_start:0
+#: field:report.project.task.user,date_start:0
 msgid "Starting Date"
 msgstr "Data de inceput"
 
 #. module: project
-#: code:addons/project/project.py:324
+#: code:addons/project/project.py:398
 #: model:ir.actions.act_window,name:project.open_view_project_all
-#: model:ir.ui.menu,name:project.menu_open_view_project_all
-#: view:project.project:0 field:project.task.type,project_ids:0
+#: model:ir.ui.menu,name:project.menu_projects
+#: view:project.project:0
+#: field:project.task.type,project_ids:0
+#: view:res.company:0
 #, python-format
 msgid "Projects"
 msgstr "Proiecte"
 
 #. module: project
-#: view:project.task:0 field:project.task,type_id:0
+#: view:project.task:0
+#: field:project.task,stage_id:0
 #: field:project.task.history,type_id:0
 #: field:project.task.history.cumulative,type_id:0
-#: view:report.project.task.user:0 field:report.project.task.user,type_id:0
 msgid "Stage"
 msgstr "Etapa"
 
@@ -854,15 +889,18 @@ msgstr ""
 "ori o sarcina este completata de catre echipa sa."
 
 #. module: project
+#: model:ir.actions.act_window,name:project.open_board_project
 #: model:ir.model,name:project.model_project_project
+#: model:ir.ui.menu,name:project.menu_project_dashboard
 #: model:ir.ui.menu,name:project.menu_project_management
-#: view:project.project:0 view:project.task:0 field:project.task,project_id:0
+#: view:project.project:0
+#: view:project.task:0
+#: field:project.task,project_id:0
 #: field:project.task.delegate,project_id:0
 #: field:project.task.history.cumulative,project_id:0
-#: field:project.vs.hours,project:0 view:report.project.task.user:0
+#: view:report.project.task.user:0
 #: field:report.project.task.user,project_id:0
 #: model:res.request.link,name:project.req_link_project
-#: field:res.users,context_project_id:0 field:task.by.days,project_id:0
 msgid "Project"
 msgstr "Proiect"
 
@@ -878,7 +916,6 @@ msgstr "Panoul meu"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
-#: model:ir.ui.menu,name:project.menu_task_types_view
 msgid "Stages"
 msgstr "Etape"
 
@@ -888,8 +925,7 @@ msgid "Change to Previous Stage"
 msgstr "Treceti la Etapa Anterioara"
 
 #. module: project
-#: model:ir.actions.todo.category,name:project.category_project_config
-#: view:res.company:0
+#: view:project.config.settings:0
 msgid "Project Management"
 msgstr "Managementul proiectului"
 
@@ -910,20 +946,22 @@ msgid "Project Task Delegate"
 msgstr "Delegat Sarcina Proiect"
 
 #. module: project
+#: field:account.analytic.account,use_tasks:0
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,name:project.action_view_task
 #: model:ir.ui.menu,name:project.menu_action_view_task
-#: model:ir.ui.menu,name:project.menu_tasks_config
-#: model:ir.ui.menu,name:project.project_report_task
 #: model:process.process,name:project.process_process_tasksprocess0
-#: view:project.task:0 view:res.partner:0 field:res.partner,task_ids:0
+#: view:project.project:0
+#: view:project.task:0
+#: view:res.partner:0
+#: field:res.partner,task_ids:0
 msgid "Tasks"
 msgstr "Sarcini"
 
 #. module: project
 #: view:project.project:0
 msgid "Parent"
-msgstr "Parinte"
+msgstr "Părinte"
 
 #. module: project
 #: view:project.task:0
@@ -989,7 +1027,7 @@ msgid "Reevaluate Task"
 msgstr "Reevaluati Sarcina"
 
 #. module: project
-#: view:project.task.history.cumulative:0 view:report.project.task.user:0
+#: view:report.project.task.user:0
 #: field:report.project.task.user,month:0
 msgid "Month"
 msgstr "Luna"
@@ -1006,14 +1044,13 @@ msgid "Task Stage"
 msgstr "Etapa sarcinii"
 
 #. module: project
-#: model:project.task.type,name:project.project_tt_specification
+#: model:project.task.type,name:project.project_tt_design
 msgid "Design"
 msgstr "Proiectare"
 
 #. module: project
-#: field:project.task,planned_hours:0
 #: field:project.task.delegate,planned_hours:0
-#: field:project.vs.hours,planned_hours:0 view:report.project.task.user:0
+#: view:report.project.task.user:0
 #: field:report.project.task.user,hours_planned:0
 msgid "Planned Hours"
 msgstr "Ore planificate"
@@ -1034,7 +1071,7 @@ msgid "Gives the sequence order when displaying a list of tasks."
 msgstr "Prezinta ordinea secventei atunci cand afiseaza o lista de sarcini."
 
 #. module: project
-#: view:project.project:0 view:project.task:0
+#: view:project.task:0
 msgid "Start Date"
 msgstr "Data de inceput"
 
@@ -1046,11 +1083,13 @@ msgid "Ready To Pull"
 msgstr "Pregatit(a) de avansare"
 
 #. module: project
-#: view:project.task:0 field:project.task,parent_ids:0
+#: view:project.task:0
+#: field:project.task,parent_ids:0
 msgid "Parent Tasks"
 msgstr "Sarcini principale"
 
 #. module: project
+#: view:project.task:0
 #: selection:project.task,kanban_state:0
 #: selection:project.task.history,kanban_state:0
 #: view:project.task.history.cumulative:0
@@ -1102,7 +1141,8 @@ msgid "For changing to delegate state"
 msgstr "Pentru trecerea la starea 'delegat'"
 
 #. module: project
-#: field:project.task,priority:0 field:report.project.task.user,priority:0
+#: field:project.task,priority:0
+#: field:report.project.task.user,priority:0
 msgid "Priority"
 msgstr "Prioritate"
 
@@ -1134,7 +1174,8 @@ msgid "Member"
 msgstr "Membru"
 
 #. module: project
-#: view:project.task:0 view:project.task.history.cumulative:0
+#: view:project.task:0
+#: view:project.task.history.cumulative:0
 msgid "Project Tasks"
 msgstr "Sarcini Proiect"
 
@@ -1147,8 +1188,7 @@ msgstr ""
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
-#: view:project.task:0 selection:project.vs.hours,state:0
-#: selection:report.project.task.user,state:0 selection:task.by.days,state:0
+#: selection:report.project.task.user,state:0
 msgid "Draft"
 msgstr "Ciorna"
 
@@ -1159,7 +1199,8 @@ msgid "Low"
 msgstr "Scazut(a)"
 
 #. module: project
-#: field:project.task,kanban_state:0 field:project.task.history,kanban_state:0
+#: field:project.task,kanban_state:0
+#: field:project.task.history,kanban_state:0
 #: field:project.task.history.cumulative,kanban_state:0
 msgid "Kanban State"
 msgstr "Starea Kanban"
@@ -1196,12 +1237,13 @@ msgstr ""
 "acestui proiect."
 
 #. module: project
-#: view:project.project:0 field:project.task,manager_id:0
+#: view:project.project:0
+#: field:project.task,manager_id:0
 msgid "Project Manager"
 msgstr "Managerul de proiect"
 
 #. module: project
-#: view:project.task:0 view:res.partner:0
+#: view:res.partner:0
 msgid "For changing to done state"
 msgstr "Pentru schimbarea in starea efectuat"
 
@@ -1216,14 +1258,16 @@ msgid "August"
 msgstr "August"
 
 #. module: project
-#: view:project.task:0 selection:project.task,kanban_state:0
+#: view:project.task:0
+#: selection:project.task,kanban_state:0
 #: selection:project.task.history,kanban_state:0
 #: selection:project.task.history.cumulative,kanban_state:0
 msgid "Normal"
 msgstr "Obisnuit"
 
 #. module: project
-#: view:project.project:0 field:project.project,complete_name:0
+#: view:project.project:0
+#: field:project.project,complete_name:0
 msgid "Project Name"
 msgstr "Numele proiectului"
 
@@ -1383,7 +1427,8 @@ msgstr "Proiectul '%s' a fost deschis."
 
 #. module: project
 #: field:project.task.history,date:0
-#: field:project.task.history.cumulative,date:0 field:project.task.work,date:0
+#: field:project.task.history.cumulative,date:0
+#: field:project.task.work,date:0
 msgid "Date"
 msgstr "Data"
 
@@ -1437,7 +1482,8 @@ msgid "History"
 msgstr "Istoric"
 
 #. module: project
-#: field:project.task,user_id:0 view:report.project.task.user:0
+#: field:project.task,user_id:0
+#: view:report.project.task.user:0
 msgid "Assigned to"
 msgstr "Atribuit lui"
 
@@ -1461,13 +1507,12 @@ msgid "Extended Filters..."
 msgstr "Filtre Extinse..."
 
 #. module: project
-#: code:addons/project/project.py:1148
+#: code:addons/project/project.py:1318
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr "Va rugam mai intai sa stergeti proiectul asociat acestui cont."
 
 #. module: project
-#: field:project.task,total_hours:0 field:project.vs.hours,total_hours:0
 #: view:report.project.task.user:0
 #: field:report.project.task.user,total_hours:0
 msgid "Total Hours"
@@ -1483,7 +1528,7 @@ msgid "State"
 msgstr "Stare"
 
 #. module: project
-#: code:addons/project/project.py:925
+#: code:addons/project/project.py:1021
 #, python-format
 msgid "Delegated User should be specified"
 msgstr "Ar trebui specificat Utilizatorul Delegat"
@@ -1512,24 +1557,31 @@ msgstr ""
 "proiectelor, etc."
 
 #. module: project
-#: view:project.project:0 view:project.task:0 selection:project.task,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.delegate,state:0
 #: selection:project.task.history,state:0
 #: selection:project.task.history.cumulative,state:0
-#: view:report.project.task.user:0 selection:report.project.task.user,state:0
-#: view:res.partner:0 selection:task.by.days,state:0
+#: model:project.task.type,name:project.project_tt_deployment
+#: selection:project.task.type,state:0
+#: view:report.project.task.user:0
+#: selection:report.project.task.user,state:0
+#: view:res.partner:0
 msgid "Done"
 msgstr "Efectuat"
 
 #. module: project
-#: view:report.project.task.user:0 field:report.project.task.user,year:0
+#: view:report.project.task.user:0
+#: field:report.project.task.user,year:0
 msgid "Year"
 msgstr "An"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
-#: view:project.project:0 view:project.task:0
+#: view:project.config.settings:0
+#: view:project.task.delegate:0
+#: view:project.task.reevaluate:0
 msgid "Cancel"
 msgstr "Anulati"
 
@@ -1545,7 +1597,7 @@ msgstr "Deschideti sarcina"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftopentask0
-#: view:project.project:0 selection:project.vs.hours,state:0
+#: view:project.project:0
 msgid "Open"
 msgstr "Deschideti"
 
@@ -1555,13 +1607,15 @@ msgid "ID: %(task_id)s"
 msgstr "ID: %(id_sarcina)s"
 
 #. module: project
-#: view:project.task:0 selection:project.task,state:0
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
 #: selection:project.task.history,state:0
-#: view:project.task.history.cumulative:0
 #: selection:project.task.history.cumulative,state:0
-#: selection:report.project.task.user,state:0 selection:task.by.days,state:0
+#: selection:project.task.type,state:0
+#: selection:report.project.task.user,state:0
 msgid "In Progress"
-msgstr "In curs de desfasurare"
+msgstr "În desfășurare"
 
 #. module: project
 #: view:project.task.history.cumulative:0
@@ -1569,7 +1623,7 @@ msgid "Task's Analysis"
 msgstr "Analiza sarcinii"
 
 #. module: project
-#: code:addons/project/project.py:789
+#: code:addons/project/project.py:932
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1673,7 +1727,8 @@ msgid "My Remaining Hours by Project"
 msgstr "Orele mele ramase dupa Proiect"
 
 #. module: project
-#: field:project.task,description:0 view:project.task.type:0
+#: view:project.task:0
+#: field:project.task,description:0
 #: field:project.task.type,description:0
 msgid "Description"
 msgstr "Descriere"
@@ -1699,7 +1754,7 @@ msgid "Total tasks"
 msgstr "Total sarcini"
 
 #. module: project
-#: help:project.task.type,project_default:0
+#: help:project.task.type,case_default:0
 msgid ""
 "If you check this field, this stage will be proposed by default on each new "
 "project. It will not assign this stage to existing projects."
@@ -1725,13 +1780,15 @@ msgid "Assign To"
 msgstr "Atribuiti lui"
 
 #. module: project
-#: field:project.project,progress_rate:0 view:report.project.task.user:0
+#: field:project.project,progress_rate:0
+#: view:report.project.task.user:0
 #: field:report.project.task.user,progress:0
 msgid "Progress"
-msgstr "In desfasurare"
+msgstr "În desfășurare"
 
 #. module: project
-#: field:project.project,effective_hours:0 field:project.task.work,hours:0
+#: field:project.project,effective_hours:0
+#: field:project.task.work,hours:0
 msgid "Time Spent"
 msgstr "Timp petrecut"
 
@@ -1766,7 +1823,7 @@ msgstr ""
 "proiectelor subordonate."
 
 #. module: project
-#: field:project.task.type,project_default:0
+#: field:project.task.type,case_default:0
 msgid "Common to All Projects"
 msgstr "Comun(a) tuturor Proiectelor"
 
@@ -1776,12 +1833,13 @@ msgid "When task is completed, it will come into the done state."
 msgstr "Atunci cand sarcina este finalizata, starea va fi 'efectuat'."
 
 #. module: project
-#: view:project.project:0
+#: field:project.task,partner_id:0
 msgid "Customer"
 msgstr "Client"
 
 #. module: project
-#: view:project.project:0 view:project.task:0
+#: view:project.project:0
+#: view:project.task:0
 #: field:project.task.history,end_date:0
 #: field:project.task.history.cumulative,end_date:0
 msgid "End Date"
@@ -1915,8 +1973,10 @@ msgid "Error ! You cannot create recursive associated members."
 msgstr "Eroare ! Nu puteti crea membri asociati recursiv."
 
 #. module: project
-#: field:project.project,priority:0 field:project.project,sequence:0
-#: field:project.task,sequence:0 field:project.task.type,sequence:0
+#: field:project.project,priority:0
+#: field:project.project,sequence:0
+#: field:project.task,sequence:0
+#: field:project.task.type,sequence:0
 msgid "Sequence"
 msgstr "Secventa"
 
@@ -1958,7 +2018,8 @@ msgstr ""
 "sectiunea facturare."
 
 #. module: project
-#: view:project.task:0 view:project.task.work:0
+#: view:project.task:0
+#: view:project.task.work:0
 msgid "Task Work"
 msgstr "Sarcina de lucru"
 
@@ -1983,7 +2044,8 @@ msgstr ""
 "catre utilizatorul caruia i-ati delegat aceasta sarcina."
 
 #. module: project
-#: view:project.project:0 model:res.groups,name:project.group_project_manager
+#: view:project.project:0
+#: model:res.groups,name:project.group_project_manager
 msgid "Manager"
 msgstr "Manager"
 
@@ -1999,14 +2061,12 @@ msgid "The task '%s' is cancelled."
 msgstr "Sarcina '%s' este anulata."
 
 #. module: project
-#: view:project.task:0 view:res.partner:0
+#: view:res.partner:0
 msgid "For changing to open state"
 msgstr "Pentru schimbarea in starea 'deschis'"
 
 #. module: project
-#: model:ir.model,name:project.model_res_partner view:project.project:0
-#: field:project.task,partner_id:0 view:report.project.task.user:0
-#: field:report.project.task.user,partner_id:0
+#: model:ir.model,name:project.model_res_partner
 msgid "Partner"
 msgstr "Partener"
 
@@ -2017,7 +2077,7 @@ msgid "Send Email after close task"
 msgstr "Trimite e-mail dupa inchiderea sarcinii"
 
 #. module: project
-#: view:project.project:0 field:project.project,type_ids:0
+#: field:project.project,type_ids:0
 #: view:project.task.type:0
 msgid "Tasks Stages"
 msgstr "Etapele Sarcinilor"
@@ -2033,6 +2093,7 @@ msgid "Mail Footer"
 msgstr "Subsol e-mail"
 
 #. module: project
-#: view:project.task:0 view:project.task.history.cumulative:0
+#: view:project.task:0
+#: view:project.task.history.cumulative:0
 msgid "In Progress Tasks"
-msgstr "Sarcini in desfasurare"
+msgstr "Sarcini în desfășurare"

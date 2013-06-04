@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:30+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2013-05-29 06:46+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -23,6 +23,7 @@ msgstr "搜尋催款"
 
 #. module: account_followup
 #: view:account_followup.stat:0
+#: view:res.partner:0
 msgid "Group By..."
 msgstr "分類方式..."
 
@@ -33,8 +34,7 @@ msgid "Follow-up Message"
 msgstr "催款訊息"
 
 #. module: account_followup
-#: view:account_followup.followup:0
-#: field:account_followup.followup,followup_line:0
+#: field:account_followup.print,followup_id:0
 msgid "Follow-Up"
 msgstr "催款"
 
@@ -92,11 +92,13 @@ msgstr "公司"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
+#: code:addons/account_followup/account_followup.py:259
+#, python-format
 msgid "Invoice Date"
 msgstr "發票日期"
 
 #. module: account_followup
-#: field:account.followup.print.all,email_subject:0
+#: field:account_followup.print,email_subject:0
 msgid "Email Subject"
 msgstr "電子郵件主題"
 
@@ -124,6 +126,8 @@ msgstr "確定"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
+#: code:addons/account_followup/account_followup.py:263
+#, python-format
 msgid "Amount"
 msgstr "金額"
 
@@ -166,7 +170,9 @@ msgid "%(heading)s: Move line header"
 msgstr "%(heading)s: 移動抬頭"
 
 #. module: account_followup
-#: field:account.followup.print,followup_id:0
+#: view:account_followup.followup:0
+#: field:account_followup.followup,followup_line:0
+#: view:res.partner:0
 msgid "Follow-up"
 msgstr "催款"
 
@@ -179,6 +185,7 @@ msgstr "增值稅:"
 #: view:account_followup.stat:0
 #: field:account_followup.stat,partner_id:0
 #: field:account_followup.stat.by.partner,partner_id:0
+#: model:ir.model,name:account_followup.model_res_partner
 msgid "Partner"
 msgstr "合夥人"
 
@@ -188,12 +195,12 @@ msgid "Date :"
 msgstr "日期 :"
 
 #. module: account_followup
-#: field:account.followup.print.all,partner_ids:0
+#: field:account_followup.print,partner_ids:0
 msgid "Partners"
 msgstr "合夥人"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:142
+#: code:addons/account_followup/wizard/account_followup_print.py:254
 #, python-format
 msgid "Invoices Reminder"
 msgstr "發票提醒"
@@ -249,12 +256,12 @@ msgstr "電子郵件內容"
 
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
+#: view:account_followup.stat:0
 msgid "Follow-up Level"
 msgstr "催款等級"
 
 #. module: account_followup
 #: field:account_followup.stat,date_followup:0
-#: field:account_followup.stat.by.partner,date_followup:0
 msgid "Latest followup"
 msgstr "最近的催款"
 
@@ -264,7 +271,7 @@ msgid "Select Partners to Remind"
 msgstr "選擇業務夥伴，以提醒"
 
 #. module: account_followup
-#: field:account.followup.print.all,partner_lang:0
+#: field:account_followup.print,partner_lang:0
 msgid "Send Email in Partner Language"
 msgstr "用業務夥伴的語言發送的電子郵件"
 
@@ -388,13 +395,13 @@ msgstr ""
 "%s"
 
 #. module: account_followup
-#: help:account.followup.print,date:0
+#: help:account_followup.print,date:0
 msgid ""
 "This field allow you to select a forecast date to plan your follow-ups"
 msgstr "此欄位，讓你選擇一個計劃催款的預測日期"
 
 #. module: account_followup
-#: field:account.followup.print,date:0
+#: field:account_followup.print,date:0
 msgid "Follow-up Sending Date"
 msgstr "催款發送日期"
 
@@ -465,8 +472,7 @@ msgid "Companies"
 msgstr "公司"
 
 #. module: account_followup
-#: view:account.followup.print.all:0
-#: field:account.followup.print.all,summary:0
+#: field:account_followup.print,summary:0
 msgid "Summary"
 msgstr "摘要"
 
@@ -496,6 +502,7 @@ msgid "%(company_currency)s: User's Company Currency"
 msgstr "%(company_currency)s: 使用者公司貨幣"
 
 #. module: account_followup
+#: field:account.move.line,result:0
 #: view:account_followup.stat:0
 #: field:account_followup.stat,balance:0
 #: field:account_followup.stat.by.partner,balance:0
@@ -535,14 +542,13 @@ msgid "Period"
 msgstr "會計期間"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:307
+#: code:addons/account_followup/wizard/account_followup_print.py:300
 #, python-format
 msgid "Followup Summary"
 msgstr "催款摘要"
 
 #. module: account_followup
-#: view:account.followup.print:0
-#: view:account.followup.print.all:0
+#: view:account_followup.print:0
 msgid "Cancel"
 msgstr "取消"
 
@@ -616,8 +622,10 @@ msgid "Followup Level"
 msgstr "催款等級"
 
 #. module: account_followup
-#: field:account_followup.followup,description:0
 #: report:account_followup.followup.print:0
+#: field:account_followup.sending.results,description:0
+#: code:addons/account_followup/account_followup.py:260
+#, python-format
 msgid "Description"
 msgstr "說明"
 
@@ -637,7 +645,7 @@ msgid "Partner entries"
 msgstr "業務夥伴分錄"
 
 #. module: account_followup
-#: help:account.followup.print.all,partner_lang:0
+#: help:account_followup.print,partner_lang:0
 msgid ""
 "Do not change message text, if you want to send email in partner language, "
 "or configure from company"
@@ -651,7 +659,6 @@ msgstr "應收款"
 #. module: account_followup
 #: view:account_followup.stat:0
 #: model:ir.actions.act_window,name:account_followup.action_followup_stat
-#: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
 msgid "Follow-ups Sent"
 msgstr "發送催款"
 
@@ -662,7 +669,6 @@ msgstr "公司名稱必須唯一！"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
-#: field:account_followup.followup.line,name:0
 msgid "Name"
 msgstr "名稱"
 
@@ -755,7 +761,7 @@ msgid "Customer Ref :"
 msgstr "客戶 :"
 
 #. module: account_followup
-#: field:account.followup.print.all,test_print:0
+#: field:account_followup.print,test_print:0
 msgid "Test Print"
 msgstr "測試列印"
 

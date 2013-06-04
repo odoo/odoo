@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-28 05:25+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:23+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -113,7 +113,7 @@ msgid ""
 "Internal reference number in case it differs from the manufacturer's serial "
 "number"
 msgstr ""
-"Interne referentienummer indien deze afwijkt van het serienummer van de "
+"Interne referentienummer indien deze afwijkt van het partijnummer van de "
 "fabrikant."
 
 #. module: stock
@@ -225,7 +225,7 @@ msgstr "Er ontbreekt gedeeltelijke verzamelopdracht data voor mutatie #%s"
 #. module: stock
 #: model:ir.actions.server,name:stock.action_partial_move_server
 msgid "Deliver/Receive Products"
-msgstr "Geleverde/ontvangen producten"
+msgstr "Ontvang/lever per product"
 
 #. module: stock
 #: code:addons/stock/report/report_stock.py:78
@@ -272,7 +272,7 @@ msgstr "Niet van toepassing"
 #. module: stock
 #: help:stock.tracking,serial:0
 msgid "Other reference or serial number"
-msgstr "Afwijkende referentie of serie nummer"
+msgstr "Afwijkende referentie of partijnummer"
 
 #. module: stock
 #: view:stock.move:0
@@ -284,7 +284,7 @@ msgstr "Oorsprong"
 #: view:board.board:0
 #: model:ir.actions.act_window,name:stock.action_stock_incoming_product_delay
 msgid "Incoming Products"
-msgstr "Binnenkomende leveringen"
+msgstr "Inkomende leveringen"
 
 #. module: stock
 #: view:report.stock.lines.date:0
@@ -351,9 +351,9 @@ msgstr ""
 #: code:addons/stock/wizard/stock_partial_picking.py:174
 #: code:addons/stock/wizard/stock_partial_picking.py:181
 #: code:addons/stock/wizard/stock_partial_picking.py:192
-#: code:addons/stock/wizard/stock_return_picking.py:99
-#: code:addons/stock/wizard/stock_return_picking.py:106
-#: code:addons/stock/wizard/stock_return_picking.py:205
+#: code:addons/stock/wizard/stock_return_picking.py:102
+#: code:addons/stock/wizard/stock_return_picking.py:109
+#: code:addons/stock/wizard/stock_return_picking.py:208
 #, python-format
 msgid "Warning!"
 msgstr "Waarschuwing!"
@@ -845,9 +845,9 @@ msgid ""
 "When doing real-time inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
-"Wanneer u real-time voorraadwaardering doet, dan is dit de journaalpost "
-"waarin automatisch de boekingen worden gemaakt, wanneer de voorraadmutaties "
-"worden verwerkt."
+"Wanneer u real-time voorraadwaardering doet, dan is dit het dagboek waarin "
+"automatisch de boekingen worden gemaakt, wanneer de voorraadmutaties worden "
+"verwerkt."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_partial_picking
@@ -1491,7 +1491,7 @@ msgid "Incoming Shipments already processed"
 msgstr "Inkomende leveringen welke reeds zijn verwerkt"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:99
+#: code:addons/stock/wizard/stock_return_picking.py:102
 #, python-format
 msgid "You may only return pickings that are Confirmed, Available or Done!"
 msgstr ""
@@ -2196,7 +2196,7 @@ msgid ""
 "Optional prefix to prepend when displaying this serial number: PREFIX/SERIAL "
 "[INT_REF]"
 msgstr ""
-"Optioneel voorvoegsel bij weergave van dit serienummer: PREFIX/SERIAL "
+"Optioneel voorvoegsel bij weergave van dit partijnummer: PREFIX/SERIAL "
 "[INT_REF]"
 
 #. module: stock
@@ -2614,8 +2614,8 @@ msgid ""
 "hold the counterpart moves for incoming and outgoing products."
 msgstr ""
 "Wanneer u bij uw product heeft gekozen voor 'Real time voorraadwaardering' "
-"zal het systeem automatisch journaalposten maken, overeenkomstig de "
-"voorraadmutaties. De voorraaadwaarde rekenig, zoals ingesteld bij de "
+"zal het systeem automatisch boekingenmaken, overeenkomstig de "
+"voorraadmutaties. De voorraadwaarde rekening, zoals ingesteld bij de "
 "productcategorie, zal de huidige voorraadwaarde weergeven. De "
 "voorraadtoename en voorraadafname rekening bevatten de tegenboeking voor "
 "inkomende- en uitgaande producten."
@@ -2627,7 +2627,7 @@ msgid ""
 "levels. Sort and group by selection criteria in order to better analyse and "
 "manage your company  activities."
 msgstr ""
-"Met de voorraadanalyse kunt u eenvoudig de bedrijfsvoorraden controleren en "
+"Met de voorraad analyse kunt u eenvoudig de bedrijfsvoorraden controleren en "
 "analyseren. Sorteer en groepeer per selectiecriteria om zo betere analyses "
 "te maken en de bedrijfsactiviteiten te beheren."
 
@@ -2770,7 +2770,7 @@ msgid ""
 "need this report in order to ensure that the stock of each product is "
 "controlled at least once a year."
 msgstr ""
-"Geef de laatste voorraadtellingen gedaan op uw producten weer sorteer ze "
+"Geeft de laatste voorraadtellingen gedaan op uw producten weer sorteer ze "
 "eenvoudig met specifieke filtercriteria. Als u vaak en gedeeltelijke "
 "voorraadtelling doet, heeft u dit rapport nodig om ervoor te zorgen dat de "
 "voorraad van elk product ten minste eenmaal per jaar wordt geteld."
@@ -3203,7 +3203,7 @@ msgstr "Verantwoordelijke"
 #: model:ir.ui.menu,name:stock.menu_action_stock_inventory_report
 #: view:report.stock.inventory:0
 msgid "Inventory Analysis"
-msgstr "Voorraadanalyse"
+msgstr "Voorraad analyse"
 
 #. module: stock
 #: field:stock.invoice.onshipping,journal_id:0
@@ -3963,7 +3963,7 @@ msgstr "Automatisch akkoord geven"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Weight"
-msgstr "Gewicht"
+msgstr "Bruto gewicht"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_template

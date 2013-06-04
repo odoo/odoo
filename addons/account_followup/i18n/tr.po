@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:30+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2013-05-29 06:46+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -23,6 +23,7 @@ msgstr "İzleme Ara"
 
 #. module: account_followup
 #: view:account_followup.stat:0
+#: view:res.partner:0
 msgid "Group By..."
 msgstr "Gruplandır..."
 
@@ -33,8 +34,7 @@ msgid "Follow-up Message"
 msgstr "İzleme Mesajı"
 
 #. module: account_followup
-#: view:account_followup.followup:0
-#: field:account_followup.followup,followup_line:0
+#: field:account_followup.print,followup_id:0
 msgid "Follow-Up"
 msgstr "İzleme"
 
@@ -95,15 +95,17 @@ msgstr ""
 #: field:account_followup.stat,company_id:0
 #: field:account_followup.stat.by.partner,company_id:0
 msgid "Company"
-msgstr "Firma"
+msgstr "Şirket"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
+#: code:addons/account_followup/account_followup.py:259
+#, python-format
 msgid "Invoice Date"
 msgstr "Fatura Tarihi"
 
 #. module: account_followup
-#: field:account.followup.print.all,email_subject:0
+#: field:account_followup.print,email_subject:0
 msgid "Email Subject"
 msgstr "Eposta Konusu"
 
@@ -132,6 +134,8 @@ msgstr "Tamam"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
+#: code:addons/account_followup/account_followup.py:263
+#, python-format
 msgid "Amount"
 msgstr "Tutar"
 
@@ -159,7 +163,7 @@ msgstr "Bakiye > 0"
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Total debit"
-msgstr "Toplam Borç"
+msgstr "Toplam borç"
 
 #. module: account_followup
 #: constraint:account.move.line:0
@@ -176,7 +180,9 @@ msgid "%(heading)s: Move line header"
 msgstr "%(başlık)lar: Hareket kalemi başlığı"
 
 #. module: account_followup
-#: field:account.followup.print,followup_id:0
+#: view:account_followup.followup:0
+#: field:account_followup.followup,followup_line:0
+#: view:res.partner:0
 msgid "Follow-up"
 msgstr "İzleme"
 
@@ -189,8 +195,9 @@ msgstr "KDV :"
 #: view:account_followup.stat:0
 #: field:account_followup.stat,partner_id:0
 #: field:account_followup.stat.by.partner,partner_id:0
+#: model:ir.model,name:account_followup.model_res_partner
 msgid "Partner"
-msgstr "Paydaş"
+msgstr "İş Ortağı"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -198,15 +205,15 @@ msgid "Date :"
 msgstr "Tarih :"
 
 #. module: account_followup
-#: field:account.followup.print.all,partner_ids:0
+#: field:account_followup.print,partner_ids:0
 msgid "Partners"
-msgstr "Paydaşlar"
+msgstr "İş Ortakları"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:142
+#: code:addons/account_followup/wizard/account_followup_print.py:254
 #, python-format
 msgid "Invoices Reminder"
-msgstr "Fatura Anımsatıcıs"
+msgstr "Fatura Anımsatıcısı"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
@@ -252,7 +259,7 @@ msgstr "Ref"
 #. module: account_followup
 #: help:account_followup.followup.line,sequence:0
 msgid "Gives the sequence order when displaying a list of follow-up lines."
-msgstr "İzleme satırlarını görüntülerken sıralamayı verir."
+msgstr "İzleme kalemleri görüntüleme sıralamasını verir."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -262,14 +269,14 @@ msgstr "Eposta gövdesi"
 
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
+#: view:account_followup.stat:0
 msgid "Follow-up Level"
-msgstr "İzleme Seviyesi"
+msgstr "İzleme Düzeyi"
 
 #. module: account_followup
 #: field:account_followup.stat,date_followup:0
-#: field:account_followup.stat.by.partner,date_followup:0
 msgid "Latest followup"
-msgstr "Son İzleme"
+msgstr "En son İzleme"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -277,9 +284,9 @@ msgid "Select Partners to Remind"
 msgstr "Anımsatma yapılacak Paydaşı seç"
 
 #. module: account_followup
-#: field:account.followup.print.all,partner_lang:0
+#: field:account_followup.print,partner_lang:0
 msgid "Send Email in Partner Language"
-msgstr "Epostayı Paydaşın Dilinde Gönder"
+msgstr "Epostayı İş Ortağının Dilinde Gönder"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -332,7 +339,7 @@ msgstr "İzlemeleri gönder"
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
 msgid "Partner to Remind"
-msgstr "Anımsatma Gönderilecek Paydaş"
+msgstr "Anımsatılacak İş Ortağı"
 
 #. module: account_followup
 #: field:account_followup.followup.line,followup_id:0
@@ -358,8 +365,8 @@ msgid ""
 "Your description is invalid, use the right legend or %% if you want to use "
 "the percent character."
 msgstr ""
-"Açıklamanız geçerli değil, sağ göstergeyi kullanın ya da %% yüzde karakteri "
-"kullanmak istiyorsanız."
+"Açıklamanız geçerli değil, sağ göstergeyi kullanın veya yüzde karakteri "
+"kullanmak istiyorsanız %% ."
 
 #. module: account_followup
 #: constraint:account.move.line:0
@@ -409,13 +416,13 @@ msgstr ""
 "%s"
 
 #. module: account_followup
-#: help:account.followup.print,date:0
+#: help:account_followup.print,date:0
 msgid ""
 "This field allow you to select a forecast date to plan your follow-ups"
 msgstr "Bu alan izlemelerinizin öngörü planını yapmanızı sağlar."
 
 #. module: account_followup
-#: field:account.followup.print,date:0
+#: field:account_followup.print,date:0
 msgid "Follow-up Sending Date"
 msgstr "İzleme Gönderim Tarihi"
 
@@ -438,7 +445,7 @@ msgstr "İzlemeleri Yazdır"
 #. module: account_followup
 #: field:account.move.line,followup_date:0
 msgid "Latest Follow-up"
-msgstr "Son Takip"
+msgstr "En son İzleme"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat
@@ -453,7 +460,7 @@ msgstr "%(kullanıcı_imza)lar: Kullanıcı Adı"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
 msgid "Journal Items"
-msgstr "Yevmiye Kalemleri"
+msgstr "Günlük Öğeleri"
 
 #. module: account_followup
 #: constraint:account.move.line:0
@@ -486,15 +493,14 @@ msgid "Companies"
 msgstr "Firmalar"
 
 #. module: account_followup
-#: view:account.followup.print.all:0
-#: field:account.followup.print.all,summary:0
+#: field:account_followup.print,summary:0
 msgid "Summary"
 msgstr "Özet"
 
 #. module: account_followup
 #: field:account_followup.stat,credit:0
 msgid "Credit"
-msgstr "Alacak"
+msgstr "Borç"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -517,6 +523,7 @@ msgid "%(company_currency)s: User's Company Currency"
 msgstr "%(firma_döviz)s: Kullanıcının Firmasının Para Birimi"
 
 #. module: account_followup
+#: field:account.move.line,result:0
 #: view:account_followup.stat:0
 #: field:account_followup.stat,balance:0
 #: field:account_followup.stat.by.partner,balance:0
@@ -556,26 +563,25 @@ msgid "Period"
 msgstr "Dönem"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:307
+#: code:addons/account_followup/wizard/account_followup_print.py:300
 #, python-format
 msgid "Followup Summary"
 msgstr "İzleme Özeti"
 
 #. module: account_followup
-#: view:account.followup.print:0
-#: view:account.followup.print.all:0
+#: view:account_followup.print:0
 msgid "Cancel"
 msgstr "İptal"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Litigation"
-msgstr "Hukuki Dava"
+msgstr "İhtilaf"
 
 #. module: account_followup
 #: field:account_followup.stat.by.partner,max_followup_id:0
 msgid "Max Follow Up Level"
-msgstr "En Üst İzleme Seviyesi"
+msgstr "Enüst İzleme Düzeyi"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_view_account_followup_followup_form
@@ -639,8 +645,10 @@ msgid "Followup Level"
 msgstr "İzleme Seviyesi"
 
 #. module: account_followup
-#: field:account_followup.followup,description:0
 #: report:account_followup.followup.print:0
+#: field:account_followup.sending.results,description:0
+#: code:addons/account_followup/account_followup.py:260
+#, python-format
 msgid "Description"
 msgstr "Açıklama"
 
@@ -657,16 +665,16 @@ msgstr "Bu Mali Yıl"
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Partner entries"
-msgstr "Cari Kayıtlar"
+msgstr "İş Ortağı kayıtları"
 
 #. module: account_followup
-#: help:account.followup.print.all,partner_lang:0
+#: help:account_followup.print,partner_lang:0
 msgid ""
 "Do not change message text, if you want to send email in partner language, "
 "or configure from company"
 msgstr ""
-"Paydaşa dili ile eposta göndermek istiyorsanız mesaj metinini değiştirmeyin, "
-"firma yapılandırmasını kullanın"
+"İş Ortağına dili ile eposta göndermek istiyorsanız mesaj metinini "
+"değiştirmeyin, firma yapılandırmasını kullanın"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_all
@@ -676,7 +684,6 @@ msgstr "Alacak Maddeleri"
 #. module: account_followup
 #: view:account_followup.stat:0
 #: model:ir.actions.act_window,name:account_followup.action_followup_stat
-#: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
 msgid "Follow-ups Sent"
 msgstr "Gönderilen İzlemeler"
 
@@ -687,7 +694,6 @@ msgstr "Şirket adı tekil olmalı !"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
-#: field:account_followup.followup.line,name:0
 msgid "Name"
 msgstr "Adı"
 
@@ -715,7 +721,7 @@ msgstr "Gecikme Günleri"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Document : Customer account statement"
-msgstr "Belge: Müşteri hesap ekstresi"
+msgstr "Belge: Müşteri hesap özeti"
 
 #. module: account_followup
 #: view:account.move.line:0
@@ -784,7 +790,7 @@ msgid "Customer Ref :"
 msgstr "Müşteri Ref :"
 
 #. module: account_followup
-#: field:account.followup.print.all,test_print:0
+#: field:account_followup.print,test_print:0
 msgid "Test Print"
 msgstr "Test Baskısı"
 

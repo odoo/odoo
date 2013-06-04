@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:28+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2013-05-29 06:43+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 "Language: nl\n"
 
 #. module: account_asset
@@ -25,7 +25,8 @@ msgstr "Investeringen in status concept en open"
 
 #. module: account_asset
 #: field:account.asset.category,method_end:0
-#: field:account.asset.history,method_end:0 field:asset.modify,method_end:0
+#: field:account.asset.history,method_end:0
+#: field:asset.modify,method_end:0
 msgid "Ending date"
 msgstr "Einddatum"
 
@@ -55,16 +56,19 @@ msgid "Gross Amount"
 msgstr "Brutobedrag"
 
 #. module: account_asset
-#: view:account.asset.asset:0 field:account.asset.asset,name:0
+#: view:account.asset.asset:0
 #: field:account.asset.depreciation.line,asset_id:0
-#: field:account.asset.history,asset_id:0 field:account.move.line,asset_id:0
-#: view:asset.asset.report:0 field:asset.asset.report,asset_id:0
+#: field:account.asset.history,asset_id:0
+#: field:account.move.line,asset_id:0
+#: view:asset.asset.report:0
+#: field:asset.asset.report,asset_id:0
 #: model:ir.model,name:account_asset.model_account_asset_asset
 msgid "Asset"
 msgstr "Investering"
 
 #. module: account_asset
-#: help:account.asset.asset,prorata:0 help:account.asset.category,prorata:0
+#: help:account.asset.asset,prorata:0
+#: help:account.asset.category,prorata:0
 msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first January"
@@ -79,7 +83,8 @@ msgstr "Historieknaam"
 
 #. module: account_asset
 #: field:account.asset.asset,company_id:0
-#: field:account.asset.category,company_id:0 view:asset.asset.report:0
+#: field:account.asset.category,company_id:0
+#: view:asset.asset.report:0
 #: field:asset.asset.report,company_id:0
 msgid "Company"
 msgstr "Bedrijf"
@@ -90,7 +95,8 @@ msgid "Modify"
 msgstr "Wijzigen"
 
 #. module: account_asset
-#: selection:account.asset.asset,state:0 view:asset.asset.report:0
+#: selection:account.asset.asset,state:0
+#: view:asset.asset.report:0
 #: selection:asset.asset.report,state:0
 msgid "Running"
 msgstr "Lopend"
@@ -134,6 +140,7 @@ msgstr ""
 "Met deze wizard boekt u de lopende afschrijvingen voor de gekozen periode."
 
 #. module: account_asset
+#: view:account.asset.asset:0
 #: field:account.asset.asset,account_move_line_ids:0
 #: field:account.move.line,entry_ids:0
 #: model:ir.actions.act_window,name:account_asset.act_entries_open
@@ -153,7 +160,8 @@ msgstr "Dit is het bedrag dat u niet kunt afschrijven."
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,depreciation_date:0
-#: view:asset.asset.report:0 field:asset.asset.report,depreciation_date:0
+#: view:asset.asset.report:0
+#: field:asset.asset.report,depreciation_date:0
 msgid "Depreciation Date"
 msgstr "Afschrijvingsdatum"
 
@@ -168,7 +176,8 @@ msgid "Posted Amount"
 msgstr "Geboekt bedrag"
 
 #. module: account_asset
-#: view:account.asset.asset:0 view:asset.asset.report:0
+#: view:account.asset.asset:0
+#: view:asset.asset.report:0
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_form
 #: model:ir.ui.menu,name:account_asset.menu_finance_assets
@@ -182,8 +191,11 @@ msgid "Depreciation Account"
 msgstr "Afschrijvingsrekening"
 
 #. module: account_asset
-#: view:account.asset.asset:0 view:account.asset.category:0
-#: view:account.asset.history:0 view:asset.modify:0 field:asset.modify,note:0
+#: view:account.asset.asset:0
+#: view:account.asset.category:0
+#: view:account.asset.history:0
+#: view:asset.modify:0
+#: field:asset.modify,note:0
 msgid "Notes"
 msgstr "Opmerkingen"
 
@@ -198,7 +210,8 @@ msgid "Wrong credit or debit value in accounting entry !"
 msgstr "Verkeerde credit– of debetwaarde in de boeking."
 
 #. module: account_asset
-#: view:asset.asset.report:0 field:asset.asset.report,nbr:0
+#: view:asset.asset.report:0
+#: field:asset.asset.report,nbr:0
 msgid "# of Depreciation Lines"
 msgstr "# afschrijvingslijnen"
 
@@ -242,7 +255,6 @@ msgid "Sequence of the depreciation"
 msgstr "Nummer van de afschrijving"
 
 #. module: account_asset
-#: field:account.asset.asset,method_period:0
 #: field:account.asset.category,method_period:0
 #: field:account.asset.history,method_period:0
 #: field:asset.modify,method_period:0
@@ -250,7 +262,8 @@ msgid "Period Length"
 msgstr "Lengte periode"
 
 #. module: account_asset
-#: selection:account.asset.asset,state:0 view:asset.asset.report:0
+#: selection:account.asset.asset,state:0
+#: view:asset.asset.report:0
 #: selection:asset.asset.report,state:0
 msgid "Draft"
 msgstr "Concept"
@@ -276,7 +289,8 @@ msgid "Analytic account"
 msgstr "Analytische rekening"
 
 #. module: account_asset
-#: field:account.asset.asset,method:0 field:account.asset.category,method:0
+#: field:account.asset.asset,method:0
+#: field:account.asset.category,method:0
 msgid "Computation Method"
 msgstr "Berekeningsmethode"
 
@@ -325,7 +339,7 @@ msgid "Time in month between two depreciations"
 msgstr "Tijd in maanden tussen twee afschrijvingen"
 
 #. module: account_asset
-#: view:asset.asset.report:0 field:asset.asset.report,name:0
+#: field:asset.asset.report,name:0
 msgid "Year"
 msgstr "Jaar"
 
@@ -347,7 +361,10 @@ msgid "Salvage Value"
 msgstr "Restwaarde"
 
 #. module: account_asset
-#: field:account.invoice.line,asset_category_id:0 view:asset.asset.report:0
+#: field:account.asset.asset,category_id:0
+#: view:account.asset.category:0
+#: field:account.invoice.line,asset_category_id:0
+#: view:asset.asset.report:0
 msgid "Asset Category"
 msgstr "Invetseringscategorie"
 
@@ -455,13 +472,15 @@ msgstr ""
 "datum of schakel de optie op het journaal uit."
 
 #. module: account_asset
-#: field:account.asset.asset,note:0 field:account.asset.category,note:0
+#: field:account.asset.asset,note:0
+#: field:account.asset.category,note:0
 #: field:account.asset.history,note:0
 msgid "Note"
 msgstr "Opmerking"
 
 #. module: account_asset
-#: help:account.asset.asset,method:0 help:account.asset.category,method:0
+#: help:account.asset.asset,method:0
+#: help:account.asset.category,method:0
 msgid ""
 "Choose the method to use to compute the amount of depreciation lines.\n"
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
@@ -505,7 +524,8 @@ msgid "Partner"
 msgstr "Relatie"
 
 #. module: account_asset
-#: view:asset.asset.report:0 field:asset.asset.report,depreciation_value:0
+#: view:asset.asset.report:0
+#: field:asset.asset.report,depreciation_value:0
 msgid "Amount of Depreciation Lines"
 msgstr "Aantal afschrijvingslijnen"
 
@@ -556,7 +576,8 @@ msgid "Extended Filters..."
 msgstr "Uitgebreide filters..."
 
 #. module: account_asset
-#: view:account.asset.asset:0 view:asset.depreciation.confirmation.wizard:0
+#: view:account.asset.asset:0
+#: view:asset.depreciation.confirmation.wizard:0
 msgid "Compute"
 msgstr "Berekenen"
 
@@ -591,7 +612,8 @@ msgid "Depreciation Name"
 msgstr "Afschrijvingsnaam"
 
 #. module: account_asset
-#: view:account.asset.asset:0 field:account.asset.asset,history_ids:0
+#: view:account.asset.asset:0
+#: field:account.asset.asset,history_ids:0
 msgid "History"
 msgstr "Historiek"
 
@@ -611,7 +633,8 @@ msgid "General"
 msgstr "Algemeen"
 
 #. module: account_asset
-#: field:account.asset.asset,prorata:0 field:account.asset.category,prorata:0
+#: field:account.asset.asset,prorata:0
+#: field:account.asset.category,prorata:0
 msgid "Prorata Temporis"
 msgstr "Prorata temporis"
 
@@ -631,22 +654,25 @@ msgid "Review Asset Categories"
 msgstr "Investeringscategorieën opnieuw bekijken"
 
 #. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0 view:asset.modify:0
+#: view:asset.depreciation.confirmation.wizard:0
+#: view:asset.modify:0
 msgid "Cancel"
 msgstr "Annuleren"
 
 #. module: account_asset
-#: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
+#: selection:account.asset.asset,state:0
+#: selection:asset.asset.report,state:0
 msgid "Close"
 msgstr "Afsluiten"
 
 #. module: account_asset
-#: view:account.asset.asset:0 view:account.asset.category:0
+#: view:account.asset.category:0
 msgid "Depreciation Method"
 msgstr "Afschrijvingsmethode"
 
 #. module: account_asset
-#: field:account.asset.asset,purchase_date:0 view:asset.asset.report:0
+#: field:account.asset.asset,purchase_date:0
+#: view:asset.asset.report:0
 #: field:asset.asset.report,purchase_date:0
 msgid "Purchase Date"
 msgstr "Aankoopdatum"
@@ -682,8 +708,7 @@ msgid "Skip Draft State"
 msgstr "Conceptstatus overslaan"
 
 #. module: account_asset
-#: view:account.asset.asset:0 view:account.asset.category:0
-#: view:account.asset.history:0
+#: view:account.asset.category:0
 msgid "Depreciation Dates"
 msgstr "Afschrijvingsdatums"
 
@@ -704,7 +729,8 @@ msgstr "Al afgeschreven bedrag"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,move_check:0
-#: view:asset.asset.report:0 field:asset.asset.report,move_check:0
+#: view:asset.asset.report:0
+#: field:asset.asset.report,move_check:0
 msgid "Posted"
 msgstr "Geboekt"
 
@@ -760,7 +786,7 @@ msgid "Asset depreciation line"
 msgstr "Afschrijvingslijn"
 
 #. module: account_asset
-#: field:account.asset.asset,category_id:0 view:account.asset.category:0
+#: view:account.asset.category:0
 #: field:asset.asset.report,asset_category_id:0
 #: model:ir.model,name:account_asset.model_account_asset_category
 msgid "Asset category"

@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-07 04:57+0000\n"
-"X-Generator: Launchpad (build 16341)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:02+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -65,6 +65,7 @@ msgstr "Ledighet att Godkänna"
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
+#: model:mail.message.subtype,name:hr_holidays.mt_holidays_refused
 msgid "Refused"
 msgstr "Nekad"
 
@@ -160,6 +161,7 @@ msgstr "Sammanfattning av ledighet"
 #: selection:hr.holidays,state:0
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
+#: model:mail.message.subtype,name:hr_holidays.mt_holidays_approved
 msgid "Approved"
 msgstr "Godkänd"
 
@@ -281,12 +283,12 @@ msgid "Leave Type"
 msgstr "Ledighetstyp"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:230
-#: code:addons/hr_holidays/hr_holidays.py:241
-#: code:addons/hr_holidays/hr_holidays.py:266
-#: code:addons/hr_holidays/hr_holidays.py:283
-#: code:addons/hr_holidays/hr_holidays.py:409
-#: code:addons/hr_holidays/hr_holidays.py:485
+#: code:addons/hr_holidays/hr_holidays.py:238
+#: code:addons/hr_holidays/hr_holidays.py:249
+#: code:addons/hr_holidays/hr_holidays.py:274
+#: code:addons/hr_holidays/hr_holidays.py:298
+#: code:addons/hr_holidays/hr_holidays.py:421
+#: code:addons/hr_holidays/hr_holidays.py:471
 #, python-format
 msgid "Warning!"
 msgstr "Varning!"
@@ -320,7 +322,7 @@ msgid "Confirm"
 msgstr "Godkänn"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:492
+#: code:addons/hr_holidays/hr_holidays.py:478
 #, python-format
 msgid "Leave Request for %s"
 msgstr "Ledighetsbegäran för %s"
@@ -391,7 +393,7 @@ msgid "Error! leave start-date must be lower then leave end-date."
 msgstr "Fel! Ledighet - Startdatum måste ligga före Slutdatum."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:490
+#: code:addons/hr_holidays/hr_holidays.py:476
 #, python-format
 msgid "Allocation for %s"
 msgstr "Tilldelning för %s"
@@ -403,7 +405,7 @@ msgid "Number of Days"
 msgstr "Antal dagar"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:485
+#: code:addons/hr_holidays/hr_holidays.py:471
 #, python-format
 msgid ""
 "The feature behind the field 'Remaining Legal Leaves' can only be used when "
@@ -776,7 +778,7 @@ msgid "By Employee Category"
 msgstr "Per anställningskategori"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:328
+#: code:addons/hr_holidays/hr_holidays.py:343
 #: view:hr.holidays:0
 #: selection:hr.holidays,type:0
 #: field:resource.calendar.leaves,holiday_id:0
@@ -785,6 +787,7 @@ msgid "Leave Request"
 msgstr "Lämna förfrågan"
 
 #. module: hr_holidays
+#: view:hr.holidays:0
 #: field:hr.holidays,name:0
 msgid "Description"
 msgstr "Beskrivning"
@@ -957,5 +960,6 @@ msgstr "År"
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: selection:hr.holidays,state:0
+#: model:mail.message.subtype,name:hr_holidays.mt_holidays_confirmed
 msgid "To Approve"
 msgstr "Att godkänna"

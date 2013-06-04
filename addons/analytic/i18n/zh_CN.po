@@ -14,13 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:32+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2013-05-29 06:48+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
-msgstr "子项"
+msgstr "子科目"
 
 #. module: analytic
 #: field:account.analytic.account,name:0
@@ -38,9 +38,9 @@ msgid "State"
 msgstr "状态"
 
 #. module: analytic
-#: field:account.analytic.account,user_id:0
+#: field:account.analytic.account,manager_id:0
 msgid "Account Manager"
-msgstr "项管理"
+msgstr "科目管理员"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -82,7 +82,7 @@ msgstr ""
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "New"
-msgstr "新增"
+msgstr "新建"
 
 #. module: analytic
 #: field:account.analytic.account,type:0
@@ -103,7 +103,7 @@ msgstr "辅助核算明细"
 #: field:account.analytic.account,description:0
 #: field:account.analytic.line,name:0
 msgid "Description"
-msgstr "说明"
+msgstr "描述"
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
@@ -117,7 +117,7 @@ msgid "Company"
 msgstr "公司"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:138
+#: code:addons/analytic/analytic.py:160
 #, python-format
 msgid ""
 "If you set a company, the currency selected has to be the same as it's "
@@ -148,7 +148,7 @@ msgstr "日期"
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Template"
-msgstr "模板"
+msgstr "模版"
 
 #. module: analytic
 #: field:account.analytic.account,quantity:0
@@ -242,6 +242,8 @@ msgid "Full Account Name"
 msgstr "所有项名称"
 
 #. module: analytic
+#: view:account.analytic.account:0
+#: selection:account.analytic.account,type:0
 #: field:account.analytic.line,account_id:0
 #: model:ir.model,name:analytic.model_account_analytic_account
 msgid "Analytic Account"

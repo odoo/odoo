@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:43+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2013-05-29 06:59+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: event
 #: view:event.event:0
@@ -65,8 +65,7 @@ msgid "Make Invoices"
 msgstr "Нэхэмжлэл үүсгэх"
 
 #. module: event
-#: view:event.event:0
-#: view:event.registration:0
+#: field:event.registration,date_open:0
 msgid "Registration Date"
 msgstr "Бүртгүүлсэн огноо"
 
@@ -125,12 +124,8 @@ msgid "Pricelist version for current event."
 msgstr "Одоогийн үйл явдлын үнийн жагсаалтын хувилбар"
 
 #. module: event
-#: code:addons/event/wizard/partner_event_registration.py:88
 #: view:event.registration:0
-#: model:ir.actions.act_window,name:event.action_partner_event_registration
 #: model:ir.model,name:event.model_event_registration
-#: view:partner.event.registration:0
-#, python-format
 msgid "Event Registration"
 msgstr "Бүртгэгдсэн үйл ажиллагаа"
 
@@ -180,9 +175,10 @@ msgstr "Үйл ажиллагаа эхлэх огноо"
 #: model:ir.ui.menu,name:event.menu_report_event_registration
 #: view:report.event.registration:0
 msgid "Events Analysis"
-msgstr "Үйл ажиллагааны анализ"
+msgstr "Үйл явдлын шинжилгээ"
 
 #. module: event
+#: field:event.event,message_ids:0
 #: field:event.registration,message_ids:0
 msgid "Messages"
 msgstr "Зурвас"
@@ -203,16 +199,15 @@ msgid "Ticket for Opera"
 msgstr "Дуурийн тасалбар"
 
 #. module: event
-#: code:addons/event/event.py:125
 #: view:event.event:0
-#, python-format
 msgid "Confirm Event"
 msgstr "Үйл ажиллагааг батлах"
 
 #. module: event
 #: selection:event.event,state:0
 #: selection:event.registration,state:0
-#: selection:report.event.registration,state:0
+#: selection:report.event.registration,event_state:0
+#: selection:report.event.registration,registration_state:0
 msgid "Cancelled"
 msgstr "Цуцлагдсан"
 
@@ -279,8 +274,8 @@ msgid "Customer Invoices"
 msgstr "Захиалагчийн нэхэмжлэл"
 
 #. module: event
-#: selection:event.event,state:0
-#: selection:report.event.registration,state:0
+#: selection:report.event.registration,event_state:0
+#: selection:report.event.registration,registration_state:0
 msgid "Draft"
 msgstr "Ноорог"
 
@@ -295,11 +290,9 @@ msgid " Event Type "
 msgstr " Үйл ажиллагааны төрөл "
 
 #. module: event
-#: view:event.event:0
 #: view:event.registration:0
 #: field:event.registration,event_id:0
 #: model:ir.model,name:event.model_event_event
-#: field:partner.event.registration,event_id:0
 #: view:report.event.registration:0
 #: field:report.event.registration,event_id:0
 #: view:res.partner:0
@@ -317,7 +310,8 @@ msgstr "Тэмдэг"
 #: selection:event.event,state:0
 #: view:event.registration:0
 #: selection:event.registration,state:0
-#: selection:report.event.registration,state:0
+#: selection:report.event.registration,event_state:0
+#: selection:report.event.registration,registration_state:0
 msgid "Confirmed"
 msgstr "Батлагдсан"
 
@@ -332,6 +326,7 @@ msgid "Events in New state"
 msgstr "Үйл ажиллагааын шинэ төлөв"
 
 #. module: event
+#: view:event.registration:0
 #: view:report.event.registration:0
 msgid "Confirm"
 msgstr "Батлах"
@@ -377,7 +372,6 @@ msgid "Location"
 msgstr "Байрлал"
 
 #. module: event
-#: view:event.event:0
 #: view:event.registration:0
 #: view:report.event.registration:0
 msgid "New"
@@ -385,7 +379,6 @@ msgstr "Шинэ"
 
 #. module: event
 #: field:event.event,register_current:0
-#: view:report.event.registration:0
 msgid "Confirmed Registrations"
 msgstr "Батлагдсан бүртгэлүүд"
 
@@ -401,7 +394,7 @@ msgid "Type"
 msgstr "Төрөл"
 
 #. module: event
-#: field:event.registration,email_from:0
+#: field:event.registration,email:0
 msgid "Email"
 msgstr "Имэйл"
 
@@ -432,8 +425,8 @@ msgid "Error !"
 msgstr "Алдаа !"
 
 #. module: event
-#: field:event.event,name:0
-#: field:event.registration,name:0
+#: field:event.event,message_summary:0
+#: field:event.registration,message_summary:0
 msgid "Summary"
 msgstr "Хураангуй"
 
@@ -492,7 +485,6 @@ msgstr "Огноонууд"
 
 #. module: event
 #: view:event.confirm:0
-#: view:event.confirm.registration:0
 msgid "Confirm Anyway"
 msgstr "Ямартай ч батлах"
 
@@ -511,8 +503,6 @@ msgstr "    Сар-1    "
 #. module: event
 #: view:event.event:0
 #: view:event.registration:0
-#: field:event.registration.badge,registration_id:0
-#: model:ir.actions.act_window,name:event.act_event_list_register_event
 msgid "Registration"
 msgstr "Бүртгэл"
 
@@ -550,7 +540,6 @@ msgid "Contact"
 msgstr "Холбогч"
 
 #. module: event
-#: view:event.event:0
 #: view:event.registration:0
 #: field:event.registration,partner_id:0
 #: model:ir.model,name:event.model_res_partner
@@ -558,7 +547,6 @@ msgid "Partner"
 msgstr "Харилцагч"
 
 #. module: event
-#: view:board.board:0
 #: model:ir.actions.act_window,name:event.act_event_reg
 #: view:report.event.registration:0
 msgid "Events Filling Status"
@@ -580,7 +568,6 @@ msgid "Events States"
 msgstr "Үйл ажиллагааны төлөв"
 
 #. module: event
-#: view:board.board:0
 #: field:event.event,register_prospect:0
 msgid "Unconfirmed Registrations"
 msgstr "Батлагдаагүй бүртгэлүүд"
@@ -602,11 +589,7 @@ msgstr "Логууд"
 
 #. module: event
 #: view:event.event:0
-#: field:event.event,state:0
-#: view:event.registration:0
-#: field:event.registration,state:0
-#: view:report.event.registration:0
-#: field:report.event.registration,state:0
+#: field:event.event,state_id:0
 msgid "State"
 msgstr "Төлөв"
 
@@ -677,7 +660,7 @@ msgstr "Нэхэмжилсэн"
 #: view:event.event:0
 #: view:report.event.registration:0
 msgid "My Events"
-msgstr "Миний үйл ажииллагаанууд"
+msgstr "Миний үйл явдлууд"
 
 #. module: event
 #: view:event.event:0
@@ -722,8 +705,12 @@ msgstr "Шинэ төлөвтэй үйл явдлууд"
 #. module: event
 #: view:event.event:0
 #: model:ir.actions.act_window,name:event.action_event_view
+#: model:ir.actions.act_window,name:event.open_board_associations_manager
+#: model:ir.module.category,name:event.module_category_event_management
+#: model:ir.ui.menu,name:event.event_main_menu
+#: model:ir.ui.menu,name:event.menu_board_associations_manager
 #: model:ir.ui.menu,name:event.menu_event_event
-#: model:ir.ui.menu,name:event.menu_event_event_assiciation
+#: model:ir.ui.menu,name:event.menu_reporting_events
 #: view:res.partner:0
 msgid "Events"
 msgstr "Үйл ажиллагаанууд"
@@ -795,7 +782,7 @@ msgid "Active"
 msgstr "Идэвхитэй"
 
 #. module: event
-#: field:event.registration,date:0
+#: field:event.event,date_begin:0
 msgid "Start Date"
 msgstr "Эхлэл огноо"
 
@@ -846,17 +833,13 @@ msgid "Set To Draft"
 msgstr "Ноороглох"
 
 #. module: event
-#: code:addons/event/event.py:499
 #: view:event.event:0
 #: view:event.registration:0
 #: view:res.partner:0
-#, python-format
 msgid "Confirm Registration"
 msgstr "Бүртгэлийг батлах"
 
 #. module: event
-#: view:event.event:0
-#: view:report.event.registration:0
 #: view:res.partner:0
 msgid "Date"
 msgstr "Огноо"
@@ -925,12 +908,8 @@ msgid "Error ! Closing Date cannot be set before Beginning Date."
 msgstr "Алдаа ! Хаагдах огноо нь Эхлэх огнооноос өмнө байж болохгүй."
 
 #. module: event
-#: code:addons/event/event.py:446
 #: selection:event.event,state:0
-#: view:event.make.invoice:0
-#: selection:event.registration,state:0
-#: selection:report.event.registration,state:0
-#, python-format
+#: selection:report.event.registration,event_state:0
 msgid "Done"
 msgstr "Хийгдсэн"
 
@@ -952,8 +931,7 @@ msgid "Year"
 msgstr "Он"
 
 #. module: event
-#: code:addons/event/event.py:465
-#, python-format
+#: view:event.confirm:0
 msgid "Cancel"
 msgstr "Цуцлах"
 
@@ -990,9 +968,6 @@ msgstr "Автомат баталгаажуулалт: [%s] %s"
 #. module: event
 #: view:event.event:0
 #: view:event.registration:0
-#: field:event.registration,user_id:0
-#: view:report.event.registration:0
-#: field:report.event.registration,user_id:0
 msgid "Responsible"
 msgstr "Хариуцагч"
 
@@ -1052,10 +1027,7 @@ msgid "Product"
 msgstr "Бараа"
 
 #. module: event
-#: view:event.event:0
 #: field:event.event,note:0
-#: view:event.registration:0
-#: field:event.registration,description:0
 msgid "Description"
 msgstr "Тодорхойлолт"
 
@@ -1065,6 +1037,7 @@ msgid " # No of Confirmed Registrations"
 msgstr " # Баталгаажсан бүртгэлийн тоо"
 
 #. module: event
+#: view:event.event:0
 #: model:ir.actions.act_window,name:event.act_register_event_partner
 msgid "Subscribe"
 msgstr "Бүртгүүлэх"
@@ -1122,6 +1095,8 @@ msgid "Beginning Date of Event"
 msgstr "Үйл явдлын эхлэх огноо"
 
 #. module: event
+#: view:event.event:0
+#: selection:event.event,state:0
 #: selection:event.registration,state:0
 msgid "Unconfirmed"
 msgstr "Батлагаажаагүй"
@@ -1133,7 +1108,7 @@ msgid "Auto Registration: [%s] %s"
 msgstr "Автомат бүртгэл: [%s] %s"
 
 #. module: event
-#: field:event.registration,date_deadline:0
+#: field:event.event,date_end:0
 msgid "End Date"
 msgstr "Дуусах огноо"
 
@@ -1149,7 +1124,8 @@ msgstr "Холбооны Хянах Самбар"
 
 #. module: event
 #: view:event.event:0
-#: field:event.registration.badge,name:0
+#: field:event.event,name:0
+#: field:event.registration,name:0
 msgid "Name"
 msgstr "Нэр"
 
@@ -1162,6 +1138,7 @@ msgid "Sale Team"
 msgstr "Борлуулалтын Баг"
 
 #. module: event
+#: view:event.event:0
 #: field:event.event,country_id:0
 msgid "Country"
 msgstr "Улс"
@@ -1173,11 +1150,7 @@ msgid "Registration is set as Cannot be invoiced"
 msgstr "Бүртгэл нэхэмжилж болохгүй байхаар тэмдэглэгдсэн"
 
 #. module: event
-#: code:addons/event/event.py:527
-#: view:event.event:0
-#: view:event.registration:0
 #: view:res.partner:0
-#, python-format
 msgid "Close Registration"
 msgstr "Бүртгэлийг Хаах"
 
@@ -1203,17 +1176,19 @@ msgstr "Батлагдсан төлөвтэй үйл явдлууд"
 #. module: event
 #: view:event.event:0
 #: view:event.type:0
+#: field:event.type,name:0
 #: view:report.event.registration:0
-#: field:report.event.registration,type:0
+#: field:report.event.registration,event_type:0
 msgid "Event Type"
 msgstr "Үйл явдлын төрөл"
 
 #. module: event
 #: view:event.event:0
 #: field:event.event,registration_ids:0
+#: model:ir.actions.act_window,name:event.act_event_list_register_event
 #: model:ir.actions.act_window,name:event.action_registration
 #: model:ir.ui.menu,name:event.menu_action_registration
-#: model:ir.ui.menu,name:event.menu_action_registration_association
+#: view:res.partner:0
 msgid "Registrations"
 msgstr "Бүртгэлүүд"
 
@@ -1234,7 +1209,8 @@ msgid "Error ! You cannot create recursive associated members."
 msgstr "Алдаа ! Тойрч холбогдсон гишүүдийг үүсгэх боломжгүй."
 
 #. module: event
-#: field:report.event.registration,date:0
+#: field:event.registration,event_begin_date:0
+#: field:report.event.registration,event_date:0
 msgid "Event Start Date"
 msgstr "Үйл явдлын эхлэл огноо"
 

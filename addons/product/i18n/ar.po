@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-16 04:57+0000\n"
-"X-Generator: Launchpad (build 16272)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:13+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -77,12 +77,12 @@ msgid "Mainboard ASUStek A7V8X-X"
 msgstr "اللوحة الأم ASUStek A7V8X-X"
 
 #. module: product
-#: help:product.template,seller_qty:0
+#: help:product.product,seller_qty:0
 msgid "This is minimum quantity to purchase from Main Supplier."
 msgstr "وهذا هو الحد الأدنى لشراء كمية من المورد الرئيسي."
 
 #. module: product
-#: model:product.uom,name:product.uom_day
+#: model:product.uom,name:product.product_uom_day
 msgid "Day"
 msgstr "يوم"
 
@@ -109,7 +109,7 @@ msgid ""
 msgstr "قائمة الأسعار سوف تستخدم، بدلاً عن الافتراضية، للبيع للشريك الحالي"
 
 #. module: product
-#: field:product.template,seller_qty:0
+#: field:product.product,seller_qty:0
 msgid "Supplier Quantity"
 msgstr "كمية المورد"
 
@@ -127,14 +127,12 @@ msgstr "تحذير !"
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_pricelist
 #: model:ir.model,name:product.model_product_pricelist
-#: field:product.product,price:0
 #: field:product.product,pricelist_id:0
 #: view:product.supplierinfo:0
 msgid "Pricelist"
 msgstr "قائمة الأسعار"
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Base Prices"
 msgstr "السعر الأساسي"
@@ -170,7 +168,7 @@ msgid "Partner"
 msgstr "شريك"
 
 #. module: product
-#: code:addons/product/product.py:143
+#: code:addons/product/product.py:176
 #, python-format
 msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
@@ -239,12 +237,12 @@ msgstr ""
 #. module: product
 #: model:product.pricelist.version,name:product.ver0
 msgid "Default Public Pricelist Version"
-msgstr "النسخة الافتراضية العامة للائحة الأسعار"
+msgstr "قائمة الأسعار المعلنة التلقائية"
 
 #. module: product
 #: selection:product.template,cost_method:0
 msgid "Standard Price"
-msgstr "السعر القياسي"
+msgstr "السعر المعياري"
 
 #. module: product
 #: model:product.pricelist.type,name:product.pricelist_type_sale
@@ -273,7 +271,7 @@ msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
 msgstr "  على سبيل المثال: 1 * (هذه الوحدة) = النسبة * (الوحدة المرجعية)"
 
 #. module: product
-#: code:addons/product/product.py:418
+#: code:addons/product/product.py:412
 #, python-format
 msgid "Products: "
 msgstr "المنتجات: "
@@ -281,7 +279,7 @@ msgstr "المنتجات: "
 #. module: product
 #: field:product.category,parent_id:0
 msgid "Parent Category"
-msgstr "التصنيف الرئيسي"
+msgstr "الفئة الأم"
 
 #. module: product
 #: help:product.template,procure_method:0
@@ -294,7 +292,7 @@ msgstr ""
 #. module: product
 #: model:process.node,note:product.process_node_supplier0
 msgid "Supplier name, price, product code, ..."
-msgstr "ااسم المورد، السعر، كود المنتج"
+msgstr "اسم المورد، السعر، كود المنتج، ..."
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd3_product_template
@@ -307,7 +305,7 @@ msgid "EAN13"
 msgstr "EAN13"
 
 #. module: product
-#: field:product.template,seller_id:0
+#: field:product.product,seller_id:0
 msgid "Main Supplier"
 msgstr "المورد الرئيسي"
 
@@ -324,8 +322,9 @@ msgstr "التعبئة"
 #. module: product
 #: view:product.product:0
 #: field:product.template,categ_id:0
+#: field:product.uom,category_id:0
 msgid "Category"
-msgstr "فئة"
+msgstr "الفئة"
 
 #. module: product
 #: help:product.pricelist.item,min_quantity:0
@@ -347,12 +346,12 @@ msgstr "الكمية-1"
 #. module: product
 #: help:product.packaging,ul_qty:0
 msgid "The number of packages by layer"
-msgstr "وعدد الرزم من قبل الطبقة"
+msgstr "عدد العبوات في كل طبقة"
 
 #. module: product
 #: field:product.packaging,qty:0
 msgid "Quantity by Package"
-msgstr "الكمية لكل طبقة"
+msgstr "الكمية في كل عبوة"
 
 #. module: product
 #: view:product.product:0
@@ -380,7 +379,7 @@ msgstr "المرجع وحدة القياس(UoM) لهذا الصنف"
 #: model:product.price.type,name:product.list_price
 #: field:product.product,lst_price:0
 msgid "Public Price"
-msgstr "السعر العام"
+msgstr "السعر المعلن"
 
 #. module: product
 #: field:product.price_list,qty5:0
@@ -395,12 +394,12 @@ msgstr "مكونات تقنية معلومات"
 #. module: product
 #: field:product.template,product_manager:0
 msgid "Product Manager"
-msgstr "مدير الإنتاج"
+msgstr "مدير الصنف"
 
 #. module: product
 #: field:product.supplierinfo,product_name:0
 msgid "Supplier Product Name"
-msgstr "اسم مورد المنتج"
+msgstr "اسم المنتج لدى المورد"
 
 #. module: product
 #: model:product.template,name:product.product_product_pc3_product_template
@@ -447,7 +446,6 @@ msgid "Products Price Search"
 msgstr "بحث عن سعر المنتجات"
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 #: field:product.template,description_sale:0
 msgid "Sale Description"
@@ -462,7 +460,7 @@ msgstr "محلية المخزون"
 #. module: product
 #: help:product.packaging,length:0
 msgid "The length of the package"
-msgstr "طول الحزمة"
+msgstr "طول العبوة"
 
 #. module: product
 #: help:product.template,weight_net:0
@@ -491,7 +489,7 @@ msgid "Ending date for this pricelist version to be valid."
 msgstr "إنهاء تاريخ اصدارة لائحة الأسعار لتكون صالحة."
 
 #. module: product
-#: model:product.category,name:product.product_category_0
+#: model:product.category,name:product.product_category_all
 msgid "All products"
 msgstr "كل المنتجات"
 
@@ -606,12 +604,12 @@ msgstr ""
 #. module: product
 #: help:product.packaging,width:0
 msgid "The width of the package"
-msgstr "عرض الحزمة"
+msgstr "عرض العبوة"
 
 #. module: product
 #: selection:product.category,type:0
 msgid "View"
-msgstr "عرض"
+msgstr "منظور"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_template_action_tree
@@ -635,14 +633,13 @@ msgstr "إجمالي عدد المنتجات التي يمكن طرحها بال
 
 #. module: product
 #: constraint:product.packaging:0
-#: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr "خطأ: كود إين غير صالح"
+msgstr "خطأ: كود EAN غير صالح"
 
 #. module: product
 #: field:product.pricelist.item,min_quantity:0
 msgid "Min. Quantity"
-msgstr "أقل. كمية"
+msgstr "أقل كمية"
 
 #. module: product
 #: model:ir.model,name:product.model_product_price_type
@@ -661,7 +658,7 @@ msgstr ""
 #. module: product
 #: view:product.pricelist.item:0
 msgid "Max. Margin"
-msgstr "كحد أقصى. الهامش"
+msgstr "حد أقصى للهامش"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -681,7 +678,7 @@ msgstr "مروحة صامتة"
 #. module: product
 #: help:product.supplierinfo,name:0
 msgid "Supplier of this product"
-msgstr "المورد لهذا المنتج"
+msgstr "مورد هذا المنتج"
 
 #. module: product
 #: help:product.pricelist.version,active:0
@@ -700,6 +697,7 @@ msgstr "طقم رف  100 سم"
 
 #. module: product
 #: field:product.supplierinfo,name:0
+#: field:product.template,seller_ids:0
 msgid "Supplier"
 msgstr "مورِّد"
 
@@ -765,7 +763,6 @@ msgid "Price List"
 msgstr "قائمة أسعار"
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Suppliers"
 msgstr "المورّدون"
@@ -800,9 +797,9 @@ msgstr ""
 "الافتراضية للقياس المنتج طريقة أخرى"
 
 #. module: product
-#: model:product.category,name:product.product_category_5
+#: model:product.category,name:product.product_category_7
 msgid "Accessories"
-msgstr "البرامج الملحقة"
+msgstr "ملحقات"
 
 #. module: product
 #: field:product.template,sale_delay:0
@@ -848,6 +845,7 @@ msgstr "طباعة"
 #. module: product
 #: view:product.product:0
 #: field:product.ul,type:0
+#: field:product.uom,uom_type:0
 msgid "Type"
 msgstr "نوع"
 
@@ -889,7 +887,6 @@ msgstr ""
 "المنتجات"
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Procurement & Locations"
 msgstr "المشتروات والمواقع"
@@ -900,7 +897,7 @@ msgid "Kitchen Design Project"
 msgstr "مشروع تصميم مطبخ"
 
 #. module: product
-#: model:product.uom,name:product.uom_hour
+#: model:product.uom,name:product.product_uom_hour
 msgid "Hour"
 msgstr "ساعة"
 
@@ -948,6 +945,7 @@ msgid "Supplier Information"
 msgstr "معلومات عن المورد"
 
 #. module: product
+#: model:ir.model,name:product.model_res_currency
 #: field:product.price.type,currency_id:0
 #: report:product.pricelist:0
 #: field:product.pricelist,currency_id:0
@@ -964,7 +962,7 @@ msgstr "دي دي ار 256 ميقا بايت PC400"
 #: model:ir.ui.menu,name:product.menu_product_category_action_form
 #: view:product.category:0
 msgid "Product Categories"
-msgstr "تصنيف المنتج"
+msgstr "تصنيفات المنتجات"
 
 #. module: product
 #: view:product.uom:0
@@ -987,7 +985,7 @@ msgid "Total Package Weight"
 msgstr "مجموع وزن الحزمة"
 
 #. module: product
-#: field:product.template,seller_info_id:0
+#: field:product.product,seller_info_id:0
 msgid "unknown"
 msgstr "مجهول"
 
@@ -1012,7 +1010,7 @@ msgstr "نوع تسعير المنتجات"
 #. module: product
 #: field:product.product,price_extra:0
 msgid "Variant Price Extra"
-msgstr "بديل التكلفة الإضافية"
+msgstr "فارق السعر الاضافي"
 
 #. module: product
 #: model:product.template,name:product.product_product_fan_product_template
@@ -1025,7 +1023,6 @@ msgid "Information about a product supplier"
 msgstr "معلومات عن مورد المنتج"
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 #: field:product.template,description_purchase:0
 msgid "Purchase Description"
@@ -1058,7 +1055,7 @@ msgstr ""
 #. module: product
 #: selection:product.template,type:0
 msgid "Stockable Product"
-msgstr ""
+msgstr "صنف مخزني"
 
 #. module: product
 #: field:product.packaging,code:0
@@ -1089,7 +1086,7 @@ msgstr "معلومات عن الشريك"
 #: selection:product.ul,type:0
 #: model:product.uom.categ,name:product.product_uom_categ_unit
 msgid "Unit"
-msgstr "وحدة"
+msgstr "وحدة القياس"
 
 #. module: product
 #: view:product.product:0
@@ -1180,11 +1177,8 @@ msgstr "وحدات لوجستية"
 #: field:product.category,name:0
 #: field:product.pricelist.type,name:0
 #: field:product.pricelist.version,name:0
-#: view:product.product:0
-#: field:product.product,name_template:0
 #: field:product.template,name:0
 #: field:product.ul,name:0
-#: field:product.uom,name:0
 #: field:product.uom.categ,name:0
 msgid "Name"
 msgstr "الاسم"
@@ -1226,7 +1220,7 @@ msgstr "ملغي"
 #. module: product
 #: model:product.uom,name:product.product_uom_km
 msgid "km"
-msgstr ""
+msgstr "كم"
 
 #. module: product
 #: help:product.template,cost_method:0
@@ -1272,10 +1266,13 @@ msgstr "العرض"
 #. module: product
 #: help:product.price.type,field:0
 msgid "Associated field in the product form."
-msgstr "الحقل المرتبط بشكل المنتج"
+msgstr "الحقل المرتبط بلائحة الصنف"
 
 #. module: product
 #: view:product.product:0
+#: view:product.template:0
+#: field:product.template,uom_id:0
+#: field:product.uom,name:0
 msgid "Unit of Measure"
 msgstr "وحدة القياس"
 
@@ -1292,10 +1289,10 @@ msgstr "تاريخ الطباعة"
 #. module: product
 #: field:product.template,uos_id:0
 msgid "Unit of Sale"
-msgstr "وحدة بيع"
+msgstr "وحدة البيع"
 
 #. module: product
-#: help:product.template,seller_delay:0
+#: help:product.product,seller_delay:0
 msgid ""
 "This is the average delay in days between the purchase order confirmation "
 "and the reception of goods for this product and for the default supplier. It "
@@ -1303,12 +1300,12 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: help:product.template,seller_id:0
+#: help:product.product,seller_id:0
 msgid "Main Supplier who has highest priority in Supplier List."
 msgstr "المورد الرئيسي الذي لديه أولوية قصوى في قائمة الموردين."
 
 #. module: product
-#: model:product.category,name:product.product_category_6
+#: model:product.category,name:product.product_category_5
 #: view:product.product:0
 msgid "Services"
 msgstr "الخدمات"
@@ -1410,7 +1407,7 @@ msgstr "اضفه الى المخزون"
 #. module: product
 #: field:product.pricelist.item,price_version_id:0
 msgid "Price List Version"
-msgstr "إصدارة قائمة الأسعار"
+msgstr "إصدار قائمة الأسعار"
 
 #. module: product
 #: field:product.product,virtual_available:0
@@ -1428,14 +1425,15 @@ msgstr ""
 "القصوى إلى أدنى تسلسل ويتوقف بمجرد تم العثور على  مطابقة البند."
 
 #. module: product
+#: view:product.product:0
 #: selection:product.template,type:0
 msgid "Consumable"
-msgstr "صالح للاستهلاك"
+msgstr "استهلاكي"
 
 #. module: product
 #: help:product.price.type,currency_id:0
 msgid "The currency the field is expressed in."
-msgstr "العملة ويعبر عنها في الحقل"
+msgstr "عملة الحقل"
 
 #. module: product
 #: help:product.template,weight:0
@@ -1448,10 +1446,9 @@ msgid "Side Panel"
 msgstr "لوحة جانبية"
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Procurement"
-msgstr "المشتريات"
+msgstr "التدبير"
 
 #. module: product
 #: view:product.product:0
@@ -1472,7 +1469,7 @@ msgstr "رف"
 #. module: product
 #: field:product.template,uom_po_id:0
 msgid "Purchase Unit of Measure"
-msgstr "قياس وحدة الشراء"
+msgstr "وحدة قياس الشراء"
 
 #. module: product
 #: field:product.template,supply_method:0
@@ -1600,7 +1597,7 @@ msgstr "أصغر من وحدة قياس المرجعية"
 #: field:product.product,active:0
 #: field:product.uom,active:0
 msgid "Active"
-msgstr "نشط"
+msgstr "مفعّل"
 
 #. module: product
 #: field:product.product,price_margin:0
@@ -1615,7 +1612,7 @@ msgstr ""
 #. module: product
 #: help:product.packaging,ean:0
 msgid "The EAN code of the package unit."
-msgstr "رمز UAN لوحدة الحزمة"
+msgstr "رمز EAN العبوة"
 
 #. module: product
 #: help:product.supplierinfo,product_uom:0
@@ -1811,6 +1808,7 @@ msgid "Box 30x40x60"
 msgstr "صندوق 30×40×60"
 
 #. module: product
+#: model:product.template,name:product.product_product_consultant_product_template
 #: selection:product.template,type:0
 msgid "Service"
 msgstr "الخدمة"
@@ -1844,7 +1842,7 @@ msgstr ""
 "السعر الأساسي (لحساب سعر البيع للعميل/المستهلك و يسمي أحيانا سعر الكاتالوج)"
 
 #. module: product
-#: code:addons/product/pricelist.py:376
+#: code:addons/product/pricelist.py:377
 #, python-format
 msgid "Partner section of the product form"
 msgstr "قسم الشريك من شكل المنتج"
@@ -1874,7 +1872,7 @@ msgstr ""
 "من وحدة القياس الافتراضية."
 
 #. module: product
-#: model:product.template,description:product.product_product_cpu1_product_template
+#: model:product.template,description:product.product_product_9_product_template
 msgid "This product is configured with example of push/pull flows"
 msgstr "هذا المنتج تم تكوين مع مثال على دفع / سحب التدفقات"
 
@@ -1900,7 +1898,7 @@ msgid "Pricelist Type"
 msgstr "نوع قائمة الأسعار"
 
 #. module: product
-#: model:product.category,name:product.product_category_otherproducts0
+#: model:product.category,name:product.product_category_3
 msgid "Other Products"
 msgstr "منتجات أخرى"
 
@@ -1915,6 +1913,7 @@ msgid "Characteristics"
 msgstr "الخصائص"
 
 #. module: product
+#: view:product.product:0
 #: field:product.template,sale_ok:0
 msgid "Can be Sold"
 msgstr "يمكن بيعها"
@@ -1946,7 +1945,7 @@ msgid "t"
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_rawmaterial0
+#: model:product.category,name:product.product_category_10
 msgid "Raw Materials"
 msgstr "مواد خام"
 
@@ -2022,7 +2021,7 @@ msgid "UoM Categories"
 msgstr "فئات وحدة القياس"
 
 #. module: product
-#: field:product.template,seller_delay:0
+#: field:product.product,seller_delay:0
 msgid "Supplier Lead Time"
 msgstr ""
 
@@ -2098,7 +2097,7 @@ msgid "Supplier of the product"
 msgstr "المورد للمنتج"
 
 #. module: product
-#: field:product.product,product_image:0
+#: field:product.product,image:0
 msgid "Image"
 msgstr "صورة"
 
@@ -2123,7 +2122,6 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Descriptions"
 msgstr "أوصاف"
@@ -2168,10 +2166,10 @@ msgstr "يعطي النظام تسلسل عند عرض قائمة التعبئة
 #. module: product
 #: field:product.pricelist.item,price_round:0
 msgid "Price Rounding"
-msgstr "السعر بالتقريب"
+msgstr "تقريب السعر"
 
 #. module: product
-#: code:addons/product/pricelist.py:178
+#: code:addons/product/pricelist.py:179
 #, python-format
 msgid ""
 "At least one pricelist has no active version !\n"
@@ -2206,7 +2204,6 @@ msgstr "ويمكن أن تؤجر"
 
 #. module: product
 #: model:product.price.type,name:product.standard_price
-#: field:product.template,standard_price:0
 msgid "Cost Price"
 msgstr "سعر التكلفة"
 
@@ -2269,7 +2266,6 @@ msgid "Sales Properties"
 msgstr "خصائص المبيعات"
 
 #. module: product
-#: view:product.product:0
 #: view:product.template:0
 msgid "Delays"
 msgstr "تأخيرات"
@@ -2289,7 +2285,6 @@ msgstr "إنشاء المنتج"
 #: field:product.packaging,name:0
 #: report:product.pricelist:0
 #: view:product.product:0
-#: view:product.template:0
 #: field:product.template,description:0
 msgid "Description"
 msgstr "وصف"
@@ -2311,6 +2306,7 @@ msgstr ""
 
 #. module: product
 #: field:product.template,volume:0
+#: model:product.uom.categ,name:product.product_uom_categ_vol
 msgid "Volume"
 msgstr "حجم"
 
@@ -2321,7 +2317,6 @@ msgstr "الحالة"
 
 #. module: product
 #: view:product.product:0
-#: model:res.groups,name:product.group_product_variant
 msgid "Product Variant"
 msgstr "المنتج البديل"
 
@@ -2331,7 +2326,8 @@ msgid "Shelves"
 msgstr "الأدرج"
 
 #. module: product
-#: code:addons/product/pricelist.py:375
+#: code:addons/product/pricelist.py:376
+#: field:product.pricelist.item,base_pricelist_id:0
 #, python-format
 msgid "Other Pricelist"
 msgstr "قوائم أسعار أخرى"
@@ -2346,6 +2342,7 @@ msgstr "قالب المنتج"
 
 #. module: product
 #: field:product.template,cost_method:0
+#: model:res.groups,name:product.group_costing_method
 msgid "Costing Method"
 msgstr "طريقة حساب التكاليف"
 

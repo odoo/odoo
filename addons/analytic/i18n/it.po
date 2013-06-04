@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:32+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2013-05-29 06:48+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -38,7 +38,7 @@ msgid "State"
 msgstr "Stato"
 
 #. module: analytic
-#: field:account.analytic.account,user_id:0
+#: field:account.analytic.account,manager_id:0
 msgid "Account Manager"
 msgstr "Gestore Conti"
 
@@ -85,7 +85,7 @@ msgstr ""
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "New"
-msgstr ""
+msgstr "Nuovo"
 
 #. module: analytic
 #: field:account.analytic.account,type:0
@@ -120,7 +120,7 @@ msgid "Company"
 msgstr "Azienda"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:138
+#: code:addons/analytic/analytic.py:160
 #, python-format
 msgid ""
 "If you set a company, the currency selected has to be the same as it's "
@@ -130,6 +130,12 @@ msgid ""
 "consolidation purposes of several companies charts with different "
 "currencies, for example."
 msgstr ""
+"Se viene selezionata un'azienda, la valuta selezionata deve essere la stessa "
+"di quella aziendale. \n"
+"E' possibile rimuovere l'azienda collegata, e quindi cambiare la valuta, "
+"solo sui conti analitici di tipo 'vista'. Ciò può essere utile veramente "
+"solo per ragioni di consolidamento di piani dei conti di diverse aziende con "
+"diverse valuta, per esempio."
 
 #. module: analytic
 #: field:account.analytic.line,user_id:0
@@ -169,7 +175,7 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,child_complete_ids:0
 msgid "Account Hierarchy"
-msgstr ""
+msgstr "Gerarchia Conto"
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
@@ -239,7 +245,7 @@ msgstr ""
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
-msgstr ""
+msgstr "Contabilità Analitica"
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
@@ -247,6 +253,8 @@ msgid "Full Account Name"
 msgstr "Nome Conto completa"
 
 #. module: analytic
+#: view:account.analytic.account:0
+#: selection:account.analytic.account,type:0
 #: field:account.analytic.line,account_id:0
 #: model:ir.model,name:analytic.model_account_analytic_account
 msgid "Analytic Account"
@@ -255,7 +263,7 @@ msgstr "Conto Analitico"
 #. module: analytic
 #: field:account.analytic.account,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: analytic
 #: constraint:account.analytic.line:0

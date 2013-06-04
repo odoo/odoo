@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-26 05:24+0000\n"
-"X-Generator: Launchpad (build 16451)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:20+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: sale
 #: field:sale.config.picking_policy,timesheet:0
@@ -70,6 +70,7 @@ msgstr "Dag"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
+#: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Annuleer order"
 
@@ -287,7 +288,7 @@ msgid "Sales Make Invoice"
 msgstr "Verkoopfactuur maken"
 
 #. module: sale
-#: code:addons/sale/sale.py:300
+#: code:addons/sale/sale.py:308
 #, python-format
 msgid "Pricelist Warning!"
 msgstr "Prijslijst waarschuwing"
@@ -295,7 +296,7 @@ msgstr "Prijslijst waarschuwing"
 #. module: sale
 #: field:sale.order.line,discount:0
 msgid "Discount (%)"
-msgstr "Korting (%)"
+msgstr "Krt. (%)"
 
 #. module: sale
 #: view:board.board:0
@@ -352,7 +353,7 @@ msgstr ""
 "factuur te maken gedurende het verzamel proces."
 
 #. module: sale
-#: code:addons/sale/sale.py:857
+#: code:addons/sale/sale.py:865
 #, python-format
 msgid "No Customer Defined !"
 msgstr "Geen klant opgegeven!"
@@ -569,7 +570,7 @@ msgid "Ordered month of the sales order"
 msgstr "Bestelde maand van de verkooporder"
 
 #. module: sale
-#: code:addons/sale/sale.py:502
+#: code:addons/sale/sale.py:510
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
@@ -779,7 +780,7 @@ msgid "# of Qty"
 msgstr "# Aantal"
 
 #. module: sale
-#: code:addons/sale/res_config.py:89
+#: code:addons/sale/res_config.py:97
 #, python-format
 msgid "Hour"
 msgstr "Uur"
@@ -816,7 +817,7 @@ msgid "You cannot confirm a sale order which has no line."
 msgstr "Het is niet mogelijk een verkooporder zonder regels te bevestigen"
 
 #. module: sale
-#: code:addons/sale/sale.py:935
+#: code:addons/sale/sale.py:942
 #, python-format
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
@@ -931,7 +932,7 @@ msgstr ""
 "maar wacht deze op de planner, als deze start op de orderdatum."
 
 #. module: sale
-#: code:addons/sale/sale.py:948
+#: code:addons/sale/sale.py:955
 #, python-format
 msgid "No valid pricelist line found ! :"
 msgstr "Geen geldige prijslijst gevonden!:"
@@ -997,8 +998,6 @@ msgstr "Mijn verkooporderregels"
 #: model:process.transition.action,name:sale.process_transition_action_cancel0
 #: view:sale.advance.payment.inv:0
 #: view:sale.make.invoice:0
-#: view:sale.order:0
-#: view:sale.order.line:0
 #: view:sale.order.line.make.invoice:0
 msgid "Cancel"
 msgstr "Annuleer"
@@ -1069,7 +1068,7 @@ msgstr "Forceer toewijzing"
 #. module: sale
 #: selection:sale.order.line,type:0
 msgid "on order"
-msgstr "Maak op bestelling"
+msgstr "Maak op order"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_invoiceafterdelivery0
@@ -1437,7 +1436,7 @@ msgid "Invoice Based on Sales Orders"
 msgstr "Factuur gebaseerd op verkooporders."
 
 #. module: sale
-#: code:addons/sale/sale.py:301
+#: code:addons/sale/sale.py:309
 #, python-format
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
@@ -1560,7 +1559,7 @@ msgstr "Betaald"
 #: model:ir.ui.menu,name:sale.menu_report_product_all
 #: view:sale.report:0
 msgid "Sales Analysis"
-msgstr "Verkoopanalyse"
+msgstr "Verkoop Analyse"
 
 #. module: sale
 #: code:addons/sale/sale.py:1151
@@ -1618,7 +1617,7 @@ msgid "Confirmed sale order lines, not yet delivered"
 msgstr "Bevestigde verkooporderregels, nog niet geleverd"
 
 #. module: sale
-#: code:addons/sale/sale.py:441
+#: code:addons/sale/sale.py:449
 #, python-format
 msgid "Customer Invoices"
 msgstr "Klantfacturen"
@@ -1963,8 +1962,8 @@ msgid "Sales by Month"
 msgstr "Omzet per maand"
 
 #. module: sale
-#: code:addons/sale/sale.py:280
-#: code:addons/sale/sale.py:578
+#: code:addons/sale/sale.py:288
+#: code:addons/sale/sale.py:586
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
@@ -2315,7 +2314,7 @@ msgid "Close"
 msgstr "Sluiten"
 
 #. module: sale
-#: code:addons/sale/sale.py:937
+#: code:addons/sale/sale.py:944
 #, python-format
 msgid "No Pricelist ! : "
 msgstr "Geen prijslijst! "

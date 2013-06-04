@@ -14,18 +14,18 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-05 05:26+0000\n"
-"X-Generator: Launchpad (build 16514)\n"
+"X-Launchpad-Export-Date: 2013-05-29 07:01+0000\n"
+"X-Generator: Launchpad (build 16640)\n"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_anonymous_manager:0
 msgid "Send an anonymous summary to the manager"
-msgstr ""
+msgstr "Испратете анонимно резиме до менаџерот"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Start Appraisal"
-msgstr ""
+msgstr "Започнете оценување"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
@@ -64,7 +64,7 @@ msgstr "Оддолжување до почеток"
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Appraisal that are in waiting appreciation state"
-msgstr ""
+msgstr "Оценување кое е во состојба на чекање на appreciation"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:244
@@ -84,7 +84,7 @@ msgstr "Компанија"
 #: field:hr.evaluation.interview,evaluation_id:0
 #: field:hr_evaluation.plan.phase,survey_id:0
 msgid "Appraisal Form"
-msgstr ""
+msgstr "Формулар за оценување"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -96,7 +96,7 @@ msgstr "Ден"
 #: view:hr_evaluation.plan:0
 #: field:hr_evaluation.plan,phase_ids:0
 msgid "Appraisal Phases"
-msgstr ""
+msgstr "Фази на оценување"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan,month_first:0
@@ -104,6 +104,8 @@ msgid ""
 "This number of months will be used to schedule the first evaluation date of "
 "the employee when selecting an evaluation plan. "
 msgstr ""
+"Овој број на месеци ќе биде употребен за да се закаже датумот за првата "
+"евалуација на вработениот кога се избира план за евалуација. "
 
 #. module: hr_evaluation
 #: view:hr.employee:0
@@ -113,7 +115,7 @@ msgstr ""
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "(eval_name)s:Appraisal Name"
-msgstr ""
+msgstr "(eval_name)s:Име на оценување"
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,help:hr_evaluation.open_view_hr_evaluation_tree
@@ -128,17 +130,17 @@ msgstr ""
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "Mail Body"
-msgstr ""
+msgstr "Тело на е-пошта"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,wait:0
 msgid "Wait Previous Phases"
-msgstr ""
+msgstr "Чекам претходни фази"
 
 #. module: hr_evaluation
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_evaluation
 msgid "Employee Appraisal"
-msgstr ""
+msgstr "Оценување на вработен"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,state:0
@@ -157,7 +159,7 @@ msgstr "Не ги задоволува очекувањата"
 #: model:ir.actions.act_window,name:hr_evaluation.open_view_hr_evaluation_tree
 #: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr
 msgid "Appraisal"
-msgstr "Проценка"
+msgstr "Оценување"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -175,6 +177,8 @@ msgid ""
 "If the evaluation does not meet the expectations, you can proposean action "
 "plan"
 msgstr ""
+"Доколку евалуацијата не ги задоволува очекувањата, можете да предложите "
+"акционен план"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -201,11 +205,26 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"Датум: %(date)s\n"
+"\n"
+"Почитуван %(employee_name)s,\n"
+"\n"
+"Правам евалуација во врска со %(eval_name)s.\n"
+"\n"
+"Ве молиме да доставите одговор.\n"
+"\n"
+"\n"
+"Ви благодариме,\n"
+"--\n"
+"%(user_signature)s\n"
+"\n"
+"        "
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Appraisal that are in Plan In Progress state"
-msgstr ""
+msgstr "Оценувања кои се во состојба План во тек"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -240,13 +259,13 @@ msgstr "(датум)и: Тековен датум"
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_anonymous_employee:0
 msgid "Send an anonymous summary to the employee"
-msgstr ""
+msgstr "Испратете анонимно резиме до вработен"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:83
 #, python-format
 msgid "Regarding "
-msgstr ""
+msgstr "Во врска со "
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0 view:hr.evaluation.report:0
@@ -272,7 +291,7 @@ msgstr "Ново"
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,mail_body:0
 msgid "Email"
-msgstr "E-mail"
+msgstr "Е-пошта"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,rating:0
@@ -322,13 +341,13 @@ msgstr "Јавни белешки"
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "Send Reminder Email"
-msgstr "Испрати емаил за потсетување"
+msgstr "Испрати е-пошта за потсетување"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 #: field:hr_evaluation.evaluation,rating:0
 msgid "Appreciation"
-msgstr ""
+msgstr "Благодарност"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -365,7 +384,7 @@ msgstr "Јули"
 #. module: hr_evaluation
 #: model:ir.actions.act_window,name:hr_evaluation.action_evaluation_plans_installer
 msgid "Review Appraisal Plans"
-msgstr ""
+msgstr "Прегледај ги плановите за оценување"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -375,7 +394,7 @@ msgstr ""
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "Action to Perform"
-msgstr ""
+msgstr "Акција за извршување"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.evaluation,note_action:0
@@ -419,7 +438,7 @@ msgstr "Во тек"
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "Interview Request"
-msgstr ""
+msgstr "Барање за интервју"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,send_answer_employee:0
@@ -461,7 +480,7 @@ msgstr "Подесување на маил"
 #. module: hr_evaluation
 #: model:ir.actions.act_window,name:hr_evaluation.evaluation_reminders
 msgid "Appraisal Reminders"
-msgstr ""
+msgstr "Потсетници за оценување"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
@@ -474,6 +493,8 @@ msgid ""
 "Check this box if you want to wait that all preceding phases are finished "
 "before launching this phase."
 msgstr ""
+"Означете го ова поле доколку сакате да чекате сите претходни фази да бидат "
+"завршени пред лансирањето на оваа фаза."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -494,7 +515,7 @@ msgstr "Нацрт"
 #: field:hr_evaluation.plan.phase,send_anonymous_employee:0
 #: field:hr_evaluation.plan.phase,send_anonymous_manager:0
 msgid "Anonymous Summary"
-msgstr ""
+msgstr "Анонимно резиме"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -509,7 +530,7 @@ msgstr ""
 #: field:hr_evaluation.plan.phase,plan_id:0
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan
 msgid "Appraisal Plan"
-msgstr ""
+msgstr "План за оценување"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
@@ -535,7 +556,7 @@ msgstr "Значително под очекувањата"
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid " (employee_name)s: Partner name"
-msgstr ""
+msgstr " (вработен_име)ња: Име на партнер"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -568,7 +589,7 @@ msgstr ""
 #. module: hr_evaluation
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan_phase
 msgid "Appraisal Plan Phase"
-msgstr ""
+msgstr "Етапа од план за оценување"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -578,7 +599,7 @@ msgstr "Јануари"
 #. module: hr_evaluation
 #: view:hr.employee:0
 msgid "Appraisal Interviews"
-msgstr ""
+msgstr "Интервјуа за оценување"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -588,7 +609,7 @@ msgstr "Датум"
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "Survey"
-msgstr "Резиме"
+msgstr "Истражување"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.evaluation,rating:0
@@ -609,35 +630,35 @@ msgstr "Финална валидација"
 #. module: hr_evaluation
 #: selection:hr_evaluation.evaluation,state:0
 msgid "Waiting Appreciation"
-msgstr ""
+msgstr "Чекам оценување"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
 #: model:ir.actions.act_window,name:hr_evaluation.action_evaluation_report_all
 #: model:ir.ui.menu,name:hr_evaluation.menu_evaluation_report_all
 msgid "Appraisal Analysis"
-msgstr ""
+msgstr "Анализи на оценување"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.evaluation,date:0
 msgid "Appraisal Deadline"
-msgstr ""
+msgstr "Краен рок за оценување"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,rating:0
 msgid "Overall Rating"
-msgstr ""
+msgstr "Вкупна оценка"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,email_subject:0
 msgid "char"
-msgstr ""
+msgstr "знак"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 #: view:hr_evaluation.evaluation:0
 msgid "Interviewer"
-msgstr ""
+msgstr "Интервјуер"
 
 #. module: hr_evaluation
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_report
@@ -663,7 +684,7 @@ msgstr ""
 #. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
 msgid "Top-Down Appraisal Requests"
-msgstr ""
+msgstr "Барања за оценување од врвот надолу"
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,help:hr_evaluation.action_evaluation_plans_installer
@@ -703,12 +724,12 @@ msgstr "Завршено"
 #: model:ir.actions.act_window,name:hr_evaluation.open_view_hr_evaluation_plan_tree
 #: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_plan_tree
 msgid "Appraisal Plans"
-msgstr ""
+msgstr "Планови за оценување"
 
 #. module: hr_evaluation
 #: model:ir.model,name:hr_evaluation.model_hr_evaluation_interview
 msgid "Appraisal Interview"
-msgstr ""
+msgstr "Интервју за оценување"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
@@ -758,6 +779,8 @@ msgid ""
 "The date of the next appraisal is computed by the appraisal plan's dates "
 "(first appraisal + periodicity)."
 msgstr ""
+"Датумот на следно оценување е пресметан преку датумите од планот за "
+"оценување (прво оценување + периодичност)."
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,overpass_delay:0
@@ -770,6 +793,8 @@ msgid ""
 "The number of month that depicts the delay between each evaluation of this "
 "plan (after the first one)."
 msgstr ""
+"Број на месеци кој го опишува одолжувањето помеѓу секоја евалуација од овој "
+"план (после првото)."
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan,month_next:0
@@ -779,13 +804,13 @@ msgstr "Период на оценување (месеци)"
 #. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
 msgid "Self Appraisal Requests"
-msgstr ""
+msgstr "Барања за самооценување"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 #: field:hr_evaluation.evaluation,survey_request_ids:0
 msgid "Appraisal Forms"
-msgstr ""
+msgstr "Формулари за оценување"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -800,17 +825,17 @@ msgstr "Внатрешни белешки"
 #. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
 msgid "Final Interview"
-msgstr "Фианлно интервју"
+msgstr "Финално интервју"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,name:0
 msgid "Phase"
-msgstr "Фаза"
+msgstr "Етапа"
 
 #. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
 msgid "Bottom-Up Appraisal Requests"
-msgstr ""
+msgstr "Барања за оценување одоздола-нагоре"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:244
@@ -829,18 +854,18 @@ msgstr "Февруари"
 #: view:hr.evaluation.interview:0
 #: view:hr_evaluation.evaluation:0
 msgid "Interview Appraisal"
-msgstr ""
+msgstr "Оценување на интервју"
 
 #. module: hr_evaluation
 #: field:survey.request,is_evaluation:0
 msgid "Is Appraisal?"
-msgstr ""
+msgstr "Е оценување?"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:320
 #, python-format
 msgid "You cannot start evaluation without Appraisal."
-msgstr ""
+msgstr "Можете да започнете евалуација без оценување."
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -850,7 +875,7 @@ msgstr ""
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,user_to_review_id:0
 msgid "Employee to Interview"
-msgstr ""
+msgstr "Вработен за интервјуирање"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -860,18 +885,18 @@ msgstr "Април"
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
 msgid "Appraisal Plan Phases"
-msgstr ""
+msgstr "Фази на план за оценување"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Validate Appraisal"
-msgstr ""
+msgstr "Потврди оценување"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 #: view:hr_evaluation.evaluation:0
 msgid "Search Appraisal"
-msgstr ""
+msgstr "Барај оценување"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,sequence:0
@@ -889,7 +914,7 @@ msgstr "(корисник_потпис)и: Корисничко име"
 #: model:ir.actions.act_window,name:hr_evaluation.action_hr_evaluation_interview_tree
 #: model:ir.ui.menu,name:hr_evaluation.menu_open_hr_evaluation_interview_requests
 msgid "Interview Requests"
-msgstr ""
+msgstr "Барања за интервју"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.report,create_date:0
@@ -905,9 +930,9 @@ msgstr "Година"
 #. module: hr_evaluation
 #: field:hr_evaluation.evaluation,note_summary:0
 msgid "Appraisal Summary"
-msgstr ""
+msgstr "Резиме на оценување"
 
 #. module: hr_evaluation
 #: field:hr.employee,evaluation_date:0
 msgid "Next Appraisal Date"
-msgstr ""
+msgstr "Датум на следно оценување"
