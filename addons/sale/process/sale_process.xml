@@ -70,8 +70,8 @@
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Confirm Quotation&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;The salesman confirms the quotation. The state of the sales order becomes 'In progress' or 'Manual in progress'.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_saleorder0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_quotation0"/>
+            <field name="target_node_id" ref="process_node_saleorder0"/>
+            <field name="source_node_id" ref="process_node_quotation0"/>
             <field eval="[(6,0,[ref('sale.trans_draft_router')])]" name="transition_ids"/>
         </record>
 
@@ -80,8 +80,8 @@
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Create Invoice&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;The Salesman creates an invoice manually, if the sales order shipping policy is 'Shipping and Manual in Progress'. The invoice is created automatically if the shipping policy is 'Payment before Delivery'.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_invoice0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_saleorder0"/>
+            <field name="target_node_id" ref="process_node_invoice0"/>
+            <field name="source_node_id" ref="process_node_saleorder0"/>
             <field eval="[(6,0,[ref('sale.trans_wait_invoice_invoice_manual')])]" name="transition_ids"/>
         </record>
 
@@ -90,8 +90,8 @@
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;From a sales order&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Depending on the Invoicing control of the sales order, the invoice can be based on delivered or on ordered quantities. Thus, a sales order can generates an invoice or a delivery order as soon as it is confirmed by the salesman.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="account.process_node_draftinvoices0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_order0"/>
+            <field name="target_node_id" ref="account.process_node_draftinvoices0"/>
+            <field name="source_node_id" ref="process_node_order0"/>
         </record>
 
         <!--
