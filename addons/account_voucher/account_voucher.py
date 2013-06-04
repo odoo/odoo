@@ -27,6 +27,25 @@ from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 from openerp.tools import float_compare
+from openerp.report import report_sxw
+
+class res_currency(osv.osv):
+    _inherit = "res.currency"
+
+    def _current_rate(self, cr, uid, ids, name, arg, context=None):
+        if context is None:
+            context = {}
+        res = super(res_currency, self)._current_rate(cr, uid, ids, name, arg, context=context)
+        if context.get('voucher_special_currency') in ids and context.get('voucher_special_currency_rate'):
+            res[context.get('voucher_special_currency')] = context.get('voucher_special_currency_rate')
+        return res
+
+    _columns = {
+        # same definition of rate that in base in order to just overwrite the function
+        'rate': fields.function(_current_rate, string='Current Rate', digits=(12,6),
+            help='The rate of the currency to the currency of rate 1.'),
+    }
+
 
 class res_company(osv.osv):
     _inherit = "res.company"
@@ -156,7 +175,7 @@ class account_voucher(osv.osv):
             journal = journal_pool.browse(cr, uid, journal_id, context=context)
             if journal.currency:
                 return journal.currency.id
-        return False
+        return self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
 
     def _get_partner(self, cr, uid, context=None):
         if context is None: context = {}
@@ -225,20 +244,25 @@ class account_voucher(osv.osv):
     def onchange_line_ids(self, cr, uid, ids, line_dr_ids, line_cr_ids, amount, voucher_currency, type, context=None):
         context = context or {}
         if not line_dr_ids and not line_cr_ids:
-            return {'value':{'writeoff_amount': 0.0, 'is_multi_currency': False}}
+            return {'value':{'writeoff_amount': 0.0}}
         line_osv = self.pool.get("account.voucher.line")
         line_dr_ids = resolve_o2m_operations(cr, uid, line_osv, line_dr_ids, ['amount'], context)
         line_cr_ids = resolve_o2m_operations(cr, uid, line_osv, line_cr_ids, ['amount'], context)
-
         #compute the field is_multi_currency that is used to hide/display options linked to secondary currency on the voucher
         is_multi_currency = False
         #loop on the voucher lines to see if one of these has a secondary currency. If yes, we need to see the options
         for voucher_line in line_dr_ids+line_cr_ids:
-            line_currency = voucher_line.get('move_line_id', False) and self.pool.get('account.move.line').browse(cr, uid, voucher_line.get('move_line_id'), context=context).currency_id
-            if line_currency:
+            line_id = voucher_line.get('id') and self.pool.get('account.voucher.line').browse(cr, uid, voucher_line['id'], context=context).move_line_id.id or voucher_line.get('move_line_id')
+            if line_id and self.pool.get('account.move.line').browse(cr, uid, line_id, context=context).currency_id:
                 is_multi_currency = True
                 break
         return {'value': {'writeoff_amount': self._compute_writeoff_amount(cr, uid, line_dr_ids, line_cr_ids, amount, type), 'is_multi_currency': is_multi_currency}}
+
+    def _get_journal_currency(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for voucher in self.browse(cr, uid, ids, context=context):
+            res[voucher.id] = voucher.journal_id.currency and voucher.journal_id.currency.id or voucher.company_id.currency_id.id
+        return res
 
     def _get_writeoff_amount(self, cr, uid, ids, name, args, context=None):
         if not ids: return {}
@@ -256,20 +280,48 @@ class account_voucher(osv.osv):
         return res
 
     def _paid_amount_in_company_currency(self, cr, uid, ids, name, args, context=None):
-        if not ids: return {}
+        if context is None:
+            context = {}
         res = {}
-        rate = 1.0
+        ctx = context.copy()
+        for v in self.browse(cr, uid, ids, context=context):
+            ctx.update({'date': v.date})
+            #make a new call to browse in order to have the right date in the context, to get the right currency rate
+            voucher = self.browse(cr, uid, v.id, context=ctx)
+            ctx.update({
+              'voucher_special_currency': voucher.payment_rate_currency_id and voucher.payment_rate_currency_id.id or False,
+              'voucher_special_currency_rate': voucher.currency_id.rate * voucher.payment_rate,})
+            res[voucher.id] =  self.pool.get('res.currency').compute(cr, uid, voucher.currency_id.id, voucher.company_id.currency_id.id, voucher.amount, context=ctx)
+        return res
+
+    def _get_currency_help_label(self, cr, uid, currency_id, payment_rate, payment_rate_currency_id, context=None):
+        """
+        This function builds a string to help the users to understand the behavior of the payment rate fields they can specify on the voucher. 
+        This string is only used to improve the usability in the voucher form view and has no other effect.
+
+        :param currency_id: the voucher currency
+        :type currency_id: integer
+        :param payment_rate: the value of the payment_rate field of the voucher
+        :type payment_rate: float
+        :param payment_rate_currency_id: the value of the payment_rate_currency_id field of the voucher
+        :type payment_rate_currency_id: integer
+        :return: translated string giving a tip on what's the effect of the current payment rate specified
+        :rtype: str
+        """
+        rml_parser = report_sxw.rml_parse(cr, uid, 'currency_help_label', context=context)
+        currency_pool = self.pool.get('res.currency')
+        currency_str = payment_rate_str = ''
+        if currency_id:
+            currency_str = rml_parser.formatLang(1, currency_obj=currency_pool.browse(cr, uid, currency_id, context=context))
+        if payment_rate_currency_id:
+            payment_rate_str  = rml_parser.formatLang(payment_rate, currency_obj=currency_pool.browse(cr, uid, payment_rate_currency_id, context=context))
+        currency_help_label = _('At the operation date, the exchange rate was\n%s = %s') % (currency_str, payment_rate_str)
+        return currency_help_label
+
+    def _fnct_currency_help_label(self, cr, uid, ids, name, args, context=None):
+        res = {}
         for voucher in self.browse(cr, uid, ids, context=context):
-            if voucher.currency_id:
-                if voucher.company_id.currency_id.id == voucher.payment_rate_currency_id.id:
-                    rate =  1 / voucher.payment_rate
-                else:
-                    ctx = context.copy()
-                    ctx.update({'date': voucher.date})
-                    voucher_rate = self.browse(cr, uid, voucher.id, context=ctx).currency_id.rate
-                    company_currency_rate = voucher.company_id.currency_id.rate
-                    rate = voucher_rate * company_currency_rate
-            res[voucher.id] =  voucher.amount / rate
+            res[voucher.id] = self._get_currency_help_label(cr, uid, voucher.currency_id.id, voucher.payment_rate, voucher.payment_rate_currency_id.id, context=context)
         return res
 
     _name = 'account.voucher'
@@ -302,8 +354,7 @@ class account_voucher(osv.osv):
             domain=[('type','=','dr')], context={'default_type':'dr'}, readonly=True, states={'draft':[('readonly',False)]}),
         'period_id': fields.many2one('account.period', 'Period', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'narration':fields.text('Notes', readonly=True, states={'draft':[('readonly',False)]}),
-#        'currency_id':fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'currency_id': fields.related('journal_id','currency', type='many2one', relation='res.currency', string='Currency', readonly=True),
+        'currency_id': fields.function(_get_journal_currency, type='many2one', relation='res.currency', string='Currency', readonly=True, required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'state':fields.selection(
             [('draft','Draft'),
@@ -344,6 +395,7 @@ class account_voucher(osv.osv):
             help='The specific rate that will be used, in this voucher, between the selected currency (in \'Payment Rate Currency\' field)  and the voucher currency.'),
         'paid_amount_in_company_currency': fields.function(_paid_amount_in_company_currency, string='Paid Amount in Company Currency', type='float', readonly=True),
         'is_multi_currency': fields.boolean('Multi Currency Voucher', help='Fields with internal purpose only that depicts if the voucher is a multi currency one or not'),
+        'currency_help_label': fields.function(_fnct_currency_help_label, type='text', string="Helping Sentence", help="This sentence helps you to know how to specify the payment rate by giving you the direct effect it has"), 
     }
     _defaults = {
         'active': True,
@@ -420,6 +472,8 @@ class account_voucher(osv.osv):
         partner_pool = self.pool.get('res.partner')
         position_pool = self.pool.get('account.fiscal.position')
         line_pool = self.pool.get('account.voucher.line')
+        if not line_ids:
+            line_ids = []
         res = {
             'tax_amount': False,
             'amount': False,
@@ -514,23 +568,26 @@ class account_voucher(osv.osv):
         return default
 
     def onchange_rate(self, cr, uid, ids, rate, amount, currency_id, payment_rate_currency_id, company_id, context=None):
-        res =  {'value': {'paid_amount_in_company_currency': amount}}
-        company_currency = self.pool.get('res.company').browse(cr, uid, company_id, context=context).currency_id
-        if rate and amount and currency_id:# and currency_id == payment_rate_currency_id:
-            voucher_rate = self.pool.get('res.currency').browse(cr, uid, currency_id, context).rate
-            if company_currency.id == payment_rate_currency_id:
-                company_rate = rate
-            else:
-                company_rate = self.pool.get('res.company').browse(cr, uid, company_id, context=context).currency_id.rate
-            res['value']['paid_amount_in_company_currency'] = amount / voucher_rate * company_rate
+        res =  {'value': {'paid_amount_in_company_currency': amount, 'currency_help_label': self._get_currency_help_label(cr, uid, currency_id, rate, payment_rate_currency_id, context=context)}}
+        if rate and amount and currency_id:
+            company_currency = self.pool.get('res.company').browse(cr, uid, company_id, context=context).currency_id
+            #context should contain the date, the payment currency and the payment rate specified on the voucher
+            amount_in_company_currency = self.pool.get('res.currency').compute(cr, uid, currency_id, company_currency.id, amount, context=context)
+            res['value']['paid_amount_in_company_currency'] = amount_in_company_currency
         return res
 
     def onchange_amount(self, cr, uid, ids, amount, rate, partner_id, journal_id, currency_id, ttype, date, payment_rate_currency_id, company_id, context=None):
         if context is None:
             context = {}
-        res = self.recompute_voucher_lines(cr, uid, ids, partner_id, journal_id, amount, currency_id, ttype, date, context=context)
         ctx = context.copy()
         ctx.update({'date': date})
+        #read the voucher rate with the right date in the context
+        currency_id = currency_id or self.pool.get('res.company').browse(cr, uid, company_id, context=ctx).currency_id.id
+        voucher_rate = self.pool.get('res.currency').read(cr, uid, currency_id, ['rate'], context=ctx)['rate']
+        ctx.update({
+            'voucher_special_currency': payment_rate_currency_id,
+            'voucher_special_currency_rate': rate * voucher_rate})
+        res = self.recompute_voucher_lines(cr, uid, ids, partner_id, journal_id, amount, currency_id, ttype, date, context=ctx)
         vals = self.onchange_rate(cr, uid, ids, rate, amount, currency_id, payment_rate_currency_id, company_id, context=ctx)
         for key in vals.keys():
             res[key].update(vals[key])
@@ -544,6 +601,7 @@ class account_voucher(osv.osv):
         journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
         company_id = journal.company_id.id
         payment_rate = 1.0
+        currency_id = currency_id or journal.company_id.currency_id.id
         payment_rate_currency_id = currency_id
         ctx = context.copy()
         ctx.update({'date': date})
@@ -559,24 +617,62 @@ class account_voucher(osv.osv):
                     # is not in the voucher currency
                     payment_rate_currency_id = voucher_line['currency_id']
                     tmp = currency_obj.browse(cr, uid, payment_rate_currency_id, context=ctx).rate
-                    voucher_currency_id = currency_id or journal.company_id.currency_id.id
-                    payment_rate = tmp / currency_obj.browse(cr, uid, voucher_currency_id, context=ctx).rate
+                    payment_rate = tmp / currency_obj.browse(cr, uid, currency_id, context=ctx).rate
                     break
+        vals['value'].update({
+            'payment_rate': payment_rate,
+            'currency_id': currency_id,
+            'payment_rate_currency_id': payment_rate_currency_id
+        })
+        #read the voucher rate with the right date in the context
+        voucher_rate = self.pool.get('res.currency').read(cr, uid, currency_id, ['rate'], context=ctx)['rate']
+        ctx.update({
+            'voucher_special_currency_rate': payment_rate * voucher_rate,
+            'voucher_special_currency': payment_rate_currency_id})
         res = self.onchange_rate(cr, uid, ids, payment_rate, amount, currency_id, payment_rate_currency_id, company_id, context=ctx)
         for key in res.keys():
             vals[key].update(res[key])
-        vals['value'].update({'payment_rate': payment_rate})
-        if payment_rate_currency_id:
-            vals['value'].update({'payment_rate_currency_id': payment_rate_currency_id})
         return vals
+
+    def basic_onchange_partner(self, cr, uid, ids, partner_id, journal_id, ttype, context=None):
+        partner_pool = self.pool.get('res.partner')
+        journal_pool = self.pool.get('account.journal')
+        res = {'value': {'account_id': False}}
+        if not partner_id or not journal_id:
+            return res
+
+        journal = journal_pool.browse(cr, uid, journal_id, context=context)
+        partner = partner_pool.browse(cr, uid, partner_id, context=context)
+        account_id = False
+        if journal.type in ('sale','sale_refund'):
+            account_id = partner.property_account_receivable.id
+        elif journal.type in ('purchase', 'purchase_refund','expense'):
+            account_id = partner.property_account_payable.id
+        else:
+            account_id = journal.default_credit_account_id.id or journal.default_debit_account_id.id
+
+        res['value']['account_id'] = account_id
+        return res
 
     def onchange_partner_id(self, cr, uid, ids, partner_id, journal_id, amount, currency_id, ttype, date, context=None):
         if not journal_id:
             return {}
-        res = self.recompute_voucher_lines(cr, uid, ids, partner_id, journal_id, amount, currency_id, ttype, date, context=context)
-        vals = self.recompute_payment_rate(cr, uid, ids, res, currency_id, date, ttype, journal_id, amount, context=context)
+        if context is None:
+            context = {}
+        #TODO: comment me and use me directly in the sales/purchases views
+        res = self.basic_onchange_partner(cr, uid, ids, partner_id, journal_id, ttype, context=context)
+        if ttype in ['sale', 'purchase']:
+            return res
+        ctx = context.copy()
+        # not passing the payment_rate currency and the payment_rate in the context but it's ok because they are reset in recompute_payment_rate
+        ctx.update({'date': date})
+        vals = self.recompute_voucher_lines(cr, uid, ids, partner_id, journal_id, amount, currency_id, ttype, date, context=ctx)
+        vals2 = self.recompute_payment_rate(cr, uid, ids, vals, currency_id, date, ttype, journal_id, amount, context=context)
         for key in vals.keys():
             res[key].update(vals[key])
+        for key in vals2.keys():
+            res[key].update(vals2[key])
+        #TODO: can probably be removed now
         #TODO: onchange_partner_id() should not returns [pre_line, line_dr_ids, payment_rate...] for type sale, and not 
         # [pre_line, line_cr_ids, payment_rate...] for type purchase.
         # We should definitively split account.voucher object in two and make distinct on_change functions. In the 
@@ -619,8 +715,6 @@ class account_voucher(osv.osv):
         if context is None:
             context = {}
         context_multi_currency = context.copy()
-        if date:
-            context_multi_currency.update({'date': date})
 
         currency_pool = self.pool.get('res.currency')
         move_line_pool = self.pool.get('account.move.line')
@@ -644,18 +738,6 @@ class account_voucher(osv.osv):
         journal = journal_pool.browse(cr, uid, journal_id, context=context)
         partner = partner_pool.browse(cr, uid, partner_id, context=context)
         currency_id = currency_id or journal.company_id.currency_id.id
-        account_id = False
-        if journal.type in ('sale','sale_refund'):
-            account_id = partner.property_account_receivable.id
-        elif journal.type in ('purchase', 'purchase_refund','expense'):
-            account_id = partner.property_account_payable.id
-        else:
-            account_id = journal.default_credit_account_id.id or journal.default_debit_account_id.id
-
-        default['value']['account_id'] = account_id
-
-        if journal.type not in ('cash', 'bank'):
-            return default
 
         total_credit = 0.0
         total_debit = 0.0
@@ -713,12 +795,13 @@ class account_voucher(osv.osv):
             if _remove_noise_in_o2m():
                 continue
 
-            if line.currency_id and currency_id==line.currency_id.id:
+            if line.currency_id and currency_id == line.currency_id.id:
                 amount_original = abs(line.amount_currency)
                 amount_unreconciled = abs(line.amount_residual_currency)
             else:
-                amount_original = currency_pool.compute(cr, uid, company_currency, currency_id, line.credit or line.debit or 0.0)
-                amount_unreconciled = currency_pool.compute(cr, uid, company_currency, currency_id, abs(line.amount_residual))
+                #always use the amount booked in the company currency as the basis of the conversion into the voucher currency
+                amount_original = currency_pool.compute(cr, uid, company_currency, currency_id, line.credit or line.debit or 0.0, context=context_multi_currency)
+                amount_unreconciled = currency_pool.compute(cr, uid, company_currency, currency_id, abs(line.amount_residual), context=context_multi_currency)
             line_currency_id = line.currency_id and line.currency_id.id or company_currency
             rs = {
                 'name':line.move_id.name,
@@ -764,10 +847,15 @@ class account_voucher(osv.osv):
         if context is None:
             context = {}
         res = {'value': {}}
-        #set the default payment rate of the voucher and compute the paid amount in company currency
-        if currency_id and currency_id == payment_rate_currency_id:
+        if currency_id:
+            #set the default payment rate of the voucher and compute the paid amount in company currency
             ctx = context.copy()
             ctx.update({'date': date})
+            #read the voucher rate with the right date in the context
+            voucher_rate = self.pool.get('res.currency').read(cr, uid, currency_id, ['rate'], context=ctx)['rate']
+            ctx.update({
+                'voucher_special_currency_rate': payment_rate * voucher_rate, 
+                'voucher_special_currency': payment_rate_currency_id})
             vals = self.onchange_rate(cr, uid, ids, payment_rate, amount, currency_id, payment_rate_currency_id, company_id, context=ctx)
             for key in vals.keys():
                 res[key].update(vals[key])
@@ -788,6 +876,7 @@ class account_voucher(osv.osv):
         currency_obj = self.pool.get('res.currency')
         ctx = context.copy()
         ctx.update({'company_id': company_id, 'account_period_prefer_normal': True})
+        voucher_currency_id = currency_id or self.pool.get('res.company').browse(cr, uid, company_id, context=ctx).currency_id.id
         pids = period_pool.find(cr, uid, date, context=ctx)
         if pids:
             res['value'].update({'period_id':pids[0]})
@@ -796,9 +885,8 @@ class account_voucher(osv.osv):
             payment_rate = 1.0
             if payment_rate_currency_id != currency_id:
                 tmp = currency_obj.browse(cr, uid, payment_rate_currency_id, context=ctx).rate
-                voucher_currency_id = currency_id or self.pool.get('res.company').browse(cr, uid, company_id, context=ctx).currency_id.id
                 payment_rate = tmp / currency_obj.browse(cr, uid, voucher_currency_id, context=ctx).rate
-            vals = self.onchange_payment_rate_currency(cr, uid, ids, currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context=context)
+            vals = self.onchange_payment_rate_currency(cr, uid, ids, voucher_currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context=context)
             vals['value'].update({'payment_rate': payment_rate})
             for key in vals.keys():
                 res[key].update(vals[key])
@@ -824,6 +912,12 @@ class account_voucher(osv.osv):
         else:
             currency_id = journal.company_id.currency_id.id
         vals['value'].update({'currency_id': currency_id})
+        #in case we want to register the payment directly from an invoice, it's confusing to allow to switch the journal 
+        #without seeing that the amount is expressed in the journal currency, and not in the invoice currency. So to avoid
+        #this common mistake, we simply reset the amount to 0 if the currency is not the invoice currency.
+        if context.get('payment_expected_currency') and currency_id != context.get('payment_expected_currency'):
+            vals['value']['amount'] = 0
+            amount = 0
         res = self.onchange_partner_id(cr, uid, ids, partner_id, journal_id, amount, currency_id, ttype, date, context)
         for key in res.keys():
             vals[key].update(res[key])
@@ -910,8 +1004,8 @@ class account_voucher(osv.osv):
         current_currency = self._get_current_currency(cr, uid, voucher_id, context)
         if current_currency <> company_currency:
             context_multi_currency = context.copy()
-            voucher_brw = self.pool.get('account.voucher').browse(cr, uid, voucher_id, context)
-            context_multi_currency.update({'date': voucher_brw.date})
+            voucher = self.pool.get('account.voucher').browse(cr, uid, voucher_id, context)
+            context_multi_currency.update({'date': voucher.date})
             return context_multi_currency
         return context
 
@@ -926,33 +1020,33 @@ class account_voucher(osv.osv):
         :return: mapping between fieldname and value of account move line to create
         :rtype: dict
         '''
-        voucher_brw = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
+        voucher = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
         debit = credit = 0.0
         # TODO: is there any other alternative then the voucher type ??
         # ANSWER: We can have payment and receipt "In Advance".
         # TODO: Make this logic available.
         # -for sale, purchase we have but for the payment and receipt we do not have as based on the bank/cash journal we can not know its payment or receipt
-        if voucher_brw.type in ('purchase', 'payment'):
-            credit = voucher_brw.paid_amount_in_company_currency
-        elif voucher_brw.type in ('sale', 'receipt'):
-            debit = voucher_brw.paid_amount_in_company_currency
+        if voucher.type in ('purchase', 'payment'):
+            credit = voucher.paid_amount_in_company_currency
+        elif voucher.type in ('sale', 'receipt'):
+            debit = voucher.paid_amount_in_company_currency
         if debit < 0: credit = -debit; debit = 0.0
         if credit < 0: debit = -credit; credit = 0.0
         sign = debit - credit < 0 and -1 or 1
         #set the first line of the voucher
         move_line = {
-                'name': voucher_brw.name or '/',
+                'name': voucher.name or '/',
                 'debit': debit,
                 'credit': credit,
-                'account_id': voucher_brw.account_id.id,
+                'account_id': voucher.account_id.id,
                 'move_id': move_id,
-                'journal_id': voucher_brw.journal_id.id,
-                'period_id': voucher_brw.period_id.id,
-                'partner_id': voucher_brw.partner_id.id,
+                'journal_id': voucher.journal_id.id,
+                'period_id': voucher.period_id.id,
+                'partner_id': voucher.partner_id.id,
                 'currency_id': company_currency <> current_currency and  current_currency or False,
-                'amount_currency': company_currency <> current_currency and sign * voucher_brw.amount or 0.0,
-                'date': voucher_brw.date,
-                'date_maturity': voucher_brw.date_due
+                'amount_currency': company_currency <> current_currency and sign * voucher.amount or 0.0,
+                'date': voucher.date,
+                'date_maturity': voucher.date_due
             }
         return move_line
 
@@ -965,31 +1059,31 @@ class account_voucher(osv.osv):
         :rtype: dict
         '''
         seq_obj = self.pool.get('ir.sequence')
-        voucher_brw = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
-        if voucher_brw.number:
-            name = voucher_brw.number
-        elif voucher_brw.journal_id.sequence_id:
-            if not voucher_brw.journal_id.sequence_id.active:
+        voucher = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
+        if voucher.number:
+            name = voucher.number
+        elif voucher.journal_id.sequence_id:
+            if not voucher.journal_id.sequence_id.active:
                 raise osv.except_osv(_('Configuration Error !'),
                     _('Please activate the sequence of selected journal !'))
             c = dict(context)
-            c.update({'fiscalyear_id': voucher_brw.period_id.fiscalyear_id.id})
-            name = seq_obj.next_by_id(cr, uid, voucher_brw.journal_id.sequence_id.id, context=c)
+            c.update({'fiscalyear_id': voucher.period_id.fiscalyear_id.id})
+            name = seq_obj.next_by_id(cr, uid, voucher.journal_id.sequence_id.id, context=c)
         else:
             raise osv.except_osv(_('Error!'),
                         _('Please define a sequence on the journal.'))
-        if not voucher_brw.reference:
+        if not voucher.reference:
             ref = name.replace('/','')
         else:
-            ref = voucher_brw.reference
+            ref = voucher.reference
 
         move = {
             'name': name,
-            'journal_id': voucher_brw.journal_id.id,
-            'narration': voucher_brw.narration,
-            'date': voucher_brw.date,
+            'journal_id': voucher.journal_id.id,
+            'narration': voucher.narration,
+            'date': voucher.date,
             'ref': ref,
-            'period_id': voucher_brw.period_id.id,
+            'period_id': voucher.period_id.id,
         }
         return move
 
@@ -1016,7 +1110,10 @@ class account_voucher(osv.osv):
                 raise osv.except_osv(_('Insufficient Configuration!'),_("You should configure the 'Gain Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
         # Even if the amount_currency is never filled, we need to pass the foreign currency because otherwise
         # the receivable/payable account may have a secondary currency, which render this field mandatory
-        account_currency_id = company_currency <> current_currency and current_currency or False
+        if line.account_id.currency_id:
+            account_currency_id = line.account_id.currency_id.id
+        else:
+            account_currency_id = company_currency <> current_currency and current_currency or False
         move_line = {
             'journal_id': line.voucher_id.journal_id.id,
             'period_id': line.voucher_id.period_id.id,
@@ -1059,16 +1156,11 @@ class account_voucher(osv.osv):
         :return: the amount in the currency of the voucher's company
         :rtype: float
         '''
+        if context is None:
+            context = {}
         currency_obj = self.pool.get('res.currency')
         voucher = self.browse(cr, uid, voucher_id, context=context)
-        res = amount
-        if voucher.payment_rate_currency_id.id == voucher.company_id.currency_id.id:
-            # the rate specified on the voucher is for the company currency
-            res = currency_obj.round(cr, uid, voucher.company_id.currency_id, (amount * voucher.payment_rate))
-        else:
-            # the rate specified on the voucher is not relevant, we use all the rates in the system
-            res = currency_obj.compute(cr, uid, voucher.currency_id.id, voucher.company_id.currency_id.id, amount, context=context)
-        return res
+        return currency_obj.compute(cr, uid, voucher.currency_id.id, voucher.company_id.currency_id.id, amount, context=context)
 
     def voucher_move_line_create(self, cr, uid, voucher_id, line_total, move_id, company_currency, current_currency, context=None):
         '''
@@ -1092,39 +1184,45 @@ class account_voucher(osv.osv):
         tot_line = line_total
         rec_lst_ids = []
 
-        voucher_brw = self.pool.get('account.voucher').browse(cr, uid, voucher_id, context)
+        date = self.read(cr, uid, voucher_id, ['date'], context=context)['date']
         ctx = context.copy()
-        ctx.update({'date': voucher_brw.date})
+        ctx.update({'date': date})
+        voucher = self.pool.get('account.voucher').browse(cr, uid, voucher_id, context=ctx)
+        voucher_currency = voucher.journal_id.currency or voucher.company_id.currency_id
+        ctx.update({
+            'voucher_special_currency_rate': voucher_currency.rate * voucher.payment_rate ,
+            'voucher_special_currency': voucher.payment_rate_currency_id and voucher.payment_rate_currency_id.id or False,})
         prec = self.pool.get('decimal.precision').precision_get(cr, uid, 'Account')
-        for line in voucher_brw.line_ids:
+        for line in voucher.line_ids:
             #create one move line per voucher line where amount is not 0.0
             # AND (second part of the clause) only if the original move line was not having debit = credit = 0 (which is a legal value)
             if not line.amount and not (line.move_line_id and not float_compare(line.move_line_id.debit, line.move_line_id.credit, precision_rounding=prec) and not float_compare(line.move_line_id.debit, 0.0, precision_rounding=prec)):
                 continue
             # convert the amount set on the voucher line into the currency of the voucher's company
-            amount = self._convert_amount(cr, uid, line.untax_amount or line.amount, voucher_brw.id, context=ctx)
+            # this calls res_curreny.compute() with the right context, so that it will take either the rate on the voucher if it is relevant or will use the default behaviour
+            amount = self._convert_amount(cr, uid, line.untax_amount or line.amount, voucher.id, context=ctx)
             # if the amount encoded in voucher is equal to the amount unreconciled, we need to compute the
             # currency rate difference
             if line.amount == line.amount_unreconciled:
                 if not line.move_line_id:
                     raise osv.except_osv(_('Wrong voucher line'),_("The invoice you are willing to pay is not valid anymore."))
-                sign = voucher_brw.type in ('payment', 'purchase') and -1 or 1
+                sign = voucher.type in ('payment', 'purchase') and -1 or 1
                 currency_rate_difference = sign * (line.move_line_id.amount_residual - amount)
             else:
                 currency_rate_difference = 0.0
             move_line = {
-                'journal_id': voucher_brw.journal_id.id,
-                'period_id': voucher_brw.period_id.id,
+                'journal_id': voucher.journal_id.id,
+                'period_id': voucher.period_id.id,
                 'name': line.name or '/',
                 'account_id': line.account_id.id,
                 'move_id': move_id,
-                'partner_id': voucher_brw.partner_id.id,
+                'partner_id': voucher.partner_id.id,
                 'currency_id': line.move_line_id and (company_currency <> line.move_line_id.currency_id.id and line.move_line_id.currency_id.id) or False,
                 'analytic_account_id': line.account_analytic_id and line.account_analytic_id.id or False,
                 'quantity': 1,
                 'credit': 0.0,
                 'debit': 0.0,
-                'date': voucher_brw.date
+                'date': voucher.date
             }
             if amount < 0:
                 amount = -amount
@@ -1140,9 +1238,9 @@ class account_voucher(osv.osv):
                 tot_line -= amount
                 move_line['credit'] = amount
 
-            if voucher_brw.tax_id and voucher_brw.type in ('sale', 'purchase'):
+            if voucher.tax_id and voucher.type in ('sale', 'purchase'):
                 move_line.update({
-                    'account_tax_id': voucher_brw.tax_id.id,
+                    'account_tax_id': voucher.tax_id.id,
                 })
 
             if move_line.get('account_tax_id', False):
@@ -1154,7 +1252,6 @@ class account_voucher(osv.osv):
             foreign_currency_diff = 0.0
             amount_currency = False
             if line.move_line_id:
-                voucher_currency = voucher_brw.currency_id and voucher_brw.currency_id.id or voucher_brw.journal_id.company_id.currency_id.id
                 # We want to set it on the account move line as soon as the original line had a foreign currency
                 if line.move_line_id.currency_id and line.move_line_id.currency_id.id != company_currency:
                     # we compute the amount in that foreign currency.
@@ -1162,27 +1259,19 @@ class account_voucher(osv.osv):
                         # if the voucher and the voucher line share the same currency, there is no computation to do
                         sign = (move_line['debit'] - move_line['credit']) < 0 and -1 or 1
                         amount_currency = sign * (line.amount)
-                    elif line.move_line_id.currency_id.id == voucher_brw.payment_rate_currency_id.id:
-                        # if the rate is specified on the voucher, we must use it
-                        payment_rate = voucher_brw.payment_rate
-                        if voucher_currency != company_currency:
-                            #if the voucher currency is not the company currency, we need to consider the rate of the line's currency
-                            voucher_rate = currency_obj.browse(cr, uid, voucher_currency, context=ctx).rate
-                            payment_rate = voucher_rate * payment_rate
-                        amount_currency = (move_line['debit'] - move_line['credit']) * payment_rate
-
                     else:
-                        # otherwise we use the rates of the system (giving the voucher date in the context)
+                        # if the rate is specified on the voucher, it will be used thanks to the special keys in the context
+                        # otherwise we use the rates of the system
                         amount_currency = currency_obj.compute(cr, uid, company_currency, line.move_line_id.currency_id.id, move_line['debit']-move_line['credit'], context=ctx)
-                if line.amount == line.amount_unreconciled and line.move_line_id.currency_id.id == voucher_currency:
-                    sign = voucher_brw.type in ('payment', 'purchase') and -1 or 1
+                if line.amount == line.amount_unreconciled:
+                    sign = voucher.type in ('payment', 'purchase') and -1 or 1
                     foreign_currency_diff = sign * line.move_line_id.amount_residual_currency + amount_currency
 
             move_line['amount_currency'] = amount_currency
             voucher_line = move_line_obj.create(cr, uid, move_line)
             rec_ids = [voucher_line, line.move_line_id.id]
 
-            if not currency_obj.is_zero(cr, uid, voucher_brw.company_id.currency_id, currency_rate_difference):
+            if not currency_obj.is_zero(cr, uid, voucher.company_id.currency_id, currency_rate_difference):
                 # Change difference entry in company currency
                 exch_lines = self._get_exchange_lines(cr, uid, line, move_id, currency_rate_difference, company_currency, current_currency, context=context)
                 new_id = move_line_obj.create(cr, uid, exch_lines[0],context)
@@ -1229,32 +1318,32 @@ class account_voucher(osv.osv):
         currency_obj = self.pool.get('res.currency')
         move_line = {}
 
-        voucher_brw = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
-        current_currency_obj = voucher_brw.currency_id or voucher_brw.journal_id.company_id.currency_id
+        voucher = self.pool.get('account.voucher').browse(cr,uid,voucher_id,context)
+        current_currency_obj = voucher.currency_id or voucher.journal_id.company_id.currency_id
 
         if not currency_obj.is_zero(cr, uid, current_currency_obj, line_total):
             diff = line_total
             account_id = False
             write_off_name = ''
-            if voucher_brw.payment_option == 'with_writeoff':
-                account_id = voucher_brw.writeoff_acc_id.id
-                write_off_name = voucher_brw.comment
-            elif voucher_brw.type in ('sale', 'receipt'):
-                account_id = voucher_brw.partner_id.property_account_receivable.id
+            if voucher.payment_option == 'with_writeoff':
+                account_id = voucher.writeoff_acc_id.id
+                write_off_name = voucher.comment
+            elif voucher.type in ('sale', 'receipt'):
+                account_id = voucher.partner_id.property_account_receivable.id
             else:
-                account_id = voucher_brw.partner_id.property_account_payable.id
-            sign = voucher_brw.type == 'payment' and -1 or 1
+                account_id = voucher.partner_id.property_account_payable.id
+            sign = voucher.type == 'payment' and -1 or 1
             move_line = {
                 'name': write_off_name or name,
                 'account_id': account_id,
                 'move_id': move_id,
-                'partner_id': voucher_brw.partner_id.id,
-                'date': voucher_brw.date,
+                'partner_id': voucher.partner_id.id,
+                'date': voucher.date,
                 'credit': diff > 0 and diff or 0.0,
                 'debit': diff < 0 and -diff or 0.0,
-                'amount_currency': company_currency <> current_currency and (sign * -1 * voucher_brw.writeoff_amount) or False,
+                'amount_currency': company_currency <> current_currency and (sign * -1 * voucher.writeoff_amount) or False,
                 'currency_id': company_currency <> current_currency and current_currency or False,
-                'analytic_account_id': voucher_brw.analytic_id and voucher_brw.analytic_id.id or False,
+                'analytic_account_id': voucher.analytic_id and voucher.analytic_id.id or False,
             }
 
         return move_line
@@ -1355,13 +1444,17 @@ class account_voucher_line(osv.osv):
     _order = "move_line_id"
 
     # If the payment is in the same currency than the invoice, we keep the same amount
-    # Otherwise, we compute from company currency to payment currency
+    # Otherwise, we compute from invoice currency to payment currency
     def _compute_balance(self, cr, uid, ids, name, args, context=None):
         currency_pool = self.pool.get('res.currency')
         rs_data = {}
         for line in self.browse(cr, uid, ids, context=context):
             ctx = context.copy()
             ctx.update({'date': line.voucher_id.date})
+            voucher_rate = self.pool.get('res.currency').read(cr, uid, line.voucher_id.currency_id.id, ['rate'], context=ctx)['rate']
+            ctx.update({
+                'voucher_special_currency': line.voucher_id.payment_rate_currency_id and line.voucher_id.payment_rate_currency_id.id or False,
+                'voucher_special_currency_rate': line.voucher_id.payment_rate * voucher_rate})
             res = {}
             company_currency = line.voucher_id.journal_id.company_id.currency_id.id
             voucher_currency = line.voucher_id.currency_id and line.voucher_id.currency_id.id or company_currency
@@ -1371,13 +1464,11 @@ class account_voucher_line(osv.osv):
                 res['amount_original'] = 0.0
                 res['amount_unreconciled'] = 0.0
             elif move_line.currency_id and voucher_currency==move_line.currency_id.id:
-                res['amount_original'] = currency_pool.compute(cr, uid, move_line.currency_id.id, voucher_currency, abs(move_line.amount_currency), context=ctx)
-                res['amount_unreconciled'] = currency_pool.compute(cr, uid, move_line.currency_id and move_line.currency_id.id or company_currency, voucher_currency, abs(move_line.amount_residual_currency), context=ctx)
-            elif move_line and move_line.credit > 0:
-                res['amount_original'] = currency_pool.compute(cr, uid, company_currency, voucher_currency, move_line.credit, context=ctx)
-                res['amount_unreconciled'] = currency_pool.compute(cr, uid, company_currency, voucher_currency, abs(move_line.amount_residual), context=ctx)
+                res['amount_original'] = abs(move_line.amount_currency)
+                res['amount_unreconciled'] = abs(move_line.amount_residual_currency)
             else:
-                res['amount_original'] = currency_pool.compute(cr, uid, company_currency, voucher_currency, move_line.debit, context=ctx)
+                #always use the amount booked in the company currency as the basis of the conversion into the voucher currency
+                res['amount_original'] = currency_pool.compute(cr, uid, company_currency, voucher_currency, move_line.credit or move_line.debit or 0.0, context=ctx)
                 res['amount_unreconciled'] = currency_pool.compute(cr, uid, company_currency, voucher_currency, abs(move_line.amount_residual), context=ctx)
 
             rs_data[line.id] = res

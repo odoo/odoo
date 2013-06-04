@@ -5,14 +5,7 @@
         <record id="portal_project_long_term_rule" model="ir.rule">
             <field name="name">Project/Phase: portal users: public or portal and following</field>
             <field name="model_id" ref="project_long_term.model_project_phase"/>
-            <field name="domain_force">['|',
-                                            ('project_id.privacy_visibility', '=', 'public'),
-                                            '&amp;',
-                                                ('project_id.privacy_visibility', 'in', ['portal', 'followers']),
-                                                '|',
-                                                    ('message_follower_ids','in', [user.partner_id.id]),
-                                                    ('user_id', '=', user.id),
-                                        ]</field>
+            <field name="domain_force">[('project_id.privacy_visibility', 'in', ['public', 'portal'])]</field>
             <field name="groups" eval="[(4, ref('portal.group_portal'))]"/>
         </record>
 

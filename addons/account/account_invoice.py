@@ -92,13 +92,43 @@ class account_invoice(osv.osv):
         return [('none', _('Free Reference'))]
 
     def _amount_residual(self, cr, uid, ids, name, args, context=None):
+        """Function of the field residua. It computes the residual amount (balance) for each invoice"""
+        if context is None:
+            context = {}
+        ctx = context.copy()
         result = {}
+        currency_obj = self.pool.get('res.currency')
         for invoice in self.browse(cr, uid, ids, context=context):
+            nb_inv_in_partial_rec = max_invoice_id = 0
             result[invoice.id] = 0.0
             if invoice.move_id:
-                for m in invoice.move_id.line_id:
-                    if m.account_id.type in ('receivable','payable'):
-                        result[invoice.id] += m.amount_residual_currency
+                for aml in invoice.move_id.line_id:
+                    if aml.account_id.type in ('receivable','payable'):
+                        if aml.currency_id and aml.currency_id.id == invoice.currency_id.id:
+                            result[invoice.id] += aml.amount_residual_currency
+                        else:
+                            ctx['date'] = aml.date
+                            result[invoice.id] += currency_obj.compute(cr, uid, aml.company_id.currency_id.id, invoice.currency_id.id, aml.amount_residual, context=ctx)
+
+                        if aml.reconcile_partial_id.line_partial_ids:
+                            #we check if the invoice is partially reconciled and if there are other invoices
+                            #involved in this partial reconciliation (and we sum these invoices)
+                            for line in aml.reconcile_partial_id.line_partial_ids:
+                                if line.invoice:
+                                    nb_inv_in_partial_rec += 1
+                                    #store the max invoice id as for this invoice we will make a balance instead of a simple division
+                                    max_invoice_id = max(max_invoice_id, line.invoice.id)
+            if nb_inv_in_partial_rec:
+                #if there are several invoices in a partial reconciliation, we split the residual by the number
+                #of invoice to have a sum of residual amounts that matches the partner balance
+                new_value = currency_obj.round(cr, uid, invoice.currency_id, result[invoice.id] / nb_inv_in_partial_rec)
+                if invoice.id == max_invoice_id:
+                    #if it's the last the invoice of the bunch of invoices partially reconciled together, we make a
+                    #balance to avoid rounding errors
+                    result[invoice.id] = result[invoice.id] - ((nb_inv_in_partial_rec - 1) * new_value)
+                else:
+                    result[invoice.id] = new_value
+
             #prevent the residual amount on the invoice to be less than 0
             result[invoice.id] = max(result[invoice.id], 0.0)            
         return result
@@ -717,7 +747,7 @@ class account_invoice(osv.osv):
         inv = self.browse(cr, uid, id)
         cur_obj = self.pool.get('res.currency')
 
-        company_currency = inv.company_id.currency_id.id
+        company_currency = self.pool['res.company'].browse(cr, uid, inv.company_id.id).currency_id.id
         if inv.type in ('out_invoice', 'in_refund'):
             sign = 1
         else:
@@ -764,6 +794,7 @@ class account_invoice(osv.osv):
         return move_lines
 
     def check_tax_lines(self, cr, uid, inv, compute_taxes, ait_obj):
+        company_currency = self.pool['res.company'].browse(cr, uid, inv.company_id.id).currency_id
         if not inv.tax_line:
             for tax in compute_taxes.values():
                 ait_obj.create(cr, uid, tax)
@@ -777,7 +808,7 @@ class account_invoice(osv.osv):
                 if not key in compute_taxes:
                     raise osv.except_osv(_('Warning!'), _('Global taxes defined, but they are not in invoice lines !'))
                 base = compute_taxes[key]['base']
-                if abs(base - tax.base) > inv.company_id.currency_id.rounding:
+                if abs(base - tax.base) > company_currency.rounding:
                     raise osv.except_osv(_('Warning!'), _('Tax base different!\nClick on compute to update the tax base.'))
             for key in compute_taxes:
                 if not key in tax_key:
@@ -864,7 +895,7 @@ class account_invoice(osv.osv):
             ctx.update({'lang': inv.partner_id.lang})
             if not inv.date_invoice:
                 self.write(cr, uid, [inv.id], {'date_invoice': fields.date.context_today(self,cr,uid,context=context)}, context=ctx)
-            company_currency = inv.company_id.currency_id.id
+            company_currency = self.pool['res.company'].browse(cr, uid, inv.company_id.id).currency_id.id
             # create the analytical lines
             # one move line per invoice line
             iml = self._get_analytic_lines(cr, uid, inv.id, context=ctx)
@@ -980,7 +1011,8 @@ class account_invoice(osv.osv):
                 'line_id': line,
                 'journal_id': journal_id,
                 'date': date,
-                'narration':inv.comment
+                'narration': inv.comment,
+                'company_id': inv.company_id.id,
             }
             period_id = inv.period_id and inv.period_id.id or False
             ctx.update(company_id=inv.company_id.id,
@@ -1513,8 +1545,7 @@ class account_invoice_line(osv.osv):
         if context is None:
             context = {}
         inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id, context=context)
-        company_currency = inv.company_id.currency_id.id
-
+        company_currency = self.pool['res.company'].browse(cr, uid, inv.company_id.id).currency_id.id
         for line in inv.invoice_line:
             mres = self.move_line_get_item(cr, uid, line, context)
             if not mres:
@@ -1659,8 +1690,7 @@ class account_invoice_tax(osv.osv):
         cur_obj = self.pool.get('res.currency')
         inv = self.pool.get('account.invoice').browse(cr, uid, invoice_id, context=context)
         cur = inv.currency_id
-        company_currency = inv.company_id.currency_id.id
-
+        company_currency = self.pool['res.company'].browse(cr, uid, inv.company_id.id).currency_id.id
         for line in inv.invoice_line:
             for tax in tax_obj.compute_all(cr, uid, line.invoice_line_tax_id, (line.price_unit* (1-(line.discount or 0.0)/100.0)), line.quantity, line.product_id, inv.partner_id)['taxes']:
                 val={}

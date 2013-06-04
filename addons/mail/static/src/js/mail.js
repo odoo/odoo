@@ -850,9 +850,9 @@ openerp.mail = function (session) {
 
         on_checked_recipient: function (event) {
             var $input = $(event.target);
-            var email = $input.attr("data");
+            var full_name = $input.attr("data");
             _.each(this.recipients, function (recipient) {
-                if (recipient.email_address == email) {
+                if (recipient.full_name == full_name) {
                     recipient.checked = $input.is(":checked");
                 }
             });
@@ -1710,7 +1710,7 @@ openerp.mail = function (session) {
         */
         do_reload_menu_emails: function () {
             var menu = session.webclient.menu;
-            if (!menu) {
+            if (!menu || !menu.current_menu) {
                 return $.when();
             }
             return menu.rpc("/web/menu/load_needaction", {'menu_ids': [menu.current_menu]}).done(function(r) {
