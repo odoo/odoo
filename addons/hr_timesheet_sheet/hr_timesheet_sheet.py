@@ -74,6 +74,21 @@ class hr_timesheet_sheet(osv.osv):
         return super(hr_timesheet_sheet, self).create(cr, uid, vals, *args, **argv)
 
     def write(self, cr, uid, ids, vals, *args, **argv):
+        delete_ids = []
+        if vals.get('attendances_ids'):
+            delete_ids = [act[1] for act in vals.get('attendances_ids') if act[0] == 2]
+
+        obj_hr_att = self.pool.get('hr.attendance')
+        for delete_att in obj_hr_att.browse(cr, uid, delete_ids):
+            prev_att_ids = obj_hr_att.search(cr, uid, [('sheet_id', 'in', ids), ('name', '<', delete_att.name), ('id', 'not in', delete_ids)], limit=1)
+            next_att_ids = obj_hr_att.search(cr, uid, [('sheet_id', 'in', ids), ('name', '>', delete_att.name), ('id', 'not in', delete_ids)], limit=1, order="name") #by default it's descending but we require ascending to get first record
+            prev_atts = obj_hr_att.browse(cr, uid, prev_att_ids)
+            next_atts = obj_hr_att.browse(cr, uid, next_att_ids)
+
+            if prev_atts and next_atts:
+                if prev_atts[0].action == next_atts[0].action:
+                    raise osv.except_osv(_('Warning !'), _('You are trying to delete inside attendance entry which is not allowed from here ! \n OR \n You are trying to delete same action entries ! \n Please try to delete this entry from Attendance list'))
+
         if 'employee_id' in vals:
             new_user_id = self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).user_id.id or False
             if not new_user_id:
