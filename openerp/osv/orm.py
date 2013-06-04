@@ -282,6 +282,9 @@ class browse_null(object):
     def __unicode__(self):
         return u''
 
+    def __iter__(self):
+        raise NotImplementedError("Iteration is not allowed on %s" % self)
+
 
 #
 # TODO: execute an object method on browse_record_list
@@ -2971,7 +2974,7 @@ class BaseModel(object):
         update_custom_fields = context.get('update_custom_fields', False)
         self._field_create(cr, context=context)
         create = not self._table_exist(cr)
-        if getattr(self, '_auto', True):
+        if self._auto:
 
             if create:
                 self._create_table(cr)
@@ -3205,7 +3208,8 @@ class BaseModel(object):
 
         cr.commit()     # start a new transaction
 
-        self._add_sql_constraints(cr)
+        if self._auto:
+            self._add_sql_constraints(cr)
 
         if create:
             self._execute_sql(cr)

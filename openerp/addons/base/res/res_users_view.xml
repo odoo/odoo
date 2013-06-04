@@ -187,7 +187,7 @@
                     <field name="name"/>
                     <field name="login"/>
                     <field name="lang"/>
-                    <field name="date"/>
+                    <field name="login_date"/>
                 </tree>
             </field>
         </record>
@@ -255,7 +255,7 @@
                         <field name="signature" readonly="0"/>
                     </group>
                     <footer>
-                        <button name="preference_save" type="object" string="Save"/>
+                        <button name="preference_save" type="object" string="Save" class="oe_highlight"/>
                         or
                         <button name="preference_cancel" string="Cancel" special="cancel" class="oe_link"/>
                     </footer>
