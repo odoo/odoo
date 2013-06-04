@@ -34,6 +34,9 @@ import openerp
 
 import session
 
+import inspect
+import functools
+
 _logger = logging.getLogger(__name__)
 
 #----------------------------------------------------------
@@ -197,10 +200,10 @@ class JsonRequest(WebRequest):
             else:
                 self.jsonrequest = simplejson.loads(request, object_hook=reject_nonliteral)
             self.init(self.jsonrequest.get("params", {}))
-            if _logger.isEnabledFor(logging.DEBUG):
-                _logger.debug("--> %s.%s\n%s", method.im_class.__name__, method.__name__, pprint.pformat(self.jsonrequest))
+            #if _logger.isEnabledFor(logging.DEBUG):
+            #    _logger.debug("--> %s.%s\n%s", method.im_class.__name__, method.__name__, pprint.pformat(self.jsonrequest))
             response['id'] = self.jsonrequest.get('id')
-            response["result"] = method(self, **self.params)
+            response["result"] = method(**self.params)
         except session.AuthenticationError, e:
             se = serialize_exception(e)
             error = {
@@ -292,9 +295,9 @@ class HttpRequest(WebRequest):
                 akw[key] = value
             else:
                 akw[key] = type(value)
-        _logger.debug("%s --> %s.%s %r", self.httprequest.method, method.im_class.__name__, method.__name__, akw)
+        #_logger.debug("%s --> %s.%s %r", self.httprequest.method, method.im_class.__name__, method.__name__, akw)
         try:
-            r = method(self, **self.params)
+            r = method(**self.params)
         except Exception, e:
             _logger.exception("An exception occured during an http request")
             se = serialize_exception(e)
@@ -388,6 +391,19 @@ controllers_path = {}
 class ControllerType(type):
     def __init__(cls, name, bases, attrs):
         super(ControllerType, cls).__init__(name, bases, attrs)
+
+        # create wrappers for old-style methods with req as first argument
+        cls._methods_wrapper = {}
+        for k, v in attrs.items():
+            if inspect.isfunction(v):
+                spec = inspect.getargspec(v)
+                first_arg = spec.args[1] if len(spec.args) >= 2 else None
+                if first_arg in ["req"]:
+                    def build_new(nv):
+                        return lambda self, *args, **kwargs: nv(self, request, *args, **kwargs)
+                    cls._methods_wrapper[k] = build_new(v)
+
+        # store the controller in the controllers list
         name_class = ("%s.%s" % (cls.__module__, cls.__name__), cls)
         controllers_class.append(name_class)
         path = attrs.get('_cp_path')
@@ -404,6 +420,12 @@ class Controller(object):
             cls = type(name, tuple(reversed(subclasses)), {})
 
         return object.__new__(cls)
+
+    def get_wrapped_method(self, name):
+        if name in self.__class__._methods_wrapper:
+            return functools.partial(self.__class__._methods_wrapper[name], self)
+        else:
+            return getattr(self, name)
 
 #----------------------------------------------------------
 # Session context manager
@@ -633,6 +655,7 @@ class Root(object):
                     method = getattr(c, method_name, None)
                     if method:
                         exposed = getattr(method, 'exposed', False)
+                        method = c.get_wrapped_method(method_name)
                         if exposed == 'json':
                             _logger.debug("Dispatch json to %s %s %s", ps, c, method_name)
                             def fct(request):
