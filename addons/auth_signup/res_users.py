@@ -23,6 +23,7 @@ import random
 from urllib import urlencode
 from urlparse import urljoin
 
+from openerp.addons.base.ir.ir_mail_server import MailDeliveryException
 from openerp.osv import osv, fields
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval
@@ -102,6 +103,9 @@ class res_partner(osv.Model):
 
     def action_signup_prepare(self, cr, uid, ids, context=None):
         return self.signup_prepare(cr, uid, ids, context=context)
+
+    def signup_cancel(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'signup_token': False, 'signup_type': False, 'signup_expiration': False}, context=context)
 
     def signup_prepare(self, cr, uid, ids, signup_type="signup", expiration=False, context=None):
         """ generate a new token for the partners with the given validity, if necessary
@@ -202,7 +206,7 @@ class res_users(osv.Model):
                 })
                 if partner.company_id:
                     values['company_id'] = partner.company_id.id
-                    values['company_ids'] = [(6,0,[partner.company_id.id])]
+                    values['company_ids'] = [(6, 0, [partner.company_id.id])]
                 self._signup_create_user(cr, uid, values, context=context)
         else:
             # no token, sign up an external user
@@ -259,25 +263,26 @@ class res_users(osv.Model):
                 pass
         if not bool(template):
             template = self.pool.get('ir.model.data').get_object(cr, uid, 'auth_signup', 'reset_password_email')
-        mail_obj = self.pool.get('mail.mail')
         assert template._name == 'email.template'
 
         for user in self.browse(cr, uid, ids, context):
             if not user.email:
                 raise osv.except_osv(_("Cannot send email: user has no email address."), user.name)
-            mail_id = self.pool.get('email.template').send_mail(cr, uid, template.id, user.id, True, context=context)
-            mail_state = mail_obj.read(cr, uid, mail_id, ['state'], context=context)
-
-            if mail_state and mail_state['state'] == 'exception':
-                raise self.pool.get('res.config.settings').get_config_warning(cr, _("Cannot send email: no outgoing email server configured.\nYou can configure it under %(menu:base_setup.menu_general_configuration)s."), context)
-            else:
-                return True
+            try:
+                self.pool.get('email.template').send_mail(cr, uid, template.id, user.id, force_send=True, raise_exception=True, context=context)
+            except Exception:
+                raise
 
     def create(self, cr, uid, values, context=None):
+        if context is None:
+            context = {}
         # overridden to automatically invite user to sign up
         user_id = super(res_users, self).create(cr, uid, values, context=context)
         user = self.browse(cr, uid, user_id, context=context)
-        if context and context.get('reset_password') and user.email:
-            ctx = dict(context, create_user=True)
-            self.action_reset_password(cr, uid, [user.id], context=ctx)
+        if user.email and not context.get('no_reset_password'):
+            context.update({'create_user': True})
+            try:
+                self.action_reset_password(cr, uid, [user.id], context=context)
+            except MailDeliveryException:
+                self.pool.get('res.partner').signup_cancel(cr, uid, [user.partner_id.id], context=context)
         return user_id
