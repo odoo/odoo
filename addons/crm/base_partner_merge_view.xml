@@ -68,9 +68,9 @@
                             OpenERP will propose you to merge only those having
                             all these fields in common. (not one of the fields).
                         </p>
-                        <group attrs="{'invisible': [('state', 'not in', ('selection', 'finished'))]}">
+                        <group attrs="{'invisible': ['|', ('state', 'not in', ('selection', 'finished')), ('number_group', '=', 0)]}">
                             <field name="state" invisible="1" />
-                            <field name="number_group" invisible="0" />
+                            <field name="number_group"/>
                         </group>
                         <group string="Search duplicates based on duplicated data in"
                             attrs="{'invisible': [('state', 'not in', ('option',))]}">
@@ -98,15 +98,15 @@
                                 redirected to the aggregated contact. You can remove
                                 contacts from this list to avoid merging them.
                             </p>
+                            <field name="dst_partner_id" domain="[('id', 'in', partner_ids and partner_ids[0] and partner_ids[0][2] or False)]" attrs="{'required': [('state', '=', 'selection')]}"/>
                             <field name="partner_ids" nolabel="1">
                                 <tree string="Partners">
                                     <field name="id" />
-                                    <field name="name" />
+                                    <field name="display_name" />
                                     <field name="email" />
                                     <field name="is_company" />
                                     <field name="vat" />
                                     <field name="country_id" />
-                                    <field name="parent_id" />
                                 </tree>
                             </field>
                         </group>
@@ -114,24 +114,9 @@
                 </form>
             </field>
         </record>
-
-        <record model="ir.actions.server"
-            id="ir_actions_server_merge_automatic">
-            <field name="code">pool.get('base.partner.merge.automatic.wizard').merge_multi(cr, uid, None, context)</field>
-            <field name="condition">True</field>
-            <field name="model_id" ref="base.model_res_partner" />
-            <field name="name">Automatic Merge</field>
-            <field name="sequence" eval="5" />
-            <field name="state">code</field>
-            <field name="type">ir.actions.server</field>
-        </record>
-
-        <record model="ir.values" id="ir_open_merge_automatic">
-            <field name="key2" eval="'client_action_multi'" />
-            <field name="model">res.partner</field>
-            <field name="name">Automatic Merge</field>
-            <field name="value" eval="'ir.actions.server,%d' % ir_actions_server_merge_automatic" />
-        </record>
+        
+        <act_window id="action_partner_merge" res_model="base.partner.merge.automatic.wizard" src_model="res.partner"
+            target="new" multi="True" key2="client_action_multi" view_mode="form" name="Automatic Merge"/>
 
     </data>
 

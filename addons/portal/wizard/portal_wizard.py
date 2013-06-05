@@ -172,7 +172,7 @@ class wizard_user(osv.osv_memory):
             @return: browse record of model res.users
         """
         res_users = self.pool.get('res.users')
-        create_context = dict(context or {}, noshortcut=True)       # to prevent shortcut creation
+        create_context = dict(context or {}, noshortcut=True, no_reset_password=True)       # to prevent shortcut creation
         values = {
             'login': extract_email(wizard_user.email),
             'partner_id': wizard_user.partner_id.id,

@@ -15,6 +15,7 @@
                 <field name="company_id" invisible="1"/>
                 <field name="partner_id" invisible="1"/>
                 <field name="commercial_partner_id" invisible="1"/>
+                <field name="country_id" invisible="1"/>
                 <field name="product_id" invisible="1"/>
                 <field name="uom_name" invisible="not context.get('set_visible',False)"/>
                 <field name="categ_id" invisible="1"/>
@@ -68,6 +69,7 @@
                 <group expand="1" string="Group By...">
                     <filter string="Partner" name="partner_id" context="{'group_by':'partner_id','residual_visible':True}"/>
                     <filter string="Commercial Partner" name="commercial_partner_id" context="{'group_by':'commercial_partner_id','residual_visible':True}"/>
+                    <filter string="Commercial Partner's Country" name="country_id" context="{'group_by':'country_id'}"/>
                     <filter string="Salesperson" name='user' icon="terp-personal" context="{'group_by':'user_id'}"/>
                     <filter string="Due Date" icon="terp-go-today" context="{'group_by':'date_due'}"/>
                     <filter string="Period" icon="terp-go-month" context="{'group_by':'period_id'}" name="period"/>
