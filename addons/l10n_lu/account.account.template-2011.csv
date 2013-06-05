@@ -1,16 +1,16 @@
 id,code,name,parent_id/id,type,user_type/id,reconcile,financial_report_ids/id
-lu_2011_account_0,0,Plan de compte Luxembourgeois - Loi de Juin 2009 (THAMINI & ADN),,view,account.data_account_type_view,f,
+lu_2011_account_0,0,Plan de compte Luxembourgeois - Loi de Juin 2009 (THAMINI & ADN & ACSONE),,view,account.data_account_type_view,f,
 lu_2011_account_bilan,bilan,COMPTES DE BILAN,lu_2011_account_0,view,account.data_account_type_view,f,
 lu_2011_account_1,1,"CLASSE 1 - COMPTES DE CAPITAUX, DE PROVISIONS ET DE DETTES FINANCIERES",lu_2011_account_bilan,view,account_type_2011_1_capital,f,
 lu_2011_account_10,10,Capital ou dotation des succursales et comptes de l’exploitant,lu_2011_account_1,view,account_type_2011_1_capital,f,
 lu_2011_account_101,101,Capital souscrit (Sociétés de capitaux - Montant total),lu_2011_account_10,other,account_type_2011_1_capital,f,account_financial_report_68
 lu_2011_account_102,102,Capital souscrit non appelé (Sociétés de capitaux),lu_2011_account_10,other,account_type_2011_1_capital,f,account_financial_report_17
 lu_2011_account_103,103,Capital souscrit appelé et non versé (Sociétés de capitaux),lu_2011_account_10,other,account_type_2011_1_capital,f,account_financial_report_18
-lu_2011_account_104,104,Capital des entreprises commerçants personnes physiques et des sociétés de personnes,lu_2011_account_10,view,account_type_2011_1_capital,f,
+lu_2011_account_104,104,Capital des entreprises commerçants personnes physiques et des sociétés de personnes,lu_2011_account_10,view,account_type_2011_1_capital,f,account_financial_report_68
 lu_2011_account_1041,1041,Commerçants personnes physiques,lu_2011_account_104,other,account_type_2011_1_capital,f,
 lu_2011_account_1042,1042,Sociétés de personnes,lu_2011_account_104,other,account_type_2011_1_capital,f,
-lu_2011_account_105,105,Dotation des succursales,lu_2011_account_10,other,account_type_2011_1_capital,f,
-lu_2011_account_106,106,Comptes de l’exploitant ou des coexploitants,lu_2011_account_10,view,account_type_2011_1_capital,f,
+lu_2011_account_105,105,Dotation des succursales,lu_2011_account_10,other,account_type_2011_1_capital,f,account_financial_report_68
+lu_2011_account_106,106,Comptes de l’exploitant ou des coexploitants,lu_2011_account_10,view,account_type_2011_1_capital,f,account_financial_report_68
 lu_2011_account_1061,1061,Prélèvements privés de l’exploitant ou des coexploitants,lu_2011_account_106,view,account_type_2011_1_capital,f,
 lu_2011_account_10611,10611,Prélèvements en numéraire (train de vie),lu_2011_account_1061,other,account_type_2011_1_capital,f,
 lu_2011_account_10612,10612,"Prélèvements en nature de marchandises, de produits finis et services (au prix de revient)",lu_2011_account_1061,other,account_type_2011_1_capital,f,
@@ -111,7 +111,7 @@ lu_2011_account_1821,1821,Provisions pour impôt sur le revenu des collectivité
 lu_2011_account_1822,1822,Provisions pour impôt commercial,lu_2011_account_182,other,account_type_2011_1_provision,f,
 lu_2011_account_1823,1823,Provisions pour impôt sur la fortune,lu_2011_account_182,other,account_type_2011_1_provision,f,
 lu_2011_account_1828,1828,Autres provisions pour impôts,lu_2011_account_182,other,account_type_2011_1_provision,f,
-lu_2011_account_183,183,Provisions pour impôts différés,lu_2011_account_18,other,account_type_2011_1_provision,f,
+lu_2011_account_183,183,Provisions pour impôts différés,lu_2011_account_18,other,account_type_2011_1_provision,f,account_financial_report_84
 lu_2011_account_188,188,Autres provisions,lu_2011_account_18,view,account_type_2011_1_provision,f,account_financial_report_85
 lu_2011_account_1881,1881,Provisions d’exploitation,lu_2011_account_188,other,account_type_2011_1_provision,f,
 lu_2011_account_1882,1882,Provisions financières,lu_2011_account_188,other,account_type_2011_1_provision,f,
@@ -146,15 +146,15 @@ lu_2011_account_1942,1942,dont la durée résiduelle est supérieure à un an,lu
 lu_2011_account_19421,19421,Montant principal,lu_2011_account_1942,other,account_type_2011_1_provision,f,
 lu_2011_account_19422,19422,Intérêts courus,lu_2011_account_1942,other,account_type_2011_1_provision,f,
 lu_2011_account_195,195,Dettes de leasing financier,lu_2011_account_19,view,account_type_2011_1_provision,f,
-lu_2011_account_1951,1951,dont la durée résiduelle est inférieure ou égale à un an,lu_2011_account_195,other,account_type_2011_1_provision,f,
-lu_2011_account_1952,1952,dont la durée résiduelle est supérieure à un an,lu_2011_account_195,other,account_type_2011_1_provision,f,
+lu_2011_account_1951,1951,dont la durée résiduelle est inférieure ou égale à un an,lu_2011_account_195,other,account_type_2011_1_provision,f,account_financial_report_95
+lu_2011_account_1952,1952,dont la durée résiduelle est supérieure à un an,lu_2011_account_195,other,account_type_2011_1_provision,f,account_financial_report_96
 lu_2011_account_198,198,Autres emprunts et dettes assimilées,lu_2011_account_19,view,account_type_2011_1_provision,f,
-lu_2011_account_1981,1981,dont la durée résiduelle est inférieure ou égale à un an,lu_2011_account_198,view,account_type_2011_1_provision,f,
+lu_2011_account_1981,1981,dont la durée résiduelle est inférieure ou égale à un an,lu_2011_account_198,view,account_type_2011_1_provision,f,account_financial_report_116
 lu_2011_account_19811,19811,Autres emprunts,lu_2011_account_1981,other,account_type_2011_1_provision,f,
 lu_2011_account_19812,19812,Rentes viagères capitalisées,lu_2011_account_1981,other,account_type_2011_1_provision,f,
 lu_2011_account_19813,19813,Autres dettes assimilées,lu_2011_account_1981,other,account_type_2011_1_provision,f,
 lu_2011_account_19814,19814,Intérêts courus sur autres emprunts et dettes assimilées,lu_2011_account_1981,other,account_type_2011_1_provision,f,
-lu_2011_account_1982,1982,dont la durée résiduelle est supérieure à un an,lu_2011_account_198,view,account_type_2011_1_provision,f,
+lu_2011_account_1982,1982,dont la durée résiduelle est supérieure à un an,lu_2011_account_198,view,account_type_2011_1_provision,f,account_financial_report_117
 lu_2011_account_19821,19821,Autres emprunts,lu_2011_account_1982,other,account_type_2011_1_provision,f,
 lu_2011_account_19822,19822,Rentes viagères capitalisées,lu_2011_account_1982,other,account_type_2011_1_provision,f,
 lu_2011_account_19823,19823,Autres dettes assimilées,lu_2011_account_1982,other,account_type_2011_1_provision,f,
@@ -288,7 +288,7 @@ lu_2011_account_3232,3232,Rebuts,lu_2011_account_323,other,account_type_2011_3_s
 lu_2011_account_3233,3233,Matières de récupération,lu_2011_account_323,other,account_type_2011_3_stock,f,
 lu_2011_account_326,326,Marchandises,lu_2011_account_32,other,account_type_2011_3_stock,f,
 lu_2011_account_327,327,"Marchandises en voie d’acheminement, mises en dépôt ou données en consignation",lu_2011_account_32,other,account_type_2011_3_stock,f,
-lu_2011_account_33,33,Terrains et immeubles destinés à la revente,lu_2011_account_3,view,account_type_2011_3_stock,f,
+lu_2011_account_33,33,Terrains et immeubles destinés à la revente,lu_2011_account_3,view,account_type_2011_3_stock,f,account_financial_report_45
 lu_2011_account_331,331,Terrains,lu_2011_account_33,other,account_type_2011_3_stock,f,
 lu_2011_account_332,332,Immeubles,lu_2011_account_33,view,account_type_2011_3_stock,f,
 lu_2011_account_3321,3321,Immeubles acquis,lu_2011_account_332,other,account_type_2011_3_stock,f,
@@ -811,7 +811,7 @@ lu_2011_account_63313,63313,Constructions,lu_2011_account_6331,other,account_typ
 lu_2011_account_6332,6332,Installations techniques et machines,lu_2011_account_633,other,account_type_2011_6_charge_exploitation,f,
 lu_2011_account_6333,6333,"Autres installations, outillage, mobilier et matériel roulant",lu_2011_account_633,other,account_type_2011_6_charge_exploitation,f,
 lu_2011_account_6334,6334,Acomptes versés et immobilisations corporelles en cours,lu_2011_account_633,other,account_type_2011_6_charge_exploitation,f,
-lu_2011_account_634,634,Dotations aux corrections de valeur sur stocks,lu_2011_account_63,view,account_type_2011_6_charge_exploitation,f,
+lu_2011_account_634,634,Dotations aux corrections de valeur sur stocks,lu_2011_account_63,view,account_type_2011_6_charge_exploitation,f,account_financial_report_129
 lu_2011_account_6341,6341,Matières premières et consommables,lu_2011_account_634,other,account_type_2011_6_charge_exploitation,f,
 lu_2011_account_6342,6342,Produits en cours de fabrication et commandes en cours,lu_2011_account_634,other,account_type_2011_6_charge_exploitation,f,
 lu_2011_account_6343,6343,Produits finis et marchandises,lu_2011_account_634,other,account_type_2011_6_charge_exploitation,f,
@@ -895,7 +895,7 @@ lu_2011_account_6553,6553,Intérêts sur dettes commerciales,lu_2011_account_655
 lu_2011_account_6554,6554,Intérêts sur des entreprises liées et sur des entreprises avec lesquelles la société a un lien de participation,lu_2011_account_655,other,account_type_2011_6_charge_finance,f,account_financial_report_134
 lu_2011_account_6555,6555,Escomptes et frais sur effets,lu_2011_account_655,other,account_type_2011_6_charge_finance,f,
 lu_2011_account_6556,6556,Escomptes accordés,lu_2011_account_655,other,account_type_2011_6_charge_finance,f,
-lu_2011_account_6558,6558,Intérêts sur autres emprunts et dettes,lu_2011_account_655,other,account_type_2011_6_charge_finance,f,account_financial_report_135
+lu_2011_account_6558,6558,Intérêts sur autres emprunts et dettes,lu_2011_account_655,other,account_type_2011_6_charge_finance,f,
 lu_2011_account_656,656,Pertes de change,lu_2011_account_65,other,account_type_2011_6_charge_finance,f,account_financial_report_135
 lu_2011_account_657,657,Quote-part de perte dans les entreprises collectives (autres que les sociétés de capitaux),lu_2011_account_65,other,account_type_2011_6_charge_finance,f,account_financial_report_135
 lu_2011_account_658,658,Autres charges financières (différence et frais de paiement (-)),lu_2011_account_65,other,account_type_2011_6_charge_finance,f,account_financial_report_135
@@ -1024,7 +1024,7 @@ lu_2011_account_73314,73314,Constructions sur sol d’autrui,lu_2011_account_733
 lu_2011_account_7332,7332,Installations techniques et machines,lu_2011_account_733,other,account_type_2011_7_produit_exploitation,f,
 lu_2011_account_7333,7333,"Autres installations, outillage, mobilier et matériel roulant",lu_2011_account_733,other,account_type_2011_7_produit_exploitation,f,
 lu_2011_account_7334,7334,Acomptes versés et immobilisations corporelles en cours,lu_2011_account_733,other,account_type_2011_7_produit_exploitation,f,
-lu_2011_account_734,734,Reprises de corrections de valeur sur stocks,lu_2011_account_73,view,account_type_2011_7_produit_exploitation,f,
+lu_2011_account_734,734,Reprises de corrections de valeur sur stocks,lu_2011_account_73,view,account_type_2011_7_produit_exploitation,f,account_financial_report_146
 lu_2011_account_7341,7341,Matières premières et consommables,lu_2011_account_734,other,account_type_2011_7_produit_exploitation,f,
 lu_2011_account_7342,7342,Produits en cours de fabrication et commandes en cours,lu_2011_account_734,other,account_type_2011_7_produit_exploitation,f,
 lu_2011_account_7343,7343,Produits finis et marchandises,lu_2011_account_734,other,account_type_2011_7_produit_exploitation,f,
@@ -1064,42 +1064,42 @@ lu_2011_account_749,749,Reprises sur provisions d’exploitation,lu_2011_account
 lu_2011_account_75,75,Produits financiers,lu_2011_account_7,view,account_type_2011_7_produit_financier,f,
 lu_2011_account_751,751,Reprises sur corrections de valeur et ajustements pour juste valeur sur immobilisations financières,lu_2011_account_75,view,account_type_2011_7_produit_financier,f,
 lu_2011_account_7511,7511,Reprises sur corrections de valeur sur immobilisations financières,lu_2011_account_751,view,account_type_2011_7_produit_financier,f,
-lu_2011_account_75111,75111,Parts dans des entreprises liées,lu_2011_account_7511,other,account_type_2011_7_produit_financier,f,
-lu_2011_account_75112,75112,Créances sur des entreprises liées,lu_2011_account_7511,other,account_type_2011_7_produit_financier,f,
-lu_2011_account_75113,75113,Parts dans des entreprises avec lesquelles la société a un lien de participation,lu_2011_account_7511,other,account_type_2011_7_produit_financier,f,
-lu_2011_account_75114,75114,Créances sur des entreprises avec lesquelles la société a un lien de participation,lu_2011_account_7511,other,account_type_2011_7_produit_financier,f,
-lu_2011_account_75115,75115,Titres ayant le caractère d’immobilisations,lu_2011_account_7511,other,account_type_2011_7_produit_financier,f,
-lu_2011_account_75116,75116,Prêts et créances immobilisées,lu_2011_account_7511,other,account_type_2011_7_produit_financier,f,
-lu_2011_account_75117,75117,Actions propres ou parts propres,lu_2011_account_7511,other,account_type_2011_7_produit_financier,f,
-lu_2011_account_7512,7512,Ajustements pour juste valeur sur immobilisations financières,lu_2011_account_751,other,account_type_2011_7_produit_financier,f,
+lu_2011_account_75111,75111,Parts dans des entreprises liées,lu_2011_account_7511,other,account_type_2011_7_produit_financier,f,account_financial_report_149
+lu_2011_account_75112,75112,Créances sur des entreprises liées,lu_2011_account_7511,other,account_type_2011_7_produit_financier,f,account_financial_report_149
+lu_2011_account_75113,75113,Parts dans des entreprises avec lesquelles la société a un lien de participation,lu_2011_account_7511,other,account_type_2011_7_produit_financier,f,account_financial_report_150
+lu_2011_account_75114,75114,Créances sur des entreprises avec lesquelles la société a un lien de participation,lu_2011_account_7511,other,account_type_2011_7_produit_financier,f,account_financial_report_150
+lu_2011_account_75115,75115,Titres ayant le caractère d’immobilisations,lu_2011_account_7511,other,account_type_2011_7_produit_financier,f,account_financial_report_150
+lu_2011_account_75116,75116,Prêts et créances immobilisées,lu_2011_account_7511,other,account_type_2011_7_produit_financier,f,account_financial_report_150
+lu_2011_account_75117,75117,Actions propres ou parts propres,lu_2011_account_7511,other,account_type_2011_7_produit_financier,f,account_financial_report_150
+lu_2011_account_7512,7512,Ajustements pour juste valeur sur immobilisations financières,lu_2011_account_751,other,account_type_2011_7_produit_financier,f,account_financial_report_150
 lu_2011_account_752,752,Revenus des immobilisations financières,lu_2011_account_75,view,account_type_2011_7_produit_financier,f,
 lu_2011_account_7521,7521,Parts dans des entreprises liées,lu_2011_account_752,other,account_type_2011_7_produit_financier,f,account_financial_report_149
-lu_2011_account_7522,7522,Créances sur des entreprises liées,lu_2011_account_752,other,account_type_2011_7_produit_financier,f,
+lu_2011_account_7522,7522,Créances sur des entreprises liées,lu_2011_account_752,other,account_type_2011_7_produit_financier,f,account_financial_report_149
 lu_2011_account_7523,7523,Parts dans des entreprises avec lesquelles la société a un lien de participation,lu_2011_account_752,other,account_type_2011_7_produit_financier,f,account_financial_report_150
-lu_2011_account_7524,7524,Créances sur des entreprises avec lesquelles la société a un lien de participation,lu_2011_account_752,other,account_type_2011_7_produit_financier,f,
-lu_2011_account_7525,7525,Titres ayant le caractère d’immobilisations,lu_2011_account_752,other,account_type_2011_7_produit_financier,f,
-lu_2011_account_7526,7526,Prêts et créances immobilisées,lu_2011_account_752,other,account_type_2011_7_produit_financier,f,
-lu_2011_account_7527,7527,Actions propres ou parts propres,lu_2011_account_752,other,account_type_2011_7_produit_financier,f,
+lu_2011_account_7524,7524,Créances sur des entreprises avec lesquelles la société a un lien de participation,lu_2011_account_752,other,account_type_2011_7_produit_financier,f,account_financial_report_150
+lu_2011_account_7525,7525,Titres ayant le caractère d’immobilisations,lu_2011_account_752,other,account_type_2011_7_produit_financier,f,account_financial_report_150
+lu_2011_account_7526,7526,Prêts et créances immobilisées,lu_2011_account_752,other,account_type_2011_7_produit_financier,f,account_financial_report_150
+lu_2011_account_7527,7527,Actions propres ou parts propres,lu_2011_account_752,other,account_type_2011_7_produit_financier,f,account_financial_report_150
 lu_2011_account_753,753,Reprises sur corrections de valeur et ajustements pour juste valeur sur éléments financiers de l’actif circulant,lu_2011_account_75,view,account_type_2011_7_produit_financier,f,
 lu_2011_account_7531,7531,Reprises sur corrections de valeur sur créances sur des entreprises liées et des entreprises avec lesquelles la société a un lien de participation,lu_2011_account_753,other,account_type_2011_7_produit_financier,f,account_financial_report_152
 lu_2011_account_7532,7532,Reprises sur corrections de valeur sur autres créances,lu_2011_account_753,other,account_type_2011_7_produit_financier,f,account_financial_report_153
 lu_2011_account_7533,7533,Reprises sur corrections de valeur sur valeurs mobilières,lu_2011_account_753,view,account_type_2011_7_produit_financier,f,
-lu_2011_account_75331,75331,Parts dans les entreprises liées,lu_2011_account_7533,other,account_type_2011_7_produit_financier,f,
-lu_2011_account_75332,75332,Parts dans des entreprises avec lesquelles la société a un lien de participation,lu_2011_account_7533,other,account_type_2011_7_produit_financier,f,
-lu_2011_account_75333,75333,Actions propres ou parts propres,lu_2011_account_7533,other,account_type_2011_7_produit_financier,f,
-lu_2011_account_75338,75338,Autres valeurs mobilières,lu_2011_account_7533,other,account_type_2011_7_produit_financier,f,
-lu_2011_account_7534,7534,Ajustements pour juste valeur sur éléments financiers de l’actif circulant,lu_2011_account_753,other,account_type_2011_7_produit_financier,f,
+lu_2011_account_75331,75331,Parts dans les entreprises liées,lu_2011_account_7533,other,account_type_2011_7_produit_financier,f,account_financial_report_152
+lu_2011_account_75332,75332,Parts dans des entreprises avec lesquelles la société a un lien de participation,lu_2011_account_7533,other,account_type_2011_7_produit_financier,f,account_financial_report_153
+lu_2011_account_75333,75333,Actions propres ou parts propres,lu_2011_account_7533,other,account_type_2011_7_produit_financier,f,account_financial_report_153
+lu_2011_account_75338,75338,Autres valeurs mobilières,lu_2011_account_7533,other,account_type_2011_7_produit_financier,f,account_financial_report_153
+lu_2011_account_7534,7534,Ajustements pour juste valeur sur éléments financiers de l’actif circulant,lu_2011_account_753,other,account_type_2011_7_produit_financier,f,account_financial_report_153
 lu_2011_account_754,754,Plus-value de cession et autres produits de valeurs mobilières,lu_2011_account_75,view,account_type_2011_7_produit_financier,f,
 lu_2011_account_7541,7541,Plus-value de cession de valeurs mobilières,lu_2011_account_754,view,account_type_2011_7_produit_financier,f,
-lu_2011_account_75411,75411,Parts dans les entreprises liées,lu_2011_account_7541,other,account_type_2011_7_produit_financier,f,
-lu_2011_account_75412,75412,Parts dans des entreprises avec lesquelles la société a un lien de participation,lu_2011_account_7541,other,account_type_2011_7_produit_financier,f,
-lu_2011_account_75413,75413,Actions propres ou parts propres,lu_2011_account_7541,other,account_type_2011_7_produit_financier,f,
-lu_2011_account_75418,75418,Autres valeurs mobilières,lu_2011_account_7541,other,account_type_2011_7_produit_financier,f,
+lu_2011_account_75411,75411,Parts dans les entreprises liées,lu_2011_account_7541,other,account_type_2011_7_produit_financier,f,account_financial_report_152
+lu_2011_account_75412,75412,Parts dans des entreprises avec lesquelles la société a un lien de participation,lu_2011_account_7541,other,account_type_2011_7_produit_financier,f,account_financial_report_153
+lu_2011_account_75413,75413,Actions propres ou parts propres,lu_2011_account_7541,other,account_type_2011_7_produit_financier,f,account_financial_report_153
+lu_2011_account_75418,75418,Autres valeurs mobilières,lu_2011_account_7541,other,account_type_2011_7_produit_financier,f,account_financial_report_153
 lu_2011_account_7548,7548,Autres produits de valeurs mobilières,lu_2011_account_754,view,account_type_2011_7_produit_financier,f,
-lu_2011_account_75481,75481,Parts dans les entreprises liées,lu_2011_account_7548,other,account_type_2011_7_produit_financier,f,
-lu_2011_account_75482,75482,Parts dans des entreprises avec lesquelles la société a un lien de participation,lu_2011_account_7548,other,account_type_2011_7_produit_financier,f,
-lu_2011_account_75483,75483,Actions propres ou parts propres,lu_2011_account_7548,other,account_type_2011_7_produit_financier,f,
-lu_2011_account_75488,75488,Autres valeurs mobilières,lu_2011_account_7548,other,account_type_2011_7_produit_financier,f,
+lu_2011_account_75481,75481,Parts dans les entreprises liées,lu_2011_account_7548,other,account_type_2011_7_produit_financier,f,account_financial_report_152
+lu_2011_account_75482,75482,Parts dans des entreprises avec lesquelles la société a un lien de participation,lu_2011_account_7548,other,account_type_2011_7_produit_financier,f,account_financial_report_153
+lu_2011_account_75483,75483,Actions propres ou parts propres,lu_2011_account_7548,other,account_type_2011_7_produit_financier,f,account_financial_report_153
+lu_2011_account_75488,75488,Autres valeurs mobilières,lu_2011_account_7548,other,account_type_2011_7_produit_financier,f,account_financial_report_153
 lu_2011_account_755,755,Autres intérêts et escomptes,lu_2011_account_75,view,account_type_2011_7_produit_financier,f,
 lu_2011_account_7552,7552,Intérêts bancaires et assimilés,lu_2011_account_755,view,account_type_2011_7_produit_financier,f,account_financial_report_156
 lu_2011_account_75521,75521,Intérêts sur comptes courants,lu_2011_account_7552,other,account_type_2011_7_produit_financier,f,
@@ -1107,9 +1107,9 @@ lu_2011_account_75522,75522,Intérêts sur comptes à terme,lu_2011_account_7552
 lu_2011_account_75523,75523,Intérêts sur leasings financiers,lu_2011_account_7552,other,account_type_2011_7_produit_financier,f,
 lu_2011_account_7553,7553,Intérêts sur créances commerciales,lu_2011_account_755,other,account_type_2011_7_produit_financier,f,account_financial_report_156
 lu_2011_account_7554,7554,Intérêts sur des entreprises liées et sur des entreprises avec lesquelles la société a un lien de participation,lu_2011_account_755,other,account_type_2011_7_produit_financier,f,account_financial_report_155
-lu_2011_account_7555,7555,Escomptes d’effets de commerce,lu_2011_account_755,other,account_type_2011_7_produit_financier,f,
-lu_2011_account_7556,7556,Escomptes obtenus,lu_2011_account_755,other,account_type_2011_7_produit_financier,f,
-lu_2011_account_7558,7558,Intérêts sur autres créances,lu_2011_account_755,other,account_type_2011_7_produit_financier,f,
+lu_2011_account_7555,7555,Escomptes d’effets de commerce,lu_2011_account_755,other,account_type_2011_7_produit_financier,f,account_financial_report_156
+lu_2011_account_7556,7556,Escomptes obtenus,lu_2011_account_755,other,account_type_2011_7_produit_financier,f,account_financial_report_156
+lu_2011_account_7558,7558,Intérêts sur autres créances,lu_2011_account_755,other,account_type_2011_7_produit_financier,f,account_financial_report_156
 lu_2011_account_756,756,Gains de change,lu_2011_account_75,other,account_type_2011_7_produit_financier,f,
 lu_2011_account_757,757,Quote-part de bénéfice dans les entreprises collectives (autres que les sociétés de capitaux),lu_2011_account_75,other,account_type_2011_7_produit_financier,f,
 lu_2011_account_758,758,Autres produits financiers,lu_2011_account_75,other,account_type_2011_7_produit_financier,f,account_financial_report_156
@@ -1144,14 +1144,14 @@ lu_2011_account_7685,7685,Bonis provenant de clauses d’indexation,lu_2011_acco
 lu_2011_account_7686,7686,Bonis provenant du rachat par l’entreprise d’actions et d’obligations émises par elle-même,lu_2011_account_768,other,account_type_2011_7_produit_exceptionnel,f,
 lu_2011_account_7688,7688,Autres produits exceptionnels divers,lu_2011_account_768,other,account_type_2011_7_produit_exceptionnel,f,
 lu_2011_account_769,769,Reprises sur provisions exceptionnelles,lu_2011_account_76,other,account_type_2011_7_produit_exceptionnel,f,
-lu_2011_account_77,77,Régularisations d’impôts sur le résultat,lu_2011_account_7,view,account_type_2011_7_produit_exceptionnel,f,
+lu_2011_account_77,77,Régularisations d’impôts sur le résultat,lu_2011_account_7,view,account_type_2011_7_produit_exceptionnel,f,account_financial_report_137
 lu_2011_account_771,771,Régularisations d’impôt sur le revenu des collectivités,lu_2011_account_77,other,account_type_2011_7_produit_exceptionnel,f,
 lu_2011_account_772,772,Régularisations d’impôt commercial,lu_2011_account_77,other,account_type_2011_7_produit_exceptionnel,f,
 lu_2011_account_773,773,Régularisations d’impôts étrangers sur le résultat,lu_2011_account_77,other,account_type_2011_7_produit_exceptionnel,f,
 lu_2011_account_779,779,Reprises sur provisions pour impôts sur le résultat,lu_2011_account_77,view,account_type_2011_7_produit_exceptionnel,f,
 lu_2011_account_7791,7791,Reprises sur provisions pour impôts,lu_2011_account_779,other,account_type_2011_7_produit_exceptionnel,f,
 lu_2011_account_7792,7792,Reprises sur provisions pour impôts différés,lu_2011_account_779,other,account_type_2011_7_produit_exceptionnel,f,
-lu_2011_account_78,78,Régularisations d’autres impôts ne figurant pas sous le poste ci-dessus,lu_2011_account_7,view,account_type_2011_7_produit_exceptionnel,f,
+lu_2011_account_78,78,Régularisations d’autres impôts ne figurant pas sous le poste ci-dessus,lu_2011_account_7,view,account_type_2011_7_produit_exceptionnel,f,account_financial_report_138
 lu_2011_account_781,781,Régularisations d’impôt sur la fortune,lu_2011_account_78,other,account_type_2011_7_produit_exceptionnel,f,
 lu_2011_account_782,782,Régularisations de taxes d’abonnement,lu_2011_account_78,other,account_type_2011_7_produit_exceptionnel,f,
 lu_2011_account_783,783,Régularisations d’impôts étrangers,lu_2011_account_78,other,account_type_2011_7_produit_exceptionnel,f,
