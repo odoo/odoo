@@ -192,8 +192,8 @@
             <field name="code">SAJ-OpenERP IN</field>
             <field name="type">sale</field>
             <field name="sequence_id" ref="account.sequence_sale_journal"/>
-            <field model="account.account" name="default_credit_account_id" ref="account.a_sale"/>
-            <field model="account.account" name="default_debit_account_id" ref="account.a_sale"/>
+            <field name="default_credit_account_id" ref="account.a_sale"/>
+            <field name="default_debit_account_id" ref="account.a_sale"/>
             <field name="analytic_journal_id" ref="account.cose_journal_sale"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_in"/>
@@ -204,8 +204,8 @@
             <field name="code">SCNJ-OpenERP IN</field>
             <field name="type">sale_refund</field>
             <field name="sequence_id" ref="account.sequence_refund_sales_journal"/>
-            <field model="account.account" name="default_credit_account_id" ref="account.a_sale"/>
-            <field model="account.account" name="default_debit_account_id" ref="account.a_sale"/>
+            <field name="default_credit_account_id" ref="account.a_sale"/>
+            <field name="default_debit_account_id" ref="account.a_sale"/>
             <field name="analytic_journal_id" ref="account.cose_journal_sale"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_in"/>
@@ -216,8 +216,8 @@
             <field name="code">EXJ-OpenERP IN</field>
             <field name="type">purchase</field>
             <field name="sequence_id" ref="account.sequence_purchase_journal"/>
-            <field model="account.account" name="default_debit_account_id" ref="account.a_expense"/>
-            <field model="account.account" name="default_credit_account_id" ref="account.a_expense"/>
+            <field name="default_debit_account_id" ref="account.a_expense"/>
+            <field name="default_credit_account_id" ref="account.a_expense"/>
             <field name="analytic_journal_id" ref="account.exp"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_in"/>
@@ -228,8 +228,8 @@
             <field name="code">ECNJ-OpenERP IN</field>
             <field name="type">purchase_refund</field>
             <field name="sequence_id" ref="account.sequence_refund_purchase_journal"/>
-            <field model="account.account" name="default_debit_account_id" ref="account.a_expense"/>
-            <field model="account.account" name="default_credit_account_id" ref="account.a_expense"/>
+            <field name="default_debit_account_id" ref="account.a_expense"/>
+            <field name="default_credit_account_id" ref="account.a_expense"/>
             <field name="analytic_journal_id" ref="account.exp"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_in"/>
@@ -240,8 +240,8 @@
             <field name="code">BNK-OpenERP IN</field>
             <field name="type">bank</field>
             <field name="sequence_id" ref="account.sequence_bank_journal"/>
-            <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
-            <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
+            <field name="default_debit_account_id" ref="account.cash"/>
+            <field name="default_credit_account_id" ref="account.cash"/>
             <field name="analytic_journal_id" ref="account.sit"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_in"/>
@@ -252,8 +252,8 @@
             <field name="code">CHK-OpenERP IN</field>
             <field name="type">bank</field>
             <field name="sequence_id" ref="account.sequence_check_journal"/>
-            <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
-            <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
+            <field name="default_debit_account_id" ref="account.cash"/>
+            <field name="default_credit_account_id" ref="account.cash"/>
             <field name="analytic_journal_id" ref="account.sit"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_in"/>
@@ -264,8 +264,8 @@
             <field name="code">CSH-OpenERP IN</field>
             <field name="type">cash</field>
             <field name="sequence_id" ref="account.sequence_cash_journal"/>
-            <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
-            <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
+            <field name="default_debit_account_id" ref="account.cash"/>
+            <field name="default_credit_account_id" ref="account.cash"/>
             <field name="analytic_journal_id" ref="account.sit"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_in"/>
@@ -277,8 +277,8 @@
             <field name="code">SAJ-OpenERP US</field>
             <field name="type">sale</field>
             <field name="sequence_id" ref="account.sequence_sale_journal"/>
-            <field model="account.account" name="default_credit_account_id" ref="account.a_sale"/>
-            <field model="account.account" name="default_debit_account_id" ref="account.a_sale"/>
+            <field name="default_credit_account_id" ref="account.a_sale"/>
+            <field name="default_debit_account_id" ref="account.a_sale"/>
             <field name="analytic_journal_id" ref="account.cose_journal_sale"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_us"/>
@@ -289,8 +289,8 @@
             <field name="code">SCNJ-OpenERP US</field>
             <field name="type">sale_refund</field>
             <field name="sequence_id" ref="account.sequence_refund_sales_journal"/>
-            <field model="account.account" name="default_credit_account_id" ref="account.a_sale"/>
-            <field model="account.account" name="default_debit_account_id" ref="account.a_sale"/>
+            <field name="default_credit_account_id" ref="account.a_sale"/>
+            <field name="default_debit_account_id" ref="account.a_sale"/>
             <field name="analytic_journal_id" ref="account.cose_journal_sale"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_us"/>
@@ -301,8 +301,8 @@
             <field name="code">EXJ-OpenERP US</field>
             <field name="type">purchase</field>
             <field name="sequence_id" ref="account.sequence_purchase_journal"/>
-            <field model="account.account" name="default_debit_account_id" ref="account.a_expense"/>
-            <field model="account.account" name="default_credit_account_id" ref="account.a_expense"/>
+            <field name="default_debit_account_id" ref="account.a_expense"/>
+            <field name="default_credit_account_id" ref="account.a_expense"/>
             <field name="analytic_journal_id" ref="account.exp"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_us"/>
@@ -313,8 +313,8 @@
             <field name="code">ECNJ-OpenERP US</field>
             <field name="type">purchase_refund</field>
             <field name="sequence_id" ref="account.sequence_refund_purchase_journal"/>
-            <field model="account.account" name="default_debit_account_id" ref="account.a_expense"/>
-            <field model="account.account" name="default_credit_account_id" ref="account.a_expense"/>
+            <field name="default_debit_account_id" ref="account.a_expense"/>
+            <field name="default_credit_account_id" ref="account.a_expense"/>
             <field name="analytic_journal_id" ref="account.exp"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_us"/>
@@ -325,8 +325,8 @@
             <field name="code">BNK-OpenERP US</field>
             <field name="type">bank</field>
             <field name="sequence_id" ref="account.sequence_bank_journal"/>
-            <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
-            <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
+            <field name="default_debit_account_id" ref="account.cash"/>
+            <field name="default_credit_account_id" ref="account.cash"/>
             <field name="analytic_journal_id" ref="account.sit"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_us"/>
@@ -337,8 +337,8 @@
             <field name="code">CHK-OpenERP US</field>
             <field name="type">bank</field>
             <field name="sequence_id" ref="account.sequence_check_journal"/>
-            <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
-            <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
+            <field name="default_debit_account_id" ref="account.cash"/>
+            <field name="default_credit_account_id" ref="account.cash"/>
             <field name="analytic_journal_id" ref="account.sit"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_us"/>
@@ -349,8 +349,8 @@
             <field name="code">CSH-OpenERP US</field>
             <field name="type">cash</field>
             <field name="sequence_id" ref="account.sequence_cash_journal"/>
-            <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
-            <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
+            <field name="default_debit_account_id" ref="account.cash"/>
+            <field name="default_credit_account_id" ref="account.cash"/>
             <field name="analytic_journal_id" ref="account.sit"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_us"/>
@@ -363,8 +363,8 @@
             <field name="code">SAJ-OpenERP BE</field>
             <field name="type">sale</field>
             <field name="sequence_id" ref="account.sequence_sale_journal"/>
-            <field model="account.account" name="default_credit_account_id" ref="account.a_sale"/>
-            <field model="account.account" name="default_debit_account_id" ref="account.a_sale"/>
+            <field name="default_credit_account_id" ref="account.a_sale"/>
+            <field name="default_debit_account_id" ref="account.a_sale"/>
             <field name="analytic_journal_id" ref="account.cose_journal_sale"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_be"/>
@@ -375,8 +375,8 @@
             <field name="code">SCNJ-OpenERP BE</field>
             <field name="type">sale_refund</field>
             <field name="sequence_id" ref="account.sequence_refund_sales_journal"/>
-            <field model="account.account" name="default_credit_account_id" ref="account.a_sale"/>
-            <field model="account.account" name="default_debit_account_id" ref="account.a_sale"/>
+            <field name="default_credit_account_id" ref="account.a_sale"/>
+            <field name="default_debit_account_id" ref="account.a_sale"/>
             <field name="analytic_journal_id" ref="account.cose_journal_sale"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_be"/>
@@ -387,8 +387,8 @@
             <field name="code">EXJ-OpenERP BE</field>
             <field name="type">purchase</field>
             <field name="sequence_id" ref="account.sequence_purchase_journal"/>
-            <field model="account.account" name="default_debit_account_id" ref="account.a_expense"/>
-            <field model="account.account" name="default_credit_account_id" ref="account.a_expense"/>
+            <field name="default_debit_account_id" ref="account.a_expense"/>
+            <field name="default_credit_account_id" ref="account.a_expense"/>
             <field name="analytic_journal_id" ref="account.exp"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_be"/>
@@ -399,8 +399,8 @@
             <field name="code">ECNJ-OpenERP BE</field>
             <field name="type">purchase_refund</field>
             <field name="sequence_id" ref="account.sequence_refund_purchase_journal"/>
-            <field model="account.account" name="default_debit_account_id" ref="account.a_expense"/>
-            <field model="account.account" name="default_credit_account_id" ref="account.a_expense"/>
+            <field name="default_debit_account_id" ref="account.a_expense"/>
+            <field name="default_credit_account_id" ref="account.a_expense"/>
             <field name="analytic_journal_id" ref="account.exp"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_be"/>
@@ -411,8 +411,8 @@
             <field name="code">BNK-OpenERP BE</field>
             <field name="type">bank</field>
             <field name="sequence_id" ref="account.sequence_bank_journal"/>
-            <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
-            <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
+            <field name="default_debit_account_id" ref="account.cash"/>
+            <field name="default_credit_account_id" ref="account.cash"/>
             <field name="analytic_journal_id" ref="account.sit"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_be"/>
@@ -423,8 +423,8 @@
             <field name="code">CHK-OpenERP BE</field>
             <field name="type">bank</field>
             <field name="sequence_id" ref="account.sequence_check_journal"/>
-            <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
-            <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
+            <field name="default_debit_account_id" ref="account.cash"/>
+            <field name="default_credit_account_id" ref="account.cash"/>
             <field name="analytic_journal_id" ref="account.sit"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_be"/>
@@ -435,8 +435,8 @@
             <field name="code">CSH-OpenERP BE</field>
             <field name="type">cash</field>
             <field name="sequence_id" ref="account.sequence_cash_journal"/>
-            <field model="account.account" name="default_debit_account_id" ref="account.cash"/>
-            <field model="account.account" name="default_credit_account_id" ref="account.cash"/>
+            <field name="default_debit_account_id" ref="account.cash"/>
+            <field name="default_credit_account_id" ref="account.cash"/>
             <field name="analytic_journal_id" ref="account.sit"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="company_id" ref="res_company_oerp_be"/>

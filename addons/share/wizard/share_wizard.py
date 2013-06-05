@@ -230,6 +230,7 @@ class share_wizard(osv.TransientModel):
         current_user = user_obj.browse(cr, UID_ROOT, uid, context=context)
         # modify context to disable shortcuts when creating share users
         context['noshortcut'] = True
+        context['no_reset_password'] = True
         created_ids = []
         existing_ids = []
         if wizard_data.user_type == 'emails':

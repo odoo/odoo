@@ -56,7 +56,7 @@
                     <separator/>
                     <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
                     <separator/>
-                    <filter string="My Sales Team(s)" icon="terp-personal+" context="{'invisible_section': False}" domain="[('section_id.user_id','=',uid)]" help="My Sales Team(s)" />
+                    <filter string="My Sales Team(s)" icon="terp-personal+" context="{'invisible_section': False}" domain="[('section_id.user_id','=',uid)]" help="My Sales Team(s)"  groups="base.group_multi_salesteams"/>
                     <separator/>
                     <filter string="My Company" icon="terp-go-home" context="{'invisible_section': False}" domain="[('section_id.user_id.company_id','=',uid)]" help="My company"/>
                     <field name="user_id" string="Salesperson"/>
@@ -71,7 +71,7 @@
                     </group>
                     <group expand="1" string="Group By...">
                         <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Sales Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}" />
+                        <filter string="Sales Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}" />
                         <filter string="Channel" icon="terp-call-start" domain="[]" context="{'group_by':'channel_id'}" />
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}" />
