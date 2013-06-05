@@ -1,7 +1,9 @@
 -
-  I cancel unqualified lead.
+  I set a new sale team (with Marketing at parent) and I cancel unqualified lead .
 -
   !python {model: crm.lead}: |
+    section_id = self.pool.get('crm.case.section').create(cr, uid, {'name': "Phone Marketing", 'parent_id': ref("crm.crm_case_section_2")})
+    self.write(cr, uid, [ref("crm_case_1")], {'section_id': section_id})
     self.case_cancel(cr, uid, [ref("crm_case_1")])
 -
   I check cancelled lead.
@@ -42,4 +44,4 @@
   I check the lead is correctly escalated to the parent team.
 -
   !assert {model: crm.lead, id: crm.crm_case_1, string: Escalate lead to parent team}:
-    - section_id.name == "Support Department"
+    - section_id.name == "Marketing"
