@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from openerp.tools.translate import _
 
 from templates import TemplateHelper
@@ -52,60 +53,37 @@ class gamification_badge(osv.Model):
     _description = 'Gamification badge'
     _inherit = ['mail.thread']
 
-
-    def _get_unique_global_list(self, cr, uid, ids, name, args, context=None):
-        """Return the list of unique res.users ids having received this badge"""
-        result = dict.fromkeys(ids, {'': False, '': False})
+    def _get_owners_info(self, cr, uid, ids, name, args, context=None):
+        """Return:
+            the list of unique res.users ids having received this badge
+            the total number of time this badge was granted
+            the total number of users this badge was granted to
+        """
+        result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
             res = set()
             for owner in obj.owner_ids:
                 res.add(owner.user_id.id)
             res = list(res)
-            result[obj.id]['unique_owner_ids'] = res
-            result[obj.id]['stat_count_distinct'] = len(res)
+            result[obj.id] = {
+                'unique_owner_ids': res,
+                'stat_count': len(obj.owner_ids),
+                'stat_count_distinct': len(res)
+            }
         return result
 
-    #TODO: use multi attribute to compute all the functional fields in a row for global/monthly/user wise (or not) stats
-    def _get_global_count(self, cr, uid, ids, name, args, context=None):
-        """Return the number of time this badge has been granted"""
+    def _get_badge_user_stats(self, cr, uid, ids, name, args, context=None):
+        """Return stats related to badge users"""
         result = dict.fromkeys(ids, False)
-        for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = len(obj.owner_ids)
-        return result
-    def _get_month_count(self, cr, uid, ids, name, args, context=None):
-        """Return the number of time this badge has been granted this month"""
         badge_user_obj = self.pool.get('gamification.badge.user')
-        result = dict.fromkeys(ids, False)
-        first_month_day = date.today().replace(day=1).isoformat()#TODO: this isn't good. Must use DEFAULT_SERVER_DATE_FORMAT
+        first_month_day = date.today().replace(day=1).strftime(DF)
         for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = badge_user_obj.search(cr, uid, [('badge_id', '=', obj.id), ('create_date', '>=', first_month_day)], context=context, count=True)
-        return result
-
-    def _get_global_my_count(self, cr, uid, ids, name, args, context=None):
-        """Return the number of time this badge has been granted to the current user"""
-        badge_user_obj = self.pool.get('gamification.badge.user')
-        result = dict.fromkeys(ids, False)
-        for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = badge_user_obj.search(cr, uid, [('badge_id', '=', obj.id), ('user_id', '=', uid)], context=context, count=True)
-        return result
-
-    def _get_month_my_count(self, cr, uid, ids, name, args, context=None):
-        """Return the number of time this badge has been granted to the current user this month"""
-        badge_user_obj = self.pool.get('gamification.badge.user')
-        result = dict.fromkeys(ids, False)
-        first_month_day = date.today().replace(day=1).isoformat()#TODO: this isn't good. Must use DEFAULT_SERVER_DATE_FORMAT
-        for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = badge_user_obj.search(cr, uid, [('badge_id', '=', obj.id), ('user_id', '=', uid), ('create_date', '>=', first_month_day)], context=context, count=True)
-        return result
-
-    def _get_month_my_sent(self, cr, uid, ids, name, args, context=None):
-        """Return the number of time this badge has been granted to the current user this month"""
-        result = dict.fromkeys(ids, False)
-        first_month_day = date.today().replace(day=1).isoformat()
-        for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = len(self.pool.get('gamification.badge.user').search(
-                cr, uid, [('badge_id', '=', obj.id), ('create_uid', '=', uid),
-                          ('create_date', '>=', first_month_day)], context=context))
+            result[obj.id] = {
+                'stat_my': badge_user_obj.search(cr, uid, [('badge_id', '=', obj.id), ('user_id', '=', uid)], context=context, count=True),
+                'stat_this_month': badge_user_obj.search(cr, uid, [('badge_id', '=', obj.id), ('create_date', '>=', first_month_day)], context=context, count=True),
+                'stat_my_this_month': badge_user_obj.search(cr, uid, [('badge_id', '=', obj.id), ('user_id', '=', uid), ('create_date', '>=', first_month_day)], context=context, count=True),
+                'stat_my_monthly_sending': badge_user_obj.search(cr, uid, [('badge_id', '=', obj.id), ('create_uid', '=', uid), ('create_date', '>=', first_month_day)], context=context, count=True)
+            }
         return result
 
     def _remaining_sending_calc(self, cr, uid, ids, name, args, context=None):
@@ -153,9 +131,10 @@ class gamification_badge(osv.Model):
             help="Check to set a monthly limit per person of sending this badge"),
         'rule_max_number': fields.integer('Limitation Number',
             help="The maximum number of time this badge can be sent per month per person."),
-        'stat_my_monthly_sending': fields.function(_get_month_my_sent,
+        'stat_my_monthly_sending': fields.function(_get_badge_user_stats,
             type="integer",
             string='My Monthly Sending Total',
+            multi='badge_users',
             help="The number of time the current user has sent this badge this month."),
         'remaining_sending': fields.function(_remaining_sending_calc, type='integer',
             string='Remaining Sending Allowed', help="If a maxium is set"),
@@ -169,37 +148,38 @@ class gamification_badge(osv.Model):
 
         'owner_ids': fields.one2many('gamification.badge.user', 'badge_id',
             string='Owners', help='The list of instances of this badge granted to users'),
-        'unique_owner_ids': fields.function(_get_unique_global_list,
+        'unique_owner_ids': fields.function(_get_owners_info,
             string='Unique Owners',
             help="The list of unique users having received this badge.",
             multi='unique_users',
             type="many2many", relation="res.users"),
 
-        'stat_count': fields.function(_get_global_count, string='Total',
+        'stat_count': fields.function(_get_owners_info, string='Total',
             type="integer",
+            multi='unique_users',
             help="The number of time this badge has been received."),
-        'stat_count_distinct': fields.function(_get_unique_global_list,
+        'stat_count_distinct': fields.function(_get_owners_info,
             type="integer",
             string='Number of users',
             multi='unique_users',
             help="The number of time this badge has been received by unique users."),
-        'stat_this_month': fields.function(_get_month_count,
+        'stat_this_month': fields.function(_get_badge_user_stats,
             type="integer",
             string='Monthly total',
+            multi='badge_users',
             help="The number of time this badge has been received this month."),
-        'stat_my': fields.function(_get_global_my_count, string='My Total',
+        'stat_my': fields.function(_get_badge_user_stats, string='My Total',
             type="integer",
+            multi='badge_users',
             help="The number of time the current user has received this badge."),
-        'stat_my_this_month': fields.function(_get_month_my_count,
+        'stat_my_this_month': fields.function(_get_badge_user_stats,
             type="integer",
             string='My Monthly Total',
+            multi='badge_users',
             help="The number of time the current user has received this badge this month."),
     }
 
     _defaults = {
-        'stat_count': 0,
-        'stat_count_distinct': 0,
-        'stat_this_month': 0,
         'rule_auth': 'everyone',
     }
 
