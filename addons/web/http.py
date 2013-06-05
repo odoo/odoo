@@ -398,7 +398,7 @@ class ControllerType(type):
             if inspect.isfunction(v):
                 spec = inspect.getargspec(v)
                 first_arg = spec.args[1] if len(spec.args) >= 2 else None
-                if first_arg in ["req"]:
+                if first_arg in ["req", "request"]:
                     def build_new(nv):
                         return lambda self, *args, **kwargs: nv(self, request, *args, **kwargs)
                     cls._methods_wrapper[k] = build_new(v)
