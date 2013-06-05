@@ -373,8 +373,6 @@
   Check Stock Inventory Report view if it shows the correct value of the stock
 - 
   !python {model: report.stock.inventory}: |
-    print self.pool.get("product.product").browse(cr, uid, ref("product_fifo_icecream")).qty_available
-    ids = self.search(cr, uid, [('product_id', '=', ref("product_fifo_icecream")), ("state", "=", "done"), ("product_qty", ">", 0.0)])
-    for line in self.browse(cr, uid, ids):
-      print line.product_qty, line.value, line.location_src_type, line.location_dest_type, line.state, line.ref
-    assert len(ids) == 0, 'No lines should be visible in the stock inventory'
+    ids = self.search(cr, uid, [('product_id', '=', ref("product_fifo_icecream")), ("state", "=", "done"), ("product_qty", ">", 0.0), 
+                                ('location_dest_type','=', 'internal')])
+    assert len(ids) == 0, 'No lines should be visible in the stock inventory as the stock is negative'
