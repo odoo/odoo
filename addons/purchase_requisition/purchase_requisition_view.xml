@@ -217,8 +217,9 @@
     <record id="purchase_order_line_tree_tender" model="ir.ui.view">
             <field name="name">purchase.order.line.tree.tender</field>
             <field name="model">purchase.order.line</field>
+            <field eval="1" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Purchase Order Lines" create="false" colors="blue:state == 'confirmed';gray:state == 'cancel'" options="{'generate_po': True}">
+                <tree string="Purchase Order Lines" create="false" colors="blue:state == 'confirmed';gray:state == 'cancel'">
                     <field name="name"/>
                     <field name="partner_id" string="Supplier" />
                     <field name="product_id"/>
@@ -243,16 +244,9 @@
             <field name="context">{"search_default_groupby_product" : True,}</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree</field>
+            <field name="view_id" ref="purchase_order_line_tree_tender"/>
             <field name="search_view_id" ref="purchase.purchase_order_line_search"/>
     </record>
-    
-    <record id="purchase_line_tree_action" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="purchase_order_line_tree_tender"/>
-            <field name="act_window_id" ref="purchase_line_tree"/>
-    </record>
-
 
     </data>
 </openerp>

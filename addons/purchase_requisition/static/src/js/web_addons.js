@@ -1,22 +1,19 @@
 openerp.purchase_requisition = function(instance) {
-
     var QWeb = instance.web.qweb,
-    _t = instance.web._t;
+        _t = instance.web._t;
 
-    instance.web.ListView.include({
+    instance.web.purchase_requisition = instance.web.purchase_requisition || {};
+
+    instance.web.views.add('tree_purchase_order_line_compare', 'instance.web.purchase_requisition.CompareListView');
+    instance.web.purchase_requisition.CompareListView = instance.web.ListView.extend({
         init: function() {
             var self = this;
             this._super.apply(this, arguments);
             this.on('list_view_loaded', this, function() {
-                if (!!self.fields_view.arch.attrs.options) {
-                    _.extend(self.options, py.eval(self.fields_view.arch.attrs.options));
-                }
-                if (!!self.options.generate_po) {
-                    if(self.__parentedParent.$el.find('.oe_generate_po').length == 0){
-                        var button = $("<button type='button' class='oe_button oe_highlight oe_generate_po'>Generate PO</button>")
-                            .click(this.proxy('generate_purchase_order'));
-                        self.__parentedParent.$el.find('.oe_list_buttons').append(button);
-                    }                   
+                if(self.__parentedParent.$el.find('.oe_generate_po').length == 0){
+                    var button = $("<button type='button' class='oe_button oe_highlight oe_generate_po'>Generate PO</button>")
+                        .click(this.proxy('generate_purchase_order'));
+                    self.__parentedParent.$el.find('.oe_list_buttons').append(button);
                 }
             });
         },
