@@ -122,13 +122,12 @@ class view(osv.osv):
            @return: the rendered definition (arch) of the view, always utf-8 bytestring (legacy convention)
                if no error occurred, else False.  
         """
+        if view.model not in self.pool:
+            return False
         try:
-            fvg = self.pool.get(view.model) and self.pool[view.model].fields_view_get(cr, uid, view_id=view.id, view_type=view.type, context=context)
-            if not fvg:
-                _logger.exception("Your view definition is wrong, model = '%s' defined on view = '%s' doesn't exist " % (view.model,view.name) )
-            return fvg and fvg['arch'] or False
+            fvg = self.pool[view.model].fields_view_get(cr, uid, view_id=view.id, view_type=view.type, context=context)
+            return fvg['arch']
         except:
-            _logger.exception("Can't render view %s for model: %s", view.xml_id, view.model)
             return False
 
     def _check_xml(self, cr, uid, ids, context=None):
@@ -154,8 +153,15 @@ class view(osv.osv):
                     return False
         return True
 
+    def _check_model(self, cr, uid, ids, context=None):
+        for view in self.browse(cr, uid, ids, context):
+            if view.model not in self.pool:
+                return False
+        return True
+
     _constraints = [
-        (_check_xml, 'Invalid XML for View Architecture!', ['arch'])
+        (_check_model, 'The model name does not exist.', ['model']),
+        (_check_xml, 'The model name does not exist or the view architecture cannot be rendered.', ['arch', 'model']),
     ]
 
     def _auto_init(self, cr, context=None):
