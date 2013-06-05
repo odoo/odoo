@@ -358,7 +358,7 @@ class email_template(osv.osv):
         values['attachment_ids'] = attachment_ids
         return values
 
-    def send_mail(self, cr, uid, template_id, res_id, force_send=False, context=None):
+    def send_mail(self, cr, uid, template_id, res_id, force_send=False, raise_exception=False, context=None):
         """Generates a new mail message for the given template and record,
            and schedules it for delivery through the ``mail`` module's scheduler.
 
@@ -382,6 +382,7 @@ class email_template(osv.osv):
         attachment_ids = values.pop('attachment_ids', [])
         attachments = values.pop('attachments', [])
         msg_id = mail_mail.create(cr, uid, values, context=context)
+        mail = mail_mail.browse(cr, uid, msg_id, context=context)
 
         # manage attachments
         for attachment in attachments:
@@ -390,7 +391,7 @@ class email_template(osv.osv):
                     'datas_fname': attachment[0],
                     'datas': attachment[1],
                     'res_model': 'mail.message',
-                    'res_id': msg_id,
+                    'res_id': mail.mail_message_id.id,
             }
             context.pop('default_type', None)
             attachment_ids.append(ir_attachment.create(cr, uid, attachment_data, context=context))
@@ -399,7 +400,7 @@ class email_template(osv.osv):
             mail_mail.write(cr, uid, msg_id, {'attachment_ids': [(6, 0, attachment_ids)]}, context=context)
 
         if force_send:
-            mail_mail.send(cr, uid, [msg_id], context=context)
+            mail_mail.send(cr, uid, [msg_id], raise_exception=raise_exception, context=context)
         return msg_id
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

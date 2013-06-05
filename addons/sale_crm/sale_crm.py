@@ -19,7 +19,10 @@
 #
 ##############################################################################
 
-from datetime import datetime
+from datetime import date
+from dateutil import relativedelta
+
+from openerp import tools
 from openerp.osv import osv, fields
 
 
@@ -31,34 +34,60 @@ class sale_order(osv.osv):
             domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]")
     }
 
+    def _prepare_invoice(self, cr, uid, order, lines, context=None):
+        invoice_vals = super(sale_order, self)._prepare_invoice(cr, uid, order, lines, context=context)
+        if order.section_id and order.section_id.id:
+            invoice_vals['section_id'] = order.section_id.id
+        return invoice_vals
+
 
 class crm_case_section(osv.osv):
     _inherit = 'crm.case.section'
 
-    def _get_sum_month_invoice(self, cr, uid, ids, field_name, arg, context=None):
-        res = dict.fromkeys(ids, 0)
+    def _get_sale_orders_data(self, cr, uid, ids, field_name, arg, context=None):
+        obj = self.pool.get('sale.order')
+        res = dict.fromkeys(ids, False)
+        month_begin = date.today().replace(day=1)
+        groupby_begin = (month_begin + relativedelta.relativedelta(months=-4)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        for id in ids:
+            res[id] = dict()
+            created_domain = [('section_id', '=', id), ('state', 'in', ['draft', 'sent']), ('date_order', '>=', groupby_begin)]
+            res[id]['monthly_quoted'] = self.__get_bar_values(cr, uid, obj, created_domain, ['amount_total', 'date_order'], 'amount_total', 'date_order', context=context)
+            validated_domain = [('section_id', '=', id), ('state', 'not in', ['draft', 'sent']), ('date_confirm', '>=', groupby_begin)]
+            res[id]['monthly_confirmed'] = self.__get_bar_values(cr, uid, obj, validated_domain, ['amount_total', 'date_confirm'], 'amount_total', 'date_confirm', context=context)
+        return res
+
+    def _get_invoices_data(self, cr, uid, ids, field_name, arg, context=None):
         obj = self.pool.get('account.invoice.report')
-        when = datetime.today()
-        for section_id in ids:
-            invoice_ids = obj.search(cr, uid, [("section_id", "=", section_id), ('state', 'not in', ['draft', 'cancel']), ('year', '=', when.year), ('month', '=', when.month > 9 and when.month or "0%s" % when.month)], context=context)
-            for invoice in obj.browse(cr, uid, invoice_ids, context=context):
-                res[section_id] += invoice.price_total
+        res = dict.fromkeys(ids, False)
+        month_begin = date.today().replace(day=1)
+        groupby_begin = (month_begin + relativedelta.relativedelta(months=-4)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        for id in ids:
+            created_domain = [('section_id', '=', id), ('state', 'not in', ['draft', 'cancel']), ('date', '>=', groupby_begin)]
+            res[id] = self.__get_bar_values(cr, uid, obj, created_domain, ['price_total', 'date'], 'price_total', 'date', context=context)
         return res
 
     _columns = {
-        'quotation_ids': fields.one2many('sale.order', 'section_id',
-            string='Quotations', readonly=True,
-            domain=[('state', 'in', ['draft', 'sent', 'cancel'])]),
-        'sale_order_ids': fields.one2many('sale.order', 'section_id',
-            string='Sale Orders', readonly=True,
-            domain=[('state', 'not in', ['draft', 'sent', 'cancel'])]),
-        'invoice_ids': fields.one2many('account.invoice', 'section_id',
-            string='Invoices', readonly=True,
-            domain=[('state', 'not in', ['draft', 'cancel'])]),
-        'sum_month_invoice': fields.function(_get_sum_month_invoice,
-            string='Total invoiced this month',
-            type='integer', readonly=True),
+        'invoiced_forecast': fields.integer(string='Invoice Forecast',
+            help="Forecast of the invoice revenue for the current month. This is the amount the sales \n"
+                    "team should invoice this month. It is used to compute the progression ratio \n"
+                    " of the current and forecast revenue on the kanban view."),
+        'invoiced_target': fields.integer(string='Invoice Target',
+            help="Target of invoice revenue for the current month. This is the amount the sales \n"
+                    "team estimates to be able to invoice this month."),
+        'monthly_quoted': fields.function(_get_sale_orders_data,
+            type='string', readonly=True, multi='_get_sale_orders_data',
+            string='Rate of created quotation per duration'),
+        'monthly_confirmed': fields.function(_get_sale_orders_data,
+            type='string', readonly=True, multi='_get_sale_orders_data',
+            string='Rate of validate sales orders per duration'),
+        'monthly_invoiced': fields.function(_get_invoices_data,
+            type='string', readonly=True,
+            string='Rate of sent invoices per duration'),
     }
+
+    def action_forecast(self, cr, uid, id, value, context=None):
+        return self.write(cr, uid, [id], {'invoiced_forecast': value}, context=context)
 
 
 class res_users(osv.Model):
