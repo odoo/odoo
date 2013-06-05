@@ -191,7 +191,8 @@ Thanks,''') % (name, self.pool.get('ir.config_parameter').get_param(cr, uid, 'we
                                 'action_id': act_id[0],
                                 'survey_id': [[6, 0, survey_ids]]
                                }
-                    user = user_ref.create(cr, uid, res_data)
+                    create_ctx = dict(context, no_reset_password=True)
+                    user = user_ref.create(cr, uid, res_data, context=create_ctx)
                     if user not in new_user:
                         new_user.append(user)
                     created+= "- %s (Login: %s,  Password: %s)\n" % (partner.name or _('Unknown'),\
