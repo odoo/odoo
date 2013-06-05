@@ -471,11 +471,12 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         var autocomplete = this.$el.autocomplete({
             source: this.proxy('complete_global_search'),
             select: this.proxy('select_completion'),
+            search: function () { self.$el.autocomplete('close'); },
             focus: function (e) { e.preventDefault(); },
             html: true,
             autoFocus: true,
             minLength: 1,
-            delay: 0
+            delay: 0,
         }).data('autocomplete');
 
         // MonkeyPatch autocomplete instance
