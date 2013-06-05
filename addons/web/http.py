@@ -366,7 +366,7 @@ class RequestProxy(object):
         return delattr(_thlocal.stack[-1], name)
     @classmethod
     def set_request(cls, request):
-        class with_obj:
+        class with_obj(object):
             def __enter__(self):
                 if getattr(_thlocal, "stack", None) is None:
                     _thlocal.stack = []
