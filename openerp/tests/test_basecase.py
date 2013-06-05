@@ -64,6 +64,24 @@ class test_transaction_case(common.TransactionCase):
         ids = self.registry('res.partner').search(cr, uid, [('name', '=', 'test_per_class_teardown_partner')])
         self.assertEqual(0, len(ids), "Test partner found.")
 
+
+    def test_20a(self):
+        """ Create a partner with a XML ID then resolve xml id with ref() and browse_ref() """
+        cr, uid = self.cr, self.uid
+        res_partner = self.registry('res.partner')
+        ir_model_data = self.registry('ir.model.data')
+        pid, _ = res_partner.name_create(cr, uid, 'Mr Yellow')
+        ir_model_data.create(cr, uid, {'name': 'test_partner_yellow',
+                                       'module': 'base',
+                                       'model': 'res.partner',
+                                       'res_id': pid})
+        xid = 'base.test_partner_yellow'
+        p_ref = self.ref(xid)
+        self.assertEquals(p_ref, pid, "ref() should resolve xid to database ID")
+        partner = res_partner.browse(cr, uid, pid)
+        p_browse_ref = self.browse_ref(xid)
+        self.assertEqual(partner, p_browse_ref, "browse_ref() should resolve xid to browse records")
+
 if __name__ == '__main__':
     unittest2.main()
 

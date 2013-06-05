@@ -10,7 +10,6 @@ import time
 import unittest2
 import xmlrpclib
 
-import openerp
 import common
 
 DB = None
@@ -64,6 +63,14 @@ class test_xmlrpc(common.RpcCase):
         assert ids
         ids = proxy.execute(ADMIN_USER_ID, ADMIN_PASSWORD, 'search', [], {})
         assert ids
+
+    # This test was written to test the creation of a new RPC endpoint, not
+    # really for the EDI itself.
+    #def test_xmlrpc_import_edi_document(self):
+    #    """ Try to call an EDI method. """
+    #    msg_re = 'EDI Document is empty!'
+    #    with self.assertRaisesRegexp(Exception, msg_re):
+    #        self.proxy.edi_60.import_edi_document(DB, ADMIN_USER_ID, ADMIN_PASSWORD, {})
 
     def test_zz_xmlrpc_drop_database(self):
         """

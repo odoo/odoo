@@ -34,7 +34,10 @@ condition/math builtins.
 from opcode import HAVE_ARGUMENT, opmap, opname
 from types import CodeType
 import logging
-import os
+
+from .misc import ustr
+
+import openerp
 
 __all__ = ['test_expr', 'safe_eval', 'const_eval']
 
@@ -107,11 +110,11 @@ def test_expr(expr, allowed_codes, mode="eval"):
             expr = expr.strip()
         code_obj = compile(expr, "", mode)
     except (SyntaxError, TypeError):
-        _logger.debug('Invalid eval expression', exc_info=True)
         raise
-    except Exception:
-        _logger.debug('Disallowed or invalid eval expression', exc_info=True)
-        raise ValueError("%s is not a valid expression" % expr)
+    except Exception, e:
+        import sys
+        exc_info = sys.exc_info()
+        raise ValueError, '"%s" while compiling\n%r' % (ustr(e), expr), exc_info[2]
     for code in _get_opcodes(code_obj):
         if code not in allowed_codes:
             raise ValueError("opcode %s not allowed (%r)" % (opname[code], expr))
@@ -195,7 +198,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
         raise ValueError("safe_eval does not allow direct evaluation of code objects.")
 
     if '__subclasses__' in expr:
-       raise ValueError('expression not allowed (__subclasses__)')
+        raise ValueError('expression not allowed (__subclasses__)')
 
     if globals_dict is None:
         globals_dict = {}
@@ -238,10 +241,22 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
                 'set' : set
             }
     )
+    c = test_expr(expr, _SAFE_OPCODES, mode=mode)
     try:
-        return eval(test_expr(expr, _SAFE_OPCODES, mode=mode), globals_dict, locals_dict)
-    except Exception:
-        _logger.exception('Cannot eval %r', expr)
+        return eval(c, globals_dict, locals_dict)
+    except openerp.osv.orm.except_orm:
         raise
+    except openerp.exceptions.Warning:
+        raise
+    except openerp.exceptions.RedirectWarning:
+        raise
+    except openerp.exceptions.AccessDenied:
+        raise
+    except openerp.exceptions.AccessError:
+        raise
+    except Exception, e:
+        import sys
+        exc_info = sys.exc_info()
+        raise ValueError, '"%s" while evaluating\n%r' % (ustr(e), expr), exc_info[2]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

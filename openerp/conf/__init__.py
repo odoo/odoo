@@ -35,10 +35,6 @@ must be used.
 
 import deprecation
 
-# Maximum number of threads processing concurrently cron jobs.
-max_cron_threads = 4 # Actually the default value here is meaningless,
-                     # look at tools.config for the default value.
-
 # Paths to search for OpenERP addons.
 addons_paths = []
 

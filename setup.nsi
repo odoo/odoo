@@ -160,7 +160,7 @@ LangString DESC_PostgreSQL_Username ${LANG_FRENCH} "Utilisateur"
 LangString DESC_PostgreSQL_Password ${LANG_FRENCH} "Mot de passe"
 
 Section -StopService
-    nsExec::Exec "net stop openerp-server-6.1"
+    nsExec::Exec "net stop openerp-server-7.0"
     sleep 2
 SectionEnd
 
@@ -202,7 +202,7 @@ Section OpenERP_Server SectionOpenERP_Server
 SectionEnd
 
 Section -RestartServer
-    nsExec::Exec "net start openerp-server-6.1"
+    nsExec::Exec "net start openerp-server-7.0"
     sleep 2
 SectionEnd
 
@@ -226,7 +226,7 @@ SectionEnd
 
 Section "Uninstall"
     ; Stop the NT Service
-    nsExec::Exec "net stop openerp-server-6.1"
+    nsExec::Exec "net stop openerp-server-7.0"
     sleep 2
 
     ; Uninstall the OpenERP Service
@@ -291,9 +291,10 @@ Function .onInit
     !insertmacro MUI_LANGDLL_DISPLAY
 
     ClearErrors
-    EnumRegKey $0 HKLM "SOFTWARE\PostgreSQL" 0
+    EnumRegKey $0 HKLM "SOFTWARE\PostgreSQL\Installations" 0
     IfErrors DoInstallPostgreSQL 0
-        StrCpy $HasPostgreSQL 1
+    StrCmp $0 "" DoInstallPostgreSQL
+    StrCpy $HasPostgreSQL 1
 
     DoInstallPostgreSQL:
 FunctionEnd

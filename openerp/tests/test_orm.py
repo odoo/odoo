@@ -1,10 +1,81 @@
-import unittest2
-
-import openerp
+from openerp.tools import mute_logger
 import common
 
 UID = common.ADMIN_USER_ID
 DB = common.DB
+
+
+class TestORM(common.TransactionCase):
+    """ test special behaviors of ORM CRUD functions
+    
+        TODO: use real Exceptions types instead of Exception """
+
+    def setUp(self):
+        super(TestORM, self).setUp()
+        cr, uid = self.cr, self.uid
+        self.partner = self.registry('res.partner')
+        self.users = self.registry('res.users')
+        self.p1 = self.partner.name_create(cr, uid, 'W')[0]
+        self.p2 = self.partner.name_create(cr, uid, 'Y')[0]
+        self.ir_rule = self.registry('ir.rule')
+
+        # sample unprivileged user
+        employee_gid = self.ref('base.group_user')
+        self.uid2 = self.users.create(cr, uid, {'name': 'test user', 'login': 'test', 'groups_id': [4,employee_gid]})
+
+    @mute_logger('openerp.osv.orm')
+    def testAccessDeletedRecords(self):
+        """ Verify that accessing deleted records works as expected """
+        cr, uid, uid2, p1, p2 = self.cr, self.uid, self.uid2, self.p1, self.p2
+        self.partner.unlink(cr, uid, [p1])
+
+        # read() is expected to skip deleted records because our API is not
+        # transactional for a sequence of search()->read() performed from the
+        # client-side... a concurrent deletion could therefore cause spurious
+        # exceptions even when simply opening a list view!
+        # /!\ Using unprileged user to detect former side effects of ir.rules!
+        self.assertEqual([{'id': p2, 'name': 'Y'}], self.partner.read(cr, uid2, [p1,p2], ['name']), "read() should skip deleted records")
+        self.assertEqual([], self.partner.read(cr, uid2, [p1], ['name']), "read() should skip deleted records")
+
+        # Deleting an already deleted record should be simply ignored
+        self.assertTrue(self.partner.unlink(cr, uid, [p1]), "Re-deleting should be a no-op")
+
+        # Updating an already deleted record should raise, even as admin
+        with self.assertRaises(Exception):
+            self.partner.write(cr, uid, [p1], {'name': 'foo'})
+
+    @mute_logger('openerp.osv.orm')
+    def testAccessFilteredRecords(self):
+        """ Verify that accessing filtered records works as expected for non-admin user """
+        cr, uid, uid2, p1, p2 = self.cr, self.uid, self.uid2, self.p1, self.p2
+        partner_model = self.registry('ir.model').search(cr, uid, [('model','=','res.partner')])[0]
+        self.ir_rule.create(cr, uid, {'name': 'Y is invisible',
+                                      'domain_force': [('id', '!=', p1)],
+                                      'model_id': partner_model})
+        # search as unprivileged user
+        partners = self.partner.search(cr, uid2, [])
+        self.assertFalse(p1 in partners, "W should not be visible...")
+        self.assertTrue(p2 in partners, "... but Y should be visible")
+
+        # read as unprivileged user
+        with self.assertRaises(Exception):
+            self.partner.read(cr, uid2, [p1], ['name'])
+        # write as unprivileged user
+        with self.assertRaises(Exception):
+            self.partner.write(cr, uid2, [p1], {'name': 'foo'})
+        # unlink as unprivileged user
+        with self.assertRaises(Exception):
+            self.partner.unlink(cr, uid2, [p1])
+
+        # Prepare mixed case 
+        self.partner.unlink(cr, uid, [p2])
+        # read mixed records: some deleted and some filtered
+        with self.assertRaises(Exception):
+            self.partner.read(cr, uid2, [p1,p2], ['name'])
+        # delete mixed records: some deleted and some filtered
+        with self.assertRaises(Exception):
+            self.partner.unlink(cr, uid2, [p1,p2])
+
 
 class TestInherits(common.TransactionCase):
     """ test the behavior of the orm for models that use _inherits;
@@ -37,6 +108,7 @@ class TestInherits(common.TransactionCase):
         self.assertEqual(foo.name, 'Foo')
         self.assertEqual(foo.partner_id.id, par_id)
 
+    @mute_logger('openerp.osv.orm')
     def test_read(self):
         """ inherited fields should be read without any indirection """
         foo_id = self.user.create(self.cr, UID, {'name': 'Foo', 'login': 'foo', 'password': 'foo'})
@@ -48,6 +120,7 @@ class TestInherits(common.TransactionCase):
         foo = self.user.browse(self.cr, UID, foo_id)
         self.assertEqual(foo.name, foo.partner_id.name)
 
+    @mute_logger('openerp.osv.orm')
     def test_copy(self):
         """ copying a user should automatically copy its partner, too """
         foo_id = self.user.create(self.cr, UID, {'name': 'Foo', 'login': 'foo', 'password': 'foo'})
@@ -62,6 +135,7 @@ class TestInherits(common.TransactionCase):
         self.assertNotEqual(foo.id, bar.id)
         self.assertNotEqual(foo.partner_id.id, bar.partner_id.id)
 
+    @mute_logger('openerp.osv.orm')
     def test_copy_with_ancestor(self):
         """ copying a user with 'parent_id' in defaults should not duplicate the partner """
         foo_id = self.user.create(self.cr, UID, {'name': 'Foo', 'login': 'foo', 'password': 'foo'})
@@ -107,7 +181,7 @@ class TestO2MSerialization(common.TransactionCase):
     def test_no_command(self):
         " empty list of commands yields an empty list of records "
         results = self.partner.resolve_2many_commands(
-            self.cr, UID, 'address', [])
+            self.cr, UID, 'child_ids', [])
 
         self.assertEqual(results, [])
 
@@ -115,7 +189,7 @@ class TestO2MSerialization(common.TransactionCase):
         " returns the VALUES dict as-is "
         values = [{'foo': 'bar'}, {'foo': 'baz'}, {'foo': 'baq'}]
         results = self.partner.resolve_2many_commands(
-            self.cr, UID, 'address', map(CREATE, values))
+            self.cr, UID, 'child_ids', map(CREATE, values))
 
         self.assertEqual(results, values)
 
@@ -129,7 +203,7 @@ class TestO2MSerialization(common.TransactionCase):
         commands = map(LINK_TO, ids)
 
         results = self.partner.resolve_2many_commands(
-            self.cr, UID, 'address', commands, ['name'])
+            self.cr, UID, 'child_ids', commands, ['name'])
 
         self.assertEqual(sorted_by_id(results), sorted_by_id([
             {'id': ids[0], 'name': 'foo'},
@@ -146,7 +220,7 @@ class TestO2MSerialization(common.TransactionCase):
         ]
 
         results = self.partner.resolve_2many_commands(
-            self.cr, UID, 'address', ids, ['name'])
+            self.cr, UID, 'child_ids', ids, ['name'])
 
         self.assertEqual(sorted_by_id(results), sorted_by_id([
             {'id': ids[0], 'name': 'foo'},
@@ -161,7 +235,7 @@ class TestO2MSerialization(common.TransactionCase):
         id_baz = self.partner.create(self.cr, UID, {'name': 'baz', 'city': 'tag'})
 
         results = self.partner.resolve_2many_commands(
-            self.cr, UID, 'address', [
+            self.cr, UID, 'child_ids', [
                 LINK_TO(id_foo),
                 UPDATE(id_bar, {'name': 'qux', 'city': 'tagtag'}),
                 UPDATE(id_baz, {'name': 'quux'})
@@ -183,7 +257,7 @@ class TestO2MSerialization(common.TransactionCase):
         commands = [DELETE(ids[0]), DELETE(ids[1]), DELETE(ids[2])]
 
         results = self.partner.resolve_2many_commands(
-            self.cr, UID, 'address', commands, ['name'])
+            self.cr, UID, 'child_ids', commands, ['name'])
 
         self.assertEqual(results, [])
 
@@ -194,7 +268,7 @@ class TestO2MSerialization(common.TransactionCase):
         ]
 
         results = self.partner.resolve_2many_commands(
-            self.cr, UID, 'address', [
+            self.cr, UID, 'child_ids', [
                 CREATE({'name': 'foo'}),
                 UPDATE(ids[0], {'name': 'bar'}),
                 LINK_TO(ids[1]),
@@ -225,7 +299,7 @@ class TestO2MSerialization(common.TransactionCase):
         commands = map(lambda id: (4, id), ids)
 
         results = self.partner.resolve_2many_commands(
-            self.cr, UID, 'address', commands, ['name'])
+            self.cr, UID, 'child_ids', commands, ['name'])
 
         self.assertEqual(sorted_by_id(results), sorted_by_id([
             {'id': ids[0], 'name': 'foo'},
@@ -236,7 +310,7 @@ class TestO2MSerialization(common.TransactionCase):
     def test_singleton_commands(self):
         "DELETE_ALL can appear as a singleton"
         results = self.partner.resolve_2many_commands(
-            self.cr, UID, 'address', [DELETE_ALL()], ['name'])
+            self.cr, UID, 'child_ids', [DELETE_ALL()], ['name'])
 
         self.assertEqual(results, [])
 

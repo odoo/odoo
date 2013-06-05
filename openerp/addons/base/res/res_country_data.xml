@@ -1186,7 +1186,7 @@
         <record id="us" model="res.country">
             <field name="name">United States</field>
             <field name="code">us</field>
-            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s'" />
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s, %(state_code)s %(zip)s\n%(country_name)s'" />
             <field name="currency_id" ref="USD"/>
         </record>
         <record id="uy" model="res.country">

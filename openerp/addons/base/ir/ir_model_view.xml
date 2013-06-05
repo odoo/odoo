@@ -44,7 +44,7 @@
                                             <field name="selection" attrs="{'required': [('ttype','in',['selection','reference'])], 'readonly': [('ttype','not in',['selection','reference'])]}"/>
                                             <field name="size" attrs="{'required': [('ttype','in',['char','reference'])], 'readonly': [('ttype','not in',['char','reference'])]}"/>
                                             <field name="domain" attrs="{'readonly': [('relation','=','')]}"/>
-                                            <field name="serialization_field_id" attrs="{'readonly': [('state','=','base')]}" domain="[('ttype','=','serialized'), ('model_id', '=', model_id)]"/>
+                                            <field name="serialization_field_id" attrs="{'readonly': [('state','=','base')]}" domain="[('ttype','=','serialized'), ('model_id', '=', parent.model)]"/>
                                         </group>
                                         <group>
                                             <field name="required"/>
@@ -151,7 +151,7 @@
                                                                           'readonly': [('ttype','not in', ['many2one','one2many','many2many'])]}"/>
                             <field name="relation_field" attrs="{'required': [('ttype','=','one2many')], 'readonly': [('ttype','!=','one2many')]}"/>
                             <field name="selection" attrs="{'required': [('ttype','in',['selection','reference'])], 'readonly': [('ttype','not in',['selection','reference'])]}"/>
-                            <field name="size" attrs="{'required': [('ttype','in',['char','reference'])], 'readonly': [('ttype','not in',['char','reference'])]}"/>
+                            <field name="size" attrs="{'invisible': [('ttype','not in',['char','text','reference'])]}"/>
                             <field name="domain" attrs="{'readonly': [('relation','=','')]}"/>
                             <field name="serialization_field_id" attrs="{'readonly': [('state','=','base')]}" domain="[('ttype','=','serialized'), ('model_id', '=', model_id)]"/>
                             <field name="on_delete" attrs="{'readonly': [('ttype','!=','many2one')]}"/>
@@ -246,8 +246,8 @@
                 <tree string="External Identifiers">
                     <field name="complete_name"/>
                     <field name="display_name"/>
-                    <field name="res_id"/>
                     <field name="model" groups="base.group_no_one"/>
+                    <field name="res_id"/>
                 </tree>
             </field>
         </record>
@@ -255,12 +255,10 @@
             <field name="model">ir.model.data</field>
             <field name="arch" type="xml">
                 <search string="External Identifiers">
-                    <field name="name"
-                        filter_domain="['|', '|', ('name','ilike',self), ('model','ilike',self), ('module','ilike',self)]"
-                        string="External Identifier"/>
-                    <filter icon="terp-camera_test"
-                        string="Updatable"
-                        domain="[('noupdate', '=', False)]"/>
+                    <field name="name" filter_domain="[('name','ilike',self)]" string="External Identifier"/>
+                    <filter string="Updatable" domain="[('noupdate', '=', False)]"/>
+                    <field name="module"/>
+                    <field name="model"/>
                     <field name="res_id"/>
                     <field name="noupdate"/>
                     <group expand="0" string="Group By...">

@@ -8,7 +8,7 @@
     'maintainer': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
-    'data': ['view.xml'],
+    'data': ['view.xml', 'ir.model.access.csv'],
     'installable': True,
     'auto_install': False,
 }

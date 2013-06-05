@@ -19,12 +19,13 @@
 #
 ##############################################################################
 
-import tools
 import base64
 import cStringIO
-from osv import fields,osv
-from tools.translate import _
-from tools.misc import get_iso_codes
+
+from openerp import tools
+from openerp.osv import fields,osv
+from openerp.tools.translate import _
+from openerp.tools.misc import get_iso_codes
 
 NEW_LANG_KEY = '__new__'
 
@@ -73,7 +74,15 @@ class base_language_export(osv.osv_memory):
         self.write(cr, uid, ids, {'state': 'get',
                                   'data': out,
                                   'name':this.name}, context=context)
-        return True
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'base.language.export',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'res_id': this.id,
+            'views': [(False, 'form')],
+            'target': 'new',
+        }
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

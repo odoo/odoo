@@ -89,8 +89,10 @@ class TransactionCase(BaseCase):
     """
 
     def setUp(self):
-        self.cr = self.cursor()
-        self.uid = openerp.SUPERUSER_ID
+        # Store cr and uid in class variables, to allow ref() and browse_ref to be BaseCase @classmethods
+        # and still access them
+        TransactionCase.cr = self.cursor()
+        TransactionCase.uid = openerp.SUPERUSER_ID
 
     def tearDown(self):
         self.cr.rollback()
@@ -131,6 +133,7 @@ class RpcCase(unittest2.TestCase):
         self.proxy.common_60 = xmlrpclib.ServerProxy(url_60 + 'common')
         self.proxy.db_60 = xmlrpclib.ServerProxy(url_60 + 'db')
         self.proxy.object_60 = xmlrpclib.ServerProxy(url_60 + 'object')
+        #self.proxy.edi_60 = xmlrpclib.ServerProxy(url_60 + 'edi')
 
         # Use the new (6.1) API.
         self.proxy.url_61 = url_61 = 'http://%s:%d/openerp/xmlrpc/1/' % (HOST, PORT)

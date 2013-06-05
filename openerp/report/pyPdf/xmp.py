@@ -66,7 +66,7 @@ class XmpInformation(PdfObject):
         for desc in self.rdfRoot.getElementsByTagNameNS(RDF_NAMESPACE, "Description"):
             if desc.getAttributeNS(RDF_NAMESPACE, "about") == aboutUri:
                 attr = desc.getAttributeNodeNS(namespace, name)
-                if attr != None:
+                if attr is not None:
                     yield attr
                 for element in desc.getElementsByTagNameNS(namespace, name):
                     yield element
@@ -187,7 +187,7 @@ class XmpInformation(PdfObject):
                 else:
                     value = self._getText(element)
                 break
-            if value != None:
+            if value is not None:
                 value = converter(value)
             ns_cache = self.cache.setdefault(namespace, {})
             ns_cache[name] = value

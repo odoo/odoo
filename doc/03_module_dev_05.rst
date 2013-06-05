@@ -1,3 +1,4 @@
+.. _module-dev-example:
 
 ==========================
 Example of module creation

@@ -20,11 +20,11 @@
 ##############################################################################
 
 from lxml import etree
+import openerp
 import openerp.tools as tools
 from openerp.tools.safe_eval import safe_eval
 import print_fnc
 from openerp.osv.orm import browse_null, browse_record
-import openerp.pooler as pooler
 
 class InheritDict(dict):
     # Might be usefull when we're doing name lookup for call or eval.
@@ -54,7 +54,7 @@ class document(object):
     def __init__(self, cr, uid, datas, func=False):
         # create a new document
         self.cr = cr
-        self.pool = pooler.get_pool(cr.dbname)
+        self.pool = openerp.registry(cr.dbname)
         self.func = func or {}
         self.datas = datas
         self.uid = uid
@@ -134,8 +134,8 @@ class document(object):
 
                     value = self.get_value(browser, attrs['name'])
 
-                    ids = self.pool.get('ir.attachment').search(self.cr, self.uid, [('res_model','=',model),('res_id','=',int(value))])
-                    datas = self.pool.get('ir.attachment').read(self.cr, self.uid, ids)
+                    ids = self.pool['ir.attachment'].search(self.cr, self.uid, [('res_model','=',model),('res_id','=',int(value))])
+                    datas = self.pool['ir.attachment'].read(self.cr, self.uid, ids)
 
                     if len(datas):
                         # if there are several, pick first
@@ -201,7 +201,7 @@ class document(object):
                         args = []
                     # get the object
                     if 'model' in attrs:
-                        obj = self.pool.get(attrs['model'])
+                        obj = self.pool[attrs['model']]
                     else:
                         if isinstance(browser, list):
                             obj = browser[0]._table
@@ -264,7 +264,7 @@ class document(object):
     def parse_tree(self, ids, model, context=None):
         if not context:
             context={}
-        browser = self.pool.get(model).browse(self.cr, self.uid, ids, context)
+        browser = self.pool[model].browse(self.cr, self.uid, ids, context)
         self.parse_node(self.dom, self.doc, browser)
 
     def parse_string(self, xml, ids, model, context=None):

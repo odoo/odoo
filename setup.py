@@ -21,31 +21,43 @@
 ##############################################################################
 
 import glob, os, re, setuptools, sys
-from os.path import join, isfile
+from os.path import join
 
 # List all data files
 def data():
-    files = []
+    r = {}
     for root, dirnames, filenames in os.walk('openerp'):
         for filename in filenames:
-            if not re.match(r'.*(\.pyc|\.pyo|\~)$',filename):
-                files.append(os.path.join(root, filename))
-    d = {}
-    for v in files:
-        k=os.path.dirname(v)
-        if k in d:
-            d[k].append(v)
-        else:
-            d[k]=[v]
-    r = d.items()
+            if not re.match(r'.*(\.pyc|\.pyo|\~)$', filename):
+                r.setdefault(root, []).append(os.path.join(root, filename))
+
     if os.name == 'nt':
-        r.append(("Microsoft.VC90.CRT", glob.glob('C:\Microsoft.VC90.CRT\*.*')))
+        r["Microsoft.VC90.CRT"] = glob.glob('C:\Microsoft.VC90.CRT\*.*')
 
-    import babel
-    r.append(("localedata",
-              glob.glob(os.path.join(os.path.dirname(babel.__file__), "localedata" , '*'))))
+        import babel
+        # Add data, but also some .py files py2exe won't include automatically.
+        # TODO This should probably go under `packages`, instead of `data`,
+        # but this will work fine (especially since we don't use the ZIP file
+        # approach).
+        r["babel/localedata"] = glob.glob(os.path.join(os.path.dirname(babel.__file__), "localedata", '*'))
+        others = ['global.dat', 'numbers.py', 'support.py']
+        r["babel"] = map(lambda f: os.path.join(os.path.dirname(babel.__file__), f), others)
+        others = ['frontend.py', 'mofile.py']
+        r["babel/messages"] = map(lambda f: os.path.join(os.path.dirname(babel.__file__), "messages", f), others)
 
-    return r
+        import pytz
+        tzdir = os.path.dirname(pytz.__file__)
+        for root, _, filenames in os.walk(os.path.join(tzdir, "zoneinfo")):
+            base = os.path.join('pytz', root[len(tzdir) + 1:])
+            r[base] = [os.path.join(root, f) for f in filenames]
+
+        import docutils
+        dudir = os.path.dirname(docutils.__file__)
+        for root, _, filenames in os.walk(dudir):
+            base = os.path.join('docutils', root[len(dudir) + 1:])
+            r[base] = [os.path.join(root, f) for f in filenames if not f.endswith(('.py', '.pyc', '.pyo'))]
+
+    return r.items()
 
 def gen_manifest():
     file_list="\n".join(data())
@@ -62,9 +74,9 @@ def py2exe_options():
             'options' : {
                 "py2exe": {
                     "skip_archive": 1,
-                    "optimize": 2,
+                    "optimize": 0, # keep the assert running, because the integrated tests rely on them.
                     "dist_dir": 'dist',
-                    "packages": [ "DAV", "HTMLParser", "PIL", "asynchat", "asyncore", "commands", "dateutil", "decimal", "email", "encodings", "imaplib", "lxml", "lxml._elementpath", "lxml.builder", "lxml.etree", "lxml.objectify", "mako", "openerp", "poplib", "pychart", "pydot", "pyparsing", "reportlab", "select", "simplejson", "smtplib", "uuid", "vatnumber", "vobject", "xml", "xml.dom", "yaml", ],
+                    "packages": [ "DAV", "HTMLParser", "PIL", "asynchat", "asyncore", "commands", "dateutil", "decimal", "docutils", "email", "encodings", "imaplib", "jinja2", "lxml", "lxml._elementpath", "lxml.builder", "lxml.etree", "lxml.objectify", "mako", "openerp", "poplib", "pychart", "pydot", "pyparsing", "pytz", "reportlab", "select", "simplejson", "smtplib", "uuid", "vatnumber", "vobject", "xml", "xml.dom", "yaml", ],
                     "excludes" : ["Tkconstants","Tkinter","tcl"],
                 }
             }
@@ -108,12 +120,17 @@ setuptools.setup(
           'docutils',
           'feedparser',
           'gdata',
-          'lxml < 3', # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
+          'gevent',
+          'gevent-psycopg2',
+          'Jinja2',
+          'lxml', # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
           'mako',
+          'mock',
           'PIL', # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
           'psutil', # windows binary code.google.com/p/psutil/downloads/list
-          'psycopg2',
+          'psycopg2 >= 2.2',
           'pydot',
+          'pyparsing < 2',
           'python-dateutil < 2',
           'python-ldap', # optional
           'python-openid',
@@ -122,6 +139,7 @@ setuptools.setup(
           'pyyaml',
           'reportlab', # windows binary pypi.python.org/pypi/reportlab
           'simplejson',
+          'unittest2',
           'vatnumber',
           'vobject',
           'werkzeug',

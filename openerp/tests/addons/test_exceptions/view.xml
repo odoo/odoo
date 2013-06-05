@@ -7,9 +7,11 @@
             <field name="model">test.exceptions.model</field>
             <field name="arch" type="xml">
                 <form string="Test exceptions">
-                      <label string="Each button generates a specific exception on the server. The text on the right is the expected representation of the exception when displayed on the client."/>
+                    <label string="Each button generates a specific exception on the server. The text on the right is the expected representation of the exception when displayed on the client. Button marked with a '*' use safe_eval()."/>
+                    <separator string="" colspan="8"/>
+                    <group colspan="8" col="8">
+                    <group colspan="4" col="8">
                       <group colspan="8" col="8">
-                          <separator string="" colspan="8"/>
                           <button name="generate_except_osv" string="except_osv" type="object" icon="gtk-ok" colspan="1"/>
                           <label string="Warning-description"/>
                       </group>
@@ -20,6 +22,10 @@
                       <group colspan="8" col="8">
                           <button name="generate_warning" string="Warning" type="object" icon="gtk-ok" colspan="1"/>
                           <label string="Warning-description"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_redirect_warning" string="RedirectWarning" type="object" icon="gtk-ok" colspan="1"/>
+                          <label string="Warning-description-redirection button"/>
                       </group>
                       <group colspan="8" col="8">
                           <button name="generate_access_denied" string="AccessDenied" type="object" icon="gtk-ok" colspan="1"/>
@@ -37,6 +43,42 @@
                           <button name="generate_undefined" string="Undefined" type="object" icon="gtk-ok" colspan="1"/>
                           <label string="Server error-traceback"/>
                       </group>
+                    </group>
+                    <group colspan="4" col="8">
+                      <group colspan="8" col="8">
+                          <button name="generate_except_osv_safe_eval" string="except_osv*" type="object" icon="gtk-ok" colspan="1"/>
+                          <label string="Warning-description"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_except_orm_safe_eval" string="except_orm*" type="object" icon="gtk-ok" colspan="1"/>
+                          <label string="Warning-description"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_warning_safe_eval" string="Warning*" type="object" icon="gtk-ok" colspan="1"/>
+                          <label string="Warning-description"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_redirect_warning_safe_eval" string="RedirectWarning*" type="object" icon="gtk-ok" colspan="1"/>
+                          <label string="Warning-description-redirection button"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_access_denied_safe_eval" string="AccessDenied*" type="object" icon="gtk-ok" colspan="1"/>
+                          <label string="Access denied-traceback"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_access_error_safe_eval" string="AccessError*" type="object" icon="gtk-ok" colspan="1"/>
+                          <label string="Access rights error-description"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_exc_access_denied_safe_eval" string="Exc AccessDenied*" type="object" icon="gtk-ok" colspan="1"/>
+                          <label string="Access denied-traceback"/>
+                      </group>
+                      <group colspan="8" col="8">
+                          <button name="generate_undefined_safe_eval" string="Undefined*" type="object" icon="gtk-ok" colspan="1"/>
+                          <label string="Server error-traceback"/>
+                      </group>
+                    </group>
+                    </group>
                 </form>
            </field>
         </record>

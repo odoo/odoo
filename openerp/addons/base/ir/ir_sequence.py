@@ -23,6 +23,8 @@ import logging
 import time
 
 import openerp
+from openerp.osv import osv
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -98,6 +100,8 @@ class ir_sequence(openerp.osv.osv.osv):
 
         There is no access rights check.
         """
+        if number_increment == 0:
+             raise osv.except_osv(_('Warning!'),_("Increment number must not be zero."))
         assert isinstance(id, (int, long))
         sql = "CREATE SEQUENCE ir_sequence_%03d INCREMENT BY %%s START WITH %%s" % id
         cr.execute(sql, (number_increment, number_next))
@@ -122,6 +126,8 @@ class ir_sequence(openerp.osv.osv.osv):
 
         There is no access rights check.
         """
+        if number_increment == 0:
+             raise osv.except_osv(_('Warning!'),_("Increment number must not be zero."))
         assert isinstance(id, (int, long))
         cr.execute("""
             ALTER SEQUENCE ir_sequence_%03d INCREMENT BY %%s RESTART WITH %%s
@@ -133,7 +139,7 @@ class ir_sequence(openerp.osv.osv.osv):
         values = self._add_missing_default_values(cr, uid, values, context)
         values['id'] = super(ir_sequence, self).create(cr, uid, values, context)
         if values['implementation'] == 'standard':
-            f = self._create_sequence(cr, values['id'], values['number_increment'], values['number_next'])
+            self._create_sequence(cr, values['id'], values['number_increment'], values['number_next'])
         return values['id']
 
     def unlink(self, cr, uid, ids, context=None):
@@ -211,7 +217,7 @@ class ir_sequence(openerp.osv.osv.osv):
     def next_by_id(self, cr, uid, sequence_id, context=None):
         """ Draw an interpolated string using the specified sequence."""
         self.check_access_rights(cr, uid, 'read')
-        company_ids = self.pool.get('res.company').search(cr, uid, [], order='company_id', context=context) + [False]
+        company_ids = self.pool.get('res.company').search(cr, uid, [], context=context) + [False]
         ids = self.search(cr, uid, ['&',('id','=', sequence_id),('company_id','in',company_ids)])
         return self._next(cr, uid, ids, context)
 
@@ -228,8 +234,8 @@ class ir_sequence(openerp.osv.osv.osv):
                 specific company will get higher priority. 
         """
         self.check_access_rights(cr, uid, 'read')
-        company_ids = self.pool.get('res.company').search(cr, uid, [], order='company_id', context=context) + [False]
-        ids = self.search(cr, uid, ['&',('code','=', sequence_code),('company_id','in',company_ids)])
+        company_ids = self.pool.get('res.company').search(cr, uid, [], context=context) + [False]
+        ids = self.search(cr, uid, ['&', ('code', '=', sequence_code), ('company_id', 'in', company_ids)])
         return self._next(cr, uid, ids, context)
 
     def get_id(self, cr, uid, sequence_code_or_id, code_or_id='id', context=None):

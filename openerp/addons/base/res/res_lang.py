@@ -20,14 +20,14 @@
 ##############################################################################
 
 import locale
+from locale import localeconv
 import logging
 import re
 
-from osv import fields, osv
-from locale import localeconv
-import tools
-from tools.safe_eval import safe_eval as eval
-from tools.translate import _
+from openerp import tools
+from openerp.osv import fields, osv
+from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -168,7 +168,7 @@ class lang(osv.osv):
         thousands_sep = lang_obj.thousands_sep or conv[monetary and 'mon_thousands_sep' or 'thousands_sep']
         decimal_point = lang_obj.decimal_point
         grouping = lang_obj.grouping
-        return (grouping, thousands_sep, decimal_point)
+        return grouping, thousands_sep, decimal_point
 
     def write(self, cr, uid, ids, vals, context=None):
         for lang_id in ids :
@@ -182,11 +182,11 @@ class lang(osv.osv):
         for language in languages:
             ctx_lang = context.get('lang')
             if language['code']=='en_US':
-                raise osv.except_osv(_('User Error'), _("Base Language 'en_US' can not be deleted !"))
+                raise osv.except_osv(_('User Error'), _("Base Language 'en_US' can not be deleted!"))
             if ctx_lang and (language['code']==ctx_lang):
-                raise osv.except_osv(_('User Error'), _("You cannot delete the language which is User's Preferred Language !"))
+                raise osv.except_osv(_('User Error'), _("You cannot delete the language which is User's Preferred Language!"))
             if language['active']:
-                raise osv.except_osv(_('User Error'), _("You cannot delete the language which is Active !\nPlease de-activate the language first."))
+                raise osv.except_osv(_('User Error'), _("You cannot delete the language which is Active!\nPlease de-activate the language first."))
             trans_obj = self.pool.get('ir.translation')
             trans_ids = trans_obj.search(cr, uid, [('lang','=',language['code'])], context=context)
             trans_obj.unlink(cr, uid, trans_ids, context=context)
@@ -227,45 +227,6 @@ class lang(osv.osv):
 #                             r'(?P<modifiers>[-#0-9 +*.hlL]*?)[eEfFgGdiouxXcrs%]')
 
 lang()
-
-def original_group(s, grouping, thousands_sep=''):
-
-    if not grouping:
-        return (s, 0)
-
-    result = ""
-    seps = 0
-    spaces = ""
-
-    if s[-1] == ' ':
-        sp = s.find(' ')
-        spaces = s[sp:]
-        s = s[:sp]
-
-    while s and grouping:
-        # if grouping is -1, we are done
-        if grouping[0] == -1:
-            break
-        # 0: re-use last group ad infinitum
-        elif grouping[0] != 0:
-            #process last group
-            group = grouping[0]
-            grouping = grouping[1:]
-        if result:
-            result = s[-group:] + thousands_sep + result
-            seps += 1
-        else:
-            result = s[-group:]
-        s = s[:-group]
-        if s and s[-1] not in "0123456789":
-            # the leading string is only spaces and signs
-            return s + result + spaces, seps
-    if not result:
-        return s + spaces, seps
-    if s:
-        result = s + thousands_sep + result
-        seps += 1
-    return result + spaces, seps
 
 def split(l, counts):
     """
@@ -316,53 +277,5 @@ def intersperse(string, counts, separator=''):
     splits = split(reverse(rest), counts)
     res = separator.join(map(reverse, reverse(splits)))
     return left + res + right, len(splits) > 0 and len(splits) -1 or 0
-
-# TODO rewrite this with a unit test library
-def _group_examples():
-    for g in [original_group, intersperse]:
-        # print "asserts on", g.func_name
-        assert g("", []) == ("", 0)
-        assert g("0", []) == ("0", 0)
-        assert g("012", []) == ("012", 0)
-        assert g("1", []) == ("1", 0)
-        assert g("12", []) == ("12", 0)
-        assert g("123", []) == ("123", 0)
-        assert g("1234", []) == ("1234", 0)
-        assert g("123456789", []) == ("123456789", 0)
-        assert g("&ab%#@1", []) == ("&ab%#@1", 0)
-
-        assert g("0", []) == ("0", 0)
-        assert g("0", [1]) == ("0", 0)
-        assert g("0", [2]) == ("0", 0)
-        assert g("0", [200]) == ("0", 0)
-
-        # breaks original_group:
-        if g.func_name == 'intersperse':
-            assert g("12345678", [0], '.') == ('12345678', 0)
-            assert g("", [1], '.') == ('', 0)
-        assert g("12345678", [1], '.') == ('1234567.8', 1)
-        assert g("12345678", [1], '.') == ('1234567.8', 1)
-        assert g("12345678", [2], '.') == ('123456.78', 1)
-        assert g("12345678", [2,1], '.') == ('12345.6.78', 2)
-        assert g("12345678", [2,0], '.') == ('12.34.56.78', 3)
-        assert g("12345678", [-1,2], '.') == ('12345678', 0)
-        assert g("12345678", [2,-1], '.') == ('123456.78', 1)
-        assert g("12345678", [2,0,1], '.') == ('12.34.56.78', 3)
-        assert g("12345678", [2,0,0], '.') == ('12.34.56.78', 3)
-        assert g("12345678", [2,0,-1], '.') == ('12.34.56.78', 3)
-        assert g("12345678", [3,3,3,3], '.') == ('12.345.678', 2)
-
-    assert original_group("abc1234567xy", [2], '.') == ('abc1234567.xy', 1)
-    assert original_group("abc1234567xy8", [2], '.') == ('abc1234567xy8', 0) # difference here...
-    assert original_group("abc12", [3], '.') == ('abc12', 0)
-    assert original_group("abc12", [2], '.') == ('abc12', 0)
-    assert original_group("abc12", [1], '.') == ('abc1.2', 1)
-
-    assert intersperse("abc1234567xy", [2], '.') == ('abc1234567.xy', 1)
-    assert intersperse("abc1234567xy8", [2], '.') == ('abc1234567x.y8', 1) # ... w.r.t. here.
-    assert intersperse("abc12", [3], '.') == ('abc12', 0)
-    assert intersperse("abc12", [2], '.') == ('abc12', 0)
-    assert intersperse("abc12", [1], '.') == ('abc1.2', 1)
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

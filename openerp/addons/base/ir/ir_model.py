@@ -25,8 +25,9 @@ import time
 import types
 
 import openerp
+import openerp.modules.registry
 from openerp import SUPERUSER_ID
-from openerp import netsvc, pooler, tools
+from openerp import tools
 from openerp.osv import fields,osv
 from openerp.osv.orm import Model
 from openerp.tools.safe_eval import safe_eval as eval
@@ -50,7 +51,7 @@ def _get_fields_type(self, cr, uid, context=None):
 
 def _in_modules(self, cr, uid, ids, field_name, arg, context=None):
     #pseudo-method used by fields.function in ir.model/ir.model.fields
-    module_pool = self.pool.get("ir.module.module")
+    module_pool = self.pool["ir.module.module"]
     installed_module_ids = module_pool.search(cr, uid, [('state','=','installed')])
     installed_module_names = module_pool.read(cr, uid, installed_module_ids, ['name'], context=context)
     installed_modules = set(x['name'] for x in installed_module_names)
@@ -70,7 +71,10 @@ class ir_model(osv.osv):
         models = self.browse(cr, uid, ids, context=context)
         res = dict.fromkeys(ids)
         for model in models:
-            res[model.id] = self.pool.get(model.model).is_transient()
+            if model.model in self.pool:
+                res[model.id] = self.pool[model.model].is_transient()
+            else:
+                _logger.error('Missing model %s' % (model.model, ))
         return res
 
     def _search_osv_memory(self, cr, uid, model, name, domain, context=None):
@@ -78,7 +82,7 @@ class ir_model(osv.osv):
             return []
         __, operator, value = domain[0]
         if operator not in ['=', '!=']:
-            raise osv.except_osv(_('Invalid search criterions'), _('The osv_memory field can only be compared with = and != operator.'))
+            raise osv.except_osv(_("Invalid Search Criteria"), _('The osv_memory field can only be compared with = and != operator.'))
         value = bool(value) if operator == '=' else not bool(value)
         all_model_ids = self.search(cr, uid, [], context=context)
         is_osv_mem = self._is_osv_memory(cr, uid, all_model_ids, 'osv_memory', arg=None, context=context)
@@ -88,7 +92,7 @@ class ir_model(osv.osv):
         models = self.browse(cr, uid, ids)
         res = {}
         for model in models:
-            res[model.id] = self.pool.get("ir.ui.view").search(cr, uid, [('model', '=', model.model)])
+            res[model.id] = self.pool["ir.ui.view"].search(cr, uid, [('model', '=', model.model)])
         return res
 
     _columns = {
@@ -141,7 +145,7 @@ class ir_model(osv.osv):
 
     def _drop_table(self, cr, uid, ids, context=None):
         for model in self.browse(cr, uid, ids, context):
-            model_pool = self.pool.get(model.model)
+            model_pool = self.pool[model.model]
             cr.execute('select relkind from pg_class where relname=%s', (model_pool._table,))
             result = cr.fetchone()
             if result and result[0] == 'v':
@@ -155,16 +159,19 @@ class ir_model(osv.osv):
         if context is None: context = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
-        if not context.get(MODULE_UNINSTALL_FLAG) and \
-                any(model.state != 'manual' for model in self.browse(cr, user, ids, context)):
-            raise except_orm(_('Error'), _("Model '%s' contains module data and cannot be removed!") % (model.name,))
+        if not context.get(MODULE_UNINSTALL_FLAG):
+            for model in self.browse(cr, user, ids, context):
+                if model.state != 'manual':
+                    raise except_orm(_('Error'), _("Model '%s' contains module data and cannot be removed!") % (model.name,))
 
         self._drop_table(cr, user, ids, context)
         res = super(ir_model, self).unlink(cr, user, ids, context)
         if not context.get(MODULE_UNINSTALL_FLAG):
             # only reload pool for normal unlink. For module uninstall the
             # reload is done independently in openerp.modules.loading
-            pooler.restart_pool(cr.dbname)
+            cr.commit() # must be committed before reloading registry in new cursor
+            openerp.modules.registry.RegistryManager.new(cr.dbname)
+            openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
 
         return res
 
@@ -189,13 +196,13 @@ class ir_model(osv.osv):
                 field_name=vals['name'],
                 field_state='manual',
                 select=vals.get('select_level', '0'))
-            self.pool.get(vals['model'])._auto_init(cr, ctx)
-            #pooler.restart_pool(cr.dbname)
+            self.pool[vals['model']]._auto_init(cr, ctx)
+            openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         return res
 
     def instanciate(self, cr, user, model, context=None):
         class x_custom_model(osv.osv):
-            pass
+            _custom = True
         x_custom_model._name = model
         x_custom_model._module = False
         a = x_custom_model.create_instance(self.pool, cr)
@@ -206,6 +213,7 @@ class ir_model(osv.osv):
         else:
             x_name = a._columns.keys()[0]
         x_custom_model._rec_name = x_name
+        a._rec_name = x_name
 
 class ir_model_fields(osv.osv):
     _name = 'ir.model.fields'
@@ -252,10 +260,9 @@ class ir_model_fields(osv.osv):
         'selection': "",
         'domain': "[]",
         'name': 'x_',
-        'state': lambda self,cr,uid,ctx={}: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
+        'state': lambda self,cr,uid,ctx=None: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
         'on_delete': 'set null',
         'select_level': '0',
-        'size': 64,
         'field_description': '',
         'selectable': 1,
     }
@@ -267,7 +274,7 @@ class ir_model_fields(osv.osv):
         except Exception:
             _logger.warning('Invalid selection list definition for fields.selection', exc_info=True)
             raise except_orm(_('Error'),
-                    _("The Selection Options expression is not a valid Pythonic expression." \
+                    _("The Selection Options expression is not a valid Pythonic expression."
                       "Please provide an expression in the [('key','Label'), ...] format."))
 
         check = True
@@ -285,15 +292,15 @@ class ir_model_fields(osv.osv):
         return True
 
     def _size_gt_zero_msg(self, cr, user, ids, context=None):
-        return _('Size of the field can never be less than 1 !')
+        return _('Size of the field can never be less than 0 !')
 
     _sql_constraints = [
-        ('size_gt_zero', 'CHECK (size>0)',_size_gt_zero_msg ),
+        ('size_gt_zero', 'CHECK (size>=0)',_size_gt_zero_msg ),
     ]
 
     def _drop_column(self, cr, uid, ids, context=None):
         for field in self.browse(cr, uid, ids, context):
-            model = self.pool.get(field.model)
+            model = self.pool[field.model]
             cr.execute('select relkind from pg_class where relname=%s', (model._table,))
             result = cr.fetchone()
             cr.execute("SELECT column_name FROM information_schema.columns WHERE table_name ='%s' and column_name='%s'" %(model._table, field.name))
@@ -314,11 +321,14 @@ class ir_model_fields(osv.osv):
 
         self._drop_column(cr, user, ids, context)
         res = super(ir_model_fields, self).unlink(cr, user, ids, context)
+        if not context.get(MODULE_UNINSTALL_FLAG):
+            cr.commit()
+            openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         return res
 
     def create(self, cr, user, vals, context=None):
         if 'model_id' in vals:
-            model_data = self.pool.get('ir.model').browse(cr, user, vals['model_id'])
+            model_data = self.pool['ir.model'].browse(cr, user, vals['model_id'])
             vals['model'] = model_data.model
         if context is None:
             context = {}
@@ -333,18 +343,19 @@ class ir_model_fields(osv.osv):
             if not vals['name'].startswith('x_'):
                 raise except_orm(_('Error'), _("Custom fields must have a name that starts with 'x_' !"))
 
-            if vals.get('relation',False) and not self.pool.get('ir.model').search(cr, user, [('model','=',vals['relation'])]):
+            if vals.get('relation',False) and not self.pool['ir.model'].search(cr, user, [('model','=',vals['relation'])]):
                 raise except_orm(_('Error'), _("Model %s does not exist!") % vals['relation'])
 
-            if self.pool.get(vals['model']):
-                self.pool.get(vals['model']).__init__(self.pool, cr)
+            if vals['model'] in self.pool:
+                self.pool[vals['model']].__init__(self.pool, cr)
                 #Added context to _auto_init for special treatment to custom field for select_level
                 ctx = dict(context,
                     field_name=vals['name'],
                     field_state='manual',
                     select=vals.get('select_level', '0'),
                     update_custom_fields=True)
-                self.pool.get(vals['model'])._auto_init(cr, ctx)
+                self.pool[vals['model']]._auto_init(cr, ctx)
+                openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
 
         return res
 
@@ -363,7 +374,6 @@ class ir_model_fields(osv.osv):
                     raise except_orm(_('Error!'),  _('Renaming sparse field "%s" is not allowed')%field.name)
 
         column_rename = None # if set, *one* column can be renamed here
-        obj = None
         models_patch = {}    # structs of (obj, [(field, prop, change_to),..])
                              # data to be updated on the orm model
 
@@ -386,8 +396,7 @@ class ir_model_fields(osv.osv):
             checked_selection = False # need only check it once, so defer
 
             for item in self.browse(cr, user, ids, context=context):
-                if not (obj and obj._name == item.model):
-                    obj = self.pool.get(item.model)
+                obj = self.pool.get(item.model)
 
                 if item.state != 'manual':
                     raise except_orm(_('Error!'),
@@ -423,7 +432,7 @@ class ir_model_fields(osv.osv):
 
                 # We don't check the 'state', because it might come from the context
                 # (thus be set for multiple fields) and will be ignored anyway.
-                if obj:
+                if obj is not None:
                     models_patch.setdefault(obj._name, (obj,[]))
                     # find out which properties (per model) we need to update
                     for field_name, field_property, set_fn in model_props:
@@ -461,6 +470,7 @@ class ir_model_fields(osv.osv):
                 for col_name, col_prop, val in patch_struct[1]:
                     setattr(obj._columns[col_name], col_prop, val)
                 obj._auto_init(cr, ctx)
+            openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         return res
 
 class ir_model_constraint(Model):
@@ -493,7 +503,7 @@ class ir_model_constraint(Model):
         Delete PostgreSQL foreign keys and constraints tracked by this model.
         """ 
 
-        if uid != SUPERUSER_ID and not self.pool.get('ir.model.access').check_groups(cr, uid, "base.group_system"):
+        if uid != SUPERUSER_ID and not self.pool['ir.model.access'].check_groups(cr, uid, "base.group_system"):
             raise except_orm(_('Permission Denied'), (_('Administrator access is required to uninstall a module')))
 
         context = dict(context or {})
@@ -503,14 +513,14 @@ class ir_model_constraint(Model):
         ids.reverse()
         for data in self.browse(cr, uid, ids, context):
             model = data.model.model
-            model_obj = self.pool.get(model)
+            model_obj = self.pool[model]
             name = openerp.tools.ustr(data.name)
             typ = data.type
 
             # double-check we are really going to delete all the owners of this schema element
             cr.execute("""SELECT id from ir_model_constraint where name=%s""", (data.name,))
             external_ids = [x[0] for x in cr.fetchall()]
-            if (set(external_ids)-ids_set):
+            if set(external_ids)-ids_set:
                 # as installed modules have defined this element we must not delete it!
                 continue
 
@@ -554,7 +564,7 @@ class ir_model_relation(Model):
         Delete PostgreSQL many2many relations tracked by this model.
         """ 
 
-        if uid != SUPERUSER_ID and not self.pool.get('ir.model.access').check_groups(cr, uid, "base.group_system"):
+        if uid != SUPERUSER_ID and not self.pool['ir.model.access'].check_groups(cr, uid, "base.group_system"):
             raise except_orm(_('Permission Denied'), (_('Administrator access is required to uninstall a module')))
 
         ids_set = set(ids)
@@ -563,13 +573,12 @@ class ir_model_relation(Model):
         ids.reverse()
         for data in self.browse(cr, uid, ids, context):
             model = data.model
-            model_obj = self.pool.get(model)
             name = openerp.tools.ustr(data.name)
 
             # double-check we are really going to delete all the owners of this schema element
             cr.execute("""SELECT id from ir_model_relation where name = %s""", (data.name,))
             external_ids = [x[0] for x in cr.fetchall()]
-            if (set(external_ids)-ids_set):
+            if set(external_ids)-ids_set:
                 # as installed modules have defined this element we must not delete it!
                 continue
 
@@ -581,7 +590,7 @@ class ir_model_relation(Model):
 
         # drop m2m relation tables
         for table in to_drop_table:
-            cr.execute('DROP TABLE %s CASCADE'% (table),)
+            cr.execute('DROP TABLE %s CASCADE'% table,)
             _logger.info('Dropped table %s', table)
 
         cr.commit()
@@ -679,9 +688,9 @@ class ir_model_access(osv.osv):
             model_name = model
 
         # TransientModel records have no access rights, only an implicit access rule
-        if not self.pool.get(model_name):
+        if model_name not in self.pool:
             _logger.error('Missing model %s' % (model_name, ))
-        elif self.pool.get(model_name).is_transient():
+        elif self.pool[model_name].is_transient():
             return True
 
         # We check if a specific rule exists
@@ -743,9 +752,8 @@ class ir_model_access(osv.osv):
     def call_cache_clearing_methods(self, cr):
         self.check.clear_cache(self)    # clear the cache of check function
         for model, method in self.__cache_clearing_methods:
-            object_ = self.pool.get(model)
-            if object_:
-                getattr(object_, method)()
+            if model in self.pool:
+                getattr(self.pool[model], method)()
 
     #
     # Check rights on actions
@@ -789,7 +797,7 @@ class ir_model_data(osv.osv):
 
         for model in result:
             try:
-                r = dict(self.pool.get(model).name_get(cr, uid, result[model].keys(), context=context))
+                r = dict(self.pool[model].name_get(cr, uid, result[model].keys(), context=context))
                 for key,val in result[model].items():
                     result2[val] = r.get(key, False)
             except:
@@ -855,15 +863,28 @@ class ir_model_data(osv.osv):
     def get_object_reference(self, cr, uid, module, xml_id):
         """Returns (model, res_id) corresponding to a given module and xml_id (cached) or raise ValueError if not found"""
         data_id = self._get_id(cr, uid, module, xml_id)
+        #assuming data_id is not False, as it was checked upstream
         res = self.read(cr, uid, data_id, ['model', 'res_id'])
         if not res['res_id']:
             raise ValueError('No such external ID currently defined in the system: %s.%s' % (module, xml_id))
-        return (res['model'], res['res_id'])
+        return res['model'], res['res_id']
+
+    def check_object_reference(self, cr, uid, module, xml_id, raise_on_access_error=False):
+        """Returns (model, res_id) corresponding to a given module and xml_id (cached), if and only if the user has the necessary access rights
+        to see that object, otherwise raise a ValueError if raise_on_access_error is True or returns a tuple (model found, False)"""
+        model, res_id = self.get_object_reference(cr, uid, module, xml_id)
+        #search on id found in result to check if current user has read access right
+        check_right = self.pool.get(model).search(cr, uid, [('id', '=', res_id)])
+        if check_right:
+            return model, res_id
+        if raise_on_access_error:
+            raise ValueError('Not enough access rights on the external ID: %s.%s' % (module, xml_id))
+        return model, False
 
     def get_object(self, cr, uid, module, xml_id, context=None):
         """Returns a browsable record for the given module name and xml_id or raise ValueError if not found"""
         res_model, res_id = self.get_object_reference(cr, uid, module, xml_id)
-        result = self.pool.get(res_model).browse(cr, uid, res_id, context=context)
+        result = self.pool[res_model].browse(cr, uid, res_id, context=context)
         if not result.exists():
             raise ValueError('No record found for unique ID %s.%s. It may have been deleted.' % (module, xml_id))
         return result
@@ -893,13 +914,13 @@ class ir_model_data(osv.osv):
         return super(ir_model_data,self).unlink(cr, uid, ids, context=context)
 
     def _update(self,cr, uid, model, module, values, xml_id=False, store=True, noupdate=False, mode='init', res_id=False, context=None):
-        model_obj = self.pool.get(model)
+        model_obj = self.pool[model]
         if not context:
             context = {}
         # records created during module install should not display the messages of OpenChatter
         context = dict(context, install_mode=True)
         if xml_id and ('.' in xml_id):
-            assert len(xml_id.split('.'))==2, _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % (xml_id)
+            assert len(xml_id.split('.'))==2, _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % xml_id
             module, xml_id = xml_id.split('.')
         if (not xml_id) and (not self.doinit):
             return False
@@ -929,13 +950,6 @@ class ir_model_data(osv.osv):
         elif res_id:
             model_obj.write(cr, uid, [res_id], values, context=context)
             if xml_id:
-                self.create(cr, uid, {
-                    'name': xml_id,
-                    'model': model,
-                    'module':module,
-                    'res_id':res_id,
-                    'noupdate': noupdate,
-                    },context=context)
                 if model_obj._inherits:
                     for table in model_obj._inherits:
                         inherit_id = model_obj.browse(cr, uid,
@@ -947,17 +961,17 @@ class ir_model_data(osv.osv):
                             'res_id': inherit_id.id,
                             'noupdate': noupdate,
                             },context=context)
+                self.create(cr, uid, {
+                    'name': xml_id,
+                    'model': model,
+                    'module':module,
+                    'res_id':res_id,
+                    'noupdate': noupdate,
+                    },context=context)
         else:
             if mode=='init' or (mode=='update' and xml_id):
                 res_id = model_obj.create(cr, uid, values, context=context)
                 if xml_id:
-                    self.create(cr, uid, {
-                        'name': xml_id,
-                        'model': model,
-                        'module': module,
-                        'res_id': res_id,
-                        'noupdate': noupdate
-                        },context=context)
                     if model_obj._inherits:
                         for table in model_obj._inherits:
                             inherit_id = model_obj.browse(cr, uid,
@@ -969,6 +983,13 @@ class ir_model_data(osv.osv):
                                 'res_id': inherit_id.id,
                                 'noupdate': noupdate,
                                 },context=context)
+                    self.create(cr, uid, {
+                        'name': xml_id,
+                        'model': model,
+                        'module': module,
+                        'res_id': res_id,
+                        'noupdate': noupdate
+                        },context=context)
         if xml_id and res_id:
             self.loads[(module, xml_id)] = (model, res_id)
             for table, inherit_field in model_obj._inherits.iteritems():
@@ -997,7 +1018,7 @@ class ir_model_data(osv.osv):
         cr.execute('select * from ir_values where model=%s and key=%s and name=%s'+where,(model, key, name))
         res = cr.fetchone()
         if not res:
-            ir_values_obj = pooler.get_pool(cr.dbname).get('ir.values')
+            ir_values_obj = openerp.registry(cr.dbname)['ir.values']
             ir_values_obj.set(cr, uid, key, key2, name, models, value, replace, isobject, meta)
         elif xml_id:
             cr.execute('UPDATE ir_values set value=%s WHERE model=%s and key=%s and name=%s'+where,(value, model, key, name))
@@ -1016,7 +1037,7 @@ class ir_model_data(osv.osv):
 
         ids = self.search(cr, uid, [('module', 'in', modules_to_remove)])
 
-        if uid != 1 and not self.pool.get('ir.model.access').check_groups(cr, uid, "base.group_system"):
+        if uid != 1 and not self.pool['ir.model.access'].check_groups(cr, uid, "base.group_system"):
             raise except_orm(_('Permission Denied'), (_('Administrator access is required to uninstall a module')))
 
         context = dict(context or {})
@@ -1043,10 +1064,9 @@ class ir_model_data(osv.osv):
                 wkf_todo.extend(cr.fetchall())
                 cr.execute("update wkf_transition set condition='True', group_id=NULL, signal=NULL,act_to=act_from,act_from=%s where act_to=%s", (res_id,res_id))
 
-        wf_service = netsvc.LocalService("workflow")
         for model,res_id in wkf_todo:
             try:
-                wf_service.trg_write(uid, model, res_id, cr)
+                openerp.workflow.trg_write(uid, model, res_id, cr)
             except Exception:
                 _logger.info('Unable to force processing of workflow for item %s@%s in order to leave activity to be deleted', res_id, model, exc_info=True)
 
@@ -1056,11 +1076,23 @@ class ir_model_data(osv.osv):
                 if set(external_ids)-ids_set:
                     # if other modules have defined this record, we must not delete it
                     continue
+                if model == 'ir.model.fields':
+                    # Don't remove the LOG_ACCESS_COLUMNS unless _log_access
+                    # has been turned off on the model.
+                    field = self.pool[model].browse(cr, uid, [res_id], context=context)[0]
+                    if field.name in openerp.osv.orm.LOG_ACCESS_COLUMNS and self.pool[field.model]._log_access:
+                        continue
+                    if field.name == 'id':
+                        continue
                 _logger.info('Deleting %s@%s', res_id, model)
                 try:
-                    self.pool.get(model).unlink(cr, uid, [res_id], context=context)
+                    cr.execute('SAVEPOINT record_unlink_save')
+                    self.pool[model].unlink(cr, uid, [res_id], context=context)
                 except Exception:
                     _logger.info('Unable to delete %s@%s', res_id, model, exc_info=True)
+                    cr.execute('ROLLBACK TO SAVEPOINT record_unlink_save')
+                else:
+                    cr.execute('RELEASE SAVEPOINT record_unlink_save')
 
         # Remove non-model records first, then model fields, and finish with models
         unlink_if_refcount((model, res_id) for model, res_id in to_unlink
@@ -1068,9 +1100,8 @@ class ir_model_data(osv.osv):
         unlink_if_refcount((model, res_id) for model, res_id in to_unlink
                                 if model == 'ir.model.fields')
 
-        ir_model_relation = self.pool.get('ir.model.relation')
-        relation_ids = ir_model_relation.search(cr, uid, [('module', 'in', modules_to_remove)])
-        ir_module_module = self.pool.get('ir.module.module')
+        ir_model_relation = self.pool['ir.model.relation']
+        ir_module_module = self.pool['ir.module.module']
         modules_to_remove_ids = ir_module_module.search(cr, uid, [('name', 'in', modules_to_remove)])
         relation_ids = ir_model_relation.search(cr, uid, [('module', 'in', modules_to_remove_ids)])
         ir_model_relation._module_data_uninstall(cr, uid, relation_ids, context)
@@ -1101,8 +1132,8 @@ class ir_model_data(osv.osv):
                 to_unlink.append((model,res_id))
         if not config.get('import_partial'):
             for (model, res_id) in to_unlink:
-                if self.pool.get(model):
+                if model in self.pool:
                     _logger.info('Deleting %s@%s', res_id, model)
-                    self.pool.get(model).unlink(cr, uid, [res_id])
+                    self.pool[model].unlink(cr, uid, [res_id])
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

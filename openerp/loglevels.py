@@ -20,79 +20,13 @@
 ##############################################################################
 
 import sys
-import logging
 
 LOG_NOTSET = 'notset'
 LOG_DEBUG = 'debug'
-LOG_TEST = 'test'
 LOG_INFO = 'info'
 LOG_WARNING = 'warn'
 LOG_ERROR = 'error'
 LOG_CRITICAL = 'critical'
-
-logging.TEST = logging.INFO - 5
-logging.addLevelName(logging.TEST, 'TEST')
-
-_logger = logging.getLogger(__name__)
-
-class Logger(object):
-    def __init__(self):
-        _logger.warning(
-            "The netsvc.Logger API shouldn't be used anymore, please "
-            "use the standard `logging.getLogger` API instead.")
-        super(Logger, self).__init__()
-
-    def notifyChannel(self, name, level, msg):
-        _logger.warning(
-            "notifyChannel API shouldn't be used anymore, please use "
-            "the standard `logging` module instead.")
-        from service.web_services import common
-
-        log = logging.getLogger(__name__ + '.deprecated.' + ustr(name))
-
-        if level in [LOG_TEST] and not hasattr(log, level):
-            fct = lambda msg, *args, **kwargs: log.log(getattr(logging, level.upper()), msg, *args, **kwargs)
-            setattr(log, level, fct)
-
-
-        level_method = getattr(log, level)
-
-        if isinstance(msg, Exception):
-            msg = exception_to_unicode(msg)
-
-        try:
-            msg = ustr(msg).strip()
-            if level in (LOG_ERROR, LOG_CRITICAL): # and tools.config.get_misc('debug','env_info',False):
-                msg = common().exp_get_server_environment() + "\n" + msg
-
-            result = msg.split('\n')
-        except UnicodeDecodeError:
-            result = msg.strip().split('\n')
-        try:
-            if len(result)>1:
-                for idx, s in enumerate(result):
-                    level_method('[%02d]: %s' % (idx+1, s,))
-            elif result:
-                level_method(result[0])
-        except IOError:
-            # TODO: perhaps reset the logger streams?
-            #if logrotate closes our files, we end up here..
-            pass
-        except Exception:
-            # better ignore the exception and carry on..
-            pass
-
-    def set_loglevel(self, level, logger=None):
-        if logger is not None:
-            log = logging.getLogger(str(logger))
-        else:
-            log = logging.getLogger()
-        log.setLevel(logging.INFO) # make sure next msg is printed
-        log.info("Log level changed to %s" % logging.getLevelName(level))
-        log.setLevel(level)
-
-    def shutdown(self):
-        logging.shutdown()
 
 # TODO get_encodings, ustr and exception_to_unicode were originally from tools.misc.
 # There are here until we refactor tools so that this module doesn't depends on tools.
@@ -110,7 +44,7 @@ def get_encodings(hint_encoding='utf-8'):
 
     # some defaults (also taking care of pure ASCII)
     for charset in ['utf8','latin1']:
-        if not (hint_encoding) or (charset.lower() != hint_encoding.lower()):
+        if not hint_encoding or (charset.lower() != hint_encoding.lower()):
             yield charset
 
     from locale import getpreferredencoding
@@ -129,14 +63,15 @@ def ustr(value, hint_encoding='utf-8', errors='strict'):
     :param: value: the value to convert
     :param: hint_encoding: an optional encoding that was detecte
         upstream and should be tried first to decode ``value``.
-    :param str error: optional `errors` flag to pass to the unicode
+    :param str errors: optional `errors` flag to pass to the unicode
         built-in to indicate how illegal character values should be
-        treated when converting a string: 'strict', 'ignore' or 'replace'.
+        treated when converting a string: 'strict', 'ignore' or 'replace'
+        (see ``unicode()`` constructor).
         Passing anything other than 'strict' means that the first
         encoding tried will be used, even if it's not the correct
-        one to use, so be careful! Ignore if value is not a string/unicode.
-    :rtype: unicode
+        one to use, so be careful! Ignored if value is not a string/unicode.
     :raise: UnicodeError if value cannot be coerced to unicode
+    :return: unicode string representing the given value
     """
     if isinstance(value, Exception):
         return exception_to_unicode(value)

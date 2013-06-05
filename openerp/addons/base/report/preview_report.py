@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from report import report_sxw
+from openerp.report import report_sxw
 
 class rmlparser(report_sxw.rml_parse):
     def set_context(self, objects, data, ids, report_type = None):

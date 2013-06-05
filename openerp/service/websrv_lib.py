@@ -24,7 +24,6 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 
-#.apidoc title: HTTP Layer library (websrv_lib)
 
 """ Framework for generic http servers
 
@@ -226,9 +225,9 @@ class HttpOptions:
         
         Sometimes, like in special DAV folders, the OPTIONS may contain
         extra keywords, perhaps also dependant on the request url. 
-        @param the options already. MUST be copied before being altered
-        @return the updated options.
-        
+        :param opts: MUST be copied before being altered
+        :returns: the updated options.
+
         """
         return opts
 

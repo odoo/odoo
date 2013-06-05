@@ -76,9 +76,9 @@ This phase also generates the ``rows`` indexes for any
 Conversion
 ++++++++++
 
-This second phase takes the record dicts, extracts the :ref:`dbid` and
-:ref:`xid` if present and attempts to convert each field to a type
-matching what OpenERP expects to write.
+This second phase takes the record dicts, extracts the :term:`database
+ID` and :term:`external ID` if present and attempts to convert each
+field to a type matching what OpenERP expects to write.
 
 * Empty fields (empty strings) are replaced with the ``False`` value
 
@@ -141,14 +141,14 @@ If ``name_search`` finds no value, an error is generated. If
 ``name_search`` finds multiple value, a warning is generated to warn
 the user of ``name_search`` collisions.
 
-If the specified field is a :ref:`xid` (``m2o/id``), the
+If the specified field is a :term:`external ID` (``m2o/id``), the
 corresponding record it looked up in the database and used as the
 field's value. If no record is found matching the provided external
 ID, an error is generated.
 
-If the specified field is a :ref:`dbid` (``m2o/.id``), the process is
-the same as for external ids (on database identifiers instead of
-external ones).
+If the specified field is a :term:`database ID` (``m2o/.id``), the
+process is the same as for external ids (on database identifiers
+instead of external ones).
 
 Many to Many field
 ~~~~~~~~~~~~~~~~~~
@@ -161,11 +161,11 @@ One to Many field
 ~~~~~~~~~~~~~~~~~
 
 For each o2m record extracted, if the record has a ``name``,
-:ref:`xid` or :ref:`dbid` the :ref:`dbid` is looked up and checked
-through the same process as for m2o fields.
+:term:`external ID` or :term:`database ID` the :term:`database ID` is
+looked up and checked through the same process as for m2o fields.
 
-If a :ref:`dbid` was found, a LINK_TO command is emmitted, followed by
-an UPDATE with the non-db values for the relational field.
+If a :term:`database ID` was found, a LINK_TO command is emmitted,
+followed by an UPDATE with the non-db values for the relational field.
 
 Otherwise a CREATE command is emmitted.
 

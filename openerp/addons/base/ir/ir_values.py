@@ -18,11 +18,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-from osv import osv,fields
-from osv.orm import except_orm
 import pickle
-from tools.translate import _
+
+from openerp.osv import osv, fields
+from openerp.osv.orm import except_orm
 
 EXCLUDED_FIELDS = set((
     'report_sxw_content', 'report_rml_content', 'report_sxw', 'report_rml',
@@ -307,10 +306,10 @@ class ir_values(osv.osv):
                    ORDER BY v.user_id, u.company_id"""
         params = ('default', model, uid, uid)
         if condition:
-            query = query % 'AND v.key2 = %s'
+            query %= 'AND v.key2 = %s'
             params += (condition[:200],)
         else:
-            query = query % 'AND v.key2 is NULL'
+            query %= 'AND v.key2 is NULL'
         cr.execute(query, params)
 
         # keep only the highest priority default for each field
@@ -398,11 +397,11 @@ class ir_values(osv.osv):
             action_model,id = action['value'].split(',')
             fields = [
                     field
-                    for field in self.pool.get(action_model)._all_columns
+                    for field in self.pool[action_model]._all_columns
                     if field not in EXCLUDED_FIELDS]
             # FIXME: needs cleanup
             try:
-                action_def = self.pool.get(action_model).read(cr, uid, int(id), fields, context)
+                action_def = self.pool[action_model].read(cr, uid, int(id), fields, context)
                 if action_def:
                     if action_model in ('ir.actions.report.xml','ir.actions.act_window',
                                         'ir.actions.wizard'):
@@ -412,12 +411,12 @@ class ir_values(osv.osv):
                                        (tuple(groups), uid))
                             if not cr.fetchone():
                                 if action['name'] == 'Menuitem':
-                                    raise osv.except_osv('Error !',
-                                                         'You do not have the permission to perform this operation !!!')
+                                    raise osv.except_osv('Error!',
+                                                         'You do not have the permission to perform this operation!!!')
                                 continue
                 # keep only the first action registered for each action name
                 results[action['name']] = (action['id'], action['name'], action_def)
-            except except_orm, e:
+            except except_orm:
                 continue
         return sorted(results.values())
 

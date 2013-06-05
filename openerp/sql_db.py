@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2013 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,18 +20,13 @@
 #
 ##############################################################################
 
-#.apidoc title: PostgreSQL interface
 
 """
 The PostgreSQL connector is a connectivity layer between the OpenERP code and
 the database, *not* a database abstraction toolkit. Database abstraction is what
 the ORM does, in fact.
-
-See also: the `pooler` module
 """
 
-#.apidoc add-functions: print_stats
-#.apidoc add-classes: Cursor Connection ConnectionPool
 
 __all__ = ['db_connect', 'close_db']
 
@@ -41,7 +36,6 @@ import psycopg2.extensions
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ_COMMITTED, ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.pool import PoolError
 from psycopg2.psycopg1 import cursor as psycopg1cursor
-from threading import currentThread
 
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 
@@ -74,8 +68,8 @@ import threading
 from inspect import currentframe
 
 import re
-re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$');
-re_into = re.compile('.* into "?([a-zA-Z_0-9]+)"? .*$');
+re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$')
+re_into = re.compile('.* into "?([a-zA-Z_0-9]+)"? .*$')
 
 sql_counter = 0
 
@@ -226,11 +220,11 @@ class Cursor(object):
             params = params or None
             res = self._obj.execute(query, params)
         except psycopg2.ProgrammingError, pe:
-            if (self._default_log_exceptions if log_exceptions is None else log_exceptions):
+            if self._default_log_exceptions if log_exceptions is None else log_exceptions:
                 _logger.error("Programming error: %s, in query %s", pe, query)
             raise
         except Exception:
-            if (self._default_log_exceptions if log_exceptions is None else log_exceptions):
+            if self._default_log_exceptions if log_exceptions is None else log_exceptions:
                 _logger.exception("bad query: %s", self._obj.query or query)
             raise
 
@@ -357,11 +351,6 @@ class Cursor(object):
     def __getattr__(self, name):
         return getattr(self._obj, name)
 
-        """ Set the mode of postgres operations for all cursors
-        """
-        """Obtain the mode of postgres operations for all cursors
-        """
-
 class PsycoConnection(psycopg2.extensions.connection):
     pass
 
@@ -403,7 +392,7 @@ class ConnectionPool(object):
     def borrow(self, dsn):
         self._debug('Borrow connection to %r', dsn)
 
-        # free leaked connections
+        # free dead and leaked connections
         for i, (cnx, _) in tools.reverse_enumerate(self._connections):
             if cnx.closed:
                 self._connections.pop(i)
@@ -417,6 +406,14 @@ class ConnectionPool(object):
 
         for i, (cnx, used) in enumerate(self._connections):
             if not used and dsn_are_equals(cnx.dsn, dsn):
+                try:
+                    cnx.reset()
+                except psycopg2.OperationalError:
+                    self._debug('Cannot reset connection at index %d: %r', i, cnx.dsn)
+                    # psycopg2 2.4.4 and earlier do not allow closing a closed connection
+                    if not cnx.closed:
+                        cnx.close()
+                    continue
                 self._connections.pop(i)
                 self._connections.append((cnx, True))
                 self._debug('Existing connection found at index %d', i)
@@ -517,17 +514,13 @@ def db_connect(db_name):
     global _Pool
     if _Pool is None:
         _Pool = ConnectionPool(int(tools.config['db_maxconn']))
-    currentThread().dbname = db_name
     return Connection(_Pool, db_name)
 
 def close_db(db_name):
-    global _Pool
     """ You might want to call openerp.modules.registry.RegistryManager.delete(db_name) along this function."""
+    global _Pool
     if _Pool:
         _Pool.close_all(dsn(db_name))
-    ct = currentThread()
-    if hasattr(ct, 'dbname'):
-        delattr(ct, 'dbname')
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

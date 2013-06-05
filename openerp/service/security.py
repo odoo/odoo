@@ -19,26 +19,20 @@
 #
 ##############################################################################
 
-import openerp.exceptions
-import openerp.pooler as pooler
-import openerp.tools as tools
-
-#.apidoc title: Authentication helpers
+import openerp
 
 def login(db, login, password):
-    pool = pooler.get_pool(db)
-    user_obj = pool.get('res.users')
-    return user_obj.login(db, login, password)
+    res_users = openerp.registry(db)['res.users']
+    return res_users.login(db, login, password)
 
 def check_super(passwd):
-    if passwd == tools.config['admin_passwd']:
+    if passwd == openerp.tools.config['admin_passwd']:
         return True
     else:
         raise openerp.exceptions.AccessDenied()
 
 def check(db, uid, passwd):
-    pool = pooler.get_pool(db)
-    user_obj = pool.get('res.users')
-    return user_obj.check(db, uid, passwd)
+    res_users = openerp.registry(db)['res.users']
+    return res_users.check(db, uid, passwd)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -21,7 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp import netsvc
+import openerp.workflow
 
 class workflow(osv.osv):
     _name = "workflow"
@@ -40,8 +40,7 @@ class workflow(osv.osv):
     def write(self, cr, user, ids, vals, context=None):
         if not context:
             context={}
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.clear_cache(cr, user)
+        openerp.workflow.clear_cache(cr, user)
         return super(workflow, self).write(cr, user, ids, vals, context=context)
 
     def get_active_workitems(self, cr, uid, res, res_id, context=None):
@@ -62,8 +61,7 @@ class workflow(osv.osv):
     def create(self, cr, user, vals, context=None):
         if not context:
             context={}
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.clear_cache(cr, user)
+        openerp.workflow.clear_cache(cr, user)
         return super(workflow, self).create(cr, user, vals, context=context)
 
 workflow()
@@ -96,7 +94,7 @@ class wkf_activity(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         if context is None: context = {}
         if not context.get('_force_unlink') and self.pool.get('workflow.workitem').search(cr, uid, [('act_id', 'in', ids)]):
-            raise osv.except_osv(_('Operation forbidden'),
+            raise osv.except_osv(_('Operation Forbidden'),
                                  _('Please make sure no workitems refer to an activity before deleting it!'))
         super(wkf_activity, self).unlink(cr, uid, ids, context=context)
 

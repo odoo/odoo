@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
+import openerp
 from openerp.report.interface import report_int
-import openerp.pooler as pooler
 import openerp.tools as tools
 
 from openerp.report import render
@@ -28,7 +28,6 @@ from lxml import etree
 
 import time, os
 
-#.apidoc title: Printscreen for Form Views
 
 class report_printscreen_list(report_int):
     def __init__(self, name):
@@ -56,8 +55,8 @@ class report_printscreen_list(report_int):
         if not context:
             context={}
         datas['ids'] = ids
-        pool = pooler.get_pool(cr.dbname)
-        model = pool.get(datas['model'])
+        registry = openerp.registry(cr.dbname)
+        model = registry[datas['model']]
         # title come from description of model which are specified in py file.
         self.title = model._description
         result = model.fields_view_get(cr, uid, view_type='form', context=context)
@@ -65,7 +64,7 @@ class report_printscreen_list(report_int):
         fields_order = self._parse_string(result['arch'])
         rows = model.read(cr, uid, datas['ids'], result['fields'].keys() )
         self._create_table(uid, datas['ids'], result['fields'], fields_order, rows, context, model._description)
-        return (self.obj.get(), 'pdf')
+        return self.obj.get(), 'pdf'
 
 
     def _create_table(self, uid, ids, fields, fields_order, results, context, title=''):
@@ -119,7 +118,7 @@ class report_printscreen_list(report_int):
                     precision=(('digits' in fields[f]) and fields[f]['digits'][1]) or 2
                     line[f]=round(line[f],precision)
                 col = etree.SubElement(node_line, 'col', tree='no')
-                if line[f] != None:
+                if line[f] is not None:
                     col.text = tools.ustr(line[f] or '')
                 else:
                     col.text = '/'

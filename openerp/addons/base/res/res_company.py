@@ -19,14 +19,14 @@
 #
 ##############################################################################
 
-from osv import osv
-from osv import fields
 import os
-import tools
+
 import openerp
-from openerp import SUPERUSER_ID
-from tools.translate import _
-from tools.safe_eval import safe_eval as eval
+from openerp import SUPERUSER_ID, tools
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools import image_resize_image
 
 class multi_company_default(osv.osv):
     """
@@ -97,10 +97,20 @@ class res_company(osv.osv):
             address_data = part_obj.address_get(cr, uid, [company.partner_id.id], adr_pref=['default'])
             address = address_data['default']
             if address:
-                part_obj.write(cr, uid, [address], {name: value or False})
+                part_obj.write(cr, uid, [address], {name: value or False}, context=context)
             else:
                 part_obj.create(cr, uid, {name: value or False, 'parent_id': company.partner_id.id}, context=context)
         return True
+
+    def _get_logo_web(self, cr, uid, ids, _field_name, _args, context=None):
+        result = dict.fromkeys(ids, False)
+        for record in self.browse(cr, uid, ids, context=context):
+            size = (180, None)
+            result[record.id] = image_resize_image(record.partner_id.image, size)
+        return result
+
+    def _get_companies_from_partner(self, cr, uid, ids, context=None):
+        return self.pool['res.company'].search(cr, uid, [('partner_id', 'in', ids)], context=context)
 
     _columns = {
         'name': fields.related('partner_id', 'name', string='Company Name', size=128, required=True, store=True, type='char'),
@@ -108,13 +118,17 @@ class res_company(osv.osv):
         'child_ids': fields.one2many('res.company', 'parent_id', 'Child Companies'),
         'partner_id': fields.many2one('res.partner', 'Partner', required=True),
         'rml_header': fields.text('RML Header', required=True),
-        'rml_header1': fields.char('Company Slogan', size=200, help="Appears by default on the top right corner of your printed documents (report header)."),
+        'rml_header1': fields.char('Company Tagline', size=200, help="Appears by default on the top right corner of your printed documents (report header)."),
         'rml_header2': fields.text('RML Internal Header', required=True),
         'rml_header3': fields.text('RML Internal Header for Landscape Reports', required=True),
         'rml_footer': fields.text('Report Footer', help="Footer text displayed at the bottom of all reports."),
         'rml_footer_readonly': fields.related('rml_footer', type='text', string='Report Footer', readonly=True),
         'custom_footer': fields.boolean('Custom Footer', help="Check this to define the report footer manually.  Otherwise it will be filled in automatically."),
         'logo': fields.related('partner_id', 'image', string="Logo", type="binary"),
+        'logo_web': fields.function(_get_logo_web, string="Logo Web", type="binary", store={
+            'res.company': (lambda s, c, u, i, x: i, ['partner_id'], 10),
+            'res.partner': (_get_companies_from_partner, ['image'], 10),
+        }),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'currency_ids': fields.one2many('res.currency', 'company_id', 'Currency'),
         'user_ids': fields.many2many('res.users', 'res_company_users_rel', 'cid', 'user_id', 'Accepted Users'),
@@ -123,7 +137,7 @@ class res_company(osv.osv):
         'street2': fields.function(_get_address_data, fnct_inv=_set_address_data, size=128, type='char', string="Street2", multi='address'),
         'zip': fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char', string="Zip", multi='address'),
         'city': fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char', string="City", multi='address'),
-        'state_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', domain="[('country_id', '=', country_id)]", relation='res.country.state', string="Fed. State", multi='address'),
+        'state_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', relation='res.country.state', string="Fed. State", multi='address'),
         'bank_ids': fields.one2many('res.partner.bank','company_id', 'Bank Accounts', help='Bank accounts related to this company'),
         'country_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', relation='res.country', string="Country", multi='address'),
         'email': fields.function(_get_address_data, fnct_inv=_set_address_data, size=64, type='char', string="Email", multi='address'),
@@ -160,12 +174,18 @@ class res_company(osv.osv):
             res += '\n%s: %s' % (title, ', '.join(name for id, name in account_names))
 
         return {'value': {'rml_footer': res, 'rml_footer_readonly': res}}
-
+    def onchange_state(self, cr, uid, ids, state_id, context=None):
+        if state_id:
+            return {'value':{'country_id': self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id }}
+        return {}
     def on_change_country(self, cr, uid, ids, country_id, context=None):
+        res = {'domain': {'state_id': []}}
         currency_id = self._get_euro(cr, uid, context=context)
         if country_id:
             currency_id = self.pool.get('res.country').browse(cr, uid, country_id, context=context).currency_id.id
-        return {'value': {'currency_id': currency_id}}
+            res['domain'] = {'state_id': [('country_id','=',country_id)]}
+        res['value'] = {'currency_id': currency_id}
+        return res
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False, access_rights_uid=None):
@@ -239,7 +259,7 @@ class res_company(osv.osv):
         vals.update({'partner_id': partner_id})
         self.cache_restart(cr)
         company_id = super(res_company, self).create(cr, uid, vals, context=context)
-        obj_partner.write(cr, uid, partner_id, {'company_id': company_id}, context=context)
+        obj_partner.write(cr, uid, [partner_id], {'company_id': company_id}, context=context)
         return company_id
 
     def write(self, cr, uid, ids, values, context=None):
@@ -291,7 +311,7 @@ class res_company(osv.osv):
         <frame id="first" x1="1.3cm" y1="3.0cm" height="%s" width="19.0cm"/>
          <stylesheet>
             <paraStyle name="main_footer"  fontName="DejaVu Sans" fontSize="8.0" alignment="CENTER"/>
-            <paraStyle name="main_header"  fontName="DejaVu Sans" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>            
+            <paraStyle name="main_header"  fontName="DejaVu Sans" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
          </stylesheet>
         <pageGraphics>
             <!-- You Logo - Change X,Y,Width and Height -->
@@ -304,7 +324,7 @@ class res_company(osv.osv):
             <lines>1.3cm %s 20cm %s</lines>
             <drawRightString x="20cm" y="%s">[[ company.rml_header1 ]]</drawRightString>
             <drawString x="1.3cm" y="%s">[[ company.partner_id.name ]]</drawString>
-            <place x="1.3cm" y="%s" height="1.55cm" width="15.0cm">
+            <place x="1.3cm" y="%s" height="1.8cm" width="15.0cm">
                 <para style="main_header">[[ display_address(company.partner_id) or  '' ]]</para>
             </place>
             <drawString x="1.3cm" y="%s">Phone:</drawString>
@@ -316,7 +336,7 @@ class res_company(osv.osv):
             <!-- left margin -->
             <rotate degrees="90"/>
             <fill color="grey"/>
-            <drawString x="2.65cm" y="-0.4cm">produced by OpenERP.com</drawString>
+            <drawString x="2.65cm" y="-0.4cm">generated by OpenERP.com</drawString>
             <fill color="black"/>
             <rotate degrees="-90"/>
 
@@ -330,8 +350,8 @@ class res_company(osv.osv):
     </pageTemplate>
 </header>"""
 
-    _header_a4 = _header_main % ('23.0cm', '27.6cm', '27.7cm', '27.7cm', '27.8cm', '27.4cm', '25.8cm', '26.0cm', '26.0cm', '25.6cm', '25.6cm', '25.5cm', '25.5cm')
-    _header_letter = _header_main % ('21.3cm', '25.9cm', '26.0cm', '26.0cm', '26.1cm', '25.5cm', '25.1cm', '24.3cm', '24.3cm', '23.9cm', '23.9cm', '23.8cm', '23.8cm')
+    _header_a4 = _header_main % ('21.7cm', '27.7cm', '27.7cm', '27.7cm', '27.8cm', '27.3cm', '25.3cm', '25.0cm', '25.0cm', '24.6cm', '24.6cm', '24.5cm', '24.5cm')
+    _header_letter = _header_main % ('20cm', '26.0cm', '26.0cm', '26.0cm', '26.1cm', '25.6cm', '23.6cm', '23.3cm', '23.3cm', '22.9cm', '22.9cm', '22.8cm', '22.8cm')
 
     def onchange_paper_format(self, cr, uid, ids, paper_format, context=None):
         if paper_format == 'us_letter':
@@ -352,7 +372,4 @@ class res_company(osv.osv):
     ]
 
 
-res_company()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

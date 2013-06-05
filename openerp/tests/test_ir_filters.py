@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import functools
 
-import openerp
 from openerp import exceptions
 from . import common
 

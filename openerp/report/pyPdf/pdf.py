@@ -53,13 +53,7 @@ import utils
 from generic import *
 from utils import readNonWhitespace, readUntilWhitespace, ConvertFunctionsToVirtualList
 
-if version_info < ( 2, 4 ):
-   from sets import ImmutableSet as frozenset
-
-if version_info < ( 2, 5 ):
-    from md5 import md5
-else:
-    from hashlib import md5
+from hashlib import md5
 
 ##
 # This class supports writing PDF files out, given pages produced by another
@@ -197,7 +191,7 @@ class PdfFileWriter(object):
     # flag is on.
     def encrypt(self, user_pwd, owner_pwd = None, use_128bit = True):
         import time, random
-        if owner_pwd == None:
+        if owner_pwd is None:
             owner_pwd = user_pwd
         if use_128bit:
             V = 2
@@ -251,7 +245,7 @@ class PdfFileWriter(object):
         # copying in a new copy of the page object.
         for objIndex in xrange(len(self._objects)):
             obj = self._objects[objIndex]
-            if isinstance(obj, PageObject) and obj.indirectRef != None:
+            if isinstance(obj, PageObject) and obj.indirectRef is not None:
                 data = obj.indirectRef
                 if not externalReferenceMap.has_key(data.pdf):
                     externalReferenceMap[data.pdf] = {}
@@ -305,7 +299,7 @@ class PdfFileWriter(object):
         trailer.writeToStream(stream, None)
         
         # eof
-        stream.write("\nstartxref\n%s\n%%%%EOF\n" % (xref_location))
+        stream.write("\nstartxref\n%s\n%%%%EOF\n" % xref_location)
 
     def _sweepIndirectReferences(self, externMap, data):
         if isinstance(data, DictionaryObject):
@@ -340,7 +334,7 @@ class PdfFileWriter(object):
                     return data
             else:
                 newobj = externMap.get(data.pdf, {}).get(data.generation, {}).get(data.idnum, None)
-                if newobj == None:
+                if newobj is None:
                     newobj = data.pdf.getObject(data)
                     self._objects.append(None) # placeholder
                     idnum = len(self._objects)
@@ -426,7 +420,7 @@ class PdfFileReader(object):
     # Stability: Added in v1.0, will exist for all v1.x releases.
     # @return Returns an integer.
     def getNumPages(self):
-        if self.flattenedPages == None:
+        if self.flattenedPages is None:
             self._flatten()
         return len(self.flattenedPages)
 
@@ -445,7 +439,7 @@ class PdfFileReader(object):
     def getPage(self, pageNumber):
         ## ensure that we're not trying to access an encrypted PDF
         #assert not self.trailer.has_key("/Encrypt")
-        if self.flattenedPages == None:
+        if self.flattenedPages is None:
             self._flatten()
         return self.flattenedPages[pageNumber]
 
@@ -465,7 +459,7 @@ class PdfFileReader(object):
     # @return Returns a dict which maps names to {@link #Destination
     # destinations}.
     def getNamedDestinations(self, tree=None, retval=None):
-        if retval == None:
+        if retval is None:
             retval = {}
             catalog = self.trailer["/Root"]
             
@@ -477,7 +471,7 @@ class PdfFileReader(object):
                 if names.has_key("/Dests"):
                     tree = names['/Dests']
         
-        if tree == None:
+        if tree is None:
             return retval
 
         if tree.has_key("/Kids"):
@@ -493,7 +487,7 @@ class PdfFileReader(object):
                 if isinstance(val, DictionaryObject) and val.has_key('/D'):
                     val = val['/D']
                 dest = self._buildDestination(key, val)
-                if dest != None:
+                if dest is not None:
                     retval[key] = dest
 
         return retval
@@ -511,7 +505,7 @@ class PdfFileReader(object):
     # Stability: Added in v1.10, will exist for all future v1.x releases.
     # @return Returns a nested list of {@link #Destination destinations}.
     def getOutlines(self, node=None, outlines=None):
-        if outlines == None:
+        if outlines is None:
             outlines = []
             catalog = self.trailer["/Root"]
             
@@ -522,7 +516,7 @@ class PdfFileReader(object):
                     node = lines["/First"]
             self._namedDests = self.getNamedDestinations()
             
-        if node == None:
+        if node is None:
           return outlines
           
         # see if there are any more outlines
@@ -588,9 +582,9 @@ class PdfFileReader(object):
             NameObject("/Resources"), NameObject("/MediaBox"),
             NameObject("/CropBox"), NameObject("/Rotate")
             )
-        if inherit == None:
+        if inherit is None:
             inherit = dict()
-        if pages == None:
+        if pages is None:
             self.flattenedPages = []
             catalog = self.trailer["/Root"].getObject()
             pages = catalog["/Pages"].getObject()
@@ -616,7 +610,7 @@ class PdfFileReader(object):
 
     def getObject(self, indirectReference):
         retval = self.resolvedObjects.get(indirectReference.generation, {}).get(indirectReference.idnum, None)
-        if retval != None:
+        if retval is not None:
             return retval
         if indirectReference.generation == 0 and \
            self.xref_objStm.has_key(indirectReference.idnum):
@@ -844,7 +838,6 @@ class PdfFileReader(object):
                 else:
                     # no xref table found at specified location
                     assert False
-                    break
 
     def _pairs(self, array):
         i = 0
@@ -959,10 +952,10 @@ def getRectangle(self, name, defaults):
     retval = self.get(name)
     if isinstance(retval, RectangleObject):
         return retval
-    if retval == None:
+    if retval is None:
         for d in defaults:
             retval = self.get(d)
-            if retval != None:
+            if retval is not None:
                 break
     if isinstance(retval, IndirectObject):
         retval = self.pdf.getObject(retval)

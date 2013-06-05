@@ -20,7 +20,8 @@
 ##############################################################################
 
 import time
-from report import report_sxw
+
+from openerp.report import report_sxw
 
 class ir_module_reference_print(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -33,7 +34,7 @@ class ir_module_reference_print(report_sxw.rml_parse):
             'findflds': self._fields_find,
         })
     def _object_doc(self, obj):
-        modobj = self.pool.get(obj)
+        modobj = self.pool[obj]
         strdocs= modobj.__doc__
         if not strdocs:
             return None
@@ -47,7 +48,7 @@ class ir_module_reference_print(report_sxw.rml_parse):
         return res
 
     def _object_doc2(self, obj):
-        modobj = self.pool.get(obj)
+        modobj = self.pool[obj]
         strdocs= modobj.__doc__
         if not strdocs:
             return None
@@ -63,17 +64,24 @@ class ir_module_reference_print(report_sxw.rml_parse):
         return res
 
     def _object_find(self, module):
-        ids2 = self.pool.get('ir.model.data').search(self.cr, self.uid, [('module','=',module), ('model','=','ir.model')])
+        ids2 = self.pool['ir.model.data'].search(self.cr, self.uid, [('module','=',module), ('model','=','ir.model')])
         ids = []
-        for mod in self.pool.get('ir.model.data').browse(self.cr, self.uid, ids2):
+        for mod in self.pool['ir.model.data'].browse(self.cr, self.uid, ids2):
             ids.append(mod.res_id)
-        modobj = self.pool.get('ir.model')
+        modobj = self.pool['ir.model']
         return modobj.browse(self.cr, self.uid, ids)
 
-    def _fields_find(self, obj):
-        modobj = self.pool.get(obj)
-        res = modobj.fields_get(self.cr, self.uid).items()
-        res.sort()
+    def _fields_find(self, obj, module):
+        res = []
+        data_obj = self.pool['ir.model.data']
+        modobj = self.pool[obj]
+        fname_wildcard = 'field_' + modobj._name.replace('.', '_') + '_%'
+        module_fields_ids = data_obj.search(self.cr, self.uid, [('model', '=', 'ir.model.fields'), ('module', '=', module), ('name', 'like', fname_wildcard)])
+        if module_fields_ids:
+            module_fields_res_ids = [x['res_id'] for x in data_obj.read(self.cr, self.uid, module_fields_ids, ['res_id'])]
+            module_fields_names = [x['name'] for x in self.pool['ir.model.fields'].read(self.cr, self.uid, module_fields_res_ids, ['name'])]
+            res = modobj.fields_get(self.cr, self.uid, allfields=module_fields_names).items()
+            res.sort()
         return res
 
 report_sxw.report_sxw('report.ir.module.reference', 'ir.module.module',

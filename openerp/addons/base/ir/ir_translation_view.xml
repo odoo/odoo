@@ -14,7 +14,7 @@
                         domain="[('comments', 'like', 'openerp-web')]"/>
                     <field name="name" operator="="/>
                     <field name="lang"/>
-                    <field name="src"/>
+                    <field name="source"/>
                     <field name="value"/>
                 </search>
             </field>
@@ -38,7 +38,7 @@
                             <field name="res_id"/>
                         </group>
                         <group string="Source Term">
-                           <field name="src" nolabel="1" height="400"/>
+                           <field name="source" nolabel="1" height="400"/>
                         </group>
                         <group string="Translation">
                            <field name="value" nolabel="1" height="400"/>
@@ -54,12 +54,12 @@
         <record id="view_translation_tree" model="ir.ui.view">
             <field name="model">ir.translation</field>
             <field name="arch" type="xml">
-                <tree string="Translations" editable="bottom">
-                    <field name="src" readonly="True"/>
+                <tree string="Translations" editable="top">
+                    <field name="source"/>
                     <field name="value"/>
-                    <field name="name" readonly="True"/>
-                    <field name="lang" readonly="True"/>
-                    <field name="type" readonly="True"/>
+                    <field name="name"/>
+                    <field name="lang"/>
+                    <field name="type"/>
                 </tree>
             </field>
         </record>

@@ -16,6 +16,10 @@ import sys
 import time
 
 import werkzeug.serving
+try:
+    from setproctitle import setproctitle
+except ImportError:
+    setproctitle = lambda x: None
 
 import openerp
 import openerp.tools.config as config
@@ -31,6 +35,7 @@ class Multicorn(object):
     def __init__(self, app):
         # config
         self.address = (config['xmlrpc_interface'] or '0.0.0.0', config['xmlrpc_port'])
+        self.long_polling_address = (config['xmlrpc_interface'] or '0.0.0.0', config['longpolling_port'])
         self.population = config['workers']
         self.timeout = config['limit_time_real']
         self.limit_request = config['limit_request']
@@ -41,6 +46,7 @@ class Multicorn(object):
         self.socket = None
         self.workers_http = {}
         self.workers_cron = {}
+        self.workers_longpolling = {}
         self.workers = {}
         self.generation = 0
         self.queue = []
@@ -127,15 +133,18 @@ class Multicorn(object):
     def process_timeout(self):
         now = time.time()
         for (pid, worker) in self.workers.items():
-            if now - worker.watchdog_time >= worker.watchdog_timeout:
+            if (worker.watchdog_timeout is not None) and \
+                (now - worker.watchdog_time >= worker.watchdog_timeout):
                 _logger.error("Worker (%s) timeout", pid)
                 self.worker_kill(pid, signal.SIGKILL)
 
     def process_spawn(self):
         while len(self.workers_http) < self.population:
             self.worker_spawn(WorkerHTTP, self.workers_http)
-        while len(self.workers_cron) < 1: # config option ?
+        while len(self.workers_cron) < config['max_cron_threads']:
             self.worker_spawn(WorkerCron, self.workers_cron)
+        while len(self.workers_longpolling) < 1:
+            self.worker_spawn(WorkerLongPolling, self.workers_longpolling)
 
     def sleep(self):
         try:
@@ -173,7 +182,13 @@ class Multicorn(object):
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.socket.setblocking(0)
         self.socket.bind(self.address)
-        self.socket.listen(8)
+        self.socket.listen(8*self.population)
+        # long polling socket
+        self.long_polling_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.long_polling_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.long_polling_socket.setblocking(0)
+        self.long_polling_socket.bind(self.long_polling_address)
+        self.long_polling_socket.listen(8)
 
     def stop(self, graceful=True):
         if graceful:
@@ -189,8 +204,7 @@ class Multicorn(object):
         for pid in self.workers.keys():
             self.worker_kill(pid, signal.SIGTERM)
         self.socket.close()
-        import __main__
-        __main__.quit_signals_received = 1
+        openerp.cli.server.quit_signals_received = 1
 
     def run(self):
         self.start()
@@ -218,6 +232,7 @@ class Worker(object):
         self.multi = multi
         self.watchdog_time = time.time()
         self.watchdog_pipe = multi.pipe_new()
+        # Can be set to None if no watchdog is desired.
         self.watchdog_timeout = multi.timeout
         self.ppid = os.getpid()
         self.pid = None
@@ -225,6 +240,9 @@ class Worker(object):
         # should we rename into lifetime ?
         self.request_max = multi.limit_request
         self.request_count = 0
+
+    def setproctitle(self, title=""):
+        setproctitle('openerp: %s %s %s' % (self.__class__.__name__, self.pid, title))
 
     def close(self):
         os.close(self.watchdog_pipe[0])
@@ -252,7 +270,7 @@ class Worker(object):
         # Reset the worker if it consumes too much memory (e.g. caused by a memory leak).
         rss, vms = psutil.Process(os.getpid()).get_memory_info()
         if vms > config['limit_memory_soft']:
-            _logger.info('Virtual memory consumption too high, rebooting the worker.')
+            _logger.info('Worker (%d) virtual memory limit (%s) reached.', self.pid, vms)
             self.alive = False # Commit suicide after the request.
 
         # VMS and RLIMIT_AS are the same thing: virtual memory, a.k.a. address space
@@ -263,7 +281,8 @@ class Worker(object):
         r = resource.getrusage(resource.RUSAGE_SELF)
         cpu_time = r.ru_utime + r.ru_stime
         def time_expired(n, stack):
-            _logger.info('CPU time limit exceeded.')
+            _logger.info('Worker (%d) CPU time limit (%s) reached.', config['limit_time_cpu'])
+            # We dont suicide in such case
             raise Exception('CPU time limit exceeded.')
         signal.signal(signal.SIGXCPU, time_expired)
         soft, hard = resource.getrlimit(resource.RLIMIT_CPU)
@@ -274,6 +293,7 @@ class Worker(object):
 
     def start(self):
         self.pid = os.getpid()
+        self.setproctitle()
         _logger.info("Worker %s (%s) alive", self.__class__.__name__, self.pid)
         # Reseed the random number generator
         random.seed()
@@ -297,10 +317,10 @@ class Worker(object):
                 self.multi.pipe_ping(self.watchdog_pipe)
                 self.sleep()
                 self.process_work()
-            _logger.info("Worker (%s) exiting...",self.pid)
+            _logger.info("Worker (%s) exiting. request_count: %s.", self.pid, self.request_count)
             self.stop()
         except Exception,e:
-            _logger.exception("Worker (%s) Exception occured, exiting..."%self.pid)
+            _logger.exception("Worker (%s) Exception occured, exiting..." % self.pid)
             # should we use 3 to abort everything ?
             sys.exit(1)
 
@@ -314,7 +334,13 @@ class WorkerHTTP(Worker):
         fcntl.fcntl(client, fcntl.F_SETFD, flags)
         # do request using WorkerBaseWSGIServer monkey patched with socket
         self.server.socket = client
-        self.server.process_request(client,addr)
+        # tolerate broken pipe when the http client closes the socket before
+        # receiving the full reply
+        try:
+            self.server.process_request(client,addr)
+        except IOError, e:
+            if e.errno != errno.EPIPE:
+                raise
         self.request_count += 1
 
     def process_work(self):
@@ -328,6 +354,35 @@ class WorkerHTTP(Worker):
     def start(self):
         Worker.start(self)
         self.server = WorkerBaseWSGIServer(self.multi.app)
+
+class WorkerLongPolling(Worker):
+    """ Long polling workers """
+    def __init__(self, multi):
+        super(WorkerLongPolling, self).__init__(multi)
+        # Disable the watchdog feature for this kind of worker.
+        self.watchdog_timeout = None
+
+    def start(self):
+        openerp.evented = True
+        _logger.info('Using gevent mode')
+        import gevent.monkey
+        gevent.monkey.patch_all()
+        import gevent_psycopg2
+        gevent_psycopg2.monkey_patch()
+
+        Worker.start(self)
+        from gevent.wsgi import WSGIServer
+        self.server = WSGIServer(self.multi.long_polling_socket, self.multi.app)
+        self.server.start()
+
+    def stop(self):
+        self.server.stop()
+
+    def sleep(self):
+        time.sleep(1)
+
+    def process_work(self):
+        pass
 
 class WorkerBaseWSGIServer(werkzeug.serving.BaseWSGIServer):
     """ werkzeug WSGI Server patched to allow using an external listen socket
@@ -345,21 +400,59 @@ class WorkerBaseWSGIServer(werkzeug.serving.BaseWSGIServer):
 
 class WorkerCron(Worker):
     """ Cron workers """
+
+    def __init__(self, multi):
+        super(WorkerCron, self).__init__(multi)
+        # process_work() below process a single database per call.
+        # The variable db_index is keeping track of the next database to
+        # process.
+        self.db_index = 0
+
     def sleep(self):
-        time.sleep(60)
+        # Really sleep once all the databases have been processed.
+        if self.db_index == 0:
+            interval = 60 + self.pid % 10 # chorus effect
+            time.sleep(interval)
 
     def process_work(self):
+        rpc_request = logging.getLogger('openerp.netsvc.rpc.request')
+        rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
+        _logger.debug("WorkerCron (%s) polling for jobs", self.pid)
         if config['db_name']:
             db_names = config['db_name'].split(',')
         else:
-            db_names = openerp.netsvc.ExportService._services['db'].exp_list(True)
-        for db_name in db_names:
+            db_names = openerp.service.db.exp_list(True)
+        if len(db_names):
+            self.db_index = (self.db_index + 1) % len(db_names)
+            db_name = db_names[self.db_index]
+            self.setproctitle(db_name)
+            if rpc_request_flag:
+                start_time = time.time()
+                start_rss, start_vms = psutil.Process(os.getpid()).get_memory_info()
             while True:
-                # TODO Each job should be considered as one request in multiprocessing
-                acquired = openerp.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
+                # acquired = openerp.addons.base.ir.ir_cron.ir_cron._acquire_job(db_name)
+                # TODO why isnt openerp.addons.base defined ?
+                import openerp.addons.base as base
+                acquired = base.ir.ir_cron.ir_cron._acquire_job(db_name)
                 if not acquired:
+                    openerp.modules.registry.RegistryManager.delete(db_name)
                     break
-        self.request_count += 1
+            # dont keep cursors in multi database mode
+            if len(db_names) > 1:
+                openerp.sql_db.close_db(db_name)
+            if rpc_request_flag:
+                end_time = time.time()
+                end_rss, end_vms = psutil.Process(os.getpid()).get_memory_info()
+                logline = '%s time:%.3fs mem: %sk -> %sk (diff: %sk)' % (db_name, end_time - start_time, start_vms / 1024, end_vms / 1024, (end_vms - start_vms)/1024)
+                _logger.debug("WorkerCron (%s) %s", self.pid, logline)
+
+            self.request_count += 1
+            if self.request_count >= self.request_max and self.request_max < len(db_names):
+                _logger.error("There are more dabatases to process than allowed "
+                    "by the `limit_request` configuration variable: %s more.",
+                    len(db_names) - self.request_max)
+        else:
+            self.db_index = 0
 
     def start(self):
         Worker.start(self)

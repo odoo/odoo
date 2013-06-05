@@ -5,8 +5,9 @@ import time # used to eval time.strftime expressions
 from datetime import datetime, timedelta
 import logging
 
-import openerp.pooler as pooler
+import openerp
 import openerp.sql_db as sql_db
+import openerp.workflow
 import misc
 from config import config
 import yaml_tag
@@ -112,7 +113,7 @@ class YamlInterpreter(object):
         self.assertion_report = report
         self.noupdate = noupdate
         self.loglevel = loglevel
-        self.pool = pooler.get_pool(cr.dbname)
+        self.pool = openerp.registry(cr.dbname)
         self.uid = 1
         self.context = {} # opererp context
         self.eval_context = {'ref': self._ref(),
@@ -128,9 +129,7 @@ class YamlInterpreter(object):
         return lambda xml_id: self.get_id(xml_id)
 
     def get_model(self, model_name):
-        model = self.pool.get(model_name)
-        assert model, "The model %s does not exist." % (model_name,)
-        return model
+        return self.pool[model_name]
 
     def validate_xml_id(self, xml_id):
         id = xml_id
@@ -140,7 +139,7 @@ class YamlInterpreter(object):
                                   "It is used to refer to other modules ID, in the form: module.record_id" \
                                   % (xml_id,)
             if module != self.module:
-                module_count = self.pool.get('ir.module.module').search_count(self.cr, self.uid, \
+                module_count = self.pool['ir.module.module'].search_count(self.cr, self.uid, \
                         ['&', ('name', '=', module), ('state', 'in', ['installed'])])
                 assert module_count == 1, 'The ID "%s" refers to an uninstalled module.' % (xml_id,)
         if len(id) > 64: # TODO where does 64 come from (DB is 128)? should be a constant or loaded form DB
@@ -162,7 +161,7 @@ class YamlInterpreter(object):
                 module = self.module
                 checked_xml_id = xml_id
             try:
-                _, id = self.pool.get('ir.model.data').get_object_reference(self.cr, self.uid, module, checked_xml_id)
+                _, id = self.pool['ir.model.data'].get_object_reference(self.cr, self.uid, module, checked_xml_id)
                 self.id_map[xml_id] = id
             except ValueError:
                 raise ValueError("""%s not found when processing %s.
@@ -201,7 +200,7 @@ class YamlInterpreter(object):
             ids = [self.get_id(assertion.id)]
         elif assertion.search:
             q = eval(assertion.search, self.eval_context)
-            ids = self.pool.get(assertion.model).search(self.cr, self.uid, q, context=assertion.context)
+            ids = self.pool[assertion.model].search(self.cr, self.uid, q, context=assertion.context)
         else:
             raise YamlImportException('Nothing to assert: you must give either an id or a search criteria.')
         return ids
@@ -281,7 +280,6 @@ class YamlInterpreter(object):
         return record_dict
 
     def process_record(self, node):
-        import openerp.osv as osv
         record, fields = node.items()[0]
         model = self.get_model(record.model)
 
@@ -290,20 +288,20 @@ class YamlInterpreter(object):
             module = self.module
             if '.' in view_id:
                 module, view_id = view_id.split('.',1)
-            view_id = self.pool.get('ir.model.data').get_object_reference(self.cr, SUPERUSER_ID, module, view_id)[1]
+            view_id = self.pool['ir.model.data'].get_object_reference(self.cr, SUPERUSER_ID, module, view_id)[1]
 
         if model.is_transient():
             record_dict=self.create_osv_memory_record(record, fields)
         else:
             self.validate_xml_id(record.id)
             try:
-                self.pool.get('ir.model.data')._get_id(self.cr, SUPERUSER_ID, self.module, record.id)
+                self.pool['ir.model.data']._get_id(self.cr, SUPERUSER_ID, self.module, record.id)
                 default = False
             except ValueError:
                 default = True
 
             if self.isnoupdate(record) and self.mode != 'init':
-                id = self.pool.get('ir.model.data')._update_dummy(self.cr, SUPERUSER_ID, record.model, self.module, record.id)
+                id = self.pool['ir.model.data']._update_dummy(self.cr, SUPERUSER_ID, record.model, self.module, record.id)
                 # check if the resource already existed at the last update
                 if id:
                     self.id_map[record] = int(id)
@@ -324,7 +322,7 @@ class YamlInterpreter(object):
 
             record_dict = self._create_record(model, fields, view_info, default=default)
             _logger.debug("RECORD_DICT %s" % record_dict)
-            id = self.pool.get('ir.model.data')._update(self.cr, SUPERUSER_ID, record.model, \
+            id = self.pool['ir.model.data']._update(self.cr, SUPERUSER_ID, record.model, \
                     self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode, context=context)
             self.id_map[record.id] = int(id)
             if config.get('import_partial'):
@@ -346,43 +344,45 @@ class YamlInterpreter(object):
             one2many_view = fg[field_name]['views'].get(view_type)
             # if the view is not defined inline, we call fields_view_get()
             if not one2many_view:
-                one2many_view = self.pool.get(fg[field_name]['relation']).fields_view_get(self.cr, SUPERUSER_ID, False, view_type, self.context)
+                one2many_view = self.pool[fg[field_name]['relation']].fields_view_get(self.cr, SUPERUSER_ID, False, view_type, self.context)
             return one2many_view
 
         def process_val(key, val):
-            if fg[key]['type']=='many2one':
+            if fg[key]['type'] == 'many2one':
                 if type(val) in (tuple,list):
                     val = val[0]
-            elif (fg[key]['type']=='one2many'):
-                if val is False:
-                    val = []
-                if len(val) and type(val[0]) == dict:
-                    #we want to return only the fields that aren't readonly
-                    #For that, we need to first get the right tree view to consider for the field `key´
+            elif fg[key]['type'] == 'one2many':
+                if val and isinstance(val, (list,tuple)) and isinstance(val[0], dict):
+                    # we want to return only the fields that aren't readonly
+                    # For that, we need to first get the right tree view to consider for the field `key´
                     one2many_tree_view = _get_right_one2many_view(fg, key, 'tree')
+                    arch = etree.fromstring(one2many_tree_view['arch'].encode('utf-8'))
                     for rec in val:
-                        #make a copy for the iteration, as we will alterate the size of `rec´ dictionary
+                        # make a copy for the iteration, as we will alter `rec´
                         rec_copy = rec.copy()
                         for field_key in rec_copy:
-                            #seek in the view for the field `field_key´ and removing it from `key´ values, as this column is readonly in the tree view
-                            subfield_obj = etree.fromstring(one2many_tree_view['arch'].encode('utf-8')).xpath("//field[@name='%s']"%(field_key))
-                            if subfield_obj and (subfield_obj[0].get('modifiers', '{}').find('"readonly": true') >= 0):
-                                #TODO: currently we only support if readonly is True in the modifiers. Some improvement may be done in 
-                                #order to support also modifiers that look like {"readonly": [["state", "not in", ["draft", "confirm"]]]}
-                                del(rec[field_key])
-
-                    #now that unwanted values have been removed from val, we can encapsulate it in a tuple as returned value
+                            # if field is missing in view or has a readonly modifier, drop it
+                            field_elem = arch.xpath("//field[@name='%s']" % field_key)
+                            if field_elem and (field_elem[0].get('modifiers', '{}').find('"readonly": true') >= 0):
+                                # TODO: currently we only support if readonly is True in the modifiers. Some improvement may be done in 
+                                # order to support also modifiers that look like {"readonly": [["state", "not in", ["draft", "confirm"]]]}
+                                del rec[field_key]
+                    # now that unwanted values have been removed from val, we can encapsulate it in a tuple as returned value
                     val = map(lambda x: (0,0,x), val)
+            elif fg[key]['type'] == 'many2many':
+                if val and isinstance(val,(list,tuple)) and isinstance(val[0], (int,long)):
+                    val = [(6,0,val)]
 
-            #we want to return only the fields that aren't readonly
+            # we want to return only the fields that aren't readonly
             if el.get('modifiers', '{}').find('"readonly": true') >= 0:
-                #TODO: currently we only support if readonly is True in the modifiers. Some improvement may be done in 
-                #order to support also modifiers that look like {"readonly": [["state", "not in", ["draft", "confirm"]]]}
+                # TODO: currently we only support if readonly is True in the modifiers. Some improvement may be done in 
+                # order to support also modifiers that look like {"readonly": [["state", "not in", ["draft", "confirm"]]]}
                 return False
+
             return val
 
         if view_info:
-            arch = etree.fromstring(view_info['arch'].encode('utf-8'))
+            arch = etree.fromstring(view_info['arch'].decode('utf-8'))
             view = arch if len(arch) else False
         else:
             view = False
@@ -541,7 +541,14 @@ class YamlInterpreter(object):
         python, statements = node.items()[0]
         model = self.get_model(python.model)
         statements = statements.replace("\r\n", "\n")
-        code_context = { 'model': model, 'cr': self.cr, 'uid': self.uid, 'log': self._log, 'context': self.context }
+        code_context = {
+            'model': model,
+            'cr': self.cr,
+            'uid': self.uid,
+            'log': self._log,
+            'context': self.context,
+            'openerp': openerp,
+        }
         code_context.update({'self': model}) # remove me when no !python block test uses 'self' anymore
         try:
             code_obj = compile(statements, self.filename, 'exec')
@@ -582,9 +589,7 @@ class YamlInterpreter(object):
         signals=[x['signal'] for x in self.cr.dictfetchall()]
         if workflow.action not in signals:
             raise YamlImportException('Incorrect action %s. No such action defined' % workflow.action)
-        import openerp.netsvc as netsvc
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, workflow.model, id, workflow.action, self.cr)
+        openerp.workflow.trg_validate(uid, workflow.model, id, workflow.action, self.cr)
 
     def _eval_params(self, model, params):
         args = []
@@ -705,7 +710,7 @@ class YamlInterpreter(object):
 
         self._set_group_values(node, values)
 
-        pid = self.pool.get('ir.model.data')._update(self.cr, SUPERUSER_ID, \
+        pid = self.pool['ir.model.data']._update(self.cr, SUPERUSER_ID, \
                 'ir.ui.menu', self.module, values, node.id, mode=self.mode, \
                 noupdate=self.isnoupdate(node), res_id=res and res[0] or False)
 
@@ -716,7 +721,7 @@ class YamlInterpreter(object):
             action_type = node.type or 'act_window'
             action_id = self.get_id(node.action)
             action = "ir.actions.%s,%d" % (action_type, action_id)
-            self.pool.get('ir.model.data').ir_set(self.cr, SUPERUSER_ID, 'action', \
+            self.pool['ir.model.data'].ir_set(self.cr, SUPERUSER_ID, 'action', \
                     'tree_but_open', 'Menuitem', [('ir.ui.menu', int(parent_id))], action, True, True, xml_id=node.id)
 
     def process_act_window(self, node):
@@ -750,7 +755,7 @@ class YamlInterpreter(object):
 
         if node.target:
             values['target'] = node.target
-        id = self.pool.get('ir.model.data')._update(self.cr, SUPERUSER_ID, \
+        id = self.pool['ir.model.data']._update(self.cr, SUPERUSER_ID, \
                 'ir.actions.act_window', self.module, values, node.id, mode=self.mode)
         self.id_map[node.id] = int(id)
 
@@ -758,19 +763,19 @@ class YamlInterpreter(object):
             keyword = 'client_action_relate'
             value = 'ir.actions.act_window,%s' % id
             replace = node.replace or True
-            self.pool.get('ir.model.data').ir_set(self.cr, SUPERUSER_ID, 'action', keyword, \
+            self.pool['ir.model.data'].ir_set(self.cr, SUPERUSER_ID, 'action', keyword, \
                     node.id, [node.src_model], value, replace=replace, noupdate=self.isnoupdate(node), isobject=True, xml_id=node.id)
         # TODO add remove ir.model.data
 
     def process_delete(self, node):
         assert getattr(node, 'model'), "Attribute %s of delete tag is empty !" % ('model',)
-        if self.pool.get(node.model):
+        if node.model in self.pool:
             if node.search:
-                ids = self.pool.get(node.model).search(self.cr, self.uid, eval(node.search, self.eval_context))
+                ids = self.pool[node.model].search(self.cr, self.uid, eval(node.search, self.eval_context))
             else:
                 ids = [self.get_id(node.id)]
             if len(ids):
-                self.pool.get(node.model).unlink(self.cr, self.uid, ids)
+                self.pool[node.model].unlink(self.cr, self.uid, ids)
         else:
             self._log("Record not deleted.")
 
@@ -779,7 +784,7 @@ class YamlInterpreter(object):
 
         res = {'name': node.name, 'url': node.url, 'target': node.target}
 
-        id = self.pool.get('ir.model.data')._update(self.cr, SUPERUSER_ID, \
+        id = self.pool['ir.model.data']._update(self.cr, SUPERUSER_ID, \
                 "ir.actions.act_url", self.module, res, node.id, mode=self.mode)
         self.id_map[node.id] = int(id)
         # ir_set
@@ -787,7 +792,7 @@ class YamlInterpreter(object):
             keyword = node.keyword or 'client_action_multi'
             value = 'ir.actions.act_url,%s' % id
             replace = node.replace or True
-            self.pool.get('ir.model.data').ir_set(self.cr, SUPERUSER_ID, 'action', \
+            self.pool['ir.model.data'].ir_set(self.cr, SUPERUSER_ID, 'action', \
                     keyword, node.url, ["ir.actions.act_url"], value, replace=replace, \
                     noupdate=self.isnoupdate(node), isobject=True, xml_id=node.id)
 
@@ -802,7 +807,7 @@ class YamlInterpreter(object):
             else:
                 value = expression
             res[fieldname] = value
-        self.pool.get('ir.model.data').ir_set(self.cr, SUPERUSER_ID, res['key'], res['key2'], \
+        self.pool['ir.model.data'].ir_set(self.cr, SUPERUSER_ID, res['key'], res['key2'], \
                 res['name'], res['models'], res['value'], replace=res.get('replace',True), \
                 isobject=res.get('isobject', False), meta=res.get('meta',None))
 
@@ -831,7 +836,7 @@ class YamlInterpreter(object):
 
         self._set_group_values(node, values)
 
-        id = self.pool.get('ir.model.data')._update(self.cr, SUPERUSER_ID, "ir.actions.report.xml", \
+        id = self.pool['ir.model.data']._update(self.cr, SUPERUSER_ID, "ir.actions.report.xml", \
                 self.module, values, xml_id, noupdate=self.isnoupdate(node), mode=self.mode)
         self.id_map[xml_id] = int(id)
 
@@ -839,7 +844,7 @@ class YamlInterpreter(object):
             keyword = node.keyword or 'client_print_multi'
             value = 'ir.actions.report.xml,%s' % id
             replace = node.replace or True
-            self.pool.get('ir.model.data').ir_set(self.cr, SUPERUSER_ID, 'action', \
+            self.pool['ir.model.data'].ir_set(self.cr, SUPERUSER_ID, 'action', \
                     keyword, values['name'], [values['model']], value, replace=replace, isobject=True, xml_id=xml_id)
 
     def process_none(self):
@@ -920,7 +925,7 @@ class YamlInterpreter(object):
 def yaml_import(cr, module, yamlfile, kind, idref=None, mode='init', noupdate=False, report=None):
     if idref is None:
         idref = {}
-    loglevel = logging.TEST if kind == 'test' else logging.DEBUG
+    loglevel = logging.INFO if kind == 'test' else logging.DEBUG
     yaml_string = yamlfile.read()
     yaml_interpreter = YamlInterpreter(cr, module, idref, mode, filename=yamlfile.name, report=report, noupdate=noupdate, loglevel=loglevel)
     yaml_interpreter.process(yaml_string)

@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -119,21 +119,17 @@ def create_categories(cr, categories):
     category = []
     while categories:
         category.append(categories[0])
-        if p_id is not None:
-            cr.execute('SELECT id \
-                       FROM ir_module_category \
-                       WHERE name=%s AND parent_id=%s', (categories[0], p_id))
-        else:
-            cr.execute('SELECT id \
-                       FROM ir_module_category \
-                       WHERE name=%s AND parent_id IS NULL', (categories[0],))
+        xml_id = 'module_category_' + ('_'.join(map(lambda x: x.lower(), category))).replace('&', 'and').replace(' ', '_')
+        # search via xml_id (because some categories are renamed)
+        cr.execute("SELECT res_id FROM ir_model_data WHERE name=%s AND module=%s AND model=%s",
+                   (xml_id, "base", "ir.module.category"))
+
         c_id = cr.fetchone()
         if not c_id:
             cr.execute('INSERT INTO ir_module_category \
                     (name, parent_id) \
                     VALUES (%s, %s) RETURNING id', (categories[0], p_id))
             c_id = cr.fetchone()[0]
-            xml_id = 'module_category_' + ('_'.join(map(lambda x: x.lower(), category))).replace('&', 'and').replace(' ', '_')
             cr.execute('INSERT INTO ir_model_data (module, name, res_id, model) \
                        VALUES (%s, %s, %s, %s)', ('base', xml_id, c_id, 'ir.module.category'))
         else:

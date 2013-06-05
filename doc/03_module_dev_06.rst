@@ -1,3 +1,4 @@
+.. _module-dev-versioning:
 .. _module_versioning:
 
 =================

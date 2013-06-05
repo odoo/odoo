@@ -1,3 +1,5 @@
+.. _module-dev-actions:
+
 =================
 Menus and Actions 
 =================
@@ -133,6 +135,9 @@ The view describes how the edition form or the data tree/list appear on screen. 
 
 A form can be called by an action opening in 'Tree' mode. The form view is generally opened from the list mode (like if the user pushes on 'switch view').
 
+.. _domain:
+.. _domains:
+
 The domain
 ----------
 
@@ -207,9 +212,9 @@ They indicate at the user that he has to open a new window in a new 'tab'.
 
 Administration > Custom > Low Level > Base > Action > Window Actions
 
-.. figure::  images/module_base_action_window.png
-   :scale: 85
-   :align: center
+.. .. figure::  images/module_base_action_window.png
+..    :scale: 85
+..    :align: center
 
 Examples of actions
 +++++++++++++++++++
