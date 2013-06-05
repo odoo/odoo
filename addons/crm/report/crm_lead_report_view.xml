@@ -75,7 +75,7 @@
                     <filter icon="terp-dialog-close" string="Closed" domain="[('state','=','done')]" help="Leads/Opportunities which are in done state"/>
                     <separator/>
                     <filter string="My Sales Team(s)" icon="terp-personal+" context="{'invisible_section': False}" domain="[('section_id.user_id','=',uid)]"
-                            help="Leads/Opportunities that are assigned to one of the sale teams I manage"/>
+                            help="Leads/Opportunities that are assigned to one of the sale teams I manage" groups="base.group_multi_salesteams"/>
                     <separator/>
                     <filter icon="terp-personal" string="My Case(s)" help="Leads/Opportunities that are assigned to me" domain="[('user_id','=',uid)]"/>
                     <field name="section_id" context="{'invisible_section': False}"
