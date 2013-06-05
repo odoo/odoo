@@ -99,12 +99,13 @@ class account_invoice_report(osv.osv):
         'partner_bank_id': fields.many2one('res.partner.bank', 'Bank Account',readonly=True),
         'residual': fields.float('Total Residual', readonly=True),
         'user_currency_residual': fields.function(_compute_amounts_in_user_currency, string="Total Residual", type='float', digits_compute=dp.get_precision('Account'), multi="_compute_amounts"),
+        'country_id': fields.many2one('res.country', 'Country of the Partner Company'),
     }
     _order = 'date desc'
 
     def _select(self):
         select_str = """
-            SELECT sub.id, sub.date, sub.year, sub.month, sub.day, sub.product_id, sub.partner_id,
+            SELECT sub.id, sub.date, sub.year, sub.month, sub.day, sub.product_id, sub.partner_id, sub.country_id,
                 sub.payment_term, sub.period_id, sub.uom_name, sub.currency_id, sub.journal_id,
                 sub.fiscal_position, sub.user_id, sub.company_id, sub.nbr, sub.type, sub.state,
                 sub.categ_id, sub.date_due, sub.account_id, sub.account_line_id, sub.partner_bank_id,
@@ -172,7 +173,8 @@ class account_invoice_report(osv.osv):
                                       WHERE a.id = ai.id)
                                ELSE 1::bigint
                           END::numeric AS residual,
-                    ai.commercial_partner_id as commercial_partner_id
+                    ai.commercial_partner_id as commercial_partner_id,
+                    partner.country_id
         """
         return select_str
 
@@ -180,6 +182,7 @@ class account_invoice_report(osv.osv):
         from_str = """
                 FROM account_invoice_line ail
                 JOIN account_invoice ai ON ai.id = ail.invoice_id
+                JOIN res_partner partner ON ai.commercial_partner_id = partner.id
                 LEFT JOIN product_product pr ON pr.id = ail.product_id
                 left JOIN product_template pt ON pt.id = pr.product_tmpl_id
                 LEFT JOIN product_uom u ON u.id = ail.uos_id
@@ -195,7 +198,7 @@ class account_invoice_report(osv.osv):
                     ai.partner_id, ai.payment_term, ai.period_id, u.name, ai.currency_id, ai.journal_id,
                     ai.fiscal_position, ai.user_id, ai.company_id, ai.type, ai.state, pt.categ_id,
                     ai.date_due, ai.account_id, ail.account_id, ai.partner_bank_id, ai.residual,
-                    ai.amount_total, u.uom_type, u.category_id, ai.commercial_partner_id
+                    ai.amount_total, u.uom_type, u.category_id, ai.commercial_partner_id, partner.country_id
         """
         return group_by_str
 

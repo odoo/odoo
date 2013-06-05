@@ -67,6 +67,7 @@ This module manages:
         'test/sales_payment.yml',
         'test/account_voucher_report.yml',
         'test/case1_usd_usd.yml',
+        'test/case1_usd_usd_payment_rate.yml',
         'test/case2_usd_eur_debtor_in_eur.yml',
         'test/case2_usd_eur_debtor_in_usd.yml',
         'test/case3_eur_eur.yml',

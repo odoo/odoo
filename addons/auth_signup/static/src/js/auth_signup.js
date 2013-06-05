@@ -57,14 +57,14 @@ openerp.auth_signup = function(instance) {
                         self.signup_enabled = result.signup;
                         self.reset_password_enabled = result.reset_password;
                         if (!self.signup_enabled || self.$("form input[name=login]").val()){
-                            self.set('login_mode', 'default');
+                            self.set('login_mode', self.params.type || 'default');
                         } else {
                             self.set('login_mode', 'signup');
                         }
                     });
                 } else {
                     // TODO: support multiple database mode
-                    self.set('login_mode', 'default');
+                    self.set('login_mode', self.params.type || 'default');
                 }
             });
         },

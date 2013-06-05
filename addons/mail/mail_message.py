@@ -27,6 +27,7 @@ from openerp import SUPERUSER_ID
 from openerp.osv import osv, orm, fields
 from openerp.tools import html_email_clean
 from openerp.tools.translate import _
+from HTMLParser import HTMLParser
 
 _logger = logging.getLogger(__name__)
 
@@ -43,6 +44,19 @@ def decode(text):
         text = decode_header(text.replace('\r', ''))
         return ''.join([tools.ustr(x[0], x[1]) for x in text])
 
+class MLStripper(HTMLParser):
+    def __init__(self):
+        self.reset()
+        self.fed = []
+    def handle_data(self, d):
+        self.fed.append(d)
+    def get_data(self):
+        return ''.join(self.fed)
+
+def strip_tags(html):
+    s = MLStripper()
+    s.feed(html)
+    return s.get_data()
 
 class mail_message(osv.Model):
     """ Messages model: system notification (replacing res.log notifications),
@@ -125,7 +139,7 @@ class mail_message(osv.Model):
             ids = [ids]
         res = []
         for message in self.browse(cr, uid, ids, context=context):
-            name = '%s: %s' % (message.subject or '', message.body or '')
+            name = '%s: %s' % (message.subject or '', strip_tags(message.body or '') or '')
             res.append((message.id, self._shorten_name(name.lstrip(' :'))))
         return res
 
@@ -236,6 +250,8 @@ class mail_message(osv.Model):
             :param bool read: set notification as (un)read
             :param bool create_missing: create notifications for missing entries
                 (i.e. when acting on displayed messages not notified)
+
+            :return number of message mark as read
         """
         notification_obj = self.pool.get('mail.notification')
         user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
@@ -246,14 +262,16 @@ class mail_message(osv.Model):
 
         # all message have notifications: already set them as (un)read
         if len(notif_ids) == len(msg_ids) or not create_missing:
-            return notification_obj.write(cr, uid, notif_ids, {'read': read}, context=context)
+            notification_obj.write(cr, uid, notif_ids, {'read': read}, context=context)
+            return len(notif_ids)
 
         # some messages do not have notifications: find which one, create notification, update read status
         notified_msg_ids = [notification.message_id.id for notification in notification_obj.browse(cr, uid, notif_ids, context=context)]
         to_create_msg_ids = list(set(msg_ids) - set(notified_msg_ids))
         for msg_id in to_create_msg_ids:
             notification_obj.create(cr, uid, {'partner_id': user_pid, 'read': read, 'message_id': msg_id}, context=context)
-        return notification_obj.write(cr, uid, notif_ids, {'read': read}, context=context)
+        notification_obj.write(cr, uid, notif_ids, {'read': read}, context=context)
+        return len(notif_ids)
 
     def set_message_starred(self, cr, uid, msg_ids, starred, create_missing=True, context=None):
         """ Set messages as (un)starred. Technically, the notifications related
@@ -743,7 +761,7 @@ class mail_message(osv.Model):
         default_starred = context.pop('default_starred', False)
         # generate message_id, to redirect answers to the right discussion thread
         if not values.get('message_id') and values.get('reply_to'):
-            values['message_id'] = tools.generate_tracking_message_id('reply_to-%(model)s' % values)
+            values['message_id'] = tools.generate_tracking_message_id('reply_to')
         elif not values.get('message_id') and values.get('res_id') and values.get('model'):
             values['message_id'] = tools.generate_tracking_message_id('%(res_id)s-%(model)s' % values)
         elif not values.get('message_id'):
