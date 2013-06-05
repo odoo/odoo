@@ -1539,7 +1539,7 @@ class BaseModel(object):
                 else:
                     translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, msg)
                 error_msgs.append(
-                        _("Error occurred while validating the field(s) %s: %s") % (','.join(fields), translated_msg)
+                        _("The field(s) `%s` failed against a constraint: %s") % (', '.join(fields), translated_msg)
                 )
                 self._invalids.update(fields)
         if error_msgs:
