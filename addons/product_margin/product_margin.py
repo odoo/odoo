@@ -67,7 +67,7 @@ class product_product(osv.osv):
                 left join product_product product on (product.id=l.product_id)
                 left join product_template pt on (pt.id = l.product_id)
                     left join product_uom pu on (pt.uom_id = pu.id)
-                    left join product_uom pu2 on (i.uos_id = pu2.id)
+                    left join product_uom pu2 on (l.uos_id = pu2.id)
                 where l.product_id = %s and i.state in %s and i.type IN %s and (i.date_invoice IS NULL or (i.date_invoice>=%s and i.date_invoice<=%s and i.company_id=%s))
                 """
             invoice_types = ('out_invoice', 'in_refund')

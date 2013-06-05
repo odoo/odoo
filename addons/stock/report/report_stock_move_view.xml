@@ -147,7 +147,8 @@
                     help = "Analysis including future moves (similar to virtual stock)"/>
                 <separator/>
                 <filter icon="terp-go-home" name="location_type_internal" string="Internal" domain="[('location_type','=','internal')]"/>
-                <filter name="inmovesremaining" string="In moves still in stock" domain="[('location_src_type','!=','internal'), ('location_dest_type','=', 'internal'), ('product_qty', '>', 0.0)]"/>
+                <filter name="inmovesremaining" string="In moves still in stock" domain="[('location_src_type','!=','internal'), ('location_dest_type','=', 'internal'), ('product_qty', '>', 0.0)]"
+                    help="Analysis showing only the in moves which are still (partially) in stock"/>
                 <field name="product_id" default_focus="1"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="location_id" filter_domain="[('location_id', 'child_of', self)]"/>

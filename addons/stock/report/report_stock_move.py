@@ -256,7 +256,7 @@ class report_stock_valuation(osv.osv):
     _description = "Stock Valuation Statistics"
     _auto = False
         
-        
+    
     
     
     _order = 'date desc'

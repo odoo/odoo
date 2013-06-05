@@ -359,3 +359,22 @@
 - 
   !python {model: product.product}: |
     assert self.browse(cr, uid, ref("product_fifo_icecream")).standard_price == 65.0
+- 
+  Check Stock Valuation Report view, check first purchase order line corresponds with first outgoing line
+- 
+  !python {model: report.stock.valuation}: |
+    pick_ids = self.pool.get('purchase.order').browse(cr, uid, ref("purchase_order_fifo1")).picking_ids
+    original_move = pick_ids[0].name
+    pick_compare = self.pool.get("stock.picking").browse(cr, uid, ref("outgoing_fifo_shipment")).name
+    ids = self.search(cr, uid, [('product_id', '=', ref("product_fifo_icecream")), ('product_qty', '=', -10.0), ('value', '=', -500.0), 
+                                ('related_move_in', '=', original_move), ('name', '=', pick_compare)])
+    assert len(ids) == 1, 'Could not find the correct line in the report'
+- 
+  Check Stock Inventory Report view if it shows the correct value of the stock
+- 
+  !python {model: report.stock.inventory}: |
+    print self.pool.get("product.product").browse(cr, uid, ref("product_fifo_icecream")).qty_available
+    ids = self.search(cr, uid, [('product_id', '=', ref("product_fifo_icecream")), ("state", "=", "done"), ("product_qty", ">", 0.0)])
+    for line in self.browse(cr, uid, ids):
+      print line.product_qty, line.value, line.location_src_type, line.location_dest_type, line.state, line.ref
+    assert len(ids) == 0, 'No lines should be visible in the stock inventory'
