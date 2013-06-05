@@ -295,7 +295,10 @@
                         notified
                     </t>
                     <span class='oe_subtle'>•</span>
-                    <span t-att-title="widget.date"><t t-if="widget.timerelative" t-raw="widget.timerelative"/><t t-if="!widget.timerelative" t-raw="widget.date"/></span>
+                    <span t-att-title="widget.date">
+                        <t t-if="widget.timerelative" t-raw="widget.timerelative"/>
+                        <t t-if="!widget.timerelative" t-raw="widget.display_date"/>
+                    </span>
                     <span t-if="!widget.options.readonly" class='oe_subtle'>•</span>
                     <t t-if="!widget.options.readonly" t-call="mail.thread.message.vote"/>
                 </div>
