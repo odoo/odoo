@@ -109,11 +109,11 @@ class crm_claim(base_stage, osv.osv):
         'cause': fields.text('Root Cause'),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=crm.AVAILABLE_STATES, string="Status", readonly=True,
-                help='The status is set to \'Draft\', when a case is created.\
-                      If the case is in progress the status is set to \'Open\'.\
-                      When the case is over, the status is set to \'Done\'.\
-                      If the case needs to be reviewed then the status is \
-                      set to \'Pending\'.'),
+                help='The status is set to \'Draft\', when a case is created.\n'
+                     'If the case is in progress the status is set to \'Open\'.\n'
+                     'When the case is over, the status is set to \'Done\'.\n'
+                     'If the case needs to be reviewed then the status is' 
+                     'set to \'Pending\'.'),
     }
 
     _defaults = {
