@@ -1020,37 +1020,32 @@ class expression(object):
                 elif field.translate:
                     need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
                     sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
+                    instr = ' %s'
                     if need_wildcard:
                         right = '%%%s%%' % right
 
-                    subselect = '( SELECT res_id'          \
-                             '    FROM ir_translation'  \
-                             '   WHERE name = %s'       \
-                             '     AND lang = %s'       \
-                             '     AND type = %s'
-                    instr = ' %s'
+                    select = 'WITH temp_'+working_model._table+' (id, name) as (' \
+                        'SELECT wt.id, coalesce(it.value,wt.name) ' \
+                        'FROM '+working_model._table+' wt ' \
+                        'LEFT JOIN ir_translation it ON (it.name = %s and ' \
+                                        'it.lang = %s and ' \
+                                        'it.type = %s and ' \
+                                        'it.res_id = wt.id and ' \
+                                        "it.value != '')" \
+                        ') '
                     #Covering in,not in operators with operands (%s,%s) ,etc.
                     if sql_operator in ['in', 'not in']:
                         instr = ','.join(['%s'] * len(right))
-                        subselect += '     AND value ' + sql_operator + ' ' + " (" + instr + ")"   \
-                             ') UNION ('                \
-                             '  SELECT id'              \
-                             '    FROM "' + working_model._table + '"'       \
-                             '   WHERE "' + left + '" ' + sql_operator + ' ' + " (" + instr + "))"
+                        select += 'SELECT id FROM temp_'+working_model._table+' WHERE "name" '+sql_operator+' ('+instr+') order by name'
                     else:
-                        subselect += '     AND value ' + sql_operator + instr +   \
-                             ') UNION ('                \
-                             '  SELECT id'              \
-                             '    FROM "' + working_model._table + '"'       \
-                             '   WHERE "' + left + '" ' + sql_operator + instr + ")"
+                        select += 'SELECT id FROM temp_'+working_model._table+' WHERE "name" '+sql_operator+' '+instr+' order by name'
 
                     params = [working_model._name + ',' + left,
                               context.get('lang', False) or 'en_US',
                               'model',
                               right,
-                              right,
                              ]
-                    push(create_substitution_leaf(leaf, ('id', 'inselect', (subselect, params)), working_model))
+                    push(create_substitution_leaf(leaf, ('id', 'inselect', (select, params)), working_model))
 
                 else:
                     push_result(leaf)
