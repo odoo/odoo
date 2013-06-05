@@ -548,7 +548,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         var val = this.$el.val();
         this.$el.val('');
         var complete = this.$el.data('autocomplete');
-        if ((val && complete.term === undefined) || complete.previous !== undefined) {
+        if ((val && complete.term === undefined) || complete.previous) {
             throw new Error("new jquery.ui version altering implementation" +
                             " details relied on");
         }
