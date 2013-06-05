@@ -160,7 +160,13 @@ class purchase_requisition(osv.osv):
         return res
 
     def _prepare_purchase_order(self, cr, uid, requisition, supplier, context=None):
-        location_id = requisition.warehouse_id.lot_input_id.id
+        if not requisition.warehouse_id:
+            warehouse_obj = self.pool.get('stock.warehouse')
+
+            warehouse_id = warehouse_obj.search(cr, uid, [('company_id', '=', requisition.company_id.id)], context=context)
+            location_id = warehouse_obj.browse(cr, uid, warehouse_id, context=context)[0].lot_input_id.id
+        else:
+            location_id = requisition.warehouse_id.lot_input_id.id
         supplier_pricelist = supplier.property_product_pricelist_purchase or False
         return {
             'origin': requisition.name,
@@ -171,7 +177,7 @@ class purchase_requisition(osv.osv):
             'fiscal_position': supplier.property_account_position and supplier.property_account_position.id or False,
             'requisition_id':requisition.id,
             'notes':requisition.description,
-            'warehouse_id':requisition.warehouse_id.id,
+            'warehouse_id':requisition.warehouse_id.id if requisition.warehouse_id else False,
         }
     def _prepare_purchase_order_line(self, cr, uid, requisition, requisition_line, purchase_id, supplier, context=None):
         fiscal_position = self.pool.get('account.fiscal.position')
