@@ -86,7 +86,7 @@ class sale_order_line(osv.osv):
                     'event_id': order_line.event_id.id,
                 }
                 message = _("The registration has been created for event <i>%s</i> from the Sale Order %s. ") % (order_line.event_id.name, order_line.order_id.name)
-                context.update({'mail_create_nolog': True, 'message': message })
+                context.update({'mail_create_nolog': True})
                 registration_id = registration_obj.create(cr, uid, dic, context=context)
                 registration_obj.message_post(cr, uid, [registration_id], body=message, context=context)
         return super(sale_order_line, self).button_confirm(cr, uid, ids, context=context)
