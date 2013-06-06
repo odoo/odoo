@@ -33,8 +33,9 @@
         </record>
 
         <record model="ir.ui.view" id="portal_hr_kanban_view_employees">
-            <field name="name">HR - Employess Kanban</field>
+            <field name="name">HR - Employees Kanban</field>
             <field name="model">hr.employee</field>
+            <field name="inherit_id" eval="False"/>
             <field name="arch" type="xml">
                 <kanban>
                     <field name="last_login"/>
