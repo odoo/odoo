@@ -4839,7 +4839,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
             this.searchview.hide();
         }
         if (this.view_list) {
-            this.view_list.$el.hide();
+            this.view_list.do_hide();
         }
         this.setup_form_view();
     },
