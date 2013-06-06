@@ -331,7 +331,7 @@
                     <field name="categ_ids" string="Category" filter_domain="[('categ_ids','ilike',self)]"/>
                     <field name="section_id" context="{'invisible_section': False}" groups="base.group_multi_salesteams"/>
                     <field name="user_id"/>
-                    <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
+                    <field name="partner_id" filter_domain="['|',('partner_id','=',self),('partner_id','child_of',self)]"/>
                     <field name="create_date"/>
                     <field name="country_id" context="{'invisible_country': False}"/>
                     <separator/>
