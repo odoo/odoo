@@ -257,9 +257,13 @@ def main(args):
         setup_pid_file()
         # Some module register themselves when they are loaded so we need the
         # services to be running before loading any registry.
-        if config['workers']:
-            openerp.service.start_services_workers()
+        if not openerp.evented:
+            if config['workers']:
+                openerp.service.start_services_workers()
+            else:
+                openerp.service.start_services()
         else:
+            config['xmlrpc_port'] = config['longpolling_port']
             openerp.service.start_services()
 
     rc = 0
