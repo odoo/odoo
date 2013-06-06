@@ -88,6 +88,7 @@ class mail_mail(osv.Model):
         """
         if values.get('reply_to'):
             return values.get('reply_to')
+        redirect_gateway = True  # whether replies will be redirected inside the document
 
         # email_reply_to, model, res_id: comes from values OR related message
         email_reply_to = False
@@ -97,7 +98,8 @@ class mail_mail(osv.Model):
         if values.get('mail_message_id') and (not model or not res_id):
             message = self.pool.get('mail.message').browse(cr, uid, values.get('mail_message_id'), context=context)
             if message.reply_to:
-                email_reply_to = tools.email_split(message.reply_to)[0]
+                email_reply_to = message.reply_to
+                redirect_gateway = False
             if not model:
                 model = message.model
             if not res_id:
@@ -115,7 +117,7 @@ class mail_mail(osv.Model):
                 email_reply_to = emails[0]
 
         # format 'Document name <email_address>'
-        if email_reply_to and model and res_id:
+        if email_reply_to and model and res_id and redirect_gateway:
             document_name = self.pool[model].name_get(cr, SUPERUSER_ID, [res_id], context=context)[0]
             if document_name:
                 # sanitize document name
