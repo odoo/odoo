@@ -72,7 +72,8 @@ class gamification_goal_type(osv.Model):
                 ('python', 'Automatic: execute a specific Python code'),
             ],
             string="Computation Mode",
-            required=True), #TODO: add help tooltip
+            help="Defined how will be computed the goals. The result of the operation will be stored in the field 'Current'.",
+            required=True),
         'display_mode': fields.selection([
                 ('progress', 'Progressive (using numerical values)'),
                 ('checkbox', 'Checkbox (done or not-done)'),
@@ -223,8 +224,8 @@ class gamification_goal(osv.Model):
                 continue
 
             if goal.type_id.computation_mode == 'manually':
+                # no comoutation for manual goals, only check for reminders
                 towrite = {'current': goal.current}
-                # check for remind to update
                 if goal.remind_update_delay and goal.last_update:
                     delta_max = timedelta(days=goal.remind_update_delay)
                     last_update = datetime.strptime(goal.last_update, '%Y-%m-%d').date()
@@ -237,6 +238,7 @@ class gamification_goal(osv.Model):
                         self.message_post(cr, uid, goal.id, body=body_html, partner_ids=[goal.user_id.partner_id.id], context=context, subtype='mail.mt_comment')
 
             elif goal.type_id.computation_mode == 'python':
+                # execute the chosen method
                 values = {'cr': cr, 'uid': goal.user_id.id, 'context': context, 'self': self.pool.get('gamification.goal.type')}
                 result = safe_eval(goal.type_id.compute_code, values, {})
 
@@ -251,6 +253,7 @@ class gamification_goal(osv.Model):
                 obj = self.pool.get(goal.type_id.model_id.model)
                 field_date_name = goal.type_id.field_date_id.name
 
+                # eval the domain with user_id replaced by goal user
                 domain = safe_eval(goal.type_id.domain,
                                    {'user_id': goal.user_id.id})
                 if goal.start_date and field_date_name:
