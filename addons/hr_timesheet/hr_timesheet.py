@@ -37,8 +37,11 @@ class hr_employee(osv.osv):
     def _getAnalyticJournal(self, cr, uid, context=None):
         md = self.pool.get('ir.model.data')
         try:
-            result = md.get_object_reference(cr, uid, 'hr_timesheet', 'analytic_journal')
-            return result[1]
+            dummy, res_id = md.get_object_reference(cr, uid, 'hr_timesheet', 'analytic_journal')
+            #search on id found in result to check if current user has read access right
+            check_right = self.pool.get('account.analytic.journal').search(cr, uid, [('id', '=', res_id)], context=context)
+            if check_right:
+                return res_id
         except ValueError:
             pass
         return False
@@ -46,8 +49,11 @@ class hr_employee(osv.osv):
     def _getEmployeeProduct(self, cr, uid, context=None):
         md = self.pool.get('ir.model.data')
         try:
-            result = md.get_object_reference(cr, uid, 'product', 'product_product_consultant')
-            return result[1]
+            dummy, res_id = md.get_object_reference(cr, uid, 'product', 'product_product_consultant')
+            #search on id found in result to check if current user has read access right
+            check_right = self.pool.get('product.template').search(cr, uid, [('id', '=', res_id)], context=context)
+            if check_right:
+                return res_id
         except ValueError:
             pass
         return False

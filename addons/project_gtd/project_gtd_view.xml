@@ -106,6 +106,8 @@
                 <filter name="open" string="In Progress" domain="[('state','in',('draft','open'))]" help="In Progress and draft tasks" icon="terp-camera_test"/>
                 <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
                 <separator/>
+                <filter name="message_unread" string="Unread Messages" domain="[('message_unread','=',True)]"/>
+                <separator/>
                 <filter string="Inbox" domain="[('timebox_id','=', False)]" help="Tasks having no timebox assigned yet"/>
                 <group expand="0" string="Display">
                     <filter string="Show Context" name="context_show" context="{'context_show': True}" domain="[]" icon="terp-camera_test" help="Show the context field"/>

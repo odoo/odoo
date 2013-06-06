@@ -196,7 +196,7 @@ class hr_applicant(base_stage, osv.Model):
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'write_date': fields.datetime('Update Date', readonly=True),
         'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage', track_visibility='onchange',
-                        domain="['&', ('fold', '=', False), '|', ('department_id', '=', department_id), ('department_id', '=', False)]"),
+                        domain="['|', ('department_id', '=', department_id), ('department_id', '=', False)]"),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=AVAILABLE_STATES, string="Status", readonly=True,
                 help='The status is set to \'Draft\', when a case is created.\
@@ -355,10 +355,12 @@ class hr_applicant(base_stage, osv.Model):
             This override updates the document according to the email.
         """
         if custom_values is None: custom_values = {}
+        val = msg.get('from').split('<')[0]
         desc = html2plaintext(msg.get('body')) if msg.get('body') else ''
         defaults = {
             'name':  msg.get('subject') or _("No Subject"),
             'description': desc,
+            'partner_name':val,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'user_id': False,
@@ -510,8 +512,11 @@ class hr_job(osv.osv):
 
     def _auto_init(self, cr, context=None):
         """Installation hook to create aliases for all jobs and avoid constraint errors."""
-        res = self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(hr_job,self)._auto_init,
-            self._columns['alias_id'], 'name', alias_prefix='job+', alias_defaults={'job_id': 'id'}, context=context)
+        if context is None:
+            context = {}
+        alias_context = dict(context, alias_model_name='hr.applicant')
+        res = self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(hr_job, self)._auto_init,
+            self._columns['alias_id'], 'name', alias_prefix='job+', alias_defaults={'job_id': 'id'}, context=alias_context)
         return res
 
     def create(self, cr, uid, vals, context=None):
