@@ -355,27 +355,19 @@ def httprequest(f):
 #----------------------------------------------------------
 # Local storage of requests
 #----------------------------------------------------------
-_thlocal = threading.local()
+from werkzeug.local import LocalStack
 
-class RequestProxy(object):
-    def __getattr__(self, name):
-        return getattr(_thlocal.stack[-1], name)
-    def __setattr__(self, name, val):
-        return setattr(_thlocal.stack[-1], name, val)
-    def __delattr__(self, name):
-        return delattr(_thlocal.stack[-1], name)
-    @classmethod
-    def set_request(cls, request):
-        class with_obj(object):
-            def __enter__(self):
-                if getattr(_thlocal, "stack", None) is None:
-                    _thlocal.stack = []
-                _thlocal.stack.append(request)
-            def __exit__(self, *args):
-                _thlocal.stack.pop()
-        return with_obj()
+_request_stack = LocalStack()
 
-request = RequestProxy()
+def set_request(request):
+    class with_obj(object):
+        def __enter__(self):
+            _request_stack.push(request)
+        def __exit__(self, *args):
+            _request_stack.pop()
+    return with_obj()
+
+request = _request_stack()
 
 #----------------------------------------------------------
 # Controller registration with a metaclass
@@ -659,16 +651,16 @@ class Root(object):
                         if exposed == 'json':
                             _logger.debug("Dispatch json to %s %s %s", ps, c, method_name)
                             def fct(request):
-                                req = JsonRequest(request)
-                                with RequestProxy.set_request(req):
-                                    return req.dispatch(method)
+                                _req = JsonRequest(request)
+                                with set_request(_req):
+                                    return request.dispatch(method)
                             return fct
                         elif exposed == 'http':
                             _logger.debug("Dispatch http to %s %s %s", ps, c, method_name)
                             def fct(request):
-                                req = HttpRequest(request)
-                                with RequestProxy.set_request(req):
-                                    return req.dispatch(method)
+                                _req = HttpRequest(request)
+                                with set_request(_req):
+                                    return request.dispatch(method)
                             return fct
                     if method_name != "index":
                         method_name = "index"

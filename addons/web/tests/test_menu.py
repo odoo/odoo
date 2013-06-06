@@ -3,7 +3,7 @@ import collections
 import mock
 import unittest2
 from openerp.addons.web.http import request as req
-from openerp.addons.web.http import RequestProxy
+from openerp.addons.web.http import set_request
 
 from ..controllers import main
 
@@ -15,7 +15,7 @@ class Placeholder(object):
 class LoadTest(unittest2.TestCase):
     def setUp(self):
         self.menu = main.Menu()
-        self.tmp_req = RequestProxy.set_request(mock.Mock())
+        self.tmp_req = set_request(mock.Mock())
         self.tmp_req.__enter__()
 
         # Have self.request.session.model() return a different mock object for

@@ -3,7 +3,7 @@ import mock
 import unittest2
 import openerp.addons.web.controllers.main
 from openerp.addons.web.http import request as req
-from openerp.addons.web.http import RequestProxy
+from openerp.addons.web.http import _request_stack
 
 class TestDataSetController(unittest2.TestCase):
     def setUp(self):
