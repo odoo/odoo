@@ -96,7 +96,8 @@ class mail_mail(osv.Model):
         email_from = values.get('email_from')
         if values.get('mail_message_id') and (not model or not res_id):
             message = self.pool.get('mail.message').browse(cr, uid, values.get('mail_message_id'), context=context)
-            email_reply_to = tools.email_split(message.reply_to)
+            if message.reply_to:
+                email_reply_to = tools.email_split(message.reply_to)[0]
             if not model:
                 model = message.model
             if not res_id:
