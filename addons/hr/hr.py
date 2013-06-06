@@ -23,6 +23,7 @@ import logging
 
 from openerp.modules.module import get_module_resource
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
 from openerp import tools
 from openerp.tools.translate import _
 
