@@ -301,6 +301,14 @@
     </record>
 
     <!-- HR Job -->
+
+    <record model="ir.actions.act_window" id="action_hr_job_applications">
+            <field name="name">Applications</field>
+            <field name="res_model">hr.applicant</field>
+            <field name="view_mode">kanban,tree,form,graph,calendar</field>
+            <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id}</field>
+    </record>
+
     <record id="hr_job_survey" model="ir.ui.view">
         <field name="name">hr.job.form1</field>
         <field name="model">hr.job</field>
@@ -310,13 +318,14 @@
                 <label for="survey_id" groups="base.group_user"/>
                 <div groups="base.group_user">
                     <field name="survey_id" class="oe_inline" domain="[('type','=','Human Resources')]"/>
-                    <button class="oe_inline"
+                    <button class="oe_inline oe_link"
                         string="Interview"
+                        icon="gtk-go-forward"
                         name="action_print_survey" type="object"
                         attrs="{'invisible':[('survey_id','=',False)]}"/>
                 </div>
             </field>
-            <xpath expr="//div[@class='oe_title']//h1" position="after">
+            <xpath expr="//div[@class='oe_title']//h2" position="after">
                 <div name="group_alias"
                         attrs="{'invisible': [('alias_domain', '=', False)]}">
                     <label for="alias_id" string="Email Alias"/>
@@ -329,14 +338,12 @@
                     </span>
                 </div>
             </xpath>
+            <xpath expr="//div[@class='oe_title']" position="after">
+                <div class="oe_right oe_button_box" name="buttons">
+                    <button string="Applications" name="%(action_hr_job_applications)d" type="action"/>
+                </div>
+            </xpath>
         </field>
-    </record>
-    
-    <record model="ir.actions.act_window" id="hr_job_applications">
-            <field name="name">Applications</field>
-            <field name="res_model">hr.applicant</field>
-            <field name="view_mode">kanban,tree,form,graph,calendar</field>
-            <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id}</field>
     </record>
 
      <record id="view_hr_job_kanban" model="ir.ui.view">
@@ -379,11 +386,11 @@
                                     <div class="oe_job oe_manager_name">
                                         <t t-esc="record.manager_id.value"/>
                                     </div>
-                                    <img t-att-src="kanban_image('hr.employee', 'image', record.manager_id.raw_value, {'preview_image': 'image_small'})" t-att-title="record.manager_id.value.name" class="oe_kanban_avatar"/>
+                                    <img t-att-src="kanban_image('hr.employee', 'image', record.manager_id.raw_value, {'preview_image': 'image_small'})" t-att-title="record.manager_id.value.name" class="oe_kanban_avatar oe_job_avatar"/>
                                     <t t-if="record.state.raw_value == 'recruit'">
                                         <div class="oe_applications">
-                                            <a name="%(hr_job_applications)d" type="action" t-if="record.application_count.value gt 1" class="oe_link"><t t-esc="record.application_count.value"/> Applications</a>
-                                            <a name="%(hr_job_applications)d" type="action" t-if="record.application_count.value lt 2" class="oe_link"><t t-esc="record.application_count.value"/> Application</a>
+                                            <a name="%(action_hr_job_applications)d" type="action" t-if="record.application_count.value gt 1" class="oe_link"><t t-esc="record.application_count.value"/> Applications</a>
+                                            <a name="%(action_hr_job_applications)d" type="action" t-if="record.application_count.value lt 2" class="oe_link"><t t-esc="record.application_count.value"/> Application</a>
                                         </div>
                                         <field state="recruit" name="no_of_recruitment" widget="gage" options="{'min_field': 'no_of_hired_employee','max_field': 'no_of_recruitment', 'label_field': 'no_of_hired_employee', 'action_change': 'action_hired_employee'}">Forecast</field>
                                     </t>

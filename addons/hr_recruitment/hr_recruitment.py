@@ -402,13 +402,6 @@ class hr_applicant(base_stage, osv.Model):
 
         return super(hr_applicant, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
-    def create(self, cr, uid, vals, context=None):
-        obj_id = super(hr_applicant, self).create(cr, uid, vals, context=context)
-        applicant = self.browse(cr, uid, obj_id, context=context)
-        if applicant.job_id:
-            self.pool.get('hr.job').message_post(cr, uid, [applicant.job_id.id], body=_('Applicant <b>created</b>'), subtype="hr_recruitment.mt_job_new_applicant", context=context)
-        return obj_id
-
     def case_open(self, cr, uid, ids, context=None):
         """
             open Request of the applicant for the hr_recruitment

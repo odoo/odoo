@@ -91,7 +91,7 @@ class hr_job(osv.osv):
         return res
 
     _name = "hr.job"
-    _description = "Job Description"
+    _description = "Job Position"
     _inherit = ['mail.thread','ir.needaction_mixin']
     _columns = {
         'name': fields.char('Job Name', size=128, required=True, select=True),
@@ -112,8 +112,8 @@ class hr_job(osv.osv):
                 'hr.employee': (_get_job_position, ['job_id'], 10),
             },
             multi='no_of_employee'),
-        'no_of_recruitment': fields.float('Expected New Employee', help='Number of new employees you expect to recruit.'),
-        'no_of_hired_employee':fields.float('Hired Employee', help='Number of hired employees during this recruitment phase.'),
+        'no_of_recruitment': fields.float('Expected New Employees', help='Number of new employees you expect to recruit.'),
+        'no_of_hired_employee':fields.float('Hired Employees', help='Number of hired employees for this job position during recruitment phase.'),
         'employee_ids': fields.one2many('hr.employee', 'job_id', 'Employees', groups='base.group_user'),
         'description': fields.text('Job Description'),
         'requirements': fields.text('Requirements'),
