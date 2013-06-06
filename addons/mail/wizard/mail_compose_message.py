@@ -157,7 +157,7 @@ class mail_compose_message(osv.TransientModel):
 
         return super(mail_compose_message, self).check_access_rule(cr, uid, ids, operation, context=context)
 
-    def _notify(self, cr, uid, newid, context=None, force_send=False):
+    def _notify(self, cr, uid, newid, context=None, force_send=False, user_signature=True):
         """ Override specific notify method of mail.message, because we do
             not want that feature in the wizard. """
         return

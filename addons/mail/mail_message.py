@@ -768,7 +768,9 @@ class mail_message(osv.Model):
         elif not values.get('message_id'):
             values['message_id'] = tools.generate_tracking_message_id('private')
         newid = super(mail_message, self).create(cr, uid, values, context)
-        self._notify(cr, uid, newid, context=context, force_send=context.get('mail_notify_force_send', True))
+        self._notify(cr, uid, newid, context=context,
+                        force_send=context.get('mail_notify_force_send', True),
+                        user_signature=context.get('mail_notify_user_signature', True))
         # TDE FIXME: handle default_starred. Why not setting an inv on starred ?
         # Because starred will call set_message_starred, that looks for notifications.
         # When creating a new mail_message, it will create a notification to a message
@@ -882,7 +884,7 @@ class mail_message(osv.Model):
             return ''
         return result
 
-    def _notify(self, cr, uid, newid, context=None, force_send=False):
+    def _notify(self, cr, uid, newid, context=None, force_send=False, user_signature=True):
         """ Add the related record followers to the destination partner_ids if is not a private message.
             Call mail_notification.notify to manage the email sending
         """
@@ -912,7 +914,8 @@ class mail_message(osv.Model):
 
         # notify
         if partners_to_notify:
-            notification_obj._notify(cr, uid, newid, partners_to_notify=[p.id for p in partners_to_notify], context=context, force_send=force_send)
+            notification_obj._notify(cr, uid, newid, partners_to_notify=[p.id for p in partners_to_notify], context=context,
+                                            force_send=force_send, user_signature=user_signature)
         message.refresh()
 
         # An error appear when a user receive a notification without notifying
