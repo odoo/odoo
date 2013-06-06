@@ -352,9 +352,6 @@ class mail_message(osv.Model):
             else:
                 partner_ids = [partner_tree[partner.id] for partner in message.partner_ids
                                 if partner.id in partner_tree]
-            # for partner in message.notified_partner_ids:
-            #     if partner.id in partner_tree:
-            #     partner_ids.append(partner_tree[partner.id])
             attachment_ids = []
             for attachment in message.attachment_ids:
                 if attachment.id in attachments_tree:

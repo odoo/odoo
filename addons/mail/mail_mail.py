@@ -66,6 +66,9 @@ class mail_mail(osv.Model):
     }
 
     def _get_default_from(self, cr, uid, context=None):
+        """ Kept for compatibility
+            TDE TODO: remove me in 8.0
+        """
         return self.pool['mail.message']._get_default_from(cr, uid, context=context)
 
     _defaults = {
@@ -85,14 +88,15 @@ class mail_mail(osv.Model):
         """
         if values.get('reply_to'):
             return values.get('reply_to')
-        email_reply_to = False
 
-        # model, res_id: comes from values OR related message
+        # email_reply_to, model, res_id: comes from values OR related message
+        email_reply_to = False
         model = values.get('model')
         res_id = values.get('res_id')
         email_from = values.get('email_from')
         if values.get('mail_message_id') and (not model or not res_id):
             message = self.pool.get('mail.message').browse(cr, uid, values.get('mail_message_id'), context=context)
+            email_reply_to = message.reply_to
             if not model:
                 model = message.model
             if not res_id:
@@ -101,7 +105,7 @@ class mail_mail(osv.Model):
                 email_from = message.email_from
 
         # if model and res_id: try to use ``message_get_reply_to`` that returns the document alias
-        if model and res_id and hasattr(self.pool[model], 'message_get_reply_to'):
+        if not email_reply_to and model and res_id and hasattr(self.pool[model], 'message_get_reply_to'):
             email_reply_to = self.pool[model].message_get_reply_to(cr, uid, [res_id], context=context)[0]
         # no alias reply_to -> reply_to will be the email_from, only the email part
         if not email_reply_to and email_from:

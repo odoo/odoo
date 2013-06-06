@@ -259,13 +259,15 @@ class mail_compose_message(osv.TransientModel):
                         new_attach_id = ir_attachment_obj.copy(cr, uid, attach_id, {'res_model': self._name, 'res_id': wizard.id}, context=context)
                         attachment_ids.append(new_attach_id)
                     post_values['attachment_ids'] = attachment_ids
-                    post_values.update(email_dict)
                     # email_from: mass mailing only can specify another email_from
                     if email_dict.get('email_from'):
                         post_values['email_from'] = email_dict.pop('email_from')
                     # replies redirection: mass mailing only
                     if not wizard.same_thread:
                         post_values['reply_to'] = email_dict.pop('reply_to')
+                    else:
+                        email_dict.pop('reply_to')
+                    post_values.update(email_dict)
                 # clean the context (hint: mass mailing sets some default values that
                 # could be wrongly interpreted by mail_mail)
                 context.pop('default_email_to', None)
