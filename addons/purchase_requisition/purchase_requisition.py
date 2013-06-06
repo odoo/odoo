@@ -61,6 +61,7 @@ class purchase_requisition(osv.osv):
             'Status', track_visibility='onchange', required=True),
         'multiple_rfq_per_supplier': fields.boolean('Multiple RFQ per supplier'),
         'account_analytic_id':fields.many2one('account.analytic.account', 'Analytic Account',),
+        'schedule_date': fields.date('Scheduled Date', select=True),
     }
     _defaults = {
         'date_start': lambda *args: time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -170,6 +171,7 @@ class purchase_requisition(osv.osv):
         supplier_pricelist = supplier.property_product_pricelist_purchase or False
         return {
             'origin': requisition.name,
+            'order_date': requisition.date_end or fields.date.context_today,
             'partner_id': supplier.id,
             'pricelist_id': supplier_pricelist.id,
             'location_id': location_id,
@@ -181,20 +183,32 @@ class purchase_requisition(osv.osv):
         }
     def _prepare_purchase_order_line(self, cr, uid, requisition, requisition_line, purchase_id, supplier, context=None):
         fiscal_position = self.pool.get('account.fiscal.position')
+        res_partner = self.pool.get('res.partner')
+        product_product = self.pool.get('product.product')
         product = requisition_line.product_id
         seller_price, qty, default_uom_po_id, date_planned = self._seller_details(cr, uid, requisition_line, supplier, context=context)
         taxes_ids = product.supplier_taxes_id
         taxes = fiscal_position.map_tax(cr, uid, supplier.property_account_position, taxes_ids)
+        # - determine name and notes based on product in partner lang.
+        context_partner = context.copy()
+
+        if supplier:
+            lang = res_partner.browse(cr, uid, supplier.id).lang
+            context_partner.update( {'lang': lang, 'partner_id': supplier.id} )
+        #call name_get() with partner in the context to eventually match name and description in the seller_ids field
+        dummy, name = product_product.name_get(cr, uid, product.id, context=context_partner)[0]
+        if product.description_purchase:
+            name += '\n' + product.description_purchase
         return {
             'order_id': purchase_id,
-            'name': product.partner_ref,
+            'name': name,
             'product_qty': qty,
             'product_id': product.id,
             'product_uom': default_uom_po_id,
             'price_unit': seller_price,
-            'date_planned': date_planned,
+            'date_planned': requisition_line.schedule_date,
             'taxes_id': [(6, 0, taxes)],
-            'account_analytic_id':requisition.account_analytic_id.id,
+            'account_analytic_id':requisition_line.account_analytic_id.id,
         }
     def make_purchase_order(self, cr, uid, ids, partner_id, context=None):
         """
@@ -314,9 +328,11 @@ class purchase_requisition_line(osv.osv):
         'requisition_id': fields.many2one('purchase.requisition','Purchase Requisition', ondelete='cascade'),
         'po_line_ids': fields.related('requisition_id', 'po_line_ids', string='PO lines', readonly=True, type="one2many"),
         'company_id': fields.related('requisition_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
+        'account_analytic_id':fields.many2one('account.analytic.account', 'Analytic Account',),
+        'schedule_date': fields.date('Scheduled Date', select=True),
     }
 
-    def onchange_product_id(self, cr, uid, ids, product_id, product_uom_id, context=None):
+    def onchange_product_id(self, cr, uid, ids, product_id, product_uom_id, parent_analytic_account, analytic_account, parent_date, date, context=None):
         """ Changes UoM and name if product_id changes.
         @param name: Name of the field
         @param product_id: Changed product_id
@@ -326,6 +342,10 @@ class purchase_requisition_line(osv.osv):
         if product_id:
             prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             value = {'product_uom_id': prod.uom_id.id,'product_qty':1.0}
+        if not analytic_account:
+            value.update({'account_analytic_id': parent_analytic_account})
+        if not date:
+            value.update({'schedule_date': parent_date})
         return {'value': value}
 
     _defaults = {

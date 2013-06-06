@@ -933,7 +933,7 @@ class purchase_order_line(osv.osv):
 
     def onchange_product_uom(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
             partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
-            name=False, price_unit=False, lead_time=False, context=None):
+            name=False, price_unit=False, lead_time=False, state='draft', context=None):
         """
         onchange handler of product_uom.
         """
@@ -968,7 +968,7 @@ class purchase_order_line(osv.osv):
 
     def onchange_product_id(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
             partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
-            name=False, price_unit=False, lead_time=False, context=None):
+            name=False, price_unit=False, lead_time=False, state='draft', context=None):
         """
         onchange handler of product_id.
         """
@@ -1045,13 +1045,13 @@ class purchase_order_line(osv.osv):
         # - determine lead time value for product
         product_lead_time = lead_time or supplierinfo.delay if supplierinfo else 0
         res['value'].update({'product_lead_time': product_lead_time})
-
-        # - determine price_unit and taxes_id
-        if pricelist_id:
-            price = product_pricelist.price_get(cr, uid, [pricelist_id],
-                    product.id, qty or 1.0, partner_id or False, {'uom': uom_id, 'date': date_order})[pricelist_id]
-        else:
-            price = product.standard_price
+        if state not in ('sent','bid'):
+            # - determine price_unit and taxes_id
+            if pricelist_id:
+                price = product_pricelist.price_get(cr, uid, [pricelist_id],
+                        product.id, qty or 1.0, partner_id or False, {'uom': uom_id, 'date': date_order})[pricelist_id]
+            else:
+                price = product.standard_price
 
         taxes = account_tax.browse(cr, uid, map(lambda x: x.id, product.supplier_taxes_id))
         fpos = fiscal_position_id and account_fiscal_position.browse(cr, uid, fiscal_position_id, context=context) or False

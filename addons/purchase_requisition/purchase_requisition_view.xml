@@ -59,6 +59,7 @@
                     <group>
                         <field name="date_start"/>
                         <field name="date_end"/>
+                        <field name="schedule_date"/>
                         <field name="origin" placeholder="e.g. PO0025"/>
                         <field name="warehouse_id" widget="selection" groups="stock.group_locations"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
@@ -68,15 +69,20 @@
                     <page string="Products">
                         <field name="line_ids">
                             <tree string="Products" editable="bottom">
-                                <field name="product_id" on_change="onchange_product_id(product_id,product_uom_id)"/>
+                                <field name="product_id" on_change="onchange_product_id(product_id,product_uom_id,parent.account_analytic_id,account_analytic_id,parent.schedule_date,schedule_date)"/>
                                 <field name="product_qty"/>
                                 <field name="product_uom_id" groups="product.group_uom"/>
+                                <field name="schedule_date"/>
+                                <field name="account_analytic_id" groups="purchase.group_analytic_accounting"/>
+                                
                             </tree>
                             <form string="Products" version="7.0">
                                 <group>
                                     <field name="product_id" />
                                     <field name="product_qty"/>
                                     <field name="product_uom_id" />
+                                    <field name="schedule_date"/>
+                                    <field name="account_analytic_id" groups="purchase.group_analytic_accounting"/>
                                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                                 </group>
                             </form>
