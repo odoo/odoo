@@ -650,15 +650,15 @@ class Root(object):
                         method = c.get_wrapped_method(method_name)
                         if exposed == 'json':
                             _logger.debug("Dispatch json to %s %s %s", ps, c, method_name)
-                            def fct(request):
-                                _req = JsonRequest(request)
+                            def fct(_request):
+                                _req = JsonRequest(_request)
                                 with set_request(_req):
                                     return request.dispatch(method)
                             return fct
                         elif exposed == 'http':
                             _logger.debug("Dispatch http to %s %s %s", ps, c, method_name)
-                            def fct(request):
-                                _req = HttpRequest(request)
+                            def fct(_request):
+                                _req = HttpRequest(_request)
                                 with set_request(_req):
                                     return request.dispatch(method)
                             return fct
