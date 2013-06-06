@@ -21,8 +21,9 @@
             <field name="inherit_id" ref="product.product_normal_form_view" />
             <field name="arch" type="xml">
                 <field name="standard_price" position="after">
-                    <field name="calculate_price" />
-                    <button name="compute_price" attrs="{'invisible': [('cost_method', '!=', 'standard')]}" type="object" string="Compute standard price"/>
+                    <button name="%(action_view_compute_price_wizard)d" string="Recompute price from BoM"
+                            type="action" attrs="{'invisible': [('cost_method', '!=', 'standard')]}"
+                             groups="product.group_costing_method"/>
                 </field>
             </field>
         </record>

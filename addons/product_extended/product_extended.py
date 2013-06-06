@@ -28,66 +28,74 @@ from openerp.osv import osv
 class product_product(osv.osv):
     _name = 'product.product'
     _inherit = 'product.product'
-    
 
 
-    _columns = {
-        'calculate_price': fields.boolean('Compute standard price', help="Check this box if the standard price must be computed from the BoM."),
-    }
-
-    _defaults = {
-        'calculate_price': lambda w,x,y,z: False,
-    }
-
-    def compute_price(self, cr, uid, ids, *args):
-        proxy = self.pool.get('mrp.bom')
+    def compute_price(self, cr, uid, ids, recursive=False, test=False, real_time_accounting = False, context=None):
+        '''
+        Will return test dict when the test = False
+        Multiple ids at once?
+        testdict is used to inform the user about the changes to be made
+        '''
+        testdict = {}
         for prod_id in ids:
-            bom_ids = proxy.search(cr, uid, [('product_id', '=', prod_id)])
+            bom_obj = self.pool.get('mrp.bom')
+            bom_ids = bom_obj.search(cr, uid, [('bom_id', '=', False), ('product_id','=', prod_id), ('bom_lines', '!=', False)], context=context)
             if bom_ids:
-                for bom in proxy.browse(cr, uid, bom_ids):
-                    self._calc_price(cr, uid, bom)
-        return True
-                    
-    def _calc_price(self, cr, uid, bom):
-        if not bom.product_id.calculate_price:
-            return bom.product_id.standard_price
+                bom_id = bom_ids[0]
+                # In recursive mode, it will first compute the prices of child boms
+                if recursive:
+                    #Search the products that are components of this bom of prod_id
+                    boms = bom_obj.search(cr, uid, [('bom_id', '=', bom_id)], context=context)
+                    #Call compute_price on these subproducts
+                    prod_set = set([x.product_id.id for x in bom_obj.browse(cr, uid, boms, context=context)])
+                    res = self.compute_price(cr, uid, list(prod_set), recursive=recursive, test=test, real_time_accounting = real_time_accounting, context=context)
+                    if test: 
+                        testdict.update(res)
+                #Use calc price to calculate and put the price on the product of the BoM if necessary
+                price = self._calc_price(cr, uid, bom_obj.browse(cr, uid, bom_id, context=context), test=test, real_time_accounting = real_time_accounting, context=context)
+                if test:
+                    testdict.update({prod_id : price})
+        if test:
+            print testdict
+            return testdict
         else:
-            price = 0
-            if bom.bom_lines:
-                for sbom in bom.bom_lines:
-                    my_qty = sbom.bom_lines and 1.0 or sbom.product_qty
-                    price += self._calc_price(cr, uid, sbom) * my_qty
-            else:
-                bom_obj = self.pool.get('mrp.bom')
-                no_child_bom = bom_obj.search(cr, uid, [('product_id', '=', bom.product_id.id), ('bom_id', '=', False)])
-                if no_child_bom and bom.id not in no_child_bom:
-                    other_bom = bom_obj.browse(cr, uid, no_child_bom)[0] #TODO zero before?
-                    if not other_bom.product_id.calculate_price:
-                        price += self._calc_price(cr, uid, other_bom) * other_bom.product_qty
-                    else:
-#                        price += other_bom.product_qty * other_bom.product_id.standard_price
-                        price += other_bom.product_id.standard_price
-                else:
-#                    price += bom.product_qty * bom.product_id.standard_price
-                    price += bom.product_id.standard_price
-#                if no_child_bom:
-#                    other_bom = bom_obj.browse(cr, uid, no_child_bom)[0]
-#                    price += bom.product_qty * self._calc_price(cr, uid, other_bom)
-#                else:
-#                    price += bom.product_qty * bom.product_id.standard_price
+            return True
 
-            if bom.routing_id:
-                for wline in bom.routing_id.workcenter_lines:
-                    wc = wline.workcenter_id
-                    cycle = wline.cycle_nbr
-                    hour = (wc.time_start + wc.time_stop + cycle * wc.time_cycle) *  (wc.time_efficiency or 1.0)
-                    price += wc.costs_cycle * cycle + wc.costs_hour * hour
-                    price = self.pool.get('product.uom')._compute_price(cr,uid,bom.product_uom.id,price,bom.product_id.uom_id.id)
-            if bom.bom_lines:
-                self.write(cr, uid, [bom.product_id.id], {'standard_price' : price/bom.product_qty})
-            if bom.product_uom.id != bom.product_id.uom_id.id:
-                price = self.pool.get('product.uom')._compute_price(cr,uid,bom.product_uom.id,price,bom.product_id.uom_id.id)
-            return price
+
+    def _calc_price(self, cr, uid, bom, test = False, real_time_accounting=False, context=None):
+        if context is None:
+            context={}
+        price = 0
+        uom_obj = self.pool.get("product.uom")
+        if bom.bom_lines:
+            for sbom in bom.bom_lines:
+                my_qty = sbom.bom_lines and 1.0 or sbom.product_qty
+                price += uom_obj._compute_price(cr, uid, sbom.product_id.uom_id.id, sbom.product_id.standard_price, sbom.product_uom.id) * my_qty
+
+        if bom.routing_id:
+            for wline in bom.routing_id.workcenter_lines:
+                wc = wline.workcenter_id
+                cycle = wline.cycle_nbr
+                hour = (wc.time_start + wc.time_stop + cycle * wc.time_cycle) *  (wc.time_efficiency or 1.0)
+                price += wc.costs_cycle * cycle + wc.costs_hour * hour
+                price = self.pool.get('product.uom')._compute_price(cr,uid,bom.product_uom.id, price, bom.product_id.uom_id.id)
+        
+        #Convert on product UoM quantities
+        if price > 0:
+            price = uom_obj._compute_price(cr, uid, bom.product_uom.id, price / bom.product_qty, bom.product_id.uom_id.id)
+            product = self.pool.get("product.product").browse(cr, uid, bom.product_id.id, context=context)
+        if not test:
+            if (product.valuation != "real_time" or not real_time_accounting):
+                self.write(cr, uid, [bom.product_id.id], {'standard_price' : price}, context=context)
+            else:
+                #Call wizard function here
+                wizard_obj = self.pool.get("stock.change.standard.price")
+                ctx = context.copy()
+                ctx.update({'active_id': bom.product_id.id})
+                wiz_id = wizard_obj.create(cr, uid, {'new_price': price}, context=ctx)
+                wizard_obj.change_price(cr, uid, [wiz_id], context=context)
+        return price
+
 product_product()
 
 class product_bom(osv.osv):
