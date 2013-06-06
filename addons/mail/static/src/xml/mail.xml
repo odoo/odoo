@@ -271,16 +271,16 @@
                             <span class='oe_subtle'>•</span>
                         </t>
                     </t>
-                    <t t-if="widget.type == 'comment' and ! widget.subtype">
+                    <t t-if="widget.type == 'comment' and ! widget.subtype and widget.partner_ids.length == 0">
                         logged a note
                     </t>
-                    <t t-if="(widget.type == 'comment' or widget.type == 'email') and widget.subtype">
+                    <t t-if="(widget.type == 'comment' or widget.type == 'email') and (widget.subtype or widget.partner_ids.length > 0)">
                         to
                         <t t-if="widget.partner_ids.length == 0">
                             nobody
                         </t>
                     </t>
-                    <t t-if="widget.type == 'notification' or ( (widget.type == 'email' or widget.type == 'comment') and widget.subtype)"
+                    <t t-if="widget.type == 'notification' or ( (widget.type == 'email' or widget.type == 'comment') and (widget.subtype or widget.partner_ids.length > 0))"
                             t-foreach="widget.partner_ids.slice(0, 3)" t-as="partner">
                         <span t-attf-class="oe_partner_follower">
                         <a t-if="widget.options.show_link" t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-raw="partner[1]"/></a>

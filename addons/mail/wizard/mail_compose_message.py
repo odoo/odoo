@@ -126,7 +126,6 @@ class mail_compose_message(osv.TransientModel):
 
     _defaults = {
         'composition_mode': 'comment',
-        'email_from': lambda self, cr, uid, ctx={}: self.pool.get('mail.mail')._get_default_from(cr, uid, context=ctx),
         'body': lambda self, cr, uid, ctx={}: '',
         'subject': lambda self, cr, uid, ctx={}: False,
         'partner_ids': lambda self, cr, uid, ctx={}: [],
@@ -158,7 +157,7 @@ class mail_compose_message(osv.TransientModel):
 
         return super(mail_compose_message, self).check_access_rule(cr, uid, ids, operation, context=context)
 
-    def _notify(self, cr, uid, newid, context=None):
+    def _notify(self, cr, uid, newid, context=None, force_send=False):
         """ Override specific notify method of mail.message, because we do
             not want that feature in the wizard. """
         return
@@ -280,11 +279,10 @@ class mail_compose_message(osv.TransientModel):
                     elif mass_mail_mode:  # mass mail: is a log pushed to recipients unless specified, author not added
                         if not wizard.notify:
                             subtype = False
-                        context = dict(context, mail_create_nosubscribe=True)  # add context key to avoid subscribing the author
-                    msg_id = active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype=subtype, context=context, **post_values)
-                    # mass_mailing, post without notify: notify specific partners
-                    if mass_mail_mode and not wizard.notify and post_values['partner_ids']:
-                        self.pool.get('mail.notification')._notify(cr, uid, msg_id, post_values['partner_ids'], context=context)
+                        context = dict(context,
+                                    mail_notify_force_send=False,  # do not send emails directly but use the queue instead
+                                    mail_create_nosubscribe=True)  # add context key to avoid subscribing the author
+                    active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype=subtype, context=context, **post_values)
 
         return {'type': 'ir.actions.act_window_close'}
 
