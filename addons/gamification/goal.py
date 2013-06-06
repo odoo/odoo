@@ -19,11 +19,11 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from openerp.tools.safe_eval import safe_eval
 from openerp.tools.translate import _
-
-from templates import TemplateHelper
 
 from datetime import date, datetime, timedelta
 
@@ -88,8 +88,10 @@ class gamification_goal_type(osv.Model):
         'field_date_id': fields.many2one('ir.model.fields',
             string='Date Field',
             help='The date to use for the time period evaluated'),
+                #TODO: actually it would be better to use 'user.id' in the domain definition, because it means user is a browse record and it's more flexible (i can do '[(country_id,=,user.partner_id.country_id.id)])
+
         'domain': fields.char("Filter Domain",
-            help="Technical filters rules to apply",
+            help="Technical filters rules to apply. Use 'user.id' (without marks) to limit the search to the evaluated user.",
             required=True),
         'compute_code': fields.char('Compute Code',
             help="The name of the python method that will be executed to compute the current value. See the file gamification/goal_type_data.py for examples."),
@@ -146,8 +148,6 @@ class gamification_goal(osv.Model):
 
     _columns = {
         'type_id': fields.many2one('gamification.goal.type', string='Goal Type', required=True, ondelete="cascade"),
-        #TODO: add some tooltip/grey label in view to explain that people can use 'user_id' in their domain
-        #TODO: actually it would be better to use 'user.id' in the domain definition, because it means user is a browse record and it's more flexible (i can do '[(country_id,=,user.partner_id.country_id.id)])
         'user_id': fields.many2one('res.users', string='User', required=True),
         'planline_id': fields.many2one('gamification.goal.planline', string='Goal Planline', ondelete="cascade"),
         'plan_id': fields.related('planline_id', 'plan_id',
@@ -194,6 +194,25 @@ class gamification_goal(osv.Model):
     }
     _order = 'create_date desc, end_date desc, type_id, id'
 
+    def _check_remind_delay(self, goal, context=None):
+        """Verify if a goal has not been updated for some time and send a
+        reminder message of needed.
+
+        :return: data to write on the goal object
+        """
+        if goal.remind_update_delay and goal.last_update:
+            delta_max = timedelta(days=goal.remind_update_delay)
+            last_update = datetime.strptime(goal.last_update, DF).date()
+            if date.today() - last_update > delta_max and goal.state == 'inprogress':
+                # generate a remind report
+                temp_obj = self.pool.get('email.template')
+                template_id = self.pool['ir.model.data'].get_object(cr, uid, 'gamification', 'email_template_goal_reminder', context)
+                body_html = temp_obj.render_template(cr, uid, template_id.body_html, 'gamification.goal', goal.id, context=context)
+
+                self.message_post(cr, uid, goal.id, body=body_html, partner_ids=[goal.user_id.partner_id.id], context=context, subtype='mail.mt_comment')
+                return {'state': 'inprogress_update'}
+        return {}
+
     def update(self, cr, uid, ids, context=None):
         """Update the goals to recomputes values and change of states
 
@@ -211,19 +230,7 @@ class gamification_goal(osv.Model):
                 continue
 
             if goal.type_id.computation_mode == 'manually':
-
-                #TODO: put this code section in a separated method
-                # check for remind to update
-                if goal.remind_update_delay and goal.last_update:
-                    delta_max = timedelta(days=goal.remind_update_delay)
-                    last_update = datetime.strptime(goal.last_update, '%Y-%m-%d').date()
-                    if date.today() - last_update > delta_max and goal.state == 'inprogress':
-                        towrite['state'] = 'inprogress_update'
-
-                        # generate a remind report
-                        template_env = TemplateHelper()
-                        body_html = template_env.get_template('reminder.mako').render({'object': goal})
-                        self.message_post(cr, uid, goal.id, body=body_html, partner_ids=[goal.user_id.partner_id.id], context=context, subtype='mail.mt_comment')
+                towrite.update(self._check_remind_delay(goal, context))
 
             elif goal.type_id.computation_mode == 'python':
                 # execute the chosen method
@@ -231,7 +238,7 @@ class gamification_goal(osv.Model):
                 result = safe_eval(goal.type_id.compute_code, values, {})
 
                 if type(result) in (float, int, long) and result != goal.current:
-                    towrite = {'current': result}
+                    towrite['current'] = result
                 else:
                     _logger.exception(_('Unvalid return content from the evaluation of %s' % str(goal.type_id.compute_code)))
                     # raise osv.except_osv(_('Error!'), _('Unvalid return content from the evaluation of %s' % str(goal.type_id.compute_code)))
@@ -241,7 +248,7 @@ class gamification_goal(osv.Model):
                 field_date_name = goal.type_id.field_date_id.name
 
                 # eval the domain with user_id replaced by goal user
-                domain = safe_eval(goal.type_id.domain, {'user_id': goal.user_id.id})  # TODO: {'user_id': goal.user_id} (see above comment)
+                domain = safe_eval(goal.type_id.domain, {'user': goal.user_id})
 
                 #add temporal clause(s) to the domain if fields are filled on the goal
                 if goal.start_date and field_date_name:
@@ -259,11 +266,11 @@ class gamification_goal(osv.Model):
 
                 #avoid useless write if the new value is the same as the old one
                 if new_value != goal.current:
-                    towrite = {'current': new_value}
+                    towrite['current'] = new_value
 
             # check goal target reached
             #TODO: reached condition is wrong because it should check time constraints.
-            if (goal.type_id.condition == 'higher' and towrite.get('current', goal.current) >= goal.target_goal) or (goal.type_id.condition == 'lower' and towrite.get('current', goal.curren) <= goal.target_goal):
+            if (goal.type_id.condition == 'higher' and towrite.get('current', goal.current) >= goal.target_goal) or (goal.type_id.condition == 'lower' and towrite.get('current', goal.current) <= goal.target_goal):
                 towrite['state'] = 'reached'
 
             # check goal failure
@@ -302,10 +309,9 @@ class gamification_goal(osv.Model):
         return self.write(cr, uid, ids, {'state': 'inprogress'}, context=context)
 
     def create(self, cr, uid, vals, context=None):
-        """Overwrite the create method to add a 'just_created' field to True"""
-        #TODO: rename just_created into something more explicit (related to the effect, not to the cause) like 'avoid_onchange_log', for example
+        """Overwrite the create method to add a 'no_remind_goal' field to True"""
         context = context or {}
-        context['just_created'] = True
+        context['no_remind_goal'] = True
         return super(gamification_goal, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -322,13 +328,13 @@ class gamification_goal(osv.Model):
                 raise osv.except_osv(_('Error!'), _('Can not modify a started goal'))
 
             if 'current' in vals:
-                if 'just_created' in context:
+                if 'no_remind_goal' in context:
                     # new goals should not be reported
                     continue
 
                 if goal.plan_id and goal.plan_id.report_message_frequency == 'onchange':
                     plan_obj = self.pool.get('gamification.goal.plan')
-                    plan_obj.report_progress(cr, uid, goal.plan_id, users=[goal.user_id], context=context)
+                    plan_obj.report_progress(cr, SUPERUSER_ID, goal.plan_id, users=[goal.user_id], context=context)
         return result
 
     def get_action(self, cr, uid, goal_id, context=None):

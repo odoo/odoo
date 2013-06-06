@@ -40,4 +40,3 @@ class TemplateHelper(SandboxedEnvironment):
             'quote': quote,
             'urlencode': urlencode,
         })
-

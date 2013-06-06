@@ -884,4 +884,22 @@
                                 AABJRU5ErkJggg==</field>
         </record>
     </data>
+
+
+    <data noupdate="0">
+
+        <record id="email_template_badge_received" model="email.template">
+            <field name="name">Received Badge</field>
+            <field name="body_html"><![CDATA[
+        <p>Congratulation, you have received the badge <strong>${object.badge_id.name}</strong> !
+        % if ctx["user_from"]
+            This badge was granted by <strong>${ctx["user_from"]}</strong>.
+        % endif
+    </p>
+
+    % if object.comment
+        <p><em>${object.comment}</em></p>
+    % endif]]></field>
+        </record>
+    </data>
 </openerp>

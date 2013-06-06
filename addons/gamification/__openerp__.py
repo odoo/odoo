@@ -23,7 +23,7 @@
     'version': '1.0',
     'author': 'OpenERP SA',
     'category': 'Human Ressources',
-    'depends': ['mail'],
+    'depends': ['mail', 'email_template'],
     'description': """
 Gamification process
 ====================

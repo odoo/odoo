@@ -23,7 +23,7 @@ from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from openerp.tools.translate import _
 
-from templates import TemplateHelper
+# from templates import TemplateHelper
 from datetime import date
 import logging
 
@@ -194,12 +194,20 @@ class gamification_badge(osv.Model):
         :param user_from: optional id of the res.users object that has sent the badge
         """
         badge = self.browse(cr, uid, badge_id, context=context)
-        template_env = TemplateHelper()
+        # template_env = TemplateHelper()
 
         res = None
+        temp_obj = self.pool.get('email.template')
+        template_id = self.pool['ir.model.data'].get_object(cr, uid, 'gamification', 'email_template_badge_received', context)
+        ctx = context.copy()
         for badge_user in self.pool.get('gamification.badge.user').browse(cr, uid, badge_user_ids, context=context):
-            values = {'badge_user': badge_user, 'user_from': user_from}
-            body_html = template_env.get_template('badge_received.mako').render(values)
+
+            ctx.update({'user_from': self.pool.get('res.users').browse(cr, uid, user_from).name})
+
+            body_html = temp_obj.render_template(cr, uid, template_id.body_html, 'gamification.badge.user', badge_user.id, context=ctx)
+
+            # values = {'badge_user': badge_user, 'user_from': user_from}
+            # body_html = template_env.get_template('badge_received.mako').render(values)
             res = self.message_post(cr, uid, badge.id, body=body_html, type='comment', subtype='mt_comment', context=context)
         return res
 

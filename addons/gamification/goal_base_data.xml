@@ -9,7 +9,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">checkbox</field>
             <field name="model_id" eval="ref('base.model_res_users')" />
-            <field name="domain">[('id','=',user_id),('partner_id.tz', '!=', False)]</field>
+            <field name="domain">[('id','=',user.id),('partner_id.tz', '!=', False)]</field>
             <field name="action_id" eval="ref('base.action_res_users_my')" />
             <field name="res_id_field">id</field>
         </record>
@@ -31,7 +31,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">checkbox</field>
             <field name="model_id" eval="ref('base.model_res_company')" />
-            <field name="domain">[('user_ids', 'in', user_id), ('name', '!=', 'Your Company')]</field>
+            <field name="domain">[('user_ids', 'in', user.id), ('name', '!=', 'Your Company')]</field>
             <field name="action_id" eval="ref('base.action_res_company_form')" />
             <field name="res_id_field">company_id.id</field>
         </record>
@@ -41,7 +41,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">checkbox</field>
             <field name="model_id" eval="ref('base.model_res_company')" />
-            <field name="domain">[('user_ids', 'in', user_id),('logo', '!=', False)]</field>
+            <field name="domain">[('user_ids', 'in', user.id),('logo', '!=', False)]</field>
             <field name="action_id" eval="ref('base.action_res_company_form')" />
             <field name="res_id_field">company_id.id</field>
         </record>
@@ -63,7 +63,7 @@
             <field name="display_mode">checkbox</field>
             <field name="computation_mode">count</field>
             <field name="model_id" eval="ref('base.model_res_users')" />
-            <field name="domain">[('id', '!=', user_id)]</field>
+            <field name="domain">[('id', '!=', user.id)]</field>
             <field name="action_id" eval="ref('action_new_simplified_res_users')" />
         </record>
 
@@ -124,7 +124,109 @@
             <field name="target_goal">1</field>
             <field name="plan_id" eval="ref('plan_base_configure')" />
         </record>
+    </data>
 
+    <!-- Mail template is done in a NOUPDATE block
+         so users can freely customize/delete them -->
+    <data noupdate="0">
+        <!--Email template -->
+        
+        <record id="email_template_goal_reminder" model="email.template">
+            <field name="name">Reminder for Goal Update</field>
+            <field name="body_html"><![CDATA[
+    <header>
+        <strong>Reminder ${object.name}</strong>
+    </header>
 
+    <p class="oe_grey">${object.report_header or ''}</p>
+    
+    <p>You have not updated your progress for the goal ${object.type_id.name} (currently reached at ${object.completeness}%) for at least ${object.remind_update_delay} days. Do not forget to do it.</p>
+
+    <p>If you have not changed your score yet, you can use the button "The current value is up to date" to indicate so.</p>
+            ]]></field>
+        </record>
+
+        <record id="email_template_goal_progress_perso" model="email.template">
+            <field name="name">Personal Goal Progress</field>
+            <field name="body_html"><![CDATA[
+    <header>
+        <strong>${object.name}</strong>
+    </header>
+    <p class="oe_grey">${object.report_header or ''}</p>
+
+    <table width="100%" border="1">
+    <tr>
+        <th>Goal</th>
+        <th>Target</th>
+        <th>Current</th>
+        <th>Completeness</th>
+    </tr>
+    % for goal in ${ctx["goals"]}:
+        <tr
+            % if goal.completeness >= 100:
+                style="font-weight:bold;"
+            % endif
+            >
+            <td>${goal.type_id.name}</td>
+            <td>${goal.target_goal}
+            % if goal.type_suffix:
+                ${goal.type_suffix}
+            % endif
+            </td>
+            <td>${goal.current}
+            % if goal.type_suffix:
+                ${goal.type_suffix}
+            % endif
+            </td>
+            <td>${goal.completeness} %</td>
+        </tr>
+    % endfor
+    </table>]]></field>
+        </record>
+
+        <record id="email_template_goal_progress_group" model="email.template">
+            <field name="name">Group Goal Progress</field>
+            <field name="body_html"><![CDATA[
+    <header>
+        <strong>${object.name}</strong>
+    </header>
+    <p class="oe_grey">${object.report_header or ''}</p>
+
+    % for planline in ctx['planlines_boards']:
+        <table width="100%" border="1">
+            <tr>
+                <th colspan="4">${planline.goal_type.name}</th>
+            </tr>
+            <tr>
+                <th>#</th>
+                <th>Person</th>
+                <th>Completeness</th>
+                <th>Current</th>
+            </tr>
+            % for idx, goal in planline.board_goals:
+                % if idx < 3 or goal.user_id.id == user.id:
+                    <tr
+                        % if goal.completeness >= 100:
+                            style="font-weight:bold;"
+                        % endif
+                        >
+                        <td>${idx+1}</td>
+                        <td>${goal.user_id.name}</td>
+                        <td>${goal.completeness}%</td>
+                        <td>${goal.current}/${goal.target_goal}
+                        % if goal.type_suffix:
+                            ${goal.type_suffix}
+                        % endif
+                        </td>
+                    </tr>
+                % endif
+            % endfor
+        </table>
+
+        <br/><br/>
+
+    % endfor
+]]></field>
+        </record>
     </data>
 </openerp>

@@ -22,7 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
-from templates import TemplateHelper
+# from templates import TemplateHelper
 
 from datetime import date, datetime, timedelta
 import calendar
@@ -545,12 +545,17 @@ class gamification_goal_plan(osv.Model):
 
         context = context or {}
         goal_obj = self.pool.get('gamification.goal')
-        template_env = TemplateHelper()
-
+        # template_env = TemplateHelper()
+        temp_obj = self.pool.get('email.template')
+        ctx = context.copy()
         if plan.visibility_mode == 'board':
             planlines_boards = self.get_board_goal_info(cr, uid, plan, subset_goal_ids, context)
 
-            body_html = template_env.get_template('group_progress.mako').render({'object': plan, 'planlines_boards': planlines_boards, 'uid': uid})
+            ctx.update({'planlines_boards': planlines_boards})
+            template_id = self.pool['ir.model.data'].get_object(cr, uid, 'gamification', 'email_template_goal_progress_group', context)
+            body_html = temp_obj.render_template(cr, uid, template_id.body_html, 'gamification.goal.plan', plan.id, context=context)
+
+            # body_html = template_env.get_template('group_progress.mako').render({'object': plan, 'planlines_boards': planlines_boards, 'uid': uid})
 
             # send to every follower of the plan
             self.message_post(cr, uid, plan.id,
@@ -570,10 +575,14 @@ class gamification_goal_plan(osv.Model):
                 if not values:
                     continue
 
-                values['object'] = plan
-                values['user'] = user,
+                # values['object'] = plan
+                # values['user'] = user
 
-                body_html = template_env.get_template('personal_progress.mako').render(values)
+                ctx.update({'planlines_boards': planlines_boards})
+                template_id = self.pool['ir.model.data'].get_object(cr, uid, 'gamification', 'email_template_goal_progress_perso', context)
+                body_html = temp_obj.render_template(cr, user.id, template_id.body_html, 'gamification.goal.plan', plan.id, context=context)
+
+                # body_html = template_env.get_template('personal_progress.mako').render(values)
 
                 # send message only to users
                 self.message_post(cr, uid, 0,

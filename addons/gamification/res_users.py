@@ -1,6 +1,27 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2010-Today OpenERP SA (<http://www.openerp.com>)
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>
+#
+##############################################################################
+
 from openerp.osv import osv
 
-#TODO add copyright and last line for vim users
+
 class res_users_gamification_group(osv.Model):
     """ Update of res.users class
         - if adding groups to an user, check gamification.goal.plan linked to
@@ -144,3 +165,4 @@ class res_groups_gamification_group(osv.Model):
             if plan_ids:
                 goal_plan_obj.write(cr, uid, plan_ids, {'user_ids': [(4, user_id) for user_id in user_ids]}, context=context)
         return write_res
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -14,3 +14,4 @@
 
     <p>If you have not changed your score yet, you can use the button "The current value is up to date" to indicate so.</p>
 </body>
+</html>
