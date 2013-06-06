@@ -64,7 +64,7 @@ class mail_compose_message(osv.TransientModel):
                 continue
             new_attachment_ids = []
             for attachment in wizard.attachment_ids:
-                if attachment in wizard.template.attachment_ids:
+                if attachment in wizard.template_id.attachment_ids:
                     new_attachment_ids.append(self.pool.get('ir.attachment').copy(cr, uid, attachment.id, {'res_model': 'mail.compose.message', 'res_id': wizard.id}, context=context))
                 else:
                     new_attachment_ids.append(attachment.id)
