@@ -88,7 +88,7 @@ class purchase_requisition(osv.osv):
         for purchase in self.browse(cr, uid, ids, context=context):
             for purchase_id in purchase.purchase_ids:
                 purchase_order_obj.action_cancel(cr,uid,[purchase_id.id])
-                po.message_post(cr, uid, [quotation.id], body=_('Cancelled by the tender associated to this quotation.'), context=context)
+                purchase_order_obj.message_post(cr, uid, [purchase_id.id], body=_('Cancelled by the tender associated to this quotation.'), context=context)
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def tender_in_progress(self, cr, uid, ids, context=None):
@@ -206,7 +206,7 @@ class purchase_requisition(osv.osv):
             'product_id': product.id,
             'product_uom': default_uom_po_id,
             'price_unit': seller_price,
-            'date_planned': requisition_line.schedule_date,
+            'date_planned': requisition_line.schedule_date or date_planned,
             'taxes_id': [(6, 0, taxes)],
             'account_analytic_id':requisition_line.account_analytic_id.id,
         }
