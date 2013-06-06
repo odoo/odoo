@@ -284,6 +284,8 @@ class purchase_requisition(osv.osv):
             #copy a quotation for this supplier and change order_line then validate it
             quotation_id = po.search(cr, uid, [('requisition_id', '=', tender.id), ('partner_id', '=', supplier)], limit=1)[0]
             new_po = po.copy(cr, uid, quotation_id, default = {'order_line': []}, context=context)
+            #put back link to tender on PO
+            po.write(cr, uid, new_po, {'requisition_id': tender.id, 'origin': tender.name}, context=context)
             #duplicate po_line and change product_qty if needed and associate them to newly created PO
             for line in product_line:
                 poline.copy(cr, uid, line.id, default = {'product_qty': line.quantity_bid, 'order_id': new_po}, context=context)
@@ -356,22 +358,8 @@ purchase_requisition_line()
 class purchase_order(osv.osv):
     _inherit = "purchase.order"
 
-    def _belong_to_bid_group(self, cr, uid, ids, field_names, arg=None, context=None):
-        belong = False
-        group_bid_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'purchase', 'group_advance_bidding')[1]
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        for group in user.groups_id:
-            if group.id == group_bid_id:
-                belong = True
-        result = {}
-        if not ids: return result
-        for id in ids:
-            result.setdefault(id, belong)
-        return result
-
     _columns = {
         'requisition_id' : fields.many2one('purchase.requisition','Purchase Requisition'),
-        'advance_bidding_group': fields.function(_belong_to_bid_group, method=True, type='boolean', string="Belong to advance bidding group"),
     }
 
     def wkf_confirm_order(self, cr, uid, ids, context=None):
@@ -388,6 +376,14 @@ class purchase_order(osv.osv):
                         wf_service.trg_validate(uid, 'purchase.order', order.id, 'purchase_cancel', cr)
                     po.requisition_id.tender_done(context=context)
         return res
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default = {}
+        default.update({
+            'requisition_id':False,
+        })
+        return super(purchase_order, self).copy(cr, uid, id, default, context)
 
 purchase_order()
 

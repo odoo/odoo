@@ -743,6 +743,7 @@ class purchase_order(osv.osv):
             'invoiced':False,
             'invoice_ids': [],
             'picking_ids': [],
+            'origin' : '',
             'name': self.pool.get('ir.sequence').get(cr, uid, 'purchase.order'),
         })
         return super(purchase_order, self).copy(cr, uid, id, default, context)
