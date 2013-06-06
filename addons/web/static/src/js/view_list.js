@@ -503,12 +503,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         var reloaded = $.Deferred();
         this.$el.find('.oe_list_content').append(
             this.groups.render(function () {
-                if (self.dataset.index == null) {
-                    var has_one = false;
-                    self.records.each(function () { has_one = true; });
-                    if (has_one) {
+                if (self.dataset.index == null && self.records.length ||
+                    self.dataset.index >= self.records.length) {
                         self.dataset.index = 0;
-                    }
                 }
                 self.compute_aggregates();
                 reloaded.resolve();
