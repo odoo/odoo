@@ -873,8 +873,8 @@ class purchase_order_line(osv.osv):
 
     def _set_lead_time(self, cr, uid, ids, name, value, arg, context=None):
         if not value: return False
-        date_planned = self.browse(cr, uid, ids, context=context)[0].date_planned
-        date = _get_date_planned(self, cr, uid, False, date_planned, value, context=None)
+        date_planned = self.browse(cr, uid, ids, context=context).date_planned
+        date = self._get_date_planned(cr, uid, False, date_planned, value, context=None)
         self.write(cr, uid, ids, {'lead_time': value, 'date_planned': date}, context=context)
         return True
 
@@ -934,7 +934,7 @@ class purchase_order_line(osv.osv):
 
     def onchange_product_uom(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
             partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
-            name=False, price_unit=False, lead_time=False, state='draft', context=None):
+            name=False, price_unit=False, state='draft', context=None):
         """
         onchange handler of product_uom.
         """
@@ -969,7 +969,7 @@ class purchase_order_line(osv.osv):
 
     def onchange_product_id(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
             partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
-            name=False, price_unit=False, lead_time=False, state='draft', context=None):
+            name=False, price_unit=False, state='draft', context=None):
         """
         onchange handler of product_id.
         """
@@ -1037,14 +1037,14 @@ class purchase_order_line(osv.osv):
                     if qty:
                         res['warning'] = {'title': _('Warning!'), 'message': _('The selected supplier has a minimal quantity set to %s %s, you should not purchase less.') % (supplierinfo.min_qty, supplierinfo.product_uom.name)}
                     qty = min_qty
-        dt = self._get_date_planned(cr, uid, supplierinfo, date_order, lead_time, context=context).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        dt = self._get_date_planned(cr, uid, supplierinfo, date_order, False, context=context).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         qty = qty or 1.0
         res['value'].update({'date_planned': date_planned or dt})
         if qty:
             res['value'].update({'product_qty': qty})
 
         # - determine lead time value for product
-        product_lead_time = lead_time or supplierinfo.delay if supplierinfo else 0
+        product_lead_time = supplierinfo.delay if supplierinfo else 0
         res['value'].update({'product_lead_time': product_lead_time})
         if state not in ('sent','bid'):
             # - determine price_unit and taxes_id
@@ -1063,6 +1063,16 @@ class purchase_order_line(osv.osv):
 
     product_id_change = onchange_product_id
     product_uom_change = onchange_product_uom
+
+    def onchange_lead_time(self, cr, uid, ids, date_order=False, date_planned=False, lead_time=False, context=None):
+        """
+        onchange handler of product_lead_time.
+        """
+        schedule_date_str = date_order or date_planned or fields.date.context_today
+        schedule_date = datetime.strptime(schedule_date_str, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(days=lead_time or 0)
+
+        res = {'value': {'date_planned': schedule_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT), 'lead_time': lead_time or 0,}}
+        return res    
 
     def action_confirm(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'confirmed'}, context=context)
