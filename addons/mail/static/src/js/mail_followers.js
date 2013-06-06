@@ -249,16 +249,13 @@ openerp_mail_followers = function(session, mail) {
         display_subtypes:function (data, id, mode) {
             var self = this;
             var $list = this.$('.oe_subtype_list');
-            if (mode.length == 0){ $list.empty().hide();}
+            if (mode.length != 0){ $list = self.$dialog; }
+            $list.empty().hide();
             var records = data[this.view.datarecord.id || this.view.dataset.ids[0]].message_subtype_data;
             _(records).each(function (record, record_name) {
                 record.name = record_name;
                 record.followed = record.followed || undefined;
-                if (mode.length == 0) {
-                    $(session.web.qweb.render('mail.followers.subtype', {'record': record,'mode': mode})).appendTo( self.$('.oe_subtype_list') );
-                } else {
-                    $(session.web.qweb.render('mail.followers.subtype', {'record': record,'mode': mode})).appendTo(self.$dialog);
-                }
+                $(session.web.qweb.render('mail.followers.subtype', {'record': record,'mode': mode})).appendTo( $list );
             });
             if (_.size(records) > 1) {
                 $list.show();
