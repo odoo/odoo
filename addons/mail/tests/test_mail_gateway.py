@@ -147,6 +147,7 @@ class TestMailgateway(TestMailBase):
         self.assertEqual(mail.reply_to, 'other@example.com',
                         'mail_mail: reply_to should be equal to the one coming from creation values')
         # Do: create a mail_mail with the previous mail_message
+        self.mail_message.write(cr, uid, [msg_id], {'reply_to': 'custom@example.com'})
         msg.refresh()
         mail_id = self.mail_mail.create(cr, uid, {'mail_message_id': msg_id, 'state': 'cancel'})
         mail = self.mail_mail.browse(cr, uid, mail_id)
@@ -185,7 +186,7 @@ class TestMailgateway(TestMailBase):
         self.registry('ir.config_parameter').unlink(cr, uid, self.registry('ir.config_parameter').search(cr, uid, [('key', '=', 'mail.catchall.alias')]))
 
         # Update message
-        self.mail_message.write(cr, uid, [msg_id], {'email_from': 'group+pigs@schlouby.fr', 'reply_to': False})
+        self.mail_message.write(cr, uid, [msg_id], {'email_from': False, 'reply_to': False})
         msg.refresh()
         # Do: create a mail_mail based on the previous mail_message
         mail_id = self.mail_mail.create(cr, uid, {'mail_message_id': msg_id, 'state': 'cancel'})
