@@ -234,6 +234,9 @@ class mail_compose_message(osv.TransientModel):
         for wizard in self.browse(cr, uid, ids, context=context):
             mass_mail_mode = wizard.composition_mode == 'mass_mail'
             active_model_pool = self.pool[wizard.model if wizard.model else 'mail.thread']
+            if not hasattr(active_model_pool, 'message_post'):
+                context['thread_model'] = wizard.model
+                active_model_pool = self.pool['mail.thread']
 
             # wizard works in batch mode: [res_id] or active_ids
             res_ids = active_ids if mass_mail_mode and wizard.model and active_ids else [wizard.res_id]

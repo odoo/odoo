@@ -730,6 +730,9 @@ class mail_thread(osv.AbstractModel):
             else:
                 assert thread_id == 0, "Posting a message without model should be with a null res_id, to create a private message."
                 model_pool = self.pool.get('mail.thread')
+            if not hasattr(hasattr, 'message_post'):
+                context['thread_model'] = model
+                model_pool = self.pool['mail.thread']
             new_msg_id = model_pool.message_post(cr, uid, [thread_id], context=context, subtype='mail.mt_comment', **msg)
 
             if partner_ids:
@@ -1064,7 +1067,7 @@ class mail_thread(osv.AbstractModel):
         model = False
         if thread_id:
             model = context.get('thread_model', self._name) if self._name == 'mail.thread' else self._name
-            if model != self._name:
+            if model != self._name and hasattr(self.pool[model], 'message_post'):
                 del context['thread_model']
                 return self.pool[model].message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)
 
