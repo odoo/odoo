@@ -88,6 +88,7 @@ class payment_order_create(osv.osv_memory):
                     'order_id': payment.id,
                     'partner_id': line.partner_id and line.partner_id.id or False,
                     'communication': line.ref or '/',
+                    'state': line.invoice and line.invoice.reference_type != 'none' and 'structured' or 'normal',
                     'date': date_to_pay,
                     'currency': (line.invoice and line.invoice.currency_id.id) or line.journal_id.currency.id or line.journal_id.company_id.currency_id.id,
                 }, context=context)
