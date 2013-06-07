@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-03-07 08:37+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-06-07 19:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -57,12 +57,6 @@ msgstr ""
 #: field:payment.line,info_owner:0
 #: view:payment.order:0
 msgid "Owner Account"
-msgstr ""
-
-#. module: account_payment
-#: help:account.invoice,amount_to_pay:0
-msgid "The amount which should be paid at the current date\n"
-"minus the amount which is already in payment order"
 msgstr ""
 
 #. module: account_payment
@@ -647,9 +641,20 @@ msgid "Total"
 msgstr ""
 
 #. module: account_payment
+#: code:addons/account_payment/wizard/account_payment_order.py:112
+#, python-format
+msgid "Entry Lines"
+msgstr ""
+
+#. module: account_payment
 #: view:account.payment.make.payment:0
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
+msgstr ""
+
+#. module: account_payment
+#: help:account.invoice,amount_to_pay:0
+msgid "The amount which should be paid at the current date. "
 msgstr ""
 
 #. module: account_payment
