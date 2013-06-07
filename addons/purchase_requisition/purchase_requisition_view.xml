@@ -100,7 +100,7 @@
                                 <field name="partner_id"/>
                                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                                 <field name="location_id" groups="stock.group_locations"/>
-                                <field name="minimum_planned_date"/>
+                                <field name="minimum_planned_date" invisible="1"/>
                                 <field name="origin"/>
                                 <field name="state"/>
                                 <button name="purchase_cancel" states="draft,confirmed,wait_auth" string="Cancel Purchase Order" icon="gtk-cancel"/>
