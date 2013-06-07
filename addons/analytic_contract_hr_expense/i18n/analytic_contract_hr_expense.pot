@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-03-07 08:37+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-06-07 19:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -22,7 +22,19 @@ msgstr ""
 
 #. module: analytic_contract_hr_expense
 #: view:account.analytic.account:0
+msgid "{'required': ['|',('invoice_on_timesheets','=',True),('charge_expenses','=',True)]}"
+msgstr ""
+
+#. module: analytic_contract_hr_expense
+#: view:account.analytic.account:0
 msgid "Nothing to invoice, create"
+msgstr ""
+
+#. module: analytic_contract_hr_expense
+#: field:account.analytic.account,expense_invoiced:0
+#: field:account.analytic.account,expense_to_invoice:0
+#: field:account.analytic.account,remaining_expense:0
+msgid "unknown"
 msgstr ""
 
 #. module: analytic_contract_hr_expense
@@ -36,22 +48,25 @@ msgid "Analytic Account"
 msgstr ""
 
 #. module: analytic_contract_hr_expense
-#: code:addons/analytic_contract_hr_expense/analytic_contract_hr_expense.py:129
+#: code:addons/analytic_contract_hr_expense/analytic_contract_hr_expense.py:144
 #, python-format
 msgid "Expenses to Invoice of %s"
 msgstr ""
 
 #. module: analytic_contract_hr_expense
-#: code:addons/analytic_contract_hr_expense/analytic_contract_hr_expense.py:121
+#: code:addons/analytic_contract_hr_expense/analytic_contract_hr_expense.py:136
 #, python-format
 msgid "Expenses of %s"
 msgstr ""
 
 #. module: analytic_contract_hr_expense
-#: field:account.analytic.account,expense_invoiced:0
-#: field:account.analytic.account,expense_to_invoice:0
-#: field:account.analytic.account,remaining_expense:0
-msgid "unknown"
+#: view:account.analytic.account:0
+msgid "Expenses and Timesheet Invoicing Ratio"
+msgstr ""
+
+#. module: analytic_contract_hr_expense
+#: view:account.analytic.account:0
+msgid "{'invisible': [('invoice_on_timesheets','=',False),('charge_expenses','=',False)]}"
 msgstr ""
 
 #. module: analytic_contract_hr_expense
