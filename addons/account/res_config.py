@@ -338,4 +338,10 @@ class account_config_settings(osv.osv_memory):
         dp = self.pool.get('ir.model.data').get_object(cr, uid, 'product','decimal_account')
         dp.write({'digits': config.decimal_precision})
 
+    def onchange_analytic_accounting(self, cr, uid, ids, analytic_accounting, context=None):
+        if analytic_accounting:
+            return {'value': {
+                'module_account_accountant': True,
+                }}
+        return {}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
