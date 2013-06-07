@@ -185,6 +185,24 @@ class hr_applicant(base_stage, osv.Model):
                     res[issue.id][field] = abs(float(duration))
         return res
     
+
+    def attachment_tree_view(self, cr, uid, ids, context):
+        domain = ['&', ('res_model', '=', 'hr.applicant'), ('res_id', 'in', ids)]
+        res_id = ids and ids[0] or False
+        return {
+            'name': _('Attachments'),
+            'domain': domain,
+            'res_model': 'ir.attachment',
+            'type': 'ir.actions.act_window',
+            'view_id': False,
+            'view_mode': 'tree,form',
+            'view_type': 'form',
+            'limit': 80,
+            'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
+        }
+
+
+
     def _compute_attachments(self, cr, uid, ids, fields, args, context=None):
         res = {}
         attachment_pool = self.pool.get('ir.attachment')
