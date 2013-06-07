@@ -1134,6 +1134,25 @@ instance.web.UserMenu =  instance.web.Widget.extend({
             });
         }
     },
+    on_menu_account: function() {
+        var self = this;
+        if (!this.getParent().has_uncommitted_changes()) {
+            var P = new instance.web.Model('ir.config_parameter');
+            P.call('get_param', ['database.uuid']).then(function(dbuuid) {
+                var state = {
+                            'd': instance.session.db,
+                            'u': window.location.protocol + '//' + window.location.host,
+                        };
+                var params = {
+                    response_type: 'token',
+                    client_id: dbuuid || '',
+                    state: JSON.stringify(state),
+                    scope: 'userinfo',
+                };
+                instance.web.redirect('https://accounts.openerp.com/oauth2/auth?'+$.param(params));
+            });
+        }
+    },
     on_menu_about: function() {
         var self = this;
         self.rpc("/web/webclient/version_info", {}).done(function(res) {
