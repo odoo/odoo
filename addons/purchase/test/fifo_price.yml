@@ -162,6 +162,13 @@
   !python {model: product.product}: |
     assert self.browse(cr, uid, ref("product_fifo_icecream")).standard_price == 80.0
 - 
+  We will temporarily change the currency rate on the sixth of June to have the same results all year
+- 
+  !record {model: res.currency.rate, id: base.rateUSDbis}:
+    rate: 1.2834
+    currency_id: base.USD
+    name: !eval time.strftime('%Y-06-06')
+- 
   Create new pricelist in usd
 - 
   !record {model: product.pricelist, id: supplier_pricelist_usd}:
@@ -230,8 +237,7 @@
 - 
   Check rounded price is 102 euro
 - 
-  !python {model: product.product}: |
-    assert round(self.browse(cr, uid, ref("product_fifo_icecream")).standard_price) == 102
+    assert round(self.browse(cr, uid, ref("product_fifo_icecream")).standard_price) == 102, "Price after doing other currency is wrong"
 - 
   Do a delivery of an extra 10 kg
 - 
