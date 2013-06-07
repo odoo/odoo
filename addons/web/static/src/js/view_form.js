@@ -203,7 +203,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.has_been_loaded.resolve();
 
         // Add bounce effect on button 'Edit' when click on readonly page view.
-        this.$el.find(".oe_form_group_row,.oe_form_field,label").on('click', function (e) {
+        this.$el.find(".oe_form_group_row,.oe_form_field,label,h1,.oe_title,.oe_notebook_page, .oe_list_content").on('click', function (e) {
             if(self.get("actual_mode") == "view") {
                 var $button = self.options.$buttons.find(".oe_form_button_edit");
                 $button.openerpBounce();
@@ -212,9 +212,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }
         });
         //bounce effect on red button when click on statusbar.
-        this.$el.find(".oe_form_field_status:not(.oe_form_status_clickable)").on('click', function (e) {
-            if((self.get("actual_mode") == "view")) {
-                var $button = self.$el.find(".oe_highlight:not(.oe_form_invisible)").css({'float':'left','clear':'none'});
+        this.$el.on('click', '.oe_form_field_status:not(.oe_form_status_clickable)', function (e) {
+            if(self.get("actual_mode") == "view") {
+                var $button = self.$el.find(".oe_highlight:not(.oe_form_invisible)").css({'float':'left','margin-left':'3px','margin-right':'2px','white-space':'nowrap'});
                 $button.openerpBounce();
                 e.stopPropagation();
             }
@@ -2749,6 +2749,7 @@ instance.web.form.FieldBoolean = instance.web.form.AbstractField.extend({
         }, this));
         var check_readonly = function() {
             self.$checkbox.prop('disabled', self.get("effective_readonly"));
+            self.click_disabled_boolean();
         };
         this.on("change:effective_readonly", this, check_readonly);
         check_readonly.call(this);
@@ -2760,6 +2761,13 @@ instance.web.form.FieldBoolean = instance.web.form.AbstractField.extend({
     focus: function() {
         var input = this.$checkbox && this.$checkbox[0];
         return input ? input.focus() : false;
+    },
+    click_disabled_boolean: function(){
+        var $disabled = this.$el.find('input[type=checkbox]:disabled');
+        $disabled.each(function (){
+            $(this).next('div').remove();
+            $(this).closest("span").append($('<div class="boolean"></div>'));
+        });
     }
 });
 
@@ -4743,13 +4751,13 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
             this.dataset.index = null;
         }
         var options = _.clone(self.options.form_view_options) || {};
-        if (this.row_id !== null) {
-            options.initial_mode = this.options.readonly ? "view" : "edit";
-        }
         _.extend(options, {
             $buttons: this.$buttonpane,
         });
         this.view_form = new instance.web.FormView(this, this.dataset, this.options.view_id || false, options);
+        if (this.row_id !== null) {
+            options.initial_mode = this.options.readonly ? "view" : this.view_form.options.initial_mode;
+        }
         if (this.options.alternative_form_view) {
             this.view_form.set_embedded_view(this.options.alternative_form_view);
         }
@@ -5219,6 +5227,13 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
             url = this.placeholder;
         }
         var $img = $(QWeb.render("FieldBinaryImage-img", { widget: this, url: url }));
+        $($img).click(function(e) {
+            if(self.view.get("actual_mode") == "view") {
+                var $button = $(".oe_form_button_edit");
+                $button.openerpBounce();
+                e.stopPropagation();
+            }
+        });
         this.$el.find('> img').remove();
         this.$el.prepend($img);
         $img.load(function() {
@@ -5409,14 +5424,14 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         this.options.clickable = this.options.clickable || (this.node.attrs || {}).clickable || false;
         this.options.visible = this.options.visible || (this.node.attrs || {}).statusbar_visible || false;
         this.set({value: false});
-        this.selection = [];
-        this.set("selection", []);
+        this.selection = {'unfolded': [], 'folded': []};
+        this.set("selection", {'unfolded': [], 'folded': []});
         this.selection_dm = new instance.web.DropMisordered();
+        this.dataset = new instance.web.DataSetStatic(this, this.field.relation, this.build_context());
     },
     start: function() {
         this.field_manager.on("view_content_has_changed", this, this.calc_domain);
         this.calc_domain();
-        this.on("change:value", this, this.get_selection);
         this.on("change:evaluated_selection_domain", this, this.get_selection);
         this.on("change:selection", this, function() {
             this.selection = this.get("selection");
@@ -5424,7 +5439,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         });
         this.get_selection();
         if (this.options.clickable) {
-            this.$el.on('click','li',this.on_click_stage);
+            this.$el.on('click','li:not(.oe_folded)',this.on_click_stage);
         }
         if (this.$el.parent().is('header')) {
             this.$el.after('<div class="oe_clear"/>');
@@ -5439,7 +5454,10 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     },
     render_value: function() {
         var self = this;
-        var content = QWeb.render("FieldStatus.content", {widget: self});
+        var content = QWeb.render("FieldStatus.content", {
+            'widget': self, 
+            'value_folded': _.find(self.selection.folded, function(i){return i[0] === self.get('value')})
+        });
         self.$el.html(content);
     },
     calc_domain: function() {
@@ -5461,17 +5479,27 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
      */
     get_selection: function() {
         var self = this;
-        var selection = [];
+        var selection_unfolded = [];
+        var selection_folded = [];
 
         var calculation = _.bind(function() {
             if (this.field.type == "many2one") {
-                var domain = [];
-                var ds = new instance.web.DataSetSearch(this, this.field.relation,
-                    self.build_context(), this.get("evaluated_selection_domain"));
-                return ds.read_slice(['name'], {}).then(function (records) {
-                    for(var i = 0; i < records.length; i++) {
-                        selection.push([records[i].id, records[i].name]);
-                    }
+                return self.get_distant_fields().then(function(fields) {
+                    return new instance.web.DataSetSearch(self, self.field.relation, self.build_context(), self.get("evaluated_selection_domain"))
+                        .read_slice(fields.fold ? ['fold'] : ['id'], {}).then(function (records) {
+
+                            var ids = _.map(records, function (val) {return val.id});
+                            return self.dataset.name_get(ids).then(function (records_name) {
+                                _.each(records, function (record) {
+                                    var name = _.find(records_name, function (val) {return val[0] == record.id;})[1];
+                                    if (record.fold && record.id != self.get('value')) {
+                                        selection_folded.push([record.id, name]);
+                                    } else {
+                                        selection_unfolded.push([record.id, name]);
+                                    }
+                                });
+                            })
+                        });
                 });
             } else {
                 // For field type selection filter values according to
@@ -5481,17 +5509,28 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
                 for(var i=0; i < select.length; i++) {
                     var key = select[i][0];
                     if(key == this.get('value') || !this.options.visible || this.options.visible.indexOf(key) != -1) {
-                        selection.push(select[i]);
+                        selection_unfolded.push(select[i]);
                     }
                 }
                 return $.when();
             }
         }, this);
         this.selection_dm.add(calculation()).then(function () {
+            var selection = {'unfolded': selection_unfolded, 'folded': selection_folded};
             if (! _.isEqual(selection, self.get("selection"))) {
                 self.set("selection", selection);
             }
         });
+    },
+    get_distant_fields: function() {
+        var self = this;
+        if (this.distant_fields) {
+            return $.when(this.distant_fields);
+        }
+        return new instance.web.Model(self.field.relation).call("fields_get", [["fold"]]).then(function(fields) {
+            self.distant_fields = fields;
+            return fields;
+        })
     },
     on_click_stage: function (ev) {
         var self = this;

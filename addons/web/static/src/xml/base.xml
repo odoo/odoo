@@ -1218,11 +1218,23 @@
     <ul t-att-class="'oe_form_field_status ' + (widget.options.clickable ? 'oe_form_status_clickable' : 'oe_form_status')" t-att-style="widget.node.attrs.style"/>
 </t>
 <t t-name="FieldStatus.content">
-    <t t-foreach="widget.selection" t-as="i">
+    <t t-foreach="widget.selection.unfolded" t-as="i">
         <li t-att-class="i[0] === widget.get('value') ? 'oe_active' : ''" t-att-data-id="i[0]">
             <span class="label"><t t-esc="i[1]"/></span>
             <!-- are you mit ? -->
             <span class="arrow"><span></span></span>
+        </li>
+    </t>
+    <t t-if="widget.selection.folded.length">
+        <li t-att-class="value_folded ? 'oe_active oe_folded' : 'oe_folded'">
+            <span class="label"> ... </span>
+            <ul>
+                <t t-foreach="widget.selection.folded" t-as="i">
+                    <li t-att-class="i[0] === widget.get('value') ? 'oe_active' : ''" t-att-data-id="i[0]">
+                        <span class="label"><t t-esc="i[1]"/></span>
+                    </li>
+                </t>
+            </ul>
         </li>
     </t>
 </t>

@@ -688,7 +688,7 @@
   cursor: pointer;
 }
 .openerp .oe_dropdown_toggle {
-  color: #4c4c4c;
+  color: #2b2b2b;
   font-weight: normal;
 }
 .openerp .oe_dropdown_hover:hover .oe_dropdown_menu, .openerp .oe_dropdown_menu.oe_opened {
@@ -1475,6 +1475,9 @@
   margin: 0px auto;
   text-align: center;
 }
+.openerp .oe_view_manager table.oe_view_manager_header .oe_view_manager_sidebar .oe_dropdown_arrow:after {
+  opacity: 0.9;
+}
 .openerp .oe_view_manager table.oe_view_manager_header td {
   line-height: 26px;
 }
@@ -1862,12 +1865,12 @@
   margin: 0;
 }
 .openerp .oe_searchview .oe_searchview_drawer h3 {
-  margin: 8px 4px 4px 12px;
+  margin: 8px 4px 4px 0px;
   color: #7c7bad;
   font-size: 13px;
 }
 .openerp .oe_searchview .oe_searchview_drawer h4, .openerp .oe_searchview .oe_searchview_drawer h4 * {
-  margin: 0;
+  margin: 0 0 0 2px;
   cursor: pointer;
   font-weight: normal;
   display: inline-block;
@@ -1943,6 +1946,12 @@
 }
 .openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom {
   padding: 0 8px 8px 8px;
+}
+.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom div {
+  padding: 0;
+}
+.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom div h4 {
+  margin: 0;
 }
 .openerp .oe_searchview .oe_searchview_drawer .oe_searchview_custom form {
   display: none;
@@ -2138,6 +2147,16 @@
 .openerp .oe_form_readonly .oe_form .oe_form_field_date {
   width: auto;
 }
+.openerp .oe_form_readonly .oe_form_field_boolean .boolean{
+  position: relative;
+  top: -14px;
+  width: 14px;
+  height: 14px;
+  z-index:10000;
+  /* IE needs a color in order for the layer to respond to mouse events */
+  backgroundColor: "#fff";
+  opacity: 0;
+}
 .openerp .oe_form_nosheet {
   margin: 16px;
 }
@@ -2185,6 +2204,7 @@
 }
 .openerp .oe_form header {
   position: relative;
+  z-index: 1;
   border-bottom: 1px solid #cacaca;
   padding-left: 2px;
   background-color: #ededed;
@@ -2659,20 +2679,20 @@
   background-image: -o-linear-gradient(top, #fcfcfc, #dedede);
   background-image: linear-gradient(to bottom, #fcfcfc, #dedede);
 }
-.openerp ul.oe_form_status li:first-child .label, .openerp ul.oe_form_status_clickable li:first-child .label {
+.openerp ul.oe_form_status li:first-child > .label, .openerp ul.oe_form_status_clickable li:first-child > .label {
   border-left: 1px solid #cacaca;
   padding-left: 14px;
 }
 .openerp ul.oe_form_status li:last-child, .openerp ul.oe_form_status_clickable li:last-child {
   border-right: 1px solid #cacaca;
 }
-.openerp ul.oe_form_status li:last-child .label, .openerp ul.oe_form_status_clickable li:last-child .label {
+.openerp ul.oe_form_status li:last-child > .label, .openerp ul.oe_form_status_clickable li:last-child > .label {
   padding-right: 14px;
 }
-.openerp ul.oe_form_status li:last-child .arrow, .openerp ul.oe_form_status_clickable li:last-child .arrow {
+.openerp ul.oe_form_status li:last-child > .arrow, .openerp ul.oe_form_status_clickable li:last-child > .arrow {
   display: none;
 }
-.openerp ul.oe_form_status li .label, .openerp ul.oe_form_status_clickable li .label {
+.openerp ul.oe_form_status li > .label, .openerp ul.oe_form_status_clickable li > .label {
   color: #4c4c4c;
   text-shadow: 0 1px 1px #fcfcfc, 0 -1px 1px #dedede;
   padding: 7px;
@@ -2681,14 +2701,14 @@
   margin: 0;
   position: relative;
 }
-.openerp ul.oe_form_status li .arrow, .openerp ul.oe_form_status_clickable li .arrow {
+.openerp ul.oe_form_status li > .arrow, .openerp ul.oe_form_status_clickable li > .arrow {
   width: 17px;
   display: inline-block;
   vertical-align: top;
   overflow: hidden;
   margin-left: -5px;
 }
-.openerp ul.oe_form_status li .arrow span, .openerp ul.oe_form_status_clickable li .arrow span {
+.openerp ul.oe_form_status li > .arrow span, .openerp ul.oe_form_status_clickable li > .arrow span {
   position: relative;
   width: 24px;
   height: 24px;
@@ -2710,6 +2730,32 @@
   -o-transform: rotate(45deg);
   transform: rotate(45deg);
 }
+.openerp ul.oe_form_status .oe_folded .label, .openerp ul.oe_form_status_clickable .oe_folded .label {
+  padding-bottom: 8px;
+}
+.openerp ul.oe_form_status .oe_folded ul, .openerp ul.oe_form_status_clickable .oe_folded ul {
+  position: absolute;
+  border-top: 1px solid #cacaca;
+  float: none;
+  top: 30px;
+  right: 0;
+  display: none;
+}
+.openerp ul.oe_form_status .oe_folded ul li, .openerp ul.oe_form_status_clickable .oe_folded ul li {
+  margin: 0;
+  border-left: 1px solid #cacaca;
+  display: block;
+}
+.openerp ul.oe_form_status .oe_folded ul li.label, .openerp ul.oe_form_status_clickable .oe_folded ul li.label {
+  border: 0;
+  padding-left: 24px;
+}
+.openerp ul.oe_form_status .oe_folded ul li:last-child, .openerp ul.oe_form_status_clickable .oe_folded ul li:last-child {
+  border-bottom: 1px solid #cacaca;
+}
+.openerp ul.oe_form_status .oe_folded:hover ul, .openerp ul.oe_form_status_clickable .oe_folded:hover ul {
+  display: block;
+}
 .openerp ul.oe_form_status li.oe_active, .openerp ul.oe_form_status_clickable li.oe_active {
   background-color: #5382b9;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#729fcf), to(#3465a4));
@@ -2719,14 +2765,14 @@
   background-image: -o-linear-gradient(top, #729fcf, #3465a4);
   background-image: linear-gradient(to bottom, #729fcf, #3465a4);
 }
-.openerp ul.oe_form_status li.oe_active .arrow span, .openerp ul.oe_form_status_clickable li.oe_active .arrow span {
+.openerp ul.oe_form_status li.oe_active > .arrow span, .openerp ul.oe_form_status_clickable li.oe_active > .arrow span {
   background-color: #3465a4;
   background: -moz-linear-gradient(135deg, #3465a4, #729fcf);
   background: -o-linear-gradient(135deg, #729fcf, #3465a4);
   background: -webkit-gradient(linear, left top, right bottom, from(#729fcf), to(#3465a4));
   background: -ms-linear-gradient(top, #729fcf, #3465a4);
 }
-.openerp ul.oe_form_status li.oe_active .label, .openerp ul.oe_form_status_clickable li.oe_active .label {
+.openerp ul.oe_form_status li.oe_active > .label, .openerp ul.oe_form_status_clickable li.oe_active > .label {
   color: white;
   text-shadow: 0 1px 1px #729fcf, 0 -1px 1px #3465a4;
 }
@@ -2742,10 +2788,10 @@
   background-image: -o-linear-gradient(top, #e8e8e8, #cacaca);
   background-image: linear-gradient(to bottom, #e8e8e8, #cacaca);
 }
-.openerp ul.oe_form_status_clickable li:hover .label {
+.openerp ul.oe_form_status_clickable li:hover > .label {
   text-shadow: 0 -1px 1px #fcfcfc, 0 1px 1px #dedede;
 }
-.openerp ul.oe_form_status_clickable li:hover .arrow span {
+.openerp ul.oe_form_status_clickable li:hover > .arrow span {
   background-color: #d9d9d9;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#e8e8e8), to(#cacaca));
   background-image: -webkit-linear-gradient(top, #e8e8e8, #cacaca);
@@ -2754,7 +2800,7 @@
   background-image: -o-linear-gradient(top, #e8e8e8, #cacaca);
   background-image: linear-gradient(to bottom, #e8e8e8, #cacaca);
 }
-.openerp ul.oe_form_status_clickable li .label {
+.openerp ul.oe_form_status_clickable li > .label {
   color: #7c7bad;
 }
 .openerp ul.oe_form_status_clickable li.oe_active:hover {
@@ -2766,10 +2812,10 @@
   background-image: -o-linear-gradient(top, #4c85c2, #284d7d);
   background-image: linear-gradient(to bottom, #4c85c2, #284d7d);
 }
-.openerp ul.oe_form_status_clickable li.oe_active:hover .label {
+.openerp ul.oe_form_status_clickable li.oe_active:hover > .label {
   text-shadow: 0 -1px 1px #729fcf, 0 1px 1px #3465a4;
 }
-.openerp ul.oe_form_status_clickable li.oe_active:hover .arrow span {
+.openerp ul.oe_form_status_clickable li.oe_active:hover > .arrow span {
   background-color: #284d7d;
   background: -moz-linear-gradient(135deg, #284d7d, #4c85c2);
   background: -o-linear-gradient(135deg, #4c85c2, #284d7d);
@@ -3348,11 +3394,11 @@ div.ui-widget-overlay {
   overflow: hidden;
   border-right: 1px solid #cacaca;
 }
-.openerp_ie ul.oe_form_status li:last-child .label, .openerp_ie ul.oe_form_status_clickable li:last-child .label {
+.openerp_ie ul.oe_form_status li:last-child > .label, .openerp_ie ul.oe_form_status_clickable li:last-child > .label {
   padding-right: 14px;
   border-right: none;
 }
-.openerp_ie ul.oe_form_status li:last-child .arrow, .openerp_ie ul.oe_form_status_clickable li:last-child .arrow {
+.openerp_ie ul.oe_form_status li:last-child > .arrow, .openerp_ie ul.oe_form_status_clickable li:last-child > .arrow {
   display: inline-block;
   opacity: 0;
   filter: alpha(opacity=0);
@@ -3360,17 +3406,17 @@ div.ui-widget-overlay {
   width: 0;
   border-right: none;
 }
-.openerp_ie ul.oe_form_status .label, .openerp_ie ul.oe_form_status_clickable .label {
+.openerp_ie ul.oe_form_status li > .label, .openerp_ie ul.oe_form_status_clickable li > .label {
   border-bottom: 1px solid #cacaca;
   background: transparent;
 }
-.openerp_ie ul.oe_form_status .arrow span, .openerp_ie ul.oe_form_status_clickable .arrow span {
+.openerp_ie ul.oe_form_status li > .arrow span, .openerp_ie ul.oe_form_status_clickable li > .arrow span {
   background-color: #fefefe !important;
 }
-.openerp_ie ul.oe_form_status li.oe_active .label, .openerp_ie ul.oe_form_status_clickable li.oe_active .label {
+.openerp_ie ul.oe_form_status li.oe_active > .label, .openerp_ie ul.oe_form_status_clickable li.oe_active > .label {
   border-bottom: 1px solid #729fcf;
 }
-.openerp_ie ul.oe_form_status li.oe_active .arrow span, .openerp_ie ul.oe_form_status_clickable li.oe_active .arrow span {
+.openerp_ie ul.oe_form_status li.oe_active > .arrow span, .openerp_ie ul.oe_form_status_clickable li.oe_active > .arrow span {
   background-color: #729fcf !important;
 }
 .openerp_ie .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button {
