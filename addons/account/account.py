@@ -648,10 +648,10 @@ class account_account(osv.osv):
             if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
                 #Check for 'Closed' type
                 if old_type == 'closed' and new_type !='closed':
-                    raise osv.except_osv(_('Warning !'), _("You cannot change the type of account from 'Closed' to any other type as it contains journal items!"))
+                    raise osv.except_osv(_('Warning!'), _("You cannot change the type of account from 'Closed' to any other type as it contains journal items!"))
                 # Forbid to change an account type for restricted_groups as it contains journal items (or if one of its children does)
                 if (new_type in restricted_groups):
-                    raise osv.except_osv(_('Warning !'), _("You cannot change the type of account to '%s' type as it contains journal items!") % (new_type,))
+                    raise osv.except_osv(_('Warning!'), _("You cannot change the type of account to '%s' type as it contains journal items!") % (new_type,))
 
         return True
 
@@ -1015,14 +1015,14 @@ class account_period(osv.osv):
         if not result:
             result = self.search(cr, uid, args, context=context)
         if not result:
-            raise osv.except_osv(_('Error !'), _('There is no period defined for this date: %s.\nPlease create one.')%dt)
+            raise osv.except_osv(_('Error!'), _('There is no period defined for this date: %s.\nPlease create one.')%dt)
         return result
 
     def action_draft(self, cr, uid, ids, *args):
         mode = 'draft'
         for period in self.browse(cr, uid, ids):
             if period.fiscalyear_id.state == 'done':
-                raise osv.except_osv(_('Warning !'), _('You can not re-open a period which belongs to closed fiscal year'))
+                raise osv.except_osv(_('Warning!'), _('You can not re-open a period which belongs to closed fiscal year'))
         cr.execute('update account_journal_period set state=%s where period_id in %s', (mode, tuple(ids),))
         cr.execute('update account_period set state=%s where id in %s', (mode, tuple(ids),))
         return True
@@ -1034,9 +1034,15 @@ class account_period(osv.osv):
             context = {}
         ids = []
         if name:
-            ids = self.search(cr, user, [('code','ilike',name)]+ args, limit=limit)
+            ids = self.search(cr, user,
+                              [('code', 'ilike', name)] + args,
+                              limit=limit,
+                              context=context)
         if not ids:
-            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
+            ids = self.search(cr, user,
+                              [('name', operator, name)] + args,
+                              limit=limit,
+                              context=context)
         return self.name_get(cr, user, ids, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -1059,10 +1065,14 @@ class account_period(osv.osv):
             raise osv.except_osv(_('Error!'), _('You should choose the periods that belong to the same company.'))
         if period_date_start > period_date_stop:
             raise osv.except_osv(_('Error!'), _('Start period should precede then end period.'))
+
+        # /!\ We do not include a criterion on the company_id field below, to allow producing consolidated reports
+        # on multiple companies. It will only work when start/end periods are selected and no fiscal year is chosen.
+
         #for period from = january, we want to exclude the opening period (but it has same date_from, so we have to check if period_from is special or not to include that clause or not in the search).
         if period_from.special:
-            return self.search(cr, uid, [('date_start', '>=', period_date_start), ('date_stop', '<=', period_date_stop), ('company_id', '=', company1_id)])
-        return self.search(cr, uid, [('date_start', '>=', period_date_start), ('date_stop', '<=', period_date_stop), ('company_id', '=', company1_id), ('special', '=', False)])
+            return self.search(cr, uid, [('date_start', '>=', period_date_start), ('date_stop', '<=', period_date_stop)])
+        return self.search(cr, uid, [('date_start', '>=', period_date_start), ('date_stop', '<=', period_date_stop), ('special', '=', False)])
 
 
 class account_journal_period(osv.osv):
@@ -1854,6 +1864,12 @@ class account_tax_code(osv.osv):
     _order = 'code'
 
 
+def get_precision_tax():
+    def change_digit_tax(cr):
+        res = openerp.registry(cr.dbname)['decimal.precision'].precision_get(cr, SUPERUSER_ID, 'Account')
+        return (16, res+3)
+    return change_digit_tax
+
 class account_tax(osv.osv):
     """
     A tax object.
@@ -1873,12 +1889,6 @@ class account_tax(osv.osv):
         default = default.copy()
         default.update({'name': name + _(' (Copy)')})
         return super(account_tax, self).copy_data(cr, uid, id, default=default, context=context)
-
-    def get_precision_tax():
-        def change_digit_tax(cr):
-            res = openerp.registry(cr.dbname)['decimal.precision'].precision_get(cr, SUPERUSER_ID, 'Account')
-            return (16, res+2)
-        return change_digit_tax
 
     _name = 'account.tax'
     _description = 'Tax'
@@ -2307,7 +2317,7 @@ class account_model(osv.osv):
             try:
                 entry['name'] = model.name%{'year': move_date.strftime('%Y'), 'month': move_date.strftime('%m'), 'date': move_date.strftime('%Y-%m')}
             except:
-                raise osv.except_osv(_('Wrong model !'), _('You have a wrong expression "%(...)s" in your model !'))
+                raise osv.except_osv(_('Wrong Model!'), _('You have a wrong expression "%(...)s" in your model!'))
             move_id = account_move_obj.create(cr, uid, {
                 'ref': entry['name'],
                 'period_id': period_id,
@@ -2319,7 +2329,7 @@ class account_model(osv.osv):
                 analytic_account_id = False
                 if line.analytic_account_id:
                     if not model.journal_id.analytic_journal_id:
-                        raise osv.except_osv(_('No Analytic Journal !'),_("You have to define an analytic journal on the '%s' journal!") % (model.journal_id.name,))
+                        raise osv.except_osv(_('No Analytic Journal!'),_("You have to define an analytic journal on the '%s' journal!") % (model.journal_id.name,))
                     analytic_account_id = line.analytic_account_id.id
                 val = {
                     'move_id': move_id,
@@ -2795,7 +2805,7 @@ class account_tax_template(osv.osv):
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
         'name': fields.char('Tax Name', size=64, required=True),
         'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the taxes lines from lower sequences to higher ones. The order is important if you have a tax that has several tax children. In this case, the evaluation order is important."),
-        'amount': fields.float('Amount', required=True, digits=(14,4), help="For Tax Type percent enter % ratio between 0-1."),
+        'amount': fields.float('Amount', required=True, digits_compute=get_precision_tax(), help="For Tax Type percent enter % ratio between 0-1."),
         'type': fields.selection( [('percent','Percent'), ('fixed','Fixed'), ('none','None'), ('code','Python Code'), ('balance','Balance')], 'Tax Type', required=True),
         'applicable_type': fields.selection( [('true','True'), ('code','Python Code')], 'Applicable Type', required=True, help="If not applicable (computed through a Python code), the tax won't appear on the invoice."),
         'domain':fields.char('Domain', size=32, help="This field is only used if you develop your own module allowing developers to create specific taxes in a custom domain."),

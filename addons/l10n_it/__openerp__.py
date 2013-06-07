@@ -29,7 +29,7 @@
 
 {
     'name': 'Italy - Accounting',
-    'version': '0.1',
+    'version': '0.2',
     'depends': ['base_vat','account_chart','base_iban'],
     'author': 'OpenERP Italian Community',
     'description': """

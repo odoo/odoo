@@ -72,40 +72,40 @@
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Create Procurement Order&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;A procurement order is automatically created as soon as a sales order is confirmed or as the invoice is paid. It drives the purchasing and the production of products regarding to the rules and to the sales order's parameters. &quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_saleprocurement0"/>
-            <field model="process.node" name="source_node_id" ref="sale.process_node_saleorder0"/>
+            <field name="target_node_id" ref="process_node_saleprocurement0"/>
+            <field name="source_node_id" ref="sale.process_node_saleorder0"/>
         </record>
 
         <record id="process_transition_packing0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Create Pick List&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;The Pick List form is created as soon as the sales order is confirmed, in the same time as the procurement order. It represents the assignment of parts to the sales order. There is 1 pick list by sales order line which evolves with the availability of parts.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_packinglist0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_saleprocurement0"/>
+            <field name="target_node_id" ref="process_node_packinglist0"/>
+            <field name="source_node_id" ref="process_node_saleprocurement0"/>
         </record>
 
         <record id="process_transition_deliver0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Create Delivery Order&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Depending on the configuration of the location Output, the move between the output area and the customer is done through the Delivery Order manually or automatically.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_deliveryorder0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_packinglist0"/>
+            <field name="target_node_id" ref="process_node_deliveryorder0"/>
+            <field name="source_node_id" ref="process_node_packinglist0"/>
         </record>
 
         <record id="process_transition_invoiceafterdelivery0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Create Invoice&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;If the sale order was set to create the invoice 'On Delivery Order', then an invoice is automatically created based on what you delivered. If you rather want to create your invoice based on your sale order, you can set the sale order to create invoice 'On Demand', then track and process the sales order that have been fully delivered and invoice them from there.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_invoiceafterdelivery0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_packinglist0"/>
+            <field name="target_node_id" ref="process_node_invoiceafterdelivery0"/>
+            <field name="source_node_id" ref="process_node_packinglist0"/>
         </record>
 
         <record id="process_transition_saleorderprocurement0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Procurement of sold material&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;For every sales order line, a procurement order is created to supply the sold product.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="procurement.process_node_procureproducts0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_saleorderprocurement0"/>
+            <field name="target_node_id" ref="procurement.process_node_procureproducts0"/>
+            <field name="source_node_id" ref="process_node_saleorderprocurement0"/>
         </record>
 
         <!--
