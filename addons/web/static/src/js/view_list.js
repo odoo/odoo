@@ -578,7 +578,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         this.no_leaf = !!context['group_by_no_leaf'];
         this.grouped = !!group_by;
 
-        return this.load_view(context).then(
+        return this.alive(this.load_view(context)).then(
             this.proxy('reload_content'));
     },
     /**
@@ -895,8 +895,9 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
 
         this.record_callbacks = {
             'remove': function (event, record) {
-                var $row = self.$current.children(
-                    '[data-id=' + record.get('id') + ']');
+                var id = record.get('id');
+                self.dataset.remove_ids([id])
+                var $row = self.$current.children('[data-id=' + id + ']');
                 var index = $row.data('index');
                 $row.remove();
             },
@@ -2060,6 +2061,7 @@ instance.web.list.columns = new instance.web.Registry({
     'field': 'instance.web.list.Column',
     'field.boolean': 'instance.web.list.Boolean',
     'field.binary': 'instance.web.list.Binary',
+    'field.char': 'instance.web.list.Char',
     'field.progressbar': 'instance.web.list.ProgressBar',
     'field.handle': 'instance.web.list.Handle',
     'button': 'instance.web.list.Button',
@@ -2226,6 +2228,20 @@ instance.web.list.Binary = instance.web.list.Column.extend({
             href: download_url,
             size: instance.web.binary_to_binsize(value),
         });
+    }
+});
+instance.web.list.Char = instance.web.list.Column.extend({
+    replacement: '*',
+    /**
+     * If password field, only display replacement characters (if value is
+     * non-empty)
+     */
+    _format: function (row_data, options) {
+        var value = row_data[this.id].value;
+        if (value && this.password === 'True') {
+            return value.replace(/[\s\S]/g, _.escape(this.replacement))
+        }
+        return this._super(row_data, options);
     }
 });
 instance.web.list.ProgressBar = instance.web.list.Column.extend({
