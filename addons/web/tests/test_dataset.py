@@ -3,12 +3,12 @@ import mock
 import unittest2
 import openerp.addons.web.controllers.main
 from openerp.addons.web.http import request as req
-from openerp.addons.web.http import _request_stack
+from openerp.addons.web.http import set_request
 
 class TestDataSetController(unittest2.TestCase):
     def setUp(self):
         self.dataset = openerp.addons.web.controllers.main.DataSet()
-        self.tmp_req = RequestProxy.set_request(mock.Mock())
+        self.tmp_req = set_request(mock.Mock())
         self.tmp_req.__enter__()
         self.read = req.session.model().read
         self.search = req.session.model().search
