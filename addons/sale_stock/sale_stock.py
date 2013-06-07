@@ -70,7 +70,7 @@ class sale_order(osv.osv):
         company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         warehouse_ids = self.pool.get('stock.warehouse').search(cr, uid, [('company_id','=',company_id)], context=context)
         if not warehouse_ids:
-            raise osv.except_osv(_('Error!'), _('There is no default location for the current user\'s company!'))
+            raise osv.except_osv(_('Error!'), _('There is no warehouse defined for the current company!'))
         return warehouse_ids[0]
 
     # This is False
@@ -140,7 +140,7 @@ class sale_order(osv.osv):
         'picking_ids': fields.one2many('stock.picking.out', 'sale_id', 'Related Picking', readonly=True, help="This is a list of delivery orders that has been generated for this sales order."),
         'shipped': fields.boolean('Delivered', readonly=True, help="It indicates that the sales order has been delivered. This field is updated only after the scheduler(s) have been launched."),
         'picked_rate': fields.function(_picked_rate, string='Picked', type='float'),
-        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
+        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse',required=True),
         'invoice_quantity': fields.selection([('order', 'Ordered Quantities'), ('procurement', 'Shipped Quantities')], 'Invoice on', 
                                              help="The sales order will automatically create the invoice proposition (draft invoice).\
                                               You have to choose  if you want your invoice based on ordered ", required=True, readonly=True, states={'draft': [('readonly', False)]}),
