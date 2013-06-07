@@ -85,7 +85,7 @@ class project(osv.osv):
         if context and context.get('user_preference'):
                 cr.execute("""SELECT project.id FROM project_project project
                            LEFT JOIN account_analytic_account account ON account.id = project.analytic_account_id
-                           LEFT JOIN project_user_rel rel ON rel.project_id = project.analytic_account_id
+                           LEFT JOIN project_user_rel rel ON rel.project_id = project.id
                            WHERE (account.user_id = %s or rel.uid = %s)"""%(user, user))
                 return [(r[0]) for r in cr.fetchall()]
         return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order,
@@ -450,7 +450,7 @@ class project(osv.osv):
 
         for project in projects:
             if (not project.members) and force_members:
-                raise osv.except_osv(_('Warning!'),_("You must assign members on the project '%s' !") % (project.name,))
+                raise osv.except_osv(_('Warning!'),_("You must assign members on the project '%s'!") % (project.name,))
 
         resource_pool = self.pool.get('resource.resource')
 
@@ -581,12 +581,12 @@ class task(base_stage, osv.osv):
 
     _track = {
         'state': {
-            'project.mt_task_new': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'new',
+            'project.mt_task_new': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['new', 'draft'],
             'project.mt_task_started': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'open',
             'project.mt_task_closed': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
         },
         'stage_id': {
-            'project.mt_task_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['new', 'done', 'open'],
+            'project.mt_task_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['new', 'draft', 'done', 'open'],
         },
         'kanban_state': {  # kanban state: tracked, but only block subtype
             'project.mt_task_blocked': lambda self, cr, uid, obj, ctx=None: obj['kanban_state'] == 'blocked',
@@ -956,7 +956,7 @@ class task(base_stage, osv.osv):
             if task.child_ids:
                 for child in task.child_ids:
                     if child.state in ['draft', 'open', 'pending']:
-                        raise osv.except_osv(_("Warning !"), _("Child task still open.\nPlease cancel or complete child task first."))
+                        raise osv.except_osv(_("Warning!"), _("Child task still open.\nPlease cancel or complete child task first."))
         return True
 
     def action_close(self, cr, uid, ids, context=None):
@@ -1120,10 +1120,12 @@ class task(base_stage, osv.osv):
             context = {}
         if not vals.get('stage_id'):
             ctx = context.copy()
-            if  vals.get('project_id'):
+            if vals.get('project_id'):
                 ctx['default_project_id'] = vals['project_id']
             vals['stage_id'] = self._get_default_stage_id(cr, uid, context=ctx)
-        task_id = super(task, self).create(cr, uid, vals, context=context)
+        # context: no_log, because subtype already handle this
+        create_context = dict(context, mail_create_nolog=True)
+        task_id = super(task, self).create(cr, uid, vals, context=create_context)
         self._store_history(cr, uid, [task_id], context=context)
         return task_id
 
@@ -1197,6 +1199,17 @@ class task(base_stage, osv.osv):
         return [task.project_id.message_get_reply_to()[0] if task.project_id else False
                     for task in self.browse(cr, uid, ids, context=context)]
 
+    def check_mail_message_access(self, cr, uid, mids, operation, model_obj=None, context=None):
+        """ mail.message document permission rule: can post a new message if can read
+            because of portal document. """
+        if not model_obj:
+            model_obj = self
+        if operation == 'create':
+            model_obj.check_access_rights(cr, uid, 'read')
+            model_obj.check_access_rule(cr, uid, mids, 'read', context=context)
+        else:
+            return super(task, self).check_mail_message_access(cr, uid, mids, operation, model_obj=model_obj, context=context)
+
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Override to updates the document according to the email. """
         if custom_values is None: custom_values = {}
@@ -1205,7 +1218,7 @@ class task(base_stage, osv.osv):
             'planned_hours': 0.0,
         }
         defaults.update(custom_values)
-        return super(task,self).message_new(cr, uid, msg, custom_values=defaults, context=context)
+        return super(task, self).message_new(cr, uid, msg, custom_values=defaults, context=context)
 
     def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
         """ Override to update the task according to the email. """

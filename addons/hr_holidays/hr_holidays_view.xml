@@ -40,8 +40,8 @@
             <field name="name">Leave Request</field>
             <field name="model">hr.holidays</field>
             <field name="arch" type="xml">
-                <calendar string="Leave Request" color="user_id" date_start="date_from" date_stop="date_to">
-                    <field name="user_id"/>
+                <calendar string="Leave Request" color="employee_id" date_start="date_from" date_stop="date_to">
+                    <field name="employee_id"/>
                     <field name="holiday_status_id"/>
                 </calendar>
             </field>
