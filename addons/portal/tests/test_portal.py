@@ -40,7 +40,9 @@ class test_portal(TestMailBase):
         self.partner_chell_id = self.user_chell.partner_id.id
 
         # Create a PigsPortal group
-        self.group_port_id = self.mail_group.create(cr, uid, {'name': 'PigsPortal', 'public': 'groups', 'group_public_id': self.group_portal_id})
+        self.group_port_id = self.mail_group.create(cr, uid,
+                        {'name': 'PigsPortal', 'public': 'groups', 'group_public_id': self.group_portal_id},
+                        {'mail_create_nolog': True})
 
         # Set an email address for the user running the tests, used as Sender for outgoing mails
         self.res_users.write(cr, uid, uid, {'email': 'test@localhost'})
@@ -130,3 +132,94 @@ class test_portal(TestMailBase):
                             'invite: body of invitation email is incorrect')
             self.assertTrue(partner_carine.signup_url in sent_email.get('body'),
                             'invite: body of invitation email does not contain signup url')
+
+    def test_20_notification_url(self):
+        """ Tests designed to test the URL added in notification emails. """
+        cr, uid, group_pigs = self.cr, self.uid, self.group_pigs
+
+        # Partner data
+        partner_raoul = self.res_partner.browse(cr, uid, self.partner_raoul_id)
+        partner_bert_id = self.res_partner.create(cr, uid, {'name': 'bert'})
+        partner_bert = self.res_partner.browse(cr, uid, partner_bert_id)
+        # Mail data
+        mail_mail_id = self.mail_mail.create(cr, uid, {'state': 'exception'})
+        mail = self.mail_mail.browse(cr, uid, mail_mail_id)
+
+        # Test: link for nobody -> None
+        url = self.mail_mail._get_partner_access_link(cr, uid, mail)
+        self.assertEqual(url, None,
+                        'notification email: mails not send to a specific partner should not have any URL')
+
+        # Test: link for partner -> signup URL
+        url = self.mail_mail._get_partner_access_link(cr, uid, mail, partner=partner_bert)
+        self.assertIn(partner_bert.signup_url, url,
+                        'notification email: mails send to a not-user partner should contain the signup URL')
+
+        # Test: link for user -> signin
+        url = self.mail_mail._get_partner_access_link(cr, uid, mail, partner=partner_raoul)
+        self.assertIn('action=mail.action_mail_redirect', url,
+                        'notification email: link should contain the redirect action')
+        self.assertIn('login=%s' % partner_raoul.user_ids[0].login, url,
+                        'notification email: link should contain the user login')
+
+    @mute_logger('openerp.addons.mail.mail_thread', 'openerp.osv.orm')
+    def test_21_inbox_redirection(self):
+        """ Tests designed to test the inbox redirection of emails notification URLs. """
+        cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs
+        model, act_id = self.ir_model_data.get_object_reference(cr, uid, 'mail', 'action_mail_inbox_feeds')
+        model, port_act_id = self.ir_model_data.get_object_reference(cr, uid, 'portal', 'action_mail_inbox_feeds_portal')
+        # Data: post a message on pigs
+        msg_id = self.group_pigs.message_post(body='My body', partner_ids=[self.partner_bert_id, self.partner_chell_id], type='comment', subtype='mail.mt_comment')
+
+        # No specific parameters -> should redirect to Inbox
+        action = self.mail_thread.message_redirect_action(cr, self.user_raoul_id, {'params': {}})
+        self.assertEqual(action.get('type'), 'ir.actions.client',
+                        'URL redirection: action without parameters should redirect to client action Inbox')
+        self.assertEqual(action.get('id'), act_id,
+                        'URL redirection: action without parameters should redirect to client action Inbox')
+
+        # Bert has read access to Pigs -> should redirect to form view of Pigs
+        action = self.mail_thread.message_redirect_action(cr, self.user_raoul_id, {'params': {'message_id': msg_id}})
+        self.assertEqual(action.get('type'), 'ir.actions.act_window',
+                        'URL redirection: action with message_id for read-accredited user should redirect to Pigs')
+        self.assertEqual(action.get('res_id'), group_pigs.id,
+                        'URL redirection: action with message_id for read-accredited user should redirect to Pigs')
+
+        # Bert has no read access to Pigs -> should redirect to Inbox
+        action = self.mail_thread.message_redirect_action(cr, self.user_bert_id, {'params': {'message_id': msg_id}})
+        self.assertEqual(action.get('type'), 'ir.actions.client',
+                        'URL redirection: action without parameters should redirect to client action Inbox')
+        self.assertEqual(action.get('id'), act_id,
+                        'URL redirection: action without parameters should redirect to client action Inbox')
+
+        # Chell has no read access to pigs -> should redirect to Portal Inbox
+        action = self.mail_thread.message_redirect_action(cr, self.user_chell_id, {'params': {'message_id': msg_id}})
+        self.assertEqual(action.get('type'), 'ir.actions.client',
+                        'URL redirection: action without parameters should redirect to client action Inbox')
+        self.assertEqual(action.get('id'), port_act_id,
+                        'URL redirection: action without parameters should redirect to client action Inbox')
+
+    def test_30_message_read(self):
+        cr, uid, group_port_id = self.cr, self.uid, self.group_port_id
+
+        # Data: custom subtypes
+        mt_group_public_id = self.mail_message_subtype.create(cr, uid, {'name': 'group_public', 'description': 'Group changed'})
+        self.ir_model_data.create(cr, uid, {'name': 'mt_group_public', 'model': 'mail.message.subtype', 'module': 'mail', 'res_id': mt_group_public_id})
+        # Data: post messages with various subtypes
+        msg1_id = self.mail_group.message_post(cr, uid, group_port_id, body='Body1', type='comment', subtype='mail.mt_comment')
+        msg2_id = self.mail_group.message_post(cr, uid, group_port_id, body='Body2', type='comment', subtype='mail.mt_group_public')
+        msg3_id = self.mail_group.message_post(cr, uid, group_port_id, body='Body3', type='comment', subtype='mail.mt_comment')
+        msg4_id = self.mail_group.message_post(cr, uid, group_port_id, body='Body4', type='comment')
+        msg5_id = self.mail_group.message_post(cr, uid, group_port_id, body='Body5', type='notification')
+
+        # Do: Chell search messages: should not see internal notes (comment without subtype)
+        msg_ids = self.mail_message.search(cr, self.user_chell_id, [('model', '=', 'mail.group'), ('res_id', '=', group_port_id)])
+        self.assertEqual(set(msg_ids), set([msg1_id, msg2_id, msg3_id, msg5_id]),
+                        'mail_message: portal user has access to messages he should not read')
+
+        # Do: Chell read messages she can read
+        self.mail_message.read(cr, self.user_chell_id, msg_ids, ['body', 'type', 'subtype_id'])
+
+        # Do: Chell read a message she should not be able to read
+        with self.assertRaises(except_orm):
+            self.mail_message.read(cr, self.user_chell_id, [msg4_id], ['body', 'type', 'subtype_id'])
