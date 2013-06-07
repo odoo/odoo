@@ -264,7 +264,7 @@ class MergePartnerAutomatic(osv.TransientModel):
 
         values = dict()
         for column, field in columns.iteritems():
-            if field._type not in ('many2many', 'one2many', 'function'):
+            if field._type not in ('many2many', 'one2many') and not isinstance(field, fields.function):
                 for item in itertools.chain(src_partners, [dst_partner]):
                     if item[column]:
                         values[column] = write_serializer(column, item[column])
