@@ -577,6 +577,10 @@ class account_invoice(osv.osv):
         return {'value': {}}
 
     def onchange_company_id(self, cr, uid, ids, company_id, part_id, type, invoice_line, currency_id):
+        #TODO: add the missing context parameter when forward-porting in trunk so we can remove
+        #      this hack!
+        context = self.pool['res.users'].context_get(cr, uid)
+
         val = {}
         dom = {}
         obj_journal = self.pool.get('account.journal')
@@ -627,14 +631,13 @@ class account_invoice(osv.osv):
                         else:
                             continue
         if company_id and type:
-            if type in ('out_invoice'):
-                journal_type = 'sale'
-            elif type in ('out_refund'):
-                journal_type = 'sale_refund'
-            elif type in ('in_refund'):
-                journal_type = 'purchase_refund'
-            else:
-                journal_type = 'purchase'
+            journal_mapping = {
+               'out_invoice': 'sale',
+               'out_refund': 'sale_refund',
+               'in_refund': 'purchase_refund',
+               'in_invoice': 'purchase',
+            }
+            journal_type = journal_mapping[type]
             journal_ids = obj_journal.search(cr, uid, [('company_id','=',company_id), ('type', '=', journal_type)])
             if journal_ids:
                 val['journal_id'] = journal_ids[0]
@@ -644,7 +647,12 @@ class account_invoice(osv.osv):
                 if r[1] == 'journal_id' and r[2] in journal_ids:
                     val['journal_id'] = r[2]
             if not val.get('journal_id', False):
-                raise osv.except_osv(_('Configuration Error!'), (_('Cannot find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration\Journals\Journals.') % (journal_type)))
+                journal_type_map = dict(obj_journal._columns['type'].selection)
+                journal_type_label = self.pool['ir.translation']._get_source(cr, uid, None, ('code','selection'),
+                                                                             context.get('lang'),
+                                                                             journal_type_map.get(journal_type))
+                raise osv.except_osv(_('Configuration Error!'),
+                                     _('Cannot find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration\Journals\Journals.') % ('"%s"' % journal_type_label))
             dom = {'journal_id':  [('id', 'in', journal_ids)]}
         else:
             journal_ids = obj_journal.search(cr, uid, [])
