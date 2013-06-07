@@ -112,7 +112,7 @@ class crm_claim(base_stage, osv.osv):
                 help='The status is set to \'Draft\', when a case is created.\n'
                      'If the case is in progress the status is set to \'Open\'.\n'
                      'When the case is over, the status is set to \'Done\'.\n'
-                     'If the case needs to be reviewed then the status is' 
+                     'If the case needs to be reviewed then the status is ' 
                      'set to \'Pending\'.'),
     }
 
