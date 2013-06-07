@@ -2721,6 +2721,11 @@ instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instanc
                     self.internal_set_value(self.$textarea.val());
                 }
             });
+            if (this.field.translate) {
+                var $img = $('<img class="oe_field_translate oe_input_icon" src="/web/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/>')
+                    .click(this.on_translate);
+                this.$cleditor.$toolbar.append($img);
+            }
         }
     },
     render_value: function() {
