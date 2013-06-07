@@ -131,7 +131,7 @@ class mrp_production_workcenter_line(osv.osv):
                elif prod_obj.state =='in_production':
                    return
                else:
-                   raise osv.except_osv(_('Error!'),_('Manufacturing order cannot start in state "%s"!') % (prod_obj.state,))
+                   raise osv.except_osv(_('Error!'),_('Manufacturing order cannot be started in state "%s"!') % (prod_obj.state,))
         else:
             oper_ids = self.search(cr,uid,[('production_id','=',prod_obj.id)])
             obj = self.browse(cr,uid,oper_ids)
@@ -451,7 +451,7 @@ class mrp_operations_operation(osv.osv):
 
         if not oper_objs:
             if code.start_stop!='start':
-                raise osv.except_osv(_('Sorry!'),_('Operation is not started yet !'))
+                raise osv.except_osv(_('Sorry!'),_('Operation is not started yet!'))
                 return False
         else:
             for oper in oper_objs:
