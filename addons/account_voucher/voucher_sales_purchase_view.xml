@@ -10,7 +10,7 @@
                     <field name="date"/>
                     <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                     <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
-                    <field name="partner_id" string="Supplier"/>
+                    <field name="partner_id" string="Supplier" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="journal_id" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('purchase','purchase_refund'))]"/>
                     <field name="period_id"/>
                     <group expand="0" string="Group By...">
@@ -32,7 +32,7 @@
                     <field name="date"/>
                     <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
                     <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
-                    <field name="partner_id" string="Customer"/>
+                    <field name="partner_id" string="Customer" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="journal_id" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('sale','sale_refund'))]"/>
                     <field name="period_id"/>
                     <group expand="0" string="Group By...">
@@ -145,6 +145,13 @@
                             </field>
                         </page>
                     </notebook>
+                    <group col="4" invisible="1">
+                                    <field name="is_multi_currency" invisible="1"/>
+                                    <field name="currency_help_label" invisible="1"/>
+                                    <field name="payment_rate" invisible="1"/>
+                                    <field name="payment_rate_currency_id"  invisible="1"/>
+                                    <field name="paid_amount_in_company_currency" colspan="4" invisible="1"/>
+                    </group>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
@@ -237,6 +244,7 @@
                                 on_change="onchange_journal(journal_id, line_dr_ids, tax_id, partner_id, date, amount, type, company_id, context)"
                                 groups="account.group_account_user"/>
                             <field name="paid_amount_in_company_currency" invisible="1"/>
+                            <field name="currency_help_label" invisible="1"/>
                         </group>
                     </group>
                     <notebook>

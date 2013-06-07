@@ -87,7 +87,7 @@ class crm_make_sale(osv.osv_memory):
                             ['default', 'invoice', 'delivery', 'contact'])
                     pricelist = partner.property_product_pricelist.id
                 if False in partner_addr.values():
-                    raise osv.except_osv(_('Insufficient Data!'), _('No addresse(s) defined for this customer.'))
+                    raise osv.except_osv(_('Insufficient Data!'), _('No address(es) defined for this customer.'))
 
                 vals = {
                     'origin': _('Opportunity: %s') % str(case.id),
@@ -153,6 +153,5 @@ class crm_make_sale(osv.osv_memory):
         'partner_id': _selectPartner,
     }
 
-crm_make_sale()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

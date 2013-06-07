@@ -43,6 +43,9 @@ class res_partner(osv.osv):
 
         super(res_partner, self).copy(cr, uid, id, default=default, context=context)
 
+    def _commercial_fields(self, cr, uid, context=None):
+        return super(res_partner, self)._commercial_fields(cr, uid, context=context) + ['property_product_pricelist_purchase']
+
     _columns = {
         'property_product_pricelist_purchase': fields.property(
           'product.pricelist',
@@ -55,7 +58,6 @@ class res_partner(osv.osv):
         'purchase_order_count': fields.function(_purchase_order_count, string='# of Purchase Order', type='integer'),
         'purchase_order_ids': fields.one2many('purchase.order','partner_id','Purchase Order')
     }
-res_partner()
 
 
 

@@ -67,7 +67,6 @@ class account_analytic_default(osv.osv):
                 best_index = index
         return res
 
-account_analytic_default()
 
 class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
@@ -82,7 +81,6 @@ class account_invoice_line(osv.osv):
             res_prod['value'].update({'account_analytic_id': False})
         return res_prod
 
-account_invoice_line()
 
 
 class stock_picking(osv.osv):
@@ -97,7 +95,6 @@ class stock_picking(osv.osv):
 
         return super(stock_picking, self)._get_account_analytic_invoice(cursor, user, picking, move_line)
 
-stock_picking()
 
 class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
@@ -118,6 +115,5 @@ class sale_order_line(osv.osv):
                 inv_line_obj.write(cr, uid, [line.id], {'account_analytic_id': rec.analytic_id.id}, context=context)
         return create_ids
 
-sale_order_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

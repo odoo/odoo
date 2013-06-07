@@ -29,7 +29,6 @@ class res_partner(osv.osv):
         'task_ids': fields.one2many('project.task', 'partner_id', 'Tasks'),
     }
 
-res_partner()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

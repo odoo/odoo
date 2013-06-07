@@ -21,6 +21,7 @@
 
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
+from openerp import netsvc
 
 class sale_order_line_make_invoice(osv.osv_memory):
     _name = "sale.order.line.make.invoice"
@@ -80,6 +81,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
 
         sales_order_line_obj = self.pool.get('sale.order.line')
         sales_order_obj = self.pool.get('sale.order')
+        wf_service = netsvc.LocalService('workflow')
         for line in sales_order_line_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             if (not line.invoiced) and (line.state not in ('draft', 'cancel')):
                 if not line.order_id in invoices:
@@ -128,6 +130,5 @@ class sale_order_line_make_invoice(osv.osv_memory):
             'type': 'ir.actions.act_window',
         }
 
-sale_order_line_make_invoice()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

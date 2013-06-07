@@ -118,6 +118,5 @@ class crm_lead_report_assign(osv.osv):
                     left join res_partner p on (c.partner_assigned_id=p.id)
             )""")
 
-crm_lead_report_assign()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -101,6 +101,5 @@ class change_production_qty(osv.osv_memory):
             self._update_product_to_produce(cr, uid, prod, wiz_qty.product_qty, context=context)
         return {}
 
-change_production_qty()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
