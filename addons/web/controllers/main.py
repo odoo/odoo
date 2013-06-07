@@ -1481,6 +1481,8 @@ class Export(openerpweb.Controller):
                     if all(dict(attrs).get('readonly', True)
                            for attrs in field.get('states', {}).values()):
                         continue
+            if not field.get('exportable', True):
+                continue
 
             id = prefix + (prefix and '/'or '') + field_name
             name = parent_name + (parent_name and '/' or '') + field['string']
