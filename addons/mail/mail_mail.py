@@ -88,18 +88,16 @@ class mail_mail(osv.Model):
         """
         if values.get('reply_to'):
             return values.get('reply_to')
-        redirect_gateway = True  # whether replies will be redirected inside the document
-
-        # email_reply_to, model, res_id: comes from values OR related message
+        format_name = True  # whether to use a 'Followers of Pigs <pigs@openerp.com' format
         email_reply_to = False
-        model = values.get('model')
-        res_id = values.get('res_id')
-        email_from = values.get('email_from')
-        if values.get('mail_message_id') and (not model or not res_id):
+
+        # model, res_id, email_from: comes from values OR related message
+        model, res_id, email_from = values.get('model'), values.get('res_id'), values.get('email_from')
+        if values.get('mail_message_id'):
             message = self.pool.get('mail.message').browse(cr, uid, values.get('mail_message_id'), context=context)
             if message.reply_to:
                 email_reply_to = message.reply_to
-                redirect_gateway = False
+                format_name = False
             if not model:
                 model = message.model
             if not res_id:
@@ -110,14 +108,15 @@ class mail_mail(osv.Model):
         # if model and res_id: try to use ``message_get_reply_to`` that returns the document alias
         if not email_reply_to and model and res_id and hasattr(self.pool[model], 'message_get_reply_to'):
             email_reply_to = self.pool[model].message_get_reply_to(cr, uid, [res_id], context=context)[0]
-        # no alias reply_to -> reply_to will be the email_from, only the email part
+        # no alias reply_to -> reply_to will be the email_from
         if not email_reply_to and email_from:
-            emails = tools.email_split(email_from)
-            if emails:
-                email_reply_to = emails[0]
+            email_reply_to = email_from
 
         # format 'Document name <email_address>'
-        if email_reply_to and model and res_id and redirect_gateway:
+        if email_reply_to and model and res_id and format_name:
+            emails = tools.email_split(email_reply_to)
+            if emails:
+                email_reply_to = emails[0]
             document_name = self.pool[model].name_get(cr, SUPERUSER_ID, [res_id], context=context)[0]
             if document_name:
                 # sanitize document name
