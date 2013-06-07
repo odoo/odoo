@@ -56,19 +56,22 @@ class res_partner(osv.Model):
     def _get_signup_url_for_action(self, cr, uid, ids, action='login', view_type=None, menu_id=None, res_id=None, model=None, context=None):
         """ generate a signup url for the given partner ids and action, possibly overriding
             the url state components (menu_id, id, view_type) """
+        if context is None:
+            context= {}
         res = dict.fromkeys(ids, False)
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         for partner in self.browse(cr, uid, ids, context):
             # when required, make sure the partner has a valid signup token
-            if context and context.get('signup_valid') and not partner.user_ids:
+            if context.get('signup_valid') and not partner.user_ids:
                 self.signup_prepare(cr, uid, [partner.id], context=context)
                 partner.refresh()
 
             # the parameters to encode for the query and fragment part of url
             query = {'db': cr.dbname}
-            fragment = {'action': action, 'type': partner.signup_type}
+            signup_type = context.get('signup_force_type_in_url', partner.signup_type or '')
+            fragment = {'action': action, 'type': signup_type}
 
-            if partner.signup_token:
+            if partner.signup_token and signup_type:
                 fragment['token'] = partner.signup_token
             elif partner.user_ids:
                 fragment['db'] = cr.dbname

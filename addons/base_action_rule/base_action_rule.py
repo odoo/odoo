@@ -66,6 +66,7 @@ class base_action_rule(osv.osv):
             [('on_create', 'On Creation'), ('on_write', 'On Update'), ('on_time', 'Based on Timed Condition')],
             string='When to Run'),
         'trg_date_id': fields.many2one('ir.model.fields', string='Trigger Date',
+            help="When should the condition be triggered. If present, will be checked by the scheduler. If empty, will be checked at creation and update.",
             domain="[('model_id', '=', model_id), ('ttype', 'in', ('date', 'datetime'))]"),
         'trg_date_range': fields.integer('Delay after trigger date',
             help="Delay after the trigger date." \

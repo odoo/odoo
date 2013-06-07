@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-05-29 13:04+0000\n"
+"PO-Revision-Date: 2013-06-05 13:02+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-05-30 05:45+0000\n"
-"X-Generator: Launchpad (build 16652)\n"
+"X-Launchpad-Export-Date: 2013-06-06 05:21+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -465,7 +465,7 @@ msgstr "Шаблона плана счетов"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify: create refund, reconcile and create a new draft invoice"
-msgstr ""
+msgstr "Изменить: создать возврат, сверить и создать новый счет"
 
 #. module: account
 #: help:account.config.settings,tax_calculation_rounding_method:0
@@ -704,6 +704,8 @@ msgid ""
 "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
 "and 'draft' or ''}"
 msgstr ""
+"Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
+"and 'draft' or ''}"
 
 #. module: account
 #: view:account.period:0
@@ -731,6 +733,8 @@ msgstr "Период журнала"
 msgid ""
 "You cannot create more than one move per period on a centralized journal."
 msgstr ""
+"Вы не можете создать более одного движения за период в централизованном "
+"журнале."
 
 #. module: account
 #: help:account.tax,account_analytic_paid_id:0
@@ -911,6 +915,7 @@ msgid ""
 "Print Report with the currency column if the currency differs from the "
 "company currency."
 msgstr ""
+"Печать отчета с колонкой валюты, если валюта отличается от валюты компании."
 
 #. module: account
 #: report:account.analytic.account.quantity_cost_ledger:0
@@ -950,6 +955,10 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                   Элементы журнала не найдены.\n"
+"                </p>\n"
+"            "
 
 #. module: account
 #: code:addons/account/account.py:1639
@@ -1039,7 +1048,7 @@ msgstr "Обязательства"
 #: code:addons/account/account_invoice.py:867
 #, python-format
 msgid "Please define sequence on the journal related to this invoice."
-msgstr ""
+msgstr "Пожалуйста, определите нумерацию в журнале, связанном с этим счетом."
 
 #. module: account
 #: view:account.entries.report:0
@@ -1517,6 +1526,9 @@ msgid ""
 "And after getting confirmation from the bank it will be in 'Confirmed' "
 "status."
 msgstr ""
+"Когда новый отчет создан - статус станет \"Черновик\".\n"
+"После получения подтверждения из банка,  статус измениться на \" "
+"Подтверждено\"."
 
 #. module: account
 #: field:account.invoice.report,state:0
@@ -1560,6 +1572,8 @@ msgid ""
 "There is no default debit account defined \n"
 "on journal \"%s\"."
 msgstr ""
+"Дебетовый счет по умолчанию не определен\n"
+"в журнале \"%s\"."
 
 #. module: account
 #: view:account.tax:0
@@ -1662,7 +1676,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,company_footer:0
 msgid "Bank accounts footer preview"
-msgstr ""
+msgstr "Просмотр нижнего колонтитула банковских счетов"
 
 #. module: account
 #: selection:account.account,type:0
