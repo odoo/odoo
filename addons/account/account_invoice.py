@@ -89,13 +89,43 @@ class account_invoice(osv.osv):
         return [('none', _('Free Reference'))]
 
     def _amount_residual(self, cr, uid, ids, name, args, context=None):
+        """Function of the field residua. It computes the residual amount (balance) for each invoice"""
+        if context is None:
+            context = {}
+        ctx = context.copy()
         result = {}
+        currency_obj = self.pool.get('res.currency')
         for invoice in self.browse(cr, uid, ids, context=context):
+            nb_inv_in_partial_rec = max_invoice_id = 0
             result[invoice.id] = 0.0
             if invoice.move_id:
-                for m in invoice.move_id.line_id:
-                    if m.account_id.type in ('receivable','payable'):
-                        result[invoice.id] += m.amount_residual_currency
+                for aml in invoice.move_id.line_id:
+                    if aml.account_id.type in ('receivable','payable'):
+                        if aml.currency_id and aml.currency_id.id == invoice.currency_id.id:
+                            result[invoice.id] += aml.amount_residual_currency
+                        else:
+                            ctx['date'] = aml.date
+                            result[invoice.id] += currency_obj.compute(cr, uid, aml.company_id.currency_id.id, invoice.currency_id.id, aml.amount_residual, context=ctx)
+
+                        if aml.reconcile_partial_id.line_partial_ids:
+                            #we check if the invoice is partially reconciled and if there are other invoices
+                            #involved in this partial reconciliation (and we sum these invoices)
+                            for line in aml.reconcile_partial_id.line_partial_ids:
+                                if line.invoice:
+                                    nb_inv_in_partial_rec += 1
+                                    #store the max invoice id as for this invoice we will make a balance instead of a simple division
+                                    max_invoice_id = max(max_invoice_id, line.invoice.id)
+            if nb_inv_in_partial_rec:
+                #if there are several invoices in a partial reconciliation, we split the residual by the number
+                #of invoice to have a sum of residual amounts that matches the partner balance
+                new_value = currency_obj.round(cr, uid, invoice.currency_id, result[invoice.id] / nb_inv_in_partial_rec)
+                if invoice.id == max_invoice_id:
+                    #if it's the last the invoice of the bunch of invoices partially reconciled together, we make a
+                    #balance to avoid rounding errors
+                    result[invoice.id] = result[invoice.id] - ((nb_inv_in_partial_rec - 1) * new_value)
+                else:
+                    result[invoice.id] = new_value
+
             #prevent the residual amount on the invoice to be less than 0
             result[invoice.id] = max(result[invoice.id], 0.0)            
         return result
@@ -1460,6 +1490,7 @@ class account_invoice_line(osv.osv):
         result = {}
         res = self.pool.get('product.product').browse(cr, uid, product, context=context)
 
+        result['name'] = res.partner_ref
         if type in ('out_invoice','out_refund'):
             a = res.property_account_income.id
             if not a:
@@ -1474,19 +1505,21 @@ class account_invoice_line(osv.osv):
 
         if type in ('out_invoice', 'out_refund'):
             taxes = res.taxes_id and res.taxes_id or (a and self.pool.get('account.account').browse(cr, uid, a, context=context).tax_ids or False)
+            if res.description_sale:
+                result['name'] += '\n'+res.description_sale
         else:
             taxes = res.supplier_taxes_id and res.supplier_taxes_id or (a and self.pool.get('account.account').browse(cr, uid, a, context=context).tax_ids or False)
+            if res.description_purchase:
+                result['name'] += '\n'+res.description_purchase
+
         tax_id = fpos_obj.map_tax(cr, uid, fpos, taxes)
 
         if type in ('in_invoice', 'in_refund'):
             result.update( {'price_unit': price_unit or res.standard_price,'invoice_line_tax_id': tax_id} )
         else:
             result.update({'price_unit': res.list_price, 'invoice_line_tax_id': tax_id})
-        result['name'] = res.partner_ref
 
         result['uos_id'] = uom_id or res.uom_id.id
-        if res.description:
-            result['name'] += '\n'+res.description
 
         domain = {'uos_id':[('category_id','=',res.uom_id.category_id.id)]}
 
