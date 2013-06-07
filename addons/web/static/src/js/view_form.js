@@ -2346,7 +2346,7 @@ instance.web.form.FieldEmail = instance.web.form.FieldChar.extend({
     },
     on_button_clicked: function() {
         if (!this.get('value') || !this.is_syntax_valid()) {
-            this.do_warn(_t("E-mail error"), _t("Can't send email to invalid e-mail address"));
+            this.do_warn(_t("E-mail Error"), _t("Can't send email to invalid e-mail address"));
         } else {
             location.href = 'mailto:' + this.get('value');
         }
@@ -2376,7 +2376,7 @@ instance.web.form.FieldUrl = instance.web.form.FieldChar.extend({
     },
     on_button_clicked: function() {
         if (!this.get('value')) {
-            this.do_warn(_t("Resource error"), _t("This resource is empty"));
+            this.do_warn(_t("Resource Error"), _t("This resource is empty"));
         } else {
             var url = $.trim(this.get('value'));
             if(/^www\./i.test(url))
@@ -5305,7 +5305,7 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
         // TODO : activate send on wizard and form
 
         if (result.error || !result.id ) {
-            this.do_warn( _t('Uploading error'), result.error);
+            this.do_warn( _t('Uploading Error'), result.error);
             files = _.filter(files, function (val) { return !val.upload; });
         } else {
             for(var i in files){
