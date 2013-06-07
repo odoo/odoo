@@ -127,7 +127,7 @@ class edi(osv.AbstractModel):
             module = edi_document.get('__import_module') or edi_document.get('__module')
             assert module, 'a `__module` or `__import_module` attribute is required in each EDI document.'
             if module != 'base' and not ir_module.search(cr, uid, [('name','=',module),('state','=','installed')]):
-                raise osv.except_osv(_('Missing application.'),
+                raise osv.except_osv(_('Missing Application.'),
                             _("The document you are trying to import requires the OpenERP `%s` application. "
                               "You can install it by connecting as the administrator and opening the configuration assistant.")%(module,))
             model = edi_document.get('__import_model') or edi_document.get('__model')

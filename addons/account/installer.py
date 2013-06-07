@@ -112,7 +112,7 @@ class account_installer(osv.osv_memory):
     def check_unconfigured_cmp(self, cr, uid, context=None):
         """ check if there are still unconfigured companies """
         if not self.get_unconfigured_cmp(cr, uid, context=context):
-            raise osv.except_osv(_('No unconfigured company !'), _("There is currently no company without chart of account. The wizard will therefore not be executed."))
+            raise osv.except_osv(_('No unconfigured company!'), _("There is currently no company without chart of account. The wizard will therefore not be executed."))
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if context is None:context = {}
