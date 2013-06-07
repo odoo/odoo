@@ -906,12 +906,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                         throw new Error(_.str.sprintf( _t("Setting 'id' attribute on existing record %s"),
                             JSON.stringify(record.attributes) ));
                     }
-                    if (!_.contains(self.dataset.ids, value)) {
-                        // add record to dataset if not already in (added by
-                        // the form view?)
-                        self.dataset.ids.splice(
-                            self.records.indexOf(record), 0, value);
-                    }
+                    self.dataset.add_ids([value], self.records.indexOf(record));
                     // Set id on new record
                     $row = self.$current.children('[data-id=false]');
                 } else {
@@ -923,7 +918,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
             'add': function (ev, records, record, index) {
                 var $new_row = $(self.render_record(record));
                 var id = record.get('id');
-                self.dataset.add_ids([id], index);
+                if (id) { self.dataset.add_ids([id], index); }
 
                 if (index === 0) {
                     $new_row.prependTo(self.$current);

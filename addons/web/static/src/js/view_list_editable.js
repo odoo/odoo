@@ -429,7 +429,6 @@ openerp.web.list_editable = function (instance) {
                 var index = this.records.indexOf(source_record) + 1;
                 record = this.make_empty_record(id);
                 this.records.add(record, {at: index});
-                this.dataset.ids.splice(index, 0, id);
             }
             return this.reload_record(record);
         },

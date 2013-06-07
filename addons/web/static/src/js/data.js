@@ -626,7 +626,7 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
         this.alter_ids(_(this.ids).difference(ids));
     },
     add_ids: function(ids, at) {
-        var args = [at, 0].concat(ids);
+        var args = [at, 0].concat(_.difference(ids, this.ids));
         this.ids.splice.apply(this.ids, args);
     },
     /**
