@@ -7,7 +7,7 @@ openerp.auth_signup = function(instance) {
             var self = this;
             this.signup_enabled = false;
             this.reset_password_enabled = false;
-            return this._super().then(function() {
+            return this._super().always(function() {
 
                 // Switches the login box to the select mode whith mode == [default|signup|reset]
                 self.on('change:login_mode', self, function() {
