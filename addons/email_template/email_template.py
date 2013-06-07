@@ -24,6 +24,7 @@ import base64
 import logging
 
 import openerp
+from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.osv import fields
 from openerp import tools
@@ -199,7 +200,7 @@ class email_template(osv.osv):
             model_data_id = data_obj._get_id(cr, uid, 'mail', 'email_compose_message_wizard_form')
             res_id = data_obj.browse(cr, uid, model_data_id, context=context).res_id
             button_name = _('Send Mail (%s)') % template.name
-            vals['ref_ir_act_window'] = action_obj.create(cr, uid, {
+            vals['ref_ir_act_window'] = action_obj.create(cr, SUPERUSER_ID, {
                  'name': button_name,
                  'type': 'ir.actions.act_window',
                  'res_model': 'mail.compose.message',
@@ -211,7 +212,7 @@ class email_template(osv.osv):
                  'target': 'new',
                  'auto_refresh':1
             }, context)
-            vals['ref_ir_value'] = self.pool.get('ir.values').create(cr, uid, {
+            vals['ref_ir_value'] = self.pool.get('ir.values').create(cr, SUPERUSER_ID, {
                  'name': button_name,
                  'model': src_obj,
                  'key2': 'client_action_multi',

@@ -150,11 +150,17 @@ class mail_notification(osv.Model):
 
         return footer
 
-    def _notify(self, cr, uid, msg_id, partners_to_notify=None, context=None):
+    def _notify(self, cr, uid, msg_id, partners_to_notify=None, context=None,
+                    force_send=False, user_signature=True):
         """ Send by email the notification depending on the user preferences
 
             :param list partners_to_notify: optional list of partner ids restricting
                 the notifications to process
+            :param bool force_send: if True, the generated mail.mail is
+                immediately sent after being created, as if the scheduler
+                was executed for this message only.
+            :param bool user_signature: if True, the generated mail.mail body is
+                the body of the related mail.message with the author's signature
         """
         if context is None:
             context = {}
@@ -189,8 +195,9 @@ class mail_notification(osv.Model):
         # add signature
         body_html = msg.body
         user_id = msg.author_id and msg.author_id.user_ids and msg.author_id.user_ids[0] and msg.author_id.user_ids[0].id or None
-        signature_company = self.get_signature_footer(cr, uid, user_id, res_model=msg.model, res_id=msg.res_id, context=context)
-        body_html = tools.append_content_to_html(body_html, signature_company, plaintext=False, container_tag='div')
+        if user_signature:
+            signature_company = self.get_signature_footer(cr, uid, user_id, res_model=msg.model, res_id=msg.res_id, context=context)
+            body_html = tools.append_content_to_html(body_html, signature_company, plaintext=False, container_tag='div')
 
         references = False
         if msg.parent_id:
@@ -203,13 +210,9 @@ class mail_notification(osv.Model):
             'recipient_ids': [(4, id) for id in notify_partner_ids],
             'references': references,
         }
-        if msg.email_from:
-            mail_values['email_from'] = msg.email_from
-        if msg.reply_to:
-            mail_values['reply_to'] = msg.reply_to
         mail_mail = self.pool.get('mail.mail')
         email_notif_id = mail_mail.create(cr, uid, mail_values, context=context)
-        try:
-            return mail_mail.send(cr, uid, [email_notif_id], context=context)
-        except Exception:
-            return False
+
+        if force_send:
+            mail_mail.send(cr, uid, [email_notif_id], context=context)
+        return True

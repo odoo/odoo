@@ -55,7 +55,6 @@ class mail_mail(osv.Model):
         'auto_delete': fields.boolean('Auto Delete',
             help="Permanently delete this email after sending it, to save space"),
         'references': fields.text('References', help='Message references, such as identifiers of previous messages', readonly=1),
-        'email_from': fields.char('From', help='Message sender, taken from user preferences.'),
         'email_to': fields.text('To', help='Message recipients (emails)'),
         'recipient_ids': fields.many2many('res.partner', string='To (Partners)'),
         'email_cc': fields.char('Cc', help='Carbon copy message recipients'),
@@ -67,16 +66,13 @@ class mail_mail(osv.Model):
     }
 
     def _get_default_from(self, cr, uid, context=None):
-        this = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
-        if this.alias_domain:
-            return '%s <%s@%s>' % (this.name, this.alias_name, this.alias_domain)
-        elif this.email:
-            return '%s <%s>' % (this.name, this.email)
-        raise osv.except_osv(_('Invalid Action!'), _("Unable to send email, please configure the sender's email address or alias."))
+        """ Kept for compatibility
+            TDE TODO: remove me in 8.0
+        """
+        return self.pool['mail.message']._get_default_from(cr, uid, context=context)
 
     _defaults = {
         'state': 'outgoing',
-        'email_from': lambda self, cr, uid, ctx=None: self._get_default_from(cr, uid, ctx),
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -92,29 +88,35 @@ class mail_mail(osv.Model):
         """
         if values.get('reply_to'):
             return values.get('reply_to')
+        format_name = True  # whether to use a 'Followers of Pigs <pigs@openerp.com' format
         email_reply_to = False
 
-        # model, res_id: comes from values OR related message
-        model = values.get('model')
-        res_id = values.get('res_id')
-        if values.get('mail_message_id') and (not model or not res_id):
+        # model, res_id, email_from: comes from values OR related message
+        model, res_id, email_from = values.get('model'), values.get('res_id'), values.get('email_from')
+        if values.get('mail_message_id'):
             message = self.pool.get('mail.message').browse(cr, uid, values.get('mail_message_id'), context=context)
+            if message.reply_to:
+                email_reply_to = message.reply_to
+                format_name = False
             if not model:
                 model = message.model
             if not res_id:
                 res_id = message.res_id
+            if not email_from:
+                email_from = message.email_from
 
         # if model and res_id: try to use ``message_get_reply_to`` that returns the document alias
-        if model and res_id and hasattr(self.pool[model], 'message_get_reply_to'):
+        if not email_reply_to and model and res_id and hasattr(self.pool[model], 'message_get_reply_to'):
             email_reply_to = self.pool[model].message_get_reply_to(cr, uid, [res_id], context=context)[0]
-        # no alias reply_to -> reply_to will be the email_from, only the email part
-        if not email_reply_to and values.get('email_from'):
-            emails = tools.email_split(values.get('email_from'))
-            if emails:
-                email_reply_to = emails[0]
+        # no alias reply_to -> reply_to will be the email_from
+        if not email_reply_to and email_from:
+            email_reply_to = email_from
 
         # format 'Document name <email_address>'
-        if email_reply_to and model and res_id:
+        if email_reply_to and model and res_id and format_name:
+            emails = tools.email_split(email_reply_to)
+            if emails:
+                email_reply_to = emails[0]
             document_name = self.pool[model].name_get(cr, SUPERUSER_ID, [res_id], context=context)[0]
             if document_name:
                 # sanitize document name
