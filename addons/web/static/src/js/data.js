@@ -625,6 +625,10 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
     remove_ids: function (ids) {
         this.alter_ids(_(this.ids).difference(ids));
     },
+    add_ids: function(ids, at) {
+        var args = [at, 0].concat(ids);
+        this.ids.splice.apply(this.ids, args);
+    },
     /**
      * Resequence records.
      *

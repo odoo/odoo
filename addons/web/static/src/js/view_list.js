@@ -893,7 +893,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
         this.record_callbacks = {
             'remove': function (event, record) {
                 var id = record.get('id');
-                self.dataset.remove_ids([id])
+                self.dataset.remove_ids([id]);
                 var $row = self.$current.children('[data-id=' + id + ']');
                 var index = $row.data('index');
                 $row.remove();
@@ -922,6 +922,8 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
             },
             'add': function (ev, records, record, index) {
                 var $new_row = $(self.render_record(record));
+                var id = record.get('id');
+                self.dataset.add_ids([id], index);
 
                 if (index === 0) {
                     $new_row.prependTo(self.$current);
