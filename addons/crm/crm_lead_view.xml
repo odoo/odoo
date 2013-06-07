@@ -157,7 +157,8 @@
                             <label for="section_id" groups="base.group_multi_salesteams"/>
                             <div groups="base.group_multi_salesteams">
                                 <field name="section_id"/>
-                                <button name="case_escalate" string="Escalate" type="object"
+                                <button name="case_escalate" string="Escalate"
+                                        type="object" class="oe_link"
                                         attrs="{'invisible': ['|', ('section_id','=',False), ('state', 'not in', ['draft','open','pending'])]}"/>
                             </div>
                             <field name="type" invisible="1"/>
@@ -343,7 +344,7 @@
                             help="Leads that are assigned to me"/>
                     <filter string="Assigned to My Team(s)"
                             domain="[('section_id.member_ids', 'in', [uid])]" context="{'invisible_section': False}"
-                            help="Leads that are assigned to any sales teams I am member of"/>
+                            help="Leads that are assigned to any sales teams I am member of" groups="base.group_multi_salesteams"/>
                     <separator />
                     <filter string="Available for mass mailing"
                             name='not_opt_out' domain="[('opt_out', '=', False)]"
@@ -351,7 +352,7 @@
                     <separator />
                     <group expand="0" string="Group By...">
                         <filter string="Salesperson" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Team" domain="[]" context="{'group_by':'section_id'}"/>
+                        <filter string="Team" domain="[]" context="{'group_by':'section_id'}" groups="base.group_multi_salesteams"/>
                         <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Customer" help="Partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Country" domain="[]" context="{'group_by':'country_id'}"/>
@@ -362,7 +363,7 @@
                     </group>
                     <group string="Display">
                         <filter string="Show Countries" context="{'invisible_country': False}" help="Show Countries"/>
-                        <filter string="Show Sales Team" context="{'invisible_section': False}" domain="[]" help="Show Sales Team"/>
+                        <filter string="Show Sales Team" context="{'invisible_section': False}" domain="[]" help="Show Sales Team" groups="base.group_multi_salesteams"/>
                     </group>
                 </search>
             </field>
@@ -556,7 +557,7 @@
                     <filter string="Lost" name="lost" domain="[('state','=','cancel')]"/>
                     <filter string="Unassigned" name="unassigned" domain="[('user_id','=', False)]" help="No salesperson"/>
                     <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]" help="Unread messages"/>
-                    <filter string="Mine" name="assigned_to_me"
+                    <filter string="My Opportunities" name="assigned_to_me"
                             domain="[('user_id','=',uid)]" context="{'invisible_section': False}"
                             help="Opportunities that are assigned to me"/>
                     <filter string="Assigned to My Team(s)"
@@ -577,7 +578,7 @@
                         <filter string="Creation" domain="[]" context="{'group_by':'create_date'}"/>
                     </group>
                     <group string="Display">
-                        <filter string="Show Sales Team" context="{'invisible_section': False}" domain="[]" help="Show Sales Team"/>
+                        <filter string="Show Sales Team" context="{'invisible_section': False}" domain="[]" help="Show Sales Team" groups="base.group_multi_salesteams"/>
                         <filter string="Show Countries" context="{'invisible_country': False}" help="Show Countries"/>
                     </group>
                 </search>
