@@ -4108,7 +4108,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
             ext: {
                 autocomplete: {
                     selectFromDropdown: function() {
-                        $(this).trigger('hideDropdown');
+                        this.trigger('hideDropdown');
                         var index = Number(this.selectedSuggestionElement().children().children().data('index'));
                         var data = self.search_result[index];
                         if (data.id) {
@@ -4117,6 +4117,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
                             ignore_blur = true;
                             data.action();
                         }
+                        this.trigger('setSuggestions', {result : []});
                     },
                 },
                 tags: {
