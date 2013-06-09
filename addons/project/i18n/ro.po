@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2013-04-13 15:26+0000\n"
 "Last-Translator: Dorin <dhongu@gmail.com>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-14 05:50+0000\n"
-"X-Generator: Launchpad (build 16564)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:38+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: project
 #: view:project.project:0
@@ -85,7 +85,7 @@ msgid "Start Task"
 msgstr "Incepeți sarcina"
 
 #. module: project
-#: code:addons/project/project.py:932
+#: code:addons/project/project.py:944
 #, python-format
 msgid "Warning !"
 msgstr "Avertizare !"
@@ -137,8 +137,8 @@ msgstr ""
 "in format HTML, cu scopul de a se introduce in vizualizari kanban."
 
 #. module: project
-#: code:addons/project/project.py:432
-#: code:addons/project/project.py:1318
+#: code:addons/project/project.py:444
+#: code:addons/project/project.py:1332
 #, python-format
 msgid "Warning!"
 msgstr "Avertisment!"
@@ -209,11 +209,6 @@ msgstr "Delegare Sarcină"
 #: field:project.task.history.cumulative,planned_hours:0
 msgid "Planned Time"
 msgstr "Timp planificat"
-
-#. module: project
-#: selection:project.project,privacy_visibility:0
-msgid "Public"
-msgstr "Public"
 
 #. module: project
 #: view:project.task:0
@@ -426,7 +421,7 @@ msgid "Assigned to"
 msgstr "Atribuit lui"
 
 #. module: project
-#: code:addons/project/project.py:1021
+#: code:addons/project/project.py:1033
 #, python-format
 msgid "Delegated User should be specified"
 msgstr "Ar trebui specificat Utilizatorul Delegat"
@@ -899,11 +894,9 @@ msgid "Is a Follower"
 msgstr "Este o Urmare"
 
 #. module: project
-#: field:project.task.history,date:0
-#: field:project.task.history.cumulative,date:0
-#: field:project.task.work,date:0
-msgid "Date"
-msgstr "Data"
+#: field:project.task,work_ids:0
+msgid "Work done"
+msgstr "Munca efectuata"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -945,9 +938,11 @@ msgid "Folded by Default"
 msgstr "Pliat Implicit"
 
 #. module: project
-#: field:project.task,work_ids:0
-msgid "Work done"
-msgstr "Munca efectuata"
+#: field:project.task.history,date:0
+#: field:project.task.history.cumulative,date:0
+#: field:project.task.work,date:0
+msgid "Date"
+msgstr "Data"
 
 #. module: project
 #: help:project.config.settings,module_project_issue:0
@@ -1315,9 +1310,9 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "Calculat în felul următor: Timp petrecut + Timp rămas"
 
 #. module: project
-#: code:addons/project/project.py:356
-#: code:addons/project/project.py:377
-#: code:addons/project/project.py:709
+#: code:addons/project/project.py:368
+#: code:addons/project/project.py:389
+#: code:addons/project/project.py:721
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copie)"
@@ -1530,7 +1525,7 @@ msgstr ""
 "managerul de proiect atunci cand sarcina se afla in starea de ciorna."
 
 #. module: project
-#: code:addons/project/project.py:220
+#: code:addons/project/project.py:230
 #, python-format
 msgid "Attachments"
 msgstr "Atasamente"
@@ -1661,7 +1656,7 @@ msgid "Overpassed Tasks"
 msgstr "Sarcini omise"
 
 #. module: project
-#: code:addons/project/project.py:932
+#: code:addons/project/project.py:944
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1724,7 +1719,7 @@ msgid "CHECK: "
 msgstr "VERIFICATI: "
 
 #. module: project
-#: code:addons/project/project.py:432
+#: code:addons/project/project.py:444
 #, python-format
 msgid "You must assign members on the project '%s' !"
 msgstr "Trebuie sa alocati membri proiectului '%s' !"
@@ -1968,7 +1963,7 @@ msgid "Starting Date"
 msgstr "Data de inceput"
 
 #. module: project
-#: code:addons/project/project.py:398
+#: code:addons/project/project.py:410
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:0
@@ -2140,7 +2135,7 @@ msgid "Reevaluation Task"
 msgstr "Activitatea de reevaluare"
 
 #. module: project
-#: code:addons/project/project.py:1318
+#: code:addons/project/project.py:1332
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr "Va rugam mai intai sa stergeti proiectul asociat acestui cont."
@@ -2251,11 +2246,6 @@ msgstr ""
 "                Instaleaza modulul project_issue_sheet."
 
 #. module: project
-#: selection:project.project,privacy_visibility:0
-msgid "Followers Only"
-msgstr "Doar Urmari"
-
-#. module: project
 #: view:board.board:0
 #: field:project.project,task_count:0
 msgid "Open Tasks"
@@ -2295,3 +2285,9 @@ msgstr "An"
 #: view:project.task.type:0
 msgid "Tasks Stages"
 msgstr "Etapele Sarcinilor"
+
+#~ msgid "Public"
+#~ msgstr "Public"
+
+#~ msgid "Followers Only"
+#~ msgstr "Doar Urmari"

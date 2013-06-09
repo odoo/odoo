@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:36+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2013-01-26 21:59+0000\n"
 "Last-Translator: Dušan Laznik (Mentis) <laznik@mentis.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:35+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:18+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -32,7 +32,7 @@ msgstr ""
 "priložnosti iz prejetih e-mailov"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:881
+#: code:addons/crm/crm_lead.py:898
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
@@ -89,6 +89,11 @@ msgstr ""
 #: view:crm.lead.report:0
 #: field:crm.phonecall.report,delay_close:0
 msgid "Delay to close"
+msgstr ""
+
+#. module: crm
+#: view:crm.lead:0
+msgid "Available for mass mailing"
 msgstr ""
 
 #. module: crm
@@ -189,8 +194,8 @@ msgid ""
 msgstr "Povzetek (število sporočil,..)"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:624
-#: code:addons/crm/crm_lead.py:744
+#: code:addons/crm/crm_lead.py:640
+#: code:addons/crm/crm_lead.py:761
 #: code:addons/crm/crm_phonecall.py:280
 #, python-format
 msgid "Warning!"
@@ -291,10 +296,8 @@ msgid "Categories"
 msgstr "Kategorije"
 
 #. module: crm
-#: help:crm.lead,opt_out:0
-msgid ""
-"If opt-out is checked, this contact has refused to receive emails or "
-"unsubscribed to a campaign."
+#: view:crm.segmentation:0
+msgid "Segmentation Test"
 msgstr ""
 
 #. module: crm
@@ -303,7 +306,7 @@ msgid "Prospect Partner"
 msgstr "Možni partner"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:982
+#: code:addons/crm/crm_lead.py:1002
 #, python-format
 msgid "No Subject"
 msgstr "Ni zadeve"
@@ -425,7 +428,7 @@ msgid "Team Leader"
 msgstr "Vodja ekipe"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1032
+#: code:addons/crm/crm_lead.py:1052
 #, python-format
 msgid "%s a call for %s.%s"
 msgstr ""
@@ -453,7 +456,7 @@ msgid "#Opportunities"
 msgstr "#Priložnosti"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:624
+#: code:addons/crm/crm_lead.py:640
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list view."
@@ -534,7 +537,7 @@ msgid "Planned Revenue"
 msgstr "Načrtovani prihodki"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:970
+#: code:addons/crm/crm_lead.py:988
 #, python-format
 msgid "Customer Email"
 msgstr ""
@@ -596,7 +599,7 @@ msgid ""
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:745
+#: code:addons/crm/crm_lead.py:762
 #, python-format
 msgid ""
 "No customer name defined. Please fill one of the following fields: Company "
@@ -724,7 +727,7 @@ msgid "Statistics Dashboard"
 msgstr "Statistična nadzorna plošča"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:861
+#: code:addons/crm/crm_lead.py:878
 #: model:crm.case.stage,name:crm.stage_lead2
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
@@ -789,7 +792,7 @@ msgid "Exclusive"
 msgstr "Ekskluzivno"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:584
+#: code:addons/crm/crm_lead.py:600
 #, python-format
 msgid "From %s : %s"
 msgstr "Od %s : %s"
@@ -798,6 +801,11 @@ msgstr "Od %s : %s"
 #: view:crm.lead2opportunity.partner.mass:0
 msgid "Convert to Opportunities"
 msgstr "Pretvorba v priložnost"
+
+#. module: crm
+#: view:crm.lead:0
+msgid "Leads that did not ask not to be included in mass mailing campaigns"
+msgstr ""
 
 #. module: crm
 #: view:crm.lead2opportunity.partner:0
@@ -967,7 +975,7 @@ msgid "Next Action"
 msgstr "Naslednje dejanje"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:763
+#: code:addons/crm/crm_lead.py:780
 #, python-format
 msgid "<b>Partner</b> set to <em>%s</em>."
 msgstr ""
@@ -1052,7 +1060,15 @@ msgid "Creation Date"
 msgstr "Ustvarjeno dne"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:698
+#: help:crm.lead,opt_out:0
+msgid ""
+"If opt-out is checked, this contact has refused to receive emails for mass "
+"mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
+"users to filter the leads when performing mass mailing."
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:715
 #, python-format
 msgid "Lead <b>converted into an Opportunity</b>"
 msgstr ""
@@ -1254,7 +1270,9 @@ msgid "Days to Close"
 msgstr ""
 
 #. module: crm
+#: code:addons/crm/crm_lead.py:1057
 #: field:crm.case.section,complete_name:0
+#, python-format
 msgid "unknown"
 msgstr "neznano"
 
@@ -1309,7 +1327,7 @@ msgid "Sales Marketing Department"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:569
+#: code:addons/crm/crm_lead.py:585
 #, python-format
 msgid "Merged lead"
 msgstr ""
@@ -1333,7 +1351,7 @@ msgid "Segmentation Description"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:565
+#: code:addons/crm/crm_lead.py:581
 #, python-format
 msgid "Merged opportunities"
 msgstr ""
@@ -1839,6 +1857,12 @@ msgid "Support Department"
 msgstr ""
 
 #. module: crm
+#: code:addons/crm/crm_lead.py:1060
+#, python-format
+msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
+msgstr ""
+
+#. module: crm
 #: view:crm.lead.report:0
 msgid "Show only lead"
 msgstr ""
@@ -1892,7 +1916,7 @@ msgid "Leads"
 msgstr "Potencialne priložnosti"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:563
+#: code:addons/crm/crm_lead.py:579
 #, python-format
 msgid "Merged leads"
 msgstr ""
@@ -1991,7 +2015,6 @@ msgid "Global CC"
 msgstr ""
 
 #. module: crm
-#: view:crm.lead:0
 #: view:crm.phonecall:0
 #: model:ir.actions.act_window,name:crm.crm_case_categ_phone0
 #: model:ir.ui.menu,name:crm.menu_crm_case_phone
@@ -2172,11 +2195,6 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_calendar_attendee
 msgid "Attendee information"
-msgstr ""
-
-#. module: crm
-#: view:crm.segmentation:0
-msgid "Segmentation Test"
 msgstr ""
 
 #. module: crm
@@ -2784,7 +2802,7 @@ msgid "Stage of case"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:569
+#: code:addons/crm/crm_lead.py:585
 #, python-format
 msgid "Merged opportunity"
 msgstr ""
@@ -2931,7 +2949,7 @@ msgid "Working Hours"
 msgstr "Delovne ure"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:968
+#: code:addons/crm/crm_lead.py:986
 #: view:crm.lead:0
 #: field:crm.lead2opportunity.partner,partner_id:0
 #: field:crm.lead2opportunity.partner.mass,partner_id:0

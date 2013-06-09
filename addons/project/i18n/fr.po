@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2013-05-22 16:25+0000\n"
 "Last-Translator: David Halgand <david.halgand@gmail.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-05-23 06:20+0000\n"
-"X-Generator: Launchpad (build 16640)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:38+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: project
 #: view:project.project:0
@@ -85,7 +85,7 @@ msgid "Start Task"
 msgstr "Démarrer la tâche"
 
 #. module: project
-#: code:addons/project/project.py:932
+#: code:addons/project/project.py:944
 #, python-format
 msgid "Warning !"
 msgstr "Avertissement"
@@ -137,8 +137,8 @@ msgstr ""
 "au format HTML pour permettre son utilisation dans la vue kanban"
 
 #. module: project
-#: code:addons/project/project.py:432
-#: code:addons/project/project.py:1318
+#: code:addons/project/project.py:444
+#: code:addons/project/project.py:1332
 #, python-format
 msgid "Warning!"
 msgstr "Attention !"
@@ -209,11 +209,6 @@ msgstr "Délégation de tâche"
 #: field:project.task.history.cumulative,planned_hours:0
 msgid "Planned Time"
 msgstr "Temps planifié"
-
-#. module: project
-#: selection:project.project,privacy_visibility:0
-msgid "Public"
-msgstr "Public"
 
 #. module: project
 #: view:project.task:0
@@ -426,7 +421,7 @@ msgid "Assigned to"
 msgstr "Assigné à"
 
 #. module: project
-#: code:addons/project/project.py:1021
+#: code:addons/project/project.py:1033
 #, python-format
 msgid "Delegated User should be specified"
 msgstr "L'utilisateur à qui la tâche est déléguée doit être spécifié"
@@ -901,11 +896,9 @@ msgid "Is a Follower"
 msgstr "Est abonné"
 
 #. module: project
-#: field:project.task.history,date:0
-#: field:project.task.history.cumulative,date:0
-#: field:project.task.work,date:0
-msgid "Date"
-msgstr "Date"
+#: field:project.task,work_ids:0
+msgid "Work done"
+msgstr "Travail effectué"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -943,9 +936,11 @@ msgid "Folded by Default"
 msgstr "Masqué par défaut"
 
 #. module: project
-#: field:project.task,work_ids:0
-msgid "Work done"
-msgstr "Travail effectué"
+#: field:project.task.history,date:0
+#: field:project.task.history.cumulative,date:0
+#: field:project.task.work,date:0
+msgid "Date"
+msgstr "Date"
 
 #. module: project
 #: help:project.config.settings,module_project_issue:0
@@ -1286,9 +1281,9 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "Calculé comme : Temps passé + Temps restant."
 
 #. module: project
-#: code:addons/project/project.py:356
-#: code:addons/project/project.py:377
-#: code:addons/project/project.py:709
+#: code:addons/project/project.py:368
+#: code:addons/project/project.py:389
+#: code:addons/project/project.py:721
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copie)"
@@ -1504,7 +1499,7 @@ msgstr ""
 "du projet quand la tâche est à l'état brouillon"
 
 #. module: project
-#: code:addons/project/project.py:220
+#: code:addons/project/project.py:230
 #, python-format
 msgid "Attachments"
 msgstr "Pièces jointes"
@@ -1630,7 +1625,7 @@ msgid "Overpassed Tasks"
 msgstr "Tâches en dépassement"
 
 #. module: project
-#: code:addons/project/project.py:932
+#: code:addons/project/project.py:944
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1691,7 +1686,7 @@ msgid "CHECK: "
 msgstr "VALIDATION: "
 
 #. module: project
-#: code:addons/project/project.py:432
+#: code:addons/project/project.py:444
 #, python-format
 msgid "You must assign members on the project '%s' !"
 msgstr "Vous devez assigner des membres au projet '%s' !"
@@ -1919,7 +1914,7 @@ msgid "Starting Date"
 msgstr "Démarrage du projet"
 
 #. module: project
-#: code:addons/project/project.py:398
+#: code:addons/project/project.py:410
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:0
@@ -2088,7 +2083,7 @@ msgid "Reevaluation Task"
 msgstr "Réévaluation de la tâche"
 
 #. module: project
-#: code:addons/project/project.py:1318
+#: code:addons/project/project.py:1332
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr "Supprimer d'abord le projet lié avec ce compte analytique."
@@ -2194,11 +2189,6 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: selection:project.project,privacy_visibility:0
-msgid "Followers Only"
-msgstr "Abonnés seulement"
-
-#. module: project
 #: view:board.board:0
 #: field:project.project,task_count:0
 msgid "Open Tasks"
@@ -2238,3 +2228,9 @@ msgstr "Année"
 #: view:project.task.type:0
 msgid "Tasks Stages"
 msgstr "Étapes des tâches"
+
+#~ msgid "Public"
+#~ msgstr "Public"
+
+#~ msgid "Followers Only"
+#~ msgstr "Abonnés seulement"

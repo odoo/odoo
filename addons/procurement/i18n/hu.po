@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
 "PO-Revision-Date: 2013-03-10 20:27+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:53+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:35+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -131,6 +131,20 @@ msgid "Reason"
 msgstr "Ok"
 
 #. module: procurement
+#: model:ir.actions.act_window,help:procurement.action_orderpoint_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"              You can define your minimum stock rules, so that OpenERP will "
+"automatically create draft manufacturing orders or purchase quotations "
+"according to the stock level.Once the virtual stock of a product (= stock on "
+"hand minus all confirmed orders and reservations) is below the minimum "
+"quantity, OpenERP will generate a procurement request to increase the stock "
+"up to the maximum quantity.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: procurement
 #: view:procurement.order.compute:0
 msgid "Compute Procurements"
 msgstr "Beszerzés számítás"
@@ -154,23 +168,6 @@ msgstr "Nem használt a számításhoz, csak információként szolgál."
 #: field:stock.warehouse.orderpoint,procurement_id:0
 msgid "Latest procurement"
 msgstr "Legutolsó beszerzés"
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.action_orderpoint_form
-msgid ""
-"You can define your minimum stock rules, so that OpenERP will automatically "
-"create draft manufacturing orders or purchase quotations according to the "
-"stock level. Once the virtual stock of a product (= stock on hand minus all "
-"confirmed orders and reservations) is below the minimum quantity, OpenERP "
-"will generate a procurement request to increase the stock up to the maximum "
-"quantity."
-msgstr ""
-"Minimum készlet szabályt tud meghatározni, így az OpenERP automatikusan "
-"fogja létrehozni a gyártási megrendelés tervezeteket vagy beszerzési "
-"megrendeléseket a raktárkészlet alapján. Ha egyszer a terméknek a virtuális "
-"készlete (= készleten lévő mínusz minden visszaigazolt megrendelés és "
-"lefoglalások) a minimum mennyiség alatt vannak, OpenERP beszerzési igényt "
-"fog generálni a raktárkészlet növeléséhez egészen a maximum mennyiségig."
 
 #. module: procurement
 #: field:procurement.order,message_ids:0
@@ -1132,3 +1129,18 @@ msgstr "PROC %d: megrendelésen - %3.2f %-5s - %s"
 #, python-format
 msgid "Products reserved from stock."
 msgstr "Termék a raktárkészletről foglalva."
+
+#~ msgid ""
+#~ "You can define your minimum stock rules, so that OpenERP will automatically "
+#~ "create draft manufacturing orders or purchase quotations according to the "
+#~ "stock level. Once the virtual stock of a product (= stock on hand minus all "
+#~ "confirmed orders and reservations) is below the minimum quantity, OpenERP "
+#~ "will generate a procurement request to increase the stock up to the maximum "
+#~ "quantity."
+#~ msgstr ""
+#~ "Minimum készlet szabályt tud meghatározni, így az OpenERP automatikusan "
+#~ "fogja létrehozni a gyártási megrendelés tervezeteket vagy beszerzési "
+#~ "megrendeléseket a raktárkészlet alapján. Ha egyszer a terméknek a virtuális "
+#~ "készlete (= készleten lévő mínusz minden visszaigazolt megrendelés és "
+#~ "lefoglalások) a minimum mennyiség alatt vannak, OpenERP beszerzési igényt "
+#~ "fog generálni a raktárkészlet növeléséhez egészen a maximum mennyiségig."

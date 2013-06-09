@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:39+0000\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
 "PO-Revision-Date: 2013-04-10 06:57+0000\n"
 "Last-Translator: Dorin <dhongu@gmail.com>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-11 14:43+0000\n"
-"X-Generator: Launchpad (build 16550)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:22+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: fleet
 #: selection:fleet.vehicle,fuel_type:0
@@ -625,6 +625,11 @@ msgid "Refueling"
 msgstr "Realimentare"
 
 #. module: fleet
+#: model:fleet.service.type,name:fleet.type_service_45
+msgid "Tire Replacement"
+msgstr "Inlocuirea Cauciucurilor"
+
+#. module: fleet
 #: help:fleet.vehicle,message_summary:0
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
@@ -822,9 +827,9 @@ msgid "Services for vehicles"
 msgstr "Service pentru vehicule"
 
 #. module: fleet
-#: view:fleet.vehicle.log.contract:0
-msgid "Indicative Cost"
-msgstr "Cost Orientativ"
+#: model:fleet.service.type,name:fleet.type_service_service_16
+msgid "Options"
+msgstr "Optiuni"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_26
@@ -1204,9 +1209,19 @@ msgid "Cost Type"
 msgstr "Tipul de Cost"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_4
-msgid "A/C Evaporator Replacement"
-msgstr "Inlocuirea Evaporatorului A/C"
+#: model:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new odometer log. \n"
+"              </p>\n"
+"              <p>\n"
+"                Here you can add various odometer entries for all vehicles.\n"
+"                You can also show odometer value for a particular vehicle "
+"using\n"
+"                the search field.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: fleet
 #: view:fleet.vehicle:0
@@ -1444,9 +1459,9 @@ msgid "Odometer"
 msgstr "Kilometraj"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_45
-msgid "Tire Replacement"
-msgstr "Inlocuirea Cauciucurilor"
+#: model:fleet.service.type,name:fleet.type_service_4
+msgid "A/C Evaporator Replacement"
+msgstr "Inlocuirea Evaporatorului A/C"
 
 #. module: fleet
 #: view:fleet.service.type:0
@@ -1554,24 +1569,9 @@ msgid "Write here all other information relative to this contract"
 msgstr "Scrieti aici orice alte informatii asociate acestui contract"
 
 #. module: fleet
-#: model:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_act
-msgid ""
-"<p>\n"
-"                Here you can add various odometer entries for all vehicles.\n"
-"                You can also show odometer value for a particular vehicle "
-"using\n"
-"                the search field.\n"
-"              </p>\n"
-"            "
-msgstr ""
-"<p>\n"
-"                Aici puteti adauga diverse inregistrari ale contorului de "
-"kilometraj pentru toate vehiculele.\n"
-"                De asemenea, puteti afisa valoarea contorului de kilometraj "
-"pentru un anumit vehicul folosind\n"
-"                campul cautare.\n"
-"              </p>\n"
-"            "
+#: view:fleet.vehicle.log.contract:0
+msgid "Indicative Cost"
+msgstr "Cost Orientativ"
 
 #. module: fleet
 #: field:fleet.vehicle.model,brand_id:0
@@ -1826,11 +1826,6 @@ msgid "Ignition Coil Replacement"
 msgstr "Inlocuirea Bobinei de Inductie"
 
 #. module: fleet
-#: model:fleet.service.type,name:fleet.type_service_service_16
-msgid "Options"
-msgstr "Optiuni"
-
-#. module: fleet
 #: model:fleet.service.type,name:fleet.type_contract_repairing
 msgid "Repairing"
 msgstr "Reparare"
@@ -2072,3 +2067,21 @@ msgstr "Numai in scopuri interne"
 #: help:fleet.vehicle.state,sequence:0
 msgid "Used to order the note stages"
 msgstr "Utilizat pentru a ordona etapele notei"
+
+#~ msgid ""
+#~ "<p>\n"
+#~ "                Here you can add various odometer entries for all vehicles.\n"
+#~ "                You can also show odometer value for a particular vehicle "
+#~ "using\n"
+#~ "                the search field.\n"
+#~ "              </p>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<p>\n"
+#~ "                Aici puteti adauga diverse inregistrari ale contorului de "
+#~ "kilometraj pentru toate vehiculele.\n"
+#~ "                De asemenea, puteti afisa valoarea contorului de kilometraj "
+#~ "pentru un anumit vehicul folosind\n"
+#~ "                campul cautare.\n"
+#~ "              </p>\n"
+#~ "            "

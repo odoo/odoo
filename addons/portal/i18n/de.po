@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
 "PO-Revision-Date: 2013-04-01 16:00+0000\n"
 "Last-Translator: Felix Schubert <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-02 05:48+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:35+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -50,9 +50,9 @@ msgid "Company Jobs"
 msgstr "Offene Stellen"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid "amount: the total amount to pay, as a float"
-msgstr "amount: Der zu zahlende Gesamtbetrag, als float"
+#: model:ir.ui.menu,name:portal.portal_orders
+msgid "Billing"
+msgstr ""
 
 #. module: portal
 #: view:portal.wizard.user:0
@@ -111,11 +111,6 @@ msgstr "Bitte wählen Sie mindestens eine Gruppe zur Freigabe"
 #: model:ir.ui.menu,name:portal.portal_mail_archivesfeeds
 msgid "Archives"
 msgstr "Archiv"
-
-#. module: portal
-#: model:ir.ui.menu,name:portal.portal_orders
-msgid "Quotations and Sales Orders"
-msgstr "Angebote und Aufträge"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -205,13 +200,14 @@ msgid "No online payment acquirers configured"
 msgstr "Kein Online Zahlungsanbieter vorkonfiguriert"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
+#: code:addons/portal/mail_message.py:54
+#, python-format
 msgid ""
-"kind: the kind of document on which the payment form is rendered (translated "
-"to user language, e.g. \"Invoice\")"
+"The requested operation cannot be completed due to security restrictions. "
+"Please contact your system administrator.\n"
+"\n"
+"(Document type: %s, Operation: %s)"
 msgstr ""
-"Typ: Typ des Dokumentes auf dessen Basis das Zahlungsformular gerendert wird "
-"(übersetzt in die Sprache des Benutzers, z.B. \"Rechnung\")"
 
 #. module: portal
 #: help:portal.wizard,portal_id:0
@@ -353,11 +349,25 @@ msgstr "uid: Die User ID des angemeldeten Benutzers"
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid ""
+"kind: the kind of document on which the payment form is rendered (translated "
+"to user language, e.g. \"Invoice\")"
+msgstr ""
+"Typ: Typ des Dokumentes auf dessen Basis das Zahlungsformular gerendert wird "
+"(übersetzt in die Sprache des Benutzers, z.B. \"Rechnung\")"
+
+#. module: portal
+#: view:portal.payment.acquirer:0
+msgid ""
 "quote(): a method to quote special string character to make them suitable "
 "for inclusion in a URL"
 msgstr ""
 "quote(): eine Methode zur Ausgabe von besonderen Strings, um sie in einer "
 "URL ausgeben zu können."
+
+#. module: portal
+#: view:portal.payment.acquirer:0
+msgid "amount: the total amount to pay, as a float"
+msgstr "amount: Der zu zahlende Gesamtbetrag, als float"
 
 #. module: portal
 #: code:addons/portal/mail_mail.py:44
@@ -411,6 +421,12 @@ msgstr ""
 #: model:ir.model,name:portal.model_portal_payment_acquirer
 msgid "Online Payment Acquirer"
 msgstr "Online Zahlungsanbieter"
+
+#. module: portal
+#: code:addons/portal/mail_message.py:53
+#, python-format
+msgid "Access Denied"
+msgstr ""
 
 #. module: portal
 #: model:mail.group,name:portal.company_news_feed
@@ -606,6 +622,11 @@ msgid "Apply"
 msgstr "Anwenden"
 
 #. module: portal
+#: model:ir.model,name:portal.model_mail_message
+msgid "Message"
+msgstr ""
+
+#. module: portal
 #: view:portal.payment.acquirer:0
 msgid "ctx: the current context dictionary"
 msgstr "ctx: das aktuelle Kontext Dictionary"
@@ -651,6 +672,9 @@ msgstr "Formular Vorlage"
 #: view:share.wizard:0
 msgid "Details"
 msgstr "Details"
+
+#~ msgid "Quotations and Sales Orders"
+#~ msgstr "Angebote und Aufträge"
 
 #, python-format
 #~ msgid ""

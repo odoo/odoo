@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2013-04-13 17:40+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-14 05:49+0000\n"
-"X-Generator: Launchpad (build 16564)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:12+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -70,13 +70,6 @@ msgstr "Ödeme kalemleri"
 #: view:payment.order:0
 msgid "Owner Account"
 msgstr "Hesap Sahibi"
-
-#. module: account_payment
-#: help:account.invoice,amount_to_pay:0
-msgid ""
-"The amount which should be paid at the current date\n"
-"minus the amount which is already in payment order"
-msgstr "Geçerli tarihte ödenecek tutar hali hazırda ödenmiş tutardan düşülür"
 
 #. module: account_payment
 #: field:payment.line,company_id:0
@@ -685,10 +678,21 @@ msgid "Total"
 msgstr "Toplam"
 
 #. module: account_payment
+#: code:addons/account_payment/wizard/account_payment_order.py:112
+#, python-format
+msgid "Entry Lines"
+msgstr ""
+
+#. module: account_payment
 #: view:account.payment.make.payment:0
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
 msgstr "Ödeme Yap"
+
+#. module: account_payment
+#: help:account.invoice,amount_to_pay:0
+msgid "The amount which should be paid at the current date. "
+msgstr ""
 
 #. module: account_payment
 #: field:payment.order,date_prefered:0
@@ -706,3 +710,8 @@ msgstr "ya da"
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
 msgstr "Ödeme Yönetimi için Banka Hesabı"
+
+#~ msgid ""
+#~ "The amount which should be paid at the current date\n"
+#~ "minus the amount which is already in payment order"
+#~ msgstr "Geçerli tarihte ödenecek tutar hali hazırda ödenmiş tutardan düşülür"

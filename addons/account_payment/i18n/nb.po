@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:30+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:12+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -62,15 +62,6 @@ msgstr "Betalingslinjer"
 #: view:payment.order:0
 msgid "Owner Account"
 msgstr "Eier Til kontoen"
-
-#. module: account_payment
-#: help:account.invoice,amount_to_pay:0
-msgid ""
-"The amount which should be paid at the current date\n"
-"minus the amount which is already in payment order"
-msgstr ""
-"Det beløp som skal betales på den aktuelle datoen minus beløpet som allerede "
-"er i betaling for."
 
 #. module: account_payment
 #: field:payment.line,company_id:0
@@ -671,10 +662,21 @@ msgid "Total"
 msgstr "Totalt"
 
 #. module: account_payment
+#: code:addons/account_payment/wizard/account_payment_order.py:112
+#, python-format
+msgid "Entry Lines"
+msgstr ""
+
+#. module: account_payment
 #: view:account.payment.make.payment:0
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
 msgstr "Lag bestilling."
+
+#. module: account_payment
+#: help:account.invoice,amount_to_pay:0
+msgid "The amount which should be paid at the current date. "
+msgstr ""
 
 #. module: account_payment
 #: field:payment.order,date_prefered:0
@@ -692,3 +694,10 @@ msgstr "eller."
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
 msgstr "Bankkonto for betaling modus."
+
+#~ msgid ""
+#~ "The amount which should be paid at the current date\n"
+#~ "minus the amount which is already in payment order"
+#~ msgstr ""
+#~ "Det beløp som skal betales på den aktuelle datoen minus beløpet som allerede "
+#~ "er i betaling for."

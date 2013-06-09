@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
 "PO-Revision-Date: 2013-04-11 14:08+0000\n"
 "Last-Translator: WANTELLET Sylvain <Swantellet@tetra-info.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-12 06:05+0000\n"
-"X-Generator: Launchpad (build 16564)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:35+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -129,6 +129,20 @@ msgid "Reason"
 msgstr "Motif"
 
 #. module: procurement
+#: model:ir.actions.act_window,help:procurement.action_orderpoint_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"              You can define your minimum stock rules, so that OpenERP will "
+"automatically create draft manufacturing orders or purchase quotations "
+"according to the stock level.Once the virtual stock of a product (= stock on "
+"hand minus all confirmed orders and reservations) is below the minimum "
+"quantity, OpenERP will generate a procurement request to increase the stock "
+"up to the maximum quantity.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: procurement
 #: view:procurement.order.compute:0
 msgid "Compute Procurements"
 msgstr "Calculer les approvisionnements"
@@ -152,24 +166,6 @@ msgstr "Non utilisé dans les calculs, pour information seulement."
 #: field:stock.warehouse.orderpoint,procurement_id:0
 msgid "Latest procurement"
 msgstr "Dernier approvisionnement"
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.action_orderpoint_form
-msgid ""
-"You can define your minimum stock rules, so that OpenERP will automatically "
-"create draft manufacturing orders or purchase quotations according to the "
-"stock level. Once the virtual stock of a product (= stock on hand minus all "
-"confirmed orders and reservations) is below the minimum quantity, OpenERP "
-"will generate a procurement request to increase the stock up to the maximum "
-"quantity."
-msgstr ""
-"Vous pouvez définir vos règles de stock minimal, pour qu'OpenERP puisse "
-"créer automatiquement les brouillons d'ordres de fabrication ou les demandes "
-"de devis, selon le niveau de stock. Une fois que le niveau de stock virtuel "
-"d'un article (= stock disponible moins toutes les commandes confirmées et "
-"les allocations) est en-dessous de la quantité minimale, OpenERP va générer "
-"une demande d'approvisionnement pour augmenter le stock jusqu'à la quantité "
-"maximale."
 
 #. module: procurement
 #: field:procurement.order,message_ids:0
@@ -1132,3 +1128,19 @@ msgstr "APPR %d: sur commande - %3.2f %-5s - %s"
 #, python-format
 msgid "Products reserved from stock."
 msgstr "Articles réservés dans le stock."
+
+#~ msgid ""
+#~ "You can define your minimum stock rules, so that OpenERP will automatically "
+#~ "create draft manufacturing orders or purchase quotations according to the "
+#~ "stock level. Once the virtual stock of a product (= stock on hand minus all "
+#~ "confirmed orders and reservations) is below the minimum quantity, OpenERP "
+#~ "will generate a procurement request to increase the stock up to the maximum "
+#~ "quantity."
+#~ msgstr ""
+#~ "Vous pouvez définir vos règles de stock minimal, pour qu'OpenERP puisse "
+#~ "créer automatiquement les brouillons d'ordres de fabrication ou les demandes "
+#~ "de devis, selon le niveau de stock. Une fois que le niveau de stock virtuel "
+#~ "d'un article (= stock disponible moins toutes les commandes confirmées et "
+#~ "les allocations) est en-dessous de la quantité minimale, OpenERP va générer "
+#~ "une demande d'approvisionnement pour augmenter le stock jusqu'à la quantité "
+#~ "maximale."

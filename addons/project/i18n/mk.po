@@ -8,15 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2013-03-28 23:28+0000\n"
-"Last-Translator: Софче Димитријева <Unknown>\n"
+"Last-Translator: Sofce Dimitrijeva <Unknown>\n"
 "Language-Team: ESKON-INZENERING\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-30 06:09+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:38+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 "Language: mk\n"
 
 #. module: project
@@ -87,7 +87,7 @@ msgid "Start Task"
 msgstr "Започни задача"
 
 #. module: project
-#: code:addons/project/project.py:932
+#: code:addons/project/project.py:944
 #, python-format
 msgid "Warning !"
 msgstr "Внимание !"
@@ -139,8 +139,8 @@ msgstr ""
 "во html формат."
 
 #. module: project
-#: code:addons/project/project.py:432
-#: code:addons/project/project.py:1318
+#: code:addons/project/project.py:444
+#: code:addons/project/project.py:1332
 #, python-format
 msgid "Warning!"
 msgstr "Внимание!"
@@ -212,11 +212,6 @@ msgstr "Придавање на задачи"
 #: field:project.task.history.cumulative,planned_hours:0
 msgid "Planned Time"
 msgstr "Планирано време"
-
-#. module: project
-#: selection:project.project,privacy_visibility:0
-msgid "Public"
-msgstr "Јавно"
 
 #. module: project
 #: view:project.task:0
@@ -430,7 +425,7 @@ msgid "Assigned to"
 msgstr "Доделено на"
 
 #. module: project
-#: code:addons/project/project.py:1021
+#: code:addons/project/project.py:1033
 #, python-format
 msgid "Delegated User should be specified"
 msgstr "Делегираниот корисник треба да биде наведен"
@@ -903,11 +898,9 @@ msgid "Is a Follower"
 msgstr "Е следбеник"
 
 #. module: project
-#: field:project.task.history,date:0
-#: field:project.task.history.cumulative,date:0
-#: field:project.task.work,date:0
-msgid "Date"
-msgstr "Датум"
+#: field:project.task,work_ids:0
+msgid "Work done"
+msgstr "Завршена работа"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -950,9 +943,11 @@ msgid "Folded by Default"
 msgstr ""
 
 #. module: project
-#: field:project.task,work_ids:0
-msgid "Work done"
-msgstr "Завршена работа"
+#: field:project.task.history,date:0
+#: field:project.task.history.cumulative,date:0
+#: field:project.task.work,date:0
+msgid "Date"
+msgstr "Датум"
 
 #. module: project
 #: help:project.config.settings,module_project_issue:0
@@ -1321,9 +1316,9 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "Пресметано како: Поминато време + Преостанато време."
 
 #. module: project
-#: code:addons/project/project.py:356
-#: code:addons/project/project.py:377
-#: code:addons/project/project.py:709
+#: code:addons/project/project.py:368
+#: code:addons/project/project.py:389
+#: code:addons/project/project.py:721
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копија)"
@@ -1539,7 +1534,7 @@ msgstr ""
 "проект менаџерот кога задачата е во нацрт состојба."
 
 #. module: project
-#: code:addons/project/project.py:220
+#: code:addons/project/project.py:230
 #, python-format
 msgid "Attachments"
 msgstr "Прилози"
@@ -1665,7 +1660,7 @@ msgid "Overpassed Tasks"
 msgstr "Пречекорени задачи"
 
 #. module: project
-#: code:addons/project/project.py:932
+#: code:addons/project/project.py:944
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1730,7 +1725,7 @@ msgid "CHECK: "
 msgstr "ПРОВЕРИ: "
 
 #. module: project
-#: code:addons/project/project.py:432
+#: code:addons/project/project.py:444
 #, python-format
 msgid "You must assign members on the project '%s' !"
 msgstr "Мора да назначите членови на проектот '%s' !"
@@ -1973,7 +1968,7 @@ msgid "Starting Date"
 msgstr "Почетен датум"
 
 #. module: project
-#: code:addons/project/project.py:398
+#: code:addons/project/project.py:410
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:0
@@ -2143,7 +2138,7 @@ msgid "Reevaluation Task"
 msgstr "Преиспитување на задача"
 
 #. module: project
-#: code:addons/project/project.py:1318
+#: code:addons/project/project.py:1332
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr "Најпрво избришете го проектот поврзан со ова конто."
@@ -2254,11 +2249,6 @@ msgstr ""
 "                Ова го инсталира project_issue_sheet модулот."
 
 #. module: project
-#: selection:project.project,privacy_visibility:0
-msgid "Followers Only"
-msgstr "Само за следбеници"
-
-#. module: project
 #: view:board.board:0
 #: field:project.project,task_count:0
 msgid "Open Tasks"
@@ -2298,3 +2288,9 @@ msgstr "Година"
 #: view:project.task.type:0
 msgid "Tasks Stages"
 msgstr "Фази на задачата"
+
+#~ msgid "Public"
+#~ msgstr "Јавно"
+
+#~ msgid "Followers Only"
+#~ msgstr "Само за следбеници"

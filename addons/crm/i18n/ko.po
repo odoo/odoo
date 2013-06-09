@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:36+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2013-03-29 04:04+0000\n"
 "Last-Translator: Josh Kim <joshkkim@gmail.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-30 06:08+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:17+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -30,7 +30,7 @@ msgid ""
 msgstr "수신메일서버를 설정하고 수신 이메일로부터 리드를 생성할 수 있게 함."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:881
+#: code:addons/crm/crm_lead.py:898
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
@@ -88,6 +88,11 @@ msgstr "기금 모금 관리"
 #: field:crm.phonecall.report,delay_close:0
 msgid "Delay to close"
 msgstr "마감까지 지연"
+
+#. module: crm
+#: view:crm.lead:0
+msgid "Available for mass mailing"
+msgstr ""
 
 #. module: crm
 #: view:crm.case.stage:0
@@ -187,8 +192,8 @@ msgid ""
 msgstr "대화 요약 (메시지 개수, ...)을 내포함. 이 요약은 간판 화면에 삽입할 수 있도록 html 형식으로 직접 작성됩니다."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:624
-#: code:addons/crm/crm_lead.py:744
+#: code:addons/crm/crm_lead.py:640
+#: code:addons/crm/crm_lead.py:761
 #: code:addons/crm/crm_phonecall.py:280
 #, python-format
 msgid "Warning!"
@@ -289,11 +294,9 @@ msgid "Categories"
 msgstr "카테고리"
 
 #. module: crm
-#: help:crm.lead,opt_out:0
-msgid ""
-"If opt-out is checked, this contact has refused to receive emails or "
-"unsubscribed to a campaign."
-msgstr "탈퇴가 체크되었을 경우, 이 연락처는 이메일 수신을 거부하였거나 캠페인 구독을 취소하였습니다."
+#: view:crm.segmentation:0
+msgid "Segmentation Test"
+msgstr "세그먼테이션 테스트"
 
 #. module: crm
 #: model:process.transition,name:crm.process_transition_leadpartner0
@@ -301,7 +304,7 @@ msgid "Prospect Partner"
 msgstr "잠재 협력업체"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:982
+#: code:addons/crm/crm_lead.py:1002
 #, python-format
 msgid "No Subject"
 msgstr "제목 없음"
@@ -443,7 +446,7 @@ msgid "Team Leader"
 msgstr "팀 리더"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1032
+#: code:addons/crm/crm_lead.py:1052
 #, python-format
 msgid "%s a call for %s.%s"
 msgstr ""
@@ -471,7 +474,7 @@ msgid "#Opportunities"
 msgstr "기회#"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:624
+#: code:addons/crm/crm_lead.py:640
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list view."
@@ -560,7 +563,7 @@ msgid "Planned Revenue"
 msgstr "계획된 수익"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:970
+#: code:addons/crm/crm_lead.py:988
 #, python-format
 msgid "Customer Email"
 msgstr "고객 이메일"
@@ -626,7 +629,7 @@ msgstr ""
 "+object.partner_id.name or '']]"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:745
+#: code:addons/crm/crm_lead.py:762
 #, python-format
 msgid ""
 "No customer name defined. Please fill one of the following fields: Company "
@@ -762,7 +765,7 @@ msgid "Statistics Dashboard"
 msgstr "통계 대시보드"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:861
+#: code:addons/crm/crm_lead.py:878
 #: model:crm.case.stage,name:crm.stage_lead2
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
@@ -827,7 +830,7 @@ msgid "Exclusive"
 msgstr "배타적"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:584
+#: code:addons/crm/crm_lead.py:600
 #, python-format
 msgid "From %s : %s"
 msgstr "%s이(가) 보냄 : %s"
@@ -836,6 +839,11 @@ msgstr "%s이(가) 보냄 : %s"
 #: view:crm.lead2opportunity.partner.mass:0
 msgid "Convert to Opportunities"
 msgstr "기회로 전환"
+
+#. module: crm
+#: view:crm.lead:0
+msgid "Leads that did not ask not to be included in mass mailing campaigns"
+msgstr ""
 
 #. module: crm
 #: view:crm.lead2opportunity.partner:0
@@ -1005,7 +1013,7 @@ msgid "Next Action"
 msgstr "다음 조치"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:763
+#: code:addons/crm/crm_lead.py:780
 #, python-format
 msgid "<b>Partner</b> set to <em>%s</em>."
 msgstr "<em>%s</em>(으)로 설정된 <b>협력업체</b> ."
@@ -1092,7 +1100,15 @@ msgid "Creation Date"
 msgstr "생성일"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:698
+#: help:crm.lead,opt_out:0
+msgid ""
+"If opt-out is checked, this contact has refused to receive emails for mass "
+"mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
+"users to filter the leads when performing mass mailing."
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:715
 #, python-format
 msgid "Lead <b>converted into an Opportunity</b>"
 msgstr "기회로 전환된<b>리드</b>"
@@ -1309,7 +1325,9 @@ msgid "Days to Close"
 msgstr "마감 잔여일"
 
 #. module: crm
+#: code:addons/crm/crm_lead.py:1057
 #: field:crm.case.section,complete_name:0
+#, python-format
 msgid "unknown"
 msgstr "알 수 없음"
 
@@ -1366,7 +1384,7 @@ msgid "Sales Marketing Department"
 msgstr "영업홍보부"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:569
+#: code:addons/crm/crm_lead.py:585
 #, python-format
 msgid "Merged lead"
 msgstr "병합된 리드"
@@ -1390,7 +1408,7 @@ msgid "Segmentation Description"
 msgstr "분할 설명"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:565
+#: code:addons/crm/crm_lead.py:581
 #, python-format
 msgid "Merged opportunities"
 msgstr "병합된 기회"
@@ -1900,6 +1918,12 @@ msgid "Support Department"
 msgstr "지원부"
 
 #. module: crm
+#: code:addons/crm/crm_lead.py:1060
+#, python-format
+msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
+msgstr ""
+
+#. module: crm
 #: view:crm.lead.report:0
 msgid "Show only lead"
 msgstr "리드만 보기"
@@ -1953,7 +1977,7 @@ msgid "Leads"
 msgstr "리드"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:563
+#: code:addons/crm/crm_lead.py:579
 #, python-format
 msgid "Merged leads"
 msgstr "병합된 리드"
@@ -2052,7 +2076,6 @@ msgid "Global CC"
 msgstr "전체 참조"
 
 #. module: crm
-#: view:crm.lead:0
 #: view:crm.phonecall:0
 #: model:ir.actions.act_window,name:crm.crm_case_categ_phone0
 #: model:ir.ui.menu,name:crm.menu_crm_case_phone
@@ -2234,11 +2257,6 @@ msgstr "이 연락처는 어떤 캠페인(세미나, 홍보, 캠페인, 단체 �
 #: model:ir.model,name:crm.model_calendar_attendee
 msgid "Attendee information"
 msgstr "참석자 정보"
-
-#. module: crm
-#: view:crm.segmentation:0
-msgid "Segmentation Test"
-msgstr "세그먼테이션 테스트"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -2893,7 +2911,7 @@ msgid "Stage of case"
 msgstr "사례의 단계"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:569
+#: code:addons/crm/crm_lead.py:585
 #, python-format
 msgid "Merged opportunity"
 msgstr "병합된 기회"
@@ -3051,7 +3069,7 @@ msgid "Working Hours"
 msgstr "근무시간"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:968
+#: code:addons/crm/crm_lead.py:986
 #: view:crm.lead:0
 #: field:crm.lead2opportunity.partner,partner_id:0
 #: field:crm.lead2opportunity.partner.mass,partner_id:0
@@ -3194,3 +3212,8 @@ msgstr ""
 "                위치를 손쉽게 추적할 수 있도록 합니다.\n"
 "              </p>\n"
 "            "
+
+#~ msgid ""
+#~ "If opt-out is checked, this contact has refused to receive emails or "
+#~ "unsubscribed to a campaign."
+#~ msgstr "탈퇴가 체크되었을 경우, 이 연락처는 이메일 수신을 거부하였거나 캠페인 구독을 취소하였습니다."

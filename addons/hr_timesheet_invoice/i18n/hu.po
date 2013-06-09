@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
 "PO-Revision-Date: 2013-02-20 16:08+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:43+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:27+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -104,7 +104,7 @@ msgid "Profit"
 msgstr "Nyereség"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:144
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:141
 #, python-format
 msgid "You cannot modify an invoiced analytic line!"
 msgstr "Nem módosíthat egy számlázott elemzési sort!"
@@ -180,7 +180,7 @@ msgid "Invoiced Amount"
 msgstr "Kiszámlázott összeg"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:188
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:185
 #, python-format
 msgid "Analytic Account incomplete !"
 msgstr "Analitikai/Elemző számla nem teljes !"
@@ -263,7 +263,7 @@ msgid "Deadline"
 msgstr "Határidő"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:246
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:243
 #, python-format
 msgid "Configuration Error!"
 msgstr "Beállítási hiba!"
@@ -300,7 +300,7 @@ msgid "Costs to invoice"
 msgstr "Kiszámlázandó költségek"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:246
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:243
 #, python-format
 msgid "Please define income account for product '%s'."
 msgstr "Kérem határozzon meg bevételi számlát erre a termékre '%s'."
@@ -765,7 +765,7 @@ msgid "Timesheets to invoice"
 msgstr "Kiszámlázandó munkaidő-kimutatások"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:189
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:186
 #, python-format
 msgid ""
 "Contract incomplete. Please fill in the Customer and Pricelist fields."
@@ -882,7 +882,7 @@ msgid "April"
 msgstr "Április"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:233
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:230
 #, python-format
 msgid ""
 "There is no product defined. Please select one or force the product through "
@@ -903,6 +903,15 @@ msgid "Invoice is already linked to some of the analytic line(s)!"
 msgstr "A számla már hozzá van rendelve egyes elemző sor(ok)hoz!"
 
 #. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create:0
+msgid ""
+"When reinvoicing costs, the amount on the invoice lines is given by the sale "
+"price of the corresponding product (if any, and if its sale price is not 0). "
+"You can use the following field to enforce the use of a single product for "
+"all the chosen lines in the future invoices."
+msgstr ""
+
+#. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create,name:0
 msgid "Description"
 msgstr "Leírás"
@@ -914,8 +923,8 @@ msgid "Units"
 msgstr "Egységek"
 
 #. module: hr_timesheet_invoice
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:143
-#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:233
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:140
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:230
 #, python-format
 msgid "Error!"
 msgstr "Hiba!"
