@@ -270,6 +270,7 @@ class mail_compose_message(osv.TransientModel):
                 context.pop('default_partner_ids', None)
                 # post the message
                 if mass_mail_mode and not wizard.post:
+                    post_values['body_html'] = post_values.get('body', '')
                     post_values['recipient_ids'] = [(4, id) for id in post_values.pop('partner_ids', [])]
                     self.pool.get('mail.mail').create(cr, uid, post_values, context=context)
                 else:
