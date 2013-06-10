@@ -543,6 +543,7 @@ class stock_picking(osv.osv):
     _name = "stock.picking"
     _inherit = ['mail.thread']
     _description = "Picking List"
+    _order = "id desc"
 
     def _set_maximum_date(self, cr, uid, ids, name, value, arg, context=None):
         """ Calculates planned date if it is greater than 'value'.
@@ -1109,7 +1110,7 @@ class stock_picking(osv.osv):
             if isinstance(partner, int):
                 partner = partner_obj.browse(cr, uid, [partner], context=context)[0]
             if not partner:
-                raise osv.except_osv(_('Error, no partner !'),
+                raise osv.except_osv(_('Error, no partner!'),
                     _('Please put a partner on the picking list if you want to generate invoice.'))
 
             if not inv_type:
@@ -1763,7 +1764,7 @@ class stock_move(osv.osv):
             for move in self.browse(cr, uid, ids, context=context):
                 if move.state == 'done':
                     if frozen_fields.intersection(vals):
-                        raise osv.except_osv(_('Operation forbidden !'),
+                        raise osv.except_osv(_('Operation Forbidden!'),
                                              _('Quantities, Units of Measure, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator).'))
         return  super(stock_move, self).write(cr, uid, ids, vals, context=context)
 

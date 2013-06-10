@@ -219,6 +219,7 @@ openerp.mail = function (session) {
             this.type = datasets.type ||  false,
             this.subtype = datasets.subtype ||  false,
             this.is_author = datasets.is_author ||  false,
+            this.author_avatar = datasets.author_avatar || false,
             this.is_private = datasets.is_private ||  false,
             this.subject = datasets.subject ||  false,
             this.name = datasets.name ||  false,
@@ -260,8 +261,10 @@ openerp.mail = function (session) {
             this.date = this.date ? session.web.str_to_datetime(this.date) : false;
             if (this.date && new Date().getTime()-this.date.getTime() < 7*24*60*60*1000) {
                 this.timerelative = $.timeago(this.date);
-            } 
-            if (this.type == 'email' && (!this.author_id || !this.author_id[0])) {
+            }
+            if (this.author_avatar) {
+                this.avatar = "data:image/png;base64," + this.author_avatar;
+            } else if (this.type == 'email' && (!this.author_id || !this.author_id[0])) {
                 this.avatar = ('/mail/static/src/img/email_icon.png');
             } else if (this.author_id && this.template != 'mail.compose_message') {
                 this.avatar = mail.ChatterUtils.get_image(this.session, 'res.partner', 'image_small', this.author_id[0]);
@@ -850,9 +853,9 @@ openerp.mail = function (session) {
 
         on_checked_recipient: function (event) {
             var $input = $(event.target);
-            var email = $input.attr("data");
+            var full_name = $input.attr("data");
             _.each(this.recipients, function (recipient) {
-                if (recipient.email_address == email) {
+                if (recipient.full_name == full_name) {
                     recipient.checked = $input.is(":checked");
                 }
             });
