@@ -17,10 +17,8 @@
                         <button name="action_next" type="object" string="Configure" invisible="context.get('menu',False)" class="oe_highlight"/>
                         <label string="or" invisible="context.get('menu',False)" class="oe_inline"/>
                     </xpath>
-                    <xpath expr="//button[@string='Skip']" position="after">
-                        <button string="Ok" class="oe_highlight" special="cancel" invisible="context.get('active_model')"/>
-                    </xpath>
                     <xpath expr="//button[@string='Skip']" position="replace">
+                        <button string="Ok" class="oe_highlight" special="cancel" invisible="context.get('active_model')"/>
                         <button string="Skip" class="oe_link" special="cancel" invisible="context.get('menu',False)"/>
                     </xpath>
                     <xpath expr="//separator[@string='title']" position="after">
