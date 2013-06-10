@@ -201,7 +201,7 @@ class purchase_order(osv.osv):
             readonly=True, states={'draft':[('readonly',False)], 'sent':[('readonly',False)]},
             help="Based on Purchase Order lines: place individual lines in 'Invoice Control / On Purchase Order lines' from where you can selectively create an invoice.\n" \
                 "Based on generated invoice: create a draft invoice you can validate later.\n" \
-                "Bases on incoming shipments: let you create an invoice when receptions are validated."
+                "Based on incoming shipments: let you create an invoice when receptions are validated."
         ),
         'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, string='Expected Date', type='date', select=True, help="This is computed as the minimum scheduled date of all purchase order lines' products.",
             store = {
