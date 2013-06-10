@@ -60,9 +60,6 @@ class mail_mail(osv.Model):
         'recipient_ids': fields.many2many('res.partner', string='To (Partners)'),
         'email_cc': fields.char('Cc', help='Carbon copy message recipients'),
         'body_html': fields.text('Rich-text Contents', help="Rich-text/HTML message"),
-        # If not set in create values, auto-detected based on create values (res_id, model, email_from)
-        'reply_to': fields.char('Reply-To',
-            help='Preferred response address for the message'),
         # Auto-detected based on create() - if 'mail_message_id' was passed then this mail is a notification
         # and during unlink() we will not cascade delete the parent and its attachments
         'notification': fields.boolean('Is Notification',
