@@ -3857,11 +3857,12 @@ class BaseModel(object):
             # Attempt to distinguish record rule restriction vs deleted records,
             # to provide a more specific error message - check if the missinf
             cr.execute('SELECT id FROM ' + self._table + ' WHERE id IN %s', (tuple(missing_ids),))
-            if cr.rowcount:
+            forbidden_ids = [x[0] for x in cr.fetchall()]
+            if forbidden_ids:
                 # the missing ids are (at least partially) hidden by access rules
                 if uid == SUPERUSER_ID:
                     return
-                _logger.warning('Access Denied by record rules for operation: %s, uid: %s, model: %s', operation, uid, self._name)
+                _logger.warning('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, forbidden_ids, uid, self._name)
                 raise except_orm(_('Access Denied'),
                                  _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
                                     (self._description, operation))

@@ -160,9 +160,11 @@ class _rml_styles(object,):
             for style in node.findall('paraStyle'):
                 sname = style.get('name')
                 self.styles[sname] = self._para_style_update(style)
-
-                self.styles_obj[sname] = reportlab.lib.styles.ParagraphStyle(sname, self.default_style["Normal"], **self.styles[sname])
-
+                if sname in self.default_style:
+                    for key, value in self.styles[sname].items():                    
+                        setattr(self.default_style[sname], key, value)
+                else:
+                    self.styles_obj[sname] = reportlab.lib.styles.ParagraphStyle(sname, self.default_style["Normal"], **self.styles[sname])
             for variable in node.findall('initialize'):
                 for name in variable.findall('name'):
                     self.names[ name.get('id')] = name.get('value')
@@ -269,6 +271,7 @@ class _rml_doc(object):
         from reportlab.pdfbase.ttfonts import TTFont
 
         for node in els:
+
             for font in node.findall('registerFont'):
                 name = font.get('fontName').encode('ascii')
                 fname = font.get('fontFile').encode('ascii')

@@ -353,6 +353,7 @@ class WorkerHTTP(Worker):
 
     def start(self):
         Worker.start(self)
+        self.multi.long_polling_socket.close()
         self.server = WorkerBaseWSGIServer(self.multi.app)
 
 class WorkerLongPolling(Worker):
@@ -362,6 +363,15 @@ class WorkerLongPolling(Worker):
         # Disable the watchdog feature for this kind of worker.
         self.watchdog_timeout = None
 
+    def watch_parent(self):
+        import gevent
+        while True:
+            if self.ppid != os.getppid():
+                _logger.info("WorkerLongPolling (%s) Parent changed", self.pid)
+                os.kill(os.getpid(), signal.SIGTERM)
+                return
+            gevent.sleep(self.multi.beat)
+
     def start(self):
         openerp.evented = True
         _logger.info('Using gevent mode')
@@ -369,20 +379,22 @@ class WorkerLongPolling(Worker):
         gevent.monkey.patch_all()
         import gevent_psycopg2
         gevent_psycopg2.monkey_patch()
+        from openerp.modules.registry import RegistryManager
+        from gevent.coros import RLock
+        RegistryManager.registries_lock = RLock()
 
         Worker.start(self)
+        self.multi.socket.close()
+
+        import gevent
+        watcher = gevent.spawn(self.watch_parent)
+
+        log = _logger.getChild(self.__class__.__name__)
+        log.write = lambda msg: log.info(msg.strip())
+
         from gevent.wsgi import WSGIServer
-        self.server = WSGIServer(self.multi.long_polling_socket, self.multi.app)
-        self.server.start()
-
-    def stop(self):
-        self.server.stop()
-
-    def sleep(self):
-        time.sleep(1)
-
-    def process_work(self):
-        pass
+        self.server = WSGIServer(self.multi.long_polling_socket, self.multi.app, log=log)
+        self.server.serve_forever()
 
 class WorkerBaseWSGIServer(werkzeug.serving.BaseWSGIServer):
     """ werkzeug WSGI Server patched to allow using an external listen socket
@@ -456,6 +468,8 @@ class WorkerCron(Worker):
 
     def start(self):
         Worker.start(self)
+        self.multi.socket.close()
+        self.multi.long_polling_socket.close()
         openerp.service.start_internal()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

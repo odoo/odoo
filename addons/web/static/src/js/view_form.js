@@ -91,6 +91,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     init: function(parent, dataset, view_id, options) {
         var self = this;
         this._super(parent);
+        this.ViewManager = parent;
         this.set_default_options(options);
         this.dataset = dataset;
         this.model = dataset.model;
@@ -720,6 +721,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         return this.save().done(function(result) {
             self.trigger("save", result);
             self.to_view_mode();
+        }).then(function(result) {
+            self.ViewManager.ActionManager.__parentedParent.menu.do_reload_needaction();
         });
     },
     on_button_cancel: function(event) {
@@ -2901,7 +2904,7 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
             var domain = instance.web.pyeval.eval('domain', this.build_domain()) || [];
             if (! _.isEqual(self.domain, domain)) {
                 self.domain = domain;
-                var ds = new instance.web.DataSet(self, self.field.relation);
+                var ds = new instance.web.DataSetStatic(self, self.field.relation, self.build_context());
                 ds.call('search', [self.domain])
                     .then(function (records) {
                         ds.name_get(records).then(function (records) {
@@ -3151,6 +3154,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         instance.web.form.CompletionFieldMixin.init.call(this);
         this.set({'value': false});
         this.display_value = {};
+        this.display_value_backup = {};
         this.last_search = [];
         this.floating = false;
         this.current_display = null;
@@ -3234,6 +3238,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             );
             pop.on('write_completed', self, function(){
                 self.display_value = {};
+                self.display_value_backup = {};
                 self.render_value();
                 self.focus();
             });
@@ -3284,6 +3289,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 if (self.last_search.length > 0) {
                     if (self.last_search[0][0] != self.get("value")) {
                         self.display_value = {};
+                        self.display_value_backup = {};
                         self.display_value["" + self.last_search[0][0]] = self.last_search[0][1];
                         self.reinit_value(self.last_search[0][0]);
                     } else {
@@ -3349,6 +3355,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 var item = ui.item;
                 if (item.id) {
                     self.display_value = {};
+                    self.display_value_backup = {};
                     self.display_value["" + item.id] = item.name;
                     self.reinit_value(item.id);
                 } else if (item.action) {
@@ -3394,6 +3401,11 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             this.alive(dataset.name_get([self.get("value")])).done(function(data) {
                 self.display_value["" + self.get("value")] = data[0][1];
                 self.render_value(true);
+            }).fail( function (data, event) {
+                // avoid displaying crash errors as many2One should be name_get compliant
+                event.preventDefault();
+                self.display_value["" + self.get("value")] = self.display_value_backup["" + self.get("value")];
+                self.render_value(true);
             });
         }
     },
@@ -3437,8 +3449,12 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         var self = this;
         if (value_ instanceof Array) {
             this.display_value = {};
+            this.display_value_backup = {}
             if (! this.options.always_reload) {
                 this.display_value["" + value_[0]] = value_[1];
+            }
+            else {
+                this.display_value_backup["" + value_[0]] = value_[1];
             }
             value_ = value_[0];
         }
@@ -3450,6 +3466,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
     },
     add_id: function(id) {
         this.display_value = {};
+        this.display_value_backup = {};
         this.reinit_value(id);
     },
     is_false: function() {

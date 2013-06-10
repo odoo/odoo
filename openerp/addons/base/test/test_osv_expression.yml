@@ -291,22 +291,22 @@
         assert res_101 == [], 'res_101: expected %r, got %r' % ([], res_101)
         assert res_102 == company_ids, 'res_102: expected %r, got %r' % (company_ids, res_102)
 -
-    Property of the query (one2many != False).
+    Verify domain evaluation for `one2many != False`
 -
-    !python {model: res.currency }: |
-        ids = self.search(cr, uid, [])
-        referenced_companies = set([x.company_id.id for x in self.browse(cr, uid, ids)])
-        companies = set(self.pool.get('res.company').search(cr, uid, [('currency_ids', '!=', False)]))
-        assert referenced_companies == companies
+    !python {model: res.partner.category }: |
+        all_ids = self.search(cr, uid, [])
+        parent_categs = set([c.parent_id.id for c in self.browse(cr, uid, all_ids) if c.parent_id])
+        result = set(self.search(cr, uid, [('child_ids', '!=', False)]))
+        assert result and result == parent_categs, "Got %r, expected %r" % (result, parent_categs) 
 -
-    Property of the query (one2many = False).
+    Verify domain evaluation for `one2many == False`
 -
-    !python {model: res.currency }: |
-        ids = self.search(cr, uid, [])
-        referenced_companies = set([x.company_id.id for x in self.browse(cr, uid, ids)])
-        unreferenced_companies = set(self.pool.get('res.company').search(cr, uid, [])).difference(referenced_companies)
-        companies = set(self.pool.get('res.company').search(cr, uid, [('currency_ids', '=', False)]))
-        assert unreferenced_companies == companies
+    !python {model: res.partner.category }: |
+        all_ids = self.search(cr, uid, [])
+        parent_categs = set([c.parent_id.id for c in self.browse(cr, uid, all_ids) if c.parent_id])
+        leaf_categs = set(all_ids) - parent_categs
+        result = set(self.search(cr, uid, [('child_ids', '=', False)]))
+        assert result and result == leaf_categs, "Got %r, expected %r" % (result, leaf_categs)
 -
     Equivalent queries.
 -

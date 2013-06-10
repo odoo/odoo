@@ -310,7 +310,7 @@ def fs2web(path):
     """convert FS path into web path"""
     return '/'.join(path.split(os.path.sep))
 
-def manifest_glob(extension, addons=None, db=None):
+def manifest_glob(extension, addons=None, db=None, include_remotes=False):
     if addons is None:
         addons = module_boot(db=db)
     else:
@@ -324,8 +324,12 @@ def manifest_glob(extension, addons=None, db=None):
         addons_path = os.path.join(manifest['addons_path'], '')[:-1]
         globlist = manifest.get(extension, [])
         for pattern in globlist:
-            for path in glob.glob(os.path.normpath(os.path.join(addons_path, addon, pattern))):
-                r.append((path, fs2web(path[len(addons_path):])))
+            if pattern.startswith(('http://', 'https://', '//')):
+                if include_remotes:
+                    r.append((None, pattern))
+            else:
+                for path in glob.glob(os.path.normpath(os.path.join(addons_path, addon, pattern))):
+                    r.append((path, fs2web(path[len(addons_path):])))
     return r
 
 def manifest_list(extension, mods=None, db=None):
@@ -333,14 +337,16 @@ def manifest_list(extension, mods=None, db=None):
     mods: a comma separated string listing modules
     db: a database name (return all installed modules in that database)
     """
+    files = manifest_glob(extension, addons=mods, db=db, include_remotes=True)
     if not req.debug:
         path = '/web/webclient/' + extension
         if mods is not None:
             path += '?' + urllib.urlencode({'mods': mods})
         elif db:
             path += '?' + urllib.urlencode({'db': db})
-        return [path]
-    files = manifest_glob(extension, addons=mods, db=db)
+
+        remotes = [wp for fp, wp in files if fp is None]
+        return [path] + remotes
     return [wp for _fp, wp in files]
 
 def get_last_modified(files):
@@ -1204,19 +1210,19 @@ class Binary(openerpweb.Controller):
         headers = [('Content-Type', 'image/png')]
         etag = req.httprequest.headers.get('If-None-Match')
         hashed_session = hashlib.md5(req.session_id).hexdigest()
+        retag = hashed_session
         id = None if not id else simplejson.loads(id)
         if type(id) is list:
             id = id[0] # m2o
-        if etag:
-            if not id and hashed_session == etag:
-                return werkzeug.wrappers.Response(status=304)
-            else:
-                date = Model.read([id], [last_update], req.context)[0].get(last_update)
-                if hashlib.md5(date).hexdigest() == etag:
-                    return werkzeug.wrappers.Response(status=304)
-
-        retag = hashed_session
         try:
+            if etag:
+                if not id and hashed_session == etag:
+                    return werkzeug.wrappers.Response(status=304)
+                else:
+                    date = Model.read([id], [last_update], req.context)[0].get(last_update)
+                    if hashlib.md5(date).hexdigest() == etag:
+                        return werkzeug.wrappers.Response(status=304)
+
             if not id:
                 res = Model.default_get([field], req.context).get(field)
                 image_base64 = res
