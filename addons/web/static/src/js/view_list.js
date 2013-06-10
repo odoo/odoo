@@ -527,13 +527,13 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                     return r.tag === 'field';
                 }), 'name')
         ).done(function (records) {
-            if (!records[0]) {
+            var values = records[0];
+            if (!values) {
                 self.records.remove(record);
                 return;
             }
-            var transfer_value = records[0];
-            _(_.keys(transfer_value)).each(function(key){
-                record.set(key, transfer_value[key], {silent: true});
+            _(_.keys(values)).each(function(key){
+                record.set(key, values[key], {silent: true});
             });
             record.trigger('change', record);
         });
