@@ -260,6 +260,9 @@ openerp_mail_followers = function(session, mail) {
             if (_.size(records) > 1) {
                 $list.show();
             }
+            if (this.check_access && this.session.debug) {
+                $('div.oe_follower_list').find('.oe_partner').css('margin-right', '28px');
+            }
         },
 
         do_follow: function () {
