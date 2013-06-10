@@ -73,18 +73,43 @@ class hr_timesheet_sheet(osv.osv):
                 raise osv.except_osv(_('Configuration Error!'), _('In order to create a timesheet for this employee, you must assign an analytic journal to the employee, like \'Timesheet Journal\'.'))
         return super(hr_timesheet_sheet, self).create(cr, uid, vals, *args, **argv)
 
-    def write(self, cr, uid, ids, vals, *args, **argv):
+    def write(self, cr, uid, ids, vals, context=None, *args, **argv):
+        delete_ids = []
+        if vals.get('attendances_ids'):
+            delete_ids = [act[1] for act in vals.get('attendances_ids') if act[0] == 2]
+
+            obj_hr_att = self.pool.get('hr.attendance')
+            for delete_att in obj_hr_att.browse(cr, uid, delete_ids, context=context):
+                prev_att_ids = obj_hr_att.search(cr, uid, [('sheet_id', 'in', ids),
+                                                ('name', '<', delete_att.name),
+                                                ('id', 'not in', delete_ids)],
+                                                limit=1, context=context)
+                next_att_ids = obj_hr_att.search(cr, uid, [('sheet_id', 'in', ids),
+                                                ('name', '>', delete_att.name),
+                                                ('id', 'not in', delete_ids)],
+                                                limit=1, order="name", context=context) #by default it's descending but we require ascending to get first record
+                prev_atts = obj_hr_att.browse(cr, uid, prev_att_ids, context=context)
+                next_atts = obj_hr_att.browse(cr, uid, next_att_ids, context=context)
+
+                if prev_atts and next_atts:
+                    if prev_atts[0].action == next_atts[0].action:
+                        raise osv.except_osv(_('Warning !'), _('You are trying' \
+                            'to delete inside attendance entry which is not ' \
+                            'allowed from here ! \n OR \n You are trying to ' \
+                            'delete same action entries ! \n Please try to ' \
+                            'delete this entry from Attendance list'))
+
         if 'employee_id' in vals:
-            new_user_id = self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).user_id.id or False
+            new_user_id = self.pool.get('hr.employee').browse(cr, uid, vals['employee_id'], context=context).user_id.id or False
             if not new_user_id:
                 raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must assign it to a user.'))
-            if not self._sheet_date(cr, uid, ids, forced_user_id=new_user_id):
+            if not self._sheet_date(cr, uid, ids, forced_user_id=new_user_id, context=context):
                 raise osv.except_osv(_('Error!'), _('You cannot have 2 timesheets that overlap!\nYou should use the menu \'My Timesheet\' to avoid this problem.'))
-            if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).product_id:
+            if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id'], context=context).product_id:
                 raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must link the employee to a product.'))
-            if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).journal_id:
+            if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id'], context=context).journal_id:
                 raise osv.except_osv(_('Configuration Error!'), _('In order to create a timesheet for this employee, you must assign an analytic journal to the employee, like \'Timesheet Journal\'.'))
-        return super(hr_timesheet_sheet, self).write(cr, uid, ids, vals, *args, **argv)
+        return super(hr_timesheet_sheet, self).write(cr, uid, ids, vals, context=context, *args, **argv)
 
     def button_confirm(self, cr, uid, ids, context=None):
         for sheet in self.browse(cr, uid, ids, context=context):
