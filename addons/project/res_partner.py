@@ -29,6 +29,13 @@ class res_partner(osv.osv):
         'task_ids': fields.one2many('project.task', 'partner_id', 'Tasks'),
     }
 
+    def copy(self, cr, uid, record_id, default=None, context=None):
+        if default is None:
+            default = {}
+
+        default.update({'task_ids': []})
+        return super(res_partner, self).copy(cr, uid, record_id, default, context)
+
 res_partner()
 
 
