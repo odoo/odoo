@@ -93,7 +93,7 @@ class Multicorn(object):
     def long_polling_spawn(self):
         nargs = [] + sys.argv
         cmd = nargs[0]
-        cmd = os.path.join(os.path.dirname(cmd), "long_polling")
+        cmd = os.path.join(os.path.dirname(cmd), "openerp-long-polling")
         nargs[0] = cmd
         popen = subprocess.Popen(nargs)
         self.long_polling_pid = popen.pid
