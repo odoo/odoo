@@ -157,7 +157,7 @@ class account_analytic_account(osv.osv):
         for account in self.browse(cr, uid, ids, context=context):
             if account.company_id:
                 if account.company_id.currency_id.id != value:
-                    raise osv.except_osv(_('Error!'), _("If you set a company, the currency selected has to be the same as it's currency. \nYou can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really usefull for consolidation purposes of several companies charts with different currencies, for example."))
+                    raise osv.except_osv(_('Error!'), _("If you set a company, the currency selected has to be the same as it's currency. \nYou can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really useful for consolidation purposes of several companies charts with different currencies, for example."))
         if value:
             return cr.execute("""update account_analytic_account set currency_id=%s where id=%s""", (value, account.id, ))
 
