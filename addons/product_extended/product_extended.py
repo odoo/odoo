@@ -56,7 +56,6 @@ class product_product(osv.osv):
                 if test:
                     testdict.update({prod_id : price})
         if test:
-            print testdict
             return testdict
         else:
             return True
@@ -93,7 +92,7 @@ class product_product(osv.osv):
                 ctx = context.copy()
                 ctx.update({'active_id': bom.product_id.id})
                 wiz_id = wizard_obj.create(cr, uid, {'new_price': price}, context=ctx)
-                wizard_obj.change_price(cr, uid, [wiz_id], context=context)
+                wizard_obj.change_price(cr, uid, [wiz_id], context=ctx)
         return price
 
 product_product()

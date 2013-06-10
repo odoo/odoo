@@ -23,7 +23,6 @@ from openerp import tools
 from openerp.osv import osv, fields
 
 
-#TODO: remove this FILE and put everything in existing core modules (purchase, stock, product...)
 class product_product (osv.osv):
     _name = "product.product"
     _inherit = "product.product"
@@ -84,15 +83,14 @@ class product_product (osv.osv):
         return super(product_product, self).write(cr, uid, ids, vals, context=context)
     
     def get_stock_matchings_fifolifo(self, cr, uid, ids, qty, fifo, product_uom_id=False, currency_id=False, context=None):
-        #TODO: document the parameters (what is fifo? what's its type and is it used for?)...
-        #TODO: check if possible to refactore and to split this big method into several smaller
+        # TODO: currency conversions could be omitted
         '''
         This method returns a list of tuples with quantities from stock in moves
-        These are the quantities that would go out theoretically according to the fifo or lifo method if qty needs to go out
-        (move_in_id, qty in uom of move out, price (converted to move out), qty in uom of move in
+        These are the quantities from the in moves that would go out theoretically according to the fifo or lifo method
+        (move_in_id, qty in uom of move out, price (converted to move out), qty in uom of move in)
         This should be called for only one product at a time
         UoMs and currencies from the corresponding moves are converted towards that given in the params
-        It is good to use force_company in the context
+        force_company should be used in the context
         '''
         assert len(ids) == 1, 'Only the fifolifo stock matchings of one product can be calculated at a time.'
         if context is None:
@@ -146,10 +144,8 @@ class stock_move(osv.osv):
     _inherit = 'stock.move'
     
     def _get_moves_from_matchings(self, cr, uid, ids, context=None):
-        #TOCHECK: self == match_obj ?
-        match_obj = self.pool.get("stock.move.matching")
         res = set()
-        for match in match_obj.browse(cr, uid, ids, context=context):
+        for match in self.browse(cr, uid, ids, context=context):
             res.add(match.move_out_id.id)
             res.add(match.move_in_id.id)
         return list(res)

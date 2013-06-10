@@ -273,11 +273,22 @@ class product_product(osv.osv):
 
     def get_product_available(self, cr, uid, ids, context=None):
         """ Finds the quantity available of product(s) depending on parameters in the context
-        for date, location, state (allows e.g. for calculating future stock), what,
-        production lot
+        for what, states, locations (company, warehouse, ), date, lot, 
+        states: state of the move
+        what: in (dest in locations) or out (source in locations) moves
+        LOCATIONS:
+        shop: warehouse of the shop
+        warehouse: stock location of the warehouse
+        location: name (ilike) or id  of the location
+        force_company: if not warehouse or shop given: will only take from this company
+        compute_child (True if not specified): will also include child locations of locations above 
+            (when force_company only from that company)
+        
+        from_date and to_date: dates from or to for the date of the stock move to include (=scheduled of effective date)
+        prodlot: lot of the move
+        
         @return: Dictionary of values for every product id
         """
-        #TODO complete the docstring with possible keys in context + their effect
         if context is None:
             context = {}
         

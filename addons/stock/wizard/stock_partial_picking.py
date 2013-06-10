@@ -213,8 +213,6 @@ class stock_partial_picking(osv.osv_memory):
                 'prodlot_id': wizard_line.prodlot_id.id,
             }
             if (picking_type == 'in') and (wizard_line.product_id.cost_method != 'standard'):
-                #TODO Maybe better ways to get company or main currency
-                #TODO Should not this currency be calculated at the date of the purchase order?  (not the case now?)
                 partial_data['move%s' % (wizard_line.move_id.id)].update(product_price=wizard_line.cost,)
         stock_picking.do_partial(cr, uid, [partial.picking_id.id], partial_data, context=context)
         return {'type': 'ir.actions.act_window_close'}
