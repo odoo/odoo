@@ -531,8 +531,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                 self.records.remove(record);
                 return;
             }
-            _(records[0]).each(function (value, key) {
-                record.set(key, value, {silent: true});
+            var transfer_value = records[0];
+            _(_.keys(transfer_value)).each(function(key){
+                record.set(key, transfer_value[key], {silent: true});
             });
             record.trigger('change', record);
         });
