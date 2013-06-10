@@ -7,30 +7,35 @@
             <field name="model">crm.lead.forward.to.partner</field>
             <field name="arch" type="xml">
                 <form string="Send Mail" version="7.0">
-                    <field name="composition_mode" colspan="2" nolabel="1" invisible="1"/>
-                    <field name="model" colspan="2" nolabel="1" invisible="1"/>
-                    <field name="res_id" colspan="2" nolabel="1" invisible="1"/>
-                    <separator string="Forward to Partner" colspan="4"/>
-                    <group col="4">
-                        <field name="history_mode" colspan="4"
-                            on_change="on_change_history_mode(history_mode, model, res_id)"/>
-                        <field name="subject" colspan="4"/>
-                        <field name="partner_ids" colspan="4" widget="many2many_tags_email"/>
-                        <notebook colspan="4">
-                            <page string="Body">
-                                <field name="body"/>
-                            </page>
-                            <page string="Attachments">
-                                <field name="attachment_ids"/>
-                            </page>
-                        </notebook>
+                    <group>
+                        <field name="forward_type" widget="radio" invisible="context.get('hide_forward_type',False)"/>
                     </group>
+                    <group>
+                        <group>
+                            <field name="partner_id" attrs="{'invisible': [('forward_type', 'in', ['assigned',False])]}"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                    <field name="assignation_lines" attrs="{'invisible': [('forward_type', 'in', ['single',False])]}">
+                        <tree create="false" editable="bottom">
+                            <field name="lead_id" invisible="1"/>
+                            <field name="subject" readonly="1"/>
+                            <field name="city" readonly="1"/>
+                            <field name="country_id" readonly="1"/>
+                            <field name="partner_assigned_id"/>
+                        </tree>
+                    </field>
+                    <field name="show_mail"/><label for="show_mail"/>
+                    <notebook colspan="4" attrs="{'invisible': [('show_mail', '=', False)]}">
+                        <page string="Body">
+                            <field name="body"  readonly="1"/>
+                        </page>
+                    </notebook>
                     <footer>
-                        <button name="action_forward" string="Send" type="object"
-                            class="oe_highlight"/>
+                        <button name="action_forward" string="Send" type="object" class="oe_highlight"/>
                         or
-                        <button string="Cancel" special="cancel"
-                            class="oe_link"/>
+                        <button string="Cancel" special="cancel" class="oe_link"/>
                     </footer>
                 </form>
             </field>
@@ -47,7 +52,7 @@
 
         <act_window id="action_crm_send_mass_forward"
             multi="True"
-            key2="client_action_multi" name="Mass forward to partner"
+            key2="client_action_multi" name="Forward to Partner"
             res_model="crm.lead.forward.to.partner" src_model="crm.lead"
             view_mode="form" target="new" view_type="form"
             context="{'default_composition_mode' : 'mass_mail'}"

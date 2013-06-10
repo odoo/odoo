@@ -47,6 +47,7 @@ You can also use the geolocalization without using the GPS coordinates.
         'crm_partner_assign_data.xml',
         'report/crm_lead_report_view.xml',
         'report/crm_partner_report_view.xml',
+        'data/lead_mail_template_data.xml'
     ],
     'test': ['test/partner_assign.yml'],
     'installable': True,
