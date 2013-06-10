@@ -23,13 +23,13 @@ from openerp.osv import fields,osv
 from openerp import tools
 from .. import crm
 
-AVAILABLE_STATES = [
-    ('draft','Draft'),
-    ('open','Open'),
-    ('cancel', 'Cancelled'),
-    ('done', 'Closed'),
-    ('pending','Pending')
-]
+# AVAILABLE_STATES = [
+#     ('draft','Draft'),
+#     ('open','Open'),
+#     ('cancel', 'Cancelled'),
+#     ('done', 'Closed'),
+#     ('pending','Pending')
+# ]
 
 MONTHS = [
     ('01', 'January'),
@@ -79,7 +79,7 @@ class crm_lead_report(osv.osv):
         'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
         'channel_id':fields.many2one('crm.case.channel', 'Channel', readonly=True),
         'type_id':fields.many2one('crm.case.resource.type', 'Campaign', readonly=True),
-        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
+        # 'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg"),
         'planned_revenue': fields.float('Planned Revenue',digits=(16,2),readonly=True),
@@ -121,7 +121,6 @@ class crm_lead_report(osv.osv):
                     to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
                     to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
 
-                    c.state,
                     c.user_id,
                     c.probability,
                     c.stage_id,

@@ -23,13 +23,13 @@ from openerp.osv import fields,osv
 from openerp import tools
 from .. import crm
 
-AVAILABLE_STATES = [
-    ('draft','Draft'),
-    ('open','Todo'),
-    ('cancel', 'Cancelled'),
-    ('done', 'Held'),
-    ('pending','Pending')
-]
+# AVAILABLE_STATES = [
+#     ('draft','Draft'),
+#     ('open','Todo'),
+#     ('cancel', 'Cancelled'),
+#     ('done', 'Held'),
+#     ('pending','Pending')
+# ]
 
 
 class crm_phonecall_report(osv.osv):
@@ -45,7 +45,7 @@ class crm_phonecall_report(osv.osv):
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'nbr': fields.integer('# of Cases', readonly=True),
-        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
+        # 'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
                                   ('03', 'March'), ('04', 'April'),\
                                   ('05', 'May'), ('06', 'June'), \
@@ -83,7 +83,6 @@ class crm_phonecall_report(osv.osv):
                     to_char(c.create_date, 'YYYY-MM-DD') as creation_date,
                     to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
                     to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
-                    c.state,
                     c.user_id,
                     c.section_id,
                     c.categ_id,

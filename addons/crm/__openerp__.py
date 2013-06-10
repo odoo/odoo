@@ -98,12 +98,14 @@ Dashboard for CRM will include:
         'base_partner_merge_view.xml',
 
         'crm_case_section_view.xml',
-    ],
-    'demo': [
+
         'crm_demo.xml',
         'crm_lead_demo.xml',
         'crm_phonecall_demo.xml',
         'crm_action_rule_demo.xml',
+    ],
+    'demo': [
+        
     ],
     'test': [
         'test/crm_lead_message.yml',

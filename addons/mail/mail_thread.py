@@ -308,8 +308,8 @@ class mail_thread(osv.AbstractModel):
         # Track initial values of tracked fields
         tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=context)
         if tracked_fields:
-            initial = self.read(cr, uid, ids, tracked_fields.keys(), context=context)
-            initial_values = dict((item['id'], item) for item in initial)
+            records = self.browse(cr, uid, ids, context=context)
+            initial_values = dict((this.id, dict((key, getattr(this, key)) for key in tracked_fields.keys())) for this in records)
 
         # Perform write, update followers
         result = super(mail_thread, self).write(cr, uid, ids, values, context=context)
@@ -368,7 +368,8 @@ class mail_thread(osv.AbstractModel):
             if not value:
                 return ''
             if col_info['type'] == 'many2one':
-                return value[1]
+                # return value[1]
+                return value.name_get()[0][1]
             if col_info['type'] == 'selection':
                 return dict(col_info['selection'])[value]
             return value
@@ -387,7 +388,9 @@ class mail_thread(osv.AbstractModel):
         if not tracked_fields:
             return True
 
-        for record in self.read(cr, uid, ids, tracked_fields.keys(), context=context):
+        for browse_record in self.browse(cr, uid, ids, context=context):
+            record = dict((key, getattr(browse_record, key)) for key in tracked_fields.keys())
+            record['id'] = browse_record.id
             initial = initial_values[record['id']]
             changes = []
             tracked_values = {}
@@ -413,7 +416,7 @@ class mail_thread(osv.AbstractModel):
                 if field not in changes:
                     continue
                 for subtype, method in track_info.items():
-                    if method(self, cr, uid, record, context):
+                    if method(self, cr, uid, browse_record, context):
                         subtypes.append(subtype)
 
             posted = False

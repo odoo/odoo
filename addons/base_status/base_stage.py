@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+
 class base_stage(object):
     """ Base utility mixin class for objects willing to manage their stages.
         Object that inherit from this class should inherit from mailgate.thread
@@ -55,7 +56,7 @@ class base_stage(object):
         if context.get('portal'):
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             return user.email
-        return False        
+        return False
 
     def _get_default_user(self, cr, uid, context=None):
         """ Gives current user id
@@ -67,17 +68,20 @@ class base_stage(object):
             return False
         return uid
 
-    def onchange_partner_address_id(self, cr, uid, ids, add, email=False, context=None):
+    def onchange_partner_address_id(self, cr, uid, ids, address_id, context=None):
         """ This function returns value of partner email based on Partner Address
-            :param add: Id of Partner's address
-            :param email: Partner's email ID
+            :param address_id: partner_id related to the correct address
         """
-        data = {'value': {'email_from': False, 'phone':False}}
-        if add:
-            address = self.pool.get('res.partner').browse(cr, uid, add)
+        if context is None:
+            context = {}
+        data = {'value': {'email_from': False, 'phone': False}}
+        if address_id:
+            address = self.pool.get('res.partner').browse(cr, uid, address_id, context=context)
             data['value'] = {'partner_name': address and address.name or False,
                              'email_from': address and address.email or False,
                              'phone':  address and address.phone or False,
+                             'mobile': address and address.mobile or False,
+                             'fax': address and address.fax or False,
                              'street': address and address.street or False,
                              'street2': address and address.street2 or False,
                              'city': address and address.city or False,
@@ -85,21 +89,18 @@ class base_stage(object):
                              'zip': address and address.zip or False,
                              'country_id': address.country_id and address.country_id.id or False,
                              }
-        fields = self.fields_get(cr, uid, context=context or {})
+        model_fields = self.fields_get(cr, uid, context=context)
         for key in data['value'].keys():
-            if key not in fields:
+            if key not in model_fields:
                 del data['value'][key]
         return data
 
-    def onchange_partner_id(self, cr, uid, ids, part, email=False):
-        """ This function returns value of partner address based on partner
-            :param part: Partner's id
-            :param email: Partner's email ID
-        """
-        data={}
-        if  part:
-            addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
-            data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
+    def onchange_partner_id(self, cr, uid, ids, partner_id, email=False, context=None):
+        """ This function returns value of partner address based on partner """
+        data = {}
+        if partner_id:
+            address = self.pool.get('res.partner').address_get(cr, uid, [partner_id], ['contact'], context=context)
+            data.update(self.onchange_partner_address_id(cr, uid, ids, address['contact'], context=context)['value'])
         return {'value': data}
 
     def _get_default_section_id(self, cr, uid, context=None):
@@ -108,7 +109,8 @@ class base_stage(object):
 
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
-        return self.stage_find(cr, uid, [], None, [('state', '=', 'draft')], context=context)
+        section_id = self._get_default_section_id(cr, uid, context=context)
+        return self.stage_find(cr, uid, [], section_id, [('sequence', '=', '1')], context=context)
 
     def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
         """ Find stage, with a given (optional) domain on the search,
@@ -128,18 +130,6 @@ class base_stage(object):
             :param order: order of the search
         """
         return False
-
-    def stage_set_with_state_name(self, cr, uid, cases, state_name, context=None):
-        """ Set a new stage, with a state_name instead of a stage_id
-            :param cases: browse_record of cases
-        """
-        if isinstance(cases, (int, long)):
-            cases = self.browse(cr, uid, cases, context=context)
-        for case in cases:
-            stage_id = self.stage_find(cr, uid, [case], None, [('state', '=', state_name)], context=context)
-            if stage_id:
-                self.stage_set(cr, uid, [case.id], stage_id, context=context)
-        return True
 
     def stage_set(self, cr, uid, ids, stage_id, context=None):
         """ Set the new stage. This methods is the right method to call
@@ -165,8 +155,7 @@ class base_stage(object):
             seq = 0
             if case.stage_id:
                 seq = case.stage_id.sequence or 0
-            section_id = None
-            next_stage_id = self.stage_find(cr, uid, [case], None, [('sequence', op, seq)],order, context=context)
+            next_stage_id = self.stage_find(cr, uid, [case], None, [('sequence', op, seq)], order, context=context)
             if next_stage_id:
                 return self.stage_set(cr, uid, [case.id], next_stage_id, context=context)
         return False
@@ -175,7 +164,7 @@ class base_stage(object):
         """ This function computes next stage for case from its current stage
             using available stage for that case type
         """
-        return self.stage_change(cr, uid, ids, '>','sequence', context)
+        return self.stage_change(cr, uid, ids, '>', 'sequence', context)
 
     def stage_previous(self, cr, uid, ids, context=None):
         """ This function computes previous stage for case from its current
@@ -192,9 +181,9 @@ class base_stage(object):
 
         if hasattr(self, '_columns'):
             if self._columns.get('date_closed'):
-                default.update({ 'date_closed': False, })
+                default.update({'date_closed': False})
             if self._columns.get('date_open'):
-                default.update({ 'date_open': False })
+                default.update({'date_open': False})
         return super(base_stage, self).copy(cr, uid, id, default, context=context)
 
     def case_escalate(self, cr, uid, ids, context=None):
@@ -211,54 +200,42 @@ class base_stage(object):
             self.write(cr, uid, [case.id], data, context=context)
         return True
 
-    def case_open(self, cr, uid, ids, context=None):
-        """ Opens case """
-        cases = self.browse(cr, uid, ids, context=context)
-        for case in cases:
-            data = {'active': True}
-            if not case.user_id:
-                data['user_id'] = uid
-            self.case_set(cr, uid, [case.id], 'open', data, context=context)
-        return True
+    # def case_open(self, cr, uid, ids, context=None):
+    #     """ Opens case """
+    #     cases = self.browse(cr, uid, ids, context=context)
+    #     for case in cases:
+    #         data = {'active': True}
+    #         if not case.user_id:
+    #             data['user_id'] = uid
+    #         self.case_set(cr, uid, [case.id], data, context=context)
+    #     return True
 
-    def case_close(self, cr, uid, ids, context=None):
-        """ Closes case """
-        return self.case_set(cr, uid, ids, 'done', {'active': True, 'date_closed': fields.datetime.now()}, context=context)
+    # def case_close(self, cr, uid, ids, context=None):
+    #     """ Closes case """
+    #     return self.case_set(cr, uid, ids, None, {'active': True, 'date_closed': fields.datetime.now()}, context=context)
 
-    def case_cancel(self, cr, uid, ids, context=None):
-        """ Cancels case """
-        return self.case_set(cr, uid, ids, 'cancel', {'active': True}, context=context)
+    # def case_cancel(self, cr, uid, ids, context=None):
+    #     """ Cancels case """
+    #     return self.case_set(cr, uid, ids, None, {'active': True}, context=context)
 
-    def case_pending(self, cr, uid, ids, context=None):
-        """ Set case as pending """
-        return self.case_set(cr, uid, ids, 'pending', {'active': True}, context=context)
+    # def case_pending(self, cr, uid, ids, context=None):
+    #     """ Set case as pending """
+    #     return self.case_set(cr, uid, ids, None, {'active': True}, context=context)
 
-    def case_reset(self, cr, uid, ids, context=None):
-        """ Resets case as draft """
-        return self.case_set(cr, uid, ids, 'draft', {'active': True}, context=context)
+    # def case_reset(self, cr, uid, ids, context=None):
+    #     """ Resets case as draft """
+    #     return self.case_set(cr, uid, ids, None, {'active': True}, context=context)
 
-    def case_set(self, cr, uid, ids, new_state_name=None, values_to_update=None, new_stage_id=None, context=None):
+    def case_set(self, cr, uid, ids, new_stage_id, values_to_update=None, context=None):
         """ Generic method for setting case. This methods wraps the update
             of the record.
 
-            :params new_state_name: the new state of the record; this method
-                                    will call ``stage_set_with_state_name``
-                                    that will find the stage matching the
-                                    new state, using the ``stage_find`` method.
             :params new_stage_id: alternatively, you may directly give the
                                   new stage of the record
-            :params state_name: the new value of the state, such as
-                     'draft' or 'close'.
             :params update_values: values that will be added with the state
                      update when writing values to the record.
         """
-        cases = self.browse(cr, uid, ids, context=context)
-        # 1. update the stage
-        if new_state_name:
-            self.stage_set_with_state_name(cr, uid, cases, new_state_name, context=context)
-        elif not (new_stage_id is None):
-            self.stage_set(cr, uid, ids, new_stage_id, context=context)
-        # 2. update values
+        self.stage_set(cr, uid, ids, new_stage_id, context=context)
         if values_to_update:
             self.write(cr, uid, ids, values_to_update, context=context)
         return True
