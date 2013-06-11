@@ -20,6 +20,7 @@ class AuthenticationError(Exception):
 class SessionExpiredException(Exception):
     pass
 
+# deprecated
 class Service(object):
     def __init__(self, session, service_name):
         self.session = session
@@ -31,6 +32,7 @@ class Service(object):
             return result
         return proxy_method
 
+# deprecated
 class Model(object):
     def __init__(self, session, model):
         self.session = session
@@ -84,12 +86,6 @@ class OpenERPSession(object):
         self.context = {}
         self.jsonp_requests = {}     # FIXME use a LRU
 
-    def send(self, service_name, method, *args):
-        return openerp.netsvc.dispatch_rpc(service_name, method, args)
-
-    def proxy(self, service):
-        return Service(self, service)
-
     def bind(self, db, uid, login, password):
         self._db = db
         self._uid = uid
@@ -103,6 +99,21 @@ class OpenERPSession(object):
         if uid: self.get_context()
         return uid
 
+    def check_security(self):
+        import openerp.service.security as security
+        if not self._db or not self._uid:
+            raise SessionExpiredException("Session expired")
+        security.check(self._db, self._uid, self._password)
+
+    #deprecated
+    def send(self, service_name, method, *args):
+        return openerp.netsvc.dispatch_rpc(service_name, method, args)
+
+    #deprecated
+    def proxy(self, service):
+        return Service(self, service)
+
+    #deprecated
     def assert_valid(self, force=False):
         """
         Ensures this session is valid (logged into the openerp server)
@@ -114,6 +125,7 @@ class OpenERPSession(object):
         if not self._uid:
             raise AuthenticationError("Authentication failure")
 
+    #deprecated
     def ensure_valid(self):
         if self._uid:
             try:
@@ -121,16 +133,19 @@ class OpenERPSession(object):
             except Exception:
                 self._uid = None
 
+    #deprecated
     def execute(self, model, func, *l, **d):
         model = self.model(model)
         r = getattr(model, func)(*l, **d)
         return r
 
+    #deprecated
     def exec_workflow(self, model, id, signal):
         self.assert_valid()
         r = self.proxy('object').exec_workflow(self._db, self._uid, self._password, model, signal, id)
         return r
 
+    #deprecated
     def model(self, model):
         """ Get an RPC proxy for the object ``model``, bound to this session.
 

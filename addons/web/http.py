@@ -83,10 +83,13 @@ class WebRequest(object):
 
         ``bool``, indicates whether the debug mode is active on the client
     """
-    def __init__(self, request):
-        self.httprequest = request
+    def __init__(self, httprequest, method):
+        self.httprequest = httprequest
         self.httpresponse = None
-        self.httpsession = request.session
+        self.httpsession = httprequest.session
+        self.db = None
+        self.uid = None
+        self.method = method
 
     def init(self, params):
         self.params = dict(params)
@@ -97,6 +100,9 @@ class WebRequest(object):
             self.session = session.OpenERPSession()
             self.httpsession[self.session_id] = self.session
 
+        self.authenticate()
+
+        # TODO: remove this shit
         # set db/uid trackers - they're cleaned up at the WSGI
         # dispatching phase in openerp.service.wsgi_server.application
         if self.session._db:
@@ -121,12 +127,38 @@ class WebRequest(object):
         # we use _ as seprator where RFC2616 uses '-'
         self.lang = lang.replace('-', '_')
 
+    def authenticate(self):
+        if self.method.auth == "nodb":
+            self.db = None
+            self.uid = None
+        elif self.method.auth == "noauth":
+            self.db = (self.session._db or openerp.addons.web.controllers.main.db_monodb(self)).lower()
+            self.uid = None
+        else:
+            self.session.check_security()
+            self.db = self.session._db
+            self.uid = self.session_uid
+
+    def registry(self):
+        return openerp.modules.registry.RegistryManager.get(self.db)
+
+    @contextlib.contextmanager
+    def cr(self):
+        with registry.cursor() as cr:
+            yield cr
+
     @contextlib.contextmanager
     def registry_cr(self):
-        dbname = self.session._db or openerp.addons.web.controllers.main.db_monodb(self)
-        registry = openerp.modules.registry.RegistryManager.get(dbname.lower())
-        with registry.cursor() as cr:
-            yield (registry, cr)
+        with self.cr() as cr:
+            yield (self.registry(), cr)
+
+def noauth(f):
+    f.auth = "noauth"
+    return f
+
+def nodb(f):
+    f.auth = "nodb"
+    return f
 
 def reject_nonliteral(dct):
     if '__ref' in dct:
@@ -167,13 +199,14 @@ class JsonRequest(WebRequest):
            "id": null}
 
     """
-    def dispatch(self, method):
+    def dispatch(self):
         """ Calls the method asked for by the JSON-RPC2 or JSONP request
 
         :param method: the method which received the request
 
         :returns: an utf8 encoded JSON-RPC2 or JSONP reply
         """
+        method = self.method
         args = self.httprequest.args
         jsonp = args.get('jsonp')
         requestf = None
@@ -291,7 +324,8 @@ def jsonrequest(f):
 class HttpRequest(WebRequest):
     """ Regular GET/POST request
     """
-    def dispatch(self, method):
+    def dispatch(self):
+        method = self.method
         params = dict(self.httprequest.args)
         params.update(self.httprequest.form)
         params.update(self.httprequest.files)
@@ -658,20 +692,22 @@ class Root(object):
                     method = getattr(c, method_name, None)
                     if method:
                         exposed = getattr(method, 'exposed', False)
+                        auth = getattr(method, 'auth', None)
                         method = c.get_wrapped_method(method_name)
+                        method.auth = auth
                         if exposed == 'json':
                             _logger.debug("Dispatch json to %s %s %s", ps, c, method_name)
                             def fct(_request):
-                                _req = JsonRequest(_request)
+                                _req = JsonRequest(_request, method)
                                 with set_request(_req):
-                                    return request.dispatch(method)
+                                    return request.dispatch()
                             return fct
                         elif exposed == 'http':
                             _logger.debug("Dispatch http to %s %s %s", ps, c, method_name)
                             def fct(_request):
-                                _req = HttpRequest(_request)
+                                _req = HttpRequest(_request, method)
                                 with set_request(_req):
-                                    return request.dispatch(method)
+                                    return request.dispatch()
                             return fct
                     if method_name != "index":
                         method_name = "index"
