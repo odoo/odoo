@@ -70,7 +70,7 @@ class sale_order(osv.osv):
         company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         warehouse_ids = self.pool.get('stock.warehouse').search(cr, uid, [('company_id','=',company_id)], context=context)
         if not warehouse_ids:
-            raise osv.except_osv(_('Error!'), _('There is no warehouse defined for the current company!'))
+            raise osv.except_osv(_('Error!'), _('There is no warehouse defined for current company.'))
         return warehouse_ids[0]
 
     # This is False
