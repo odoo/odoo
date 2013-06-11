@@ -84,9 +84,9 @@ def rjsmin(script):
     ).strip()
     return result
 
-def db_list(req):
+def db_list(req, force=False):
     proxy = req.session.proxy("db")
-    dbs = proxy.list()
+    dbs = proxy.list(force)
     h = req.httprequest.environ['HTTP_HOST'].split(':')[0]
     d = h.split('.')[0]
     r = openerp.tools.config['dbfilter'].replace('%h', h).replace('%d', d)
@@ -103,7 +103,7 @@ def db_monodb_redirect(req):
         return (db_url, False)
 
     try:
-        dbs = db_list(req)
+        dbs = db_list(req, True)
     except xmlrpclib.Fault:
         # ignore access denied
         dbs = []
@@ -757,6 +757,10 @@ class Database(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def get_list(self, req):
+        # TODO change js to avoid calling this method if in monodb mode
+        monodb = db_monodb(req)
+        if monodb:
+            return [monodb]
         return db_list(req)
 
     @openerpweb.jsonrequest
