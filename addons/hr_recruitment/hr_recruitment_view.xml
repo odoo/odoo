@@ -294,12 +294,12 @@
                                 </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:5px;">
                                     <t t-raw="record.message_summary.raw_value"/>
-										 <a t-if="record.attachments.raw_value == 1" name="attachment_tree_view" type="object" style="margin-right: 10px"> <field name="attachments"/> Document</a> 
-																		
-										 <a t-if="record.attachments.raw_value gt 1" name="attachment_tree_view" type="object" style="margin-right: 10px"> <field name="attachments"/> Documents</a> 
-                                     
+                                    <a t-if="record.attachments.raw_value == 1" name="attachment_tree_view" type="object" style="margin-right: 10px"> <field name="attachments"/> Document</a> 
+							
+                                    <a t-if="record.attachments.raw_value gt 1" name="attachment_tree_view" type="object" style="margin-right: 10px"> <field name="attachments"/> Documents</a> 
+
                                 </div>
-                                
+                            
                             </div>
                             <div class="oe_clear"></div>
                         </div>
