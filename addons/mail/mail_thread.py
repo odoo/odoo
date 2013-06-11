@@ -436,7 +436,7 @@ class mail_thread(osv.AbstractModel):
         ret_dict = {}
         for model_name in self.pool.obj_list():
             model = self.pool.get(model_name)
-            if 'mail.thread' in getattr(model, '_inherit', []):
+            if hasattr(model, "message_process") and hasattr(model, "message_post"):
                 ret_dict[model_name] = model._description
         return ret_dict
 
