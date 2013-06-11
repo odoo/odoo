@@ -52,6 +52,6 @@ class applicant_document(osv.osv):
 
     _columns = {
         'index_content': fields.function(_get_index_content, string='Index Content', \
-                                 fnct_search=_content_search,type="text"),
+                                 fnct_search=_content_search, type="text"),
     }
 

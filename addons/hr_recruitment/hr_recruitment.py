@@ -201,8 +201,6 @@ class hr_applicant(base_stage, osv.Model):
             'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
         }
 
-
-
     def _compute_attachments(self, cr, uid, ids, fields, args, context=None):
         res = {}
         attachment_pool = self.pool.get('ir.attachment')
