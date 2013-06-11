@@ -29,5 +29,6 @@ class hr_applicant_settings(osv.osv_memory):
         'module_document_ftp': fields.boolean('Allow the automatic indexation of resumes',
             help="""Manage your CV's and motivation letter related to all applicants.
                 This installs the module document_ftp. This will install the knowledge management  module in order to allow you to search using specific keywords through  the content of all documents (PDF, .DOCx...)"""),
+ 
     }
 

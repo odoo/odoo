@@ -58,7 +58,6 @@
                 <field name="availability" invisible="1"/>
                 <field name="department_id" invisible="context.get('invisible_department', True)"/>
                 <field name="user_id"/>
-                <field name="index_content" invisible="1"/>
                 <field name="state" invisible="1"/>
             </tree>
         </field>
@@ -188,7 +187,7 @@
                 <separator/>
                 <filter string="Next Actions" context="{'invisible_next_action':False, 'invisible_next_date':False}"
                     domain="[('date_action','&lt;&gt;',False)]" help="Filter and view on next actions and date"/>
-                <field name="index_content" string="Resume Content"/>
+               
                 <field name="job_id"/>
                 <field name="user_id"/>
                 <separator/>

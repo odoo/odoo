@@ -213,17 +213,6 @@ class hr_applicant(base_stage, osv.Model):
                 res[issue.id] = len(attach)
         return res
 
-    def _get_index_content(self, cr, uid, ids, fields, args, context=None):
-        res = {}
-        attachment_pool = self.pool.get('ir.attachment')
-        for issue in self.browse(cr, uid, ids, context=context):
-            res[issue.id] = 0
-            attach_id = attachment_pool.search(cr, uid, [('res_model','=','hr.applicant'),('res_id','=',issue.id)])
-            if attach_id:
-                for attach in attachment_pool.browse(cr, uid, attach_id, context):
-                    res[issue.id] = attach.index_content
-        return res
-
     _columns = {
         'name': fields.char('Subject', size=128, required=True),
         'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the case without removing it."),
@@ -276,8 +265,6 @@ class hr_applicant(base_stage, osv.Model):
         'emp_id': fields.many2one('hr.employee', 'employee'),
         'attachments': fields.function(_compute_attachments, string='Attachments', \
                                  type="integer"),
-        'index_content': fields.function(_get_index_content, string='Index Content', \
-                                 type="char",store=True),
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
     }
 
