@@ -32,6 +32,7 @@ except ImportError:
 import openerp
 import openerp.modules.registry
 from openerp.tools.translate import _
+from openerp.tools import config
 
 from .. import http
 openerpweb = http
@@ -102,25 +103,21 @@ def db_monodb_redirect(req):
     if db_url:
         return (db_url, False)
 
-    try:
-        dbs = db_list(req, True)
-    except xmlrpclib.Fault:
-        # ignore access denied
-        dbs = []
+    dbs = db_list(req, True)
 
     # 2 use the database from the cookie if it's listable and still listed
     cookie_db = req.httprequest.cookies.get('last_used_database')
     if cookie_db in dbs:
         db = cookie_db
 
-    # 3 use the first db
-    if dbs and not db:
+    # 3 use the first db if user can list databases
+    if dbs and not db and (config['list_db'] or len(dbs) == 1):
         db = dbs[0]
 
     # redirect to the chosen db if multiple are available
     if db and len(dbs) > 1:
         query = dict(urlparse.parse_qsl(req.httprequest.query_string, keep_blank_values=True))
-        query.update({ 'db': db })
+        query.update({'db': db})
         redirect = req.httprequest.path + '?' + urllib.urlencode(query)
     return (db, redirect)
 
@@ -758,10 +755,13 @@ class Database(openerpweb.Controller):
     @openerpweb.jsonrequest
     def get_list(self, req):
         # TODO change js to avoid calling this method if in monodb mode
-        monodb = db_monodb(req)
-        if monodb:
-            return [monodb]
-        return db_list(req)
+        try:
+            return db_list(req)
+        except xmlrpclib.Fault:
+            monodb = db_monodb(req)
+            if monodb:
+                return [monodb]
+            raise
 
     @openerpweb.jsonrequest
     def create(self, req, fields):
