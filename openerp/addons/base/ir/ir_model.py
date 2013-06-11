@@ -82,7 +82,7 @@ class ir_model(osv.osv):
             return []
         __, operator, value = domain[0]
         if operator not in ['=', '!=']:
-            raise osv.except_osv(_('Invalid search criterions'), _('The osv_memory field can only be compared with = and != operator.'))
+            raise osv.except_osv(_("Invalid Search Criteria"), _('The osv_memory field can only be compared with = and != operator.'))
         value = bool(value) if operator == '=' else not bool(value)
         all_model_ids = self.search(cr, uid, [], context=context)
         is_osv_mem = self._is_osv_memory(cr, uid, all_model_ids, 'osv_memory', arg=None, context=context)

@@ -576,7 +576,14 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.category</field>
             <field name="view_type">form</field>
-            <field name="help">Manage the partner categories in order to better classify them for tracking and analysis purposes. A partner may belong to several categories and categories have a hierarchy structure: a partner belonging to a category also belong to his parent category.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new partner category.
+              </p><p>
+                Manage the partner categories in order to better classify them for tracking and analysis purposes.
+                A partner may belong to several categories and categories have a hierarchy structure: a partner belonging to a category also belong to his parent category.
+              </p>
+            </field>
         </record>
 
         <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Partner Tags" sequence="4" parent="menu_config_address_book" groups="base.group_no_one"/>

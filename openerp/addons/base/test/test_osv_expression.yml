@@ -291,22 +291,22 @@
         assert res_101 == [], 'res_101: expected %r, got %r' % ([], res_101)
         assert res_102 == company_ids, 'res_102: expected %r, got %r' % (company_ids, res_102)
 -
-    Property of the query (one2many != False).
+    Verify domain evaluation for `one2many != False`
 -
-    !python {model: res.currency }: |
-        ids = self.search(cr, uid, [])
-        referenced_companies = set([x.company_id.id for x in self.browse(cr, uid, ids)])
-        companies = set(self.pool.get('res.company').search(cr, uid, [('currency_ids', '!=', False)]))
-        assert referenced_companies == companies
+    !python {model: res.partner.category }: |
+        all_ids = self.search(cr, uid, [])
+        parent_categs = set([c.parent_id.id for c in self.browse(cr, uid, all_ids) if c.parent_id])
+        result = set(self.search(cr, uid, [('child_ids', '!=', False)]))
+        assert result and result == parent_categs, "Got %r, expected %r" % (result, parent_categs) 
 -
-    Property of the query (one2many = False).
+    Verify domain evaluation for `one2many == False`
 -
-    !python {model: res.currency }: |
-        ids = self.search(cr, uid, [])
-        referenced_companies = set([x.company_id.id for x in self.browse(cr, uid, ids)])
-        unreferenced_companies = set(self.pool.get('res.company').search(cr, uid, [])).difference(referenced_companies)
-        companies = set(self.pool.get('res.company').search(cr, uid, [('currency_ids', '=', False)]))
-        assert unreferenced_companies == companies
+    !python {model: res.partner.category }: |
+        all_ids = self.search(cr, uid, [])
+        parent_categs = set([c.parent_id.id for c in self.browse(cr, uid, all_ids) if c.parent_id])
+        leaf_categs = set(all_ids) - parent_categs
+        result = set(self.search(cr, uid, [('child_ids', '=', False)]))
+        assert result and result == leaf_categs, "Got %r, expected %r" % (result, leaf_categs)
 -
     Equivalent queries.
 -
@@ -375,6 +375,11 @@
         currency_ids3 = self.pool.get('res.currency').search(cr, uid, [('id', 'not in', [])])
         assert currency_ids1 == currency_ids2 == currency_ids3, 'All 3 results should have be the same: all currencies'
         default_company = self.browse(cr, uid, 1)
+
+        # Due to currency data definition change (in relation with bug 1111298), this test now needs
+        # a manual setup where all currencies are assigned to the default company.
+        self.pool['res.currency'].write(cr, uid, currency_ids1, {'company_id': default_company.id})
+
         # one2many towards same model
         res_1 = self.search(cr, uid, [('child_ids', 'in', [x.id for x in company.child_ids])]) # any company having a child of company3 as child
         res_2 = self.search(cr, uid, [('child_ids', 'in', [company.child_ids[0].id])]) # any company having the first child of company3 as child

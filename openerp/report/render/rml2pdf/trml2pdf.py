@@ -160,9 +160,11 @@ class _rml_styles(object,):
             for style in node.findall('paraStyle'):
                 sname = style.get('name')
                 self.styles[sname] = self._para_style_update(style)
-
-                self.styles_obj[sname] = reportlab.lib.styles.ParagraphStyle(sname, self.default_style["Normal"], **self.styles[sname])
-
+                if self.default_style.has_key(sname):
+                    for key, value in self.styles[sname].items():                    
+                        setattr(self.default_style[sname], key, value)
+                else:
+                    self.styles_obj[sname] = reportlab.lib.styles.ParagraphStyle(sname, self.default_style["Normal"], **self.styles[sname])
             for variable in node.findall('initialize'):
                 for name in variable.findall('name'):
                     self.names[ name.get('id')] = name.get('value')
@@ -269,15 +271,29 @@ class _rml_doc(object):
         from reportlab.pdfbase.ttfonts import TTFont
 
         for node in els:
+
             for font in node.findall('registerFont'):
                 name = font.get('fontName').encode('ascii')
                 fname = font.get('fontFile').encode('ascii')
                 if name not in pdfmetrics._fonts:
                     pdfmetrics.registerFont(TTFont(name, fname))
+                #by default, we map the fontName to each style (bold, italic, bold and italic), so that 
+                #if there isn't any font defined for one of these style (via a font family), the system
+                #will fallback on the normal font.
                 addMapping(name, 0, 0, name)    #normal
                 addMapping(name, 0, 1, name)    #italic
                 addMapping(name, 1, 0, name)    #bold
                 addMapping(name, 1, 1, name)    #italic and bold
+
+            #if registerFontFamily is defined, we register the mapping of the fontName to use for each style.
+            for font_family in node.findall('registerFontFamily'):
+                family_name = font_family.get('normal').encode('ascii')
+                if font_family.get('italic'):
+                    addMapping(family_name, 0, 1, font_family.get('italic').encode('ascii'))
+                if font_family.get('bold'):
+                    addMapping(family_name, 1, 0, font_family.get('bold').encode('ascii'))
+                if font_family.get('boldItalic'):
+                    addMapping(family_name, 1, 1, font_family.get('boldItalic').encode('ascii'))
 
     def setTTFontMapping(self,face, fontname, filename, mode='all'):
         from reportlab.lib.fonts import addMapping

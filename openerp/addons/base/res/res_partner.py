@@ -74,7 +74,8 @@ class format_address(object):
 
 
 def _tz_get(self,cr,uid, context=None):
-    return [(x, x) for x in pytz.all_timezones]
+    # put POSIX 'Etc/*' entries at the end to avoid confusing users - see bug 1086728
+    return [(tz,tz) for tz in sorted(pytz.all_timezones, key=lambda tz: tz if not tz.startswith('Etc/') else '_')]
 
 class res_partner_category(osv.osv):
 
@@ -573,7 +574,7 @@ class res_partner(osv.osv, format_address):
             context = {}
         name, email = self._parse_partner_name(name, context=context)
         if context.get('force_email') and not email:
-            raise osv.except_osv(_('Warning'), _("Couldn't create contact without email address !"))
+            raise osv.except_osv(_('Warning'), _("Couldn't create contact without email address!"))
         if not name and email:
             name = email
         rec_id = self.create(cr, uid, {self._rec_name: name or email, 'email': email or False}, context=context)

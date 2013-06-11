@@ -31,6 +31,7 @@ import re
 import smtplib
 import threading
 
+from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 from openerp.tools import html2text
@@ -211,14 +212,14 @@ class ir_mail_server(osv.osv):
                                     password=smtp_server.smtp_pass, encryption=smtp_server.smtp_encryption,
                                     smtp_debug=smtp_server.smtp_debug)
             except Exception, e:
-                raise osv.except_osv(_("Connection test failed!"), _("Here is what we got instead:\n %s") % tools.ustr(e))
+                raise osv.except_osv(_("Connection Test Failed!"), _("Here is what we got instead:\n %s") % tools.ustr(e))
             finally:
                 try:
                     if smtp: smtp.quit()
                 except Exception:
                     # ignored, just a consequence of the previous exception
                     pass
-        raise osv.except_osv(_("Connection test succeeded!"), _("Everything seems properly set up!"))
+        raise osv.except_osv(_("Connection Test Succeeded!"), _("Everything seems properly set up!"))
 
     def connect(self, host, port, user=None, password=None, encryption=False, smtp_debug=False):
         """Returns a new SMTP connection to the give SMTP server, authenticated
@@ -417,11 +418,11 @@ class ir_mail_server(osv.osv):
         # Get SMTP Server Details from Mail Server
         mail_server = None
         if mail_server_id:
-            mail_server = self.browse(cr, uid, mail_server_id)
+            mail_server = self.browse(cr, SUPERUSER_ID, mail_server_id)
         elif not smtp_server:
-            mail_server_ids = self.search(cr, uid, [], order='sequence', limit=1)
+            mail_server_ids = self.search(cr, SUPERUSER_ID, [], order='sequence', limit=1)
             if mail_server_ids:
-                mail_server = self.browse(cr, uid, mail_server_ids[0])
+                mail_server = self.browse(cr, SUPERUSER_ID, mail_server_ids[0])
 
         if mail_server:
             smtp_server = mail_server.smtp_host
