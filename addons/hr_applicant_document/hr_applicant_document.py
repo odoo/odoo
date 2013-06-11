@@ -21,11 +21,10 @@
 
 import time
 from openerp import tools
-from openerp.addons.base_status.base_stage import base_stage
 from datetime import datetime
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from openerp.tools import html2plaintext
+
 class applicant_document(osv.osv):
 	_name = 'hr.applicant'
 	_inherit = 'hr.applicant'
@@ -54,5 +53,4 @@ class applicant_document(osv.osv):
 	'index_content': fields.function(_get_index_content, string='Index Content', \
                                  fnct_search=_content_search,type="text"),
 	}
-applicant_document()	
 
