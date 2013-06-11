@@ -36,7 +36,7 @@ from openerp.tools.translate import _
 from .. import http
 openerpweb = http
 
-from openerp.addons.web.http import request as req
+from openerp.addons.web.http import request as req, noauth, nodb
 
 #----------------------------------------------------------
 # OpenERP Web helpers
@@ -574,6 +574,7 @@ class Home(openerpweb.Controller):
     _cp_path = '/'
 
     @openerpweb.httprequest
+    @nodb
     def index(self, s_action=None, db=None, **kw):
         db, redir = db_monodb_redirect()
         if redir:
@@ -603,18 +604,22 @@ class WebClient(openerpweb.Controller):
     _cp_path = "/web/webclient"
 
     @openerpweb.jsonrequest
+    @nodb
     def csslist(self, mods=None):
         return manifest_list('css', mods=mods)
 
     @openerpweb.jsonrequest
+    @nodb
     def jslist(self, mods=None):
         return manifest_list('js', mods=mods)
 
     @openerpweb.jsonrequest
+    @nodb
     def qweblist(self, mods=None):
         return manifest_list('qweb', mods=mods)
 
     @openerpweb.httprequest
+    @nodb
     def css(self, mods=None, db=None):
         files = list(manifest_glob('css', addons=mods, db=db))
         last_modified = get_last_modified(f[0] for f in files)
@@ -666,6 +671,7 @@ class WebClient(openerpweb.Controller):
             last_modified, checksum)
 
     @openerpweb.httprequest
+    @nodb
     def js(self, mods=None, db=None):
         files = [f[0] for f in manifest_glob('js', addons=mods, db=db)]
         last_modified = get_last_modified(files)
@@ -679,6 +685,7 @@ class WebClient(openerpweb.Controller):
             last_modified, checksum)
 
     @openerpweb.httprequest
+    @nodb
     def qweb(self, mods=None, db=None):
         files = [f[0] for f in manifest_glob('qweb', addons=mods, db=db)]
         last_modified = get_last_modified(files)
@@ -692,6 +699,7 @@ class WebClient(openerpweb.Controller):
             last_modified, checksum)
 
     @openerpweb.jsonrequest
+    @nodb
     def bootstrap_translations(self, mods):
         """ Load local translations from *.po files, as a temporary solution
             until we have established a valid session. This is meant only
@@ -715,6 +723,7 @@ class WebClient(openerpweb.Controller):
                 "lang_parameters": None}
 
     @openerpweb.jsonrequest
+    @nodb
     def translations(self, mods, lang):
         res_lang = req.session.model('res.lang')
         ids = res_lang.search([("code", "=", lang)])
@@ -740,6 +749,7 @@ class WebClient(openerpweb.Controller):
                 "lang_parameters": lang_params}
 
     @openerpweb.jsonrequest
+    @nodb
     def version_info(self):
         return openerp.service.common.exp_version()
 
@@ -747,6 +757,7 @@ class Proxy(openerpweb.Controller):
     _cp_path = '/web/proxy'
 
     @openerpweb.jsonrequest
+    @nodb
     def load(self, path):
         """ Proxies an HTTP request through a JSON request.
 
@@ -765,10 +776,12 @@ class Database(openerpweb.Controller):
     _cp_path = "/web/database"
 
     @openerpweb.jsonrequest
+    @nodb
     def get_list(self):
         return db_list()
 
     @openerpweb.jsonrequest
+    @nodb
     def create(self, fields):
         params = dict(map(operator.itemgetter('name', 'value'), fields))
         return req.session.proxy("db").create_database(
@@ -779,6 +792,7 @@ class Database(openerpweb.Controller):
             params['create_admin_pwd'])
 
     @openerpweb.jsonrequest
+    @nodb
     def duplicate(self, fields):
         params = dict(map(operator.itemgetter('name', 'value'), fields))
         return req.session.proxy("db").duplicate_database(
@@ -787,6 +801,7 @@ class Database(openerpweb.Controller):
             params['db_name'])
 
     @openerpweb.jsonrequest
+    @nodb
     def duplicate(self, fields):
         params = dict(map(operator.itemgetter('name', 'value'), fields))
         duplicate_attrs = (
@@ -798,6 +813,7 @@ class Database(openerpweb.Controller):
         return req.session.proxy("db").duplicate_database(*duplicate_attrs)
 
     @openerpweb.jsonrequest
+    @nodb
     def drop(self, fields):
         password, db = operator.itemgetter(
             'drop_pwd', 'drop_db')(
@@ -811,6 +827,7 @@ class Database(openerpweb.Controller):
             return {'error': _('Could not drop database !'), 'title': _('Drop Database')}
 
     @openerpweb.httprequest
+    @nodb
     def backup(self, backup_db, backup_pwd, token):
         try:
             db_dump = base64.b64decode(
@@ -829,6 +846,7 @@ class Database(openerpweb.Controller):
             return simplejson.dumps([[],[{'error': openerp.tools.ustr(e), 'title': _('Backup Database')}]])
 
     @openerpweb.httprequest
+    @nodb
     def restore(self, db_file, restore_pwd, new_db):
         try:
             data = base64.b64encode(db_file.read())
@@ -838,6 +856,7 @@ class Database(openerpweb.Controller):
             raise Exception("AccessDenied")
 
     @openerpweb.jsonrequest
+    @nodb
     def change_password(self, fields):
         old_password, new_password = operator.itemgetter(
             'old_pwd', 'new_pwd')(
@@ -863,10 +882,12 @@ class Session(openerpweb.Controller):
         }
 
     @openerpweb.jsonrequest
+    @nodb
     def get_session_info(self):
         return self.session_info()
 
     @openerpweb.jsonrequest
+    @nodb
     def authenticate(self, db, login, password, base_location=None):
         wsgienv = req.httprequest.environ
         env = dict(
@@ -907,6 +928,7 @@ class Session(openerpweb.Controller):
             return {"error": e, "title": _("Languages")}
 
     @openerpweb.jsonrequest
+    @nodb
     def modules(self):
         # return all installed modules. Web client is smart enough to not load a module twice
         return module_installed()
@@ -986,6 +1008,7 @@ class Menu(openerpweb.Controller):
         return Menus.search(menu_domain, 0, False, False, req.context)
 
     @openerpweb.jsonrequest
+    @nodb
     def load(self):
         """ Loads all menu items (all applications and their sub-menus).
 

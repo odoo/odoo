@@ -83,13 +83,14 @@ class WebRequest(object):
 
         ``bool``, indicates whether the debug mode is active on the client
     """
-    def __init__(self, httprequest, method):
+    def __init__(self, httprequest, method, auth_method=None):
         self.httprequest = httprequest
         self.httpresponse = None
         self.httpsession = httprequest.session
         self.db = None
         self.uid = None
         self.method = method
+        self.auth_method = auth_method
 
     def init(self, params):
         self.params = dict(params)
@@ -128,16 +129,19 @@ class WebRequest(object):
         self.lang = lang.replace('-', '_')
 
     def authenticate(self):
-        if self.method.auth == "nodb":
+        if self.auth_method == "nodb":
             self.db = None
             self.uid = None
-        elif self.method.auth == "noauth":
+        elif self.auth_method == "noauth":
             self.db = (self.session._db or openerp.addons.web.controllers.main.db_monodb(self)).lower()
             self.uid = None
         else:
-            self.session.check_security()
+            try:
+                self.session.check_security()
+            except session.SessionExpiredException, e:
+                raise session.SessionExpiredException("Session expired for request %s" % self.httprequest)
             self.db = self.session._db
-            self.uid = self.session_uid
+            self.uid = self.session._uid
 
     def registry(self):
         return openerp.modules.registry.RegistryManager.get(self.db)
@@ -694,18 +698,17 @@ class Root(object):
                         exposed = getattr(method, 'exposed', False)
                         auth = getattr(method, 'auth', None)
                         method = c.get_wrapped_method(method_name)
-                        method.auth = auth
                         if exposed == 'json':
                             _logger.debug("Dispatch json to %s %s %s", ps, c, method_name)
                             def fct(_request):
-                                _req = JsonRequest(_request, method)
+                                _req = JsonRequest(_request, method, auth)
                                 with set_request(_req):
                                     return request.dispatch()
                             return fct
                         elif exposed == 'http':
                             _logger.debug("Dispatch http to %s %s %s", ps, c, method_name)
                             def fct(_request):
-                                _req = HttpRequest(_request, method)
+                                _req = HttpRequest(_request, method, auth)
                                 with set_request(_req):
                                     return request.dispatch()
                             return fct
