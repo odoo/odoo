@@ -83,6 +83,9 @@
                             </group>
                         </page>
                         <page string="Header/Footer" groups="base.group_no_one">
+                            <group>
+                                <field name="font" on_change="onchange_font_name(font)"/>
+                            </group>
                             <label for="rml_header"/>
                             <field name="rml_header"/>
                             <label for="rml_header2"/>

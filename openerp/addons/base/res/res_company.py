@@ -20,13 +20,32 @@
 ##############################################################################
 
 import os
-
+import re
 import openerp
 from openerp import SUPERUSER_ID, tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import image_resize_image
+
+_select_font=[ ('DejaVu Sans',"DejaVu Sans"),
+        ('DejaVu Sans Bold',"DejaVu Sans Bold"),
+        ('DejaVu Sans Oblique',"DejaVu Sans Oblique"),
+        ('DejaVu Sans BoldOblique',"DejaVu Sans BoldOblique"),
+        ('Liberation Serif',"Liberation Serif"),
+        ('Liberation Serif Bold',"Liberation Serif Bold"),
+        ('Liberation Serif Italic',"Liberation Serif Italic"),
+        ('Liberation Serif BoldItalic',"Liberation Serif BoldItalic"),
+        ('Liberation Serif',"Liberation Serif"),
+        ('Liberation Serif Bold',"Liberation Serif Bold"),
+        ('Liberation Serif Italic',"Liberation Serif Italic"),
+        ('Liberation Serif BoldItalic',"Liberation Serif BoldItalic"),
+        ('FreeMono',"FreeMono"),
+        ('FreeMono Bold',"FreeMono Bold"),
+        ('FreeMono Oblique',"FreeMono Oblique"),
+        ('FreeMono BoldOblique',"FreeMono BoldOblique"),
+        ('Sun-ExtA',"Sun-ExtA")
+]
 
 class multi_company_default(osv.osv):
     """
@@ -108,7 +127,7 @@ class res_company(osv.osv):
             size = (180, None)
             result[record.id] = image_resize_image(record.partner_id.image, size)
         return result
-
+        
     def _get_companies_from_partner(self, cr, uid, ids, context=None):
         return self.pool['res.company'].search(cr, uid, [('partner_id', 'in', ids)], context=context)
 
@@ -147,6 +166,7 @@ class res_company(osv.osv):
         'vat': fields.related('partner_id', 'vat', string="Tax ID", type="char", size=32),
         'company_registry': fields.char('Company Registry', size=64),
         'paper_format': fields.selection([('a4', 'A4'), ('us_letter', 'US Letter')], "Paper Format", required=True),
+        'font': fields.selection(_select_font, "Select Font"),
     }
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
@@ -178,6 +198,25 @@ class res_company(osv.osv):
         if state_id:
             return {'value':{'country_id': self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id }}
         return {}
+        
+    def onchange_font_name(self, cr, uid, ids, font, context=None):
+        """
+        To change default header style of all <para> and drawstring.
+        """
+        def _change_header(header,font):
+            """
+            Replace default fontname use in header and setfont tag
+            """
+            default_para = re.sub('fontName.?=.?".*"', 'fontName="%s"'% font,header)
+            return re.sub('(<setFont.?name.?=.?)(".*?")(.)', '\g<1>"%s"\g<3>'% font,default_para)
+        if not ids: return {}
+        data = self.browse(cr, uid, ids[0], context=context)
+        return {'value':{
+                        'rml_header': _change_header(data.rml_header,font),
+                        'rml_header2':_change_header(data.rml_header2,font),
+                        'rml_header3':_change_header(data.rml_header3,font)
+                        }}
+
     def on_change_country(self, cr, uid, ids, country_id, context=None):
         res = {'domain': {'state_id': []}}
         currency_id = self._get_euro(cr, uid, context=context)
