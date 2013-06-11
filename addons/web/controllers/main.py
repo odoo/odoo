@@ -768,7 +768,7 @@ class Database(openerpweb.Controller):
         # TODO change js to avoid calling this method if in monodb mode
         try:
             return db_list(req)
-        except xmlrpclib.Fault:
+        except openerp.exceptions.AccessDenied:
             monodb = db_monodb(req)
             if monodb:
                 return [monodb]
