@@ -28,14 +28,14 @@
         <field name="name">purchase.requisition.form</field>
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
-            <form string="Purchase Requisition" version="7.0">
-            <header>
-                <button name="tender_in_progress" states="draft" string="Send to Suppliers" type="object" class="oe_highlight"/>
-                <button name="tender_open" states="in_progress" string="Choose supplier(s)" type="object" class="oe_highlight"/>
+            <form string="Request for Tender" version="7.0">
+            <header>              
+                <button name="sent_suppliers" states="draft" string="Send to Suppliers" class="oe_highlight"/>
+                <button name="open_bid" states="in_progress" string="Choose supplier(s)" class="oe_highlight"/>
                 <button name="tender_reset" states="cancel" string="Reset to Draft" type="object" />
                 <button name="open_product_line" states="open" string="Choose product lines" type="object" class="oe_highlight" groups="purchase.group_advance_bidding"/>
                 <button name="generate_po" states="open" string="Make Purchase" type="object" class="oe_highlight"/>
-                <button name="tender_cancel" states="draft,in_progress" string="Cancel Requisition" type="object" />
+                <button name="cancel_requisition" states="draft,in_progress" string="Cancel Requisition" type="object" />
                 <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,open,done" statusbar_colors='{"in_progress":"blue"}'/>
             </header>
             <sheet>
@@ -125,7 +125,7 @@
         <field name="name">purchase.requisition.tree</field>
         <field name="model">purchase.requisition</field>
         <field name="arch" type="xml">
-            <tree fonts="bold:message_unread==True" colors="grey:state == 'cancel';red:date_end and date_end&lt;current_date;black:date_end&gt;current_date;" string="Purchase Requisition">
+            <tree fonts="bold:message_unread==True" colors="grey:state == 'cancel';red:date_end and date_end&lt;current_date;black:date_end&gt;current_date;" string="Request for Tender">
                 <field name="message_unread" invisible="1"/>
                 <field name="name"/>
                 <field name="date_start"/>
@@ -142,12 +142,12 @@
             <field name="name">purchase.requisition.list.select</field>
             <field name="model">purchase.requisition</field>
             <field name="arch" type="xml">
-                <search string="Search Purchase Requisition">
-                    <field name="name" string="Purchase Requisition"/>
+                <search string="Search Request for Tender">
+                    <field name="name" string="Request for Tender"/>
                     <field name="exclusive" />
-                    <filter icon="terp-document-new" name="draft" string="New" domain="[('state','=','draft')]" help="New Purchase Requisition"/>
-                    <filter icon="terp-camera_test" string="Sent to Suppliers" domain="[('state','=','in_progress')]" help="Purchase Requisition in negociation"/>
-                    <filter icon="terp-dialog-close" string="Purchase Done" domain="[('state','=','done')]" help="Current Purchase Requisition"/>
+                    <filter icon="terp-document-new" name="draft" string="New" domain="[('state','=','draft')]" help="New Request for Tender"/>
+                    <filter icon="terp-camera_test" string="Sent to Suppliers" domain="[('state','=','in_progress')]" help="Request for Tender in negociation"/>
+                    <filter icon="terp-dialog-close" string="Purchase Done" domain="[('state','=','done')]" help="Current Request for Tender"/>
                     <separator/>
                     <filter icon="terp-personal-" string="Unassigned"  domain="[('user_id','=', False)]" help="Unassigned  Requisition"/>
                     <field name="user_id" />
@@ -164,7 +164,7 @@
 
 
     <record model="ir.actions.act_window" id="action_purchase_requisition">
-        <field name="name">Purchase Requisitions</field>
+        <field name="name">Request for Tender</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">purchase.requisition</field>
         <field name="view_type">form</field>
@@ -173,9 +173,9 @@
         <field name="search_view_id" ref="view_purchase_requisition_filter"/>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
-            Click to start a new purchase requisition process. 
+            Click to start a new request for tender process. 
           </p><p>
-            A purchase requisition is the step before a request for quotation.
+            A request for tender is the step before a request for quotation.
             In a purchase requisition (or purchase tender), you can record the
             products you need to buy and trigger the creation of RfQs to
             suppliers. After the negotiation, once you have reviewed all the

@@ -1123,6 +1123,8 @@ class procurement_order(osv.osv):
                 return False
         return True
 
+    def check_product_requisition(self, cr, uid, ids, context=None):
+        return False
 
     def action_po_assign(self, cr, uid, ids, context=None):
         """ This is action which call from workflow to assign purchase order to procurements

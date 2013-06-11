@@ -43,6 +43,7 @@ keep track and order all your purchase orders.
               'purchase_requisition_data.xml',
               'purchase_requisition_view.xml',
               'purchase_requisition_report.xml',
+              'purchase_requisition_workflow.xml',
               'security/ir.model.access.csv','purchase_requisition_sequence.xml'
     ],
     'auto_install': False,

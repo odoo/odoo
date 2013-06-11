@@ -56,11 +56,12 @@ class purchase_requisition(osv.osv):
         'purchase_ids' : fields.one2many('purchase.order','requisition_id','Purchase Orders',states={'done': [('readonly', True)]}),
         'po_line_ids': fields.function(_get_po_line, method=True, type='one2many', relation='purchase.order.line', string='Products by supplier'),
         'line_ids' : fields.one2many('purchase.requisition.line','requisition_id','Products to Purchase',states={'done': [('readonly', True)]}),
+        'move_dest_id': fields.many2one('stock.move', 'Reservation Destination', ondelete='set null'),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),        
         'state': fields.selection([('draft','Draft Tender'),('in_progress','Sent to Suppliers'),('open','Choosing Lines'),('done','PO Created'),('cancel','Cancelled')],
             'Status', track_visibility='onchange', required=True),
         'multiple_rfq_per_supplier': fields.boolean('Multiple RFQ per supplier'),
-        'account_analytic_id':fields.many2one('account.analytic.account', 'Analytic Account',),
+        'account_analytic_id':fields.many2one('account.analytic.account', 'Analytic Account'),
         'schedule_date': fields.date('Scheduled Date', select=True),
     }
     _defaults = {
@@ -103,8 +104,13 @@ class purchase_requisition(osv.osv):
         return self.write(cr, uid, ids, {'state':'open'} ,context=context)
 
     def tender_reset(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state': 'draft'})
-
+        self.write(cr, uid, ids, {'state': 'draft'})
+        wf_service = netsvc.LocalService("workflow")
+        for p_id in ids:
+            # Deleting the existing instance of workflow for PO
+            wf_service.trg_delete(uid, 'purchase.requisition', p_id, cr)
+            wf_service.trg_create(uid, 'purchase.requisition', p_id, cr)
+        return True
     def tender_done(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state':'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
@@ -207,6 +213,7 @@ class purchase_requisition(osv.osv):
             'product_uom': default_uom_po_id,
             'price_unit': seller_price,
             'date_planned': requisition_line.schedule_date or date_planned,
+            'move_dest_id': requisition.move_dest_id.id,
             'taxes_id': [(6, 0, taxes)],
             'account_analytic_id':requisition_line.account_analytic_id.id,
         }
@@ -298,7 +305,9 @@ class purchase_requisition(osv.osv):
         self.cancel_quotation(cr, uid, tender, context=context)
 
         #set tender to state done
-        self.tender_done(cr, uid, id, context=context)
+        wf_service = netsvc.LocalService("workflow")
+        wf_service.trg_validate(uid, 'purchase.requisition', tender.id, 'done', cr)
+        #self.tender_done(cr, uid, id, context=context)
         return True
 
     def trigger_validate_po(self, cr, uid, po_id, context=None):
@@ -327,11 +336,11 @@ class purchase_requisition_line(osv.osv):
         'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure'),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
         'po_line_buy': fields.many2one('purchase.order.line', 'Purchase Order Line'),
-        'requisition_id': fields.many2one('purchase.requisition','Purchase Requisition', ondelete='cascade'),
+        'requisition_id': fields.many2one('purchase.requisition','Request for Tender', ondelete='cascade'),
         'po_line_ids': fields.related('requisition_id', 'po_line_ids', string='PO lines', readonly=True, type="one2many"),
         'company_id': fields.related('requisition_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
         'account_analytic_id':fields.many2one('account.analytic.account', 'Analytic Account',),
-        'schedule_date': fields.date('Scheduled Date', select=True),
+        'schedule_date': fields.date('Scheduled Date'),
     }
 
     def onchange_product_id(self, cr, uid, ids, product_id, product_uom_id, parent_analytic_account, analytic_account, parent_date, date, context=None):
@@ -359,7 +368,7 @@ class purchase_order(osv.osv):
     _inherit = "purchase.order"
 
     _columns = {
-        'requisition_id' : fields.many2one('purchase.requisition','Purchase Requisition'),
+        'requisition_id' : fields.many2one('purchase.requisition','Request for Tender'),
     }
 
     def wkf_confirm_order(self, cr, uid, ids, context=None):
@@ -414,7 +423,7 @@ class product_product(osv.osv):
     _inherit = 'product.product'
 
     _columns = {
-        'purchase_requisition': fields.boolean('Purchase Requisition', help="Check this box to generates purchase requisition instead of generating requests for quotation from procurement.")
+        'purchase_requisition': fields.boolean('Request for Tender', help="Check this box to generates requests for tender instead of generating requests for quotation from procurement.")
     }
     _defaults = {
         'purchase_requisition': False
@@ -441,6 +450,7 @@ class procurement_order(osv.osv):
                     'date_end': procurement.date_planned,
                     'warehouse_id':warehouse_id and warehouse_id[0] or False,
                     'company_id':procurement.company_id.id,
+                    'move_dest_id':procurement.move_id.id,
                     'line_ids': [(0,0,{
                         'product_id': procurement.product_id.id,
                         'product_uom_id': procurement.product_uom.id,
@@ -452,6 +462,12 @@ class procurement_order(osv.osv):
         else:
             res = super(procurement_order, self).make_po(cr, uid, ids, context=context)
         return res
+
+    def check_product_requisition(self, cr, uid, ids, context=None):
+        procurement = self.browse(cr, uid, ids, context=context)[0]
+        if procurement.product_id.purchase_requisition:
+            return True
+        return False
 
 procurement_order()
 
