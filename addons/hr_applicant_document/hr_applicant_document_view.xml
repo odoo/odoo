@@ -2,27 +2,17 @@
 <openerp>
     <data>
 
-		<record model="ir.ui.view" id="crm_case_tree_view_job_inherit">
-		    <field name="name">Applicants</field>
-		    <field name="model">hr.applicant</field>
-		    <field name="inherit_id" ref="hr_recruitment.crm_case_tree_view_job" />
-		    <field name="arch" type="xml">
-		    	<field name="user_id" position="after">
-		    		<field name="index_content" invisible="1"/>
-		    	</field>
-			</field>
-		</record>
-		     
-		<record id="view_crm_case_jobs_filter_inherit" model="ir.ui.view">
-		    <field name="name">Jobs - Recruitment Search</field>
-		    <field name="model">hr.applicant</field>
-		    <field name="inherit_id" ref="hr_recruitment.view_crm_case_jobs_filter" />
-		    <field name="arch" type="xml">
-		    	<field name="job_id" position="before">
-		    		<field name="index_content" string="Resume Content"/>
-		    	</field>
-		    </field>
-		</record>
+	     
+	<record id="view_crm_case_jobs_filter_inherit" model="ir.ui.view">
+	    <field name="name">Jobs - Recruitment Search</field>
+	    <field name="model">hr.applicant</field>
+	    <field name="inherit_id" ref="hr_recruitment.view_crm_case_jobs_filter" />
+	    <field name="arch" type="xml">
+	    	<field name="job_id" position="before">
+	    		<field name="index_content" string="Resume Content"/>
+	    	</field>
+	    </field>
+	</record>
     
 
 	<record model="ir.actions.act_window" id="hr_applicant_resumes">
