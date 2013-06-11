@@ -34,7 +34,8 @@ class res_partner(osv.osv):
             default = {}
 
         default.update({'task_ids': []})
-        return super(res_partner, self).copy(cr, uid, record_id, default, context)
+        return super(res_partner, self).copy(
+                cr, uid, record_id, default=default, context=context)
 
 res_partner()
 
