@@ -23,6 +23,7 @@ import logging
 import openerp
 from openerp.modules.registry import RegistryManager
 from ..res_users import SignupError
+from openerp.addons.web.http import nodb, noauth
 
 _logger = logging.getLogger(__name__)
 
@@ -30,6 +31,7 @@ class Controller(openerp.addons.web.http.Controller):
     _cp_path = '/auth_signup'
 
     @openerp.addons.web.http.jsonrequest
+    @nodb
     def get_config(self, req, dbname):
         """ retrieve the module config (which features are enabled) for the login page """
         registry = RegistryManager.get(dbname)
