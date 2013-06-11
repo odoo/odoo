@@ -951,7 +951,7 @@ class account_invoice(osv.osv):
             total, total_currency, iml = self.compute_invoice_totals(cr, uid, inv, company_currency, ref, iml, context=ctx)
             acc_id = inv.account_id.id
 
-            name = inv['name'] or '/'
+            name = inv['name'] or inv['supplier_invoice_number'] or '/'
             totlines = False
             if inv.payment_term:
                 totlines = payment_term_obj.compute(cr,
