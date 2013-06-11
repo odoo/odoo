@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-04-30 05:51+0000\n"
+"PO-Revision-Date: 2013-06-09 07:22+0000\n"
 "Last-Translator: Paul Korotkov <korotkov.paul@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-08 07:28+0000\n"
+"X-Launchpad-Export-Date: 2013-06-11 06:31+0000\n"
 "X-Generator: Launchpad (build 16667)\n"
 
 #. module: mail
@@ -26,7 +26,7 @@ msgstr "Форма подписчиков"
 #: code:addons/mail/mail_thread.py:246
 #, python-format
 msgid "%s created"
-msgstr ""
+msgstr "%s создан"
 
 #. module: mail
 #: field:mail.compose.message,author_id:0
@@ -145,7 +145,7 @@ msgstr "Мастер составления эл. почты"
 #: code:addons/mail/static/src/xml/mail.xml:268
 #, python-format
 msgid "updated document"
-msgstr ""
+msgstr "обновил документ"
 
 #. module: mail
 #. openerp-web
@@ -169,6 +169,13 @@ msgid ""
 "discussions\n"
 "- All Messages: for every notification you receive in your Inbox"
 msgstr ""
+"Политика получения эл. почты по новым сообщениям в ящике OpenERP:\n"
+"- Никогда: эл. почта не используется\n"
+"- Только входящая эл. почта: для сообщений в ящике OpenERP, полученых по эл. "
+"почте\n"
+"- Входящая эл. почта и обсуждения: для входящей эл. почты в ящике OpenERP и "
+"внутренних обсуждений\n"
+"- Все сообщения: для всех сообщений, приходящих в ящик OpenERP"
 
 #. module: mail
 #: field:mail.group,message_unread:0
@@ -431,7 +438,7 @@ msgstr "Авто удаление"
 #: code:addons/mail/static/src/xml/mail.xml:294
 #, python-format
 msgid "notified"
-msgstr ""
+msgstr "оповещён"
 
 #. module: mail
 #. openerp-web
@@ -523,7 +530,7 @@ msgstr "Системное уведомление"
 #. module: mail
 #: view:mail.message:0
 msgid "To Read"
-msgstr ""
+msgstr "Непрочитанные"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
@@ -745,7 +752,7 @@ msgstr "Отправитель сообщения, взятый из настр�
 #: code:addons/mail/static/src/js/mail.js:978
 #, python-format
 msgid "read more"
-msgstr ""
+msgstr "подробнее"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:40
@@ -762,7 +769,7 @@ msgstr "Родительское сообщение"
 #. module: mail
 #: selection:res.partner,notification_email_send:0
 msgid "All Messages (discussions, emails, followed system notifications)"
-msgstr ""
+msgstr "Все сообщения (обсуждения, эл. почта, уведомления по подписке)"
 
 #. module: mail
 #. openerp-web
@@ -849,7 +856,7 @@ msgstr "Модель обсуждаемого ресурса"
 #: code:addons/mail/static/src/js/mail.js:979
 #, python-format
 msgid "read less"
-msgstr ""
+msgstr "свернуть"
 
 #. module: mail
 #. openerp-web
@@ -1253,7 +1260,7 @@ msgstr ""
 #. module: mail
 #: field:res.partner,notification_email_send:0
 msgid "Receive Messages by Email"
-msgstr ""
+msgstr "Получать сообщения по эл. почте"
 
 #. module: mail
 #: model:mail.group,name:mail.group_best_sales_practices
@@ -1302,7 +1309,7 @@ msgstr "Расширенные фильтры..."
 #. module: mail
 #: selection:res.partner,notification_email_send:0
 msgid "Incoming Emails only"
-msgstr ""
+msgstr "Только входящая эл. почта"
 
 #. module: mail
 #. openerp-web
@@ -1364,7 +1371,7 @@ msgstr "Описание"
 #: code:addons/mail/mail_mail.py:244
 #, python-format
 msgid "\"Followers of %s\" <%s>"
-msgstr ""
+msgstr "\"Подписчики документа %s\" <%s>"
 
 #. module: mail
 #: view:mail.compose.message:0
@@ -1549,7 +1556,7 @@ msgstr "Партнеры которые имеют уведомление дос
 #. module: mail
 #: view:mail.message:0
 msgid "Show already read messages"
-msgstr ""
+msgstr "Показать прочитанные сообщения"
 
 #. module: mail
 #: view:mail.message:0
@@ -1715,19 +1722,19 @@ msgstr "Вернуть в список задач"
 #: code:addons/mail/static/src/xml/mail.xml:154
 #, python-format
 msgid "Attach a note that will not be sent to the followers"
-msgstr ""
+msgstr "Создать заметку, которая не будет отправлена подписчикам"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:279
 #, python-format
 msgid "nobody"
-msgstr ""
+msgstr "никто"
 
 #. module: mail
 #: selection:res.partner,notification_email_send:0
 msgid "Incoming Emails and Discussions"
-msgstr ""
+msgstr "Входящая эл. почта и обсуждения"
 
 #. module: mail
 #: field:mail.group,name:0
@@ -1737,7 +1744,7 @@ msgstr "Название"
 #. module: mail
 #: constraint:res.partner:0
 msgid "You cannot create recursive Partner hierarchies."
-msgstr ""
+msgstr "Не допускается создание рекурсивных иерархий Партнёров"
 
 #. module: mail
 #: help:base.config.settings,alias_domain:0
@@ -1799,7 +1806,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/mail.xml:149
 #, python-format
 msgid "(no email address)"
-msgstr ""
+msgstr "(нет адреса эл. почты)"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_feeds
