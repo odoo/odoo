@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
-
         <record model="ir.ui.view" id="crm_lead_forward_to_partner_form">
             <field name="name">crm_lead_forward_to_partner</field>
             <field name="model">crm.lead.forward.to.partner</field>
@@ -12,7 +11,7 @@
                     </group>
                     <group>
                         <group>
-                            <field name="partner_id" attrs="{'invisible': [('forward_type', 'in', ['assigned',False])]}"/>
+                            <field name="partner_id" attrs="{'invisible': [('forward_type', 'in', ['assigned',False])], 'required': [('forward_type', '=', 'single')]}"  />
                         </group>
                         <group>
                         </group>
@@ -26,10 +25,11 @@
                             <field name="partner_assigned_id"/>
                         </tree>
                     </field>
-                    <field name="show_mail"/><label for="show_mail"/>
+                    <field name="show_mail" />
+                    <label for="show_mail" />
                     <notebook colspan="4" attrs="{'invisible': [('show_mail', '=', False)]}">
                         <page string="Body">
-                            <field name="body"  readonly="1"/>
+                            <field name="body" readonly="1"/>
                         </page>
                     </notebook>
                     <footer>
@@ -50,14 +50,10 @@
             <field name="target">new</field>
         </record>
 
-        <act_window id="action_crm_send_mass_forward"
-            multi="True"
-            key2="client_action_multi" name="Forward to Partner"
-            res_model="crm.lead.forward.to.partner" src_model="crm.lead"
-            view_mode="form" target="new" view_type="form"
-            context="{'default_composition_mode' : 'mass_mail'}"
-            view_id="crm_lead_forward_to_partner_form"
-        />
+        <act_window id="action_crm_send_mass_forward" multi="True"
+            key2="client_action_multi" name="Forward to Partner" res_model="crm.lead.forward.to.partner"
+            src_model="crm.lead" view_mode="form" target="new" view_type="form"
+            context="{'default_composition_mode' : 'mass_mail'}" view_id="crm_lead_forward_to_partner_form" />
 
     </data>
 </openerp>

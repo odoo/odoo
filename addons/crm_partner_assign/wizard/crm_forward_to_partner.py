@@ -75,6 +75,10 @@ class crm_lead_forward_to_partner(osv.TransientModel):
                 lead_obj.write(cr, uid, active_ids, {'partner_assigned_id': record[0].partner_id.id , 'user_id': record[0].partner_id.user_id.id})
         else:
             for lead in record[0].assignation_lines:
+                if not lead.partner_assigned_id:
+                    raise osv.except_osv(_('Assignation Error'),
+                             _('Some leads have not been assigned to any partner so assign partners manualy'))
+            for lead in record[0].assignation_lines:
                 self.write(cr, uid, ids, {'partner_id':lead.partner_assigned_id.id,
                                           'lead_single_link': lead.lead_link,
                                           'lead_single_id':lead.lead_id.id
