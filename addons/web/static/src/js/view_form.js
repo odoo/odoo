@@ -2346,7 +2346,7 @@ instance.web.form.FieldEmail = instance.web.form.FieldChar.extend({
     },
     on_button_clicked: function() {
         if (!this.get('value') || !this.is_syntax_valid()) {
-            this.do_warn(_t("E-mail error"), _t("Can't send email to invalid e-mail address"));
+            this.do_warn(_t("E-mail Error"), _t("Can't send email to invalid e-mail address"));
         } else {
             location.href = 'mailto:' + this.get('value');
         }
@@ -2376,7 +2376,7 @@ instance.web.form.FieldUrl = instance.web.form.FieldChar.extend({
     },
     on_button_clicked: function() {
         if (!this.get('value')) {
-            this.do_warn(_t("Resource error"), _t("This resource is empty"));
+            this.do_warn(_t("Resource Error"), _t("This resource is empty"));
         } else {
             var url = $.trim(this.get('value'));
             if(/^www\./i.test(url))
@@ -2721,6 +2721,11 @@ instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instanc
                     self.internal_set_value(self.$textarea.val());
                 }
             });
+            if (this.field.translate) {
+                var $img = $('<img class="oe_field_translate oe_input_icon" src="/web/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/>')
+                    .click(this.on_translate);
+                this.$cleditor.$toolbar.append($img);
+            }
         }
     },
     render_value: function() {
@@ -3233,6 +3238,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 self.display_value_backup = {};
                 self.render_value();
                 self.focus();
+                self.view.do_onchange(self);
             });
         });
 
@@ -4209,7 +4215,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
             ext: {
                 autocomplete: {
                     selectFromDropdown: function() {
-                        $(this).trigger('hideDropdown');
+                        this.trigger('hideDropdown');
                         var index = Number(this.selectedSuggestionElement().children().children().data('index'));
                         var data = self.search_result[index];
                         if (data.id) {
@@ -4218,6 +4224,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
                             ignore_blur = true;
                             data.action();
                         }
+                        this.trigger('setSuggestions', {result : []});
                     },
                 },
                 tags: {
@@ -4952,7 +4959,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
             this.searchview.hide();
         }
         if (this.view_list) {
-            this.view_list.$el.hide();
+            this.view_list.do_hide();
         }
         this.setup_form_view();
     },
@@ -5375,7 +5382,7 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
         }
 
         if (result.error || !result.id ) {
-            this.do_warn( _t('Uploading error'), result.error);
+            this.do_warn( _t('Uploading Error'), result.error);
             delete this.data[0];
         } else {
             if (this.data[0] && this.data[0].filename == result.filename && this.data[0].upload) {

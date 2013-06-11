@@ -1,7 +1,7 @@
 /**
  * This code is released to the public domain by Jim Studt, 2007.
  * He may keep some sort of up to date copy at http://www.federated.com/~jim/canvastext/
- * It as been modified by Fabien Ménager to handle font style like size, weight, color and rotation. 
+ * It as been modified by Fabien MÃ©nager to handle font style like size, weight, color and rotation. 
  * A partial support for special characters has been added too.
  */
 var CanvasText = {
@@ -108,71 +108,71 @@ var CanvasText = {
     '~': { width: 24, points: [[3,6],[3,8],[4,11],[6,12],[8,12],[10,11],[14,8],[16,7],[18,7],[20,8],[21,10],null,[3,8],[4,10],[6,11],[8,11],[10,10],[14,7],[16,6],[18,6],[20,7],[21,10],[21,12]] },
     
     // Lower case Latin-1
-    'à': { diacritic: '`', letter: 'a' },
-    'á': { diacritic: '´', letter: 'a' },
-    'â': { diacritic: '^', letter: 'a' },
-    'ä': { diacritic: '¨', letter: 'a' },
-    'ã': { diacritic: '~', letter: 'a' },
+    'Ã ': { diacritic: '`', letter: 'a' },
+    'Ã¡': { diacritic: 'Â´', letter: 'a' },
+    'Ã¢': { diacritic: '^', letter: 'a' },
+    'Ã¤': { diacritic: 'Â¨', letter: 'a' },
+    'Ã£': { diacritic: '~', letter: 'a' },
     
-    'è': { diacritic: '`', letter: 'e' },
-    'é': { diacritic: '´', letter: 'e' },
-    'ê': { diacritic: '^', letter: 'e' },
-    'ë': { diacritic: '¨', letter: 'e' },
+    'Ã¨': { diacritic: '`', letter: 'e' },
+    'Ã©': { diacritic: 'Â´', letter: 'e' },
+    'Ãª': { diacritic: '^', letter: 'e' },
+    'Ã«': { diacritic: 'Â¨', letter: 'e' },
     
-    'ì': { diacritic: '`', letter: 'i' },
-    'í': { diacritic: '´', letter: 'i' },
-    'î': { diacritic: '^', letter: 'i' },
-    'ï': { diacritic: '¨', letter: 'i' },
+    'Ã¬': { diacritic: '`', letter: 'i' },
+    'Ã­': { diacritic: 'Â´', letter: 'i' },
+    'Ã®': { diacritic: '^', letter: 'i' },
+    'Ã¯': { diacritic: 'Â¨', letter: 'i' },
     
-    'ò': { diacritic: '`', letter: 'o' },
-    'ó': { diacritic: '´', letter: 'o' },
-    'ô': { diacritic: '^', letter: 'o' },
-    'ö': { diacritic: '¨', letter: 'o' },
-    'õ': { diacritic: '~', letter: 'o' },
+    'Ã²': { diacritic: '`', letter: 'o' },
+    'Ã³': { diacritic: 'Â´', letter: 'o' },
+    'Ã´': { diacritic: '^', letter: 'o' },
+    'Ã¶': { diacritic: 'Â¨', letter: 'o' },
+    'Ãµ': { diacritic: '~', letter: 'o' },
 
-    'ù': { diacritic: '`', letter: 'u' },
-    'ú': { diacritic: '´', letter: 'u' },
-    'û': { diacritic: '^', letter: 'u' },
-    'ü': { diacritic: '¨', letter: 'u' },
+    'Ã¹': { diacritic: '`', letter: 'u' },
+    'Ãº': { diacritic: 'Â´', letter: 'u' },
+    'Ã»': { diacritic: '^', letter: 'u' },
+    'Ã¼': { diacritic: 'Â¨', letter: 'u' },
     
-    'ı': { diacritic: '´', letter: 'y' },
-    'ÿ': { diacritic: '¨', letter: 'y' },
+    'Ã½': { diacritic: 'Â´', letter: 'y' },
+    'Ã¿': { diacritic: 'Â¨', letter: 'y' },
     
-    'ç': { diacritic: '¸', letter: 'c' },
-    'ñ': { diacritic: '~', letter: 'n' },
+    'Ã§': { diacritic: 'Â¸', letter: 'c' },
+    'Ã±': { diacritic: '~', letter: 'n' },
 
     // Upper case Latin-1
-    'À': { diacritic: '`', letter: 'A' },
-    'Á': { diacritic: '´', letter: 'A' },
-    'Â': { diacritic: '^', letter: 'A' },
-    'Ä': { diacritic: '¨', letter: 'A' },
-    'Ã': { diacritic: '~', letter: 'A' },
+    'Ã€': { diacritic: '`', letter: 'A' },
+    'Ã': { diacritic: 'Â´', letter: 'A' },
+    'Ã‚': { diacritic: '^', letter: 'A' },
+    'Ã„': { diacritic: 'Â¨', letter: 'A' },
+    'Ãƒ': { diacritic: '~', letter: 'A' },
     
-    'È': { diacritic: '`', letter: 'E' },
-    'É': { diacritic: '´', letter: 'E' },
-    'Ê': { diacritic: '^', letter: 'E' },
-    'Ë': { diacritic: '¨', letter: 'E' },
+    'Ãˆ': { diacritic: '`', letter: 'E' },
+    'Ã‰': { diacritic: 'Â´', letter: 'E' },
+    'ÃŠ': { diacritic: '^', letter: 'E' },
+    'Ã‹': { diacritic: 'Â¨', letter: 'E' },
 
-    'Ì': { diacritic: '`', letter: 'I' },
-    'Í': { diacritic: '´', letter: 'I' },
-    'Î': { diacritic: '^', letter: 'I' },
-    'Ï': { diacritic: '¨', letter: 'I' },
+    'ÃŒ': { diacritic: '`', letter: 'I' },
+    'Ã': { diacritic: 'Â´', letter: 'I' },
+    'Ã': { diacritic: '^', letter: 'I' },
+    'Ã': { diacritic: 'Â¨', letter: 'I' },
     
-    'Ò': { diacritic: '`', letter: 'O' },
-    'Ó': { diacritic: '´', letter: 'O' },
-    'Ô': { diacritic: '^', letter: 'O' },
-    'Ö': { diacritic: '¨', letter: 'O' },
-    'Õ': { diacritic: '~', letter: 'O' },
+    'Ã’': { diacritic: '`', letter: 'O' },
+    'Ã“': { diacritic: 'Â´', letter: 'O' },
+    'Ã”': { diacritic: '^', letter: 'O' },
+    'Ã–': { diacritic: 'Â¨', letter: 'O' },
+    'Ã•': { diacritic: '~', letter: 'O' },
     
-    'Ù': { diacritic: '`', letter: 'U' },
-    'Ú': { diacritic: '´', letter: 'U' },
-    'Û': { diacritic: '^', letter: 'U' },
-    'Ü': { diacritic: '¨', letter: 'U' },
+    'Ã™': { diacritic: '`', letter: 'U' },
+    'Ãš': { diacritic: 'Â´', letter: 'U' },
+    'Ã›': { diacritic: '^', letter: 'U' },
+    'Ãœ': { diacritic: 'Â¨', letter: 'U' },
     
-    'İ': { diacritic: '´', letter: 'Y' },
+    'Ã': { diacritic: 'Â´', letter: 'Y' },
     
-    'Ç': { diacritic: '¸', letter: 'C' },
-    'Ñ': { diacritic: '~', letter: 'N' }
+    'Ã‡': { diacritic: 'Â¸', letter: 'C' },
+    'Ã‘': { diacritic: '~', letter: 'N' }
   },
   
   specialchars: {
@@ -181,11 +181,11 @@ var CanvasText = {
   
   /** Diacritics, used to draw accentuated letters */
   diacritics: {
-    '¸': { entity: 'cedil', points: [[6,-4],[4,-6],[2,-7],[1,-7]] },
-    '´': { entity: 'acute', points: [[8,19],[13,22]] },
+    'Â¸': { entity: 'cedil', points: [[6,-4],[4,-6],[2,-7],[1,-7]] },
+    'Â´': { entity: 'acute', points: [[8,19],[13,22]] },
     '`': { entity: 'grave', points: [[7,22],[12,19]] },
     '^': { entity: 'circ',  points: [[5.5,19],[9.5,23],[12.5,19]] },
-    '¨': { entity: 'trema', points: [[5,21],[6,20],[7,21],[6,22],[5,21],null,[12,21],[13,20],[14,21],[13,22],[12,21]] },
+    'Â¨': { entity: 'trema', points: [[5,21],[6,20],[7,21],[6,22],[5,21],null,[12,21],[13,20],[14,21],[13,22],[12,21]] },
     '~': { entity: 'tilde', points: [[4,18],[7,22],[10,18],[13,22]] }
   },
   

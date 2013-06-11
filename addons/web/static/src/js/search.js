@@ -131,6 +131,7 @@ my.InputView = instance.web.Widget.extend({
         paste: 'onPaste',
     },
     getSelection: function () {
+        this.el.normalize();
         // get Text node
         var root = this.el.childNodes[0];
         if (!root || !root.textContent) {
@@ -139,6 +140,16 @@ my.InputView = instance.web.Widget.extend({
             return {start: 0, end: 0};
         }
         var range = window.getSelection().getRangeAt(0);
+        // In Firefox, depending on the way text is selected (drag, double- or
+        // triple-click) the range may start or end on the parent of the
+        // selected text node‽ Check for this condition and fixup the range
+        // note: apparently with C-a this can go even higher?
+        if (range.startContainer === this.el && range.startOffset === 0) {
+            range.setStart(root, 0);
+        }
+        if (range.endContainer === this.el && range.endOffset === 1) {
+            range.setEnd(root, root.length)
+        }
         assert(range.startContainer === root,
                "selection should be in the input view");
         assert(range.endContainer === root,
@@ -149,6 +160,7 @@ my.InputView = instance.web.Widget.extend({
         }
     },
     onKeydown: function (e) {
+        this.el.normalize();
         var sel;
         switch (e.which) {
         // Do not insert newline, but let it bubble so searchview can use it
@@ -186,6 +198,7 @@ my.InputView = instance.web.Widget.extend({
         }
     },
     setCursorAtEnd: function () {
+        this.el.normalize();
         var sel = window.getSelection();
         sel.removeAllRanges();
         var range = document.createRange();
@@ -196,13 +209,14 @@ my.InputView = instance.web.Widget.extend({
         // from about half the link to half the text, paste in search box then
         // hit the left arrow key, getSelection would blow up).
         //
-        // Explicitly selecting only the inner text node (only child node at
-        // this point, though maybe we should assert that) avoiids the issue
+        // Explicitly selecting only the inner text node (only child node
+        // since we've normalized the parent) avoids the issue
         range.selectNode(this.el.childNodes[0]);
         range.collapse(false);
         sel.addRange(range);
     },
     onPaste: function () {
+        this.el.normalize();
         // In MSIE and Webkit, it is possible to get various representations of
         // the clipboard data at this point e.g.
         // window.clipboardData.getData('Text') and
@@ -224,6 +238,7 @@ my.InputView = instance.web.Widget.extend({
             var data = this.$el.text();
             // paste raw text back in
             this.$el.empty().text(data);
+            this.el.normalize();
             // Set the cursor at the end of the text, so the cursor is not lost
             // in some kind of error-spawning limbo.
             this.setCursorAtEnd();
@@ -449,11 +464,12 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         var autocomplete = this.$el.autocomplete({
             source: this.proxy('complete_global_search'),
             select: this.proxy('select_completion'),
+            search: function () { self.$el.autocomplete('close'); },
             focus: function (e) { e.preventDefault(); },
             html: true,
             autoFocus: true,
             minLength: 1,
-            delay: 0
+            delay: 0,
         }).data('autocomplete');
 
         // MonkeyPatch autocomplete instance
@@ -526,7 +542,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         var val = this.$el.val();
         this.$el.val('');
         var complete = this.$el.data('autocomplete');
-        if ((val && complete.term === undefined) || complete.previous !== undefined) {
+        if ((val && complete.term === undefined) || complete.previous) {
             throw new Error("new jquery.ui version altering implementation" +
                             " details relied on");
         }
@@ -1892,7 +1908,7 @@ instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @
         this._super(parent);
         this.fields = _(fields).chain()
             .map(function(val, key) { return _.extend({}, val, {'name': key}); })
-            .filter(function (field) { return !field.deprecated; })
+            .filter(function (field) { return !field.deprecated && (field.store === void 0 || field.store || field.fnct_search); })
             .sortBy(function(field) {return field.string;})
             .value();
         this.attrs = {_: _, fields: this.fields, selected: null};

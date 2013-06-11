@@ -503,12 +503,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         var reloaded = $.Deferred();
         this.$el.find('.oe_list_content').append(
             this.groups.render(function () {
-                if (self.dataset.index == null) {
-                    var has_one = false;
-                    self.records.each(function () { has_one = true; });
-                    if (has_one) {
+                if (self.dataset.index == null && self.records.length ||
+                    self.dataset.index >= self.records.length) {
                         self.dataset.index = 0;
-                    }
                 }
                 self.compute_aggregates();
                 reloaded.resolve();
@@ -530,12 +527,13 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                     return r.tag === 'field';
                 }), 'name')
         ).done(function (records) {
-            if (!records[0]) {
+            var values = records[0];
+            if (!values) {
                 self.records.remove(record);
                 return;
             }
-            _(records[0]).each(function (value, key) {
-                record.set(key, value, {silent: true});
+            _(_.keys(values)).each(function(key){
+                record.set(key, values[key], {silent: true});
             });
             record.trigger('change', record);
         });
@@ -896,7 +894,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
         this.record_callbacks = {
             'remove': function (event, record) {
                 var id = record.get('id');
-                self.dataset.remove_ids([id])
+                self.dataset.remove_ids([id]);
                 var $row = self.$current.children('[data-id=' + id + ']');
                 var index = $row.data('index');
                 $row.remove();
@@ -909,12 +907,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                         throw new Error(_.str.sprintf( _t("Setting 'id' attribute on existing record %s"),
                             JSON.stringify(record.attributes) ));
                     }
-                    if (!_.contains(self.dataset.ids, value)) {
-                        // add record to dataset if not already in (added by
-                        // the form view?)
-                        self.dataset.ids.splice(
-                            self.records.indexOf(record), 0, value);
-                    }
+                    self.dataset.add_ids([value], self.records.indexOf(record));
                     // Set id on new record
                     $row = self.$current.children('[data-id=false]');
                 } else {
@@ -925,6 +918,8 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
             },
             'add': function (ev, records, record, index) {
                 var $new_row = $(self.render_record(record));
+                var id = record.get('id');
+                if (id) { self.dataset.add_ids([id], index); }
 
                 if (index === 0) {
                     $new_row.prependTo(self.$current);

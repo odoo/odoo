@@ -32,6 +32,7 @@ except ImportError:
 import openerp
 import openerp.modules.registry
 from openerp.tools.translate import _
+from openerp.tools import config
 
 from .. import http
 openerpweb = http
@@ -84,9 +85,9 @@ def rjsmin(script):
     ).strip()
     return result
 
-def db_list(req):
+def db_list(req, force=False):
     proxy = req.session.proxy("db")
-    dbs = proxy.list()
+    dbs = proxy.list(force)
     h = req.httprequest.environ['HTTP_HOST'].split(':')[0]
     d = h.split('.')[0]
     r = openerp.tools.config['dbfilter'].replace('%h', h).replace('%d', d)
@@ -102,25 +103,21 @@ def db_monodb_redirect(req):
     if db_url:
         return (db_url, False)
 
-    try:
-        dbs = db_list(req)
-    except Exception:
-        # ignore access denied
-        dbs = []
+    dbs = db_list(req, True)
 
     # 2 use the database from the cookie if it's listable and still listed
     cookie_db = req.httprequest.cookies.get('last_used_database')
     if cookie_db in dbs:
         db = cookie_db
 
-    # 3 use the first db
-    if dbs and not db:
+    # 3 use the first db if user can list databases
+    if dbs and not db and (config['list_db'] or len(dbs) == 1):
         db = dbs[0]
 
     # redirect to the chosen db if multiple are available
     if db and len(dbs) > 1:
         query = dict(urlparse.parse_qsl(req.httprequest.query_string, keep_blank_values=True))
-        query.update({ 'db': db })
+        query.update({'db': db})
         redirect = req.httprequest.path + '?' + urllib.urlencode(query)
     return (db, redirect)
 
@@ -281,8 +278,9 @@ def concat_files(file_list, reader=None, intersperse=""):
 
     if reader is None:
         def reader(f):
-            with open(f, 'rb') as fp:
-                return fp.read()
+            import codecs
+            with codecs.open(f, 'rb', "utf-8-sig") as fp:
+                return fp.read().encode("utf-8")
 
     files_content = []
     for fname in file_list:
@@ -767,7 +765,14 @@ class Database(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def get_list(self, req):
-        return db_list(req)
+        # TODO change js to avoid calling this method if in monodb mode
+        try:
+            return db_list(req)
+        except xmlrpclib.Fault:
+            monodb = db_monodb(req)
+            if monodb:
+                return [monodb]
+            raise
 
     @openerpweb.jsonrequest
     def create(self, req, fields):
@@ -782,20 +787,11 @@ class Database(openerpweb.Controller):
     @openerpweb.jsonrequest
     def duplicate(self, req, fields):
         params = dict(map(operator.itemgetter('name', 'value'), fields))
-        return req.session.proxy("db").duplicate_database(
-            params['super_admin_pwd'],
-            params['db_original_name'],
-            params['db_name'])
-
-    @openerpweb.jsonrequest
-    def duplicate(self, req, fields):
-        params = dict(map(operator.itemgetter('name', 'value'), fields))
         duplicate_attrs = (
             params['super_admin_pwd'],
             params['db_original_name'],
             params['db_name'],
         )
-
         return req.session.proxy("db").duplicate_database(*duplicate_attrs)
 
     @openerpweb.jsonrequest
@@ -803,9 +799,9 @@ class Database(openerpweb.Controller):
         password, db = operator.itemgetter(
             'drop_pwd', 'drop_db')(
                 dict(map(operator.itemgetter('name', 'value'), fields)))
-
+        
         try:
-            return req.session.proxy("db").drop(password, db)
+            if req.session.proxy("db").drop(password, db):return True
         except openerp.exceptions.AccessDenied:
             return {'error': 'AccessDenied', 'title': 'Drop Database'}
         except Exception:
@@ -1389,7 +1385,7 @@ class Binary(openerpweb.Controller):
         else:
             try:
                 # create an empty registry
-                registry = openerp.modules.registry.Registry(dbname.lower())
+                registry = openerp.modules.registry.Registry(dbname)
                 with registry.cursor() as cr:
                     cr.execute("""SELECT c.logo_web
                                     FROM res_users u
@@ -1499,6 +1495,8 @@ class Export(openerpweb.Controller):
                     if all(dict(attrs).get('readonly', True)
                            for attrs in field.get('states', {}).values()):
                         continue
+            if not field.get('exportable', True):
+                continue
 
             id = prefix + (prefix and '/'or '') + field_name
             name = parent_name + (parent_name and '/' or '') + field['string']

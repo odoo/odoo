@@ -273,7 +273,7 @@ var py = {};
         var Special = '[:;.,`@]';
         var Funny = group(Operator, Bracket, Special);
 
-        var ContStr = group("[uU]?'([^']*)'", '[uU]?"([^"]*)"');
+        var ContStr = group("([uU])?'([^']*)'", '([uU])?"([^"]*)"');
 
         var PseudoToken = Whitespace + group(Number, Funny, ContStr, Name);
 
@@ -311,7 +311,8 @@ var py = {};
                 } else if (string_pattern.test(token)) {
                     var m = string_pattern.exec(token);
                     tokens.push(create(symbols['(string)'], {
-                        value: (m[2] !== undefined ? m[2] : m[3])
+                        unicode: !!(m[2] || m[4]),
+                        value: (m[3] !== undefined ? m[3] : m[5])
                     }));
                 } else if (token in symbols) {
                     var symbol;
@@ -393,13 +394,14 @@ var py = {};
 
         switch(val.constructor) {
         case Object:
-            var out = py.PY_call(py.object);
-            for(var k in val) {
-                if (val.hasOwnProperty(k)) {
-                    out[k] = val[k];
+            // TODO: why py.object instead of py.dict?
+            var o = py.PY_call(py.object);
+            for (var prop in val) {
+                if (val.hasOwnProperty(prop)) {
+                    o[prop] = val[prop];
                 }
             }
-            return out;
+            return o;
         case Array:
             return py.list.fromJSON(val);
         }
@@ -521,7 +523,7 @@ var py = {};
         }
     };
     py.PY_getAttr = function (o, attr_name) {
-        return PY_ensurepy(o.__getattribute__(attr_name),attr_name);
+        return PY_ensurepy(o.__getattribute__(attr_name));
     };
     py.PY_str = function (o) {
         var v = o.__str__();
@@ -762,14 +764,7 @@ var py = {};
 
         // Conversion
         toJSON: function () {
-            var out = {};
-            for(var k in this) {
-                if (this.hasOwnProperty(k) && !/^__/.test(k)) {
-                    var val = this[k];
-                    out[k] = val.toJSON ? val.toJSON() : val;
-                }
-            }
-            return out;
+            throw new Error(this.constructor.name + ' can not be converted to JSON');
         }
     });
     var NoneType = py.type('NoneType', null, {
@@ -998,7 +993,7 @@ var py = {};
             }
             var t = py.PY_call(py.tuple);
             for(var i=0; i<ar.length; ++i) {
-                t._values.push(PY_ensurepy(ar[i],i));
+                t._values.push(PY_ensurepy(ar[i]));
             }
             return t;
         }
@@ -1032,7 +1027,7 @@ var py = {};
                 if (!d.hasOwnProperty(k)) { continue; }
                 instance.__setitem__(
                     py.str.fromJSON(k),
-                    PY_ensurepy(d[k],k));
+                    PY_ensurepy(d[k]));
             }
             return instance;
         },
@@ -1108,6 +1103,114 @@ var py = {};
     });
 
 
+    /**
+     * Implements the decoding of Python string literals (embedded in
+     * JS strings) into actual JS strings. This includes the decoding
+     * of escapes into their corresponding JS
+     * characters/codepoints/whatever.
+     *
+     * The ``unicode`` flags notes whether the literal should be
+     * decoded as a bytestring literal or a unicode literal, which
+     * pretty much only impacts decoding (or not) of unicode escapes
+     * at this point since bytestrings are not technically handled
+     * (everything is decoded to JS "unicode" strings)
+     *
+     * Eventurally, ``str`` could eventually use typed arrays, that'd
+     * be interesting...
+     */
+    var PY_decode_string_literal = function (str, unicode) {
+        var out = [], code;
+        // Directly maps a single escape code to an output
+        // character
+        var direct_map = {
+            '\\': '\\',
+            '"': '"',
+            "'": "'",
+            'a': '\x07',
+            'b': '\x08',
+            'f': '\x0c',
+            'n': '\n',
+            'r': '\r',
+            't': '\t',
+            'v': '\v'
+        };
+
+        for (var i=0; i<str.length; ++i) {
+            if (str[i] !== '\\') {
+                out.push(str[i]);
+                continue;
+            }
+            var escape = str[i+1];
+            if (escape in direct_map) {
+                out.push(direct_map[escape]);
+                ++i;
+                continue;
+            }
+
+            switch (escape) {
+            // Ignored
+            case '\n': ++i; continue;
+            // Character named name in the Unicode database (Unicode only)
+            case 'N':
+                if (!unicode) { break; }
+                throw Error("SyntaxError: \\N{} escape not implemented");
+            case 'u':
+                if (!unicode) { break; }
+                var uni = str.slice(i+2, i+6);
+                if (!/[0-9a-f]{4}/i.test(uni)) {
+                    throw new Error([
+                        "SyntaxError: (unicode error) 'unicodeescape' codec",
+                        " can't decode bytes in position ",
+                        i, "-", i+4,
+                        ": truncated \\uXXXX escape"
+                    ].join(''));
+                }
+                code = parseInt(uni, 16);
+                out.push(String.fromCharCode(code));
+                // escape + 4 hex digits
+                i += 5;
+                continue;
+            case 'U':
+                if (!unicode) { break; }
+                // TODO: String.fromCodePoint
+                throw Error("SyntaxError: \\U escape not implemented");
+            case 'x':
+                // get 2 hex digits
+                var hex = str.slice(i+2, i+4);
+                if (!/[0-9a-f]{2}/i.test(hex)) {
+                    if (!unicode) {
+                        throw new Error('ValueError: invalid \\x escape');
+                    }
+                    throw new Error([
+                        "SyntaxError: (unicode error) 'unicodeescape'",
+                        " codec can't decode bytes in position ",
+                        i, '-', i+2,
+                        ": truncated \\xXX escape"
+                    ].join(''))
+                }
+                code = parseInt(hex, 16);
+                out.push(String.fromCharCode(code));
+                // skip escape + 2 hex digits
+                i += 3;
+                continue;
+            default:
+                // Check if octal
+                if (!/[0-8]/.test(escape)) { break; }
+                var r = /[0-8]{1,3}/g;
+                r.lastIndex = i+1;
+                var m = r.exec(str);
+                var oct = m[0];
+                code = parseInt(oct, 8);
+                out.push(String.fromCharCode(code));
+                // skip matchlength
+                i += oct.length;
+                continue;
+            }
+            out.push('\\');
+        }
+
+        return out.join('');
+    };
     // All binary operators with fallbacks, so they can be applied generically
     var PY_operators = {
         '==': ['eq', 'eq', function (a, b) { return a === b; }],
@@ -1217,7 +1320,8 @@ var py = {};
             }
             return PY_ensurepy(val, expr.value);
         case '(string)':
-            return py.str.fromJSON(expr.value);
+            return py.str.fromJSON(PY_decode_string_literal(
+                expr.value, expr.unicode));
         case '(number)':
             return py.float.fromJSON(expr.value);
         case '(constant)':

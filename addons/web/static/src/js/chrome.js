@@ -430,7 +430,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
         var fetch_langs = this.rpc("/web/session/get_lang_list", {}).done(function(result) {
             self.lang_list = result;
         });
-        return $.when(fetch_db, fetch_langs).done(self.do_render);
+        return $.when(fetch_db, fetch_langs).always(self.do_render);
     },
     do_render: function() {
         var self = this;
@@ -950,7 +950,7 @@ instance.web.Menu =  instance.web.Widget.extend({
     },
     do_load_needaction: function (menu_ids) {
         var self = this;
-        menu_ids = _.reject(menu_ids, _.isEmpty);
+        menu_ids = _.compact(menu_ids);
         if (_.isEmpty(menu_ids)) {
             return $.when();
         }
@@ -1184,6 +1184,25 @@ instance.web.UserMenu =  instance.web.Widget.extend({
             });
         }
     },
+    on_menu_account: function() {
+        var self = this;
+        if (!this.getParent().has_uncommitted_changes()) {
+            var P = new instance.web.Model('ir.config_parameter');
+            P.call('get_param', ['database.uuid']).then(function(dbuuid) {
+                var state = {
+                            'd': instance.session.db,
+                            'u': window.location.protocol + '//' + window.location.host,
+                        };
+                var params = {
+                    response_type: 'token',
+                    client_id: dbuuid || '',
+                    state: JSON.stringify(state),
+                    scope: 'userinfo',
+                };
+                instance.web.redirect('https://accounts.openerp.com/oauth2/auth?'+$.param(params));
+            });
+        }
+    },
     on_menu_about: function() {
         var self = this;
         self.rpc("/web/webclient/version_info", {}).done(function(res) {
@@ -1404,7 +1423,7 @@ instance.web.WebClient = instance.web.Client.extend({
             if (browser_offset !== user_offset) {
                 var $icon = $(QWeb.render('WebClient.timezone_systray'));
                 $icon.on('click', function() {
-                    var notification = self.do_warn(_t("Timezone mismatch"), QWeb.render('WebClient.timezone_notification', {
+                    var notification = self.do_warn(_t("Timezone Mismatch"), QWeb.render('WebClient.timezone_notification', {
                         user_timezone: instance.session.user_context.tz || 'UTC',
                         user_offset: user_offset,
                         browser_offset: browser_offset,
