@@ -206,11 +206,11 @@ class hr_applicant(base_stage, osv.Model):
     def _compute_attachments(self, cr, uid, ids, fields, args, context=None):
         res = {}
         attachment_pool = self.pool.get('ir.attachment')
-        for issue in self.browse(cr, uid, ids, context=context):
-            res[issue.id] = 0
-            attach = attachment_pool.search(cr, uid, [('res_model','=','hr.applicant'),('res_id','=',issue.id)])
+        for applicant in self.browse(cr, uid, ids, context=context):
+            res[applicant.id] = 0
+            attach = attachment_pool.search(cr, uid, [('res_model','=','hr.applicant'),('res_id','=',applicant.id)])
             if attach:
-                res[issue.id] = len(attach)
+                res[applicant.id] = len(attach)
         return res
 
     _columns = {
