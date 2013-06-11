@@ -101,12 +101,16 @@ class mail_thread(osv.AbstractModel):
 
         if catchall_domain and model and res_id:  # specific res_id -> find its alias (i.e. section_id specified)
             object_id = self.pool.get(model).browse(cr, uid, res_id, context=context)
-            alias = object_id.alias_id
+            # check that the alias effectively creates new records
+            if object_id.alias_id and object_id.alias_id.alias_model_id and \
+                    object_id.alias_id.alias_model_id.model == self._name and \
+                    object_id.alias_id.alias_force_thread_id == 0:
+                alias = object_id.alias_id
         elif catchall_domain and model:  # no specific res_id given -> generic help message, take an example alias (i.e. alias of some section_id)
             model_id = self.pool.get('ir.model').search(cr, uid, [("model", "=", self._name)], context=context)[0]
             alias_obj = self.pool.get('mail.alias')
-            alias_ids = alias_obj.search(cr, uid, [("alias_model_id", "=", model_id)], context=context, limit=1, order='id ASC')
-            if alias_ids:
+            alias_ids = alias_obj.search(cr, uid, [("alias_model_id", "=", model_id), ('alias_force_thread_id', '=', 0)], context=context, order='id ASC')
+            if alias_ids and len(alias_ids) == 1:  # if several aliases -> incoherent to propose one guessed from nowhere, therefore avoid if several aliases
                 alias = alias_obj.browse(cr, uid, alias_ids[0], context=context)
 
         if alias:
@@ -281,14 +285,21 @@ class mail_thread(osv.AbstractModel):
             context = {}
         thread_id = super(mail_thread, self).create(cr, uid, values, context=context)
 
+        # automatic logging unless asked not to (mainly for various testing purpose)
+        if not context.get('mail_create_nolog'):
+            self.message_post(cr, uid, thread_id, body=_('%s created') % (self._description), context=context)
+
         # subscribe uid unless asked not to
         if not context.get('mail_create_nosubscribe'):
             self.message_subscribe_users(cr, uid, [thread_id], [uid], context=context)
         self.message_auto_subscribe(cr, uid, [thread_id], values.keys(), context=context)
 
-        # automatic logging unless asked not to (mainly for various testing purpose)
-        if not context.get('mail_create_nolog'):
-            self.message_post(cr, uid, thread_id, body=_('%s created') % (self._description), context=context)
+        # track values
+        tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=context)
+        if tracked_fields:
+            initial_values = {thread_id: dict((item, False) for item in tracked_fields)}
+            self.message_track(cr, uid, [thread_id], tracked_fields, initial_values, context=context)
+
         return thread_id
 
     def write(self, cr, uid, ids, values, context=None):
@@ -448,6 +459,20 @@ class mail_thread(osv.AbstractModel):
                             ], context=context)
         ir_attachment_obj.unlink(cr, uid, attach_ids, context=context)
         return True
+
+    def check_mail_message_access(self, cr, uid, mids, operation, model_obj=None, context=None):
+        """ mail.message check permission rules for related document. This method is
+            meant to be inherited in order to implement addons-specific behavior.
+            A common behavior would be to allow creating messages when having read
+            access rule on the document, for portal document such as issues. """
+        if not model_obj:
+            model_obj = self
+        if operation in ['create', 'write', 'unlink']:
+            model_obj.check_access_rights(cr, uid, 'write')
+            model_obj.check_access_rule(cr, uid, mids, 'write', context=context)
+        else:
+            model_obj.check_access_rights(cr, uid, operation)
+            model_obj.check_access_rule(cr, uid, mids, operation, context=context)
 
     def _get_formview_action(self, cr, uid, id, model=None, context=None):
         """ Return an action to open the document. This method is meant to be

@@ -84,7 +84,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
             obj_company = obj_user.browse(cr, uid, uid, context=context).company_id
         vat_no = obj_company.partner_id.vat
         if not vat_no:
-            raise osv.except_osv(_('insufficient data!'), _('No VAT number associated with your company.'))
+            raise osv.except_osv(_('Insufficient Data!'), _('No VAT number associated with your company.'))
         vat_no = vat_no.replace(' ','').upper()
         vat = vat_no[2:]
 
