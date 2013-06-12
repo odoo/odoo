@@ -736,7 +736,7 @@ class mail_message(osv.Model):
         other_ids = other_ids.difference(set(notified_ids))
         model_record_ids = _generate_model_record_ids(message_values, other_ids)
         document_related_ids = []
-        
+
         for model, doc_dict in model_record_ids.items():
             model_obj = self.pool[model]
             mids = model_obj.exists(cr, uid, doc_dict.keys())
@@ -754,15 +754,6 @@ class mail_message(osv.Model):
         raise orm.except_orm(_('Access Denied'),
                             _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
                             (self._description, operation))
-
-    def check_related_document(self, cr, uid, model_obj, mids, operation, context=None):
-        """Concrete check permission rules for related document"""
-        if operation in ['create', 'write', 'unlink']:
-            model_obj.check_access_rights(cr, uid, 'write')
-            model_obj.check_access_rule(cr, uid, mids, 'write', context=context)
-        else:
-            model_obj.check_access_rights(cr, uid, operation)
-            model_obj.check_access_rule(cr, uid, mids, operation, context=context)
 
     def create(self, cr, uid, values, context=None):
         if context is None:

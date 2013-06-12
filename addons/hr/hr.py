@@ -152,6 +152,7 @@ class hr_job(osv.osv):
 class hr_employee(osv.osv):
     _name = "hr.employee"
     _description = "Employee"
+    _order = 'name_related'
     _inherits = {'resource.resource': "resource_id"}
     _inherit = ['mail.thread']
 
@@ -160,10 +161,10 @@ class hr_employee(osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             result[obj.id] = tools.image_get_resized_images(obj.image)
         return result
-    
+
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
-    
+
     _columns = {
         #we need a related field in order to be able to sort the employee by name
         'name_related': fields.related('resource_id', 'name', type='char', string='Name', readonly=True, store=True),
@@ -173,12 +174,12 @@ class hr_employee(osv.osv):
         'sinid': fields.char('SIN No', size=32, help="Social Insurance Number"),
         'identification_id': fields.char('Identification No', size=32),
         'otherid': fields.char('Other Id', size=64),
-        'gender': fields.selection([('male', 'Male'),('female', 'Female')], 'Gender'),
+        'gender': fields.selection([('male', 'Male'), ('female', 'Female')], 'Gender'),
         'marital': fields.selection([('single', 'Single'), ('married', 'Married'), ('widower', 'Widower'), ('divorced', 'Divorced')], 'Marital Status'),
-        'department_id':fields.many2one('hr.department', 'Department'),
+        'department_id': fields.many2one('hr.department', 'Department'),
         'address_id': fields.many2one('res.partner', 'Working Address'),
         'address_home_id': fields.many2one('res.partner', 'Home Address'),
-        'bank_account_id':fields.many2one('res.partner.bank', 'Bank Account Number', domain="[('partner_id','=',address_home_id)]", help="Employee bank salary account"),
+        'bank_account_id': fields.many2one('res.partner.bank', 'Bank Account Number', domain="[('partner_id','=',address_home_id)]", help="Employee bank salary account"),
         'work_phone': fields.char('Work Phone', size=32, readonly=False),
         'mobile_phone': fields.char('Work Mobile', size=32, readonly=False),
         'work_email': fields.char('Work Email', size=240),
@@ -209,14 +210,22 @@ class hr_employee(osv.osv):
             help="Small-sized photo of the employee. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
-        'passport_id':fields.char('Passport No', size=64),
+        'passport_id': fields.char('Passport No', size=64),
         'color': fields.integer('Color Index'),
         'city': fields.related('address_id', 'city', type='char', string='City'),
         'login': fields.related('user_id', 'login', type='char', string='Login', readonly=1),
         'last_login': fields.related('user_id', 'date', type='datetime', string='Latest Connection', readonly=1),
     }
 
-    _order = 'name_related'
+    def _get_default_image(self, cr, uid, context=None):
+        image_path = get_module_resource('hr', 'static/src/img', 'default_image.png')
+        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
+
+    defaults = {
+        'active': 1,
+        'image': _get_default_image,
+        'color': 0,
+    }
 
     def create(self, cr, uid, data, context=None):
         if context is None:
@@ -257,7 +266,7 @@ class hr_employee(osv.osv):
             company_id = self.pool.get('res.company').browse(cr, uid, company, context=context)
             address = self.pool.get('res.partner').address_get(cr, uid, [company_id.partner_id.id], ['default'])
             address_id = address and address['default'] or False
-        return {'value': {'address_id' : address_id}}
+        return {'value': {'address_id': address_id}}
 
     def onchange_department_id(self, cr, uid, ids, department_id, context=None):
         value = {'parent_id': False}
@@ -270,11 +279,7 @@ class hr_employee(osv.osv):
         work_email = False
         if user_id:
             work_email = self.pool.get('res.users').browse(cr, uid, user_id, context=context).email
-        return {'value': {'work_email' : work_email}}
-
-    def _get_default_image(self, cr, uid, context=None):
-        image_path = get_module_resource('hr', 'static/src/img', 'default_image.png')
-        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
+        return {'value': {'work_email': work_email}}
 
     def action_follow(self, cr, uid, ids, context=None):
         """ Wrapper because message_subscribe_users take a user_ids=None
@@ -305,13 +310,6 @@ class hr_employee(osv.osv):
                 user_field_lst.append(name)
         return user_field_lst
 
-
-    _defaults = {
-        'active': 1,
-        'image': _get_default_image,
-        'color': 0,
-    }
-
     def _check_recursion(self, cr, uid, ids, context=None):
         level = 100
         while len(ids):
@@ -325,6 +323,22 @@ class hr_employee(osv.osv):
     _constraints = [
         (_check_recursion, 'Error! You cannot create recursive hierarchy of Employee(s).', ['parent_id']),
     ]
+
+    # ---------------------------------------------------
+    # Mail gateway
+    # ---------------------------------------------------
+
+    def check_mail_message_access(self, cr, uid, mids, operation, model_obj=None, context=None):
+        """ mail.message document permission rule: can post a new message if can read
+            because of portal document. """
+        if not model_obj:
+            model_obj = self
+        employee_ids = model_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
+        if employee_ids and operation == 'create':
+            model_obj.check_access_rights(cr, uid, 'read')
+            model_obj.check_access_rule(cr, uid, mids, 'read', context=context)
+        else:
+            return super(hr_employee, self).check_mail_message_access(cr, uid, mids, operation, model_obj=model_obj, context=context)
 
 
 class hr_department(osv.osv):
