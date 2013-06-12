@@ -199,22 +199,20 @@ class res_company(osv.osv):
             return {'value':{'country_id': self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id }}
         return {}
         
-    def onchange_font_name(self, cr, uid, ids, font, context=None):
-        """
-        To change default header style of all <para> and drawstring.
-        """
+    def onchange_font_name(self, cr, uid, ids, font, rml_header, rml_header2, rml_header3, context=None):
+        
+        """ To change default header style of all <para> and drawstring. """
+        
         def _change_header(header,font):
-            """
-            Replace default fontname use in header and setfont tag
-            """
+        
+            """ Replace default fontname use in header and setfont tag """
+            
             default_para = re.sub('fontName.?=.?".*"', 'fontName="%s"'% font,header)
             return re.sub('(<setFont.?name.?=.?)(".*?")(.)', '\g<1>"%s"\g<3>'% font,default_para)
-        if not ids: return {}
-        data = self.browse(cr, uid, ids[0], context=context)
         return {'value':{
-                        'rml_header': _change_header(data.rml_header,font),
-                        'rml_header2':_change_header(data.rml_header2,font),
-                        'rml_header3':_change_header(data.rml_header3,font)
+                        'rml_header': _change_header(rml_header,font),
+                        'rml_header2':_change_header(rml_header2,font),
+                        'rml_header3':_change_header(rml_header3,font)
                         }}
 
     def on_change_country(self, cr, uid, ids, country_id, context=None):
@@ -413,7 +411,8 @@ class res_company(osv.osv):
         'rml_header':_get_header,
         'rml_header2': _header2,
         'rml_header3': _header3,
-        'logo':_get_logo
+        'logo':_get_logo,
+        'font':'DejaVu Sans'
     }
 
     _constraints = [
