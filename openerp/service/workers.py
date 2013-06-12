@@ -25,6 +25,7 @@ except ImportError:
 
 import openerp
 import openerp.tools.config as config
+from openerp.tools.misc import stripped_sys_argv
 
 _logger = logging.getLogger(__name__)
 
@@ -91,7 +92,7 @@ class Multicorn(object):
             sys.exit(0)
 
     def long_polling_spawn(self):
-        nargs = [] + sys.argv
+        nargs = stripped_sys_argv('--pidfile')
         cmd = nargs[0]
         cmd = os.path.join(os.path.dirname(cmd), "openerp-long-polling")
         nargs[0] = cmd
