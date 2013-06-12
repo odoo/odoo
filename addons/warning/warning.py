@@ -64,7 +64,7 @@ class sale_order(osv.osv):
         partner = self.pool.get('res.partner').browse(cr, uid, part, context=context)
         if partner.sale_warn != 'no-message':
             if partner.sale_warn == 'block':
-                raise osv.except_osv(_('Alert for %s !') % (partner.name), partner.sale_warn_msg)
+                raise osv.except_osv(_('Alert for %s!') % (partner.name), partner.sale_warn_msg)
             title =  _("Warning for %s") % partner.name
             message = partner.sale_warn_msg
             warning = {
@@ -93,7 +93,7 @@ class purchase_order(osv.osv):
         partner = self.pool.get('res.partner').browse(cr, uid, part)
         if partner.purchase_warn != 'no-message':
             if partner.purchase_warn == 'block':
-                raise osv.except_osv(_('Alert for %s !') % (partner.name), partner.purchase_warn_msg)
+                raise osv.except_osv(_('Alert for %s!') % (partner.name), partner.purchase_warn_msg)
             title = _("Warning for %s") % partner.name
             message = partner.purchase_warn_msg
             warning = {
@@ -127,7 +127,7 @@ class account_invoice(osv.osv):
         partner = self.pool.get('res.partner').browse(cr, uid, partner_id)
         if partner.invoice_warn != 'no-message':
             if partner.invoice_warn == 'block':
-                raise osv.except_osv(_('Alert for %s !') % (partner.name), partner.invoice_warn_msg)
+                raise osv.except_osv(_('Alert for %s!') % (partner.name), partner.invoice_warn_msg)
 
             title = _("Warning for %s") % partner.name
             message = partner.invoice_warn_msg
@@ -159,7 +159,7 @@ class stock_picking(osv.osv):
         message = False
         if partner.picking_warn != 'no-message':
             if partner.picking_warn == 'block':
-                raise osv.except_osv(_('Alert for %s !') % (partner.name), partner.picking_warn_msg)
+                raise osv.except_osv(_('Alert for %s!') % (partner.name), partner.picking_warn_msg)
             title = _("Warning for %s") % partner.name
             message = partner.picking_warn_msg
             warning = {
@@ -189,7 +189,7 @@ class stock_picking_in(osv.osv):
         message = False
         if partner.picking_warn != 'no-message':
             if partner.picking_warn == 'block':
-                raise osv.except_osv(_('Alert for %s !') % (partner.name), partner.picking_warn_msg)
+                raise osv.except_osv(_('Alert for %s!') % (partner.name), partner.picking_warn_msg)
             title = _("Warning for %s") % partner.name
             message = partner.picking_warn_msg
             warning = {
@@ -215,7 +215,7 @@ class stock_picking_out(osv.osv):
         message = False
         if partner.picking_warn != 'no-message':
             if partner.picking_warn == 'block':
-                raise osv.except_osv(_('Alert for %s !') % (partner.name), partner.picking_warn_msg)
+                raise osv.except_osv(_('Alert for %s!') % (partner.name), partner.picking_warn_msg)
             title = _("Warning for %s") % partner.name
             message = partner.picking_warn_msg
             warning = {
@@ -263,7 +263,7 @@ class sale_order_line(osv.osv):
 
         if product_info.sale_line_warn != 'no-message':
             if product_info.sale_line_warn == 'block':
-                raise osv.except_osv(_('Alert for %s !') % (product_info.name), product_info.sale_line_warn_msg)
+                raise osv.except_osv(_('Alert for %s!') % (product_info.name), product_info.sale_line_warn_msg)
             title = _("Warning for %s") % product_info.name
             message = product_info.sale_line_warn_msg
             warning['title'] = title
@@ -296,7 +296,7 @@ class purchase_order_line(osv.osv):
 
         if product_info.purchase_line_warn != 'no-message':
             if product_info.purchase_line_warn == 'block':
-                raise osv.except_osv(_('Alert for %s !') % (product_info.name), product_info.purchase_line_warn_msg)
+                raise osv.except_osv(_('Alert for %s!') % (product_info.name), product_info.purchase_line_warn_msg)
             title = _("Warning for %s") % product_info.name
             message = product_info.purchase_line_warn_msg
             warning['title'] = title

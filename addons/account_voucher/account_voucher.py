@@ -1638,7 +1638,7 @@ class account_bank_statement(osv.osv):
         for bk_st in self.browse(cr, uid, ids, context=context):
             if vals.get('journal_id') and bk_st.line_ids:
                 if any([x.voucher_id and True or False for x in bk_st.line_ids]):
-                    raise osv.except_osv(_('Unable to change journal !'), _('You can not change the journal as you already reconciled some statement lines!'))
+                    raise osv.except_osv(_('Unable to Change Journal!'), _('You can not change the journal as you already reconciled some statement lines!'))
         return super(account_bank_statement, self).write(cr, uid, ids, vals, context=context)
 
 account_bank_statement()

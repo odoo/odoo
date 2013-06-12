@@ -7,20 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
 "PO-Revision-Date: 2013-03-12 00:01+0000\n"
 "Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:55+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:37+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
 msgid "Number of Layers"
 msgstr "Broj razina"
+
+#. module: product
+#: view:res.partner:0
+msgid "the parent company"
+msgstr ""
 
 #. module: product
 #: help:product.pricelist.item,base:0
@@ -807,10 +812,8 @@ msgid "describe the product characteristics..."
 msgstr ""
 
 #. module: product
-#: help:product.template,standard_price:0
-msgid ""
-"Cost price of the product used for standard stock valuation in accounting "
-"and used as a base price on purchase orders."
+#: view:res.partner:0
+msgid "Pricelists are managed on"
 msgstr ""
 
 #. module: product
@@ -1134,9 +1137,9 @@ msgid "Price Surcharge"
 msgstr "Dodatna cijena"
 
 #. module: product
-#: field:product.product,code:0
-#: field:product.product,default_code:0
-msgid "Internal Reference"
+#: code:addons/product/pricelist.py:380
+#, python-format
+msgid "Supplier Prices on the product form"
 msgstr ""
 
 #. module: product
@@ -1363,7 +1366,7 @@ msgid "Supplier Info"
 msgstr "detalji dobavljača"
 
 #. module: product
-#: code:addons/product/product.py:729
+#: code:addons/product/product.py:732
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -1390,6 +1393,13 @@ msgstr "Jedinice mjere"
 #: field:product.supplierinfo,min_qty:0
 msgid "Minimal Quantity"
 msgstr "Minimalna količina"
+
+#. module: product
+#: view:product.supplierinfo:0
+msgid ""
+"The prices below will only be taken into account when your pricelist is set "
+"as based on supplier prices."
+msgstr ""
 
 #. module: product
 #: help:product.supplierinfo,product_code:0
@@ -1729,6 +1739,11 @@ msgid "Price:"
 msgstr ""
 
 #. module: product
+#: view:product.pricelist.item:0
+msgid "Min. Margin"
+msgstr "Min. marža"
+
+#. module: product
 #: field:product.template,weight:0
 msgid "Gross Weight"
 msgstr "Bruto težina"
@@ -1866,12 +1881,6 @@ msgid "Default Unit of Measure"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:377
-#, python-format
-msgid "Partner section of the product form"
-msgstr "Podaci o partneru u formi artikla"
-
-#. module: product
 #: help:product.price.type,name:0
 msgid "Name of this kind of price."
 msgstr "Naziv ove vrste cijene."
@@ -1915,6 +1924,12 @@ msgstr "Duljina / udaljenost"
 #. module: product
 #: model:product.category,name:product.product_category_8
 msgid "Components"
+msgstr ""
+
+#. module: product
+#: field:product.product,code:0
+#: field:product.product,default_code:0
+msgid "Internal Reference"
 msgstr ""
 
 #. module: product
@@ -2231,9 +2246,11 @@ msgid "Max. Price Margin"
 msgstr "Maks. marža prodajne cijene"
 
 #. module: product
-#: view:product.pricelist.item:0
-msgid "Min. Margin"
-msgstr "Min. marža"
+#: help:product.template,standard_price:0
+msgid ""
+"Cost price of the product used for standard stock valuation in accounting "
+"and used as a base price on purchase orders."
+msgstr ""
 
 #. module: product
 #: help:product.supplierinfo,product_name:0
@@ -2432,7 +2449,7 @@ msgid "15” LCD Monitor"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:376
+#: code:addons/product/pricelist.py:379
 #: field:product.pricelist.item,base_pricelist_id:0
 #, python-format
 msgid "Other Pricelist"
@@ -2564,3 +2581,7 @@ msgstr "Volumen u m3."
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Popust"
+
+#, python-format
+#~ msgid "Partner section of the product form"
+#~ msgstr "Podaci o partneru u formi artikla"

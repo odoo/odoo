@@ -63,7 +63,7 @@ class report_custom(report_int):
             self.obj.render()
             return (self.obj.pdf, 'pdf')
         except Exception:
-            raise osv.except_osv(_('pdf not created !'), _('Please check if package pdftk is installed!'))
+            raise osv.except_osv(_('PDF Not Created!'), _('Please check if package pdftk is installed!'))
 
 report_custom('report.l10n_lu.tax.report.print')
 

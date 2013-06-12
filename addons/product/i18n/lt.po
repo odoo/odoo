@@ -7,20 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
 "PO-Revision-Date: 2013-05-09 12:51+0000\n"
 "Last-Translator: Andrius Vilciauskas <a.vilciauskas@gmail.com>\n"
 "Language-Team: Lithuanian <lt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-05-10 06:51+0000\n"
-"X-Generator: Launchpad (build 16598)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:36+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
 msgid "Number of Layers"
 msgstr "Sluoksnių skaičius"
+
+#. module: product
+#: view:res.partner:0
+msgid "the parent company"
+msgstr ""
 
 #. module: product
 #: help:product.pricelist.item,base:0
@@ -829,13 +834,9 @@ msgid "describe the product characteristics..."
 msgstr "aprašykite produkto savybes..."
 
 #. module: product
-#: help:product.template,standard_price:0
-msgid ""
-"Cost price of the product used for standard stock valuation in accounting "
-"and used as a base price on purchase orders."
+#: view:res.partner:0
+msgid "Pricelists are managed on"
 msgstr ""
-"Produkto savikaina naudojama finansinėje apskaitoje tipinei atsargų "
-"apskaitai bei kaip bazinė produkto kaina pirkimų užsakymuose."
 
 #. module: product
 #: field:product.category,child_id:0
@@ -1184,10 +1185,10 @@ msgid "Price Surcharge"
 msgstr "Kainos priemoka"
 
 #. module: product
-#: field:product.product,code:0
-#: field:product.product,default_code:0
-msgid "Internal Reference"
-msgstr "Vidinis numeris"
+#: code:addons/product/pricelist.py:380
+#, python-format
+msgid "Supplier Prices on the product form"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_8_product_template
@@ -1420,7 +1421,7 @@ msgid "Supplier Info"
 msgstr "Tiekėjo informacija"
 
 #. module: product
-#: code:addons/product/product.py:729
+#: code:addons/product/product.py:732
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopija)"
@@ -1447,6 +1448,13 @@ msgstr "Matavimo vienetai"
 #: field:product.supplierinfo,min_qty:0
 msgid "Minimal Quantity"
 msgstr "Minimalus kiekis"
+
+#. module: product
+#: view:product.supplierinfo:0
+msgid ""
+"The prices below will only be taken into account when your pricelist is set "
+"as based on supplier prices."
+msgstr ""
 
 #. module: product
 #: help:product.supplierinfo,product_code:0
@@ -1812,6 +1820,11 @@ msgid "Price:"
 msgstr "Kaina:"
 
 #. module: product
+#: view:product.pricelist.item:0
+msgid "Min. Margin"
+msgstr "Min. skirtumas"
+
+#. module: product
 #: field:product.template,weight:0
 msgid "Gross Weight"
 msgstr "Bruto svoris"
@@ -1955,12 +1968,6 @@ msgid "Default Unit of Measure"
 msgstr "Matavimo vienetai"
 
 #. module: product
-#: code:addons/product/pricelist.py:377
-#, python-format
-msgid "Partner section of the product form"
-msgstr "Produkto formos partnerio sekcija"
-
-#. module: product
 #: help:product.price.type,name:0
 msgid "Name of this kind of price."
 msgstr "Šios kainos rūšies pavadinimas."
@@ -2005,6 +2012,12 @@ msgstr "Ilgis"
 #: model:product.category,name:product.product_category_8
 msgid "Components"
 msgstr ""
+
+#. module: product
+#: field:product.product,code:0
+#: field:product.product,default_code:0
+msgid "Internal Reference"
+msgstr "Vidinis numeris"
 
 #. module: product
 #: view:product.product:0
@@ -2363,9 +2376,13 @@ msgid "Max. Price Margin"
 msgstr "Maks. kainos marža"
 
 #. module: product
-#: view:product.pricelist.item:0
-msgid "Min. Margin"
-msgstr "Min. skirtumas"
+#: help:product.template,standard_price:0
+msgid ""
+"Cost price of the product used for standard stock valuation in accounting "
+"and used as a base price on purchase orders."
+msgstr ""
+"Produkto savikaina naudojama finansinėje apskaitoje tipinei atsargų "
+"apskaitai bei kaip bazinė produkto kaina pirkimų užsakymuose."
 
 #. module: product
 #: help:product.supplierinfo,product_name:0
@@ -2592,7 +2609,7 @@ msgid "15” LCD Monitor"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:376
+#: code:addons/product/pricelist.py:379
 #: field:product.pricelist.item,base_pricelist_id:0
 #, python-format
 msgid "Other Pricelist"
@@ -2742,3 +2759,7 @@ msgstr "Tūris išreikštas kubiniais metrais."
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Kainos nuolaida"
+
+#, python-format
+#~ msgid "Partner section of the product form"
+#~ msgstr "Produkto formos partnerio sekcija"

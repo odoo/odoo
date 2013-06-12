@@ -7,20 +7,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
-"PO-Revision-Date: 2013-03-09 08:32+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-06-08 09:43+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:28+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-06-09 06:16+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "No order to invoice, create"
 msgstr "Geen order om te factureren, aanmaken"
+
+#. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:547
+#, python-format
+msgid "Timesheets to Invoice of %s"
+msgstr "Urenstaten te facturen van %s"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -64,21 +70,6 @@ msgstr "Ongefactureerd bedrag"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid ""
-"When invoicing on timesheet, OpenERP uses the\n"
-"                            pricelist of the contract which uses the price\n"
-"                            defined on the product related to each employee "
-"to\n"
-"                            define the customer invoice price rate."
-msgstr ""
-"Bij het factureren van urenstaten, OpenERP gebruikt de\n"
-"                            prijslijst van het contract, welke weer de prijs "
-"\n"
-"                            gebruikt van het gekoppelde product aan de\n"
-"                            werknemer, om de klant factuurprijs bepalen."
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
 msgid "⇒ Invoice"
 msgstr "⇒ Factuur"
 
@@ -96,6 +87,30 @@ msgstr "Datum van laatste gefactureerde kosten"
 #: help:account.analytic.account,fix_price_to_invoice:0
 msgid "Sum of quotations for this contract."
 msgstr "Totaal van de offertes voor dit contract"
+
+#. module: account_analytic_analysis
+#: model:ir.actions.act_window,help:account_analytic_analysis.action_sales_order
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a quotation that can be converted into a "
+"sales\n"
+"                order.\n"
+"              </p><p>\n"
+"                Use sale orders to track everything that should be invoiced\n"
+"                at a fix price on a contract.\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik voor het aanmaken van een offerte welke kan worden "
+"geconverteerd in een verkoop\n"
+"                order.\n"
+"              </p><p>\n"
+"                Gebruik verkooporder om alles te volgen wat moet worden "
+"gefactureerd\n"
+"                met een vaste prijs op een contract.\n"
+"              </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
@@ -118,7 +133,7 @@ msgid "Contract expiration reminder ${user.company_id.name}"
 msgstr "Verlopen contract herinnering ${user.company_id.name}"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:466
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:464
 #, python-format
 msgid "Sales Order Lines of %s"
 msgstr "Verkooporderregels van %s"
@@ -287,6 +302,15 @@ msgstr "Werkelijke marge"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
+msgid ""
+"{'required': [('type','=','contract'),'|',('fix_price_invoices','=',True), "
+"('invoice_on_timesheets', '=', True)]}"
+msgstr ""
+"{'required': [('type','=','contract'),'|',('fix_price_invoices','=',True), "
+"('invoice_on_timesheets', '=', True)]}"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
 msgid "Contracts assigned to a customer."
 msgstr "Contracten toegewezen aan een klant."
 
@@ -309,11 +333,6 @@ msgstr "Berekend met de formule: (werkelijke marge / totale kosten) * 100."
 #: view:account.analytic.account:0
 msgid "or view"
 msgstr "of bekijk"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Customer Contracts"
-msgstr "Klant contracten"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -534,6 +553,7 @@ msgid "Contracts"
 msgstr "Contracten"
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_sales_order
 msgid "Sales Orders"
 msgstr "Verkooporders"
@@ -671,8 +691,8 @@ msgstr "Niet toegewezen contracten"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Sale Orders"
-msgstr "Verkooporders"
+msgid "Customer Contracts"
+msgstr "Klant contracten"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoiced_total:0
@@ -795,6 +815,20 @@ msgid "Date of the latest work done on this account."
 msgstr "Datum van de laatste werkzaamheden geboekt op deze kostenplaats"
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid ""
+"When reinvoicing costs, OpenERP uses the\n"
+"                            pricelist of the contract which uses the price\n"
+"                            defined on the product related (e.g timesheet \n"
+"                            products are defined on each employee)."
+msgstr ""
+"Bij het door factureren van kosten, gebruikt OpenERP\n"
+"                            de prijslijst van het contract, welke de prijs\n"
+"                            gebruikt van het gekoppelde product (bijv. \n"
+"                            urenstaten producten worden gedefinieerd \n"
+"                            per gebruiker)."
+
+#. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_sale_config_settings
 msgid "sale.config.settings"
 msgstr "sale.config.settings"
@@ -884,6 +918,22 @@ msgstr "Totaal"
 
 #~ msgid "Pending contracts to renew with your customer"
 #~ msgstr "Contracten in afwachting of deze vernieuwd worden."
+
+#~ msgid "Sale Orders"
+#~ msgstr "Verkooporders"
+
+#~ msgid ""
+#~ "When invoicing on timesheet, OpenERP uses the\n"
+#~ "                            pricelist of the contract which uses the price\n"
+#~ "                            defined on the product related to each employee "
+#~ "to\n"
+#~ "                            define the customer invoice price rate."
+#~ msgstr ""
+#~ "Bij het factureren van urenstaten, OpenERP gebruikt de\n"
+#~ "                            prijslijst van het contract, welke weer de prijs "
+#~ "\n"
+#~ "                            gebruikt van het gekoppelde product aan de\n"
+#~ "                            werknemer, om de klant factuurprijs bepalen."
 
 #~ msgid "Units Done"
 #~ msgstr "Eenheden verwerkt"

@@ -7,15 +7,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2013-03-07 18:28+0000\n"
-"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
+"Last-Translator: ERPSystems.ro <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:32+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:14+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
+
+#. module: auth_signup
+#: view:res.users:0
+msgid ""
+"A password reset has been requested for this user. An email containing the "
+"following link has been sent:"
+msgstr ""
 
 #. module: auth_signup
 #: field:res.partner,signup_type:0
@@ -29,7 +36,7 @@ msgstr "Permite utilizatorilor sa se inregistreze"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:16
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:19
 #, python-format
 msgid "Confirm Password"
 msgstr "Confirma Parola"
@@ -41,12 +48,22 @@ msgstr ""
 "Daca nu este selectat, doar utilizatorii invitati pot sa se inregistreze."
 
 #. module: auth_signup
+#: view:res.users:0
+msgid "Send an invitation email"
+msgstr ""
+
+#. module: auth_signup
+#: selection:res.users,state:0
+msgid "Activated"
+msgstr ""
+
+#. module: auth_signup
 #: model:ir.model,name:auth_signup.model_base_config_settings
 msgid "base.config.settings"
 msgstr "base.config.settings (setari.config.de_baza)"
 
 #. module: auth_signup
-#: code:addons/auth_signup/res_users.py:265
+#: code:addons/auth_signup/res_users.py:266
 #, python-format
 msgid "Cannot send email: user has no email address."
 msgstr ""
@@ -54,8 +71,8 @@ msgstr ""
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:24
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:28
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:27
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:31
 #, python-format
 msgid "Reset password"
 msgstr "Reseteaza parola"
@@ -73,28 +90,15 @@ msgstr "Parola resetata"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:117
+#: code:addons/auth_signup/static/src/js/auth_signup.js:120
 #, python-format
 msgid "Please enter a password and confirm it."
 msgstr "Va rugam sa introduceti o parola si sa o confirmati."
 
 #. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:23
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:26
-#, python-format
-msgid "Sign Up"
-msgstr "Inregistrare"
-
-#. module: auth_signup
-#: selection:res.users,state:0
-msgid "New"
-msgstr "Nou(a)"
-
-#. module: auth_signup
-#: field:res.users,state:0
-msgid "Status"
-msgstr "Stare"
+#: view:res.users:0
+msgid "Send reset password link by email"
+msgstr ""
 
 #. module: auth_signup
 #: model:email.template,body_html:auth_signup.reset_password_email
@@ -118,8 +122,24 @@ msgstr ""
 "<p>Nota: Daca nu asteptati aceasta, puteti ignora acest email.</p>"
 
 #. module: auth_signup
+#: view:res.users:0
+msgid ""
+"An invitation email containing the following subscription link has been sent:"
+msgstr ""
+
+#. module: auth_signup
+#: field:res.users,state:0
+msgid "Status"
+msgstr "Stare"
+
+#. module: auth_signup
+#: selection:res.users,state:0
+msgid "Never Connected"
+msgstr ""
+
+#. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:111
+#: code:addons/auth_signup/static/src/js/auth_signup.js:114
 #, python-format
 msgid "Please enter a name."
 msgstr "Va rugam sa introduceti un nume"
@@ -199,18 +219,13 @@ msgstr ""
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:114
+#: code:addons/auth_signup/static/src/js/auth_signup.js:117
 #, python-format
 msgid "Please enter a username."
 msgstr "Va rugam sa introduceti un nume de utilizator."
 
 #. module: auth_signup
-#: selection:res.users,state:0
-msgid "Active"
-msgstr "Activ(a)"
-
-#. module: auth_signup
-#: code:addons/auth_signup/res_users.py:269
+#: code:addons/auth_signup/res_users.py:270
 #, python-format
 msgid ""
 "Cannot send email: no outgoing email server configured.\n"
@@ -222,7 +237,7 @@ msgstr ""
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:174
+#: code:addons/auth_signup/static/src/js/auth_signup.js:177
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr "Un email a fost trimis cu acreditarile pentru a va reseta parola"
@@ -243,15 +258,10 @@ msgstr "Nume"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:170
+#: code:addons/auth_signup/static/src/js/auth_signup.js:173
 #, python-format
 msgid "Please enter a username or email address."
 msgstr "Va rugam sa introduceti un nume de utilizator sau o adresa de email."
-
-#. module: auth_signup
-#: selection:res.users,state:0
-msgid "Resetting Password"
-msgstr "Resetare Parola"
 
 #. module: auth_signup
 #. openerp-web
@@ -274,7 +284,7 @@ msgstr ""
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:22
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:25
 #, python-format
 msgid "Log in"
 msgstr "Autentificare"
@@ -286,35 +296,35 @@ msgstr "Simbolul de inregistrare este Valabil"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:108
 #: code:addons/auth_signup/static/src/js/auth_signup.js:111
 #: code:addons/auth_signup/static/src/js/auth_signup.js:114
 #: code:addons/auth_signup/static/src/js/auth_signup.js:117
 #: code:addons/auth_signup/static/src/js/auth_signup.js:120
-#: code:addons/auth_signup/static/src/js/auth_signup.js:167
+#: code:addons/auth_signup/static/src/js/auth_signup.js:123
 #: code:addons/auth_signup/static/src/js/auth_signup.js:170
+#: code:addons/auth_signup/static/src/js/auth_signup.js:173
 #, python-format
 msgid "Login"
 msgstr "Autentificare"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:94
+#: code:addons/auth_signup/static/src/js/auth_signup.js:97
 #, python-format
 msgid "Invalid signup token"
 msgstr "Simbol de inregistrare nevalid"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:120
+#: code:addons/auth_signup/static/src/js/auth_signup.js:123
 #, python-format
 msgid "Passwords do not match; please retype them."
 msgstr "Parolele nu se potrivesc; va rugam sa le scrieti din nou."
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:108
-#: code:addons/auth_signup/static/src/js/auth_signup.js:167
+#: code:addons/auth_signup/static/src/js/auth_signup.js:111
+#: code:addons/auth_signup/static/src/js/auth_signup.js:170
 #, python-format
 msgid "No database selected !"
 msgstr "Nu a fost selectata nicio baza de date !"
@@ -331,7 +341,7 @@ msgstr "${obiect.companie_id.nume} invitatie pentru a va conecta la OpenERP"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:27
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:30
 #, python-format
 msgid "Back to Login"
 msgstr "Inapoi la Autentificare"
@@ -342,14 +352,20 @@ msgid "Partner"
 msgstr "Partener"
 
 #. module: auth_signup
-#: view:res.users:0
-msgid "Send reset password instructions by email"
-msgstr "Trimiteti prin email instructiunile de resetare a parolei"
-
-#. module: auth_signup
 #: field:res.partner,signup_token:0
 msgid "Signup Token"
 msgstr "Simbol Inregistrare"
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:26
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:29
+#, python-format
+msgid "Sign Up"
+msgstr "Inregistrare"
+
+#~ msgid "New"
+#~ msgstr "Nou(a)"
 
 #, python-format
 #~ msgid "Mail sent to:"
@@ -357,6 +373,12 @@ msgstr "Simbol Inregistrare"
 
 #~ msgid "Send an email to the user to (re)set their password."
 #~ msgstr "Trimiteti un email utilizatorului pentru a (re)seta parola."
+
+#~ msgid "Active"
+#~ msgstr "Activ(a)"
+
+#~ msgid "Resetting Password"
+#~ msgstr "Resetare Parola"
 
 #~ msgid "Reset Password"
 #~ msgstr "Reseteaza Parola"

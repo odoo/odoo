@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:36+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:35+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:18+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -32,7 +32,7 @@ msgstr ""
 "desde los correos entrantes."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:881
+#: code:addons/crm/crm_lead.py:898
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
@@ -90,6 +90,11 @@ msgstr "Administrar recaudación de fondos"
 #: field:crm.phonecall.report,delay_close:0
 msgid "Delay to close"
 msgstr "Demora cierre"
+
+#. module: crm
+#: view:crm.lead:0
+msgid "Available for mass mailing"
+msgstr ""
 
 #. module: crm
 #: view:crm.case.stage:0
@@ -191,8 +196,8 @@ msgstr ""
 "directamente en formato HTML para poder ser insertado en las vistas kanban."
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:624
-#: code:addons/crm/crm_lead.py:744
+#: code:addons/crm/crm_lead.py:640
+#: code:addons/crm/crm_lead.py:761
 #: code:addons/crm/crm_phonecall.py:280
 #, python-format
 msgid "Warning!"
@@ -293,13 +298,9 @@ msgid "Categories"
 msgstr "Categorías"
 
 #. module: crm
-#: help:crm.lead,opt_out:0
-msgid ""
-"If opt-out is checked, this contact has refused to receive emails or "
-"unsubscribed to a campaign."
-msgstr ""
-"Si opt-out está marcado, este contacto ha rehusado recibir correos "
-"electrónicos o ha eliminado su suscripción a una campaña."
+#: view:crm.segmentation:0
+msgid "Segmentation Test"
+msgstr "Prueba de segmentación"
 
 #. module: crm
 #: model:process.transition,name:crm.process_transition_leadpartner0
@@ -307,7 +308,7 @@ msgid "Prospect Partner"
 msgstr "Socio prospecto"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:982
+#: code:addons/crm/crm_lead.py:1002
 #, python-format
 msgid "No Subject"
 msgstr "Sin asunto"
@@ -452,7 +453,7 @@ msgid "Team Leader"
 msgstr "Jefe de equipo"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1032
+#: code:addons/crm/crm_lead.py:1052
 #, python-format
 msgid "%s a call for %s.%s"
 msgstr ""
@@ -482,7 +483,7 @@ msgid "#Opportunities"
 msgstr "# Oportunidades"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:624
+#: code:addons/crm/crm_lead.py:640
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list view."
@@ -573,7 +574,7 @@ msgid "Planned Revenue"
 msgstr "Ingresos previstos"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:970
+#: code:addons/crm/crm_lead.py:988
 #, python-format
 msgid "Customer Email"
 msgstr ""
@@ -641,7 +642,7 @@ msgstr ""
 "+object.partner_id.name or '']]"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:745
+#: code:addons/crm/crm_lead.py:762
 #, python-format
 msgid ""
 "No customer name defined. Please fill one of the following fields: Company "
@@ -779,7 +780,7 @@ msgid "Statistics Dashboard"
 msgstr "Tablero de estadísticas"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:861
+#: code:addons/crm/crm_lead.py:878
 #: model:crm.case.stage,name:crm.stage_lead2
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
@@ -846,7 +847,7 @@ msgid "Exclusive"
 msgstr "Exclusivo"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:584
+#: code:addons/crm/crm_lead.py:600
 #, python-format
 msgid "From %s : %s"
 msgstr "De %s : %s"
@@ -855,6 +856,11 @@ msgstr "De %s : %s"
 #: view:crm.lead2opportunity.partner.mass:0
 msgid "Convert to Opportunities"
 msgstr "Convertir a oportunidad"
+
+#. module: crm
+#: view:crm.lead:0
+msgid "Leads that did not ask not to be included in mass mailing campaigns"
+msgstr ""
 
 #. module: crm
 #: view:crm.lead2opportunity.partner:0
@@ -1026,7 +1032,7 @@ msgid "Next Action"
 msgstr "Acción siguiente"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:763
+#: code:addons/crm/crm_lead.py:780
 #, python-format
 msgid "<b>Partner</b> set to <em>%s</em>."
 msgstr "<b>Empresa</b> establecida a <em>%s</em>."
@@ -1113,7 +1119,15 @@ msgid "Creation Date"
 msgstr "Fecha creación"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:698
+#: help:crm.lead,opt_out:0
+msgid ""
+"If opt-out is checked, this contact has refused to receive emails for mass "
+"mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
+"users to filter the leads when performing mass mailing."
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:715
 #, python-format
 msgid "Lead <b>converted into an Opportunity</b>"
 msgstr "Iniciativa <b>convertida a oportunidad</b>"
@@ -1339,7 +1353,9 @@ msgid "Days to Close"
 msgstr "Días para el cierre"
 
 #. module: crm
+#: code:addons/crm/crm_lead.py:1057
 #: field:crm.case.section,complete_name:0
+#, python-format
 msgid "unknown"
 msgstr "desconocido"
 
@@ -1398,7 +1414,7 @@ msgid "Sales Marketing Department"
 msgstr "Departamento de ventas y marketing"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:569
+#: code:addons/crm/crm_lead.py:585
 #, python-format
 msgid "Merged lead"
 msgstr ""
@@ -1426,7 +1442,7 @@ msgid "Segmentation Description"
 msgstr "Descripción de segmentación"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:565
+#: code:addons/crm/crm_lead.py:581
 #, python-format
 msgid "Merged opportunities"
 msgstr "Oportunidades fusionadas"
@@ -1946,6 +1962,12 @@ msgid "Support Department"
 msgstr "Departamento de soporte"
 
 #. module: crm
+#: code:addons/crm/crm_lead.py:1060
+#, python-format
+msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
+msgstr ""
+
+#. module: crm
 #: view:crm.lead.report:0
 msgid "Show only lead"
 msgstr "Mostrar solo iniciativas"
@@ -1999,7 +2021,7 @@ msgid "Leads"
 msgstr "Iniciativas"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:563
+#: code:addons/crm/crm_lead.py:579
 #, python-format
 msgid "Merged leads"
 msgstr "Combinar iniciativas"
@@ -2100,7 +2122,6 @@ msgid "Global CC"
 msgstr "CC Global"
 
 #. module: crm
-#: view:crm.lead:0
 #: view:crm.phonecall:0
 #: model:ir.actions.act_window,name:crm.crm_case_categ_phone0
 #: model:ir.ui.menu,name:crm.menu_crm_case_phone
@@ -2288,11 +2309,6 @@ msgstr ""
 #: model:ir.model,name:crm.model_calendar_attendee
 msgid "Attendee information"
 msgstr "Información asistencia"
-
-#. module: crm
-#: view:crm.segmentation:0
-msgid "Segmentation Test"
-msgstr "Prueba de segmentación"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -2955,7 +2971,7 @@ msgid "Stage of case"
 msgstr "Etapa del caso"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:569
+#: code:addons/crm/crm_lead.py:585
 #, python-format
 msgid "Merged opportunity"
 msgstr ""
@@ -3116,7 +3132,7 @@ msgid "Working Hours"
 msgstr "Horario de trabajo"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:968
+#: code:addons/crm/crm_lead.py:986
 #: view:crm.lead:0
 #: field:crm.lead2opportunity.partner,partner_id:0
 #: field:crm.lead2opportunity.partner.mass,partner_id:0
@@ -3264,6 +3280,13 @@ msgstr ""
 
 #~ msgid "Send Mail"
 #~ msgstr "Enviar correo"
+
+#~ msgid ""
+#~ "If opt-out is checked, this contact has refused to receive emails or "
+#~ "unsubscribed to a campaign."
+#~ msgstr ""
+#~ "Si opt-out está marcado, este contacto ha rehusado recibir correos "
+#~ "electrónicos o ha eliminado su suscripción a una campaña."
 
 #~ msgid "Exp.Closing"
 #~ msgstr "Cierre previsto"

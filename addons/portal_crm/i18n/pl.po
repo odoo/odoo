@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:53+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:35+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: portal_crm
 #: selection:portal_crm.crm_contact_us,type:0
@@ -63,9 +63,9 @@ msgid "Company"
 msgstr "Firma"
 
 #. module: portal_crm
-#: field:portal_crm.crm_contact_us,day_open:0
-msgid "Days to Open"
-msgstr "Dni do otwarcia"
+#: field:portal_crm.crm_contact_us,user_id:0
+msgid "Salesperson"
+msgstr "Sprzedawca"
 
 #. module: portal_crm
 #: view:portal_crm.crm_contact_us:0
@@ -96,11 +96,6 @@ msgstr "Wiadomości"
 #: field:portal_crm.crm_contact_us,color:0
 msgid "Color Index"
 msgstr "Indeks kolorów"
-
-#. module: portal_crm
-#: field:portal_crm.crm_contact_us,partner_latitude:0
-msgid "Geo Latitude"
-msgstr "Szerokość geograficzna"
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,partner_name:0
@@ -213,11 +208,6 @@ msgid "Channel"
 msgstr "Kanał"
 
 #. module: portal_crm
-#: view:portal_crm.crm_contact_us:0
-msgid "Name"
-msgstr "Nazwa"
-
-#. module: portal_crm
 #: selection:portal_crm.crm_contact_us,priority:0
 msgid "Lowest"
 msgstr "Najniższy"
@@ -233,14 +223,12 @@ msgid "Content..."
 msgstr ""
 
 #. module: portal_crm
-#: view:portal_crm.crm_contact_us:0
-msgid "Close"
-msgstr "Zamknij"
-
-#. module: portal_crm
-#: selection:portal_crm.crm_contact_us,state:0
-msgid "Pending"
-msgstr "Oczekiwanie"
+#: help:portal_crm.crm_contact_us,opt_out:0
+msgid ""
+"If opt-out is checked, this contact has refused to receive emails for mass "
+"mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
+"users to filter the leads when performing mass mailing."
+msgstr ""
 
 #. module: portal_crm
 #: help:portal_crm.crm_contact_us,type:0
@@ -261,15 +249,6 @@ msgstr "Etap"
 #: field:portal_crm.crm_contact_us,user_login:0
 msgid "User Login"
 msgstr "Nazwa użytkownika"
-
-#. module: portal_crm
-#: help:portal_crm.crm_contact_us,opt_out:0
-msgid ""
-"If opt-out is checked, this contact has refused to receive emails or "
-"unsubscribed to a campaign."
-msgstr ""
-"Jeśli zaznaczono Odmowa to znaczy, że kontakt odmówił przyjmowania maili lub "
-"wypisał się z kampanii."
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,contact_name:0
@@ -387,9 +366,9 @@ msgid "Closed"
 msgstr "Zamknięte"
 
 #. module: portal_crm
-#: field:portal_crm.crm_contact_us,date_assign:0
-msgid "Assignation Date"
-msgstr "Data przypisania"
+#: selection:portal_crm.crm_contact_us,state:0
+msgid "Pending"
+msgstr "Oczekiwanie"
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,state:0
@@ -432,9 +411,9 @@ msgid "Active"
 msgstr "Aktywne"
 
 #. module: portal_crm
-#: field:portal_crm.crm_contact_us,user_id:0
-msgid "Salesperson"
-msgstr "Sprzedawca"
+#: field:portal_crm.crm_contact_us,day_open:0
+msgid "Days to Open"
+msgstr "Dni do otwarcia"
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,day_close:0
@@ -469,19 +448,14 @@ msgid "Partner Contact Name"
 msgstr "Nazwa kontaktu partnera"
 
 #. module: portal_crm
-#: field:portal_crm.crm_contact_us,partner_longitude:0
-msgid "Geo Longitude"
-msgstr "Długość geograficzna"
-
-#. module: portal_crm
 #: view:portal_crm.crm_contact_us:0
 msgid "Your phone number..."
 msgstr ""
 
 #. module: portal_crm
-#: help:portal_crm.crm_contact_us,date_assign:0
-msgid "Last date this case was forwarded/assigned to a partner"
-msgstr "Ostatnia data przekazania/przypisania sprawy do partnera"
+#: view:portal_crm.crm_contact_us:0
+msgid "Close"
+msgstr "Zamknij"
 
 #. module: portal_crm
 #: help:portal_crm.crm_contact_us,email_from:0
@@ -509,19 +483,14 @@ msgid "Referred By"
 msgstr "Polecone przez"
 
 #. module: portal_crm
-#: field:portal_crm.crm_contact_us,partner_assigned_id:0
-msgid "Assigned Partner"
-msgstr "Przypisany partner"
-
-#. module: portal_crm
 #: selection:portal_crm.crm_contact_us,type:0
 msgid "Opportunity"
 msgstr "Szansa"
 
 #. module: portal_crm
-#: help:portal_crm.crm_contact_us,partner_assigned_id:0
-msgid "Partner this case has been forwarded/assigned to."
-msgstr ""
+#: view:portal_crm.crm_contact_us:0
+msgid "Name"
+msgstr "Nazwa"
 
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,country_id:0
@@ -578,3 +547,25 @@ msgstr "Ostatnia akcja"
 #: model:ir.model,name:portal_crm.model_portal_crm_crm_contact_us
 msgid "Contact form for the portal"
 msgstr "Formularz kontaktowy dla portalu"
+
+#~ msgid "Geo Latitude"
+#~ msgstr "Szerokość geograficzna"
+
+#~ msgid ""
+#~ "If opt-out is checked, this contact has refused to receive emails or "
+#~ "unsubscribed to a campaign."
+#~ msgstr ""
+#~ "Jeśli zaznaczono Odmowa to znaczy, że kontakt odmówił przyjmowania maili lub "
+#~ "wypisał się z kampanii."
+
+#~ msgid "Assignation Date"
+#~ msgstr "Data przypisania"
+
+#~ msgid "Last date this case was forwarded/assigned to a partner"
+#~ msgstr "Ostatnia data przekazania/przypisania sprawy do partnera"
+
+#~ msgid "Geo Longitude"
+#~ msgstr "Długość geograficzna"
+
+#~ msgid "Assigned Partner"
+#~ msgstr "Przypisany partner"

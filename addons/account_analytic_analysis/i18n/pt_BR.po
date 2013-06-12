@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2013-03-16 04:46+0000\n"
 "Last-Translator: Fábio Martinelli - http://zupy.com.br "
 "<webmaster@guaru.net>\n"
@@ -15,13 +15,19 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:28+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:09+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "No order to invoice, create"
 msgstr "Não existe pedido para faturar, crie um"
+
+#. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:547
+#, python-format
+msgid "Timesheets to Invoice of %s"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -65,20 +71,6 @@ msgstr "Valor não Faturado"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid ""
-"When invoicing on timesheet, OpenERP uses the\n"
-"                            pricelist of the contract which uses the price\n"
-"                            defined on the product related to each employee "
-"to\n"
-"                            define the customer invoice price rate."
-msgstr ""
-"Quando for faturar sobre Planilha de Horas o OpenERP usa a lista de preços "
-"do contrato o qual usa o preço\n"
-"definido sobre um determinado produto/serviço para cada funcionário, para "
-"para então definir o valor na fatura do cliente."
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
 msgid "⇒ Invoice"
 msgstr "=> Fatura"
 
@@ -96,6 +88,20 @@ msgstr "Data do último custo faturado"
 #: help:account.analytic.account,fix_price_to_invoice:0
 msgid "Sum of quotations for this contract."
 msgstr "Total das cotações para este contrato."
+
+#. module: account_analytic_analysis
+#: model:ir.actions.act_window,help:account_analytic_analysis.action_sales_order
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a quotation that can be converted into a "
+"sales\n"
+"                order.\n"
+"              </p><p>\n"
+"                Use sale orders to track everything that should be invoiced\n"
+"                at a fix price on a contract.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
@@ -118,7 +124,7 @@ msgid "Contract expiration reminder ${user.company_id.name}"
 msgstr "Aviso de vencimento de contrato ${user.company_id.name}"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:466
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:464
 #, python-format
 msgid "Sales Order Lines of %s"
 msgstr "Linhas do Pedido de Vendas de %s"
@@ -283,6 +289,13 @@ msgstr "Margem real"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
+msgid ""
+"{'required': [('type','=','contract'),'|',('fix_price_invoices','=',True), "
+"('invoice_on_timesheets', '=', True)]}"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
 msgid "Contracts assigned to a customer."
 msgstr "Contratos associados a um cliente"
 
@@ -305,11 +318,6 @@ msgstr "Calcula usando a fórmula: (Margem Real / Custo Total) * 100."
 #: view:account.analytic.account:0
 msgid "or view"
 msgstr "ou visualizar"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Customer Contracts"
-msgstr "Contratos de Clientes"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -530,6 +538,7 @@ msgid "Contracts"
 msgstr "Contratos"
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_sales_order
 msgid "Sales Orders"
 msgstr "Pedidos de Vendas"
@@ -662,8 +671,8 @@ msgstr "Contratos não atribuídos"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Sale Orders"
-msgstr "Pedidos de Venda"
+msgid "Customer Contracts"
+msgstr "Contratos de Clientes"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoiced_total:0
@@ -788,6 +797,15 @@ msgid "Date of the latest work done on this account."
 msgstr "Data do último trabalho realizado nesta conta."
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid ""
+"When reinvoicing costs, OpenERP uses the\n"
+"                            pricelist of the contract which uses the price\n"
+"                            defined on the product related (e.g timesheet \n"
+"                            products are defined on each employee)."
+msgstr ""
+
+#. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_sale_config_settings
 msgid "sale.config.settings"
 msgstr "sale.config.settings"
@@ -860,8 +878,23 @@ msgstr "Total"
 #~ "Um contrato no OpenERP é uma conta analítica tendo um parceiro configurado "
 #~ "nela."
 
+#~ msgid "Sale Orders"
+#~ msgstr "Pedidos de Venda"
+
 #~ msgid "Contracts in progress"
 #~ msgstr "Contratos em andamento"
+
+#~ msgid ""
+#~ "When invoicing on timesheet, OpenERP uses the\n"
+#~ "                            pricelist of the contract which uses the price\n"
+#~ "                            defined on the product related to each employee "
+#~ "to\n"
+#~ "                            define the customer invoice price rate."
+#~ msgstr ""
+#~ "Quando for faturar sobre Planilha de Horas o OpenERP usa a lista de preços "
+#~ "do contrato o qual usa o preço\n"
+#~ "definido sobre um determinado produto/serviço para cada funcionário, para "
+#~ "para então definir o valor na fatura do cliente."
 
 #~ msgid "Units Done"
 #~ msgstr "Unidades Concluídas"

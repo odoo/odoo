@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2013-03-28 23:12+0000\n"
-"Last-Translator: Софче Димитријева <Unknown>\n"
+"Last-Translator: Sofce Dimitrijeva <Unknown>\n"
 "Language-Team: ESKON-INZENERING\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-30 06:08+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:25+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 "Language: mk\n"
 
 #. module: hr_holidays
@@ -34,7 +34,7 @@ msgid "Waiting Second Approval"
 msgstr "Се чека на второ одобрување"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:298
+#: code:addons/hr_holidays/hr_holidays.py:309
 #, python-format
 msgid ""
 "You cannot modify a leave request that has been approved. Contact a human "
@@ -272,12 +272,12 @@ msgstr ""
 "директно во html формат со цел да биде вметнато во kanban преглед."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:238
 #: code:addons/hr_holidays/hr_holidays.py:249
-#: code:addons/hr_holidays/hr_holidays.py:274
-#: code:addons/hr_holidays/hr_holidays.py:298
-#: code:addons/hr_holidays/hr_holidays.py:421
-#: code:addons/hr_holidays/hr_holidays.py:471
+#: code:addons/hr_holidays/hr_holidays.py:260
+#: code:addons/hr_holidays/hr_holidays.py:285
+#: code:addons/hr_holidays/hr_holidays.py:309
+#: code:addons/hr_holidays/hr_holidays.py:432
+#: code:addons/hr_holidays/hr_holidays.py:482
 #, python-format
 msgid "Warning!"
 msgstr "Предупредување!"
@@ -315,7 +315,7 @@ msgid "Sick Leaves"
 msgstr "Боледување"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:478
+#: code:addons/hr_holidays/hr_holidays.py:489
 #, python-format
 msgid "Leave Request for %s"
 msgstr "Барање за Отсуство за %s"
@@ -386,7 +386,7 @@ msgid "Wheat"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:476
+#: code:addons/hr_holidays/hr_holidays.py:487
 #, python-format
 msgid "Allocation for %s"
 msgstr "Распределба за %s"
@@ -418,7 +418,7 @@ msgid "Number of Days"
 msgstr "Број на денови"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:471
+#: code:addons/hr_holidays/hr_holidays.py:482
 #, python-format
 msgid ""
 "The feature behind the field 'Remaining Legal Leaves' can only be used when "
@@ -530,7 +530,7 @@ msgid "Start Date"
 msgstr "Почетен датум"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:421
+#: code:addons/hr_holidays/hr_holidays.py:432
 #, python-format
 msgid ""
 "There are not enough %s allocated for employee %s; please create an "
@@ -569,11 +569,6 @@ msgstr ""
 "                на денови поврзани со вашето отсуство.\n"
 "              </p>\n"
 "            "
-
-#. module: hr_holidays
-#: sql_constraint:hr.holidays:0
-msgid "The employee or employee category of this request is missing."
-msgstr "Недостасува вработен или категорија на вработен на ова барање."
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -693,6 +688,13 @@ msgid "Active"
 msgstr "Активен"
 
 #. module: hr_holidays
+#: sql_constraint:hr.holidays:0
+msgid ""
+"The employee or employee category of this request is missing. Please make "
+"sure that your user login is linked to an employee."
+msgstr ""
+
+#. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Add a reason..."
 msgstr "Додади причина..."
@@ -800,7 +802,7 @@ msgid "Validated"
 msgstr "Валидирано"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:238
+#: code:addons/hr_holidays/hr_holidays.py:249
 #, python-format
 msgid "You cannot delete a leave which is in %s state."
 msgstr "Не може да избришете отсуство кое е во %s состојба."
@@ -866,7 +868,7 @@ msgid "To Submit"
 msgstr "Да се поднесе"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:343
+#: code:addons/hr_holidays/hr_holidays.py:354
 #: view:hr.holidays:0
 #: selection:hr.holidays,type:0
 #: field:resource.calendar.leaves,holiday_id:0
@@ -964,7 +966,7 @@ msgid "Both Approved and Confirmed"
 msgstr "Одобрено и Потврдено"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:440
+#: code:addons/hr_holidays/hr_holidays.py:451
 #, python-format
 msgid "Request approved, waiting second validation."
 msgstr "Барањето е одобрено, се чека секундарно потврдување."
@@ -980,8 +982,8 @@ msgid "Messages and communication history"
 msgstr "Историја на пораки и комуникација"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:249
-#: code:addons/hr_holidays/hr_holidays.py:274
+#: code:addons/hr_holidays/hr_holidays.py:260
+#: code:addons/hr_holidays/hr_holidays.py:285
 #: sql_constraint:hr.holidays:0
 #, python-format
 msgid "The start date must be anterior to the end date."
@@ -1075,3 +1077,6 @@ msgstr "Причини"
 #: field:hr.holidays.summary.employee,holiday_type:0
 msgid "Select Leave Type"
 msgstr "Изберете тип на отсуство"
+
+#~ msgid "The employee or employee category of this request is missing."
+#~ msgstr "Недостасува вработен или категорија на вработен на ова барање."

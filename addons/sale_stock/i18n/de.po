@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:39+0000\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
 "PO-Revision-Date: 2013-04-17 07:52+0000\n"
 "Last-Translator: Iyasu Beraki <iberaki@elegosoft.com>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-18 06:06+0000\n"
-"X-Generator: Launchpad (build 16567)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:44+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -38,7 +38,7 @@ msgid "Deliveries to Invoice"
 msgstr "Abzurechnende Lieferungen"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:544
+#: code:addons/sale_stock/sale_stock.py:570
 #, python-format
 msgid "Picking Information ! : "
 msgstr "Lieferschein Info!: "
@@ -49,7 +49,7 @@ msgid "Pick List"
 msgstr "Kommissionsliste"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:539
+#: code:addons/sale_stock/sale_stock.py:565
 #, python-format
 msgid ""
 "You selected a quantity of %d Units.\n"
@@ -83,7 +83,7 @@ msgid "Cancel Order"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:207
+#: code:addons/sale_stock/sale_stock.py:209
 #, python-format
 msgid ""
 "You must first cancel all delivery order(s) attached to this sales order."
@@ -109,25 +109,9 @@ msgstr ""
 "für den Einkauf des Produkts erstellt."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:615
-#, python-format
-msgid "Error!"
-msgstr "Fehler !"
-
-#. module: sale_stock
 #: field:sale.order,picking_policy:0
 msgid "Shipping Policy"
 msgstr "Abrechnungsbedingung"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:616
-#, python-format
-msgid ""
-"You cannot make an advance on a sales order                      that is "
-"defined as 'Automatic Invoice after delivery'."
-msgstr ""
-"Sie können keine Anzahlung für Aufträge leisten,  die als Abrechnungsmethode "
-"'Bei Lieferung' haben."
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_action_shop_form
@@ -147,7 +131,7 @@ msgid "Stock Move"
 msgstr "Bestandsbuchung"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:161
+#: code:addons/sale_stock/sale_stock.py:163
 #, python-format
 msgid "Invalid Action!"
 msgstr "Ungültige Aktion!"
@@ -163,8 +147,8 @@ msgid "Allow a different address for delivery and invoicing "
 msgstr "Ermöglicht verschiedene Adressen für Auslieferung und Abrechnung "
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:546
-#: code:addons/sale_stock/sale_stock.py:597
+#: code:addons/sale_stock/sale_stock.py:572
+#: code:addons/sale_stock/sale_stock.py:623
 #, python-format
 msgid "Configuration Error!"
 msgstr "Konfigurationsfehler!"
@@ -215,14 +199,6 @@ msgstr ""
 "Verkaufsauftrag einzupackenden Artikel. Hierzu gibt es einen Packauftrag mit "
 "allen Auftragsposition für den Kunden. Der Zustand des Packauftrags kann "
 "sich je nach der Verfügbarkeit von Teilen verändern."
-
-#. module: sale_stock
-#: help:res.company,security_lead:0
-msgid ""
-"This is the days added to what you promise to customers for security purpose"
-msgstr ""
-"Diese Tage werden aus Sicherheitsgründen addiert zur versprochenen "
-"Auslieferungszeit (an den Kunden)."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -277,11 +253,12 @@ msgstr "Projekt MRP"
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_invoiceafterdelivery0
 msgid ""
-"The invoice is created automatically if the shipping policy is 'Invoice from "
-"pick' or 'Invoice on order after delivery'."
+"If the sale order was set to create the invoice 'On Delivery Order', then an "
+"invoice is automatically created based on what you delivered. If you rather "
+"want to create your invoice based on your sale order, you can set the sale "
+"order to create invoice 'On Demand', then track and process the sales order "
+"that have been fully delivered and invoice them from there."
 msgstr ""
-"Die Rechnung wird für die Abrechnungsbedingungen \"Rechnung durch "
-"Lieferung\" und \" Rechnung durch Auftrag\"  automatisch erzeugt."
 
 #. module: sale_stock
 #: field:sale.order.line,procurement_id:0
@@ -296,7 +273,7 @@ msgid "Shipped"
 msgstr "Ausgeliefert"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:240
+#: code:addons/sale_stock/sale_stock.py:265
 #, python-format
 msgid "invalid mode for test_state"
 msgstr "Fehlerhafter Modus für test_state"
@@ -391,7 +368,7 @@ msgstr ""
 "Teillieferungen möglich sind"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:206
+#: code:addons/sale_stock/sale_stock.py:208
 #, python-format
 msgid "Cannot cancel sales order!"
 msgstr "Der Auftrag kann nicht storniert werden!"
@@ -415,6 +392,14 @@ msgstr ""
 #: field:sale.order.line,property_ids:0
 msgid "Properties"
 msgstr "Eigenschaften"
+
+#. module: sale_stock
+#: help:res.company,security_lead:0
+msgid ""
+"Margin of error for dates promised to customers. Products will be scheduled "
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
+msgstr ""
 
 #. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
@@ -481,7 +466,7 @@ msgid "Assign"
 msgstr "Annehmen"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:592
+#: code:addons/sale_stock/sale_stock.py:618
 #, python-format
 msgid "Not enough stock ! : "
 msgstr "Nicht genug auf Lager! "
@@ -522,7 +507,7 @@ msgid "Cancel"
 msgstr "Abbrechen"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:161
+#: code:addons/sale_stock/sale_stock.py:163
 #, python-format
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it.\n"
@@ -557,7 +542,7 @@ msgid "Sales Advance Payment Invoice"
 msgstr "Anzahlungsrechnung"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:497
+#: code:addons/sale_stock/sale_stock.py:523
 #, python-format
 msgid "You must first cancel stock moves attached to this sales order line."
 msgstr ""
@@ -565,7 +550,7 @@ msgstr ""
 "abbrechen."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:535
+#: code:addons/sale_stock/sale_stock.py:561
 #, python-format
 msgid "(n/a)"
 msgstr "(n/v)"
@@ -576,7 +561,7 @@ msgid "Incoterm"
 msgstr "Lieferbedingung"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:496
+#: code:addons/sale_stock/sale_stock.py:522
 #, python-format
 msgid "Cannot cancel sales order line!"
 msgstr "Es kann kein Auftrag erstellt werden!"
@@ -630,7 +615,7 @@ msgid "Ignore Exception"
 msgstr "Ignoriere den Ausnahmefehler"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:588
+#: code:addons/sale_stock/sale_stock.py:614
 #, python-format
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
@@ -674,3 +659,28 @@ msgstr ""
 "Je nach Definition des Ausliefungslagers wird die Lagerbewegung zwischen "
 "Auslieferungslager und dem Kunden durch einen Lieferauftrag entweder manuell "
 "oder automatisch erstellt"
+
+#~ msgid ""
+#~ "The invoice is created automatically if the shipping policy is 'Invoice from "
+#~ "pick' or 'Invoice on order after delivery'."
+#~ msgstr ""
+#~ "Die Rechnung wird für die Abrechnungsbedingungen \"Rechnung durch "
+#~ "Lieferung\" und \" Rechnung durch Auftrag\"  automatisch erzeugt."
+
+#~ msgid ""
+#~ "This is the days added to what you promise to customers for security purpose"
+#~ msgstr ""
+#~ "Diese Tage werden aus Sicherheitsgründen addiert zur versprochenen "
+#~ "Auslieferungszeit (an den Kunden)."
+
+#, python-format
+#~ msgid "Error!"
+#~ msgstr "Fehler !"
+
+#, python-format
+#~ msgid ""
+#~ "You cannot make an advance on a sales order                      that is "
+#~ "defined as 'Automatic Invoice after delivery'."
+#~ msgstr ""
+#~ "Sie können keine Anzahlung für Aufträge leisten,  die als Abrechnungsmethode "
+#~ "'Bei Lieferung' haben."

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2013-05-12 19:29+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-05-13 06:46+0000\n"
-"X-Generator: Launchpad (build 16614)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:38+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: project
 #: view:project.project:0
@@ -85,7 +85,7 @@ msgid "Start Task"
 msgstr "Start taak"
 
 #. module: project
-#: code:addons/project/project.py:932
+#: code:addons/project/project.py:944
 #, python-format
 msgid "Warning !"
 msgstr "Waarschuwing !"
@@ -138,8 +138,8 @@ msgstr ""
 "ingevoegd."
 
 #. module: project
-#: code:addons/project/project.py:432
-#: code:addons/project/project.py:1318
+#: code:addons/project/project.py:444
+#: code:addons/project/project.py:1332
 #, python-format
 msgid "Warning!"
 msgstr "Waarschuwing!"
@@ -209,11 +209,6 @@ msgstr "Taak delegeren"
 #: field:project.task.history.cumulative,planned_hours:0
 msgid "Planned Time"
 msgstr "Geplande tijd"
-
-#. module: project
-#: selection:project.project,privacy_visibility:0
-msgid "Public"
-msgstr "Openbaar"
 
 #. module: project
 #: view:project.task:0
@@ -428,7 +423,7 @@ msgid "Assigned to"
 msgstr "Toegewezen aan"
 
 #. module: project
-#: code:addons/project/project.py:1021
+#: code:addons/project/project.py:1033
 #, python-format
 msgid "Delegated User should be specified"
 msgstr "De gedelegeerde gebruiker moet worden gespecificeerd"
@@ -900,11 +895,9 @@ msgid "Is a Follower"
 msgstr "Is een volger"
 
 #. module: project
-#: field:project.task.history,date:0
-#: field:project.task.history.cumulative,date:0
-#: field:project.task.work,date:0
-msgid "Date"
-msgstr "Datum"
+#: field:project.task,work_ids:0
+msgid "Work done"
+msgstr "Voltooide taken"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -946,9 +939,11 @@ msgid "Folded by Default"
 msgstr "Standaard ingevouwen"
 
 #. module: project
-#: field:project.task,work_ids:0
-msgid "Work done"
-msgstr "Voltooide taken"
+#: field:project.task.history,date:0
+#: field:project.task.history.cumulative,date:0
+#: field:project.task.work,date:0
+msgid "Date"
+msgstr "Datum"
 
 #. module: project
 #: help:project.config.settings,module_project_issue:0
@@ -1317,9 +1312,9 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "Berekend als: Gebruikte uren + resterende uren."
 
 #. module: project
-#: code:addons/project/project.py:356
-#: code:addons/project/project.py:377
-#: code:addons/project/project.py:709
+#: code:addons/project/project.py:368
+#: code:addons/project/project.py:389
+#: code:addons/project/project.py:721
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -1533,7 +1528,7 @@ msgstr ""
 "projectleider tijdens conceptfase."
 
 #. module: project
-#: code:addons/project/project.py:220
+#: code:addons/project/project.py:230
 #, python-format
 msgid "Attachments"
 msgstr "Bijlagen"
@@ -1661,7 +1656,7 @@ msgid "Overpassed Tasks"
 msgstr "Overschreden taken"
 
 #. module: project
-#: code:addons/project/project.py:932
+#: code:addons/project/project.py:944
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1724,7 +1719,7 @@ msgid "CHECK: "
 msgstr "CONTROLEER: "
 
 #. module: project
-#: code:addons/project/project.py:432
+#: code:addons/project/project.py:444
 #, python-format
 msgid "You must assign members on the project '%s' !"
 msgstr "U dient gebruikers aan het project '%s' toe te wijzen!"
@@ -1968,7 +1963,7 @@ msgid "Starting Date"
 msgstr "Begindatum"
 
 #. module: project
-#: code:addons/project/project.py:398
+#: code:addons/project/project.py:410
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:0
@@ -2135,7 +2130,7 @@ msgid "Reevaluation Task"
 msgstr "Taak herevalueren"
 
 #. module: project
-#: code:addons/project/project.py:1318
+#: code:addons/project/project.py:1332
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr "Verwijder eerst het project dat aan deze kostenplaats is gekoppeld"
@@ -2246,11 +2241,6 @@ msgstr ""
 "Hiermee installeert u de module project_issue_sheet."
 
 #. module: project
-#: selection:project.project,privacy_visibility:0
-msgid "Followers Only"
-msgstr "Alleen volgers"
-
-#. module: project
 #: view:board.board:0
 #: field:project.project,task_count:0
 msgid "Open Tasks"
@@ -2290,3 +2280,9 @@ msgstr "Jaar"
 #: view:project.task.type:0
 msgid "Tasks Stages"
 msgstr "Taken fases"
+
+#~ msgid "Public"
+#~ msgstr "Openbaar"
+
+#~ msgid "Followers Only"
+#~ msgstr "Alleen volgers"

@@ -975,8 +975,8 @@ openerp.mail = function (session) {
         expender: function () {
             this.$('.oe_msg_body:first').expander({
                 slicePoint: this.options.truncate_limit,
-                expandText: 'read more',
-                userCollapseText: 'read less',
+                expandText: _t('read more'),
+                userCollapseText: _t('read less'),
                 detailClass: 'oe_msg_tail',
                 moreClass: 'oe_mail_expand',
                 lessClass: 'oe_mail_reduce',

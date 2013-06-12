@@ -7,20 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
 "PO-Revision-Date: 2013-04-07 22:43+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-08 06:20+0000\n"
-"X-Generator: Launchpad (build 16550)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:36+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
 msgid "Number of Layers"
 msgstr "Rétegek száma"
+
+#. module: product
+#: view:res.partner:0
+msgid "the parent company"
+msgstr ""
 
 #. module: product
 #: help:product.pricelist.item,base:0
@@ -833,13 +838,9 @@ msgid "describe the product characteristics..."
 msgstr "Írja le a termék jellemzőit..."
 
 #. module: product
-#: help:product.template,standard_price:0
-msgid ""
-"Cost price of the product used for standard stock valuation in accounting "
-"and used as a base price on purchase orders."
+#: view:res.partner:0
+msgid "Pricelists are managed on"
 msgstr ""
-"A termék költségára az alap raktár érték meghatározáshoz a könyvelésben amit "
-"a megrendelések alapárának használ"
 
 #. module: product
 #: field:product.category,child_id:0
@@ -1194,10 +1195,10 @@ msgid "Price Surcharge"
 msgstr "Felár"
 
 #. module: product
-#: field:product.product,code:0
-#: field:product.product,default_code:0
-msgid "Internal Reference"
-msgstr "Belső hivatkozás"
+#: code:addons/product/pricelist.py:380
+#, python-format
+msgid "Supplier Prices on the product form"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_8_product_template
@@ -1441,7 +1442,7 @@ msgid "Supplier Info"
 msgstr "Info a beszállítókról"
 
 #. module: product
-#: code:addons/product/product.py:729
+#: code:addons/product/product.py:732
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (másolat)"
@@ -1468,6 +1469,13 @@ msgstr "Mértékegység"
 #: field:product.supplierinfo,min_qty:0
 msgid "Minimal Quantity"
 msgstr "Minimum mennyiség"
+
+#. module: product
+#: view:product.supplierinfo:0
+msgid ""
+"The prices below will only be taken into account when your pricelist is set "
+"as based on supplier prices."
+msgstr ""
 
 #. module: product
 #: help:product.supplierinfo,product_code:0
@@ -1844,6 +1852,11 @@ msgid "Price:"
 msgstr "Ár:"
 
 #. module: product
+#: view:product.pricelist.item:0
+msgid "Min. Margin"
+msgstr "Min. árrés"
+
+#. module: product
 #: field:product.template,weight:0
 msgid "Gross Weight"
 msgstr "Bruttó súly"
@@ -1988,12 +2001,6 @@ msgid "Default Unit of Measure"
 msgstr "Alapértelmezett mértékegység"
 
 #. module: product
-#: code:addons/product/pricelist.py:377
-#, python-format
-msgid "Partner section of the product form"
-msgstr "A termék űrlap partneradatai."
-
-#. module: product
 #: help:product.price.type,name:0
 msgid "Name of this kind of price."
 msgstr "Ártípus neve"
@@ -2038,6 +2045,12 @@ msgstr "Hossz / Távolság"
 #: model:product.category,name:product.product_category_8
 msgid "Components"
 msgstr "Összetevők"
+
+#. module: product
+#: field:product.product,code:0
+#: field:product.product,default_code:0
+msgid "Internal Reference"
+msgstr "Belső hivatkozás"
 
 #. module: product
 #: view:product.product:0
@@ -2402,9 +2415,13 @@ msgid "Max. Price Margin"
 msgstr "Max. árrés"
 
 #. module: product
-#: view:product.pricelist.item:0
-msgid "Min. Margin"
-msgstr "Min. árrés"
+#: help:product.template,standard_price:0
+msgid ""
+"Cost price of the product used for standard stock valuation in accounting "
+"and used as a base price on purchase orders."
+msgstr ""
+"A termék költségára az alap raktár érték meghatározáshoz a könyvelésben amit "
+"a megrendelések alapárának használ"
 
 #. module: product
 #: help:product.supplierinfo,product_name:0
@@ -2637,7 +2654,7 @@ msgid "15” LCD Monitor"
 msgstr "15” LCD Monitor"
 
 #. module: product
-#: code:addons/product/pricelist.py:376
+#: code:addons/product/pricelist.py:379
 #: field:product.pricelist.item,base_pricelist_id:0
 #, python-format
 msgid "Other Pricelist"
@@ -2792,3 +2809,7 @@ msgstr "A térfogat köbméterben."
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Árengedmény"
+
+#, python-format
+#~ msgid "Partner section of the product form"
+#~ msgstr "A termék űrlap partneradatai."

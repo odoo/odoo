@@ -61,12 +61,12 @@ class partner_vat(osv.osv_memory):
             company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         period_ids = obj_period.search(cr, uid, [('date_start' ,'>=', date_start), ('date_stop','<=',date_stop), ('company_id','=',company_id)])
         if not period_ids:
-             raise osv.except_osv(_('insufficient data!'), _('No data for the selected year.'))
+             raise osv.except_osv(_('Insufficient Data!'), _('No data for the selected year.'))
 
         partners = []
         partner_ids = obj_partner.search(cr, uid, [('vat_subjected', '!=', False), ('vat','ilike','BE%')], context=context)
         if not partner_ids:
-             raise osv.except_osv(_('Error'),_('No belgian contact with a VAT number in your database.'))
+             raise osv.except_osv(_('Error'),_('No belgium contact with a VAT number in your database.'))
         cr.execute("""SELECT sub1.partner_id, sub1.name, sub1.vat, sub1.turnover, sub2.vat_amount
                 FROM (SELECT l.partner_id, p.name, p.vat, SUM(CASE WHEN c.code ='49' THEN -l.tax_amount ELSE l.tax_amount END) as turnover
                       FROM account_move_line l
@@ -91,7 +91,7 @@ class partner_vat(osv.osv_memory):
                 partners.append(id_client)
         
         if not partners:
-            raise osv.except_osv(_('insufficient data!'), _('No data found for the selected year.'))
+            raise osv.except_osv(_('Insufficient Data!'), _('No data found for the selected year.'))
         context.update({'partner_ids': partners, 'year': data['year'], 'limit_amount': data['limit_amount']})
         model_data_ids = obj_model_data.search(cr, uid, [('model','=','ir.ui.view'), ('name','=','view_vat_listing')])
         resource_id = obj_model_data.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']

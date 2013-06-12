@@ -1,5 +1,6 @@
 function openerp_pos_widgets(instance, module){ //module is instance.point_of_sale
-    var QWeb = instance.web.qweb;
+    var QWeb = instance.web.qweb,
+	_t = instance.web._t;
 
     // The ImageCache is used to hide the latency of the application cache on-disk access in chrome 
     // that causes annoying flickering on product pictures. Why the hell a simple access to
@@ -971,13 +972,13 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.onscreen_keyboard.appendTo($(".point-of-sale #content")); 
 
             this.close_button = new module.HeaderButtonWidget(this,{
-                label:'Close',
+                label: _t('Close'),
                 action: function(){ self.try_close(); },
             });
             this.close_button.appendTo(this.$('#rightheader'));
 
             this.client_button = new module.HeaderButtonWidget(this,{
-                label:'Self-Checkout',
+                label: _t('Self-Checkout'),
                 action: function(){ self.screen_selector.set_user_mode('client'); },
             });
             this.client_button.appendTo(this.$('#rightheader'));

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2013-03-18 00:16+0000\n"
 "Last-Translator: Krisztian Eyssen <krisz@eyssen.hu>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:56+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:38+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: project
 #: selection:project.project,state:0
@@ -90,7 +90,7 @@ msgid "Start Task"
 msgstr "Feladat kezdete"
 
 #. module: project
-#: code:addons/project/project.py:932
+#: code:addons/project/project.py:944
 #, python-format
 msgid "Warning !"
 msgstr "Figyelem!"
@@ -142,8 +142,8 @@ msgstr ""
 "direkt HTML formátumú ahhoz hogy beilleszthető legyen a kanban nézetekbe."
 
 #. module: project
-#: code:addons/project/project.py:432
-#: code:addons/project/project.py:1318
+#: code:addons/project/project.py:444
+#: code:addons/project/project.py:1332
 #, python-format
 msgid "Warning!"
 msgstr "Figyelem!"
@@ -215,11 +215,6 @@ msgstr "Feladat elosztás"
 #: field:project.task.history.cumulative,planned_hours:0
 msgid "Planned Time"
 msgstr "Tervezett idő"
-
-#. module: project
-#: selection:project.project,privacy_visibility:0
-msgid "Public"
-msgstr "Nyilvános"
 
 #. module: project
 #: view:project.task:0
@@ -431,7 +426,7 @@ msgid "Assigned to"
 msgstr "Hozzárendelve"
 
 #. module: project
-#: code:addons/project/project.py:1021
+#: code:addons/project/project.py:1033
 #, python-format
 msgid "Delegated User should be specified"
 msgstr "Átruházási felhasználót kell meghatározni"
@@ -903,11 +898,9 @@ msgid "Is a Follower"
 msgstr "Ez egy követő"
 
 #. module: project
-#: field:project.task.history,date:0
-#: field:project.task.history.cumulative,date:0
-#: field:project.task.work,date:0
-msgid "Date"
-msgstr "Dátum"
+#: field:project.task,work_ids:0
+msgid "Work done"
+msgstr "Elvégzett munka"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -950,9 +943,11 @@ msgid "Folded by Default"
 msgstr "Alapértelmezetten összehajtott"
 
 #. module: project
-#: field:project.task,work_ids:0
-msgid "Work done"
-msgstr "Elvégzett munka"
+#: field:project.task.history,date:0
+#: field:project.task.history.cumulative,date:0
+#: field:project.task.work,date:0
+msgid "Date"
+msgstr "Dátum"
 
 #. module: project
 #: help:project.config.settings,module_project_issue:0
@@ -1320,9 +1315,9 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "Kiszámítható: eltöltött idő + hátralévő idő"
 
 #. module: project
-#: code:addons/project/project.py:356
-#: code:addons/project/project.py:377
-#: code:addons/project/project.py:709
+#: code:addons/project/project.py:368
+#: code:addons/project/project.py:389
+#: code:addons/project/project.py:721
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (másolat)"
@@ -1532,7 +1527,7 @@ msgstr ""
 "feladat tervezeti állapotban van."
 
 #. module: project
-#: code:addons/project/project.py:220
+#: code:addons/project/project.py:230
 #, python-format
 msgid "Attachments"
 msgstr "Mellékletek"
@@ -1662,7 +1657,7 @@ msgid "Overpassed Tasks"
 msgstr "Átugrott feladat"
 
 #. module: project
-#: code:addons/project/project.py:932
+#: code:addons/project/project.py:944
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1726,7 +1721,7 @@ msgid "CHECK: "
 msgstr "ELLENŐRIZNI: "
 
 #. module: project
-#: code:addons/project/project.py:432
+#: code:addons/project/project.py:444
 #, python-format
 msgid "You must assign members on the project '%s' !"
 msgstr "Hozzá kell rendelni tagot ezen a projekten '%s' !"
@@ -1973,7 +1968,7 @@ msgid "Starting Date"
 msgstr "Kezdési dátum"
 
 #. module: project
-#: code:addons/project/project.py:398
+#: code:addons/project/project.py:410
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:0
@@ -2145,7 +2140,7 @@ msgid "Reevaluation Task"
 msgstr "Feladat újraértékelése"
 
 #. module: project
-#: code:addons/project/project.py:1318
+#: code:addons/project/project.py:1332
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr "Kérem törölje az ehhez a számlához csatolt projektet először"
@@ -2256,11 +2251,6 @@ msgstr ""
 "                Ez a project_issue_sheet modult telepíti."
 
 #. module: project
-#: selection:project.project,privacy_visibility:0
-msgid "Followers Only"
-msgstr "Csak követők"
-
-#. module: project
 #: view:board.board:0
 #: field:project.project,task_count:0
 msgid "Open Tasks"
@@ -2300,3 +2290,9 @@ msgstr "Év"
 #: view:project.task.type:0
 msgid "Tasks Stages"
 msgstr "Feladatok szakaszai"
+
+#~ msgid "Public"
+#~ msgstr "Nyilvános"
+
+#~ msgid "Followers Only"
+#~ msgstr "Csak követők"

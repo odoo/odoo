@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2013-04-23 12:12+0000\n"
 "Last-Translator: Bertrand Rétif <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-24 05:28+0000\n"
-"X-Generator: Launchpad (build 16580)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:25+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -33,7 +33,7 @@ msgid "Waiting Second Approval"
 msgstr "En attente d'une deuxième approbation"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:298
+#: code:addons/hr_holidays/hr_holidays.py:309
 #, python-format
 msgid ""
 "You cannot modify a leave request that has been approved. Contact a human "
@@ -275,12 +275,12 @@ msgstr ""
 "au format HTML pour permettre son utilisation dans la vue kanban."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:238
 #: code:addons/hr_holidays/hr_holidays.py:249
-#: code:addons/hr_holidays/hr_holidays.py:274
-#: code:addons/hr_holidays/hr_holidays.py:298
-#: code:addons/hr_holidays/hr_holidays.py:421
-#: code:addons/hr_holidays/hr_holidays.py:471
+#: code:addons/hr_holidays/hr_holidays.py:260
+#: code:addons/hr_holidays/hr_holidays.py:285
+#: code:addons/hr_holidays/hr_holidays.py:309
+#: code:addons/hr_holidays/hr_holidays.py:432
+#: code:addons/hr_holidays/hr_holidays.py:482
 #, python-format
 msgid "Warning!"
 msgstr "Avertissement !"
@@ -318,7 +318,7 @@ msgid "Sick Leaves"
 msgstr "Arrêts maladie"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:478
+#: code:addons/hr_holidays/hr_holidays.py:489
 #, python-format
 msgid "Leave Request for %s"
 msgstr "Demande de congés pour %s"
@@ -389,7 +389,7 @@ msgid "Wheat"
 msgstr "Blé"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:476
+#: code:addons/hr_holidays/hr_holidays.py:487
 #, python-format
 msgid "Allocation for %s"
 msgstr "Allocation pour %s"
@@ -420,7 +420,7 @@ msgid "Number of Days"
 msgstr "Nombre de jours"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:471
+#: code:addons/hr_holidays/hr_holidays.py:482
 #, python-format
 msgid ""
 "The feature behind the field 'Remaining Legal Leaves' can only be used when "
@@ -542,7 +542,7 @@ msgid "Start Date"
 msgstr "Date de début"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:421
+#: code:addons/hr_holidays/hr_holidays.py:432
 #, python-format
 msgid ""
 "There are not enough %s allocated for employee %s; please create an "
@@ -581,11 +581,6 @@ msgstr ""
 "                de jours ouvrés correspondant à votre demande.\n"
 "              </p>\n"
 "            "
-
-#. module: hr_holidays
-#: sql_constraint:hr.holidays:0
-msgid "The employee or employee category of this request is missing."
-msgstr "L'employé ou la catégorie d'employé de cette demande est manquant."
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -704,6 +699,13 @@ msgid "Active"
 msgstr "Actif"
 
 #. module: hr_holidays
+#: sql_constraint:hr.holidays:0
+msgid ""
+"The employee or employee category of this request is missing. Please make "
+"sure that your user login is linked to an employee."
+msgstr ""
+
+#. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Add a reason..."
 msgstr "Ajouter un commentaire..."
@@ -811,7 +813,7 @@ msgid "Validated"
 msgstr "Validé"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:238
+#: code:addons/hr_holidays/hr_holidays.py:249
 #, python-format
 msgid "You cannot delete a leave which is in %s state."
 msgstr "Vous ne pouvez pas supprimer des congés qui sont dans l'état %s."
@@ -877,7 +879,7 @@ msgid "To Submit"
 msgstr "À soumettre"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:343
+#: code:addons/hr_holidays/hr_holidays.py:354
 #: view:hr.holidays:0
 #: selection:hr.holidays,type:0
 #: field:resource.calendar.leaves,holiday_id:0
@@ -975,7 +977,7 @@ msgid "Both Approved and Confirmed"
 msgstr "Approuvés et confirmés"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:440
+#: code:addons/hr_holidays/hr_holidays.py:451
 #, python-format
 msgid "Request approved, waiting second validation."
 msgstr "Demande approuvée, en attente d'une seconde validation."
@@ -991,8 +993,8 @@ msgid "Messages and communication history"
 msgstr "Historique des messages et des communications"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:249
-#: code:addons/hr_holidays/hr_holidays.py:274
+#: code:addons/hr_holidays/hr_holidays.py:260
+#: code:addons/hr_holidays/hr_holidays.py:285
 #: sql_constraint:hr.holidays:0
 #, python-format
 msgid "The start date must be anterior to the end date."
@@ -1086,3 +1088,6 @@ msgstr "Raisons"
 #: field:hr.holidays.summary.employee,holiday_type:0
 msgid "Select Leave Type"
 msgstr "Choisir le type de congés"
+
+#~ msgid "The employee or employee category of this request is missing."
+#~ msgstr "L'employé ou la catégorie d'employé de cette demande est manquant."
