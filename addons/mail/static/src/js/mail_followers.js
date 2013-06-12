@@ -280,14 +280,14 @@ openerp_mail_followers = function(session, mail) {
                 _(this.$('.oe_msg_subtype_check')).each(function (record) {
                     $(record).attr('checked',false);
                 });
-            var unsubscribe = 'message_unsubscribe_users';
+            var action_unsubscribe = 'message_unsubscribe_users';
             var follower_ids = [this.session.uid];
             if (user_pid) {
-                unsubscribe = 'message_unsubscribe';
+                action_unsubscribe = 'message_unsubscribe';
                 follower_ids = [user_pid];
             }
                 var context = new session.web.CompoundContext(this.build_context(), {});
-                return this.ds_model.call(unsubscribe, [[this.view.datarecord.id], follower_ids, context])
+                return this.ds_model.call(action_unsubscribe, [[this.view.datarecord.id], follower_ids, context])
                      .then(this.proxy('read_value'));
             }
             return false;
@@ -296,11 +296,11 @@ openerp_mail_followers = function(session, mail) {
         do_update_subscription: function (event, user_pid) {
             var self = this;
 
-            var subscribe = 'message_subscribe_users';
+            var action_subscribe = 'message_subscribe_users';
             var follower_ids = [this.session.uid];
             var oe_action = this.$('.oe_actions input[type="checkbox"]');
             if (user_pid) {
-                subscribe = 'message_subscribe';
+                action_subscribe = 'message_subscribe';
                 follower_ids = [user_pid];
                 oe_action = $('.oe_edit_actions input[type="checkbox"]');
             }
@@ -317,7 +317,7 @@ openerp_mail_followers = function(session, mail) {
                 }
             } else {
                 var context = new session.web.CompoundContext(this.build_context(), {});
-                return this.ds_model.call(subscribe, [[this.view.datarecord.id], follower_ids, checklist, context])
+                return this.ds_model.call(action_subscribe, [[this.view.datarecord.id], follower_ids, checklist, context])
                     .then(this.proxy('read_value'));
             }
         },
