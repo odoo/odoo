@@ -50,24 +50,24 @@
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Procurement Task&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;if product type is 'service' then it creates the task.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_procuretasktask0"/>
-            <field model="process.node" name="source_node_id" ref="sale_stock.process_node_saleprocurement0"/>
+            <field name="target_node_id" ref="process_node_procuretasktask0"/>
+            <field name="source_node_id" ref="sale_stock.process_node_saleprocurement0"/>
         </record>
 
         <record id="process_transition_createtask0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Create Task&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Product type is service, then its creates the task.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="project.process_node_drafttask0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_saleordertask0"/>
+            <field name="target_node_id" ref="project.process_node_drafttask0"/>
+            <field name="source_node_id" ref="process_node_saleordertask0"/>
         </record>
 
         <record id="process_transition_ordertask0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Order Task&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;If procurement method is Make to order and supply method is produce&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_mrptask0"/>
-            <field model="process.node" name="source_node_id" ref="procurement.process_node_serviceonorder0"/>
+            <field name="target_node_id" ref="process_node_mrptask0"/>
+            <field name="source_node_id" ref="procurement.process_node_serviceonorder0"/>
         </record>
 
     </data>

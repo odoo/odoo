@@ -273,7 +273,7 @@ class sale_order(osv.osv):
             if s['state'] in ['draft', 'cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid Action!'), _('In order to delete a confirmed sales order, you must cancel it before !'))
+                raise osv.except_osv(_('Invalid Action!'), _('In order to delete a confirmed sales order, you must cancel it before!'))
 
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
@@ -695,7 +695,7 @@ class sale_order_line(osv.osv):
     _description = 'Sales Order Line'
     _columns = {
         'order_id': fields.many2one('sale.order', 'Order Reference', required=True, ondelete='cascade', select=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'name': fields.text('Description', required=True, select=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'name': fields.text('Description', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of sales order lines."),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
         'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
@@ -870,7 +870,7 @@ class sale_order_line(osv.osv):
         context = context or {}
         lang = lang or context.get('lang',False)
         if not  partner_id:
-            raise osv.except_osv(_('No Customer Defined !'), _('Before choosing a product,\n select a customer in the sales form.'))
+            raise osv.except_osv(_('No Customer Defined!'), _('Before choosing a product,\n select a customer in the sales form.'))
         warning = {}
         product_uom_obj = self.pool.get('product.uom')
         partner_obj = self.pool.get('res.partner')

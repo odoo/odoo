@@ -147,6 +147,8 @@ class TestMailgateway(TestMailBase):
         self.assertEqual(mail.reply_to, 'other@example.com',
                         'mail_mail: reply_to should be equal to the one coming from creation values')
         # Do: create a mail_mail with the previous mail_message
+        self.mail_message.write(cr, uid, [msg_id], {'reply_to': 'custom@example.com'})
+        msg.refresh()
         mail_id = self.mail_mail.create(cr, uid, {'mail_message_id': msg_id, 'state': 'cancel'})
         mail = self.mail_mail.browse(cr, uid, mail_id)
         # Test: mail_mail content
@@ -177,12 +179,15 @@ class TestMailgateway(TestMailBase):
         mail = self.mail_mail.browse(cr, uid, mail_id)
         # Test: mail_mail content
         self.assertEqual(mail.reply_to, msg.email_from,
-                        'mail_mail: reply_to should equal to mail_message.email_from when having no document or default alias')
+                        'mail_mail: reply_to should be equal to mail_message.email_from when having no document or default alias')
 
         # Data: set catchall domain
         self.registry('ir.config_parameter').set_param(cr, uid, 'mail.catchall.domain', 'schlouby.fr')
         self.registry('ir.config_parameter').unlink(cr, uid, self.registry('ir.config_parameter').search(cr, uid, [('key', '=', 'mail.catchall.alias')]))
 
+        # Update message
+        self.mail_message.write(cr, uid, [msg_id], {'email_from': False, 'reply_to': False})
+        msg.refresh()
         # Do: create a mail_mail based on the previous mail_message
         mail_id = self.mail_mail.create(cr, uid, {'mail_message_id': msg_id, 'state': 'cancel'})
         mail = self.mail_mail.browse(cr, uid, mail_id)
@@ -191,7 +196,7 @@ class TestMailgateway(TestMailBase):
                         'mail_mail: reply_to should equal the mail.group alias')
 
         # Update message
-        self.mail_message.write(cr, uid, [msg_id], {'res_id': False, 'email_from': 'someone@schlouby.fr'})
+        self.mail_message.write(cr, uid, [msg_id], {'res_id': False, 'email_from': 'someone@schlouby.fr', 'reply_to': False})
         msg.refresh()
         # Do: create a mail_mail based on the previous mail_message
         mail_id = self.mail_mail.create(cr, uid, {'mail_message_id': msg_id, 'state': 'cancel'})
@@ -203,6 +208,9 @@ class TestMailgateway(TestMailBase):
         # Data: set catchall alias
         self.registry('ir.config_parameter').set_param(self.cr, self.uid, 'mail.catchall.alias', 'gateway')
 
+        # Update message
+        self.mail_message.write(cr, uid, [msg_id], {'email_from': False, 'reply_to': False})
+        msg.refresh()
         # Do: create a mail_mail based on the previous mail_message
         mail_id = self.mail_mail.create(cr, uid, {'mail_message_id': msg_id, 'state': 'cancel'})
         mail = self.mail_mail.browse(cr, uid, mail_id)

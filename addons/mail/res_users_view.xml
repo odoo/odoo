@@ -37,6 +37,12 @@
                     </div>
                     <field name="alias_contact" string="Accept Emails From"/>
                 </field>
+                <group string="Email preferences" position="after">
+                    <group name="misc" string="Miscellaneous"
+                            groups="base.group_no_one">
+                        <field name="display_groups_suggestions"/>
+                    </group>
+                </group>
             </data>
             </field>
         </record>

@@ -19,13 +19,12 @@
 #
 ##############################################################################
 
-import base64
-import time
-from lxml import etree
+from datetime import date, datetime
+from dateutil import relativedelta
+
+from openerp import tools
 from openerp.osv import fields
 from openerp.osv import osv
-from openerp import tools
-from openerp.tools.translate import _
 
 MAX_LEVEL = 15
 AVAILABLE_STATES = [
@@ -106,9 +105,56 @@ class crm_case_section(osv.osv):
     _inherit = "mail.thread"
     _description = "Sales Teams"
     _order = "complete_name"
+    # number of periods for lead/opportunities/... tracking in salesteam kanban dashboard/kanban view
+    _period_number = 5
 
     def get_full_name(self, cr, uid, ids, field_name, arg, context=None):
         return dict(self.name_get(cr, uid, ids, context=context))
+
+    def __get_bar_values(self, cr, uid, obj, domain, read_fields, value_field, groupby_field, context=None):
+        """ Generic method to generate data for bar chart values using SparklineBarWidget.
+            This method performs obj.read_group(cr, uid, domain, read_fields, groupby_field).
+
+            :param obj: the target model (i.e. crm_lead)
+            :param domain: the domain applied to the read_group
+            :param list read_fields: the list of fields to read in the read_group
+            :param str value_field: the field used to compute the value of the bar slice
+            :param str groupby_field: the fields used to group
+
+            :return list section_result: a list of dicts: [
+                                                {   'value': (int) bar_column_value,
+                                                    'tootip': (str) bar_column_tooltip,
+                                                }
+                                            ]
+        """
+        month_begin = date.today().replace(day=1)
+        section_result = [{
+                            'value': 0,
+                            'tooltip': (month_begin + relativedelta.relativedelta(months=-i)).strftime('%B'),
+                            } for i in range(self._period_number - 1, -1, -1)]
+        group_obj = obj.read_group(cr, uid, domain, read_fields, groupby_field, context=context)
+        for group in group_obj:
+            group_begin_date = datetime.strptime(group['__domain'][0][2], tools.DEFAULT_SERVER_DATE_FORMAT)
+            month_delta = relativedelta.relativedelta(month_begin, group_begin_date)
+            section_result[self._period_number - (month_delta.months + 1)] = {'value': group.get(value_field, 0), 'tooltip': group_begin_date.strftime('%B')}
+        return section_result
+
+    def _get_opportunities_data(self, cr, uid, ids, field_name, arg, context=None):
+        """ Get opportunities-related data for salesteam kanban view
+            monthly_open_leads: number of open lead during the last months
+            monthly_planned_revenue: planned revenu of opportunities during the last months
+        """
+        obj = self.pool.get('crm.lead')
+        res = dict.fromkeys(ids, False)
+        month_begin = date.today().replace(day=1)
+        groupby_begin = (month_begin + relativedelta.relativedelta(months=-4)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        for id in ids:
+            res[id] = dict()
+            lead_domain = [('type', '=', 'lead'), ('section_id', '=', id), ('create_date', '>=', groupby_begin)]
+            res[id]['monthly_open_leads'] = self.__get_bar_values(cr, uid, obj, lead_domain, ['create_date'], 'create_date_count', 'create_date', context=context)
+            opp_domain = [('type', '=', 'opportunity'), ('section_id', '=', id), ('create_date', '>=', groupby_begin)]
+            res[id]['monthly_planned_revenue'] = self.__get_bar_values(cr, uid, obj, opp_domain, ['planned_revenue', 'create_date'], 'planned_revenue', 'create_date', context=context)
+        return res
 
     _columns = {
         'name': fields.char('Sales Team', size=64, required=True, translate=True),
@@ -129,15 +175,16 @@ class crm_case_section(osv.osv):
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
                                     help="The email address associated with this team. New emails received will automatically "
                                          "create new leads assigned to the team."),
-        'open_lead_ids': fields.one2many('crm.lead', 'section_id',
-            string='Open Leads', readonly=True,
-            domain=['&', ('type', '!=', 'opportunity'), ('state', 'not in', ['done', 'cancel'])]),
-        'open_opportunity_ids': fields.one2many('crm.lead', 'section_id',
-            string='Open Opportunities', readonly=True,
-            domain=['&', '|', ('type', '=', 'opportunity'), ('type', '=', 'both'), ('state', 'not in', ['done', 'cancel'])]),
         'color': fields.integer('Color Index'),
         'use_leads': fields.boolean('Leads',
-            help="This enables the management of leads in the sales team. Otherwise the sales team manages only opportunities."),
+            help="The first contact you get with a potential customer is a lead you qualify before converting it into a real business opportunity. Check this box to manage leads in this sales team."),
+
+        'monthly_open_leads': fields.function(_get_opportunities_data,
+            type="string", readonly=True, multi='_get_opportunities_data',
+            string='Open Leads per Month'),
+        'monthly_planned_revenue': fields.function(_get_opportunities_data,
+            type="string", readonly=True, multi='_get_opportunities_data',
+            string='Planned Revenue per Month')
     }
 
     def _get_stage_common(self, cr, uid, context):

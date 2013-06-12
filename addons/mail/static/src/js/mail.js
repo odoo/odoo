@@ -4,8 +4,8 @@ openerp.mail = function (session) {
 
     var mail = session.mail = {};
 
-    openerp_mail_followers(session, mail);        // import mail_followers.js
-    openerp_FieldMany2ManyTagsEmail(session);      // import manyy2many_tags_email.js
+    openerp_mail_followers(session, mail);          // import mail_followers.js
+    openerp_FieldMany2ManyTagsEmail(session);       // import manyy2many_tags_email.js
 
     /**
      * ------------------------------------------------------------
@@ -219,6 +219,7 @@ openerp.mail = function (session) {
             this.type = datasets.type ||  false,
             this.subtype = datasets.subtype ||  false,
             this.is_author = datasets.is_author ||  false,
+            this.author_avatar = datasets.author_avatar || false,
             this.is_private = datasets.is_private ||  false,
             this.subject = datasets.subject ||  false,
             this.name = datasets.name ||  false,
@@ -236,8 +237,15 @@ openerp.mail = function (session) {
 
             this.format_data();
 
+            // update record_name: Partner profile
+            if (this.model == 'res.partner') {
+                this.record_name = 'Partner Profile of ' + this.record_name;
+            }
+            else if (this.model == 'hr.employee') {
+                this.record_name = 'News from ' + this.record_name;
+            }
             // record options and data
-            this.show_record_name = this.options.show_record_name && this.record_name && !this.thread_level && this.model != 'res.partner';
+            this.show_record_name = this.options.show_record_name && this.record_name && !this.thread_level;
             this.options.show_read = false;
             this.options.show_unread = false;
             if (this.options.show_read_unread_button) {
@@ -256,12 +264,15 @@ openerp.mail = function (session) {
 
         /* Convert date, timerelative and avatar in displayable data. */
         format_data: function () {
+
             //formating and add some fields for render
             this.date = this.date ? session.web.str_to_datetime(this.date) : false;
             if (this.date && new Date().getTime()-this.date.getTime() < 7*24*60*60*1000) {
                 this.timerelative = $.timeago(this.date);
-            } 
-            if (this.type == 'email' && (!this.author_id || !this.author_id[0])) {
+            }
+            if (this.author_avatar) {
+                this.avatar = "data:image/png;base64," + this.author_avatar;
+            } else if (this.type == 'email' && (!this.author_id || !this.author_id[0])) {
                 this.avatar = ('/mail/static/src/img/email_icon.png');
             } else if (this.author_id && this.template != 'mail.compose_message') {
                 this.avatar = mail.ChatterUtils.get_image(this.session, 'res.partner', 'image_small', this.author_id[0]);
@@ -735,7 +746,7 @@ openerp.mail = function (session) {
                 }
                 // create object and attach to the thread object
                 thread.message_fetch([["id", "=", message_id]], false, [message_id], function (arg, data) {
-                    var message = thread.create_message_object( data[0] );
+                    var message = thread.create_message_object( data.slice(-1)[0] );
                     // insert the message on dom
                     thread.insert_message( message, root ? undefined : self.$el, root );
                 });
@@ -843,9 +854,9 @@ openerp.mail = function (session) {
 
         on_checked_recipient: function (event) {
             var $input = $(event.target);
-            var email = $input.attr("data");
+            var full_name = $input.attr("data");
             _.each(this.recipients, function (recipient) {
-                if (recipient.email_address == email) {
+                if (recipient.full_name == full_name) {
                     recipient.checked = $input.is(":checked");
                 }
             });
@@ -1832,6 +1843,19 @@ openerp.mail = function (session) {
 
     /**
      * ------------------------------------------------------------
+     * Aside Widget
+     * ------------------------------------------------------------
+     * 
+     * This widget handles the display of a sidebar on the Wall. Its main use
+     * is to display group and employees suggestion (if hr is installed).
+     */
+    mail.WallSidebar = session.web.Widget.extend({
+        template: 'mail.wall.sidebar',
+    });
+
+
+    /**
+     * ------------------------------------------------------------
      * Wall Widget
      * ------------------------------------------------------------
      *
@@ -1891,6 +1915,9 @@ openerp.mail = function (session) {
             if (! this.searchview.has_defaults) {
                 this.message_render();
             }
+            // render sidebar
+            var wall_sidebar = new mail.WallSidebar(this);
+            wall_sidebar.appendTo(this.$el.find('.oe_mail_wall_aside'));
         },
 
         /**
@@ -2008,4 +2035,16 @@ openerp.mail = function (session) {
             });
         },
     });
+
+
+    /**
+     * ------------------------------------------------------------
+     * Sub-widgets loading
+     * ------------------------------------------------------------
+     * 
+     * Load here widgets that could depend on widgets defined in mail.js
+     */
+
+    openerp.mail.suggestions(session, mail);        // import suggestion.js (suggestion widget)
+
 };

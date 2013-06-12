@@ -68,15 +68,16 @@
                     <label for="categ_ids" class="oe_edit_only"/>
                     <field name="categ_ids" widget="many2many_tags"/>
                     <group>
-                        <group groups="base.group_user">
+                        <group>
                             <field name="user_id" 
                                 context="{'default_groups_ref': ['base.group_user', 'project.group_project_user']}"/>
                             <field name="partner_id"  on_change="onchange_partner_id(partner_id, email_from)"/>
                             <field name="email_from"/>
-                            <label for="project_id" groups="base.group_user"/>
-                            <div groups="base.group_user">
+                            <label for="project_id"/>
+                            <div>
                                 <field name="project_id" on_change="on_change_project(project_id)" class="oe_inline" context="{'default_use_issues':1}"/>
-                                <button name="case_escalate" string="⇒ Escalate" type="object" states="draft,open,pending" class="oe_link"/>
+                                <button name="case_escalate" string="⇒ Escalate" type="object" states="draft,open,pending" class="oe_link"
+                                        groups="base.group_user"/>
                             </div>
                         </group>
                         <group>
@@ -150,8 +151,8 @@
                     <field name="id"/>
                     <filter icon="terp-mail-message-new" string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
-                    <filter string="New" icon="terp-document-new" domain="[('state','=','draft')]" help="New Issues"/>
-                    <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
+                    <filter name="filter_new" string="New" icon="terp-document-new" domain="[('state','=','draft')]" help="New Issues"/>
+                    <filter name="filter_open" string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
                     <separator/>
                     <filter string="Unassigned Issues" domain="[('user_id','=',False)]"  help="Unassigned Issues" icon="terp-personal-"/>
                     <separator/>
@@ -160,13 +161,13 @@
                     <field name="categ_ids"/>
                     <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <group expand="0" string="Group By..." >
-                        <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Contact" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Project"  icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
-                        <filter string="Version" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'version_id'}"/>
-                        <filter string="Priority" icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}"/>
-                        <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
-                        <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" help="Creation Month"/>
+                        <filter string="Responsible" name="group_user_id" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Contact" name="group_partner_id" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Project" name="group_project_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
+                        <filter string="Version" name="group_version" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'version_id'}"/>
+                        <filter string="Priority" name="group_priority" icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}"/>
+                        <filter string="Stage" name="group_stage_id" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
+                        <filter string="Month" name="group_create_date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" help="Creation Month"/>
                     </group>
                 </search>
             </field>

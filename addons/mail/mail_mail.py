@@ -27,6 +27,7 @@ from urlparse import urljoin
 
 from openerp import tools
 from openerp import SUPERUSER_ID
+from openerp.addons.base.ir.ir_mail_server import MailDeliveryException
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -59,9 +60,6 @@ class mail_mail(osv.Model):
         'recipient_ids': fields.many2many('res.partner', string='To (Partners)'),
         'email_cc': fields.char('Cc', help='Carbon copy message recipients'),
         'body_html': fields.text('Rich-text Contents', help="Rich-text/HTML message"),
-        # If not set in create values, auto-detected based on create values (res_id, model, email_from)
-        'reply_to': fields.char('Reply-To',
-            help='Preferred response address for the message'),
         # Auto-detected based on create() - if 'mail_message_id' was passed then this mail is a notification
         # and during unlink() we will not cascade delete the parent and its attachments
         'notification': fields.boolean('Is Notification',
@@ -292,7 +290,7 @@ class mail_mail(osv.Model):
             'email_to': email_to,
         }
 
-    def send(self, cr, uid, ids, auto_commit=False, context=None):
+    def send(self, cr, uid, ids, auto_commit=False, raise_exception=False, context=None):
         """ Sends the selected emails immediately, ignoring their current
             state (mails that have already been sent should not be passed
             unless they should actually be re-sent).
@@ -303,6 +301,8 @@ class mail_mail(osv.Model):
             :param bool auto_commit: whether to force a commit of the mail status
                 after sending each mail (meant only for scheduler processing);
                 should never be True during normal transactions (default: False)
+            :param bool raise_exception: whether to raise an exception if the
+                email sending process has failed
             :return: True
         """
         ir_mail_server = self.pool.get('ir.mail_server')
@@ -348,9 +348,16 @@ class mail_mail(osv.Model):
                 # see revid:odo@openerp.com-20120622152536-42b2s28lvdv3odyr in 6.1
                 if mail_sent:
                     self._postprocess_sent_message(cr, uid, mail, context=context)
-            except Exception:
+            except Exception as e:
                 _logger.exception('failed sending mail.mail %s', mail.id)
                 mail.write({'state': 'exception'})
+                if raise_exception:
+                    if isinstance(e, AssertionError):
+                        # get the args of the original error, wrap into a value and throw a MailDeliveryException
+                        # that is an except_orm, with name and value as arguments
+                        value = '. '.join(e.args)
+                        raise MailDeliveryException(_("Mail Delivery Failed"), value)
+                    raise
 
             if auto_commit == True:
                 cr.commit()
