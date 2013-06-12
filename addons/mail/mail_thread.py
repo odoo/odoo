@@ -1485,6 +1485,13 @@ class mail_thread(osv.AbstractModel):
         if context is None:
             context = {}
 
+        # TDE HACK: originally by MAT from portal/mail_mail.py but not working until the inheritance graph bug is not solved in trunk
+        # TDE FIXME: relocate in portal when it won't be necessary to reload the hr.employee model in an additional bridge module
+        if self.pool['res.groups']._all_columns.get('is_portal'):
+            user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
+            if any(group.is_portal for group in user.groups_id):
+                return []
+
         threads = []
         if removed_suggested_threads is None:
             removed_suggested_threads = []

@@ -44,14 +44,3 @@ class mail_mail(osv.Model):
             return _("""<small>Access your messages and documents through <a style='color:inherit' href="%s">our Customer Portal</a></small>""") % signup_url
         else:
             return super(mail_mail, self)._get_partner_access_link(cr, uid, mail, partner=partner, context=context)
-
-class mail_thread_portal(osv.AbstractModel):
-
-    _inherit = 'mail.thread'
-
-    def get_suggested_thread(self, cr, uid, removed_suggested_threads=None, context=None):
-        """Overwrite to avoid showing suggestions for anonymous users"""
-        anonymous_group = self.pool.get('ir.model.data').get_object(cr, SUPERUSER_ID, 'portal', 'group_anonymous')
-        if uid in [user.id for user in anonymous_group.users]:
-            return []
-        return super(mail_thread_portal, self).get_suggested_thread(cr, uid, removed_suggested_threads, context=context)
