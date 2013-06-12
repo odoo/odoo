@@ -201,6 +201,7 @@ class purchase_requisition(osv.osv):
         if supplier:
             lang = res_partner.browse(cr, uid, supplier.id).lang
             context_partner.update( {'lang': lang, 'partner_id': supplier.id} )
+        product = product_product.browse(cr, uid, requisition_line.product_id.id, context=context_partner)
         #call name_get() with partner in the context to eventually match name and description in the seller_ids field
         dummy, name = product_product.name_get(cr, uid, product.id, context=context_partner)[0]
         if product.description_purchase:
