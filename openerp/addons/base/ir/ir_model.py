@@ -82,7 +82,7 @@ class ir_model(osv.osv):
             return []
         __, operator, value = domain[0]
         if operator not in ['=', '!=']:
-            raise osv.except_osv(_('Invalid search criterions'), _('The osv_memory field can only be compared with = and != operator.'))
+            raise osv.except_osv(_("Invalid Search Criteria"), _('The osv_memory field can only be compared with = and != operator.'))
         value = bool(value) if operator == '=' else not bool(value)
         all_model_ids = self.search(cr, uid, [], context=context)
         is_osv_mem = self._is_osv_memory(cr, uid, all_model_ids, 'osv_memory', arg=None, context=context)
@@ -863,10 +863,23 @@ class ir_model_data(osv.osv):
     def get_object_reference(self, cr, uid, module, xml_id):
         """Returns (model, res_id) corresponding to a given module and xml_id (cached) or raise ValueError if not found"""
         data_id = self._get_id(cr, uid, module, xml_id)
+        #assuming data_id is not False, as it was checked upstream
         res = self.read(cr, uid, data_id, ['model', 'res_id'])
         if not res['res_id']:
             raise ValueError('No such external ID currently defined in the system: %s.%s' % (module, xml_id))
         return res['model'], res['res_id']
+
+    def check_object_reference(self, cr, uid, module, xml_id, raise_on_access_error=False):
+        """Returns (model, res_id) corresponding to a given module and xml_id (cached), if and only if the user has the necessary access rights
+        to see that object, otherwise raise a ValueError if raise_on_access_error is True or returns a tuple (model found, False)"""
+        model, res_id = self.get_object_reference(cr, uid, module, xml_id)
+        #search on id found in result to check if current user has read access right
+        check_right = self.pool.get(model).search(cr, uid, [('id', '=', res_id)])
+        if check_right:
+            return model, res_id
+        if raise_on_access_error:
+            raise ValueError('Not enough access rights on the external ID: %s.%s' % (module, xml_id))
+        return model, False
 
     def get_object(self, cr, uid, module, xml_id, context=None):
         """Returns a browsable record for the given module name and xml_id or raise ValueError if not found"""
