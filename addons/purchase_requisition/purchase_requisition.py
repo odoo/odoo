@@ -424,7 +424,7 @@ class product_product(osv.osv):
     _inherit = 'product.product'
 
     _columns = {
-        'purchase_requisition': fields.boolean('Request for Tender', help="Check this box to generates requests for tender instead of generating requests for quotation from procurement.")
+        'purchase_requisition': fields.boolean('Requests for Tender', help="Check this box to generate requests for tender instead of generating requests for quotation from procurement.")
     }
     _defaults = {
         'purchase_requisition': False
