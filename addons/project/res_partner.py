@@ -33,7 +33,7 @@ class res_partner(osv.osv):
         if default is None:
             default = {}
 
-        default.update({'task_ids': []})
+        default['task_ids'] = []
         return super(res_partner, self).copy(
                 cr, uid, record_id, default=default, context=context)
 
