@@ -252,6 +252,8 @@ openerp_mail_followers = function(session, mail) {
             if (mode.length != 0){ $list = self.$dialog; }
             $list.empty().hide();
             var records = data[this.view.datarecord.id || this.view.dataset.ids[0]].message_subtype_data;
+            this.records_length = $.map(records, function(value, index) { return index; }).length;
+            if (this.records_length > 1) { self.display_followers(); }
             _(records).each(function (record, record_name) {
                 record.name = record_name;
                 record.followed = record.followed || undefined;
