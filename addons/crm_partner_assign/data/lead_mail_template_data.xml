@@ -7,6 +7,7 @@
             <field name="auto_delete" eval="True"/>
             <field name="email_to">${object.partner_id.email}</field>
             <field name="email_from">${user.email or ''}</field>
+            <field name="subject">Fwd: Lead: ${object.partner_id.name}</field>
             <field name="body_html"><![CDATA[
             
 Hello ${object.partner_id.name},
@@ -35,7 +36,7 @@ Hello ${object.partner_id.name},
 </b>
 % endif
 </br>
-<blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;">Connect you to your  Partner Portal to see leads details.</blockquote>
+<blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;">Connect you to your <b><a href="${object.get_portal_url()}">Partner Portal</a></b> to see leads details.</blockquote>
 
 </br>   
 Thanks,</br>

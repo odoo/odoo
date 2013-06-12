@@ -87,6 +87,10 @@ class crm_lead_forward_to_partner(osv.TransientModel):
                 lead_obj.write(cr, uid, [lead.lead_id.id], {'partner_assigned_id': lead.partner_assigned_id.id, 'user_id': lead.partner_assigned_id.user_id.id})
         return True
     
+    def get_portal_url(self, cr, uid, ids, context=None):
+        portal_link = "%s/?db=%s" % (self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url'), cr.dbname)
+        return portal_link
+    
     _columns = {
         'forward_type':fields.selection([ ('single', 'a single partner: manual selection of partner'), ('assigned', "several partners: automatic assignation, using GPS coordinates and partner's grades"), ], 'Forward selected leads to'),
         'partner_id':fields.many2one('res.partner', 'Forward Leads To'),
