@@ -67,10 +67,11 @@ class StockMove(osv.osv):
         'procurements': fields.one2many('procurement.order', 'move_id', 'Procurements'),
     }
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        default = default or {}
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
         default['procurements'] = []
-        return super(StockMove, self).copy(cr, uid, id, default, context=context)
+        return super(StockMove, self).copy_data(cr, uid, id, default, context=context)
 
 StockMove()
 
@@ -307,7 +308,7 @@ class procurement_order(osv.osv):
         move_obj = self.pool.get('stock.move')
         for procurement in self.browse(cr, uid, ids, context=context):
             if procurement.product_qty <= 0.00:
-                raise osv.except_osv(_('Data Insufficient !'),
+                raise osv.except_osv(_('Data Insufficient!'),
                     _('Please check the quantity in procurement order(s) for the product "%s", it should not be 0 or less!' % procurement.product_id.name))
             if procurement.product_id.type in ('product', 'consu'):
                 if not procurement.move_id:

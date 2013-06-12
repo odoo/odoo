@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-03-16 14:09+0000\n"
+"Last-Translator: Fábio Martinelli - http://zupy.com.br "
+"<webmaster@guaru.net>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:39+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:19+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: crm_claim
 #: help:crm.claim.stage,fold:0
@@ -29,13 +30,13 @@ msgstr ""
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
 msgid "# of Cases"
-msgstr "Nº de Casos"
+msgstr "# de Casos"
 
 #. module: crm_claim
 #: view:crm.claim:0
 #: view:crm.claim.report:0
 msgid "Group By..."
-msgstr "Agrupar Por..."
+msgstr "Agrupar por..."
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -108,7 +109,7 @@ msgstr ""
 #. module: crm_claim
 #: view:crm.claim.report:0
 msgid "#Claim"
-msgstr "Nº da Solicitação"
+msgstr "# Solicitação"
 
 #. module: crm_claim
 #: field:crm.claim.stage,name:0
@@ -124,7 +125,7 @@ msgstr "Vendedor"
 #: selection:crm.claim,priority:0
 #: selection:crm.claim.report,priority:0
 msgid "Highest"
-msgstr "Maior"
+msgstr "Máxima"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -234,12 +235,12 @@ msgstr "Seção"
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Root Causes"
-msgstr "Origens do Problema"
+msgstr "Origens da Solicitação"
 
 #. module: crm_claim
 #: field:crm.claim,user_fault:0
 msgid "Trouble Responsible"
-msgstr "Responsável pelo Problema"
+msgstr "Responsável pela Solicitação"
 
 #. module: crm_claim
 #: field:crm.claim,priority:0
@@ -281,7 +282,7 @@ msgstr "Email"
 #: selection:crm.claim,priority:0
 #: selection:crm.claim.report,priority:0
 msgid "Lowest"
-msgstr "Mais Baixa"
+msgstr "Mínima"
 
 #. module: crm_claim
 #: field:crm.claim,action_next:0
@@ -312,6 +313,11 @@ msgstr "Rejeitada"
 #: field:crm.claim,date_action_next:0
 msgid "Next Action Date"
 msgstr "Data da Próxima Ação"
+
+#. module: crm_claim
+#: model:ir.model,name:crm_claim.model_sale_config_settings
+msgid "sale.config.settings"
+msgstr "sale.config.settings"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
@@ -378,7 +384,7 @@ msgstr ""
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Settle"
-msgstr "Resolução"
+msgstr "Resolvido"
 
 #. module: crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_claim_stage_view
@@ -777,7 +783,7 @@ msgstr "Prazo Ultrapassado"
 #. module: crm_claim
 #: field:crm.claim,cause:0
 msgid "Root Cause"
-msgstr "Origem do Problema"
+msgstr "Origem"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -816,24 +822,9 @@ msgid "Refused stage"
 msgstr "Estágio Recusado"
 
 #. module: crm_claim
-#: model:ir.actions.act_window,help:crm_claim.crm_case_categ_claim0
-msgid ""
-"Record and track your customers' claims. Claims may be linked to a sales "
-"order or a lot. You can send emails with attachments and keep the full "
-"history for a claim (emails sent, intervention type and so on). Claims may "
-"automatically be linked to an email address using the mail gateway module."
-msgstr ""
-"Registrar e acompanhar as solicitações de seus clientes. As solicitações "
-"podem estar ligadas a um Pedido de Venda ou um lote. Você pode enviar e-"
-"mails com anexos e manter o histórico completo de um pedido (e-mails "
-"enviados, o tipo de intervenção e assim por diante). As solicitações podem "
-"ser automaticamente ligadas a um endereço de e-mail usando o módulo gateway "
-"de e-mails."
-
-#. module: crm_claim
 #: field:crm.claim.report,email:0
 msgid "# Emails"
-msgstr "Nº de Emails"
+msgstr "# Emails"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -846,9 +837,17 @@ msgid "February"
 msgstr "Fevereiro"
 
 #. module: crm_claim
-#: model:ir.model,name:crm_claim.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr "sale.config.settings"
+#: model:ir.actions.act_window,help:crm_claim.crm_case_categ_claim0
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Record and track your customers' claims. Claims may be "
+"linked to a sales order or a lot.You can send emails with attachments and "
+"keep the full history for a claim (emails sent, intervention type and so "
+"on).Claims may automatically be linked to an email address using the mail "
+"gateway module.\n"
+"            </p>\n"
+"            "
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -931,3 +930,16 @@ msgstr ""
 #: help:crm.claim.stage,case_refused:0
 msgid "Refused stages are specific stages for done."
 msgstr "Estágios de Recusados são específicos para concluídos."
+
+#~ msgid ""
+#~ "Record and track your customers' claims. Claims may be linked to a sales "
+#~ "order or a lot. You can send emails with attachments and keep the full "
+#~ "history for a claim (emails sent, intervention type and so on). Claims may "
+#~ "automatically be linked to an email address using the mail gateway module."
+#~ msgstr ""
+#~ "Registrar e acompanhar as solicitações de seus clientes. As solicitações "
+#~ "podem estar ligadas a um Pedido de Venda ou um lote. Você pode enviar e-"
+#~ "mails com anexos e manter o histórico completo de um pedido (e-mails "
+#~ "enviados, o tipo de intervenção e assim por diante). As solicitações podem "
+#~ "ser automaticamente ligadas a um endereço de e-mail usando o módulo gateway "
+#~ "de e-mails."

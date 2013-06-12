@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-02-14 16:29+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"PO-Revision-Date: 2013-03-10 21:01+0000\n"
+"Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-15 05:24+0000\n"
-"X-Generator: Launchpad (build 16491)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:35+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_mail
@@ -55,14 +55,21 @@ msgid "Company Jobs"
 msgstr "Vállalati feladatok"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid "amount: the total amount to pay, as a float"
-msgstr "összeg: a teljes fizetendő mennyiség, mind összegezve"
+#: model:ir.ui.menu,name:portal.portal_orders
+msgid "Billing"
+msgstr ""
 
 #. module: portal
 #: view:portal.wizard.user:0
 msgid "Contacts"
 msgstr "Kapcsolatok"
+
+#. module: portal
+#: view:portal.wizard:0
+msgid "This text is included in the email sent to new portal users."
+msgstr ""
+"Ez a szöveg hozzá lesz adva az összes új portál felhasználónak elküldött "
+"leveléhez."
 
 #. module: portal
 #: view:share.wizard:0
@@ -76,9 +83,24 @@ msgid "Portal Groups"
 msgstr "Portál csoportok"
 
 #. module: portal
+#: code:addons/portal/mail_mail.py:52
+#, python-format
+msgid "<p>Access this document <a href=\"%s\">directly in OpenERP</a></p>"
+msgstr ""
+"<p>Ennek a dokumentumnak az elérése <a href=\"%s\">közvetlenül az OpenERP-"
+"ben</a></p>"
+
+#. module: portal
 #: field:portal.wizard,welcome_message:0
 msgid "Invitation Message"
 msgstr "Meghívó szövege"
+
+#. module: portal
+#: model:ir.actions.act_window,name:portal.partner_wizard_action
+#: model:ir.model,name:portal.model_portal_wizard
+#: view:portal.wizard:0
+msgid "Portal Access Management"
+msgstr "Portál hozzáférés kezelése"
 
 #. module: portal
 #: view:res.groups:0
@@ -92,14 +114,10 @@ msgid "Please select at least one group to share with"
 msgstr "Kérem legalább egy csoport kiválasztását akivel megosztja"
 
 #. module: portal
-#: view:share.wizard:0
-msgid "Details"
-msgstr "Részletek"
-
-#. module: portal
-#: model:ir.ui.menu,name:portal.portal_orders
-msgid "Quotations and Sales Orders"
-msgstr "Árajánlatok és vevői megrendelések"
+#: model:ir.actions.client,name:portal.action_mail_archives_feeds_portal
+#: model:ir.ui.menu,name:portal.portal_mail_archivesfeeds
+msgid "Archives"
+msgstr "Archívumok"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -121,9 +139,13 @@ msgid "Share Wizard"
 msgstr "Megosztás varázsló"
 
 #. module: portal
-#: field:portal.wizard.user,email:0
-msgid "Email"
-msgstr "E-mail"
+#: view:portal.payment.acquirer:0
+msgid ""
+", so it may use Mako expressions.\n"
+"                                The Mako evaluation context provides:"
+msgstr ""
+", így talán Mako kifejezéseket használ.\n"
+"                                A Mako adja az összefüggés értékelést:"
 
 #. module: portal
 #: model:ir.actions.client,help:portal.action_news
@@ -137,6 +159,22 @@ msgstr ""
 "                    Önnek nincsenek olvasatlan hírei a vállalattól.\n"
 "                </p>\n"
 "            "
+
+#. module: portal
+#: field:portal.wizard.user,email:0
+msgid "Email"
+msgstr "E-mail"
+
+#. module: portal
+#: view:portal.wizard:0
+msgid "or"
+msgstr "vagy"
+
+#. module: portal
+#: model:ir.actions.client,name:portal.action_mail_star_feeds_portal
+#: model:ir.ui.menu,name:portal.portal_mail_starfeeds
+msgid "To-do"
+msgstr "Feladat"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:194
@@ -170,13 +208,14 @@ msgid "No online payment acquirers configured"
 msgstr "Nincs online fizetési igénylő beállítva"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
+#: code:addons/portal/mail_message.py:54
+#, python-format
 msgid ""
-"kind: the kind of document on which the payment form is rendered (translated "
-"to user language, e.g. \"Invoice\")"
+"The requested operation cannot be completed due to security restrictions. "
+"Please contact your system administrator.\n"
+"\n"
+"(Document type: %s, Operation: %s)"
 msgstr ""
-"fajta: a dokumentum fajtája amelyen a fizetés űrlap elő lesz terjesztve "
-"(lefordítva a felhasználó nyelvére, stb. \"Számla\")"
 
 #. module: portal
 #: help:portal.wizard,portal_id:0
@@ -204,13 +243,26 @@ msgstr ""
 "            "
 
 #. module: portal
-#: view:portal.payment.acquirer:0
+#: model:ir.actions.client,help:portal.action_mail_archives_feeds_portal
 msgid ""
-", so it may use Mako expressions.\n"
-"                                The Mako evaluation context provides:"
+"<p>\n"
+"                    No message found and no message sent yet.\n"
+"                </p><p>\n"
+"                    Click on the top-right icon to compose a message. This\n"
+"                    message will be sent by email if it's an internal "
+"contact.\n"
+"                </p>\n"
+"            "
 msgstr ""
-", így talán Mako kifejezéseket használ.\n"
-"                                A Mako adja az összefüggés értékelést:"
+"<p>\n"
+"                    Nem található üzenet és nem lett még elküldve üzenet.\n"
+"                </p><p>\n"
+"                    Kattintson felül jobbra az ikonra egy üzenet "
+"összeállításához. Ez az\n"
+"                    üzenet lesz elküldve e-mailként, ha ez egy belső "
+"kapcsolat.\n"
+"                </p>\n"
+"            "
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_menu
@@ -305,6 +357,15 @@ msgstr "uid: the current user id"
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid ""
+"kind: the kind of document on which the payment form is rendered (translated "
+"to user language, e.g. \"Invoice\")"
+msgstr ""
+"fajta: a dokumentum fajtája amelyen a fizetés űrlap elő lesz terjesztve "
+"(lefordítva a felhasználó nyelvére, stb. \"Számla\")"
+
+#. module: portal
+#: view:portal.payment.acquirer:0
+msgid ""
 "quote(): a method to quote special string character to make them suitable "
 "for inclusion in a URL"
 msgstr ""
@@ -312,9 +373,19 @@ msgstr ""
 "URL névbe"
 
 #. module: portal
-#: help:res.groups,is_portal:0
-msgid "If checked, this group is usable as a portal."
-msgstr "Ha bejelölt, akkor a csoport portálként is használható."
+#: view:portal.payment.acquirer:0
+msgid "amount: the total amount to pay, as a float"
+msgstr "összeg: a teljes fizetendő mennyiség, mind összegezve"
+
+#. module: portal
+#: code:addons/portal/mail_mail.py:44
+#, python-format
+msgid ""
+"<p>Access your messages and personal documents through <a href=\"%s\">our "
+"Customer Portal</a></p>"
+msgstr ""
+"<p>Elérheti az üzeneteit és a személyes dokumentumait ezen keresztül <a "
+"href=\"%s\">our Customer Portal</a></p>"
 
 #. module: portal
 #: field:portal.payment.acquirer,form_template:0
@@ -352,6 +423,12 @@ msgstr ""
 #: model:ir.model,name:portal.model_portal_payment_acquirer
 msgid "Online Payment Acquirer"
 msgstr "Online fizetési igénylő"
+
+#. module: portal
+#: code:addons/portal/mail_message.py:53
+#, python-format
+msgid "Access Denied"
+msgstr ""
 
 #. module: portal
 #: model:mail.group,name:portal.company_news_feed
@@ -417,13 +494,9 @@ msgid "About Us"
 msgstr "Rólunk"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid ""
-"currency: the currency record in which the document is issued (e.g. "
-"currency.name could be EUR)"
-msgstr ""
-"Pénznem: a pénznem rekord ami a dokumentumon  használva lett (pl. ezt a "
-"devizát használták EUR)"
+#: help:res.groups,is_portal:0
+msgid "If checked, this group is usable as a portal."
+msgstr "Ha bejelölt, akkor a csoport portálként is használható."
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -470,9 +543,13 @@ msgstr ""
 "http://www.openerp.com\n"
 
 #. module: portal
-#: view:portal.wizard:0
-msgid "or"
-msgstr "vagy"
+#: view:portal.payment.acquirer:0
+msgid ""
+"currency: the currency record in which the document is issued (e.g. "
+"currency.name could be EUR)"
+msgstr ""
+"Pénznem: a pénznem rekord ami a dokumentumon  használva lett (pl. ezt a "
+"devizát használták EUR)"
 
 #. module: portal
 #: model:portal.payment.acquirer,form_template:portal.paypal_acquirer
@@ -532,6 +609,11 @@ msgid "Apply"
 msgstr "Alkalmaz"
 
 #. module: portal
+#: model:ir.model,name:portal.model_mail_message
+msgid "Message"
+msgstr ""
+
+#. module: portal
 #: view:portal.payment.acquirer:0
 msgid "ctx: the current context dictionary"
 msgstr "ctx: a jelenlegi összefüggés szótár"
@@ -547,13 +629,27 @@ msgstr ""
 "                                A sablon ezzel lesz elkészítve"
 
 #. module: portal
-#: code:addons/portal/mail_mail.py:42
-#, python-format
+#: model:ir.actions.client,help:portal.action_mail_star_feeds_portal
 msgid ""
-"Access your personal documents through <a href=\"%s\">our Customer Portal</a>"
+"<p>\n"
+"                    <b>No todo.</b>\n"
+"                </p><p>\n"
+"                    When you process messages in your inbox, you can mark "
+"some\n"
+"                    as <i>todo</i>. From this menu, you can process all your "
+"todo.\n"
+"                </p>\n"
+"            "
 msgstr ""
-"A személyes dokumentum elérése ezen keresztül <a href=\"%s\">a mi Vevő "
-"Portálunk</a>"
+"<p>\n"
+"                    <b>Nincs teendő.</b>\n"
+"                </p><p>\n"
+"                    Ha a Beérkezett üzeneteinél végez műveletet, "
+"megjelölheti\n"
+"                    mint <i>teendő</i>. Ebből a menüből, minden teendőjét "
+"elvégezheti.\n"
+"                </p>\n"
+"            "
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -561,8 +657,16 @@ msgid "Form Template"
 msgstr "Sablon űrlap"
 
 #. module: portal
-#: model:ir.actions.act_window,name:portal.partner_wizard_action
-#: model:ir.model,name:portal.model_portal_wizard
-#: view:portal.wizard:0
-msgid "Portal Access Management"
-msgstr "Portál hozzáférés kezelése"
+#: view:share.wizard:0
+msgid "Details"
+msgstr "Részletek"
+
+#~ msgid "Quotations and Sales Orders"
+#~ msgstr "Árajánlatok és vevői megrendelések"
+
+#, python-format
+#~ msgid ""
+#~ "Access your personal documents through <a href=\"%s\">our Customer Portal</a>"
+#~ msgstr ""
+#~ "A személyes dokumentum elérése ezen keresztül <a href=\"%s\">a mi Vevő "
+#~ "Portálunk</a>"

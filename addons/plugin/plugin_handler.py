@@ -4,7 +4,8 @@ Created on 18 oct. 2011
 @author: openerp
 '''
 
-from openerp.osv import fields, osv
+from openerp.osv import osv
+from openerp.tools.translate import _
 
 class plugin_handler(osv.osv_memory):
     _name = 'plugin.handler'
@@ -29,7 +30,7 @@ class plugin_handler(osv.osv_memory):
         partner_ids = partner_obj.search(cr, uid, [('email', 'like', address_email)])
         res_id = partner_ids and partner_ids[0] or 0
         url = self._make_url(cr, uid, res_id, 'res.partner')
-        return ('res.partner', res_id , url)
+        return ('res.partner', res_id, url)
 
     def document_get(self, cr, uid, email):
         """
@@ -48,7 +49,7 @@ class plugin_handler(osv.osv_memory):
         message_id = msg.get('message_id')
         msg_id = False
         if message_id:
-            msg_ids = mail_message_obj.search(cr, uid, [('message_id','=', message_id)])
+            msg_ids = mail_message_obj.search(cr, uid, [('message_id', '=', message_id)])
             msg_id = len(msg_ids) and msg_ids[0] or False
         if not msg_id and parent_id:
             msg_id = parent_id
@@ -57,8 +58,8 @@ class plugin_handler(osv.osv_memory):
             res_id = msg.res_id
             model = msg.model
             url = self._make_url(cr, uid, res_id, model)
-            name =  self.pool.get(model).name_get(cr, uid, [res_id])[0][1]
-        return (model,res_id, url,name)
+            name = self.pool.get(model).name_get(cr, uid, [res_id])[0][1]
+        return (model, res_id, url, name)
 
     def document_type(self, cr, uid, context=None):
         """
@@ -94,26 +95,25 @@ class plugin_handler(osv.osv_memory):
         model_obj = self.pool.get(model)
         msg = self.pool.get('mail.thread').message_parse(cr, uid, email)
         message_id = msg.get('message-id')
-        mail_ids = mail_message.search(cr, uid, [('message_id','=',message_id),('res_id','=',res_id),('model','=',model)])
-
-        if message_id and mail_ids :
+        mail_ids = mail_message.search(cr, uid, [('message_id', '=', message_id), ('res_id', '=', res_id), ('model', '=', model)])
+        if message_id and mail_ids:
             mail_record = mail_message.browse(cr, uid, mail_ids)[0]
             res_id = mail_record.res_id
-            notify = "Email already pushed"
+            notify = _("Email already pushed")
         elif res_id == 0:
             if model == 'res.partner':
-                notify = 'User the Partner button to create a new partner'
+                notify = _('Use the Partner button to create a new partner')
             else:
                 res_id = model_obj.message_process(cr, uid, model, email)
-                notify = "Mail successfully pushed, a new %s has been created " % model
+                notify = _("Mail successfully pushed, a new %s has been created.") % model
         else:
             model_obj.message_post(cr, uid, [res_id],
-                            body= msg.get('body'),
-                            subject= msg.get('subject'),
-                            type= 'email',
-                            parent_id= msg.get('parent_id'),
-                            attachments= msg.get('attachments'))
-            notify = "Mail successfully pushed"
+                            body=msg.get('body'),
+                            subject=msg.get('subject'),
+                            type='comment' if model == 'res.partner' else 'email',
+                            parent_id=msg.get('parent_id'),
+                            attachments=msg.get('attachments'))
+            notify = _("Mail successfully pushed")
         url = self._make_url(cr, uid, res_id, model)
         return (model, res_id, url, notify)
 
@@ -154,16 +154,17 @@ class plugin_handler(osv.osv_memory):
         message_id = msg.get('message-id')
         push_mail = self.push_message(cr, uid, model, headers, res_id)
         res_id = push_mail[1]
-        model =  push_mail[0]
+        model = push_mail[0]
+        notify = push_mail[3]
         for name in attachments.keys():
             attachment_ids = ir_attachment_obj.search(cr, uid, [('res_model', '=', model), ('res_id', '=', res_id), ('datas_fname', '=', name)])
             if attachment_ids:
-                attach_ids.append( attachment_ids[0])
+                attach_ids.append(attachment_ids[0])
             else:
-                vals = {"res_model": model, "res_id": res_id, "name": name, "datas" :attachments[name], "datas_fname" : name}
+                vals = {"res_model": model, "res_id": res_id, "name": name, "datas": attachments[name], "datas_fname": name}
                 attach_ids.append(ir_attachment_obj.create(cr, uid, vals))
-        mail_ids = mail_message.search(cr, uid, [('message_id','=',message_id),('res_id','=',res_id),('model','=',model)])
+        mail_ids = mail_message.search(cr, uid, [('message_id', '=', message_id), ('res_id', '=', res_id), ('model', '=', model)])
         if mail_ids:
-            ids =  mail_message.write(cr, uid, mail_ids[0], { 'attachment_ids': [(6, 0, attach_ids)],'body':body,'body_html':body_html})
+            mail_message.write(cr, uid, mail_ids[0], {'attachment_ids': [(6, 0, attach_ids)], 'body': body, 'body_html': body_html})
         url = self._make_url(cr, uid, res_id, model)
-        return (model, res_id, url)
+        return (model, res_id, url, notify)

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-01-13 19:22+0000\n"
-"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-03-07 18:19+0000\n"
+"Last-Translator: ERPSystems.ro <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:33+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:11+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: account_followup
 #: model:email.template,subject:account_followup.email_template_account_followup_default
@@ -63,11 +63,6 @@ msgid "Needs Printing"
 msgstr "Necesita Tiparire"
 
 #. module: account_followup
-#: view:res.partner:0
-msgid "⇾ Mark as Done"
-msgstr "⇾ Marcheaza ca Efectuat"
-
-#. module: account_followup
 #: field:account_followup.followup.line,manual_action_note:0
 msgid "Action To Do"
 msgstr "Actiune de Efectuat"
@@ -82,6 +77,8 @@ msgstr "Companie"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
+#: code:addons/account_followup/account_followup.py:258
+#, python-format
 msgid "Invoice Date"
 msgstr "Data Facturii"
 
@@ -106,9 +103,10 @@ msgid "Follow-up Steps"
 msgstr "Pasii Continuarii"
 
 #. module: account_followup
-#: field:account_followup.print,email_body:0
-msgid "Email Body"
-msgstr "Continutul Email-ului"
+#: code:addons/account_followup/account_followup.py:261
+#, python-format
+msgid "Due Date"
+msgstr "Data scadentei"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_print
@@ -116,7 +114,17 @@ msgid "Send Follow-Ups"
 msgstr "Trimiteti Continuari"
 
 #. module: account_followup
+#: code:addons/account_followup/account_followup.py:312
+#: code:addons/account_followup/account_followup.py:318
+#: code:addons/account_followup/report/account_followup_print.py:86
+#, python-format
+msgid "Error!"
+msgstr "Eroare!"
+
+#. module: account_followup
 #: report:account_followup.followup.print:0
+#: code:addons/account_followup/account_followup.py:262
+#, python-format
 msgid "Amount"
 msgstr "Suma"
 
@@ -248,6 +256,12 @@ msgstr ""
 "            "
 
 #. module: account_followup
+#: code:addons/account_followup/account_followup.py:260
+#, python-format
+msgid "Reference"
+msgstr "Referinta"
+
+#. module: account_followup
 #: view:account_followup.stat.by.partner:0
 msgid "Balance > 0"
 msgstr "Sold > 0"
@@ -291,6 +305,11 @@ msgstr "TVA:"
 #: model:ir.model,name:account_followup.model_res_partner
 msgid "Partner"
 msgstr "Partener"
+
+#. module: account_followup
+#: field:account_followup.print,email_body:0
+msgid "Email Body"
+msgstr "Continutul Email-ului"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -495,6 +514,16 @@ msgid "Payment Follow-ups"
 msgstr "Urmariri Plata"
 
 #. module: account_followup
+#: code:addons/account_followup/report/account_followup_print.py:86
+#, python-format
+msgid ""
+"The followup plan defined for the current company does not have any followup "
+"action."
+msgstr ""
+"Planul de urmariree definit pentru actuala companie nu are nici o actiune de "
+"urmarire."
+
+#. module: account_followup
 #: field:account_followup.followup.line,delay:0
 msgid "Due Days"
 msgstr "Zile Scadente"
@@ -511,7 +540,6 @@ msgid "Latest followup"
 msgstr "Ultima urmare"
 
 #. module: account_followup
-#: model:ir.actions.act_window,name:account_followup.action_account_manual_reconcile_receivable
 #: model:ir.ui.menu,name:account_followup.menu_manual_reconcile_followup
 msgid "Reconcile Invoices & Payments"
 msgstr "Reconciliaza Facturi & Plati"
@@ -563,6 +591,11 @@ msgid "Printed Message"
 msgstr "Mesaj tiparit"
 
 #. module: account_followup
+#: view:res.partner:0
+msgid "Responsible of credit collection"
+msgstr "Responsabil pentru recuperarea creditului"
+
+#. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:155
 #, python-format
 msgid "Anybody"
@@ -590,7 +623,7 @@ msgid "Follow Ups"
 msgstr "Urmariri"
 
 #. module: account_followup
-#: code:addons/account_followup/account_followup.py:219
+#: code:addons/account_followup/account_followup.py:218
 #, python-format
 msgid "Email not sent because of email address of partner not filled in"
 msgstr ""
@@ -610,6 +643,11 @@ msgid ""
 msgstr ""
 "Optional, puteti atribui un utilizator acestui camp, care il va face "
 "responsabil pentru actiune."
+
+#. module: account_followup
+#: view:res.partner:0
+msgid "Partners with Overdue Credits"
+msgstr "Parteneri cu Credite Restante"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_sending_results
@@ -648,6 +686,15 @@ msgstr "Cauta Urmarirea"
 
 #. module: account_followup
 #: view:res.partner:0
+msgid ""
+"He said the problem was temporary and promised to pay 50% before 15th of "
+"May, balance before 1st of July."
+msgstr ""
+"A spus ca problema este temporara si a promis sa plateasca 50% inainte de 15 "
+"mai, sold inainte de 1 iulie."
+
+#. module: account_followup
+#: view:res.partner:0
 msgid "Account Move line"
 msgstr "Linie miscare Cont"
 
@@ -663,13 +710,9 @@ msgid "or"
 msgstr "sau"
 
 #. module: account_followup
-#: view:res.partner:0
-msgid ""
-"If not specified by the latest follow-up level, it will send from the "
-"default email template"
-msgstr ""
-"Daca nu este specificat de nivelul cel mai recent al urmaririi, va trimite "
-"din sablonul implicit de email-uri"
+#: field:account_followup.stat,blocked:0
+msgid "Blocked"
+msgstr "Blocat(a)"
 
 #. module: account_followup
 #: sql_constraint:account_followup.followup.line:0
@@ -685,6 +728,13 @@ msgstr "Faceti click pentru a marca actiunea ca efectuata."
 #: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
 msgid "Follow-Ups Analysis"
 msgstr "Analiza Urmariri"
+
+#. module: account_followup
+#: view:res.partner:0
+msgid "Action to be taken e.g. Give a phonecall, Check if it's paid, ..."
+msgstr ""
+"Se vor lua masuri, de exemplu Apel telefonic, Verificati daca este platit, "
+"..."
 
 #. module: account_followup
 #: help:res.partner,payment_next_action_date:0
@@ -718,6 +768,7 @@ msgid "Follow-up Sending Date"
 msgstr "Data trimiterii urmarii"
 
 #. module: account_followup
+#: view:res.partner:0
 #: field:res.partner,payment_responsible_id:0
 msgid "Follow-up Responsible"
 msgstr "Responsabil cu urmarirea"
@@ -859,10 +910,19 @@ msgid "unknown"
 msgstr "necunoscut(a)"
 
 #. module: account_followup
-#: code:addons/account_followup/account_followup.py:283
+#: code:addons/account_followup/account_followup.py:313
 #, python-format
 msgid "Printed overdue payments report"
 msgstr "Raportul tiparit al platilor restante"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:290
+#, python-format
+msgid ""
+"You became responsible to do the next action for the payment follow-up of"
+msgstr ""
+"Ati devenit responsabil cu efectuarea urmatoarei actiuni pentru urmarirea "
+"platii a"
 
 #. module: account_followup
 #: help:account_followup.followup.line,manual_action:0
@@ -892,17 +952,15 @@ msgid " email(s) should have been sent, but "
 msgstr " email-ul(-urile) ar fi trebuit trimise, dar "
 
 #. module: account_followup
-#: help:account_followup.print,test_print:0
-msgid ""
-"Check if you want to print follow-ups without changing follow-ups level."
-msgstr ""
-"Selectati daca doriti sa tipariti urmaririle fara a modifica nivelul "
-"acestora."
-
-#. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
 msgid "Journal Items"
 msgstr "Elementele Jurnalului"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:280
+#, python-format
+msgid "Amount due"
+msgstr "Suma datorata"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -934,6 +992,12 @@ msgstr "Credit"
 #: field:res.partner,payment_amount_overdue:0
 msgid "Amount Overdue"
 msgstr "Suma Restanta"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:263
+#, python-format
+msgid "Lit."
+msgstr "Lit."
 
 #. module: account_followup
 #: help:res.partner,latest_followup_level_id_without_lit:0
@@ -1119,9 +1183,11 @@ msgid " had unknown email address(es)"
 msgstr " a avut adrese de email necunoscute"
 
 #. module: account_followup
-#: view:res.partner:0
-msgid "Responsible"
-msgstr "Responsabil"
+#: help:account_followup.print,test_print:0
+msgid ""
+"Check if you want to print follow-ups without changing follow-up level."
+msgstr ""
+"Selectati daca doriti sa imprimati urmariri fara a schimba livelul urmaririi."
 
 #. module: account_followup
 #: model:ir.ui.menu,name:account_followup.menu_finance_followup
@@ -1158,6 +1224,8 @@ msgstr "Inclusiv inregistrari in jurnal marcate ca litigiu"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 #: field:account_followup.sending.results,description:0
+#: code:addons/account_followup/account_followup.py:259
+#, python-format
 msgid "Description"
 msgstr "Descriere"
 
@@ -1187,22 +1255,19 @@ msgid "Latest Follow-up Level without litigation"
 msgstr "Nivelul celei mai recente Urmariri fara litigiu"
 
 #. module: account_followup
-#: model:ir.actions.act_window,help:account_followup.action_account_manual_reconcile_receivable
-msgid ""
-"<p>\n"
-"                    No journal items found.\n"
-"                </p>\n"
-"            "
-msgstr ""
-"<p>\n"
-"                    Nu au fost gasite elemente ale registrului.\n"
-"                </p>\n"
-"            "
+#: view:res.partner:0
+msgid "⇾ Mark as Done"
+msgstr "⇾ Marcheaza ca Efectuat"
 
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Partner entries"
 msgstr "Inregistrari partener"
+
+#. module: account_followup
+#: view:account_followup.followup.line:0
+msgid "e.g. Call the customer, check if it's paid, ..."
+msgstr "de exemplu Sunati un client, verificati daca este platit, ..."
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -1306,9 +1371,10 @@ msgid " letter(s) in report"
 msgstr " scrisori in raport"
 
 #. module: account_followup
-#: view:res.partner:0
-msgid "Partners with Overdue Credits"
-msgstr "Parteneri cu Credite Restante"
+#: model:ir.actions.act_window,name:account_followup.action_customer_my_followup
+#: model:ir.ui.menu,name:account_followup.menu_sale_followup
+msgid "My Follow-Ups"
+msgstr "Urmaririle mele"
 
 #. module: account_followup
 #: view:res.partner:0
@@ -1361,6 +1427,16 @@ msgstr "Trimite urmariri"
 #: view:account.move.line:0
 msgid "Total credit"
 msgstr "Credit total"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:312
+#, python-format
+msgid ""
+"The partner does not have any accounting entries to print in the overdue "
+"report for the current company."
+msgstr ""
+"Partenerul nu are nici o inregistrare contabila de tiparit in raportul "
+"scadent pentru compania curenta."
 
 #. module: account_followup
 #: field:account_followup.followup.line,sequence:0
@@ -1416,11 +1492,41 @@ msgid "Accounting"
 msgstr "Contabilitate"
 
 #. module: account_followup
-#: field:account_followup.stat,blocked:0
-msgid "Blocked"
-msgstr "Blocat(a)"
+#: view:res.partner:0
+msgid ""
+"If not specified by the latest follow-up level, it will send from the "
+"default email template"
+msgstr ""
+"Daca nu este specificat de nivelul cel mai recent al urmaririi, va trimite "
+"din sablonul implicit de email-uri"
+
+#. module: account_followup
+#: code:addons/account_followup/account_followup.py:318
+#, python-format
+msgid "There is no followup plan defined for the current company."
+msgstr "Nu exista nici un plan de urmarire definit pentru compania curenta."
 
 #. module: account_followup
 #: field:res.partner,payment_note:0
 msgid "Customer Payment Promise"
 msgstr "Promisiunea de Plata a Clientului"
+
+#~ msgid ""
+#~ "Check if you want to print follow-ups without changing follow-ups level."
+#~ msgstr ""
+#~ "Selectati daca doriti sa tipariti urmaririle fara a modifica nivelul "
+#~ "acestora."
+
+#~ msgid "Responsible"
+#~ msgstr "Responsabil"
+
+#~ msgid ""
+#~ "<p>\n"
+#~ "                    No journal items found.\n"
+#~ "                </p>\n"
+#~ "            "
+#~ msgstr ""
+#~ "<p>\n"
+#~ "                    Nu au fost gasite elemente ale registrului.\n"
+#~ "                </p>\n"
+#~ "            "

@@ -13,11 +13,11 @@
     product_id: product.product_product_consultant
     journal_id: hr_timesheet.analytic_journal
 -
-  I create a timesheet for employee "Quentin Paolinon".
+  I create a timesheet for employee "Quentin Paolino".
 -
   !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
     date_from: !eval time.strftime('%Y-%m-01')
-    name: Quentin Paolinon
+    name: Quentin Paolino
     state: new
     user_id: base.user_demo
     employee_id: 'hr.employee_qdp'
@@ -65,6 +65,7 @@
             self.button_confirm(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], {"active_ids":
               [ref("hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form")],"active_id": ref("hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form"),
               })
+            assert True, "The validation of the timesheet was unexpectedly accepted despite the 2:30 hours of difference"
         except:
             pass
 -
@@ -87,7 +88,7 @@
   !record {model: res.company, id: base.main_company}:
     timesheet_max_difference: 1.00
 -
-  I tried again to confirm the timesheet after modification.
+  I try again to confirm the timesheet after modification.
 -
   !python {model: hr_timesheet_sheet.sheet}: |
         uid = ref('base.user_root')

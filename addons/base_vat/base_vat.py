@@ -83,6 +83,8 @@ class res_partner(osv.osv):
         Check the VAT number depending of the country.
         http://sima-pc.com/nif.php
         '''
+        if not ustr(country_code).encode('utf-8').isalpha():
+            return False
         check_func_name = 'check_vat_' + country_code
         check_func = getattr(self, check_func_name, None) or \
                         getattr(vatnumber, check_func_name, None)
@@ -133,6 +135,9 @@ class res_partner(osv.osv):
     _columns = {
         'vat_subjected': fields.boolean('VAT Legal Statement', help="Check this box if the partner is subjected to the VAT. It will be used for the VAT legal statement.")
     }
+
+    def _commercial_fields(self, cr, uid, context=None):
+        return super(res_partner, self)._commercial_fields(cr, uid, context=context) + ['vat_subjected']
 
     def _construct_constraint_msg(self, cr, uid, ids, context=None):
         def default_vat_check(cn, vn):

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"PO-Revision-Date: 2013-03-04 23:46+0000\n"
+"Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:10+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:48+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: survey
 #: view:survey.response.line:0
@@ -47,7 +47,7 @@ msgstr "Текст батлах"
 #. module: survey
 #: view:survey:0
 msgid "Answers:"
-msgstr ""
+msgstr "Хариултууд:"
 
 #. module: survey
 #: view:survey:0
@@ -58,7 +58,7 @@ msgstr "Урьсан хэрэглэгч"
 #. module: survey
 #: model:survey.type,name:survey.survey_type1
 msgid "Human Resources"
-msgstr ""
+msgstr "Хүний нөөц"
 
 #. module: survey
 #: selection:survey.answer,type:0
@@ -70,12 +70,12 @@ msgstr "Тэмдэгт"
 #: model:ir.ui.menu,name:survey.menu_survey_form
 #: model:ir.ui.menu,name:survey.menu_surveys
 msgid "Surveys"
-msgstr "Санал асуулгууд"
+msgstr "Асуулгууд"
 
 #. module: survey
-#: field:survey.question,in_visible_answer_type:0
-msgid "Is Answer Type Invisible?"
-msgstr "Энэ хариултыг далдлах уу?"
+#: view:survey.request:0
+msgid "Cancel Request"
+msgstr ""
 
 #. module: survey
 #: view:survey:0
@@ -240,7 +240,7 @@ msgstr ""
 #: view:survey.page:0
 #: view:survey.question:0
 msgid "Survey Question"
-msgstr "Санал асуулгын асуулт"
+msgstr "Асуулгын асуулт"
 
 #. module: survey
 #: view:survey.question.column.heading:0
@@ -267,7 +267,7 @@ msgstr "Хуудасны гарчиг"
 #. module: survey
 #: model:ir.model,name:survey.model_survey_history
 msgid "Survey History"
-msgstr "Санал асуулгын түүх"
+msgstr "Асуулгын түүх"
 
 #. module: survey
 #: field:survey.response.answer,comment:0
@@ -296,12 +296,12 @@ msgstr " Баганы гарчиг"
 #: code:addons/survey/wizard/survey_send_invitation.py:71
 #, python-format
 msgid "The following surveys are not in open state: %s"
-msgstr ""
+msgstr "Дараах асуулгууд нээлттэй төлөвтэй биш байна: %s"
 
 #. module: survey
 #: field:survey,tot_comp_survey:0
 msgid "Total Completed Survey"
-msgstr "Нийт дууссан санал асуулга"
+msgstr "Нийт дууссан асуулга"
 
 #. module: survey
 #: view:survey.response.answer:0
@@ -311,7 +311,7 @@ msgstr "(Асуултын төрөл нь зөвхөн matrix_of_drop_down_menus
 #. module: survey
 #: model:ir.actions.report.xml,name:survey.survey_analysis
 msgid "Survey Statistics"
-msgstr "Статистик"
+msgstr "Асуулгын Статистик"
 
 #. module: survey
 #: selection:survey,state:0
@@ -332,6 +332,8 @@ msgid ""
 "This survey has no question defined. Please define the questions and answers "
 "first."
 msgstr ""
+"Энэ асуулгад асуулт тодорхойлогдоогүй байна. Хариулахын тулд эхлээд "
+"асуултууд тодорхойл."
 
 #. module: survey
 #: field:survey.question,comment_field_type:0
@@ -346,18 +348,18 @@ msgstr "Нэг Мөр Текст"
 #. module: survey
 #: field:survey,date_open:0
 msgid "Survey Open Date"
-msgstr "Санал асуулга нээх огноо"
+msgstr "Асуулга Нээх Огноо"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_answer.py:800
 #, python-format
 msgid "You cannot select the same answer more than one time."
-msgstr ""
+msgstr "Нэг хариултыг нэгээс олон удаа сонгох боломжгүй."
 
 #. module: survey
 #: field:survey,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Өнгөний Индекс"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -367,14 +369,14 @@ msgstr "Олон Сонголт (Олон Хариулт)"
 #. module: survey
 #: view:survey:0
 msgid "Edit Survey"
-msgstr "Санал асуулга засах"
+msgstr "Асуулга засах"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_answer.py:766
 #: code:addons/survey/wizard/survey_answer.py:961
 #, python-format
 msgid "Please enter an integer value."
-msgstr ""
+msgstr "Бүхэл тоо оруулна уу."
 
 #. module: survey
 #: field:survey.question.column.heading,menu_choice:0
@@ -387,7 +389,7 @@ msgstr "Цэс сонгох"
 msgid ""
 "You must enter one or more menu choices                                 in "
 "column heading."
-msgstr ""
+msgstr "Баганын толгойд нэг юмуу хэд хэдэн менюны сонголтыг оруулах ёстой."
 
 #. module: survey
 #: selection:survey.question,required_type:0
@@ -398,12 +400,12 @@ msgstr "Ихдээ"
 #: view:survey:0
 #: view:survey.request:0
 msgid "My Survey(s)"
-msgstr "Миний Судалгаа"
+msgstr "Миний Асуулга"
 
 #. module: survey
 #: view:survey.response.line:0
 msgid "Survey Answer Line"
-msgstr "Хариултын мөр"
+msgstr "Асуулгын Хариултын мөр"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_send_invitation.py:72
@@ -427,6 +429,23 @@ msgid ""
 "\n"
 "Thanks,"
 msgstr ""
+"\n"
+"Сайн байна уу %%(name)s, \n"
+"\n"
+"\n"
+"Та өөрөөсөө багахан цагийг асуулгыг бөглөхөд зориулна уу: \n"
+"%s\n"
+"\n"
+"Асуулга руу дараах параметруудаар хандах боломжтой:\n"
+" URL: %s\n"
+" Таны нэвтрэх нэр: %%(login)s\n"
+"\n"
+" Таны нууц үг: %%(passwd)s\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"Баярлалаа,"
 
 #. module: survey
 #: field:survey.response.line,single_text:0
@@ -436,7 +455,7 @@ msgstr "Текст"
 #. module: survey
 #: view:survey:0
 msgid "Edit..."
-msgstr ""
+msgstr "Засах..."
 
 #. module: survey
 #: selection:survey.print,paper_size:0
@@ -484,6 +503,11 @@ msgid "From"
 msgstr "Хаанаас"
 
 #. module: survey
+#: view:survey:0
+msgid "Cancel Survey"
+msgstr ""
+
+#. module: survey
 #: selection:survey.question,comment_valid_type:0
 #: selection:survey.question,validation_type:0
 msgid "Don't Validate Comment Text."
@@ -493,7 +517,7 @@ msgstr "Тайлбар текст батлагдсангүй."
 #: code:addons/survey/survey.py:532
 #, python-format
 msgid "You must enter one or more menu choices in column heading."
-msgstr ""
+msgstr "Баганын толгойд нэг юмуу хэд хэдэн менюний сонголтыг оруулах ёстой."
 
 #. module: survey
 #: selection:survey.question,comment_valid_type:0
@@ -531,7 +555,7 @@ msgstr "Үнэлгээг төлөвлөх үе шат"
 #: code:addons/survey/wizard/survey_send_invitation.py:199
 #, python-format
 msgid "Unknown"
-msgstr ""
+msgstr "Үл мэдэгдэх"
 
 #. module: survey
 #: view:survey:0
@@ -570,11 +594,18 @@ msgid "Email"
 msgstr "Э-мэйл"
 
 #. module: survey
+#: view:survey:0
+#: view:survey.page:0
+#: view:survey.question:0
+msgid "Required Answer"
+msgstr "Шаардлагатай хариулт"
+
+#. module: survey
 #: code:addons/survey/survey.py:96
 #: code:addons/survey/survey.py:259
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (хуулбар)"
 
 #. module: survey
 #: selection:survey.response,state:0
@@ -595,12 +626,12 @@ msgstr "Оролцогч сонгох"
 #: code:addons/survey/survey.py:527
 #, python-format
 msgid "Maximum Required Answer is greater than Minimum Required Answer."
-msgstr ""
+msgstr "Максимум Шаардагдах Хариулт нь Минимум Шаардагдах асуултаас их"
 
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_reporting
 msgid "Reporting"
-msgstr ""
+msgstr "Тайлагнах"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.act_survey_answer
@@ -627,7 +658,7 @@ msgstr "Дугаар"
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_print_survey_form
 msgid "Print Surveys"
-msgstr ""
+msgstr "Асуулгыг хэвлэх"
 
 #. module: survey
 #: field:survey.question.column.heading,in_visible_menu_choice:0
@@ -648,7 +679,7 @@ msgstr "Алдааны мэссэж"
 #: code:addons/survey/wizard/survey_answer.py:124
 #, python-format
 msgid "You cannot answer this survey more than %s times."
-msgstr ""
+msgstr "Та энэ асуулгад %s-с олон удаа хариулж чадахгүй."
 
 #. module: survey
 #: field:survey.request,date_deadline:0
@@ -671,7 +702,7 @@ msgstr "survey.print"
 #: view:survey.page:0
 #: field:survey.question,page_id:0
 msgid "Survey Page"
-msgstr "Санал асуулгын хуудас"
+msgstr "Асуулгын хуудас"
 
 #. module: survey
 #: view:survey.question.column.heading:0
@@ -689,7 +720,7 @@ msgstr "Хариулах шаардлагатай асуулт"
 #: model:ir.actions.act_window,name:survey.action_survey_request_tree
 #: model:ir.ui.menu,name:survey.menu_survey_type_form1
 msgid "Survey Requests"
-msgstr "Санал асуулгын хүсэлт"
+msgstr "Асуулгын хүсэлтүүд"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_browse_answer
@@ -714,6 +745,11 @@ msgstr ""
 
 #. module: survey
 #: view:survey:0
+msgid "Survey description..."
+msgstr ""
+
+#. module: survey
+#: view:survey:0
 #: view:survey.page:0
 #: view:survey.question:0
 msgid "When the question is not answered, display this error message:"
@@ -731,11 +767,12 @@ msgstr "Сонголт"
 #, python-format
 msgid "You must enter one or more Answers for question \"%s\" of page %s."
 msgstr ""
+"Та \"%s\" гэсэн %s хуудсын асуултад нэг юмуу хэд хэдэн хариулт оруулах ёстой."
 
 #. module: survey
 #: view:survey:0
 msgid "Delete"
-msgstr ""
+msgstr "Устгах"
 
 #. module: survey
 #: field:survey.response.answer,comment_field:0
@@ -751,7 +788,7 @@ msgstr "Сэтгэгдэл"
 #: view:survey.response.answer:0
 #: view:survey.response.line:0
 msgid "Survey Answer"
-msgstr "Санал асуулгын хариулт"
+msgstr "Асуулгын хариулт"
 
 #. module: survey
 #: selection:survey.answer,type:0
@@ -762,7 +799,7 @@ msgstr "Сонголт"
 #: model:ir.actions.act_window,name:survey.action_browse_survey_response
 #: view:survey:0
 msgid "Answer Survey"
-msgstr "Хариулах асуулга"
+msgstr "Асуулгад Хариулах"
 
 #. module: survey
 #: view:survey:0
@@ -784,7 +821,7 @@ msgstr "_Илгээх"
 #. module: survey
 #: help:survey,responsible_id:0
 msgid "User responsible for survey"
-msgstr "Санал асуулгын хариуцагч хэрэглэгч"
+msgstr "Асуулгын хариуцагч хэрэглэгч"
 
 #. module: survey
 #: field:survey,page_ids:0
@@ -837,6 +874,8 @@ msgstr "Хэрэглэгчээс зөвхөн нэг л хариулт авах 
 msgid ""
 "You must enter one or more column headings for question \"%s\" of page %s."
 msgstr ""
+"\"%s\" гэсэн %s хуудсын асуултанд нэг юмуу хэд хэдэн баганын толгой оруулах "
+"ёстой."
 
 #. module: survey
 #: model:ir.model,name:survey.model_res_users
@@ -856,6 +895,8 @@ msgid ""
 "You must enter one or more menu                                 choices in "
 "column heading (white spaces not allowed)."
 msgstr ""
+"Баганын толгойд нэг юмуу хэд хэдэн менюний сонголт оруулах ёстой (зай "
+"зөвшөөрөгдөхгүй)"
 
 #. module: survey
 #: field:survey.question,maximum_req_ans:0
@@ -884,7 +925,7 @@ msgstr "мөн"
 #: model:ir.actions.act_window,name:survey.action_view_survey_print_statistics
 #: view:survey.print.statistics:0
 msgid "Survey Print Statistics"
-msgstr "Статистикийг хэвлэх"
+msgstr "Асуулгын Статистикийг хэвлэх"
 
 #. module: survey
 #: field:survey.send.invitation.log,note:0
@@ -913,11 +954,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Шинэ асуулга үүсгэхдээ дарна. \n"
+"              </p><p>\n"
+"                Асуулгыг олон зорилгоор ашиглаж болно: ажилтан авах "
+"ярилцлагад, ажилтны тогтмол хугацааны үнэлгээнд, маркетингэд, компанит "
+"ажилд, гм.\n"
+"              </p><p>\n"
+"                Асуулга нь асуултууд бүх хуудсуудаас бүрдэнэ. Асуултын төрөл "
+"нь: текст, олон сонголт, гм.\n"
+"              </p>\n"
+"            "
 
 #. module: survey
 #: field:survey,date_close:0
 msgid "Survey Close Date"
-msgstr "Санал асуулга хаасан огноо"
+msgstr "Асуулгын хаах огноо"
 
 #. module: survey
 #: field:survey.question.column.heading,in_visible_rating_weight:0
@@ -1006,6 +1058,8 @@ msgid ""
 "You cannot give more responses. Please contact the author of this survey for "
 "further assistance."
 msgstr ""
+"Та цааш хариулт өгч чадахгүй. Энэ асуулгын зохиогчтой тусламж авахаар бол "
+"холбогдоно уу."
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1068,7 +1122,7 @@ msgstr "Мөрийн №"
 #. module: survey
 #: view:survey:0
 msgid "Survey Details"
-msgstr "Санал асуулгын мэдээлэл"
+msgstr "Асуулгын Дэлгэрэнгүй"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1076,16 +1130,14 @@ msgid "Multiple Textboxes With Different Type"
 msgstr "Ялгаатай төрөлүүдтэй Олон Текстүүд"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
-msgid "Required Answer"
-msgstr "Шаардлагатай хариулт"
+#: view:survey.name.wiz:0
+msgid "Add Description"
+msgstr ""
 
 #. module: survey
 #: model:survey.type,name:survey.survey_type2
 msgid "Customer Feeback"
-msgstr ""
+msgstr "Захиалагчийн Санал хүсэлт"
 
 #. module: survey
 #: view:survey:0
@@ -1118,9 +1170,15 @@ msgid "Date"
 msgstr "Огноо"
 
 #. module: survey
-#: selection:survey.answer,type:0
-msgid "Integer"
-msgstr "Бүхэл тоо"
+#: view:survey:0
+msgid "All New Survey"
+msgstr "Бүх Шинэ Асуулга"
+
+#. module: survey
+#: view:survey:0
+#: view:survey.page:0
+msgid "Description on the survey page..."
+msgstr ""
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_send_invitation
@@ -1152,6 +1210,8 @@ msgid ""
 "You must enter one or more menu choices in column heading (white spaces not "
 "allowed)."
 msgstr ""
+"Баганы толгойд нэг юмуу хэд хэдэн менюний сонголт оруулах ёстой (зай "
+"зөвшөөрөгдөхгүй)"
 
 #. module: survey
 #: field:survey.print,paper_size:0
@@ -1173,13 +1233,14 @@ msgstr "Санал асуулга ачааллах"
 #. module: survey
 #: model:ir.model,name:survey.model_survey_response_line
 msgid "Survey Response Line"
-msgstr "Санал Асуулгын Хариултын Мөр"
+msgstr "Асуулгын Хариултын Мөр"
 
 #. module: survey
 #: code:addons/survey/survey.py:169
 #, python-format
 msgid "This survey has no pages defined. Please define pages first."
 msgstr ""
+"Асуулгад хуудас тодорхойлогдоогүй байна. Эхний хуудсыг тодорхойлно уу."
 
 #. module: survey
 #: model:ir.actions.report.xml,name:survey.report_survey_form
@@ -1200,7 +1261,7 @@ msgstr ""
 #: field:survey.request,survey_id:0
 #: field:survey.response,survey_id:0
 msgid "Survey"
-msgstr "Санал асуулга"
+msgstr "Асуулга"
 
 #. module: survey
 #: field:survey.question,in_visible_rating_weight:0
@@ -1208,9 +1269,9 @@ msgid "Is Rating Scale Invisible?"
 msgstr "Онооны Үнэлгээ Нууц уу?"
 
 #. module: survey
-#: view:survey:0
-msgid "All New Survey"
-msgstr "Бүх Шинэ Санал Асуулга"
+#: selection:survey.answer,type:0
+msgid "Integer"
+msgstr "Бүхэл тоо"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1240,7 +1301,7 @@ msgstr "Код"
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_print_survey_statistics
 msgid "Surveys Statistics"
-msgstr "Санал асуулгын статистик"
+msgstr "Асуулгын статистик"
 
 #. module: survey
 #: field:survey.print,orientation:0
@@ -1292,7 +1353,7 @@ msgstr "Дууссан"
 #. module: survey
 #: view:survey:0
 msgid "Test Survey"
-msgstr "Тест"
+msgstr "Тест Асуулга"
 
 #. module: survey
 #: field:survey.question,rating_allow_one_column_require:0
@@ -1301,13 +1362,11 @@ msgstr ""
 "Нэг багананд зөвхөн нэг л хариулт зөвшөөрөгдөнө (Хучээр байр эзлүүлэх)"
 
 #. module: survey
-#: view:survey:0
 #: view:survey.browse.answer:0
 #: view:survey.name.wiz:0
 #: view:survey.print:0
 #: view:survey.print.answer:0
 #: view:survey.print.statistics:0
-#: view:survey.request:0
 #: view:survey.send.invitation:0
 msgid "Cancel"
 msgstr "Цуцлах"
@@ -1334,11 +1393,12 @@ msgstr "Нээх"
 #, python-format
 msgid "You must enter one or more answers for question \"%s\" of page %s ."
 msgstr ""
+"\"%s\" гэсэн %s хуудсын асуултанд нэг юмуу хэд хэдэн хариулт оруулах ёстой."
 
 #. module: survey
 #: field:survey,tot_start_survey:0
 msgid "Total Started Survey"
-msgstr "Нийт эхэлсэн санал асуулга"
+msgstr "Нийт эхэлсэн асуулга"
 
 #. module: survey
 #: code:addons/survey/survey.py:517
@@ -1353,8 +1413,7 @@ msgstr ""
 #. module: survey
 #: help:survey,max_response_limit:0
 msgid "Set to one if survey is answerable only once"
-msgstr ""
-"Санал асуулга нь зөвхөн нэг л удаа хариулагдах бол нэг гэж тохируулна"
+msgstr "Асуулга нь зөвхөн нэг л удаа хариулагдах бол нэг гэж тохируулна"
 
 #. module: survey
 #: selection:survey.response,state:0
@@ -1364,7 +1423,7 @@ msgstr "Дууссан "
 #. module: survey
 #: model:ir.model,name:survey.model_survey_question_column_heading
 msgid "Survey Question Column Heading"
-msgstr "Санал асуулгын баганын толгой"
+msgstr "Асуулгын баганын толгой"
 
 #. module: survey
 #: field:survey.answer,average:0
@@ -1386,7 +1445,7 @@ msgstr "Асуулгын хариулт өгөх"
 msgid ""
 "If this field is empty, all answers of the selected survey will be print."
 msgstr ""
-"Хэрэв энэ нь хоосон байвал сонгосо санал асуулгын бүх хариултууд хэвлэгдэнэ."
+"Хэрэв энэ нь хоосон байвал сонгосон асуулгын бүх хариултууд хэвлэгдэнэ."
 
 #. module: survey
 #: selection:survey.response.line,state:0
@@ -1396,13 +1455,13 @@ msgstr "Хариулсан"
 #. module: survey
 #: field:survey,send_response:0
 msgid "Email Notification on Answer"
-msgstr ""
+msgstr "Хариулт дээрх Имэйл Мэдэгдэл"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_answer.py:445
 #, python-format
 msgid "Complete Survey Answer"
-msgstr "Санал Асуулгын Хариултыг Гүйцээнэ үү"
+msgstr "Асуулгын Хариултыг Гүйцээх"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1429,7 +1488,7 @@ msgstr "Урилга илгээх"
 #: code:addons/survey/wizard/survey_selection.py:80
 #, python-format
 msgid "You cannot give response for this survey more than %s times."
-msgstr ""
+msgstr "Энэ асуулгад та %s -с олон удаа хариулж чадахгүй."
 
 #. module: survey
 #: view:survey.question:0
@@ -1444,7 +1503,7 @@ msgstr "Дан текст"
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_question_form
 msgid "Survey Questions"
-msgstr "Санал асуулгын асуулт"
+msgstr "Асуулгын асуулт"
 
 #. module: survey
 #: field:survey,note:0
@@ -1477,7 +1536,7 @@ msgstr "Босоо"
 #: code:addons/survey/wizard/survey_send_invitation.py:68
 #, python-format
 msgid "Invitation for %s"
-msgstr ""
+msgstr "%s-н урилга"
 
 #. module: survey
 #: selection:survey.question,comment_valid_type:0
@@ -1488,13 +1547,13 @@ msgstr "Тодорхой Урттай Байх Ёстой"
 #. module: survey
 #: model:survey.type,name:survey.survey_type3
 msgid "Supplier Selection"
-msgstr ""
+msgstr "Нийлүүлэгчийн Сонголт"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_answer.py:992
 #, python-format
 msgid "You cannot select same answer more than one time.'"
-msgstr ""
+msgstr "Нэг ижил хариултыг нэгээс олон удаа сонгох боломжгүй.'"
 
 #. module: survey
 #: code:addons/survey/survey.py:685
@@ -1515,18 +1574,18 @@ msgstr ""
 #. module: survey
 #: view:survey:0
 msgid "All Open Survey"
-msgstr "Бүх Нээлттэй Санал асуулга"
+msgstr "Бүх Нээлттэй Асуулга"
 
 #. module: survey
 #: model:ir.actions.report.xml,name:survey.survey_browse_response
 #: field:survey.browse.answer,response_id:0
 msgid "Survey Answers"
-msgstr "Санал асуулгын Хариултууд"
+msgstr "Асуулгын Хариултууд"
 
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_print_survey_answer
 msgid "Surveys Answers"
-msgstr "Санал асуулгын хариултууд"
+msgstr "Асуулгын хариултууд"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.act_survey_pages
@@ -1568,7 +1627,7 @@ msgstr "Бүх сонголтын нийлбэр"
 #. module: survey
 #: view:survey.request:0
 msgid "Request"
-msgstr ""
+msgstr "Хүсэлт"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_response
@@ -1632,7 +1691,7 @@ msgstr "Алдааны мэссэж"
 #: code:addons/survey/wizard/survey_send_invitation.py:71
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Анхааруулга!"
 
 #. module: survey
 #: code:addons/survey/survey.py:465
@@ -1713,12 +1772,12 @@ msgstr "Хөвөгч таслал"
 #: view:survey.print.statistics:0
 #: view:survey.send.invitation:0
 msgid "or"
-msgstr ""
+msgstr "эсвэл"
 
 #. module: survey
 #: field:survey,title:0
 msgid "Survey Title"
-msgstr "Санал асуулгын гарчиг"
+msgstr "Асуулгын гарчиг"
 
 #. module: survey
 #: field:survey.question.column.heading,rating_weight:0
@@ -1747,12 +1806,17 @@ msgstr "Бананы нэр"
 #: model:ir.ui.menu,name:survey.menu_survey_page_form1
 #: view:survey.page:0
 msgid "Survey Pages"
-msgstr "Санал асуулгын хуудсууд"
+msgstr "Асуулгын хуудсууд"
 
 #. module: survey
 #: field:survey.question,type:0
 msgid "Question Type"
 msgstr "Асуултын төрөл"
+
+#. module: survey
+#: field:survey.question,in_visible_answer_type:0
+msgid "Is Answer Type Invisible?"
+msgstr "Энэ хариултыг далдлах уу?"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1764,7 +1828,7 @@ msgstr "Хүснэгт"
 #: code:addons/survey/wizard/survey_answer.py:117
 #, python-format
 msgid "You cannot answer because the survey is not open."
-msgstr ""
+msgstr "Энэ асуулга нээлттэй биш тул та хариулах боломжгүй."
 
 #. module: survey
 #: field:survey.question,comment_minimum_date:0

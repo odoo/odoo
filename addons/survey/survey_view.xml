@@ -23,7 +23,7 @@
                 <header>
                     <button name="survey_open" string="Open" states="cancel,close" type="object"/>
                     <button name="survey_close" string="Close" states="open" type="object" class="oe_highlight"/>
-                    <button name="survey_cancel" string="Cancel" states="open" type="object"/>
+                    <button name="survey_cancel" string="Cancel Survey" states="open" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="open,close"/>
                 </header>
                 <sheet>
@@ -772,6 +772,7 @@
             <field name="arch" type="xml">
                 <form string="Survey Question">
                     <field name="question" colspan="4"/>
+                    <field name="page_id"/>
                     <field name="sequence"/>
                     <field name="tot_resp"/>
                     <field name="type" on_change="on_change_type(type)"/>
@@ -1117,7 +1118,7 @@
                     <button name="survey_req_draft" string="Set to Draft" states="cancel,done" type="object"/>
                     <button name="survey_req_waiting_answer" string="Waiting Answer" states="draft" type="object" class="oe_highlight"/>
                     <button name="survey_req_done" string="Done" states="waiting_answer" type="object" class="oe_highlight"/>
-                    <button name="survey_req_cancel" string="Cancel" states="waiting_answer" type="object"/>
+                    <button name="survey_req_cancel" string="Cancel Request" states="waiting_answer" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,waiting_answer"/>
                 </header>
                 <sheet string="Survey Request">

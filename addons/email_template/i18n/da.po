@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Danish <da@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:42+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:21+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: email_template
 #: field:email.template,email_from:0
@@ -24,8 +24,9 @@ msgid "From"
 msgstr ""
 
 #. module: email_template
-#: field:mail.compose.message,template_id:0
-msgid "Template"
+#: view:res.partner:0
+msgid ""
+"Partners that did not ask not to be included in mass mailing campaigns"
 msgstr ""
 
 #. module: email_template
@@ -40,9 +41,16 @@ msgid "Opt-Out"
 msgstr ""
 
 #. module: email_template
-#: field:email.template,email_to:0
-#: field:email_template.preview,email_to:0
-msgid "To (Emails)"
+#: view:email.template:0
+msgid "Email contents (in raw HTML format)"
+msgstr ""
+
+#. module: email_template
+#: help:email.template,email_from:0
+#: help:email_template.preview,email_from:0
+msgid ""
+"Sender address (placeholders may be used here). If not set, the default "
+"value will be the author's email alias if configured, or email address."
 msgstr ""
 
 #. module: email_template
@@ -66,28 +74,20 @@ msgid "Field"
 msgstr ""
 
 #. module: email_template
-#: help:email.template,email_from:0
-#: help:email_template.preview,email_from:0
-msgid "Sender address (placeholders may be used here)"
-msgstr ""
-
-#. module: email_template
 #: view:email.template:0
 msgid "Remove context action"
-msgstr ""
-
-#. module: email_template
-#: help:email.template,mail_server_id:0
-#: help:email_template.preview,mail_server_id:0
-msgid ""
-"Optional preferred server for outgoing mails. If not set, the highest "
-"priority one will be used."
 msgstr ""
 
 #. module: email_template
 #: field:email.template,report_name:0
 #: field:email_template.preview,report_name:0
 msgid "Report Filename"
+msgstr ""
+
+#. module: email_template
+#: field:email.template,email_to:0
+#: field:email_template.preview,email_to:0
+msgid "To (Emails)"
 msgstr ""
 
 #. module: email_template
@@ -113,9 +113,14 @@ msgid "Body"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:244
+#: code:addons/email_template/email_template.py:247
 #, python-format
 msgid "%s (copy)"
+msgstr ""
+
+#. module: email_template
+#: field:mail.compose.message,template_id:0
+msgid "Template"
 msgstr ""
 
 #. module: email_template
@@ -145,6 +150,11 @@ msgid ""
 msgstr ""
 
 #. module: email_template
+#: view:res.partner:0
+msgid "Available for mass mailing"
+msgstr ""
+
+#. module: email_template
 #: model:ir.model,name:email_template.model_email_template
 msgid "Email Templates"
 msgstr ""
@@ -155,6 +165,12 @@ msgstr ""
 msgid ""
 "Name to use for the generated report file (may contain placeholders)\n"
 "The extension can be omitted and will then come from the report type."
+msgstr ""
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:234
+#, python-format
+msgid "Warning"
 msgstr ""
 
 #. module: email_template
@@ -234,6 +250,14 @@ msgstr ""
 #. module: email_template
 #: view:email_template.preview:0
 msgid "Using sample document"
+msgstr ""
+
+#. module: email_template
+#: help:res.partner,opt_out:0
+msgid ""
+"If opt-out is checked, this contact has refused to receive emails for mass "
+"mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
+"users to filter the partners when performing mass mailing."
 msgstr ""
 
 #. module: email_template
@@ -379,7 +403,7 @@ msgid "Attachments"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:231
+#: code:addons/email_template/email_template.py:234
 #, python-format
 msgid "Deletion of the action record failed."
 msgstr ""
@@ -408,16 +432,17 @@ msgid "Email Details"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:196
+#: code:addons/email_template/email_template.py:199
 #, python-format
 msgid "Send Mail (%s)"
 msgstr ""
 
 #. module: email_template
-#: help:res.partner,opt_out:0
+#: help:email.template,mail_server_id:0
+#: help:email_template.preview,mail_server_id:0
 msgid ""
-"If checked, this partner will not receive any automated email notifications, "
-"such as the availability of invoices."
+"Optional preferred server for outgoing mails. If not set, the highest "
+"priority one will be used."
 msgstr ""
 
 #. module: email_template
@@ -440,9 +465,8 @@ msgid ""
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:231
-#, python-format
-msgid "Warning"
+#: view:res.partner:0
+msgid "Suppliers"
 msgstr ""
 
 #. module: email_template

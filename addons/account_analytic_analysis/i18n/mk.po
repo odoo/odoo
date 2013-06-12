@@ -2,24 +2,31 @@
 # Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
-#
+# Sofce Dimitrijeva <sofce@eskon.com.mk>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Macedonian <mk@li.org>\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-03-28 21:17+0000\n"
+"Last-Translator: Sofce Dimitrijeva <Unknown>\n"
+"Language-Team: ESKON-INZENERING\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:31+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:09+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
+"Language: mk\n"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "No order to invoice, create"
+msgstr "Нема налог за фактурирање. Креирајте"
+
+#. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:547
+#, python-format
+msgid "Timesheets to Invoice of %s"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -29,24 +36,27 @@ msgstr "Групирај По..."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
+msgid "Template"
+msgstr "Урнек"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
 msgid "To Invoice"
-msgstr ""
+msgstr "Да се фактурира"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Remaining"
-msgstr ""
+msgstr "Преостанато"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,real_margin_rate:0
+msgid "Real Margin Rate (%)"
+msgstr "Реален процент на маржа (%)"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Contracts in progress"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,last_worked_invoiced_date:0
-msgid ""
-"If invoice from the costs, this is the date of the latest work or cost that "
-"have been invoiced."
+msgid "End date passed or prepaid unit consumed"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -61,72 +71,91 @@ msgstr "Нефактуриран износ"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid ""
-"When invoicing on timesheet, OpenERP uses the\n"
-"                            pricelist of the contract which uses the price\n"
-"                            defined on the product related to each employee "
-"to\n"
-"                            define the customer invoice price rate."
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
 msgid "⇒ Invoice"
-msgstr ""
+msgstr "⇒ Фактура"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_invoiced:0
 msgid "Invoiced Amount"
-msgstr ""
+msgstr "Фактуриран износ"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
 msgid "Date of Last Invoiced Cost"
-msgstr ""
+msgstr "Датум на последно фактуриран трошок"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,fix_price_to_invoice:0
 msgid "Sum of quotations for this contract."
+msgstr "Сума на понудите за овој договор"
+
+#. module: account_analytic_analysis
+#: model:ir.actions.act_window,help:account_analytic_analysis.action_sales_order
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a quotation that can be converted into a "
+"sales\n"
+"                order.\n"
+"              </p><p>\n"
+"                Use sale orders to track everything that should be invoiced\n"
+"                at a fix price on a contract.\n"
+"              </p>\n"
+"            "
 msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
 msgid "Total customer invoiced amount for this account."
-msgstr ""
+msgstr "Вкупно фактуриран износ на купувач за оваа сметка."
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Cancelled"
+msgstr "Откажано"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,timesheet_ca_invoiced:0
 msgid "Sum of timesheet lines invoiced for this contract."
-msgstr ""
+msgstr "Сума на фактурирани ставки од временската таблица за овој договор."
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:462
+#: model:email.template,subject:account_analytic_analysis.account_analytic_cron_email_template
+msgid "Contract expiration reminder ${user.company_id.name}"
+msgstr "Потсетник за истекување на договор ${user.company_id.name}"
+
+#. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:464
 #, python-format
 msgid "Sales Order Lines of %s"
-msgstr ""
+msgstr "Ставки од налози за продажба на %s"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "End date is in the next month"
+msgstr "Крајниот датум е во наредниот месец"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
 msgid "Computed using the formula: Invoiced Amount / Total Time"
 msgstr ""
+"Пресметано со користење на формулата: Фактуриран износ / Вкупно време"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
 #: field:account_analytic_analysis.summary.month,account_id:0
 #: field:account_analytic_analysis.summary.user,account_id:0
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
 msgid "Analytic Account"
-msgstr ""
+msgstr "Аналитичка сметка"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Partner"
-msgstr ""
+msgstr "Партнер"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts that are not assigned to an account manager."
-msgstr ""
+msgstr "Договори што не се доделени на менаџерот на сметката."
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue
@@ -146,6 +175,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Кликнете овде за да дефинирате нов договор.\n"
+"              </p><p>\n"
+"                Овде ќе ги најдете договорите што треба да се обноват поради "
+"истекување или работата е поголема од максимално дозволената.\n"
+"</p><p>\n"
+"OpenERP автоматски ги поставува договорите за обновување во статус на "
+"чекање. После преговарањето, продавачот треба да го затвори или да ги обнови "
+"договорите на чекње.\n"
+"              </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -155,27 +195,30 @@ msgstr "Краен датум"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Account Manager"
-msgstr ""
+msgstr "Менаџер на сметка"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours_to_invoice:0
 msgid "Computed using the formula: Maximum Time - Total Invoiced Time"
 msgstr ""
+"Пресметано со користење на формулата: Максимално Време - Вкупно Фактурирано "
+"Време"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Expected"
-msgstr ""
+msgstr "Очекувано"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Contracts not assigned"
-msgstr ""
+msgid "Closed contracts"
+msgstr "Затворени договори"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
 msgid "Computed using the formula: Theoretical Revenue - Total Costs"
 msgstr ""
+"Пресметано со користење на формулата: Теоретски приход - Вкупни трошоци"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
@@ -196,16 +239,20 @@ msgid ""
 "{'required': [('type','=','contract')], 'invisible': [('type','in',['view', "
 "'normal','template'])]}"
 msgstr ""
+"{'required': [('type','=','contract')], 'invisible': [('type','in',['view', "
+"'normal','template'])]}"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,real_margin_rate:0
-msgid "Real Margin Rate (%)"
-msgstr ""
+#: view:account.analytic.account:0
+msgid "Pricelist"
+msgstr "Ценовник"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
 msgid "Computed using the formula: Maximum Time - Total Worked Time"
 msgstr ""
+"Пресметано со користење на формулата: Максимално Време - Вкупно Сработено "
+"Време"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_quantity:0
@@ -213,98 +260,253 @@ msgid ""
 "Number of time you spent on the analytic account (from timesheet). It "
 "computes quantities on all journal of type 'general'."
 msgstr ""
+"Време кое го поминувате на аналитичката сметка (од временска таблица). Ги "
+"пресметува количините на сите дневници од типот 'општо'."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Nothing to invoice, create"
-msgstr ""
+msgstr "Нема ништо за фактурирање, креирајте"
 
 #. module: account_analytic_analysis
 #: model:res.groups,name:account_analytic_analysis.group_template_required
 msgid "Mandatory use of templates in contracts"
+msgstr "Задолжително користење на урнеци во договори"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,last_worked_invoiced_date:0
+msgid ""
+"If invoice from the costs, this is the date of the latest work or cost that "
+"have been invoiced."
 msgstr ""
+"Доколку фактурирате од трошоци, ова е датумот на последната работа или "
+"трошок што е фактуриран."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
 msgid "Total Worked Time"
-msgstr ""
+msgstr "Вкупно сработено време"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
+msgstr "Реална маржа"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid ""
+"{'required': [('type','=','contract'),'|',('fix_price_invoices','=',True), "
+"('invoice_on_timesheets', '=', True)]}"
 msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Contracts assigned to a customer."
+msgstr "Договори доделени на купувач."
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
 msgid "Hours summary by month"
-msgstr ""
+msgstr "Резиме на часови по месец"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Pending contracts"
+msgstr "Договори на чекање"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
 msgid "Computes using the formula: (Real Margin / Total Costs) * 100."
 msgstr ""
+"Пресметано со користење на формулата :(Реална маржа / Вкупни трошоци)*100"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "or view"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Customer Contracts"
-msgstr ""
+msgstr "или прегледај"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Parent"
-msgstr ""
+msgstr "Родител"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Units Consumed"
+msgstr "Потрошени единици"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,month_ids:0
 #: field:account_analytic_analysis.summary.month,month:0
 msgid "Month"
-msgstr ""
+msgstr "Месец"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_all
 msgid "Time & Materials to Invoice"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
-msgid "Contracts"
-msgstr ""
+msgstr "Време и материјали за фактурирање"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Start Date"
-msgstr ""
+msgstr "Почетен датум"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Expiring soon"
+msgstr "Истекува наскоро"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Фактурирано"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
+#: model:email.template,body_html:account_analytic_analysis.account_analytic_cron_email_template
 msgid ""
-"The contracts to be renewed because the deadline is passed or the working "
-"hours are higher than the allocated hours"
+"\n"
+"Hello ${object.name},\n"
+"\n"
+"% macro account_table(values):\n"
+"<table cellspacing=\"1\" border=\"1\" cellpadding=\"4\">\n"
+"    <tr>\n"
+"        <th>Customer</th>\n"
+"        <th>Contract</th>\n"
+"        <th>Dates</th>\n"
+"        <th>Prepaid Units</th>\n"
+"        <th>Contact</th>\n"
+"    </tr>\n"
+"    % for partner, accounts in values:\n"
+"        % for account in accounts:\n"
+"        <tr>\n"
+"            <td>${partner.name}</td>\n"
+"            <td><a "
+"href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&vi"
+"ew_type=form\">${account.name}</a></td>\n"
+"            <td>${account.date_start} to ${account.date and account.date or "
+"'???'}</td>\n"
+"            <td>\n"
+"            % if account.quantity_max != 0.0:\n"
+"                ${account.remaining_hours}/${account.quantity_max} units\n"
+"            % endif\n"
+"            </td>\n"
+"            <td>${account.partner_id.phone or ''}, "
+"${account.partner_id.email or ''}</td>\n"
+"        </tr>\n"
+"        % endfor\n"
+"    % endfor\n"
+"</table>\n"
+"% endmacro \n"
+"\n"
+"% if \"new\" in ctx[\"data\"]:\n"
+"    <h2>The following contracts just expired: </h2>\n"
+"    ${account_table(ctx[\"data\"][\"new\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"% if \"old\" in ctx[\"data\"]:\n"
+"    <h2>The following expired contracts are still not processed: </h2>\n"
+"    ${account_table(ctx[\"data\"][\"old\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"% if \"future\" in ctx[\"data\"]:\n"
+"    <h2>The following contracts will expire in less than one month: </h2>\n"
+"    ${account_table(ctx[\"data\"][\"future\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"<p>\n"
+"    You can check all contracts to be renewed using the menu:\n"
+"</p>\n"
+"<ul>\n"
+"    <li>Sales / Invoicing / Contracts to Renew</li>\n"
+"</ul>\n"
+"<p>\n"
+"    Thanks,\n"
+"</p>\n"
+"\n"
+"<pre>\n"
+"-- \n"
+"OpenERP Automatic Email\n"
+"</pre>\n"
+"\n"
+"            "
 msgstr ""
-"Договорот треба да се обнови бидејќи крајниот рок е поминат или работните "
-"часови се повеќе од распределените часови"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Pending contracts to renew with your customer"
-msgstr ""
+"\n"
+"Почитувани ${object.name},\n"
+"\n"
+"% macro account_table(values):\n"
+"<table cellspacing=\"1\" border=\"1\" cellpadding=\"4\">\n"
+"    <tr>\n"
+"        <th>Купувач</th>\n"
+"        <th>Договор</th>\n"
+"        <th>Датуми</th>\n"
+"        <th>Prepaid Units</th>\n"
+"        <th>Контакт</th>\n"
+"    </tr>\n"
+"    % for partner, accounts in values:\n"
+"        % for account in accounts:\n"
+"        <tr>\n"
+"            <td>${partner.name}</td>\n"
+"            <td><a "
+"href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&vi"
+"ew_type=form\">${account.name}</a></td>\n"
+"            <td>${account.date_start} to ${account.date and account.date or "
+"'???'}</td>\n"
+"            <td>\n"
+"            % if account.quantity_max != 0.0:\n"
+"                ${account.remaining_hours}/${account.quantity_max} units\n"
+"            % endif\n"
+"            </td>\n"
+"            <td>${account.partner_id.phone or ''}, "
+"${account.partner_id.email or ''}</td>\n"
+"        </tr>\n"
+"        % endfor\n"
+"    % endfor\n"
+"</table>\n"
+"% endmacro \n"
+"\n"
+"% if \"new\" in ctx[\"data\"]:\n"
+"    <h2>Следниве договори штотуку истекоа: </h2>\n"
+"    ${account_table(ctx[\"data\"][\"new\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"% if \"old\" in ctx[\"data\"]:\n"
+"    <h2>Следниве истечени договори се уште не се обработени: </h2>\n"
+"    ${account_table(ctx[\"data\"][\"old\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"% if \"future\" in ctx[\"data\"]:\n"
+"    <h2>Следниве договори ќе истечат за помалку од еден месец: </h2>\n"
+"    ${account_table(ctx[\"data\"][\"future\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"<p>\n"
+"    Можете да ги означите сите договори кои треба да бидат обновени со "
+"користење на менито:\n"
+"</p>\n"
+"<ul>\n"
+"    <li>Продажби / Фактурирање / Договори за обновување</li>\n"
+"</ul>\n"
+"<p>\n"
+"    Ви благодариме,\n"
+"</p>\n"
+"\n"
+"<pre>\n"
+"-- \n"
+"OpenERP Automatic Email\n"
+"</pre>\n"
+"\n"
+"            "
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Timesheets"
-msgstr ""
+msgstr "Распореди"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Closed"
+msgstr "Затворено"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_non_invoiced:0
@@ -312,26 +514,23 @@ msgid ""
 "Number of time (hours/days) (from journal of type 'general') that can be "
 "invoiced if you invoice based on analytic account."
 msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Pending"
-msgstr "Чекање"
+"Време(часови/денови)(од дневник со тип 'општо') што може да биде фактурирано "
+"доколку фактурата е базирана на аналитичка сметка."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,is_overdue_quantity:0
 msgid "Overdue Quantity"
-msgstr ""
+msgstr "Заостната количина"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Status"
-msgstr ""
+msgstr "Статус"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
 msgid "Theoretical Revenue"
-msgstr ""
+msgstr "Теоретски приход"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -340,19 +539,23 @@ msgstr "Да се обнови"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid ""
-"A contract in OpenERP is an analytic account having a partner set on it."
-msgstr ""
+#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
+msgid "Contracts"
+msgstr "Договори"
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_sales_order
 msgid "Sales Orders"
-msgstr ""
+msgstr "Налози за продажба"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
 msgid "If invoice from the costs, this is the date of the latest invoiced."
 msgstr ""
+"Доколку фактурирате од трошоци, ова е датумот на последниот фактуриран "
+"трошок."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_theorical:0
@@ -361,12 +564,19 @@ msgid ""
 "if all these costs have been invoiced at the normal sale price provided by "
 "the pricelist."
 msgstr ""
+"Засновано на трошоците на проектот, колкав би бил приходот доколку сите овие "
+"трошоци би биле фактурирани по нормална продажна цена, дадена во ценовникот."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,user_ids:0
 #: field:account_analytic_analysis.summary.user,user:0
 msgid "User"
-msgstr ""
+msgstr "Корисник"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Cancelled contracts"
+msgstr "Откажани договори"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.template_of_contract_action
@@ -381,16 +591,25 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Кликнете за да креирате урнек на договор.\n"
+"                </p><p>\n"
+"                    Урнеците се користат за да го навестат "
+"договорот/проектот кој \n"
+"                    кој може да биде селектиран за брзо конфигурирање на\n"
+"                    роковите и условите од договорот.\n"
+"                </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
 msgid "Hours Summary by User"
-msgstr ""
+msgstr "Резиме на часови по корисник"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contract"
-msgstr ""
+msgstr "Договор"
 
 #. module: account_analytic_analysis
 #: help:sale.config.settings,group_template_required:0
@@ -398,6 +617,8 @@ msgid ""
 "Allows you to set the template field as required when creating an analytic "
 "account or a contract."
 msgstr ""
+"Ви овозможува да го подесите полето за урнек како што се бара кога се креира "
+"аналитичка сметка или договор."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_invoiced:0
@@ -405,11 +626,18 @@ msgid ""
 "Number of time (hours/days) that can be invoiced plus those that already "
 "have been invoiced."
 msgstr ""
+"Време (часови/денови) што може да бидат фактурирани плус тие што веќе се "
+"фактурирани."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,revenue_per_hour:0
 msgid "Revenue per Time (real)"
-msgstr ""
+msgstr "Приход по време (реално)"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Expired or consumed"
+msgstr "Истечено или потрошено"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue_all
@@ -426,32 +654,54 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Кликнете за да креирате нов договор.\n"
+"                </p><p>\n"
+"                    Користете ги договорите за да ги следите задачите, "
+"распоредите или фактурирањето врз основа на\n"
+"                    завршена работа, трошоци и/или налози за продажба. "
+"OpenERP автоматски ќе ги управува\n"
+"                    алармите за обновување на договорите до одговорниот "
+"продавач.\n"
+"                </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,toinvoice_total:0
 msgid "Total to Invoice"
-msgstr ""
+msgstr "Вкупно за фактурирање"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Sale Orders"
-msgstr ""
+msgid "Contracts not assigned"
+msgstr "Недоделени договори"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Open"
-msgstr ""
+msgid "Customer Contracts"
+msgstr "Договори на купувачи"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoiced_total:0
 msgid "Total Invoiced"
-msgstr ""
+msgstr "Вкупно фактурирано"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "In Progress"
+msgstr "Во тек"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
 msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
 msgstr ""
-"Пресметано според формулата: Максимална фактурирана цена - Фактурирана цена."
+"Пресметано со користење на формулата: Максимална фактурна цена - Фактуриран "
+"износ"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Contracts in progress (open, draft)"
+msgstr "Договори во тек (отворено, нацрт)"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
@@ -461,7 +711,7 @@ msgstr "Датум на последна фактура"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Units Remaining"
-msgstr ""
+msgstr "Преостанати единици"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_hr_tree_invoiced_all
@@ -476,6 +726,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                Овде ќе ги најдете распоредите и набавките кои сте ги "
+"направиле за\n"
+"                договорите кои може повторно да бидат фактурирани на "
+"купувачот.  Доколку сакате\n"
+"                да ги снимите новите активности за да ги фактурирате, треба "
+"да го употребите менито\n"
+"                временска таблица.\n"
+"              </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_non_invoiced:0
@@ -485,12 +745,12 @@ msgstr "Нефактурирано време"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Invoicing"
-msgstr ""
+msgstr "Фактурирање"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,total_cost:0
 msgid "Total Costs"
-msgstr ""
+msgstr "Вкупни трошоци"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_total:0
@@ -509,58 +769,63 @@ msgstr "Договори кои треба да се обноват"
 #. module: account_analytic_analysis
 #: help:account.analytic.account,toinvoice_total:0
 msgid " Sum of everything that could be invoiced for this contract."
-msgstr ""
+msgstr " Сума на се што би можело да се фактурира за овој договор."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
 msgid "Theoretical Margin"
-msgstr ""
+msgstr "Теоретска маржа"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_total:0
 msgid "Total Remaining"
-msgstr ""
+msgstr "Вкупно преостанато"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
 msgid "Computed using the formula: Invoiced Amount - Total Costs."
 msgstr ""
+"Пресметано со користење на фактурата: Фактуриран износ - Вкупни трошоци."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_est:0
 msgid "Estimation of Hours to Invoice"
-msgstr ""
+msgstr "Проценка на часови за фактурирање"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,fix_price_invoices:0
 msgid "Fixed Price"
-msgstr ""
+msgstr "Фиксна цена"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_date:0
 msgid "Date of the latest work done on this account."
+msgstr "Датум на последната работа завршена на оваа сметка"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid ""
+"When reinvoicing costs, OpenERP uses the\n"
+"                            pricelist of the contract which uses the price\n"
+"                            defined on the product related (e.g timesheet \n"
+"                            products are defined on each employee)."
 msgstr ""
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr ""
+msgstr "sale.config.settings"
 
 #. module: account_analytic_analysis
 #: field:sale.config.settings,group_template_required:0
 msgid "Mandatory use of templates."
-msgstr ""
+msgstr "Задолжително користење на урнеци"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
 msgid "Contract Template"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Units Done"
-msgstr ""
+msgstr "Урнек на договор"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
@@ -568,16 +833,18 @@ msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
 "indirect costs, like time spent on timesheets."
 msgstr ""
+"Вкупно трошоци за оваа сметка. Тоа вклучува реални трошоци (од фактурите) и "
+"индиректни трошоци, како време поминато на распореди."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,est_total:0
 msgid "Total Estimation"
-msgstr ""
+msgstr "Вкупна проценка"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,remaining_ca:0
 msgid "Remaining Revenue"
-msgstr ""
+msgstr "Преостанат приход"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_to_invoice:0
@@ -585,25 +852,52 @@ msgid ""
 "If invoice from analytic account, the remaining amount you can invoice to "
 "the customer based on the total costs."
 msgstr ""
+"Доколку фактурирате од аналитичка сметка, преостанатиот износ можете да го "
+"фактурирате на купувачот врз основа на вкупните трошоци."
 
 #. module: account_analytic_analysis
 #: field:account_analytic_analysis.summary.month,unit_amount:0
 #: field:account_analytic_analysis.summary.user,unit_amount:0
 msgid "Total Time"
-msgstr ""
+msgstr "Вкупно време"
 
 #. module: account_analytic_analysis
 #: model:res.groups,comment:account_analytic_analysis.group_template_required
 msgid ""
 "the field template of the analytic accounts and contracts will be required."
-msgstr ""
+msgstr "полето Урнек на аналитичките сметки и договори ќе бидат потребни."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoice_on_timesheets:0
 msgid "On Timesheets"
-msgstr ""
+msgstr "На распореди"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Total"
-msgstr ""
+msgstr "Вкупно"
+
+#~ msgid "Pending"
+#~ msgstr "Чекање"
+
+#~ msgid ""
+#~ "The contracts to be renewed because the deadline is passed or the working "
+#~ "hours are higher than the allocated hours"
+#~ msgstr ""
+#~ "Договорот треба да се обнови бидејќи крајниот рок е поминат или работните "
+#~ "часови се повеќе од распределените часови"
+
+#~ msgid "Contracts in progress"
+#~ msgstr "Договори во тек"
+
+#~ msgid "Pending contracts to renew with your customer"
+#~ msgstr "Договори што чекаат на обновување"
+
+#~ msgid "Sale Orders"
+#~ msgstr "Налози за продажба"
+
+#~ msgid "Open"
+#~ msgstr "Отвори"
+
+#~ msgid "Units Done"
+#~ msgstr "Завршени единици"

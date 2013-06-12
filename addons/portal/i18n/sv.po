@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
 "PO-Revision-Date: 2013-01-20 17:30+0000\n"
 "Last-Translator: Mikael Dúi Bolinder <dui@outlook.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-21 05:27+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:35+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -44,14 +44,19 @@ msgid "Company Jobs"
 msgstr "Företagsjobb"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid "amount: the total amount to pay, as a float"
+#: model:ir.ui.menu,name:portal.portal_orders
+msgid "Billing"
 msgstr ""
 
 #. module: portal
 #: view:portal.wizard.user:0
 msgid "Contacts"
 msgstr "Kontakter"
+
+#. module: portal
+#: view:portal.wizard:0
+msgid "This text is included in the email sent to new portal users."
+msgstr ""
 
 #. module: portal
 #: view:share.wizard:0
@@ -65,9 +70,22 @@ msgid "Portal Groups"
 msgstr "Portalgrupper"
 
 #. module: portal
+#: code:addons/portal/mail_mail.py:52
+#, python-format
+msgid "<p>Access this document <a href=\"%s\">directly in OpenERP</a></p>"
+msgstr ""
+
+#. module: portal
 #: field:portal.wizard,welcome_message:0
 msgid "Invitation Message"
 msgstr "Inbjudningsmeddelande"
+
+#. module: portal
+#: model:ir.actions.act_window,name:portal.partner_wizard_action
+#: model:ir.model,name:portal.model_portal_wizard
+#: view:portal.wizard:0
+msgid "Portal Access Management"
+msgstr ""
 
 #. module: portal
 #: view:res.groups:0
@@ -81,13 +99,9 @@ msgid "Please select at least one group to share with"
 msgstr "Vänligen välj minst en grupp att dela med"
 
 #. module: portal
-#: view:share.wizard:0
-msgid "Details"
-msgstr ""
-
-#. module: portal
-#: model:ir.ui.menu,name:portal.portal_orders
-msgid "Quotations and Sales Orders"
+#: model:ir.actions.client,name:portal.action_mail_archives_feeds_portal
+#: model:ir.ui.menu,name:portal.portal_mail_archivesfeeds
+msgid "Archives"
 msgstr ""
 
 #. module: portal
@@ -108,9 +122,11 @@ msgid "Share Wizard"
 msgstr ""
 
 #. module: portal
-#: field:portal.wizard.user,email:0
-msgid "Email"
-msgstr "E-post"
+#: view:portal.payment.acquirer:0
+msgid ""
+", so it may use Mako expressions.\n"
+"                                The Mako evaluation context provides:"
+msgstr ""
 
 #. module: portal
 #: model:ir.actions.client,help:portal.action_news
@@ -119,6 +135,22 @@ msgid ""
 "                    Youd don't have unread company's news.\n"
 "                </p>\n"
 "            "
+msgstr ""
+
+#. module: portal
+#: field:portal.wizard.user,email:0
+msgid "Email"
+msgstr "E-post"
+
+#. module: portal
+#: view:portal.wizard:0
+msgid "or"
+msgstr ""
+
+#. module: portal
+#: model:ir.actions.client,name:portal.action_mail_star_feeds_portal
+#: model:ir.ui.menu,name:portal.portal_mail_starfeeds
+msgid "To-do"
 msgstr ""
 
 #. module: portal
@@ -152,10 +184,13 @@ msgid "No online payment acquirers configured"
 msgstr ""
 
 #. module: portal
-#: view:portal.payment.acquirer:0
+#: code:addons/portal/mail_message.py:54
+#, python-format
 msgid ""
-"kind: the kind of document on which the payment form is rendered (translated "
-"to user language, e.g. \"Invoice\")"
+"The requested operation cannot be completed due to security restrictions. "
+"Please contact your system administrator.\n"
+"\n"
+"(Document type: %s, Operation: %s)"
 msgstr ""
 
 #. module: portal
@@ -179,10 +214,16 @@ msgid ""
 msgstr ""
 
 #. module: portal
-#: view:portal.payment.acquirer:0
+#: model:ir.actions.client,help:portal.action_mail_archives_feeds_portal
 msgid ""
-", so it may use Mako expressions.\n"
-"                                The Mako evaluation context provides:"
+"<p>\n"
+"                    No message found and no message sent yet.\n"
+"                </p><p>\n"
+"                    Click on the top-right icon to compose a message. This\n"
+"                    message will be sent by email if it's an internal "
+"contact.\n"
+"                </p>\n"
+"            "
 msgstr ""
 
 #. module: portal
@@ -274,13 +315,28 @@ msgstr ""
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid ""
+"kind: the kind of document on which the payment form is rendered (translated "
+"to user language, e.g. \"Invoice\")"
+msgstr ""
+
+#. module: portal
+#: view:portal.payment.acquirer:0
+msgid ""
 "quote(): a method to quote special string character to make them suitable "
 "for inclusion in a URL"
 msgstr ""
 
 #. module: portal
-#: help:res.groups,is_portal:0
-msgid "If checked, this group is usable as a portal."
+#: view:portal.payment.acquirer:0
+msgid "amount: the total amount to pay, as a float"
+msgstr ""
+
+#. module: portal
+#: code:addons/portal/mail_mail.py:44
+#, python-format
+msgid ""
+"<p>Access your messages and personal documents through <a href=\"%s\">our "
+"Customer Portal</a></p>"
 msgstr ""
 
 #. module: portal
@@ -320,6 +376,12 @@ msgstr ""
 #. module: portal
 #: model:ir.model,name:portal.model_portal_payment_acquirer
 msgid "Online Payment Acquirer"
+msgstr ""
+
+#. module: portal
+#: code:addons/portal/mail_message.py:53
+#, python-format
+msgid "Access Denied"
 msgstr ""
 
 #. module: portal
@@ -372,10 +434,8 @@ msgid "About Us"
 msgstr ""
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid ""
-"currency: the currency record in which the document is issued (e.g. "
-"currency.name could be EUR)"
+#: help:res.groups,is_portal:0
+msgid "If checked, this group is usable as a portal."
 msgstr ""
 
 #. module: portal
@@ -406,8 +466,10 @@ msgid ""
 msgstr ""
 
 #. module: portal
-#: view:portal.wizard:0
-msgid "or"
+#: view:portal.payment.acquirer:0
+msgid ""
+"currency: the currency record in which the document is issued (e.g. "
+"currency.name could be EUR)"
 msgstr ""
 
 #. module: portal
@@ -466,6 +528,11 @@ msgid "Apply"
 msgstr ""
 
 #. module: portal
+#: model:ir.model,name:portal.model_mail_message
+msgid "Message"
+msgstr ""
+
+#. module: portal
 #: view:portal.payment.acquirer:0
 msgid "ctx: the current context dictionary"
 msgstr ""
@@ -478,10 +545,17 @@ msgid ""
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/mail_mail.py:42
-#, python-format
+#: model:ir.actions.client,help:portal.action_mail_star_feeds_portal
 msgid ""
-"Access your personal documents through <a href=\"%s\">our Customer Portal</a>"
+"<p>\n"
+"                    <b>No todo.</b>\n"
+"                </p><p>\n"
+"                    When you process messages in your inbox, you can mark "
+"some\n"
+"                    as <i>todo</i>. From this menu, you can process all your "
+"todo.\n"
+"                </p>\n"
+"            "
 msgstr ""
 
 #. module: portal
@@ -490,8 +564,6 @@ msgid "Form Template"
 msgstr ""
 
 #. module: portal
-#: model:ir.actions.act_window,name:portal.partner_wizard_action
-#: model:ir.model,name:portal.model_portal_wizard
-#: view:portal.wizard:0
-msgid "Portal Access Management"
+#: view:share.wizard:0
+msgid "Details"
 msgstr ""

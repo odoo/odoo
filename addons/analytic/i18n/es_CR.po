@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish (Costa Rica) <es_CR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:34+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:13+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -34,12 +34,18 @@ msgid "Contract: "
 msgstr ""
 
 #. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_pending
+msgid "Contract pending"
+msgstr ""
+
+#. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Template"
 msgstr "Plantilla"
 
 #. module: analytic
 #: view:account.analytic.account:0
+#: field:account.analytic.account,date:0
 msgid "End Date"
 msgstr ""
 
@@ -52,19 +58,6 @@ msgstr "Especifica el valor de las cantidades a contar."
 #: field:account.analytic.account,debit:0
 msgid "Debit"
 msgstr "Debe"
-
-#. module: analytic
-#: help:account.analytic.account,type:0
-msgid ""
-"If you select the View Type, it means you won't allow to create journal "
-"entries using that account.\n"
-"The type 'Analytic account' stands for usual accounts that you only want to "
-"use in accounting.\n"
-"If you select Contract or Project, it offers you the possibility to manage "
-"the validity and the invoicing options for this account.\n"
-"The special type 'Template of Contract' allows you to define a template with "
-"default data that you can reuse easily."
-msgstr ""
 
 #. module: analytic
 #: view:account.analytic.account:0
@@ -126,7 +119,7 @@ msgid "Status"
 msgstr ""
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:268
+#: code:addons/analytic/analytic.py:271
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -141,6 +134,12 @@ msgstr "Línea analítica"
 #: field:account.analytic.line,name:0
 msgid "Description"
 msgstr "Descripción"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:262
+#, python-format
+msgid "Quick account creation disallowed."
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,message_unread:0
@@ -164,13 +163,15 @@ msgid "Renewal"
 msgstr ""
 
 #. module: analytic
-#: help:account.analytic.account,message_ids:0
-msgid "Messages and communication history"
+#: help:account.analytic.account,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
 msgstr ""
 
 #. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_opened
-msgid "Stage <b>opened</b>"
+#: help:account.analytic.account,message_unread:0
+msgid "If checked new messages require your attention."
 msgstr ""
 
 #. module: analytic
@@ -209,9 +210,9 @@ msgid "User"
 msgstr "Usuario"
 
 #. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_pending
-msgid "Contract <b>pending</b>"
-msgstr ""
+#: field:account.analytic.account,parent_id:0
+msgid "Parent Analytic Account"
+msgstr "Cuenta analítica padre"
 
 #. module: analytic
 #: field:account.analytic.line,date:0
@@ -253,9 +254,14 @@ msgid "Messages"
 msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,parent_id:0
-msgid "Parent Analytic Account"
-msgstr "Cuenta analítica padre"
+#: help:account.analytic.account,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
+
+#. module: analytic
+#: constraint:account.analytic.line:0
+msgid "You cannot create analytic line on view account."
+msgstr ""
 
 #. module: analytic
 #: view:account.analytic.account:0
@@ -289,8 +295,16 @@ msgid "Contract Opened"
 msgstr ""
 
 #. module: analytic
-#: model:mail.message.subtype,description:analytic.mt_account_closed
-msgid "Contract <b>closed</b>"
+#: help:account.analytic.account,type:0
+msgid ""
+"If you select the View Type, it means you won't allow to create journal "
+"entries using that account.\n"
+"The type 'Analytic account' stands for usual accounts that you only want to "
+"use in accounting.\n"
+"If you select Contract or Project, it offers you the possibility to manage "
+"the validity and the invoicing options for this account.\n"
+"The special type 'Template of Contract' allows you to define a template with "
+"default data that you can reuse easily."
 msgstr ""
 
 #. module: analytic
@@ -309,8 +323,8 @@ msgid "Balance"
 msgstr "Balance"
 
 #. module: analytic
-#: help:account.analytic.account,message_unread:0
-msgid "If checked new messages require your attention."
+#: field:account.analytic.account,complete_name:0
+msgid "Full Name"
 msgstr ""
 
 #. module: analytic
@@ -325,11 +339,6 @@ msgid "Quantity"
 msgstr "Cantidad"
 
 #. module: analytic
-#: field:account.analytic.account,date:0
-msgid "Date End"
-msgstr "Fecha final"
-
-#. module: analytic
 #: field:account.analytic.account,code:0
 msgid "Reference"
 msgstr ""
@@ -341,6 +350,11 @@ msgid "Error!"
 msgstr ""
 
 #. module: analytic
+#: model:mail.message.subtype,description:analytic.mt_account_closed
+msgid "Contract closed"
+msgstr ""
+
+#. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
 msgstr "Contabilidad analítica"
@@ -349,11 +363,6 @@ msgstr "Contabilidad analítica"
 #: field:account.analytic.line,amount:0
 msgid "Amount"
 msgstr "Monto"
-
-#. module: analytic
-#: field:account.analytic.account,complete_name:0
-msgid "Full Account Name"
-msgstr "Nombre completo de la cuenta"
 
 #. module: analytic
 #: view:account.analytic.account:0
@@ -369,10 +378,14 @@ msgid "Currency"
 msgstr "Moneda"
 
 #. module: analytic
-#: help:account.analytic.account,message_summary:0
-msgid ""
-"Holds the Chatter summary (number of messages, ...). This summary is "
-"directly in html format in order to be inserted in kanban views."
+#: model:mail.message.subtype,description:analytic.mt_account_opened
+msgid "Contract opened"
+msgstr ""
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:262
+#, python-format
+msgid "Warning"
 msgstr ""
 
 #. module: analytic
@@ -386,11 +399,12 @@ msgid "Start Date"
 msgstr ""
 
 #. module: analytic
-#: constraint:account.analytic.line:0
-msgid "You cannot create analytic line on view account."
-msgstr ""
-
-#. module: analytic
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
 msgstr "Entradas analíticas"
+
+#~ msgid "Date End"
+#~ msgstr "Fecha final"
+
+#~ msgid "Full Account Name"
+#~ msgstr "Nombre completo de la cuenta"

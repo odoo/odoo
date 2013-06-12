@@ -20,6 +20,8 @@
 ##############################################################################
 
 import time
+import pytz
+from openerp import SUPERUSER_ID
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
@@ -593,11 +595,34 @@ class purchase_order(osv.osv):
             wf_service.trg_validate(uid, 'purchase.order', id, 'purchase_cancel', cr)
         return True
 
+    def date_to_datetime(self, cr, uid, userdate, context=None):
+        """ Convert date values expressed in user's timezone to
+        server-side UTC timestamp, assuming a default arbitrary
+        time of 12:00 AM - because a time is needed.
+    
+        :param str userdate: date string in in user time zone
+        :return: UTC datetime string for server-side use
+        """
+        # TODO: move to fields.datetime in server after 7.0
+        user_date = datetime.strptime(userdate, DEFAULT_SERVER_DATE_FORMAT)
+        if context and context.get('tz'):
+            tz_name = context['tz']
+        else:
+            tz_name = self.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['tz'])['tz']
+        if tz_name:
+            utc = pytz.timezone('UTC')
+            context_tz = pytz.timezone(tz_name)
+            user_datetime = user_date + relativedelta(hours=12.0)
+            local_timestamp = context_tz.localize(user_datetime, is_dst=False)
+            user_datetime = local_timestamp.astimezone(utc)
+            return user_datetime.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        return user_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+
     def _prepare_order_picking(self, cr, uid, order, context=None):
         return {
             'name': self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.in'),
             'origin': order.name + ((order.origin and (':' + order.origin)) or ''),
-            'date': order.date_order,
+            'date': self.date_to_datetime(cr, uid, order.date_order, context),
             'partner_id': order.dest_address_id.id or order.partner_id.id,
             'invoice_state': '2binvoiced' if order.invoice_method == 'picking' else 'none',
             'type': 'in',
@@ -615,8 +640,8 @@ class purchase_order(osv.osv):
             'product_uos_qty': order_line.product_qty,
             'product_uom': order_line.product_uom.id,
             'product_uos': order_line.product_uom.id,
-            'date': order_line.date_planned,
-            'date_expected': order_line.date_planned,
+            'date': self.date_to_datetime(cr, uid, order.date_order, context),
+            'date_expected': self.date_to_datetime(cr, uid, order_line.date_planned, context),
             'location_id': order.partner_id.property_stock_supplier.id,
             'location_dest_id': order.location_id.id,
             'picking_id': picking_id,
@@ -923,7 +948,8 @@ class purchase_order_line(osv.osv):
             lang = res_partner.browse(cr, uid, partner_id).lang
             context_partner.update( {'lang': lang, 'partner_id': partner_id} )
         product = product_product.browse(cr, uid, product_id, context=context_partner)
-        name = product.name
+        #call name_get() with partner in the context to eventually match name and description in the seller_ids field
+        dummy, name = product_product.name_get(cr, uid, product_id, context=context_partner)[0]
         if product.description_purchase:
             name += '\n' + product.description_purchase
         res['value'].update({'name': name})

@@ -30,7 +30,7 @@ Hello ${object.name},
             <td>${account.date_start} to ${account.date and account.date or '???'}</td>
             <td>
             % if account.quantity_max != 0.0:
-                ${account.quantity}/${account.quantity_max} hours
+                ${account.remaining_hours}/${account.quantity_max} units
             % endif
             </td>
             <td>${account.partner_id.phone or ''}, ${account.partner_id.email or ''}</td>
@@ -55,6 +55,19 @@ Hello ${object.name},
     ${account_table(ctx["data"]["future"].iteritems())}
 % endif
 
+<p>
+    You can check all contracts to be renewed using the menu:
+</p>
+<ul>
+    <li>Sales / Invoicing / Contracts to Renew</li>
+</ul>
+<p>
+    Thanks,
+</p>
+
+<pre>
+-- 
+OpenERP Automatic Email
 </pre>
 
             ]]></field>

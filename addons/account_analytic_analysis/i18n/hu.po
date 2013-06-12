@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-02 11:07+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-04-21 23:19+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:31+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:09+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -23,9 +23,20 @@ msgid "No order to invoice, create"
 msgstr "Nincs számlázandó megrendelés, hozzon létre"
 
 #. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:547
+#, python-format
+msgid "Timesheets to Invoice of %s"
+msgstr ""
+
+#. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Group By..."
 msgstr "Csoportosítás..."
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Template"
+msgstr "Sablon"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -38,18 +49,14 @@ msgid "Remaining"
 msgstr "Hátralevő"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Contracts in progress"
-msgstr "Folyamatban lévő szerződések"
+#: field:account.analytic.account,real_margin_rate:0
+msgid "Real Margin Rate (%)"
+msgstr "Valós fedezeti hányad (%)"
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,last_worked_invoiced_date:0
-msgid ""
-"If invoice from the costs, this is the date of the latest work or cost that "
-"have been invoiced."
-msgstr ""
-"A legutolsó kiszámlázott munka vagy költség dátuma, ha a költségek alapján "
-"számláznak."
+#: view:account.analytic.account:0
+msgid "End date passed or prepaid unit consumed"
+msgstr "Határidő túllépett vagy az előre kifizetett egységek elfogytak"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_date:0
@@ -60,22 +67,6 @@ msgstr "Utolsó költség/munka dátuma"
 #: field:account.analytic.account,ca_to_invoice:0
 msgid "Uninvoiced Amount"
 msgstr "Nem számlázott összeg"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid ""
-"When invoicing on timesheet, OpenERP uses the\n"
-"                            pricelist of the contract which uses the price\n"
-"                            defined on the product related to each employee "
-"to\n"
-"                            define the customer invoice price rate."
-msgstr ""
-"Ha az időkimutatás számlázott, akkor OpenERP használja a \n"
-"                            az árat használó szerződéshez tartozó árlistát\n"
-"                            ami minden munkavállaló által a termékhez "
-"meghatározott\n"
-"                            a számlán feltüntetett vevőhöz meghatározott "
-"árfolyam."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -98,9 +89,28 @@ msgid "Sum of quotations for this contract."
 msgstr "Ehhez a szerződéshez tartotzó ajánlatok összege."
 
 #. module: account_analytic_analysis
+#: model:ir.actions.act_window,help:account_analytic_analysis.action_sales_order
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a quotation that can be converted into a "
+"sales\n"
+"                order.\n"
+"              </p><p>\n"
+"                Use sale orders to track everything that should be invoiced\n"
+"                at a fix price on a contract.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
 msgid "Total customer invoiced amount for this account."
 msgstr "Ezen gyűjtőkód alapján a vevőnek összesen kiszámlázott összeg."
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Cancelled"
+msgstr "Érvénytelenített"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,timesheet_ca_invoiced:0
@@ -108,10 +118,20 @@ msgid "Sum of timesheet lines invoiced for this contract."
 msgstr "Ennek a szerződéshez tartozó időkimutatás számlázott sorai."
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:462
+#: model:email.template,subject:account_analytic_analysis.account_analytic_cron_email_template
+msgid "Contract expiration reminder ${user.company_id.name}"
+msgstr "Figyelmeztetés a szerződés lejártára ${user.company_id.name}"
+
+#. module: account_analytic_analysis
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:464
 #, python-format
 msgid "Sales Order Lines of %s"
 msgstr "Megrendelés sorok ebből %s"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "End date is in the next month"
+msgstr "A lejárat dátuma a következő hónapban lesz"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
@@ -119,7 +139,6 @@ msgid "Computed using the formula: Invoiced Amount / Total Time"
 msgstr "Számolva a következő formulával: Számlázott összeg / Teljes idő"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
 #: field:account_analytic_analysis.summary.month,account_id:0
 #: field:account_analytic_analysis.summary.user,account_id:0
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
@@ -154,6 +173,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson új szerződés létrehozásához.\n"
+"              </p><p>\n"
+"                Itt találhatók a frissítendő szerződések, melyeknek a "
+"lejárati\n"
+"                ideje túllépett, vagy a belelőlt energia nagyobb mint a\n"
+"                maximum megengedett.\n"
+"              </p><p>\n"
+"                OpenERP automatikusan frissítésre állítja a függőben\n"
+"                lévőket. A tárgyalás után, az értékesítőnek le kell zárnia "
+"vagy meg \n"
+"                kell újítania a fügőben lévő szerződéseket.\n"
+"              </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -178,8 +211,8 @@ msgstr "Elvárt"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Contracts not assigned"
-msgstr "Nem kijelölt/csoportosított szerződések"
+msgid "Closed contracts"
+msgstr "Lezárt szerződések"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
@@ -209,9 +242,9 @@ msgstr ""
 "'normal','template'])]}"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,real_margin_rate:0
-msgid "Real Margin Rate (%)"
-msgstr "Valós fedezeti hányad (%)"
+#: view:account.analytic.account:0
+msgid "Pricelist"
+msgstr "Árlista"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_hours:0
@@ -236,7 +269,16 @@ msgstr "Nincs mit számlázni, hozzon létre"
 #. module: account_analytic_analysis
 #: model:res.groups,name:account_analytic_analysis.group_template_required
 msgid "Mandatory use of templates in contracts"
+msgstr "Kizárólag sablonok használhatóak a szerződésekhez"
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,last_worked_invoiced_date:0
+msgid ""
+"If invoice from the costs, this is the date of the latest work or cost that "
+"have been invoiced."
 msgstr ""
+"A legutolsó kiszámlázott munka vagy költség dátuma, ha a költségek alapján "
+"számláznak."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_quantity:0
@@ -249,9 +291,26 @@ msgid "Real Margin"
 msgstr "Valós fedezet"
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid ""
+"{'required': [('type','=','contract'),'|',('fix_price_invoices','=',True), "
+"('invoice_on_timesheets', '=', True)]}"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Contracts assigned to a customer."
+msgstr "Vevőhöz rendelt szeződések"
+
+#. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_month
 msgid "Hours summary by month"
 msgstr "Havonkénti óraösszesítő"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Pending contracts"
+msgstr "Függő szerződések"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin_rate:0
@@ -265,13 +324,13 @@ msgstr "vagy nézet"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Customer Contracts"
-msgstr "Ügyfelek/Vevők szerződései"
+msgid "Parent"
+msgstr "Gyűjtő főkönyvi szla."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Parent"
-msgstr "Gyűjtő főkönyvi szla."
+msgid "Units Consumed"
+msgstr "Elfogyasztott egységek"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,month_ids:0
@@ -286,15 +345,14 @@ msgid "Time & Materials to Invoice"
 msgstr "Számlázandó idő & Anyagok"
 
 #. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
-msgid "Contracts"
-msgstr "Szerződések"
-
-#. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Start Date"
 msgstr "Kezdési dátum"
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Expiring soon"
+msgstr "Hamarosan lejár"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -302,18 +360,74 @@ msgid "Invoiced"
 msgstr "Kiszámlázott"
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
+#: model:email.template,body_html:account_analytic_analysis.account_analytic_cron_email_template
 msgid ""
-"The contracts to be renewed because the deadline is passed or the working "
-"hours are higher than the allocated hours"
+"\n"
+"Hello ${object.name},\n"
+"\n"
+"% macro account_table(values):\n"
+"<table cellspacing=\"1\" border=\"1\" cellpadding=\"4\">\n"
+"    <tr>\n"
+"        <th>Customer</th>\n"
+"        <th>Contract</th>\n"
+"        <th>Dates</th>\n"
+"        <th>Prepaid Units</th>\n"
+"        <th>Contact</th>\n"
+"    </tr>\n"
+"    % for partner, accounts in values:\n"
+"        % for account in accounts:\n"
+"        <tr>\n"
+"            <td>${partner.name}</td>\n"
+"            <td><a "
+"href=\"${ctx[\"base_url\"]}/#action=${ctx[\"action_id\"]}&id=${account.id}&vi"
+"ew_type=form\">${account.name}</a></td>\n"
+"            <td>${account.date_start} to ${account.date and account.date or "
+"'???'}</td>\n"
+"            <td>\n"
+"            % if account.quantity_max != 0.0:\n"
+"                ${account.remaining_hours}/${account.quantity_max} units\n"
+"            % endif\n"
+"            </td>\n"
+"            <td>${account.partner_id.phone or ''}, "
+"${account.partner_id.email or ''}</td>\n"
+"        </tr>\n"
+"        % endfor\n"
+"    % endfor\n"
+"</table>\n"
+"% endmacro \n"
+"\n"
+"% if \"new\" in ctx[\"data\"]:\n"
+"    <h2>The following contracts just expired: </h2>\n"
+"    ${account_table(ctx[\"data\"][\"new\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"% if \"old\" in ctx[\"data\"]:\n"
+"    <h2>The following expired contracts are still not processed: </h2>\n"
+"    ${account_table(ctx[\"data\"][\"old\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"% if \"future\" in ctx[\"data\"]:\n"
+"    <h2>The following contracts will expire in less than one month: </h2>\n"
+"    ${account_table(ctx[\"data\"][\"future\"].iteritems())}\n"
+"% endif\n"
+"\n"
+"<p>\n"
+"    You can check all contracts to be renewed using the menu:\n"
+"</p>\n"
+"<ul>\n"
+"    <li>Sales / Invoicing / Contracts to Renew</li>\n"
+"</ul>\n"
+"<p>\n"
+"    Thanks,\n"
+"</p>\n"
+"\n"
+"<pre>\n"
+"-- \n"
+"OpenERP Automatic Email\n"
+"</pre>\n"
+"\n"
+"            "
 msgstr ""
-"A szerződések megújítva mert a határidő túllépett vagy a munka idők "
-"magasabbak mint a beállított idők."
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Pending contracts to renew with your customer"
-msgstr "A vevői által megújítandó elintézetlen szerződések"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -321,16 +435,18 @@ msgid "Timesheets"
 msgstr "Munkaidő kimutatások"
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Closed"
+msgstr "Lezárt"
+
+#. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_non_invoiced:0
 msgid ""
 "Number of time (hours/days) (from journal of type 'general') that can be "
 "invoiced if you invoice based on analytic account."
 msgstr ""
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Pending"
-msgstr "Függőben"
+"Idő mennyisége (órák/napok) (Az 'általános' típusú naplóból) melyek "
+"számlázhatóak, ha a számlázás a gyüjtőkódon alapszik."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,is_overdue_quantity:0
@@ -354,13 +470,13 @@ msgstr "Megújításhoz"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid ""
-"A contract in OpenERP is an analytic account having a partner set on it."
-msgstr ""
-"Az OpenERP-ben a szerződés egy analitikai/elemző számla melyhez egy partnert "
-"kapcsoltak."
+#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_overdue_all
+#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_overdue_all
+msgid "Contracts"
+msgstr "Szerződések"
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_sales_order
 msgid "Sales Orders"
 msgstr "Vevői megrendelések"
@@ -390,6 +506,11 @@ msgid "User"
 msgstr "Felhasználó"
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Cancelled contracts"
+msgstr "Visszavont szerződések"
+
+#. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.template_of_contract_action
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -402,6 +523,16 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Kattintson szerződés sablon létrehozásához.\n"
+"                </p><p>\n"
+"                    Sablonokat használ a szerződések/projektek "
+"elképzelésénak kialakításához, \n"
+"                    melyeket az értékesítő kiválaszthat és gyorsan "
+"beállíthat a szerződés\n"
+"                    feltételeihez és részleteihez.\n"
+"                </p>\n"
+"            "
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
@@ -436,6 +567,11 @@ msgid "Revenue per Time (real)"
 msgstr "Bevétel per idő (valós)"
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Expired or consumed"
+msgstr "Lejárt vagy elfogyasztott"
+
+#. module: account_analytic_analysis
 #: model:ir.actions.act_window,help:account_analytic_analysis.action_account_analytic_overdue_all
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -458,13 +594,13 @@ msgstr "Teljes számlázandó"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Sale Orders"
-msgstr "Vevői rendelés"
+msgid "Contracts not assigned"
+msgstr "Nem kijelölt/csoportosított szerződések"
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
-msgid "Open"
-msgstr "Megnyitás"
+msgid "Customer Contracts"
+msgstr "Ügyfelek/Vevők szerződései"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,invoiced_total:0
@@ -472,11 +608,21 @@ msgid "Total Invoiced"
 msgstr "Teljes számlázva"
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "In Progress"
+msgstr "Folyamatban"
+
+#. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
 msgid "Computed using the formula: Max Invoice Price - Invoiced Amount."
 msgstr ""
 "Max. kiszámlázható érték - Kiszámlázott összeg képlet alapján kerül "
 "kiszámításra."
+
+#. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "Contracts in progress (open, draft)"
+msgstr "Folyamatban lévő szerződések (tervezett, nyitott)"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
@@ -568,6 +714,15 @@ msgid "Date of the latest work done on this account."
 msgstr "A gyűjtőkódon utoljára végzett munka dátuma."
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid ""
+"When reinvoicing costs, OpenERP uses the\n"
+"                            pricelist of the contract which uses the price\n"
+"                            defined on the product related (e.g timesheet \n"
+"                            products are defined on each employee)."
+msgstr ""
+
+#. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_sale_config_settings
 msgid "sale.config.settings"
 msgstr "sale.config.settings"
@@ -582,11 +737,6 @@ msgstr "Sablonok kötelező használata."
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
 msgid "Contract Template"
 msgstr "Szerződés sablonok"
-
-#. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Units Done"
-msgstr "Egységek végrehajtva"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
@@ -638,4 +788,49 @@ msgstr "Az időkimutatásokon"
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Total"
-msgstr ""
+msgstr "Összesen"
+
+#~ msgid "Contracts in progress"
+#~ msgstr "Folyamatban lévő szerződések"
+
+#~ msgid ""
+#~ "When invoicing on timesheet, OpenERP uses the\n"
+#~ "                            pricelist of the contract which uses the price\n"
+#~ "                            defined on the product related to each employee "
+#~ "to\n"
+#~ "                            define the customer invoice price rate."
+#~ msgstr ""
+#~ "Ha az időkimutatás számlázott, akkor OpenERP használja a \n"
+#~ "                            az árat használó szerződéshez tartozó árlistát\n"
+#~ "                            ami minden munkavállaló által a termékhez "
+#~ "meghatározott\n"
+#~ "                            a számlán feltüntetett vevőhöz meghatározott "
+#~ "árfolyam."
+
+#~ msgid ""
+#~ "The contracts to be renewed because the deadline is passed or the working "
+#~ "hours are higher than the allocated hours"
+#~ msgstr ""
+#~ "A szerződések megújítva mert a határidő túllépett vagy a munka idők "
+#~ "magasabbak mint a beállított idők."
+
+#~ msgid "Pending contracts to renew with your customer"
+#~ msgstr "A vevői által megújítandó elintézetlen szerződések"
+
+#~ msgid "Pending"
+#~ msgstr "Függőben"
+
+#~ msgid ""
+#~ "A contract in OpenERP is an analytic account having a partner set on it."
+#~ msgstr ""
+#~ "Az OpenERP-ben a szerződés egy analitikai/elemző számla melyhez egy partnert "
+#~ "kapcsoltak."
+
+#~ msgid "Open"
+#~ msgstr "Megnyitás"
+
+#~ msgid "Sale Orders"
+#~ msgstr "Vevői rendelés"
+
+#~ msgid "Units Done"
+#~ msgstr "Egységek végrehajtva"

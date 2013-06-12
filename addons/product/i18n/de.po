@@ -7,21 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-01-06 22:36+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"PO-Revision-Date: 2013-03-12 21:27+0000\n"
+"Last-Translator: Felix Schubert <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:59+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:36+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
 msgid "Number of Layers"
 msgstr "Anzahl Ebenen"
+
+#. module: product
+#: view:res.partner:0
+msgid "the parent company"
+msgstr ""
 
 #. module: product
 #: help:product.pricelist.item,base:0
@@ -301,6 +305,11 @@ msgid "Laptop E5023"
 msgstr ""
 
 #. module: product
+#: field:product.price_list,qty1:0
+msgid "Quantity-1"
+msgstr "Menge-1"
+
+#. module: product
 #: help:product.packaging,ul_qty:0
 msgid "The number of packages by layer"
 msgstr "Anzahl der Packstücke nach Ebene"
@@ -503,9 +512,9 @@ msgid "Quantity-3"
 msgstr "Menge-3"
 
 #. module: product
-#: field:product.price_list,qty1:0
-msgid "Quantity-1"
-msgstr "Menge-1"
+#: model:res.groups,name:product.group_product_variant
+msgid "Product Variant (not supported)"
+msgstr "Produkt Varianten (nicht unterstützt)"
 
 #. module: product
 #: field:product.price_list,qty4:0
@@ -824,13 +833,14 @@ msgid "External Hard disk"
 msgstr "Externe Festplatte"
 
 #. module: product
-#: help:product.template,standard_price:0
-msgid ""
-"Cost price of the product used for standard stock valuation in accounting "
-"and used as a base price on purchase orders."
+#: view:product.product:0
+msgid "describe the product characteristics..."
 msgstr ""
-"Der Anschaffungspreis eines Produkts wird genutzt zur Lagerbestand "
-"Bewertung, und nicht  als Basispreis für die Berechnung von Einkaufspreisen."
+
+#. module: product
+#: view:res.partner:0
+msgid "Pricelists are managed on"
+msgstr ""
 
 #. module: product
 #: field:product.category,child_id:0
@@ -1182,10 +1192,10 @@ msgid "Price Surcharge"
 msgstr "Aufschlag"
 
 #. module: product
-#: field:product.product,code:0
-#: field:product.product,default_code:0
-msgid "Internal Reference"
-msgstr "Interne Referenz"
+#: code:addons/product/pricelist.py:380
+#, python-format
+msgid "Supplier Prices on the product form"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_8_product_template
@@ -1207,7 +1217,6 @@ msgstr "Verpackungseinheit"
 #: field:product.category,name:0
 #: field:product.pricelist.type,name:0
 #: field:product.pricelist.version,name:0
-#: field:product.product,name_template:0
 #: field:product.template,name:0
 #: field:product.ul,name:0
 #: field:product.uom.categ,name:0
@@ -1382,6 +1391,11 @@ msgstr ""
 "werden soll."
 
 #. module: product
+#: field:product.product,name_template:0
+msgid "Template Name"
+msgstr "Vorlagenname"
+
+#. module: product
 #: field:product.template,weight_net:0
 msgid "Net Weight"
 msgstr "Nettogewicht"
@@ -1412,6 +1426,11 @@ msgstr ""
 
 #. module: product
 #: view:product.product:0
+msgid "This note will be displayed on requests for quotation..."
+msgstr "Diese Anmerkungen werden auf Angebotsanfragen ausgegeben..."
+
+#. module: product
+#: view:product.product:0
 msgid "Inventory"
 msgstr "Bestand"
 
@@ -1421,7 +1440,7 @@ msgid "Supplier Info"
 msgstr "Lieferanteninfo"
 
 #. module: product
-#: code:addons/product/product.py:729
+#: code:addons/product/product.py:732
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (Kopie)"
@@ -1448,6 +1467,13 @@ msgstr "Mengeneinheiten"
 #: field:product.supplierinfo,min_qty:0
 msgid "Minimal Quantity"
 msgstr "Min. Menge"
+
+#. module: product
+#: view:product.supplierinfo:0
+msgid ""
+"The prices below will only be taken into account when your pricelist is set "
+"as based on supplier prices."
+msgstr ""
 
 #. module: product
 #: help:product.supplierinfo,product_code:0
@@ -1827,6 +1853,11 @@ msgid "Price:"
 msgstr "Preis:"
 
 #. module: product
+#: view:product.pricelist.item:0
+msgid "Min. Margin"
+msgstr "Min. Spanne"
+
+#. module: product
 #: field:product.template,weight:0
 msgid "Gross Weight"
 msgstr "Bruttogewicht"
@@ -1972,12 +2003,6 @@ msgid "Default Unit of Measure"
 msgstr "Standard Mengeneinheit"
 
 #. module: product
-#: code:addons/product/pricelist.py:377
-#, python-format
-msgid "Partner section of the product form"
-msgstr "Partner Sektion im Produktformular"
-
-#. module: product
 #: help:product.price.type,name:0
 msgid "Name of this kind of price."
 msgstr "Bezeichnung für diese Preisart."
@@ -2023,6 +2048,17 @@ msgstr "Länge /Entfernung"
 #: model:product.category,name:product.product_category_8
 msgid "Components"
 msgstr "Komponenten"
+
+#. module: product
+#: field:product.product,code:0
+#: field:product.product,default_code:0
+msgid "Internal Reference"
+msgstr "Interne Referenz"
+
+#. module: product
+#: view:product.product:0
+msgid "e.g. 5901234123457"
+msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_type
@@ -2193,7 +2229,7 @@ msgstr "Lieferzeit des Lieferanten"
 #. module: product
 #: model:ir.model,name:product.model_decimal_precision
 msgid "decimal.precision"
-msgstr ""
+msgstr "Nachkommastellen"
 
 #. module: product
 #: selection:product.ul,type:0
@@ -2378,9 +2414,13 @@ msgid "Max. Price Margin"
 msgstr "Max. Preis Spanne"
 
 #. module: product
-#: view:product.pricelist.item:0
-msgid "Min. Margin"
-msgstr "Min. Spanne"
+#: help:product.template,standard_price:0
+msgid ""
+"Cost price of the product used for standard stock valuation in accounting "
+"and used as a base price on purchase orders."
+msgstr ""
+"Der Anschaffungspreis eines Produkts wird genutzt zur Lagerbestand "
+"Bewertung, und nicht  als Basispreis für die Berechnung von Einkaufspreisen."
 
 #. module: product
 #: help:product.supplierinfo,product_name:0
@@ -2595,7 +2635,11 @@ msgstr "Lieferanten Mengeneinheit"
 
 #. module: product
 #: view:product.product:0
-#: model:res.groups,name:product.group_product_variant
+msgid "note to be displayed on quotations..."
+msgstr "Anmerkungen die auf den Angeboten ausgegeben werden ..."
+
+#. module: product
+#: view:product.product:0
 msgid "Product Variant"
 msgstr "Produktvarianten"
 
@@ -2605,7 +2649,7 @@ msgid "15” LCD Monitor"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:376
+#: code:addons/product/pricelist.py:379
 #: field:product.pricelist.item,base_pricelist_id:0
 #, python-format
 msgid "Other Pricelist"
@@ -2763,3 +2807,7 @@ msgstr "Volumen in m³"
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Rabatt"
+
+#, python-format
+#~ msgid "Partner section of the product form"
+#~ msgstr "Partner Sektion im Produktformular"

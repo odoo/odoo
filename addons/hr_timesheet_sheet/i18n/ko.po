@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-05-18 23:46+0000\n"
+"Last-Translator: AhnJD <zion64@zeiv.dsmynas.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:48+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:27+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: hr_timesheet_sheet
 #: field:hr.analytic.timesheet,sheet_id:0
@@ -28,13 +28,13 @@ msgstr "시트"
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_timesheetdraft0
 msgid "Service"
-msgstr ""
+msgstr "서비스"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,quantity:0
 #: field:timesheet.report,quantity:0
 msgid "Time"
-msgstr ""
+msgstr "시간"
 
 #. module: hr_timesheet_sheet
 #: help:hr.config.settings,timesheet_max_difference:0
@@ -43,6 +43,9 @@ msgid ""
 "                computation for one sheet. Set this to 0 if you do not want "
 "any control."
 msgstr ""
+"Allowed difference in hours between the sign in/out and the timesheet\n"
+"                computation for one sheet. Set this to 0 if you do not want "
+"any control."
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -62,12 +65,12 @@ msgstr "총 참석"
 #: view:timesheet.report:0
 #: field:timesheet.report,department_id:0
 msgid "Department"
-msgstr ""
+msgstr "부서"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_tasktimesheet0
 msgid "Task timesheet"
-msgstr ""
+msgstr "태스크 타임시트"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:73
@@ -82,7 +85,7 @@ msgstr ""
 #: selection:hr.timesheet.report,month:0
 #: selection:timesheet.report,month:0
 msgid "March"
-msgstr ""
+msgstr "3월"
 
 #. module: hr_timesheet_sheet
 #: view:timesheet.report:0
@@ -93,7 +96,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "읽지 않은 메시지"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -102,7 +105,7 @@ msgstr ""
 #: view:timesheet.report:0
 #: field:timesheet.report,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "회사"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -123,7 +126,7 @@ msgstr "초안으로 설정"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Timesheet Period"
-msgstr ""
+msgstr "타임시트 기록기간"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,date_to:0
@@ -142,11 +145,11 @@ msgid "Based on the timesheet"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:326
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:397
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:327
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:398
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet."
-msgstr ""
+msgstr "확정된 타임시트에 있는 엔트리를 수정할 수 없습니다."
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -167,17 +170,17 @@ msgstr "검증"
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "Approved"
-msgstr ""
+msgstr "승인됨"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
 msgid "Present"
-msgstr ""
+msgstr "출근"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
 msgid "Total Cost"
-msgstr ""
+msgstr "총 원가"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -189,7 +192,7 @@ msgstr "거부"
 #: view:hr_timesheet_sheet.sheet:0
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet
 msgid "Timesheet Activities"
-msgstr ""
+msgstr "타임시트 액티비티"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
@@ -198,8 +201,8 @@ msgid "Please create an employee and associate it with this user."
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:401
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:421
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:402
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:422
 #, python-format
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates."
@@ -225,7 +228,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "메세지"
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,state:0
@@ -245,13 +248,13 @@ msgstr ""
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:80
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:82
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:84
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:326
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:397
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:428
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:327
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:398
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:429
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "오류!"
 
 #. module: hr_timesheet_sheet
 #: field:hr.config.settings,timesheet_max_difference:0
@@ -270,22 +273,22 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_timesheet_report_stat_all
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_timesheet_report_all
 msgid "Timesheet Sheet Analysis"
-msgstr ""
+msgstr "타임시트 분석"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.account,name:0
 msgid "Project / Analytic Account"
-msgstr ""
+msgstr "프로젝트 / 관리회계"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_validatetimesheet0
 msgid "Validation"
-msgstr ""
+msgstr "확인"
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "체크할 경우, 새로운 메시지를 주목할 필요가 있습니다."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:69
@@ -306,7 +309,7 @@ msgstr ""
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:215
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "유효하지 않은 액션!"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -369,17 +372,17 @@ msgstr "일정 라인"
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "담당자"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_confirmedtimesheet0
 msgid "State is 'confirmed'."
-msgstr ""
+msgstr "확정 상태입니다."
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,employee_id:0
 msgid "Employee"
-msgstr ""
+msgstr "직원"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
@@ -407,7 +410,7 @@ msgstr ""
 #: view:hr.timesheet.report:0
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Hours"
-msgstr ""
+msgstr "시간"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -418,13 +421,13 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_validatetimesheet0
 msgid "The project manager validates the timesheets."
-msgstr ""
+msgstr "프로젝트관리자가 타임시트를 확인합니다."
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
 #: selection:timesheet.report,month:0
 msgid "July"
-msgstr ""
+msgstr "7월"
 
 #. module: hr_timesheet_sheet
 #: field:hr.config.settings,timesheet_range:0
@@ -436,7 +439,7 @@ msgstr ""
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:86
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "설정 오류!"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,state:0
@@ -453,7 +456,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "Waiting Approval"
-msgstr ""
+msgstr "승인 대기 중"
 
 #. module: hr_timesheet_sheet
 #: view:timesheet.report:0
@@ -494,19 +497,19 @@ msgstr ""
 msgid ""
 "In order to create a timesheet for this employee, you must link the employee "
 "to a product, like 'Consultant'."
-msgstr ""
+msgstr "이 직원을 위한 타임시트를 생성하기 위해 직원을 제품에 연계(예, 컨설턴트)시켜야 합니다."
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
 #: selection:timesheet.report,month:0
 msgid "September"
-msgstr ""
+msgstr "9월"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
 #: selection:timesheet.report,month:0
 msgid "December"
-msgstr ""
+msgstr "12월"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:0
@@ -532,7 +535,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "In Draft"
-msgstr ""
+msgstr "초안 상태"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_attendancetimesheet0
@@ -790,7 +793,7 @@ msgid "Search Account"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:428
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:429
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet"
 msgstr ""
@@ -1059,8 +1062,8 @@ msgid "Invoice rate"
 msgstr "인보이스 비율"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:401
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:421
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:402
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:422
 #, python-format
 msgid "User Error!"
 msgstr ""

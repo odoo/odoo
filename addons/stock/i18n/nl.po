@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-14 11:37+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-06-08 10:11+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-15 05:24+0000\n"
-"X-Generator: Launchpad (build 16491)\n"
+"X-Launchpad-Export-Date: 2013-06-09 06:17+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -130,8 +130,8 @@ msgid "Product Moves"
 msgstr "Productmutaties"
 
 #. module: stock
-#: code:addons/stock/stock.py:2519
-#: code:addons/stock/stock.py:2580
+#: code:addons/stock/stock.py:2524
+#: code:addons/stock/stock.py:2585
 #, python-format
 msgid "Please provide proper quantity."
 msgstr "Geef een juist aantal in"
@@ -167,6 +167,11 @@ msgstr "Hoeveelheid mag niet negatief zijn."
 #: view:stock.picking.in:0
 msgid "Picking list"
 msgstr "Verzamellijst"
+
+#. module: stock
+#: view:stock.inventory:0
+msgid "e.g. Annual inventory"
+msgstr "Bijv. Jaarlijkse vororaadtelling"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -291,7 +296,7 @@ msgstr "Oorsprong"
 #: view:board.board:0
 #: model:ir.actions.act_window,name:stock.action_stock_incoming_product_delay
 msgid "Incoming Products"
-msgstr "Binnenkomende leveringen"
+msgstr "Inkomende leveringen"
 
 #. module: stock
 #: view:report.stock.lines.date:0
@@ -360,9 +365,9 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:768
-#: code:addons/stock/stock.py:2475
-#: code:addons/stock/stock.py:2519
-#: code:addons/stock/stock.py:2580
+#: code:addons/stock/stock.py:2473
+#: code:addons/stock/stock.py:2524
+#: code:addons/stock/stock.py:2585
 #: code:addons/stock/wizard/stock_change_product_qty.py:91
 #: code:addons/stock/wizard/stock_fill_inventory.py:124
 #: code:addons/stock/wizard/stock_inventory_merge.py:43
@@ -372,9 +377,9 @@ msgstr ""
 #: code:addons/stock/wizard/stock_partial_picking.py:174
 #: code:addons/stock/wizard/stock_partial_picking.py:181
 #: code:addons/stock/wizard/stock_partial_picking.py:192
-#: code:addons/stock/wizard/stock_return_picking.py:99
-#: code:addons/stock/wizard/stock_return_picking.py:106
-#: code:addons/stock/wizard/stock_return_picking.py:205
+#: code:addons/stock/wizard/stock_return_picking.py:102
+#: code:addons/stock/wizard/stock_return_picking.py:109
+#: code:addons/stock/wizard/stock_return_picking.py:208
 #, python-format
 msgid "Warning!"
 msgstr "Waarschuwing!"
@@ -484,14 +489,20 @@ msgid "Ready to Deliver"
 msgstr "Gereed om te leveren"
 
 #. module: stock
-#: model:ir.model,name:stock.model_action_traceability
-msgid "Action traceability "
-msgstr "Actie traceability "
+#: code:addons/stock/stock.py:2481
+#, python-format
+msgid ""
+"Forbidden operation: it is not allowed to scrap products from a virtual "
+"location."
+msgstr ""
+"Niet toegestane bewerking: Het is niet toegestaan om producten af te keuren "
+"vanuit een virtuele locatie."
 
 #. module: stock
 #: selection:stock.move,state:0
 #: selection:stock.picking,state:0
 #: selection:stock.picking.in,state:0
+#: report:stock.picking.list:0
 #: selection:stock.picking.out,state:0
 msgid "Waiting Availability"
 msgstr "Wachten op beschikbaarheid"
@@ -500,6 +511,7 @@ msgstr "Wachten op beschikbaarheid"
 #: selection:report.stock.inventory,state:0
 #: selection:report.stock.move,state:0
 #: selection:stock.move,state:0
+#: report:stock.picking.list:0
 #: view:stock.production.lot:0
 #: field:stock.production.lot,stock_available:0
 msgid "Available"
@@ -878,6 +890,11 @@ msgid "Procurement Location"
 msgstr "Leveringslocatie"
 
 #. module: stock
+#: view:stock.picking:0
+msgid "e.g. PO0032"
+msgstr "Bijv. PO0032"
+
+#. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_tree
 #: model:ir.ui.menu,name:stock.menu_action_location_tree
 msgid "Location Structure"
@@ -933,14 +950,7 @@ msgid "Reference must be unique per Company!"
 msgstr "Referentie moet uniek zijn per bedrijf!"
 
 #. module: stock
-#: field:stock.picking,date:0
-#: field:stock.picking.in,date:0
-#: field:stock.picking.out,date:0
-msgid "Time"
-msgstr "Tijd"
-
-#. module: stock
-#: code:addons/stock/product.py:447
+#: code:addons/stock/product.py:449
 #, python-format
 msgid "Future Receptions"
 msgstr "Toekomstige ontvangsten"
@@ -980,7 +990,7 @@ msgstr "- bijwerken"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Weight"
-msgstr "Gewicht"
+msgstr "Bruto gewicht"
 
 #. module: stock
 #: field:stock.warehouse,lot_input_id:0
@@ -1049,7 +1059,7 @@ msgid "Change Product Quantity"
 msgstr "Hoeveelheid aanpassen"
 
 #. module: stock
-#: code:addons/stock/product.py:463
+#: code:addons/stock/product.py:465
 #, python-format
 msgid "Future P&L"
 msgstr "Toekomstige W&V"
@@ -1061,6 +1071,13 @@ msgstr "Toekomstige W&V"
 #: view:stock.picking.in:0
 msgid "Incoming Shipments"
 msgstr "Inkomende leveringen"
+
+#. module: stock
+#: help:stock.picking,date:0
+#: help:stock.picking.in,date:0
+#: help:stock.picking.out,date:0
+msgid "Creation date, usually the time of the order."
+msgstr "Aanmaakdatum, normaliter de datum/tijd van de order."
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -1153,12 +1170,6 @@ msgid "Ready to Receive"
 msgstr "Gereed om te ontvangen"
 
 #. module: stock
-#: view:stock.move:0
-#: view:stock.picking:0
-msgid "_Cancel"
-msgstr "_Annuleren"
-
-#. module: stock
 #: field:report.stock.move,day_diff:0
 msgid "Execution Lead Time (Days)"
 msgstr "Uitvoering levertijd (dagen)"
@@ -1211,7 +1222,7 @@ msgstr ""
 "lijst."
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:106
+#: code:addons/stock/wizard/stock_return_picking.py:109
 #, python-format
 msgid ""
 "No products to return (only lines in Done state and not fully returned yet "
@@ -1375,7 +1386,7 @@ msgid "Supplier"
 msgstr "Leverancier"
 
 #. module: stock
-#: code:addons/stock/stock.py:2859
+#: code:addons/stock/stock.py:2864
 #, python-format
 msgid ""
 "In order to cancel this inventory, you must first unpost related journal "
@@ -1483,7 +1494,7 @@ msgstr "Totale hoeveelheid"
 #: field:stock.picking.in,min_date:0
 #: field:stock.picking.out,min_date:0
 msgid "Scheduled Time"
-msgstr "Geplande tijd"
+msgstr "Gepland"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.move_consume
@@ -1606,7 +1617,7 @@ msgid "To be refunded/invoiced"
 msgstr "Terug te betalen (Credit factuur)"
 
 #. module: stock
-#: code:addons/stock/stock.py:2450
+#: code:addons/stock/stock.py:2448
 #, python-format
 msgid "You can only delete draft moves."
 msgstr "Er kunnen alleen concept-wijzigingen worden verwijderd."
@@ -1651,7 +1662,7 @@ msgid "Additional Info"
 msgstr "Aanvullende informatie"
 
 #. module: stock
-#: code:addons/stock/stock.py:2648
+#: code:addons/stock/stock.py:2653
 #, python-format
 msgid "Missing partial picking data for move #%s."
 msgstr "Er ontbreekt gedeeltelijke verzamelopdracht data voor mutatie #%s."
@@ -1667,7 +1678,7 @@ msgid "Incoming Shipments already processed"
 msgstr "Inkomende leveringen welke reeds zijn verwerkt"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:99
+#: code:addons/stock/wizard/stock_return_picking.py:102
 #, python-format
 msgid "You may only return pickings that are Confirmed, Available or Done!"
 msgstr ""
@@ -1751,6 +1762,9 @@ msgstr ""
 #. module: stock
 #: field:stock.inventory,date:0
 #: field:stock.move,create_date:0
+#: field:stock.picking,date:0
+#: field:stock.picking.in,date:0
+#: field:stock.picking.out,date:0
 #: field:stock.production.lot,date:0
 #: field:stock.tracking,date:0
 msgid "Creation Date"
@@ -1881,7 +1895,7 @@ msgid "Stock Invoice Onshipping"
 msgstr "Factureren bij levering"
 
 #. module: stock
-#: code:addons/stock/stock.py:2475
+#: code:addons/stock/stock.py:2473
 #, python-format
 msgid "Please provide a positive quantity to scrap."
 msgstr "Geef een positieve hoeveelheid in om af te keuren."
@@ -2035,7 +2049,7 @@ msgid "Shelf 2"
 msgstr "Plank 2"
 
 #. module: stock
-#: code:addons/stock/stock.py:529
+#: code:addons/stock/stock.py:528
 #, python-format
 msgid "You cannot remove a lot line."
 msgstr "Het is niet mogelijk om een partij regel te verwijderen."
@@ -2059,7 +2073,7 @@ msgid "Localization"
 msgstr "Positie in magazijn"
 
 #. module: stock
-#: code:addons/stock/product.py:459
+#: code:addons/stock/product.py:461
 #, python-format
 msgid "Delivered Qty"
 msgstr "Geleverd aantal"
@@ -2406,7 +2420,7 @@ msgid "Generate accounting entries per stock movement"
 msgstr "Maak boekingen per voorraadmutatie"
 
 #. module: stock
-#: code:addons/stock/product.py:449
+#: code:addons/stock/product.py:451
 #, python-format
 msgid "Received Qty"
 msgstr "Ontvangen aantal"
@@ -2452,6 +2466,11 @@ msgid "Supplier Address :"
 msgstr "Leveranciers adres:"
 
 #. module: stock
+#: field:stock.config.settings,group_product_variant:0
+msgid "Support multiple variants per products  "
+msgstr "Ondersteun meerdere product varianten  "
+
+#. module: stock
 #: view:stock.inventory.line:0
 msgid "Stock Inventory Lines"
 msgstr "Stock Inventory Lines"
@@ -2477,8 +2496,8 @@ msgid "Customer Locations"
 msgstr "Klant locaties"
 
 #. module: stock
-#: code:addons/stock/stock.py:2449
-#: code:addons/stock/stock.py:2858
+#: code:addons/stock/stock.py:2448
+#: code:addons/stock/stock.py:2863
 #, python-format
 msgid "User Error!"
 msgstr "Gebruikersfout!"
@@ -2720,7 +2739,7 @@ msgid "Warehouse board"
 msgstr "Magazijn Dashboard"
 
 #. module: stock
-#: code:addons/stock/product.py:469
+#: code:addons/stock/product.py:471
 #, python-format
 msgid "Future Qty"
 msgstr "Toekomstige HvH"
@@ -2846,7 +2865,7 @@ msgid "Move"
 msgstr "Verplaats"
 
 #. module: stock
-#: code:addons/stock/product.py:465
+#: code:addons/stock/product.py:467
 #, python-format
 msgid "P&L Qty"
 msgstr "Winst&Verlies hoeveelheid"
@@ -2960,9 +2979,9 @@ msgid "Cancel Inventory"
 msgstr "Verwijder voorraadtelling"
 
 #. module: stock
-#: field:stock.config.settings,group_product_variant:0
-msgid "Support multiple variants per products  "
-msgstr "Ondersteun meerdere product varianten  "
+#: view:stock.move:0
+msgid "Cancel Move"
+msgstr "Mutatie annuleren"
 
 #. module: stock
 #: code:addons/stock/stock.py:2246
@@ -3016,6 +3035,11 @@ msgid "Stock report by serial number"
 msgstr "Voorraad rapport per partijnummer"
 
 #. module: stock
+#: view:stock.picking:0
+msgid "Cancel Transfer"
+msgstr "Transfer annuleren"
+
+#. module: stock
 #: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "July"
@@ -3034,7 +3058,7 @@ msgid ""
 "need this report in order to ensure that the stock of each product is "
 "controlled at least once a year."
 msgstr ""
-"Geef de laatste voorraadtellingen gedaan op uw producten weer sorteer ze "
+"Geeft de laatste voorraadtellingen gedaan op uw producten weer sorteer ze "
 "eenvoudig met specifieke filtercriteria. Als u vaak en gedeeltelijke "
 "voorraadtelling doet, heeft u dit rapport nodig om ervoor te zorgen dat de "
 "voorraad van elk product ten minste eenmaal per jaar wordt geteld."
@@ -3088,7 +3112,7 @@ msgid "Stock Journal"
 msgstr "Voorraadboek"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:171
+#: code:addons/stock/wizard/stock_return_picking.py:174
 #, python-format
 msgid "%s-%s-return"
 msgstr "%s-%s-retour"
@@ -3412,9 +3436,9 @@ msgstr ""
 "toepassingen van deze functie zijn:\n"
 "                beheren van gekoppelde productie processen, beheren van "
 "standaard locaties per product,\n"
-"                definiëren van routes binnen uw magazijn volgens behoeften "
+"                definiëren van routes binnen uw magazijn volgens behoeften "
 "van uw bedrijf, enz.\n"
-"                Dit installeert de module stock_location."
+"                Dit installeert de module stock_location."
 
 #. module: stock
 #: view:stock.inventory:0
@@ -3500,7 +3524,7 @@ msgstr ""
 "            "
 
 #. module: stock
-#: code:addons/stock/stock.py:2496
+#: code:addons/stock/stock.py:2501
 #, python-format
 msgid "%s %s %s has been <b>moved to</b> scrap."
 msgstr "%s %s %s is <b>verplaatst naar</b> scrap."
@@ -3519,6 +3543,7 @@ msgstr "Klant verpakkingen"
 #: selection:stock.move,state:0
 #: view:stock.picking:0
 #: view:stock.picking.in:0
+#: report:stock.picking.list:0
 msgid "Done"
 msgstr "Verwerkt"
 
@@ -3577,6 +3602,11 @@ msgid "Scheduled"
 msgstr "Gepland"
 
 #. module: stock
+#: view:stock.picking:0
+msgid "Add an internal note..."
+msgstr "Voeg interne notitie toe..."
+
+#. module: stock
 #: model:ir.actions.act_window,name:stock.action_warehouse_form
 #: model:ir.ui.menu,name:stock.menu_action_warehouse_form
 msgid "Warehouses"
@@ -3620,7 +3650,7 @@ msgid "Stock"
 msgstr "Voorraad"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:219
+#: code:addons/stock/wizard/stock_return_picking.py:222
 #, python-format
 msgid "Returned Picking"
 msgstr "Retouren"
@@ -3859,13 +3889,6 @@ msgid "Shelf 1"
 msgstr "Plank 1"
 
 #. module: stock
-#: help:stock.picking,date:0
-#: help:stock.picking.in,date:0
-#: help:stock.picking.out,date:0
-msgid "Creation time, usually the time of the order."
-msgstr "Aanmaakdatum, meestal de tijd van de order."
-
-#. module: stock
 #: field:stock.tracking,name:0
 msgid "Pack Reference"
 msgstr "Verpakkingsreferentie"
@@ -3949,7 +3972,7 @@ msgid "Inventory Move"
 msgstr "Voorraadverplaatsing"
 
 #. module: stock
-#: code:addons/stock/product.py:475
+#: code:addons/stock/product.py:477
 #, python-format
 msgid "Future Productions"
 msgstr "Toekomstige productie"
@@ -4091,6 +4114,7 @@ msgstr "Partijvoorraad"
 #: field:stock.production.lot,name:0
 #: field:stock.production.lot.revision,lot_id:0
 #: field:stock.report.prodlots,prodlot_id:0
+#: field:stock.return.picking.memory,prodlot_id:0
 msgid "Serial Number"
 msgstr "Partijnummer"
 
@@ -4156,7 +4180,7 @@ msgstr "Niet-europese afnemers"
 #: code:addons/stock/product.py:167
 #: code:addons/stock/report/report_stock.py:78
 #: code:addons/stock/report/report_stock.py:134
-#: code:addons/stock/stock.py:529
+#: code:addons/stock/stock.py:528
 #: code:addons/stock/stock.py:790
 #: code:addons/stock/stock.py:1190
 #: code:addons/stock/stock.py:1199
@@ -4166,7 +4190,8 @@ msgstr "Niet-europese afnemers"
 #: code:addons/stock/stock.py:2252
 #: code:addons/stock/stock.py:2255
 #: code:addons/stock/stock.py:2258
-#: code:addons/stock/stock.py:2585
+#: code:addons/stock/stock.py:2481
+#: code:addons/stock/stock.py:2590
 #: code:addons/stock/wizard/stock_fill_inventory.py:59
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:112
 #: code:addons/stock/wizard/stock_splitinto.py:53
@@ -4343,7 +4368,7 @@ msgid "Followers"
 msgstr "Volgers"
 
 #. module: stock
-#: code:addons/stock/stock.py:2585
+#: code:addons/stock/stock.py:2590
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
 msgstr ""
@@ -4371,6 +4396,11 @@ msgstr "Totaal uitgaande hoeveelheid"
 #: field:stock.picking.out,backorder_id:0
 msgid "Back Order of"
 msgstr "Backorder van"
+
+#. module: stock
+#: model:ir.model,name:stock.model_action_traceability
+msgid "Action traceability "
+msgstr "Actie traceability "
 
 #. module: stock
 #: help:stock.partial.move.line,cost:0
@@ -4428,7 +4458,7 @@ msgstr ""
 "gecrediteerd en voorraadtoename rekening zal worden gedebiteerd."
 
 #. module: stock
-#: code:addons/stock/stock.py:2811
+#: code:addons/stock/stock.py:2816
 #, python-format
 msgid "INV:"
 msgstr "TEL:"
@@ -4495,7 +4525,7 @@ msgstr ""
 "interne locaties."
 
 #. module: stock
-#: code:addons/stock/product.py:457
+#: code:addons/stock/product.py:459
 #, python-format
 msgid "Future Deliveries"
 msgstr "Toekomstige leveringen"
@@ -4718,7 +4748,7 @@ msgstr "Wilt u deze voorraadtelling samenvoegen?"
 #. module: stock
 #: view:stock.picking.out:0
 msgid "Date of Delivery"
-msgstr "Leverdatum"
+msgstr "Datum gereed"
 
 #. module: stock
 #: field:stock.location,posy:0
@@ -4756,7 +4786,7 @@ msgstr ""
 "                Dit installeert de module claim_from_delivery."
 
 #. module: stock
-#: code:addons/stock/wizard/stock_return_picking.py:205
+#: code:addons/stock/wizard/stock_return_picking.py:208
 #, python-format
 msgid "Please specify at least one non-zero quantity."
 msgstr "Specificeer ten minste één waarde welke niet nul is."
@@ -4789,7 +4819,7 @@ msgid "November"
 msgstr "November"
 
 #. module: stock
-#: code:addons/stock/product.py:471
+#: code:addons/stock/product.py:473
 #, python-format
 msgid "Unplanned Qty"
 msgstr "Niet geplande aantal"
@@ -4848,7 +4878,7 @@ msgid "Move History (parent moves)"
 msgstr "Mutatiehistorie (bovenliggende mutaties)"
 
 #. module: stock
-#: code:addons/stock/product.py:453
+#: code:addons/stock/product.py:455
 #, python-format
 msgid "Future Stock"
 msgstr "Virtuele voorraad"
@@ -5069,7 +5099,7 @@ msgid "Location Content"
 msgstr "Locatie inhoud"
 
 #. module: stock
-#: code:addons/stock/product.py:477
+#: code:addons/stock/product.py:479
 #, python-format
 msgid "Produced Qty"
 msgstr "Geproduceerd aantal"
@@ -5294,3 +5324,12 @@ msgstr "Gereed om te verwerken"
 #: report:stock.picking.list:0
 msgid "Warehouse Address :"
 msgstr "Magazijn adres:"
+
+#~ msgid "_Cancel"
+#~ msgstr "_Annuleren"
+
+#~ msgid "Creation time, usually the time of the order."
+#~ msgstr "Aanmaakdatum, meestal de tijd van de order."
+
+#~ msgid "Time"
+#~ msgstr "Aangemaakt"

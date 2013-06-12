@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-19 01:07+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-04-07 12:30+0000\n"
 "Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-20 05:29+0000\n"
-"X-Generator: Launchpad (build 16491)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:25+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -33,7 +33,7 @@ msgid "Waiting Second Approval"
 msgstr "2 дахь зөвшөөрлийг хүлээж байна"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:291
+#: code:addons/hr_holidays/hr_holidays.py:309
 #, python-format
 msgid ""
 "You cannot modify a leave request that has been approved. Contact a human "
@@ -173,12 +173,6 @@ msgid "Refuse"
 msgstr "Татгалзах"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:433
-#, python-format
-msgid "Request <b>approved</b>, waiting second validation."
-msgstr "Хүсэлт <b>батлагдсан</b>, хоёр дахь шалгалтыг хүлээж байна."
-
-#. module: hr_holidays
 #: view:hr.employee:0
 #: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
 #: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
@@ -191,9 +185,9 @@ msgid "Messages"
 msgstr "Зурвасууд"
 
 #. module: hr_holidays
-#: xsl:holidays.summary:0
-msgid "Analyze from"
-msgstr "Дараахаас шинжлэх"
+#: model:ir.model,name:hr_holidays.model_hr_holidays
+msgid "Leave"
+msgstr "Амралт, чөлөө"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:44
@@ -278,12 +272,12 @@ msgstr ""
 "html форматтай бөгөөд канбан харагдацад шууд орж харагдах боломжтой."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:238
 #: code:addons/hr_holidays/hr_holidays.py:249
-#: code:addons/hr_holidays/hr_holidays.py:274
-#: code:addons/hr_holidays/hr_holidays.py:291
-#: code:addons/hr_holidays/hr_holidays.py:414
-#: code:addons/hr_holidays/hr_holidays.py:464
+#: code:addons/hr_holidays/hr_holidays.py:260
+#: code:addons/hr_holidays/hr_holidays.py:285
+#: code:addons/hr_holidays/hr_holidays.py:309
+#: code:addons/hr_holidays/hr_holidays.py:432
+#: code:addons/hr_holidays/hr_holidays.py:482
 #, python-format
 msgid "Warning!"
 msgstr "Анхааруулга!"
@@ -300,8 +294,8 @@ msgstr "Уулзалтын чөлөө"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
-msgid "Legal Leaves 2012"
-msgstr "Цалинтай чөлөө 2012"
+msgid "Legal Leaves 2013"
+msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.holidays.summary.dept,holiday_type:0
@@ -321,7 +315,7 @@ msgid "Sick Leaves"
 msgstr "Өвчний чөлөө"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:471
+#: code:addons/hr_holidays/hr_holidays.py:489
 #, python-format
 msgid "Leave Request for %s"
 msgstr "%s-н амралт, чөлөөний хүсэлт"
@@ -392,7 +386,7 @@ msgid "Wheat"
 msgstr "Үр тарианы өнгө"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:469
+#: code:addons/hr_holidays/hr_holidays.py:487
 #, python-format
 msgid "Allocation for %s"
 msgstr "%s хуваарилалт"
@@ -422,7 +416,7 @@ msgid "Number of Days"
 msgstr "Хоногийн тоо"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:464
+#: code:addons/hr_holidays/hr_holidays.py:482
 #, python-format
 msgid ""
 "The feature behind the field 'Remaining Legal Leaves' can only be used when "
@@ -453,7 +447,7 @@ msgstr "Зөвшөөрөл хүлээж байгаа"
 #. module: hr_holidays
 #: field:hr.holidays,category_id:0
 msgid "Employee Tag"
-msgstr "Ажилчны Тааг"
+msgstr "Ажилчны Пайз"
 
 #. module: hr_holidays
 #: field:hr.holidays.summary.employee,emp:0
@@ -540,7 +534,7 @@ msgid "Start Date"
 msgstr "Эхэлсэн огноо"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:414
+#: code:addons/hr_holidays/hr_holidays.py:432
 #, python-format
 msgid ""
 "There are not enough %s allocated for employee %s; please create an "
@@ -580,11 +574,6 @@ msgstr ""
 "            "
 
 #. module: hr_holidays
-#: sql_constraint:hr.holidays:0
-msgid "The employee or employee category of this request is missing."
-msgstr "Энэ хүсэлтийн ажилчин эсвэл ажилчны ангилал байхгүй байна."
-
-#. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Category"
 msgstr "Зэрэглэл"
@@ -617,7 +606,7 @@ msgstr "Шинэ болгох"
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
 msgid "The number of days must be greater than 0."
-msgstr "Өдрийн тоо нь 0-с их байх ёстой."
+msgstr "Хоногийн тоо нь 0-с их байх ёстой."
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -701,10 +690,16 @@ msgid "Active"
 msgstr "Идэвхтэй"
 
 #. module: hr_holidays
-#: view:hr.employee:0
-#: field:hr.employee,remaining_leaves:0
-msgid "Remaining Legal Leaves"
-msgstr "Цалинтай амралт, чөлөөний үлдэгдэл"
+#: sql_constraint:hr.holidays:0
+msgid ""
+"The employee or employee category of this request is missing. Please make "
+"sure that your user login is linked to an employee."
+msgstr ""
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+msgid "Add a reason..."
+msgstr ""
 
 #. module: hr_holidays
 #: field:hr.holidays,manager_id:0
@@ -753,11 +748,6 @@ msgid "My Department Leaves"
 msgstr "Миний хэлтсийн амралт, чөлөөнүүд"
 
 #. module: hr_holidays
-#: model:mail.message.subtype,description:hr_holidays.mt_holidays_confirmed
-msgid "Request confirmed, waiting confirmation"
-msgstr "Хүсэлт батлагдсан, магадлагааг хүлээж байна"
-
-#. module: hr_holidays
 #: field:hr.employee,current_leave_state:0
 msgid "Current Leave Status"
 msgstr "Идэвхтэй Амралт, чөлөөний Төлөв"
@@ -804,12 +794,17 @@ msgid "Cancel"
 msgstr "Цуцлах"
 
 #. module: hr_holidays
+#: model:mail.message.subtype,description:hr_holidays.mt_holidays_confirmed
+msgid "Request created and waiting confirmation"
+msgstr ""
+
+#. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Validated"
 msgstr "Батламжилсан"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:238
+#: code:addons/hr_holidays/hr_holidays.py:249
 #, python-format
 msgid "You cannot delete a leave which is in %s state."
 msgstr "%s төлөвтэй амралт, чөлөөг устгах боломжгүй."
@@ -826,7 +821,7 @@ msgid ""
 "By Employee: Allocation/Request for individual Employee, By Employee Tag: "
 "Allocation/Request for group of employees in category"
 msgstr ""
-"Ажичлнаар: Хуваарилалт/Хүсэлт ажилчин бүрт, Ажилчдын Таагаар: "
+"Ажичлнаар: Хуваарилалт/Хүсэлт ажилчин бүрт, Ажилчдын Пайзаар: "
 "Хуваарилалт/Хүсэлт ажилчдын ангилал дэх бүлгүүдэд"
 
 #. module: hr_holidays
@@ -875,7 +870,7 @@ msgid "To Submit"
 msgstr "Илгээх"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:336
+#: code:addons/hr_holidays/hr_holidays.py:354
 #: view:hr.holidays:0
 #: selection:hr.holidays,type:0
 #: field:resource.calendar.leaves,holiday_id:0
@@ -890,9 +885,15 @@ msgid "Description"
 msgstr "Тайлбар"
 
 #. module: hr_holidays
+#: view:hr.employee:0
+#: field:hr.employee,remaining_leaves:0
+msgid "Remaining Legal Leaves"
+msgstr "Цалинтай амралт, чөлөөний үлдэгдэл"
+
+#. module: hr_holidays
 #: selection:hr.holidays,holiday_type:0
 msgid "By Employee Tag"
-msgstr "Ажилчны Таагаар"
+msgstr "Ажилчны Пайзаар"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
@@ -967,6 +968,12 @@ msgid "Both Approved and Confirmed"
 msgstr "Батлагдсан болон Магадлагдсан хоёулаа"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:451
+#, python-format
+msgid "Request approved, waiting second validation."
+msgstr ""
+
+#. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Approve"
 msgstr "Зөвшөөрөх"
@@ -977,17 +984,17 @@ msgid "Messages and communication history"
 msgstr "Зурвас болон харилцсан түүх"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:249
-#: code:addons/hr_holidays/hr_holidays.py:274
+#: code:addons/hr_holidays/hr_holidays.py:260
+#: code:addons/hr_holidays/hr_holidays.py:285
 #: sql_constraint:hr.holidays:0
 #, python-format
 msgid "The start date must be anterior to the end date."
 msgstr "Төгсгөлийн огнооноос эхлэлийн огноо нь өмнө нь байх ёстой"
 
 #. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_holidays
-msgid "Leave"
-msgstr "Амралт, чөлөө"
+#: xsl:holidays.summary:0
+msgid "Analyze from"
+msgstr "Дараахаас шинжлэх"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,double_validation:0
@@ -1072,3 +1079,16 @@ msgstr "Амралт, чөлөөний шалтгаан"
 #: field:hr.holidays.summary.employee,holiday_type:0
 msgid "Select Leave Type"
 msgstr "Чөлөөний төрөлийг сонгох"
+
+#, python-format
+#~ msgid "Request <b>approved</b>, waiting second validation."
+#~ msgstr "Хүсэлт <b>батлагдсан</b>, хоёр дахь шалгалтыг хүлээж байна."
+
+#~ msgid "Legal Leaves 2012"
+#~ msgstr "Цалинтай чөлөө 2012"
+
+#~ msgid "The employee or employee category of this request is missing."
+#~ msgstr "Энэ хүсэлтийн ажилчин эсвэл ажилчны ангилал байхгүй байна."
+
+#~ msgid "Request confirmed, waiting confirmation"
+#~ msgstr "Хүсэлт батлагдсан, магадлагааг хүлээж байна"

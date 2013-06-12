@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-07 08:58+0000\n"
-"Last-Translator: WANTELLET Sylvain <Swantellet@tetra-info.com>\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-06-10 12:45+0000\n"
+"Last-Translator: Gilles Major (OpenERP) <gim@openerp.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:53+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-11 06:31+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -152,6 +152,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Contient le résumé de la discussion (nombre de messages, ...). Ce résumé est "
+"au format HTML pour permettre son utilisation dans la vue kanban."
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_servicerfq0
@@ -307,6 +309,8 @@ msgid ""
 "                                will contain the raw materials, instead of "
 "the finished product."
 msgstr ""
+"Lors du traitement de la commande de ce produit, le bon de livraison\n"
+"contiendra les matières premières au lieu du produit fini."
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -530,7 +534,7 @@ msgid "Scheduled Date"
 msgstr "Date planifiée"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:124
+#: code:addons/mrp/procurement.py:129
 #, python-format
 msgid "Manufacturing Order <em>%s</em> created."
 msgstr "Ordre de fabrication <em>%s</em> créé."
@@ -728,7 +732,7 @@ msgid "Work Center Load"
 msgstr "Occupation du poste de charge"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:50
+#: code:addons/mrp/procurement.py:55
 #, python-format
 msgid "No BoM defined for this product !"
 msgstr "Pas de nomenclature définie pour cet article !"
@@ -1064,7 +1068,7 @@ msgid "BoM Type"
 msgstr "Type de nomenclature"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:52
+#: code:addons/mrp/procurement.py:57
 #, python-format
 msgid ""
 "Procurement '%s' has an exception: 'No BoM defined for this product !'"
@@ -1159,7 +1163,6 @@ msgstr "Inactif"
 #: view:mrp.config.settings:0
 #: view:mrp.product.produce:0
 #: view:mrp.product_price:0
-#: view:mrp.production:0
 #: view:mrp.workcenter.load:0
 msgid "Cancel"
 msgstr "Annuler"
@@ -1181,7 +1184,7 @@ msgstr "En retard"
 #. module: mrp
 #: model:process.node,name:mrp.process_node_servicemts0
 msgid "Make to stock"
-msgstr "Production sur stock"
+msgstr "Approvisionnement sur stock"
 
 #. module: mrp
 #: report:bom.structure:0
@@ -1200,7 +1203,7 @@ msgstr "Ordres de fabrication"
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Awaiting Raw Materials"
-msgstr ""
+msgstr "Attente de matières premières"
 
 #. module: mrp
 #: field:mrp.bom,position:0
@@ -1501,7 +1504,7 @@ msgstr "Jours de sécurité pour chaque opération de production."
 #: model:process.transition,name:mrp.process_transition_servicemts0
 #: model:process.transition,name:mrp.process_transition_stockmts0
 msgid "Make to Stock"
-msgstr "Production sur stock"
+msgstr "Approvisionnement sur stock"
 
 #. module: mrp
 #: constraint:mrp.production:0
@@ -1515,7 +1518,7 @@ msgid ""
 "purchase order."
 msgstr ""
 "Dans le cas où la méthode de fourniture de l'article est \"Acheter\", le "
-"système va créer un ordre d'achat."
+"système va créer une commande d'achat."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_order
@@ -1792,7 +1795,7 @@ msgstr "Fabriquer"
 #: model:process.transition,name:mrp.process_transition_servicemto0
 #: model:process.transition,name:mrp.process_transition_stockproduct0
 msgid "Make to Order"
-msgstr "Production à la demande"
+msgstr "Approvisionnement à la demande"
 
 #. module: mrp
 #: help:mrp.workcenter,note:0
@@ -1971,6 +1974,11 @@ msgstr "Unité de mesure par défaut"
 #: field:mrp.workcenter,time_cycle:0
 msgid "Time for 1 cycle (hour)"
 msgstr "Temps pour 1 cycle (en heures)"
+
+#. module: mrp
+#: view:mrp.production:0
+msgid "Cancel Production"
+msgstr "Annuler la production"
 
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.report_mrp_production_report
@@ -2325,7 +2333,7 @@ msgstr "Le type d'article est stockable ou consommable."
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Production Started"
-msgstr "La production a démarré."
+msgstr "La production a démarré"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_procureproducts0
@@ -2360,6 +2368,8 @@ msgid ""
 "                        The delivery order will be ready once the production "
 "is done."
 msgstr ""
+"en utilisant la nomenclature associée à ce produit.\n"
+"Le bon de livraison sera prêt à l'issue de la production."
 
 #. module: mrp
 #: field:mrp.config.settings,module_stock_no_autopicking:0

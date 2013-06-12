@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-03-16 13:22+0000\n"
+"Last-Translator: Fábio Martinelli - http://zupy.com.br "
+"<webmaster@guaru.net>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:01+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:39+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: project
 #: view:project.project:0
@@ -85,7 +86,7 @@ msgid "Start Task"
 msgstr "Iniciar Tarefa"
 
 #. module: project
-#: code:addons/project/project.py:932
+#: code:addons/project/project.py:944
 #, python-format
 msgid "Warning !"
 msgstr "Aviso!"
@@ -138,8 +139,8 @@ msgstr ""
 "kanban."
 
 #. module: project
-#: code:addons/project/project.py:432
-#: code:addons/project/project.py:1305
+#: code:addons/project/project.py:444
+#: code:addons/project/project.py:1332
 #, python-format
 msgid "Warning!"
 msgstr "Atenção!"
@@ -211,9 +212,18 @@ msgid "Planned Time"
 msgstr "Tempo Planejado"
 
 #. module: project
-#: selection:project.project,privacy_visibility:0
-msgid "Public"
-msgstr "Público"
+#: view:project.task:0
+#: selection:project.task,state:0
+#: selection:project.task.delegate,state:0
+#: selection:project.task.history,state:0
+#: selection:project.task.history.cumulative,state:0
+#: model:project.task.type,name:project.project_tt_deployment
+#: selection:project.task.type,state:0
+#: view:report.project.task.user:0
+#: selection:report.project.task.user,state:0
+#: view:res.partner:0
+msgid "Done"
+msgstr "Concluído"
 
 #. module: project
 #: model:project.category,name:project.project_category_01
@@ -338,6 +348,11 @@ msgid "June"
 msgstr "Junho"
 
 #. module: project
+#: view:project.task:0
+msgid "Gantt View"
+msgstr "Visualização Gantt"
+
+#. module: project
 #: selection:report.project.task.user,month:0
 msgid "October"
 msgstr "Outubro"
@@ -372,6 +387,11 @@ msgid "Summary"
 msgstr "Resumo"
 
 #. module: project
+#: view:project.task:0
+msgid "Task summary..."
+msgstr "Resumo da tarefa..."
+
+#. module: project
 #: view:project.project:0
 msgid "Append this project to another one using analytic accounts hierarchy"
 msgstr ""
@@ -402,7 +422,7 @@ msgid "Assigned to"
 msgstr "Atribuída para"
 
 #. module: project
-#: code:addons/project/project.py:1021
+#: code:addons/project/project.py:1033
 #, python-format
 msgid "Delegated User should be specified"
 msgstr "É necessário especificar o usuário delegado"
@@ -483,6 +503,11 @@ msgstr "Delegar Responsabilidade"
 #: field:project.task,create_date:0
 msgid "Create Date"
 msgstr "Data de Criação"
+
+#. module: project
+#: view:project.task:0
+msgid "Add a Description..."
+msgstr "Adicione uma Descrição..."
 
 #. module: project
 #: view:res.partner:0
@@ -885,6 +910,11 @@ msgid "GTD"
 msgstr "GTD"
 
 #. module: project
+#: view:project.project:0
+msgid "Project Stages"
+msgstr "Estágios do Projeto"
+
+#. module: project
 #: help:project.task,state:0
 msgid ""
 "The status is set to 'Draft', when a case is created.                      "
@@ -945,6 +975,11 @@ msgid "10"
 msgstr "10"
 
 #. module: project
+#: view:project.project:0
+msgid "Cancel Project"
+msgstr "Cancelar Projeto"
+
+#. module: project
 #: help:project.project,analytic_account_id:0
 msgid ""
 "Link this project to an analytic account if you need financial management on "
@@ -959,7 +994,6 @@ msgstr ""
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
 #: view:project.config.settings:0
-#: view:project.project:0
 #: view:project.task.delegate:0
 #: view:project.task.reevaluate:0
 msgid "Cancel"
@@ -1016,9 +1050,22 @@ msgid "Manager"
 msgstr "Gerente"
 
 #. module: project
-#: selection:project.task,priority:0
-msgid "Important"
-msgstr "Importante"
+#: model:ir.actions.act_window,help:project.project_category_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a new tag.\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Clique para adicionar uma nova tag.\n"
+"              </p>\n"
+"            "
+
+#. module: project
+#: model:ir.ui.menu,name:project.menu_task_types_view
+msgid "Task Stages"
+msgstr "Estágios da Tarefa"
 
 #. module: project
 #: field:project.category,name:0
@@ -1261,9 +1308,9 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "Calculado como: Tempo Gasto + Tempo Restante"
 
 #. module: project
-#: code:addons/project/project.py:356
-#: code:addons/project/project.py:377
-#: code:addons/project/project.py:709
+#: code:addons/project/project.py:368
+#: code:addons/project/project.py:389
+#: code:addons/project/project.py:721
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (cópia)"
@@ -1299,6 +1346,11 @@ msgstr "project.task.reevaluate"
 #: field:project.task,delay_hours:0
 msgid "Delay Hours"
 msgstr "Horas de Atraso"
+
+#. module: project
+#: view:project.task.type:0
+msgid "Add a description..."
+msgstr "Adicionar uma descrição ..."
 
 #. module: project
 #: view:project.project:0
@@ -1395,6 +1447,9 @@ msgid "Pending"
 msgstr "Pendente"
 
 #. module: project
+#: model:ir.actions.act_window,name:project.project_category_action
+#: model:ir.ui.menu,name:project.menu_project_category_act
+#: view:project.category:0
 #: field:project.task,categ_ids:0
 msgid "Tags"
 msgstr "Marcadores"
@@ -1468,24 +1523,15 @@ msgstr ""
 "Projeto quando a tarefa está no estado Provisório."
 
 #. module: project
-#: code:addons/project/project.py:220
+#: code:addons/project/project.py:230
 #, python-format
 msgid "Attachments"
 msgstr "Anexos"
 
 #. module: project
-#: view:project.task:0
-#: selection:project.task,state:0
-#: selection:project.task.delegate,state:0
-#: selection:project.task.history,state:0
-#: selection:project.task.history.cumulative,state:0
-#: model:project.task.type,name:project.project_tt_deployment
-#: selection:project.task.type,state:0
-#: view:report.project.task.user:0
-#: selection:report.project.task.user,state:0
-#: view:res.partner:0
-msgid "Done"
-msgstr "Concluído"
+#: view:project.category:0
+msgid "Issue Version"
+msgstr "Versão do Incidente"
 
 #. module: project
 #: code:addons/project/project.py:182
@@ -1606,7 +1652,7 @@ msgid "Overpassed Tasks"
 msgstr "Tarefas Atrasadas"
 
 #. module: project
-#: code:addons/project/project.py:932
+#: code:addons/project/project.py:944
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1670,7 +1716,7 @@ msgid "CHECK: "
 msgstr "VERIFIQUE: "
 
 #. module: project
-#: code:addons/project/project.py:432
+#: code:addons/project/project.py:444
 #, python-format
 msgid "You must assign members on the project '%s' !"
 msgstr "Você precisa associar membros no projeto '%s' !"
@@ -1726,9 +1772,9 @@ msgid "Generate tasks from sale orders"
 msgstr "Gerar tarefas a partir de pedidos de vendas"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_task_types_view
-msgid "Task Stages"
-msgstr "Estágios da Tarefa"
+#: selection:project.task,priority:0
+msgid "Important"
+msgstr "Importante"
 
 #. module: project
 #: model:process.node,note:project.process_node_drafttask0
@@ -1775,6 +1821,7 @@ msgid "Cancelled"
 msgstr "Cancelado"
 
 #. module: project
+#: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,help:project.action_view_task
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -1913,7 +1960,7 @@ msgid "Starting Date"
 msgstr "Data de Início"
 
 #. module: project
-#: code:addons/project/project.py:398
+#: code:addons/project/project.py:410
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:0
@@ -2083,7 +2130,7 @@ msgid "Reevaluation Task"
 msgstr "Tarefa de Reavaliação"
 
 #. module: project
-#: code:addons/project/project.py:1305
+#: code:addons/project/project.py:1332
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr "Por favor exclua o projeto associado a esta conta primeiro."
@@ -2195,11 +2242,6 @@ msgstr ""
 "                O módulo project_issue_sheet será instalado."
 
 #. module: project
-#: selection:project.project,privacy_visibility:0
-msgid "Followers Only"
-msgstr "Somente Seguidores"
-
-#. module: project
 #: view:board.board:0
 #: field:project.project,task_count:0
 msgid "Open Tasks"
@@ -2235,8 +2277,13 @@ msgid "Year"
 msgstr "Ano"
 
 #. module: project
-#: view:project.project:0
 #: field:project.project,type_ids:0
 #: view:project.task.type:0
 msgid "Tasks Stages"
 msgstr "Estágio de Tarefas"
+
+#~ msgid "Public"
+#~ msgstr "Público"
+
+#~ msgid "Followers Only"
+#~ msgstr "Somente Seguidores"

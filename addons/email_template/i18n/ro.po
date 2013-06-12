@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-01-23 21:20+0000\n"
-"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"PO-Revision-Date: 2013-03-13 18:52+0000\n"
+"Last-Translator: ERPSystems.ro <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-24 05:35+0000\n"
-"X-Generator: Launchpad (build 16445)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:21+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: email_template
 #: field:email.template,email_from:0
@@ -24,9 +24,10 @@ msgid "From"
 msgstr "De la"
 
 #. module: email_template
-#: field:mail.compose.message,template_id:0
-msgid "Template"
-msgstr "Sablon"
+#: view:res.partner:0
+msgid ""
+"Partners that did not ask not to be included in mass mailing campaigns"
+msgstr ""
 
 #. module: email_template
 #: help:email.template,ref_ir_value:0
@@ -40,10 +41,17 @@ msgid "Opt-Out"
 msgstr "Nu participati"
 
 #. module: email_template
-#: field:email.template,email_to:0
-#: field:email_template.preview,email_to:0
-msgid "To (Emails)"
-msgstr "Destinatar (Email-uri)"
+#: view:email.template:0
+msgid "Email contents (in raw HTML format)"
+msgstr "Cuprinsul email-ului (in format HTML brut)"
+
+#. module: email_template
+#: help:email.template,email_from:0
+#: help:email_template.preview,email_from:0
+msgid ""
+"Sender address (placeholders may be used here). If not set, the default "
+"value will be the author's email alias if configured, or email address."
+msgstr ""
 
 #. module: email_template
 #: field:email.template,mail_server_id:0
@@ -68,31 +76,21 @@ msgid "Field"
 msgstr "Camp"
 
 #. module: email_template
-#: help:email.template,email_from:0
-#: help:email_template.preview,email_from:0
-msgid "Sender address (placeholders may be used here)"
-msgstr "Adresa expeditorului (aici pot fi folositi inlocuitori)"
-
-#. module: email_template
 #: view:email.template:0
 msgid "Remove context action"
 msgstr "Sterge actiunea cadru"
-
-#. module: email_template
-#: help:email.template,mail_server_id:0
-#: help:email_template.preview,mail_server_id:0
-msgid ""
-"Optional preferred server for outgoing mails. If not set, the highest "
-"priority one will be used."
-msgstr ""
-"Server optional preferat pentru trimiterea e-mail-urilor. Daca nu este "
-"setat, va fi folosit cel cu prioritatea cea mai mare."
 
 #. module: email_template
 #: field:email.template,report_name:0
 #: field:email_template.preview,report_name:0
 msgid "Report Filename"
 msgstr "Raport nume fisier"
+
+#. module: email_template
+#: field:email.template,email_to:0
+#: field:email_template.preview,email_to:0
+msgid "To (Emails)"
+msgstr "Destinatar (Email-uri)"
 
 #. module: email_template
 #: view:email.template:0
@@ -117,10 +115,15 @@ msgid "Body"
 msgstr "Conţinut"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:244
+#: code:addons/email_template/email_template.py:247
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copie)"
+
+#. module: email_template
+#: field:mail.compose.message,template_id:0
+msgid "Template"
+msgstr "Sablon"
 
 #. module: email_template
 #: help:email.template,user_signature:0
@@ -153,6 +156,11 @@ msgstr ""
 "modelul documentului la care se refera relatia."
 
 #. module: email_template
+#: view:res.partner:0
+msgid "Available for mass mailing"
+msgstr ""
+
+#. module: email_template
 #: model:ir.model,name:email_template.model_email_template
 msgid "Email Templates"
 msgstr "Sabloane e-mail"
@@ -167,6 +175,12 @@ msgstr ""
 "Numele care va fi folosit pentru fisierul raportului generat (poate sa "
 "contina inlocuitori)\n"
 "Extensia poate sa fie omisa, iar atunci va reiesi din tipul raportului."
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:234
+#, python-format
+msgid "Warning"
+msgstr "Atentionare"
 
 #. module: email_template
 #: field:email.template,ref_ir_act_window:0
@@ -187,7 +201,7 @@ msgstr ""
 "trimiteti un e-mail. Daca nu este setata, va fi folosita versiunea in limba "
 "engleza. Aceasta ar trebui de obicei sa fie o expresie inlocuitoare care "
 "furnizeaza codul limbii corespunzatoare, de exemplu "
-"${obiect.partener_id.cod.limba}."
+"${object.partner_id.lang.code}."
 
 #. module: email_template
 #: field:email_template.preview,res_id:0
@@ -257,6 +271,14 @@ msgstr "Previzualizare a"
 #: view:email_template.preview:0
 msgid "Using sample document"
 msgstr "Utilizare document de probă"
+
+#. module: email_template
+#: help:res.partner,opt_out:0
+msgid ""
+"If opt-out is checked, this contact has refused to receive emails for mass "
+"mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
+"users to filter the partners when performing mass mailing."
+msgstr ""
 
 #. module: email_template
 #: view:email.template:0
@@ -407,7 +429,7 @@ msgid "Attachments"
 msgstr "Atasamente"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:231
+#: code:addons/email_template/email_template.py:234
 #, python-format
 msgid "Deletion of the action record failed."
 msgstr "Stergerea inregistrarii actiunii a esuat."
@@ -416,7 +438,7 @@ msgstr "Stergerea inregistrarii actiunii a esuat."
 #: field:email.template,email_cc:0
 #: field:email_template.preview,email_cc:0
 msgid "Cc"
-msgstr "Cc (copie carbon)"
+msgstr "Cc"
 
 #. module: email_template
 #: field:email.template,model_id:0
@@ -436,19 +458,20 @@ msgid "Email Details"
 msgstr "Detalii e-mail"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:196
+#: code:addons/email_template/email_template.py:199
 #, python-format
 msgid "Send Mail (%s)"
 msgstr "Trimite email (%s)"
 
 #. module: email_template
-#: help:res.partner,opt_out:0
+#: help:email.template,mail_server_id:0
+#: help:email_template.preview,mail_server_id:0
 msgid ""
-"If checked, this partner will not receive any automated email notifications, "
-"such as the availability of invoices."
+"Optional preferred server for outgoing mails. If not set, the highest "
+"priority one will be used."
 msgstr ""
-"Daca bifati, acest partener nu va primi nicio notificare automata prin e-"
-"mail, cum ar fi disponibilitatea facturilor."
+"Server optional preferat pentru trimiterea e-mail-urilor. Daca nu este "
+"setat, va fi folosit cel cu prioritatea cea mai mare."
 
 #. module: email_template
 #: help:email.template,auto_delete:0
@@ -474,10 +497,9 @@ msgstr ""
 "destinatie (sub-model)."
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:231
-#, python-format
-msgid "Warning"
-msgstr "Atentionare"
+#: view:res.partner:0
+msgid "Suppliers"
+msgstr ""
 
 #. module: email_template
 #: field:email.template,user_signature:0
@@ -523,3 +545,13 @@ msgstr "Cuprins"
 #: field:email_template.preview,subject:0
 msgid "Subject"
 msgstr "Subiect"
+
+#~ msgid "Sender address (placeholders may be used here)"
+#~ msgstr "Adresa expeditorului (aici pot fi folositi inlocuitori)"
+
+#~ msgid ""
+#~ "If checked, this partner will not receive any automated email notifications, "
+#~ "such as the availability of invoices."
+#~ msgstr ""
+#~ "Daca bifati, acest partener nu va primi nicio notificare automata prin e-"
+#~ "mail, cum ar fi disponibilitatea facturilor."

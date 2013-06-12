@@ -7,28 +7,28 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:34+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:13+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
 msgid "Reconciliation"
-msgstr ""
+msgstr "Сверка"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_config_settings
 msgid "account.config.settings"
-msgstr ""
+msgstr "account.config.settings"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:357
+#: code:addons/account_voucher/account_voucher.py:417
 #, python-format
 msgid "Write-Off"
 msgstr "Списание"
@@ -46,7 +46,7 @@ msgstr "Общая сумма"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Open Customer Journal Entries"
-msgstr ""
+msgstr "Открыть записи журнала по заказчику"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -64,7 +64,7 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "(Update)"
-msgstr ""
+msgstr "(Обновить)"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -91,7 +91,7 @@ msgstr "Март"
 #. module: account_voucher
 #: field:account.voucher,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Непрочитанные"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -114,15 +114,22 @@ msgid "Transaction reference number."
 msgstr "Номер транзакции."
 
 #. module: account_voucher
-#: view:sale.receipt.report:0
-msgid "Group by year of Invoice Date"
+#: view:account.voucher:0
+msgid "Allocation"
+msgstr "Распределение"
+
+#. module: account_voucher
+#: help:account.voucher,currency_help_label:0
+msgid ""
+"This sentence helps you to know how to specify the payment rate by giving "
+"you the direct effect it has"
 msgstr ""
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,user_id:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Продавец"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -130,11 +137,18 @@ msgid "Voucher Statistics"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1533
+#: code:addons/account_voucher/account_voucher.py:1641
 #, python-format
 msgid ""
 "You can not change the journal as you already reconciled some statement "
 "lines!"
+msgstr ""
+"Вы не можете изменить журнал, так как вы уже сверили некоторые позиции "
+"документа!"
+
+#. module: account_voucher
+#: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
+msgid "Status changed"
 msgstr ""
 
 #. module: account_voucher
@@ -146,7 +160,7 @@ msgstr "Утвердить"
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_payment
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_payment
 msgid "Supplier Payments"
-msgstr ""
+msgstr "Оплаты поставщикам"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
@@ -168,7 +182,7 @@ msgstr "Искать ваучеры"
 #. module: account_voucher
 #: field:account.voucher,writeoff_acc_id:0
 msgid "Counterpart Account"
-msgstr ""
+msgstr "Корреспондирующий счет"
 
 #. module: account_voucher
 #: field:account.voucher,account_id:0
@@ -190,7 +204,7 @@ msgstr "OK"
 #. module: account_voucher
 #: field:account.voucher.line,reconcile:0
 msgid "Full Reconcile"
-msgstr ""
+msgstr "Полная сверка"
 
 #. module: account_voucher
 #: field:account.voucher,date_due:0
@@ -208,7 +222,7 @@ msgstr "Примечания"
 #. module: account_voucher
 #: field:account.voucher,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Сообщения"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
@@ -222,11 +236,11 @@ msgid "Journal Item"
 msgstr "Элемент журнала"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:496
-#: code:addons/account_voucher/account_voucher.py:967
+#: code:addons/account_voucher/account_voucher.py:558
+#: code:addons/account_voucher/account_voucher.py:1073
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Ошибка!"
 
 #. module: account_voucher
 #: field:account.voucher.line,amount:0
@@ -236,6 +250,11 @@ msgstr "Суммма"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Payment Options"
+msgstr "Варианты оплаты"
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "e.g. 003/10"
 msgstr ""
 
 #. module: account_voucher
@@ -250,11 +269,13 @@ msgid "Cancelled"
 msgstr "Отменено"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1139
+#: code:addons/account_voucher/account_voucher.py:1249
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
 msgstr ""
+"Вы должны настроить код базового счета и код налогового счета для налога "
+"'%s'!"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
@@ -272,7 +293,7 @@ msgstr ""
 #. module: account_voucher
 #: help:account.voucher,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Если отмечено, новые сообщения требуют вашего внимания."
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_bank_statement_line
@@ -286,20 +307,21 @@ msgid "Day"
 msgstr "День"
 
 #. module: account_voucher
+#: view:account.voucher:0
 #: field:account.voucher,tax_id:0
 msgid "Tax"
 msgstr "Налог"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:867
+#: code:addons/account_voucher/account_voucher.py:971
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Неверное действие!"
 
 #. module: account_voucher
 #: field:account.voucher,comment:0
 msgid "Counterpart Comment"
-msgstr ""
+msgstr "Корреспондирующий коментарий"
 
 #. module: account_voucher
 #: field:account.voucher.line,account_analytic_id:0
@@ -312,6 +334,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Содержит сводку по Чаттеру (количество сообщений,...). Эта сводка в формате "
+"html для возможности использования в канбан виде"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -326,7 +350,7 @@ msgstr "Информация о платеже"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "(update)"
-msgstr ""
+msgstr "(обновить)"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -342,7 +366,12 @@ msgid "Import Invoices"
 msgstr "Импорт счетов"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1098
+#: view:account.voucher:0
+msgid "e.g. Invoice SAJ/0042"
+msgstr ""
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:1208
 #, python-format
 msgid "Wrong voucher line"
 msgstr ""
@@ -361,7 +390,7 @@ msgid "Receipt"
 msgstr "Приход"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1004
+#: code:addons/account_voucher/account_voucher.py:1110
 #, python-format
 msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
@@ -376,13 +405,18 @@ msgstr "Позиции продаж"
 
 #. module: account_voucher
 #: view:account.voucher:0
+msgid "Cancel Voucher"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
 #: field:account.voucher,period_id:0
 msgid "Period"
 msgstr "Период"
 
 #. module: account_voucher
 #: view:account.voucher:0
-#: code:addons/account_voucher/account_voucher.py:199
+#: code:addons/account_voucher/account_voucher.py:231
 #, python-format
 msgid "Supplier"
 msgstr "Поставщик"
@@ -395,7 +429,7 @@ msgstr "Ваучер поставщика"
 #. module: account_voucher
 #: field:account.voucher,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Подписчики"
 
 #. module: account_voucher
 #: selection:account.voucher.line,type:0
@@ -403,10 +437,10 @@ msgid "Debit"
 msgstr "Дебет"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1533
+#: code:addons/account_voucher/account_voucher.py:1641
 #, python-format
 msgid "Unable to change journal !"
-msgstr ""
+msgstr "Невозможно изменить журнал!"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -426,10 +460,12 @@ msgid "Pro-forma Vouchers"
 msgstr ""
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: model:ir.actions.act_window,name:account_voucher.act_journal_voucher_open
-msgid "Voucher Entries"
-msgstr "Проводки ваучера"
+#: code:addons/account_voucher/account_voucher.py:318
+#, python-format
+msgid ""
+"At the operation date, the exchange rate was\n"
+"%s = %s"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_vendor_payment
@@ -446,7 +482,7 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Open Supplier Journal Entries"
-msgstr ""
+msgstr "Открыть журнал проводок по поставщику"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
@@ -459,8 +495,19 @@ msgid "Memo"
 msgstr "Памятка"
 
 #. module: account_voucher
+#: code:addons/account_voucher/invoice.py:34
+#, python-format
+msgid "Pay Invoice"
+msgstr "Оплата счета"
+
+#. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure to unreconcile and cancel this record ?"
+msgstr "Вы уверены, что надо отменить сверку и саму запись ?"
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Sales Receipt"
 msgstr ""
 
 #. module: account_voucher
@@ -494,22 +541,21 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,writeoff_amount:0
 msgid "Difference Amount"
-msgstr ""
+msgstr "Сумма разницы"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,due_delay:0
 msgid "Avg. Due Delay"
+msgstr "Средн. задержка"
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Are you sure you want to unreconcile this record?"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/invoice.py:34
-#, python-format
-msgid "Pay Invoice"
-msgstr "Оплата счета"
-
-#. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1139
+#: code:addons/account_voucher/account_voucher.py:1249
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr ""
@@ -554,7 +600,7 @@ msgstr "Оплаченная сумма"
 #. module: account_voucher
 #: field:account.voucher,payment_option:0
 msgid "Payment Difference"
-msgstr ""
+msgstr "Оплата разницы"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -563,15 +609,15 @@ msgid "To Review"
 msgstr "Для проверки"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1011
-#: code:addons/account_voucher/account_voucher.py:1025
-#: code:addons/account_voucher/account_voucher.py:1180
+#: code:addons/account_voucher/account_voucher.py:1120
+#: code:addons/account_voucher/account_voucher.py:1134
+#: code:addons/account_voucher/account_voucher.py:1286
 #, python-format
 msgid "change"
-msgstr ""
+msgstr "изменить"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1000
+#: code:addons/account_voucher/account_voucher.py:1106
 #, python-format
 msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
@@ -585,11 +631,6 @@ msgid "Expense Lines"
 msgstr "Позиции расходов"
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Sale voucher"
-msgstr ""
-
-#. module: account_voucher
 #: help:account.voucher,is_multi_currency:0
 msgid ""
 "Fields with internal purpose only that depicts if the voucher is a multi "
@@ -599,7 +640,7 @@ msgstr ""
 #. module: account_voucher
 #: view:account.invoice:0
 msgid "Register Payment"
-msgstr ""
+msgstr "Регистрация оплаты"
 
 #. module: account_voucher
 #: field:account.statement.from.invoice.lines,line_ids:0
@@ -614,7 +655,7 @@ msgstr "декабрём"
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Group by month of Invoice Date"
-msgstr ""
+msgstr "Группировать по месяцу даты счета"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -625,6 +666,7 @@ msgstr "&#1052;&#1077;&#1089;&#1103;&#1094;"
 #. module: account_voucher
 #: field:account.voucher,currency_id:0
 #: field:account.voucher.line,currency_id:0
+#: model:ir.model,name:account_voucher.model_res_currency
 #: field:sale.receipt.report,currency_id:0
 msgid "Currency"
 msgstr "Валюта"
@@ -645,11 +687,6 @@ msgid "Voucher Status"
 msgstr ""
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Are you sure to unreconcile this record?"
-msgstr ""
-
-#. module: account_voucher
 #: field:account.voucher,company_id:0
 #: field:account.voucher.line,company_id:0
 #: view:sale.receipt.report:0
@@ -665,13 +702,18 @@ msgstr ""
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
 msgid "Reconcile Payment Balance"
+msgstr "Сверка платежного баланса"
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Cancel Receipt"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:963
+#: code:addons/account_voucher/account_voucher.py:1067
 #, python-format
 msgid "Configuration Error !"
-msgstr ""
+msgstr "Ошибка конфигурации !"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -695,18 +737,18 @@ msgstr ""
 #: field:account.voucher,state:0
 #: view:sale.receipt.report:0
 msgid "Status"
-msgstr ""
+msgstr "Статус"
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Allocation"
-msgstr ""
+#: view:sale.receipt.report:0
+msgid "Group by year of Invoice Date"
+msgstr "Группировать по году в дате счета"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice.lines:0
 #: view:account.voucher:0
 msgid "or"
-msgstr ""
+msgstr "или"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -716,7 +758,7 @@ msgstr "Август"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Validate Payment"
-msgstr ""
+msgstr "Утвердить оплату"
 
 #. module: account_voucher
 #: help:account.voucher,audit:0
@@ -724,6 +766,8 @@ msgid ""
 "Check this box if you are unsure of that journal entry and if you want to "
 "note it as 'to be reviewed' by an accounting expert."
 msgstr ""
+"Отметьте, если вы не уверены в этой проводке журнала и хотите отметить её "
+"\"для проверки\" опытному бухгалтеру."
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -731,10 +775,10 @@ msgid "October"
 msgstr "Октябрь"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:964
+#: code:addons/account_voucher/account_voucher.py:1068
 #, python-format
 msgid "Please activate the sequence of selected journal !"
-msgstr ""
+msgstr "Пожалуйста, включите нумерацию выбранного журнала!"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -749,10 +793,9 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,paid:0
 msgid "Paid"
-msgstr ""
+msgstr "Оплачено"
 
 #. module: account_voucher
-#: view:account.voucher:0
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
 msgid "Sales Receipts"
@@ -761,7 +804,7 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Подписан"
 
 #. module: account_voucher
 #: field:account.voucher,analytic_id:0
@@ -788,7 +831,7 @@ msgstr "Расширенные фильтры..."
 #. module: account_voucher
 #: field:account.voucher,paid_amount_in_company_currency:0
 msgid "Paid Amount in Company Currency"
-msgstr ""
+msgstr "Оплаченная сумма в валюте компании"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,amount_reconciled:0
@@ -812,10 +855,10 @@ msgid "Previous Payments ?"
 msgstr "Предыдущие платежи ?"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1098
+#: code:addons/account_voucher/account_voucher.py:1208
 #, python-format
 msgid "The invoice you are willing to pay is not valid anymore."
-msgstr ""
+msgstr "Счет, который вы готовы платить, уже не актуален ."
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -831,30 +874,30 @@ msgstr "Журнал ваучеров"
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Компании"
 
 #. module: account_voucher
 #: field:account.voucher,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Итог"
 
 #. module: account_voucher
 #: field:account.voucher,active:0
 msgid "Active"
-msgstr ""
+msgstr "Активно"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:968
+#: code:addons/account_voucher/account_voucher.py:1074
 #, python-format
 msgid "Please define a sequence on the journal."
-msgstr ""
+msgstr "Пожалуйста, определите нумерацию журнала."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.act_pay_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
 msgid "Customer Payments"
-msgstr ""
+msgstr "Платежи клиентов"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt_report_all
@@ -866,7 +909,7 @@ msgstr ""
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Group by Invoice Date"
-msgstr ""
+msgstr "Группировать по дате счета"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -877,6 +920,11 @@ msgstr ""
 #: view:account.voucher:0
 msgid "Invoices and outstanding transactions"
 msgstr "Счета и незавершенные операции"
+
+#. module: account_voucher
+#: field:account.voucher,currency_help_label:0
+msgid "Helping Sentence"
+msgstr ""
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -972,7 +1020,7 @@ msgid "Journal Items"
 msgstr "Элементы журнала"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:496
+#: code:addons/account_voucher/account_voucher.py:558
 #, python-format
 msgid "Please define default credit/debit accounts on the journal \"%s\"."
 msgstr ""
@@ -1040,11 +1088,6 @@ msgstr "Описание"
 #: selection:sale.receipt.report,month:0
 msgid "May"
 msgstr "Май"
-
-#. module: account_voucher
-#: view:account.voucher:0
-msgid "Sale Receipt"
-msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1120,6 +1163,12 @@ msgid "Ref #"
 msgstr ""
 
 #. module: account_voucher
+#: view:account.voucher:0
+#: model:ir.actions.act_window,name:account_voucher.act_journal_voucher_open
+msgid "Voucher Entries"
+msgstr "Проводки ваучера"
+
+#. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,year:0
 msgid "Year"
@@ -1181,7 +1230,7 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:867
+#: code:addons/account_voucher/account_voucher.py:971
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr ""
@@ -1239,13 +1288,8 @@ msgid "Open Balance"
 msgstr "Открытый баланс"
 
 #. module: account_voucher
-#: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
-msgid "Status <b>changed</b>"
-msgstr ""
-
-#. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1000
-#: code:addons/account_voucher/account_voucher.py:1004
+#: code:addons/account_voucher/account_voucher.py:1106
+#: code:addons/account_voucher/account_voucher.py:1110
 #, python-format
 msgid "Insufficient Configuration!"
 msgstr ""
@@ -1257,3 +1301,6 @@ msgid ""
 "inactive, which allow to hide the customer/supplier payment while the bank "
 "statement isn't confirmed."
 msgstr ""
+
+#~ msgid "Are you sure to unreconcile this record?"
+#~ msgstr "Вы уверены в отмене сверки"

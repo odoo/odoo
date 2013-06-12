@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
 "PO-Revision-Date: 2013-01-07 16:44+0000\n"
 "Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:42+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:21+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: event
 #: view:event.event:0
@@ -146,6 +146,11 @@ msgid "Confirmed events"
 msgstr "Evénements confirmés"
 
 #. module: event
+#: view:event.event:0
+msgid "ZIP"
+msgstr ""
+
+#. module: event
 #: view:report.event.registration:0
 msgid "Event Beginning Date"
 msgstr "Date de début de l'événement"
@@ -238,6 +243,11 @@ msgstr "État d'inscription"
 #: view:event.event:0
 msgid "tickets"
 msgstr "tickets"
+
+#. module: event
+#: view:event.event:0
+msgid "Street..."
+msgstr ""
 
 #. module: event
 #: view:res.partner:0
@@ -491,6 +501,7 @@ msgid "Logs"
 msgstr "Historique"
 
 #. module: event
+#: view:event.event:0
 #: field:event.event,state_id:0
 msgid "State"
 msgstr "État"
@@ -616,9 +627,10 @@ msgid ""
 msgstr ""
 
 #. module: event
-#: field:event.event,user_id:0
-msgid "Responsible User"
-msgstr "Responsable"
+#: code:addons/event/event.py:106
+#, python-format
+msgid "Only %d Seats are Available!"
+msgstr ""
 
 #. module: event
 #: code:addons/event/event.py:100
@@ -865,6 +877,11 @@ msgid "You must wait for the starting day of the event to do this action."
 msgstr ""
 
 #. module: event
+#: field:event.event,user_id:0
+msgid "Responsible User"
+msgstr "Responsable"
+
+#. module: event
 #: selection:event.event,state:0
 #: selection:report.event.registration,event_state:0
 msgid "Done"
@@ -886,9 +903,8 @@ msgid "Reply-to Email"
 msgstr ""
 
 #. module: event
-#: code:addons/event/event.py:106
-#, python-format
-msgid "Only %d Seats are Available!"
+#: view:event.event:0
+msgid "City"
 msgstr ""
 
 #. module: event
@@ -1013,6 +1029,7 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: event
+#: view:event.event:0
 #: field:event.event,country_id:0
 msgid "Country"
 msgstr "Pays"

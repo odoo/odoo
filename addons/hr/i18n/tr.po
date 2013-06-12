@@ -1,21 +1,20 @@
-# Turkish translation for openobject-addons
-# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# 	* hr
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-04-13 17:56+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:43+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:23+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -25,7 +24,7 @@ msgstr "Openerp kullanıcısı"
 #. module: hr
 #: field:hr.config.settings,module_hr_timesheet_sheet:0
 msgid "Allow timesheets validation by managers"
-msgstr ""
+msgstr "Yöneticiler tarafından zamanÇizelgelerini onaylama İzin"
 
 #. module: hr
 #: field:hr.job,requirements:0
@@ -35,7 +34,7 @@ msgstr "Gereksinimler"
 #. module: hr
 #: model:process.transition,name:hr.process_transition_contactofemployee0
 msgid "Link the employee to information"
-msgstr "Çalışanı danışmaya bağla"
+msgstr "Personeli danışma bağlantısı"
 
 #. module: hr
 #: field:hr.employee,sinid:0
@@ -59,11 +58,14 @@ msgid ""
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
+"Çalışanın orta boyutta fotoğrafı. Genellikle otomatik olarak 128x128px "
+"olarak boyutlandırılan en boy oranı sabit resimdir. Bu alanı form "
+"görünümünde ya da bazı kanban görünümlerinde kullanın."
 
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Time Tracking"
-msgstr ""
+msgstr "Zaman İzleme"
 
 #. module: hr
 #: view:hr.employee:0
@@ -74,17 +76,17 @@ msgstr "Gruplandır..."
 #. module: hr
 #: model:ir.actions.act_window,name:hr.view_department_form_installer
 msgid "Create Your Departments"
-msgstr "Bölümlerinizi Oluşturun"
+msgstr "Bölümlerini Oluştur"
 
 #. module: hr
 #: help:hr.job,no_of_employee:0
 msgid "Number of employees currently occupying this job position."
-msgstr ""
+msgstr "Şu anda bu pozisyonda bulunan çalışan sayısı."
 
 #. module: hr
 #: field:hr.config.settings,module_hr_evaluation:0
 msgid "Organize employees periodic evaluation"
-msgstr ""
+msgstr "Çalışanların dönemsel değerlendirilmesi"
 
 #. module: hr
 #: view:hr.department:0
@@ -99,7 +101,7 @@ msgstr "Bölüm"
 #. module: hr
 #: field:hr.employee,work_email:0
 msgid "Work Email"
-msgstr "İş Eposta"
+msgstr "İş Epostası"
 
 #. module: hr
 #: help:hr.employee,image:0
@@ -107,11 +109,13 @@ msgid ""
 "This field holds the image used as photo for the employee, limited to "
 "1024x1024px."
 msgstr ""
+"Bu alan çalışanın resmi olarak kullanılan bir fotoğrafı tutar, 1024x1024px "
+"olarak sınırlıdır."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_holidays:0
 msgid "This installs the module hr_holidays."
-msgstr ""
+msgstr "Bu, hr_holidays modülünü kurar."
 
 #. module: hr
 #: view:hr.job:0
@@ -126,7 +130,7 @@ msgstr "Seçme İşleminde"
 #. module: hr
 #: field:hr.job,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Okunmamış mesajlar"
 
 #. module: hr
 #: field:hr.department,company_id:0
@@ -134,7 +138,7 @@ msgstr ""
 #: view:hr.job:0
 #: field:hr.job,company_id:0
 msgid "Company"
-msgstr "Firma"
+msgstr "Şirket"
 
 #. module: hr
 #: field:hr.job,no_of_recruitment:0
@@ -142,45 +146,45 @@ msgid "Expected in Recruitment"
 msgstr "Seçim için Bekleniyor"
 
 #. module: hr
-#: field:res.users,employee_ids:0
-msgid "Related employees"
-msgstr ""
+#: view:hr.employee:0
+msgid "Other Information ..."
+msgstr "Diğer Bilgiler ..."
 
 #. module: hr
 #: constraint:hr.employee.category:0
 msgid "Error! You cannot create recursive Categories."
-msgstr ""
+msgstr "Hata! Sen özyinelemeli Kategoriler oluşturamazsınız."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_recruitment:0
 msgid "This installs the module hr_recruitment."
-msgstr ""
+msgstr "Bu, hr_recruitment modülünü kurar."
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Birth"
-msgstr ""
+msgstr "Doğum"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_form
 msgid "Employee Tags"
-msgstr ""
+msgstr "Personel Etiketi"
 
 #. module: hr
 #: view:hr.job:0
 msgid "Launch Recruitement"
-msgstr ""
+msgstr "Seçimi Başlat"
 
 #. module: hr
 #: model:process.transition,name:hr.process_transition_employeeuser0
 msgid "Link a user to an employee"
-msgstr "Kullanıcıyı bir çalışana bağla"
+msgstr "Kullanıcıyı bir personele bağla"
 
 #. module: hr
 #: field:hr.department,parent_id:0
 msgid "Parent Department"
-msgstr "Ana Bölüm"
+msgstr "Üst Bölüm"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
@@ -195,32 +199,32 @@ msgstr "Evli"
 #. module: hr
 #: field:hr.job,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Mesajlar"
 
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Talent Management"
-msgstr ""
+msgstr "Yetenek Yönetimi"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_timesheet_sheet:0
 msgid "This installs the module hr_timesheet_sheet."
-msgstr ""
+msgstr "Bu hr_timesheet_sheet modülünü kurar"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Mobile:"
-msgstr ""
+msgstr "Cep:"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Position"
-msgstr "Durum"
+msgstr "Pozisyonu"
 
 #. module: hr
 #: help:hr.job,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Eğer seçilirse yeni mesajlar dikkat gerektirir."
 
 #. module: hr
 #: field:hr.employee,color:0
@@ -239,7 +243,7 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,image_medium:0
 msgid "Medium-sized photo"
-msgstr ""
+msgstr "Orta boyutlu fotoğraf"
 
 #. module: hr
 #: field:hr.employee,identification_id:0
@@ -280,7 +284,7 @@ msgstr "Ofis Konumu"
 #. module: hr
 #: field:hr.job,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "İzleyiciler"
 
 #. module: hr
 #: view:hr.employee:0
@@ -301,6 +305,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is "
 "required."
 msgstr ""
+"Çalışanın ufak boyutta fotoğrafı. Genellikle kendiliğinden 64x64px olarak "
+"boyutlandırılan en boy oranı sabit resimdir. Bu alanı küçük resim gerektiren "
+"herhangi bir yerde kullanın."
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -310,12 +317,12 @@ msgstr "Doğum Tarihi"
 #. module: hr
 #: help:hr.job,no_of_recruitment:0
 msgid "Number of new employees you expect to recruit."
-msgstr ""
+msgstr "İşe almak için beklediğiniz yeni personel sayısı."
 
 #. module: hr
 #: model:ir.actions.client,name:hr.action_client_hr_menu
 msgid "Open HR Menu"
-msgstr ""
+msgstr "İK Menüsünü Aç"
 
 #. module: hr
 #: help:hr.job,message_summary:0
@@ -323,6 +330,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Sohbetçi özetini (mesaj sayısı, ...) barındırır. Bu özet doğrudan html "
+"formatında sipariş kanban görünümlerinde eklenecek."
 
 #. module: hr
 #: help:hr.config.settings,module_account_analytic_analysis:0
@@ -330,11 +339,13 @@ msgid ""
 "This installs the module account_analytic_analysis, which will install sales "
 "management too."
 msgstr ""
+"Bu, account_analytic_analysis modülünü kurar,aynı anda satış yönetimini de "
+"kuracaktır."
 
 #. module: hr
 #: view:board.board:0
 msgid "Human Resources Dashboard"
-msgstr "İnsan Kaynakları Kontrol Paneli"
+msgstr "İnsan Kaynakları Paneli"
 
 #. module: hr
 #: view:hr.employee:0
@@ -346,7 +357,7 @@ msgstr "İş"
 #. module: hr
 #: field:hr.job,no_of_employee:0
 msgid "Current Number of Employees"
-msgstr ""
+msgstr "Personel Mevcut Sayısı"
 
 #. module: hr
 #: field:hr.department,member_ids:0
@@ -366,12 +377,12 @@ msgstr "Çalışan formu ve yapısı"
 #. module: hr
 #: field:hr.config.settings,module_hr_expense:0
 msgid "Manage employees expenses"
-msgstr ""
+msgstr "Personel giderlerini yönet"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Tel:"
-msgstr ""
+msgstr "Tel:"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -381,7 +392,7 @@ msgstr "Boşanmış"
 #. module: hr
 #: field:hr.employee.category,parent_id:0
 msgid "Parent Category"
-msgstr "Ana Kategori"
+msgstr "Üst Kategori"
 
 #. module: hr
 #: view:hr.department:0
@@ -393,7 +404,12 @@ msgstr "Bölümler"
 #. module: hr
 #: model:process.node,name:hr.process_node_employeecontact0
 msgid "Employee Contact"
-msgstr "Çalışan İletişimi"
+msgstr "Personel İletişimi"
+
+#. module: hr
+#: view:hr.employee:0
+msgid "e.g. Part Time"
+msgstr "e.g. Yarı Zamanlı"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -417,6 +433,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Yeni bir iş pozisyonu oluşturmak için tıklayın.\n"
+"              </p><p>\n"
+"                İş Pozisyonları işleri ve gereksinimlerini tanımlamak için "
+"kullanılır.\n"
+"                Her iş pozisyonunda olan çalışanların sayısını tutabilir ve "
+"planlanan\n"
+"                gelişime uygun olarak izleyebilirsiniz.\n"
+"              </p><p>\n"
+"                Bir iş pozisyonu için bir anket ekleyebilirsiniz. Bu işi çin "
+"başvuranların\n"
+"                işe alım sürecinde değerlendirilmesi için kullanılacaktır.\n"
+"              </p>\n"
+"            "
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -429,26 +459,28 @@ msgid ""
 "$('.oe_employee_picture').load(function() { if($(this).width() > "
 "$(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
 msgstr ""
+"$('.oe_employee_picture').load(function() { if($(this).width() > "
+"$(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_evaluation:0
 msgid "This installs the module hr_evaluation."
-msgstr ""
+msgstr "Bu, hr_evaluation modülünü kurar."
 
 #. module: hr
 #: constraint:hr.employee:0
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr ""
+msgstr "Hata! Çalışan(lar)a özyinelemeli sıradüzeni oluşturmazsınız."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_attendance:0
 msgid "This installs the module hr_attendance."
-msgstr ""
+msgstr "Bu, hr_attendance modülünü kurar."
 
 #. module: hr
 #: field:hr.employee,image_small:0
 msgid "Smal-sized photo"
-msgstr ""
+msgstr "Küçük boyutlu fotoğraf"
 
 #. module: hr
 #: view:hr.employee.category:0
@@ -459,22 +491,22 @@ msgstr "Çalışan Kategorisi"
 #. module: hr
 #: field:hr.employee,category_ids:0
 msgid "Tags"
-msgstr ""
+msgstr "Etiketler"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_contract:0
 msgid "This installs the module hr_contract."
-msgstr ""
+msgstr "Bu, hr_contract modülünü kurar."
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Related User"
-msgstr "Bağlı Kullanıcı"
+msgstr "İlgili Kullanıcı"
 
 #. module: hr
 #: view:hr.config.settings:0
 msgid "or"
-msgstr ""
+msgstr "veya"
 
 #. module: hr
 #: field:hr.employee.category,name:0
@@ -484,17 +516,17 @@ msgstr "Kategori"
 #. module: hr
 #: view:hr.job:0
 msgid "Stop Recruitment"
-msgstr ""
+msgstr "İşe Alımı Durdur"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_attendance:0
 msgid "Install attendances feature"
-msgstr ""
+msgstr "Katılımcı özelliği yükle"
 
 #. module: hr
 #: help:hr.employee,bank_account_id:0
 msgid "Employee bank salary account"
-msgstr "Çalışan maaş banka hesabı"
+msgstr "Personel maaşı banka hesabı"
 
 #. module: hr
 #: field:hr.department,note:0
@@ -504,7 +536,7 @@ msgstr "Not"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
 msgid "Employees Structure"
-msgstr "Çalışanların Yapısı"
+msgstr "Çalışan Yapısı"
 
 #. module: hr
 #: view:hr.employee:0
@@ -512,9 +544,14 @@ msgid "Contact Information"
 msgstr "İletişim Bilgisi"
 
 #. module: hr
+#: field:res.users,employee_ids:0
+msgid "Related employees"
+msgstr "İlgili personeller"
+
+#. module: hr
 #: field:hr.config.settings,module_hr_holidays:0
 msgid "Manage holidays, leaves and allocation requests"
-msgstr ""
+msgstr "Tatil, izin ve tahsis isteklerini yönet"
 
 #. module: hr
 #: field:hr.department,child_ids:0
@@ -526,7 +563,7 @@ msgstr "Alt Bölümler"
 #: view:hr.job:0
 #: field:hr.job,state:0
 msgid "Status"
-msgstr "Durum"
+msgstr "Durumu"
 
 #. module: hr
 #: field:hr.employee,otherid:0
@@ -541,12 +578,12 @@ msgstr "Çalışan Sözleşmesi"
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Contracts"
-msgstr ""
+msgstr "Sözleşmeler"
 
 #. module: hr
 #: help:hr.job,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Mesajlar ve iletişim geçmişi"
 
 #. module: hr
 #: field:hr.employee,ssnid:0
@@ -556,12 +593,12 @@ msgstr "SGK No"
 #. module: hr
 #: field:hr.job,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Bir İzleyicidir"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_recruitment:0
 msgid "Manage the recruitment process"
-msgstr ""
+msgstr "İşe alım süreci yönetimi"
 
 #. module: hr
 #: view:hr.employee:0
@@ -571,12 +608,12 @@ msgstr "Etkin"
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Human Resources Management"
-msgstr ""
+msgstr "İnsan Kaynakları Yönetimi"
 
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Install your country's payroll"
-msgstr ""
+msgstr "Ülkenizin bordrosunu yükleyin"
 
 #. module: hr
 #: field:hr.employee,bank_account_id:0
@@ -586,12 +623,12 @@ msgstr "Banka Hesap No"
 #. module: hr
 #: view:hr.department:0
 msgid "Companies"
-msgstr "Firmalar"
+msgstr "Şirketler"
 
 #. module: hr
 #: field:hr.job,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Özet"
 
 #. module: hr
 #: model:process.transition,note:hr.process_transition_contactofemployee0
@@ -614,21 +651,29 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Yeni bir çalışan eklemek için tıklayınız.\n"
+"              </p><p>\n"
+"                OpenERP çalışan ekranında sadece hızlı bir bakış ile,\n"
+"                her kişi için gerekli tüm bilgileri kolayca bulabilirsiniz;\n"
+"                kişisel verileri, iş pozisyonu, uygunluğu, vb\n"
+"              </p>\n"
+"            "
 
 #. module: hr
 #: view:hr.employee:0
 msgid "HR Settings"
-msgstr ""
+msgstr "İK Ayarları"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Citizenship & Other Info"
-msgstr ""
+msgstr "Vatandaşlık & Diğer Bilgiler"
 
 #. module: hr
 #: constraint:hr.department:0
 msgid "Error! You cannot create recursive departments."
-msgstr ""
+msgstr "Hata! Özyinelemeli bölümler oluşturamazsınız."
 
 #. module: hr
 #: field:hr.employee,address_id:0
@@ -638,7 +683,7 @@ msgstr "İş Adresi"
 #. module: hr
 #: view:hr.employee:0
 msgid "Public Information"
-msgstr ""
+msgstr "Genel Bilgiler"
 
 #. module: hr
 #: field:hr.employee,marital:0
@@ -653,7 +698,7 @@ msgstr "ir.actions.act_window"
 #. module: hr
 #: field:hr.employee,last_login:0
 msgid "Latest Connection"
-msgstr ""
+msgstr "Son Bağlantı"
 
 #. module: hr
 #: field:hr.employee,image:0
@@ -663,7 +708,7 @@ msgstr "Fotoğraf"
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Cancel"
-msgstr ""
+msgstr "İptal"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -678,17 +723,26 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Bir departman oluşturmak için tıklayın.\n"
+"              </p><p>\n"
+"                OpenERP bölüm yapısı bölümlere göre çalışanlarla ilgili tüm\n"
+"                tüm belgeleri yönetmek için kullanılır:giderler, zaman "
+"çizelgeleri,\n"
+"                izinler ve tatiller, işe alımlar, vb\n"
+"              </p>\n"
+"            "
 
 #. module: hr
 #: help:hr.config.settings,module_hr_timesheet:0
 msgid "This installs the module hr_timesheet."
-msgstr ""
+msgstr "Bu hr_timesheet modülünü kurar."
 
 #. module: hr
 #: help:hr.job,expected_employees:0
 msgid ""
 "Expected number of employees for this job position after new recruitment."
-msgstr ""
+msgstr "Yeni işe alım sonra bu iş pozisyonu için beklenen pesonel sayısı."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.view_department_form_installer
@@ -703,6 +757,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Yeni bir departman tanımlamak için tıklayın.\n"
+"              </p><p>\n"
+"                Sizin departmanlar yapısı tüm belgeleri yönetmek için "
+"kullanılır\n"
+"                departmanlar tarafından personel ile ilgili: giderleri ve "
+"zamanÇizelgeleri,\n"
+"                izinler ve tatiller, eleman alımları, vb\n"
+"              </p>\n"
+"            "
 
 #. module: hr
 #: view:hr.employee:0
@@ -712,7 +776,7 @@ msgstr "Kişisel Bilgiler"
 #. module: hr
 #: field:hr.employee,city:0
 msgid "City"
-msgstr "İl"
+msgstr "İli"
 
 #. module: hr
 #: field:hr.employee,passport_id:0
@@ -727,18 +791,26 @@ msgstr "İş Cep"
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Recruitement in Progress"
-msgstr ""
+msgstr "İşe Alım Sürüyor"
 
 #. module: hr
 #: field:hr.config.settings,module_account_analytic_analysis:0
 msgid ""
 "Allow invoicing based on timesheets (the sale application will be installed)"
 msgstr ""
+"Zaman Çizelgelerine dayalı faturalamaya izin ver (satış uygulaması "
+"yüklenecektir)"
+
+#. module: hr
+#: code:addons/hr/hr.py:221
+#, python-format
+msgid "Welcome to %s! Please help him/her take the first steps with OpenERP!"
+msgstr ""
 
 #. module: hr
 #: view:hr.employee.category:0
 msgid "Employees Categories"
-msgstr "Çalışanların Kategorileri"
+msgstr "Çalışan Kategorileri"
 
 #. module: hr
 #: field:hr.employee,address_home_id:0
@@ -748,7 +820,7 @@ msgstr "Ev Adresi"
 #. module: hr
 #: field:hr.config.settings,module_hr_timesheet:0
 msgid "Manage timesheets"
-msgstr ""
+msgstr "Zaman Çizelgelerini Yönet"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_payroll_modules
@@ -768,17 +840,17 @@ msgstr "İş Adı"
 #. module: hr
 #: view:hr.job:0
 msgid "In Position"
-msgstr "Durumunda"
+msgstr "Poziyonu"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_payroll:0
 msgid "This installs the module hr_payroll."
-msgstr ""
+msgstr "Bu hr_payroll modülünü kurar."
 
 #. module: hr
 #: field:hr.config.settings,module_hr_contract:0
 msgid "Record contracts per employee"
-msgstr ""
+msgstr "Her çalışan içi sözleşme kaydet"
 
 #. module: hr
 #: view:hr.department:0
@@ -793,7 +865,7 @@ msgstr "Uyruğu"
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Additional Features"
-msgstr ""
+msgstr "Ek Özellikler"
 
 #. module: hr
 #: field:hr.employee,notes:0
@@ -803,7 +875,7 @@ msgstr "Notlar"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
 msgid "Subordinate Hierarchy"
-msgstr ""
+msgstr "Alt Sıradüzeni"
 
 #. module: hr
 #: field:hr.employee,resource_id:0
@@ -836,33 +908,33 @@ msgstr "Çalışanlar"
 #. module: hr
 #: help:hr.employee,sinid:0
 msgid "Social Insurance Number"
-msgstr "Sosyal Sigorta Numarası"
+msgstr "Sosyal Güvenlik Numarası"
 
 #. module: hr
 #: field:hr.department,name:0
 msgid "Department Name"
-msgstr "Bölüm Adı"
+msgstr "Bölüm Adı Adı"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
 msgid "Reports"
-msgstr ""
+msgstr "Raporlar"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_payroll:0
 msgid "Manage payroll"
-msgstr ""
+msgstr "Bordro yönet"
 
 #. module: hr
 #: view:hr.config.settings:0
 #: model:ir.actions.act_window,name:hr.action_human_resources_configuration
 msgid "Configure Human Resources"
-msgstr ""
+msgstr "İnsan Kaynakları Yapılandırması"
 
 #. module: hr
 #: selection:hr.job,state:0
 msgid "No Recruitment"
-msgstr ""
+msgstr "İşe Alım Yok"
 
 #. module: hr
 #: help:hr.employee,ssnid:0
@@ -872,17 +944,17 @@ msgstr "Sosyal Güvenlik Numarası"
 #. module: hr
 #: model:process.node,note:hr.process_node_openerpuser0
 msgid "Creation of a OpenERP user"
-msgstr "OpenERP kullanıcısı Oluşturma"
+msgstr "Bir OpenERP kullanıcısı Oluşturma"
 
 #. module: hr
 #: field:hr.employee,login:0
 msgid "Login"
-msgstr "Oturum aç"
+msgstr "Giriş"
 
 #. module: hr
 #: field:hr.job,expected_employees:0
 msgid "Total Forecasted Employees"
-msgstr ""
+msgstr "Toplam Tahmini Personel"
 
 #. module: hr
 #: help:hr.job,state:0
@@ -890,17 +962,19 @@ msgid ""
 "By default 'In position', set it to 'In Recruitment' if recruitment process "
 "is going on for this job position."
 msgstr ""
+"Varsayılan olarak 'Pozisyonda' ayarlaıdır, bu iş pozisyonu için işe alım "
+"süreci yürütülüyorsa 'İşe Alım Sürecinde' olarak ayarlayın."
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "Kullanıcılar"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_hr_job
 msgid "Job Positions"
-msgstr "İş Durumları"
+msgstr "İş Pozisyonları"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_board_hr
@@ -920,6 +994,23 @@ msgid ""
 "              </div>\n"
 "            "
 msgstr ""
+"<div class=\"oe_empty_custom_dashboard\">\n"
+"                  <p>\n"
+"                    <b>İnsan Kaynakları kontrol panel boştur.</b>\n"
+"                  </p><p>\n"
+"                    Kontrol paneline ilk raporunuzu eklemek için menüye "
+"gidib,\n"
+"                    liste ya da grafik görünümüne geçin ve genişletilmiş "
+"arama\n"
+"                    seçeneklerinde <i>'Kontrol Paneline Ekle'</i> ye "
+"tıklayın.\n"
+"                  </p><p>\n"
+"                    Arama seçeneklerini kullanarak kontrol paneline "
+"eklemeden\n"
+"                    önce veriyi  süzebilir ve gruplandırabilirsiniz.\n"
+"                  </p>\n"
+"              </div>\n"
+"            "
 
 #. module: hr
 #: view:hr.employee:0
@@ -935,12 +1026,12 @@ msgstr "Her firma için iş durumu adı benzersiz olmalı!"
 #. module: hr
 #: help:hr.config.settings,module_hr_expense:0
 msgid "This installs the module hr_expense."
-msgstr ""
+msgstr "Bu modül hr_expense yükler."
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_config_settings
 msgid "hr.config.settings"
-msgstr ""
+msgstr "hr.config.settings"
 
 #. module: hr
 #: field:hr.department,manager_id:0
@@ -962,4 +1053,4 @@ msgstr "Emrindekiler"
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Apply"
-msgstr ""
+msgstr "Uygula"

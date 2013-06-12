@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:39+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:19+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: crm_claim
 #: help:crm.claim.stage,fold:0
@@ -23,6 +23,8 @@ msgid ""
 "This stage is not visible, for example in status bar or kanban view, when "
 "there are no records in that stage to display."
 msgstr ""
+"Эта стадия не видима, например в статус-баре или виде канбан, когда нет "
+"записей этой стадии для отображения."
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
@@ -46,11 +48,13 @@ msgid ""
 "Allows you to configure your incoming mail server, and create claims from "
 "incoming emails."
 msgstr ""
+"Позволяет настроить сервер входящей почты и создавать претензии из входящих "
+"эл. писем."
 
 #. module: crm_claim
 #: model:ir.model,name:crm_claim.model_crm_claim_stage
 msgid "Claim stages"
-msgstr ""
+msgstr "Этапы претензии"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -65,7 +69,7 @@ msgstr "Задержка закрытия"
 #. module: crm_claim
 #: field:crm.claim,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Непрочитанные"
 
 #. module: crm_claim
 #: field:crm.claim,resolution:0
@@ -100,12 +104,12 @@ msgstr "# претензий"
 #. module: crm_claim
 #: field:crm.claim.stage,name:0
 msgid "Stage Name"
-msgstr ""
+msgstr "Название этапа"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Продавец"
 
 #. module: crm_claim
 #: selection:crm.claim,priority:0
@@ -149,7 +153,7 @@ msgstr "Предупредительная мера"
 #. module: crm_claim
 #: help:crm.claim,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Если отмечено, новые сообщения требуют вашего внимания."
 
 #. module: crm_claim
 #: field:crm.claim.report,date_closed:0
@@ -182,6 +186,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Содержит сводку по Чаттеру (количество сообщений,...). Эта сводка в формате "
+"html для возможности использования в канбан виде"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -235,12 +241,12 @@ msgstr "Важность"
 #. module: crm_claim
 #: field:crm.claim.stage,fold:0
 msgid "Hide in Views when Empty"
-msgstr ""
+msgstr "Скрыть вид, если пусто"
 
 #. module: crm_claim
 #: field:crm.claim,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Подписчики"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -254,7 +260,7 @@ msgstr "Новый"
 #. module: crm_claim
 #: field:crm.claim.stage,section_ids:0
 msgid "Sections"
-msgstr ""
+msgstr "Секции"
 
 #. module: crm_claim
 #: field:crm.claim,email_from:0
@@ -290,12 +296,17 @@ msgstr "Предмет претензии"
 #. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim3
 msgid "Rejected"
-msgstr ""
+msgstr "Отклонено"
 
 #. module: crm_claim
 #: field:crm.claim,date_action_next:0
 msgid "Next Action Date"
 msgstr "Дата следующего действия"
+
+#. module: crm_claim
+#: model:ir.model,name:crm_claim.model_sale_config_settings
+msgid "sale.config.settings"
+msgstr "sale.config.settings"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
@@ -344,7 +355,7 @@ msgstr ""
 #: code:addons/crm_claim/crm_claim.py:194
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "Без темы"
 
 #. module: crm_claim
 #: help:crm.claim.stage,state:0
@@ -358,7 +369,7 @@ msgstr ""
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Settle"
-msgstr ""
+msgstr "Решать"
 
 #. module: crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_claim_stage_view
@@ -384,7 +395,7 @@ msgstr "Отчет о претензиях"
 #. module: crm_claim
 #: view:sale.config.settings:0
 msgid "Configure"
-msgstr ""
+msgstr "Настроить"
 
 #. module: crm_claim
 #: model:crm.case.resource.type,name:crm_claim.type_claim1
@@ -430,6 +441,8 @@ msgid ""
 "If you check this field, this stage will be proposed by default on each "
 "sales team. It will not assign this stage to existing teams."
 msgstr ""
+"Если вы отметите это поле, этот этап будет предложен по умолчанию каждому "
+"отделу продаж. Этот этап не будет назначен существующим отделам."
 
 #. module: crm_claim
 #: field:crm.claim,categ_id:0
@@ -485,7 +498,7 @@ msgstr "Закрыто"
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Reject"
-msgstr ""
+msgstr "Отклонить"
 
 #. module: crm_claim
 #: view:res.partner:0
@@ -495,7 +508,7 @@ msgstr "Претензии партнера"
 #. module: crm_claim
 #: view:crm.claim.stage:0
 msgid "Claim Stage"
-msgstr ""
+msgstr "Этап претензии"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -513,7 +526,7 @@ msgstr "Отложено"
 #: field:crm.claim.report,state:0
 #: field:crm.claim.stage,state:0
 msgid "Status"
-msgstr ""
+msgstr "Статус"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -529,7 +542,7 @@ msgstr "Обычный"
 #. module: crm_claim
 #: help:crm.claim.stage,sequence:0
 msgid "Used to order stages. Lower is better."
-msgstr ""
+msgstr "Используется для упорядочивания этапов. Меньше - лучше."
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -549,7 +562,7 @@ msgstr "Телефон"
 #. module: crm_claim
 #: field:crm.claim,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Подписан"
 
 #. module: crm_claim
 #: field:crm.claim.report,user_id:0
@@ -581,6 +594,10 @@ msgid ""
 "the case needs to be reviewed then the status is                       set "
 "to 'Pending'."
 msgstr ""
+"Статус устанавливается в \"Черновик\", при создании  дела. Если дело в "
+"процессе, то статус - «Открыт». Когда дело закончено, устанавливается статус "
+"\"Готово\". Если дело должно быть пересмотрено то статус установлен в "
+"'Ожидание'."
 
 #. module: crm_claim
 #: field:crm.claim,active:0
@@ -628,7 +645,7 @@ msgstr "Дата претензии"
 #. module: crm_claim
 #: field:crm.claim,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Итог"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
@@ -638,7 +655,7 @@ msgstr "Категории претензий"
 #. module: crm_claim
 #: field:crm.claim.stage,case_default:0
 msgid "Common to All Teams"
-msgstr ""
+msgstr "Общее для всех отделов"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -677,7 +694,7 @@ msgstr "Претензия"
 #. module: crm_claim
 #: view:crm.claim.report:0
 msgid "My Company"
-msgstr ""
+msgstr "Моя компания"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -776,20 +793,6 @@ msgid "Refused stage"
 msgstr ""
 
 #. module: crm_claim
-#: model:ir.actions.act_window,help:crm_claim.crm_case_categ_claim0
-msgid ""
-"Record and track your customers' claims. Claims may be linked to a sales "
-"order or a lot. You can send emails with attachments and keep the full "
-"history for a claim (emails sent, intervention type and so on). Claims may "
-"automatically be linked to an email address using the mail gateway module."
-msgstr ""
-"Запись и отслеживание претензий заказчиков. Претензии могут быть связаны с "
-"заказом на продажу или с партией ТМЦ. Вы можете посылать эл. письма с "
-"приложенными файлами и сохранять всю историю претензии (отосланные эл. "
-"письма, тип вмешательства и т.д.). Претензии могут быть автоматически "
-"связаны c эл. адресами используя шлюз эл. почты."
-
-#. module: crm_claim
 #: field:crm.claim.report,email:0
 msgid "# Emails"
 msgstr "# эл. писем"
@@ -805,8 +808,16 @@ msgid "February"
 msgstr "Февраль"
 
 #. module: crm_claim
-#: model:ir.model,name:crm_claim.model_sale_config_settings
-msgid "sale.config.settings"
+#: model:ir.actions.act_window,help:crm_claim.crm_case_categ_claim0
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Record and track your customers' claims. Claims may be "
+"linked to a sales order or a lot.You can send emails with attachments and "
+"keep the full history for a claim (emails sent, intervention type and so "
+"on).Claims may automatically be linked to an email address using the mail "
+"gateway module.\n"
+"            </p>\n"
+"            "
 msgstr ""
 
 #. module: crm_claim
@@ -833,22 +844,22 @@ msgstr "Мои дела"
 #. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim2
 msgid "Settled"
-msgstr ""
+msgstr "Решено"
 
 #. module: crm_claim
 #: help:crm.claim,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Сообщения и история общения"
 
 #. module: crm_claim
 #: field:sale.config.settings,fetchmail_claim:0
 msgid "Create claims from incoming mails"
-msgstr ""
+msgstr "Создать претензии из входящей почты"
 
 #. module: crm_claim
 #: field:crm.claim.stage,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Нумерация"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -883,8 +894,22 @@ msgid ""
 "Link between stages and sales teams. When set, this limitate the current "
 "stage to the selected sales teams."
 msgstr ""
+"Связь между этапами и отделами продаж. При установке, ограничивает этап для "
+"выбранного отдела продаж."
 
 #. module: crm_claim
 #: help:crm.claim.stage,case_refused:0
 msgid "Refused stages are specific stages for done."
 msgstr ""
+
+#~ msgid ""
+#~ "Record and track your customers' claims. Claims may be linked to a sales "
+#~ "order or a lot. You can send emails with attachments and keep the full "
+#~ "history for a claim (emails sent, intervention type and so on). Claims may "
+#~ "automatically be linked to an email address using the mail gateway module."
+#~ msgstr ""
+#~ "Запись и отслеживание претензий заказчиков. Претензии могут быть связаны с "
+#~ "заказом на продажу или с партией ТМЦ. Вы можете посылать эл. письма с "
+#~ "приложенными файлами и сохранять всю историю претензии (отосланные эл. "
+#~ "письма, тип вмешательства и т.д.). Претензии могут быть автоматически "
+#~ "связаны c эл. адресами используя шлюз эл. почты."

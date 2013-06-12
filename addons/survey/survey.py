@@ -502,7 +502,7 @@ class survey_question(osv.osv):
     def create(self, cr, uid, vals, context=None):
         minimum_ans = 0
         maximum_ans = 0
-        page = self.pool.get('survey.page').browse(cr, uid, vals['page_id'], context=context).title
+        page = self.pool.get('survey.page').browse(cr, uid, int(vals.get('page_id', 0)), context=context).title
         if vals.has_key('answer_choice_ids') and  not len(vals['answer_choice_ids']):
             if vals.has_key('type') and vals['type'] not in ['descriptive_text', 'single_textbox', 'comment','table']:
                 raise osv.except_osv(_('Warning!'),_('You must enter one or more answers for question "%s" of page %s .') % (vals['question'], page))

@@ -165,9 +165,8 @@ class res_partner(osv.osv):
             else:
                 action_text = partner.latest_followup_level_id_without_lit.manual_action_note or ''
 
-            #Check date: put the minimum date if it existed already
-            action_date = (partner.payment_next_action_date and min(partner.payment_next_action_date, fields.date.context_today(self, cr, uid, context=context))
-                           ) or fields.date.context_today(self, cr, uid, context=context)
+            #Check date: only change when it did not exist already
+            action_date = partner.payment_next_action_date or fields.date.context_today(self, cr, uid, context=context)
 
             # Check responsible: if partner has not got a responsible already, take from follow-up
             responsible_id = False
@@ -292,8 +291,7 @@ class res_partner(osv.osv):
                                       type = 'comment',
                                       subtype = "mail.mt_comment", context = context,
                                       model = 'res.partner', res_id = part.id, 
-                                      notified_partner_ids = [(6, 0, [responsible_partner_id])],
-                                      partner_ids = [(6, 0, [responsible_partner_id])])
+                                      partner_ids = [responsible_partner_id])
         return super(res_partner, self).write(cr, uid, ids, vals, context=context)
 
     def action_done(self, cr, uid, ids, context=None):

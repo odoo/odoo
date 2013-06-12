@@ -413,7 +413,8 @@ class share_wizard(osv.TransientModel):
                 relation_model_id = model_obj.search(cr, UID_ROOT, [('model','=',coldef._obj)])[0]
                 relation_model_browse = model_obj.browse(cr, UID_ROOT, relation_model_id, context=context)
                 relation_osv = self.pool.get(coldef._obj)
-                if coltype == 'one2many':
+                #skip virtual one2many fields (related, ...) as there is no reverse relationship
+                if coltype == 'one2many' and hasattr(coldef, '_fields_id'):
                     # don't record reverse path if it's not a real m2o (that happens, but rarely)
                     dest_model_ci = relation_osv._all_columns
                     reverse_rel = coldef._fields_id
@@ -614,8 +615,8 @@ class share_wizard(osv.TransientModel):
                     # other groups, so we duplicate if needed
                     rule = self._check_personal_rule_or_duplicate(cr, group_id, rule, context=context)
                     eval_ctx = rule_obj._eval_context_for_combinations()
-                    org_domain = expression.normalize(eval(rule.domain_force, eval_ctx))
-                    new_clause = expression.normalize(eval(domain, eval_ctx))
+                    org_domain = expression.normalize_domain(eval(rule.domain_force, eval_ctx))
+                    new_clause = expression.normalize_domain(eval(domain, eval_ctx))
                     combined_domain = expression.AND([new_clause, org_domain])
                     rule.write({'domain_force': combined_domain, 'name': rule.name + _('(Modified)')})
                     _logger.debug("Combining sharing rule %s on model %s with domain: %s", rule.id, model_id, domain)
@@ -660,7 +661,7 @@ class share_wizard(osv.TransientModel):
         self._assert(wizard_data.action_id and wizard_data.access_mode,
                      _('Action and Access Mode are required to create a shared access.'),
                      context=context)
-        self._assert(self.has_share(cr, uid, context=context),
+        self._assert(self.has_share(cr, uid, wizard_data, context=context),
                      _('You must be a member of the Share/User group to use the share wizard.'),
                      context=context)
         if wizard_data.user_type == 'emails':
@@ -831,7 +832,7 @@ class share_wizard(osv.TransientModel):
         notification_obj = self.pool.get('mail.notification')
         user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
         if not user.email:
-            raise osv.except_osv(_('Email required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
+            raise osv.except_osv(_('Email Required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
         
         # TODO: also send an HTML version of this mail
         for result_line in wizard_data.result_line_ids:
@@ -862,7 +863,7 @@ class share_wizard(osv.TransientModel):
         mail_mail = self.pool.get('mail.mail')
         user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
         if not user.email:
-            raise osv.except_osv(_('Email required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
+            raise osv.except_osv(_('Email Required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
         
         # TODO: also send an HTML version of this mail
         mail_ids = []

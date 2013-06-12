@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-02-11 08:25+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-06-09 14:25+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-12 05:29+0000\n"
-"X-Generator: Launchpad (build 16491)\n"
+"X-Launchpad-Export-Date: 2013-06-11 06:31+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -72,13 +72,6 @@ msgid "Owner Account"
 msgstr "Hesap Sahibi"
 
 #. module: account_payment
-#: help:account.invoice,amount_to_pay:0
-msgid ""
-"The amount which should be paid at the current date\n"
-"minus the amount which is already in payment order"
-msgstr "Geçerli tarihte ödenecek tutar hali hazırda ödenmiş tutardan düşülür"
-
-#. module: account_payment
 #: field:payment.line,company_id:0
 #: field:payment.mode,company_id:0
 #: field:payment.order,company_id:0
@@ -130,8 +123,8 @@ msgid ""
 "You cannot cancel an invoice which has already been imported in a payment "
 "order. Remove it from the following payment order : %s."
 msgstr ""
-"Ödeme emri içine aktarılan bir faturayı iptal edemezsiniz.\r\n"
-"faturayı ödeme emrinden çıkart: %s."
+"Ödeme emrine aktarılan bir faturayı iptal edemezsiniz.\r\n"
+"Bu faturayı aşağıdaki ödeme emrinden çıkart: %s."
 
 #. module: account_payment
 #: code:addons/account_payment/account_invoice.py:43
@@ -548,7 +541,6 @@ msgstr "İletişim"
 #. module: account_payment
 #: view:account.payment.make.payment:0
 #: view:account.payment.populate.statement:0
-#: view:payment.order:0
 #: view:payment.order.create:0
 msgid "Cancel"
 msgstr "İptal"
@@ -676,15 +668,31 @@ msgid "Order"
 msgstr "Emir"
 
 #. module: account_payment
+#: view:payment.order:0
+msgid "Cancel Payments"
+msgstr "Ödeme İptal et"
+
+#. module: account_payment
 #: field:payment.order,total:0
 msgid "Total"
 msgstr "Toplam"
+
+#. module: account_payment
+#: code:addons/account_payment/wizard/account_payment_order.py:112
+#, python-format
+msgid "Entry Lines"
+msgstr "Kayıt Kalemleri"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
 msgstr "Ödeme Yap"
+
+#. module: account_payment
+#: help:account.invoice,amount_to_pay:0
+msgid "The amount which should be paid at the current date. "
+msgstr "Geçerli tarihte ödenmesi gereken tutar. "
 
 #. module: account_payment
 #: field:payment.order,date_prefered:0
@@ -702,3 +710,8 @@ msgstr "ya da"
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
 msgstr "Ödeme Yönetimi için Banka Hesabı"
+
+#~ msgid ""
+#~ "The amount which should be paid at the current date\n"
+#~ "minus the amount which is already in payment order"
+#~ msgstr "Geçerli tarihte ödenecek tutar hali hazırda ödenmiş tutardan düşülür"

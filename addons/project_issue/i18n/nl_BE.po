@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Dutch (Belgium) <nl_BE@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:02+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:39+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: project_issue
 #: model:project.category,name:project_issue.project_issue_category_03
@@ -114,7 +114,7 @@ msgid "Days to Open"
 msgstr "Dagen tot openen"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:465
+#: code:addons/project_issue/project_issue.py:479
 #, python-format
 msgid ""
 "You cannot escalate this issue.\n"
@@ -253,18 +253,10 @@ msgid "Extra Info"
 msgstr "Extra informatie"
 
 #. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.action_project_issue_report
-msgid ""
-"This report on the project issues allows you to analyse the quality of your "
-"support or after-sales services. You can track the issues per age. You can "
-"analyse the time required to open or close an issue, the number of email to "
-"exchange and the time spent on average by issues."
+#: code:addons/project_issue/project_issue.py:479
+#, python-format
+msgid "Warning!"
 msgstr ""
-"Met dit rapport over probleemmeldingen kunt u de kwaliteit van uw support of "
-"klantendienst analyseren. U kunt problemen per ouderdom opvolgen. U kunt de "
-"tijd analyseren die nodig is om een probleem te openen of te sluiten, het "
-"aantal uitgewisselde e-mails en de gemiddelde tijd die aan een probleem "
-"wordt besteed."
 
 #. module: project_issue
 #: view:project.issue:0
@@ -277,6 +269,12 @@ msgid "Responsible"
 msgstr "Verantwoordelijke"
 
 #. module: project_issue
+#: model:mail.message.subtype,name:project_issue.mt_issue_blocked
+#: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
+msgid "Issue Blocked"
+msgstr ""
+
+#. module: project_issue
 #: view:project.issue:0
 msgid "Statistics"
 msgstr "Statistieken"
@@ -287,7 +285,7 @@ msgid "Kanban State"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:360
+#: code:addons/project_issue/project_issue.py:366
 #, python-format
 msgid "Project issue <b>converted</b> to task."
 msgstr ""
@@ -321,9 +319,9 @@ msgid "New"
 msgstr ""
 
 #. module: project_issue
-#: model:ir.actions.act_window,name:project_issue.project_issue_categ_action
-msgid "Issue Categories"
-msgstr "Probleemcategorieën"
+#: view:project.project:0
+msgid "{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}"
+msgstr ""
 
 #. module: project_issue
 #: field:project.issue,email_from:0
@@ -343,7 +341,7 @@ msgid "Lowest"
 msgstr "Laagste"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:382
+#: code:addons/project_issue/project_issue.py:388
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -394,9 +392,18 @@ msgid "July"
 msgstr "Juli"
 
 #. module: project_issue
-#: model:ir.ui.menu,name:project_issue.menu_project_issue_category_act
-msgid "Categories"
-msgstr "Categorieën"
+#: model:ir.actions.act_window,help:project_issue.action_project_issue_report
+msgid ""
+"This report on the project issues allows you to analyse the quality of your "
+"support or after-sales services. You can track the issues per age. You can "
+"analyse the time required to open or close an issue, the number of email to "
+"exchange and the time spent on average by issues."
+msgstr ""
+"Met dit rapport over probleemmeldingen kunt u de kwaliteit van uw support of "
+"klantendienst analyseren. U kunt problemen per ouderdom opvolgen. U kunt de "
+"tijd analyseren die nodig is om een probleem te openen of te sluiten, het "
+"aantal uitgewisselde e-mails en de gemiddelde tijd die aan een probleem "
+"wordt besteed."
 
 #. module: project_issue
 #: view:project.issue:0
@@ -414,7 +421,7 @@ msgid "Issues Analysis"
 msgstr "Probleemanalyse"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:485
+#: code:addons/project_issue/project_issue.py:516
 #, python-format
 msgid "No Subject"
 msgstr ""
@@ -438,7 +445,7 @@ msgid "Delete"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:365
+#: code:addons/project_issue/project_issue.py:371
 #, python-format
 msgid "Tasks"
 msgstr "Taken"
@@ -477,11 +484,6 @@ msgstr ""
 #: view:project.project:0
 msgid "creates"
 msgstr ""
-
-#. module: project_issue
-#: model:crm.case.categ,name:project_issue.feature_request_categ
-msgid "Feature Requests"
-msgstr "Feature"
 
 #. module: project_issue
 #: field:project.issue,write_date:0
@@ -534,11 +536,6 @@ msgstr ""
 "Deze e-mailadressen worden toegevoegd aan het CC-veld van alle inkomende en "
 "uitgaande mails voor dit record. Verschillende adressen kunnen worden "
 "gescheiden door een komma."
-
-#. module: project_issue
-#: model:crm.case.categ,name:project_issue.bug_categ
-msgid "Maintenance"
-msgstr "Onderhoud"
 
 #. module: project_issue
 #: selection:project.issue.report,state:0
@@ -594,11 +591,6 @@ msgid "Normal"
 msgstr "Normaal"
 
 #. module: project_issue
-#: field:project.project,issue_count:0
-msgid "unknown"
-msgstr ""
-
-#. module: project_issue
 #: view:project.issue:0
 msgid "Category:"
 msgstr ""
@@ -650,9 +642,9 @@ msgid "November"
 msgstr "November"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:465
+#: code:addons/project_issue/project_issue.py:499
 #, python-format
-msgid "Warning!"
+msgid "Customer Email"
 msgstr ""
 
 #. module: project_issue
@@ -661,9 +653,9 @@ msgid "Search"
 msgstr "Zoeken"
 
 #. module: project_issue
-#: selection:project.issue.report,month:0
-msgid "October"
-msgstr "Oktober"
+#: view:project.issue:0
+msgid "Creation Month"
+msgstr ""
 
 #. module: project_issue
 #: help:project.issue,days_since_creation:0
@@ -728,11 +720,6 @@ msgid "Version Number"
 msgstr "Versienummer"
 
 #. module: project_issue
-#: view:project.issue:0
-msgid "Cancel"
-msgstr "Annuleren"
-
-#. module: project_issue
 #: selection:project.issue.report,state:0
 msgid "Open"
 msgstr "Openen"
@@ -768,7 +755,12 @@ msgstr "Projectprobleem"
 
 #. module: project_issue
 #: view:project.issue:0
-msgid "Creation Month"
+msgid "Add an internal note..."
+msgstr ""
+
+#. module: project_issue
+#: view:project.issue:0
+msgid "Cancel Issue"
 msgstr ""
 
 #. module: project_issue
@@ -777,10 +769,20 @@ msgid "Computed as: Time Spent / Total Time."
 msgstr "Berekend als: Bestede tijd / totale tijd"
 
 #. module: project_issue
+#: field:project.project,issue_count:0
+msgid "Unclosed Issues"
+msgstr ""
+
+#. module: project_issue
 #: view:project.issue:0
 #: selection:project.issue,kanban_state:0
 msgid "Ready for next stage"
 msgstr ""
+
+#. module: project_issue
+#: selection:project.issue.report,month:0
+msgid "October"
+msgstr "Oktober"
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -851,9 +853,9 @@ msgid "Issue Created"
 msgstr ""
 
 #. module: project_issue
-#: model:mail.message.subtype,name:project_issue.mt_issue_blocked
-#: model:mail.message.subtype,name:project_issue.mt_project_issue_blocked
-msgid "Issue Blocked"
+#: code:addons/project_issue/project_issue.py:497
+#, python-format
+msgid "Customer"
 msgstr ""
 
 #. module: project_issue
@@ -918,11 +920,6 @@ msgstr "April"
 #: view:project.issue:0
 msgid "⇒ Escalate"
 msgstr ""
-
-#. module: project_issue
-#: view:project.issue:0
-msgid "References"
-msgstr "Referenties"
 
 #. module: project_issue
 #: model:mail.message.subtype,description:project_issue.mt_issue_new
@@ -996,3 +993,21 @@ msgstr "Duur"
 #: model:mail.message.subtype,name:project_issue.mt_project_issue_started
 msgid "Issue Started"
 msgstr ""
+
+#~ msgid "Maintenance"
+#~ msgstr "Onderhoud"
+
+#~ msgid "Issue Categories"
+#~ msgstr "Probleemcategorieën"
+
+#~ msgid "Categories"
+#~ msgstr "Categorieën"
+
+#~ msgid "Feature Requests"
+#~ msgstr "Feature"
+
+#~ msgid "Cancel"
+#~ msgstr "Annuleren"
+
+#~ msgid "References"
+#~ msgstr "Referenties"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-31 18:30+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-05-12 19:29+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-01 05:49+0000\n"
-"X-Generator: Launchpad (build 16455)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:38+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: project
 #: view:project.project:0
@@ -85,7 +85,7 @@ msgid "Start Task"
 msgstr "Start taak"
 
 #. module: project
-#: code:addons/project/project.py:932
+#: code:addons/project/project.py:944
 #, python-format
 msgid "Warning !"
 msgstr "Waarschuwing !"
@@ -138,8 +138,8 @@ msgstr ""
 "ingevoegd."
 
 #. module: project
-#: code:addons/project/project.py:432
-#: code:addons/project/project.py:1305
+#: code:addons/project/project.py:444
+#: code:addons/project/project.py:1332
 #, python-format
 msgid "Warning!"
 msgstr "Waarschuwing!"
@@ -211,9 +211,18 @@ msgid "Planned Time"
 msgstr "Geplande tijd"
 
 #. module: project
-#: selection:project.project,privacy_visibility:0
-msgid "Public"
-msgstr "Openbaar"
+#: view:project.task:0
+#: selection:project.task,state:0
+#: selection:project.task.delegate,state:0
+#: selection:project.task.history,state:0
+#: selection:project.task.history.cumulative,state:0
+#: model:project.task.type,name:project.project_tt_deployment
+#: selection:project.task.type,state:0
+#: view:report.project.task.user:0
+#: selection:report.project.task.user,state:0
+#: view:res.partner:0
+msgid "Done"
+msgstr "Verwerkt"
 
 #. module: project
 #: model:project.category,name:project.project_category_01
@@ -338,6 +347,11 @@ msgid "June"
 msgstr "Juni"
 
 #. module: project
+#: view:project.task:0
+msgid "Gantt View"
+msgstr "Gantt weergave"
+
+#. module: project
 #: selection:report.project.task.user,month:0
 msgid "October"
 msgstr "Oktober"
@@ -372,6 +386,11 @@ msgid "Summary"
 msgstr "Samenvatting"
 
 #. module: project
+#: view:project.task:0
+msgid "Task summary..."
+msgstr "Taak samenvatting...."
+
+#. module: project
 #: view:project.project:0
 msgid "Append this project to another one using analytic accounts hierarchy"
 msgstr ""
@@ -404,7 +423,7 @@ msgid "Assigned to"
 msgstr "Toegewezen aan"
 
 #. module: project
-#: code:addons/project/project.py:1021
+#: code:addons/project/project.py:1033
 #, python-format
 msgid "Delegated User should be specified"
 msgstr "De gedelegeerde gebruiker moet worden gespecificeerd"
@@ -485,6 +504,11 @@ msgstr "Delegeren"
 #: field:project.task,create_date:0
 msgid "Create Date"
 msgstr "Datum gemaakt"
+
+#. module: project
+#: view:project.task:0
+msgid "Add a Description..."
+msgstr "Voeg een omschrijving toe..."
 
 #. module: project
 #: view:res.partner:0
@@ -700,7 +724,7 @@ msgstr "Nieuwe taak"
 #. module: project
 #: field:project.config.settings,module_project_issue_sheet:0
 msgid "Invoice working time on issues"
-msgstr "Facturer gewerkte uren aan issues"
+msgstr "Factureer gewerkte uren aan issues"
 
 #. module: project
 #: view:project.project:0
@@ -886,6 +910,11 @@ msgid "GTD"
 msgstr "GTD"
 
 #. module: project
+#: view:project.project:0
+msgid "Project Stages"
+msgstr "Project fases"
+
+#. module: project
 #: help:project.task,state:0
 msgid ""
 "The status is set to 'Draft', when a case is created.                      "
@@ -934,11 +963,21 @@ msgid ""
 " * Ready for next stage indicates the task is ready to be pulled to the next "
 "stage"
 msgstr ""
+"Een kanban taak status geeft een speciale situatie aan. De status kan zijn:\n"
+" * Normaal, de standaard situatie\n"
+" * Geblokkeerd, geeft aan dat iets de voortgang van de taak blokkeert\n"
+" * Gereed voor volgende fase, geeft aan dat de taak gereed is om de "
+"verschuiven naar de volgende fase"
 
 #. module: project
 #: view:project.task:0
 msgid "10"
 msgstr "10"
+
+#. module: project
+#: view:project.project:0
+msgid "Cancel Project"
+msgstr "Project annuleren"
 
 #. module: project
 #: help:project.project,analytic_account_id:0
@@ -956,7 +995,6 @@ msgstr ""
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
 #: view:project.config.settings:0
-#: view:project.project:0
 #: view:project.task.delegate:0
 #: view:project.task.reevaluate:0
 msgid "Cancel"
@@ -1013,9 +1051,22 @@ msgid "Manager"
 msgstr "Manager"
 
 #. module: project
-#: selection:project.task,priority:0
-msgid "Important"
-msgstr "Belangrijk"
+#: model:ir.actions.act_window,help:project.project_category_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a new tag.\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik om een label toe te voegen. \n"
+"              </p>\n"
+"            "
+
+#. module: project
+#: model:ir.ui.menu,name:project.menu_task_types_view
+msgid "Task Stages"
+msgstr "Taak fases"
 
 #. module: project
 #: field:project.category,name:0
@@ -1180,6 +1231,10 @@ msgid ""
 "stage. For example, if a stage is related to the status 'Close', when your "
 "document reaches this stage, it is automatically closed."
 msgstr ""
+"De status van uw document is automatisch aangepast op basis van de "
+"geselecteerde fase. Bijvoorbeeld, als een fase is gerelateerd aan de status "
+"'Gesloten', dan zal het document automatisch worden gesloten als het deze "
+"fase bereikt."
 
 #. module: project
 #: view:project.task:0
@@ -1257,9 +1312,9 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "Berekend als: Gebruikte uren + resterende uren."
 
 #. module: project
-#: code:addons/project/project.py:356
-#: code:addons/project/project.py:377
-#: code:addons/project/project.py:709
+#: code:addons/project/project.py:368
+#: code:addons/project/project.py:389
+#: code:addons/project/project.py:721
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -1295,6 +1350,11 @@ msgstr "project.task.reevaluate"
 #: field:project.task,delay_hours:0
 msgid "Delay Hours"
 msgstr "Uren vertraging"
+
+#. module: project
+#: view:project.task.type:0
+msgid "Add a description..."
+msgstr "Voeg een omschrijving toe..."
 
 #. module: project
 #: view:project.project:0
@@ -1392,6 +1452,9 @@ msgid "Pending"
 msgstr "In afwachting"
 
 #. module: project
+#: model:ir.actions.act_window,name:project.project_category_action
+#: model:ir.ui.menu,name:project.menu_project_category_act
+#: view:project.category:0
 #: field:project.task,categ_ids:0
 msgid "Tags"
 msgstr "Labels"
@@ -1465,24 +1528,15 @@ msgstr ""
 "projectleider tijdens conceptfase."
 
 #. module: project
-#: code:addons/project/project.py:220
+#: code:addons/project/project.py:230
 #, python-format
 msgid "Attachments"
 msgstr "Bijlagen"
 
 #. module: project
-#: view:project.task:0
-#: selection:project.task,state:0
-#: selection:project.task.delegate,state:0
-#: selection:project.task.history,state:0
-#: selection:project.task.history.cumulative,state:0
-#: model:project.task.type,name:project.project_tt_deployment
-#: selection:project.task.type,state:0
-#: view:report.project.task.user:0
-#: selection:report.project.task.user,state:0
-#: view:res.partner:0
-msgid "Done"
-msgstr "Verwerkt"
+#: view:project.category:0
+msgid "Issue Version"
+msgstr "Issue versie"
 
 #. module: project
 #: code:addons/project/project.py:182
@@ -1586,6 +1640,10 @@ msgid ""
 "                (by default, http://ietherpad.com/).\n"
 "                This installs the module pad."
 msgstr ""
+"Geeft het bedrijf de mogelijkheid om te kiezen welke Pad installatie wordt "
+"gebruikt\n"
+"                (standaard, http://ietherpad.com/).\n"
+"                Dit installeert de module pad."
 
 #. module: project
 #: field:project.task,id:0
@@ -1598,7 +1656,7 @@ msgid "Overpassed Tasks"
 msgstr "Overschreden taken"
 
 #. module: project
-#: code:addons/project/project.py:932
+#: code:addons/project/project.py:944
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1661,7 +1719,7 @@ msgid "CHECK: "
 msgstr "CONTROLEER: "
 
 #. module: project
-#: code:addons/project/project.py:432
+#: code:addons/project/project.py:444
 #, python-format
 msgid "You must assign members on the project '%s' !"
 msgstr "U dient gebruikers aan het project '%s' toe te wijzen!"
@@ -1699,6 +1757,12 @@ msgid ""
 "                editing and deleting either ways.\n"
 "                This installs the module project_timesheet."
 msgstr ""
+"Dit geeft u de mogelijkheid om de invoer van uren bij de taak te verplaatsen "
+"naar\n"
+"                de urenstaat voor een datum en gebruiker. Het is zodoende "
+"mogelijk\n"
+"                om uren te bewerken en te verwijderen op beide plaatsen.\n"
+"                Dit installeert de module project_timesheet."
 
 #. module: project
 #: field:project.config.settings,module_project_issue:0
@@ -1711,9 +1775,9 @@ msgid "Generate tasks from sale orders"
 msgstr "Genereer taken van verkooporders"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_task_types_view
-msgid "Task Stages"
-msgstr "Taak fases"
+#: selection:project.task,priority:0
+msgid "Important"
+msgstr "Belangrijk"
 
 #. module: project
 #: model:process.node,note:project.process_node_drafttask0
@@ -1760,6 +1824,7 @@ msgid "Cancelled"
 msgstr "Geannuleerd"
 
 #. module: project
+#: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,help:project.action_view_task
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -1772,6 +1837,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik hier voor het aanmaken van een nieuwe taak.\n"
+"              </p><p>\n"
+"                OpenERP's project management geeft u de mogelijkheid om uw\n"
+"                taken de beheren en deze zo efficiënt mogelijk uit te "
+"voeren. U kunt\n"
+"                de voortgang volgen, discussiëren over taken, documenten "
+"koppelen, etc.\n"
+"              </p>\n"
+"            "
 
 #. module: project
 #: field:project.task,date_end:0
@@ -1888,7 +1963,7 @@ msgid "Starting Date"
 msgstr "Begindatum"
 
 #. module: project
-#: code:addons/project/project.py:398
+#: code:addons/project/project.py:410
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:0
@@ -1957,6 +2032,10 @@ msgid ""
 "'Manufacture'.\n"
 "                This installs the module project_mrp."
 msgstr ""
+"Deze optie zal automatisch taken aanmaken van producten in verkooporders.\n"
+"                Om specifieker te zijn. Taken worden aangemaakt van "
+"verwervingsregels van producten van het type 'Dienst',\n"
+"                Dit installeert de module project_mrp."
 
 #. module: project
 #: help:project.task.delegate,planned_hours:0
@@ -2051,7 +2130,7 @@ msgid "Reevaluation Task"
 msgstr "Taak herevalueren"
 
 #. module: project
-#: code:addons/project/project.py:1305
+#: code:addons/project/project.py:1332
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr "Verwijder eerst het project dat aan deze kostenplaats is gekoppeld"
@@ -2078,7 +2157,7 @@ msgstr "projecten waarvan ik manager ben"
 #: selection:project.task.history,kanban_state:0
 #: selection:project.task.history.cumulative,kanban_state:0
 msgid "Ready for next stage"
-msgstr "Gereed voor ogende fase"
+msgstr "Gereed voor volgende fase"
 
 #. module: project
 #: field:project.task.type,case_default:0
@@ -2123,6 +2202,9 @@ msgid ""
 "resource allocation.\n"
 "                This installs the module project_long_term."
 msgstr ""
+"Een lange termijn project management module voor het beheren van planningen "
+"en resources.\n"
+"                Dit installeert de module project_long_term."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_closed
@@ -2157,11 +2239,6 @@ msgid ""
 msgstr ""
 "Geeft urenstaat ondersteuning bij het beheren  van issues/bugs in project.\n"
 "Hiermee installeert u de module project_issue_sheet."
-
-#. module: project
-#: selection:project.project,privacy_visibility:0
-msgid "Followers Only"
-msgstr "Alleen volgers"
 
 #. module: project
 #: view:board.board:0
@@ -2199,8 +2276,13 @@ msgid "Year"
 msgstr "Jaar"
 
 #. module: project
-#: view:project.project:0
 #: field:project.project,type_ids:0
 #: view:project.task.type:0
 msgid "Tasks Stages"
 msgstr "Taken fases"
+
+#~ msgid "Public"
+#~ msgstr "Openbaar"
+
+#~ msgid "Followers Only"
+#~ msgstr "Alleen volgers"

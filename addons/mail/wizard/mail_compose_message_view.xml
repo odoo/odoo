@@ -13,8 +13,9 @@
                         <field name="res_id" invisible="1"/>
                         <field name="parent_id" invisible="1"/>
                         <!-- visible wizard -->
-                        <label for="partner_ids" string="Recipients"/>
-                        <div groups="base.group_user">
+                        <label for="partner_ids" string="Recipients"
+                             invisible="context.get('mail_compose_log', False)"/>
+                        <div groups="base.group_user" invisible="context.get('mail_compose_log', False)">
                             <span attrs="{'invisible':['|', ('model', '=', False), ('composition_mode', '!=', 'mass_mail')]}">
                                 Followers of selected items and
                             </span>

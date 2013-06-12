@@ -1,0 +1,2022 @@
+# Macedonian translation for openobject-addons
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# Aleksandar <server986@gmail.com>, 2013.
+# Sofce Dimitrijeva <sofce@eskon.com.mk>, 2013.
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: OpenERP Macedonian <openerp-i18n-"
+"macedonian@lists.launchpad.net >\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-03-28 23:23+0000\n"
+"Last-Translator: Sofce Dimitrijeva <Unknown>\n"
+"Language-Team: ESKON-INZENERING\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:28+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
+"Language: mk\n"
+
+#. module: mail
+#: view:mail.followers:0
+msgid "Followers Form"
+msgstr "Формулар за паратители"
+
+#. module: mail
+#: code:addons/mail/mail_thread.py:246
+#, python-format
+msgid "%s created"
+msgstr ""
+
+#. module: mail
+#: field:mail.compose.message,author_id:0
+#: view:mail.mail:0
+#: field:mail.message,author_id:0
+msgid "Author"
+msgstr "Автор"
+
+#. module: mail
+#: view:mail.mail:0
+msgid "Message Details"
+msgstr "Детали за пораката"
+
+#. module: mail
+#: help:mail.mail,email_to:0
+msgid "Message recipients"
+msgstr "Примачи"
+
+#. module: mail
+#: help:mail.message.subtype,default:0
+msgid "Activated by default when subscribing."
+msgstr "Стандардно активирање со претплатување."
+
+#. module: mail
+#: view:mail.message:0
+msgid "Comments"
+msgstr "Коментари"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:313
+#, python-format
+msgid "more messages"
+msgstr "уште пораки"
+
+#. module: mail
+#: view:mail.alias:0
+#: view:mail.mail:0
+msgid "Group By..."
+msgstr "Групирај По..."
+
+#. module: mail
+#: help:mail.compose.message,body:0
+#: help:mail.message,body:0
+msgid "Automatically sanitized HTML contents"
+msgstr "Автоматски санирани HTML содржини"
+
+#. module: mail
+#: help:mail.alias,alias_name:0
+msgid ""
+"The name of the email alias, e.g. 'jobs' if you want to catch emails for "
+"<jobs@example.my.openerp.com>"
+msgstr ""
+"Име на алијас на e-mail адресата, пример 'jobs' доколку ги сакате пораките "
+"за <jobs@example.my.openerp.com>"
+
+#. module: mail
+#: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
+#: view:mail.compose.message:0
+msgid "Compose Email"
+msgstr "Состави е-пошта"
+
+#. module: mail
+#: constraint:mail.alias:0
+msgid ""
+"Invalid expression, it must be a literal python dictionary definition e.g. "
+"\"{'field': 'value'}\""
+msgstr ""
+"Невалиден израз, мора да биде буквална дефиниција од python речникот пример "
+"\"{'field': 'value'}\""
+
+#. module: mail
+#: view:mail.group:0
+msgid "Group Name"
+msgstr "Име на група"
+
+#. module: mail
+#: selection:mail.group,public:0
+msgid "Public"
+msgstr "Јавно"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:277
+#, python-format
+msgid "to"
+msgstr "до"
+
+#. module: mail
+#: view:mail.mail:0
+msgid "Body"
+msgstr "Тело"
+
+#. module: mail
+#: view:mail.message:0
+msgid "Show messages to read"
+msgstr "Прикажи ги пораките за читање"
+
+#. module: mail
+#: help:mail.compose.message,email_from:0
+#: help:mail.message,email_from:0
+msgid ""
+"Email address of the sender. This field is set when no matching partner is "
+"found for incoming emails."
+msgstr ""
+"E-mail адреса на испраќачот. Ова поле се поставува кога нема партнер што се "
+"совпаѓа за дојдовните e-mail пораки."
+
+#. module: mail
+#: model:ir.model,name:mail.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr "Волшебник за креирање на е-пошта"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:268
+#, python-format
+msgid "updated document"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail_followers.xml:23
+#, python-format
+msgid "Add others"
+msgstr "Додади други"
+
+#. module: mail
+#: field:mail.message.subtype,parent_id:0
+msgid "Parent"
+msgstr "Родител"
+
+#. module: mail
+#: help:res.partner,notification_email_send:0
+msgid ""
+"Policy to receive emails for new messages pushed to your personal Inbox:\n"
+"- Never: no emails are sent\n"
+"- Incoming Emails only: for messages received by the system via email\n"
+"- Incoming Emails and Discussions: for incoming emails along with internal "
+"discussions\n"
+"- All Messages: for every notification you receive in your Inbox"
+msgstr ""
+
+#. module: mail
+#: field:mail.group,message_unread:0
+#: field:mail.thread,message_unread:0
+#: field:res.partner,message_unread:0
+msgid "Unread Messages"
+msgstr "Непрочитани Пораки"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:313
+#, python-format
+msgid "show"
+msgstr "прикажи"
+
+#. module: mail
+#: help:mail.group,group_ids:0
+msgid ""
+"Members of those groups will automatically added as followers. Note that "
+"they will be able to manage their subscription manually if necessary."
+msgstr ""
+"Членовите на овие групи автоматски се додаваат како пратители. Имајте во "
+"предвид дека тие ќе можат сами да управуваат со претплатата рачно доколку е "
+"потребно."
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/mail.js:1029
+#, python-format
+msgid "Do you really want to delete this message?"
+msgstr "Навистина ли сакате да ја избришете пораката?"
+
+#. module: mail
+#: view:mail.message:0
+#: field:mail.notification,read:0
+msgid "Read"
+msgstr "Читај"
+
+#. module: mail
+#: view:mail.group:0
+msgid "Search Groups"
+msgstr "Барај групи"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/mail_followers.js:110
+#, python-format
+msgid ""
+"Warning! \n"
+" %s won't be notified of any email or discussion on this document. Do you "
+"really want to remove him from the followers ?"
+msgstr ""
+"Внимание! \n"
+" %s нема да биде известен за е-пошта или дискусија за овој документ. Дали "
+"сакате да го отстраните од пратители ?"
+
+#. module: mail
+#: field:mail.compose.message,res_id:0
+#: field:mail.followers,res_id:0
+#: field:mail.message,res_id:0
+#: field:mail.wizard.invite,res_id:0
+msgid "Related Document ID"
+msgstr "ID на поврзан документ"
+
+#. module: mail
+#: code:addons/mail/mail_message.py:737
+#, python-format
+msgid "Access Denied"
+msgstr "Пристапот е одбиен"
+
+#. module: mail
+#: help:mail.group,image_medium:0
+msgid ""
+"Medium-sized photo of the group. It is automatically resized as a 128x128px "
+"image, with aspect ratio preserved. Use this field in form views or some "
+"kanban views."
+msgstr ""
+"Слика од групата со средна големина. Автоматски се врши промена на "
+"големината во 128x128px со зачувување на односот. Ова поле се користи кај "
+"формите за преглед."
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:212
+#, python-format
+msgid "Uploading error"
+msgstr "Грешка при качување"
+
+#. module: mail
+#: model:mail.group,name:mail.group_support
+msgid "Support"
+msgstr "Поддршка"
+
+#. module: mail
+#: code:addons/mail/mail_message.py:738
+#, python-format
+msgid ""
+"The requested operation cannot be completed due to security restrictions. "
+"Please contact your system administrator.\n"
+"\n"
+"(Document type: %s, Operation: %s)"
+msgstr ""
+"Бараната операција не може да се изврши поради безбедносни причини. "
+"Контактирајте го администраторот.\n"
+"\n"
+"(Тип на документ: %s, Операција: %s)"
+
+#. module: mail
+#: view:mail.mail:0
+#: selection:mail.mail,state:0
+msgid "Received"
+msgstr "Примено"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:71
+#, python-format
+msgid "Attach a File"
+msgstr "Прикачи датотека"
+
+#. module: mail
+#: view:mail.mail:0
+msgid "Thread"
+msgstr "Нишка"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:29
+#, python-format
+msgid "Open the full mail composer"
+msgstr "Отворете го целосниот креатор за пораки"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:29
+#, python-format
+msgid "&ograve"
+msgstr "&ograve"
+
+#. module: mail
+#: field:base.config.settings,alias_domain:0
+msgid "Alias Domain"
+msgstr "Домеин на алијас"
+
+#. module: mail
+#: field:mail.group,group_ids:0
+msgid "Auto Subscription"
+msgstr "Автоматско претплатување"
+
+#. module: mail
+#: field:mail.mail,references:0
+msgid "References"
+msgstr "Референци"
+
+#. module: mail
+#: view:mail.wizard.invite:0
+msgid "Add Followers"
+msgstr "Додади пратители"
+
+#. module: mail
+#: help:mail.compose.message,author_id:0
+#: help:mail.message,author_id:0
+msgid ""
+"Author of the message. If not set, email_from may hold an email address that "
+"did not match any partner."
+msgstr ""
+"Автор на пораката. Доколку не е подесено, email_from може да содржи e-mail "
+"адреса што не се совпаѓа со никој партнер."
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:96
+#: code:addons/mail/static/src/xml/mail.xml:108
+#, python-format
+msgid "uploading"
+msgstr "качување"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail_followers.xml:52
+#, python-format
+msgid "more."
+msgstr "повеќе."
+
+#. module: mail
+#: help:mail.compose.message,type:0
+#: help:mail.message,type:0
+msgid ""
+"Message type: email for email message, notification for system message, "
+"comment for other messages such as user replies"
+msgstr ""
+"Тип на порака: e-mail за e-mail порака, известување за системски пораки, "
+"коментар за други пораки како кориснички одговори"
+
+#. module: mail
+#: help:mail.message.subtype,relation_field:0
+msgid ""
+"Field used to link the related model to the subtype model when using "
+"automatic subscription on a related document. The field is used to compute "
+"getattr(related_document.relation_field)."
+msgstr ""
+"Поле кое се користи за поврзување на моделот со моделот на подтипот со "
+"користење на автоматско претплатување на поврзаниот документ. Полето се "
+"користи за обработка на  getattr(related_document.relation_field)."
+
+#. module: mail
+#: selection:mail.mail,state:0
+msgid "Cancelled"
+msgstr "Откажано"
+
+#. module: mail
+#: field:mail.mail,reply_to:0
+msgid "Reply-To"
+msgstr "Одговори на"
+
+#. module: mail
+#: code:addons/mail/wizard/invite.py:37
+#, python-format
+msgid "<div>You have been invited to follow %s.</div>"
+msgstr "<div>Поканети сте да го следите %s.</div>"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:53
+#, python-format
+msgid "Send a message"
+msgstr "Испрати порака"
+
+#. module: mail
+#: help:mail.group,message_unread:0
+#: help:mail.thread,message_unread:0
+#: help:res.partner,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Доколку е штиклирано, новите пораки го бараат вашето вниманите."
+
+#. module: mail
+#: field:mail.group,image_medium:0
+msgid "Medium-sized photo"
+msgstr "Слика со средна големина"
+
+#. module: mail
+#: model:ir.actions.client,name:mail.action_mail_to_me_feeds
+#: model:ir.ui.menu,name:mail.mail_tomefeeds
+msgid "To: me"
+msgstr "До: мене"
+
+#. module: mail
+#: field:mail.message.subtype,name:0
+msgid "Message Type"
+msgstr "Тип на порака"
+
+#. module: mail
+#: field:mail.mail,auto_delete:0
+msgid "Auto Delete"
+msgstr "Автоматско бришење"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:294
+#, python-format
+msgid "notified"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:274
+#, python-format
+msgid "logged a note"
+msgstr "додаде белешка"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail_followers.xml:12
+#: view:mail.group:0
+#, python-format
+msgid "Unfollow"
+msgstr "Прекини со следење"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:312
+#, python-format
+msgid "show one more message"
+msgstr "прикажи уште една порака"
+
+#. module: mail
+#: code:addons/mail/mail_mail.py:75
+#: code:addons/mail/res_users.py:69
+#, python-format
+msgid "Invalid Action!"
+msgstr "Невалидна Постапка!"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:25
+#, python-format
+msgid "User img"
+msgstr "Корисничка img"
+
+#. module: mail
+#: model:ir.actions.act_window,name:mail.action_view_mail_mail
+#: model:ir.ui.menu,name:mail.menu_mail_mail
+#: view:mail.mail:0
+#: view:mail.message:0
+msgid "Emails"
+msgstr "Е-пошти"
+
+#. module: mail
+#: field:mail.followers,partner_id:0
+msgid "Related Partner"
+msgstr "Поврзан партнер"
+
+#. module: mail
+#: help:mail.group,message_summary:0
+#: help:mail.thread,message_summary:0
+#: help:res.partner,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+"Го содржи прегледот за комуникацијата (број на пораки и сл.). Овој преглед е "
+"во html формат со цел да биде вметнат во kanban приказ."
+
+#. module: mail
+#: help:mail.alias,alias_model_id:0
+msgid ""
+"The model (OpenERP Document Kind) to which this alias corresponds. Any "
+"incoming email that does not reply to an existing record will cause the "
+"creation of a new record of this model (e.g. a Project Task)"
+msgstr ""
+"Моделот (OpenERP Document Kind) на кој алијасот одговара. Секој влезен e-"
+"mail кој што не одговара на постоечки запис, ќе предизвика креирање на нов "
+"запис на тој модел (пр. Проектна задача)"
+
+#. module: mail
+#: view:base.config.settings:0
+msgid "mycompany.my.openerp.com"
+msgstr "mycompany.my.openerp.com"
+
+#. module: mail
+#: field:mail.message.subtype,relation_field:0
+msgid "Relation field"
+msgstr "Поле за врска"
+
+#. module: mail
+#: selection:mail.compose.message,type:0
+#: selection:mail.message,type:0
+msgid "System notification"
+msgstr "Системско известување"
+
+#. module: mail
+#: view:mail.message:0
+msgid "To Read"
+msgstr ""
+
+#. module: mail
+#: model:ir.model,name:mail.model_res_partner
+msgid "Partner"
+msgstr "Партнер"
+
+#. module: mail
+#: model:ir.ui.menu,name:mail.mail_my_stuff
+msgid "Organizer"
+msgstr "Организатор"
+
+#. module: mail
+#: field:mail.compose.message,subject:0
+#: field:mail.message,subject:0
+msgid "Subject"
+msgstr "Тема"
+
+#. module: mail
+#: field:mail.wizard.invite,partner_ids:0
+msgid "Partners"
+msgstr "Партнери"
+
+#. module: mail
+#: view:mail.mail:0
+msgid "Retry"
+msgstr "Обиди се повторно"
+
+#. module: mail
+#: field:mail.compose.message,email_from:0
+#: field:mail.mail,email_from:0
+#: field:mail.message,email_from:0
+msgid "From"
+msgstr "Од"
+
+#. module: mail
+#: field:mail.compose.message,subtype_id:0
+#: field:mail.followers,subtype_ids:0
+#: field:mail.message,subtype_id:0
+#: view:mail.message.subtype:0
+msgid "Subtype"
+msgstr "Подтип"
+
+#. module: mail
+#: view:mail.mail:0
+#: view:mail.message.subtype:0
+msgid "Email message"
+msgstr "Е-mail порака"
+
+#. module: mail
+#: model:ir.model,name:mail.model_base_config_settings
+msgid "base.config.settings"
+msgstr "base.config.settings"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/mail_followers.js:157
+#, python-format
+msgid "followers"
+msgstr "пратители"
+
+#. module: mail
+#: view:mail.group:0
+msgid "Send a message to the group"
+msgstr "Испрати порака до група"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:36
+#: view:mail.compose.message:0
+#, python-format
+msgid "Send"
+msgstr "Испрати"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/mail_followers.js:153
+#, python-format
+msgid "No followers"
+msgstr "Нема пратители"
+
+#. module: mail
+#: view:mail.mail:0
+msgid "Failed"
+msgstr "Неуспешно"
+
+#. module: mail
+#: view:mail.mail:0
+msgid "Cancel Email"
+msgstr "Откажи Email"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail_followers.xml:22
+#: model:ir.actions.act_window,name:mail.action_view_followers
+#: model:ir.ui.menu,name:mail.menu_email_followers
+#: view:mail.followers:0
+#: field:mail.group,message_follower_ids:0
+#: field:mail.thread,message_follower_ids:0
+#: field:res.partner,message_follower_ids:0
+#, python-format
+msgid "Followers"
+msgstr "Пратители"
+
+#. module: mail
+#: model:ir.actions.client,name:mail.action_mail_archives_feeds
+#: model:ir.ui.menu,name:mail.mail_archivesfeeds
+msgid "Archives"
+msgstr "Архиви"
+
+#. module: mail
+#: view:mail.compose.message:0
+msgid "Subject..."
+msgstr "Тема..."
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:95
+#: code:addons/mail/static/src/xml/mail.xml:107
+#, python-format
+msgid "Delete this attachment"
+msgstr "Избриши го оваа прикачување"
+
+#. module: mail
+#: code:addons/mail/mail_thread.py:112
+#, python-format
+msgid "New"
+msgstr "Ново"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/mail_followers.js:155
+#, python-format
+msgid "One follower"
+msgstr "Еден пратител"
+
+#. module: mail
+#: field:mail.compose.message,model:0
+#: field:mail.followers,res_model:0
+#: field:mail.message,model:0
+#: field:mail.wizard.invite,res_model:0
+msgid "Related Document Model"
+msgstr "Поврзан модел на документ"
+
+#. module: mail
+#: field:mail.compose.message,type:0
+#: field:mail.message,type:0
+msgid "Type"
+msgstr "Тип"
+
+#. module: mail
+#: selection:mail.compose.message,type:0
+#: view:mail.mail:0
+#: selection:mail.message,type:0
+msgid "Email"
+msgstr "Е-пошта"
+
+#. module: mail
+#: field:ir.ui.menu,mail_group_id:0
+msgid "Mail Group"
+msgstr "Група за пошта"
+
+#. module: mail
+#: field:mail.alias,alias_defaults:0
+msgid "Default Values"
+msgstr "Стандардна вредност"
+
+#. module: mail
+#: view:mail.mail:0
+msgid "by"
+msgstr "од"
+
+#. module: mail
+#: code:addons/mail/res_users.py:89
+#, python-format
+msgid "%s has joined the %s network."
+msgstr "%s се приклучи на %s мрежата."
+
+#. module: mail
+#: help:mail.group,image_small:0
+msgid ""
+"Small-sized photo of the group. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
+msgstr ""
+"Слика од групата со мала големина. Автоматски се врши промена на големината "
+"во 64x64px со зачувување на односот. Ова поле се користи каде што има "
+"потреба од мала слика."
+
+#. module: mail
+#: view:mail.compose.message:0
+#: field:mail.message,partner_ids:0
+msgid "Recipients"
+msgstr "Примачи"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:140
+#, python-format
+msgid "<<<"
+msgstr "<<<"
+
+#. module: mail
+#: field:mail.group,group_public_id:0
+msgid "Authorized Group"
+msgstr "Овластена група"
+
+#. module: mail
+#: view:mail.group:0
+msgid "Join Group"
+msgstr "Приклучи се на групата"
+
+#. module: mail
+#: help:mail.mail,email_from:0
+msgid "Message sender, taken from user preferences."
+msgstr "Испраќач на пораката, земен од прилагодувањата за корисникот."
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/mail.js:978
+#, python-format
+msgid "read more"
+msgstr ""
+
+#. module: mail
+#: code:addons/mail/wizard/invite.py:40
+#, python-format
+msgid "<div>You have been invited to follow a new document.</div>"
+msgstr "<div>Поканети сте да следите нов документ.</div>"
+
+#. module: mail
+#: field:mail.compose.message,parent_id:0
+#: field:mail.message,parent_id:0
+msgid "Parent Message"
+msgstr "Изворна порака"
+
+#. module: mail
+#: selection:res.partner,notification_email_send:0
+msgid "All Messages (discussions, emails, followed system notifications)"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/mail_followers.js:252
+#, python-format
+msgid ""
+"Warning! \n"
+"You won't be notified of any email or discussion on this document. Do you "
+"really want to unfollow this document ?"
+msgstr ""
+"Внимание! \n"
+"Нема да бидете известени за е-пошта или дискусија за овој документ. Дали "
+"сакате да го прекинете следењето на овој документ ?"
+
+#. module: mail
+#: model:ir.actions.client,help:mail.action_mail_to_me_feeds
+msgid ""
+"<p>\n"
+"                    <b>No private message.</b>\n"
+"                </p><p>\n"
+"                    This list contains messages sent to you.\n"
+"                </p>\n"
+"            "
+msgstr ""
+"<p>\n"
+"                    <b>Нема приватна порака.</b>\n"
+"                </p><p>\n"
+"                    Оваа листа ги содржи пораките пратени до вас.\n"
+"                </p>\n"
+"            "
+
+#. module: mail
+#: model:mail.group,name:mail.group_rd
+msgid "R&D"
+msgstr "R&D"
+
+#. module: mail
+#: model:ir.model,name:mail.model_mail_wizard_invite
+msgid "Invite wizard"
+msgstr "Волшебник за покани"
+
+#. module: mail
+#: view:mail.mail:0
+msgid "Advanced"
+msgstr "Напредно"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:244
+#, python-format
+msgid "Move to Inbox"
+msgstr "Премести во Влезно сандаче"
+
+#. module: mail
+#: code:addons/mail/wizard/mail_compose_message.py:193
+#, python-format
+msgid "Re:"
+msgstr "Одговор:"
+
+#. module: mail
+#: field:mail.compose.message,to_read:0
+#: field:mail.message,to_read:0
+msgid "To read"
+msgstr "За читање"
+
+#. module: mail
+#: code:addons/mail/res_users.py:69
+#, python-format
+msgid ""
+"You may not create a user. To create new users, you should use the "
+"\"Settings > Users\" menu."
+msgstr ""
+"Не можете да креирате нов корисник. За креирање на корисници треба да го "
+"користите \"Подесувања > Корисници\" менито."
+
+#. module: mail
+#: help:mail.followers,res_model:0
+#: help:mail.wizard.invite,res_model:0
+msgid "Model of the followed resource"
+msgstr "Модел на следениот ресурс"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/mail.js:979
+#, python-format
+msgid "read less"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:337
+#, python-format
+msgid "like"
+msgstr "како"
+
+#. module: mail
+#: view:mail.compose.message:0
+#: view:mail.wizard.invite:0
+msgid "Cancel"
+msgstr "Откажи"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:47
+#, python-format
+msgid "Share with my followers..."
+msgstr "Сподели со моите пратители..."
+
+#. module: mail
+#: field:mail.notification,partner_id:0
+msgid "Contact"
+msgstr "Контакт"
+
+#. module: mail
+#: view:mail.group:0
+msgid ""
+"Only the invited followers can read the\n"
+"                                    discussions on this group."
+msgstr ""
+"Само поканети пратители можат да ги читат\n"
+"                                    дискусиите на оваа група."
+
+#. module: mail
+#: model:ir.model,name:mail.model_ir_ui_menu
+msgid "ir.ui.menu"
+msgstr "ir.ui.menu"
+
+#. module: mail
+#: view:mail.message:0
+msgid "Has attachments"
+msgstr "Има прикачувања"
+
+#. module: mail
+#: view:mail.mail:0
+msgid "on"
+msgstr "на"
+
+#. module: mail
+#: code:addons/mail/mail_message.py:926
+#, python-format
+msgid ""
+"The following partners chosen as recipients for the email have no email "
+"address linked :"
+msgstr ""
+"Следните партнери избрани како примачи на пораката немаат поврзно e-mail "
+"адреса :"
+
+#. module: mail
+#: help:mail.alias,alias_defaults:0
+msgid ""
+"A Python dictionary that will be evaluated to provide default values when "
+"creating new records for this alias."
+msgstr ""
+"Python речник ќе биде користен за да обезбеди стандардни вредности при "
+"креирање нови записи за овој алијас."
+
+#. module: mail
+#: model:ir.model,name:mail.model_mail_message_subtype
+msgid "Message subtypes"
+msgstr "Подтип на порака"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:37
+#: code:addons/mail/static/src/xml/mail.xml:55
+#, python-format
+msgid "Log a note"
+msgstr "Додади белешка"
+
+#. module: mail
+#: selection:mail.compose.message,type:0
+#: view:mail.mail:0
+#: selection:mail.message,type:0
+msgid "Comment"
+msgstr "Коментар"
+
+#. module: mail
+#: model:ir.actions.client,help:mail.action_mail_inbox_feeds
+msgid ""
+"<p>\n"
+"                    <b>Good Job!</b> Your inbox is empty.\n"
+"                </p><p>\n"
+"                    Your inbox contains private messages or emails sent to "
+"you\n"
+"                    as well as information related to documents or people "
+"you\n"
+"                    follow.\n"
+"                </p>\n"
+"            "
+msgstr ""
+"<p>\n"
+"                    <b>Добра работа!</b> Влезното сандаче е празно.\n"
+"                </p><p>\n"
+"                    Вашето влезно сандаче ги содржи приватните и e-mail "
+"пораките \n"
+"                    пратени до вас како и информации поврзани со документи "
+"или \n"
+"                    луѓе што ги следите.\n"
+"                </p>\n"
+"            "
+
+#. module: mail
+#: field:mail.mail,notification:0
+msgid "Is Notification"
+msgstr "Е известување"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:188
+#, python-format
+msgid "Compose a new message"
+msgstr "Состави нова порака"
+
+#. module: mail
+#: view:mail.mail:0
+msgid "Send Now"
+msgstr "Испрати сега"
+
+#. module: mail
+#: code:addons/mail/mail_mail.py:75
+#, python-format
+msgid ""
+"Unable to send email, please configure the sender's email address or alias."
+msgstr ""
+"Пораката не може да се испрати, ве молиме конфигурирајте ја e-mail адресата "
+"на испраќачот или алијас."
+
+#. module: mail
+#: help:res.users,alias_id:0
+msgid ""
+"Email address internally associated with this user. Incoming emails will "
+"appear in the user's notifications."
+msgstr ""
+"E-mail адреса внатрешно поврзана со овој корисник. Дојдовните e-mail пораки "
+"ќе се прикажат во известувањата на корисникот."
+
+#. module: mail
+#: field:mail.group,image:0
+msgid "Photo"
+msgstr "Фотографија"
+
+#. module: mail
+#: help:mail.compose.message,vote_user_ids:0
+#: help:mail.message,vote_user_ids:0
+msgid "Users that voted for this message"
+msgstr "Корисници што гласале за оваа порака"
+
+#. module: mail
+#: help:mail.group,alias_id:0
+msgid ""
+"The email address associated with this group. New emails received will "
+"automatically create new topics."
+msgstr ""
+"E-mail адреса поврзана со оваа група. Новите e-mail пораки автоматски ќе "
+"креираат нови теми."
+
+#. module: mail
+#: view:mail.mail:0
+msgid "Month"
+msgstr "Месец"
+
+#. module: mail
+#: view:mail.mail:0
+msgid "Email Search"
+msgstr "Пребарување на e-mail"
+
+#. module: mail
+#: field:mail.compose.message,child_ids:0
+#: field:mail.message,child_ids:0
+msgid "Child Messages"
+msgstr "Порака (дете)"
+
+#. module: mail
+#: field:mail.alias,alias_user_id:0
+msgid "Owner"
+msgstr "Сопственик"
+
+#. module: mail
+#: code:addons/mail/res_partner.py:52
+#, python-format
+msgid "Partner Profile"
+msgstr "Профил на партнер"
+
+#. module: mail
+#: model:ir.model,name:mail.model_mail_message
+#: field:mail.mail,mail_message_id:0
+#: view:mail.message:0
+#: field:mail.notification,message_id:0
+#: field:mail.wizard.invite,message:0
+msgid "Message"
+msgstr "Порака"
+
+#. module: mail
+#: help:mail.followers,res_id:0
+#: help:mail.wizard.invite,res_id:0
+msgid "Id of the followed resource"
+msgstr "ID на ресурсот што се следи"
+
+#. module: mail
+#: field:mail.compose.message,body:0
+#: field:mail.message,body:0
+msgid "Contents"
+msgstr "Содржини"
+
+#. module: mail
+#: model:ir.actions.act_window,name:mail.action_view_mail_alias
+#: model:ir.ui.menu,name:mail.mail_alias_menu
+msgid "Aliases"
+msgstr "Алијаси"
+
+#. module: mail
+#: help:mail.message.subtype,description:0
+msgid ""
+"Description that will be added in the message posted for this subtype. If "
+"void, the name will be added instead."
+msgstr ""
+"Опис што ќе биде додаден во пораката пратена за овој подтип. Доколку е "
+"поништено, ќе се додаде името."
+
+#. module: mail
+#: field:mail.compose.message,vote_user_ids:0
+#: field:mail.message,vote_user_ids:0
+msgid "Votes"
+msgstr "Гласови"
+
+#. module: mail
+#: view:mail.group:0
+msgid "Group"
+msgstr "Група"
+
+#. module: mail
+#: help:mail.compose.message,starred:0
+#: help:mail.message,starred:0
+msgid "Current user has a starred notification linked to this message"
+msgstr "Моменталниот корисник има известување поврзано со оваа порака"
+
+#. module: mail
+#: field:mail.group,public:0
+msgid "Privacy"
+msgstr "Приватност"
+
+#. module: mail
+#: view:mail.mail:0
+msgid "Notification"
+msgstr "Известување"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/mail.js:654
+#, python-format
+msgid "Please complete partner's informations"
+msgstr "Ве молилме комплетирајте ги информациите за партнерите"
+
+#. module: mail
+#: code:addons/mail/mail_mail.py:190
+#, python-format
+msgid "<p>Access this document <a href=\"%s\">directly in OpenERP</a></p>"
+msgstr ""
+"<p>Пристапи до овој документ <a href=\"%s\">директно во OpenERP</a></p>"
+
+#. module: mail
+#: view:mail.compose.message:0
+msgid "Followers of selected items and"
+msgstr "Пратители на избраните предмети и"
+
+#. module: mail
+#: field:mail.alias,alias_force_thread_id:0
+msgid "Record Thread ID"
+msgstr "ID на нишка на запис"
+
+#. module: mail
+#: model:ir.model,name:mail.model_publisher_warranty_contract
+msgid "publisher_warranty.contract"
+msgstr "publisher_warranty.contract"
+
+#. module: mail
+#: model:ir.ui.menu,name:mail.mail_group_root
+msgid "My Groups"
+msgstr "Мои Групи"
+
+#. module: mail
+#: model:ir.actions.client,help:mail.action_mail_archives_feeds
+msgid ""
+"<p>\n"
+"                    No message found and no message sent yet.\n"
+"                </p><p>\n"
+"                    Click on the top-right icon to compose a message. This\n"
+"                    message will be sent by email if it's an internal "
+"contact.\n"
+"                </p>\n"
+"            "
+msgstr ""
+"<p>\n"
+"                    Нема пронајдено пораки и нема пратено пораки.\n"
+"                </p><p>\n"
+"                    За креирање на порака кликни на иконата горе-десно. Оваа "
+"                    порака ќе биде пратена како e-mail доколку се работи за "
+"внатрешен контакт.\n"
+"                </p>\n"
+"            "
+
+#. module: mail
+#: view:mail.mail:0
+#: field:mail.mail,state:0
+msgid "Status"
+msgstr "Статус"
+
+#. module: mail
+#: view:mail.mail:0
+#: selection:mail.mail,state:0
+msgid "Outgoing"
+msgstr "Појдовни"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:54
+#: code:addons/mail/static/src/xml/mail.xml:191
+#: view:mail.compose.message:0
+#: view:mail.wizard.invite:0
+#, python-format
+msgid "or"
+msgstr "или"
+
+#. module: mail
+#: code:addons/mail/mail_thread.py:111
+#, python-format
+msgid "You have one unread message"
+msgstr "Имате една непрочитана порака"
+
+#. module: mail
+#: help:mail.compose.message,record_name:0
+#: help:mail.message,record_name:0
+msgid "Name get of the related document."
+msgstr "Превземи име од поврзаниот документ."
+
+#. module: mail
+#: model:ir.actions.act_window,name:mail.action_view_notifications
+#: model:ir.model,name:mail.model_mail_notification
+#: model:ir.ui.menu,name:mail.menu_email_notifications
+#: field:mail.compose.message,notification_ids:0
+#: view:mail.message:0
+#: field:mail.message,notification_ids:0
+#: view:mail.notification:0
+msgid "Notifications"
+msgstr "Известувања"
+
+#. module: mail
+#: view:mail.alias:0
+msgid "Search Alias"
+msgstr "Пребарувај алијаси"
+
+#. module: mail
+#: help:mail.alias,alias_force_thread_id:0
+msgid ""
+"Optional ID of a thread (record) to which all incoming messages will be "
+"attached, even if they did not reply to it. If set, this will disable the "
+"creation of new records completely."
+msgstr ""
+"Опционен идентификатор на нишка (запис) на која сите влезни пораки ќе бидат "
+"прикачени, дури и ако не и одговорат. Доколку е подесено, ова ќе оневозможи "
+"креирање на нови записи."
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:311
+#, python-format
+msgid "show more message"
+msgstr "прикажи уште пораки"
+
+#. module: mail
+#: help:mail.message.subtype,name:0
+msgid ""
+"Message subtype gives a more precise type on the message, especially for "
+"system notifications. For example, it can be a notification related to a new "
+"record (New), or to a stage change in a process (Stage change). Message "
+"subtypes allow to precisely tune the notifications the user want to receive "
+"on its wall."
+msgstr ""
+"Подтипот на пораката дава попрецизна дефиниција на пораката, посебно за "
+"системски известувања. На пример тоа може да биде известување за нов запис "
+"(Нов) или промена на ниво во одреден процес (Промена на ниво). Подтипот на "
+"пораките овозможува прецизно одбирање од страна на корисникот кој "
+"известувања ќе се прикажуваат."
+
+#. module: mail
+#: field:res.partner,notification_email_send:0
+msgid "Receive Messages by Email"
+msgstr ""
+
+#. module: mail
+#: model:mail.group,name:mail.group_best_sales_practices
+msgid "Best Sales Practices"
+msgstr "Практика за најдобра продажба"
+
+#. module: mail
+#: selection:mail.group,public:0
+msgid "Selected Group Only"
+msgstr "Само за избраната група"
+
+#. module: mail
+#: field:mail.group,message_is_follower:0
+#: field:mail.thread,message_is_follower:0
+#: field:res.partner,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Е пратител"
+
+#. module: mail
+#: view:mail.alias:0
+#: view:mail.mail:0
+msgid "User"
+msgstr "Корисник"
+
+#. module: mail
+#: view:mail.group:0
+msgid "Groups"
+msgstr "Групи"
+
+#. module: mail
+#: view:mail.message:0
+msgid "Messages Search"
+msgstr "Пребарувај низ пораките"
+
+#. module: mail
+#: field:mail.compose.message,date:0
+#: field:mail.message,date:0
+msgid "Date"
+msgstr "Датум"
+
+#. module: mail
+#: view:mail.mail:0
+msgid "Extended Filters..."
+msgstr "Проширени филтри..."
+
+#. module: mail
+#: selection:res.partner,notification_email_send:0
+msgid "Incoming Emails only"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:292
+#, python-format
+msgid "more"
+msgstr "повеќе"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:120
+#, python-format
+msgid "To:"
+msgstr "До:"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:193
+#, python-format
+msgid "Write to my followers"
+msgstr "Пиши им на моите пратители"
+
+#. module: mail
+#: model:ir.model,name:mail.model_res_groups
+msgid "Access Groups"
+msgstr "Групи за пристап"
+
+#. module: mail
+#: field:mail.message.subtype,default:0
+msgid "Default"
+msgstr "Стандардно"
+
+#. module: mail
+#: model:ir.model,name:mail.model_res_users
+msgid "Users"
+msgstr "Корисници"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:246
+#, python-format
+msgid "Mark as Todo"
+msgstr "Обележи како ДаСеНаправи"
+
+#. module: mail
+#: help:mail.message.subtype,parent_id:0
+msgid "Parent subtype, used for automatic subscription."
+msgstr "Изворен подтип, се користи за автоматско претплатување."
+
+#. module: mail
+#: field:mail.group,message_summary:0
+#: field:mail.thread,message_summary:0
+#: field:res.partner,message_summary:0
+msgid "Summary"
+msgstr "Резиме"
+
+#. module: mail
+#: code:addons/mail/mail_mail.py:222
+#: code:addons/mail/mail_mail.py:244
+#, python-format
+msgid "\"Followers of %s\" <%s>"
+msgstr ""
+
+#. module: mail
+#: view:mail.compose.message:0
+#: view:mail.wizard.invite:0
+msgid "Add contacts to notify..."
+msgstr "Додади контакти за известување..."
+
+#. module: mail
+#: view:mail.group:0
+msgid "Group Form"
+msgstr "Форма за групи"
+
+#. module: mail
+#: field:mail.compose.message,starred:0
+#: field:mail.message,starred:0
+#: field:mail.notification,starred:0
+msgid "Starred"
+msgstr "Набљудувани"
+
+#. module: mail
+#: field:mail.group,menu_id:0
+msgid "Related Menu"
+msgstr "Поврзано мени"
+
+#. module: mail
+#: code:addons/mail/update.py:93
+#, python-format
+msgid "Error"
+msgstr "Грешка"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail_followers.xml:13
+#, python-format
+msgid "Following"
+msgstr "Следи"
+
+#. module: mail
+#: sql_constraint:mail.alias:0
+msgid ""
+"Unfortunately this email alias is already used, please choose a unique one"
+msgstr ""
+"За жал овој алијас веќе се користи, ве молиме изберете уникатен алијас"
+
+#. module: mail
+#: help:mail.alias,alias_user_id:0
+msgid ""
+"The owner of records created upon receiving emails on this alias. If this "
+"field is not set the system will attempt to find the right owner based on "
+"the sender (From) address, or will use the Administrator account if no "
+"system user is found for that address."
+msgstr ""
+"Сопственик на записите креирани по примањето на пораките на овој алијас. "
+"Доколку ова поле не е конфигурирано, системот ќе се обиде да го пронајде "
+"вистинскиот сопственик врз база на адресата на испраќачот или ќе ја користи "
+"администраторската сметка доколку не се пронајде системски корисник за таа "
+"адреса."
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail_followers.xml:52
+#, python-format
+msgid "And"
+msgstr "И"
+
+#. module: mail
+#: code:addons/mail/mail_thread.py:111
+#, python-format
+msgid "You have %d unread messages"
+msgstr "Имате %d непрочитани пораки"
+
+#. module: mail
+#: field:mail.compose.message,message_id:0
+#: field:mail.message,message_id:0
+msgid "Message-Id"
+msgstr "Идентификатор на порака"
+
+#. module: mail
+#: help:mail.group,image:0
+msgid ""
+"This field holds the image used as photo for the group, limited to "
+"1024x1024px."
+msgstr ""
+"Ова поле ја содржи сликата што се користи за групата, ограничена на "
+"1024x1024px."
+
+#. module: mail
+#: field:mail.compose.message,attachment_ids:0
+#: view:mail.mail:0
+#: field:mail.message,attachment_ids:0
+msgid "Attachments"
+msgstr "Прилози"
+
+#. module: mail
+#: field:mail.compose.message,record_name:0
+#: field:mail.message,record_name:0
+msgid "Message Record Name"
+msgstr "Име на записот на пораката"
+
+#. module: mail
+#: field:mail.mail,email_cc:0
+msgid "Cc"
+msgstr "Копија"
+
+#. module: mail
+#: help:mail.notification,starred:0
+msgid "Starred message that goes into the todo mailbox"
+msgstr "Набљудувана порака што се префрлува во ДаСеНаправи сандачето"
+
+#. module: mail
+#: view:mail.group:0
+msgid "Topics discussed in this group..."
+msgstr "Теми дискутирани во оваа група..."
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:123
+#: view:mail.compose.message:0
+#, python-format
+msgid "Followers of"
+msgstr "Пратители на"
+
+#. module: mail
+#: help:mail.mail,auto_delete:0
+msgid "Permanently delete this email after sending it, to save space"
+msgstr ""
+"Трајно избриши ја пораката откако ќе се испрати, за да заштедите простор"
+
+#. module: mail
+#: model:ir.actions.client,name:mail.action_mail_group_feeds
+msgid "Discussion Group"
+msgstr "Група за дискусија"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:242
+#, python-format
+msgid "Done"
+msgstr "Завршено"
+
+#. module: mail
+#: model:mail.message.subtype,name:mail.mt_comment
+msgid "Discussions"
+msgstr "Дискусии"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail_followers.xml:11
+#, python-format
+msgid "Follow"
+msgstr "Следи"
+
+#. module: mail
+#: model:mail.group,name:mail.group_all_employees
+msgid "Whole Company"
+msgstr "Цела компанија"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:129
+#: code:addons/mail/static/src/xml/mail.xml:292
+#: view:mail.compose.message:0
+#, python-format
+msgid "and"
+msgstr "и"
+
+#. module: mail
+#: help:mail.mail,body_html:0
+msgid "Rich-text/HTML message"
+msgstr "Текстуална/HTML порака"
+
+#. module: mail
+#: view:mail.mail:0
+msgid "Creation Month"
+msgstr "Месец на креирање"
+
+#. module: mail
+#: help:mail.compose.message,notified_partner_ids:0
+#: help:mail.message,notified_partner_ids:0
+msgid ""
+"Partners that have a notification pushing this message in their mailboxes"
+msgstr ""
+"Партнери што имаат известувања што ја проследуваат пораката до нивните "
+"сандачиња"
+
+#. module: mail
+#: view:mail.message:0
+msgid "Show already read messages"
+msgstr ""
+
+#. module: mail
+#: view:mail.message:0
+msgid "Content"
+msgstr "Содржина"
+
+#. module: mail
+#: field:mail.mail,email_to:0
+msgid "To"
+msgstr "До"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:245
+#: view:mail.mail:0
+#, python-format
+msgid "Reply"
+msgstr "Одговори"
+
+#. module: mail
+#: field:mail.compose.message,notified_partner_ids:0
+#: field:mail.message,notified_partner_ids:0
+msgid "Notified partners"
+msgstr "Известени партнери"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:126
+#, python-format
+msgid "this document"
+msgstr "овој документ"
+
+#. module: mail
+#: help:mail.group,public:0
+msgid ""
+"This group is visible by non members.             Invisible groups can add "
+"members through the invite button."
+msgstr ""
+"Оваа група е видлива и за тие што не се членови.  Невидливите групи можат да "
+"додадат членови со копчето Покани."
+
+#. module: mail
+#: model:mail.group,name:mail.group_board
+msgid "Board meetings"
+msgstr "Состаноци на одборот"
+
+#. module: mail
+#: field:mail.alias,alias_model_id:0
+msgid "Aliased Model"
+msgstr "Модел на алијас"
+
+#. module: mail
+#: help:mail.compose.message,message_id:0
+#: help:mail.message,message_id:0
+msgid "Message unique identifier"
+msgstr "Единствен идентификатор на порака"
+
+#. module: mail
+#: field:mail.group,description:0
+#: field:mail.message.subtype,description:0
+msgid "Description"
+msgstr "Опис"
+
+#. module: mail
+#: model:ir.model,name:mail.model_mail_followers
+msgid "Document Followers"
+msgstr "Пратители на документ"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail_followers.xml:35
+#, python-format
+msgid "Remove this follower"
+msgstr "Отстрани го овој пратител"
+
+#. module: mail
+#: selection:res.partner,notification_email_send:0
+msgid "Never"
+msgstr "Никогаш"
+
+#. module: mail
+#: field:mail.mail,mail_server_id:0
+msgid "Outgoing mail server"
+msgstr "Сервер за излезна пошта"
+
+#. module: mail
+#: code:addons/mail/mail_message.py:930
+#, python-format
+msgid "Partners email addresses not found"
+msgstr "E-mail адресите на партнерите не се пронајдени"
+
+#. module: mail
+#: view:mail.mail:0
+#: selection:mail.mail,state:0
+msgid "Sent"
+msgstr "Испратено"
+
+#. module: mail
+#: field:mail.mail,body_html:0
+msgid "Rich-text Contents"
+msgstr "Текстуални содржини"
+
+#. module: mail
+#: help:mail.compose.message,to_read:0
+#: help:mail.message,to_read:0
+msgid "Current user has an unread notification linked to this message"
+msgstr "Овој корисник има непрочитано известување поврзано со оваа порака"
+
+#. module: mail
+#: model:ir.model,name:mail.model_mail_thread
+msgid "Email Thread"
+msgstr "Е-mail нишка"
+
+#. module: mail
+#: model:ir.actions.act_window,name:mail.action_view_groups
+#: model:ir.ui.menu,name:mail.mail_allgroups
+msgid "Join a group"
+msgstr "Приклучи се на група"
+
+#. module: mail
+#: model:ir.actions.client,help:mail.action_mail_group_feeds
+msgid ""
+"<p>\n"
+"                    No message in this group.\n"
+"                </p>\n"
+"            "
+msgstr ""
+"<p>\n"
+"                    Нема порака во оваа група.\n"
+"                </p>\n"
+"            "
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:213
+#, python-format
+msgid "Please, wait while the file is uploading."
+msgstr "Ве молиме почекајте додека фајлот се качува."
+
+#. module: mail
+#: view:mail.group:0
+msgid ""
+"This group is visible by everyone,\n"
+"                                    including your customers if you "
+"installed\n"
+"                                    the portal module."
+msgstr ""
+"Оваа група можат да ја видат сите,\n"
+"                                    вклучувајки ги и клиентите доколку го "
+"имате\n"
+"                                    инсталирано portal модулот."
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:243
+#, python-format
+msgid "Set back to Todo"
+msgstr "Врати на ДаСеНаправи"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:154
+#, python-format
+msgid "Attach a note that will not be sent to the followers"
+msgstr ""
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:279
+#, python-format
+msgid "nobody"
+msgstr ""
+
+#. module: mail
+#: selection:res.partner,notification_email_send:0
+msgid "Incoming Emails and Discussions"
+msgstr ""
+
+#. module: mail
+#: field:mail.group,name:0
+msgid "Name"
+msgstr "Име"
+
+#. module: mail
+#: constraint:res.partner:0
+msgid "You cannot create recursive Partner hierarchies."
+msgstr ""
+
+#. module: mail
+#: help:base.config.settings,alias_domain:0
+msgid ""
+"If you have setup a catch-all email domain redirected to the OpenERP server, "
+"enter the domain name here."
+msgstr ""
+"Доколку имате подесено домен за прибирање на сите e-mail пораки, што "
+"пренасочува на OpenERP серверот, внесете го тука."
+
+#. module: mail
+#: model:ir.actions.act_window,name:mail.action_view_mail_message
+#: model:ir.ui.menu,name:mail.menu_mail_message
+#: field:mail.group,message_ids:0
+#: view:mail.message:0
+#: field:mail.thread,message_ids:0
+#: field:res.partner,message_ids:0
+msgid "Messages"
+msgstr "Пораки"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:139
+#, python-format
+msgid "others..."
+msgstr "останати..."
+
+#. module: mail
+#: model:ir.actions.client,name:mail.action_mail_star_feeds
+#: model:ir.ui.menu,name:mail.mail_starfeeds
+msgid "To-do"
+msgstr "Задача:"
+
+#. module: mail
+#: view:mail.alias:0
+#: field:mail.alias,alias_name:0
+#: field:mail.group,alias_id:0
+#: field:res.users,alias_id:0
+msgid "Alias"
+msgstr "Алијас"
+
+#. module: mail
+#: model:ir.model,name:mail.model_mail_mail
+msgid "Outgoing Mails"
+msgstr "Излезни e-mail пораки"
+
+#. module: mail
+#: help:mail.compose.message,notification_ids:0
+#: help:mail.message,notification_ids:0
+msgid ""
+"Technical field holding the message notifications. Use notified_partner_ids "
+"to access notified partners."
+msgstr ""
+"Техничко поле што ги содржи пораките за известувања. Користете "
+"notified_partner_ids за пристап до известените партнери."
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:149
+#, python-format
+msgid "(no email address)"
+msgstr ""
+
+#. module: mail
+#: model:ir.ui.menu,name:mail.mail_feeds
+#: model:ir.ui.menu,name:mail.mail_feeds_main
+msgid "Messaging"
+msgstr "Размена на пораки"
+
+#. module: mail
+#: view:mail.alias:0
+#: field:mail.message.subtype,res_model:0
+msgid "Model"
+msgstr "Модел"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:206
+#, python-format
+msgid "No messages."
+msgstr "Нема пораки."
+
+#. module: mail
+#: help:mail.followers,subtype_ids:0
+msgid ""
+"Message subtypes followed, meaning subtypes that will be pushed onto the "
+"user's Wall."
+msgstr ""
+"Подтипови на пораки што се следат, значи подтиповите ќе бидат проследени на "
+"корисничкиот Ѕид."
+
+#. module: mail
+#: help:mail.group,message_ids:0
+#: help:mail.thread,message_ids:0
+#: help:res.partner,message_ids:0
+msgid "Messages and communication history"
+msgstr "Пораки и историја на комуникација"
+
+#. module: mail
+#: help:mail.mail,references:0
+msgid "Message references, such as identifiers of previous messages"
+msgstr "Референци на пораките, како идентификатори на претходните пораки"
+
+#. module: mail
+#: field:mail.compose.message,composition_mode:0
+msgid "Composition mode"
+msgstr "Режим на составување"
+
+#. module: mail
+#: help:mail.message.subtype,res_model:0
+msgid ""
+"Model the subtype applies to. If False, this subtype applies to all models."
+msgstr ""
+"Модел на кој припаѓа овој подтип. Доколку е неточно, тој подтип припаѓа на "
+"сите модели."
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:338
+#, python-format
+msgid "unlike"
+msgstr "за разлика од"
+
+#. module: mail
+#: model:ir.model,name:mail.model_mail_group
+msgid "Discussion group"
+msgstr "Група за дискусија"
+
+#. module: mail
+#: help:mail.mail,email_cc:0
+msgid "Carbon copy message recipients"
+msgstr "Копирај ги примачите на пораката"
+
+#. module: mail
+#: field:mail.alias,alias_domain:0
+msgid "Alias domain"
+msgstr "Домеин на алијас"
+
+#. module: mail
+#: code:addons/mail/update.py:93
+#, python-format
+msgid "Error during communication with the publisher warranty server."
+msgstr "Грешка при комуникацијата со гаранцискиот сервер на издавачот."
+
+#. module: mail
+#: selection:mail.group,public:0
+msgid "Private"
+msgstr "Приватно"
+
+#. module: mail
+#: model:ir.actions.client,help:mail.action_mail_star_feeds
+msgid ""
+"<p>\n"
+"                    <b>No todo.</b>\n"
+"                </p><p>\n"
+"                    When you process messages in your inbox, you can mark "
+"some\n"
+"                    as <i>todo</i>. From this menu, you can process all your "
+"todo.\n"
+"                </p>\n"
+"            "
+msgstr ""
+"<p>\n"
+"                    <b>Нема ДаСеНаправи.</b>\n"
+"                </p><p>\n"
+"                    При процесирање на пораките во влезното сандаче, некои "
+"може да ги означите \n"
+"                    како <i>ДаСеНаправи</i>. Од ова мени може да ги "
+"обработите сите ДаСеНаправи задачи.\n"
+"                </p>\n"
+"            "
+
+#. module: mail
+#: selection:mail.mail,state:0
+msgid "Delivery Failed"
+msgstr "Испораката не е успешна"
+
+#. module: mail
+#: field:mail.compose.message,partner_ids:0
+msgid "Additional contacts"
+msgstr "Додатни контакти"
+
+#. module: mail
+#: help:mail.compose.message,parent_id:0
+#: help:mail.message,parent_id:0
+msgid "Initial thread message."
+msgstr "Почетна тема на пораката"
+
+#. module: mail
+#: model:mail.group,name:mail.group_hr_policies
+msgid "HR Policies"
+msgstr "HR Политика"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:323
+#, python-format
+msgid "Compose new Message"
+msgstr "Состави нова порака"
+
+#. module: mail
+#: model:ir.actions.client,name:mail.action_mail_inbox_feeds
+#: model:ir.ui.menu,name:mail.mail_inboxfeeds
+msgid "Inbox"
+msgstr "Влезно Сандаче"
+
+#. module: mail
+#: field:mail.compose.message,filter_id:0
+msgid "Filters"
+msgstr "Филтри"
+
+#. module: mail
+#. openerp-web
+#: code:addons/mail/static/src/js/many2many_tags_email.js:63
+#, python-format
+msgid "Please complete partner's informations and Email"
+msgstr ""
+"Ве молиме комплетирајте ги информациите за партнерите и e-mail адресите"
+
+#. module: mail
+#: model:ir.actions.act_window,name:mail.action_view_message_subtype
+#: model:ir.ui.menu,name:mail.menu_message_subtype
+msgid "Subtypes"
+msgstr "Подтипови"
+
+#. module: mail
+#: model:ir.model,name:mail.model_mail_alias
+msgid "Email Aliases"
+msgstr "Алијаси на e-mail"
+
+#. module: mail
+#: field:mail.group,image_small:0
+msgid "Small-sized photo"
+msgstr "Слика со мала димензија"
+
+#. module: mail
+#: help:mail.mail,reply_to:0
+msgid "Preferred response address for the message"
+msgstr "Приоритетна адреса за одговор на пораката"
+
+#, python-format
+#~ msgid "Add them into recipients and followers"
+#~ msgstr "Додади ги во примачи и следбеници"
+
+#~ msgid "Comments and Emails"
+#~ msgstr "Коментари и e-mail пораки"
+
+#, python-format
+#~ msgid "Write to the followers of this document..."
+#~ msgstr "Пиши им на следбениците на овој документ..."
+
+#, python-format
+#~ msgid "/web/binary/upload_attachment"
+#~ msgstr "/web/binary/upload_attachment"
+
+#~ msgid "All feeds"
+#~ msgstr "Сите содржини"
+
+#, python-format
+#~ msgid "Post"
+#~ msgstr "Испрати"
+
+#~ msgid ""
+#~ "Choose in which case you want to receive an email when you receive new feeds."
+#~ msgstr ""
+#~ "Изберете во кој случај сакате да примите e-mail кога ќе примите нови "
+#~ "содржини."
+
+#~ msgid "Receive Feeds by Email"
+#~ msgstr "Добивај содржини по e-mail"
+
+#~ msgid "Unread"
+#~ msgstr "Непрочитани"
+
+#~ msgid "Emails only"
+#~ msgstr "Само за e-mail адреси"
+
+#, python-format
+#~ msgid "File"
+#~ msgstr "Датотека"

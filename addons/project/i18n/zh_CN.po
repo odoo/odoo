@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:01+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:39+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: project
 #: view:project.project:0
@@ -83,7 +83,7 @@ msgid "Start Task"
 msgstr "开始任务"
 
 #. module: project
-#: code:addons/project/project.py:932
+#: code:addons/project/project.py:944
 #, python-format
 msgid "Warning !"
 msgstr "警告！"
@@ -133,8 +133,8 @@ msgid ""
 msgstr "保存复杂的摘要(消息数量,……等)。为了插入到看板视图，这一摘要直接是是HTML格式。"
 
 #. module: project
-#: code:addons/project/project.py:432
-#: code:addons/project/project.py:1305
+#: code:addons/project/project.py:444
+#: code:addons/project/project.py:1332
 #, python-format
 msgid "Warning!"
 msgstr "警告!"
@@ -202,9 +202,18 @@ msgid "Planned Time"
 msgstr "已计划的时间"
 
 #. module: project
-#: selection:project.project,privacy_visibility:0
-msgid "Public"
-msgstr "公开"
+#: view:project.task:0
+#: selection:project.task,state:0
+#: selection:project.task.delegate,state:0
+#: selection:project.task.history,state:0
+#: selection:project.task.history.cumulative,state:0
+#: model:project.task.type,name:project.project_tt_deployment
+#: selection:project.task.type,state:0
+#: view:report.project.task.user:0
+#: selection:report.project.task.user,state:0
+#: view:res.partner:0
+msgid "Done"
+msgstr "完成"
 
 #. module: project
 #: model:project.category,name:project.project_category_01
@@ -327,6 +336,11 @@ msgid "June"
 msgstr "六月"
 
 #. module: project
+#: view:project.task:0
+msgid "Gantt View"
+msgstr ""
+
+#. module: project
 #: selection:report.project.task.user,month:0
 msgid "October"
 msgstr "十月"
@@ -357,6 +371,11 @@ msgid "Summary"
 msgstr "总计"
 
 #. module: project
+#: view:project.task:0
+msgid "Task summary..."
+msgstr ""
+
+#. module: project
 #: view:project.project:0
 msgid "Append this project to another one using analytic accounts hierarchy"
 msgstr "这个项目追加到另一个分析帐户结构"
@@ -384,7 +403,7 @@ msgid "Assigned to"
 msgstr "指派到"
 
 #. module: project
-#: code:addons/project/project.py:1021
+#: code:addons/project/project.py:1033
 #, python-format
 msgid "Delegated User should be specified"
 msgstr "应该制定委派用户"
@@ -465,6 +484,11 @@ msgstr "代表"
 #: field:project.task,create_date:0
 msgid "Create Date"
 msgstr "创建日期"
+
+#. module: project
+#: view:project.task:0
+msgid "Add a Description..."
+msgstr ""
 
 #. module: project
 #: view:res.partner:0
@@ -849,6 +873,11 @@ msgid "GTD"
 msgstr ""
 
 #. module: project
+#: view:project.project:0
+msgid "Project Stages"
+msgstr ""
+
+#. module: project
 #: help:project.task,state:0
 msgid ""
 "The status is set to 'Draft', when a case is created.                      "
@@ -906,6 +935,11 @@ msgid "10"
 msgstr "10"
 
 #. module: project
+#: view:project.project:0
+msgid "Cancel Project"
+msgstr ""
+
+#. module: project
 #: help:project.project,analytic_account_id:0
 msgid ""
 "Link this project to an analytic account if you need financial management on "
@@ -917,7 +951,6 @@ msgstr "如果你需要项目的财务管理链接到这项目的辅助核算项
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
 #: view:project.config.settings:0
-#: view:project.project:0
 #: view:project.task.delegate:0
 #: view:project.task.reevaluate:0
 msgid "Cancel"
@@ -970,9 +1003,18 @@ msgid "Manager"
 msgstr "经理"
 
 #. module: project
-#: selection:project.task,priority:0
-msgid "Important"
-msgstr "重要"
+#: model:ir.actions.act_window,help:project.project_category_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a new tag.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: project
+#: model:ir.ui.menu,name:project.menu_task_types_view
+msgid "Task Stages"
+msgstr "任务阶段"
 
 #. module: project
 #: field:project.category,name:0
@@ -1197,9 +1239,9 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "计算:花费的时间 + 剩余的时间"
 
 #. module: project
-#: code:addons/project/project.py:356
-#: code:addons/project/project.py:377
-#: code:addons/project/project.py:709
+#: code:addons/project/project.py:368
+#: code:addons/project/project.py:389
+#: code:addons/project/project.py:721
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
@@ -1235,6 +1277,11 @@ msgstr "project.task.reevaluate"
 #: field:project.task,delay_hours:0
 msgid "Delay Hours"
 msgstr "延迟的小时数"
+
+#. module: project
+#: view:project.task.type:0
+msgid "Add a description..."
+msgstr ""
 
 #. module: project
 #: view:project.project:0
@@ -1329,6 +1376,9 @@ msgid "Pending"
 msgstr "未决"
 
 #. module: project
+#: model:ir.actions.act_window,name:project.project_category_action
+#: model:ir.ui.menu,name:project.menu_project_category_act
+#: view:project.category:0
 #: field:project.task,categ_ids:0
 msgid "Tags"
 msgstr "标签"
@@ -1396,24 +1446,15 @@ msgid ""
 msgstr "做任务的估计时间.通常由项目经理在任务草稿阶段设定"
 
 #. module: project
-#: code:addons/project/project.py:220
+#: code:addons/project/project.py:230
 #, python-format
 msgid "Attachments"
 msgstr "附件"
 
 #. module: project
-#: view:project.task:0
-#: selection:project.task,state:0
-#: selection:project.task.delegate,state:0
-#: selection:project.task.history,state:0
-#: selection:project.task.history.cumulative,state:0
-#: model:project.task.type,name:project.project_tt_deployment
-#: selection:project.task.type,state:0
-#: view:report.project.task.user:0
-#: selection:report.project.task.user,state:0
-#: view:res.partner:0
-msgid "Done"
-msgstr "完成"
+#: view:project.category:0
+msgid "Issue Version"
+msgstr ""
 
 #. module: project
 #: code:addons/project/project.py:182
@@ -1523,7 +1564,7 @@ msgid "Overpassed Tasks"
 msgstr "拖期任务"
 
 #. module: project
-#: code:addons/project/project.py:932
+#: code:addons/project/project.py:944
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1584,7 +1625,7 @@ msgid "CHECK: "
 msgstr "CHECK: "
 
 #. module: project
-#: code:addons/project/project.py:432
+#: code:addons/project/project.py:444
 #, python-format
 msgid "You must assign members on the project '%s' !"
 msgstr "您必须为项目“%s”指定成员！"
@@ -1634,9 +1675,9 @@ msgid "Generate tasks from sale orders"
 msgstr "从销售订单生成任务"
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_task_types_view
-msgid "Task Stages"
-msgstr "任务阶段"
+#: selection:project.task,priority:0
+msgid "Important"
+msgstr "重要"
 
 #. module: project
 #: model:process.node,note:project.process_node_drafttask0
@@ -1683,6 +1724,7 @@ msgid "Cancelled"
 msgstr "已取消"
 
 #. module: project
+#: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,help:project.action_view_task
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -1809,7 +1851,7 @@ msgid "Starting Date"
 msgstr "开始日期"
 
 #. module: project
-#: code:addons/project/project.py:398
+#: code:addons/project/project.py:410
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:0
@@ -1970,7 +2012,7 @@ msgid "Reevaluation Task"
 msgstr "任务重估"
 
 #. module: project
-#: code:addons/project/project.py:1305
+#: code:addons/project/project.py:1332
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr "请删除与此科目关联的项目"
@@ -2074,11 +2116,6 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: selection:project.project,privacy_visibility:0
-msgid "Followers Only"
-msgstr "仅关注着"
-
-#. module: project
 #: view:board.board:0
 #: field:project.project,task_count:0
 msgid "Open Tasks"
@@ -2112,8 +2149,13 @@ msgid "Year"
 msgstr "年"
 
 #. module: project
-#: view:project.project:0
 #: field:project.project,type_ids:0
 #: view:project.task.type:0
 msgid "Tasks Stages"
 msgstr "任务阶段"
+
+#~ msgid "Public"
+#~ msgstr "公开"
+
+#~ msgid "Followers Only"
+#~ msgstr "仅关注着"

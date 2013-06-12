@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"PO-Revision-Date: 2013-03-16 06:14+0000\n"
+"Last-Translator: Fábio Martinelli - http://zupy.com.br "
+"<webmaster@guaru.net>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:42+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:22+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: event
 #: view:event.event:0
@@ -149,6 +150,11 @@ msgid "Confirmed events"
 msgstr "Eventos confirmados"
 
 #. module: event
+#: view:event.event:0
+msgid "ZIP"
+msgstr "CEP"
+
+#. module: event
 #: view:report.event.registration:0
 msgid "Event Beginning Date"
 msgstr "Data de Início do Evento"
@@ -241,6 +247,11 @@ msgstr "Estado da Inscrição"
 #: view:event.event:0
 msgid "tickets"
 msgstr "tickets"
+
+#. module: event
+#: view:event.event:0
+msgid "Street..."
+msgstr "Rua..."
 
 #. module: event
 #: view:res.partner:0
@@ -496,6 +507,7 @@ msgid "Logs"
 msgstr "Logs"
 
 #. module: event
+#: view:event.event:0
 #: field:event.event,state_id:0
 msgid "State"
 msgstr "Estado"
@@ -623,9 +635,10 @@ msgstr ""
 "(coloque 0 para ignorar esta regra)"
 
 #. module: event
-#: field:event.event,user_id:0
-msgid "Responsible User"
-msgstr "Usuário Responsável"
+#: code:addons/event/event.py:106
+#, python-format
+msgid "Only %d Seats are Available!"
+msgstr "Apenas %d Lugares estão Disponíveis!"
 
 #. module: event
 #: code:addons/event/event.py:100
@@ -890,6 +903,11 @@ msgid "You must wait for the starting day of the event to do this action."
 msgstr "Você deve esperar o dia de início do evento para fazer esta ação."
 
 #. module: event
+#: field:event.event,user_id:0
+msgid "Responsible User"
+msgstr "Usuário Responsável"
+
+#. module: event
 #: selection:event.event,state:0
 #: selection:report.event.registration,event_state:0
 msgid "Done"
@@ -911,10 +929,9 @@ msgid "Reply-to Email"
 msgstr "Email Reponder para"
 
 #. module: event
-#: code:addons/event/event.py:106
-#, python-format
-msgid "Only %d Seats are Available!"
-msgstr "Apenas %d Lugares estão Disponíveis!"
+#: view:event.event:0
+msgid "City"
+msgstr "Cidade"
 
 #. module: event
 #: model:email.template,subject:event.confirmation_event
@@ -1038,6 +1055,7 @@ msgid "Name"
 msgstr "Nome"
 
 #. module: event
+#: view:event.event:0
 #: field:event.event,country_id:0
 msgid "Country"
 msgstr "País"

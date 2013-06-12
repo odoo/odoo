@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:32+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:10+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -148,7 +148,7 @@ msgstr ""
 #. module: account_asset
 #: help:account.asset.asset,method_period:0
 msgid "The amount of time between two depreciations, in months"
-msgstr ""
+msgstr "Количество времени между амортизациями, в месяцах"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,depreciation_date:0
@@ -160,7 +160,7 @@ msgstr "Дата амортизации"
 #. module: account_asset
 #: constraint:account.asset.asset:0
 msgid "Error ! You cannot create recursive assets."
-msgstr ""
+msgstr "Ошибка! Нельзя создавать рекурсивные активы."
 
 #. module: account_asset
 #: field:asset.asset.report,posted_value:0
@@ -197,6 +197,12 @@ msgid "Depreciation Entry"
 msgstr "Проводка амортизации"
 
 #. module: account_asset
+#: code:addons/account_asset/account_asset.py:82
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: account_asset
 #: view:asset.asset.report:0
 #: field:asset.asset.report,nbr:0
 msgid "# of Depreciation Lines"
@@ -205,7 +211,7 @@ msgstr "# позиций амортизации"
 #. module: account_asset
 #: field:account.asset.asset,method_period:0
 msgid "Number of Months in a Period"
-msgstr ""
+msgstr "Количество месяцев в периоде"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -234,7 +240,7 @@ msgstr "Счет активов"
 #: model:ir.actions.act_window,name:account_asset.action_asset_depreciation_confirmation_wizard
 #: model:ir.ui.menu,name:account_asset.menu_asset_depreciation_confirmation_wizard
 msgid "Compute Assets"
-msgstr ""
+msgstr "Вычислить активы"
 
 #. module: account_asset
 #: field:account.asset.category,method_period:0
@@ -265,12 +271,12 @@ msgstr "Изменить длительность"
 #: help:account.asset.category,method_number:0
 #: help:account.asset.history,method_number:0
 msgid "The number of depreciations needed to depreciate your asset"
-msgstr ""
+msgstr "Количество амортизаций необходимых для обесценивания актива"
 
 #. module: account_asset
 #: view:account.asset.category:0
 msgid "Analytic Information"
-msgstr ""
+msgstr "Аналитическая информация"
 
 #. module: account_asset
 #: field:account.asset.category,account_analytic_id:0
@@ -293,7 +299,7 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.depreciation.line,remaining_value:0
 msgid "Next Period Depreciation"
-msgstr ""
+msgstr "Следующий период амортизации"
 
 #. module: account_asset
 #: help:account.asset.history,method_period:0
@@ -344,7 +350,7 @@ msgstr "Поиск категории актива"
 #. module: account_asset
 #: view:asset.modify:0
 msgid "months"
-msgstr ""
+msgstr "месяцы"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice_line
@@ -372,7 +378,7 @@ msgstr ""
 #: view:asset.depreciation.confirmation.wizard:0
 #: view:asset.modify:0
 msgid "or"
-msgstr ""
+msgstr "или"
 
 #. module: account_asset
 #: field:account.asset.asset,note:0
@@ -406,7 +412,7 @@ msgstr ""
 #. module: account_asset
 #: view:asset.asset.report:0
 msgid "Assets in running state"
-msgstr ""
+msgstr "Активы в рабочем состоянии"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -427,7 +433,7 @@ msgstr ""
 #: field:account.asset.asset,state:0
 #: field:asset.asset.report,state:0
 msgid "Status"
-msgstr ""
+msgstr "Статус"
 
 #. module: account_asset
 #: field:account.asset.asset,partner_id:0
@@ -474,12 +480,12 @@ msgstr "Вычислить"
 #. module: account_asset
 #: view:account.asset.history:0
 msgid "Asset History"
-msgstr ""
+msgstr "История актива"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard
 msgid "asset.depreciation.confirmation.wizard"
-msgstr ""
+msgstr "asset.depreciation.confirmation.wizard"
 
 #. module: account_asset
 #: field:account.asset.asset,active:0
@@ -505,7 +511,7 @@ msgstr "История"
 #. module: account_asset
 #: view:asset.depreciation.confirmation.wizard:0
 msgid "Compute Asset"
-msgstr ""
+msgstr "Вычислить актив"
 
 #. module: account_asset
 #: field:asset.depreciation.confirmation.wizard,period_id:0
@@ -521,7 +527,7 @@ msgstr "Общий"
 #: field:account.asset.asset,prorata:0
 #: field:account.asset.category,prorata:0
 msgid "Prorata Temporis"
-msgstr ""
+msgstr "По истечении срока"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice
@@ -553,7 +559,7 @@ msgstr "Элементы журнала"
 #. module: account_asset
 #: view:asset.modify:0
 msgid "Asset Durations to Modify"
-msgstr ""
+msgstr "Актив - интервал времени для изменения"
 
 #. module: account_asset
 #: field:account.asset.asset,purchase_date:0
@@ -574,11 +580,19 @@ msgid ""
 "Choose the period for which you want to automatically post the depreciation "
 "lines of running assets"
 msgstr ""
+"Выберите период, за который вы хотите автоматически создавать записи "
+"амортизации  для актива"
 
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Current"
 msgstr "Текущий"
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset.py:82
+#, python-format
+msgid "You cannot delete an asset that contains posted depreciation lines."
+msgstr ""
 
 #. module: account_asset
 #: view:account.asset.category:0
@@ -588,12 +602,12 @@ msgstr "Метод амортизации"
 #. module: account_asset
 #: field:account.asset.depreciation.line,amount:0
 msgid "Current Depreciation"
-msgstr ""
+msgstr "Текущая аммортизация"
 
 #. module: account_asset
 #: field:account.asset.asset,name:0
 msgid "Asset Name"
-msgstr ""
+msgstr "Название актива"
 
 #. module: account_asset
 #: field:account.asset.category,open_asset:0
@@ -618,7 +632,7 @@ msgstr "Журнал"
 #. module: account_asset
 #: field:account.asset.history,name:0
 msgid "History name"
-msgstr ""
+msgstr "Название истории"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,depreciated_value:0
@@ -657,7 +671,7 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.asset,purchase_value:0
 msgid "Gross Value"
-msgstr ""
+msgstr "Валовая стоимость"
 
 #. module: account_asset
 #: field:account.asset.category,name:0
@@ -695,20 +709,25 @@ msgid "Amount of Depreciation Lines"
 msgstr "Сумма по позициям амортизации"
 
 #. module: account_asset
-#: code:addons/account_asset/wizard/wizard_asset_compute.py:49
+#: code:addons/account_asset/wizard/wizard_asset_compute.py:50
 #, python-format
 msgid "Created Asset Moves"
 msgstr ""
 
 #. module: account_asset
+#: view:account.asset.asset:0
+msgid "Add an internal note here..."
+msgstr ""
+
+#. module: account_asset
 #: field:account.asset.depreciation.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Нумерация"
 
 #. module: account_asset
 #: help:account.asset.category,method_period:0
 msgid "State here the time between 2 depreciations, in months"
-msgstr ""
+msgstr "Время между двумя амортизациями в месяцах"
 
 #. module: account_asset
 #: field:account.asset.history,date:0
@@ -729,7 +748,7 @@ msgstr "Число амортизаций"
 #. module: account_asset
 #: view:account.asset.asset:0
 msgid "Create Move"
-msgstr ""
+msgstr "Создать перемещение"
 
 #. module: account_asset
 #: view:account.asset.asset:0

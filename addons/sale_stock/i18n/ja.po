@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:07+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:44+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -36,7 +36,7 @@ msgid "Deliveries to Invoice"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:544
+#: code:addons/sale_stock/sale_stock.py:570
 #, python-format
 msgid "Picking Information ! : "
 msgstr "集荷情報： "
@@ -47,7 +47,7 @@ msgid "Pick List"
 msgstr "集荷リスト"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:539
+#: code:addons/sale_stock/sale_stock.py:565
 #, python-format
 msgid ""
 "You selected a quantity of %d Units.\n"
@@ -76,7 +76,12 @@ msgid "Validate"
 msgstr "検証"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:207
+#: view:sale.order:0
+msgid "Cancel Order"
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:209
 #, python-format
 msgid ""
 "You must first cancel all delivery order(s) attached to this sales order."
@@ -100,22 +105,8 @@ msgid ""
 msgstr "全ての受注オーダー行について、調達オーダーは販売された製品の供給を作成します。"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:615
-#, python-format
-msgid "Error!"
-msgstr ""
-
-#. module: sale_stock
 #: field:sale.order,picking_policy:0
 msgid "Shipping Policy"
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:616
-#, python-format
-msgid ""
-"You cannot make an advance on a sales order                      that is "
-"defined as 'Automatic Invoice after delivery'."
 msgstr ""
 
 #. module: sale_stock
@@ -134,7 +125,7 @@ msgid "Stock Move"
 msgstr "在庫移動"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:161
+#: code:addons/sale_stock/sale_stock.py:163
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -150,8 +141,8 @@ msgid "Allow a different address for delivery and invoicing "
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:546
-#: code:addons/sale_stock/sale_stock.py:597
+#: code:addons/sale_stock/sale_stock.py:572
+#: code:addons/sale_stock/sale_stock.py:623
 #, python-format
 msgid "Configuration Error!"
 msgstr ""
@@ -160,6 +151,11 @@ msgstr ""
 #: model:process.node,name:sale_stock.process_node_saleprocurement0
 msgid "Procurement Order"
 msgstr "調達オーダー"
+
+#. module: sale_stock
+#: model:ir.actions.act_window,name:sale_stock.res_partner_rule_children
+msgid "Contact Details"
+msgstr ""
 
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
@@ -193,12 +189,6 @@ msgid ""
 msgstr ""
 "受注オーダーが確認されると同時に調達オーダーとしてすぐに、集荷リストフォームが作成されます。これは受注オーダー部品の割り当てを表しています。受注オーダー行"
 "による１つの集荷リストは部品の入手可能性とともに展開します。"
-
-#. module: sale_stock
-#: help:res.company,security_lead:0
-msgid ""
-"This is the days added to what you promise to customers for security purpose"
-msgstr "これは安全目的のために顧客に約束するために加える日数です。"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -253,9 +243,12 @@ msgstr ""
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_invoiceafterdelivery0
 msgid ""
-"The invoice is created automatically if the shipping policy is 'Invoice from "
-"pick' or 'Invoice on order after delivery'."
-msgstr "出荷方針が集荷時に請求または配達後に請求の場合は、請求書は自動的に作成されます。"
+"If the sale order was set to create the invoice 'On Delivery Order', then an "
+"invoice is automatically created based on what you delivered. If you rather "
+"want to create your invoice based on your sale order, you can set the sale "
+"order to create invoice 'On Demand', then track and process the sales order "
+"that have been fully delivered and invoice them from there."
+msgstr ""
 
 #. module: sale_stock
 #: field:sale.order.line,procurement_id:0
@@ -270,7 +263,7 @@ msgid "Shipped"
 msgstr "出荷済"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:240
+#: code:addons/sale_stock/sale_stock.py:265
 #, python-format
 msgid "invalid mode for test_state"
 msgstr "テスト状態では不正なモード"
@@ -354,7 +347,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:206
+#: code:addons/sale_stock/sale_stock.py:208
 #, python-format
 msgid "Cannot cancel sales order!"
 msgstr ""
@@ -375,6 +368,14 @@ msgstr "これは受注オーダーが配達されたことを示します。こ
 #: field:sale.order.line,property_ids:0
 msgid "Properties"
 msgstr "属性"
+
+#. module: sale_stock
+#: help:res.company,security_lead:0
+msgid ""
+"Margin of error for dates promised to customers. Products will be scheduled "
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
+msgstr ""
 
 #. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
@@ -429,7 +430,7 @@ msgid "Assign"
 msgstr "割当"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:592
+#: code:addons/sale_stock/sale_stock.py:618
 #, python-format
 msgid "Not enough stock ! : "
 msgstr "在庫不足です： "
@@ -462,12 +463,11 @@ msgstr "請求書"
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_cancel1
 #: model:process.transition.action,name:sale_stock.process_transition_action_cancel2
-#: view:sale.order:0
 msgid "Cancel"
 msgstr "キャンセル"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:161
+#: code:addons/sale_stock/sale_stock.py:163
 #, python-format
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it.\n"
@@ -500,13 +500,13 @@ msgid "Sales Advance Payment Invoice"
 msgstr "受注前払請求書"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:497
+#: code:addons/sale_stock/sale_stock.py:523
 #, python-format
 msgid "You must first cancel stock moves attached to this sales order line."
 msgstr "最初にこの受注オーダー行に付随する在庫移動をキャンセルする必要があります。"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:535
+#: code:addons/sale_stock/sale_stock.py:561
 #, python-format
 msgid "(n/a)"
 msgstr "（利用不可）"
@@ -517,7 +517,7 @@ msgid "Incoterm"
 msgstr "インコターム"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:496
+#: code:addons/sale_stock/sale_stock.py:522
 #, python-format
 msgid "Cannot cancel sales order line!"
 msgstr ""
@@ -570,7 +570,7 @@ msgid "Ignore Exception"
 msgstr "例外を無視"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:588
+#: code:addons/sale_stock/sale_stock.py:614
 #, python-format
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
@@ -611,3 +611,12 @@ msgid ""
 "output area and the customer is done through the Delivery Order manually or "
 "automatically."
 msgstr "製造品場所の設定によって、製造領域と顧客の間の移動は、手動または自動的な配達オーダーを通して実施されます。"
+
+#~ msgid ""
+#~ "The invoice is created automatically if the shipping policy is 'Invoice from "
+#~ "pick' or 'Invoice on order after delivery'."
+#~ msgstr "出荷方針が集荷時に請求または配達後に請求の場合は、請求書は自動的に作成されます。"
+
+#~ msgid ""
+#~ "This is the days added to what you promise to customers for security purpose"
+#~ msgstr "これは安全目的のために顧客に約束するために加える日数です。"

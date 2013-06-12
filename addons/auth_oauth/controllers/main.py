@@ -64,8 +64,13 @@ class OAuthController(oeweb.Controller):
                 u = registry.get('res.users')
                 credentials = u.auth_oauth(cr, SUPERUSER_ID, provider, kw, context=context)
                 cr.commit()
-                action = state.get('a', None)
-                url = '/#action=' + action if action else '/'
+                action = state.get('a')
+                menu = state.get('m')
+                url = '/'
+                if action:
+                    url = '/#action=%s' % action
+                elif menu:
+                    url = '/#menu_id=%s' % menu
                 return login_and_redirect(req, *credentials, redirect_url=url)
             except AttributeError:
                 # auth_signup is not installed
@@ -97,7 +102,10 @@ class OAuthController(oeweb.Controller):
         registry = RegistryManager.get(dbname)
         with registry.cursor() as cr:
             IMD = registry['ir.model.data']
-            model, provider_id = IMD.get_object_reference(cr, SUPERUSER_ID, 'auth_oauth', 'provider_openerp')
+            try:
+                model, provider_id = IMD.get_object_reference(cr, SUPERUSER_ID, 'auth_oauth', 'provider_openerp')
+            except ValueError:
+                return set_cookie_and_redirect(req, '/?db=%s' % dbname)
             assert model == 'auth.oauth.provider'
 
         state = {

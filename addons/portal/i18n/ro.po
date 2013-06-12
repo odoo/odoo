@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-01-09 14:57+0000\n"
-"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"PO-Revision-Date: 2013-03-07 19:30+0000\n"
+"Last-Translator: ERPSystems.ro <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:58+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:35+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -52,14 +52,20 @@ msgid "Company Jobs"
 msgstr "Locurile de munca din companie"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid "amount: the total amount to pay, as a float"
-msgstr "suma: suma totala de plata, ca emitere"
+#: model:ir.ui.menu,name:portal.portal_orders
+msgid "Billing"
+msgstr ""
 
 #. module: portal
 #: view:portal.wizard.user:0
 msgid "Contacts"
 msgstr "Contacte"
+
+#. module: portal
+#: view:portal.wizard:0
+msgid "This text is included in the email sent to new portal users."
+msgstr ""
+"Acest text este inclus in email-ul trimis noilor utilizatori ai portalului."
 
 #. module: portal
 #: view:share.wizard:0
@@ -73,9 +79,22 @@ msgid "Portal Groups"
 msgstr "Grupuri Portal"
 
 #. module: portal
+#: code:addons/portal/mail_mail.py:52
+#, python-format
+msgid "<p>Access this document <a href=\"%s\">directly in OpenERP</a></p>"
+msgstr "<p>Accesati acest document <a href=\"%s\">direct in OpenERP</a></p>"
+
+#. module: portal
 #: field:portal.wizard,welcome_message:0
 msgid "Invitation Message"
 msgstr "Mesajul Invitatiei"
+
+#. module: portal
+#: model:ir.actions.act_window,name:portal.partner_wizard_action
+#: model:ir.model,name:portal.model_portal_wizard
+#: view:portal.wizard:0
+msgid "Portal Access Management"
+msgstr "Management Acces Portal"
 
 #. module: portal
 #: view:res.groups:0
@@ -90,14 +109,10 @@ msgstr ""
 "Va rugam sa selectati cel putin un grup cu care sa partajati informatiile"
 
 #. module: portal
-#: view:share.wizard:0
-msgid "Details"
-msgstr "Detalii"
-
-#. module: portal
-#: model:ir.ui.menu,name:portal.portal_orders
-msgid "Quotations and Sales Orders"
-msgstr "Cotatii si Comenzi de Vanzare"
+#: model:ir.actions.client,name:portal.action_mail_archives_feeds_portal
+#: model:ir.ui.menu,name:portal.portal_mail_archivesfeeds
+msgid "Archives"
+msgstr "Arhive"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -119,9 +134,13 @@ msgid "Share Wizard"
 msgstr "Wizard Partajare"
 
 #. module: portal
-#: field:portal.wizard.user,email:0
-msgid "Email"
-msgstr "Email"
+#: view:portal.payment.acquirer:0
+msgid ""
+", so it may use Mako expressions.\n"
+"                                The Mako evaluation context provides:"
+msgstr ""
+", prin urmare poate folosi expresii Mako.\n"
+"                                Contextul evaluarii Mako ofera:"
 
 #. module: portal
 #: model:ir.actions.client,help:portal.action_news
@@ -135,6 +154,22 @@ msgstr ""
 "                    Nu aveti stiri necitite.\n"
 "                </p>\n"
 "            "
+
+#. module: portal
+#: field:portal.wizard.user,email:0
+msgid "Email"
+msgstr "Email"
+
+#. module: portal
+#: view:portal.wizard:0
+msgid "or"
+msgstr "sau"
+
+#. module: portal
+#: model:ir.actions.client,name:portal.action_mail_star_feeds_portal
+#: model:ir.ui.menu,name:portal.portal_mail_starfeeds
+msgid "To-do"
+msgstr "De facut"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:194
@@ -169,13 +204,14 @@ msgid "No online payment acquirers configured"
 msgstr "Nu au fost configurati beneficiarii platii online"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
+#: code:addons/portal/mail_message.py:54
+#, python-format
 msgid ""
-"kind: the kind of document on which the payment form is rendered (translated "
-"to user language, e.g. \"Invoice\")"
+"The requested operation cannot be completed due to security restrictions. "
+"Please contact your system administrator.\n"
+"\n"
+"(Document type: %s, Operation: %s)"
 msgstr ""
-"tip: tipul de document in care este redat formularul de plata (tradus in "
-"limba utilizatorului, de exemplu 'Factura\")"
 
 #. module: portal
 #: help:portal.wizard,portal_id:0
@@ -202,13 +238,26 @@ msgstr ""
 "            "
 
 #. module: portal
-#: view:portal.payment.acquirer:0
+#: model:ir.actions.client,help:portal.action_mail_archives_feeds_portal
 msgid ""
-", so it may use Mako expressions.\n"
-"                                The Mako evaluation context provides:"
+"<p>\n"
+"                    No message found and no message sent yet.\n"
+"                </p><p>\n"
+"                    Click on the top-right icon to compose a message. This\n"
+"                    message will be sent by email if it's an internal "
+"contact.\n"
+"                </p>\n"
+"            "
 msgstr ""
-", prin urmare poate folosi expresii Mako.\n"
-"                                Contextul evaluarii Mako ofera:"
+"<p>\n"
+"                    Nici un mesaj gasit si nici un mesaj trimis inca.\n"
+"                </p><p>\n"
+"                    Clic pe pictograma din partea dreapta sus pentru a "
+"compune un mesaj. Acest\n"
+"                    mesaj va fi trimis prin email daca este un contact "
+"intern.\n"
+"                </p>\n"
+"            "
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_menu
@@ -302,6 +351,15 @@ msgstr "uid: id-ul utilizatorului actual"
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid ""
+"kind: the kind of document on which the payment form is rendered (translated "
+"to user language, e.g. \"Invoice\")"
+msgstr ""
+"tip: tipul de document in care este redat formularul de plata (tradus in "
+"limba utilizatorului, de exemplu 'Factura\")"
+
+#. module: portal
+#: view:portal.payment.acquirer:0
+msgid ""
 "quote(): a method to quote special string character to make them suitable "
 "for inclusion in a URL"
 msgstr ""
@@ -309,9 +367,19 @@ msgstr ""
 "face potrivite includerii intr-un URL"
 
 #. module: portal
-#: help:res.groups,is_portal:0
-msgid "If checked, this group is usable as a portal."
-msgstr "Daca este selectat, acest grup este utilizabil ca portal."
+#: view:portal.payment.acquirer:0
+msgid "amount: the total amount to pay, as a float"
+msgstr "suma: suma totala de plata, ca emitere"
+
+#. module: portal
+#: code:addons/portal/mail_mail.py:44
+#, python-format
+msgid ""
+"<p>Access your messages and personal documents through <a href=\"%s\">our "
+"Customer Portal</a></p>"
+msgstr ""
+"<p>Accesati-va mesajele si documentele personale prin <a href=\"%s\"> "
+"Portalul nostru pentru Clienti</a></p>"
 
 #. module: portal
 #: field:portal.payment.acquirer,form_template:0
@@ -354,6 +422,12 @@ msgstr ""
 #: model:ir.model,name:portal.model_portal_payment_acquirer
 msgid "Online Payment Acquirer"
 msgstr "Beneficiarul Platii Online"
+
+#. module: portal
+#: code:addons/portal/mail_message.py:53
+#, python-format
+msgid "Access Denied"
+msgstr ""
 
 #. module: portal
 #: model:mail.group,name:portal.company_news_feed
@@ -420,13 +494,9 @@ msgid "About Us"
 msgstr "Despre Noi"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid ""
-"currency: the currency record in which the document is issued (e.g. "
-"currency.name could be EUR)"
-msgstr ""
-"valuta: inregistrarea valutei in care este emis documentul (de exemplu "
-"numele.valutei poate fi EUR)"
+#: help:res.groups,is_portal:0
+msgid "If checked, this group is usable as a portal."
+msgstr "Daca este selectat, acest grup este utilizabil ca portal."
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -472,9 +542,13 @@ msgstr ""
 "http://www.openerp.com\n"
 
 #. module: portal
-#: view:portal.wizard:0
-msgid "or"
-msgstr "sau"
+#: view:portal.payment.acquirer:0
+msgid ""
+"currency: the currency record in which the document is issued (e.g. "
+"currency.name could be EUR)"
+msgstr ""
+"valuta: inregistrarea valutei in care este emis documentul (de exemplu "
+"numele.valutei poate fi EUR)"
 
 #. module: portal
 #: model:portal.payment.acquirer,form_template:portal.paypal_acquirer
@@ -551,6 +625,11 @@ msgid "Apply"
 msgstr "Aplica"
 
 #. module: portal
+#: model:ir.model,name:portal.model_mail_message
+msgid "Message"
+msgstr ""
+
+#. module: portal
 #: view:portal.payment.acquirer:0
 msgid "ctx: the current context dictionary"
 msgstr "cxt: dictionarul contextului actual"
@@ -566,12 +645,27 @@ msgstr ""
 "                                Sablonul va fi redat cu"
 
 #. module: portal
-#: code:addons/portal/mail_mail.py:42
-#, python-format
+#: model:ir.actions.client,help:portal.action_mail_star_feeds_portal
 msgid ""
-"Access your personal documents through <a href=\"%s\">our Customer Portal</a>"
+"<p>\n"
+"                    <b>No todo.</b>\n"
+"                </p><p>\n"
+"                    When you process messages in your inbox, you can mark "
+"some\n"
+"                    as <i>todo</i>. From this menu, you can process all your "
+"todo.\n"
+"                </p>\n"
+"            "
 msgstr ""
-"Accesati documentele personale prin a href=\"%s\">our Customer Portal</a>"
+"<p>\n"
+"                    <b>Nimic de efectuat.</b>\n"
+"                </p><p>\n"
+"                    Atunci cand preocesati mesajele din inbox, puteti marca "
+"unele\n"
+"                    drept <i>de efectuat</i>. Din acest meniu, puteti "
+"procesa toate lucrurile de efectuat.\n"
+"                </p>\n"
+"            "
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -579,8 +673,15 @@ msgid "Form Template"
 msgstr "Sablon Formular"
 
 #. module: portal
-#: model:ir.actions.act_window,name:portal.partner_wizard_action
-#: model:ir.model,name:portal.model_portal_wizard
-#: view:portal.wizard:0
-msgid "Portal Access Management"
-msgstr "Management Acces Portal"
+#: view:share.wizard:0
+msgid "Details"
+msgstr "Detalii"
+
+#~ msgid "Quotations and Sales Orders"
+#~ msgstr "Cotatii si Comenzi de Vanzare"
+
+#, python-format
+#~ msgid ""
+#~ "Access your personal documents through <a href=\"%s\">our Customer Portal</a>"
+#~ msgstr ""
+#~ "Accesati documentele personale prin a href=\"%s\">our Customer Portal</a>"

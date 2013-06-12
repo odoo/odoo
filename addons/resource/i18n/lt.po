@@ -1,21 +1,21 @@
 # Lithuanian translation for openobject-addons
 # Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# Giedrius Slavinskas <giedrius@inovera.lt>, 2011.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: Paulius Sladkevičius <paulius@hacbee.com>\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"PO-Revision-Date: 2013-04-30 16:29+0000\n"
+"Last-Translator: Paulius Sladkevičius @ hbee <paulius@hacbee.com>\n"
 "Language-Team: Lithuanian <lt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:05+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:42+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: resource
 #: help:resource.calendar.leaves,resource_id:0
@@ -23,13 +23,13 @@ msgid ""
 "If empty, this is a generic holiday for the company. If a resource is set, "
 "the holiday/leave is only for this resource"
 msgstr ""
-"Jeigu tuščias, pagrinde tai nurodo kompanijos atostogas. Jeigu resursas "
-"nurodytas, atostogos/išvykimas yra tik šiam resursui"
+"Jeigu laukas tuščias, prastova taikoma visiems resursams. Kai resursas "
+"pasirinktas, atostogos/prastova taikoma tik šiam resursui."
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
 msgid "Material"
-msgstr "Medžiaga"
+msgstr "Daiktinis"
 
 #. module: resource
 #: field:resource.resource,resource_type:0
@@ -53,6 +53,16 @@ msgid "Day of Week"
 msgstr "Savaitės diena"
 
 #. module: resource
+#: model:ir.actions.act_window,help:resource.action_resource_calendar_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Define working hours and time table that could be scheduled "
+"to your project members\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Thursday"
 msgstr "Ketvirtadienis"
@@ -71,7 +81,7 @@ msgstr "Sekmadienis"
 #. module: resource
 #: field:resource.resource,time_efficiency:0
 msgid "Efficiency Factor"
-msgstr "Efektyvumo koeficientas"
+msgstr "Našumo koeficientas"
 
 #. module: resource
 #: view:resource.resource:0
@@ -90,16 +100,16 @@ msgid "Resources"
 msgstr "Resursai"
 
 #. module: resource
-#: code:addons/resource/resource.py:389
+#: code:addons/resource/resource.py:455
 #, python-format
 msgid "Make sure the Working time has been configured with proper week days!"
 msgstr ""
 
 #. module: resource
-#: code:addons/resource/resource.py:307
+#: code:addons/resource/resource.py:373
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (kopija)"
 
 #. module: resource
 #: view:resource.calendar:0
@@ -123,7 +133,7 @@ msgstr "Kalendoriaus resursas"
 #: view:resource.resource:0
 #: field:resource.resource,company_id:0
 msgid "Company"
-msgstr "Kompanija"
+msgstr "Įmonė"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -133,7 +143,7 @@ msgstr "Penktadienis"
 #. module: resource
 #: view:resource.calendar.attendance:0
 msgid "Hours"
-msgstr ""
+msgstr "Valandos"
 
 #. module: resource
 #: view:resource.calendar.leaves:0
@@ -159,7 +169,7 @@ msgstr ""
 #. module: resource
 #: field:resource.calendar.attendance,date_from:0
 msgid "Starting Date"
-msgstr ""
+msgstr "Pradžios data"
 
 #. module: resource
 #: field:resource.calendar,manager:0
@@ -205,7 +215,7 @@ msgstr "Darbo laikas"
 #. module: resource
 #: help:resource.calendar.attendance,hour_from:0
 msgid "Start and End time of working."
-msgstr ""
+msgstr "Darbo pradžia."
 
 #. module: resource
 #: view:resource.calendar.leaves:0
@@ -234,6 +244,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
+"Nebenaudojami resursai gali būti paslėpti, vietoj to, kad būtų pašalinti."
 
 #. module: resource
 #: field:resource.calendar.attendance,calendar_id:0
@@ -246,13 +257,6 @@ msgid "Work from"
 msgstr "Dirbama nuo"
 
 #. module: resource
-#: model:ir.actions.act_window,help:resource.action_resource_calendar_form
-msgid ""
-"Define working hours and time table that could be scheduled to your project "
-"members"
-msgstr ""
-
-#. module: resource
 #: help:resource.resource,user_id:0
 msgid "Related user name for the resource to manage its access."
 msgstr "Susijęs naudotojo pavadinimas resurso prieigai valdyti"
@@ -260,7 +264,7 @@ msgstr "Susijęs naudotojo pavadinimas resurso prieigai valdyti"
 #. module: resource
 #: help:resource.resource,calendar_id:0
 msgid "Define the schedule of resource"
-msgstr "Nurodyti resurso tvarkaraštį"
+msgstr "Nurodo resurso darbo grafiką"
 
 #. module: resource
 #: view:resource.calendar.leaves:0
@@ -300,12 +304,15 @@ msgid ""
 "show a load of 100% for this phase by default, but if we put a efficiency of "
 "200%, then his load will only be 50%."
 msgstr ""
+"Šis laukas nurodo resurso užduočių vykdymo našumą. Pvz. resursui atliekant 5 "
+"dienų etapą su 5 užduotim, jo užimtumas šiame etape bus lygus 100%. "
+"Padidinus našumą iki 200%, užimtumas taps 50%."
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
 #: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Leaves"
-msgstr "Resurso išvykimai"
+msgstr "Resursų prastovos"
 
 #. module: resource
 #: model:ir.actions.act_window,help:resource.action_resource_resource_tree
@@ -327,20 +334,20 @@ msgid "(vacation)"
 msgstr "(atostogos)"
 
 #. module: resource
-#: code:addons/resource/resource.py:389
+#: code:addons/resource/resource.py:455
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "Klaida nustatymuose!"
 
 #. module: resource
 #: selection:resource.resource,resource_type:0
 msgid "Human"
-msgstr "Žmogus"
+msgstr "Žmogiškasis"
 
 #. module: resource
 #: view:resource.calendar.leaves:0
 msgid "Duration"
-msgstr ""
+msgstr "Laikotarpis"
 
 #. module: resource
 #: field:resource.calendar.leaves,date_from:0
@@ -351,3 +358,8 @@ msgstr "Pradžios data"
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Saturday"
 msgstr "Šeštadienis"
+
+#~ msgid ""
+#~ "Define working hours and time table that could be scheduled to your project "
+#~ "members"
+#~ msgstr "Apibrėžkite darbo laiko bei darbuotojų darbo grafiką"

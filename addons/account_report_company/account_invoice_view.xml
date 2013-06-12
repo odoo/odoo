@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="account_report_company_tree_view">
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_tree"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="commercial_partner_id" invisible="1"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="account_report_company_search_view">
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <filter string="Partner" position="replace">
+                    <filter name="commercial_partner_id" string="Partner" domain="[]" context="{'group_by':'commercial_partner_id'}"/>
+                </filter>
+            </field>
+        </record>
+    </data>
+</openerp>

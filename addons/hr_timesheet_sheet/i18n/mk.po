@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-03-28 23:23+0000\n"
+"Last-Translator: Sofce Dimitrijeva <Unknown>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:48+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:27+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: hr_timesheet_sheet
 #: field:hr.analytic.timesheet,sheet_id:0
@@ -28,13 +28,13 @@ msgstr "Лист"
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_timesheetdraft0
 msgid "Service"
-msgstr "Сервис"
+msgstr "Услуга"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,quantity:0
 #: field:timesheet.report,quantity:0
 msgid "Time"
-msgstr ""
+msgstr "Време"
 
 #. module: hr_timesheet_sheet
 #: help:hr.config.settings,timesheet_max_difference:0
@@ -43,18 +43,22 @@ msgid ""
 "                computation for one sheet. Set this to 0 if you do not want "
 "any control."
 msgstr ""
+"Дозволена разлика во часови помеѓу најава/одјава и пресметката на врменската "
+"таблица\n"
+"                за еден лист. Подесете го на 0 доколку не сакате било каква "
+"контрола."
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
 #: view:hr_timesheet_sheet.sheet:0
 #: view:timesheet.report:0
 msgid "Group By..."
-msgstr "Групирај По..."
+msgstr "Групирај по..."
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,total_attendance:0
 msgid "Total Attendance"
-msgstr ""
+msgstr "Вкупно присуство"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -62,12 +66,12 @@ msgstr ""
 #: view:timesheet.report:0
 #: field:timesheet.report,department_id:0
 msgid "Department"
-msgstr "Сектор"
+msgstr "Одделение"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_tasktimesheet0
 msgid "Task timesheet"
-msgstr ""
+msgstr "Временска таблица на задача"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:73
@@ -77,6 +81,8 @@ msgid ""
 "In order to create a timesheet for this employee, you must assign an "
 "analytic journal to the employee, like 'Timesheet Journal'."
 msgstr ""
+"Со цел да креирате временска таблица за овој вработен, мора да доделите "
+"аналитички дневник на вработениот, како 'Дневник Временска таблица'."
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -88,12 +94,12 @@ msgstr "Март"
 #: view:timesheet.report:0
 #: field:timesheet.report,cost:0
 msgid "#Cost"
-msgstr ""
+msgstr "#Трошок"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Непрочитани Пораки"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -102,7 +108,7 @@ msgstr ""
 #: view:timesheet.report:0
 #: field:timesheet.report,company_id:0
 msgid "Company"
-msgstr "Фирма"
+msgstr "Компанија"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -113,51 +119,51 @@ msgstr "Фирма"
 #: model:process.node,name:hr_timesheet_sheet.process_node_timesheet0
 #: view:timesheet.report:0
 msgid "Timesheet"
-msgstr "Работни Часови"
+msgstr "Временска таблица"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Set to Draft"
-msgstr "Сетирај на Драфт"
+msgstr "Постави во нацрт"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Timesheet Period"
-msgstr ""
+msgstr "Период на временска таблица"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,date_to:0
 #: field:timesheet.report,date_to:0
 msgid "Date to"
-msgstr ""
+msgstr "Датум до"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "to"
-msgstr ""
+msgstr "до"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_invoiceonwork0
 msgid "Based on the timesheet"
-msgstr ""
+msgstr "Засновано на временска таблица"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:326
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:397
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:327
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:398
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet."
-msgstr ""
+msgstr "Не можете да измените внес во потврдена временска таблица."
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
 #: view:timesheet.report:0
 msgid "Group by day of date"
-msgstr ""
+msgstr "Групирај по ден од датум"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current
 msgid "My Current Timesheet"
-msgstr ""
+msgstr "Мојата тековна временска таблица"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition.action,name:hr_timesheet_sheet.process_transition_action_validatetimesheet0
@@ -177,7 +183,7 @@ msgstr "Присутен"
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
 msgid "Total Cost"
-msgstr ""
+msgstr "Вкупен трошок"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -189,27 +195,29 @@ msgstr "Одбиј"
 #: view:hr_timesheet_sheet.sheet:0
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet
 msgid "Timesheet Activities"
-msgstr ""
+msgstr "Активности по временска таблица"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
 #, python-format
 msgid "Please create an employee and associate it with this user."
-msgstr ""
+msgstr "Креирајте вработен и поврзете го со овој корисник."
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:401
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:421
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:402
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:422
 #, python-format
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates."
 msgstr ""
+"Не може да внесете датум на присуство надвор од датумите на тековната "
+"временска таблица."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:205
 #, python-format
 msgid "Week "
-msgstr ""
+msgstr "Недела "
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.action_hr_timesheet_current_open
@@ -221,11 +229,19 @@ msgid ""
 "the user and can be validated by his manager. If required, as defined on the "
 "project, you can generate the invoices based on the timesheet."
 msgstr ""
+"Мојата временска таблица ја отвара вашата временска таблица така што можете "
+"да ги резервирате вашите активности во системот. Од истиот формулар, може да "
+"ги регистрирате вашите присуства (Пријава/Одјава) и да ги опишете работните "
+"часови кои сте ги поминале на различни проекти. На крајот на периодот "
+"дефиниран во компанијата, временската таблица е потврдена од страна на "
+"корисникот и може да биде валидирана од неговиот менаџер. Доколку е "
+"потребно, како што е дефинирано на проектот, можете да генерирате фактури "
+"врз основа на временската таблица."
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Пораки"
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,state:0
@@ -237,6 +253,12 @@ msgid ""
 "* The 'Done' status is used when users timesheet is accepted by his/her "
 "senior."
 msgstr ""
+" *Статусот 'Нацрт' се користи кога корисникот ја кодира новата и непотврдена "
+"временска таблица.                 \n"
+"* Статусот 'Потврдено' се користи за да се потврди временската таблица од "
+"страна на корисникот.                 \n"
+"* Статусот 'Завршено' се користи кога временската таблица на корисникот е "
+"прифатена од неговиот претпоставен."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:64
@@ -245,47 +267,48 @@ msgstr ""
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:80
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:82
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:84
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:326
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:397
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:428
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:327
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:398
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:429
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Грешка!"
 
 #. module: hr_timesheet_sheet
 #: field:hr.config.settings,timesheet_max_difference:0
 msgid ""
 "Allow a difference of time between timesheets and attendances of (in hours)"
 msgstr ""
+"Дозволува разлика во време помеѓу распоредите и присуствата на (во часови)"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:99
 #, python-format
 msgid ""
 "Please verify that the total difference of the sheet is lower than %.2f."
-msgstr ""
+msgstr "Потврдете дека вкупната вредност на листот е помала од %.2f."
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_timesheet_report_stat_all
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_timesheet_report_all
 msgid "Timesheet Sheet Analysis"
-msgstr ""
+msgstr "Анализи на лист од временска таблица"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.account,name:0
 msgid "Project / Analytic Account"
-msgstr ""
+msgstr "Проект / Аналитичка сметка"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_validatetimesheet0
 msgid "Validation"
-msgstr ""
+msgstr "Валидација"
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Доколку е штиклирано, новите пораки го бараат вашето вниманите."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:69
@@ -295,18 +318,20 @@ msgid ""
 "In order to create a timesheet for this employee, you must assign it to a "
 "user."
 msgstr ""
+"Со цел да креирате врменска таблица за овој вработен, мора да го доделите на "
+"корисник."
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_attendance0
 msgid "Employee's timesheet entry"
-msgstr ""
+msgstr "Внес во временска таблица на вработен"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:213
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:215
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Погрешна операција!"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -314,7 +339,7 @@ msgstr ""
 #: view:timesheet.report:0
 #: field:timesheet.report,account_id:0
 msgid "Analytic Account"
-msgstr ""
+msgstr "Аналитичка сметка"
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,message_summary:0
@@ -322,17 +347,19 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Прикажува резиме на конверзација (број на пораки, ...). Ова резиме е "
+"директно во html формат со цел да биде вметнато во kanban преглед."
 
 #. module: hr_timesheet_sheet
 #: field:timesheet.report,nbr:0
 msgid "#Nbr"
-msgstr ""
+msgstr "#Nbr"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,date_from:0
 #: field:timesheet.report,date_from:0
 msgid "Date from"
-msgstr ""
+msgstr "Датум од"
 
 #. module: hr_timesheet_sheet
 #: view:hr.employee:0
@@ -340,125 +367,125 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_employee_2_hr_timesheet
 #: view:res.company:0
 msgid "Timesheets"
-msgstr "Работни часови"
+msgstr "Временски таблици"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_confirmedtimesheet0
 #: view:timesheet.report:0
 #: selection:timesheet.report,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Потврдено"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.day,total_attendance:0
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_attendance
 #: model:process.node,name:hr_timesheet_sheet.process_node_attendance0
 msgid "Attendance"
-msgstr ""
+msgstr "Присутност"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition.action,name:hr_timesheet_sheet.process_transition_action_draftconfirmtimesheet0
 msgid "Confirm"
-msgstr ""
+msgstr "Потврди"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,timesheet_ids:0
 msgid "Timesheet lines"
-msgstr "Редови на работни часови"
+msgstr "Ставки на временска таблица"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Пратители"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_confirmedtimesheet0
 msgid "State is 'confirmed'."
-msgstr ""
+msgstr "Состојбата е 'Потврдено'."
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,employee_id:0
 msgid "Employee"
-msgstr ""
+msgstr "Вработен"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
 #: selection:timesheet.report,state:0
 msgid "New"
-msgstr ""
+msgstr "Ново"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_week_attendance_graph
 msgid "My Total Attendances By Week"
-msgstr ""
+msgstr "Мои присуства по недела"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.account,total:0
 msgid "Total Time"
-msgstr ""
+msgstr "Вкупно време"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form
 msgid "Timesheets to Validate"
-msgstr ""
+msgstr "Распореди за валидација"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Hours"
-msgstr ""
+msgstr "Часови"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
 #: view:timesheet.report:0
 msgid "Group by month of date"
-msgstr ""
+msgstr "Групирај по месец од датумот"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_validatetimesheet0
 msgid "The project manager validates the timesheets."
-msgstr ""
+msgstr "Проект менаџерот го потврдува датумот"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
 #: selection:timesheet.report,month:0
 msgid "July"
-msgstr ""
+msgstr "Јули"
 
 #. module: hr_timesheet_sheet
 #: field:hr.config.settings,timesheet_range:0
 msgid "Validate timesheets every"
-msgstr ""
+msgstr "Потврди временска таблица секој"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:73
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:86
 #, python-format
 msgid "Configuration Error!"
-msgstr ""
+msgstr "Грешка конфигурација!"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,state:0
 #: view:timesheet.report:0
 #: field:timesheet.report,state:0
 msgid "Status"
-msgstr ""
+msgstr "Статус"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_workontask0
 msgid "Work on Task"
-msgstr ""
+msgstr "Работа на задача"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "Waiting Approval"
-msgstr ""
+msgstr "Чекам одобрение"
 
 #. module: hr_timesheet_sheet
 #: view:timesheet.report:0
 msgid "#Quantity"
-msgstr ""
+msgstr "#Количина"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,total_timesheet:0
@@ -475,18 +502,18 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Sign In"
-msgstr ""
+msgstr "Најава"
 
 #. module: hr_timesheet_sheet
 #: view:timesheet.report:0
 #: field:timesheet.report,total_timesheet:0
 msgid "#Total Timesheet"
-msgstr ""
+msgstr "# Вкупно временска таблица"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_current_open
 msgid "hr.timesheet.current.open"
-msgstr ""
+msgstr "hr.timesheet.current.open"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:71
@@ -495,23 +522,25 @@ msgid ""
 "In order to create a timesheet for this employee, you must link the employee "
 "to a product, like 'Consultant'."
 msgstr ""
+"Со цел да креирате временска таблица за овој вработен, мора првин да го "
+"поврзете вработениот за производ, како 'Консултант'."
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
 #: selection:timesheet.report,month:0
 msgid "September"
-msgstr ""
+msgstr "Септември"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
 #: selection:timesheet.report,month:0
 msgid "December"
-msgstr ""
+msgstr "Декември"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:0
 msgid "It will open your current timesheet"
-msgstr ""
+msgstr "Ќе ја отвори вашата тековна временска таблица"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.config.settings,timesheet_range:0
@@ -521,23 +550,23 @@ msgstr ""
 #: view:timesheet.report:0
 #: field:timesheet.report,month:0
 msgid "Month"
-msgstr ""
+msgstr "Месец"
 
 #. module: hr_timesheet_sheet
 #: view:timesheet.report:0
 #: field:timesheet.report,total_diff:0
 msgid "#Total Diff"
-msgstr ""
+msgstr "#Вкупна разл."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "In Draft"
-msgstr ""
+msgstr "Во нацрт"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_attendancetimesheet0
 msgid "Sign in/out"
-msgstr ""
+msgstr "Најава/Одјава"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:84
@@ -546,6 +575,8 @@ msgid ""
 "In order to create a timesheet for this employee, you must link the employee "
 "to a product."
 msgstr ""
+"Со цел да креирате временска таблица за овој вработен, мора да го поврзете "
+"вработениот за производ."
 
 #. module: hr_timesheet_sheet
 #. openerp-web
@@ -555,16 +586,18 @@ msgid ""
 "You will be able to register your working hours and\n"
 "                        activities."
 msgstr ""
+"Ќе може да ги регистрирате вашите работни часови и\n"
+"активности."
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:0
 msgid "or"
-msgstr ""
+msgstr "или"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_invoiceontimesheet0
 msgid "Billing"
-msgstr ""
+msgstr "Фактурирање"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_timesheetdraft0
@@ -572,39 +605,41 @@ msgid ""
 "The timesheet line represents the time spent by the employee on a specific "
 "service provided."
 msgstr ""
+"Ставката на распоредот претставува време поминато од страна на вработениот "
+"на одредена услуга."
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,name:0
 msgid "Note"
-msgstr ""
+msgstr "Белешка"
 
 #. module: hr_timesheet_sheet
 #. openerp-web
 #: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:33
 #, python-format
 msgid "Add"
-msgstr ""
+msgstr "Додади"
 
 #. module: hr_timesheet_sheet
 #: view:timesheet.report:0
 #: selection:timesheet.report,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Недовршено"
 
 #. module: hr_timesheet_sheet
 #: field:res.company,timesheet_max_difference:0
 msgid "Timesheet allowed difference(Hours)"
-msgstr ""
+msgstr "Дозволени разлики во временската таблица (Часови)"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_invoiceontimesheet0
 msgid "The invoice is created based on the timesheet."
-msgstr ""
+msgstr "Фактурата е креирана врз основа на временската таблица."
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_drafttimesheetsheet0
 msgid "Draft Timesheet"
-msgstr ""
+msgstr "Нацрт временска таблица"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
@@ -622,50 +657,64 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Нова временска таблица за одобрување.\n"
+"              </p><p>\n"
+"               Мора да ги снимате временските таблици секој ден и да ги "
+"потврдите на крајот\n"
+"               на неделата. Откако временската таблица е потврдена, треба да "
+"биде \n"
+"               валидирана од страна на менаџерот.\n"
+"              </p><p>\n"
+"                Временските таблици исто така може да бидат фактурирани на "
+"купувачите, во зависност од the\n"
+"                конфигурацијата на договорот поврзан со секој договор.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "Аналитичка ставка"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
 #: selection:timesheet.report,month:0
 msgid "August"
-msgstr ""
+msgstr "Август"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Differences"
-msgstr ""
+msgstr "Разлики"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
 #: selection:timesheet.report,month:0
 msgid "June"
-msgstr ""
+msgstr "Јуни"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,state_attendance:0
 msgid "Current Status"
-msgstr ""
+msgstr "Тековен статус"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.config.settings,timesheet_range:0
 #: selection:res.company,timesheet_range:0
 msgid "Week"
-msgstr ""
+msgstr "Недела"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_account
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_day
 msgid "Timesheets by Period"
-msgstr ""
+msgstr "Временска таблица по период"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Е Пратител"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -674,47 +723,47 @@ msgstr ""
 #: view:timesheet.report:0
 #: field:timesheet.report,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Корисник"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_account
 msgid "Timesheet by Account"
-msgstr ""
+msgstr "Временска таблица по сметка"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,date:0
 #: field:hr_timesheet_sheet.sheet.day,name:0
 #: field:timesheet.report,date:0
 msgid "Date"
-msgstr ""
+msgstr "Датум"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
 #: selection:timesheet.report,month:0
 msgid "November"
-msgstr ""
+msgstr "Ноември"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
 #: view:timesheet.report:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Проширени филтри..."
 
 #. module: hr_timesheet_sheet
 #: field:res.company,timesheet_range:0
 msgid "Timesheet range"
-msgstr ""
+msgstr "Опсег на временска таблица"
 
 #. module: hr_timesheet_sheet
 #: view:board.board:0
 msgid "My Total Attendance By Week"
-msgstr ""
+msgstr "Мое вкупно присуство по недела"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
 #: selection:timesheet.report,month:0
 msgid "October"
-msgstr ""
+msgstr "Октомври"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:60
@@ -723,39 +772,41 @@ msgid ""
 "The timesheet cannot be validated as it does not contain an equal number of "
 "sign ins and sign outs."
 msgstr ""
+"Временската таблица не може да биде потврдена бидејќи не содржи еднаков број "
+"на пријави и одјави."
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
 #: selection:timesheet.report,month:0
 msgid "January"
-msgstr ""
+msgstr "Јануари"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_attendancetimesheet0
 msgid "The employee signs in and signs out."
-msgstr ""
+msgstr "Пријави и одјави на вработен."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Компании"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 #: field:hr_timesheet_sheet.sheet,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Резиме"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:215
 #, python-format
 msgid "You cannot delete a timesheet which have attendance entries."
-msgstr ""
+msgstr "Не може да избришете временска таблица која има записи за присуство."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Unvalidated Timesheets"
-msgstr ""
+msgstr "Невалидирани временски таблици"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:82
@@ -764,11 +815,14 @@ msgid ""
 "You cannot have 2 timesheets that overlap!\n"
 "You should use the menu 'My Timesheet' to avoid this problem."
 msgstr ""
+"Не може да имате 2 временски таблици кои се преклопуваат!\n"
+"За да го избегнете овој проблем треба да го користите менито 'Моја временска "
+"таблица'."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Submit to Manager"
-msgstr ""
+msgstr "Поднеси до менаџерот"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -776,24 +830,24 @@ msgstr ""
 #: view:timesheet.report:0
 #: field:timesheet.report,general_account_id:0
 msgid "General Account"
-msgstr ""
+msgstr "Општа сметка"
 
 #. module: hr_timesheet_sheet
 #: help:hr.config.settings,timesheet_range:0
 #: help:res.company,timesheet_range:0
 msgid "Periodicity on which you validate your timesheets."
-msgstr ""
+msgstr "Период на кој ги валидирате вашите временски таблици."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:0
 msgid "Search Account"
-msgstr ""
+msgstr "Барај сметка"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:428
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:429
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet"
-msgstr ""
+msgstr "Не може да измените внес во потврдена временска таблица"
 
 #. module: hr_timesheet_sheet
 #: help:res.company,timesheet_max_difference:0
@@ -801,13 +855,16 @@ msgid ""
 "Allowed difference in hours between the sign in/out and the timesheet "
 "computation for one sheet. Set this to 0 if you do not want any control."
 msgstr ""
+"Дозволена разлика во часови помеѓу најавата/одјавата и пресметката на "
+"временската таблица за еден лист. Подесете го на 0 доколку не сакате било "
+"каква контрола."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 #: field:hr_timesheet_sheet.sheet,period_ids:0
 #: view:hr_timesheet_sheet.sheet.day:0
 msgid "Period"
-msgstr ""
+msgstr "Период"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.config.settings,timesheet_range:0
@@ -817,7 +874,7 @@ msgstr ""
 #: view:timesheet.report:0
 #: field:timesheet.report,day:0
 msgid "Day"
-msgstr ""
+msgstr "Ден"
 
 #. module: hr_timesheet_sheet
 #: constraint:hr_timesheet_sheet.sheet:0
@@ -825,106 +882,109 @@ msgid ""
 "You cannot have 2 timesheets that overlap!\n"
 "Please use the menu 'My Current Timesheet' to avoid this problem."
 msgstr ""
+"Не може да имате 2 временски таблици кои се преклопуваат!\n"
+"Употребете го менито 'Моја тековен временска таблица' за да го избегнете "
+"овој проблем."
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:0
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_hr_timesheet_current_open
 #: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timsheet_sheet
 msgid "My Timesheet"
-msgstr "Мои работни часови"
+msgstr "Моја временска таблица"
 
 #. module: hr_timesheet_sheet
 #: view:timesheet.report:0
 #: selection:timesheet.report,state:0
 msgid "Done"
-msgstr ""
+msgstr "Завршено"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_drafttimesheetsheet0
 msgid "State is 'draft'."
-msgstr ""
+msgstr "Состојбата е 'нацрт'."
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:0
 msgid "Cancel"
-msgstr ""
+msgstr "Откажи"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_validatedtimesheet0
 msgid "Validated"
-msgstr ""
+msgstr "Валидирано"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_invoiceonwork0
 msgid "Invoice on Work"
-msgstr ""
+msgstr "Фактура за работа"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:0
 msgid "Timesheet by Accounts"
-msgstr ""
+msgstr "Временска таблица по сметки"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:50
 #, python-format
 msgid "Open Timesheet"
-msgstr ""
+msgstr "Отвори временска таблица"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
 #: view:timesheet.report:0
 msgid "Group by year of date"
-msgstr ""
+msgstr "Групирај по година од датумот"
 
 #. module: hr_timesheet_sheet
 #. openerp-web
 #: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:56
 #, python-format
 msgid "Click to add projects, contracts or analytic accounts."
-msgstr ""
+msgstr "Кликнете за да додадете проекти, договори или аналитички сметки."
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_validatedtimesheet0
 msgid "State is 'validated'."
-msgstr ""
+msgstr "Состојбата е 'потврдено'."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_config_settings
 msgid "hr.config.settings"
-msgstr ""
+msgstr "hr.config.settings"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_hr_timesheet_report_stat_all
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_hr_timesheet_report_all
 msgid "Timesheet Analysis"
-msgstr ""
+msgstr "Анализи на временска таблица"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Search Timesheet"
-msgstr ""
+msgstr "Барај временска таблица"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Confirmed Timesheets"
-msgstr ""
+msgstr "Потврдени временски таблици"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Details"
-msgstr ""
+msgstr "Детали"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_analytic_timesheet
 msgid "Timesheet Line"
-msgstr ""
+msgstr "Ставка од временска таблица"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:213
 #, python-format
 msgid "You cannot delete a timesheet which is already confirmed."
-msgstr ""
+msgstr "Не може да избришете временска таблица која е веќе потврдена."
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -932,81 +992,81 @@ msgstr ""
 #: view:timesheet.report:0
 #: field:timesheet.report,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Производ"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 #: field:hr_timesheet_sheet.sheet,attendances_ids:0
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_attendance
 msgid "Attendances"
-msgstr ""
+msgstr "Присуства"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,name:0
 #: field:timesheet.report,name:0
 msgid "Description"
-msgstr ""
+msgstr "Опис"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_confirmtimesheet0
 msgid "The employee periodically confirms his own timesheets."
-msgstr ""
+msgstr "Вработениот периодично ја потврдува својата врменска таблица."
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
 #: selection:timesheet.report,month:0
 msgid "May"
-msgstr ""
+msgstr "Мај"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_workontask0
 msgid "Defines the work summary of task"
-msgstr ""
+msgstr "Го дефинира работното резиме на задачата"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Sign Out"
-msgstr ""
+msgstr "Одјава"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_tasktimesheet0
 msgid "Moves task entry into the timesheet line"
-msgstr ""
+msgstr "Го преместува внесот за задачата во ставка од временската таблица."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.day:0
 msgid "Total Attendances"
-msgstr ""
+msgstr "Вкупно присуства"
 
 #. module: hr_timesheet_sheet
 #. openerp-web
 #: code:addons/hr_timesheet_sheet/static/src/xml/timesheet.xml:39
 #, python-format
 msgid "Add a Line"
-msgstr ""
+msgstr "Додади ставка"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,total_difference:0
 #: field:hr_timesheet_sheet.sheet.day,total_difference:0
 msgid "Difference"
-msgstr ""
+msgstr "Разлика"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:64
 #, python-format
 msgid "You cannot duplicate a timesheet."
-msgstr ""
+msgstr "Не може да дуплирате временски таблици."
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
 msgid "Absent"
-msgstr ""
+msgstr "Отсутен"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
 #: selection:timesheet.report,month:0
 msgid "February"
-msgstr ""
+msgstr "Февруари"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.action_hr_timesheet_report_stat_all
@@ -1020,38 +1080,49 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"               Овој извештај врши анализи на временските таблици креирани од "
+"вашите\n"
+"                човечки ресурси во системот. Ви овозможува да имате целосен "
+"преглед \n"
+"                на внесовите направени од вашите вработени. Може да ги "
+"групирате по\n"
+"                специфични критериуми за селекција благодарение на алатката "
+"за пребарување.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Employees"
-msgstr ""
+msgstr "Вработени"
 
 #. module: hr_timesheet_sheet
 #: constraint:hr.analytic.timesheet:0
 msgid "You cannot modify an entry in a Confirmed/Done timesheet !"
-msgstr ""
+msgstr "Не можете да измените внес во Потврдена/Завршена временска таблица !"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_timesheet0
 msgid "Information of time spent on a service"
-msgstr ""
+msgstr "Информација за времето поминато на одредена услуга"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
 #: selection:timesheet.report,month:0
 msgid "April"
-msgstr ""
+msgstr "Април"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_confirmtimesheet0
 msgid "Confirmation"
-msgstr ""
+msgstr "Потврда"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:99
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Предупредување!"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.account,invoice_rate:0
@@ -1059,58 +1130,58 @@ msgid "Invoice rate"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:401
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:421
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:402
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:422
 #, python-format
 msgid "User Error!"
-msgstr ""
+msgstr "Корисничка грешка!"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.day:0
 msgid "Total Difference"
-msgstr ""
+msgstr "Вкупно разлика"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Approve"
-msgstr ""
+msgstr "Одобри"
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Историја на пораки и комуникација"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,account_ids:0
 msgid "Analytic accounts"
-msgstr ""
+msgstr "Аналитички сметки"
 
 #. module: hr_timesheet_sheet
 #: view:timesheet.report:0
 #: field:timesheet.report,to_invoice:0
 msgid "Type of Invoicing"
-msgstr ""
+msgstr "Тип на фактурирање"
 
 #. module: hr_timesheet_sheet
 #: view:timesheet.report:0
 #: field:timesheet.report,total_attendance:0
 msgid "#Total Attendance"
-msgstr ""
+msgstr "#Вкупно присуства"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,cost:0
 msgid "Cost"
-msgstr ""
+msgstr "Трошок"
 
 #. module: hr_timesheet_sheet
 #: field:timesheet.report,date_current:0
 msgid "Current date"
-msgstr ""
+msgstr "Тековен датум"
 
 #. module: hr_timesheet_sheet
 #: model:process.process,name:hr_timesheet_sheet.process_process_hrtimesheetprocess0
 msgid "Hr Timesheet"
-msgstr ""
+msgstr "Временска таблица за човечки ресурси"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -1118,18 +1189,18 @@ msgstr ""
 #: view:timesheet.report:0
 #: field:timesheet.report,year:0
 msgid "Year"
-msgstr ""
+msgstr "Година"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:0
 #: selection:hr_timesheet_sheet.sheet,state:0
 msgid "Open"
-msgstr ""
+msgstr "Отвори"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "To Approve"
-msgstr ""
+msgstr "За Одобрување"
 
 #. module: hr_timesheet_sheet
 #. openerp-web
@@ -1138,14 +1209,14 @@ msgstr ""
 #: view:hr_timesheet_sheet.sheet.account:0
 #, python-format
 msgid "Total"
-msgstr ""
+msgstr "Вкупно"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Дневник"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_day
 msgid "Timesheet by Day"
-msgstr ""
+msgstr "Временска таблица по ден"

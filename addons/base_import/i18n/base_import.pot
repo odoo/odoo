@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.0alpha\n"
+"Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 17:05+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-06-07 19:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,7 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:420
+#: code:addons/base_import/static/src/js/import.js:451
 #, python-format
 msgid "Get all possible values"
 msgstr ""
@@ -51,7 +51,7 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:310
+#: code:addons/base_import/static/src/js/import.js:331
 #, python-format
 msgid "Relation Fields"
 msgstr ""
@@ -241,14 +241,6 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/import.xml:231
-#, python-format
-msgid "The following CSV file shows how to import \n"
-"                        suppliers and their respective contacts"
-msgstr ""
-
-#. module: base_import
-#. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:109
 #, python-format
 msgid "How can I change the CSV file format options when \n"
@@ -303,9 +295,9 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/import.xml:233
+#: code:addons/base_import/static/src/js/import.js:174
 #, python-format
-msgid "Suppliers and their respective contacts"
+msgid "Semicolon"
 msgstr ""
 
 #. module: base_import
@@ -341,6 +333,13 @@ msgid "Microsoft Excel will allow \n"
 "                        you to modify only the encoding when saving \n"
 "                        (in 'Save As' dialog box > click 'Tools' dropdown \n"
 "                        list > Encoding tab)."
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import.js:175
+#, python-format
+msgid "Tab"
 msgstr ""
 
 #. module: base_import
@@ -515,8 +514,10 @@ msgid "Reload data to check changes."
 msgstr ""
 
 #. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
-msgid "base_import.tests.models.char.readonly"
+#. openerp-web
+#: code:addons/base_import/static/src/xml/import.xml:233
+#, python-format
+msgid "Customers and their respective contacts"
 msgstr ""
 
 #. module: base_import
@@ -606,7 +607,7 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:407
+#: code:addons/base_import/static/src/js/import.js:438
 #, python-format
 msgid "Here are the possible values:"
 msgstr ""
@@ -620,7 +621,7 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:227
+#: code:addons/base_import/static/src/js/import.js:248
 #, python-format
 msgid "A single column was found in the file, this often means the file separator is incorrect"
 msgstr ""
@@ -700,7 +701,7 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:396
+#: code:addons/base_import/static/src/js/import.js:427
 #, python-format
 msgid "(%d more)"
 msgstr ""
@@ -751,7 +752,7 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:373
+#: code:addons/base_import/static/src/js/import.js:404
 #, python-format
 msgid "Everything seems valid."
 msgstr ""
@@ -768,7 +769,7 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:390
+#: code:addons/base_import/static/src/js/import.js:421
 #, python-format
 msgid "at row %d"
 msgstr ""
@@ -786,6 +787,14 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/import.xml:80
 #, python-format
 msgid "XXX/ID"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/import.xml:231
+#, python-format
+msgid "The following CSV file shows how to import \n"
+"                        customers and their respective contacts"
 msgstr ""
 
 #. module: base_import
@@ -860,6 +869,13 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
+#: code:addons/base_import/static/src/js/import.js:176
+#, python-format
+msgid "Space"
+msgstr ""
+
+#. module: base_import
+#. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:249
 #, python-format
 msgid "This feature \n"
@@ -892,6 +908,11 @@ msgid "If you import a file that contains one of the \n"
 msgstr ""
 
 #. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
+msgid "base_import.tests.models.char.readonly"
+msgstr ""
+
+#. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:169
 #, python-format
@@ -900,7 +921,7 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:309
+#: code:addons/base_import/static/src/js/import.js:330
 #, python-format
 msgid "Normal Fields"
 msgstr ""
@@ -933,6 +954,14 @@ msgid "If you want to import sales order having several \n"
 "                        relative to order. Any additional lines will need an \n"
 "                        addtional row that does not have any information in \n"
 "                        the fields relative to the order."
+msgstr ""
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import.js:173
+#: code:addons/base_import/static/src/js/import.js:184
+#, python-format
+msgid "Comma"
 msgstr ""
 
 #. module: base_import
@@ -1027,7 +1056,7 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:392
+#: code:addons/base_import/static/src/js/import.js:423
 #, python-format
 msgid "between rows %d and %d"
 msgstr ""

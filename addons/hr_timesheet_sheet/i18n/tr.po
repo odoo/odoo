@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-11 15:41+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-05-02 10:41+0000\n"
 "Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-12 05:29+0000\n"
-"X-Generator: Launchpad (build 16491)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:27+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: hr_timesheet_sheet
 #: field:hr.analytic.timesheet,sheet_id:0
@@ -76,6 +76,8 @@ msgid ""
 "In order to create a timesheet for this employee, you must assign an "
 "analytic journal to the employee, like 'Timesheet Journal'."
 msgstr ""
+"Bu personel için bir zaman çizelgesi oluşturmak için, 'Zaman Çizelgesi "
+"Yevmiye' gibi, personel bir analitik yevmiyesi atamanız gerekir."
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -141,8 +143,8 @@ msgid "Based on the timesheet"
 msgstr "ZamanÇizelgesi bazında"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:326
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:397
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:327
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:398
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet."
 msgstr "Onaylamış ZamanÇizelgesi bir girişi değiştiremezsiniz."
@@ -151,7 +153,7 @@ msgstr "Onaylamış ZamanÇizelgesi bir girişi değiştiremezsiniz."
 #: view:hr.timesheet.report:0
 #: view:timesheet.report:0
 msgid "Group by day of date"
-msgstr ""
+msgstr "Gün tarihine göre gurpla"
 
 #. module: hr_timesheet_sheet
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current
@@ -197,8 +199,8 @@ msgid "Please create an employee and associate it with this user."
 msgstr "Lütfen bir çalışan oluşturun  ve bu kullanıcı ile ilişkilendirin"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:401
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:421
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:402
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:422
 #, python-format
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates."
@@ -221,6 +223,12 @@ msgid ""
 "the user and can be validated by his manager. If required, as defined on the "
 "project, you can generate the invoices based on the timesheet."
 msgstr ""
+"Eğer sisteme etkinliklerinizi kitap gibi olabilir ki benim Zaman Çizelgesi "
+"zaman çizelgesi açılır. Aynı formu, size katılmcı kayıt (Giriş / Çıkış "
+"Kayıt) ve farklı projeler üzerinde yapılan çalışma saatleri "
+"tanımlayabilirsiniz.Şirketce belirtilen süre sonunda, bir zaman çizelgesi, "
+"kullanıcı tarafından doğrulanır ve yönetici tarafından onaylanır. Gerekirse "
+"proje üzerinde tanımlanan, siz zaman çizelgesi göre faturalar oluşturabilir."
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_ids:0
@@ -245,9 +253,9 @@ msgstr ""
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:80
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:82
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:84
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:326
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:397
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:428
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:327
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:398
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:429
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
 #, python-format
 msgid "Error!"
@@ -258,19 +266,20 @@ msgstr "Hata!"
 msgid ""
 "Allow a difference of time between timesheets and attendances of (in hours)"
 msgstr ""
+"Zaman çizelgeleri ve katılımcı (saat) arasında bir zaman farkı izin verin"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:99
 #, python-format
 msgid ""
 "Please verify that the total difference of the sheet is lower than %.2f."
-msgstr ""
+msgstr "Sayfanın toplam fark %.2f daha düşük olduğunu kontrol edin."
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_timesheet_report_stat_all
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_timesheet_report_all
 msgid "Timesheet Sheet Analysis"
-msgstr ""
+msgstr "ZamanÇizelgesi Formu Analizi"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.account,name:0
@@ -285,7 +294,7 @@ msgstr "Onaylama"
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "İşaretliyse yeni mesajlar ilginizi gerektirir."
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:69
@@ -295,11 +304,13 @@ msgid ""
 "In order to create a timesheet for this employee, you must assign it to a "
 "user."
 msgstr ""
+"Bu personel için bir zaman çizelgesi oluşturmak için, bir kullanıcıya "
+"atamanız gerekir."
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_attendance0
 msgid "Employee's timesheet entry"
-msgstr ""
+msgstr "PersonelZaman çizelgesi girişi"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:213
@@ -322,11 +333,13 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Sohbetçi özetini (mesaj sayısı, ...) barındırır. Bu özet kanban "
+"görünümlerine eklenmek üzere doğrudan html biçimindedir."
 
 #. module: hr_timesheet_sheet
 #: field:timesheet.report,nbr:0
 msgid "#Nbr"
-msgstr ""
+msgstr "#Nbr"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,date_from:0
@@ -369,12 +382,12 @@ msgstr "ZamanÇizelge satırıları"
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_follower_ids:0
 msgid "Followers"
-msgstr "Takipçi"
+msgstr "İzleyiciler"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_confirmedtimesheet0
 msgid "State is 'confirmed'."
-msgstr ""
+msgstr "Durumu 'doğruladı' ."
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,employee_id:0
@@ -390,7 +403,7 @@ msgstr "Yeni"
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_week_attendance_graph
 msgid "My Total Attendances By Week"
-msgstr ""
+msgstr "Hafta olarak Toplam katılımcılar"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.account,total:0
@@ -401,7 +414,7 @@ msgstr "Toplam Zaman"
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form
 msgid "Timesheets to Validate"
-msgstr ""
+msgstr "ZamanÇizelgeleri Doğrulama"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -413,12 +426,12 @@ msgstr "Saatler"
 #: view:hr.timesheet.report:0
 #: view:timesheet.report:0
 msgid "Group by month of date"
-msgstr ""
+msgstr "Ayın Günlerini gurupla"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_validatetimesheet0
 msgid "The project manager validates the timesheets."
-msgstr ""
+msgstr "Proje yöneticisi zamançizelgeleri doğrular."
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -429,7 +442,7 @@ msgstr "Temmuz"
 #. module: hr_timesheet_sheet
 #: field:hr.config.settings,timesheet_range:0
 msgid "Validate timesheets every"
-msgstr ""
+msgstr "ZamanÇizelgeleri her doğrulama"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:73
@@ -448,7 +461,7 @@ msgstr "Durumu"
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_workontask0
 msgid "Work on Task"
-msgstr ""
+msgstr "Görev Çalışmaları"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
@@ -486,7 +499,7 @@ msgstr "# Toplam ZamanÇizelge"
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_current_open
 msgid "hr.timesheet.current.open"
-msgstr ""
+msgstr "hr.timesheet.current.open"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:71
@@ -495,6 +508,8 @@ msgid ""
 "In order to create a timesheet for this employee, you must link the employee "
 "to a product, like 'Consultant'."
 msgstr ""
+"Bu personel için bir zaman çizelgesi oluşturmak için, 'Danışman' gibi, bir "
+"ürün için personel bağlantı gerekir."
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -511,7 +526,7 @@ msgstr "Aralık"
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:0
 msgid "It will open your current timesheet"
-msgstr ""
+msgstr "Bu mevcut zamançizelgesi açılacak"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.config.settings,timesheet_range:0
@@ -527,12 +542,12 @@ msgstr "Ay"
 #: view:timesheet.report:0
 #: field:timesheet.report,total_diff:0
 msgid "#Total Diff"
-msgstr ""
+msgstr "#Toplam Diff"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "In Draft"
-msgstr ""
+msgstr "Taslak"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_attendancetimesheet0
@@ -546,6 +561,8 @@ msgid ""
 "In order to create a timesheet for this employee, you must link the employee "
 "to a product."
 msgstr ""
+"Bu çalışan için bir zaman çizelgesi oluşturmak için, bir ürün için çalışan "
+"bağlantı gerekir."
 
 #. module: hr_timesheet_sheet
 #. openerp-web
@@ -665,7 +682,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,message_is_follower:0
 msgid "Is a Follower"
-msgstr "Bir Takipçisi mi"
+msgstr "Bir İzleyicidir"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -790,7 +807,7 @@ msgid "Search Account"
 msgstr "Hesap Arama"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:428
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:429
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet"
 msgstr ""
@@ -1059,8 +1076,8 @@ msgid "Invoice rate"
 msgstr "Fatura oranı"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:401
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:421
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:402
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:422
 #, python-format
 msgid "User Error!"
 msgstr "Kullanıcı Hatası!"

@@ -3940,7 +3940,7 @@
         <record id="btw_code_2a" model="account.tax.code.template">
             <field name="code">2a</field>
             <field name="parent_id" ref="btw_code_verlegging"/>
-            <field name="name">Leveringen/diensten waarbij de heffing van omzetbelasting naar u is verlegd (BTW)</field>
+            <field name="name">Heffing van omzetbelasting is naar u verlegd (BTW)</field>
         </record>
 <!-- Voor rubriek 3 hoeft geen omzetbelasting aangegeven te worden, wel het omzet bedrag, zie hiervoor verderop
      3. Leveringen naar het buitenland -->
@@ -4052,7 +4052,7 @@
         <record id="omz_code_2a" model="account.tax.code.template">
             <field name="code">2a</field>
             <field name="parent_id" ref="omz_code_verlegging"/>
-            <field name="name">Leveringen/diensten waarbij de heffing van omzetbelasting naar u is verlegd (omzet)</field>
+            <field name="name">Heffing van omzetbelasting is naar u verlegd (omzet)</field>
         </record>
 <!-- 3. Leveringen naar het buitenland -->
         <record id="omz_code_naar_buitenland" model="account.tax.code.template">
@@ -4260,7 +4260,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="omz_code_1e" name="ref_base_code_id"/>
             <field name="ref_base_sign" eval="-1"/>
             <field name="ref_tax_sign" eval="-1"/>
-            <field name="type_tax_use">purchase</field>
+            <field name="type_tax_use">sale</field>
         </record>
         <record id="btw_ink_0" model="account.tax.template">
             <field name="sequence">15</field>
@@ -4279,9 +4279,9 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field eval="True" name="child_depend"/>
         </record>
         <record id="btw_ink_0_1" model="account.tax.template">
-            <field name="sequence">99</field>
+            <field name="sequence">98</field>
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
-            <field name="name">BTW af te dragen verlegd (inkopen1)</field>
+            <field name="name">BTW te vorderen verlegd (inkopen1)</field>
             <field eval="1.00" name="amount"/>
             <field name="type">percent</field>
             <field eval="btw_ink_0" name="parent_id"/>
@@ -4304,54 +4304,8 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
             <field name="account_paid_id" ref="vat_payable_verlegd"/>
             <field eval="btw_code_5b" name="tax_code_id"/>
             <field eval="btw_code_5b" name="ref_tax_code_id"/>
+            <field name="tax_sign" eval="-1"/>
             <field name="ref_base_sign" eval="-1"/>
-            <field name="ref_tax_sign" eval="-1"/>
-            <field name="type_tax_use">purchase</field>
-        </record>
-        <record id="btw_ink2_0" model="account.tax.template">
-            <field name="sequence">15</field>
-            <field name="chart_template_id" ref="l10nnl_chart_template"/>
-            <field name="name">BTW te vorderen verlegd (inkopen)</field>
-            <field name="description">21% BTW verlegd</field>
-            <field eval="0.21" name="amount"/>
-            <field name="type">percent</field>
-            <field name="account_collected_id" ref="vat_refund_verlegd"/>
-            <field name="account_paid_id" ref="vat_refund_verlegd"/>
-            <field eval="omz_code_2a" name="base_code_id"/>
-            <field eval="omz_code_2a" name="ref_base_code_id"/>
-            <field name="ref_base_sign" eval="-1"/>
-            <field name="ref_tax_sign" eval="-1"/>
-            <field name="type_tax_use">purchase</field>
-            <field eval="True" name="child_depend"/>
-        </record>
-        <record id="btw_ink2_0_1" model="account.tax.template">
-            <field name="sequence">99</field>
-            <field name="chart_template_id" ref="l10nnl_chart_template"/>
-            <field name="name">BTW te vorderen verlegd (inkopen1)</field>
-            <field eval="1.00" name="amount"/>
-            <field name="type">percent</field>
-            <field eval="btw_ink2_0" name="parent_id"/>
-            <field name="account_collected_id" ref="vat_refund_verlegd"/>
-            <field name="account_paid_id" ref="vat_refund_verlegd"/>
-            <field eval="btw_code_2a" name="tax_code_id"/>
-            <field eval="btw_code_2a" name="ref_tax_code_id"/>
-            <field name="ref_base_sign" eval="-1"/>
-            <field name="ref_tax_sign" eval="-1"/>
-            <field name="type_tax_use">purchase</field>
-        </record>
-        <record id="btw_ink2_0_2" model="account.tax.template">
-            <field name="sequence">99</field>
-            <field name="chart_template_id" ref="l10nnl_chart_template"/>
-            <field name="name">BTW te vorderen verlegd (inkopen2)</field>
-            <field eval="-1.00" name="amount"/>
-            <field name="type">percent</field>
-            <field eval="btw_ink2_0" name="parent_id"/>
-            <field name="account_collected_id" ref="vat_refund_verlegd"/>
-            <field name="account_paid_id" ref="vat_refund_verlegd"/>
-            <field eval="btw_code_5b" name="tax_code_id"/>
-            <field eval="btw_code_5b" name="ref_tax_code_id"/>
-            <field name="ref_base_sign" eval="-1"/>
-            <field name="ref_tax_sign" eval="-1"/>
             <field name="type_tax_use">purchase</field>
         </record>
 <!-- Binnen de EU -->
@@ -4402,6 +4356,7 @@ TODO rubriek 1c en 1d moeten nog, zijn variabel, dus BTW percentage moet door ge
         </record>
         <record id="btw_I_21" model="account.tax.template">
             <field name="chart_template_id" ref="l10nnl_chart_template"/>
+            <field name="sequence">20</field>
             <field name="name">Inkopen import binnen EU hoog</field>
             <field name="description">21% BTW import binnen EU</field>
             <field eval="0.21" name="amount"/>

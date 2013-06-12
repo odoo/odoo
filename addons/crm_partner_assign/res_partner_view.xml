@@ -77,6 +77,7 @@
         <field name="inherit_id" ref="base.view_partner_tree"/>
         <field name="arch" type="xml">
             <field name="user_id" position="after">
+                <field name="date_review_next"/>
                 <field name="grade_id"/>
                 <field name="activation"/>
             </field>
@@ -104,17 +105,19 @@
         <field name="arch" type="xml">
             <xpath expr="//notebook[last()]" position="inside">
                 <page string="Geo Localization">
-                    <group colspan="2" col="2">
-                        <separator string="Partner Activation" colspan="2"/>
-                        <field name="grade_id" widget="selection"/>
-                        <field name="activation" widget="selection"/>
-                        <field name="partner_weight"/>
-                    </group>
-                    <group colspan="2" col="2">
-                        <separator string="Partner Review" colspan="2"/>
-                        <field name="date_review"/>
-                        <field name="date_review_next"/>
-                        <field name="date_partnership"/>
+                    <group>
+                        <group>
+                            <separator string="Partner Activation" colspan="2"/>
+                            <field name="grade_id" widget="selection"/>
+                            <field name="activation" widget="selection"/>
+                            <field name="partner_weight"/>
+                        </group>
+                        <group>
+                            <separator string="Partner Review" colspan="2"/>
+                            <field name="date_review"/>
+                            <field name="date_review_next"/>
+                            <field name="date_partnership"/>
+                        </group>
                     </group>
                     <group colspan="2" col="2">
                         <separator string="Geo Localization" colspan="2"/>

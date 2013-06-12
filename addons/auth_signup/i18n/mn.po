@@ -7,15 +7,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2013-02-09 13:34+0000\n"
 "Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-10 05:23+0000\n"
-"X-Generator: Launchpad (build 16482)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:14+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
+
+#. module: auth_signup
+#: view:res.users:0
+msgid ""
+"A password reset has been requested for this user. An email containing the "
+"following link has been sent:"
+msgstr ""
 
 #. module: auth_signup
 #: field:res.partner,signup_type:0
@@ -29,7 +36,7 @@ msgstr "Гадаад хэрэглэгчид бүртгүүлэхийг зөвш�
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:16
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:19
 #, python-format
 msgid "Confirm Password"
 msgstr "Нууц үгийг баталгаажуулах"
@@ -41,19 +48,30 @@ msgstr ""
 "Хэрэв тэмдэглээгүй бол зөвхөн уригдсан хэрэглэгчид л бүртгүүлэх боломжтой"
 
 #. module: auth_signup
+#: view:res.users:0
+msgid "Send an invitation email"
+msgstr ""
+
+#. module: auth_signup
+#: selection:res.users,state:0
+msgid "Activated"
+msgstr ""
+
+#. module: auth_signup
 #: model:ir.model,name:auth_signup.model_base_config_settings
 msgid "base.config.settings"
 msgstr "base.config.settings"
 
 #. module: auth_signup
-#: code:addons/auth_signup/res_users.py:252
+#: code:addons/auth_signup/res_users.py:266
 #, python-format
 msgid "Cannot send email: user has no email address."
 msgstr "Имэйлийг илгээх боломжгүй: хэрэглэгчид имэйл хаяг алга"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:25
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:27
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:31
 #, python-format
 msgid "Reset password"
 msgstr "Нууц үгийг шинэчлэх"
@@ -70,38 +88,15 @@ msgstr "Нууц үгийг шинэчлэх"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:125
+#: code:addons/auth_signup/static/src/js/auth_signup.js:120
 #, python-format
 msgid "Please enter a password and confirm it."
 msgstr "Нууц үгийг оруулж баталгаажуул"
 
 #. module: auth_signup
 #: view:res.users:0
-msgid "Send an email to the user to (re)set their password."
-msgstr "Хэрэглэгчид нууц үгээ шинэчлэх имэйл илгээнэ."
-
-#. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:23
-#, python-format
-msgid "Sign Up"
-msgstr "Бүртгүүлэх"
-
-#. module: auth_signup
-#: selection:res.users,state:0
-msgid "New"
-msgstr "Шинэ"
-
-#. module: auth_signup
-#: code:addons/auth_signup/res_users.py:258
-#, python-format
-msgid "Mail sent to:"
-msgstr "Мэйлийг хэнд илгээх"
-
-#. module: auth_signup
-#: field:res.users,state:0
-msgid "Status"
-msgstr "Төлөв"
+msgid "Send reset password link by email"
+msgstr ""
 
 #. module: auth_signup
 #: model:email.template,body_html:auth_signup.reset_password_email
@@ -126,8 +121,24 @@ msgstr ""
 "байж болно.</p>"
 
 #. module: auth_signup
+#: view:res.users:0
+msgid ""
+"An invitation email containing the following subscription link has been sent:"
+msgstr ""
+
+#. module: auth_signup
+#: field:res.users,state:0
+msgid "Status"
+msgstr "Төлөв"
+
+#. module: auth_signup
+#: selection:res.users,state:0
+msgid "Never Connected"
+msgstr ""
+
+#. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:119
+#: code:addons/auth_signup/static/src/js/auth_signup.js:114
 #, python-format
 msgid "Please enter a name."
 msgstr "Нэр оруулна уу."
@@ -143,19 +154,48 @@ msgid "Signup URL"
 msgstr "Бүртгүүлэх URL"
 
 #. module: auth_signup
+#: model:email.template,body_html:auth_signup.set_password_email
+msgid ""
+"\n"
+"                \n"
+"                    <p>\n"
+"                        ${object.name},\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        You have been invited to connect to "
+"\"${object.company_id.name}\" in order to get access to your documents in "
+"OpenERP.\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        To accept the invitation, click on the following "
+"link:\n"
+"                    </p>\n"
+"                    <ul>\n"
+"                        <li><a href=\"${object.signup_url}\">Accept "
+"invitation to \"${object.company_id.name}\"</a></li>\n"
+"                    </ul>\n"
+"                    <p>\n"
+"                        Thanks,\n"
+"                    </p>\n"
+"                    <pre>\n"
+"--\n"
+"${object.company_id.name or ''}\n"
+"${object.company_id.email or ''}\n"
+"${object.company_id.phone or ''}\n"
+"                    </pre>\n"
+"                \n"
+"            "
+msgstr ""
+
+#. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:122
+#: code:addons/auth_signup/static/src/js/auth_signup.js:117
 #, python-format
 msgid "Please enter a username."
 msgstr "Хэрэглэгчийн нэрийг оруулна уу"
 
 #. module: auth_signup
-#: selection:res.users,state:0
-msgid "Active"
-msgstr "Идэвхтэй"
-
-#. module: auth_signup
-#: code:addons/auth_signup/res_users.py:256
+#: code:addons/auth_signup/res_users.py:270
 #, python-format
 msgid ""
 "Cannot send email: no outgoing email server configured.\n"
@@ -163,6 +203,13 @@ msgid ""
 msgstr ""
 "Имэйл илгээх боломжгүй: гарах имэйл сервер тохируулагдаагүй байна.\n"
 "Тохиргоо/Ерөнхий тохиргоо дотор үүнийг тохируулах боломжтой."
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/js/auth_signup.js:177
+#, python-format
+msgid "An email has been sent with credentials to reset your password"
+msgstr ""
 
 #. module: auth_signup
 #. openerp-web
@@ -180,15 +227,10 @@ msgstr "Нэр"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:165
+#: code:addons/auth_signup/static/src/js/auth_signup.js:173
 #, python-format
 msgid "Please enter a username or email address."
 msgstr "Хэрэглэгчийн нэр эсвэл имэйл хаягийг оруулна уу."
-
-#. module: auth_signup
-#: selection:res.users,state:0
-msgid "Resetting Password"
-msgstr "Нууц үгийг шинэчлэж байна"
 
 #. module: auth_signup
 #. openerp-web
@@ -209,7 +251,7 @@ msgstr "Энэ нь Нэвтрэх хуудаснаас нууц үгээ шин
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:21
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:25
 #, python-format
 msgid "Log in"
 msgstr "Нэвтрэх"
@@ -221,43 +263,38 @@ msgstr "Бүртгүүлэх Жетон Хүчинтэй"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:116
-#: code:addons/auth_signup/static/src/js/auth_signup.js:119
-#: code:addons/auth_signup/static/src/js/auth_signup.js:122
-#: code:addons/auth_signup/static/src/js/auth_signup.js:125
-#: code:addons/auth_signup/static/src/js/auth_signup.js:128
-#: code:addons/auth_signup/static/src/js/auth_signup.js:162
-#: code:addons/auth_signup/static/src/js/auth_signup.js:165
+#: code:addons/auth_signup/static/src/js/auth_signup.js:111
+#: code:addons/auth_signup/static/src/js/auth_signup.js:114
+#: code:addons/auth_signup/static/src/js/auth_signup.js:117
+#: code:addons/auth_signup/static/src/js/auth_signup.js:120
+#: code:addons/auth_signup/static/src/js/auth_signup.js:123
+#: code:addons/auth_signup/static/src/js/auth_signup.js:170
+#: code:addons/auth_signup/static/src/js/auth_signup.js:173
 #, python-format
 msgid "Login"
 msgstr "Нэвтрэх"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:99
+#: code:addons/auth_signup/static/src/js/auth_signup.js:97
 #, python-format
 msgid "Invalid signup token"
 msgstr "Бүртгүүлэх жетон хүчингүй"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:128
+#: code:addons/auth_signup/static/src/js/auth_signup.js:123
 #, python-format
 msgid "Passwords do not match; please retype them."
 msgstr "Нууц үгүүд таарахгүй байна; дахин бичнэ үү."
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:116
-#: code:addons/auth_signup/static/src/js/auth_signup.js:162
+#: code:addons/auth_signup/static/src/js/auth_signup.js:111
+#: code:addons/auth_signup/static/src/js/auth_signup.js:170
 #, python-format
 msgid "No database selected !"
 msgstr "Өгөгдлийн бааз сонгогдоогүй байна!"
-
-#. module: auth_signup
-#: view:res.users:0
-msgid "Reset Password"
-msgstr "Нууц шинэчлэх"
 
 #. module: auth_signup
 #: field:base.config.settings,auth_signup_reset_password:0
@@ -265,18 +302,16 @@ msgid "Enable password reset from Login page"
 msgstr "Нэвтрэх хуудаснаас нууц үг шинэчлэхийг зөвшөөрөх"
 
 #. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:24
-#, python-format
-msgid "Back to Login"
-msgstr "Дахин нэвтрэх"
+#: model:email.template,subject:auth_signup.set_password_email
+msgid "${object.company_id.name} invitation to connect on OpenERP"
+msgstr ""
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:22
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:30
 #, python-format
-msgid "Sign up"
-msgstr "Бүртгүүлэх"
+msgid "Back to Login"
+msgstr "Дахин нэвтрэх"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
@@ -287,3 +322,34 @@ msgstr "Харилцагч"
 #: field:res.partner,signup_token:0
 msgid "Signup Token"
 msgstr "Бүртгүүлэх Жетон"
+
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:26
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:29
+#, python-format
+msgid "Sign Up"
+msgstr "Бүртгүүлэх"
+
+#~ msgid "New"
+#~ msgstr "Шинэ"
+
+#, python-format
+#~ msgid "Mail sent to:"
+#~ msgstr "Мэйлийг хэнд илгээх"
+
+#~ msgid "Send an email to the user to (re)set their password."
+#~ msgstr "Хэрэглэгчид нууц үгээ шинэчлэх имэйл илгээнэ."
+
+#~ msgid "Active"
+#~ msgstr "Идэвхтэй"
+
+#~ msgid "Resetting Password"
+#~ msgstr "Нууц үгийг шинэчлэж байна"
+
+#~ msgid "Reset Password"
+#~ msgstr "Нууц шинэчлэх"
+
+#, python-format
+#~ msgid "Sign up"
+#~ msgstr "Бүртгүүлэх"

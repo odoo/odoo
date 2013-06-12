@@ -7,19 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-02-15 07:45+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-06-08 09:50+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-16 05:39+0000\n"
-"X-Generator: Launchpad (build 16491)\n"
+"X-Launchpad-Export-Date: 2013-06-09 06:16+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:420
+#: code:addons/base_import/static/src/js/import.js:451
 #, python-format
 msgid "Get all possible values"
 msgstr "Alle positieve waardes ophalen"
@@ -70,7 +70,7 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:310
+#: code:addons/base_import/static/src/js/import.js:331
 #, python-format
 msgid "Relation Fields"
 msgstr "Relatie velden"
@@ -84,7 +84,7 @@ msgid ""
 "                        record, defined by the ID postgresql column"
 msgstr ""
 "Land/Database ID: de unieke OpenERP ID voor een \n"
-"                        record, gedefinieerd door de postgresql kolom id"
+"                        record, gedefinieerd door de PostgreSQL kolom id"
 
 #. module: base_import
 #. openerp-web
@@ -106,9 +106,9 @@ msgstr ""
 "programmeurs\n"
 "                        omdat het als voordeel heeft dat je geen conflicten "
 "hebt (je kan \n"
-"                        meerdere records met dezelfde naam hebben, maar ze "
+"                        meerdere records met dezelfde naam hebben, maar ze "
 "hebben altijd\n"
-"                        een unieke database ID)"
+"                        een unieke database ID)"
 
 #. module: base_import
 #. openerp-web
@@ -246,7 +246,7 @@ msgstr "Kan ik meerdere maken hetzelfde record importeren."
 #: code:addons/base_import/static/src/xml/import.xml:15
 #, python-format
 msgid "Validate"
-msgstr "Bevestigen"
+msgstr "Valideren"
 
 #. module: base_import
 #. openerp-web
@@ -316,17 +316,6 @@ msgstr "Zelfde waarde"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/import.xml:231
-#, python-format
-msgid ""
-"The following CSV file shows how to import \n"
-"                        suppliers and their respective contacts"
-msgstr ""
-"Het navolgende CSV bestand toont hoe leveranciers \n"
-"                        en de contactpersonen te importeren"
-
-#. module: base_import
-#. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:109
 #, python-format
 msgid ""
@@ -358,9 +347,9 @@ msgid ""
 msgstr ""
 "Zoals u in dit bestand kunt zien, werken Fabien en Laurence\n"
 "                        voor grote bedrijven (company_1) en Eric werkt\n"
-"                        voor het nedrijf Organi. De relatie tussen de "
+"                        voor het bedrijf Organi. De relatie tussen de "
 "personen \n"
-"                        en de bedrijven wordt egmaakt door gebruik te maken "
+"                        en de bedrijven wordt gemaakt door gebruik te maken "
 "van de \n"
 "                        External ID van de bedrijven. We hebben een prefix "
 "gemaakt voor de \n"
@@ -418,10 +407,10 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/import.xml:233
+#: code:addons/base_import/static/src/js/import.js:174
 #, python-format
-msgid "Suppliers and their respective contacts"
-msgstr "Leveranciers en de bijbehorende contactpersonen"
+msgid "Semicolon"
+msgstr "Puntkomma"
 
 #. module: base_import
 #. openerp-web
@@ -444,19 +433,19 @@ msgid ""
 "                        hierarchy."
 msgstr ""
 "Als u bijvoorbeeld twee productcategorieën heeft\n"
-"                         met het onderliggende categorie met de naam "
+"                        met het onderliggende categorie met de naam "
 "\"Verkoopbaar\" (bijv. \"Div.\n"
-"                         Producten / Verkoopbaar\" & \"Overige producten / "
+"                        Producten / Verkoopbaar\" & \"Overige producten / "
 "Verkoopbaar\"),\n"
-"                         zal de import validate stoppen, maar u kunt nog "
+"                        zal de import validatie stoppen, maar u kunt nog "
 "steeds uw data importeren.\n"
-"                         Toch raden wij u niet aan de data te importeren "
+"                        Toch raden wij u niet aan de data te importeren "
 "omdat deze allemaal worden\n"
-"                         gekoppeld aan de eerste categorie \"Verkoopbaar\" "
-"in de product categorie lijst\n"
-"                         (\"Div. Producten / Verkoopbaar\"). Wij raden u aan "
+"                        gekoppeld aan de eerste categorie \"Verkoopbaar\" in "
+"de product categorie lijst\n"
+"                        (\"Div. Producten / Verkoopbaar\"). Wij raden u aan "
 "om een van de dubbele waarden\n"
-"                         van uw productcategorie hiërarchie aan te passen."
+"                        van uw productcategorie hiërarchie aan te passen."
 
 #. module: base_import
 #. openerp-web
@@ -486,9 +475,16 @@ msgstr ""
 "Microsoft Excel geeft u \n"
 "                        de mogelijkheid alleen de codering te wijzigen bij "
 "het opslaan\n"
-"                         (in 'Opslaan als' dialoogvenster> klik op 'Extra' "
+"                        (in 'Opslaan als' dialoogvenster> klik op 'Extra' "
 "dropdown\n"
-"                         lijst> Codering tab)."
+"                        lijst> Codering tab)."
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import.js:175
+#, python-format
+msgid "Tab"
+msgstr "Tab"
 
 #. module: base_import
 #: field:base_import.tests.models.preview,othervalue:0
@@ -655,7 +651,7 @@ msgstr "Het zal het volgende CSV bestand produceren"
 #: code:addons/base_import/static/src/xml/import.xml:362
 #, python-format
 msgid "Here is the start of the file we could not import:"
-msgstr "Hier is de start van het bestand welke we niet konden improteren:"
+msgstr "Hier is de start van het bestand welke we niet konden importeren:"
 
 #. module: base_import
 #: field:base_import.import,file_type:0
@@ -702,9 +698,11 @@ msgid "Reload data to check changes."
 msgstr "Gegevens herladen om  te controleren op wijzigingen"
 
 #. module: base_import
-#: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
-msgid "base_import.tests.models.char.readonly"
-msgstr "base_import.tests.models.char.readonly"
+#. openerp-web
+#: code:addons/base_import/static/src/xml/import.xml:233
+#, python-format
+msgid "Customers and their respective contacts"
+msgstr "Klanten en de bijbehorende contactpersonen"
 
 #. module: base_import
 #. openerp-web
@@ -819,7 +817,7 @@ msgstr "Importeren"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:407
+#: code:addons/base_import/static/src/js/import.js:438
 #, python-format
 msgid "Here are the possible values:"
 msgstr "Hier de mogelijke waarden."
@@ -833,7 +831,7 @@ msgstr "De"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:227
+#: code:addons/base_import/static/src/js/import.js:248
 #, python-format
 msgid ""
 "A single column was found in the file, this often means the file separator "
@@ -935,7 +933,7 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:396
+#: code:addons/base_import/static/src/js/import.js:427
 #, python-format
 msgid "(%d more)"
 msgstr "(%d meer)"
@@ -996,7 +994,7 @@ msgid ""
 "command:"
 msgstr ""
 "We zullen  eerst alle bedrijven met de  \n"
-"                        \"External ID\" exproteren. In PSQL, schrijf het "
+"                        \"External ID\" exporteren. In PSQL, schrijf het "
 "volgende commando:"
 
 #. module: base_import
@@ -1012,7 +1010,7 @@ msgstr ""
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:373
+#: code:addons/base_import/static/src/js/import.js:404
 #, python-format
 msgid "Everything seems valid."
 msgstr "Alle velden lijken geldig."
@@ -1028,15 +1026,15 @@ msgid ""
 "                        use make use of the external ID for this field \n"
 "                        'Category'."
 msgstr ""
-"Maar als u de configuratie van de\n"
-"                         productcategorieën niet wiltr wijzigen, raden wij u "
+"Maar als u de configuratie van de \n"
+"                        productcategorieën niet wilt wijzigen, raden wij u "
 "aan\n"
-"                         gebruik maken van de externe ID voor dit veld\n"
-"                         'Categorie'."
+"                        gebruik maken van de externe ID voor dit veld\n"
+"                        'Categorie'."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:390
+#: code:addons/base_import/static/src/js/import.js:421
 #, python-format
 msgid "at row %d"
 msgstr "op regel %d"
@@ -1058,6 +1056,18 @@ msgstr ""
 #, python-format
 msgid "XXX/ID"
 msgstr "XXX/ID"
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/import.xml:231
+#, python-format
+msgid ""
+"The following CSV file shows how to import \n"
+"                        customers and their respective contacts"
+msgstr ""
+"Het volgende CSV bestand laaat zien hoe \n"
+"                        klanten en de bijbehorende contactpersonen te "
+"importeren."
 
 #. module: base_import
 #. openerp-web
@@ -1164,6 +1174,13 @@ msgstr "company_3,Boum,True"
 
 #. module: base_import
 #. openerp-web
+#: code:addons/base_import/static/src/js/import.js:176
+#, python-format
+msgid "Space"
+msgstr "Spatie"
+
+#. module: base_import
+#. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:249
 #, python-format
 msgid ""
@@ -1190,8 +1207,8 @@ msgid ""
 "                        import an other record that links to the first\n"
 "                        one, use"
 msgstr ""
-"kolom in OpenERP. Waneer u\n"
-"                        een ander record importeerd, welke verwijst naar de "
+"kolom in OpenERP. Wanneer u\n"
+"                        een ander record importeert, welke verwijst naar de "
 "eerste\n"
 "                        gebruik,"
 
@@ -1229,6 +1246,11 @@ msgstr ""
 "iedere record."
 
 #. module: base_import
+#: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
+msgid "base_import.tests.models.char.readonly"
+msgstr "base_import.tests.models.char.readonly"
+
+#. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/import.xml:169
 #, python-format
@@ -1237,7 +1259,7 @@ msgstr "CSV bestand voor categorieën"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:309
+#: code:addons/base_import/static/src/js/import.js:330
 #, python-format
 msgid "Normal Fields"
 msgstr "Normale velden"
@@ -1295,6 +1317,14 @@ msgstr ""
 "                        meer de kopgegevens van de order bevatten, maar "
 "alleen de\n"
 "                        regelinformatie."
+
+#. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/js/import.js:173
+#: code:addons/base_import/static/src/js/import.js:184
+#, python-format
+msgid "Comma"
+msgstr "Komma"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
@@ -1408,7 +1438,7 @@ msgstr "Bestand formaat opties..."
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/js/import.js:392
+#: code:addons/base_import/static/src/js/import.js:423
 #, python-format
 msgid "between rows %d and %d"
 msgstr "Tussen regel %d en %d"
@@ -1442,3 +1472,15 @@ msgstr ""
 #: field:base_import.import,file:0
 msgid "File"
 msgstr "Bestand"
+
+#, python-format
+#~ msgid "Suppliers and their respective contacts"
+#~ msgstr "Leveranciers en de bijbehorende contactpersonen"
+
+#, python-format
+#~ msgid ""
+#~ "The following CSV file shows how to import \n"
+#~ "                        suppliers and their respective contacts"
+#~ msgstr ""
+#~ "Het navolgende CSV bestand toont hoe leveranciers \n"
+#~ "                        en de contactpersonen te importeren"

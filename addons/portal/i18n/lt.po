@@ -1,21 +1,21 @@
 # Lithuanian translation for openobject-addons
 # Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Giedrius Slavinskas <giedrius@inovera.lt>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"PO-Revision-Date: 2013-04-30 16:28+0000\n"
+"Last-Translator: Giedrius Slavinskas - inovera.lt <giedrius@inovera.lt>\n"
 "Language-Team: Lithuanian <lt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:57+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:35+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -41,23 +41,28 @@ msgstr ""
 #. module: portal
 #: model:mail.group,name:portal.company_jobs
 msgid "Company Jobs"
-msgstr ""
+msgstr "Įmonės užduotys"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid "amount: the total amount to pay, as a float"
+#: model:ir.ui.menu,name:portal.portal_orders
+msgid "Billing"
 msgstr ""
 
 #. module: portal
 #: view:portal.wizard.user:0
 msgid "Contacts"
+msgstr "Kontaktai"
+
+#. module: portal
+#: view:portal.wizard:0
+msgid "This text is included in the email sent to new portal users."
 msgstr ""
 
 #. module: portal
 #: view:share.wizard:0
 #: field:share.wizard,group_ids:0
 msgid "Existing groups"
-msgstr ""
+msgstr "Esamos grupės"
 
 #. module: portal
 #: view:res.groups:0
@@ -65,8 +70,21 @@ msgid "Portal Groups"
 msgstr ""
 
 #. module: portal
+#: code:addons/portal/mail_mail.py:52
+#, python-format
+msgid "<p>Access this document <a href=\"%s\">directly in OpenERP</a></p>"
+msgstr ""
+
+#. module: portal
 #: field:portal.wizard,welcome_message:0
 msgid "Invitation Message"
+msgstr ""
+
+#. module: portal
+#: model:ir.actions.act_window,name:portal.partner_wizard_action
+#: model:ir.model,name:portal.model_portal_wizard
+#: view:portal.wizard:0
+msgid "Portal Access Management"
 msgstr ""
 
 #. module: portal
@@ -81,14 +99,10 @@ msgid "Please select at least one group to share with"
 msgstr ""
 
 #. module: portal
-#: view:share.wizard:0
-msgid "Details"
-msgstr ""
-
-#. module: portal
-#: model:ir.ui.menu,name:portal.portal_orders
-msgid "Quotations and Sales Orders"
-msgstr ""
+#: model:ir.actions.client,name:portal.action_mail_archives_feeds_portal
+#: model:ir.ui.menu,name:portal.portal_mail_archivesfeeds
+msgid "Archives"
+msgstr "Archyvas"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -108,8 +122,10 @@ msgid "Share Wizard"
 msgstr ""
 
 #. module: portal
-#: field:portal.wizard.user,email:0
-msgid "Email"
+#: view:portal.payment.acquirer:0
+msgid ""
+", so it may use Mako expressions.\n"
+"                                The Mako evaluation context provides:"
 msgstr ""
 
 #. module: portal
@@ -120,6 +136,22 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+
+#. module: portal
+#: field:portal.wizard.user,email:0
+msgid "Email"
+msgstr "El. paštas"
+
+#. module: portal
+#: view:portal.wizard:0
+msgid "or"
+msgstr "arba"
+
+#. module: portal
+#: model:ir.actions.client,name:portal.action_mail_star_feeds_portal
+#: model:ir.ui.menu,name:portal.portal_mail_starfeeds
+msgid "To-do"
+msgstr "Reikia atlikti"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:194
@@ -137,7 +169,7 @@ msgstr ""
 #. module: portal
 #: field:portal.wizard,user_ids:0
 msgid "Users"
-msgstr ""
+msgstr "Naudotojai"
 
 #. module: portal
 #: code:addons/portal/acquirer.py:82
@@ -152,10 +184,13 @@ msgid "No online payment acquirers configured"
 msgstr ""
 
 #. module: portal
-#: view:portal.payment.acquirer:0
+#: code:addons/portal/mail_message.py:54
+#, python-format
 msgid ""
-"kind: the kind of document on which the payment form is rendered (translated "
-"to user language, e.g. \"Invoice\")"
+"The requested operation cannot be completed due to security restrictions. "
+"Please contact your system administrator.\n"
+"\n"
+"(Document type: %s, Operation: %s)"
 msgstr ""
 
 #. module: portal
@@ -167,7 +202,7 @@ msgstr ""
 #: code:addons/portal/wizard/share_wizard.py:38
 #, python-format
 msgid "Users you already shared with"
-msgstr ""
+msgstr "Naudotojai, su kuriais jau buvo dalintasi"
 
 #. module: portal
 #: model:ir.actions.client,help:portal.action_jobs
@@ -179,11 +214,25 @@ msgid ""
 msgstr ""
 
 #. module: portal
-#: view:portal.payment.acquirer:0
+#: model:ir.actions.client,help:portal.action_mail_archives_feeds_portal
 msgid ""
-", so it may use Mako expressions.\n"
-"                                The Mako evaluation context provides:"
+"<p>\n"
+"                    No message found and no message sent yet.\n"
+"                </p><p>\n"
+"                    Click on the top-right icon to compose a message. This\n"
+"                    message will be sent by email if it's an internal "
+"contact.\n"
+"                </p>\n"
+"            "
 msgstr ""
+"<p>\n"
+"                    Dar nėra gauta nei išsiųsta nė viena žinutė.\n"
+"                </p><p>\n"
+"                    Paspauskite ant piktogramos lango viršuje, kairėje "
+"pusėje, kad parašytumėt žinutę. Žinutė bus išsiųsta el. paštu, jeigu tai "
+"vidinis kontaktas.\n"
+"                </p>\n"
+"            "
 
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_menu
@@ -243,13 +292,13 @@ msgstr ""
 #: model:ir.actions.client,name:portal.action_mail_inbox_feeds_portal
 #: model:ir.ui.menu,name:portal.portal_inbox
 msgid "Inbox"
-msgstr ""
+msgstr "Gauta"
 
 #. module: portal
 #: view:share.wizard:0
 #: field:share.wizard,user_ids:0
 msgid "Existing users"
-msgstr ""
+msgstr "Esami naudotojai"
 
 #. module: portal
 #: field:portal.wizard.user,wizard_id:0
@@ -259,7 +308,7 @@ msgstr ""
 #. module: portal
 #: field:portal.payment.acquirer,name:0
 msgid "Name"
-msgstr ""
+msgstr "Pavadinimas"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_groups
@@ -274,13 +323,28 @@ msgstr ""
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid ""
+"kind: the kind of document on which the payment form is rendered (translated "
+"to user language, e.g. \"Invoice\")"
+msgstr ""
+
+#. module: portal
+#: view:portal.payment.acquirer:0
+msgid ""
 "quote(): a method to quote special string character to make them suitable "
 "for inclusion in a URL"
 msgstr ""
 
 #. module: portal
-#: help:res.groups,is_portal:0
-msgid "If checked, this group is usable as a portal."
+#: view:portal.payment.acquirer:0
+msgid "amount: the total amount to pay, as a float"
+msgstr ""
+
+#. module: portal
+#: code:addons/portal/mail_mail.py:44
+#, python-format
+msgid ""
+"<p>Access your messages and personal documents through <a href=\"%s\">our "
+"Customer Portal</a></p>"
 msgstr ""
 
 #. module: portal
@@ -291,7 +355,7 @@ msgstr ""
 #. module: portal
 #: field:portal.wizard.user,partner_id:0
 msgid "Contact"
-msgstr ""
+msgstr "Kontaktas"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_mail
@@ -307,7 +371,7 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_messages
 msgid "Messaging"
-msgstr ""
+msgstr "Žinutės"
 
 #. module: portal
 #: model:res.groups,comment:portal.group_anonymous
@@ -323,9 +387,15 @@ msgid "Online Payment Acquirer"
 msgstr ""
 
 #. module: portal
+#: code:addons/portal/mail_message.py:53
+#, python-format
+msgid "Access Denied"
+msgstr ""
+
+#. module: portal
 #: model:mail.group,name:portal.company_news_feed
 msgid "Company News"
-msgstr ""
+msgstr "Įmonės naujienos"
 
 #. module: portal
 #: code:addons/portal/acquirer.py:76
@@ -353,6 +423,14 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    <b>Šauniai padirbėta!</b> Jūsų neturite gautų žinučių.\n"
+"                </p><p>\n"
+"                    Šiame lange rodomos privačios žinutės, el. laiškai "
+"siųsti jums bei informacija susijusi su prenumeruojamais dokumentais ar "
+"žmonėmis.\n"
+"                </p>\n"
+"            "
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -372,10 +450,8 @@ msgid "About Us"
 msgstr ""
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid ""
-"currency: the currency record in which the document is issued (e.g. "
-"currency.name could be EUR)"
+#: help:res.groups,is_portal:0
+msgid "If checked, this group is usable as a portal."
 msgstr ""
 
 #. module: portal
@@ -406,8 +482,10 @@ msgid ""
 msgstr ""
 
 #. module: portal
-#: view:portal.wizard:0
-msgid "or"
+#: view:portal.payment.acquirer:0
+msgid ""
+"currency: the currency record in which the document is issued (e.g. "
+"currency.name could be EUR)"
 msgstr ""
 
 #. module: portal
@@ -453,16 +531,21 @@ msgstr ""
 #: code:addons/portal/wizard/share_wizard.py:39
 #, python-format
 msgid "Existing Groups (e.g Portal Groups)"
-msgstr ""
+msgstr "Esamos grupės (pvz. Portalo grupė)"
 
 #. module: portal
 #: view:portal.wizard:0
 msgid "Cancel"
-msgstr ""
+msgstr "Atšaukti"
 
 #. module: portal
 #: view:portal.wizard:0
 msgid "Apply"
+msgstr "Taikyti"
+
+#. module: portal
+#: model:ir.model,name:portal.model_mail_message
+msgid "Message"
 msgstr ""
 
 #. module: portal
@@ -478,11 +561,25 @@ msgid ""
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/mail_mail.py:42
-#, python-format
+#: model:ir.actions.client,help:portal.action_mail_star_feeds_portal
 msgid ""
-"Access your personal documents through <a href=\"%s\">our Customer Portal</a>"
+"<p>\n"
+"                    <b>No todo.</b>\n"
+"                </p><p>\n"
+"                    When you process messages in your inbox, you can mark "
+"some\n"
+"                    as <i>todo</i>. From this menu, you can process all your "
+"todo.\n"
+"                </p>\n"
+"            "
 msgstr ""
+"<p>\n"
+"                    <b>Neturite svarbių žinučių.</b>\n"
+"                </p><p>\n"
+"                    Gautas žinutes galima pažymėti kaip <i>reikia "
+"atlikti</i>. Šiame lange galite peržvelgti šias žinutes.\n"
+"                </p>\n"
+"            "
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -490,8 +587,6 @@ msgid "Form Template"
 msgstr ""
 
 #. module: portal
-#: model:ir.actions.act_window,name:portal.partner_wizard_action
-#: model:ir.model,name:portal.model_portal_wizard
-#: view:portal.wizard:0
-msgid "Portal Access Management"
-msgstr ""
+#: view:share.wizard:0
+msgid "Details"
+msgstr "Detalės"

@@ -41,7 +41,7 @@
         <field name="arch" type="xml">
             <tree string="Applicants" fonts="bold:message_unread==True" colors="grey:state in ('cancel','done');blue:state=='pending'">
                 <field name="message_unread" invisible="1"/>
-                <field name="create_date" groups="base.group_no_one"/>
+                <field name="create_date"/>
                 <field name="name" string="Subject"/>
                 <field name="partner_name"/>
                 <field name="email_from"/>
@@ -151,7 +151,7 @@
             </sheet>
             <div class="oe_chatter">
                 <field name="message_follower_ids" widget="mail_followers"/>
-                <field name="message_ids" widget="mail_thread" placeholder="Share a message..."/>
+                <field name="message_ids" widget="mail_thread"/>
             </div>
           </form>
         </field>
@@ -198,7 +198,7 @@
                     <filter string="Appreciation" domain="[]" context="{'group_by':'priority'}"/>
                     <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
                     <filter string="Source" domain="[]" context="{'group_by':'source_id'}"/>
-                    <filter string="Creation Date" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
+                    <filter string="Creation Date" domain="[]" context="{'group_by':'create_date'}"/>
                 </group>
            </search>
         </field>
@@ -237,6 +237,7 @@
                 <field name="title_action"/>
                 <field name="department_id"/>
                 <field name="categ_ids"/>
+                <field name="message_summary"/>
                 <templates>
                     <t t-name="kanban-tooltip">
                         <ul class="oe_kanban_tooltip">
@@ -282,6 +283,7 @@
 
                                 </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:5px;">
+                                    <t t-raw="record.message_summary.raw_value"/>
                                     <field name="categ_ids"/>
                                 </div>
                             </div>

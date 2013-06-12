@@ -7,20 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:59+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:36+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
 msgid "Number of Layers"
 msgstr "Αριθμός στρώσεων"
+
+#. module: product
+#: view:res.partner:0
+msgid "the parent company"
+msgstr ""
 
 #. module: product
 #: help:product.pricelist.item,base:0
@@ -280,6 +285,11 @@ msgid "Laptop E5023"
 msgstr ""
 
 #. module: product
+#: field:product.price_list,qty1:0
+msgid "Quantity-1"
+msgstr "Ποσότητα-1"
+
+#. module: product
 #: help:product.packaging,ul_qty:0
 msgid "The number of packages by layer"
 msgstr "Αριθμός πακέτων ανά στρώση"
@@ -459,9 +469,9 @@ msgid "Quantity-3"
 msgstr "Ποσότητα-3"
 
 #. module: product
-#: field:product.price_list,qty1:0
-msgid "Quantity-1"
-msgstr "Ποσότητα-1"
+#: model:res.groups,name:product.group_product_variant
+msgid "Product Variant (not supported)"
+msgstr ""
 
 #. module: product
 #: field:product.price_list,qty4:0
@@ -764,10 +774,13 @@ msgid "External Hard disk"
 msgstr ""
 
 #. module: product
-#: help:product.template,standard_price:0
-msgid ""
-"Cost price of the product used for standard stock valuation in accounting "
-"and used as a base price on purchase orders."
+#: view:product.product:0
+msgid "describe the product characteristics..."
+msgstr ""
+
+#. module: product
+#: view:res.partner:0
+msgid "Pricelists are managed on"
 msgstr ""
 
 #. module: product
@@ -1092,9 +1105,9 @@ msgid "Price Surcharge"
 msgstr "Τιμή Προσαύξησης"
 
 #. module: product
-#: field:product.product,code:0
-#: field:product.product,default_code:0
-msgid "Internal Reference"
+#: code:addons/product/pricelist.py:380
+#, python-format
+msgid "Supplier Prices on the product form"
 msgstr ""
 
 #. module: product
@@ -1117,7 +1130,6 @@ msgstr "Αποθηκευτικές Μονάδες"
 #: field:product.category,name:0
 #: field:product.pricelist.type,name:0
 #: field:product.pricelist.version,name:0
-#: field:product.product,name_template:0
 #: field:product.template,name:0
 #: field:product.ul,name:0
 #: field:product.uom.categ,name:0
@@ -1278,6 +1290,11 @@ msgid "Specify the minimum amount of margin over the base price."
 msgstr ""
 
 #. module: product
+#: field:product.product,name_template:0
+msgid "Template Name"
+msgstr ""
+
+#. module: product
 #: field:product.template,weight_net:0
 msgid "Net Weight"
 msgstr "Καραρό βάρος"
@@ -1304,6 +1321,11 @@ msgstr ""
 
 #. module: product
 #: view:product.product:0
+msgid "This note will be displayed on requests for quotation..."
+msgstr ""
+
+#. module: product
+#: view:product.product:0
 msgid "Inventory"
 msgstr ""
 
@@ -1313,7 +1335,7 @@ msgid "Supplier Info"
 msgstr "Πληροφορίες Προμηθευτή"
 
 #. module: product
-#: code:addons/product/product.py:729
+#: code:addons/product/product.py:732
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -1340,6 +1362,13 @@ msgstr "Μονάδες Μέτρησης"
 #: field:product.supplierinfo,min_qty:0
 msgid "Minimal Quantity"
 msgstr "Ελάχιστη Ποσότητα"
+
+#. module: product
+#: view:product.supplierinfo:0
+msgid ""
+"The prices below will only be taken into account when your pricelist is set "
+"as based on supplier prices."
+msgstr ""
 
 #. module: product
 #: help:product.supplierinfo,product_code:0
@@ -1678,6 +1707,11 @@ msgid "Price:"
 msgstr ""
 
 #. module: product
+#: view:product.pricelist.item:0
+msgid "Min. Margin"
+msgstr "Ελάχιστο Περιθώριο"
+
+#. module: product
 #: field:product.template,weight:0
 msgid "Gross Weight"
 msgstr "Μικτό βάρος"
@@ -1816,12 +1850,6 @@ msgid "Default Unit of Measure"
 msgstr "Προεπιλεγμένη Μονάδα Μέτρησης"
 
 #. module: product
-#: code:addons/product/pricelist.py:377
-#, python-format
-msgid "Partner section of the product form"
-msgstr "Τομέας συνεργάτη στην φόρμα προϊόντος"
-
-#. module: product
 #: help:product.price.type,name:0
 msgid "Name of this kind of price."
 msgstr "Ονομασά για αυτόν τον τύπο τιμής."
@@ -1865,6 +1893,17 @@ msgstr "Μήκος/Απόσταση"
 #. module: product
 #: model:product.category,name:product.product_category_8
 msgid "Components"
+msgstr ""
+
+#. module: product
+#: field:product.product,code:0
+#: field:product.product,default_code:0
+msgid "Internal Reference"
+msgstr ""
+
+#. module: product
+#: view:product.product:0
+msgid "e.g. 5901234123457"
 msgstr ""
 
 #. module: product
@@ -2174,9 +2213,11 @@ msgid "Max. Price Margin"
 msgstr "Μέγιστο εύρος τιμής"
 
 #. module: product
-#: view:product.pricelist.item:0
-msgid "Min. Margin"
-msgstr "Ελάχιστο Περιθώριο"
+#: help:product.template,standard_price:0
+msgid ""
+"Cost price of the product used for standard stock valuation in accounting "
+"and used as a base price on purchase orders."
+msgstr ""
 
 #. module: product
 #: help:product.supplierinfo,product_name:0
@@ -2361,7 +2402,11 @@ msgstr ""
 
 #. module: product
 #: view:product.product:0
-#: model:res.groups,name:product.group_product_variant
+msgid "note to be displayed on quotations..."
+msgstr ""
+
+#. module: product
+#: view:product.product:0
 msgid "Product Variant"
 msgstr "Μεταβλητή Προϊόντος"
 
@@ -2371,7 +2416,7 @@ msgid "15” LCD Monitor"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:376
+#: code:addons/product/pricelist.py:379
 #: field:product.pricelist.item,base_pricelist_id:0
 #, python-format
 msgid "Other Pricelist"
@@ -2504,3 +2549,7 @@ msgstr "Ο όγκος σε m3."
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Έκπτωση Τιμής"
+
+#, python-format
+#~ msgid "Partner section of the product form"
+#~ msgstr "Τομέας συνεργάτη στην φόρμα προϊόντος"

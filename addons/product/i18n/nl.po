@@ -7,20 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-02-09 12:01+0000\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"PO-Revision-Date: 2013-06-08 10:05+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-10 05:24+0000\n"
-"X-Generator: Launchpad (build 16482)\n"
+"X-Launchpad-Export-Date: 2013-06-09 06:16+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
 msgid "Number of Layers"
 msgstr "Aantal lagen"
+
+#. module: product
+#: view:res.partner:0
+msgid "the parent company"
+msgstr "het bovenliggende bedrijf"
 
 #. module: product
 #: help:product.pricelist.item,base:0
@@ -303,6 +308,11 @@ msgid "Laptop E5023"
 msgstr "Laptop E5023"
 
 #. module: product
+#: field:product.price_list,qty1:0
+msgid "Quantity-1"
+msgstr "Hoeveelheid-1"
+
+#. module: product
 #: help:product.packaging,ul_qty:0
 msgid "The number of packages by layer"
 msgstr "Het aantal colli per laag"
@@ -481,7 +491,7 @@ msgstr "Verwervingen"
 #. module: product
 #: model:res.groups,name:product.group_mrp_properties
 msgid "Manage Properties of Product"
-msgstr "Beheer eigenschappen van het product"
+msgstr "Beheer eigenschappen van samengesteld product"
 
 #. module: product
 #: help:product.uom,factor:0
@@ -510,9 +520,9 @@ msgid "Quantity-3"
 msgstr "Hoeveelheid-3"
 
 #. module: product
-#: field:product.price_list,qty1:0
-msgid "Quantity-1"
-msgstr "Hoeveelheid-1"
+#: model:res.groups,name:product.group_product_variant
+msgid "Product Variant (not supported)"
+msgstr "Product variant (wordt niet ondersteund)"
 
 #. module: product
 #: field:product.price_list,qty4:0
@@ -792,7 +802,7 @@ msgstr "Prijslijst"
 #. module: product
 #: field:product.product,virtual_available:0
 msgid "Forecasted Quantity"
-msgstr "Geprognotiseerde hoeveelheid"
+msgstr "Virtuele voorraad"
 
 #. module: product
 #: view:product.product:0
@@ -832,17 +842,17 @@ msgstr "Leverancier van het product"
 #. module: product
 #: model:product.template,name:product.product_product_28_product_template
 msgid "External Hard disk"
-msgstr "Externae Harddisk"
+msgstr "Externe Harddisk"
 
 #. module: product
-#: help:product.template,standard_price:0
-msgid ""
-"Cost price of the product used for standard stock valuation in accounting "
-"and used as a base price on purchase orders."
-msgstr ""
-"Kostprijs van het product, welke wordt gebruikt voor de standaard "
-"voorraadwaardering in de boekhouding. de prijs wordt ook gebruikt als "
-"standaard prijs voor inkopen."
+#: view:product.product:0
+msgid "describe the product characteristics..."
+msgstr "Beschrijf de kenmerken van het product..."
+
+#. module: product
+#: view:res.partner:0
+msgid "Pricelists are managed on"
+msgstr "Prijslijsten worden beheert bij"
 
 #. module: product
 #: field:product.category,child_id:0
@@ -1198,10 +1208,10 @@ msgid "Price Surcharge"
 msgstr "Prijs toeslag"
 
 #. module: product
-#: field:product.product,code:0
-#: field:product.product,default_code:0
-msgid "Internal Reference"
-msgstr "Interne referentie"
+#: code:addons/product/pricelist.py:380
+#, python-format
+msgid "Supplier Prices on the product form"
+msgstr "Leveranciersprijslijsten op het product formulier"
 
 #. module: product
 #: model:product.template,name:product.product_product_8_product_template
@@ -1223,7 +1233,6 @@ msgstr "Logistieke eenheden"
 #: field:product.category,name:0
 #: field:product.pricelist.type,name:0
 #: field:product.pricelist.version,name:0
-#: field:product.product,name_template:0
 #: field:product.template,name:0
 #: field:product.ul,name:0
 #: field:product.uom.categ,name:0
@@ -1396,6 +1405,11 @@ msgid "Specify the minimum amount of margin over the base price."
 msgstr "Specificeer het minimale marge bedrag over de basisprijs."
 
 #. module: product
+#: field:product.product,name_template:0
+msgid "Template Name"
+msgstr "Sjabloonnaam"
+
+#. module: product
 #: field:product.template,weight_net:0
 msgid "Net Weight"
 msgstr "Netto gewicht"
@@ -1426,6 +1440,11 @@ msgstr ""
 
 #. module: product
 #: view:product.product:0
+msgid "This note will be displayed on requests for quotation..."
+msgstr "Deze notitie wordt weergegeven op offerte aanvragen..."
+
+#. module: product
+#: view:product.product:0
 msgid "Inventory"
 msgstr "Voorraad"
 
@@ -1435,7 +1454,7 @@ msgid "Supplier Info"
 msgstr "Leveranciersinfo"
 
 #. module: product
-#: code:addons/product/product.py:729
+#: code:addons/product/product.py:732
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopie)"
@@ -1462,6 +1481,15 @@ msgstr "Maateenheden"
 #: field:product.supplierinfo,min_qty:0
 msgid "Minimal Quantity"
 msgstr "Minimale hoeveelheid"
+
+#. module: product
+#: view:product.supplierinfo:0
+msgid ""
+"The prices below will only be taken into account when your pricelist is set "
+"as based on supplier prices."
+msgstr ""
+"De onderstaande prijzen worden alleen meegenomen wanneer de prijslijst is "
+"ingesteld als gebaseerd op leveranciersprijzen."
 
 #. module: product
 #: help:product.supplierinfo,product_code:0
@@ -1838,6 +1866,11 @@ msgid "Price:"
 msgstr "Prijs:"
 
 #. module: product
+#: view:product.pricelist.item:0
+msgid "Min. Margin"
+msgstr "Min. marge"
+
+#. module: product
 #: field:product.template,weight:0
 msgid "Gross Weight"
 msgstr "Bruto gewicht"
@@ -1982,12 +2015,6 @@ msgid "Default Unit of Measure"
 msgstr "Standaard maateenheid"
 
 #. module: product
-#: code:addons/product/pricelist.py:377
-#, python-format
-msgid "Partner section of the product form"
-msgstr "Leveranciers sectie op productformulier"
-
-#. module: product
 #: help:product.price.type,name:0
 msgid "Name of this kind of price."
 msgstr "Naam van deze prijssoort"
@@ -2032,6 +2059,17 @@ msgstr "Lengte / Afstand"
 #: model:product.category,name:product.product_category_8
 msgid "Components"
 msgstr "Componenten"
+
+#. module: product
+#: field:product.product,code:0
+#: field:product.product,default_code:0
+msgid "Internal Reference"
+msgstr "Interne referentie"
+
+#. module: product
+#: view:product.product:0
+msgid "e.g. 5901234123457"
+msgstr "Bijv. 5901234123457"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_type
@@ -2114,7 +2152,7 @@ msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Klik voor het aanmaken van een nieuw product.\n"
 "              </p><p>\n"
-"               U dien een product aan te maken van alles wat u inkoopt, dit "
+"               U dient een product aan te maken van alles wat u inkoopt, dit "
 "kan \n"
 "               een voorraad product, een verbruiksartikel of diensten zijn, "
 "van\n"
@@ -2275,8 +2313,8 @@ msgstr ""
 "<p class=\"oe_view_nocontent_create\">\n"
 "                Klik voor het aanmaken van een nieuw product.\n"
 "              </p><p>\n"
-"               U dien een product aan te maken van alles wat u verkoopt, dit "
-"kan \n"
+"               U dient een product aan te maken van alles wat u verkoopt, "
+"dit kan \n"
 "               een voorraad product, een verbruiksartikel of diensten zijn, "
 "van\n"
 "               onderaannemers\n"
@@ -2396,9 +2434,14 @@ msgid "Max. Price Margin"
 msgstr "Max. prijsmarge"
 
 #. module: product
-#: view:product.pricelist.item:0
-msgid "Min. Margin"
-msgstr "Min. marge"
+#: help:product.template,standard_price:0
+msgid ""
+"Cost price of the product used for standard stock valuation in accounting "
+"and used as a base price on purchase orders."
+msgstr ""
+"Kostprijs van het product, welke wordt gebruikt voor de standaard "
+"voorraadwaardering in de boekhouding. de prijs wordt ook gebruikt als "
+"standaard prijs voor inkopen."
 
 #. module: product
 #: help:product.supplierinfo,product_name:0
@@ -2622,7 +2665,11 @@ msgstr "Maateenheid leverancier"
 
 #. module: product
 #: view:product.product:0
-#: model:res.groups,name:product.group_product_variant
+msgid "note to be displayed on quotations..."
+msgstr "Opmerkingen welke wordt weergegeven op iedere offerte..."
+
+#. module: product
+#: view:product.product:0
 msgid "Product Variant"
 msgstr "Productvariant"
 
@@ -2632,7 +2679,7 @@ msgid "15” LCD Monitor"
 msgstr "15” LCD Monitor"
 
 #. module: product
-#: code:addons/product/pricelist.py:376
+#: code:addons/product/pricelist.py:379
 #: field:product.pricelist.item,base_pricelist_id:0
 #, python-format
 msgid "Other Pricelist"
@@ -2788,3 +2835,7 @@ msgstr "Het volume in m3."
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Korting"
+
+#, python-format
+#~ msgid "Partner section of the product form"
+#~ msgstr "Leveranciers sectie op productformulier"

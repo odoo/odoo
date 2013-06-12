@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-12 09:04+0000\n"
-"Last-Translator: WANTELLET Sylvain <Swantellet@tetra-info.com>\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-05-21 16:06+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-13 05:21+0000\n"
-"X-Generator: Launchpad (build 16491)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:10+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -195,6 +196,12 @@ msgstr "Commentaires"
 #: field:account.asset.depreciation.line,move_id:0
 msgid "Depreciation Entry"
 msgstr "Ecriture de dépreciation"
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset.py:82
+#, python-format
+msgid "Error!"
+msgstr "Erreur!"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -604,6 +611,14 @@ msgid "Current"
 msgstr "En cours"
 
 #. module: account_asset
+#: code:addons/account_asset/account_asset.py:82
+#, python-format
+msgid "You cannot delete an asset that contains posted depreciation lines."
+msgstr ""
+"Vous ne pouvez pas supprimer une immobilisation qui contient des lignes de "
+"dépréciations comptabilisées."
+
+#. module: account_asset
 #: view:account.asset.category:0
 msgid "Depreciation Method"
 msgstr "Méthode d'amortissement"
@@ -730,10 +745,15 @@ msgid "Amount of Depreciation Lines"
 msgstr "Montant des lignes d'amortissement"
 
 #. module: account_asset
-#: code:addons/account_asset/wizard/wizard_asset_compute.py:49
+#: code:addons/account_asset/wizard/wizard_asset_compute.py:50
 #, python-format
 msgid "Created Asset Moves"
 msgstr "Écritures d'amortissement créées"
+
+#. module: account_asset
+#: view:account.asset.asset:0
+msgid "Add an internal note here..."
+msgstr "Ajouter une note interne ici…"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,sequence:0

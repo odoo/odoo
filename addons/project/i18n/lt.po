@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-05-09 06:10+0000\n"
+"Last-Translator: Andrius Preimantas @ hbee <andrius.preimantas@gmail.com>\n"
 "Language-Team: Lithuanian <lt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:01+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:38+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: project
 #: view:project.project:0
 msgid "Email Interface"
-msgstr ""
+msgstr "El. pašto sąsaja"
 
 #. module: project
 #: help:account.analytic.account,use_tasks:0
@@ -83,16 +83,16 @@ msgid "Start Task"
 msgstr "Pradėti užduotį"
 
 #. module: project
-#: code:addons/project/project.py:932
+#: code:addons/project/project.py:944
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Įspėjimas!"
 
 #. module: project
 #: help:project.project,message_unread:0
 #: help:project.task,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Jeigu pažymėta, naujos žinutės reikalaus jūsų dėmesio."
 
 #. module: project
 #: model:process.node,name:project.process_node_donetask0
@@ -107,7 +107,7 @@ msgstr "Užduotis baigta"
 #. module: project
 #: view:res.partner:0
 msgid "False"
-msgstr ""
+msgstr "Ne"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_testing
@@ -133,11 +133,11 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:432
-#: code:addons/project/project.py:1305
+#: code:addons/project/project.py:444
+#: code:addons/project/project.py:1332
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Įspėjimas!"
 
 #. module: project
 #: model:ir.model,name:project.model_res_partner
@@ -164,7 +164,7 @@ msgstr "Nustatyti iš naujo"
 #. module: project
 #: view:report.project.task.user:0
 msgid "In progress tasks"
-msgstr ""
+msgstr "Vykdomos užduotys"
 
 #. module: project
 #: help:project.project,progress_rate:0
@@ -175,7 +175,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.client,name:project.action_client_project_menu
 msgid "Open Project Menu"
-msgstr ""
+msgstr "Atidaryti projektų meniu"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_project_task_user_tree
@@ -203,9 +203,18 @@ msgid "Planned Time"
 msgstr "Suplanuota"
 
 #. module: project
-#: selection:project.project,privacy_visibility:0
-msgid "Public"
-msgstr ""
+#: view:project.task:0
+#: selection:project.task,state:0
+#: selection:project.task.delegate,state:0
+#: selection:project.task.history,state:0
+#: selection:project.task.history.cumulative,state:0
+#: model:project.task.type,name:project.project_tt_deployment
+#: selection:project.task.type,state:0
+#: view:report.project.task.user:0
+#: selection:report.project.task.user,state:0
+#: view:res.partner:0
+msgid "Done"
+msgstr "Atlikta"
 
 #. module: project
 #: model:project.category,name:project.project_category_01
@@ -287,7 +296,7 @@ msgstr "Dalyviai"
 #. module: project
 #: view:project.task:0
 msgid "Cancel Task"
-msgstr ""
+msgstr "Atšaukti užduotį"
 
 #. module: project
 #: help:project.project,members:0
@@ -328,6 +337,11 @@ msgid "June"
 msgstr "Birželis"
 
 #. module: project
+#: view:project.task:0
+msgid "Gantt View"
+msgstr ""
+
+#. module: project
 #: selection:report.project.task.user,month:0
 msgid "October"
 msgstr "Spalis"
@@ -360,6 +374,11 @@ msgid "Summary"
 msgstr ""
 
 #. module: project
+#: view:project.task:0
+msgid "Task summary..."
+msgstr "Užduoties konspektas..."
+
+#. module: project
 #: view:project.project:0
 msgid "Append this project to another one using analytic accounts hierarchy"
 msgstr ""
@@ -389,7 +408,7 @@ msgid "Assigned to"
 msgstr "Priskirtas"
 
 #. module: project
-#: code:addons/project/project.py:1021
+#: code:addons/project/project.py:1033
 #, python-format
 msgid "Delegated User should be specified"
 msgstr ""
@@ -397,7 +416,7 @@ msgstr ""
 #. module: project
 #: view:project.project:0
 msgid "Project(s) Manager"
-msgstr ""
+msgstr "Projekto(-ų) vadovas"
 
 #. module: project
 #: selection:project.project,state:0
@@ -472,6 +491,11 @@ msgid "Create Date"
 msgstr "Sukūrimo data"
 
 #. module: project
+#: view:project.task:0
+msgid "Add a Description..."
+msgstr ""
+
+#. module: project
 #: view:res.partner:0
 msgid "For changing to open state"
 msgstr ""
@@ -494,7 +518,7 @@ msgstr "Pakartotinai įtraukite užduoties aprašymą vartotojo užduotyje"
 #. module: project
 #: view:project.project:0
 msgid "Project Settings"
-msgstr ""
+msgstr "Projekto nustatymai"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -809,7 +833,7 @@ msgstr ""
 #. module: project
 #: view:project.project:0
 msgid "Close Project"
-msgstr ""
+msgstr "Uždaryti projektą"
 
 #. module: project
 #: field:project.project,tasks:0
@@ -853,6 +877,11 @@ msgstr "Išplėsti filtrai..."
 #: model:ir.ui.menu,name:project.menu_tasks_config
 msgid "GTD"
 msgstr ""
+
+#. module: project
+#: view:project.project:0
+msgid "Project Stages"
+msgstr "Projekto etapai"
 
 #. module: project
 #: help:project.task,state:0
@@ -904,6 +933,11 @@ msgid "10"
 msgstr ""
 
 #. module: project
+#: view:project.project:0
+msgid "Cancel Project"
+msgstr "Atšaukti projektą"
+
+#. module: project
 #: help:project.project,analytic_account_id:0
 msgid ""
 "Link this project to an analytic account if you need financial management on "
@@ -918,7 +952,6 @@ msgstr ""
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
 #: view:project.config.settings:0
-#: view:project.project:0
 #: view:project.task.delegate:0
 #: view:project.task.reevaluate:0
 msgid "Cancel"
@@ -953,6 +986,8 @@ msgid ""
 "Follow this project to automatically track the events associated to tasks "
 "and issues of this project."
 msgstr ""
+"Prenumeruokite šį projektą, kad automatiškai gautumėte pranešimus apie "
+"įvykius susijusius su projekto užduotimis ir svarstomomis problemomis."
 
 #. module: project
 #: view:project.task:0
@@ -971,8 +1006,17 @@ msgid "Manager"
 msgstr "Vadovas"
 
 #. module: project
-#: selection:project.task,priority:0
-msgid "Important"
+#: model:ir.actions.act_window,help:project.project_category_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a new tag.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: project
+#: model:ir.ui.menu,name:project.menu_task_types_view
+msgid "Task Stages"
 msgstr ""
 
 #. module: project
@@ -1040,7 +1084,7 @@ msgstr "Šablonas"
 #. module: project
 #: view:project.project:0
 msgid "Re-open project"
-msgstr ""
+msgstr "Vėl atidaryti projektą"
 
 #. module: project
 #: help:project.project,priority:0
@@ -1050,7 +1094,7 @@ msgstr "Suteikia eiliškumą kai rodomas projektų sąrašas"
 #. module: project
 #: constraint:project.project:0
 msgid "Error! project start-date must be lower then project end-date."
-msgstr "Klaida! Projekto pradžios data turi būti ankščiau nei baigimo data."
+msgstr "Klaida! Projekto pradžios data turi būti ankstesnę už pabaigos datą."
 
 #. module: project
 #: field:project.project,members:0
@@ -1084,7 +1128,7 @@ msgstr "Atverti užduotį"
 #. module: project
 #: view:project.task.type:0
 msgid "Stages common to all projects"
-msgstr ""
+msgstr "Etapai bendri visiems projektams"
 
 #. module: project
 #: model:process.node,name:project.process_node_drafttask0
@@ -1167,7 +1211,7 @@ msgstr "Svarbumas"
 #. module: project
 #: view:project.project:0
 msgid "Open Projects"
-msgstr ""
+msgstr "Atidarryti projektai"
 
 #. module: project
 #: help:project.project,alias_id:0
@@ -1198,9 +1242,9 @@ msgid "Computed as: Time Spent + Remaining Time."
 msgstr "Skaičiuojama taip : Praleistas + Likęs laikas."
 
 #. module: project
-#: code:addons/project/project.py:356
-#: code:addons/project/project.py:377
-#: code:addons/project/project.py:709
+#: code:addons/project/project.py:368
+#: code:addons/project/project.py:389
+#: code:addons/project/project.py:721
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -1236,6 +1280,11 @@ msgstr ""
 #: field:project.task,delay_hours:0
 msgid "Delay Hours"
 msgstr "Papildomos valandos"
+
+#. module: project
+#: view:project.task.type:0
+msgid "Add a description..."
+msgstr ""
 
 #. module: project
 #: view:project.project:0
@@ -1302,7 +1351,7 @@ msgstr ""
 #. module: project
 #: view:project.project:0
 msgid "Projects in which I am a member."
-msgstr ""
+msgstr "Projektai kuriuose aš esu narys."
 
 #. module: project
 #: selection:project.task,priority:0
@@ -1330,6 +1379,9 @@ msgid "Pending"
 msgstr "Laukianti"
 
 #. module: project
+#: model:ir.actions.act_window,name:project.project_category_action
+#: model:ir.ui.menu,name:project.menu_project_category_act
+#: view:project.category:0
 #: field:project.task,categ_ids:0
 msgid "Tags"
 msgstr ""
@@ -1399,24 +1451,15 @@ msgstr ""
 "kai užduotis yra projekto būsenoje)."
 
 #. module: project
-#: code:addons/project/project.py:220
+#: code:addons/project/project.py:230
 #, python-format
 msgid "Attachments"
 msgstr ""
 
 #. module: project
-#: view:project.task:0
-#: selection:project.task,state:0
-#: selection:project.task.delegate,state:0
-#: selection:project.task.history,state:0
-#: selection:project.task.history.cumulative,state:0
-#: model:project.task.type,name:project.project_tt_deployment
-#: selection:project.task.type,state:0
-#: view:report.project.task.user:0
-#: selection:report.project.task.user,state:0
-#: view:res.partner:0
-msgid "Done"
-msgstr "Atlikta"
+#: view:project.category:0
+msgid "Issue Version"
+msgstr ""
 
 #. module: project
 #: code:addons/project/project.py:182
@@ -1526,7 +1569,7 @@ msgid "Overpassed Tasks"
 msgstr "Uždelstos užduotys"
 
 #. module: project
-#: code:addons/project/project.py:932
+#: code:addons/project/project.py:944
 #, python-format
 msgid ""
 "Child task still open.\n"
@@ -1585,7 +1628,7 @@ msgid "CHECK: "
 msgstr "Patikrinti: "
 
 #. module: project
-#: code:addons/project/project.py:432
+#: code:addons/project/project.py:444
 #, python-format
 msgid "You must assign members on the project '%s' !"
 msgstr ""
@@ -1593,7 +1636,7 @@ msgstr ""
 #. module: project
 #: view:project.project:0
 msgid "Pending Projects"
-msgstr ""
+msgstr "Laukiantys projektai"
 
 #. module: project
 #: view:project.task:0
@@ -1635,8 +1678,8 @@ msgid "Generate tasks from sale orders"
 msgstr ""
 
 #. module: project
-#: model:ir.ui.menu,name:project.menu_task_types_view
-msgid "Task Stages"
+#: selection:project.task,priority:0
+msgid "Important"
 msgstr ""
 
 #. module: project
@@ -1684,6 +1727,7 @@ msgid "Cancelled"
 msgstr "Nutrauktas"
 
 #. module: project
+#: model:ir.actions.act_window,help:project.act_project_project_2_project_task_all
 #: model:ir.actions.act_window,help:project.action_view_task
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -1812,7 +1856,7 @@ msgid "Starting Date"
 msgstr "Pradžios data"
 
 #. module: project
-#: code:addons/project/project.py:398
+#: code:addons/project/project.py:410
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_projects
 #: view:project.project:0
@@ -1950,7 +1994,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.action_config_settings
 #: view:project.config.settings:0
 msgid "Configure Project"
-msgstr ""
+msgstr "Konfigūruoti projektą"
 
 #. module: project
 #: view:project.task.history.cumulative:0
@@ -1973,7 +2017,7 @@ msgid "Reevaluation Task"
 msgstr "Pakartotinė užduotis"
 
 #. module: project
-#: code:addons/project/project.py:1305
+#: code:addons/project/project.py:1332
 #, python-format
 msgid "Please delete the project linked with this account first."
 msgstr ""
@@ -1992,7 +2036,7 @@ msgstr "Nepriskirtos užduotys"
 #. module: project
 #: view:project.project:0
 msgid "Projects in which I am a manager"
-msgstr ""
+msgstr "Projektai kuriuose aš vadovas"
 
 #. module: project
 #: view:project.task:0
@@ -2005,7 +2049,7 @@ msgstr ""
 #. module: project
 #: field:project.task.type,case_default:0
 msgid "Default for New Projects"
-msgstr ""
+msgstr "Pagal nutylėjimą naujiems projektams"
 
 #. module: project
 #: view:project.task:0
@@ -2077,11 +2121,6 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: selection:project.project,privacy_visibility:0
-msgid "Followers Only"
-msgstr ""
-
-#. module: project
 #: view:board.board:0
 #: field:project.project,task_count:0
 msgid "Open Tasks"
@@ -2117,7 +2156,6 @@ msgid "Year"
 msgstr "Metai"
 
 #. module: project
-#: view:project.project:0
 #: field:project.project,type_ids:0
 #: view:project.task.type:0
 msgid "Tasks Stages"

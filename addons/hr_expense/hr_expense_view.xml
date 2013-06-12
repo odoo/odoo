@@ -32,7 +32,7 @@
                     <field name="user_id" invisible="1"/>
                     <field name="name"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
-                    <field name="amount"/>
+                    <field name="amount" sum="Total Amount"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -67,8 +67,8 @@
                     <button name="refuse" states="confirm,accepted" string="Refuse" type="workflow" groups="base.group_hr_user" />
                     <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" groups="base.group_hr_user" />
                     <button name="done" states="accepted" string="Generate Accounting Entries" type="workflow" groups="account.group_account_invoice" class="oe_highlight"/>
-                    <button name="action_view_receipt" states="done" string="Open Receipt" type="object"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,accepted,done" statusbar_colors='{"confirm":"blue","cancelled":"red"}'/>
+                    <button name="action_view_receipt" states="done" string="Open Accounting Entries" type="object" groups="account.group_account_invoice"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,accepted,done,paid" statusbar_colors='{"confirm":"blue","cancelled":"red"}'/>
                 </header>
                 <sheet>
                     <group>
@@ -112,7 +112,7 @@
                                     <field name="date_value" string="Expense Date"/>
                                     <field name="name"/>
                                     <field name="ref"/>
-                                    <field domain="[('type','in',['normal','contract']), ('parent_id','!=',False)]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
+                                    <field domain="[('type','in',['normal','contract'])]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
                                     <field name="uom_id" on_change="onchange_uom(product_id, uom_id, context)"/>
                                     <field name="unit_amount"/>
                                     <field name="unit_quantity"/>
@@ -133,7 +133,8 @@
                             <group>
                                 <group string="Accounting Data">
                                     <field name="journal_id" widget="selection" domain="[('type', '=', 'purchase')]"/>
-                                    <field name="voucher_id" context="{'form_view_ref': 'account_voucher.view_purchase_receipt_form'}"/>
+                                    <field name="account_move_id"/>
+                                    <field name="voucher_id" invisible="1" context="{'form_view_ref': 'account_voucher.view_purchase_receipt_form'}"/>
                                 </group>
                             </group>
                         </page>
@@ -210,6 +211,11 @@
             <field name="context">{"default_hr_expense_ok":1}</field>
             <field name="domain">[('hr_expense_ok','=',True)]</field>
             <field name="search_view_id" ref="product.product_search_form_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new expense category. 
+             </p>
+            </field>
         </record>
 
         <menuitem id="menu_hr_product" name="Expense Categories" parent="hr.menu_hr_configuration" action="hr_expense_product"/>

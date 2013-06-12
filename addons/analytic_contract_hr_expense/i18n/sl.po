@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-01-05 16:48+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-06-09 08:49+0000\n"
 "Last-Translator: Dušan Laznik (Mentis) <laznik@mentis.si>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:34+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-11 06:31+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: analytic_contract_hr_expense
 #: view:account.analytic.account:0
@@ -24,8 +24,24 @@ msgstr "ali pogled"
 
 #. module: analytic_contract_hr_expense
 #: view:account.analytic.account:0
+msgid ""
+"{'required': "
+"['|',('invoice_on_timesheets','=',True),('charge_expenses','=',True)]}"
+msgstr ""
+"{'required': "
+"['|',('invoice_on_timesheets','=',True),('charge_expenses','=',True)]}"
+
+#. module: analytic_contract_hr_expense
+#: view:account.analytic.account:0
 msgid "Nothing to invoice, create"
 msgstr "Ni kaj fakturirati"
+
+#. module: analytic_contract_hr_expense
+#: field:account.analytic.account,expense_invoiced:0
+#: field:account.analytic.account,expense_to_invoice:0
+#: field:account.analytic.account,remaining_expense:0
+msgid "unknown"
+msgstr "neznano"
 
 #. module: analytic_contract_hr_expense
 #: view:account.analytic.account:0
@@ -38,23 +54,30 @@ msgid "Analytic Account"
 msgstr "Analitični konto"
 
 #. module: analytic_contract_hr_expense
-#: code:addons/analytic_contract_hr_expense/analytic_contract_hr_expense.py:129
+#: code:addons/analytic_contract_hr_expense/analytic_contract_hr_expense.py:144
 #, python-format
 msgid "Expenses to Invoice of %s"
 msgstr "Stroški za fakturiranje na %s"
 
 #. module: analytic_contract_hr_expense
-#: code:addons/analytic_contract_hr_expense/analytic_contract_hr_expense.py:121
+#: code:addons/analytic_contract_hr_expense/analytic_contract_hr_expense.py:136
 #, python-format
 msgid "Expenses of %s"
 msgstr "Stroški na %s"
 
 #. module: analytic_contract_hr_expense
-#: field:account.analytic.account,expense_invoiced:0
-#: field:account.analytic.account,expense_to_invoice:0
-#: field:account.analytic.account,remaining_expense:0
-msgid "unknown"
-msgstr "neznano"
+#: view:account.analytic.account:0
+msgid "Expenses and Timesheet Invoicing Ratio"
+msgstr "Razmerje med stroški in zaračunanimi časovnicami."
+
+#. module: analytic_contract_hr_expense
+#: view:account.analytic.account:0
+msgid ""
+"{'invisible': "
+"[('invoice_on_timesheets','=',False),('charge_expenses','=',False)]}"
+msgstr ""
+"{'invisible': "
+"[('invoice_on_timesheets','=',False),('charge_expenses','=',False)]}"
 
 #. module: analytic_contract_hr_expense
 #: field:account.analytic.account,est_expenses:0

@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-import partner_geo_assign
+import crm_partner_assign
 import wizard
 import report
 

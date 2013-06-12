@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-06-05 09:24+0000\n"
+"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:43+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:23+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -63,13 +63,13 @@ msgstr ""
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Time Tracking"
-msgstr ""
+msgstr "Учёт времени"
 
 #. module: hr
 #: view:hr.employee:0
 #: view:hr.job:0
 msgid "Group By..."
-msgstr "Объеденить по..."
+msgstr "Группировать по ..."
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.view_department_form_installer
@@ -80,6 +80,7 @@ msgstr "Укажите ваши отделы"
 #: help:hr.job,no_of_employee:0
 msgid "Number of employees currently occupying this job position."
 msgstr ""
+"Количество сотрудников, в настоящее время занимающих данную должность."
 
 #. module: hr
 #: field:hr.config.settings,module_hr_evaluation:0
@@ -107,11 +108,13 @@ msgid ""
 "This field holds the image used as photo for the employee, limited to "
 "1024x1024px."
 msgstr ""
+"Данное поле содержит изображение, используемое в качестве фотографии "
+"сотрудника, ограничение размера 1024x1024 пикселей."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_holidays:0
 msgid "This installs the module hr_holidays."
-msgstr ""
+msgstr "Установит модуль hr_holidays."
 
 #. module: hr
 #: view:hr.job:0
@@ -142,30 +145,30 @@ msgid "Expected in Recruitment"
 msgstr "Планируется набрать"
 
 #. module: hr
-#: field:res.users,employee_ids:0
-msgid "Related employees"
-msgstr ""
+#: view:hr.employee:0
+msgid "Other Information ..."
+msgstr "Прочая информация..."
 
 #. module: hr
 #: constraint:hr.employee.category:0
 msgid "Error! You cannot create recursive Categories."
-msgstr ""
+msgstr "Ошибка! Вы не можете создавать рекурсивные категории."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_recruitment:0
 msgid "This installs the module hr_recruitment."
-msgstr ""
+msgstr "Установит модуль hr_recruitment."
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Birth"
-msgstr ""
+msgstr "Дата рождения"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_form
 msgid "Employee Tags"
-msgstr ""
+msgstr "Теги сотрудника"
 
 #. module: hr
 #: view:hr.job:0
@@ -195,7 +198,7 @@ msgstr "В браке"
 #. module: hr
 #: field:hr.job,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Сообщения"
 
 #. module: hr
 #: view:hr.config.settings:0
@@ -205,12 +208,12 @@ msgstr ""
 #. module: hr
 #: help:hr.config.settings,module_hr_timesheet_sheet:0
 msgid "This installs the module hr_timesheet_sheet."
-msgstr ""
+msgstr "Установит модуль hr_timesheet_sheet."
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Mobile:"
-msgstr ""
+msgstr "Мобильный:"
 
 #. module: hr
 #: view:hr.employee:0
@@ -220,7 +223,7 @@ msgstr "Должность"
 #. module: hr
 #: help:hr.job,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Если отмечено, новые сообщения требуют вашего внимания."
 
 #. module: hr
 #: field:hr.employee,color:0
@@ -239,7 +242,7 @@ msgstr ""
 #. module: hr
 #: field:hr.employee,image_medium:0
 msgid "Medium-sized photo"
-msgstr ""
+msgstr "Фотография среднего размера"
 
 #. module: hr
 #: field:hr.employee,identification_id:0
@@ -301,6 +304,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is "
 "required."
 msgstr ""
+"Маленькая фотография сотрудника. Изображение автоматически уменьшено до "
+"64x64 пикселей с сохранением соотношения сторон. Используйте данное поле "
+"везде, где требуется маленькое изображение."
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -310,7 +316,7 @@ msgstr "Дата рождения"
 #. module: hr
 #: help:hr.job,no_of_recruitment:0
 msgid "Number of new employees you expect to recruit."
-msgstr ""
+msgstr "Планируемое к найму количество сотрудников."
 
 #. module: hr
 #: model:ir.actions.client,name:hr.action_client_hr_menu
@@ -346,7 +352,7 @@ msgstr "Должность"
 #. module: hr
 #: field:hr.job,no_of_employee:0
 msgid "Current Number of Employees"
-msgstr ""
+msgstr "Текущее количество сотрудников"
 
 #. module: hr
 #: field:hr.department,member_ids:0
@@ -371,7 +377,7 @@ msgstr ""
 #. module: hr
 #: view:hr.employee:0
 msgid "Tel:"
-msgstr ""
+msgstr "Телефон:"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -394,6 +400,11 @@ msgstr "Подразделения"
 #: model:process.node,name:hr.process_node_employeecontact0
 msgid "Employee Contact"
 msgstr "Контакты сотрудника"
+
+#. module: hr
+#: view:hr.employee:0
+msgid "e.g. Part Time"
+msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -429,26 +440,28 @@ msgid ""
 "$('.oe_employee_picture').load(function() { if($(this).width() > "
 "$(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
 msgstr ""
+"$('.oe_employee_picture').load(function() { if($(this).width() > "
+"$(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_evaluation:0
 msgid "This installs the module hr_evaluation."
-msgstr ""
+msgstr "Установит модуль hr_evaluation."
 
 #. module: hr
 #: constraint:hr.employee:0
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr ""
+msgstr "Ошибка! Вы не можете создавать рекурсивную иерархию сотрудника(ов)."
 
 #. module: hr
 #: help:hr.config.settings,module_hr_attendance:0
 msgid "This installs the module hr_attendance."
-msgstr ""
+msgstr "Установит модуль hr_attendance."
 
 #. module: hr
 #: field:hr.employee,image_small:0
 msgid "Smal-sized photo"
-msgstr ""
+msgstr "Маленькая фотография"
 
 #. module: hr
 #: view:hr.employee.category:0
@@ -459,12 +472,12 @@ msgstr "Категория сотрудника"
 #. module: hr
 #: field:hr.employee,category_ids:0
 msgid "Tags"
-msgstr ""
+msgstr "Теги"
 
 #. module: hr
 #: help:hr.config.settings,module_hr_contract:0
 msgid "This installs the module hr_contract."
-msgstr ""
+msgstr "Установит модуль hr_contract."
 
 #. module: hr
 #: view:hr.employee:0
@@ -474,7 +487,7 @@ msgstr "Относится к пользователю"
 #. module: hr
 #: view:hr.config.settings:0
 msgid "or"
-msgstr ""
+msgstr "или"
 
 #. module: hr
 #: field:hr.employee.category,name:0
@@ -512,6 +525,11 @@ msgid "Contact Information"
 msgstr "Контактная информация"
 
 #. module: hr
+#: field:res.users,employee_ids:0
+msgid "Related employees"
+msgstr "Связанные сотрудники"
+
+#. module: hr
 #: field:hr.config.settings,module_hr_holidays:0
 msgid "Manage holidays, leaves and allocation requests"
 msgstr ""
@@ -519,7 +537,7 @@ msgstr ""
 #. module: hr
 #: field:hr.department,child_ids:0
 msgid "Child Departments"
-msgstr "Подчиненные подразделения"
+msgstr "Подчинённые подразделения"
 
 #. module: hr
 #: view:hr.employee:0
@@ -541,12 +559,12 @@ msgstr "Договор с сотрудником"
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Contracts"
-msgstr ""
+msgstr "Договоры"
 
 #. module: hr
 #: help:hr.job,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Сообщения и история общения"
 
 #. module: hr
 #: field:hr.employee,ssnid:0
@@ -571,7 +589,7 @@ msgstr "Активные"
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Human Resources Management"
-msgstr ""
+msgstr "Управление кадрами"
 
 #. module: hr
 #: view:hr.config.settings:0
@@ -616,6 +634,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Нажмите для добавления нового сотрудника.\n"
+"              </p><p>\n"
+"                Всего лишь бегло взглянув на экран сотрудника в OpenERP,\n"
+"                вы сможете быстро найти нужную информацию о каждом "
+"человеке,\n"
+"                включая контактную информацию, должность, доступность и "
+"т.д.\n"
+"              </p>\n"
+"            "
 
 #. module: hr
 #: view:hr.employee:0
@@ -625,12 +653,12 @@ msgstr ""
 #. module: hr
 #: view:hr.employee:0
 msgid "Citizenship & Other Info"
-msgstr ""
+msgstr "Гражданство и прочая информация"
 
 #. module: hr
 #: constraint:hr.department:0
 msgid "Error! You cannot create recursive departments."
-msgstr ""
+msgstr "Ошибка! Вы не можете создавать рекурсивные подразделения."
 
 #. module: hr
 #: field:hr.employee,address_id:0
@@ -640,7 +668,7 @@ msgstr "Рабочий адрес"
 #. module: hr
 #: view:hr.employee:0
 msgid "Public Information"
-msgstr ""
+msgstr "Общедоступная информация"
 
 #. module: hr
 #: field:hr.employee,marital:0
@@ -655,7 +683,7 @@ msgstr "ir.actions.act_window"
 #. module: hr
 #: field:hr.employee,last_login:0
 msgid "Latest Connection"
-msgstr ""
+msgstr "Последнее подключение"
 
 #. module: hr
 #: field:hr.employee,image:0
@@ -665,7 +693,7 @@ msgstr "Фотография"
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Cancel"
-msgstr ""
+msgstr "Отмена"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -680,17 +708,29 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Нажмите для создания подразделения.\n"
+"</p><p>\n"
+"Структура подразделения в OpenERP предназначена для управления всеми "
+"документами,\n"
+"связанными с сотрудниками по подразделениям, включая расходы, табели учёта "
+"раб. времени,\n"
+"отпуска и праздники, наём сотрудников и т.д.\n"
+"</p>\n"
+"            "
 
 #. module: hr
 #: help:hr.config.settings,module_hr_timesheet:0
 msgid "This installs the module hr_timesheet."
-msgstr ""
+msgstr "Установит модуль hr_timesheet."
 
 #. module: hr
 #: help:hr.job,expected_employees:0
 msgid ""
 "Expected number of employees for this job position after new recruitment."
 msgstr ""
+"Планируемое количество сотрудников на данной должности по окончании нового "
+"набора сотрудников."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.view_department_form_installer
@@ -705,6 +745,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"Нажмите для определения нового подразделения.\n"
+"</p><p>\n"
+"Ваша структура подразделений предназначена для управления всеми "
+"документами,\n"
+"связанными с сотрудниками по подразделениям, включая расходы, табели учёта "
+"раб. времени,\n"
+"отпуска и праздники, наём сотрудников и т.д.\n"
+"</p>\n"
+"            "
 
 #. module: hr
 #: view:hr.employee:0
@@ -738,6 +788,12 @@ msgid ""
 msgstr ""
 
 #. module: hr
+#: code:addons/hr/hr.py:221
+#, python-format
+msgid "Welcome to %s! Please help him/her take the first steps with OpenERP!"
+msgstr ""
+
+#. module: hr
 #: view:hr.employee.category:0
 msgid "Employees Categories"
 msgstr "Категории сотрудников"
@@ -755,7 +811,7 @@ msgstr ""
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_payroll_modules
 msgid "Payroll"
-msgstr "Платежная ведомость"
+msgstr "Платёжная ведомость"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -775,7 +831,7 @@ msgstr "В норме"
 #. module: hr
 #: help:hr.config.settings,module_hr_payroll:0
 msgid "This installs the module hr_payroll."
-msgstr ""
+msgstr "Установит модуль hr_payroll."
 
 #. module: hr
 #: field:hr.config.settings,module_hr_contract:0
@@ -790,12 +846,12 @@ msgstr "подразделение"
 #. module: hr
 #: field:hr.employee,country_id:0
 msgid "Nationality"
-msgstr "Национальность"
+msgstr "Гражданство"
 
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Additional Features"
-msgstr ""
+msgstr "Дополнительные возможности"
 
 #. module: hr
 #: field:hr.employee,notes:0
@@ -848,7 +904,7 @@ msgstr "Наименование подразделения"
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
 msgid "Reports"
-msgstr ""
+msgstr "Отчёты"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_payroll:0
@@ -884,7 +940,7 @@ msgstr "Имя пользователя системы"
 #. module: hr
 #: field:hr.job,expected_employees:0
 msgid "Total Forecasted Employees"
-msgstr ""
+msgstr "Всего прогнозируемых сотрудников"
 
 #. module: hr
 #: help:hr.job,state:0
@@ -896,7 +952,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
 msgid "Users"
-msgstr ""
+msgstr "Пользователи"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
@@ -937,19 +993,19 @@ msgstr "Название должности в компании должно б�
 #. module: hr
 #: help:hr.config.settings,module_hr_expense:0
 msgid "This installs the module hr_expense."
-msgstr ""
+msgstr "Установит модуль hr_expense."
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_config_settings
 msgid "hr.config.settings"
-msgstr ""
+msgstr "hr.config.settings"
 
 #. module: hr
 #: field:hr.department,manager_id:0
 #: view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
-msgstr "Руководитель"
+msgstr "Менеджер"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -959,9 +1015,9 @@ msgstr "Вдовец/вдова"
 #. module: hr
 #: field:hr.employee,child_ids:0
 msgid "Subordinates"
-msgstr "Подчиненные"
+msgstr "Подчинённые"
 
 #. module: hr
 #: view:hr.config.settings:0
 msgid "Apply"
-msgstr ""
+msgstr "Применить"

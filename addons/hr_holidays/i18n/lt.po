@@ -1,26 +1,26 @@
 # Lithuanian translation for openobject-addons
 # Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Giedrius Slavinskas <giedrius@inovera.lt>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-04-30 16:27+0000\n"
+"Last-Translator: Giedrius Slavinskas - inovera.lt <giedrius@inovera.lt>\n"
 "Language-Team: Lithuanian <lt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:45+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:25+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Blue"
-msgstr ""
+msgstr "Mėlyna"
 
 #. module: hr_holidays
 #: field:hr.holidays,linked_request_ids:0
@@ -33,7 +33,7 @@ msgid "Waiting Second Approval"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:291
+#: code:addons/hr_holidays/hr_holidays.py:309
 #, python-format
 msgid ""
 "You cannot modify a leave request that has been approved. Contact a human "
@@ -53,12 +53,12 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Group By..."
-msgstr ""
+msgstr "Grupuoti pagal..."
 
 #. module: hr_holidays
 #: field:hr.holidays,holiday_type:0
 msgid "Allocation Mode"
-msgstr ""
+msgstr "Rėžimas"
 
 #. module: hr_holidays
 #: field:hr.employee,leave_date_from:0
@@ -69,18 +69,18 @@ msgstr ""
 #: view:hr.holidays:0
 #: field:hr.holidays,department_id:0
 msgid "Department"
-msgstr ""
+msgstr "Padalinys"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.request_approve_allocation
 #: model:ir.ui.menu,name:hr_holidays.menu_request_approve_allocation
 msgid "Allocation Requests to Approve"
-msgstr ""
+msgstr "Paskyrimų pritarimas"
 
 #. module: hr_holidays
 #: help:hr.holidays,category_id:0
 msgid "Category of Employee"
-msgstr ""
+msgstr "Darbuotojų kategorija"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -90,7 +90,7 @@ msgstr "Ruda"
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Remaining Days"
-msgstr ""
+msgstr "Liko dienų"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
@@ -100,7 +100,7 @@ msgstr ""
 #. module: hr_holidays
 #: selection:hr.holidays,holiday_type:0
 msgid "By Employee"
-msgstr ""
+msgstr "Pagal darbuotoją"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -108,6 +108,8 @@ msgid ""
 "The default duration interval between the start date and the end date is 8 "
 "hours.  Feel free to adapt it to your needs."
 msgstr ""
+"Numatytasis laiko intervalas tarp pradžios ir pabaigos datų yra 8 valandos, "
+"tačiau jūs galite datas keisti kaip tik norite."
 
 #. module: hr_holidays
 #: model:mail.message.subtype,description:hr_holidays.mt_holidays_refused
@@ -117,12 +119,12 @@ msgstr ""
 #. module: hr_holidays
 #: field:hr.holidays,number_of_days_temp:0
 msgid "Allocation"
-msgstr ""
+msgstr "Paskirta"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "to"
-msgstr ""
+msgstr "iki"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -147,7 +149,7 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Validate"
-msgstr ""
+msgstr "Patvirtinti"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
@@ -156,7 +158,7 @@ msgstr ""
 #: selection:hr.holidays.summary.employee,holiday_type:0
 #: model:mail.message.subtype,name:hr_holidays.mt_holidays_approved
 msgid "Approved"
-msgstr "Patvirtintas"
+msgstr "Pritarta"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -169,45 +171,39 @@ msgid "Refuse"
 msgstr "Atmesti"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:433
-#, python-format
-msgid "Request <b>approved</b>, waiting second validation."
-msgstr ""
-
-#. module: hr_holidays
 #: view:hr.employee:0
 #: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
 #: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
 msgid "Leaves"
-msgstr ""
+msgstr "Atostogos"
 
 #. module: hr_holidays
 #: field:hr.holidays,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Pranešimai"
 
 #. module: hr_holidays
-#: xsl:holidays.summary:0
-msgid "Analyze from"
-msgstr ""
+#: model:ir.model,name:hr_holidays.model_hr_holidays
+msgid "Leave"
+msgstr "Atostogos"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:44
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Klaida!"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_request_approve_holidays
 msgid "Leave Requests to Approve"
-msgstr ""
+msgstr "Prašymų pritarimas"
 
 #. module: hr_holidays
 #: view:hr.holidays.summary.dept:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_dept
 #: model:ir.ui.menu,name:hr_holidays.menu_account_central_journal
 msgid "Leaves by Department"
-msgstr ""
+msgstr "Atostogos pagal padalinį"
 
 #. module: hr_holidays
 #: field:hr.holidays,manager_id2:0
@@ -219,7 +215,7 @@ msgstr ""
 #: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Atšauktas"
 
 #. module: hr_holidays
 #: help:hr.holidays,type:0
@@ -232,17 +228,17 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Validation"
-msgstr ""
+msgstr "Patvirtinimas"
 
 #. module: hr_holidays
 #: help:hr.holidays,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Jeigu pažymėta, naujos žinutės reikalaus jūsų dėmesio."
 
 #. module: hr_holidays
 #: field:hr.holidays.status,color_name:0
 msgid "Color in Report"
-msgstr ""
+msgstr "Spalva ataskaitoje"
 
 #. module: hr_holidays
 #: help:hr.holidays,manager_id:0
@@ -258,7 +254,7 @@ msgstr ""
 #: field:hr.holidays.summary.dept,holiday_type:0
 #: model:ir.model,name:hr_holidays.model_hr_holidays_status
 msgid "Leave Type"
-msgstr ""
+msgstr "Atostogų tipas"
 
 #. module: hr_holidays
 #: help:hr.holidays,message_summary:0
@@ -266,17 +262,19 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Saugo pokalbių suvestinę (žinučių skaičius, ...). Ši apžvalga saugoma html "
+"formatu, kad būtų galima įterpti į kanban rodinius."
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:238
 #: code:addons/hr_holidays/hr_holidays.py:249
-#: code:addons/hr_holidays/hr_holidays.py:274
-#: code:addons/hr_holidays/hr_holidays.py:291
-#: code:addons/hr_holidays/hr_holidays.py:414
-#: code:addons/hr_holidays/hr_holidays.py:464
+#: code:addons/hr_holidays/hr_holidays.py:260
+#: code:addons/hr_holidays/hr_holidays.py:285
+#: code:addons/hr_holidays/hr_holidays.py:309
+#: code:addons/hr_holidays/hr_holidays.py:432
+#: code:addons/hr_holidays/hr_holidays.py:482
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Įspėjimas!"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -286,11 +284,11 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.act_hr_leave_request_to_meeting
 msgid "Leave Meetings"
-msgstr ""
+msgstr "Susitikimas dėl atostogų"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
-msgid "Legal Leaves 2012"
+msgid "Legal Leaves 2013"
 msgstr ""
 
 #. module: hr_holidays
@@ -308,10 +306,10 @@ msgstr "Nuo"
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_sl
 msgid "Sick Leaves"
-msgstr ""
+msgstr "Neatvykimas dėl ligos"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:471
+#: code:addons/hr_holidays/hr_holidays.py:489
 #, python-format
 msgid "Leave Request for %s"
 msgstr ""
@@ -325,7 +323,7 @@ msgstr ""
 #: view:hr.holidays.status:0
 #: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
 msgid "Leave Types"
-msgstr ""
+msgstr "Atostogų tipai"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,remaining_leaves:0
@@ -335,7 +333,7 @@ msgstr "Neišnaudotos atostogos"
 #. module: hr_holidays
 #: field:hr.holidays,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Prenumeratoriai"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_remaining_leaves_user
@@ -354,12 +352,12 @@ msgstr "Darbuotojas"
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
 msgid "New"
-msgstr ""
+msgstr "Nauja"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Type"
-msgstr ""
+msgstr "Tipas"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -382,7 +380,7 @@ msgid "Wheat"
 msgstr ""
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:469
+#: code:addons/hr_holidays/hr_holidays.py:487
 #, python-format
 msgid "Allocation for %s"
 msgstr ""
@@ -406,7 +404,7 @@ msgid "Number of Days"
 msgstr "Dienų skaičius"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:464
+#: code:addons/hr_holidays/hr_holidays.py:482
 #, python-format
 msgid ""
 "The feature behind the field 'Remaining Legal Leaves' can only be used when "
@@ -426,12 +424,12 @@ msgstr ""
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
 msgid "Waiting Approval"
-msgstr ""
+msgstr "Laukiama patvirtinimo"
 
 #. module: hr_holidays
 #: field:hr.holidays,category_id:0
 msgid "Employee Tag"
-msgstr ""
+msgstr "Darbuotojo kategorija"
 
 #. module: hr_holidays
 #: field:hr.holidays.summary.employee,emp:0
@@ -444,6 +442,8 @@ msgid ""
 "Filters only on allocations and requests that belong to an holiday type that "
 "is 'active' (active field is True)"
 msgstr ""
+"Rodo tik tuos paskyrimus ar prašymus, kurių atostogų tipas yra „aktyvus“ "
+"(pažymėtas laukas „Aktyvus“)"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.hr_holidays_leaves_assign_legal
@@ -462,6 +462,7 @@ msgid ""
 "Once a leave is validated, OpenERP will create a corresponding meeting of "
 "this type in the calendar."
 msgstr ""
+"Kai atostogos bus patvirintos, OpenERP kalendoriuje sukurs šio tipo įvykį."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:44
@@ -472,7 +473,7 @@ msgstr ""
 #. module: hr_holidays
 #: field:hr.holidays,parent_id:0
 msgid "Parent"
-msgstr ""
+msgstr "Tėvinis"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -482,33 +483,33 @@ msgstr ""
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 msgid "Month"
-msgstr ""
+msgstr "Mėnuo"
 
 #. module: hr_holidays
 #: field:hr.holidays,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Neskaitytos žinutės"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.open_ask_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays_new
 msgid "Leave Requests"
-msgstr ""
+msgstr "Atostogų prašymai"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,limit:0
 msgid "Allow to Override Limit"
-msgstr ""
+msgstr "Leisti viršyti limitą"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: field:hr.holidays,date_from:0
 msgid "Start Date"
-msgstr ""
+msgstr "Pradžios data"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:414
+#: code:addons/hr_holidays/hr_holidays.py:432
 #, python-format
 msgid ""
 "There are not enough %s allocated for employee %s; please create an "
@@ -519,7 +520,7 @@ msgstr ""
 #: view:hr.holidays.summary.dept:0
 #: view:hr.holidays.summary.employee:0
 msgid "or"
-msgstr ""
+msgstr "arba"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,help:hr_holidays.open_ask_holidays
@@ -534,16 +535,21 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
-
-#. module: hr_holidays
-#: sql_constraint:hr.holidays:0
-msgid "The employee or employee category of this request is missing."
-msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Spauskite, kad įvestumėte atostogų prašymą.\n"
+"              </p><p>\n"
+"                Įvedus atostogų prašymas, jis bus nusiųstas peržiūrėti "
+"vadovui.\n"
+"                Įsitikikinte, kad nustatėte teisingą atostogų tipą\n"
+"                (neapmokamos, apmokamos, ligos atostogos) ir prašomą\n"
+"                atostogų dienų skaičių.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Category"
-msgstr ""
+msgstr "Kategorija"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,max_leaves:0
@@ -559,11 +565,14 @@ msgid ""
 "leaves than the available ones for this type and take them into account for "
 "the \"Remaining Legal Leaves\" defined on the employee form."
 msgstr ""
+"Jeigu pažymėta, sistema leis darbuotojui skirti daugiau atostogų nei jam yra "
+"likę pagal šį tipą. Taip pat atostogų dienų skaičius galės viršyti „Likę "
+"skirtų atostogų“ reikšmę darbuotojo formoje."
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Reset to New"
-msgstr ""
+msgstr "Atkurti kaip juodraštį"
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
@@ -583,7 +592,7 @@ msgstr ""
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Black"
-msgstr ""
+msgstr "Juoda"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_holidays_leaves_assign_legal
@@ -593,12 +602,12 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_view_holiday_status
 msgid "Leaves Types"
-msgstr ""
+msgstr "Atostogų tipai"
 
 #. module: hr_holidays
 #: field:hr.holidays,meeting_id:0
 msgid "Meeting"
-msgstr ""
+msgstr "Susitikimas"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,color_name:0
@@ -606,12 +615,14 @@ msgid ""
 "This color will be used in the leaves summary located in Reporting\\Leaves "
 "by Department."
 msgstr ""
+"Ši spalva bus naudojama atostogų apžvalgos ataskaitoje esančioje Ataskaitos\\"
+"Atostogos pagal padalinį."
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: field:hr.holidays,state:0
 msgid "Status"
-msgstr ""
+msgstr "Būsena"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -626,7 +637,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.request_approve_holidays
 msgid "Requests to Approve"
-msgstr ""
+msgstr "Prašymų pritarimas"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,leaves_taken:0
@@ -636,7 +647,7 @@ msgstr "Išnaudotos dienos"
 #. module: hr_holidays
 #: field:hr.holidays,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Ar prenumeratorius"
 
 #. module: hr_holidays
 #: field:hr.holidays,user_id:0
@@ -647,13 +658,19 @@ msgstr "Naudotojas"
 #. module: hr_holidays
 #: field:hr.holidays.status,active:0
 msgid "Active"
+msgstr "Aktyvus"
+
+#. module: hr_holidays
+#: sql_constraint:hr.holidays:0
+msgid ""
+"The employee or employee category of this request is missing. Please make "
+"sure that your user login is linked to an employee."
 msgstr ""
 
 #. module: hr_holidays
-#: view:hr.employee:0
-#: field:hr.employee,remaining_leaves:0
-msgid "Remaining Legal Leaves"
-msgstr ""
+#: view:hr.holidays:0
+msgid "Add a reason..."
+msgstr "Įrašykite priežastį..."
 
 #. module: hr_holidays
 #: field:hr.holidays,manager_id:0
@@ -663,12 +680,12 @@ msgstr ""
 #. module: hr_holidays
 #: field:hr.holidays,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Santrauka"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_unpaid
 msgid "Unpaid"
-msgstr ""
+msgstr "Neapmokėta"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
@@ -679,12 +696,12 @@ msgstr ""
 #: model:ir.actions.report.xml,name:hr_holidays.report_holidays_summary
 #: model:ir.ui.menu,name:hr_holidays.menu_open_company_allocation
 msgid "Leaves Summary"
-msgstr ""
+msgstr "Atostogų suvestinė"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Submit to Manager"
-msgstr ""
+msgstr "Pateikti vadovui"
 
 #. module: hr_holidays
 #: view:hr.employee:0
@@ -699,12 +716,7 @@ msgstr "Šviesiai mėlyna"
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "My Department Leaves"
-msgstr ""
-
-#. module: hr_holidays
-#: model:mail.message.subtype,description:hr_holidays.mt_holidays_confirmed
-msgid "Request confirmed, waiting confirmation"
-msgstr ""
+msgstr "Mano padalinio atostogos"
 
 #. module: hr_holidays
 #: field:hr.employee,current_leave_state:0
@@ -714,7 +726,7 @@ msgstr ""
 #. module: hr_holidays
 #: field:hr.holidays,type:0
 msgid "Request Type"
-msgstr ""
+msgstr "Tipas"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,active:0
@@ -722,11 +734,13 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the leave "
 "type without removing it."
 msgstr ""
+"Jeigu aktyvus laukelis nustatytas kaip \"ne\", leidžiame paslėpti atostogų "
+"tipą, jo nepašalinus."
 
 #. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Misc"
-msgstr ""
+msgstr "Kita"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_comp
@@ -736,13 +750,13 @@ msgstr ""
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Yellow"
-msgstr ""
+msgstr "Šviesiai geltona"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_available_holidays_report
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
 msgid "Leaves Analysis"
-msgstr ""
+msgstr "Atostogų analizė"
 
 #. module: hr_holidays
 #: view:hr.holidays.summary.dept:0
@@ -751,12 +765,17 @@ msgid "Cancel"
 msgstr "Atšaukti"
 
 #. module: hr_holidays
+#: model:mail.message.subtype,description:hr_holidays.mt_holidays_confirmed
+msgid "Request created and waiting confirmation"
+msgstr ""
+
+#. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Validated"
 msgstr "Patvirtintos"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:238
+#: code:addons/hr_holidays/hr_holidays.py:249
 #, python-format
 msgid "You cannot delete a leave which is in %s state."
 msgstr ""
@@ -765,7 +784,7 @@ msgstr ""
 #: view:hr.holidays:0
 #: selection:hr.holidays,type:0
 msgid "Allocation Request"
-msgstr ""
+msgstr "Atostogų paskyrimas"
 
 #. module: hr_holidays
 #: help:hr.holidays,holiday_type:0
@@ -773,23 +792,26 @@ msgid ""
 "By Employee: Allocation/Request for individual Employee, By Employee Tag: "
 "Allocation/Request for group of employees in category"
 msgstr ""
+"Pagal darbuotoją: paskyrimas/prašymas pildomas individualiam darbuotojui\n"
+"Pagal darbuotojų kategoriją: paskyrimas/prašymas pildomas grupei darbuotojų, "
+"kurie priklauso pasirinktai kategorijai"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
 msgid "Leave Detail"
-msgstr ""
+msgstr "Išvykimo informacija"
 
 #. module: hr_holidays
 #: field:hr.holidays,double_validation:0
 #: field:hr.holidays.status,double_validation:0
 msgid "Apply Double Validation"
-msgstr ""
+msgstr "Reikalingas dvigubas patvirtinimas"
 
 #. module: hr_holidays
 #: view:hr.employee:0
 #: view:hr.holidays:0
 msgid "days"
-msgstr ""
+msgstr "dienų"
 
 #. module: hr_holidays
 #: view:hr.holidays.summary.dept:0
@@ -800,14 +822,14 @@ msgstr "Spausdinti"
 #. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Details"
-msgstr ""
+msgstr "Detalės"
 
 #. module: hr_holidays
 #: view:board.board:0
 #: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_leaves_by_month
 msgid "My Leaves"
-msgstr ""
+msgstr "Mano atostogos"
 
 #. module: hr_holidays
 #: field:hr.holidays.summary.dept,depts:0
@@ -817,16 +839,16 @@ msgstr "Padalinys(iai)"
 #. module: hr_holidays
 #: selection:hr.holidays,state:0
 msgid "To Submit"
-msgstr ""
+msgstr "Juodraštis"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:336
+#: code:addons/hr_holidays/hr_holidays.py:354
 #: view:hr.holidays:0
 #: selection:hr.holidays,type:0
 #: field:resource.calendar.leaves,holiday_id:0
 #, python-format
 msgid "Leave Request"
-msgstr ""
+msgstr "Atostogų prašymas"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -835,21 +857,27 @@ msgid "Description"
 msgstr "Aprašymas"
 
 #. module: hr_holidays
+#: view:hr.employee:0
+#: field:hr.employee,remaining_leaves:0
+msgid "Remaining Legal Leaves"
+msgstr "Likę skirtų atostogų"
+
+#. module: hr_holidays
 #: selection:hr.holidays,holiday_type:0
 msgid "By Employee Tag"
-msgstr ""
+msgstr "Pagal darbuotojo kategoriją"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
 #: model:mail.message.subtype,name:hr_holidays.mt_holidays_refused
 msgid "Refused"
-msgstr "Atmestos"
+msgstr "Atmesta"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,categ_id:0
 msgid "Meeting Type"
-msgstr ""
+msgstr "Kalendoriaus įrašo tipas"
 
 #. module: hr_holidays
 #: field:hr.holidays.remaining.leaves.user,no_of_leaves:0
@@ -864,12 +892,12 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "To Confirm"
-msgstr ""
+msgstr "Pateikta"
 
 #. module: hr_holidays
 #: field:hr.holidays,date_to:0
 msgid "End Date"
-msgstr ""
+msgstr "Pabaigos data"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,leaves_taken:0
@@ -881,12 +909,12 @@ msgstr ""
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Violet"
-msgstr ""
+msgstr "Violetinė"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,max_leaves:0
 msgid "Maximum Allowed"
-msgstr ""
+msgstr "Skirta atostogoms"
 
 #. module: hr_holidays
 #: help:hr.holidays,manager_id2:0
@@ -898,35 +926,41 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Mode"
-msgstr ""
+msgstr "Rėžimas"
 
 #. module: hr_holidays
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
 msgid "Both Approved and Confirmed"
+msgstr "Kartu pritarta bei patvirtinta"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr_holidays.py:451
+#, python-format
+msgid "Request approved, waiting second validation."
 msgstr ""
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Approve"
-msgstr ""
+msgstr "Pritarti"
 
 #. module: hr_holidays
 #: help:hr.holidays,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Žinučių ir pranešimų istorija"
 
 #. module: hr_holidays
-#: code:addons/hr_holidays/hr_holidays.py:249
-#: code:addons/hr_holidays/hr_holidays.py:274
+#: code:addons/hr_holidays/hr_holidays.py:260
+#: code:addons/hr_holidays/hr_holidays.py:285
 #: sql_constraint:hr.holidays:0
 #, python-format
 msgid "The start date must be anterior to the end date."
 msgstr ""
 
 #. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_holidays
-msgid "Leave"
+#: xsl:holidays.summary:0
+msgid "Analyze from"
 msgstr ""
 
 #. module: hr_holidays
@@ -935,13 +969,14 @@ msgid ""
 "When selected, the Allocation/Leave Requests for this type require a second "
 "validation to be approved."
 msgstr ""
+"Kai pažymėta, šio tipo paskyrimas/prašymas bus tvirtinamas du kartus."
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.open_allocation_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_allocation_holidays
 msgid "Allocation Requests"
-msgstr ""
+msgstr "Atostogų paskyrimai"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
@@ -955,11 +990,15 @@ msgid ""
 "to create allocation/leave request. Total based on all the leave types "
 "without overriding limit."
 msgstr ""
+"Šim darbuotojui skirtų bendras atostogų dienų skaičius. Pakeiskite šią "
+"reiškmę, kad būtų galima sukurti atostogų prašymus. Bendras atostogų dienų "
+"skaičius galioja visiems atostogų/pravaikštų tipams ir šis limitas negali "
+"būti viršytas."
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Light Pink"
-msgstr ""
+msgstr "Šviesiai rožinė"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
@@ -969,7 +1008,7 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Manager"
-msgstr ""
+msgstr "Vadovas"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_dept
@@ -979,19 +1018,19 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Year"
-msgstr ""
+msgstr "Metai"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Duration"
-msgstr ""
+msgstr "Laikotarpis"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: selection:hr.holidays,state:0
 #: model:mail.message.subtype,name:hr_holidays.mt_holidays_confirmed
 msgid "To Approve"
-msgstr ""
+msgstr "Pritarta"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,description:hr_holidays.mt_holidays_approved
@@ -1006,4 +1045,4 @@ msgstr ""
 #. module: hr_holidays
 #: field:hr.holidays.summary.employee,holiday_type:0
 msgid "Select Leave Type"
-msgstr ""
+msgstr "Pasirinkite atostogų tipą"

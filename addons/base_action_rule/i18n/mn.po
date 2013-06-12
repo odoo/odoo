@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-02-15 15:56+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-03-03 03:54+0000\n"
 "Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-16 05:39+0000\n"
-"X-Generator: Launchpad (build 16491)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:14+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -29,6 +29,16 @@ msgid ""
 "enter the name (Ex: Create the 01/01/2012) and add the option \"Share with "
 "all users\""
 msgstr ""
+"- Энэхүү ижил \"Хайлт\" харагдацад, \"Идэвхтэй Шүүлтүүрийг Хадгалах\" менюг "
+"сонго, нэрийг оруул (Ж: Үүсгэсэн огноо 01/01/2012) дараа нь \"Бүх "
+"хэрэглэгчидтэй хуваалцах\" сонголтыг нэм"
+
+#. module: base_action_rule
+#: help:base.action.rule,trg_date_id:0
+msgid ""
+"When should the condition be triggered. If present, will be checked by the "
+"scheduler. If empty, will be checked at creation and update."
+msgstr ""
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
@@ -38,7 +48,7 @@ msgstr "Үйл ажиллагааны дүрэм"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Select a filter or a timer as condition."
-msgstr ""
+msgstr "Шүүлтүүр эсвэл цагийн тоолуурыг нөхцлөөр сонго"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,user_id:0
@@ -48,7 +58,7 @@ msgstr "Хариуцлагатай"
 #. module: base_action_rule
 #: help:base.action.rule,server_action_ids:0
 msgid "Examples: email reminders, call object service, etc."
-msgstr ""
+msgstr "Жишээнүүд: имэйл сануулга, обьектын сервисийг дуудах, гм"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_followers:0
@@ -58,7 +68,7 @@ msgstr "Дагагчид нэмэх"
 #. module: base_action_rule
 #: field:base.action.rule,act_user_id:0
 msgid "Set Responsible"
-msgstr ""
+msgstr "Хариуцагчийг тааруулах"
 
 #. module: base_action_rule
 #: help:base.action.rule,trg_date_range:0
@@ -67,11 +77,13 @@ msgid ""
 "delay before thetrigger date, like sending a reminder 15 minutes before a "
 "meeting."
 msgstr ""
+"Өдөөгч огнооны дараа азнана. Сөрөг тоо тавьж өдөөх огнооноос өмнө азналт "
+"хийлгэж бас болно, уулзалтаас 15 минутын өмнө сануулга явуулдагтай ижил."
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule_lead_test
 msgid "base.action.rule.lead.test"
-msgstr ""
+msgstr "base.action.rule.lead.test"
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
@@ -106,7 +118,7 @@ msgstr "Төлөв"
 #. module: base_action_rule
 #: field:base.action.rule,filter_pre_id:0
 msgid "Before Update Filter"
-msgstr ""
+msgstr "Шүүлтүүрийг Шинэчлэхийн Өмнө"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -118,6 +130,8 @@ msgstr "Үйл ажиллаагааны дүрэм"
 msgid ""
 "If present, this condition must be satisfied after the update of the record."
 msgstr ""
+"Хэрэв байвал энэ нөхцөл нь бичлэгийг шинэчилсэн дараа энэ нөхцөл хангагдаж "
+"байх ёстой."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -127,12 +141,12 @@ msgstr "Солих утгууд"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "The filter must therefore be available in this page."
-msgstr ""
+msgstr "Шүүлтүүр нь энэ хуудсанд байх ёстой."
 
 #. module: base_action_rule
 #: field:base.action.rule,filter_id:0
 msgid "After Update Filter"
-msgstr ""
+msgstr "Шүүлтүүрийг Шинэчилсний Дараа"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -142,7 +156,7 @@ msgstr "Цаг"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "To create a new filter:"
-msgstr ""
+msgstr "Шинэ шүүлтүүр үүсгэх"
 
 #. module: base_action_rule
 #: field:base.action.rule,active:0
@@ -163,11 +177,15 @@ msgid ""
 "while the postcondition filter is checked after the modification. A "
 "precondition filter will therefore not work during a creation."
 msgstr ""
+"Үйлдлийн дүрэм нь \"Холбогдох Баримтын Модель\"-ийг үүсгэх, засахад "
+"шалгагддаг. Урьдчилсан нөхцлийн шүүлтүүр нь засварлахын өмнө шалгагдаж "
+"засварын дараагаар хойнох нөхцөл нь шалгагддаг. Урьдчилсан нөхцөл нь "
+"үүсгэхэд ажиллахгүй."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Filter Condition"
-msgstr ""
+msgstr "Шүүлтийн Нөхцөл"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -176,6 +194,9 @@ msgid ""
 "in the \"Search\" view (Example of filter based on Leads/Opportunities: "
 "Creation Date \"is equal to\" 01/01/2012)"
 msgstr ""
+"- \"Холбогдох Баримтын Модель\" хуудас руу очиж шүүлтийн параметрүүдийг "
+"\"Хайлт\" харагдацад тохируул (Жишээлбэл Сэжим/Боломжийн шүүлтүүр үүсгэсэн "
+"огноо дээр суурилж болно: Үүсгэсэн Огноо \"тэнцүү\" 01/01/2012)"
 
 #. module: base_action_rule
 #: field:base.action.rule,name:0
@@ -206,7 +227,7 @@ msgstr "Өдөр"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Timer"
-msgstr ""
+msgstr "Цаг тоологч"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range_type:0
@@ -216,22 +237,22 @@ msgstr "Саатлын төрөл"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Server actions to run"
-msgstr ""
+msgstr "Ажиллах сервер үйлдэл"
 
 #. module: base_action_rule
 #: help:base.action.rule,active:0
 msgid "When unchecked, the rule is hidden and will not be executed."
-msgstr ""
+msgstr "Тэмдэглээгүй бол дүрэм харагдахгүй бөгөөд ажиллахгүй."
 
 #. module: base_action_rule
 #: selection:base.action.rule.lead.test,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Цуцлагдсан"
 
 #. module: base_action_rule
 #: field:base.action.rule,model:0
 msgid "Model"
-msgstr ""
+msgstr "Модел"
 
 #. module: base_action_rule
 #: field:base.action.rule,last_run:0
@@ -246,13 +267,13 @@ msgstr "Минут"
 #. module: base_action_rule
 #: field:base.action.rule,model_id:0
 msgid "Related Document Model"
-msgstr ""
+msgstr "Холбогдох Баримтын Модель"
 
 #. module: base_action_rule
 #: help:base.action.rule,filter_pre_id:0
 msgid ""
 "If present, this condition must be satisfied before the update of the record."
-msgstr ""
+msgstr "Байгаа бол энэ нөхцөл нь бичлэгийг шинэчлэхийн биелж байх ёстой."
 
 #. module: base_action_rule
 #: field:base.action.rule,sequence:0
@@ -280,6 +301,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Шинэ автомат үйлдлийн дүрэмийг тохируулахдаа дарна. \n"
+"              </p><p>\n"
+"                Автомат үйлдэлүүд нь янз бүрийн дэлгэцүүд дээр автомат \n"
+"                үйлдлүүдийг өдөөдөг. Жишээ: Тухайлсан нэг хэрэглэгчийн \n"
+"                үүсгэсэн борлуулалтын сэжим нь тухайлсан борлуулалтын \n"
+"                багт оноогдож болно. Эсвэл хүлээж буй төлөвтэй 14 хоносон \n"
+"                боломжийн хувьд автомат сануулга имэйлийг илгээж болно.\n"
+"              </p>\n"
+"            "
 
 #. module: base_action_rule
 #: field:base.action.rule,create_date:0
@@ -289,7 +320,7 @@ msgstr "Үүссэн Огноо"
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,date_action_last:0
 msgid "Last Action"
-msgstr ""
+msgstr "Сүүлийн үйлдэл"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,partner_id:0
@@ -305,9 +336,9 @@ msgstr "Гарааны огноо"
 #: view:base.action.rule:0
 #: field:base.action.rule,server_action_ids:0
 msgid "Server Actions"
-msgstr ""
+msgstr "Сервер үйлдлүүд"
 
 #. module: base_action_rule
 #: field:base.action.rule.lead.test,name:0
 msgid "Subject"
-msgstr ""
+msgstr "Гарчиг"

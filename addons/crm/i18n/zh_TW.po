@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:39+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:18+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -30,7 +30,7 @@ msgid ""
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:880
+#: code:addons/crm/crm_lead.py:898
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
@@ -41,6 +41,7 @@ msgid "Lead"
 msgstr "潛在客戶"
 
 #. module: crm
+#: view:crm.lead:0
 #: field:crm.lead,title:0
 msgid "Title"
 msgstr "標題"
@@ -82,6 +83,11 @@ msgstr ""
 #: field:crm.phonecall.report,delay_close:0
 msgid "Delay to close"
 msgstr "延遲關閉"
+
+#. module: crm
+#: view:crm.lead:0
+msgid "Available for mass mailing"
+msgstr ""
 
 #. module: crm
 #: view:crm.case.stage:0
@@ -131,10 +137,8 @@ msgid "Exp. Closing"
 msgstr "預計成交日期"
 
 #. module: crm
-#: help:crm.case.section,message_unread:0
-#: help:crm.lead,message_unread:0
-#: help:crm.phonecall,message_unread:0
-msgid "If checked new messages require your attention."
+#: view:crm.phonecall:0
+msgid "Cancel Call"
 msgstr ""
 
 #. module: crm
@@ -183,7 +187,8 @@ msgid ""
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:632
+#: code:addons/crm/crm_lead.py:640
+#: code:addons/crm/crm_lead.py:761
 #: code:addons/crm/crm_phonecall.py:280
 #, python-format
 msgid "Warning!"
@@ -223,9 +228,9 @@ msgid "Opt-Out"
 msgstr "不參加"
 
 #. module: crm
-#: field:crm.lead,state_id:0
-msgid "State"
-msgstr "狀態"
+#: view:crm.lead:0
+msgid "Opportunities that are assigned to me"
+msgstr ""
 
 #. module: crm
 #: field:res.partner,meeting_count:0
@@ -241,6 +246,11 @@ msgstr ""
 #: field:crm.segmentation,segmentation_line:0
 msgid "Criteria"
 msgstr "條件"
+
+#. module: crm
+#: view:crm.lead:0
+msgid "Assigned to My Team(s)"
+msgstr ""
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -260,16 +270,16 @@ msgid "Leads Analysis"
 msgstr "潛在客戶分析"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:1010
-#, python-format
-msgid "<b>%s a call</b> for the <em>%s</em>."
-msgstr ""
-
-#. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_resource_type_act
 #: model:ir.ui.menu,name:crm.menu_crm_case_resource_type_act
 msgid "Campaigns"
 msgstr "行銷活動"
+
+#. module: crm
+#: view:crm.lead:0
+#: field:crm.lead,state_id:0
+msgid "State"
+msgstr "狀態"
 
 #. module: crm
 #: view:crm.lead:0
@@ -279,11 +289,9 @@ msgid "Categories"
 msgstr "分類"
 
 #. module: crm
-#: help:crm.lead,opt_out:0
-msgid ""
-"If opt-out is checked, this contact has refused to receive emails or "
-"unsubscribed to a campaign."
-msgstr "如果勾選不參加，代表此聯絡人拒絕收到郵件或不參加行銷活動。"
+#: view:crm.segmentation:0
+msgid "Segmentation Test"
+msgstr "細分測試"
 
 #. module: crm
 #: model:process.transition,name:crm.process_transition_leadpartner0
@@ -291,7 +299,7 @@ msgid "Prospect Partner"
 msgstr "潛在業務夥伴"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:967
+#: code:addons/crm/crm_lead.py:1002
 #, python-format
 msgid "No Subject"
 msgstr "無主題"
@@ -376,6 +384,7 @@ msgstr ""
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead7
+#: view:crm.lead:0
 msgid "Dead"
 msgstr ""
 
@@ -412,6 +421,12 @@ msgid "Team Leader"
 msgstr "團隊主管"
 
 #. module: crm
+#: code:addons/crm/crm_lead.py:1052
+#, python-format
+msgid "%s a call for %s.%s"
+msgstr ""
+
+#. module: crm
 #: help:crm.case.stage,probability:0
 msgid ""
 "This percentage depicts the default/average probability of the Case for this "
@@ -434,15 +449,10 @@ msgid "#Opportunities"
 msgstr "商機數"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:632
+#: code:addons/crm/crm_lead.py:640
 #, python-format
 msgid ""
 "Please select more than one element (lead or opportunity) from the list view."
-msgstr ""
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Leads that are assigned to one of the sale teams I manage, or to me"
 msgstr ""
 
 #. module: crm
@@ -520,6 +530,12 @@ msgid "Planned Revenue"
 msgstr "計劃收入"
 
 #. module: crm
+#: code:addons/crm/crm_lead.py:988
+#, python-format
+msgid "Customer Email"
+msgstr ""
+
+#. module: crm
 #: field:crm.lead,planned_revenue:0
 msgid "Expected Revenue"
 msgstr "預期收益"
@@ -559,11 +575,6 @@ msgid "Merge"
 msgstr ""
 
 #. module: crm
-#: model:email.template,subject:crm.email_template_opportunity_mail
-msgid "Opportunity ${object.name | h})"
-msgstr ""
-
-#. module: crm
 #: view:crm.case.categ:0
 msgid "Case Category"
 msgstr "業務分類"
@@ -578,6 +589,14 @@ msgstr "聯絡人姓名"
 msgid ""
 "Reminder on Lead: [[object.id ]] [[object.partner_id and 'of ' "
 "+object.partner_id.name or '']]"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:762
+#, python-format
+msgid ""
+"No customer name defined. Please fill one of the following fields: Company "
+"Name, Contact Name or Email (\"Name <email@address>\")"
 msgstr ""
 
 #. module: crm
@@ -681,9 +700,9 @@ msgid "The name of the segmentation."
 msgstr "細分的名稱"
 
 #. module: crm
-#: field:crm.case.stage,probability:0
-msgid "Probability (%)"
-msgstr "概率(%)"
+#: model:ir.filters,name:crm.filter_usa_lead
+msgid "Leads from USA"
+msgstr ""
 
 #. module: crm
 #: sql_constraint:crm.lead:0
@@ -701,7 +720,7 @@ msgid "Statistics Dashboard"
 msgstr "統計控制台"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:860
+#: code:addons/crm/crm_lead.py:878
 #: model:crm.case.stage,name:crm.stage_lead2
 #: selection:crm.case.stage,type:0
 #: view:crm.lead:0
@@ -751,6 +770,11 @@ msgid ""
 msgstr ""
 
 #. module: crm
+#: field:crm.segmentation.line,expr_value:0
+msgid "Value"
+msgstr "值"
+
+#. module: crm
 #: field:calendar.attendee,categ_id:0
 msgid "Event Type"
 msgstr "事件類型"
@@ -761,7 +785,7 @@ msgid "Exclusive"
 msgstr "唯一的"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:591
+#: code:addons/crm/crm_lead.py:600
 #, python-format
 msgid "From %s : %s"
 msgstr "發自: %s:%s"
@@ -769,6 +793,11 @@ msgstr "發自: %s:%s"
 #. module: crm
 #: view:crm.lead2opportunity.partner.mass:0
 msgid "Convert to Opportunities"
+msgstr ""
+
+#. module: crm
+#: view:crm.lead:0
+msgid "Leads that did not ask not to be included in mass mailing campaigns"
 msgstr ""
 
 #. module: crm
@@ -816,6 +845,7 @@ msgstr "未分配的電訪"
 
 #. module: crm
 #: view:crm.lead:0
+#: view:crm.lead2opportunity.partner:0
 #: field:crm.lead2opportunity.partner,opportunity_ids:0
 #: field:crm.lead2opportunity.partner.mass,opportunity_ids:0
 #: model:ir.actions.act_window,name:crm.crm_case_category_act_oppor11
@@ -848,13 +878,18 @@ msgstr "致電"
 
 #. module: crm
 #: view:crm.lead:0
+msgid "Leads that are assigned to me"
+msgstr ""
+
+#. module: crm
+#: view:crm.lead:0
 msgid "Mark Won"
 msgstr "標記為成交"
 
 #. module: crm
-#: model:ir.filters,name:crm.filter_usa_lead
-msgid "Leads from USA"
-msgstr ""
+#: field:crm.case.stage,probability:0
+msgid "Probability (%)"
+msgstr "概率(%)"
 
 #. module: crm
 #: view:crm.lead:0
@@ -879,15 +914,27 @@ msgid "Send Email"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:97
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:89
 #, python-format
 msgid "Warning !"
 msgstr "警告！"
 
 #. module: crm
+#: help:crm.case.section,message_unread:0
+#: help:crm.lead,message_unread:0
+#: help:crm.phonecall,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: crm
 #: field:crm.lead,day_open:0
 msgid "Days to Open"
 msgstr "開啟天數"
+
+#. module: crm
+#: view:crm.lead:0
+msgid "ZIP"
+msgstr ""
 
 #. module: crm
 #: field:crm.lead,mobile:0
@@ -899,13 +946,6 @@ msgstr "行動裝置"
 #: field:crm.lead,ref:0
 msgid "Reference"
 msgstr "參考"
-
-#. module: crm
-#: view:crm.lead:0
-msgid ""
-"Opportunities that are assigned to either me or one of the sale teams I "
-"manage"
-msgstr ""
 
 #. module: crm
 #: help:crm.case.section,resource_calendar_id:0
@@ -928,7 +968,7 @@ msgid "Next Action"
 msgstr "下一動作"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:762
+#: code:addons/crm/crm_lead.py:780
 #, python-format
 msgid "<b>Partner</b> set to <em>%s</em>."
 msgstr ""
@@ -957,11 +997,6 @@ msgstr "主題"
 
 #. module: crm
 #: view:crm.lead:0
-msgid "New Leads"
-msgstr "建立潛在客戶"
-
-#. module: crm
-#: view:crm.lead:0
 msgid "Show Sales Team"
 msgstr "顯示銷售團隊"
 
@@ -974,6 +1009,7 @@ msgstr ""
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead6
+#: view:crm.lead:0
 msgid "Won"
 msgstr "成交"
 
@@ -1017,7 +1053,15 @@ msgid "Creation Date"
 msgstr "建立日期"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:703
+#: help:crm.lead,opt_out:0
+msgid ""
+"If opt-out is checked, this contact has refused to receive emails for mass "
+"mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
+"users to filter the leads when performing mass mailing."
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:715
 #, python-format
 msgid "Lead <b>converted into an Opportunity</b>"
 msgstr ""
@@ -1031,6 +1075,11 @@ msgstr "採購金額"
 #: view:crm.phonecall.report:0
 msgid "Year of call"
 msgstr "電訪年份"
+
+#. module: crm
+#: view:crm.lead:0
+msgid "Open Leads"
+msgstr ""
 
 #. module: crm
 #: view:crm.case.stage:0
@@ -1050,6 +1099,11 @@ msgstr ""
 #: field:crm.lead,user_login:0
 msgid "User Login"
 msgstr "使用者賬戶"
+
+#. module: crm
+#: view:crm.lead:0
+msgid "No salesperson"
+msgstr ""
 
 #. module: crm
 #: view:crm.phonecall.report:0
@@ -1086,6 +1140,11 @@ msgstr ""
 #. module: crm
 #: view:crm.lead:0
 msgid "í"
+msgstr ""
+
+#. module: crm
+#: view:crm.phonecall:0
+msgid "Description..."
 msgstr ""
 
 #. module: crm
@@ -1204,7 +1263,9 @@ msgid "Days to Close"
 msgstr "結束日期"
 
 #. module: crm
+#: code:addons/crm/crm_lead.py:1057
 #: field:crm.case.section,complete_name:0
+#, python-format
 msgid "unknown"
 msgstr "未知"
 
@@ -1259,9 +1320,10 @@ msgid "Sales Marketing Department"
 msgstr "銷售市場部"
 
 #. module: crm
-#: view:crm.phonecall.report:0
-msgid "Date of call"
-msgstr "通話日期"
+#: code:addons/crm/crm_lead.py:585
+#, python-format
+msgid "Merged lead"
+msgstr ""
 
 #. module: crm
 #: help:crm.lead,section_id:0
@@ -1282,12 +1344,7 @@ msgid "Segmentation Description"
 msgstr "細分說明"
 
 #. module: crm
-#: view:crm.lead:0
-msgid "Lead Description"
-msgstr ""
-
-#. module: crm
-#: code:addons/crm/crm_lead.py:573
+#: code:addons/crm/crm_lead.py:581
 #, python-format
 msgid "Merged opportunities"
 msgstr "合併商機"
@@ -1328,7 +1385,6 @@ msgid "References"
 msgstr "參考"
 
 #. module: crm
-#: view:crm.lead:0
 #: view:crm.lead2opportunity.partner:0
 #: view:crm.lead2opportunity.partner.mass:0
 #: view:crm.merge.opportunity:0
@@ -1337,11 +1393,6 @@ msgstr "參考"
 #: view:crm.phonecall2phonecall:0
 msgid "Cancel"
 msgstr "取消"
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Opportunities Assigned to Me or My Team(s)"
-msgstr ""
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor4
@@ -1403,8 +1454,8 @@ msgid "Leads/Opportunities which are in open state"
 msgstr "開啟的潛在客戶/商機"
 
 #. module: crm
-#: model:ir.model,name:crm.model_res_users
-msgid "Users"
+#: view:crm.lead:0
+msgid "Opportunities that are assigned to any sales teams I am member of"
 msgstr ""
 
 #. module: crm
@@ -1463,12 +1514,6 @@ msgid "Leads/Opportunities that are assigned to me"
 msgstr ""
 
 #. module: crm
-#: field:crm.lead.report,date_closed:0
-#: field:crm.phonecall.report,date_closed:0
-msgid "Close Date"
-msgstr "結束日期"
-
-#. module: crm
 #: view:crm.lead.report:0
 msgid "My Case(s)"
 msgstr "我的業務"
@@ -1484,6 +1529,11 @@ msgstr ""
 #: view:crm.lead:0
 msgid "Show Countries"
 msgstr ""
+
+#. module: crm
+#: view:crm.phonecall.report:0
+msgid "Date of call"
+msgstr "通話日期"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1526,6 +1576,11 @@ msgstr "延遲關閉"
 #: view:crm.phonecall.report:0
 msgid "Group By..."
 msgstr "分類方式..."
+
+#. module: crm
+#: model:email.template,subject:crm.email_template_opportunity_mail
+msgid "${object.name}"
+msgstr ""
 
 #. module: crm
 #: view:crm.merge.opportunity:0
@@ -1573,6 +1628,11 @@ msgid "Month of call"
 msgstr "通話月份"
 
 #. module: crm
+#: view:crm.lead:0
+msgid "Describe the lead..."
+msgstr ""
+
+#. module: crm
 #: code:addons/crm/crm_phonecall.py:290
 #, python-format
 msgid "Partner has been <b>created</b>."
@@ -1611,15 +1671,14 @@ msgstr "建立年份"
 
 #. module: crm
 #: view:crm.case.section:0
-#: view:crm.lead:0
 #: field:crm.lead,description:0
 msgid "Notes"
 msgstr "備註"
 
 #. module: crm
-#: field:crm.segmentation.line,expr_value:0
-msgid "Value"
-msgstr "值"
+#: view:crm.opportunity2phonecall:0
+msgid "Call Description"
+msgstr ""
 
 #. module: crm
 #: field:crm.lead,partner_name:0
@@ -1748,11 +1807,6 @@ msgid "Telesales"
 msgstr "電話銷售"
 
 #. module: crm
-#: view:crm.lead:0
-msgid "Leads Assigned to Me or My Team(s)"
-msgstr ""
-
-#. module: crm
 #: model:ir.model,name:crm.model_crm_segmentation_line
 msgid "Segmentation line"
 msgstr "細分明細"
@@ -1794,6 +1848,12 @@ msgstr "潛在客戶/客戶"
 #. module: crm
 #: model:crm.case.section,name:crm.crm_case_section_2
 msgid "Support Department"
+msgstr ""
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:1060
+#, python-format
+msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hour(s)"
 msgstr ""
 
 #. module: crm
@@ -1850,7 +1910,7 @@ msgid "Leads"
 msgstr "潛在客戶"
 
 #. module: crm
-#: code:addons/crm/crm_lead.py:571
+#: code:addons/crm/crm_lead.py:579
 #, python-format
 msgid "Merged leads"
 msgstr ""
@@ -1934,6 +1994,11 @@ msgid "Pending"
 msgstr "待處理"
 
 #. module: crm
+#: view:crm.lead:0
+msgid "Assigned to Me"
+msgstr ""
+
+#. module: crm
 #: model:process.transition,name:crm.process_transition_leadopportunity0
 msgid "Prospect Opportunity"
 msgstr "探查商機"
@@ -1944,7 +2009,6 @@ msgid "Global CC"
 msgstr "完整副本"
 
 #. module: crm
-#: view:crm.lead:0
 #: view:crm.phonecall:0
 #: model:ir.actions.act_window,name:crm.crm_case_categ_phone0
 #: model:ir.ui.menu,name:crm.menu_crm_case_phone
@@ -1986,11 +2050,6 @@ msgid "Mandatory Expression"
 msgstr "強制的表示式"
 
 #. module: crm
-#: view:crm.lead:0
-msgid "Send Mail"
-msgstr ""
-
-#. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
 #: selection:crm.lead2opportunity.partner.mass,action:0
 #: selection:crm.partner.binding,action:0
@@ -2025,12 +2084,14 @@ msgid "Misc"
 msgstr "雜項"
 
 #. module: crm
+#: view:crm.lead:0
 #: view:crm.lead.report:0
 #: selection:crm.lead.report,state:0
 msgid "Open"
 msgstr "開啟"
 
 #. module: crm
+#: view:crm.lead:0
 #: field:crm.lead,city:0
 msgid "City"
 msgstr "城市"
@@ -2084,16 +2145,16 @@ msgid "Address"
 msgstr ""
 
 #. module: crm
+#: view:crm.lead:0
+msgid "Leads that are assigned to any sales teams I am member of"
+msgstr ""
+
+#. module: crm
 #: help:crm.case.section,alias_id:0
 msgid ""
 "The email address associated with this team. New emails received will "
 "automatically create new leads assigned to the team."
 msgstr ""
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Unassigned Opportunities"
-msgstr "未分配的商機"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2129,11 +2190,6 @@ msgstr "這個聯絡人從哪個活動中來（研討會、行銷活動還是群
 #: model:ir.model,name:crm.model_calendar_attendee
 msgid "Attendee information"
 msgstr "參與者資訊"
-
-#. module: crm
-#: view:crm.segmentation:0
-msgid "Segmentation Test"
-msgstr "細分測試"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -2235,11 +2291,6 @@ msgid "Lead converted into an opportunity"
 msgstr ""
 
 #. module: crm
-#: view:crm.lead:0
-msgid "Unassigned Leads"
-msgstr "未分配的潛在客戶"
-
-#. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_won
 msgid "Opportunity won"
 msgstr ""
@@ -2292,9 +2343,15 @@ msgid "Cancelled"
 msgstr "已取消"
 
 #. module: crm
-#: field:crm.lead,color:0
-msgid "Color Index"
-msgstr "顏色索引"
+#: view:crm.lead:0
+msgid "Street..."
+msgstr ""
+
+#. module: crm
+#: field:crm.lead.report,date_closed:0
+#: field:crm.phonecall.report,date_closed:0
+msgid "Close Date"
+msgstr "結束日期"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.action_report_crm_phonecall
@@ -2319,6 +2376,11 @@ msgstr ""
 #: field:crm.phonecall,name:0
 msgid "Call Summary"
 msgstr "電訪摘要"
+
+#. module: crm
+#: field:crm.lead,color:0
+msgid "Color Index"
+msgstr "顏色索引"
 
 #. module: crm
 #: field:crm.segmentation.line,expr_operator:0
@@ -2476,6 +2538,11 @@ msgstr "第一次與新的潛在客戶接觸"
 #. module: crm
 #: view:res.partner:0
 msgid "Calls"
+msgstr ""
+
+#. module: crm
+#: view:crm.lead:0
+msgid "Cancel Case"
 msgstr ""
 
 #. module: crm
@@ -2716,19 +2783,30 @@ msgid "Planned Revenues"
 msgstr "計劃收入"
 
 #. module: crm
-#: view:crm.lead:0
-msgid "Exp.Closing"
-msgstr "結束中"
-
-#. module: crm
 #: help:crm.lead.report,deadline_year:0
 msgid "Expected closing year"
 msgstr "預期結束年數"
 
 #. module: crm
+#: view:crm.lead:0
+msgid "e.g. Call for proposal"
+msgstr ""
+
+#. module: crm
 #: model:ir.model,name:crm.model_crm_case_stage
 msgid "Stage of case"
 msgstr "業務階段"
+
+#. module: crm
+#: code:addons/crm/crm_lead.py:585
+#, python-format
+msgid "Merged opportunity"
+msgstr ""
+
+#. module: crm
+#: view:crm.lead:0
+msgid "Unassigned"
+msgstr ""
 
 #. module: crm
 #: selection:crm.opportunity2phonecall,action:0
@@ -2764,11 +2842,6 @@ msgstr ""
 
 #. module: crm
 #: view:crm.lead:0
-msgid "Create date"
-msgstr "發現日期"
-
-#. module: crm
-#: view:crm.lead:0
 msgid "at"
 msgstr ""
 
@@ -2798,7 +2871,6 @@ msgstr "說明"
 #: field:crm.case.resource.type,section_id:0
 #: view:crm.case.section:0
 #: field:crm.case.section,name:0
-#: view:crm.lead:0
 #: field:crm.lead,section_id:0
 #: view:crm.lead.report:0
 #: field:crm.lead.report,section_id:0
@@ -2873,10 +2945,12 @@ msgid "Working Hours"
 msgstr "工時"
 
 #. module: crm
+#: code:addons/crm/crm_lead.py:986
 #: view:crm.lead:0
 #: field:crm.lead2opportunity.partner,partner_id:0
 #: field:crm.lead2opportunity.partner.mass,partner_id:0
 #: field:crm.partner.binding,partner_id:0
+#, python-format
 msgid "Customer"
 msgstr "客戶"
 
@@ -2894,16 +2968,18 @@ msgstr "安排一個會議"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead8
+#: view:crm.lead:0
 msgid "Lost"
 msgstr "丟單"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:97
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:89
 #, python-format
 msgid "Closed/Cancelled leads cannot be converted into opportunities."
 msgstr ""
 
 #. module: crm
+#: view:crm.lead:0
 #: field:crm.lead,country_id:0
 #: view:crm.lead.report:0
 #: field:crm.lead.report,country_id:0
@@ -3005,3 +3081,23 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+
+#~ msgid ""
+#~ "If opt-out is checked, this contact has refused to receive emails or "
+#~ "unsubscribed to a campaign."
+#~ msgstr "如果勾選不參加，代表此聯絡人拒絕收到郵件或不參加行銷活動。"
+
+#~ msgid "New Leads"
+#~ msgstr "建立潛在客戶"
+
+#~ msgid "Unassigned Opportunities"
+#~ msgstr "未分配的商機"
+
+#~ msgid "Unassigned Leads"
+#~ msgstr "未分配的潛在客戶"
+
+#~ msgid "Create date"
+#~ msgstr "發現日期"
+
+#~ msgid "Exp.Closing"
+#~ msgstr "結束中"

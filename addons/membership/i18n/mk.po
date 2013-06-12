@@ -1,0 +1,813 @@
+# Macedonian translation for openobject-addons
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"PO-Revision-Date: 2013-03-11 08:28+0000\n"
+"Last-Translator: Aleksandar Panov <server986@gmail.com>\n"
+"Language-Team: Macedonian <mk@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:29+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
+
+#. module: membership
+#: model:process.transition,name:membership.process_transition_invoicetoassociate0
+msgid "invoice to associate"
+msgstr "фактурирај на соработник"
+
+#. module: membership
+#: model:process.process,name:membership.process_process_membershipprocess0
+msgid "Membership Process"
+msgstr "Процес на зачленување"
+
+#. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: selection:res.partner,membership_state:0
+msgid "Paid Member"
+msgstr "Член со плаќање"
+
+#. module: membership
+#: view:report.membership:0
+msgid "This will display waiting, invoiced and total pending columns"
+msgstr ""
+
+#. module: membership
+#: view:report.membership:0
+#: view:res.partner:0
+msgid "Group By..."
+msgstr "Групирај по..."
+
+#. module: membership
+#: field:report.membership,num_paid:0
+msgid "# Paid"
+msgstr "# Платено"
+
+#. module: membership
+#: field:report.membership,tot_earned:0
+msgid "Earned Amount"
+msgstr "Заработен износ"
+
+#. module: membership
+#: model:ir.model,name:membership.model_report_membership
+msgid "Membership Analysis"
+msgstr "Анализи на членство"
+
+#. module: membership
+#: selection:report.membership,month:0
+msgid "March"
+msgstr "Март"
+
+#. module: membership
+#: model:process.node,note:membership.process_node_setassociation0
+msgid "Set an associate member of partner."
+msgstr "Постави соработник на партнер."
+
+#. module: membership
+#: model:process.transition,note:membership.process_transition_invoicetopaid0
+msgid "Invoice is be paid."
+msgstr "Фактурата да се плати."
+
+#. module: membership
+#: field:membership.membership_line,company_id:0
+#: view:report.membership:0
+#: field:report.membership,company_id:0
+msgid "Company"
+msgstr "Компанија"
+
+#. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: field:res.partner,free_member:0
+#: selection:res.partner,membership_state:0
+msgid "Free Member"
+msgstr "Слободен член"
+
+#. module: membership
+#: view:res.partner:0
+msgid "Ending Date Of Membership"
+msgstr "Краен датум на членство"
+
+#. module: membership
+#: help:report.membership,date_to:0
+msgid "End membership date"
+msgstr "Датум на завршување на членство"
+
+#. module: membership
+#: field:product.product,membership_date_to:0
+#: field:res.partner,membership_stop:0
+msgid "Membership End Date"
+msgstr "Крајна дата на членство"
+
+#. module: membership
+#: view:report.membership:0
+#: field:report.membership,user_id:0
+#: view:res.partner:0
+msgid "Salesperson"
+msgstr "Продавач"
+
+#. module: membership
+#: model:process.transition,name:membership.process_transition_waitingtoinvoice0
+msgid "Waiting to invoice"
+msgstr "Чекам да се фактурира"
+
+#. module: membership
+#: view:report.membership:0
+msgid "This will display paid, old and total earned columns"
+msgstr ""
+
+#. module: membership
+#: view:res.partner:0
+msgid "Suppliers"
+msgstr "Добавувачи"
+
+#. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: selection:res.partner,membership_state:0
+msgid "Non Member"
+msgstr "Не е член"
+
+#. module: membership
+#: view:product.product:0
+msgid "Taxes"
+msgstr "Даноци"
+
+#. module: membership
+#: view:res.partner:0
+msgid "All Members"
+msgstr "Сите членови"
+
+#. module: membership
+#: view:product.product:0
+msgid "This note will be displayed on quotations..."
+msgstr "Оваа белешка ќе се прикаже на понудите..."
+
+#. module: membership
+#: code:addons/membership/membership.py:410
+#: code:addons/membership/membership.py:413
+#, python-format
+msgid "Error!"
+msgstr "Грешка!"
+
+#. module: membership
+#: model:process.transition,name:membership.process_transition_producttomember0
+msgid "Product to member"
+msgstr "Производ на член"
+
+#. module: membership
+#: model:product.template,name:membership.membership_1_product_template
+msgid "Silver Membership"
+msgstr "Сребрено членство"
+
+#. module: membership
+#: model:process.node,note:membership.process_node_associatedmember0
+msgid "Member is associated."
+msgstr "Членот е поврзан."
+
+#. module: membership
+#: field:report.membership,tot_pending:0
+msgid "Pending Amount"
+msgstr "Очекуван износ"
+
+#. module: membership
+#: model:process.transition,note:membership.process_transition_associationpartner0
+msgid "Associated partner."
+msgstr "Поврзан партнер"
+
+#. module: membership
+#: view:res.partner:0
+msgid "Supplier Partners"
+msgstr "Партнери на добавувач"
+
+#. module: membership
+#: field:report.membership,num_invoiced:0
+msgid "# Invoiced"
+msgstr "# Фактурирано"
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_report_membership_tree
+#: model:ir.ui.menu,name:membership.menu_report_membership
+msgid "Members Analysis"
+msgstr "Анализи на членови"
+
+#. module: membership
+#: view:res.partner:0
+msgid "End Membership Date"
+msgstr "Датум на завршување на членство"
+
+#. module: membership
+#: code:addons/membership/membership.py:414
+#, python-format
+msgid "Partner doesn't have an address to make the invoice."
+msgstr "Партнерот нема адреса за да се направи фактура."
+
+#. module: membership
+#: model:ir.model,name:membership.model_res_partner
+#: field:membership.membership_line,partner:0
+msgid "Partner"
+msgstr "Партнер"
+
+#. module: membership
+#: model:process.transition,name:membership.process_transition_invoicetopaid0
+msgid "Invoice to paid"
+msgstr "Фактура за плаќање"
+
+#. module: membership
+#: view:res.partner:0
+msgid "Customer Partners"
+msgstr "Партнери на клиент"
+
+#. module: membership
+#: field:membership.membership_line,date_from:0
+msgid "From"
+msgstr "Од"
+
+#. module: membership
+#: constraint:membership.membership_line:0
+msgid "Error, this membership product is out of date"
+msgstr ""
+
+#. module: membership
+#: model:process.transition.action,name:membership.process_transition_action_create0
+msgid "Create"
+msgstr "Креирај"
+
+#. module: membership
+#: model:ir.model,name:membership.model_membership_membership_line
+msgid "Member line"
+msgstr "Линија на член"
+
+#. module: membership
+#: help:report.membership,date_from:0
+msgid "Start membership date"
+msgstr "Датум на почеток на членство"
+
+#. module: membership
+#: field:res.partner,membership_cancel:0
+msgid "Cancel Membership Date"
+msgstr "Откажи датум на членство"
+
+#. module: membership
+#: model:process.node,name:membership.process_node_paidmember0
+msgid "Paid member"
+msgstr "Платен член"
+
+#. module: membership
+#: field:report.membership,num_waiting:0
+msgid "# Waiting"
+msgstr "# Чекање"
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_membership_members
+#: model:ir.ui.menu,name:membership.menu_members
+#: model:ir.ui.menu,name:membership.menu_membership
+#: view:res.partner:0
+msgid "Members"
+msgstr "Членови"
+
+#. module: membership
+#: view:res.partner:0
+msgid "Invoiced/Paid/Free"
+msgstr "Фактурирано/Платено/Слободно-"
+
+#. module: membership
+#: model:process.node,note:membership.process_node_invoicedmember0
+msgid "Open invoice."
+msgstr "Отвори фактура."
+
+#. module: membership
+#: selection:report.membership,month:0
+msgid "July"
+msgstr "Јули"
+
+#. module: membership
+#: model:product.template,name:membership.membership_0_product_template
+msgid "Golden Membership"
+msgstr "Златно членство"
+
+#. module: membership
+#: help:res.partner,associate_member:0
+msgid ""
+"A member with whom you want to associate your membership.It will consider "
+"the membership state of the associated member."
+msgstr ""
+"Член со кој сакате да го поврзете членството. Ќе се смета состојбата на "
+"членството на здружениот член."
+
+#. module: membership
+#: view:product.product:0
+#: view:report.membership:0
+#: field:report.membership,membership_id:0
+msgid "Membership Product"
+msgstr "Производ на членство"
+
+#. module: membership
+#: model:process.transition,note:membership.process_transition_producttomember0
+msgid "Define product for membership."
+msgstr "Дефинирај производ за членство."
+
+#. module: membership
+#: model:process.transition,note:membership.process_transition_invoicetoassociate0
+msgid "Invoiced member may be Associated member."
+msgstr ""
+
+#. module: membership
+#: help:product.product,membership_date_to:0
+#: help:res.partner,membership_stop:0
+msgid "Date until which membership remains active."
+msgstr "Датум до кој членството останува активно."
+
+#. module: membership
+#: view:product.product:0
+msgid "Membership products"
+msgstr "Производи на членство"
+
+#. module: membership
+#: field:res.partner,membership_state:0
+msgid "Current Membership Status"
+msgstr "Моментален статус на членство"
+
+#. module: membership
+#: view:product.product:0
+msgid "Add a description..."
+msgstr "Додади опис..."
+
+#. module: membership
+#: field:membership.membership_line,date:0
+msgid "Join Date"
+msgstr "Датум на здружување"
+
+#. module: membership
+#: model:process.node,name:membership.process_node_setassociation0
+msgid "Set association"
+msgstr "Постави здружение"
+
+#. module: membership
+#: view:res.partner:0
+msgid " Membership State"
+msgstr " Состојба на членство"
+
+#. module: membership
+#: view:res.partner:0
+msgid "Memberships"
+msgstr "Членства"
+
+#. module: membership
+#: model:process.node,note:membership.process_node_paidmember0
+msgid "Membership invoice paid."
+msgstr "Фактурата за членство е платена."
+
+#. module: membership
+#: selection:report.membership,month:0
+msgid "September"
+msgstr "Септември"
+
+#. module: membership
+#: selection:report.membership,month:0
+msgid "December"
+msgstr "Декември"
+
+#. module: membership
+#: model:ir.model,name:membership.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "Ставка од фактура"
+
+#. module: membership
+#: view:report.membership:0
+#: field:report.membership,month:0
+msgid "Month"
+msgstr "Месец"
+
+#. module: membership
+#: view:product.product:0
+msgid "Group by..."
+msgstr "Групирај по..."
+
+#. module: membership
+#: code:addons/membership/membership.py:411
+#, python-format
+msgid "Partner is a free Member."
+msgstr "Партнерот е бесплатен член."
+
+#. module: membership
+#: view:res.partner:0
+msgid "Buy Membership"
+msgstr "Купи членство"
+
+#. module: membership
+#: field:report.membership,associate_member_id:0
+#: view:res.partner:0
+#: field:res.partner,associate_member:0
+msgid "Associate Member"
+msgstr "Здружен член"
+
+#. module: membership
+#: help:product.product,membership_date_from:0
+#: help:res.partner,membership_start:0
+msgid "Date from which membership becomes active."
+msgstr "Датум од кој членството станува активно"
+
+#. module: membership
+#: view:report.membership:0
+msgid "Associated Partner"
+msgstr "Поврзан партнер"
+
+#. module: membership
+#: model:ir.model,name:membership.model_membership_invoice
+#: view:membership.invoice:0
+msgid "Membership Invoice"
+msgstr "Фактура за членство"
+
+#. module: membership
+#: model:process.node,note:membership.process_node_membershipproduct0
+msgid "Define membership product."
+msgstr "Дефинирај производ на чледство."
+
+#. module: membership
+#: view:product.product:0
+msgid "Category"
+msgstr "Категорија"
+
+#. module: membership
+#: view:res.partner:0
+msgid "Contacts"
+msgstr "Контакти"
+
+#. module: membership
+#: view:report.membership:0
+msgid "Forecast"
+msgstr "Прогноза"
+
+#. module: membership
+#: field:report.membership,partner_id:0
+msgid "Member"
+msgstr "Член"
+
+#. module: membership
+#: view:product.product:0
+msgid "Date From"
+msgstr "Датум од"
+
+#. module: membership
+#: model:process.node,name:membership.process_node_associatedmember0
+msgid "Associated member"
+msgstr "Поврзан партнер"
+
+#. module: membership
+#: help:membership.membership_line,date:0
+msgid "Date on which member has joined the membership"
+msgstr "Датум на кој членот се приклучи на членството"
+
+#. module: membership
+#: field:membership.membership_line,state:0
+msgid "Membership Status"
+msgstr "Статуси на членство"
+
+#. module: membership
+#: view:res.partner:0
+msgid "Customers"
+msgstr "Клиенти"
+
+#. module: membership
+#: view:membership.invoice:0
+msgid "or"
+msgstr "или"
+
+#. module: membership
+#: selection:report.membership,month:0
+msgid "August"
+msgstr "Август"
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_membership_products
+#: model:ir.ui.menu,name:membership.menu_membership_products
+#: view:product.product:0
+msgid "Membership Products"
+msgstr "Производи на членство"
+
+#. module: membership
+#: sql_constraint:product.product:0
+msgid "Error ! Ending Date cannot be set before Beginning Date."
+msgstr ""
+"Грешка ! Крајниот датум не може да биде поставен пред претходниот датум."
+
+#. module: membership
+#: selection:report.membership,month:0
+msgid "June"
+msgstr "Јуни"
+
+#. module: membership
+#: help:product.product,membership:0
+msgid "Check if the product is eligible for membership."
+msgstr "Означете доколку производот е погоден за членство."
+
+#. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: selection:res.partner,membership_state:0
+msgid "Invoiced Member"
+msgstr ""
+
+#. module: membership
+#: field:membership.invoice,product_id:0
+#: field:membership.membership_line,membership_id:0
+#: view:product.product:0
+#: field:product.product,membership:0
+#: view:report.membership:0
+#: view:res.partner:0
+#: field:res.partner,member_lines:0
+msgid "Membership"
+msgstr "Членство"
+
+#. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: selection:res.partner,membership_state:0
+msgid "Waiting Member"
+msgstr "Член на чекање"
+
+#. module: membership
+#: model:process.transition,name:membership.process_transition_associationpartner0
+msgid "Association Partner"
+msgstr "Поврзан партнер"
+
+#. module: membership
+#: field:report.membership,date_from:0
+#: view:res.partner:0
+msgid "Start Date"
+msgstr "Почетен датум"
+
+#. module: membership
+#: selection:report.membership,month:0
+msgid "November"
+msgstr "Ноември"
+
+#. module: membership
+#: selection:report.membership,month:0
+msgid "October"
+msgstr "Октомври"
+
+#. module: membership
+#: help:res.partner,membership_state:0
+msgid ""
+"It indicates the membership state.\n"
+"                    -Non Member: A partner who has not applied for any "
+"membership.\n"
+"                    -Cancelled Member: A member who has cancelled his "
+"membership.\n"
+"                    -Old Member: A member whose membership date has "
+"expired.\n"
+"                    -Waiting Member: A member who has applied for the "
+"membership and whose invoice is going to be created.\n"
+"                    -Invoiced Member: A member whose invoice has been "
+"created.\n"
+"                    -Paying member: A member who has paid the membership fee."
+msgstr ""
+"Ја покажува состојбата на членството.\n"
+"                    -Не е член: Партнер кој не аплицирал за членство.\n"
+"                    -Откажан член: Член кој го откажал своето членство.\n"
+"                    -Стар член: Член чиј датум на членство е истечен.\n"
+"                    -Член на чекање: Член кој аплицирал за членство и чија "
+"фактура ќе биде креирана\n"
+"                    -Фактуриран член: Член чија фактура е креирана.\n"
+"                    -Платен член: Член кој ја платил членарината."
+
+#. module: membership
+#: selection:report.membership,month:0
+msgid "January"
+msgstr "Јануари"
+
+#. module: membership
+#: view:res.partner:0
+msgid "Membership Partners"
+msgstr "Партнери на членство"
+
+#. module: membership
+#: field:membership.membership_line,member_price:0
+#: view:product.product:0
+msgid "Membership Fee"
+msgstr "Надоместок за членство"
+
+#. module: membership
+#: help:res.partner,membership_amount:0
+msgid "The price negotiated by the partner"
+msgstr "Цената нагодена од партнерот"
+
+#. module: membership
+#: model:product.template,name:membership.membership_2_product_template
+msgid "Basic Membership"
+msgstr "Основно членство"
+
+#. module: membership
+#: view:res.partner:0
+msgid "None/Canceled/Old/Waiting"
+msgstr "Ништо/Откажано/Старо/Се чека"
+
+#. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: selection:res.partner,membership_state:0
+msgid "Old Member"
+msgstr "Стар член"
+
+#. module: membership
+#: field:membership.membership_line,date_to:0
+msgid "To"
+msgstr "До"
+
+#. module: membership
+#: view:report.membership:0
+#: field:report.membership,membership_state:0
+msgid "Current Membership State"
+msgstr "Моментална состојба на членство"
+
+#. module: membership
+#: help:membership.membership_line,state:0
+msgid ""
+"It indicates the membership status.\n"
+"                        -Non Member: A member who has not applied for any "
+"membership.\n"
+"                        -Cancelled Member: A member who has cancelled his "
+"membership.\n"
+"                        -Old Member: A member whose membership date has "
+"expired.\n"
+"                        -Waiting Member: A member who has applied for the "
+"membership and whose invoice is going to be created.\n"
+"                        -Invoiced Member: A member whose invoice has been "
+"created.\n"
+"                        -Paid Member: A member who has paid the membership "
+"amount."
+msgstr ""
+"Ја покажува состојбата на членството.\n"
+"                    -Не е член: Партнер кој не аплицирал за членство.\n"
+"                    -Откажан член: Член кој го откажал своето членство.\n"
+"                    -Стар член: Член чиј датум на членство е истечен.\n"
+"                    -Член на чекање: Член кој аплицирал за членство и чија "
+"фактура ќе биде креирана\n"
+"                    -Фактуриран член: Член чија фактура е креирана.\n"
+"                    -Платен член: Член кој ја платил членарината."
+
+#. module: membership
+#: model:process.transition,note:membership.process_transition_waitingtoinvoice0
+msgid "Draft invoice is now open."
+msgstr "Нацрт фактурата е отворена."
+
+#. module: membership
+#: view:product.product:0
+msgid "Inactive"
+msgstr "Неактивен"
+
+#. module: membership
+#: model:ir.model,name:membership.model_account_invoice
+#: field:membership.membership_line,account_invoice_id:0
+msgid "Invoice"
+msgstr "Фактура"
+
+#. module: membership
+#: view:membership.invoice:0
+msgid "Cancel"
+msgstr "Откажи"
+
+#. module: membership
+#: view:res.partner:0
+msgid "All non Members"
+msgstr "Сите кои не се членови"
+
+#. module: membership
+#: field:membership.membership_line,account_invoice_line:0
+msgid "Account Invoice line"
+msgstr ""
+
+#. module: membership
+#: model:process.node,note:membership.process_node_waitingmember0
+msgid "Draft invoice for membership."
+msgstr "Нацрт фактура за членство"
+
+#. module: membership
+#: field:membership.invoice,member_price:0
+msgid "Member Price"
+msgstr "Цена на член"
+
+#. module: membership
+#: view:product.product:0
+msgid "Membership Duration"
+msgstr "Времетраење на членство"
+
+#. module: membership
+#: model:ir.model,name:membership.model_product_product
+msgid "Product"
+msgstr "Производ"
+
+#. module: membership
+#: selection:report.membership,month:0
+msgid "May"
+msgstr "Мај"
+
+#. module: membership
+#: field:product.product,membership_date_from:0
+#: field:res.partner,membership_start:0
+msgid "Membership Start Date"
+msgstr "Почетен датум на членство"
+
+#. module: membership
+#: help:res.partner,free_member:0
+msgid "Select if you want to give free membership."
+msgstr "Означете доколку сакате да дадетебесплатно членство."
+
+#. module: membership
+#: field:res.partner,membership_amount:0
+msgid "Membership Amount"
+msgstr "Износ за членство"
+
+#. module: membership
+#: field:report.membership,date_to:0
+#: view:res.partner:0
+msgid "End Date"
+msgstr "Краен датум"
+
+#. module: membership
+#: selection:report.membership,month:0
+msgid "February"
+msgstr "Февруари"
+
+#. module: membership
+#: model:process.node,name:membership.process_node_invoicedmember0
+msgid "Invoiced member"
+msgstr "Фактуриран член"
+
+#. module: membership
+#: selection:report.membership,month:0
+msgid "April"
+msgstr "Април"
+
+#. module: membership
+#: view:res.partner:0
+msgid "Starting Date Of Membership"
+msgstr "Почетен датум на членство"
+
+#. module: membership
+#: help:res.partner,membership_cancel:0
+msgid "Date on which membership has been cancelled"
+msgstr "Датум на кој членството е откажано"
+
+#. module: membership
+#: field:membership.membership_line,date_cancel:0
+msgid "Cancel date"
+msgstr "Откажи датум"
+
+#. module: membership
+#: model:process.node,name:membership.process_node_waitingmember0
+msgid "Waiting member"
+msgstr "Член на чекање"
+
+#. module: membership
+#: model:ir.actions.act_window,name:membership.action_membership_invoice_view
+#: view:membership.invoice:0
+msgid "Invoice Membership"
+msgstr "Фактурирај членство"
+
+#. module: membership
+#: model:process.node,name:membership.process_node_membershipproduct0
+msgid "Membership product"
+msgstr ""
+
+#. module: membership
+#: help:membership.membership_line,member_price:0
+msgid "Amount for the membership"
+msgstr "Износ за членство"
+
+#. module: membership
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr "Грешка ! Не може да креирате рекурсивни поврзани членови."
+
+#. module: membership
+#: selection:membership.membership_line,state:0
+#: selection:report.membership,membership_state:0
+#: selection:res.partner,membership_state:0
+msgid "Cancelled Member"
+msgstr "Откажан член"
+
+#. module: membership
+#: view:report.membership:0
+#: field:report.membership,year:0
+msgid "Year"
+msgstr "Година"
+
+#. module: membership
+#: view:product.product:0
+msgid "Accounting"
+msgstr "Сметководство"
+
+#. module: membership
+#: view:report.membership:0
+msgid "Revenue Done"
+msgstr ""

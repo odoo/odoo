@@ -7,21 +7,29 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:45+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:24+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 #: model:process.node,name:hr_expense.process_node_confirmedexpenses0
 msgid "Confirmed Expenses"
 msgstr "Gastos confirmados"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:349
+#, python-format
+msgid ""
+"No purchase account found for the product %s (or for his category), please "
+"configure one."
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_line
@@ -90,6 +98,11 @@ msgid "Unread Messages"
 msgstr "Mensajes sin leer"
 
 #. module: hr_expense
+#: selection:hr.expense.expense,state:0
+msgid "Waiting Payment"
+msgstr ""
+
+#. module: hr_expense
 #: field:hr.expense.expense,company_id:0
 #: view:hr.expense.report:0
 #: field:hr.expense.report,company_id:0
@@ -122,11 +135,6 @@ msgid "Expenses Statistics"
 msgstr "Estadísticas de gastos"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-msgid "Open Receipt"
-msgstr "Abrir recibo"
-
-#. module: hr_expense
 #: view:hr.expense.report:0
 #: field:hr.expense.report,day:0
 msgid "Day"
@@ -153,8 +161,10 @@ msgstr "Mensajes"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:172
-#: code:addons/hr_expense/hr_expense.py:181
-#: code:addons/hr_expense/hr_expense.py:197
+#: code:addons/hr_expense/hr_expense.py:238
+#: code:addons/hr_expense/hr_expense.py:240
+#: code:addons/hr_expense/hr_expense.py:349
+#: code:addons/hr_expense/hr_expense.py:353
 #, python-format
 msgid "Error!"
 msgstr "¡Error!"
@@ -187,6 +197,11 @@ msgstr ""
 "El responsable inmediato rechaza la hoja. Restablecida como borrador."
 
 #. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Open Accounting Entries"
+msgstr ""
+
+#. module: hr_expense
 #: help:hr.expense.expense,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr "Si está marcado, hay nuevos mensajes que requieren su atención"
@@ -210,19 +225,6 @@ msgstr "Referencia"
 #: report:hr.expense:0
 msgid "Certified honest and conform,"
 msgstr "Certifica que los datos son ciertos,"
-
-#. module: hr_expense
-#: help:hr.expense.expense,state:0
-msgid ""
-"When the expense request is created the status is 'Draft'.\n"
-" It is confirmed by the user and request is sent to admin, the status is "
-"'Waiting Confirmation'.            \n"
-"If the admin accepts it, the status is 'Accepted'.\n"
-" If a receipt is made for the expense request, the status is 'Done'."
-msgstr ""
-"Cuando la petición de gasto se crea, su estado es 'Borrador'.\n"
-"Si el responsable la acepta, el estado es 'Aceptado'.\n"
-"Si se realiza un recibo para la petición de gasto, el estado es 'Realizado'."
 
 #. module: hr_expense
 #: help:hr.expense.expense,date_confirm:0
@@ -249,7 +251,7 @@ msgstr ""
 "directamente en formato HTML para poder ser insertado en las vistas kanban."
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:302
+#: code:addons/hr_expense/hr_expense.py:453
 #, python-format
 msgid "Warning"
 msgstr "Advertencia"
@@ -273,6 +275,17 @@ msgstr "Rechazar gasto"
 #: field:hr.expense.report,price_average:0
 msgid "Average Price"
 msgstr "Precio promedio"
+
+#. module: hr_expense
+#: help:hr.expense.expense,state:0
+msgid ""
+"When the expense request is created the status is 'Draft'.\n"
+" It is confirmed by the user and request is sent to admin, the status is "
+"'Waiting Confirmation'.            \n"
+"If the admin accepts it, the status is 'Accepted'.\n"
+" If the accounting entries are made for the expense request, the status is "
+"'Waiting Payment'."
+msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -356,7 +369,7 @@ msgid "Some costs may be reinvoices to the customer"
 msgstr "Algunos costes pueden ser refacturados al cliente"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:197
+#: code:addons/hr_expense/hr_expense.py:238
 #, python-format
 msgid "The employee must have a home address."
 msgstr "El empleado debe tener una dirección de casa."
@@ -411,7 +424,7 @@ msgid "After creating invoice, reimburse expenses"
 msgstr "Después de crear factura, reembolsar gastos"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:116
+#: code:addons/hr_expense/hr_expense.py:121
 #, python-format
 msgid "Warning!"
 msgstr "¡Advertencia!"
@@ -428,10 +441,16 @@ msgid "Validation Date"
 msgstr "Fecha de validación"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:227
+#: code:addons/hr_expense/hr_expense.py:378
 #, python-format
-msgid "Expense Receipt"
-msgstr "Recibo del gasto"
+msgid "Expense Account Move"
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:240
+#, python-format
+msgid "The employee must have a payable account set on his home address."
+msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -499,7 +518,12 @@ msgid "Employee encode all his expenses"
 msgstr "Empleado codifica todos sus gastos"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:302
+#: view:hr.expense.expense:0
+msgid "Free Notes"
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:453
 #, python-format
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product "
@@ -529,7 +553,12 @@ msgid "Draft"
 msgstr "Borrador"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:181
+#: selection:hr.expense.expense,state:0
+msgid "Paid"
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:353
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product purchase: "
@@ -554,6 +583,7 @@ msgid "The direct manager approves the sheet"
 msgstr "El responsable inmediato aprueba la hoja."
 
 #. module: hr_expense
+#: view:hr.expense.expense:0
 #: field:hr.expense.expense,amount:0
 msgid "Total Amount"
 msgstr "Importe total"
@@ -655,6 +685,11 @@ msgid "Summary"
 msgstr "Resumen"
 
 #. module: hr_expense
+#: model:ir.model,name:hr_expense.model_account_move_line
+msgid "Journal Items"
+msgstr ""
+
+#. module: hr_expense
 #: model:product.template,name:hr_expense.car_travel_product_template
 msgid "Car Travel Expenses"
 msgstr "Gastos de viajes en coche"
@@ -707,7 +742,6 @@ msgid "Unit Price"
 msgstr "Precio unidad"
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0
 #: view:hr.expense.report:0
 #: selection:hr.expense.report,state:0
 msgid "Done"
@@ -764,6 +798,15 @@ msgstr "Acceptar"
 #: report:hr.expense:0
 msgid "This document must be dated and signed for reimbursement"
 msgstr "Este documento debe estar fechado y firmado para su cobro"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_product
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new expense category. \n"
+"             </p>\n"
+"            "
+msgstr ""
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_refuseexpense0
@@ -878,7 +921,7 @@ msgid "Name"
 msgstr "Nombre"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:116
+#: code:addons/hr_expense/hr_expense.py:121
 #, python-format
 msgid "You can only delete draft expenses!"
 msgstr "¡Sólo puede borrar gastos en borrador!"
@@ -966,3 +1009,21 @@ msgstr "Total"
 #: model:process.node,name:hr_expense.process_node_reinvoicing0
 msgid "Reinvoicing"
 msgstr "Refacturació"
+
+#, python-format
+#~ msgid "Expense Receipt"
+#~ msgstr "Recibo del gasto"
+
+#~ msgid ""
+#~ "When the expense request is created the status is 'Draft'.\n"
+#~ " It is confirmed by the user and request is sent to admin, the status is "
+#~ "'Waiting Confirmation'.            \n"
+#~ "If the admin accepts it, the status is 'Accepted'.\n"
+#~ " If a receipt is made for the expense request, the status is 'Done'."
+#~ msgstr ""
+#~ "Cuando la petición de gasto se crea, su estado es 'Borrador'.\n"
+#~ "Si el responsable la acepta, el estado es 'Aceptado'.\n"
+#~ "Si se realiza un recibo para la petición de gasto, el estado es 'Realizado'."
+
+#~ msgid "Open Receipt"
+#~ msgstr "Abrir recibo"

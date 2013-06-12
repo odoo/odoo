@@ -35,23 +35,24 @@
 			</form>
 			</field>
     	</record>
-    	<record id="view_account_bank_statement_line_coda_tree" model="ir.ui.view">
+        <record id="view_account_bank_statement_line_coda_tree" model="ir.ui.view">
             <field name="name">account.bank.statement.line.coda.tree</field>
             <field name="model">account.bank.statement.line</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" string="Statement lines">
-			        <field name="sequence" readonly="1" invisible="1"/>
-			        <field name="date"/>
-			        <field name="name"/>
-			        <field name="ref"/>
-			        <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
-			        <field name="type" on_change="onchange_type(partner_id, type)"/>
-			        <field name="account_id" options='{"no_open":True}' domain="[('journal_id','=',parent.journal_id), ('company_id', '=', parent.company_id)]"/>
-			        <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]"/>
-			        <field name="amount"/>
-			        <field name="note"/>
-			    </tree>
+                <tree editable="bottom" string="Statement lines" create="0">
+                    <field name="sequence" readonly="1" invisible="1"/>
+                    <field name="statement_id" readonly="1" />
+                    <field name="date"/>
+                    <field name="name"/>
+                    <field name="ref"/>
+                    <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
+                    <field name="type" on_change="onchange_type(partner_id, type)"/>
+                    <field name="account_id" options='{"no_open":True}' domain="[('type', '&lt;&gt;', 'view')]"/>
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('type', '&lt;&gt;', 'view')]"/>
+                    <field name="amount"/>
+                    <field name="note"/>
+                </tree>
             </field>
         </record>
         

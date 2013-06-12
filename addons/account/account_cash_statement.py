@@ -253,7 +253,7 @@ class account_cash_statement(osv.osv):
         for statement in statement_pool.browse(cr, uid, ids, context=context):
             vals = {}
             if not self._user_allow(cr, uid, statement.id, context=context):
-                raise osv.except_osv(_('Error!'), (_('You do not have rights to open this %s journal !') % (statement.journal_id.name, )))
+                raise osv.except_osv(_('Error!'), (_('You do not have rights to open this %s journal!') % (statement.journal_id.name, )))
 
             if statement.name and statement.name == '/':
                 c = {'fiscalyear_id': statement.period_id.fiscalyear_id.id}

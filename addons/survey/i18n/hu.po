@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-01-07 00:35+0000\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"PO-Revision-Date: 2013-03-10 20:49+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:10+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:48+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: survey
 #: view:survey.response.line:0
@@ -74,9 +74,9 @@ msgid "Surveys"
 msgstr "Felmérések"
 
 #. module: survey
-#: field:survey.question,in_visible_answer_type:0
-msgid "Is Answer Type Invisible?"
-msgstr "A válasz típusa láthatlan?"
+#: view:survey.request:0
+msgid "Cancel Request"
+msgstr "Igény elvetése"
 
 #. module: survey
 #: view:survey:0
@@ -508,16 +508,21 @@ msgid "From"
 msgstr "Kezdő dátum"
 
 #. module: survey
+#: view:survey:0
+msgid "Cancel Survey"
+msgstr "Felmérés visszavonása"
+
+#. module: survey
 #: selection:survey.question,comment_valid_type:0
 #: selection:survey.question,validation_type:0
 msgid "Don't Validate Comment Text."
-msgstr "Nincs jóváhagyva a megjegyzés szövege"
+msgstr "Ne érvényesítse a megjegyzés szöveget"
 
 #. module: survey
 #: code:addons/survey/survey.py:532
 #, python-format
 msgid "You must enter one or more menu choices in column heading."
-msgstr "Be kell írnia egy vagy több menü választást oszlopozott tételben."
+msgstr "Be kell írnia egy vagy több menü lehetőséget az oszlopok címsorába."
 
 #. module: survey
 #: selection:survey.question,comment_valid_type:0
@@ -592,6 +597,13 @@ msgstr "Típus"
 #: field:survey.request,email:0
 msgid "Email"
 msgstr "E-mail"
+
+#. module: survey
+#: view:survey:0
+#: view:survey.page:0
+#: view:survey.question:0
+msgid "Required Answer"
+msgstr "Szükséges válasz"
 
 #. module: survey
 #: code:addons/survey/survey.py:96
@@ -735,6 +747,11 @@ msgid ""
 msgstr ""
 "A beírt maximum a maximum szükséges válaszhoz nagyobb mint a válaszok száma. "
 "Kérem használjon egy számot ami kisebb mint %d."
+
+#. module: survey
+#: view:survey:0
+msgid "Survey description..."
+msgstr "Felmérés leírása..."
 
 #. module: survey
 #: view:survey:0
@@ -1119,11 +1136,9 @@ msgid "Multiple Textboxes With Different Type"
 msgstr "Többszörös szövegdoboz különböző típusokkal"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
-msgid "Required Answer"
-msgstr "Szükséges válasz"
+#: view:survey.name.wiz:0
+msgid "Add Description"
+msgstr "Leírás hozzáadása"
 
 #. module: survey
 #: model:survey.type,name:survey.survey_type2
@@ -1161,9 +1176,15 @@ msgid "Date"
 msgstr "Dátum"
 
 #. module: survey
-#: selection:survey.answer,type:0
-msgid "Integer"
-msgstr "Egész szám"
+#: view:survey:0
+msgid "All New Survey"
+msgstr "Összes új felmérés"
+
+#. module: survey
+#: view:survey:0
+#: view:survey.page:0
+msgid "Description on the survey page..."
+msgstr "Leírás a felmérési lapon..."
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_send_invitation
@@ -1255,9 +1276,9 @@ msgid "Is Rating Scale Invisible?"
 msgstr "Az értékelés skála látható?"
 
 #. module: survey
-#: view:survey:0
-msgid "All New Survey"
-msgstr "Összes új felmérés"
+#: selection:survey.answer,type:0
+msgid "Integer"
+msgstr "Egész szám"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1347,13 +1368,11 @@ msgid "Allow Only One Answer per Column (Forced Ranking)"
 msgstr "Egy válasz engedélyezése egy oszlopban (Eröltetett sorrend)"
 
 #. module: survey
-#: view:survey:0
 #: view:survey.browse.answer:0
 #: view:survey.name.wiz:0
 #: view:survey.print:0
 #: view:survey.print.answer:0
 #: view:survey.print.statistics:0
-#: view:survey.request:0
 #: view:survey.send.invitation:0
 msgid "Cancel"
 msgstr "Mégse"
@@ -1801,6 +1820,11 @@ msgstr "Felmérésoldalak"
 #: field:survey.question,type:0
 msgid "Question Type"
 msgstr "Kérdéstípus"
+
+#. module: survey
+#: field:survey.question,in_visible_answer_type:0
+msgid "Is Answer Type Invisible?"
+msgstr "A válasz típusa láthatlan?"
 
 #. module: survey
 #: selection:survey.question,type:0

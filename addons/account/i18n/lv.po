@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-02-25 11:45+0000\n"
+"Last-Translator: Jānis <Unknown>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:26+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:04+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -36,9 +36,14 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: view:res.partner:0
+msgid "the parent company"
+msgstr ""
+
+#. module: account
 #: view:account.move.reconcile:0
 msgid "Journal Entry Reconcile"
-msgstr "Sasaistīt Žurnāla Rindas"
+msgstr "Saistīt reģistru ierakstus"
 
 #. module: account
 #: view:account.account:0
@@ -58,7 +63,7 @@ msgid "Residual"
 msgstr "Atlikums"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:368
+#: code:addons/account/account_bank_statement.py:369
 #, python-format
 msgid "Journal item \"%s\" is not valid."
 msgstr ""
@@ -74,9 +79,9 @@ msgid "Import from invoice or payment"
 msgstr "Importēt no rēķina vai maksājuma"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1061
-#: code:addons/account/account_move_line.py:1144
-#: code:addons/account/account_move_line.py:1211
+#: code:addons/account/account_move_line.py:1058
+#: code:addons/account/account_move_line.py:1143
+#: code:addons/account/account_move_line.py:1210
 #, python-format
 msgid "Bad Account!"
 msgstr ""
@@ -130,16 +135,15 @@ msgstr ""
 #: code:addons/account/account.py:641
 #: code:addons/account/account.py:686
 #: code:addons/account/account.py:781
-#: code:addons/account/account.py:1049
-#: code:addons/account/account_invoice.py:792
-#: code:addons/account/account_invoice.py:795
-#: code:addons/account/account_invoice.py:798
-#: code:addons/account/account_invoice.py:1509
+#: code:addons/account/account.py:1058
+#: code:addons/account/account_invoice.py:817
+#: code:addons/account/account_invoice.py:820
+#: code:addons/account/account_invoice.py:823
+#: code:addons/account/account_invoice.py:1542
 #: code:addons/account/account_move_line.py:98
-#: code:addons/account/account_move_line.py:774
-#: code:addons/account/account_move_line.py:783
-#: code:addons/account/account_move_line.py:827
-#: code:addons/account/account_move_line.py:867
+#: code:addons/account/account_move_line.py:771
+#: code:addons/account/account_move_line.py:824
+#: code:addons/account/account_move_line.py:864
 #: code:addons/account/wizard/account_fiscalyear_close.py:62
 #: code:addons/account/wizard/account_invoice_state.py:44
 #: code:addons/account/wizard/account_invoice_state.py:68
@@ -151,10 +155,10 @@ msgid "Warning!"
 msgstr "Uzmanību!"
 
 #. module: account
-#: code:addons/account/account.py:3149
+#: code:addons/account/account.py:3197
 #, python-format
 msgid "Miscellaneous Journal"
-msgstr ""
+msgstr "Dažādi reģistri"
 
 #. module: account
 #: code:addons/account/wizard/account_open_closed_fiscalyear.py:39
@@ -205,8 +209,8 @@ msgid ""
 "invoice) to create analytic entries, OpenERP will look for a matching "
 "journal of the same type."
 msgstr ""
-"Tiek norādīts analītiskā žurnāla tips. Veidojot jaunu dokumentu, kuram "
-"nepieciešami arī analītiskie ieraksti, OpenERP piemeklēs žurnālu ar "
+"Tiek norādīts analītiskā reģistra tips. Veidojot jaunu dokumentu, kuram "
+"nepieciešami arī analītiskie ieraksti, OpenERP piemeklēs reģistru ar "
 "atbilstošu tipu."
 
 #. module: account
@@ -340,7 +344,7 @@ msgid "Allow multi currencies"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:73
+#: code:addons/account/account_invoice.py:74
 #, python-format
 msgid "You must define an analytic journal of type '%s'!"
 msgstr ""
@@ -389,6 +393,11 @@ msgstr "account.bank.accounts.wizard"
 #: field:account.move.reconcile,create_date:0
 msgid "Creation date"
 msgstr "Izveides datums"
+
+#. module: account
+#: view:account.invoice:0
+msgid "Cancel Invoice"
+msgstr "Atcelt Rēķinu"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -516,7 +525,7 @@ msgstr ""
 #: model:ir.model,name:account.model_account_journal
 #: field:validate.account.move,journal_id:0
 msgid "Journal"
-msgstr "Žurnāls"
+msgstr "Reģistrs"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_confirm
@@ -536,7 +545,7 @@ msgstr ""
 #. module: account
 #: field:account.bank.statement,account_id:0
 msgid "Account used in this journal"
-msgstr "Žurnālā izmantotais konts"
+msgstr "Reģistram izmantotais konts"
 
 #. module: account
 #: help:account.aged.trial.balance,chart_account_id:0
@@ -596,16 +605,18 @@ msgid "The accountant confirms the statement."
 msgstr "Grāmatvedim jāapstiprina izraksts."
 
 #. module: account
-#. openerp-web
-#: code:addons/account/static/src/xml/account_move_reconciliation.xml:31
-#, python-format
-msgid "Nothing to reconcile"
-msgstr ""
+#: selection:account.balance.report,display_account:0
+#: selection:account.common.account.report,display_account:0
+#: selection:account.report.general.ledger,display_account:0
+#: selection:account.tax,type_tax_use:0
+#: selection:account.tax.template,type_tax_use:0
+msgid "All"
+msgstr "Visi"
 
 #. module: account
 #: field:account.config.settings,decimal_precision:0
 msgid "Decimal precision on journal entries"
-msgstr ""
+msgstr "Decimālā precizitāte reģistru ierakstiem"
 
 #. module: account
 #: selection:account.config.settings,period:0
@@ -661,9 +672,21 @@ msgid "Profit Account"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1157
+#: code:addons/account/account_move_line.py:1156
 #, python-format
 msgid "No period found or more than one period found for the given date."
+msgstr ""
+
+#. module: account
+#: help:res.partner,last_reconciliation_date:0
+msgid ""
+"Date on which the partner accounting entries were fully reconciled last "
+"time. It differs from the last date where a reconciliation has been made for "
+"this partner, as here we depict the fact that nothing more was to be "
+"reconciled at this date. This can be achieved in 2 different ways: either "
+"the last unreconciled debit/credit entry of this partner was reconciled, "
+"either the user pressed the button \"Nothing more to reconcile\" during the "
+"manual reconciliation process."
 msgstr ""
 
 #. module: account
@@ -672,13 +695,13 @@ msgid "Report of the Sales by Account Type"
 msgstr "Pārdošanas atskaites pēc Konta Tipa."
 
 #. module: account
-#: code:addons/account/account.py:3153
+#: code:addons/account/account.py:3201
 #, python-format
 msgid "SAJ"
 msgstr "REL"
 
 #. module: account
-#: code:addons/account/account.py:1551
+#: code:addons/account/account.py:1591
 #, python-format
 msgid "Cannot create move with currency different from .."
 msgstr ""
@@ -709,7 +732,14 @@ msgstr "Sākuma Ierakstu Periods"
 #. module: account
 #: model:ir.model,name:account.model_account_journal_period
 msgid "Journal Period"
-msgstr "Žurnāla periods"
+msgstr "Reģistra periods"
+
+#. module: account
+#: constraint:account.move.line:0
+msgid ""
+"The amount expressed in the secondary currency must be positive when the "
+"journal item is a debit and negative when if it is a credit."
+msgstr ""
 
 #. module: account
 #: constraint:account.move:0
@@ -769,7 +799,7 @@ msgid "Are you sure you want to create entries?"
 msgstr "Vai esat pārliecināti, ka vēlaties izveidot ierakstus?"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1329
+#: code:addons/account/account_invoice.py:1358
 #, python-format
 msgid "Invoice partially paid: %s%s of %s%s (%s%s remaining)."
 msgstr ""
@@ -785,6 +815,11 @@ msgstr "Drukāt Rēķinu"
 msgid ""
 "Cannot %s invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only refund this invoice."
+msgstr ""
+
+#. module: account
+#: view:account.account:0
+msgid "Account code"
 msgstr ""
 
 #. module: account
@@ -821,6 +856,7 @@ msgid "Financial Report"
 msgstr ""
 
 #. module: account
+#: view:account.analytic.account:0
 #: view:account.analytic.journal:0
 #: field:account.analytic.journal,type:0
 #: field:account.bank.statement.line,type:0
@@ -837,7 +873,7 @@ msgid "Type"
 msgstr "Veids"
 
 #. module: account
-#: code:addons/account/account_invoice.py:798
+#: code:addons/account/account_invoice.py:823
 #, python-format
 msgid ""
 "Taxes are missing!\n"
@@ -860,7 +896,7 @@ msgid "Supplier Invoices And Refunds"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:854
+#: code:addons/account/account_move_line.py:851
 #, python-format
 msgid "Entry is already reconciled."
 msgstr ""
@@ -875,7 +911,7 @@ msgstr "Atsaiste"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal_report
 msgid "Account Analytic Journal"
-msgstr "Konta Analītiskais Žurnāls"
+msgstr "Konta analītiskais reģistrs"
 
 #. module: account
 #: view:account.invoice:0
@@ -912,6 +948,13 @@ msgid "September"
 msgstr "Septembris"
 
 #. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_move_reconciliation.xml:24
+#, python-format
+msgid "Latest Manual Reconciliation Processed:"
+msgstr ""
+
+#. module: account
 #: selection:account.subscription,period_type:0
 msgid "days"
 msgstr "dienas"
@@ -934,7 +977,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1637
+#: code:addons/account/account.py:1677
 #, python-format
 msgid ""
 "You cannot unreconcile journal items if they has been generated by the       "
@@ -978,7 +1021,7 @@ msgstr "Nav apmaksāts"
 #. module: account
 #: field:account.config.settings,purchase_journal_id:0
 msgid "Purchase journal"
-msgstr ""
+msgstr "Iegādes reģistrs"
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_paid
@@ -1018,7 +1061,7 @@ msgid "Liability"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:871
+#: code:addons/account/account_invoice.py:896
 #, python-format
 msgid "Please define sequence on the journal related to this invoice."
 msgstr ""
@@ -1031,7 +1074,7 @@ msgstr "Paplašinātie filtri..."
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_central_journal
 msgid "Centralizing Journal"
-msgstr "Cenralizētais Žurnāls"
+msgstr "Centralizētais reģistrs"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -1091,14 +1134,14 @@ msgid "Features"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:2298
-#: code:addons/account/account_bank_statement.py:423
-#: code:addons/account/account_invoice.py:73
-#: code:addons/account/account_invoice.py:748
+#: code:addons/account/account.py:2346
+#: code:addons/account/account_bank_statement.py:424
+#: code:addons/account/account_invoice.py:74
+#: code:addons/account/account_invoice.py:772
 #: code:addons/account/account_move_line.py:195
 #, python-format
 msgid "No Analytic Journal !"
-msgstr "Nav norādīts analītiskais žurnāls!"
+msgstr "Nav norādīts analītiskais reģistrs!"
 
 #. module: account
 #: report:account.partner.balance:0
@@ -1172,9 +1215,8 @@ msgid "Refund "
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_analytic_line.py:90
-#, python-format
-msgid "There is no expense account defined for this product: \"%s\" (id:%d)."
+#: help:account.config.settings,company_footer:0
+msgid "Bank accounts as printed in the footer of each printed document"
 msgstr ""
 
 #. module: account
@@ -1220,7 +1262,7 @@ msgstr ""
 #. module: account
 #: model:account.account.type,name:account.data_account_type_bank
 #: selection:account.bank.accounts.wizard,account_type:0
-#: code:addons/account/account.py:3044
+#: code:addons/account/account.py:3092
 #, python-format
 msgid "Bank"
 msgstr "Banka"
@@ -1239,11 +1281,6 @@ msgstr ""
 #: model:process.transition,name:account.process_transition_confirmstatementfromdraft0
 msgid "Confirm statement"
 msgstr "Apstiprināt Izrakstu"
-
-#. module: account
-#: view:account.tax:0
-msgid "Account Tax"
-msgstr "Nodokļu Konts"
 
 #. module: account
 #: help:account.account,foreign_balance:0
@@ -1268,13 +1305,6 @@ msgstr "Kredīta Centralizācija"
 #: model:ir.ui.menu,name:account.menu_action_account_tax_code_template_form
 msgid "Tax Code Templates"
 msgstr "Nodokļu Kodu Šabloni"
-
-#. module: account
-#: constraint:account.move.line:0
-msgid ""
-"The amount expressed in the secondary currency must be positif when journal "
-"item are debit and negatif when journal item are credit."
-msgstr ""
 
 #. module: account
 #: view:account.invoice.cancel:0
@@ -1306,6 +1336,7 @@ msgid "Outgoing Currencies Rate"
 msgstr "Izejošais Valūtas Kurss"
 
 #. module: account
+#: view:account.analytic.account:0
 #: field:account.config.settings,chart_template_id:0
 msgid "Template"
 msgstr ""
@@ -1481,7 +1512,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_entries_report
 msgid "Journal Items Analysis"
-msgstr "Žurnāla grāmatojumu Analīze"
+msgstr "Reģistra grāmatojumu analīze"
 
 #. module: account
 #: model:ir.ui.menu,name:account.next_id_22
@@ -1499,6 +1530,13 @@ msgstr ""
 #. module: account
 #: field:account.invoice.report,state:0
 msgid "Invoice Status"
+msgstr ""
+
+#. module: account
+#: view:account.open.closed.fiscalyear:0
+#: model:ir.actions.act_window,name:account.action_account_open_closed_fiscalyear
+#: model:ir.ui.menu,name:account.menu_wizard_account_open_closed_fiscalyear
+msgid "Cancel Closing Entries"
 msgstr ""
 
 #. module: account
@@ -1532,7 +1570,7 @@ msgid "With balance is not equal to 0"
 msgstr "Kur bilance nav vienāda ar 0"
 
 #. module: account
-#: code:addons/account/account.py:1445
+#: code:addons/account/account.py:1483
 #, python-format
 msgid ""
 "There is no default debit account defined \n"
@@ -1631,6 +1669,14 @@ msgid "Supplier Refunds"
 msgstr "Ienākošie Kredītrēķini"
 
 #. module: account
+#: report:account.invoice:0
+#: view:account.invoice:0
+#: field:account.invoice,date_invoice:0
+#: field:report.invoice.created,date_invoice:0
+msgid "Invoice Date"
+msgstr "Rēķina Datums"
+
+#. module: account
 #: field:account.tax.code,code:0
 #: field:account.tax.code.template,code:0
 msgid "Case Code"
@@ -1668,6 +1714,11 @@ msgid "Recurring"
 msgstr ""
 
 #. module: account
+#: report:account.invoice:0
+msgid "TIN :"
+msgstr ""
+
+#. module: account
 #: field:account.journal,groups_id:0
 msgid "Groups"
 msgstr "Grupas"
@@ -1690,7 +1741,7 @@ msgstr "Meklēt Bankas Izrakstus"
 #. module: account
 #: view:account.move.line:0
 msgid "Unposted Journal Items"
-msgstr ""
+msgstr "Nenogrāmatoti reģistru ieraksti"
 
 #. module: account
 #: view:account.chart.template:0
@@ -1755,8 +1806,10 @@ msgstr ""
 #: view:account.invoice:0
 #: view:account.invoice.report:0
 #: field:account.move.line,invoice:0
+#: code:addons/account/account_invoice.py:1154
 #: model:ir.model,name:account.model_account_invoice
 #: model:res.request.link,name:account.req_link_invoice
+#, python-format
 msgid "Invoice"
 msgstr "Rēķins"
 
@@ -1831,7 +1884,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:857
+#: code:addons/account/account_move_line.py:854
 #, python-format
 msgid "Some entries are already reconciled."
 msgstr ""
@@ -1859,11 +1912,6 @@ msgid "Pending Accounts"
 msgstr ""
 
 #. module: account
-#: view:account.open.closed.fiscalyear:0
-msgid "Cancel Fiscal Year Opening Entries"
-msgstr ""
-
-#. module: account
 #: report:account.journal.period.print.sale.purchase:0
 #: view:account.tax.template:0
 msgid "Tax Declaration"
@@ -1875,8 +1923,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the journal "
 "period without removing it."
 msgstr ""
-"Uzliekot vērtību \"False\" laukam Aktīvs, iespējams slēpt žurnāla periodu to "
-"neizdzēšot."
+"Uzliekot vērtību \"False\" laukam Aktīvs, iespējams slēpt reģistra periodu "
+"to neizdzēšot."
 
 #. module: account
 #: field:account.report.general.ledger,sortby:0
@@ -1907,7 +1955,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_common_journal_report
 msgid "Account Common Journal Report"
-msgstr "Žurnālu Izdruka"
+msgstr "Konta kopējā reģistra atskaite"
 
 #. module: account
 #: selection:account.partner.balance,display_partner:0
@@ -1985,36 +2033,36 @@ msgstr ""
 #: code:addons/account/account.py:634
 #: code:addons/account/account.py:636
 #: code:addons/account/account.py:930
-#: code:addons/account/account.py:1062
-#: code:addons/account/account.py:1064
-#: code:addons/account/account.py:1103
-#: code:addons/account/account.py:1283
-#: code:addons/account/account.py:1297
-#: code:addons/account/account.py:1320
-#: code:addons/account/account.py:1327
-#: code:addons/account/account.py:1547
-#: code:addons/account/account.py:1551
-#: code:addons/account/account.py:1637
-#: code:addons/account/account.py:2310
-#: code:addons/account/account.py:2630
-#: code:addons/account/account.py:3417
+#: code:addons/account/account.py:1071
+#: code:addons/account/account.py:1073
+#: code:addons/account/account.py:1116
+#: code:addons/account/account.py:1319
+#: code:addons/account/account.py:1333
+#: code:addons/account/account.py:1356
+#: code:addons/account/account.py:1363
+#: code:addons/account/account.py:1587
+#: code:addons/account/account.py:1591
+#: code:addons/account/account.py:1677
+#: code:addons/account/account.py:2358
+#: code:addons/account/account.py:2678
+#: code:addons/account/account.py:3465
 #: code:addons/account/account_analytic_line.py:89
 #: code:addons/account/account_analytic_line.py:98
-#: code:addons/account/account_bank_statement.py:367
-#: code:addons/account/account_bank_statement.py:380
-#: code:addons/account/account_bank_statement.py:418
+#: code:addons/account/account_bank_statement.py:368
+#: code:addons/account/account_bank_statement.py:381
+#: code:addons/account/account_bank_statement.py:419
 #: code:addons/account/account_cash_statement.py:256
 #: code:addons/account/account_cash_statement.py:300
-#: code:addons/account/account_invoice.py:871
-#: code:addons/account/account_invoice.py:905
-#: code:addons/account/account_invoice.py:1095
-#: code:addons/account/account_move_line.py:578
-#: code:addons/account/account_move_line.py:831
+#: code:addons/account/account_invoice.py:896
+#: code:addons/account/account_invoice.py:930
+#: code:addons/account/account_invoice.py:1121
+#: code:addons/account/account_move_line.py:579
+#: code:addons/account/account_move_line.py:828
+#: code:addons/account/account_move_line.py:851
 #: code:addons/account/account_move_line.py:854
-#: code:addons/account/account_move_line.py:857
-#: code:addons/account/account_move_line.py:1122
-#: code:addons/account/account_move_line.py:1124
-#: code:addons/account/account_move_line.py:1157
+#: code:addons/account/account_move_line.py:1119
+#: code:addons/account/account_move_line.py:1121
+#: code:addons/account/account_move_line.py:1156
 #: code:addons/account/report/common_report_header.py:92
 #: code:addons/account/wizard/account_change_currency.py:38
 #: code:addons/account/wizard/account_change_currency.py:59
@@ -2028,8 +2076,8 @@ msgstr ""
 #: code:addons/account/wizard/account_report_common.py:158
 #: code:addons/account/wizard/account_report_common.py:164
 #: code:addons/account/wizard/account_use_model.py:44
-#: code:addons/account/wizard/pos_box.py:32
-#: code:addons/account/wizard/pos_box.py:36
+#: code:addons/account/wizard/pos_box.py:31
+#: code:addons/account/wizard/pos_box.py:35
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -2071,7 +2119,7 @@ msgid "period close"
 msgstr "perioda slēgšana"
 
 #. module: account
-#: code:addons/account/account.py:1049
+#: code:addons/account/account.py:1058
 #, python-format
 msgid ""
 "This journal already contains items for this period, therefore you cannot "
@@ -2134,7 +2182,7 @@ msgstr "Kopā"
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_journal_sale_purchase
 msgid "Sale/Purchase Journal"
-msgstr ""
+msgstr "Iegādes/Realizācijas reģistrs"
 
 #. module: account
 #: view:account.analytic.account:0
@@ -2143,10 +2191,10 @@ msgid "Analytic account"
 msgstr "Analītiskais konts"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:405
+#: code:addons/account/account_bank_statement.py:406
 #, python-format
 msgid "Please verify that an account is defined in the journal."
-msgstr "Pārbaudiet, vai žurnālam ir definēts konts."
+msgstr "Pārbaudiet, vai reģistram ir definēts konts."
 
 #. module: account
 #: selection:account.entries.report,move_line_state:0
@@ -2163,7 +2211,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_print_journal
 #: model:ir.model,name:account.model_account_print_journal
 msgid "Account Print Journal"
-msgstr "Kontu Drukas Žurnāls"
+msgstr "Konta reģistra atskaite"
 
 #. module: account
 #: model:ir.model,name:account.model_product_category
@@ -2193,7 +2241,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_move_line_quickadd.xml:14
 #, python-format
 msgid "Journal :"
-msgstr ""
+msgstr "Reģistrs :"
 
 #. module: account
 #: sql_constraint:account.fiscal.position.tax:0
@@ -2551,7 +2599,7 @@ msgid "Create an Account Based on this Template"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:905
+#: code:addons/account/account_invoice.py:930
 #, python-format
 msgid ""
 "Cannot create the invoice.\n"
@@ -2572,7 +2620,7 @@ msgid "Main Sequence"
 msgstr "Galvenā Secība"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:477
+#: code:addons/account/account_bank_statement.py:478
 #, python-format
 msgid ""
 "In order to delete a bank statement, you must first cancel it to delete "
@@ -2596,7 +2644,7 @@ msgid "Fiscal Positions"
 msgstr "Nodokļu Profili"
 
 #. module: account
-#: code:addons/account/account_move_line.py:578
+#: code:addons/account/account_move_line.py:579
 #, python-format
 msgid "You cannot create journal items on a closed account %s %s."
 msgstr ""
@@ -2704,7 +2752,7 @@ msgid "Account Model Entries"
 msgstr "Tipveida ieraksti"
 
 #. module: account
-#: code:addons/account/account.py:3154
+#: code:addons/account/account.py:3202
 #, python-format
 msgid "EXJ"
 msgstr "IEP"
@@ -2720,23 +2768,8 @@ msgid "Bank Details"
 msgstr "Bankas Rekvizīti"
 
 #. module: account
-#: model:ir.actions.act_window,help:account.action_move_journal_line
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"                Click to create a journal entry.\n"
-"              </p><p>\n"
-"                A journal entry consists of several journal items, each of\n"
-"                which is either a debit or a credit transaction.\n"
-"              </p><p>\n"
-"                OpenERP automatically creates one journal entry per "
-"accounting\n"
-"                document: invoice, refund, supplier payment, bank "
-"statements,\n"
-"                etc. So, you should record journal entries manually "
-"only/mainly\n"
-"                for miscellaneous operations.\n"
-"              </p>\n"
-"            "
+#: view:account.bank.statement:0
+msgid "Cancel CashBox"
 msgstr ""
 
 #. module: account
@@ -2821,21 +2854,20 @@ msgid "Accounts"
 msgstr "Konti"
 
 #. module: account
-#: code:addons/account/account.py:3493
-#: code:addons/account/account_bank_statement.py:404
-#: code:addons/account/account_invoice.py:386
-#: code:addons/account/account_invoice.py:488
-#: code:addons/account/account_invoice.py:586
-#: code:addons/account/account_invoice.py:601
-#: code:addons/account/account_invoice.py:609
-#: code:addons/account/account_invoice.py:631
-#: code:addons/account/account_move_line.py:535
+#: code:addons/account/account.py:3541
+#: code:addons/account/account_bank_statement.py:405
+#: code:addons/account/account_invoice.py:504
+#: code:addons/account/account_invoice.py:606
+#: code:addons/account/account_invoice.py:621
+#: code:addons/account/account_invoice.py:629
+#: code:addons/account/account_invoice.py:654
+#: code:addons/account/account_move_line.py:536
 #, python-format
 msgid "Configuration Error!"
 msgstr "Konfigurācijas kļūda!"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:433
+#: code:addons/account/account_bank_statement.py:434
 #, python-format
 msgid "Statement %s confirmed, journal items were created."
 msgstr ""
@@ -3026,7 +3058,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1062
+#: code:addons/account/account.py:1071
 #, python-format
 msgid "You should choose the periods that belong to the same company."
 msgstr ""
@@ -3039,28 +3071,30 @@ msgid "Sales by Account"
 msgstr "Pārdošanas dati pēc Konta"
 
 #. module: account
-#: code:addons/account/account.py:1411
+#: code:addons/account/account.py:1449
 #, python-format
 msgid "You cannot delete a posted journal entry \"%s\"."
-msgstr ""
+msgstr "Nogrāmatotu \"%s\" reģistra ierakstu nevar dzēst."
 
 #. module: account
-#: view:account.invoice:0
-msgid "Accounting Period"
+#: help:account.tax,account_collected_id:0
+msgid ""
+"Set the account that will be set by default on invoice tax lines for "
+"invoices. Leave empty to use the expense account."
 msgstr ""
 
 #. module: account
 #: field:account.config.settings,sale_journal_id:0
 msgid "Sale journal"
-msgstr ""
+msgstr "Realizācijas reģistrs"
 
 #. module: account
-#: code:addons/account/account.py:2298
-#: code:addons/account/account_invoice.py:748
+#: code:addons/account/account.py:2346
+#: code:addons/account/account_invoice.py:772
 #: code:addons/account/account_move_line.py:195
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
-msgstr "Žurnālam '%s'  ir jādefinē atbilstošs analītiskais žurnāls!"
+msgstr "Reģistrs '%s' ir jādefinē atbilstošs analītiskais reģistrs!"
 
 #. module: account
 #: code:addons/account/account.py:781
@@ -3069,6 +3103,7 @@ msgid ""
 "This journal already contains items, therefore you cannot modify its company "
 "field."
 msgstr ""
+"Šis reģistrs jau satur ierakstus, tādēļ Jūs nevarat labot tā uzņēmuma lauku."
 
 #. module: account
 #: code:addons/account/account.py:409
@@ -3219,7 +3254,7 @@ msgid "Fiscal Position"
 msgstr "Nodokļu Profils"
 
 #. module: account
-#: code:addons/account/account_invoice.py:795
+#: code:addons/account/account_invoice.py:820
 #, python-format
 msgid ""
 "Tax base different!\n"
@@ -3299,7 +3334,7 @@ msgstr "Nodokļu Veidņu Saraksts"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_print_sale_purchase_journal
 msgid "Sale/Purchase Journals"
-msgstr ""
+msgstr "Iegādes/Realizācijas reģistri"
 
 #. module: account
 #: help:account.account,currency_mode:0
@@ -3317,7 +3352,7 @@ msgstr ""
 "datuma valūtas kursu."
 
 #. module: account
-#: code:addons/account/account.py:2630
+#: code:addons/account/account.py:2678
 #, python-format
 msgid "There is no parent code for the template account."
 msgstr ""
@@ -3348,6 +3383,7 @@ msgstr "Vienmēr"
 msgid ""
 "Full accounting features: journals, legal statements, chart of accounts, etc."
 msgstr ""
+"Pilnas grāmatvedības funkcijas: reģistri, izraksti, kontu plāni, utt."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -3380,7 +3416,7 @@ msgid "View"
 msgstr "Skatījums"
 
 #. module: account
-#: code:addons/account/account.py:3412
+#: code:addons/account/account.py:3460
 #: code:addons/account/account_bank.py:95
 #, python-format
 msgid "BNK"
@@ -3524,7 +3560,7 @@ msgid ""
 "This wizard will validate all journal entries of a particular journal and "
 "period. Once journal entries are validated, you can not update them anymore."
 msgstr ""
-"Vednis apstiprinās visus noteikta žurnāla un perioda grāmatojumus. Pēc "
+"Vednis apstiprinās visus noteikta reģistra un perioda grāmatojumus. Pēc "
 "apstiprināšanas tos vairs nevarēs mainīt."
 
 #. module: account
@@ -3602,7 +3638,7 @@ msgstr "Atstājiet neaizpildītu, lai lietotu izdevumu kontu"
 #: model:ir.ui.menu,name:account.menu_journals
 #: model:ir.ui.menu,name:account.menu_journals_report
 msgid "Journals"
-msgstr "Žurnāli"
+msgstr "Reģistri"
 
 #. module: account
 #: field:account.partner.reconcile.process,to_reconcile:0
@@ -3650,7 +3686,7 @@ msgstr ""
 "izrakstam."
 
 #. module: account
-#: code:addons/account/account_invoice.py:988
+#: code:addons/account/account_invoice.py:1013
 #, python-format
 msgid ""
 "You cannot create an invoice on a centralized journal. Uncheck the "
@@ -3665,7 +3701,7 @@ msgid "Starting Balance"
 msgstr "Sākuma Bilance"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1428
+#: code:addons/account/account_invoice.py:1462
 #, python-format
 msgid "No Partner Defined !"
 msgstr "Nav definēts Partneris!"
@@ -3718,7 +3754,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:535
+#: code:addons/account/account_move_line.py:536
 #, python-format
 msgid ""
 "Cannot find any account journal of %s type for this company.\n"
@@ -3749,7 +3785,7 @@ msgstr "Nodokļu Plāns"
 #. module: account
 #: view:account.journal:0
 msgid "Search Account Journal"
-msgstr "Meklēt Žurnālā"
+msgstr "Meklēt konta reģistru"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree_pending_invoice
@@ -3783,7 +3819,7 @@ msgid ""
 "All selected journal entries will be validated and posted. It means you "
 "won't be able to modify their accounting fields anymore."
 msgstr ""
-"Visi žurnāla ieraksti tiks apstiprināti un grāmatoti. To nevarēs vēlāk "
+"Visi reģistra ieraksti tiks apstiprināti un grāmatoti. To nevarēs vēlāk "
 "mainīt."
 
 #. module: account
@@ -3868,17 +3904,19 @@ msgid "Period Length (days)"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1327
+#: code:addons/account/account.py:1363
 #, python-format
 msgid ""
 "You cannot modify a posted entry of this journal.\n"
 "First you should set the journal to allow cancelling entries."
 msgstr ""
+"Jūs nevarat labot šī reģistra grāmatojumu.\n"
+"Jums jāuzstāda atļauja reģistrā atcelt grāmatojumus."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_print_sale_purchase_journal
 msgid "Print Sale/Purchase Journal"
-msgstr ""
+msgstr "Drukāt Iegāde/Realizācijas reģistru"
 
 #. module: account
 #: view:account.installer:0
@@ -3919,7 +3957,7 @@ msgstr "Summa pēc Nodokļa Koda"
 #. module: account
 #: view:account.move.line:0
 msgid "Unreconciled Journal Items"
-msgstr ""
+msgstr "Nesaistītie kontējumi"
 
 #. module: account
 #: selection:account.account.type,close_method:0
@@ -3930,11 +3968,6 @@ msgstr "Detaļas"
 #: help:account.config.settings,default_purchase_tax:0
 msgid "This purchase tax will be assigned by default on new products."
 msgstr ""
-
-#. module: account
-#: report:account.invoice:0
-msgid "VAT :"
-msgstr "PVN :"
 
 #. module: account
 #: report:account.central.journal:0
@@ -4029,7 +4062,7 @@ msgid "Chart of Accounts Template"
 msgstr "Kontu Plāns (Veidne)"
 
 #. module: account
-#: code:addons/account/account.py:2310
+#: code:addons/account/account.py:2358
 #, python-format
 msgid ""
 "Maturity date of entry line generated by model line '%s' of model '%s' is "
@@ -4038,13 +4071,9 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: selection:account.balance.report,display_account:0
-#: selection:account.common.account.report,display_account:0
-#: selection:account.report.general.ledger,display_account:0
-#: selection:account.tax,type_tax_use:0
-#: selection:account.tax.template,type_tax_use:0
-msgid "All"
-msgstr "Visi"
+#: view:account.tax:0
+msgid "Account Tax"
+msgstr "Nodokļu Konts"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_reporting_budgets
@@ -4182,6 +4211,11 @@ msgid "Complete set of taxes"
 msgstr ""
 
 #. module: account
+#: field:res.partner,last_reconciliation_date:0
+msgid "Latest Full Reconciliation Date"
+msgstr ""
+
+#. module: account
 #: field:account.account,name:0
 #: field:account.account.template,name:0
 #: report:account.analytic.account.inverted.balance:0
@@ -4194,7 +4228,7 @@ msgid "Name"
 msgstr "Nosaukums"
 
 #. module: account
-#: code:addons/account/installer.py:94
+#: code:addons/account/installer.py:115
 #, python-format
 msgid "No unconfigured company !"
 msgstr ""
@@ -4213,7 +4247,7 @@ msgstr "Izdošanas datums"
 #: code:addons/account/wizard/account_fiscalyear_close.py:100
 #, python-format
 msgid "The journal must have default credit and debit account."
-msgstr ""
+msgstr "Šim reģistram obligāti jānorāda debeta un kredīta konts."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_tree
@@ -4235,7 +4269,7 @@ msgstr ""
 #. module: account
 #: help:account.journal,analytic_journal_id:0
 msgid "Journal for analytic entries"
-msgstr "Žurnāls analītiskajiem ierakstiem"
+msgstr "Analītisko ierakstu reģistrs"
 
 #. module: account
 #: constraint:account.aged.trial.balance:0
@@ -4265,8 +4299,8 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1061
-#: code:addons/account/account_move_line.py:1144
+#: code:addons/account/account_move_line.py:1058
+#: code:addons/account/account_move_line.py:1143
 #, python-format
 msgid "You cannot use an inactive account."
 msgstr ""
@@ -4288,7 +4322,7 @@ msgstr "Grāmatvedība"
 #. module: account
 #: view:account.entries.report:0
 msgid "Journal Entries with period in current year"
-msgstr ""
+msgstr "Tekošā gada perioda reģistra ieraksti"
 
 #. module: account
 #: field:account.account,child_consol_ids:0
@@ -4296,7 +4330,7 @@ msgid "Consolidated Children"
 msgstr "Konsolidētie Konti"
 
 #. module: account
-#: code:addons/account/account_invoice.py:554
+#: code:addons/account/account_invoice.py:570
 #: code:addons/account/wizard/account_invoice_refund.py:146
 #, python-format
 msgid "Insufficient Data!"
@@ -4330,7 +4364,6 @@ msgstr "nosaukums"
 
 #. module: account
 #: view:account.invoice:0
-#: view:account.period:0
 #: view:account.subscription:0
 msgid "Set to Draft"
 msgstr "Atzīmēt kā Melnrakstu"
@@ -4441,7 +4474,7 @@ msgstr "Noņemot lauka aktīvs atzīmi, iespējams noslēpt kontu to nedzēšot.
 #. module: account
 #: view:account.move.line:0
 msgid "Posted Journal Items"
-msgstr ""
+msgstr "Nogrāmatotie reģistra ieraksti"
 
 #. module: account
 #: field:account.move.line,blocked:0
@@ -4489,8 +4522,19 @@ msgid "Account Type"
 msgstr "Konta Veids"
 
 #. module: account
-#: view:account.bank.statement:0
-msgid "Close CashBox"
+#: model:ir.actions.act_window,help:account.action_bank_tree
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to setup a new bank account. \n"
+"          </p><p>\n"
+"            Configure your company's bank account and select those that "
+"must\n"
+"            appear on the report footer.\n"
+"          </p><p>\n"
+"            If you use the accounting application of OpenERP, journals and\n"
+"            accounts will be created automatically based on these data.\n"
+"          </p>\n"
+"        "
 msgstr ""
 
 #. module: account
@@ -4499,7 +4543,7 @@ msgid "Cancel the Selected Invoices"
 msgstr "Atcelt izvēlētos Rēķinus"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:423
+#: code:addons/account/account_bank_statement.py:424
 #, python-format
 msgid "You have to assign an analytic journal on the '%s' journal!"
 msgstr ""
@@ -4515,19 +4559,8 @@ msgstr ""
 "rēķinus."
 
 #. module: account
-#: model:ir.actions.act_window,help:account.action_bank_tree
-msgid ""
-"<p class=\"oe_view_nocontent_create\">\n"
-"            Click to setup a new bank account. \n"
-"          </p><p>\n"
-"            Configure your company's bank account and select those that "
-"must\n"
-"            appear on the report footer.\n"
-"          </p><p>\n"
-"            If you use the accounting application of OpenERP, journals and\n"
-"            accounts will be created automatically based on these data.\n"
-"          </p>\n"
-"        "
+#: view:account.bank.statement:0
+msgid "Close CashBox"
 msgstr ""
 
 #. module: account
@@ -4559,7 +4592,7 @@ msgstr "Mēnesis"
 #: code:addons/account/account.py:668
 #, python-format
 msgid "You cannot change the code of account which contains journal items!"
-msgstr ""
+msgstr "Jūs nevarat mainīt konta kodu kurš satur reģistra ierakstus!"
 
 #. module: account
 #: field:account.config.settings,purchase_sequence_prefix:0
@@ -4567,8 +4600,8 @@ msgid "Supplier invoice sequence"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:587
-#: code:addons/account/account_invoice.py:602
+#: code:addons/account/account_invoice.py:607
+#: code:addons/account/account_invoice.py:622
 #, python-format
 msgid ""
 "Cannot find a chart of account, you should create one from Settings\\"
@@ -4631,7 +4664,7 @@ msgid "Account Base Code"
 msgstr "Konta Bāzes Kods"
 
 #. module: account
-#: code:addons/account/account_move_line.py:867
+#: code:addons/account/account_move_line.py:864
 #, python-format
 msgid ""
 "You have to provide an account for the write off/exchange difference entry."
@@ -4680,11 +4713,10 @@ msgid "Opening Entries Reconciliation"
 msgstr ""
 
 #. module: account
-#. openerp-web
-#: code:addons/account/static/src/xml/account_move_reconciliation.xml:24
+#: code:addons/account/wizard/account_fiscalyear_close.py:41
 #, python-format
-msgid "Last Reconciliation:"
-msgstr ""
+msgid "End of Fiscal Year Entry"
+msgstr "Fiskālā Gada Slēgšana"
 
 #. module: account
 #: selection:account.move.line,state:0
@@ -4697,11 +4729,17 @@ msgid "Statement from invoice or payment"
 msgstr "Izraksts rēķinam vai maksājumam"
 
 #. module: account
-#: code:addons/account/installer.py:94
+#: code:addons/account/installer.py:115
 #, python-format
 msgid ""
 "There is currently no company without chart of account. The wizard will "
 "therefore not be executed."
+msgstr ""
+
+#. module: account
+#: view:account.move:0
+#: view:account.move.line:0
+msgid "Add an internal note..."
 msgstr ""
 
 #. module: account
@@ -4751,7 +4789,7 @@ msgid "Bank statements are entered in the system."
 msgstr "Bankas izraksti ievadīti sistēmā."
 
 #. module: account
-#: code:addons/account/wizard/account_reconcile.py:121
+#: code:addons/account/wizard/account_reconcile.py:122
 #, python-format
 msgid "Reconcile Writeoff"
 msgstr "Norakstīšana"
@@ -4775,7 +4813,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_journal_select
 msgid "Account Journal Select"
-msgstr "Izvēlēties Grāmatvedības Žurnālu"
+msgstr "Izvēlēties grāmatvedības reģistru"
 
 #. module: account
 #: view:account.tax.template:0
@@ -4786,7 +4824,7 @@ msgstr "Kredītrēķini"
 #: view:account.move.line:0
 #: model:ir.actions.act_window,name:account.action_account_manual_reconcile
 msgid "Journal Items to Reconcile"
-msgstr ""
+msgstr "Reģistru ieraksti sasaistei"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
@@ -4841,7 +4879,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:631
+#: code:addons/account/account_invoice.py:655
 #, python-format
 msgid ""
 "Cannot find any account journal of %s type for this company.\n"
@@ -4856,7 +4894,7 @@ msgid "Based On"
 msgstr "Bāzēts Uz"
 
 #. module: account
-#: code:addons/account/account.py:3156
+#: code:addons/account/account.py:3204
 #, python-format
 msgid "ECNJ"
 msgstr "ECNJ"
@@ -4892,6 +4930,11 @@ msgid "It acts as a default account for credit amount"
 msgstr "Tiek izmantots kā noklusējuma konts kredīta summām"
 
 #. module: account
+#: view:account.move.line:0
+msgid "Number (Move)"
+msgstr "Numurs (Grāmatojumam)"
+
+#. module: account
 #: view:cash.box.out:0
 msgid "Describe why you take money from the cash register:"
 msgstr ""
@@ -4902,6 +4945,12 @@ msgstr ""
 #: selection:report.invoice.created,state:0
 msgid "Cancelled"
 msgstr "Atcelts"
+
+#. module: account
+#: code:addons/account/account.py:1903
+#, python-format
+msgid " (Copy)"
+msgstr ""
 
 #. module: account
 #: help:account.config.settings,group_proforma_invoices:0
@@ -4922,7 +4971,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:3346
+#: code:addons/account/account.py:3394
 #, python-format
 msgid "Purchase Tax %.2f%%"
 msgstr ""
@@ -4972,6 +5021,11 @@ msgid "Sale Tax"
 msgstr ""
 
 #. module: account
+#: view:account.move:0
+msgid "Cancel Entry"
+msgstr ""
+
+#. module: account
 #: field:account.tax,ref_tax_code_id:0
 #: field:account.tax.template,ref_tax_code_id:0
 msgid "Refund Tax Code"
@@ -4996,9 +5050,14 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:3157
+#: code:addons/account/account.py:3205
 #, python-format
 msgid "MISC"
+msgstr ""
+
+#. module: account
+#: view:res.partner:0
+msgid "Accounting-related settings are managed on"
 msgstr ""
 
 #. module: account
@@ -5131,13 +5190,6 @@ msgid "Draft invoices are validated. "
 msgstr "Neapstiprinātie rēķini tika apstiprināti. "
 
 #. module: account
-#: help:account.tax,account_collected_id:0
-msgid ""
-"Set the account that will be set by default on invoice tax lines for "
-"invoices. Leave empty to use the expense account."
-msgstr ""
-
-#. module: account
 #: code:addons/account/account.py:890
 #, python-format
 msgid "Opening Period"
@@ -5160,12 +5212,17 @@ msgid "Compute"
 msgstr "Aprēķināt"
 
 #. module: account
+#: view:account.invoice:0
+msgid "Additional notes..."
+msgstr ""
+
+#. module: account
 #: field:account.tax,type_tax_use:0
 msgid "Tax Application"
 msgstr "Nodokļa Pielietojums"
 
 #. module: account
-#: code:addons/account/account_invoice.py:894
+#: code:addons/account/account_invoice.py:919
 #, python-format
 msgid ""
 "Please verify the price of the invoice !\n"
@@ -5213,10 +5270,9 @@ msgid "Balance by Type of Account"
 msgstr "Bilance pēc Konta Tipa"
 
 #. module: account
-#: code:addons/account/account_cash_statement.py:301
-#, python-format
-msgid "There is no %s Account on the journal %s."
-msgstr ""
+#: view:account.fiscalyear.close:0
+msgid "Generate Fiscal Year Opening Entries"
+msgstr "Veikt Jauna Fiskālā gada sākuma grāmatojumus"
 
 #. module: account
 #: model:res.groups,name:account.group_account_user
@@ -5260,6 +5316,11 @@ msgstr ""
 #: model:ir.model,name:account.model_account_vat_declaration
 msgid "Account Vat Declaration"
 msgstr "PVN Deklarācija"
+
+#. module: account
+#: view:account.bank.statement:0
+msgid "Cancel Statement"
+msgstr ""
 
 #. module: account
 #: help:account.config.settings,module_account_accountant:0
@@ -5337,7 +5398,7 @@ msgid "Target Moves"
 msgstr "Mērķa Grāmatojumi"
 
 #. module: account
-#: code:addons/account/account.py:1416
+#: code:addons/account/account.py:1454
 #, python-format
 msgid ""
 "Move cannot be deleted if linked to an invoice. (Invoice: %s - Move ID:%s)"
@@ -5418,7 +5479,7 @@ msgid "Internal Name"
 msgstr "Iekšējais Nosaukums"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1186
+#: code:addons/account/account_move_line.py:1185
 #, python-format
 msgid ""
 "Cannot create an automatic sequence for this piece.\n"
@@ -5490,7 +5551,7 @@ msgid "Compute Code (if type=code)"
 msgstr "Aprēķināt kodu (ja tips=kods)"
 
 #. module: account
-#: code:addons/account/account_invoice.py:489
+#: code:addons/account/account_invoice.py:505
 #, python-format
 msgid ""
 "Cannot find a chart of accounts for this company, you should create one."
@@ -5533,12 +5594,6 @@ msgid "Amount"
 msgstr "Summa"
 
 #. module: account
-#: code:addons/account/wizard/account_fiscalyear_close.py:41
-#, python-format
-msgid "End of Fiscal Year Entry"
-msgstr "Fiskālā Gada Slēgšana"
-
-#. module: account
 #: model:process.transition,name:account.process_transition_customerinvoice0
 #: model:process.transition,name:account.process_transition_paymentorderreconcilation0
 #: model:process.transition,name:account.process_transition_statemententries0
@@ -5561,17 +5616,6 @@ msgstr ""
 #: field:account.tax.template,child_depend:0
 msgid "Tax on Children"
 msgstr "Bērnu nodoklis"
-
-#. module: account
-#: help:res.partner,last_reconciliation_date:0
-msgid ""
-"Date on which the partner accounting entries were fully reconciled last "
-"time. It differs from the date of the last reconciliation made for this "
-"partner, as here we depict the fact that nothing more was to be reconciled "
-"at this date. This can be achieved in 2 ways: either the last debit/credit "
-"entry was reconciled, either the user pressed the button \"Fully "
-"Reconciled\" in the manual reconciliation process"
-msgstr ""
 
 #. module: account
 #: field:account.journal,update_posted:0
@@ -5618,7 +5662,7 @@ msgid "Recompute taxes and total"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1103
+#: code:addons/account/account.py:1116
 #, python-format
 msgid "You cannot modify/delete a journal with entries for this period."
 msgstr ""
@@ -5648,7 +5692,7 @@ msgid "Amount Computation"
 msgstr "Vērtības Aprēķins"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1108
+#: code:addons/account/account_move_line.py:1105
 #, python-format
 msgid "You can not add/modify entries in a closed period %s of journal %s."
 msgstr ""
@@ -5684,6 +5728,7 @@ msgid "Account Common Account Report"
 msgstr "Grāmatvedības Vispārējās Atskaites"
 
 #. module: account
+#: view:account.analytic.account:0
 #: view:account.bank.statement:0
 #: selection:account.bank.statement,state:0
 #: view:account.fiscalyear:0
@@ -5743,7 +5788,7 @@ msgstr "Rēķinu Atskaišu skaits Pēdējo 15 dienu laikā"
 #. module: account
 #: field:account.fiscalyear,end_journal_period_id:0
 msgid "End of Year Entries Journal"
-msgstr "Gada Slēguma Ierakstu Žurnāls"
+msgstr "Gada slēguma ierakstu reģistrs"
 
 #. module: account
 #: view:account.invoice:0
@@ -5853,9 +5898,24 @@ msgid "Quantity"
 msgstr "Skaits"
 
 #. module: account
-#: view:account.move.line:0
-msgid "Number (Move)"
-msgstr "Numurs (Grāmatojumam)"
+#: model:ir.actions.act_window,help:account.action_move_journal_line
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a journal entry.\n"
+"              </p><p>\n"
+"                A journal entry consists of several journal items, each of\n"
+"                which is either a debit or a credit transaction.\n"
+"              </p><p>\n"
+"                OpenERP automatically creates one journal entry per "
+"accounting\n"
+"                document: invoice, refund, supplier payment, bank "
+"statements,\n"
+"                etc. So, you should record journal entries manually "
+"only/mainly\n"
+"                for miscellaneous operations.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
@@ -5872,6 +5932,15 @@ msgstr "Maksājumu rindas kontu savienošanai."
 msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and supplier invoices"
+msgstr ""
+
+#. module: account
+#: code:addons/account/account_invoice.py:471
+#, python-format
+msgid ""
+"You cannot delete an invoice after it has been validated (and received a "
+"number).  You can set it back to \"Draft\" state and modify its content, "
+"then re-confirm it."
 msgstr ""
 
 #. module: account
@@ -5942,7 +6011,7 @@ msgid "Fixed Amount"
 msgstr "Fiksēta Summa"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1059
+#: code:addons/account/account_move_line.py:1056
 #, python-format
 msgid "You cannot change the tax, you should remove and recreate lines."
 msgstr ""
@@ -5956,7 +6025,7 @@ msgstr "Automātiski Saistīt Kontus"
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Journal Item"
-msgstr "Žurnāla Vienums"
+msgstr "Kontējums"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear_close
@@ -5985,7 +6054,7 @@ msgstr "Izveides Datums"
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_form
 #: model:ir.ui.menu,name:account.account_def_analytic_journal
 msgid "Analytic Journals"
-msgstr "Analītiskie Žurnāli"
+msgstr "Analītiskie reģistri"
 
 #. module: account
 #: field:account.account,child_id:0
@@ -5993,14 +6062,14 @@ msgid "Child Accounts"
 msgstr "Apakškonti"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1120
+#: code:addons/account/account_move_line.py:1117
 #, python-format
 msgid "Move name (id): %s (%s)"
 msgstr ""
 
 #. module: account
 #: view:account.move.line.reconcile:0
-#: code:addons/account/account_move_line.py:882
+#: code:addons/account/account_move_line.py:879
 #, python-format
 msgid "Write-Off"
 msgstr "Norakstīšana"
@@ -6026,7 +6095,7 @@ msgstr ""
 #: view:account.config.settings:0
 #: view:account.invoice:0
 #: view:account.invoice.report:0
-#: code:addons/account/account_invoice.py:363
+#: code:addons/account/account_invoice.py:387
 #, python-format
 msgid "Supplier"
 msgstr "Piegādātājs"
@@ -6041,12 +6110,18 @@ msgid "March"
 msgstr "Marts"
 
 #. module: account
+#: code:addons/account/account.py:1031
+#, python-format
+msgid "You can not re-open a period which belongs to closed fiscal year"
+msgstr ""
+
+#. module: account
 #: report:account.analytic.account.journal:0
 msgid "Account n°"
 msgstr "Konta numurs"
 
 #. module: account
-#: code:addons/account/account_invoice.py:91
+#: code:addons/account/account_invoice.py:92
 #, python-format
 msgid "Free Reference"
 msgstr "Atsauce"
@@ -6166,7 +6241,7 @@ msgid "Filter by"
 msgstr "Filtrēt pēc"
 
 #. module: account
-#: code:addons/account/account.py:2286
+#: code:addons/account/account.py:2334
 #, python-format
 msgid "You have a wrong expression \"%(...)s\" in your model !"
 msgstr ""
@@ -6214,7 +6289,7 @@ msgid "Number of Days"
 msgstr "Dienu Skaits"
 
 #. module: account
-#: code:addons/account/account.py:1321
+#: code:addons/account/account.py:1357
 #, python-format
 msgid ""
 "You cannot validate this journal entry because account \"%s\" does not "
@@ -6263,7 +6338,7 @@ msgstr ""
 #. module: account
 #: field:account.journal.period,name:0
 msgid "Journal-Period Name"
-msgstr "Žurnāla-Perioda Nosaukums"
+msgstr "Reģistra-Perioda nosaukums"
 
 #. module: account
 #: field:account.invoice.tax,factor_base:0
@@ -6273,7 +6348,7 @@ msgstr "Bāzes koda reizinājuma faktors"
 #. module: account
 #: help:account.journal,company_id:0
 msgid "Company related to this journal"
-msgstr "Žurnāla uzņēmums"
+msgstr "Reģistra uzņēmums"
 
 #. module: account
 #: help:account.config.settings,group_multi_currency:0
@@ -6346,11 +6421,6 @@ msgid "Root Account"
 msgstr "Pamata Konts"
 
 #. module: account
-#: field:res.partner,last_reconciliation_date:0
-msgid "Latest Reconciliation Date"
-msgstr "Pēdējais Savienošanas Datums"
-
-#. module: account
 #: view:account.analytic.line:0
 #: model:ir.model,name:account.model_account_analytic_line
 msgid "Analytic Line"
@@ -6362,7 +6432,7 @@ msgid "Models"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:1095
+#: code:addons/account/account_invoice.py:1121
 #, python-format
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
@@ -6490,19 +6560,16 @@ msgstr "Daļēji Savienoti Kontējumi"
 #: view:account.analytic.inverted.balance:0
 #: view:account.analytic.journal.report:0
 #: view:account.automatic.reconcile:0
-#: view:account.bank.statement:0
 #: view:account.change.currency:0
 #: view:account.chart:0
 #: view:account.common.report:0
 #: view:account.config.settings:0
 #: view:account.fiscalyear.close:0
 #: view:account.fiscalyear.close.state:0
-#: view:account.invoice:0
 #: view:account.invoice.cancel:0
 #: view:account.invoice.confirm:0
 #: view:account.invoice.refund:0
 #: view:account.journal.select:0
-#: view:account.move:0
 #: view:account.move.bank.reconcile:0
 #: view:account.move.line.reconcile:0
 #: view:account.move.line.reconcile.select:0
@@ -6534,10 +6601,10 @@ msgstr "Ieņēmumu"
 #. module: account
 #: constraint:account.move.line:0
 msgid "You cannot create journal items on closed account."
-msgstr ""
+msgstr "Jūs nevarat izveidot reģistru ierakstus slēgtā periodā."
 
 #. module: account
-#: code:addons/account/account_invoice.py:610
+#: code:addons/account/account_invoice.py:630
 #, python-format
 msgid "Invoice line account's company and invoice's compnay does not match."
 msgstr ""
@@ -6558,15 +6625,10 @@ msgid "The related account currency if not equal to the company one."
 msgstr "Saistītā konta valūta, ja nav vienāda ar uzņēmuma valūtu."
 
 #. module: account
-#: code:addons/account/installer.py:48
+#: code:addons/account/installer.py:69
 #, python-format
 msgid "Custom"
 msgstr ""
-
-#. module: account
-#: view:account.analytic.account:0
-msgid "Current"
-msgstr "Pašreizējais"
 
 #. module: account
 #: field:account.journal,cashbox_line_ids:0
@@ -6585,10 +6647,10 @@ msgid "Internal Transfers Account"
 msgstr ""
 
 #. module: account
-#: code:addons/account/wizard/pos_box.py:33
+#: code:addons/account/wizard/pos_box.py:32
 #, python-format
 msgid "Please check that the field 'Journal' is set on the Bank Statement"
-msgstr ""
+msgstr "Lūdzu pārbaudiet vai ir aizpildīts lauks 'Reģistrs' Bankas izrakstā"
 
 #. module: account
 #: selection:account.tax,type:0
@@ -6603,7 +6665,7 @@ msgstr ""
 #. module: account
 #: selection:account.report.general.ledger,sortby:0
 msgid "Journal & Partner"
-msgstr "Žurnāls un Partneris"
+msgstr "Reģistrs un partneris"
 
 #. module: account
 #: field:account.automatic.reconcile,power:0
@@ -6611,9 +6673,14 @@ msgid "Power"
 msgstr "Pakāpe:"
 
 #. module: account
-#: code:addons/account/account.py:3417
+#: code:addons/account/account.py:3465
 #, python-format
 msgid "Cannot generate an unused journal code."
+msgstr ""
+
+#. module: account
+#: view:account.invoice:0
+msgid "force period"
 msgstr ""
 
 #. module: account
@@ -6684,12 +6751,12 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1410
-#: code:addons/account/account.py:1415
-#: code:addons/account/account.py:1444
-#: code:addons/account/account.py:1451
-#: code:addons/account/account_invoice.py:987
-#: code:addons/account/account_move_line.py:1008
+#: code:addons/account/account.py:1448
+#: code:addons/account/account.py:1453
+#: code:addons/account/account.py:1482
+#: code:addons/account/account.py:1489
+#: code:addons/account/account_invoice.py:1012
+#: code:addons/account/account_move_line.py:1005
 #: code:addons/account/wizard/account_automatic_reconcile.py:148
 #: code:addons/account/wizard/account_fiscalyear_close.py:88
 #: code:addons/account/wizard/account_fiscalyear_close.py:99
@@ -6716,7 +6783,7 @@ msgstr "Likviditāte"
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_open_form
 #: model:ir.ui.menu,name:account.account_analytic_journal_entries
 msgid "Analytic Journal Items"
-msgstr "Analītiskā Žurnāla Ieraksti"
+msgstr "Analītiskie reģistra ieraksti"
 
 #. module: account
 #: field:account.config.settings,has_default_company:0
@@ -6751,7 +6818,7 @@ msgstr ""
 #. module: account
 #: sql_constraint:account.journal:0
 msgid "The name of the journal must be unique per company !"
-msgstr "Žurnāla nosaukumam katram uzņēmumam ir jābūt unikālam!"
+msgstr "Katra uzņēmuma reģistra nosaukumam jābūt unikālam!"
 
 #. module: account
 #: field:account.account.template,nocreate:0
@@ -6770,7 +6837,9 @@ msgstr ""
 #: report:account.invoice:0
 #: selection:account.invoice,type:0
 #: selection:account.invoice.report,type:0
+#: code:addons/account/account_invoice.py:1157
 #: selection:report.invoice.created,type:0
+#, python-format
 msgid "Supplier Refund"
 msgstr "Ienākošie Kredītrēķini"
 
@@ -6851,7 +6920,7 @@ msgstr "account.sequence.fiscalyear"
 #: model:ir.model,name:account.model_account_analytic_journal
 #: model:ir.ui.menu,name:account.account_analytic_journal_print
 msgid "Analytic Journal"
-msgstr "Analītskais Žurnāls"
+msgstr "Analītiskais reģistrs"
 
 #. module: account
 #: view:account.entries.report:0
@@ -6915,7 +6984,7 @@ msgstr "Analītisko Ierakstu Statistika"
 
 #. module: account
 #: code:addons/account/account_analytic_line.py:142
-#: code:addons/account/account_move_line.py:958
+#: code:addons/account/account_move_line.py:955
 #, python-format
 msgid "Entries: "
 msgstr "Ieraksti: "
@@ -6986,7 +7055,7 @@ msgstr "Python pirmkods"
 #. module: account
 #: view:account.entries.report:0
 msgid "Journal Entries with period in current period"
-msgstr ""
+msgstr "Tekošā perioda reģistra ieraksti ar periodu"
 
 #. module: account
 #: help:account.journal,update_posted:0
@@ -6994,7 +7063,8 @@ msgid ""
 "Check this box if you want to allow the cancellation the entries related to "
 "this journal or of the invoice related to this journal"
 msgstr ""
-"Atzīmēt, ja vēlaties atļaut žurnālu grāmatojumu vai žurnālu rēķinu atcelšanu"
+"Atzīmēt, ja vēlaties atļaut reģistra grāmatojumu vai reģistra rēķinu "
+"atcelšanu"
 
 #. module: account
 #: view:account.fiscalyear.close:0
@@ -7005,6 +7075,11 @@ msgstr "Apstiprināt"
 #: model:process.transition.action,name:account.process_transition_action_createentries0
 msgid "Create entry"
 msgstr "Apstiprināt ierakstu"
+
+#. module: account
+#: view:account.open.closed.fiscalyear:0
+msgid "Cancel Fiscal Year Closing Entries"
+msgstr ""
 
 #. module: account
 #: selection:account.account.type,report_type:0
@@ -7026,7 +7101,7 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:1024
-#: code:addons/account/account_move_line.py:1108
+#: code:addons/account/account_move_line.py:1105
 #, python-format
 msgid "Error !"
 msgstr "Kļūda!"
@@ -7167,7 +7242,7 @@ msgstr ""
 #. module: account
 #: view:account.journal.select:0
 msgid "Journal Select"
-msgstr "Izvēlēties Žurnālu"
+msgstr "Izvēlēties reģistru"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -7254,7 +7329,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:2256
+#: code:addons/account/account.py:2304
 #, python-format
 msgid ""
 "You can specify year, month and date in the name of the model using the "
@@ -7309,6 +7384,11 @@ msgid "Taxes used in Sales"
 msgstr ""
 
 #. module: account
+#: view:account.period:0
+msgid "Re-Open Period"
+msgstr ""
+
+#. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree1
 #: model:ir.ui.menu,name:account.menu_action_invoice_tree1
 msgid "Customer Invoices"
@@ -7333,7 +7413,7 @@ msgid "Done"
 msgstr "Apstiprināts"
 
 #. module: account
-#: code:addons/account/account.py:1283
+#: code:addons/account/account.py:1319
 #, python-format
 msgid ""
 "You cannot validate a non-balanced entry.\n"
@@ -7365,8 +7445,14 @@ msgid "Source Document"
 msgstr "Pamatojuma Dokuments"
 
 #. module: account
-#: help:account.config.settings,company_footer:0
-msgid "Bank accounts as printed in the footer of each printed document"
+#: code:addons/account/account_analytic_line.py:90
+#, python-format
+msgid "There is no expense account defined for this product: \"%s\" (id:%d)."
+msgstr ""
+
+#. module: account
+#: view:account.account.template:0
+msgid "Internal notes..."
 msgstr ""
 
 #. module: account
@@ -7391,14 +7477,6 @@ msgstr ""
 #: report:account.invoice:0
 msgid "Taxes:"
 msgstr "Nodokļi:"
-
-#. module: account
-#: code:addons/account/account_invoice.py:458
-#, python-format
-msgid ""
-"You can not delete an invoice which is not cancelled. You should refund it "
-"instead."
-msgstr ""
 
 #. module: account
 #: help:account.tax,amount:0
@@ -7436,7 +7514,7 @@ msgstr "Nodokļu Kontu Veidne"
 #. module: account
 #: view:account.journal.select:0
 msgid "Are you sure you want to open Journal Entries?"
-msgstr "Vai vēlaties atvērt Žurnāla Kontējumus?"
+msgstr "Vai vēlaties atvērt grāmatojumus?"
 
 #. module: account
 #: view:account.state.open:0
@@ -7493,12 +7571,9 @@ msgid "For percent enter a ratio between 0-1."
 msgstr ""
 
 #. module: account
-#: report:account.invoice:0
 #: view:account.invoice:0
-#: field:account.invoice,date_invoice:0
-#: field:report.invoice.created,date_invoice:0
-msgid "Invoice Date"
-msgstr "Rēķina Datums"
+msgid "Accounting Period"
+msgstr ""
 
 #. module: account
 #: view:account.invoice.report:0
@@ -7547,7 +7622,7 @@ msgid ""
 "new counterpart but will share the same counterpart. This is used in fiscal "
 "year closing."
 msgstr ""
-"Atzīmēt šo lauku, lai norādītu, ka katrs šī žurnāla ieraksts neveidos jaunu "
+"Atzīmēt šo lauku, lai norādītu, ka katrs šī reģistra ieraksts neveidos jaunu "
 "pretējo kontējumu. Tiek lietots fiskālā gada slēgšanā."
 
 #. module: account
@@ -7621,6 +7696,7 @@ msgstr "Atskaites"
 
 #. module: account
 #. openerp-web
+#: code:addons/account/account_move_line.py:780
 #: code:addons/account/static/src/js/account_move_reconciliation.js:90
 #, python-format
 msgid "Warning"
@@ -7635,7 +7711,7 @@ msgstr ""
 #: view:account.journal:0
 #: field:res.partner.bank,journal_id:0
 msgid "Account Journal"
-msgstr "Konta Žurnāls"
+msgstr "Konta reģistrs"
 
 #. module: account
 #: field:account.config.settings,tax_calculation_rounding_method:0
@@ -7685,12 +7761,14 @@ msgid "Use model"
 msgstr "Lietot modeli"
 
 #. module: account
-#: code:addons/account/account.py:1452
+#: code:addons/account/account.py:1490
 #, python-format
 msgid ""
 "There is no default credit account defined \n"
 "on journal \"%s\"."
 msgstr ""
+"Nav nodefinēts noklusētais kredīta konts \n"
+"reģistram \"%s\"."
 
 #. module: account
 #: view:account.invoice.line:0
@@ -7736,7 +7814,7 @@ msgid "Root/View"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:3158
+#: code:addons/account/account.py:3206
 #, python-format
 msgid "OPEJ"
 msgstr ""
@@ -7805,10 +7883,10 @@ msgid "Maturity Date"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:3145
+#: code:addons/account/account.py:3193
 #, python-format
 msgid "Sales Journal"
-msgstr "Realizācijas Žurnāls"
+msgstr "Realizācijas reģistrs"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_tax
@@ -7816,7 +7894,7 @@ msgid "Invoice Tax"
 msgstr "Rēķina Nodoklis"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1186
+#: code:addons/account/account_move_line.py:1185
 #, python-format
 msgid "No piece number !"
 msgstr "Vienībai nav definēts numurs!"
@@ -7840,7 +7918,7 @@ msgstr ""
 #. module: account
 #: view:account.move:0
 msgid "Unposted Journal Entries"
-msgstr ""
+msgstr "Nenogrāmatotie grāmatojumi"
 
 #. module: account
 #: help:account.invoice.refund,date:0
@@ -7855,7 +7933,7 @@ msgid "Sales Properties"
 msgstr "Pārdošanas Parametri"
 
 #. module: account
-#: code:addons/account/account.py:3493
+#: code:addons/account/account.py:3541
 #, python-format
 msgid ""
 "You have to set a code for the bank account defined on the selected chart of "
@@ -7880,7 +7958,7 @@ msgstr "Līdz"
 
 #. module: account
 #: selection:account.move.line,centralisation:0
-#: code:addons/account/account.py:1502
+#: code:addons/account/account.py:1541
 #, python-format
 msgid "Currency Adjustment"
 msgstr ""
@@ -7912,7 +7990,7 @@ msgid "May"
 msgstr "Maijs"
 
 #. module: account
-#: code:addons/account/account_invoice.py:792
+#: code:addons/account/account_invoice.py:817
 #, python-format
 msgid "Global taxes defined, but they are not in invoice lines !"
 msgstr ""
@@ -7946,14 +8024,14 @@ msgstr ""
 #: view:validate.account.move:0
 #: view:validate.account.move.lines:0
 msgid "Post Journal Entries"
-msgstr "Veikt Grāmatojumus"
+msgstr "Veikt grāmatojumus"
 
 #. module: account
 #: selection:account.bank.statement.line,type:0
 #: view:account.config.settings:0
 #: view:account.invoice:0
 #: view:account.invoice.report:0
-#: code:addons/account/account_invoice.py:361
+#: code:addons/account/account_invoice.py:385
 #, python-format
 msgid "Customer"
 msgstr "Klients"
@@ -7969,7 +8047,7 @@ msgstr ""
 #: selection:account.bank.accounts.wizard,account_type:0
 #: selection:account.entries.report,type:0
 #: selection:account.journal,type:0
-#: code:addons/account/account.py:3044
+#: code:addons/account/account.py:3092
 #, python-format
 msgid "Cash"
 msgstr "Skaidrā nauda"
@@ -8008,7 +8086,7 @@ msgstr ""
 #. module: account
 #: selection:account.print.journal,sort_selection:0
 msgid "Journal Entry Number"
-msgstr ""
+msgstr "Grāmatojumu numurs"
 
 #. module: account
 #: view:account.financial.report:0
@@ -8090,6 +8168,14 @@ msgid "Reconciliation Transactions"
 msgstr ""
 
 #. module: account
+#: code:addons/account/account_invoice.py:469
+#, python-format
+msgid ""
+"You cannot delete an invoice which is not draft or cancelled. You should "
+"refund it instead."
+msgstr ""
+
+#. module: account
 #: model:ir.ui.menu,name:account.menu_finance_legal_statement
 msgid "Legal Reports"
 msgstr "Deklarācijas"
@@ -8120,6 +8206,7 @@ msgstr ""
 #. module: account
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
+#: model:ir.actions.act_window,name:account.action_account_partner_ledger
 #: model:ir.actions.report.xml,name:account.account_3rdparty_ledger
 #: model:ir.actions.report.xml,name:account.account_3rdparty_ledger_other
 #: model:ir.ui.menu,name:account.menu_account_partner_ledger
@@ -8135,6 +8222,7 @@ msgstr "Fiksēts"
 #: code:addons/account/account.py:653
 #: code:addons/account/account.py:656
 #: code:addons/account/account.py:668
+#: code:addons/account/account.py:1031
 #, python-format
 msgid "Warning !"
 msgstr "Uzmanību!"
@@ -8202,7 +8290,7 @@ msgid "Select a currency to apply on the invoice"
 msgstr "Izvēlēties rēķina valūtu"
 
 #. module: account
-#: code:addons/account/account_invoice.py:873
+#: code:addons/account/account_invoice.py:898
 #, python-format
 msgid "No Invoice Lines !"
 msgstr "Nav Rēķina Rindu!"
@@ -8217,8 +8305,7 @@ msgstr ""
 msgid ""
 "Select Fiscal Year which you want to remove entries for its End of year "
 "entries journal"
-msgstr ""
-"Izvēlēties Fiskālo Gadu, kuram dzēst Gada Beigu grāmatojumus žurnālā."
+msgstr "Izvēlēties Fiskālo Gadu, kuram dzēst Gada Beigu grāmatojumus"
 
 #. module: account
 #: field:account.tax.template,type_tax_use:0
@@ -8226,7 +8313,7 @@ msgid "Tax Use In"
 msgstr "Nodokļa lietojums"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:381
+#: code:addons/account/account_bank_statement.py:382
 #, python-format
 msgid ""
 "The statement balance is incorrect !\n"
@@ -8234,7 +8321,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:419
+#: code:addons/account/account_bank_statement.py:420
 #, python-format
 msgid "The account entries lines are not in valid state."
 msgstr "Kontējumi nav derīgi."
@@ -8253,12 +8340,12 @@ msgstr "Automātiska ievade"
 #: help:account.account,reconcile:0
 msgid ""
 "Check this box if this account allows reconciliation of journal items."
-msgstr ""
+msgstr "Atzīmēt, ja šim kontam ir atļautas kontējumu sasaistes."
 
 #. module: account
-#: report:account.analytic.account.inverted.balance:0
-msgid "Inverted Analytic Balance -"
-msgstr "Apgrieztā Analītiskā Bilance -"
+#: selection:account.model.line,date_maturity:0
+msgid "Partner Payment Term"
+msgstr "Partnera Apmaksas Termiņš"
 
 #. module: account
 #: help:account.move.reconcile,opening_reconciliation:0
@@ -8278,7 +8365,7 @@ msgid "Associated Partner"
 msgstr "Saistītais Partneris"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1428
+#: code:addons/account/account_invoice.py:1462
 #, python-format
 msgid "You must first select a partner !"
 msgstr "Vispirms jāizvēlas partneris!"
@@ -8289,7 +8376,6 @@ msgid "Additional Information"
 msgstr "Papildus Informācija"
 
 #. module: account
-#: view:account.invoice.report:0
 #: field:account.invoice.report,residual:0
 #: field:account.invoice.report,user_currency_residual:0
 msgid "Total Residual"
@@ -8360,16 +8446,16 @@ msgstr ""
 "citi nodokļi."
 
 #. module: account
-#: code:addons/account/account.py:3148
+#: code:addons/account/account.py:3196
 #, python-format
 msgid "Purchase Refund Journal"
-msgstr "Iepirkumu Kredītrēķinu Žurnāls"
+msgstr "Iegādes kredītrēķinu reģistrs"
 
 #. module: account
-#: code:addons/account/account.py:1297
+#: code:addons/account/account.py:1333
 #, python-format
 msgid "Please define a sequence on the journal."
-msgstr ""
+msgstr "Lūdzu norādiet reģistra sekvenci."
 
 #. module: account
 #: help:account.tax.template,amount:0
@@ -8389,7 +8475,7 @@ msgstr ""
 #. module: account
 #: help:account.journal,user_id:0
 msgid "The user responsible for this journal"
-msgstr "Atbildīgais par žurnālu."
+msgstr "Atbildīgais par reģistru"
 
 #. module: account
 #: help:account.config.settings,module_account_followup:0
@@ -8455,7 +8541,7 @@ msgstr "Standarta Atskaites"
 #. module: account
 #: field:account.move.line.reconcile.writeoff,journal_id:0
 msgid "Write-Off Journal"
-msgstr "Norakstīšanas Žurnāls"
+msgstr "Norakstīšanas reģistrs"
 
 #. module: account
 #: field:account.chart.template,property_account_income_categ:0
@@ -8581,12 +8667,6 @@ msgid "Automatic import of the bank sta"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:389
-#, python-format
-msgid "Unknown Error!"
-msgstr ""
-
-#. module: account
 #: model:ir.model,name:account.model_account_move_bank_reconcile
 msgid "Move bank reconcile"
 msgstr "Bankas grāmatojumu sasaiste"
@@ -8609,7 +8689,7 @@ msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a'})"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1211
+#: code:addons/account/account_move_line.py:1210
 #, python-format
 msgid ""
 "You cannot use this general account in this journal, check the tab 'Entry "
@@ -8678,7 +8758,7 @@ msgstr "Fiskālā gada Slēgšanas stāvoklis"
 #. module: account
 #: field:account.invoice.refund,journal_id:0
 msgid "Refund Journal"
-msgstr "Kredītrēķinu Žurnāls"
+msgstr "Kredītrēķinu reģistrs"
 
 #. module: account
 #: report:account.account.balance:0
@@ -8710,7 +8790,7 @@ msgid "The partner account used for this invoice."
 msgstr "Rēķinā izmantotais partnera konts."
 
 #. module: account
-#: code:addons/account/account.py:3343
+#: code:addons/account/account.py:3391
 #, python-format
 msgid "Tax %.2f%%"
 msgstr ""
@@ -8728,10 +8808,10 @@ msgid "Payment Term Line"
 msgstr "Apmaksas Noteikumu Rinda"
 
 #. module: account
-#: code:addons/account/account.py:3146
+#: code:addons/account/account.py:3194
 #, python-format
 msgid "Purchase Journal"
-msgstr "Iepirkuma Žurnāls"
+msgstr "Iegādes reģistrs"
 
 #. module: account
 #: field:account.invoice,amount_untaxed:0
@@ -8746,7 +8826,7 @@ msgstr "Drukāt Nodokļu Deklarāciju"
 #. module: account
 #: view:account.model.line:0
 msgid "Journal Entry Model Line"
-msgstr "Žurnāla Ievades Modeļa Rinda"
+msgstr "Grāmatojuma modeļa rinda"
 
 #. module: account
 #: view:account.invoice:0
@@ -8767,6 +8847,11 @@ msgstr "Piegādātāji"
 #: view:account.journal:0
 msgid "Accounts Type Allowed (empty for no control)"
 msgstr "Atļauto Kontu Tips (netiek ņemts vērā, ja lauks ir tukšs)"
+
+#. module: account
+#: view:account.payment.term:0
+msgid "Payment term explanation for the customer..."
+msgstr ""
 
 #. module: account
 #: help:account.move.line,amount_residual:0
@@ -8894,10 +8979,10 @@ msgstr "Analītiskās Izmaksas"
 #: report:account.general.journal:0
 #: field:account.journal,name:0
 msgid "Journal Name"
-msgstr "Žurnāla Nosaukums"
+msgstr "Reģistra nosaukums"
 
 #. module: account
-#: code:addons/account/account_move_line.py:832
+#: code:addons/account/account_move_line.py:829
 #, python-format
 msgid "Entry \"%s\" is not valid !"
 msgstr "Ieraksts \"%s\" nav derīgs!"
@@ -8946,7 +9031,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1009
+#: code:addons/account/account_move_line.py:1006
 #, python-format
 msgid "The account move (%s) for centralisation has been confirmed."
 msgstr ""
@@ -9007,7 +9092,7 @@ msgid "Reconciled entries"
 msgstr "Sasaistītie kontējumi"
 
 #. module: account
-#: code:addons/account/account.py:2286
+#: code:addons/account/account.py:2334
 #, python-format
 msgid "Wrong model !"
 msgstr ""
@@ -9029,7 +9114,7 @@ msgid "Print Account Partner Balance"
 msgstr "Drukāt Partnera Bilanci"
 
 #. module: account
-#: code:addons/account/account_move_line.py:1124
+#: code:addons/account/account_move_line.py:1121
 #, python-format
 msgid ""
 "You cannot do this modification on a reconciled entry. You can just change "
@@ -9063,10 +9148,10 @@ msgstr "nezināms"
 
 #. module: account
 #: field:account.fiscalyear.close,journal_id:0
-#: code:addons/account/account.py:3150
+#: code:addons/account/account.py:3198
 #, python-format
 msgid "Opening Entries Journal"
-msgstr "Sākuma Atlikumu Kontējumu Žurnāls"
+msgstr "Sākuma atlikumu ierakstu reģistrs"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_customerinvoice0
@@ -9121,7 +9206,7 @@ msgstr "Python Kods"
 #. module: account
 #: field:account.analytic.journal,code:0
 msgid "Journal Code"
-msgstr "Žurnāla Kods"
+msgstr "Reģistra kods"
 
 #. module: account
 #: view:account.invoice:0
@@ -9138,7 +9223,7 @@ msgstr "Kontējumi"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_journal_button
 msgid "Open Journal"
-msgstr "Atvērt Žurnālu"
+msgstr "Atvērt reģistru"
 
 #. module: account
 #: report:account.analytic.account.journal:0
@@ -9158,10 +9243,10 @@ msgid "Unit of Currency"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:3147
+#: code:addons/account/account.py:3195
 #, python-format
 msgid "Sales Refund Journal"
-msgstr "Realizācija. Kredītrēķinu Žurnāls"
+msgstr "Realizācijas kredītrēķinu reģistrs"
 
 #. module: account
 #: view:account.move:0
@@ -9192,7 +9277,7 @@ msgstr "Fiskālo gadu un periodu Slēgšanas stāvokļi"
 #. module: account
 #: field:account.config.settings,purchase_refund_journal_id:0
 msgid "Purchase refund journal"
-msgstr ""
+msgstr "Iegādes kredītrēķinu reģistrs"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -9224,13 +9309,13 @@ msgid "Purchase Tax(%)"
 msgstr "Iepirkumu Nodoklis(%)"
 
 #. module: account
-#: code:addons/account/account_invoice.py:873
+#: code:addons/account/account_invoice.py:898
 #, python-format
 msgid "Please create some invoice lines."
 msgstr "Ievadiet rēķina rindas"
 
 #. module: account
-#: code:addons/account/wizard/pos_box.py:37
+#: code:addons/account/wizard/pos_box.py:36
 #, python-format
 msgid ""
 "Please check that the field 'Internal Transfers Account' is set on the "
@@ -9243,7 +9328,7 @@ msgid "Display Detail"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:3155
+#: code:addons/account/account.py:3203
 #, python-format
 msgid "SCNJ"
 msgstr ""
@@ -9404,8 +9489,8 @@ msgid "Receivable Account"
 msgstr "Debitoru saistību konts"
 
 #. module: account
-#: code:addons/account/account_move_line.py:774
-#: code:addons/account/account_move_line.py:827
+#: code:addons/account/account_move_line.py:771
+#: code:addons/account/account_move_line.py:824
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries."
 msgstr ""
@@ -9456,6 +9541,11 @@ msgid "Payable"
 msgstr "Izdevumu"
 
 #. module: account
+#: view:account.account:0
+msgid "Account name"
+msgstr ""
+
+#. module: account
 #: view:board.board:0
 msgid "Account Board"
 msgstr "Grāmatvedības Panelis"
@@ -9472,9 +9562,10 @@ msgid "Accounting entries are the first input of the reconciliation."
 msgstr "Grāmatvedības ieraksti ir pirmie sasaistes elementi."
 
 #. module: account
-#: view:account.fiscalyear.close:0
-msgid "Generate Fiscal Year Opening Entries"
-msgstr "Veikt Jauna Fiskālā gada sākuma grāmatojumus"
+#: code:addons/account/account_cash_statement.py:301
+#, python-format
+msgid "There is no %s Account on the journal %s."
+msgstr ""
 
 #. module: account
 #: report:account.third_party_ledger:0
@@ -9506,8 +9597,7 @@ msgid "Move"
 msgstr "Grāmatojums"
 
 #. module: account
-#: code:addons/account/account_bank_statement.py:477
-#: code:addons/account/account_invoice.py:458
+#: code:addons/account/account_bank_statement.py:478
 #: code:addons/account/wizard/account_period_close.py:51
 #, python-format
 msgid "Invalid Action!"
@@ -9572,7 +9662,7 @@ msgid ""
 "in the journal definition for reconciliation."
 msgstr ""
 "Nepieciešams definēt bankas kontu\n"
-"sasaistes ierakstu žurnālam."
+"sasaistes ierakstu reģistram."
 
 #. module: account
 #: help:account.journal,sequence_id:0
@@ -9603,7 +9693,7 @@ msgid "Balance :"
 msgstr "Bilance"
 
 #. module: account
-#: code:addons/account/account.py:1547
+#: code:addons/account/account.py:1587
 #, python-format
 msgid "Cannot create moves for different companies."
 msgstr ""
@@ -9694,7 +9784,7 @@ msgid "Immediate Payment"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account.py:1464
+#: code:addons/account/account.py:1502
 #, python-format
 msgid " Centralisation"
 msgstr ""
@@ -9763,11 +9853,24 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: code:addons/account/account_move_line.py:780
+#, python-format
+msgid "Journal Item '%s' (id: %s), Move '%s' is already reconciled!"
+msgstr ""
+
+#. module: account
 #: view:account.invoice:0
 #: view:account.invoice.report:0
 #: model:process.node,name:account.process_node_supplierdraftinvoices0
 msgid "Draft Invoices"
 msgstr "Neapstiprināti Rēķini"
+
+#. module: account
+#. openerp-web
+#: code:addons/account/static/src/xml/account_move_reconciliation.xml:31
+#, python-format
+msgid "Nothing more to reconcile"
+msgstr ""
 
 #. module: account
 #: view:cash.box.in:0
@@ -9783,7 +9886,7 @@ msgid "Unreconciled"
 msgstr "Nesaistīts"
 
 #. module: account
-#: code:addons/account/account_invoice.py:894
+#: code:addons/account/account_invoice.py:919
 #, python-format
 msgid "Bad total !"
 msgstr "Kļūdaina kopsumma!"
@@ -9852,8 +9955,10 @@ msgstr "Kods/Datums"
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_move_line
 #: model:ir.actions.act_window,name:account.act_account_move_to_account_move_line_open
 #: model:ir.actions.act_window,name:account.act_account_partner_account_move
+#: model:ir.actions.act_window,name:account.action_account_items
 #: model:ir.actions.act_window,name:account.action_account_moves_all_a
 #: model:ir.actions.act_window,name:account.action_move_line_select
+#: model:ir.actions.act_window,name:account.action_tax_code_items
 #: model:ir.actions.act_window,name:account.action_tax_code_line_open
 #: model:ir.model,name:account.model_account_move_line
 #: model:ir.ui.menu,name:account.menu_action_account_moves_all
@@ -9866,7 +9971,7 @@ msgid "Comparison"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1122
+#: code:addons/account/account_move_line.py:1119
 #, python-format
 msgid ""
 "You cannot do this modification on a confirmed entry. You can just change "
@@ -9950,10 +10055,10 @@ msgstr "Žurnālu Apgrozījums"
 #. module: account
 #: view:account.model:0
 msgid "Journal Entry Model"
-msgstr "Grāmatojuma Modelis"
+msgstr "Grāmatojuma modelis"
 
 #. module: account
-#: code:addons/account/account.py:1064
+#: code:addons/account/account.py:1073
 #, python-format
 msgid "Start period should precede then end period."
 msgstr ""
@@ -10016,6 +10121,11 @@ msgid "Currency Rate"
 msgstr "Valūtas Kurss"
 
 #. module: account
+#: view:account.config.settings:0
+msgid "e.g. sales@openerp.com"
+msgstr ""
+
+#. module: account
 #: field:account.account,tax_ids:0
 #: view:account.account.template:0
 #: field:account.account.template,tax_ids:0
@@ -10035,12 +10145,6 @@ msgstr "Aprīlis"
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_profitloss_toreport0
 msgid "Profit (Loss) to report"
-msgstr ""
-
-#. module: account
-#: code:addons/account/account_invoice.py:387
-#, python-format
-msgid "There is no Sale/Purchase Journal(s) defined."
 msgstr ""
 
 #. module: account
@@ -10129,7 +10233,6 @@ msgstr "Aktīvie Regulārie Kontējumi"
 #: view:account.analytic.cost.ledger:0
 #: view:account.analytic.inverted.balance:0
 #: view:account.analytic.journal.report:0
-#: model:ir.actions.act_window,name:account.action_account_partner_ledger
 msgid "Select Period"
 msgstr "Izvēlēties Periodu"
 
@@ -10170,13 +10273,6 @@ msgstr "Grāmatots"
 #: field:accounting.report,date_to_cmp:0
 msgid "End Date"
 msgstr "Beigu Datums"
-
-#. module: account
-#: view:account.open.closed.fiscalyear:0
-#: model:ir.actions.act_window,name:account.action_account_open_closed_fiscalyear
-#: model:ir.ui.menu,name:account.menu_wizard_account_open_closed_fiscalyear
-msgid "Cancel Opening Entries"
-msgstr "Atcelt Sākuma Atlikumu Kontējumus"
 
 #. module: account
 #: field:account.payment.term.line,days2:0
@@ -10315,7 +10411,7 @@ msgstr ""
 
 #. module: account
 #: selection:account.partner.ledger,filter:0
-#: code:addons/account/report/account_partner_ledger.py:59
+#: code:addons/account/report/account_partner_ledger.py:56
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
 #, python-format
 msgid "Unreconciled Entries"
@@ -10368,7 +10464,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_move_line.py:1059
+#: code:addons/account/account_move_line.py:1056
 #, python-format
 msgid "Unable to change tax!"
 msgstr ""
@@ -10391,7 +10487,7 @@ msgstr "Beigu periods"
 #. module: account
 #: sql_constraint:account.journal:0
 msgid "The code of the journal must be unique per company !"
-msgstr "Žurnāla kodam ir jābūt unikālam katram uzņēmumam!"
+msgstr "Reģistra kodam jābūt unikālam katram uzņēmumam!"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all
@@ -10437,8 +10533,10 @@ msgstr "Kontu Nodokļu Profils"
 #: view:account.invoice:0
 #: selection:account.invoice,type:0
 #: selection:account.invoice.report,type:0
+#: code:addons/account/account_invoice.py:1155
 #: model:process.process,name:account.process_process_supplierinvoiceprocess0
 #: selection:report.invoice.created,type:0
+#, python-format
 msgid "Supplier Invoice"
 msgstr "Ienākošais Rēķins"
 
@@ -10493,15 +10591,9 @@ msgid "Receivable accounts"
 msgstr "Ieņēmumu konti"
 
 #. module: account
-#: code:addons/account/account_move_line.py:783
-#, python-format
-msgid "Already reconciled."
-msgstr ""
-
-#. module: account
-#: selection:account.model.line,date_maturity:0
-msgid "Partner Payment Term"
-msgstr "Partnera Apmaksas Termiņš"
+#: report:account.analytic.account.inverted.balance:0
+msgid "Inverted Analytic Balance -"
+msgstr "Apgrieztā Analītiskā Bilance -"
 
 #. module: account
 #: field:temp.range,name:0
@@ -10620,7 +10712,7 @@ msgid "Entries Sorted by"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:1510
+#: code:addons/account/account_invoice.py:1543
 #, python-format
 msgid ""
 "The selected unit of measure is not compatible with the unit of measure of "
@@ -10701,6 +10793,8 @@ msgstr "Meklēt Rēķinu"
 #: report:account.invoice:0
 #: view:account.invoice:0
 #: view:account.invoice.report:0
+#: code:addons/account/account_invoice.py:1156
+#, python-format
 msgid "Refund"
 msgstr "Atmaksa"
 
@@ -10771,7 +10865,7 @@ msgid "Manual Invoice Taxes"
 msgstr "Manuāli Rēķina Nodokļi"
 
 #. module: account
-#: code:addons/account/account_invoice.py:554
+#: code:addons/account/account_invoice.py:570
 #, python-format
 msgid "The payment term of supplier does not have a payment term line."
 msgstr ""
@@ -10884,7 +10978,7 @@ msgstr "Nākotnē"
 #. module: account
 #: view:account.move.line:0
 msgid "Search Journal Items"
-msgstr "Meklēt Žurnāla Grāmatojumus"
+msgstr "Meklēt kontējumus"
 
 #. module: account
 #: help:account.tax,base_sign:0
@@ -10931,3 +11025,19 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in its currency (maybe different of the company currency)."
 msgstr ""
+
+#~ msgid "VAT :"
+#~ msgstr "PVN :"
+
+#~ msgid "Current"
+#~ msgstr "Pašreizējais"
+
+#~ msgid "Latest Reconciliation Date"
+#~ msgstr "Pēdējais Savienošanas Datums"
+
+#~ msgid "Cancel Opening Entries"
+#~ msgstr "Atcelt Sākuma Atlikumu Kontējumus"
+
+#, python-format
+#~ msgid "There is no Sale/Purchase Journal(s) defined."
+#~ msgstr "Nav nodefinēts Iegādes/Realizācijas reģistrs(-i)."

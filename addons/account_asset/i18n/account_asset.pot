@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.0alpha\n"
+"Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 17:04+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-06-07 19:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -188,6 +188,12 @@ msgstr ""
 #. module: account_asset
 #: field:account.asset.depreciation.line,move_id:0
 msgid "Depreciation Entry"
+msgstr ""
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset.py:82
+#, python-format
+msgid "Error!"
 msgstr ""
 
 #. module: account_asset
@@ -561,6 +567,12 @@ msgid "Current"
 msgstr ""
 
 #. module: account_asset
+#: code:addons/account_asset/account_asset.py:82
+#, python-format
+msgid "You cannot delete an asset that contains posted depreciation lines."
+msgstr ""
+
+#. module: account_asset
 #: view:account.asset.category:0
 msgid "Depreciation Method"
 msgstr ""
@@ -669,9 +681,14 @@ msgid "Amount of Depreciation Lines"
 msgstr ""
 
 #. module: account_asset
-#: code:addons/account_asset/wizard/wizard_asset_compute.py:49
+#: code:addons/account_asset/wizard/wizard_asset_compute.py:50
 #, python-format
 msgid "Created Asset Moves"
+msgstr ""
+
+#. module: account_asset
+#: view:account.asset.asset:0
+msgid "Add an internal note here..."
 msgstr ""
 
 #. module: account_asset

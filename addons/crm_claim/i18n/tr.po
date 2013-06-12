@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-02-16 19:39+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-04-13 17:52+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-17 05:23+0000\n"
-"X-Generator: Launchpad (build 16491)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:19+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: crm_claim
 #: help:crm.claim.stage,fold:0
@@ -29,7 +29,7 @@ msgstr ""
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
 msgid "# of Cases"
-msgstr "# nın Vakkası"
+msgstr "Durum #"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -95,6 +95,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Bir şikayet kategorisi oluşturmak için tıklayın.\n"
+"              </p><p>\n"
+"                Şikayetleri daha iyi yönetmek ve sınıflandırmak için şikayet "
+"kategorileri\n"
+"                oluşturun. Şikayetlere bazı örnekler şunlar olabilir: "
+"koruyucu eylem, düzeltme eylemi.\n"
+"              </p>\n"
+"            "
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -208,7 +217,7 @@ msgstr "Partner"
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Follow Up"
-msgstr "Takip Etme"
+msgstr "İzleme"
 
 #. module: crm_claim
 #: selection:crm.claim,type_action:0
@@ -246,7 +255,7 @@ msgstr "Boş Görünümler Gizle"
 #. module: crm_claim
 #: field:crm.claim,message_follower_ids:0
 msgid "Followers"
-msgstr "Takipçiler"
+msgstr "İzleyiciler"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -302,6 +311,11 @@ msgstr "Rededildi"
 #: field:crm.claim,date_action_next:0
 msgid "Next Action Date"
 msgstr "Ssonraki İşlem Tarihi"
+
+#. module: crm_claim
+#: model:ir.model,name:crm_claim.model_sale_config_settings
+msgid "sale.config.settings"
+msgstr "sale.config.settings"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
@@ -360,11 +374,14 @@ msgid ""
 "is related to the status 'Close', when your document reaches this stage, it "
 "will be automatically have the 'closed' status."
 msgstr ""
+"Aşamayla ilişkili durum. Belgenizin durumu seçilen aşamayla ilgili olarak "
+"kendiliğinden değişecektir. Örneğin; aşama 'Kapalı' durumu ile ilişkiliyse, "
+"belgeniz bu duruma ulaştığında kendiliğinden 'kapalı' duruma geçecektir."
 
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Settle"
-msgstr ""
+msgstr "Yerine getir"
 
 #. module: crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_claim_stage_view
@@ -557,7 +574,7 @@ msgstr "Telefon"
 #. module: crm_claim
 #: field:crm.claim,message_is_follower:0
 msgid "Is a Follower"
-msgstr "Bir Takipçisi mi"
+msgstr "Bir İzleyicidir"
 
 #. module: crm_claim
 #: field:crm.claim.report,user_id:0
@@ -579,6 +596,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"               Şikayetlerin işlenmesinde yeni bir aşama ayarlamak için "
+"tıklayın. \n"
+"              </p><p>\n"
+"                Sisteme giren her şikayetin durumunu kategorize etmek için "
+"şikayet\n"
+"                aşamaları oluşturabilirsiniz. Aşamalar, şikayetlerin çözümü "
+"için gerekli\n"
+"                tüm adımları tanımlar.\n"
+"              </p>\n"
+"            "
 
 #. module: crm_claim
 #: help:crm.claim,state:0
@@ -589,6 +617,10 @@ msgid ""
 "the case needs to be reviewed then the status is                       set "
 "to 'Pending'."
 msgstr ""
+"Bir durum oluşturulduğunda durum 'Taslak' olarak ayarlanır. Durum sürmekte "
+"ise 'Açık' olarak ayarlanır. Durum bittiğinde, durum 'Yapıldı' olarak "
+"ayarlanır. Eğer durumun incelenmesi gerekiyorsa durum 'Bekliyor' olarak "
+"ayarlanır."
 
 #. module: crm_claim
 #: field:crm.claim,active:0
@@ -786,20 +818,6 @@ msgid "Refused stage"
 msgstr "Reddet aşaması"
 
 #. module: crm_claim
-#: model:ir.actions.act_window,help:crm_claim.crm_case_categ_claim0
-msgid ""
-"Record and track your customers' claims. Claims may be linked to a sales "
-"order or a lot. You can send emails with attachments and keep the full "
-"history for a claim (emails sent, intervention type and so on). Claims may "
-"automatically be linked to an email address using the mail gateway module."
-msgstr ""
-"Müşterilerinizin şikayetlerini kayıt ve takip edin. Şikayetler bir satış "
-"siparişine ya da gönderilen ürünlerle ilgili olabilir. Ekli e-postalar "
-"gönderebilir ve şikayetlerin geçmiş kayıtlarının tamamını tutabilirsiniz "
-"(gönderilen e-postalar, müdahale tipi vb.). Şikayetler otomatik olarak e-"
-"mail adresi ile ilişkilendirilir."
-
-#. module: crm_claim
 #: field:crm.claim.report,email:0
 msgid "# Emails"
 msgstr "# E-postaları"
@@ -815,9 +833,17 @@ msgid "February"
 msgstr "Şubat"
 
 #. module: crm_claim
-#: model:ir.model,name:crm_claim.model_sale_config_settings
-msgid "sale.config.settings"
-msgstr "sale.config.settings"
+#: model:ir.actions.act_window,help:crm_claim.crm_case_categ_claim0
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Record and track your customers' claims. Claims may be "
+"linked to a sales order or a lot.You can send emails with attachments and "
+"keep the full history for a claim (emails sent, intervention type and so "
+"on).Claims may automatically be linked to an email address using the mail "
+"gateway module.\n"
+"            </p>\n"
+"            "
+msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -843,7 +869,7 @@ msgstr "Benim takip ettiğim vaka(lar)"
 #. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim2
 msgid "Settled"
-msgstr ""
+msgstr "Yerine getirildi"
 
 #. module: crm_claim
 #: help:crm.claim,message_ids:0
@@ -900,3 +926,15 @@ msgstr ""
 #: help:crm.claim.stage,case_refused:0
 msgid "Refused stages are specific stages for done."
 msgstr "Reddedilen aşamalar yapılmış belirli aşamalardır."
+
+#~ msgid ""
+#~ "Record and track your customers' claims. Claims may be linked to a sales "
+#~ "order or a lot. You can send emails with attachments and keep the full "
+#~ "history for a claim (emails sent, intervention type and so on). Claims may "
+#~ "automatically be linked to an email address using the mail gateway module."
+#~ msgstr ""
+#~ "Müşterilerinizin şikayetlerini kayıt ve takip edin. Şikayetler bir satış "
+#~ "siparişiyle ya da gönderilen ürünlerle ilgili olabilir. Ekleriyle birlikte "
+#~ "eposta gönderebilir ve şikayetlerin geçmiş kayıtlarının tamamını "
+#~ "tutabilirsiniz (gönderilen e-postalar, müdahale tipi vb.). Şikayetler "
+#~ "otomatik olarak eposta adresi ile ilişkilendirilir."

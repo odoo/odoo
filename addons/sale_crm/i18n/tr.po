@@ -1,47 +1,53 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* sale_crm
-#
+# * sale_crm
+# acer <ayhankiziltan@sumas-pompa.com>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-02-06 20:42+0000\n"
-"Last-Translator: Ahmet Altınışık <Unknown>\n"
-"Language-Team: \n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"PO-Revision-Date: 2013-06-09 14:34+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
+"Language-Team: OpenERP Turkish Translation\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-07 05:42+0000\n"
-"X-Generator: Launchpad (build 16477)\n"
+"X-Launchpad-Export-Date: 2013-06-11 06:32+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
+"Language: tr\n"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:90
+#: code:addons/sale_crm/wizard/crm_make_sale.py:92
 #, python-format
 msgid "Insufficient Data!"
-msgstr "Veri Yetersiz!"
+msgstr "Yetersiz Veri!"
 
 #. module: sale_crm
-#: view:crm.lead:0
-#: view:crm.make.sale:0
-msgid "Convert to Quotation"
-msgstr "Teklife Dönüştür"
+#: code:addons/sale_crm/wizard/crm_make_sale.py:113
+#, python-format
+msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
+msgstr "Fırsat teklife <em>%s</em> <b>dönüştürüldü</b> ."
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr "Aday/Fırsat"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_account_invoice_report
 msgid "Invoices Statistics"
-msgstr "Fatura İsatislikleri"
+msgstr "Fatura İsatistikleri"
 
 #. module: sale_crm
 #: field:crm.make.sale,close:0
 msgid "Mark Won"
-msgstr "İşaretle Kazandı"
+msgstr "Kazanıldı İşaretle"
 
 #. module: sale_crm
 #: field:res.users,default_section_id:0
 msgid "Default Sales Team"
-msgstr "Öntanımlı Satış Takımı"
+msgstr "Varsayılan Satış Takımı"
 
 #. module: sale_crm
 #: view:sale.order:0
@@ -63,7 +69,7 @@ msgstr ""
 #. module: sale_crm
 #: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_sent
 msgid "Quotation Send"
-msgstr "Teklifi Gönder"
+msgstr "Teklif Gönder"
 
 #. module: sale_crm
 #: field:sale.order,categ_ids:0
@@ -71,8 +77,8 @@ msgid "Categories"
 msgstr "Kategoriler"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:124
-#: code:addons/sale_crm/wizard/crm_make_sale.py:135
+#: code:addons/sale_crm/wizard/crm_make_sale.py:127
+#: code:addons/sale_crm/wizard/crm_make_sale.py:138
 #, python-format
 msgid "Quotation"
 msgstr "Teklif"
@@ -90,7 +96,7 @@ msgstr "_Oluştur"
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_make_sale
 msgid "Make sales"
-msgstr "Satış yapma"
+msgstr "Satış yap"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_account_invoice
@@ -98,27 +104,27 @@ msgid "Invoice"
 msgstr "Fatura"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:93
+#: code:addons/sale_crm/wizard/crm_make_sale.py:95
 #, python-format
 msgid "Opportunity: %s"
 msgstr "Fırsat: %s"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:110
-#, python-format
-msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
-msgstr "Fırsat <b>dönüştürldü</b> teklif için <em>%s</em>."
+#: view:crm.lead:0
+#: view:crm.make.sale:0
+msgid "Convert to Quotation"
+msgstr "Teklife Dönüştür"
 
 #. module: sale_crm
 #: field:crm.make.sale,shop_id:0
 msgid "Shop"
-msgstr "Mağza"
+msgstr "Mağaza"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:90
+#: code:addons/sale_crm/wizard/crm_make_sale.py:92
 #, python-format
 msgid "No addresse(s) defined for this customer."
-msgstr "Hiçbir adres (ler) bu müşteri için tanımlanmadı"
+msgstr "Bu müşteri için adres tanımlanmamış."
 
 #. module: sale_crm
 #: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_confirmed
@@ -142,7 +148,7 @@ msgstr "Teklif Oluştur"
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
 msgid "Make Quotation"
-msgstr "Teklif Hazırla"
+msgstr "Teklif Yap"
 
 #. module: sale_crm
 #: view:crm.make.sale:0
@@ -157,4 +163,4 @@ msgstr "Satış Siparişi"
 #. module: sale_crm
 #: view:crm.make.sale:0
 msgid "or"
-msgstr "veya"
+msgstr "ya da"

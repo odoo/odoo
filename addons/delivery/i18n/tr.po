@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2013-02-07 13:12+0000\n"
-"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-03-01 23:02+0000\n"
+"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-08 05:23+0000\n"
-"X-Generator: Launchpad (build 16482)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:20+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -25,12 +25,12 @@ msgstr "Sipariş Ref."
 #. module: delivery
 #: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Delivery by Poste"
-msgstr "İşlenen Teslimat"
+msgstr "Poste tarafından teslim"
 
 #. module: delivery
 #: view:delivery.grid.line:0
 msgid " in Function of "
-msgstr " nın foksiyonu "
+msgstr " bu İşlevde "
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -41,12 +41,12 @@ msgstr "Hedef"
 #. module: delivery
 #: field:stock.move,weight_net:0
 msgid "Net weight"
-msgstr "Net Ağırlık"
+msgstr "Net ağırlık"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
-msgstr "Teslimat Grid Satırı"
+msgstr "Teslimat Tablo Satırı"
 
 #. module: delivery
 #: field:stock.move,weight_uom_id:0
@@ -58,7 +58,7 @@ msgstr "Ölçü Birimi"
 #: view:delivery.carrier:0
 #: view:delivery.grid:0
 msgid "Delivery grids"
-msgstr "Teslimat gridleri"
+msgstr "Teslimat tablosu"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -71,44 +71,44 @@ msgstr "Hacim"
 #. module: delivery
 #: view:delivery.carrier:0
 msgid "Zip"
-msgstr "Zip"
+msgstr "PKodu"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
 msgid "Grid Line"
-msgstr "Grid Satırı"
+msgstr "Tablo Satırı"
 
 #. module: delivery
 #: help:delivery.carrier,partner_id:0
 msgid "The partner that is doing the delivery service."
-msgstr "Teslimat Servisi veren Partner"
+msgstr "Teslimat hizmetini veren iş ortağı"
 
 #. module: delivery
 #: model:ir.actions.report.xml,name:delivery.report_shipping
 msgid "Delivery order"
-msgstr "Teslim Emri"
+msgstr "Teslim emri"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:221
 #, python-format
 msgid "No line matched this product or order in the chosen delivery grid."
 msgstr ""
-"Seçilen teslimat listesinde bu ürün ya da siparişle eşleşen kalem yok."
+"Seçilen teslimat tablosunda bu ürün ya da siparişle eşleşen kalem yok."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
 msgid "Picking to be invoiced"
-msgstr "Faturalanma için seçilen"
+msgstr "Faturalanacak toplama"
 
 #. module: delivery
 #: field:delivery.carrier,pricelist_ids:0
 msgid "Advanced Pricing"
-msgstr "Gelişmiş Fiyatlama"
+msgstr "Gelişmiş Fiyatlandırma"
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
 msgid "Gives the sequence order when displaying a list of delivery grid."
-msgstr "Bir teslimat gridi listesini görüntülerken sıralamasını verir."
+msgstr "Bir teslimat tablsunu görüntülerken diziliş sıralamasını verir."
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -133,6 +133,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Belirli bir bölge için bir teslimat fiyat listesi oluşturmak "
+"için tıklayın.\n"
+"              </p><p>\n"
+"                Teslimat fiyat listesi, ürünlerin ağırlığına ve diğer "
+"kriterlere göre\n"
+"                maliyet ve satış fiyatı hesaplamanızı sağlar. Her teslimat "
+"yöntemi\n"
+"                için birçok fiyat listesi oluşturabilirsiniz: posta kodu "
+"alanı ile tanımlanan\n"
+"                ülke için ya da belirli bir ülkedeki bir bölge için.\n"
+"              </p>\n"
+"            "
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -152,7 +165,7 @@ msgstr "Tutar"
 #. module: delivery
 #: view:sale.order:0
 msgid "Add in Quote"
-msgstr "Teklif den Ekle"
+msgstr "Teklife Ekle"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -170,7 +183,7 @@ msgstr "Teslimat Yöntemi"
 #: code:addons/delivery/delivery.py:221
 #, python-format
 msgid "No price available!"
-msgstr "Fiyat uygun değil!"
+msgstr "Hiç fiyat yok!"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
@@ -193,13 +206,13 @@ msgstr "Net Ağırlık"
 #. module: delivery
 #: view:delivery.grid.line:0
 msgid "Grid Lines"
-msgstr "Grid Satırları"
+msgstr "Tablo Kalemleri"
 
 #. module: delivery
 #: view:delivery.carrier:0
 #: view:delivery.grid:0
 msgid "Grid definition"
-msgstr "Grid tanımı"
+msgstr "Tablo tanımı"
 
 #. module: delivery
 #: code:addons/delivery/stock.py:90
@@ -215,7 +228,7 @@ msgstr "Operatör"
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
 msgid "Partner"
-msgstr "Partner"
+msgstr "İş Ortağı"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
@@ -225,7 +238,7 @@ msgstr "Satış Siparişi"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_out
 msgid "Delivery Orders"
-msgstr "Teslimat Siparişleri"
+msgstr "Teslimat Emirleri"
 
 #. module: delivery
 #: view:sale.order:0
@@ -234,27 +247,27 @@ msgid ""
 "based on delivery order(s)."
 msgstr ""
 "Eğer 'Teklife Ekle'me yapmazsanız, gerçek fiyat teslim emirlerine göre "
-"faturalama yaparken gerçek fiyat hesaplanacaktır."
+"faturalama yaparken hesaplanacaktır."
 
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Transport Company"
-msgstr "Nakliye Firma"
+msgstr "Nakliye Firması"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
 msgid "Delivery Grid"
-msgstr "Teslimat Gridi"
+msgstr "Teslimat Tablosu"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Invoiced to"
-msgstr "Faturala"
+msgstr "Buna faturalandır"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Picking List"
-msgstr "Seçim Listesi"
+msgstr "Toplama Listesi"
 
 #. module: delivery
 #: field:delivery.grid.line,name:0
@@ -267,7 +280,7 @@ msgid ""
 "If the order is more expensive than a certain amount, the customer can "
 "benefit from a free shipping"
 msgstr ""
-"Eğer sipariş belli tutarın üzerinde ise, müşteri ücretsiz teslimattan "
+"Eğer sipariş belirli bir tutarın üzerinde ise, müşteri bedelsiz teslimattan "
 "faydalanabilir"
 
 #. module: delivery
@@ -282,12 +295,12 @@ msgstr ""
 #. module: delivery
 #: field:delivery.carrier,free_if_more_than:0
 msgid "Free If Order Total Amount Is More Than"
-msgstr "Sipariş Toplam Tutarı Bundan Fazlaysa Ücretsidir"
+msgstr "Sipariş Toplam Tutarı Bundan Fazlaysa Bedelsizdir"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
 msgid "Grid"
-msgstr "Izgara"
+msgstr "Tablo"
 
 #. module: delivery
 #: help:delivery.grid,active:0
@@ -295,19 +308,19 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "grid without removing it."
 msgstr ""
-"Aktif alanı Yanlış olarak ayarlayarak, teslimat gridini silmeden "
+"Aktif alanı Yanlış olarak ayarlaysa, teslimat tablosunu silmeden "
 "gizleyebilirsiniz."
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
 msgid "To Zip"
-msgstr "Bitiş P. Kodu"
+msgstr "Sıkıştırılacak"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:147
 #, python-format
 msgid "Default price"
-msgstr "Öntanımlı Fiyat"
+msgstr "Varsayılan Fiyat"
 
 #. module: delivery
 #: field:delivery.carrier,normal_price:0
@@ -322,7 +335,7 @@ msgstr "Sipariş Tarihi"
 #. module: delivery
 #: field:delivery.grid,name:0
 msgid "Grid Name"
-msgstr "Grid Adı"
+msgstr "Tablo Adı"
 
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
@@ -357,14 +370,14 @@ msgstr ""
 msgid ""
 "Keep empty if the pricing depends on the advanced pricing per destination"
 msgstr ""
-"Fiyatlandırmayı her varış yeri için gelişmiş fiyatlandırmaya göre "
-"yapacaksanız boş bırakın"
+"Fiyatlandırmayı her varış yeri için peşin fiyatlandırmaya göre yapacaksanız "
+"boş bırakın"
 
 #. module: delivery
 #: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid available !"
-msgstr "Hiçbir grid mevcut değil!"
+msgstr "Hiçbir tablo yok!"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -380,7 +393,7 @@ msgstr "Sipariş taslak modunda değil !"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Lot"
-msgstr "Lot"
+msgstr "Parti"
 
 #. module: delivery
 #: field:delivery.carrier,active:0
@@ -418,7 +431,8 @@ msgstr "Değişken"
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from picking."
 msgstr ""
-"Bu teslimat yöntemi, alımdan faturalandırma yaparken kullanılacaktır."
+"Bu teslimat yöntemi, toplama üzerinden faturalandırma yaparken "
+"kullanılacaktır."
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -440,11 +454,25 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Yeni bir teslimat yöntemi tanımlamak için tıklayın. \n"
+"              </p><p>\n"
+"                Her nakliyecinin (örn. UPS) her yönteme ekli fiyatlandırma "
+"kuralları ile \n"
+"                birçok teslimat yöntemi olabilir (örn.UPS Ekspres, UPS "
+"Standart).\n"
+"              </p><p>\n"
+"                Bu yöntemler ayarlamalarınıza göre kendiliğinden teslimat\n"
+"                fiyatlarını hesaplar; satış siparişlerinde (tekliflere "
+"göre)\n"
+"                ya da faturalarda (teslimat emirlerine göre).\n"
+"              </p>\n"
+"            "
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
 msgid "Maximum Value"
-msgstr "Max. Değer"
+msgstr "Ençok Değer"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -454,20 +482,21 @@ msgstr "Miktar"
 #. module: delivery
 #: field:delivery.grid,zip_from:0
 msgid "Start Zip"
-msgstr "Baş. P. Kodu"
+msgstr "Sıkıştırmayı Başlat"
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
 msgid ""
 "Complete this field if you plan to invoice the shipping based on picking."
 msgstr ""
-"Alım bazında sevkiyatı faturalandırmayı planlıyorsanız, bu alanı tamamlayın."
+"Sevkiyatı toplamaya göre faturalandırmayı planlıyorsanız, bu alanı "
+"tamamlayın."
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:136
 #, python-format
 msgid "Free if more than %.2f"
-msgstr "Eğer %.2f fazla ise ücretsiz"
+msgstr "Eğer %.2f den fazla ise ücretsiz"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_in
@@ -495,14 +524,13 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "carrier without removing it."
 msgstr ""
-"Aktif alanı Yanlış olarak ayarlayarak, teslimat nakliyecisini silmeden "
-"gizleyebilirsiniz."
+"Etkin alan Yanlış olarak ayarlıysa, nakliyeciyi silmeden gizleyebilirsiniz."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_grid_form
 msgid "Delivery Pricelist"
-msgstr "Teslimat FiyatListesi"
+msgstr "Teslimat Fiyat Listesi"
 
 #. module: delivery
 #: field:delivery.carrier,price:0
@@ -515,7 +543,7 @@ msgstr "Fiyat"
 #: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid matching for this carrier !"
-msgstr "Bu nakliyeciyle eşleşen hiçbir grid mevcut değil!"
+msgstr "Bu nakliyeciyle eşleşen hiçbir tablo yoktur!"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -532,17 +560,17 @@ msgstr "Ağırlık * Hacim"
 #: code:addons/delivery/stock.py:91
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr "Nakliyeci %s (id: %d) teslimat gridine sahip değil!"
+msgstr "Nakliyeci %s (id: %d) teslimat tablosuna sahip değil!"
 
 #. module: delivery
 #: view:delivery.carrier:0
 msgid "Pricing Information"
-msgstr "Fiyat Bilgisi"
+msgstr "Fiyatlandırma Bilgisi"
 
 #. module: delivery
 #: field:delivery.carrier,use_detailed_pricelist:0
 msgid "Advanced Pricing per Destination"
-msgstr "Adrese göre Gelişmiş Fiyatlama"
+msgstr "Adrese göre Peşin Fiyatlandırma"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -570,7 +598,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.carrier,grids_id:0
 msgid "Delivery Grids"
-msgstr "Teslimat Gridleri"
+msgstr "Teslimat Tabloları"
 
 #. module: delivery
 #: field:delivery.grid,sequence:0
@@ -585,13 +613,13 @@ msgstr "Satış Fiyatı"
 #. module: delivery
 #: view:stock.picking.out:0
 msgid "Print Delivery Order"
-msgstr "Teslimat Siparişini Yazdır"
+msgstr "Teslimat Emrini Yazdır"
 
 #. module: delivery
 #: view:delivery.grid:0
 #: field:delivery.grid,state_ids:0
 msgid "States"
-msgstr "Durumu"
+msgstr "Durumlar"
 
 #. module: delivery
 #: help:stock.move,weight_uom_id:0

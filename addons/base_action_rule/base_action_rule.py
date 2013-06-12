@@ -62,6 +62,7 @@ class base_action_rule(osv.osv):
         'sequence': fields.integer('Sequence',
             help="Gives the sequence order when displaying a list of rules."),
         'trg_date_id': fields.many2one('ir.model.fields', string='Trigger Date',
+            help="When should the condition be triggered. If present, will be checked by the scheduler. If empty, will be checked at creation and update.",
             domain="[('model_id', '=', model_id), ('ttype', 'in', ('date', 'datetime'))]"),
         'trg_date_range': fields.integer('Delay after trigger date',
             help="Delay after the trigger date." \
@@ -213,6 +214,13 @@ class base_action_rule(osv.osv):
         super(base_action_rule, self).write(cr, uid, ids, vals, context=context)
         self._register_hook(cr, ids)
         return True
+
+    def onchange_model_id(self, cr, uid, ids, model_id, context=None):
+        data = {'model': False, 'filter_pre_id': False, 'filter_id': False}
+        if model_id:
+            model = self.pool.get('ir.model').browse(cr, uid, model_id, context=context)
+            data.update({'model': model.model})
+        return {'value': data}
 
     def _check(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
         """ This Function is called by scheduler. """

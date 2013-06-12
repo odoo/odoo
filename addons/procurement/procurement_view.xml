@@ -18,6 +18,7 @@
                     <field name="product_uom" string="Unit of Measure"/>
                     <field name="procure_method"/>
                     <field name="state"/>
+                    <field name="name" placeholder="External note..." invisible="1"/>
                     <field name="message"/>
                 </tree>
             </field>
@@ -47,7 +48,7 @@
                         <button name="button_confirm" states="draft" string="Confirm" class="oe_highlight"/>
                         <button name="button_check" states="confirmed" string="Run Procurement" class="oe_highlight"/>
                         <button name="button_restart" states="exception" string="Retry" class="oe_highlight"/>
-                        <button name="button_cancel" states="draft,exception,waiting" string="Cancel"/>
+                        <button name="button_cancel" states="draft,exception,waiting" string="Cancel Procurement"/>
                         <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed" />
                     </header>
                     <sheet>
@@ -253,7 +254,11 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_warehouse_orderpoint_tree"/>
             <field name="search_view_id" ref="warehouse_orderpoint_search" />
-            <field name="help">You can define your minimum stock rules, so that OpenERP will automatically create draft manufacturing orders or purchase quotations according to the stock level. Once the virtual stock of a product (= stock on hand minus all confirmed orders and reservations) is below the minimum quantity, OpenERP will generate a procurement request to increase the stock up to the maximum quantity.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+              You can define your minimum stock rules, so that OpenERP will automatically create draft manufacturing orders or purchase quotations according to the stock level.Once the virtual stock of a product (= stock on hand minus all confirmed orders and reservations) is below the minimum quantity, OpenERP will generate a procurement request to increase the stock up to the maximum quantity.
+              </p>
+            </field>
         </record>
 
         <act_window

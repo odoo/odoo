@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:06+0000\n"
-"PO-Revision-Date: 2013-01-08 09:43+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"PO-Revision-Date: 2013-05-22 07:05+0000\n"
+"Last-Translator: Quentin THEURET <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 07:10+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:48+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: survey
 #: view:survey.response.line:0
@@ -73,9 +73,9 @@ msgid "Surveys"
 msgstr "Sondages"
 
 #. module: survey
-#: field:survey.question,in_visible_answer_type:0
-msgid "Is Answer Type Invisible?"
-msgstr "Le type de réponse est-il 'Invisible' ?"
+#: view:survey.request:0
+msgid "Cancel Request"
+msgstr "Annuler la requête"
 
 #. module: survey
 #: view:survey:0
@@ -296,7 +296,7 @@ msgstr " En-tête de colonne"
 #: code:addons/survey/wizard/survey_send_invitation.py:71
 #, python-format
 msgid "The following surveys are not in open state: %s"
-msgstr ""
+msgstr "Le questionnaire suivant n'est pas dans un état ouvert : %s"
 
 #. module: survey
 #: field:survey,tot_comp_survey:0
@@ -333,6 +333,8 @@ msgid ""
 "This survey has no question defined. Please define the questions and answers "
 "first."
 msgstr ""
+"Aucune question n'est attachée à ce questionnaire. Veuillez d'abord définir "
+"des questions et des réponses."
 
 #. module: survey
 #: field:survey.question,comment_field_type:0
@@ -485,6 +487,11 @@ msgid "From"
 msgstr "À partir de"
 
 #. module: survey
+#: view:survey:0
+msgid "Cancel Survey"
+msgstr "Annuler le sondage"
+
+#. module: survey
 #: selection:survey.question,comment_valid_type:0
 #: selection:survey.question,validation_type:0
 msgid "Don't Validate Comment Text."
@@ -571,6 +578,13 @@ msgid "Email"
 msgstr "Courriel"
 
 #. module: survey
+#: view:survey:0
+#: view:survey.page:0
+#: view:survey.question:0
+msgid "Required Answer"
+msgstr "Réponse obligatoire"
+
+#. module: survey
 #: code:addons/survey/survey.py:96
 #: code:addons/survey/survey.py:259
 #, python-format
@@ -601,7 +615,7 @@ msgstr ""
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_reporting
 msgid "Reporting"
-msgstr ""
+msgstr "Rapports"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.act_survey_answer
@@ -628,7 +642,7 @@ msgstr "Numéro de page"
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_print_survey_form
 msgid "Print Surveys"
-msgstr ""
+msgstr "Imprimer les questionnaires"
 
 #. module: survey
 #: field:survey.question.column.heading,in_visible_menu_choice:0
@@ -649,7 +663,7 @@ msgstr "Message d'erreur"
 #: code:addons/survey/wizard/survey_answer.py:124
 #, python-format
 msgid "You cannot answer this survey more than %s times."
-msgstr ""
+msgstr "Vous ne pouvez pas répondre à ce questionnaire plus de %s fois."
 
 #. module: survey
 #: field:survey.request,date_deadline:0
@@ -715,6 +729,11 @@ msgstr ""
 
 #. module: survey
 #: view:survey:0
+msgid "Survey description..."
+msgstr "Description du sondage…"
+
+#. module: survey
+#: view:survey:0
 #: view:survey.page:0
 #: view:survey.question:0
 msgid "When the question is not answered, display this error message:"
@@ -733,11 +752,13 @@ msgstr "Options"
 #, python-format
 msgid "You must enter one or more Answers for question \"%s\" of page %s."
 msgstr ""
+"Vous devez donner une ou plusieurs réponses pour la question \"%s\" de la "
+"page %s."
 
 #. module: survey
 #: view:survey:0
 msgid "Delete"
-msgstr ""
+msgstr "Supprimer"
 
 #. module: survey
 #: field:survey.response.answer,comment_field:0
@@ -1083,11 +1104,9 @@ msgid "Multiple Textboxes With Different Type"
 msgstr "Zones de textes multiples de type différent"
 
 #. module: survey
-#: view:survey:0
-#: view:survey.page:0
-#: view:survey.question:0
-msgid "Required Answer"
-msgstr "Réponse obligatoire"
+#: view:survey.name.wiz:0
+msgid "Add Description"
+msgstr "Ajouter une description"
 
 #. module: survey
 #: model:survey.type,name:survey.survey_type2
@@ -1125,9 +1144,15 @@ msgid "Date"
 msgstr "Date"
 
 #. module: survey
-#: selection:survey.answer,type:0
-msgid "Integer"
-msgstr "Entier"
+#: view:survey:0
+msgid "All New Survey"
+msgstr "Toutes les nouvelles enquêtes"
+
+#. module: survey
+#: view:survey:0
+#: view:survey.page:0
+msgid "Description on the survey page..."
+msgstr ""
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_send_invitation
@@ -1215,9 +1240,9 @@ msgid "Is Rating Scale Invisible?"
 msgstr "L'échelle d'évaluation est-elle invisible ?"
 
 #. module: survey
-#: view:survey:0
-msgid "All New Survey"
-msgstr "Toutes les nouvelles enquêtes"
+#: selection:survey.answer,type:0
+msgid "Integer"
+msgstr "Entier"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1307,13 +1332,11 @@ msgid "Allow Only One Answer per Column (Forced Ranking)"
 msgstr "Permettre une seule réponse par colonne (classement forcé)"
 
 #. module: survey
-#: view:survey:0
 #: view:survey.browse.answer:0
 #: view:survey.name.wiz:0
 #: view:survey.print:0
 #: view:survey.print.answer:0
 #: view:survey.print.statistics:0
-#: view:survey.request:0
 #: view:survey.send.invitation:0
 msgid "Cancel"
 msgstr "Annuler"
@@ -1760,6 +1783,11 @@ msgstr "Pages du sondage"
 #: field:survey.question,type:0
 msgid "Question Type"
 msgstr "Type de question"
+
+#. module: survey
+#: field:survey.question,in_visible_answer_type:0
+msgid "Is Answer Type Invisible?"
+msgstr "Le type de réponse est-il 'Invisible' ?"
 
 #. module: survey
 #: selection:survey.question,type:0

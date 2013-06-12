@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 7.0alpha\n"
+"Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-21 17:05+0000\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"PO-Revision-Date: 2013-06-07 19:37+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -61,8 +61,8 @@ msgid "Company"
 msgstr ""
 
 #. module: portal_crm
-#: field:portal_crm.crm_contact_us,day_open:0
-msgid "Days to Open"
+#: field:portal_crm.crm_contact_us,user_id:0
+msgid "Salesperson"
 msgstr ""
 
 #. module: portal_crm
@@ -93,11 +93,6 @@ msgstr ""
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,color:0
 msgid "Color Index"
-msgstr ""
-
-#. module: portal_crm
-#: field:portal_crm.crm_contact_us,partner_latitude:0
-msgid "Geo Latitude"
 msgstr ""
 
 #. module: portal_crm
@@ -207,11 +202,6 @@ msgid "Channel"
 msgstr ""
 
 #. module: portal_crm
-#: view:portal_crm.crm_contact_us:0
-msgid "Name"
-msgstr ""
-
-#. module: portal_crm
 #: selection:portal_crm.crm_contact_us,priority:0
 msgid "Lowest"
 msgstr ""
@@ -223,12 +213,12 @@ msgstr ""
 
 #. module: portal_crm
 #: view:portal_crm.crm_contact_us:0
-msgid "Close"
+msgid "Content..."
 msgstr ""
 
 #. module: portal_crm
-#: selection:portal_crm.crm_contact_us,state:0
-msgid "Pending"
+#: help:portal_crm.crm_contact_us,opt_out:0
+msgid "If opt-out is checked, this contact has refused to receive emails for mass mailing and marketing campaign. Filter 'Available for Mass Mailing' allows users to filter the leads when performing mass mailing."
 msgstr ""
 
 #. module: portal_crm
@@ -252,11 +242,6 @@ msgid "User Login"
 msgstr ""
 
 #. module: portal_crm
-#: help:portal_crm.crm_contact_us,opt_out:0
-msgid "If opt-out is checked, this contact has refused to receive emails or unsubscribed to a campaign."
-msgstr ""
-
-#. module: portal_crm
 #: field:portal_crm.crm_contact_us,contact_name:0
 msgid "Contact Name"
 msgstr ""
@@ -264,6 +249,11 @@ msgstr ""
 #. module: portal_crm
 #: model:ir.ui.menu,name:portal_crm.portal_company_contact
 msgid "Contact"
+msgstr ""
+
+#. module: portal_crm
+#: view:portal_crm.crm_contact_us:0
+msgid "Your name..."
 msgstr ""
 
 #. module: portal_crm
@@ -294,6 +284,11 @@ msgstr ""
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,write_date:0
 msgid "Update Date"
+msgstr ""
+
+#. module: portal_crm
+#: view:portal_crm.crm_contact_us:0
+msgid "Your email..."
 msgstr ""
 
 #. module: portal_crm
@@ -353,8 +348,8 @@ msgid "Closed"
 msgstr ""
 
 #. module: portal_crm
-#: field:portal_crm.crm_contact_us,date_assign:0
-msgid "Assignation Date"
+#: selection:portal_crm.crm_contact_us,state:0
+msgid "Pending"
 msgstr ""
 
 #. module: portal_crm
@@ -398,8 +393,8 @@ msgid "Active"
 msgstr ""
 
 #. module: portal_crm
-#: field:portal_crm.crm_contact_us,user_id:0
-msgid "Salesperson"
+#: field:portal_crm.crm_contact_us,day_open:0
+msgid "Days to Open"
 msgstr ""
 
 #. module: portal_crm
@@ -418,6 +413,11 @@ msgid "Summary"
 msgstr ""
 
 #. module: portal_crm
+#: view:portal_crm.crm_contact_us:0
+msgid "Subject..."
+msgstr ""
+
+#. module: portal_crm
 #: help:portal_crm.crm_contact_us,section_id:0
 msgid "When sending mails, the default email address is taken from the sales team."
 msgstr ""
@@ -428,13 +428,13 @@ msgid "Partner Contact Name"
 msgstr ""
 
 #. module: portal_crm
-#: field:portal_crm.crm_contact_us,partner_longitude:0
-msgid "Geo Longitude"
+#: view:portal_crm.crm_contact_us:0
+msgid "Your phone number..."
 msgstr ""
 
 #. module: portal_crm
-#: help:portal_crm.crm_contact_us,date_assign:0
-msgid "Last date this case was forwarded/assigned to a partner"
+#: view:portal_crm.crm_contact_us:0
+msgid "Close"
 msgstr ""
 
 #. module: portal_crm
@@ -463,18 +463,13 @@ msgid "Referred By"
 msgstr ""
 
 #. module: portal_crm
-#: field:portal_crm.crm_contact_us,partner_assigned_id:0
-msgid "Assigned Partner"
-msgstr ""
-
-#. module: portal_crm
 #: selection:portal_crm.crm_contact_us,type:0
 msgid "Opportunity"
 msgstr ""
 
 #. module: portal_crm
-#: help:portal_crm.crm_contact_us,partner_assigned_id:0
-msgid "Partner this case has been forwarded/assigned to."
+#: view:portal_crm.crm_contact_us:0
+msgid "Name"
 msgstr ""
 
 #. module: portal_crm

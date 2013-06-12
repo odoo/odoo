@@ -74,9 +74,6 @@ class account_analytic_account(osv.osv):
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Timesheet Invoicing Ratio',
             help="You usually invoice 100% of the timesheets. But if you mix fixed price and timesheet invoicing, you may use another ratio. For instance, if you do a 20% advance invoice (fixed price, based on a sales order), you should invoice the rest on timesheet with a 80% ratio."),
     }
-    _defaults = {
-        'pricelist_id': lambda self, cr, uid, ctx: ctx.get('pricelist_id', False),
-    }
 
     def on_change_partner_id(self, cr, uid, ids, partner_id, name, context=None):
         res = super(account_analytic_account, self).on_change_partner_id(cr, uid, ids, partner_id, name, context=context)
@@ -185,7 +182,7 @@ class account_analytic_line(osv.osv):
             for account in analytic_account_obj.browse(cr, uid, list(account_ids), context=context):
                 partner = account.partner_id
                 if (not partner) or not (account.pricelist_id):
-                    raise osv.except_osv(_('Analytic Account incomplete !'),
+                    raise osv.except_osv(_('Analytic Account Incomplete!'),
                             _('Contract incomplete. Please fill in the Customer and Pricelist fields.'))
 
                 date_due = False

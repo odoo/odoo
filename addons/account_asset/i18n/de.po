@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-06 19:52+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-03-20 23:21+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:32+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:10+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -198,6 +198,12 @@ msgstr "Bemerkungen"
 #: field:account.asset.depreciation.line,move_id:0
 msgid "Depreciation Entry"
 msgstr "Abschreibungsbuchung"
+
+#. module: account_asset
+#: code:addons/account_asset/account_asset.py:82
+#, python-format
+msgid "Error!"
+msgstr "Fehler!"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -606,6 +612,14 @@ msgid "Current"
 msgstr "Aktuell"
 
 #. module: account_asset
+#: code:addons/account_asset/account_asset.py:82
+#, python-format
+msgid "You cannot delete an asset that contains posted depreciation lines."
+msgstr ""
+"Sie können kein Anlagegut löschen, welches über Abschreibungspositionen "
+"verfügt"
+
+#. module: account_asset
 #: view:account.asset.category:0
 msgid "Depreciation Method"
 msgstr "Abschreibungsmethode"
@@ -732,10 +746,15 @@ msgid "Amount of Depreciation Lines"
 msgstr "Betrag der Abschreibungen"
 
 #. module: account_asset
-#: code:addons/account_asset/wizard/wizard_asset_compute.py:49
+#: code:addons/account_asset/wizard/wizard_asset_compute.py:50
 #, python-format
 msgid "Created Asset Moves"
 msgstr "Erzeugte Anlagenbuchungen"
+
+#. module: account_asset
+#: view:account.asset.asset:0
+msgid "Add an internal note here..."
+msgstr "Schreiben Sie hier Ihre Mitteilung"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,sequence:0

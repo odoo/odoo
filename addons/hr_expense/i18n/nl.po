@@ -7,21 +7,31 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-01-31 18:21+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-06-08 11:50+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-01 05:49+0000\n"
-"X-Generator: Launchpad (build 16455)\n"
+"X-Launchpad-Export-Date: 2013-06-09 06:16+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 #: model:process.node,name:hr_expense.process_node_confirmedexpenses0
 msgid "Confirmed Expenses"
 msgstr "Goedgekeurde declaraties"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:349
+#, python-format
+msgid ""
+"No purchase account found for the product %s (or for his category), please "
+"configure one."
+msgstr ""
+"Geen inkooprekening gevonden voor het product %s (of voor de categorie van "
+"het product). Maak er een aan."
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_line
@@ -90,11 +100,16 @@ msgid "Unread Messages"
 msgstr "Ongelezen berichten"
 
 #. module: hr_expense
+#: selection:hr.expense.expense,state:0
+msgid "Waiting Payment"
+msgstr "Wachten op betaling"
+
+#. module: hr_expense
 #: field:hr.expense.expense,company_id:0
 #: view:hr.expense.report:0
 #: field:hr.expense.report,company_id:0
 msgid "Company"
-msgstr "BedrijfTe b"
+msgstr "Bedrijf"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -120,11 +135,6 @@ msgstr ""
 #: model:ir.model,name:hr_expense.model_hr_expense_report
 msgid "Expenses Statistics"
 msgstr "Declaratie statistieken"
-
-#. module: hr_expense
-#: view:hr.expense.expense:0
-msgid "Open Receipt"
-msgstr "Open bon"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -153,8 +163,10 @@ msgstr "Berichten"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:172
-#: code:addons/hr_expense/hr_expense.py:181
-#: code:addons/hr_expense/hr_expense.py:197
+#: code:addons/hr_expense/hr_expense.py:238
+#: code:addons/hr_expense/hr_expense.py:240
+#: code:addons/hr_expense/hr_expense.py:349
+#: code:addons/hr_expense/hr_expense.py:353
 #, python-format
 msgid "Error!"
 msgstr "Fout!"
@@ -186,6 +198,11 @@ msgid "The direct manager refuses the sheet.Reset as draft."
 msgstr "De directe manager keurt het formulier af. Teruggezet naar concept."
 
 #. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Open Accounting Entries"
+msgstr "Open boekingen"
+
+#. module: hr_expense
 #: help:hr.expense.expense,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
@@ -209,22 +226,6 @@ msgstr "Referentie"
 #: report:hr.expense:0
 msgid "Certified honest and conform,"
 msgstr "Geheel naar waarheid ingevuld,"
-
-#. module: hr_expense
-#: help:hr.expense.expense,state:0
-msgid ""
-"When the expense request is created the status is 'Draft'.\n"
-" It is confirmed by the user and request is sent to admin, the status is "
-"'Waiting Confirmation'.            \n"
-"If the admin accepts it, the status is 'Accepted'.\n"
-" If a receipt is made for the expense request, the status is 'Done'."
-msgstr ""
-"Nadat de declaratie is gemaakt staat de status op 'Concept'.\n"
-" Als het is bevestigd door de gebruiker en gestuurd naar de beheerder, gaat "
-"de status naar 'Wacht of bevestiging'.            \n"
-"Als de beheerder de declaratie accepteert, gaat de status naar "
-"'Geaccepteerd'.\n"
-" Als een factuur is gemaakt voor de declaratie, gaat de status naar 'Gereed'."
 
 #. module: hr_expense
 #: help:hr.expense.expense,date_confirm:0
@@ -252,7 +253,7 @@ msgstr ""
 "ingevoegd."
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:302
+#: code:addons/hr_expense/hr_expense.py:453
 #, python-format
 msgid "Warning"
 msgstr "Waarschuwing"
@@ -276,6 +277,23 @@ msgstr "Declaratie weigeren"
 #: field:hr.expense.report,price_average:0
 msgid "Average Price"
 msgstr "Gemiddelde prijs"
+
+#. module: hr_expense
+#: help:hr.expense.expense,state:0
+msgid ""
+"When the expense request is created the status is 'Draft'.\n"
+" It is confirmed by the user and request is sent to admin, the status is "
+"'Waiting Confirmation'.            \n"
+"If the admin accepts it, the status is 'Accepted'.\n"
+" If the accounting entries are made for the expense request, the status is "
+"'Waiting Payment'."
+msgstr ""
+"Nadat de declaratie is gemaakt staat de status op 'Concept'.\n"
+" Als het is bevestigd door de gebruiker en gestuurd naar de beheerder, gaat "
+"de status naar 'Wacht of bevestiging'.            \n"
+"Als de beheerder het accepteert, gaat de status naar 'Geaccepteerd'.\n"
+" Als de boekingen zijn aangemaakt voor de declaratie, de status is 'Wacht op "
+"betaling'."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -360,7 +378,7 @@ msgid "Some costs may be reinvoices to the customer"
 msgstr "Sommige kosten kunnen doorbelast worden aan de klant"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:197
+#: code:addons/hr_expense/hr_expense.py:238
 #, python-format
 msgid "The employee must have a home address."
 msgstr "Voor de werknemer moet een huisadres zijn ingesteld."
@@ -415,7 +433,7 @@ msgid "After creating invoice, reimburse expenses"
 msgstr "Na aanmaken factuur, kosten vergoeden"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:116
+#: code:addons/hr_expense/hr_expense.py:121
 #, python-format
 msgid "Warning!"
 msgstr "Waarschuwing!"
@@ -432,10 +450,18 @@ msgid "Validation Date"
 msgstr "Controledatum"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:227
+#: code:addons/hr_expense/hr_expense.py:378
 #, python-format
-msgid "Expense Receipt"
-msgstr "Declaratie bon"
+msgid "Expense Account Move"
+msgstr "Kosten boeking"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:240
+#, python-format
+msgid "The employee must have a payable account set on his home address."
+msgstr ""
+"De werknemer dient een debiteuren rekening te hebben ingesteld op zijn "
+"huisadres."
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -503,7 +529,12 @@ msgid "Employee encode all his expenses"
 msgstr "Werknemer declareert al diens onkosten"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:302
+#: view:hr.expense.expense:0
+msgid "Free Notes"
+msgstr "Vrije notities"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:453
 #, python-format
 msgid ""
 "Selected Unit of Measure does not belong to the same category as the product "
@@ -533,7 +564,12 @@ msgid "Draft"
 msgstr "Concept"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:181
+#: selection:hr.expense.expense,state:0
+msgid "Paid"
+msgstr "Betaald"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:353
 #, python-format
 msgid ""
 "Please configure Default Expense account for Product purchase: "
@@ -558,6 +594,7 @@ msgid "The direct manager approves the sheet"
 msgstr "De direct leidinggevende accordeert het formulier"
 
 #. module: hr_expense
+#: view:hr.expense.expense:0
 #: field:hr.expense.expense,amount:0
 msgid "Total Amount"
 msgstr "Totaalbedrag"
@@ -634,9 +671,9 @@ msgstr ""
 "              </p><p>\n"
 "                OpenERP zal ervoor zorgen het hele proces wordt gevolgd, de "
 "declaratie\n"
-"                wordt gevalideerd door de manager(s), en wordt aan de "
+"                wordt gevalideerd door de manager(s), en wordt aan de "
 "werknemer vergoed.\n"
-"                Sommige kosten worden doorberekend aan de klanten.\n"
+"                Sommige kosten worden doorberekend aan de klanten.\n"
 "              </p>\n"
 "            "
 
@@ -659,6 +696,11 @@ msgstr "Declaraties"
 #: field:hr.expense.expense,message_summary:0
 msgid "Summary"
 msgstr "Samenvatting"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_account_move_line
+msgid "Journal Items"
+msgstr "Boekingsregels"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.car_travel_product_template
@@ -713,7 +755,6 @@ msgid "Unit Price"
 msgstr "Prijs"
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0
 #: view:hr.expense.report:0
 #: selection:hr.expense.report,state:0
 msgid "Done"
@@ -770,6 +811,19 @@ msgstr "Accepteren"
 #: report:hr.expense:0
 msgid "This document must be dated and signed for reimbursement"
 msgstr "Dit document moet gedagtekend en ondertekend worden voor uitbetaling"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,help:hr_expense.hr_expense_product
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new expense category. \n"
+"             </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik voor het aanmaken van een kosten categorie. \n"
+"             </p>\n"
+"            "
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_refuseexpense0
@@ -884,7 +938,7 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:116
+#: code:addons/hr_expense/hr_expense.py:121
 #, python-format
 msgid "You can only delete draft expenses!"
 msgstr "U kunt alleen declaraties in de conceptfase verwijderen."
@@ -970,3 +1024,24 @@ msgstr "Totaal"
 #: model:process.node,name:hr_expense.process_node_reinvoicing0
 msgid "Reinvoicing"
 msgstr "Doorbelasten"
+
+#~ msgid "Open Receipt"
+#~ msgstr "Open bon"
+
+#, python-format
+#~ msgid "Expense Receipt"
+#~ msgstr "Declaratie bon"
+
+#~ msgid ""
+#~ "When the expense request is created the status is 'Draft'.\n"
+#~ " It is confirmed by the user and request is sent to admin, the status is "
+#~ "'Waiting Confirmation'.            \n"
+#~ "If the admin accepts it, the status is 'Accepted'.\n"
+#~ " If a receipt is made for the expense request, the status is 'Done'."
+#~ msgstr ""
+#~ "Nadat de declaratie is gemaakt staat de status op 'Concept'.\n"
+#~ " Als het is bevestigd door de gebruiker en gestuurd naar de beheerder, gaat "
+#~ "de status naar 'Wacht of bevestiging'.            \n"
+#~ "Als de beheerder de declaratie accepteert, gaat de status naar "
+#~ "'Geaccepteerd'.\n"
+#~ " Als een factuur is gemaakt voor de declaratie, gaat de status naar 'Gereed'."

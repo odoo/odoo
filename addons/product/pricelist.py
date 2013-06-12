@@ -236,7 +236,10 @@ class product_pricelist(osv.osv):
                                         qty, context=context)[res['base_pricelist_id']]
                                 ptype_src = self.browse(cr, uid, res['base_pricelist_id']).currency_id.id
                                 uom_price_already_computed = True
-                                price = currency_obj.compute(cr, uid, ptype_src, res['currency_id'], price_tmp, round=False)
+                                price = currency_obj.compute(cr, uid,
+                                        ptype_src, res['currency_id'],
+                                        price_tmp, round=False,
+                                        context=context)
                         elif res['base'] == -2:
                             # this section could be improved by moving the queries outside the loop:
                             where = []
@@ -374,7 +377,7 @@ class product_pricelist_item(osv.osv):
             result.append((line.id, line.name))
 
         result.append((-1, _('Other Pricelist')))
-        result.append((-2, _('Partner section of the product form')))
+        result.append((-2, _('Supplier Prices on the product form')))
         return result
 
     _name = "product.pricelist.item"

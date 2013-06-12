@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:36+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:15+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -102,11 +102,6 @@ msgid "Fourth"
 msgstr "Ceturtais"
 
 #. module: base_calendar
-#: model:ir.model,name:base_calendar.model_res_users
-msgid "Users"
-msgstr "Lietotāji"
-
-#. module: base_calendar
 #: field:calendar.event,day:0
 #: selection:calendar.event,select1:0
 #: field:calendar.todo,day:0
@@ -173,7 +168,6 @@ msgstr "Laika josla"
 #: selection:calendar.event,show_as:0
 #: selection:calendar.todo,show_as:0
 #: selection:crm.meeting,show_as:0
-#: selection:res.users,availability:0
 msgid "Free"
 msgstr "Brīvs"
 
@@ -251,7 +245,7 @@ msgid "To"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1255
+#: code:addons/base_calendar/base_calendar.py:1262
 #, python-format
 msgid "Error!"
 msgstr "Kļūda!"
@@ -363,10 +357,10 @@ msgstr ""
 
 #. module: base_calendar
 #: code:addons/base_calendar/base_calendar.py:399
-#: code:addons/base_calendar/base_calendar.py:444
-#: code:addons/base_calendar/base_calendar.py:1008
-#: code:addons/base_calendar/base_calendar.py:1010
-#: code:addons/base_calendar/base_calendar.py:1455
+#: code:addons/base_calendar/base_calendar.py:441
+#: code:addons/base_calendar/base_calendar.py:1015
+#: code:addons/base_calendar/base_calendar.py:1017
+#: code:addons/base_calendar/base_calendar.py:1462
 #, python-format
 msgid "Warning!"
 msgstr "Uzmanību!"
@@ -525,7 +519,7 @@ msgid "Event alarm information"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1010
+#: code:addons/base_calendar/base_calendar.py:1017
 #, python-format
 msgid "Count cannot be negative or 0."
 msgstr ""
@@ -639,6 +633,11 @@ msgid "hours"
 msgstr ""
 
 #. module: base_calendar
+#: view:calendar.event:0
+msgid "Cancel Event"
+msgstr ""
+
+#. module: base_calendar
 #: field:calendar.attendee,partner_id:0
 msgid "Contact"
 msgstr "Kontakts"
@@ -744,7 +743,7 @@ msgid "Declined"
 msgstr "Noraidīts"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1455
+#: code:addons/base_calendar/base_calendar.py:1462
 #, python-format
 msgid "Group by date is not supported, use the calendar view instead."
 msgstr ""
@@ -1165,11 +1164,6 @@ msgid "All Day?"
 msgstr ""
 
 #. module: base_calendar
-#: view:calendar.event:0
-msgid "Cancel"
-msgstr "Atcelt"
-
-#. module: base_calendar
 #: model:ir.actions.act_window,help:base_calendar.action_crm_meeting
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -1203,12 +1197,11 @@ msgid "Select Weekdays"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1514
+#: code:addons/base_calendar/base_calendar.py:1521
 #: selection:calendar.attendee,availability:0
 #: selection:calendar.event,show_as:0
 #: selection:calendar.todo,show_as:0
 #: selection:crm.meeting,show_as:0
-#: selection:res.users,availability:0
 #, python-format
 msgid "Busy"
 msgstr "Aizņemts"
@@ -1459,7 +1452,7 @@ msgid "Weekday"
 msgstr "Nedēļas diena"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1008
+#: code:addons/base_calendar/base_calendar.py:1015
 #, python-format
 msgid "Interval cannot be negative."
 msgstr ""
@@ -1472,7 +1465,7 @@ msgid "By day"
 msgstr "Pēc dienas"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:444
+#: code:addons/base_calendar/base_calendar.py:441
 #, python-format
 msgid "First you have to specify the date of the invitation."
 msgstr ""
@@ -1569,7 +1562,6 @@ msgstr "Otrais"
 
 #. module: base_calendar
 #: field:calendar.attendee,availability:0
-#: field:res.users,availability:0
 msgid "Free/Busy"
 msgstr "Brīvs/aizņemts"
 
@@ -1607,3 +1599,9 @@ msgstr ""
 #: selection:crm.meeting,byday:0
 msgid "Fifth"
 msgstr ""
+
+#~ msgid "Users"
+#~ msgstr "Lietotāji"
+
+#~ msgid "Cancel"
+#~ msgstr "Atcelt"

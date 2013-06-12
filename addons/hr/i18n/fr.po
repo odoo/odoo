@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-02-12 17:01+0000\n"
-"Last-Translator: David Halgand <david.halgand@gmail.com>\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-04-10 03:02+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-13 05:21+0000\n"
-"X-Generator: Launchpad (build 16491)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:23+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -59,6 +60,9 @@ msgid ""
 "128x128px image, with aspect ratio preserved. Use this field in form views "
 "or some kanban views."
 msgstr ""
+"Photo de l'employé. Elle est automatiquement redimensionnée comme une image "
+"128x128px, le ratio est préservé. Ce champ est utilisé dans les vues "
+"formulaire ou kanban."
 
 #. module: hr
 #: view:hr.config.settings:0
@@ -144,9 +148,9 @@ msgid "Expected in Recruitment"
 msgstr "Attendu en recrutement"
 
 #. module: hr
-#: field:res.users,employee_ids:0
-msgid "Related employees"
-msgstr "Employés liés"
+#: view:hr.employee:0
+msgid "Other Information ..."
+msgstr "Autre information..."
 
 #. module: hr
 #: constraint:hr.employee.category:0
@@ -405,6 +409,11 @@ msgid "Employee Contact"
 msgstr "Contrat de travail de l'employé"
 
 #. module: hr
+#: view:hr.employee:0
+msgid "e.g. Part Time"
+msgstr "i.e. Temps partiel"
+
+#. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
 msgid ""
 "<p class=\"oe_view_nocontent_create\">\n"
@@ -426,6 +435,23 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Cliquez pour définir un nouveau poste.\n"
+"               </ p>\n"
+"                 Les postes sont utilisés pour définir les métiers et leurs "
+"exigences.\n"
+"                 Vous pouvez garder une trace du nombre d'employés que vous "
+"avez par \n"
+"                 poste et suivre l'évolution en fonction de ce que vous avez "
+"prévu\n"
+"                 pour l'avenir.\n"
+"               </ p>\n"
+"                 Vous pouvez joindre un sondage à un poste. Il sera utilisé "
+"dans\n"
+"                 le processus de recrutement afin d'évaluer les candidats "
+"pour ce poste..\n"
+"               </ p>\n"
+"            "
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -521,6 +547,11 @@ msgstr "Structure des employés"
 #: view:hr.employee:0
 msgid "Contact Information"
 msgstr "Informations sur le contact"
+
+#. module: hr
+#: field:res.users,employee_ids:0
+msgid "Related employees"
+msgstr "Employés liés"
 
 #. module: hr
 #: field:hr.config.settings,module_hr_holidays:0
@@ -627,6 +658,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Cliquez pour ajouter un nouvel employé.\n"
+"               </ p>\n"
+"                 Avec juste un rapide coup d'œil sur l'écran employé "
+"OpenERP, vous\n"
+"                 pouvez facilement trouver toutes les informations dont vous "
+"avez besoin pour chaque personne;\n"
+"                 les données de contact, la situation d'emploi, la "
+"disponibilité, etc\n"
+"               </ p>\n"
+"            "
 
 #. module: hr
 #: view:hr.employee:0
@@ -691,6 +733,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Cliquez pour créer un département.\n"
+"               </ p>\n"
+"                 La structure des départements est utilisée pour gérer tous "
+"les documents\n"
+"                 liés aux employés : frais, feuilles de temps, congés, "
+"recrutements, etc\n"
+"               </ p>\n"
+"            "
 
 #. module: hr
 #: help:hr.config.settings,module_hr_timesheet:0
@@ -716,6 +767,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                 Cliquez pour créer un département.\n"
+"               </ p>\n"
+"                 La structure des départements est utilisée pour gérer tous "
+"les documents\n"
+"                 liés aux employés : frais, feuilles de temps, congés, "
+"recrutements, etc\n"
+"               </ p>\n"
+"            "
 
 #. module: hr
 #: view:hr.employee:0
@@ -749,6 +809,12 @@ msgid ""
 msgstr ""
 "Permet la facturation à partir des feuilles de temps (l'application "
 "\"Ventes\" sera installée)"
+
+#. module: hr
+#: code:addons/hr/hr.py:221
+#, python-format
+msgid "Welcome to %s! Please help him/her take the first steps with OpenERP!"
+msgstr ""
 
 #. module: hr
 #: view:hr.employee.category:0
@@ -937,6 +1003,24 @@ msgid ""
 "              </div>\n"
 "            "
 msgstr ""
+"<div class=\"oe_empty_custom_dashboard\">\n"
+"                   <p>\n"
+"                     <b> Le tableau de bord des ressources humaines est "
+"vide. </ b>\n"
+"                   </ p>\n"
+"                     Pour ajouter votre premier rapport dans ce tableau de "
+"bord, aller à n'importe quel\n"
+"                     menu, passer à la liste ou la vue graphique, puis "
+"cliquez sur <i>'Ajouter au\n"
+"                     Tableau de bord'</ i> dans les options de recherche "
+"avancée.\n"
+"                   </ p>\n"
+"                     Vous pouvez filtrer et regrouper les données avant de "
+"l'insérer dans le\n"
+"                     tableau de bord à l'aide des options de recherche.\n"
+"                   </ p>\n"
+"               </ div>\n"
+"            "
 
 #. module: hr
 #: view:hr.employee:0

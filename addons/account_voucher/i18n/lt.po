@@ -1,26 +1,26 @@
 # Lithuanian translation for openobject-addons
 # Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+# Giedrius Slavinskas <giedrius@inovera.lt>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2012-12-21 23:00+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"PO-Revision-Date: 2013-04-30 16:26+0000\n"
+"Last-Translator: Giedrius Slavinskas - inovera.lt <giedrius@inovera.lt>\n"
 "Language-Team: Lithuanian <lt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-01-18 06:34+0000\n"
-"X-Generator: Launchpad (build 16430)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:12+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
 msgid "Reconciliation"
-msgstr ""
+msgstr "Sudengimas"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_config_settings
@@ -28,7 +28,7 @@ msgid "account.config.settings"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:357
+#: code:addons/account_voucher/account_voucher.py:417
 #, python-format
 msgid "Write-Off"
 msgstr "Nurašymas"
@@ -36,12 +36,12 @@ msgstr "Nurašymas"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Payment Ref"
-msgstr "Mokėjimo nuoroda"
+msgstr "Apmokėjimo numeris"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Total Amount"
-msgstr ""
+msgstr "Iš viso"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -60,11 +60,12 @@ msgid ""
 "Computed as the difference between the amount stated in the voucher and the "
 "sum of allocation on the voucher lines."
 msgstr ""
+"Paskaičiuotas skirtumas tarp sumokėtos bei eilutėse paskirstytos sumos."
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "(Update)"
-msgstr ""
+msgstr "(Atnaujinti)"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -76,12 +77,12 @@ msgstr ""
 #: view:account.statement.from.invoice.lines:0
 #: model:ir.actions.act_window,name:account_voucher.action_view_account_statement_from_invoice_lines
 msgid "Import Entries"
-msgstr ""
+msgstr "Įkelti DK įrašus"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Voucher Entry"
-msgstr ""
+msgstr "Apskaitos dokumento įrašai"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -91,7 +92,7 @@ msgstr "Kovas"
 #. module: account_voucher
 #: field:account.voucher,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Neperžiūrėtos žinutės"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -101,28 +102,35 @@ msgstr "Apmokėti sąskaitą"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure you want to cancel this receipt?"
-msgstr ""
+msgstr "Ar tikrai norite atšaukti šį kvitą?"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Set to Draft"
-msgstr "Nustatyti kaip juodraštį"
+msgstr "Atstatyti į juodraštį"
 
 #. module: account_voucher
 #: help:account.voucher,reference:0
 msgid "Transaction reference number."
-msgstr ""
+msgstr "Apmokėjimo numeris."
 
 #. module: account_voucher
-#: view:sale.receipt.report:0
-msgid "Group by year of Invoice Date"
+#: view:account.voucher:0
+msgid "Allocation"
+msgstr "Paskirstymas"
+
+#. module: account_voucher
+#: help:account.voucher,currency_help_label:0
+msgid ""
+"This sentence helps you to know how to specify the payment rate by giving "
+"you the direct effect it has"
 msgstr ""
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,user_id:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Pardavėjas"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -130,11 +138,16 @@ msgid "Voucher Statistics"
 msgstr "Kvito statistika"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1533
+#: code:addons/account_voucher/account_voucher.py:1641
 #, python-format
 msgid ""
 "You can not change the journal as you already reconciled some statement "
 "lines!"
+msgstr ""
+
+#. module: account_voucher
+#: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
+msgid "Status changed"
 msgstr ""
 
 #. module: account_voucher
@@ -146,7 +159,7 @@ msgstr "Patvirtinti"
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_payment
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_payment
 msgid "Supplier Payments"
-msgstr ""
+msgstr "Mokėjimai tiekėjams"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_purchase_receipt
@@ -159,6 +172,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Spauskite, kad įvestumėte pirkimo kvitą. \n"
+"              </p><p>\n"
+"                Patvirtinus pirkimo kvitą, galima įvesti mokėjimą tiekėjui,\n"
+"                susijusį su šiuo kvitu.\n"
+"              </p>\n"
+"            "
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -168,7 +188,7 @@ msgstr "Ieškoti kvito"
 #. module: account_voucher
 #: field:account.voucher,writeoff_acc_id:0
 msgid "Counterpart Account"
-msgstr ""
+msgstr "Nurašymo sąskaita"
 
 #. module: account_voucher
 #: field:account.voucher,account_id:0
@@ -180,17 +200,17 @@ msgstr "Sąskaita"
 #. module: account_voucher
 #: field:account.voucher,line_dr_ids:0
 msgid "Debits"
-msgstr ""
+msgstr "Debetavimas"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice.lines:0
 msgid "Ok"
-msgstr "OK"
+msgstr "Gerai"
 
 #. module: account_voucher
 #: field:account.voucher.line,reconcile:0
 msgid "Full Reconcile"
-msgstr "Pilnas sugretinimas"
+msgstr "Pilnas sudengimas"
 
 #. module: account_voucher
 #: field:account.voucher,date_due:0
@@ -208,25 +228,25 @@ msgstr "Pastabos"
 #. module: account_voucher
 #: field:account.voucher,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Pranešimai"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
 msgid "Purchase Receipts"
-msgstr ""
+msgstr "Pirkimo kvitai"
 
 #. module: account_voucher
 #: field:account.voucher.line,move_line_id:0
 msgid "Journal Item"
-msgstr ""
+msgstr "DK įrašas"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:496
-#: code:addons/account_voucher/account_voucher.py:967
+#: code:addons/account_voucher/account_voucher.py:558
+#: code:addons/account_voucher/account_voucher.py:1073
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Klaida!"
 
 #. module: account_voucher
 #: field:account.voucher.line,amount:0
@@ -240,6 +260,11 @@ msgstr "Mokėjimo pasirinkimai"
 
 #. module: account_voucher
 #: view:account.voucher:0
+msgid "e.g. 003/10"
+msgstr "pvz. 003/10"
+
+#. module: account_voucher
+#: view:account.voucher:0
 msgid "Other Information"
 msgstr "Kita informacija"
 
@@ -250,7 +275,7 @@ msgid "Cancelled"
 msgstr "Atšauktas"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1139
+#: code:addons/account_voucher/account_voucher.py:1249
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -268,11 +293,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Spauskite, kad sukurtumėte pardavimo kvitą.\n"
+"              </p><p>\n"
+"                Patvirtinus pardavimo kvitą galima įvesti pirkėjo mokėjimą, "
+"\n"
+"                susijusį su šiuo kvitu.\n"
+"              </p>\n"
+"            "
 
 #. module: account_voucher
 #: help:account.voucher,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Jeigu pažymėta, naujos žinutės reikalaus jūsų dėmesio."
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_bank_statement_line
@@ -283,23 +316,24 @@ msgstr "Banko sąskaitos išrašo eilutė"
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,day:0
 msgid "Day"
-msgstr "Diena"
+msgstr "Data"
 
 #. module: account_voucher
+#: view:account.voucher:0
 #: field:account.voucher,tax_id:0
 msgid "Tax"
-msgstr "Mokestis"
+msgstr "Mokesčiai"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:867
+#: code:addons/account_voucher/account_voucher.py:971
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Klaidingas veiksmas!"
 
 #. module: account_voucher
 #: field:account.voucher,comment:0
 msgid "Counterpart Comment"
-msgstr ""
+msgstr "Nurašymo paaiškinimas"
 
 #. module: account_voucher
 #: field:account.voucher.line,account_analytic_id:0
@@ -312,6 +346,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Saugo pokalbių suvestinę (žinučių skaičius, ...). Ši apžvalga saugoma html "
+"formatu, kad būtų galima įterpti į kanban rodinius."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -321,12 +357,12 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Payment Information"
-msgstr "Mokėjimo informacija"
+msgstr "Mokėjimo duomenys"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "(update)"
-msgstr ""
+msgstr "(atnaujinti)"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -342,7 +378,12 @@ msgid "Import Invoices"
 msgstr "Įkelti S/F"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1098
+#: view:account.voucher:0
+msgid "e.g. Invoice SAJ/0042"
+msgstr "pvz. Sąskaita-faktūra SAJ/0042"
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:1208
 #, python-format
 msgid "Wrong voucher line"
 msgstr ""
@@ -351,17 +392,17 @@ msgstr ""
 #: selection:account.voucher,pay_now:0
 #: selection:sale.receipt.report,pay_now:0
 msgid "Pay Later or Group Funds"
-msgstr ""
+msgstr "Mokėti vėliau arba bendras apmokėjimas"
 
 #. module: account_voucher
 #: view:account.voucher:0
 #: selection:account.voucher,type:0
 #: selection:sale.receipt.report,type:0
 msgid "Receipt"
-msgstr ""
+msgstr "Kvitas"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1004
+#: code:addons/account_voucher/account_voucher.py:1110
 #, python-format
 msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
@@ -376,13 +417,18 @@ msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
+msgid "Cancel Voucher"
+msgstr "Atšaukti kvitą"
+
+#. module: account_voucher
+#: view:account.voucher:0
 #: field:account.voucher,period_id:0
 msgid "Period"
 msgstr "Periodas"
 
 #. module: account_voucher
 #: view:account.voucher:0
-#: code:addons/account_voucher/account_voucher.py:199
+#: code:addons/account_voucher/account_voucher.py:231
 #, python-format
 msgid "Supplier"
 msgstr "Tiekėjas"
@@ -395,7 +441,7 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Prenumeratoriai"
 
 #. module: account_voucher
 #: selection:account.voucher.line,type:0
@@ -403,7 +449,7 @@ msgid "Debit"
 msgstr "Debetas"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1533
+#: code:addons/account_voucher/account_voucher.py:1641
 #, python-format
 msgid "Unable to change journal !"
 msgstr ""
@@ -412,7 +458,7 @@ msgstr ""
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,nbr:0
 msgid "# of Voucher Lines"
-msgstr ""
+msgstr "# eilučių"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -423,13 +469,15 @@ msgstr "Tipas"
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Pro-forma Vouchers"
-msgstr ""
+msgstr "Išankstiniai kvitai"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: model:ir.actions.act_window,name:account_voucher.act_journal_voucher_open
-msgid "Voucher Entries"
-msgstr "Kvito eilutės"
+#: code:addons/account_voucher/account_voucher.py:318
+#, python-format
+msgid ""
+"At the operation date, the exchange rate was\n"
+"%s = %s"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_vendor_payment
@@ -442,6 +490,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Spauskite, kad sukurtumėte mokėjimą tiekėjui.\n"
+"              </p><p>\n"
+"                OpenERP pagalba jūs galėsite paprasčiau sekti atliekamus "
+"mokėjimus bei skolas tiekėjams.\n"
+"              </p>\n"
+"            "
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -456,12 +511,23 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,name:0
 msgid "Memo"
-msgstr ""
+msgstr "Atmintinė"
+
+#. module: account_voucher
+#: code:addons/account_voucher/invoice.py:34
+#, python-format
+msgid "Pay Invoice"
+msgstr "Apmokėti sąskaitą"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure to unreconcile and cancel this record ?"
-msgstr ""
+msgstr "Ar tikrai norite panaikinti sudengimą ir atšaukti šį įrašą?"
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Sales Receipt"
+msgstr "Pardavimo kvitas"
 
 #. module: account_voucher
 #: field:account.voucher,is_multi_currency:0
@@ -471,12 +537,12 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Bill Information"
-msgstr "Sąskaitos informacija"
+msgstr "Kvito duomenys"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "July"
-msgstr ""
+msgstr "Liepa"
 
 #. module: account_voucher
 #: help:account.voucher,state:0
@@ -494,22 +560,21 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,writeoff_amount:0
 msgid "Difference Amount"
-msgstr ""
+msgstr "Nesutampanti suma"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,due_delay:0
 msgid "Avg. Due Delay"
+msgstr "Vid. apmokėjimo terminas"
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Are you sure you want to unreconcile this record?"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/invoice.py:34
-#, python-format
-msgid "Pay Invoice"
-msgstr "Apmokėti sąskaitą"
-
-#. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1139
+#: code:addons/account_voucher/account_voucher.py:1249
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr ""
@@ -517,12 +582,12 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,tax_amount:0
 msgid "Tax Amount"
-msgstr ""
+msgstr "Mokesčių suma"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Validated Vouchers"
-msgstr ""
+msgstr "Užregistruoti kvitai"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_vendor_receipt
@@ -539,6 +604,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Spauskite, kad užregistruotumėte apmokėjimą. \n"
+"              </p><p>\n"
+"                Įveskite pirkėją, pasirinkite mokėjimo būdą ir tuomet\n"
+"                galėsite sukurti mokėjimo įrašus rankiniu būdu arba OpenERP\n"
+"                pasiūlys automatinį mokėjimo sudengimą su neapmokėta S/F ar\n"
+"                pardavimo kvitu.\n"
+"              </p>\n"
+"            "
 
 #. module: account_voucher
 #: field:account.config.settings,expense_currency_exchange_account_id:0
@@ -549,29 +623,29 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Paid Amount"
-msgstr ""
+msgstr "Sumokėta suma"
 
 #. module: account_voucher
 #: field:account.voucher,payment_option:0
 msgid "Payment Difference"
-msgstr ""
+msgstr "Mokėjimo nesutapimas"
 
 #. module: account_voucher
 #: view:account.voucher:0
 #: field:account.voucher,audit:0
 msgid "To Review"
-msgstr ""
+msgstr "Peržiūrėti"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1011
-#: code:addons/account_voucher/account_voucher.py:1025
-#: code:addons/account_voucher/account_voucher.py:1180
+#: code:addons/account_voucher/account_voucher.py:1120
+#: code:addons/account_voucher/account_voucher.py:1134
+#: code:addons/account_voucher/account_voucher.py:1286
 #, python-format
 msgid "change"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1000
+#: code:addons/account_voucher/account_voucher.py:1106
 #, python-format
 msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
@@ -585,11 +659,6 @@ msgid "Expense Lines"
 msgstr ""
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Sale voucher"
-msgstr ""
-
-#. module: account_voucher
 #: help:account.voucher,is_multi_currency:0
 msgid ""
 "Fields with internal purpose only that depicts if the voucher is a multi "
@@ -599,32 +668,33 @@ msgstr ""
 #. module: account_voucher
 #: view:account.invoice:0
 msgid "Register Payment"
-msgstr ""
+msgstr "Užregistruoti mokėjimą"
 
 #. module: account_voucher
 #: field:account.statement.from.invoice.lines,line_ids:0
 msgid "Invoices"
-msgstr ""
+msgstr "Sąskaitos faktūros"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "December"
-msgstr ""
+msgstr "Gruodis"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Group by month of Invoice Date"
-msgstr ""
+msgstr "S/F išrašymo mėnuo"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,month:0
 msgid "Month"
-msgstr ""
+msgstr "Mėnuo"
 
 #. module: account_voucher
 #: field:account.voucher,currency_id:0
 #: field:account.voucher.line,currency_id:0
+#: model:ir.model,name:account_voucher.model_res_currency
 #: field:sale.receipt.report,currency_id:0
 msgid "Currency"
 msgstr "Valiuta"
@@ -632,7 +702,7 @@ msgstr "Valiuta"
 #. module: account_voucher
 #: view:account.statement.from.invoice.lines:0
 msgid "Payable and Receivables"
-msgstr ""
+msgstr "Mokamos ir gautinos sumos"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -642,11 +712,6 @@ msgstr ""
 #. module: account_voucher
 #: field:sale.receipt.report,state:0
 msgid "Voucher Status"
-msgstr ""
-
-#. module: account_voucher
-#: view:account.voucher:0
-msgid "Are you sure to unreconcile this record?"
 msgstr ""
 
 #. module: account_voucher
@@ -665,10 +730,15 @@ msgstr ""
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
 msgid "Reconcile Payment Balance"
-msgstr ""
+msgstr "Sudengti mokėjimo likutį"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:963
+#: view:account.voucher:0
+msgid "Cancel Receipt"
+msgstr "Atšaukti kvitą"
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:1067
 #, python-format
 msgid "Configuration Error !"
 msgstr ""
@@ -677,13 +747,13 @@ msgstr ""
 #: view:account.voucher:0
 #: view:sale.receipt.report:0
 msgid "Draft Vouchers"
-msgstr ""
+msgstr "Dokumento juodraštis"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,price_total_tax:0
 msgid "Total With Tax"
-msgstr ""
+msgstr "Iš viso"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -695,23 +765,23 @@ msgstr ""
 #: field:account.voucher,state:0
 #: view:sale.receipt.report:0
 msgid "Status"
-msgstr ""
+msgstr "Būsena"
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Allocation"
-msgstr ""
+#: view:sale.receipt.report:0
+msgid "Group by year of Invoice Date"
+msgstr "S/F išrašymo metai"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice.lines:0
 #: view:account.voucher:0
 msgid "or"
-msgstr ""
+msgstr "arba"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "August"
-msgstr ""
+msgstr "Rugpjūtis"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -728,10 +798,10 @@ msgstr ""
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "October"
-msgstr ""
+msgstr "Spalis"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:964
+#: code:addons/account_voucher/account_voucher.py:1068
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr ""
@@ -739,7 +809,7 @@ msgstr ""
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "June"
-msgstr ""
+msgstr "Birželis"
 
 #. module: account_voucher
 #: field:account.voucher,payment_rate_currency_id:0
@@ -749,24 +819,23 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,paid:0
 msgid "Paid"
-msgstr ""
+msgstr "Apmokėta"
 
 #. module: account_voucher
-#: view:account.voucher:0
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
 msgid "Sales Receipts"
-msgstr ""
+msgstr "Pardavimo kvitai"
 
 #. module: account_voucher
 #: field:account.voucher,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Ar prenumeratorius"
 
 #. module: account_voucher
 #: field:account.voucher,analytic_id:0
 msgid "Write-Off Analytic Account"
-msgstr ""
+msgstr "Nurašymo analitinė sąskaita"
 
 #. module: account_voucher
 #: field:account.voucher,date:0
@@ -778,12 +847,12 @@ msgstr "Data"
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "November"
-msgstr ""
+msgstr "Lapkritis"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Išplėstiniai filtrai..."
 
 #. module: account_voucher
 #: field:account.voucher,paid_amount_in_company_currency:0
@@ -799,7 +868,7 @@ msgstr ""
 #: selection:account.voucher,pay_now:0
 #: selection:sale.receipt.report,pay_now:0
 msgid "Pay Directly"
-msgstr ""
+msgstr "Mokėti iškart"
 
 #. module: account_voucher
 #: field:account.voucher.line,type:0
@@ -812,7 +881,7 @@ msgid "Previous Payments ?"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1098
+#: code:addons/account_voucher/account_voucher.py:1208
 #, python-format
 msgid "The invoice you are willing to pay is not valid anymore."
 msgstr ""
@@ -820,31 +889,31 @@ msgstr ""
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "January"
-msgstr ""
+msgstr "Sausis"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_voucher_list
 #: model:ir.ui.menu,name:account_voucher.menu_encode_entries_by_voucher
 msgid "Journal Vouchers"
-msgstr "Žurnalo kvitai"
+msgstr "Apskaitos dokumentai"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Įmonės"
 
 #. module: account_voucher
 #: field:account.voucher,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Santrauka"
 
 #. module: account_voucher
 #: field:account.voucher,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktyvus"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:968
+#: code:addons/account_voucher/account_voucher.py:1074
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr ""
@@ -854,24 +923,24 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
 msgid "Customer Payments"
-msgstr ""
+msgstr "Pirkėjo mokėjimai"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt_report_all
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt_report_all
 #: view:sale.receipt.report:0
 msgid "Sales Receipts Analysis"
-msgstr ""
+msgstr "Pardavimo kvitų analizė"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Group by Invoice Date"
-msgstr ""
+msgstr "S/F išrašymo data"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Post"
-msgstr ""
+msgstr "Registruoti"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -879,20 +948,25 @@ msgid "Invoices and outstanding transactions"
 msgstr ""
 
 #. module: account_voucher
+#: field:account.voucher,currency_help_label:0
+msgid "Helping Sentence"
+msgstr ""
+
+#. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,price_total:0
 msgid "Total Without Tax"
-msgstr ""
+msgstr "Iš viso be mokesčių"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Bill Date"
-msgstr "Sąskaitos data"
+msgstr "Kvito data"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Unreconcile"
-msgstr "Panaikinti sugretinimą"
+msgstr "Panaikinti sudengimą"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -913,7 +987,7 @@ msgstr "Kreditas"
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_bank_statement
 msgid "Bank Statement"
-msgstr ""
+msgstr "Banko sąskaitos išrašas"
 
 #. module: account_voucher
 #: view:account.bank.statement:0
@@ -923,12 +997,12 @@ msgstr ""
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "September"
-msgstr ""
+msgstr "Rugsėjis"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Sales Information"
-msgstr ""
+msgstr "Pardavimo informacija"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -940,7 +1014,7 @@ msgstr "Kvitas"
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Sąskaita-faktūra"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -969,10 +1043,10 @@ msgstr "Išankstinė sąskaita"
 #: view:account.voucher:0
 #: field:account.voucher,move_ids:0
 msgid "Journal Items"
-msgstr ""
+msgstr "DK įrašai"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:496
+#: code:addons/account_voucher/account_voucher.py:558
 #, python-format
 msgid "Please define default credit/debit accounts on the journal \"%s\"."
 msgstr ""
@@ -981,13 +1055,13 @@ msgstr ""
 #: selection:account.voucher,type:0
 #: selection:sale.receipt.report,type:0
 msgid "Purchase"
-msgstr ""
+msgstr "Pirkimai"
 
 #. module: account_voucher
 #: view:account.invoice:0
 #: view:account.voucher:0
 msgid "Pay"
-msgstr ""
+msgstr "Mokėti"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1002,6 +1076,9 @@ msgid ""
 "either choose to keep open this difference on the partner's account, or "
 "reconcile it with the payment(s)"
 msgstr ""
+"Pasirinkite ką daryti su susidariusiu skirtumu tarp sumokėtos bei "
+"paskirstytos sumos. Galima pasirinkti, kad likutis liktų kontakto balanse, "
+"arba sudengti su kitu mokėjimu (-ais)."
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt_report_all
@@ -1019,17 +1096,17 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Posted Vouchers"
-msgstr ""
+msgstr "Užregistruotas dokumentas"
 
 #. module: account_voucher
 #: field:account.voucher,payment_rate:0
 msgid "Exchange Rate"
-msgstr ""
+msgstr "Valiutos kursas"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Payment Method"
-msgstr ""
+msgstr "Mokėjimo būdas"
 
 #. module: account_voucher
 #: field:account.voucher.line,name:0
@@ -1039,12 +1116,7 @@ msgstr "Aprašymas"
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "May"
-msgstr ""
-
-#. module: account_voucher
-#: view:account.voucher:0
-msgid "Sale Receipt"
-msgstr ""
+msgstr "Gegužė"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1057,23 +1129,23 @@ msgstr "Žurnalas"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Internal Notes"
-msgstr ""
+msgstr "Vidinės pastabos"
 
 #. module: account_voucher
 #: view:account.voucher:0
 #: field:account.voucher,line_cr_ids:0
 msgid "Credits"
-msgstr ""
+msgstr "Kreditavimas"
 
 #. module: account_voucher
 #: field:account.voucher.line,amount_original:0
 msgid "Original Amount"
-msgstr ""
+msgstr "Pirminė suma"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Purchase Receipt"
-msgstr "Pirkimo kvitas"
+msgstr "Pirkimo kvitai"
 
 #. module: account_voucher
 #: help:account.voucher,payment_rate:0
@@ -1089,7 +1161,7 @@ msgstr ""
 #: field:sale.receipt.report,pay_now:0
 #: selection:sale.receipt.report,type:0
 msgid "Payment"
-msgstr ""
+msgstr "Mokėjimas"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1102,12 +1174,12 @@ msgstr "Užregistruota"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Customer"
-msgstr ""
+msgstr "Pirkėjas"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "February"
-msgstr ""
+msgstr "Vasaris"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1117,13 +1189,19 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,reference:0
 msgid "Ref #"
-msgstr "Nuoroda"
+msgstr "Nr #"
+
+#. module: account_voucher
+#: view:account.voucher:0
+#: model:ir.actions.act_window,name:account_voucher.act_journal_voucher_open
+msgid "Voucher Entries"
+msgstr "Kvito eilutės"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,year:0
 msgid "Year"
-msgstr ""
+msgstr "Metai"
 
 #. module: account_voucher
 #: field:account.config.settings,income_currency_exchange_account_id:0
@@ -1140,22 +1218,22 @@ msgstr "Pardavimas"
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "April"
-msgstr ""
+msgstr "Balandis"
 
 #. module: account_voucher
 #: help:account.voucher,tax_id:0
 msgid "Only for tax excluded from price"
-msgstr ""
+msgstr "Tik tie mokesčiai, kurie neįtraukti į kainą"
 
 #. module: account_voucher
 #: field:account.voucher,type:0
 msgid "Default Type"
-msgstr ""
+msgstr "Tipas"
 
 #. module: account_voucher
 #: help:account.voucher,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Žinučių ir pranešimų istorija"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_statement_from_invoice_lines
@@ -1166,7 +1244,7 @@ msgstr ""
 #: view:account.voucher:0
 #: field:account.voucher,amount:0
 msgid "Total"
-msgstr ""
+msgstr "Iš viso"
 
 #. module: account_voucher
 #: field:account.voucher,move_id:0
@@ -1181,7 +1259,7 @@ msgid ""
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:867
+#: code:addons/account_voucher/account_voucher.py:971
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr ""
@@ -1189,7 +1267,7 @@ msgstr ""
 #. module: account_voucher
 #: help:account.voucher,date:0
 msgid "Effective date for accounting entries"
-msgstr ""
+msgstr "DK įrašų įsigaliojimo data"
 
 #. module: account_voucher
 #: model:mail.message.subtype,name:account_voucher.mt_voucher_state_change
@@ -1199,7 +1277,7 @@ msgstr ""
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
 msgid "Keep Open"
-msgstr ""
+msgstr "Palikti atvirą"
 
 #. module: account_voucher
 #: field:account.voucher,line_ids:0
@@ -1212,7 +1290,7 @@ msgstr "Kvito eilutės"
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,delay_to_pay:0
 msgid "Avg. Delay To Pay"
-msgstr ""
+msgstr "Vid. vėluojama apmokėti"
 
 #. module: account_voucher
 #: field:account.voucher.line,untax_amount:0
@@ -1236,16 +1314,11 @@ msgstr "Partneris"
 #. module: account_voucher
 #: field:account.voucher.line,amount_unreconciled:0
 msgid "Open Balance"
-msgstr ""
+msgstr "Likutis"
 
 #. module: account_voucher
-#: model:mail.message.subtype,description:account_voucher.mt_voucher_state_change
-msgid "Status <b>changed</b>"
-msgstr ""
-
-#. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1000
-#: code:addons/account_voucher/account_voucher.py:1004
+#: code:addons/account_voucher/account_voucher.py:1106
+#: code:addons/account_voucher/account_voucher.py:1110
 #, python-format
 msgid "Insufficient Configuration!"
 msgstr ""
