@@ -43,12 +43,21 @@ class res_users_gamification_group(osv.Model):
                 goal_plan_obj.write(cr, uid, plan_ids, {'user_ids': [(4, user_id) for user_id in ids]}, context=context)
 
         if vals.get('image'):
-            self.pool.get('gamification.goal').changed_users_avatar(cr, uid, ids, context)
+            goal_type_id = self.pool.get('ir.model.data').get_object(cr, uid, 'gamification', 'type_base_avatar', context)
+            goal_ids = self.pool.get('gamification.goal').search(cr, uid, [('type_id', '=', goal_type_id.id), ('user_id', 'in', ids)], context=context)
+            values = {'state': 'reached', 'current': 1}
+            self.pool.get('gamification.goal').write(cr, uid, goal_ids, values, context=context)
         return write_res
 
-#TODO: this method is not clear about what she returns (list of dict but the dict's keys may be different from one to another)... it's doubtfull conceptually. Don't we need some more doc? why is this method looking so overkill?
     def get_goals_todo_info(self, cr, uid, context=None):
-        """Return the list of goals assigned to the user, grouped by plan"""
+        """Return the list of goals assigned to the user, grouped by plan
+
+        This method intends to return processable data in javascript in the
+        goal_list_to_do template. The output format is not constant as the
+        required information is different between individual and board goal
+        types
+        :return: list of dictionnaries for each goal to display
+        """
         all_goals_info = []
         plan_obj = self.pool.get('gamification.goal.plan')
 
