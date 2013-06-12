@@ -83,13 +83,13 @@ class WebRequest(object):
 
         ``bool``, indicates whether the debug mode is active on the client
     """
-    def __init__(self, httprequest, method, auth_method=None):
+    def __init__(self, httprequest, func, auth_method="auth"):
         self.httprequest = httprequest
         self.httpresponse = None
         self.httpsession = httprequest.session
         self.db = None
         self.uid = None
-        self.method = method
+        self.func = func
         self.auth_method = auth_method
 
     def init(self, params):
@@ -135,7 +135,7 @@ class WebRequest(object):
         elif self.auth_method == "noauth":
             self.db = (self.session._db or openerp.addons.web.controllers.main.db_monodb(self)).lower()
             self.uid = None
-        else:
+        else: # auth
             try:
                 self.session.check_security()
             except session.SessionExpiredException, e:
@@ -146,6 +146,7 @@ class WebRequest(object):
     def registry(self):
         return openerp.modules.registry.RegistryManager.get(self.db)
 
+    @property
     @contextlib.contextmanager
     def cr(self):
         with registry.cursor() as cr:
@@ -206,11 +207,11 @@ class JsonRequest(WebRequest):
     def dispatch(self):
         """ Calls the method asked for by the JSON-RPC2 or JSONP request
 
-        :param method: the method which received the request
+        :param func: the func which received the request
 
         :returns: an utf8 encoded JSON-RPC2 or JSONP reply
         """
-        method = self.method
+        func = self.func
         args = self.httprequest.args
         jsonp = args.get('jsonp')
         requestf = None
@@ -245,9 +246,9 @@ class JsonRequest(WebRequest):
                 self.jsonrequest = simplejson.loads(request, object_hook=reject_nonliteral)
             self.init(self.jsonrequest.get("params", {}))
             #if _logger.isEnabledFor(logging.DEBUG):
-            #    _logger.debug("--> %s.%s\n%s", method.im_class.__name__, method.__name__, pprint.pformat(self.jsonrequest))
+            #    _logger.debug("--> %s.%s\n%s", func.im_class.__name__, func.__name__, pprint.pformat(self.jsonrequest))
             response['id'] = self.jsonrequest.get('id')
-            response["result"] = method(**self.params)
+            response["result"] = func(**self.params)
         except session.AuthenticationError, e:
             se = serialize_exception(e)
             error = {
@@ -329,7 +330,7 @@ class HttpRequest(WebRequest):
     """ Regular GET/POST request
     """
     def dispatch(self):
-        method = self.method
+        func = self.func
         params = dict(self.httprequest.args)
         params.update(self.httprequest.form)
         params.update(self.httprequest.files)
@@ -340,9 +341,9 @@ class HttpRequest(WebRequest):
                 akw[key] = value
             else:
                 akw[key] = type(value)
-        #_logger.debug("%s --> %s.%s %r", self.httprequest.method, method.im_class.__name__, method.__name__, akw)
+        #_logger.debug("%s --> %s.%s %r", self.httprequest.func, func.im_class.__name__, func.__name__, akw)
         try:
-            r = method(**self.params)
+            r = func(**self.params)
         except werkzeug.exceptions.HTTPException, e:
             r = e
         except Exception, e:
