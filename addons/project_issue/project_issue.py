@@ -249,11 +249,11 @@ class project_issue(base_stage, osv.osv):
         'description': fields.text('Private Note'),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=_TASK_STATE, string="Status", readonly=True,
-                help='The status is set to \'Draft\', when a case is created.\
-                      If the case is in progress the status is set to \'Open\'.\
-                      When the case is over, the status is set to \'Done\'.\
-                      If the case needs to be reviewed then the status is \
-                      set to \'Pending\'.'),
+                help='The status is set to \'Draft\', when a case is created.\n'
+                     'If the case is in progress the status is set to \'Open\'.\n'
+                     'When the case is over, the status is set to \'Done\'.\n'
+                     'If the case needs to be reviewed then the status is '
+                     'set to \'Pending\'.'),
         'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready for next stage')], 'Kanban State',
                                          track_visibility='onchange',
                                          help="A Issue's kanban state indicates special situations affecting it:\n"
