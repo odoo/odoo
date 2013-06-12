@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-22 05:38+0000\n"
-"X-Generator: Launchpad (build 16378)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:22+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: sale
 #: model:res.groups,name:sale.group_analytic_accounting
@@ -42,7 +42,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
 #: model:ir.ui.menu,name:sale.menu_invoicing_sales_order_lines
 msgid "Order Lines to Invoice"
-msgstr ""
+msgstr "Ordrelinjer til fakturering"
 
 #. module: sale
 #: field:sale.order,date_confirm:0
@@ -69,7 +69,7 @@ msgstr ""
 #. module: sale
 #: view:sale.config.settings:0
 msgid "Product Features"
-msgstr ""
+msgstr "Produktegenskaper"
 
 #. module: sale
 #: help:sale.config.settings,module_account_analytic_analysis:0
@@ -95,7 +95,7 @@ msgstr ""
 #: view:sale.order.line:0
 #: field:sale.report,product_uom:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Måleenhet"
 
 #. module: sale
 #: field:sale.order.line,type:0
@@ -118,7 +118,7 @@ msgid "March"
 msgstr "Mars"
 
 #. module: sale
-#: code:addons/sale/sale.py:559
+#: code:addons/sale/sale.py:567
 #, python-format
 msgid "First cancel all invoices attached to this sales order."
 msgstr ""
@@ -126,13 +126,13 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 msgid "Quotation Number"
-msgstr ""
+msgstr "Tilbudsnummer"
 
 #. module: sale
 #: view:sale.order:0
 #: field:sale.order,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Uleste meldinger"
 
 #. module: sale
 #: field:sale.order,company_id:0
@@ -141,7 +141,7 @@ msgstr ""
 #: field:sale.report,company_id:0
 #: field:sale.shop,company_id:0
 msgid "Company"
-msgstr "Firma"
+msgstr "Bedrift"
 
 #. module: sale
 #: field:sale.make.invoice,invoice_date:0
@@ -167,29 +167,29 @@ msgstr "Fakturaavvik"
 #. module: sale
 #: view:sale.order:0
 msgid "Quotation "
-msgstr ""
+msgstr "Tilbud "
 
 #. module: sale
 #: selection:sale.order,state:0
 msgid "Draft Quotation"
-msgstr ""
+msgstr "Tilbudskladd"
 
 #. module: sale
 #: field:sale.order,partner_shipping_id:0
 msgid "Delivery Address"
-msgstr ""
+msgstr "Leveringsadresse"
 
 #. module: sale
 #: view:sale.report:0
 #: field:sale.report,analytic_account_id:0
 #: field:sale.shop,project_id:0
 msgid "Analytic Account"
-msgstr "Analytisk konto"
+msgstr "Analytisk Konto"
 
 #. module: sale
 #: field:sale.config.settings,module_sale_journal:0
 msgid "Allow batch invoicing of delivery orders through journals"
-msgstr ""
+msgstr "Tillat batchfakturering av leveranse via journaler"
 
 #. module: sale
 #: field:sale.order.line,price_subtotal:0
@@ -204,6 +204,7 @@ msgstr "Dag"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
+#: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Kanseller ordre"
 
@@ -281,11 +282,12 @@ msgid "Project"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:360
-#: code:addons/sale/sale.py:501
-#: code:addons/sale/sale.py:592
-#: code:addons/sale/sale.py:755
-#: code:addons/sale/sale.py:772
+#: code:addons/sale/sale.py:185
+#: code:addons/sale/sale.py:368
+#: code:addons/sale/sale.py:509
+#: code:addons/sale/sale.py:600
+#: code:addons/sale/sale.py:763
+#: code:addons/sale/sale.py:780
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -403,9 +405,9 @@ msgid "Tax"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:270
-#: code:addons/sale/sale.py:812
-#: code:addons/sale/sale.py:976
+#: code:addons/sale/sale.py:278
+#: code:addons/sale/sale.py:820
+#: code:addons/sale/sale.py:983
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -456,7 +458,7 @@ msgid "Fax :"
 msgstr "Fax:"
 
 #. module: sale
-#: code:addons/sale/sale.py:270
+#: code:addons/sale/sale.py:278
 #, python-format
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it before !"
@@ -480,8 +482,8 @@ msgid "Contract Features"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:280
-#: code:addons/sale/sale.py:578
+#: code:addons/sale/sale.py:288
+#: code:addons/sale/sale.py:586
 #: model:ir.model,name:sale.model_sale_order
 #: model:process.node,name:sale.process_node_order0
 #: model:process.node,name:sale.process_node_saleorder0
@@ -546,7 +548,7 @@ msgid "Prepare invoices based on timesheets"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:812
+#: code:addons/sale/sale.py:820
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced."
 msgstr ""
@@ -606,7 +608,7 @@ msgid "Disc.(%)"
 msgstr "Rabatt(%)"
 
 #. module: sale
-#: code:addons/sale/sale.py:756
+#: code:addons/sale/sale.py:764
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr ""
@@ -648,7 +650,7 @@ msgid "Make Invoices"
 msgstr "Lag fakturaer"
 
 #. module: sale
-#: code:addons/sale/res_config.py:89
+#: code:addons/sale/res_config.py:97
 #, python-format
 msgid "Hour"
 msgstr "Time"
@@ -757,7 +759,7 @@ msgid "Default Options"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:953
+#: code:addons/sale/sale.py:960
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:91
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:95
 #, python-format
@@ -817,7 +819,7 @@ msgid "Sales Order done"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:361
+#: code:addons/sale/sale.py:369
 #, python-format
 msgid "Please define sales journal for this company: \"%s\" (id:%d)."
 msgstr ""
@@ -870,7 +872,7 @@ msgid "Sales Make Invoice"
 msgstr "Salg oppretter faktura"
 
 #. module: sale
-#: code:addons/sale/sale.py:300
+#: code:addons/sale/sale.py:308
 #, python-format
 msgid "Pricelist Warning!"
 msgstr "Prisliste-advarsel!"
@@ -946,7 +948,7 @@ msgid "Category of Product"
 msgstr "Produktkategori"
 
 #. module: sale
-#: code:addons/sale/sale.py:558
+#: code:addons/sale/sale.py:566
 #, python-format
 msgid "Cannot cancel this sales order!"
 msgstr ""
@@ -1001,7 +1003,7 @@ msgid "Open Sale Menu"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:592
+#: code:addons/sale/sale.py:600
 #, python-format
 msgid "You cannot confirm a sales order which has no line."
 msgstr ""
@@ -1012,7 +1014,7 @@ msgid "In Progress"
 msgstr "I arbeid"
 
 #. module: sale
-#: code:addons/sale/sale.py:857
+#: code:addons/sale/sale.py:865
 #, python-format
 msgid "No Customer Defined !"
 msgstr "Ingen kunde definert!"
@@ -1309,7 +1311,7 @@ msgstr ""
 "manuelt arbeid'."
 
 #. module: sale
-#: code:addons/sale/sale.py:935
+#: code:addons/sale/sale.py:942
 #, python-format
 msgid ""
 "You have to select a pricelist or a customer in the sales form !\n"
@@ -1325,7 +1327,7 @@ msgstr ""
 "Referanse til dokumentet som genererte denne salgsordreforespørselen."
 
 #. module: sale
-#: code:addons/sale/sale.py:948
+#: code:addons/sale/sale.py:955
 #, python-format
 msgid "No valid pricelist line found ! :"
 msgstr "Inegn gyldig prisliste funnet!:"
@@ -1409,7 +1411,7 @@ msgid "TVA :"
 msgstr "MVA:"
 
 #. module: sale
-#: code:addons/sale/sale.py:441
+#: code:addons/sale/sale.py:449
 #, python-format
 msgid "Customer Invoices"
 msgstr "Kundefaktura"
@@ -1435,7 +1437,7 @@ msgid "Sales"
 msgstr "Salg"
 
 #. module: sale
-#: code:addons/sale/sale.py:301
+#: code:addons/sale/sale.py:309
 #, python-format
 msgid ""
 "If you change the pricelist of this order (and eventually the currency), "
@@ -1496,8 +1498,6 @@ msgstr "Mine salgsordrelinjer"
 #: model:process.transition.action,name:sale.process_transition_action_cancel0
 #: view:sale.advance.payment.inv:0
 #: view:sale.make.invoice:0
-#: view:sale.order:0
-#: view:sale.order.line:0
 #: view:sale.order.line.make.invoice:0
 msgid "Cancel"
 msgstr "Kanseller"
@@ -1508,7 +1508,7 @@ msgid "Followers"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:937
+#: code:addons/sale/sale.py:944
 #, python-format
 msgid "No Pricelist ! : "
 msgstr "Ingen prisliste!: "
@@ -1560,7 +1560,7 @@ msgid "Shipping address :"
 msgstr "Leveringsadresse:"
 
 #. module: sale
-#: code:addons/sale/sale.py:502
+#: code:addons/sale/sale.py:510
 #, python-format
 msgid ""
 "You cannot group sales having different currencies for the same partner."
@@ -1586,7 +1586,7 @@ msgid "Use contracts management"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:945
+#: code:addons/sale/sale.py:952
 #, python-format
 msgid ""
 "Cannot find a pricelist line matching this product and quantity.\n"
@@ -1836,7 +1836,7 @@ msgid "sale.group_delivery_invoice_address"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:773
+#: code:addons/sale/sale.py:781
 #, python-format
 msgid ""
 "There is no Fiscal Position defined or Income category account defined for "
@@ -2052,7 +2052,7 @@ msgid "Some order lines"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:976
+#: code:addons/sale/sale.py:983
 #, python-format
 msgid "Cannot delete a sales order line which is in state '%s'."
 msgstr ""
@@ -2122,7 +2122,7 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:857
+#: code:addons/sale/sale.py:865
 #, python-format
 msgid ""
 "Before choosing a product,\n"
@@ -3282,3 +3282,154 @@ msgstr "Ordredato for salgsordren"
 
 #~ msgid "Document of the move to the output or to the customer."
 #~ msgstr "Dokumentering av bevegelse til utgående lokasjon eller kunde."
+
+#~ msgid ""
+#~ "\n"
+#~ "Hello${object.partner_order_id.name and ' ' or "
+#~ "''}${object.partner_order_id.name or ''},\n"
+#~ "\n"
+#~ "Here is your order confirmation for ${object.partner_id.name}:\n"
+#~ "       | Order number: *${object.name}*\n"
+#~ "       | Order total: *${object.amount_total} "
+#~ "${object.pricelist_id.currency_id.name}*\n"
+#~ "       | Order date: ${object.date_order}\n"
+#~ "       % if object.origin:\n"
+#~ "       | Order reference: ${object.origin}\n"
+#~ "       % endif\n"
+#~ "       % if object.client_order_ref:\n"
+#~ "       | Your reference: ${object.client_order_ref}<br />\n"
+#~ "       % endif\n"
+#~ "       | Your contact: ${object.user_id.name} ${object.user_id.user_email "
+#~ "and '<%s>'%(object.user_id.user_email) or ''}\n"
+#~ "\n"
+#~ "You can view the order confirmation, download it and even pay online using "
+#~ "the following link:\n"
+#~ "    ${ctx.get('edi_web_url_view') or 'n/a'}\n"
+#~ "\n"
+#~ "% if object.order_policy in ('prepaid','manual') and "
+#~ "object.company_id.paypal_account:\n"
+#~ "<% \n"
+#~ "comp_name = quote(object.company_id.name)\n"
+#~ "order_name = quote(object.name)\n"
+#~ "paypal_account = quote(object.company_id.paypal_account)\n"
+#~ "order_amount = quote(str(object.amount_total))\n"
+#~ "cur_name = quote(object.pricelist_id.currency_id.name)\n"
+#~ "paypal_url = \"https://www.paypal.com/cgi-"
+#~ "bin/webscr?cmd=_xclick&business=%s&item_name=%s%%20Order%%20%s&invoice=%s&amo"
+#~ "unt=%s\" \\\n"
+#~ "             "
+#~ "\"&currency_code=%s&button_subtype=services&no_note=1&bn=OpenERP_Order_PayNow"
+#~ "_%s\" % \\\n"
+#~ "             "
+#~ "(paypal_account,comp_name,order_name,order_name,order_amount,cur_name,cur_nam"
+#~ "e)\n"
+#~ "%>\n"
+#~ "It is also possible to directly pay with Paypal:\n"
+#~ "    ${paypal_url}\n"
+#~ "% endif\n"
+#~ "\n"
+#~ "If you have any question, do not hesitate to contact us.\n"
+#~ "\n"
+#~ "\n"
+#~ "Thank you for choosing ${object.company_id.name}!\n"
+#~ "\n"
+#~ "\n"
+#~ "--\n"
+#~ "${object.user_id.name} ${object.user_id.user_email and "
+#~ "'<%s>'%(object.user_id.user_email) or ''}\n"
+#~ "${object.company_id.name}\n"
+#~ "% if object.company_id.street:\n"
+#~ "${object.company_id.street or ''}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.street2:\n"
+#~ "${object.company_id.street2}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.city or object.company_id.zip:\n"
+#~ "${object.company_id.zip or ''} ${object.company_id.city or ''}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.country_id:\n"
+#~ "${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) "
+#~ "or ''} ${object.company_id.country_id.name or ''}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.phone:\n"
+#~ "Phone: ${object.company_id.phone}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.website:\n"
+#~ "${object.company_id.website or ''}\n"
+#~ "% endif\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "Hei${object.partner_order_id.name and ' ' or "
+#~ "''}${object.partner_order_id.name or ''},\n"
+#~ "\n"
+#~ "Her er ordrebekreftelsen for ${object.partner_id.name}:\n"
+#~ "       | Ordrenummer: *${object.name}*\n"
+#~ "       | Totalt beløp: *${object.amount_total} "
+#~ "${object.pricelist_id.currency_id.name}*\n"
+#~ "       | Ordredato: ${object.date_order}\n"
+#~ "       % if object.origin:\n"
+#~ "       | Ordrereferanse: ${object.origin}\n"
+#~ "       % endif\n"
+#~ "       % if object.client_order_ref:\n"
+#~ "       | Deres referanse: ${object.client_order_ref}<br />\n"
+#~ "       % endif\n"
+#~ "       | Deres kontakt: ${object.user_id.name} ${object.user_id.user_email "
+#~ "and '<%s>'%(object.user_id.user_email) or ''}\n"
+#~ "\n"
+#~ "Du kan vise og laste den ned ordrebekreftelsen. Du kan også betale online "
+#~ "ved hjelp av følgende snarvei:\n"
+#~ "    ${ctx.get('edi_web_url_view') or 'n/a'}\n"
+#~ "\n"
+#~ "% if object.order_policy in ('prepaid','manual') and "
+#~ "object.company_id.paypal_account:\n"
+#~ "<% \n"
+#~ "comp_name = quote(object.company_id.name)\n"
+#~ "order_name = quote(object.name)\n"
+#~ "paypal_account = quote(object.company_id.paypal_account)\n"
+#~ "order_amount = quote(str(object.amount_total))\n"
+#~ "cur_name = quote(object.pricelist_id.currency_id.name)\n"
+#~ "paypal_url = \"https://www.paypal.com/cgi-"
+#~ "bin/webscr?cmd=_xclick&business=%s&item_name=%s%%20Order%%20%s&invoice=%s&amo"
+#~ "unt=%s\" \\\n"
+#~ "             "
+#~ "\"&currency_code=%s&button_subtype=services&no_note=1&bn=OpenERP_Order_PayNow"
+#~ "_%s\" % \\\n"
+#~ "             "
+#~ "(paypal_account,comp_name,order_name,order_name,order_amount,cur_name,cur_nam"
+#~ "e)\n"
+#~ "%>\n"
+#~ "Det er også mulig å betale direkte via PayPal:\n"
+#~ "    ${paypal_url}\n"
+#~ "% endif\n"
+#~ "\n"
+#~ "Ta gjerne kontakt om du har spørsmål.\n"
+#~ "\n"
+#~ "\n"
+#~ "Takk for at du har valgt ${object.company_id.name}!\n"
+#~ "\n"
+#~ "\n"
+#~ "--\n"
+#~ "${object.user_id.name} ${object.user_id.user_email and "
+#~ "'<%s>'%(object.user_id.user_email) or ''}\n"
+#~ "${object.company_id.name}\n"
+#~ "% if object.company_id.street:\n"
+#~ "${object.company_id.street or ''}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.street2:\n"
+#~ "${object.company_id.street2}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.city or object.company_id.zip:\n"
+#~ "${object.company_id.zip or ''} ${object.company_id.city or ''}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.country_id:\n"
+#~ "${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) "
+#~ "or ''} ${object.company_id.country_id.name or ''}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.phone:\n"
+#~ "Tlf: ${object.company_id.phone}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.website:\n"
+#~ "${object.company_id.website or ''}\n"
+#~ "% endif\n"
+#~ "            "

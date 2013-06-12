@@ -25,116 +25,65 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
-from openerp import netsvc
+import openerp
+from openerp.osv import fields, orm
+
 from webkit_report import WebKitParser
-from openerp.report.report_sxw import rml_parse
 
-def register_report(name, model, tmpl_path, parser=rml_parse):
-    """Register the report into the services"""
-    name = 'report.%s' % name
-    if netsvc.Service._services.get(name, False):
-        service = netsvc.Service._services[name]
-        if isinstance(service, WebKitParser):
-            #already instantiated properly, skip it
-            return
-        if hasattr(service, 'parser'):
-            parser = service.parser
-        del netsvc.Service._services[name]
-    WebKitParser(name, model, tmpl_path, parser=parser)
-
-
-class ReportXML(osv.osv):
-
-    def __init__(self, pool, cr):
-        super(ReportXML, self).__init__(pool, cr)
-
-    def register_all(self,cursor):
-        value = super(ReportXML, self).register_all(cursor)
-        cursor.execute("SELECT * FROM ir_act_report_xml WHERE report_type = 'webkit'")
-        records = cursor.dictfetchall()
-        for record in records:
-            register_report(record['report_name'], record['model'], record['report_rml'])
-        return value
-
-    def unlink(self, cursor, user, ids, context=None):
-        """Delete report and unregister it"""
-        trans_obj = self.pool.get('ir.translation')
-        trans_ids = trans_obj.search(
-            cursor,
-            user,
-            [('type', '=', 'report'), ('res_id', 'in', ids)]
-        )
-        trans_obj.unlink(cursor, user, trans_ids)
-
-        # Warning: we cannot unregister the services at the moment
-        # because they are shared across databases. Calling a deleted
-        # report will fail so it's ok.
-
-        res = super(ReportXML, self).unlink(
-                                            cursor,
-                                            user,
-                                            ids,
-                                            context
-                                        )
-        return res
-
-    def create(self, cursor, user, vals, context=None):
-        "Create report and register it"
-        res = super(ReportXML, self).create(cursor, user, vals, context)
-        if vals.get('report_type','') == 'webkit':
-            # I really look forward to virtual functions :S
-            register_report(
-                        vals['report_name'],
-                        vals['model'],
-                        vals.get('report_rml', False)
-                        )
-        return res
-
-    def write(self, cr, uid, ids, vals, context=None):
-        "Edit report and manage it registration"
-        if isinstance(ids, (int, long)):
-            ids = [ids,]
-        for rep in self.browse(cr, uid, ids, context=context):
-            if rep.report_type != 'webkit':
-                continue
-            if vals.get('report_name', False) and \
-                vals['report_name'] != rep.report_name:
-                report_name = vals['report_name']
-            else:
-                report_name = rep.report_name
-
-            register_report(
-                        report_name,
-                        vals.get('model', rep.model),
-                        vals.get('report_rml', rep.report_rml)
-                        )
-        res = super(ReportXML, self).write(cr, uid, ids, vals, context)
-        return res
-
-    _name = 'ir.actions.report.xml'
+class ir_actions_report_xml(orm.Model):
     _inherit = 'ir.actions.report.xml'
     _columns = {
-        'webkit_header':  fields.property(
-                                            'ir.header_webkit',
-                                            type='many2one',
-                                            relation='ir.header_webkit',
-                                            string='Webkit Header',
-                                            help="The header linked to the report",
-                                            view_load=True,
-                                            required=True
-                                        ),
-        'webkit_debug' : fields.boolean('Webkit debug', help="Enable the webkit engine debugger"),
-        'report_webkit_data': fields.text('Webkit Template', help="This template will be used if the main report file is not found"),
-        'precise_mode':fields.boolean('Precise Mode', help='This mode allow more precise element \
-                                                            position as each object is printed on a separate HTML.\
-                                                            but memory and disk usage is wider')
+        'webkit_header': fields.property('ir.header_webkit',
+            type='many2one', relation='ir.header_webkit',
+            string='Webkit Header', help="The header linked to the report",
+            view_load=True, required=True),
+        'webkit_debug': fields.boolean('Webkit debug',
+            help="Enable the webkit engine debugger"),
+        'report_webkit_data': fields.text('Webkit Template',
+            help="This template will be used if the main report file is not found"),
+        'precise_mode': fields.boolean('Precise Mode',
+            help="This mode allow more precise element position as each object"
+            " is printed on a separate HTML but memory and disk usage are wider.")
     }
 
-ReportXML()
+    def _lookup_report(self, cr, name):
+        """
+        Look up a report definition.
+        """
+        import operator
+        import os
+        opj = os.path.join
+
+        # First lookup in the deprecated place, because if the report definition
+        # has not been updated, it is more likely the correct definition is there.
+        # Only reports with custom parser specified in Python are still there.
+        if 'report.' + name in openerp.report.interface.report_int._reports:
+            new_report = openerp.report.interface.report_int._reports['report.' + name]
+            if not isinstance(new_report, WebKitParser):
+                new_report = None
+        else:
+            cr.execute("SELECT * FROM ir_act_report_xml WHERE report_name=%s and report_type=%s", (name, 'webkit'))
+            r = cr.dictfetchone()
+            if r:
+                if r['parser']:
+                    parser = operator.attrgetter(r['parser'])(openerp.addons)
+                    kwargs = { 'parser': parser }
+                else:
+                    kwargs = {}
+
+                new_report = WebKitParser('report.'+r['report_name'],
+                    r['model'], opj('addons',r['report_rml'] or '/'),
+                    header=r['header'], register=False, **kwargs)
+            else:
+                new_report = None
+
+        if new_report:
+            return new_report
+        else:
+            return super(ir_actions_report_xml, self)._lookup_report(cr, name)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

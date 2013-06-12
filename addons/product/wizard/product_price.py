@@ -60,6 +60,5 @@ class product_price_list(osv.osv_memory):
             'report_name': 'product.pricelist',
             'datas': datas,
        }
-product_price_list()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

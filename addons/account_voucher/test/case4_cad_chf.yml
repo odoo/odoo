@@ -118,7 +118,8 @@
   I completly pay the invoice of 200 CAD
 -
   !python {model: account.voucher}: |
-    import netsvc, time
+    import time
+    from openerp import netsvc
     vals = {}
     voucher_id = self.browse(cr, uid, ref('account_voucher_1_case4'))
     data = []
@@ -141,10 +142,9 @@
   I confirm the voucher
 -
   !python {model: account.voucher}: |
-    import netsvc
+    from openerp import netsvc
     voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 4'), ('partner_id', '=', ref('base.res_partner_19'))])
-    wf_service = netsvc.LocalService("workflow")
-    wf_service.trg_validate(uid, 'account.voucher', voucher[0], 'proforma_voucher', cr)
+    self.signal_proforma_voucher(cr, uid, voucher)
 -
   I check that the move of my voucher is valid
 -
@@ -161,7 +161,7 @@
 -
   I check that the debtor account has 1 new line with -298.78 as amount_currency columns and 149.39 of credit and currency is CAD.
 -
-  I check that my currency rate difference is correct. 0 in debit with no amount_currency
+  I check that my currency rate difference is correct. 0 in debit with 98.78 CAD as amount_currency
 -
   I check that my writeoff is correct. 11.05 credit and -13.26 amount_currency
 -
@@ -176,7 +176,8 @@
         elif move_line.amount_currency == -298.78:
             assert move_line.credit == 149.39, "Debtor account has wrong entry."
         elif move_line.debit == 0.00 and move_line.credit == 0.00:
-            assert move_line.amount_currency == 0.00, "Incorrect Currency Difference."
+            assert move_line.amount_currency == 98.78, "Incorrect Currency Difference, got %s as amount_currency (expected 98.78)." % (move_line.amount_currency)
+            assert move_line.currency_id.id == ref('base.CAD'), "Incorrect Currency Difference, got %s (expected 'CAD')" % (move_line.currency_id.name)
         elif move_line.credit == 10.61:
             assert move_line.amount_currency == -13.26, "Writeoff amount is wrong."
         else:

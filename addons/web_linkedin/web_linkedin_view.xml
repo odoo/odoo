@@ -9,6 +9,10 @@
                 <field name="name" position="replace">
                     <field name="name" default_focus="1" nolabel="1" widget="linkedin" />
                 </field>
+                <field name="website" position="after">
+                    <field name="linkedin_id" invisible="1"/>
+                    <field name="linkedin_url" nolabel="1" widget="linkedin_url"/>
+                </field>
             </field>
        </record>
         
@@ -29,8 +33,9 @@
                             <li>Log into LinkedIn.</li>
                             <li>Add a new application and fill the form:
                                 <ul>
-                                    <li>JavaScript API Domain: <field name="server_domain" readonly="1" style="width:0"/></li>
+                                    <li>Website URL: <field name="server_domain" readonly="1" style="width:0;white-space: nowrap;"/></li>
                                     <li>The programming tool is Javascript</li>
+                                    <li>Website URL inside "JavaScript API Domains" field</li>
                                 </ul>
                             </li>
                             <li>Copy the <strong>API key</strong> here:

@@ -41,16 +41,6 @@
         </record>
         <menuitem action="project_issue_version_action" id="menu_project_issue_version_act" parent="menu_project_confi" groups="base.group_no_one"/>
 
-        <record id="project_issue_categ_action" model="ir.actions.act_window">
-            <field name="name">Issue Categories</field>
-            <field name="res_model">crm.case.categ</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
-            <field name="domain">[('object_id.model', '=', 'project.issue')]</field>
-            <field name="context" eval="{'object_id': ref('model_project_issue')}"/>
-        </record>
-
-        <menuitem action="project_issue_categ_action" name="Categories" id="menu_project_issue_category_act" parent="menu_project_confi" groups="base.group_no_one"/>
 
         <record model="ir.ui.view" id="project_issue_form_view">
             <field name="name">Project Issue Tracker Form</field>
@@ -58,30 +48,40 @@
             <field name="arch" type="xml">
                 <form string="Issue" version="7.0">
                 <header>
-                    <button name="case_close" string="Done" type="object" 
+                    <button name="case_close" string="Done" type="object"
                             states="open" groups="base.group_user"/>
                     <button name="case_close" string="Done" type="object"
                             states="draft,pending" groups="base.group_user"/>
-                    <button name="case_cancel" string="Cancel" type="object"
+                    <button name="case_cancel" string="Cancel Issue" type="object"
                             states="draft,open,pending" groups="base.group_user"/>
                     <field name="stage_id" widget="statusbar" clickable="True"/>
                 </header>
                 <sheet string="Issue">
                     <label for="name" class="oe_edit_only"/>
-                    <h1><field name="name"/></h1>
+                    <h1>
+                        <field name="name" class="oe_inline"/>
+                        <field name="kanban_state" invisible='1'/>
+                        <button name="set_kanban_state_done" help="In Progress" attrs="{'invisible': [('kanban_state', 'in', ['done','blocked'])]}" type="object" icon="gtk-normal" class="oe_link oe_right"/>
+                        <button name="set_kanban_state_blocked" help="Ready for Next Stage" attrs="{'invisible': [('kanban_state', 'in', ['normal','blocked'])]}" type="object" icon="gtk-yes" class="oe_link oe_right"/>
+                        <button name="set_kanban_state_normal" help="Blocked" attrs="{'invisible': [('kanban_state', 'in', ['done','normal'])]}" type="object" icon="gtk-no" class="oe_link oe_right"/>
+                    </h1>
+                    <label for="categ_ids" class="oe_edit_only"/>
+                    <field name="categ_ids" widget="many2many_tags"/>
                     <group>
-                        <group groups="base.group_user">
-                            <field name="user_id"/>
+                        <group>
+                            <field name="user_id" 
+                                context="{'default_groups_ref': ['base.group_user', 'project.group_project_user']}"/>
                             <field name="partner_id"  on_change="onchange_partner_id(partner_id, email_from)"/>
                             <field name="email_from"/>
-                            <label for="project_id" groups="base.group_user"/>
-                            <div groups="base.group_user">
+                            <label for="project_id"/>
+                            <div>
                                 <field name="project_id" on_change="on_change_project(project_id)" class="oe_inline" context="{'default_use_issues':1}"/>
-                                <button name="case_escalate" string="⇒ Escalate" type="object" states="draft,open,pending" class="oe_link"/>
+                                <button name="case_escalate" string="⇒ Escalate" type="object" states="draft,open,pending" class="oe_link"
+                                        groups="base.group_user"/>
                             </div>
                         </group>
                         <group>
-                            <field name="categ_ids" widget="many2many_tags"/>
+                            <field name="id"/>
                             <field name="version_id" groups="base.group_user"/>
                             <field name="priority" groups="base.group_user"/>
                             <label for="task_id" groups="base.group_user"/>
@@ -95,7 +95,7 @@
                         <page string="Description">
                             <field name="description" placeholder="Add an internal note..." groups="base.group_user"/>
                         </page>
-                        <page string="Extra Info" groups="project.group_project_manager">
+                        <page string="Extra Info" groups="project.group_project_manager,project.group_project_user">
                             <group string="Statistics">
                                 <field name="day_open"/>
                                 <field name="day_close"/>
@@ -104,11 +104,8 @@
                                 <field name="inactivity_days"/>
                                 <field name="days_since_creation"/>
                             </group>
-                            <group string="References">
-                                <field name="id"/>
-                                <field name="active"/>
-                            </group>
                             <group string="Status" groups="base.group_no_one">
+                                <field name="active"/>
                                 <field name="state" string="Status"/>
                             </group>
                         </page>
@@ -129,11 +126,11 @@
                 <tree string="Issue Tracker Tree" fonts="bold:message_unread==True" colors="black:state=='open';blue:state=='pending';grey:state in ('cancel', 'done')">
                     <field name="message_unread" invisible="1"/>
                     <field name="id"/>
-                    <field name="create_date" groups="base.group_no_one"/>
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="project_id"/>
                     <field name="priority" string="Priority" groups="base.group_user"/>
+                    <field name="create_date"/>
                     <field name="version_id" widget="selection"/>
                     <field name="user_id"/>
                     <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}"/>
@@ -150,25 +147,27 @@
             <field name="model">project.issue</field>
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
-                    <field name="name" string="Issue" filter_domain="['|', '|',('partner_id','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
+                    <field name="name" string="Issue" filter_domain="['|', '|', '|', ('partner_id','child_of',self), ('description','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
                     <field name="id"/>
                     <filter icon="terp-mail-message-new" string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
-                    <filter string="New" icon="terp-document-new" domain="[('state','=','draft')]" help="New Issues"/>
-                    <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
+                    <filter name="filter_new" string="New" icon="terp-document-new" domain="[('state','=','draft')]" help="New Issues"/>
+                    <filter name="filter_open" string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
                     <separator/>
-                    <filter string="Unassigned Issues" domain="[('user_id','=',False)]"  help="Unassigned Issues" icon="terp-personal-" />
+                    <filter string="Unassigned Issues" domain="[('user_id','=',False)]"  help="Unassigned Issues" icon="terp-personal-"/>
+                    <separator/>
                     <field name="user_id"/>
                     <field name="project_id"/>
                     <field name="categ_ids"/>
+                    <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <group expand="0" string="Group By..." >
-                        <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Contact" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Project"  icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
-                        <filter string="Version" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'version_id'}"/>
-                        <filter string="Priority" icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}"/>
-                        <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
-                        <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" help="Creation Month"/>
+                        <filter string="Responsible" name="group_user_id" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Contact" name="group_partner_id" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <filter string="Project" name="group_project_id" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
+                        <filter string="Version" name="group_version" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'version_id'}"/>
+                        <filter string="Priority" name="group_priority" icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}"/>
+                        <filter string="Stage" name="group_stage_id" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
+                        <filter string="Month" name="group_create_date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" help="Creation Month"/>
                     </group>
                 </search>
             </field>
@@ -201,6 +200,7 @@
                     <field name="user_id"/>
                     <field name="date_deadline"/>
                     <field name="kanban_state"/>
+                    <field name="message_summary"/>
                     <templates>
                         <t t-name="kanban-tooltip">
                            <ul class="oe_kanban_tooltip">
@@ -250,6 +250,9 @@
                                             </t>
                                             <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                         </div>
+                                    </div>
+                                    <div class="oe_kanban_footer_left">
+                                        <t t-raw="record.message_summary.raw_value"/>
                                     </div>
                                 </div>
                                 <div class="oe_clear"></div>
@@ -301,7 +304,18 @@
             <field name="view_type">form</field>
             <field name="name">Issues</field>
             <field name="view_mode">kanban,tree,form,calendar,graph</field>
-            <field name="context">{'search_default_project_id': [active_id], 'default_project_id': active_id}</field>
+            <field name="context">{
+                    'search_default_project_id': [active_id], 
+                    'default_project_id': active_id,
+                }
+            </field>
+            <field name="help" type="html">
+                <p>
+                    The OpenERP issues tacker allows you to efficiantly manage things
+                    like internal requests, software development bugs, customer
+                    complaints, project troubles, material breakdowns, etc.
+                </p>
+            </field>
         </record>
 
         <!-- Project -->
@@ -317,12 +331,24 @@
                 <xpath expr='//div[@name="buttons"]' position='inside'>
                     <button name="%(act_project_project_2_project_issue_all)d" string="Issues" type="action" attrs="{'invisible':[('use_issues','=', 0)]}"/>
                 </xpath>
+                <xpath expr='//page[@name="project_stages"]' position="attributes">
+                    <attribute name="attrs">{'invisible': [('use_tasks', '=', False),('use_issues','=',False)]}</attribute>
+                </xpath>
                 <field name="priority" position="before">
                     <field name="project_escalation_id"/>
                 </field>
-                <field name="alias_domain" position="after">
-                    <label for="alias_model" class="oe_edit_only" string="creates"/><field name="alias_model" class="oe_edit_only oe_inline"/>
-                </field>
+                <xpath expr='//span[@name="edit_alias"]' position='replace'>
+                    <span class="oe_edit_only" name="edit_alias">
+                        <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>
+                        @
+                        <field class="oe_inline" name="alias_domain"/>
+                        <span class="oe_inline"
+                                attrs="{'invisible': ['|', ('use_issues', '!=', True), ('use_tasks', '!=', True)]}">
+                            <label for="alias_model" string="creates"/>
+                            <field name="alias_model" class="oe_inline"/>
+                        </span>
+                    </span>
+                </xpath>
             </field>
        </record>
 
@@ -354,6 +380,20 @@
                 <xpath expr='//div[@name="project"]' position='inside'>
                     <field name="use_issues"/>
                     <label for="use_issues"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- res.partner -->
+        <record model="ir.ui.view" id="res_partner_issues_button_view">
+            <field name="name">res.partner.issues.button.view</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                    <button type="action" string="Issues" attrs="{'invisible': [('customer', '=', False)]}"
+                        name="%(act_project_project_2_project_issue_all)d" context="{'search_default_partner_id': active_id, 'default_partner_id': active_id}" groups="project.group_project_user"/>
                 </xpath>
             </field>
         </record>

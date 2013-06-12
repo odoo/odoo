@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-from openerp import netsvc
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -81,7 +80,6 @@ class res_partner_bank(osv.osv):
 
     _constraints = [(_check_key, 'The RIB and/or IBAN is not valid', ['rib_acc_number', 'bank_code', 'office', 'key'])]
 
-res_partner_bank()
 
 class res_bank(osv.osv):
     """Add the bank code to make it easier to enter RIB data"""
@@ -103,6 +101,5 @@ class res_bank(osv.osv):
     _columns = {
         'rib_code': fields.char('RIB Bank Code', size=64),
     }
-res_bank()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

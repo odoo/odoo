@@ -161,7 +161,7 @@
               </p>
             </field>
         </record>
-        <menuitem id="menu_action_account_period" action="action_account_period" parent="account.next_id_23" groups="base.group_no_one"/>
+        <menuitem id="menu_action_account_period" action="action_account_period" parent="account.next_id_23"/>
 
         <!-- Accounts -->
         <record id="view_account_form" model="ir.ui.view">
@@ -347,6 +347,15 @@
             res_model="account.move.line"
             src_model="account.account"/>
 
+        <!-- Enable drill-down from Chart Of Accounts tree view -->
+        <act_window
+            id="action_account_items"
+            name="Journal Items"
+            context="{'search_default_account_id': [active_id]}"
+            res_model="account.move.line"
+            src_model="account.account"
+            key2="tree_but_open"/>
+
         <!-- Account Journal -->
         <record id="view_account_journal_tree" model="ir.ui.view">
             <field name="name">account.journal.tree</field>
@@ -426,15 +435,15 @@
                                 <group string="Accounts">
                                     <field name="profit_account_id" domain="[('type','!=','view')]"/>
                                     <field name="loss_account_id" domain="[('type','!=','view')]"/>
-                                    <field name="internal_account_id"/>
+                                    <field name="internal_account_id" domain="[('type','!=','view')]"/>
                                 </group>
                                 <group string="Miscellaneous">
                                     <field name="with_last_closing_balance"/>
-                                    <field name="cash_control"/>
+                                    <field name="cash_control" attrs="{'invisible':[('type','not in', ('cash',))]}"/>
                                 </group>
                             </group>
-                            <separator string="Available Coins" colspan="4" attrs="{'invisible' : [('cash_control', '=', False)] }"/>
-                            <field name="cashbox_line_ids" nolabel="1" string="Unit Of Currency Definition" colspan="4" attrs="{'invisible' : [('cash_control', '=', False)]}">
+                            <separator string="Available Coins" colspan="4" attrs="{'invisible' : ['|',('cash_control', '=', False),('type','not in', ('cash',))] }"/>
+                            <field name="cashbox_line_ids" nolabel="1" string="Unit Of Currency Definition" colspan="4" attrs="{'invisible' : ['|',('cash_control', '=', False),('type','not in', ('cash',))]}">
                                 <tree string="CashBox Lines" editable="bottom">
                                     <field name="pieces" />
                                 </tree>
@@ -543,7 +552,7 @@
                 <header>
                     <button name="button_confirm_bank" states="draft" string="Confirm" type="object" class="oe_highlight"/>
                     <button name="button_dummy" states="draft" string="Compute" type="object" class="oe_highlight"/>
-                    <button name="button_cancel" states="confirm" string="Cancel" type="object"/>
+                    <button name="button_cancel" states="confirm" string="Cancel Statement" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
                 </header>
                 <sheet>
@@ -841,6 +850,16 @@
             res_model="account.move.line"
             src_model="account.tax.code"/>
 
+        <!-- Enable drill-down from Chart Of Taxes tree view -->
+        <act_window
+            id="action_tax_code_items"
+            name="Journal Items"
+            domain="[('tax_code_id','child_of',active_id),('state','!=','draft')]"
+            res_model="account.move.line"
+            src_model="account.tax.code"
+            key2="tree_but_open"/>
+
+
         <!-- Tax -->
         <record id="view_tax_tree" model="ir.ui.view">
             <field name="name">account.tax.tree</field>
@@ -888,9 +907,7 @@
                                 <label for="type"/>
                                 <div>
                                     <field name="type"/>
-                                    <field name="amount" class="oe_inline"
-                                        attrs="{'invisible':[('type','in',('none', 'code', 'balance'))]}"/>
-                                    <label string="%%" attrs="{'invisible':[('type','&lt;&gt;','percent')]}"/>
+                                    <field name="amount" attrs="{'invisible':[('type','in',('none', 'code', 'balance'))]}"/>
                                 </div>
                                 <field name="python_compute" attrs="{'invisible':[('type','!=','code')],'required':[('type','=','code')]}"/>
                                 <field name="python_compute_inv" attrs="{'invisible':[('type','!=','code')],'required':[('type','=','code')]}"/>
@@ -903,7 +920,7 @@
                             </group>
                             <group string="Invoices">
                                   <field name="account_collected_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                                  <field name="account_analytic_collected_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id), ('parent_id', '&lt;&gt;', False)]" groups="analytic.group_analytic_accounting"/>
+                                  <field name="account_analytic_collected_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
 
                                   <field name="base_code_id"/>
                                   <field name="base_sign"/>
@@ -913,7 +930,7 @@
                             </group>
                             <group string="Refunds">
                                   <field name="account_paid_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                                  <field name="account_analytic_paid_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id), ('parent_id', '&lt;&gt;', False)]" groups="analytic.group_analytic_accounting"/>
+                                  <field name="account_analytic_paid_id" domain="[('type','&lt;&gt;','view'), ('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting"/>
 
                                   <field name="ref_base_code_id"/>
                                   <field name="ref_base_sign"/>
@@ -1020,7 +1037,7 @@
                                         <field name="blocked"/>
                                     </group>
                                     <group groups="analytic.group_analytic_accounting" string="Analytic">
-                                        <field name="analytic_account_id" domain="[('parent_id','!=',False)]"/>
+                                        <field name="analytic_account_id" domain="[('type','in',('normal','contract'))]"/>
                                     </group>
                                 </group>
                                 <field name="narration" colspan="4" nolabel="1" placeholder="Add an internal note..."/>
@@ -1065,7 +1082,7 @@
                                 <field name="blocked"/>
                                 <newline/>
                                 <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
-                                <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
+                                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                 <separator colspan="4" string="Status"/>
                                 <newline/>
                                 <field name="reconcile_id"/>
@@ -1093,7 +1110,7 @@
                     <field name="ref"/>
                     <field name="statement_id" invisible="1"/>
                     <field name="partner_id" on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"/>
-                    <field name="account_id" options='{"no_open":True}' domain="[('journal_id','=',journal_id), ('company_id', '=', company_id)]" on_change="onchange_account_id(account_id)"/>
+                    <field name="account_id" options='{"no_open":True}' domain="[('journal_id','=',journal_id), ('company_id', '=', company_id)]" on_change="onchange_account_id(account_id, partner_id, context)"/>
                     <field name="account_tax_id" options='{"no_open":True}' invisible="context.get('journal_type', False) not in ['sale','sale_refund','purchase','purchase_refund','general']"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('type','not in',['view','template'])]" invisible="not context.get('analytic_journal_id',False)"/>
                     <field name="move_id" required="0"/>
@@ -1175,7 +1192,12 @@
             sequence="1"
             groups="group_account_user"
         />
-
+        <record id="action_account_moves_all_tree" model="ir.actions.act_window">
+            <field name="name">Journal Items</field>
+            <field name="res_model">account.move.line</field>
+            <field name="context">{'search_default_partner_id': [active_id], 'default_partner_id': active_id}</field>
+            <field name="view_id" ref="view_move_line_tree"/>
+        </record>
         <record id="view_move_line_tree_reconcile" model="ir.ui.view">
             <field name="model">account.move.line</field>
             <field eval="24" name="priority"/>
@@ -1187,6 +1209,8 @@
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="account_id"/>
+                    <field name="period_id" invisible="1"/>
+                    <field name="journal_id" invisible="1"/>
                     <field name="reconcile_partial_id"/>
                     <field name="state" invisible="1"/>
                     <field name="debit" sum="Total debit"/>
@@ -1237,7 +1261,7 @@
                 <form string="Account Entry" version="7.0">
                 <header>
                     <button name="button_validate" states="draft" string="Post" type="object" class="oe_highlight" groups="account.group_account_invoice"/>
-                    <button name="button_cancel" states="posted" string="Cancel" type="object" groups="account.group_account_invoice"/>
+                    <button name="button_cancel" states="posted" string="Cancel Entry" type="object" groups="account.group_account_invoice"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet string="Journal Entries" >
@@ -1267,7 +1291,7 @@
                                     <group col="6" colspan="4">
                                         <field name="name"/>
                                         <field name="ref"/>
-                                        <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
+                                        <field name="partner_id" on_change="onchange_partner_id(False, partner_id, account_id, debit, credit, date, journal_id, context)"/>
 
                                         <field name="journal_id"/>
                                         <field name="period_id"/>
@@ -1317,7 +1341,7 @@
                                                 </group>
 
                                                 <group groups="analytic.group_analytic_accounting" string="Analytic">
-                                                    <field name="analytic_account_id" domain="[('parent_id','!=',False)]"/>
+                                                    <field name="analytic_account_id"/>
                                                 </group>
                                             </group>
                                             <separator string="Internal Note"/>
@@ -1331,12 +1355,12 @@
                                 <tree colors="blue:state == 'draft';black:state == 'posted'" editable="top" string="Journal Items">
                                     <field name="invoice"/>
                                     <field name="name"/>
-                                    <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,parent.date,parent.journal_id)"/>
+                                    <field name="partner_id" on_change="onchange_partner_id(False, partner_id, account_id, debit, credit, parent.date, parent.journal_id, context)"/>
                                     <field name="account_id" domain="[('journal_id','=',parent.journal_id),('company_id', '=', parent.company_id)]"/>
                                     <field name="date_maturity"/>
                                     <field name="debit" sum="Total Debit"/>
                                     <field name="credit" sum="Total Credit"/>
-                                    <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
+                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                     <field name="amount_currency"/>
                                     <field name="currency_id" groups="base.group_multi_currency"/>
                                     <field name="tax_code_id"/>
@@ -1750,23 +1774,6 @@
             </field>
         </record>
 
-        <!-- res.partner links -->
-        <act_window
-            context="{'search_default_unreconciled':True, 'search_default_partner_id':[active_id], 'default_partner_id': active_id}"
-            domain="[('account_id.reconcile', '=', True),('account_id.type', 'in', ['receivable', 'payable'])]"
-            id="act_account_partner_account_move_all"
-            name="Receivables &amp; Payables"
-            res_model="account.move.line"
-            src_model="res.partner"/>
-
-        <act_window 
-            context="{'search_default_partner_id':[active_id], 'default_partner_id': active_id}"
-            id="act_account_partner_account_move"
-            name="Journal Items"
-            res_model="account.move.line"
-            src_model="res.partner"
-            groups="account.group_account_user"/>
-
         <!-- Account Templates -->
         <menuitem
             id="account_template_folder"
@@ -2102,10 +2109,8 @@
                         <group attrs="{'invisible': [('only_one_chart_template','=',True)]}">
                             <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)" domain="[('visible','=', True)]"/>
                         </group>
-                        <group groups="base.group_multi_company">
-                            <field name="company_id" widget="selection" on_change="onchange_company_id(company_id)"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
-                        </group>
                         <group>
+                            <field name="company_id" widget="selection" on_change="onchange_company_id(company_id)"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
                             <field name="currency_id" class="oe_inline"/>
                             <field name="sale_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
                             <label for="sale_tax_rate" string="Sale Tax" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
@@ -2239,7 +2244,7 @@
                 <header>
                     <button name="button_confirm_cash" states="open" string="Close CashBox" type="object" class="oe_highlight"/>
                     <button name="button_open" states="draft" string="Open CashBox" type="object" class="oe_highlight"/>
-                    <button name="button_cancel" states="confirm,open" string="Cancel" type="object"/>
+                    <button name="button_cancel" states="confirm,open" string="Cancel CashBox" type="object"/>
                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm"/>
                 </header>
                 <sheet string="Statement">

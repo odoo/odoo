@@ -86,11 +86,11 @@ class ir_model_fields_anonymization(osv.osv):
         if context.get('manual'):
             global_state = self._get_global_state(cr, uid, context=context)
             if global_state == 'anonymized':
-                raise osv.except_osv('Error !', "The database is currently anonymized, you cannot create, modify or delete fields.")
+                raise osv.except_osv('Error!', "The database is currently anonymized, you cannot create, modify or delete fields.")
             elif global_state == 'unstable':
                 msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized," + \
                       " while some fields are not anonymized. You should try to solve this problem before trying to create, write or delete fields.")
-                raise osv.except_osv('Error !', msg)
+                raise osv.except_osv('Error!', msg)
 
         return True
 
@@ -357,7 +357,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
             else:
                 msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized," + \
                   " while some fields are not anonymized. You should try to solve this problem before trying to do anything else.")
-                raise osv.except_osv('Error !', msg)
+                raise osv.except_osv('Error!', msg)
 
             res['arch'] = etree.tostring(eview)
 
@@ -411,7 +411,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
             model_name = field.model_id.model
             field_name = field.field_id.name
             field_type = field.field_id.ttype
-            table_name = self.pool.get(model_name)._table
+            table_name = self.pool[model_name]._table
 
             # get the current value
             sql = "select id, %s from %s" % (field_name, table_name)
@@ -521,11 +521,11 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         # check that all the defined fields are in the 'anonymized' state
         state = ir_model_fields_anonymization_model._get_global_state(cr, uid, context=context)
         if state == 'clear':
-            raise osv.except_osv_('Error !', "The database is not currently anonymized, you cannot reverse the anonymization.")
+            raise osv.except_osv_('Error!', "The database is not currently anonymized, you cannot reverse the anonymization.")
         elif state == 'unstable':
             msg = _("The database anonymization is currently in an unstable state. Some fields are anonymized," + \
                   " while some fields are not anonymized. You should try to solve this problem before trying to do anything.")
-            raise osv.except_osv('Error !', msg)
+            raise osv.except_osv('Error!', msg)
 
         wizards = self.browse(cr, uid, ids, context=context)
         for wizard in wizards:
@@ -543,13 +543,14 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
             fixes = group(fixes, ('model_name', 'field_name'))
 
             for line in data:
-                table_name = self.pool.get(line['model_id'])._table if self.pool.get(line['model_id']) else None
+                queries = []
+                table_name = self.pool[line['model_id']]._table if line['model_id'] in self.pool else None
 
                 # check if custom sql exists:
                 key = (line['model_id'], line['field_id'])
                 custom_updates =  fixes.get(key)
                 if custom_updates:
-                    custom_updates.sort(itemgetter('sequence'))
+                    custom_updates.sort(key=itemgetter('sequence'))
                     queries = [(record['query'], record['query_type']) for record in custom_updates if record['query_type']]
                 elif table_name:
                     queries = [("update %(table)s set %(field)s = %%(value)s where id = %%(id)s" % {

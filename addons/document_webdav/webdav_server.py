@@ -30,12 +30,12 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 ###############################################################################
 
 
 import logging
-from openerp import netsvc
+import openerp
 from dav_fs import openerp_dav_handler
 from openerp.tools.config import config
 try:
@@ -56,7 +56,6 @@ import urllib
 import re
 import time
 from string import atoi
-import addons
 import socket
 # from DAV.constants import DAV_VERSION_1, DAV_VERSION_2
 from xml.dom import minidom
@@ -609,7 +608,7 @@ try:
             if base_path and base_path == '/':
                 dir_path = config.get_misc('static-http', 'dir_path', False)
             else:
-                dir_path = addons.get_module_resource('document_webdav','public_html')
+                dir_path = openerp.modules.module.get_module_resource('document_webdav','public_html')
                 # an _ugly_ hack: we put that dir back in tools.config.misc, so that
                 # the StaticHttpHandler can find its dir_path.
                 config.misc.setdefault('static-http',{})['dir_path'] = dir_path

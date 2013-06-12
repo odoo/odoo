@@ -48,7 +48,6 @@ class product_category(osv.osv):
             help="This account will be used to value outgoing stock using cost price."),
 
     }
-product_category()
 
 class product_template(osv.osv):
     _inherit = "product.template"
@@ -78,7 +77,6 @@ class product_template(osv.osv):
             help="This account will be used to value outgoing stock using cost price."),
 
     }
-product_template()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

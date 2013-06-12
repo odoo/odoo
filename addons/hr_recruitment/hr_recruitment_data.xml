@@ -470,11 +470,13 @@
     <record id="mt_stage_changed" model="mail.message.subtype">
         <field name="name">Stage Changed</field>
         <field name="res_model">hr.applicant</field>
+        <field name="default" eval="False"/>
         <field name="description">Stage changed</field>
     </record>
     <record id="mt_applicant_hired" model="mail.message.subtype">
         <field name="name">Applicant Hired</field>
         <field name="res_model">hr.applicant</field>
+        <field name="default" eval="False"/>
         <field name="description">Applicant hired</field>
     </record>
     <record id="mt_applicant_refused" model="mail.message.subtype">
@@ -483,6 +485,18 @@
         <field name="default" eval="False"/>
         <field name="description">Applicant refused</field>
     </record>
-
+    <!-- Applicant Categories(Tag) -->
+    <record id="tag_applicant_reserve" model="hr.applicant_category">
+        <field name="name">Reserve</field>
+    </record>
+    <record id="tag_applicant_manager" model="hr.applicant_category">
+        <field name="name">Manager</field>
+    </record>
+    <record id="tag_applicant_it" model="hr.applicant_category">
+        <field name="name">IT</field>
+    </record>
+    <record id="tag_applicant_sales" model="hr.applicant_category">
+        <field name="name">Sales</field>
+    </record>
 </data>
 </openerp>

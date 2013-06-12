@@ -24,16 +24,11 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #
 ##############################################################################
 
-from openerp.osv import fields,osv
-import pooler
-import netsvc
-import time
-from xml import dom
-
+from openerp.osv import fields, osv
 
 CODE_EXEC_DEFAULT = '''\
 res = []
@@ -61,5 +56,4 @@ class accounting_assert_test(osv.osv):
         'sequence': 10,
     }
 
-accounting_assert_test()
 

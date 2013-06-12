@@ -67,6 +67,5 @@ class crm_partner_report_assign(osv.osv):
                         on (i.partner_id=p.id and i.type in ('out_invoice','out_refund') and i.state in ('open','paid'))
             )""")
 
-crm_partner_report_assign()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

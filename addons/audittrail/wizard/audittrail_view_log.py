@@ -61,6 +61,5 @@ class audittrail_view_log(osv.osv_memory):
         #End Loop
         return result
 
-audittrail_view_log()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

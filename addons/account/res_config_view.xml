@@ -33,7 +33,7 @@
                                 <label for="company_id" string="Select Company"/>
                                 <field name="company_id"
                                     widget="selection"
-                                    on_change="onchange_company_id(company_id)"
+                                    on_change="onchange_company_id(company_id, context)"
                                     class="oe_inline"/>
                             </div>
                             <div>
@@ -130,7 +130,7 @@
                                 <label for="module_account_accountant"/>
                             </div>
                             <div>
-                                <field name="group_analytic_accounting" class="oe_inline"/>
+                                <field name="group_analytic_accounting" class="oe_inline" on_change="onchange_analytic_accounting(group_analytic_accounting, context)"/>
                                 <label for="group_analytic_accounting"/>
                             </div>
                             <div>

@@ -19,10 +19,13 @@
 #
 ##############################################################################
 
-from openerp import addons
 import logging
+
+from openerp.modules.module import get_module_resource
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
 from openerp import tools
+
 _logger = logging.getLogger(__name__)
 
 class hr_employee_category(osv.osv):
@@ -67,7 +70,6 @@ class hr_employee_category(osv.osv):
         (_check_recursion, 'Error! You cannot create recursive Categories.', ['parent_id'])
     ]
 
-hr_employee_category()
 
 class hr_job(osv.osv):
 
@@ -93,6 +95,10 @@ class hr_job(osv.osv):
     _inherit = ['mail.thread']
     _columns = {
         'name': fields.char('Job Name', size=128, required=True, select=True),
+        # TO CLEAN: when doing a cleaning, we should change like this:
+        #   no_of_recruitment: a function field
+        #   expected_employees: float
+        # This would allow a clean update when creating new employees.
         'expected_employees': fields.function(_no_of_employee, string='Total Forecasted Employees',
             help='Expected number of employees for this job position after new recruitment.',
             store = {
@@ -140,12 +146,12 @@ class hr_job(osv.osv):
         self.write(cr, uid, ids, {'state': 'open', 'no_of_recruitment': 0})
         return True
 
-hr_job()
 
 class hr_employee(osv.osv):
     _name = "hr.employee"
     _description = "Employee"
     _inherits = {'resource.resource': "resource_id"}
+    _inherit = ['mail.thread']
 
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
@@ -216,7 +222,7 @@ class hr_employee(osv.osv):
             (model, mail_group_id) = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'group_all_employees')
             employee = self.browse(cr, uid, employee_id, context=context)
             self.pool.get('mail.group').message_post(cr, uid, [mail_group_id],
-                body='Welcome to %s! Please help them take the first steps with OpenERP!' % (employee.name),
+                body=_('Welcome to %s! Please help him/her take the first steps with OpenERP!') % (employee.name),
                 subtype='mail.mt_comment', context=context)
         except:
             pass # group deleted: do not push a message
@@ -256,7 +262,7 @@ class hr_employee(osv.osv):
         return {'value': {'work_email' : work_email}}
 
     def _get_default_image(self, cr, uid, context=None):
-        image_path = addons.get_module_resource('hr', 'static/src/img', 'default_image.png')
+        image_path = get_module_resource('hr', 'static/src/img', 'default_image.png')
         return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     _defaults = {
@@ -279,7 +285,6 @@ class hr_employee(osv.osv):
         (_check_recursion, 'Error! You cannot create recursive hierarchy of Employee(s).', ['parent_id']),
     ]
 
-hr_employee()
 
 class hr_department(osv.osv):
     _description = "Department"
@@ -321,7 +326,6 @@ class res_users(osv.osv):
         'employee_ids': fields.one2many('hr.employee', 'user_id', 'Related employees'),
         }
 
-res_users()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

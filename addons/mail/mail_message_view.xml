@@ -59,12 +59,15 @@
                     <field name="type"/>
                     <field name="author_id"/>
                     <field name="partner_ids"/>
-                    <filter string="Read"
-                            name="message_read" help="Show messages to read"
-                            domain="[('to_read', '=', False)]"/>
-                    <filter string="Unread"
+                    <field name="model"/>
+                    <field name="res_id"/>
+                    <field name="parent_id"/>
+                    <filter string="To Read"
                             name="message_unread" help="Show messages to read"
                             domain="[('to_read', '=', True)]"/>
+                    <filter string="Read"
+                            name="message_read" help="Show already read messages"
+                            domain="[('to_read', '=', False)]"/>
                     <separator/>
                     <filter string="Comments"
                             name="comments" help="Comments"

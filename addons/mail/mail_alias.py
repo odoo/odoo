@@ -117,8 +117,13 @@ class mail_alias(osv.Model):
            mail catchall domain from config.
            e.g. `jobs@openerp.my.openerp.com` or `sales@openerp.my.openerp.com`
         """
-        return [(record['id'], "%s@%s" % (record['alias_name'], record['alias_domain']))
-                    for record in self.read(cr, uid, ids, ['alias_name', 'alias_domain'], context=context)]
+        res = []
+        for record in self.browse(cr, uid, ids, context=context):
+            if record.alias_name and record.alias_domain:
+                res.append((record['id'], "%s@%s" % (record.alias_name, record.alias_domain)))
+            else:
+                res.append((record['id'], False))
+        return res
 
     def _find_unique(self, cr, uid, name, context=None):
         """Find a unique alias name similar to ``name``. If ``name`` is
@@ -134,7 +139,7 @@ class mail_alias(osv.Model):
         return new_name
 
     def migrate_to_alias(self, cr, child_model_name, child_table_name, child_model_auto_init_fct,
-        alias_id_column, alias_key, alias_prefix = '', alias_force_key = '', alias_defaults = {}, context=None):
+        alias_id_column, alias_key, alias_prefix='', alias_force_key='', alias_defaults={}, context=None):
         """ Installation hook to create aliases for all users and avoid constraint errors.
 
             :param child_model_name: model name of the child class (i.e. res.users)
@@ -149,25 +154,27 @@ class mail_alias(osv.Model):
             :param alias_defaults: dict, keys = mail.alias columns, values = child
                 model column name used for default values (i.e. {'job_id': 'id'})
         """
+        if context is None:
+            context = {}
 
-        # disable the unique alias_id not null constraint, to avoid spurious warning during 
+        # disable the unique alias_id not null constraint, to avoid spurious warning during
         # super.auto_init. We'll reinstall it afterwards.
         alias_id_column.required = False
 
         # call _auto_init
-        child_model_auto_init_fct(cr, context=context)
+        res = child_model_auto_init_fct(cr, context=context)
 
         registry = RegistryManager.get(cr.dbname)
         mail_alias = registry.get('mail.alias')
-        child_class_model = registry.get(child_model_name)
-        no_alias_ids = child_class_model.search(cr, SUPERUSER_ID, [('alias_id', '=', False)], context={'active_test':False})
+        child_class_model = registry[child_model_name]
+        no_alias_ids = child_class_model.search(cr, SUPERUSER_ID, [('alias_id', '=', False)], context={'active_test': False})
         # Use read() not browse(), to avoid prefetching uninitialized inherited fields
         for obj_data in child_class_model.read(cr, SUPERUSER_ID, no_alias_ids, [alias_key]):
-            alias_vals = {'alias_name': '%s%s' % (alias_prefix, obj_data[alias_key]) }
+            alias_vals = {'alias_name': '%s%s' % (alias_prefix, obj_data[alias_key])}
             if alias_force_key:
                 alias_vals['alias_force_thread_id'] = obj_data[alias_force_key]
-            alias_vals['alias_defaults'] = dict( (k, obj_data[v]) for k, v in alias_defaults.iteritems())
-            alias_id = mail_alias.create_unique_alias(cr, SUPERUSER_ID, alias_vals, model_name=child_model_name)
+            alias_vals['alias_defaults'] = dict((k, obj_data[v]) for k, v in alias_defaults.iteritems())
+            alias_id = mail_alias.create_unique_alias(cr, SUPERUSER_ID, alias_vals, model_name=context.get('alias_model_name', child_model_name))
             child_class_model.write(cr, SUPERUSER_ID, obj_data['id'], {'alias_id': alias_id})
             _logger.info('Mail alias created for %s %s (uid %s)', child_model_name, obj_data[alias_key], obj_data['id'])
 
@@ -183,13 +190,18 @@ class mail_alias(osv.Model):
         # set back the unique alias_id constraint
         alias_id_column.required = True
 
+        return res
+
     def create_unique_alias(self, cr, uid, vals, model_name=None, context=None):
         """Creates an email.alias record according to the values provided in ``vals``,
         with 2 alterations: the ``alias_name`` value may be suffixed in order to
-        make it unique, and the ``alias_model_id`` value will set to the
-        model ID of the ``model_name`` value, if provided, 
+        make it unique (and certain unsafe characters replaced), and 
+        he ``alias_model_id`` value will set to the model ID of the ``model_name``
+        value, if provided, 
         """
-        alias_name = re.sub(r'[^\w+]', '-', remove_accents(vals['alias_name'])).lower()
+        # when an alias name appears to already be an email, we keep the local part only
+        alias_name = remove_accents(vals['alias_name']).lower().split('@')[0]
+        alias_name = re.sub(r'[^\w+.]+', '-', alias_name)
         alias_name = self._find_unique(cr, uid, alias_name, context=context)
         vals['alias_name'] = alias_name
         if model_name:

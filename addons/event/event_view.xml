@@ -6,7 +6,7 @@
             <field name="res_model">event.registration</field>
             <field name="view_type">form</field>
             <field name="name">Registrations</field>
-            <field name="view_mode">calendar,tree,form,graph</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
             <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id}</field>
         </record>
 
@@ -93,6 +93,7 @@
                                    </div>
                             </group>
                             <group>
+                                <field name="user_id"/>
                                 <field name="type" on_change="onchange_event_type(type,context)" />
                                 <field name="date_begin" on_change="onchange_start_date(date_begin,date_end)"/>
                                 <field name="date_end"/>
@@ -100,19 +101,13 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Email Configuration" groups="base.group_no_one">
-                                <group>
+                            <page string="Event Details" groups="base.group_no_one">
+                                <group colspan="4">
                                     <field name="reply_to"/>
-                                    <group>
-                                        <field name="email_registration_id"/>
-                                    </group>
-                                    <group>
-                                        <field name="email_confirmation_id"/>
-                                    </group>
+                                    <field name="email_registration_id"/>
+                                    <field name="email_confirmation_id"/>
                                 </group>
-                            </page>
-                            <page string="Event Description">
-                                <field name="note" colspan="4" nolabel="1"/>
+                                <field name="note" nolabel="1" placeholder="Event Description..."/>
                             </page>
                             <page string="Registrations">
                                 <group>
@@ -168,7 +163,7 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="message_ids" widget="mail_thread" placeholder="Share a note..."/>
+                        <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
             </field>
@@ -405,7 +400,7 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="message_ids" widget="mail_thread" placeholder="Share a note..."/>
+                        <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
             </field>

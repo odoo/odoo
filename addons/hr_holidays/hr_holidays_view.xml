@@ -40,8 +40,8 @@
             <field name="name">Leave Request</field>
             <field name="model">hr.holidays</field>
             <field name="arch" type="xml">
-                <calendar string="Leave Request" color="user_id" date_start="date_from" date_stop="date_to">
-                    <field name="user_id"/>
+                <calendar string="Leave Request" color="employee_id" date_start="date_from" date_stop="date_to">
+                    <field name="employee_id"/>
                     <field name="holiday_status_id"/>
                 </calendar>
             </field>
@@ -78,7 +78,7 @@
                             <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'invisible':[('holiday_type','=','employee')], 'readonly':[('state','!=','draft'), ('state','!=','confirm')]}"/>
                         </group>
                         <group>
-                            <field name="holiday_type" on_change="onchange_type(holiday_type)" attrs="{'readonly':[('state','!=','draft')]}" width="130" string="Mode" groups="base.group_hr_user"/>
+                            <field name="holiday_type" on_change="onchange_type(holiday_type, employee_id)" attrs="{'readonly':[('state','!=','draft')]}" width="130" string="Mode" groups="base.group_hr_user"/>
                             <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}" on_change="onchange_employee(employee_id)" groups="base.group_hr_user"/>
                             <field name="department_id" attrs="{'readonly':[('holiday_type','=','category')]}" groups="base.group_hr_user"/>
                         </group>
@@ -206,7 +206,8 @@
             <field name="arch" type="xml">
                 <tree colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Leave Requests">
                     <field name="employee_id"/>
-                    <field name="holiday_type" string="Mode" groups="base.group_hr_user"/>
+                    <field name="holiday_type" string="Mode" groups="base.group_no_one"/>
+                    <field name="holiday_status_id"/>
                     <field name="name"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
@@ -214,7 +215,6 @@
                     <field name="state"/>
                     <field name="category_id" invisible="1"/>
                     <field name="department_id" invisible="not context.get('set_visible',False)"/>
-                    <field name="holiday_status_id" invisible="1"/>
                     <field name="manager_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                 </tree>
@@ -374,6 +374,7 @@
             <field name="model">hr.holidays.status</field>
             <field name="arch" type="xml">
                 <form string="Leave Type" version="7.0">
+                <sheet string="Leave Type">
                     <group col="4">
                         <field name="name"/>
                         <field name="categ_id"/>
@@ -392,6 +393,7 @@
                           </group>
                       </page>
                     </notebook>
+                </sheet>
                 </form>
             </field>
         </record>

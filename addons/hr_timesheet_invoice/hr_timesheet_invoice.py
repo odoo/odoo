@@ -37,7 +37,6 @@ class hr_timesheet_invoice_factor(osv.osv):
         'factor': lambda *a: 0.0,
     }
 
-hr_timesheet_invoice_factor()
 
 
 class account_analytic_account(osv.osv):
@@ -73,9 +72,6 @@ class account_analytic_account(osv.osv):
             help="Total invoiced"),
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Timesheet Invoicing Ratio',
             help="You usually invoice 100% of the timesheets. But if you mix fixed price and timesheet invoicing, you may use another ratio. For instance, if you do a 20% advance invoice (fixed price, based on a sales order), you should invoice the rest on timesheet with a 80% ratio."),
-    }
-    _defaults = {
-        'pricelist_id': lambda self, cr, uid, ctx: ctx.get('pricelist_id', False),
     }
 
     def on_change_partner_id(self, cr, uid, ids, partner_id, name, context=None):
@@ -185,7 +181,7 @@ class account_analytic_line(osv.osv):
             for account in analytic_account_obj.browse(cr, uid, list(account_ids), context=context):
                 partner = account.partner_id
                 if (not partner) or not (account.pricelist_id):
-                    raise osv.except_osv(_('Analytic Account incomplete !'),
+                    raise osv.except_osv(_('Analytic Account Incomplete!'),
                             _('Contract incomplete. Please fill in the Customer and Pricelist fields.'))
 
                 date_due = False
@@ -289,7 +285,6 @@ class account_analytic_line(osv.osv):
                 invoice_obj.button_reset_taxes(cr, uid, [last_invoice], context)
         return invoices
 
-account_analytic_line()
 
 
 class hr_analytic_timesheet(osv.osv):
@@ -317,7 +312,6 @@ class hr_analytic_timesheet(osv.osv):
         return super(hr_analytic_timesheet, self).copy(cursor, user, obj_id,
                 default, context=context)
 
-hr_analytic_timesheet()
 
 
 class account_invoice(osv.osv):
@@ -337,7 +331,6 @@ class account_invoice(osv.osv):
                         il['analytic_lines'][0][2]['to_invoice'] = to_invoice[0]
         return iml
 
-account_invoice()
 
 
 class account_move_line(osv.osv):
@@ -356,6 +349,5 @@ class account_move_line(osv.osv):
                     }, context=context)
         return res
 
-account_move_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
