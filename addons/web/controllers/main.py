@@ -922,6 +922,7 @@ class Session(openerpweb.Controller):
             req.session._uid, "ir.ui.menu", req.context)
 
     @openerpweb.jsonrequest
+    @nodb
     def get_lang_list(self):
         try:
             return req.session.proxy("db").list_lang() or []
