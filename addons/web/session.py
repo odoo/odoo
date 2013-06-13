@@ -21,8 +21,10 @@ class AuthenticationError(Exception):
 class SessionExpiredException(Exception):
     pass
 
-# deprecated
 class Service(object):
+    """
+        Deprecated. Use ``openerp.netsvc.dispatch_rpc()`` instead.
+    """
     def __init__(self, session, service_name):
         self.session = session
         self.service_name = service_name
@@ -33,8 +35,10 @@ class Service(object):
             return result
         return proxy_method
 
-# deprecated
 class Model(object):
+    """
+        Deprecated. Use the resistry and cursor in ``openerp.addons.web.http.request`` instead.
+    """
     def __init__(self, session, model):
         self.session = session
         self.model = model
@@ -97,6 +101,10 @@ class OpenERPSession(object):
         self.jsonp_requests = {}     # FIXME use a LRU
 
     def authenticate(self, db, login, password, env=None):
+        """
+        Authenticate the current user with the given db, login and password. If successful, store
+        the authentication parameters in the current session and request.
+        """
         uid = openerp.netsvc.dispatch_rpc('common', 'authenticate', [db, login, password, env])
         self._db = db
         self._uid = uid
@@ -109,15 +117,21 @@ class OpenERPSession(object):
         return uid
 
     def check_security(self):
+        """
+        Chech the current authentication parameters to know if those are still valid. This method
+        should be called at each request. If the authentication fails, a ``SessionExpiredException``
+        is raised.
+        """
         if not self._db or not self._uid:
             raise SessionExpiredException("Session expired")
         import openerp.service.security as security
         security.check(self._db, self._uid, self._password)
 
     def get_context(self):
-        """ Re-initializes the current user's session context (based on
+        """
+        Re-initializes the current user's session context (based on
         his preferences) by calling res.users.get_context() with the old
-        context
+        context.
 
         :returns: the new context
         """
@@ -147,17 +161,22 @@ class OpenERPSession(object):
 
         context['lang'] = lang or 'en_US'
 
-    #deprecated
     def send(self, service_name, method, *args):
+        """
+        Deprecated. Use ``openerp.netsvc.dispatch_rpc()`` instead.
+        """
         return openerp.netsvc.dispatch_rpc(service_name, method, args)
 
-    #deprecated
     def proxy(self, service):
+        """
+        Deprecated. Use ``openerp.netsvc.dispatch_rpc()`` instead.
+        """
         return Service(self, service)
 
-    #deprecated
     def assert_valid(self, force=False):
         """
+        Deprecated. Use ``check_security()`` instead.
+
         Ensures this session is valid (logged into the openerp server)
         """
         if self._uid and not force:
@@ -167,29 +186,37 @@ class OpenERPSession(object):
         if not self._uid:
             raise AuthenticationError("Authentication failure")
 
-    #deprecated
     def ensure_valid(self):
+        """
+        Deprecated. Use ``check_security()`` instead.
+        """
         if self._uid:
             try:
                 self.assert_valid(True)
             except Exception:
                 self._uid = None
 
-    #deprecated
     def execute(self, model, func, *l, **d):
+        """
+        Deprecated. Use the resistry and cursor in ``openerp.addons.web.http.request`` instead.
+        """
         model = self.model(model)
         r = getattr(model, func)(*l, **d)
         return r
 
-    #deprecated
     def exec_workflow(self, model, id, signal):
+        """
+        Deprecated. Use the resistry and cursor in ``openerp.addons.web.http.request`` instead.
+        """
         self.assert_valid()
         r = self.proxy('object').exec_workflow(self._db, self._uid, self._password, model, signal, id)
         return r
 
-    #deprecated
     def model(self, model):
-        """ Get an RPC proxy for the object ``model``, bound to this session.
+        """
+        Deprecated. Use the resistry and cursor in ``openerp.addons.web.http.request`` instead.
+
+        Get an RPC proxy for the object ``model``, bound to this session.
 
         :param model: an OpenERP model name
         :type model: str

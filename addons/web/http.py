@@ -83,6 +83,16 @@ class WebRequest(object):
     .. attribute:: debug
 
         ``bool``, indicates whether the debug mode is active on the client
+
+    .. attribute:: db
+
+        ``str``, the name of the database linked to the current request. Can be ``None``
+        if the current request uses the @nodb decorator.
+
+    .. attribute:: uid
+
+        ``int``, the id of the user related to the current request. Can be ``None``
+        if the current request uses the @nodb or the @noauth decorator.
     """
     def __init__(self, httprequest, func, auth_method="auth"):
         self.httprequest = httprequest
@@ -135,12 +145,14 @@ class WebRequest(object):
         # we use _ as seprator where RFC2616 uses '-'
         self.lang = lang.replace('-', '_')
 
-    def authenticate(self):
+    def _authenticate(self):
         if self.auth_method == "nodb":
             self.db = None
             self.uid = None
         elif self.auth_method == "noauth":
             self.db = (self.session._db or openerp.addons.web.controllers.main.db_monodb()).lower()
+            if not self.db:
+                raise session.SessionExpiredException("No valid database for request %s" % self.httprequest)
             self.uid = None
         else: # auth
             try:
@@ -152,23 +164,26 @@ class WebRequest(object):
 
     @property
     def registry(self):
+        """
+        The registry to the database linked to this request. Can be ``None`` if the current request uses the
+        @nodb decorator.
+        """
         return openerp.modules.registry.RegistryManager.get(self.db) if self.db else None
 
     @property
     def cr(self):
+        """
+        The cursor initialized for the current method call. If the current request uses the @nodb decorator
+        trying to access this property will raise an exception.
+        """
         # some magic to lazy create the cr
         if not self._cr_cm:
             self._cr_cm = self.registry.cursor()
             self._cr = self._cr_cm.__enter__()
         return self._cr
 
-    #TODO: remove
-    @contextlib.contextmanager
-    def registry_cr(self):
-        return (self.registry, self.cr)
-
     def _call_function(self, *args, **kwargs):
-        self.authenticate()
+        self._authenticate()
         try:
             # ugly syntax only to get the __exit__ arguments to pass to self._cr
             request = self
@@ -190,10 +205,20 @@ class WebRequest(object):
 
 
 def noauth(f):
+    """
+    Decorator to put on a controller method to inform it does not require a user to be logged. When this decorator
+    is used, ``request.uid`` will be ``None``. The request will still try to detect the database and an exception
+    will be launched if there is no way to guess it.
+    """
     f.auth = "noauth"
     return f
 
 def nodb(f):
+    """
+    Decorator to put on a controller method to inform it does not require authentication nor any link to a database.
+    When this decorator is used, ``request.uid`` and ``request.db`` will be ``None``. Trying to use ``request.cr``
+    will launch an exception.
+    """
     f.auth = "nodb"
     return f
 
@@ -447,6 +472,9 @@ def set_request(request):
             _request_stack.pop()
     return with_obj()
 
+"""
+    A global proxy that always redirect to the current request object.
+"""
 request = _request_stack()
 
 #----------------------------------------------------------
