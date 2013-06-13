@@ -2088,12 +2088,15 @@ class account_tax(osv.osv):
                 data['balance'] = cur_price_unit
 
             amount2 = data.get('amount', 0.0)
+            amount3 = 0.0
             if tax.child_ids:
                 if tax.child_depend:
                     latest = res.pop()
                 amount = amount2
                 child_tax = self._unit_compute(cr, uid, tax.child_ids, amount, product, partner, quantity)
                 res.extend(child_tax)
+                for child in child_tax:
+                    amount3 += child.get('amount', 0.0)
                 if tax.child_depend:
                     for r in res:
                         for name in ('base','ref_base'):
@@ -2109,7 +2112,7 @@ class account_tax(osv.osv):
                                 r['amount'] = data['amount']
                                 latest[name+'_code_id'] = False
             if tax.include_base_amount:
-                cur_price_unit+=amount2
+                cur_price_unit += amount2 + amount3
         return res
 
     def compute_all(self, cr, uid, taxes, price_unit, quantity, product=None, partner=None, force_excluded=False):
