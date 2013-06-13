@@ -29,7 +29,7 @@ class Service(object):
 
     def __getattr__(self, method):
         def proxy_method(*args):
-            result = self.session.send(self.service_name, method, *args)
+            result = openerp.netsvc.dispatch_rpc(self.service_name, method, args)
             return result
         return proxy_method
 
