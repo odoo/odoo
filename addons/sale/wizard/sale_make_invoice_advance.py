@@ -31,7 +31,7 @@ class sale_advance_payment_inv(osv.osv_memory):
             [('all', 'Invoice the whole sales order'), ('percentage','Percentage'), ('fixed','Fixed price (deposit)'),
                 ('lines', 'Some order lines')],
             'What do you want to invoice?', required=True,
-            help="""Use All to create the final invoice.
+            help="""Use Invoice the whole sale order to create the final invoice.
                 Use Percentage to invoice a percentage of the total amount.
                 Use Fixed Price to invoice a specific amound in advance.
                 Use Some Order Lines to invoice a selection of the sales order lines."""),

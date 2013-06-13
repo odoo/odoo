@@ -63,12 +63,14 @@ class mail_notification(osv.Model):
         'read': fields.boolean('Read', select=1),
         'starred': fields.boolean('Starred', select=1,
             help='Starred message that goes into the todo mailbox'),
+        'date': fields.date('Date'),
         'message_id': fields.many2one('mail.message', string='Message',
                         ondelete='cascade', required=True, select=1),
     }
 
     _defaults = {
         'read': False,
+        'date': lambda *a: fields.datetime.now(),
         'starred': False,
     }
 
