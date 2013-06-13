@@ -133,7 +133,7 @@ class WebRequest(object):
             self.db = None
             self.uid = None
         elif self.auth_method == "noauth":
-            self.db = (self.session._db or openerp.addons.web.controllers.main.db_monodb(self)).lower()
+            self.db = (self.session._db or openerp.addons.web.controllers.main.db_monodb()).lower()
             self.uid = None
         else: # auth
             try:
