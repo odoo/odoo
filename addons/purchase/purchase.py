@@ -1046,6 +1046,7 @@ class purchase_order_line(osv.osv):
         # - determine lead time value for product
         product_lead_time = supplierinfo.delay if supplierinfo else 0
         res['value'].update({'product_lead_time': product_lead_time})
+        price = price_unit
         if state not in ('sent','bid'):
             # - determine price_unit and taxes_id
             if pricelist_id:
