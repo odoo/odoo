@@ -289,7 +289,7 @@ class hr_timesheet_line(osv.osv):
         return ts_line_ids
 
     _columns = {
-        'sheet_id': fields.function(_sheet, string='Sheet',
+        'sheet_id': fields.function(_sheet, string='Sheet', select="1",
             type='many2one', relation='hr_timesheet_sheet.sheet', ondelete="cascade",
             store={
                     'hr_timesheet_sheet.sheet': (_get_hr_timesheet_sheet, ['employee_id', 'date_from', 'date_to'], 10),
@@ -327,7 +327,6 @@ class hr_timesheet_line(osv.osv):
         return dict([(el, self.on_change_account_id(cr, uid, ids, el, context.get('user_id', uid))) for el in account_ids])
 
 
-hr_timesheet_line()
 
 class hr_attendance(osv.osv):
     _inherit = "hr.attendance"
@@ -425,7 +424,6 @@ class hr_attendance(osv.osv):
                 raise osv.except_osv(_('Error!'), _('You cannot modify an entry in a confirmed timesheet'))
         return True
 
-hr_attendance()
 
 class hr_timesheet_sheet_sheet_day(osv.osv):
     _name = "hr_timesheet_sheet.sheet.day"
@@ -475,12 +473,8 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
                                 0.0 as total_attendance
                             from
                                 hr_analytic_timesheet hrt
-                                left join (account_analytic_line l
-                                    LEFT JOIN hr_timesheet_sheet_sheet s
-                                    ON (s.date_to >= l.date
-                                        AND s.date_from <= l.date
-                                        AND s.user_id = l.user_id))
-                                    on (l.id = hrt.line_id)
+                                JOIN account_analytic_line l ON l.id = hrt.line_id
+                                LEFT JOIN hr_timesheet_sheet_sheet s ON s.id = hrt.sheet_id
                             group by l.date::date, s.id
                         ) union (
                             select
@@ -491,21 +485,14 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
                                 SUM(((EXTRACT(hour FROM a.name) * 60) + EXTRACT(minute FROM a.name)) * (CASE WHEN a.action = 'sign_in' THEN -1 ELSE 1 END)) as total_attendance
                             from
                                 hr_attendance a
-                                LEFT JOIN (hr_timesheet_sheet_sheet s
-                                    LEFT JOIN resource_resource r
-                                        LEFT JOIN hr_employee e
-                                        ON (e.resource_id = r.id)
-                                    ON (s.user_id = r.user_id))
-                                ON (a.employee_id = e.id
-                                    AND s.date_to >= date_trunc('day',a.name)
-                                    AND s.date_from <= a.name)
+                                LEFT JOIN hr_timesheet_sheet_sheet s
+                                ON s.id = a.sheet_id
                             WHERE action in ('sign_in', 'sign_out')
                             group by a.name::date, s.id
                         )) AS foo
                         GROUP BY name, sheet_id
                 )) AS bar""")
 
-hr_timesheet_sheet_sheet_day()
 
 
 class hr_timesheet_sheet_sheet_account(osv.osv):
@@ -539,7 +526,6 @@ class hr_timesheet_sheet_sheet_account(osv.osv):
             group by l.account_id, s.id, l.to_invoice
         )""")
 
-hr_timesheet_sheet_sheet_account()
 
 
 
@@ -558,7 +544,6 @@ class res_company(osv.osv):
         'timesheet_max_difference': lambda *args: 0.0
     }
 
-res_company()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

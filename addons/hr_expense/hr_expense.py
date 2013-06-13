@@ -52,12 +52,12 @@ class hr_expense_expense(osv.osv):
             res[expense.id] = total
         return res
 
+    def _get_expense_from_line(self, cr, uid, ids, context=None):
+        return [line.expense_id.id for line in self.pool.get('hr.expense.line').browse(cr, uid, ids, context=context)]
+
     def _get_currency(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, [uid], context=context)[0]
-        if user.company_id:
-            return user.company_id.currency_id.id
-        else:
-            return self.pool.get('res.currency').search(cr, uid, [('rate','=',1.0)], context=context)[0]
+        return user.company_id.currency_id.id
 
     _name = "hr.expense.expense"
     _inherit = ['mail.thread']
@@ -84,7 +84,10 @@ class hr_expense_expense(osv.osv):
         'account_move_id': fields.many2one('account.move', 'Ledger Posting'),
         'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', readonly=True, states={'draft':[('readonly',False)]} ),
         'note': fields.text('Note'),
-        'amount': fields.function(_amount, string='Total Amount', digits_compute=dp.get_precision('Account')),
+        'amount': fields.function(_amount, string='Total Amount', digits_compute=dp.get_precision('Account'), 
+            store={
+                'hr.expense.line': (_get_expense_from_line, ['unit_amount','unit_quantity'], 10)
+            }),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'department_id':fields.many2one('hr.department','Department', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True),
@@ -93,11 +96,13 @@ class hr_expense_expense(osv.osv):
             ('cancelled', 'Refused'),
             ('confirm', 'Waiting Approval'),
             ('accepted', 'Approved'),
-            ('done', 'Done'),
+            ('done', 'Waiting Payment'),
+            ('paid', 'Paid'),
             ],
             'Status', readonly=True, track_visibility='onchange',
             help='When the expense request is created the status is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the status is \'Waiting Confirmation\'.\
-            \nIf the admin accepts it, the status is \'Accepted\'.\n If a receipt is made for the expense request, the status is \'Done\'.'),
+            \nIf the admin accepts it, the status is \'Accepted\'.\n If the accounting entries are made for the expense request, the status is \'Waiting Payment\'.'),
+
     }
     _defaults = {
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'hr.employee', context=c),
@@ -107,6 +112,12 @@ class hr_expense_expense(osv.osv):
         'user_id': lambda cr, uid, id, c={}: id,
         'currency_id': _get_currency,
     }
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default.update(account_move_id=False)
+        return super(hr_expense_expense, self).copy(cr, uid, id, default=default, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):
@@ -228,6 +239,8 @@ class hr_expense_expense(osv.osv):
         for exp in self.browse(cr, uid, ids, context=context):
             if not exp.employee_id.address_home_id:
                 raise osv.except_osv(_('Error!'), _('The employee must have a home address.'))
+            if not exp.employee_id.address_home_id.property_account_payable.id:
+                raise osv.except_osv(_('Error!'), _('The employee must have a payable account set on his home address.'))
             company_currency = exp.company_id.currency_id.id
             diff_currency_p = exp.currency_id.id <> company_currency
             
@@ -274,7 +287,6 @@ class hr_expense_expense(osv.osv):
             tax_code_found= False
             
             #Calculate tax according to default tax on product
-            
             taxes = []
             #Taken from product_id_onchange in account.invoice
             if line.product_id:
@@ -311,15 +323,18 @@ class hr_expense_expense(osv.osv):
                 tax_code_found = True
                 res[-1]['tax_code_id'] = tax_code_id
                 res[-1]['tax_amount'] = cur_obj.compute(cr, uid, exp.currency_id.id, company_currency, tax_amount, context={'date': exp.date_confirm})
-                
-                #Will create the tax here as we don't have the access 
+                ## 
+                is_price_include = tax_obj.read(cr,uid,tax['id'],['price_include'],context)['price_include']
+                if is_price_include:
+                    ## We need to deduce the price for the tax
+                    res[-1]['price'] = res[-1]['price']  - (tax['amount'] * tax['base_sign'] or 0.0)
                 assoc_tax = {
                              'type':'tax',
                              'name':tax['name'],
                              'price_unit': tax['price_unit'],
                              'quantity': 1,
                              'price':  tax['amount'] * tax['base_sign'] or 0.0,
-                             'account_id': tax['account_collected_id'],
+                             'account_id': tax['account_collected_id'] or mres['account_id'],
                              'tax_code_id': tax['tax_code_id'],
                              'tax_amount': tax['amount'] * tax['base_sign'],
                              }
@@ -333,6 +348,8 @@ class hr_expense_expense(osv.osv):
             acc = line.product_id.property_account_expense
             if not acc:
                 acc = line.product_id.categ_id.property_account_expense_categ
+            if not acc:
+                raise osv.except_osv(_('Error!'), _('No purchase account found for the product %s (or for his category), please configure one.') % (line.product_id.name))
         else:
             acc = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category', context={'force_company': company.id})
             if not acc:
@@ -373,7 +390,6 @@ class hr_expense_expense(osv.osv):
         }
         return result
 
-hr_expense_expense()
 
 class product_product(osv.osv):
     _inherit = "product.product"
@@ -381,7 +397,6 @@ class product_product(osv.osv):
         'hr_expense_ok': fields.boolean('Can be Expensed', help="Specify if the product can be selected in an HR expense line."),
     }
 
-product_product()
 
 class hr_expense_line(osv.osv):
     _name = "hr.expense.line"
@@ -440,6 +455,27 @@ class hr_expense_line(osv.osv):
             res['value'].update({'uom_id': product.uom_id.id})
         return res
 
-hr_expense_line()
+
+class account_move_line(osv.osv):
+    _inherit = "account.move.line"
+
+    def reconcile(self, cr, uid, ids, type='auto', writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False, context=None):
+        res = super(account_move_line, self).reconcile(cr, uid, ids, type=type, writeoff_acc_id=writeoff_acc_id, writeoff_period_id=writeoff_period_id, writeoff_journal_id=writeoff_journal_id, context=context)
+        #when making a full reconciliation of account move lines 'ids', we may need to recompute the state of some hr.expense
+        account_move_ids = [aml.move_id.id for aml in self.browse(cr, uid, ids, context=context)]
+        expense_obj = self.pool.get('hr.expense.expense')
+        currency_obj = self.pool.get('res.currency')
+        if account_move_ids:
+            expense_ids = expense_obj.search(cr, uid, [('account_move_id', 'in', account_move_ids)], context=context)
+            for expense in expense_obj.browse(cr, uid, expense_ids, context=context):
+                if expense.state == 'done':
+                    #making the postulate it has to be set paid, then trying to invalidate it
+                    new_status_is_paid = True
+                    for aml in expense.account_move_id.line_id:
+                        if aml.account_id.type == 'payable' and not currency_obj.is_zero(cr, uid, expense.company_id.currency_id, aml.amount_residual):
+                            new_status_is_paid = False
+                    if new_status_is_paid:
+                        expense_obj.write(cr, uid, [expense.id], {'state': 'paid'}, context=context)
+        return res
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

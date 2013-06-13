@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -91,7 +90,6 @@ class res_users(osv.osv):
                     raise
                 self._uid_cache.setdefault(db, {})[uid] = passwd
 
-res_users()
 
 
 

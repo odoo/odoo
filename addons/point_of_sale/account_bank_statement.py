@@ -34,7 +34,6 @@ class account_journal(osv.osv):
         'self_checkout_payment_method' : False,
     }
 
-account_journal()
 
 class account_cash_statement(osv.osv):
     _inherit = 'account.bank.statement'
@@ -42,6 +41,5 @@ class account_cash_statement(osv.osv):
         'pos_session_id' : fields.many2one('pos.session'),
     }
 
-account_cash_statement()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

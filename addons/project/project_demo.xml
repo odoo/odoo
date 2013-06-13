@@ -62,7 +62,7 @@
             <field name="name">E-Learning Integration</field>
             <field name="user_id" ref="base.user_demo"/>
             <field name="alias_model">project.task</field>
-            <field name="privacy_visibility">public</field>
+            <field name="privacy_visibility">employees</field>
             <field name="members" eval="[(4, ref('base.user_root')), (4, ref('base.user_demo'))]"/>
         </record>
 
@@ -76,6 +76,7 @@
             <field name="name">Website Design Templates</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="alias_model">project.task</field>
+            <field name="privacy_visibility">employees</field>
             <field name="members" eval="[(4, ref('base.user_root')), (4,ref('base.user_demo'))]"/>
         </record>
 
@@ -89,6 +90,7 @@
             <field name="partner_id" ref="base.res_partner_7"/>
             <field name="name">Data Import/Export Plugin</field>
             <field name="alias_model">project.task</field>
+            <field name="privacy_visibility">followers</field>
             <field name="members" eval="[(6, 0, [
                     ref('base.user_root'),
                     ref('base.user_demo')])]"/>

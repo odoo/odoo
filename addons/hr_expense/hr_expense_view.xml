@@ -32,7 +32,7 @@
                     <field name="user_id" invisible="1"/>
                     <field name="name"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
-                    <field name="amount"/>
+                    <field name="amount" sum="Total Amount"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -68,7 +68,7 @@
                     <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" groups="base.group_hr_user" />
                     <button name="done" states="accepted" string="Generate Accounting Entries" type="workflow" groups="account.group_account_invoice" class="oe_highlight"/>
                     <button name="action_view_move" states="done" string="Open Accounting Entries" type="object" groups="account.group_account_invoice"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,accepted,done" statusbar_colors='{"confirm":"blue","cancelled":"red"}'/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,accepted,done,paid" statusbar_colors='{"confirm":"blue","cancelled":"red"}'/>
                 </header>
                 <sheet>
                     <group>
@@ -112,7 +112,7 @@
                                     <field name="date_value" string="Expense Date"/>
                                     <field name="name"/>
                                     <field name="ref"/>
-                                    <field domain="[('type','in',['normal','contract']), ('parent_id','!=',False)]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
+                                    <field domain="[('type','in',['normal','contract'])]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
                                     <field name="uom_id" on_change="onchange_uom(product_id, uom_id, context)"/>
                                     <field name="unit_amount"/>
                                     <field name="unit_quantity"/>

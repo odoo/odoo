@@ -40,7 +40,7 @@ class email_template_preview(osv.osv_memory):
         email_template = self.pool.get('email.template')
         template = email_template.browse(cr, uid, int(template_id), context=context)
         template_object = template.model_id
-        model =  self.pool.get(template_object.model)
+        model =  self.pool[template_object.model]
         record_ids = model.search(cr, uid, [], 0, 10, 'id', context=context)
         default_id = context.get('default_res_id')
 
@@ -69,15 +69,19 @@ class email_template_preview(osv.osv_memory):
     }
 
     def on_change_res_id(self, cr, uid, ids, res_id, context=None):
-        if not res_id: return {}
-        vals = {}
+        if context is None:
+            context = {'value': {}}
+        if not res_id or not context.get('template_id'):
+            return {'value': {}}
+
         email_template = self.pool.get('email.template')
-        template_id = context and context.get('template_id')
+        template_id = context.get('template_id')
         template = email_template.browse(cr, uid, template_id, context=context)
-        vals['name'] = template.name
+
+        # generate and get template values
         mail_values = email_template.generate_email(cr, uid, template_id, res_id, context=context)
-        for k in ('email_from','email_to','email_cc','reply_to','subject','body_html'):
-            vals[k] = mail_values[k]
+        vals = dict((field, mail_values.get(field, False)) for field in ('email_from', 'email_to', 'email_cc', 'reply_to', 'subject', 'body_html', 'partner_to'))
+        vals['name'] = template.name
         return {'value': vals}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

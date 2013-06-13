@@ -38,7 +38,6 @@ class subscription_document(osv.osv):
     _defaults = {
         'active' : lambda *a: True,
     }
-subscription_document()
 
 class subscription_document_fields(osv.osv):
     _name = "subscription.document.fields"
@@ -50,7 +49,6 @@ class subscription_document_fields(osv.osv):
         'document_id': fields.many2one('subscription.document', 'Subscription Document', ondelete='cascade'),
     }
     _defaults = {}
-subscription_document_fields()
 
 def _get_document_types(self, cr, uid, context=None):
     cr.execute('select m.model, s.name from subscription_document s, ir_model m WHERE s.model = m.id order by s.name')
@@ -85,6 +83,17 @@ class subscription_subscription(osv.osv):
         'state': lambda *a: 'draft'
     }
 
+    def _auto_end(self, cr, context=None):    
+        super(subscription_subscription, self)._auto_end(cr, context=context)
+        # drop the FK from subscription to ir.cron, as it would cause deadlocks
+        # during cron job execution. When model_copy() tries to write() on the subscription,
+        # it has to wait for an ExclusiveLock on the cron job record, but the latter 
+        # is locked by the cron system for the duration of the job!
+        # FIXME: the subscription module should be reviewed to simplify the scheduling process
+        #        and to use a unique cron job for all subscriptions, so that it never needs to
+        #        be updated during its execution. 
+        cr.execute("ALTER TABLE %s DROP CONSTRAINT %s" % (self._table, '%s_cron_id_fkey' % self._table))
+
     def set_process(self, cr, uid, ids, context=None):
         for row in self.read(cr, uid, ids, context=context):
             mapping = {'name':'name','interval_number':'interval_number','interval_type':'interval_type','exec_init':'numbercall','date_init':'nextcall'}
@@ -104,9 +113,9 @@ class subscription_subscription(osv.osv):
             try:
                 (model_name, id) = row['doc_source'].split(',')
                 id = int(id)
-                model = self.pool.get(model_name)
+                model = self.pool[model_name]
             except:
-                raise osv.except_osv(_('Wrong Source Document !'), _('Please provide another source document.\nThis one does not exist !'))
+                raise osv.except_osv(_('Wrong Source Document!'), _('Please provide another source document.\nThis one does not exist!'))
 
             default = {'state':'draft'}
             doc_obj = self.pool.get('subscription.document')
@@ -125,7 +134,7 @@ class subscription_subscription(osv.osv):
             # the subscription is over and we mark it as being done
             if remaining == 1:
                 state = 'done'
-            id = self.pool.get(model_name).copy(cr, uid, id, default, context)
+            id = self.pool[model_name].copy(cr, uid, id, default, context)
             self.pool.get('subscription.subscription.history').create(cr, uid, {'subscription_id': row['id'], 'date':time.strftime('%Y-%m-%d %H:%M:%S'), 'document_id': model_name+','+str(id)})
             self.write(cr, uid, [row['id']], {'state':state})
         return True
@@ -133,7 +142,7 @@ class subscription_subscription(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for record in self.browse(cr, uid, ids, context or {}):
             if record.state=="running":
-                raise osv.except_osv(_('Error!'),_('You cannot delete an active subscription !'))
+                raise osv.except_osv(_('Error!'),_('You cannot delete an active subscription!'))
         return super(subscription_subscription, self).unlink(cr, uid, ids, context)
 
     def set_done(self, cr, uid, ids, context=None):
@@ -146,7 +155,6 @@ class subscription_subscription(osv.osv):
     def set_draft(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'draft'})
         return True
-subscription_subscription()
 
 class subscription_subscription_history(osv.osv):
     _name = "subscription.subscription.history"
@@ -157,7 +165,6 @@ class subscription_subscription_history(osv.osv):
         'subscription_id': fields.many2one('subscription.subscription', 'Subscription', ondelete='cascade'),
         'document_id': fields.reference('Source Document', required=True, selection=_get_document_types, size=128),
     }
-subscription_subscription_history()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

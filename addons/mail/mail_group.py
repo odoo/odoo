@@ -144,11 +144,19 @@ class mail_group(osv.Model):
             search_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'view_message_search')
             params = {
                 'search_view_id': search_ref and search_ref[1] or False,
-                'domain': [('model', '=', 'mail.group'), ('res_id', '=', mail_group_id)],
-                'context': {'default_model': 'mail.group', 'default_res_id': mail_group_id, 'search_default_message_unread': True},
+                'domain': [
+                    ('model', '=', 'mail.group'),
+                    ('res_id', '=', mail_group_id),
+                ],
+                'context': {
+                    'default_model': 'mail.group',
+                    'default_res_id': mail_group_id,
+                },
                 'res_model': 'mail.message',
                 'thread_level': 1,
-                'header_description': self._generate_header_description(cr, uid, group, context=context)
+                'header_description': self._generate_header_description(cr, uid, group, context=context),
+                'view_mailbox': True,
+                'compose_placeholder': 'Send a message to the group',
             }
             cobj = self.pool.get('ir.actions.client')
             newref = cobj.copy(cr, SUPERUSER_ID, ref[1], default={'params': str(params), 'name': vals['name']}, context=context)
@@ -200,3 +208,12 @@ class mail_group(osv.Model):
         """ Wrapper because message_unsubscribe_users take a user_ids=None
             that receive the context without the wrapper. """
         return self.message_unsubscribe_users(cr, uid, ids, context=context)
+
+    def get_suggested_thread(self, cr, uid, removed_suggested_threads=None, context=None):
+        """Show the suggestion of groups if display_groups_suggestions if the
+        user perference allows it."""
+        user = self.pool.get('res.users').browse(cr, uid, uid, context)
+        if not user.display_groups_suggestions:
+            return []
+        else:
+            return super(mail_group, self).get_suggested_thread(cr, uid, removed_suggested_threads, context)

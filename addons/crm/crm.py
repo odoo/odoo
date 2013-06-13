@@ -19,13 +19,12 @@
 #
 ##############################################################################
 
-import base64
-import time
-from lxml import etree
+from datetime import date, datetime
+from dateutil import relativedelta
+
+from openerp import tools
 from openerp.osv import fields
 from openerp.osv import osv
-from openerp import tools
-from openerp.tools.translate import _
 
 MAX_LEVEL = 15
 AVAILABLE_STATES = [
@@ -98,6 +97,7 @@ class crm_case_stage(osv.osv):
         'case_default': True,
     }
 
+
 class crm_case_section(osv.osv):
     """ Model for sales teams. """
     _name = "crm.case.section"
@@ -105,9 +105,56 @@ class crm_case_section(osv.osv):
     _inherit = "mail.thread"
     _description = "Sales Teams"
     _order = "complete_name"
+    # number of periods for lead/opportunities/... tracking in salesteam kanban dashboard/kanban view
+    _period_number = 5
 
     def get_full_name(self, cr, uid, ids, field_name, arg, context=None):
-        return  dict(self.name_get(cr, uid, ids, context=context))
+        return dict(self.name_get(cr, uid, ids, context=context))
+
+    def __get_bar_values(self, cr, uid, obj, domain, read_fields, value_field, groupby_field, context=None):
+        """ Generic method to generate data for bar chart values using SparklineBarWidget.
+            This method performs obj.read_group(cr, uid, domain, read_fields, groupby_field).
+
+            :param obj: the target model (i.e. crm_lead)
+            :param domain: the domain applied to the read_group
+            :param list read_fields: the list of fields to read in the read_group
+            :param str value_field: the field used to compute the value of the bar slice
+            :param str groupby_field: the fields used to group
+
+            :return list section_result: a list of dicts: [
+                                                {   'value': (int) bar_column_value,
+                                                    'tootip': (str) bar_column_tooltip,
+                                                }
+                                            ]
+        """
+        month_begin = date.today().replace(day=1)
+        section_result = [{
+                            'value': 0,
+                            'tooltip': (month_begin + relativedelta.relativedelta(months=-i)).strftime('%B'),
+                            } for i in range(self._period_number - 1, -1, -1)]
+        group_obj = obj.read_group(cr, uid, domain, read_fields, groupby_field, context=context)
+        for group in group_obj:
+            group_begin_date = datetime.strptime(group['__domain'][0][2], tools.DEFAULT_SERVER_DATE_FORMAT)
+            month_delta = relativedelta.relativedelta(month_begin, group_begin_date)
+            section_result[self._period_number - (month_delta.months + 1)] = {'value': group.get(value_field, 0), 'tooltip': group_begin_date.strftime('%B')}
+        return section_result
+
+    def _get_opportunities_data(self, cr, uid, ids, field_name, arg, context=None):
+        """ Get opportunities-related data for salesteam kanban view
+            monthly_open_leads: number of open lead during the last months
+            monthly_planned_revenue: planned revenu of opportunities during the last months
+        """
+        obj = self.pool.get('crm.lead')
+        res = dict.fromkeys(ids, False)
+        month_begin = date.today().replace(day=1)
+        groupby_begin = (month_begin + relativedelta.relativedelta(months=-4)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        for id in ids:
+            res[id] = dict()
+            lead_domain = [('type', '=', 'lead'), ('section_id', '=', id), ('create_date', '>=', groupby_begin)]
+            res[id]['monthly_open_leads'] = self.__get_bar_values(cr, uid, obj, lead_domain, ['create_date'], 'create_date_count', 'create_date', context=context)
+            opp_domain = [('type', '=', 'opportunity'), ('section_id', '=', id), ('create_date', '>=', groupby_begin)]
+            res[id]['monthly_planned_revenue'] = self.__get_bar_values(cr, uid, obj, opp_domain, ['planned_revenue', 'create_date'], 'planned_revenue', 'create_date', context=context)
+        return res
 
     _columns = {
         'name': fields.char('Sales Team', size=64, required=True, translate=True),
@@ -117,27 +164,37 @@ class crm_case_section(osv.osv):
                         "true, it will allow you to hide the sales team without removing it."),
         'change_responsible': fields.boolean('Reassign Escalated', help="When escalating to this team override the salesman with the team leader."),
         'user_id': fields.many2one('res.users', 'Team Leader'),
-        'member_ids':fields.many2many('res.users', 'sale_member_rel', 'section_id', 'member_id', 'Team Members'),
+        'member_ids': fields.many2many('res.users', 'sale_member_rel', 'section_id', 'member_id', 'Team Members'),
         'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by OpenERP about cases in this sales team"),
         'parent_id': fields.many2one('crm.case.section', 'Parent Team'),
         'child_ids': fields.one2many('crm.case.section', 'parent_id', 'Child Teams'),
         'resource_calendar_id': fields.many2one('resource.calendar', "Working Time", help="Used to compute open days"),
         'note': fields.text('Description'),
-        'working_hours': fields.float('Working Hours', digits=(16,2 )),
+        'working_hours': fields.float('Working Hours', digits=(16, 2)),
         'stage_ids': fields.many2many('crm.case.stage', 'section_stage_rel', 'section_id', 'stage_id', 'Stages'),
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
                                     help="The email address associated with this team. New emails received will automatically "
                                          "create new leads assigned to the team."),
+        'color': fields.integer('Color Index'),
+        'use_leads': fields.boolean('Leads',
+            help="The first contact you get with a potential customer is a lead you qualify before converting it into a real business opportunity. Check this box to manage leads in this sales team."),
+
+        'monthly_open_leads': fields.function(_get_opportunities_data,
+            type="string", readonly=True, multi='_get_opportunities_data',
+            string='Open Leads per Month'),
+        'monthly_planned_revenue': fields.function(_get_opportunities_data,
+            type="string", readonly=True, multi='_get_opportunities_data',
+            string='Planned Revenue per Month')
     }
 
     def _get_stage_common(self, cr, uid, context):
-        ids = self.pool.get('crm.case.stage').search(cr, uid, [('case_default','=',1)], context=context)
+        ids = self.pool.get('crm.case.stage').search(cr, uid, [('case_default', '=', 1)], context=context)
         return ids
 
     _defaults = {
         'active': 1,
         'stage_ids': _get_stage_common,
-        'alias_domain': False, # always hide alias during creation
+        'use_leads': True,
     }
 
     _sql_constraints = [
@@ -150,7 +207,7 @@ class crm_case_section(osv.osv):
 
     def name_get(self, cr, uid, ids, context=None):
         """Overrides orm name_get method"""
-        if not isinstance(ids, list) :
+        if not isinstance(ids, list):
             ids = [ids]
         res = []
         if not ids:
@@ -167,20 +224,20 @@ class crm_case_section(osv.osv):
     def create(self, cr, uid, vals, context=None):
         mail_alias = self.pool.get('mail.alias')
         if not vals.get('alias_id'):
-            vals.pop('alias_name', None) # prevent errors during copy()
+            alias_name = vals.pop('alias_name', None) or vals.get('name')  # prevent errors during copy()
             alias_id = mail_alias.create_unique_alias(cr, uid,
-                    {'alias_name': vals['name']},
+                    {'alias_name': alias_name},
                     model_name="crm.lead",
                     context=context)
             vals['alias_id'] = alias_id
         res = super(crm_case_section, self).create(cr, uid, vals, context)
-        mail_alias.write(cr, uid, [vals['alias_id']], {'alias_defaults': {'section_id': res, 'type':'lead'}}, context)
+        mail_alias.write(cr, uid, [vals['alias_id']], {'alias_defaults': {'section_id': res, 'type': 'lead'}}, context)
         return res
 
     def unlink(self, cr, uid, ids, context=None):
         # Cascade-delete mail aliases as well, as they should not exist without the sales team.
         mail_alias = self.pool.get('mail.alias')
-        alias_ids = [team.alias_id.id for team in self.browse(cr, uid, ids, context=context) if team.alias_id ]
+        alias_ids = [team.alias_id.id for team in self.browse(cr, uid, ids, context=context) if team.alias_id]
         res = super(crm_case_section, self).unlink(cr, uid, ids, context=context)
         mail_alias.unlink(cr, uid, alias_ids, context=context)
         return res
@@ -229,5 +286,6 @@ class crm_payment_mode(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

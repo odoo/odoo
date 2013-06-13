@@ -27,6 +27,10 @@
                             </h1>
                             <label for="category_ids" class="oe_edit_only" groups="base.group_hr_user"/>
                             <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" groups="base.group_hr_user"/>
+                            <label for="work_email" class="oe_edit_only"/>
+                            <field name="work_email" widget="email"/>
+                            <label for="work_phone" class="oe_edit_only"/>
+                            <field name="work_phone"/>
                         </div>
                         <div class="oe_right oe_button_box" name="button_box">
                             <!-- Put here related buttons -->
@@ -36,8 +40,6 @@
                                 <group>
                                     <group string="Contact Information">
                                         <field name="address_id" on_change="onchange_address_id(address_id)" context="{'show_address': 1}" options='{"always_reload": True, "highlight_first_line": True}'/>
-                                        <field name="work_email" widget="email"/>
-                                        <field name="work_phone"/>
                                         <field name="mobile_phone"/>
                                         <field name="work_location"/>
                                     </group>
@@ -136,6 +138,9 @@
         <field name="arch" type="xml">
             <kanban>
                 <field name="last_login"/>
+                <field name="message_is_follower"/>
+                <field name="message_follower_ids"/>
+                <field name="message_ids"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_employee_vignette">
@@ -154,10 +159,19 @@
                                     </li>
                                     <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
                                     <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
-                                    <li t-if="record.work_phone.raw_value">Tel: <field name="work_phone"/></li>
-                                    <li t-if="record.mobile_phone.raw_value">Mobile: <field name="mobile_phone"/></li>
                                     <li t-if="record.work_email.raw_value"><a t-attf-href="mailto:#{record.work_email.value}"><field name="work_email"/></a></li>
                                 </ul>
+                                <div class="oe_kanban_footer_left">
+                                    <span title='Messages'><span class='oe_e'>9</span><t t-esc="record.message_ids.raw_value.length"/></span>
+                                    <span title='Followers'><span class='oe_e'>+</span><t t-esc="record.message_follower_ids.raw_value.length"/></span>
+                                </div>
+                                <div class="oe_followers" groups="base.group_user">
+                                    <button t-if="record.message_is_follower.raw_value" name="action_unfollow" type="object" class="oe_follower oe_following">
+                                        <span class="oe_unfollow">Unfollow</span>
+                                        <span class="oe_following">Following</span>
+                                    </button>
+                                    <button t-if="! record.message_is_follower.raw_value" name="action_follow" type="object" class="oe_follower oe_notfollow">Follow</button>
+                                </div>
                             </div>
                         </div>
                         <script>
@@ -341,7 +355,8 @@
                             </group>
                             <group>
                                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                                <field name="department_id"/>                            </group>
+                                <field name="department_id"/>
+                            </group>
                         </group>
                         <div>
                             <label for="description"/>

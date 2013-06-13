@@ -94,6 +94,5 @@ class procurement_order(osv.osv):
             if procurement.sale_line_id and procurement.sale_line_id.order_id:
                 procurement.sale_line_id.order_id.message_post(body=body)
 
-procurement_order()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
