@@ -593,9 +593,6 @@ class sale_order_line(osv.osv):
             return res
 
         #update of result obtained in super function
-        res_packing = self.product_packaging_change(cr, uid, ids, pricelist, product, qty, uom, partner_id, packaging, context=context)
-        res['value'].update(res_packing.get('value', {}))
-        warning_msgs = res_packing.get('warning') and res_packing['warning']['message'] or ''
         product_obj = product_obj.browse(cr, uid, product, context=context)
         res['value']['delay'] = (product_obj.sale_delay or 0.0)
         res['value']['type'] = product_obj.procure_method
@@ -608,6 +605,10 @@ class sale_order_line(osv.osv):
                 uom = False
         if not uom2:
             uom2 = product_obj.uom_id
+        # Calling product_packaging_change function after updating updating UoM
+        res_packing = self.product_packaging_change(cr, uid, ids, pricelist, product, qty, uom, partner_id, packaging, context=context)
+        res['value'].update(res_packing.get('value', {}))
+        warning_msgs = res_packing.get('warning') and res_packing['warning']['message'] or ''
         compare_qty = float_compare(product_obj.virtual_available * uom2.factor, qty * product_obj.uom_id.factor, precision_rounding=product_obj.uom_id.rounding)
         if (product_obj.type=='product') and int(compare_qty) == -1 \
           and (product_obj.procure_method=='make_to_stock'):
