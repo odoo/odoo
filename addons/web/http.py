@@ -537,9 +537,13 @@ class DisableCacheMiddleware(object):
 
 def session_path():
     try:
-        username = getpass.getuser()
-    except Exception:
-        username = "unknown"
+        import pwd
+        username = pwd.getpwuid(os.geteuid()).pw_name
+    except ImportError:
+        try:
+            username = getpass.getuser()
+        except Exception:
+            username = "unknown"
     path = os.path.join(tempfile.gettempdir(), "oe-sessions-" + username)
     try:
         os.mkdir(path, 0700)

@@ -5,6 +5,7 @@
 openerp.web_graph = function (instance) {
 
 var _lt = instance.web._lt;
+var _t = instance.web._t;
 
 // removed ``undefined`` values
 var filter_values = function (o) {
@@ -343,7 +344,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
                     var defs = [];
                     _.each(axis, function(x) {
                         var key = x[xaxis[0]]
-                        defs.push(obj.call("read_group", [domain, yaxis.concat(xaxis.slice(1, 2)), xaxis.slice(1, 2)], {context: context}).then(function(res) {
+                        defs.push(obj.call("read_group", [x['__domain'], yaxis.concat(xaxis.slice(1, 2)), xaxis.slice(1, 2)], {context: context}).then(function(res) {
                             return [x, key, res];
                         }));
                     });
@@ -365,7 +366,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         }).then(function() {
             var res = {
                 'data': result,
-                'ticks': _.map(ticks, function(el, key) { return [el, key] })
+                'ticks': _.map(ticks, function(el, key) { return [el, key || _t("Undefined")] })
             };
             return res;
         }));

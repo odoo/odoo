@@ -2721,6 +2721,11 @@ instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instanc
                     self.internal_set_value(self.$textarea.val());
                 }
             });
+            if (this.field.translate) {
+                var $img = $('<img class="oe_field_translate oe_input_icon" src="/web/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/>')
+                    .click(this.on_translate);
+                this.$cleditor.$toolbar.append($img);
+            }
         }
     },
     render_value: function() {
@@ -3241,6 +3246,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 self.display_value_backup = {};
                 self.render_value();
                 self.focus();
+                self.view.do_onchange(self);
             });
         });
 
@@ -4217,7 +4223,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
             ext: {
                 autocomplete: {
                     selectFromDropdown: function() {
-                        $(this).trigger('hideDropdown');
+                        this.trigger('hideDropdown');
                         var index = Number(this.selectedSuggestionElement().children().children().data('index'));
                         var data = self.search_result[index];
                         if (data.id) {
@@ -4226,6 +4232,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
                             ignore_blur = true;
                             data.action();
                         }
+                        this.trigger('setSuggestions', {result : []});
                     },
                 },
                 tags: {
@@ -4960,7 +4967,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
             this.searchview.hide();
         }
         if (this.view_list) {
-            this.view_list.$el.hide();
+            this.view_list.do_hide();
         }
         this.setup_form_view();
     },

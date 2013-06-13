@@ -131,6 +131,7 @@ my.InputView = instance.web.Widget.extend({
         paste: 'onPaste',
     },
     getSelection: function () {
+        this.el.normalize();
         // get Text node
         var root = this.el.childNodes[0];
         if (!root || !root.textContent) {
@@ -139,6 +140,16 @@ my.InputView = instance.web.Widget.extend({
             return {start: 0, end: 0};
         }
         var range = window.getSelection().getRangeAt(0);
+        // In Firefox, depending on the way text is selected (drag, double- or
+        // triple-click) the range may start or end on the parent of the
+        // selected text node‽ Check for this condition and fixup the range
+        // note: apparently with C-a this can go even higher?
+        if (range.startContainer === this.el && range.startOffset === 0) {
+            range.setStart(root, 0);
+        }
+        if (range.endContainer === this.el && range.endOffset === 1) {
+            range.setEnd(root, root.length)
+        }
         assert(range.startContainer === root,
                "selection should be in the input view");
         assert(range.endContainer === root,
@@ -149,6 +160,7 @@ my.InputView = instance.web.Widget.extend({
         }
     },
     onKeydown: function (e) {
+        this.el.normalize();
         var sel;
         switch (e.which) {
         // Do not insert newline, but let it bubble so searchview can use it
@@ -186,6 +198,7 @@ my.InputView = instance.web.Widget.extend({
         }
     },
     setCursorAtEnd: function () {
+        this.el.normalize();
         var sel = window.getSelection();
         sel.removeAllRanges();
         var range = document.createRange();
@@ -196,13 +209,14 @@ my.InputView = instance.web.Widget.extend({
         // from about half the link to half the text, paste in search box then
         // hit the left arrow key, getSelection would blow up).
         //
-        // Explicitly selecting only the inner text node (only child node at
-        // this point, though maybe we should assert that) avoiids the issue
+        // Explicitly selecting only the inner text node (only child node
+        // since we've normalized the parent) avoids the issue
         range.selectNode(this.el.childNodes[0]);
         range.collapse(false);
         sel.addRange(range);
     },
     onPaste: function () {
+        this.el.normalize();
         // In MSIE and Webkit, it is possible to get various representations of
         // the clipboard data at this point e.g.
         // window.clipboardData.getData('Text') and
@@ -224,6 +238,7 @@ my.InputView = instance.web.Widget.extend({
             var data = this.$el.text();
             // paste raw text back in
             this.$el.empty().text(data);
+            this.el.normalize();
             // Set the cursor at the end of the text, so the cursor is not lost
             // in some kind of error-spawning limbo.
             this.setCursorAtEnd();
@@ -326,7 +341,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             }
         },
         'autocompleteopen': function () {
-            this.$el.autocomplete('widget').css('z-index', 3);
+            this.$el.autocomplete('widget').css('z-index', 1004);
         },
     },
     /**
@@ -449,11 +464,12 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         var autocomplete = this.$el.autocomplete({
             source: this.proxy('complete_global_search'),
             select: this.proxy('select_completion'),
+            search: function () { self.$el.autocomplete('close'); },
             focus: function (e) { e.preventDefault(); },
             html: true,
             autoFocus: true,
             minLength: 1,
-            delay: 0
+            delay: 0,
         }).data('autocomplete');
 
         // MonkeyPatch autocomplete instance
@@ -526,7 +542,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         var val = this.$el.val();
         this.$el.val('');
         var complete = this.$el.data('autocomplete');
-        if ((val && complete.term === undefined) || complete.previous !== undefined) {
+        if ((val && complete.term === undefined) || complete.previous) {
             throw new Error("new jquery.ui version altering implementation" +
                             " details relied on");
         }
@@ -1039,7 +1055,9 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
         facet.values.each(function (v) {
             var i = _(self.filters).indexOf(v.get('value'));
             if (i === -1) { return; }
-            $filters.eq(i).addClass('oe_selected');
+            $filters.filter(function () {
+                return Number($(this).data('index')) === i;
+            }).addClass('oe_selected');
         });
     },
     /**
@@ -1129,7 +1147,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
         });
     },
     toggle_filter: function (e) {
-        this.toggle(this.filters[$(e.target).index()]);
+        this.toggle(this.filters[Number($(e.target).data('index'))]);
     },
     toggle: function (filter) {
         this.view.query.toggle(this.make_facet([this.make_value(filter)]));
@@ -1337,20 +1355,22 @@ instance.web.search.CharField = instance.web.search.Field.extend( /** @lends ins
     }
 });
 instance.web.search.NumberField = instance.web.search.Field.extend(/** @lends instance.web.search.NumberField# */{
-    value_from: function () {
-        if (!this.$el.val()) {
-            return null;
-        }
-        var val = this.parse(this.$el.val()),
-          check = Number(this.$el.val());
-        if (isNaN(val) || val !== check) {
-            this.$el.addClass('error');
-            throw new instance.web.search.Invalid(
-                this.attrs.name, this.$el.val(), this.error_message);
-        }
-        this.$el.removeClass('error');
-        return val;
-    }
+    complete: function (value) {
+        var val = this.parse(value);
+        if (isNaN(val)) { return $.when(); }
+        var label = _.str.sprintf(
+            _t("Search %(field)s for: %(value)s"), {
+                field: '<em>' + this.attrs.string + '</em>',
+                value: '<strong>' + _.str.escapeHTML(value) + '</strong>'});
+        return $.when([{
+            label: label,
+            facet: {
+                category: this.attrs.string,
+                field: this,
+                values: [{label: value, value: val}]
+            }
+        }]);
+    },
 });
 /**
  * @class
@@ -1888,7 +1908,7 @@ instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @
         this._super(parent);
         this.fields = _(fields).chain()
             .map(function(val, key) { return _.extend({}, val, {'name': key}); })
-            .filter(function (field) { return !field.deprecated; })
+            .filter(function (field) { return !field.deprecated && (field.store === void 0 || field.store || field.fnct_search); })
             .sortBy(function(field) {return field.string;})
             .value();
         this.attrs = {_: _, fields: this.fields, selected: null};

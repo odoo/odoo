@@ -1,4 +1,3 @@
-#!/usr/bin/python
 import datetime
 import babel
 import dateutil.relativedelta

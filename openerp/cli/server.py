@@ -221,6 +221,18 @@ def quit_on_signals():
         os.unlink(config['pidfile'])
     sys.exit(0)
 
+def watch_parent(beat=4):
+    import gevent
+    ppid = os.getppid()
+    while True:
+        if ppid != os.getppid():
+            pid = os.getpid()
+            _logger.info("LongPolling (%s) Parent changed", pid)
+            # suicide !!
+            os.kill(pid, signal.SIGTERM)
+            return
+        gevent.sleep(beat)
+
 def main(args):
     check_root_user()
     openerp.tools.config.parse_config(args)
@@ -257,9 +269,15 @@ def main(args):
         setup_pid_file()
         # Some module register themselves when they are loaded so we need the
         # services to be running before loading any registry.
-        if config['workers']:
-            openerp.service.start_services_workers()
+        if not openerp.evented:
+            if config['workers']:
+                openerp.service.start_services_workers()
+            else:
+                openerp.service.start_services()
         else:
+            config['xmlrpc_port'] = config['longpolling_port']
+            import gevent
+            gevent.spawn(watch_parent)
             openerp.service.start_services()
 
     rc = 0
