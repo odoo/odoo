@@ -158,26 +158,23 @@ class WebRequest(object):
     #TODO: remove
     @contextlib.contextmanager
     def registry_cr(self):
-        return (self.registry, cr)
+        return (self.registry, self.cr)
 
     def _call_function(self, *args, **kwargs):
         self.authenticate()
         try:
-            if self.registry:
-                # ugly syntax only to get the __exit__ arguments to pass to self._cr
-                request = self
-                class with_obj(object):
-                    def __enter__(self):
-                        pass
-                    def __exit__(self, *args):
-                        if request._cr_cm:
-                            request._cr_cm.__exit__(*args)
-                            request._cr_cm = None
-                            request._cr = None
+            # ugly syntax only to get the __exit__ arguments to pass to self._cr
+            request = self
+            class with_obj(object):
+                def __enter__(self):
+                    pass
+                def __exit__(self, *args):
+                    if request._cr_cm:
+                        request._cr_cm.__exit__(*args)
+                        request._cr_cm = None
+                        request._cr = None
 
-                with with_obj():
-                    return self.func(*args, **kwargs)
-            else:
+            with with_obj():
                 return self.func(*args, **kwargs)
         finally:
             # just to be sure no one tries to re-use the request

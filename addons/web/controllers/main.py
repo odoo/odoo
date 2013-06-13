@@ -881,7 +881,10 @@ class Session(openerpweb.Controller):
         }
 
     @openerpweb.jsonrequest
+    @nodb
     def get_session_info(self):
+        req.uid = req.session._uid
+        req.db = req.session._db
         return self.session_info()
 
     @openerpweb.jsonrequest
@@ -1382,6 +1385,7 @@ class Binary(openerpweb.Controller):
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
     @openerpweb.httprequest
+    @nodb
     def company_logo(self, dbname=None):
         # TODO add etag, refactor to use /image code for etag
         uid = None

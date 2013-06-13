@@ -104,6 +104,8 @@ class OpenERPSession(object):
     def authenticate(self, db, login, password, env=None):
         uid = self.proxy('common').authenticate(db, login, password, env)
         self.bind(db, uid, login, password)
+        http.request.db = db
+        http.request.uid = uid
 
         if uid: self.get_context()
         return uid
