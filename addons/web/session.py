@@ -111,9 +111,9 @@ class OpenERPSession(object):
         return uid
 
     def check_security(self):
-        import openerp.service.security as security
         if not self._db or not self._uid:
             raise SessionExpiredException("Session expired")
+        import openerp.service.security as security
         security.check(self._db, self._uid, self._password)
 
     #deprecated
