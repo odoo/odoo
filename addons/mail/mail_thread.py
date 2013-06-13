@@ -1160,7 +1160,10 @@ class mail_thread(osv.AbstractModel):
 
     def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, context=None):
         """ Add partners to the records followers. """
-        user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+        mail_followers_obj = self.pool.get('mail.followers')
+        subtype_obj = self.pool.get('mail.message.subtype')
+
+        user_pid = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
         if set(partner_ids) == set([user_pid]):
             try:
                 self.check_access_rights(cr, uid, 'read')
@@ -1169,27 +1172,35 @@ class mail_thread(osv.AbstractModel):
         else:
             self.check_access_rights(cr, uid, 'write')
 
-        # subscribe partners
-        self.write(cr, SUPERUSER_ID, ids, {'message_follower_ids': [(4, pid) for pid in partner_ids]}, context=context)
+        for record in self.browse(cr, SUPERUSER_ID, ids, context=context):
+            existing_pids = set([f.id for f in record.message_follower_ids
+                                            if f.id in partner_ids])
+            new_pids = set(partner_ids) - existing_pids
 
-        # subtype specified: update the subscriptions
-        fol_obj = self.pool.get('mail.followers')
-        if subtype_ids is not None:
-            fol_ids = fol_obj.search(cr, SUPERUSER_ID, [('res_model', '=', self._name), ('res_id', 'in', ids), ('partner_id', 'in', partner_ids)], context=context)
-            fol_obj.write(cr, SUPERUSER_ID, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
-        # no subtypes: default ones for new subscription, do not update existing subscriptions
-        else:
-            # search new subscriptions: subtype_ids is False
-            fol_ids = fol_obj.search(cr, SUPERUSER_ID, [
-                            ('res_model', '=', self._name),
-                            ('res_id', 'in', ids),
-                            ('partner_id', 'in', partner_ids),
-                            ('subtype_ids', '=', False)
-                        ], context=context)
-            if fol_ids:
-                subtype_obj = self.pool.get('mail.message.subtype')
-                subtype_ids = subtype_obj.search(cr, uid, [('default', '=', True), '|', ('res_model', '=', self._name), ('res_model', '=', False)], context=context)
-                fol_obj.write(cr, SUPERUSER_ID, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
+            # subtype_ids specified: update already subscribed partners
+            if subtype_ids and existing_pids:
+                fol_ids = mail_followers_obj.search(cr, SUPERUSER_ID, [
+                                                        ('res_model', '=', self._name),
+                                                        ('res_id', 'in', ids),
+                                                        ('partner_id', 'in', list(existing_pids)),
+                                                    ], context=context)
+                mail_followers_obj.write(cr, SUPERUSER_ID, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
+            # subtype_ids not specified: do not update already subscribed partner, fetch default subtypes for new partners
+            else:
+                subtype_ids = subtype_obj.search(cr, uid, [
+                                                        ('default', '=', True),
+                                                        '|',
+                                                        ('res_model', '=', self._name),
+                                                        ('res_model', '=', False)
+                                                    ], context=context)
+            # subscribe new followers
+            for new_pid in new_pids:
+                mail_followers_obj.create(cr, SUPERUSER_ID, {
+                                                'res_model': self._name,
+                                                'res_id': record.id,
+                                                'partner_id': new_pid,
+                                                'subtype_ids': [(6, 0, subtype_ids)],
+                                            }, context=context)
 
         return True
 
