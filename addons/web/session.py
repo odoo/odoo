@@ -95,15 +95,12 @@ class OpenERPSession(object):
         self.context = {}
         self.jsonp_requests = {}     # FIXME use a LRU
 
-    def bind(self, db, uid, login, password):
+    def authenticate(self, db, login, password, env=None):
+        uid = openerp.netsvc.dispatch_rpc('common', 'authenticate', [db, login, password, env])
         self._db = db
         self._uid = uid
         self._login = login
         self._password = password
-
-    def authenticate(self, db, login, password, env=None):
-        uid = self.proxy('common').authenticate(db, login, password, env)
-        self.bind(db, uid, login, password)
         http.request.db = db
         http.request.uid = uid
 
@@ -115,6 +112,39 @@ class OpenERPSession(object):
             raise SessionExpiredException("Session expired")
         import openerp.service.security as security
         security.check(self._db, self._uid, self._password)
+
+    def get_context(self):
+        """ Re-initializes the current user's session context (based on
+        his preferences) by calling res.users.get_context() with the old
+        context
+
+        :returns: the new context
+        """
+        assert self._uid, "The user needs to be logged-in to initialize his context"
+        self.context = http.request.registry.get('res.users').context_get(http.request.cr, http.request.uid) or {}
+        self.context['uid'] = self._uid
+        self._fix_lang(self.context)
+        return self.context
+
+    def _fix_lang(self, context):
+        """ OpenERP provides languages which may not make sense and/or may not
+        be understood by the web client's libraries.
+
+        Fix those here.
+
+        :param dict context: context to fix
+        """
+        lang = context['lang']
+
+        # inane OpenERP locale
+        if lang == 'ar_AR':
+            lang = 'ar'
+
+        # lang to lang_REGION (datejs only handles lang_REGION, no bare langs)
+        if lang in babel.core.LOCALE_ALIASES:
+            lang = babel.core.LOCALE_ALIASES[lang]
+
+        context['lang'] = lang or 'en_US'
 
     #deprecated
     def send(self, service_name, method, *args):
@@ -168,38 +198,5 @@ class OpenERPSession(object):
             raise SessionExpiredException("Session expired")
 
         return Model(self, model)
-
-    def get_context(self):
-        """ Re-initializes the current user's session context (based on
-        his preferences) by calling res.users.get_context() with the old
-        context
-
-        :returns: the new context
-        """
-        assert self._uid, "The user needs to be logged-in to initialize his context"
-        self.context = self.model('res.users').context_get() or {}
-        self.context['uid'] = self._uid
-        self._fix_lang(self.context)
-        return self.context
-
-    def _fix_lang(self, context):
-        """ OpenERP provides languages which may not make sense and/or may not
-        be understood by the web client's libraries.
-
-        Fix those here.
-
-        :param dict context: context to fix
-        """
-        lang = context['lang']
-
-        # inane OpenERP locale
-        if lang == 'ar_AR':
-            lang = 'ar'
-
-        # lang to lang_REGION (datejs only handles lang_REGION, no bare langs)
-        if lang in babel.core.LOCALE_ALIASES:
-            lang = babel.core.LOCALE_ALIASES[lang]
-
-        context['lang'] = lang or 'en_US'
 
 # vim:et:ts=4:sw=4:
