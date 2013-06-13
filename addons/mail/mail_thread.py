@@ -1181,7 +1181,7 @@ class mail_thread(osv.AbstractModel):
             if subtype_ids and existing_pids:
                 fol_ids = mail_followers_obj.search(cr, SUPERUSER_ID, [
                                                         ('res_model', '=', self._name),
-                                                        ('res_id', 'in', ids),
+                                                        ('res_id', '=', record.id),
                                                         ('partner_id', 'in', list(existing_pids)),
                                                     ], context=context)
                 mail_followers_obj.write(cr, SUPERUSER_ID, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
