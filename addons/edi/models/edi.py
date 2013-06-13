@@ -29,7 +29,6 @@ import urllib2
 
 import openerp
 import openerp.release as release
-import openerp.netsvc as netsvc
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
 from openerp.tools.safe_eval import safe_eval as eval
@@ -107,8 +106,8 @@ class edi(osv.AbstractModel):
         """
         edi_list = []
         for record in records:
-            record_model_obj = self.pool.get(record._name)
-            edi_list += record_model_obj.edi_export(cr, uid, [record], context=context)
+            record_model = record._model
+            edi_list += record_model.edi_export(cr, uid, [record], context=context)
         return self.serialize(edi_list)
 
     def load_edi(self, cr, uid, edi_documents, context=None):
@@ -127,14 +126,14 @@ class edi(osv.AbstractModel):
             module = edi_document.get('__import_module') or edi_document.get('__module')
             assert module, 'a `__module` or `__import_module` attribute is required in each EDI document.'
             if module != 'base' and not ir_module.search(cr, uid, [('name','=',module),('state','=','installed')]):
-                raise osv.except_osv(_('Missing application.'),
+                raise osv.except_osv(_('Missing Application.'),
                             _("The document you are trying to import requires the OpenERP `%s` application. "
                               "You can install it by connecting as the administrator and opening the configuration assistant.")%(module,))
             model = edi_document.get('__import_model') or edi_document.get('__model')
             assert model, 'a `__model` or `__import_model` attribute is required in each EDI document.'
-            model_obj = self.pool.get(model)
-            assert model_obj, 'model `%s` cannot be found, despite module `%s` being available - '\
+            assert model in self.pool, 'model `%s` cannot be found, despite module `%s` being available - '\
                               'this EDI document seems invalid or unsupported.' % (model,module)
+            model_obj = self.pool[model]
             record_id = model_obj.edi_import(cr, uid, edi_document, context=context)
             record_action = model_obj._edi_record_display_action(cr, uid, record_id, context=context)
             res.append((model, record_id, record_action))
@@ -401,7 +400,7 @@ class EDIMixin(object):
         return results
 
     def _edi_get_object_by_name(self, cr, uid, name, model_name, context=None):
-        model = self.pool.get(model_name)
+        model = self.pool[model_name]
         search_results = model.name_search(cr, uid, name, operator='=', context=context)
         if len(search_results) == 1:
             return model.browse(cr, uid, search_results[0][0], context=context)
@@ -418,9 +417,7 @@ class EDIMixin(object):
                                                               ('usage','=','default')])
         if matching_reports:
             report = ir_actions_report.browse(cr, uid, matching_reports[0])
-            report_service = 'report.' + report.report_name
-            service = netsvc.LocalService(report_service)
-            (result, format) = service.create(cr, uid, [record.id], {'model': self._name}, context=context)
+            result, format = openerp.report.render_report(cr, uid, [record.id], report.report_name, {'model': self._name}, context=context)
             eval_context = {'time': time, 'object': record}
             if not report.attachment or not eval(report.attachment, eval_context):
                 # no auto-saving of report as attachment, need to do it manually
@@ -486,7 +483,7 @@ class EDIMixin(object):
                                                   ('name','=',ext_id),
                                                   ('module','in',modules)])
         if data_ids:
-            model = self.pool.get(model)
+            model = self.pool[model]
             data = ir_model_data.browse(cr, uid, data_ids[0], context=context)
             if model.exists(cr, uid, [data.res_id]):
                 return model.browse(cr, uid, data.res_id, context=context)
@@ -522,7 +519,7 @@ class EDIMixin(object):
             _logger.debug("%s: Importing EDI relationship [%r,%r] - name not found, creating it.",
                           self._name, external_id, value)
             # also need_new_ext_id here, but already been set above
-            model = self.pool.get(model)
+            model = self.pool[model]
             res_id, _ = model.name_create(cr, uid, value, context=context)
             target = model.browse(cr, uid, res_id, context=context)
         else:
@@ -595,7 +592,7 @@ class EDIMixin(object):
         # process o2m values, connecting them to their parent on-the-fly
         for o2m_field, o2m_value in o2m_todo.iteritems():
             field = self._all_columns[o2m_field].column
-            dest_model = self.pool.get(field._obj)
+            dest_model = self.pool[field._obj]
             for o2m_line in o2m_value:
                 # link to parent record: expects an (ext_id, name) pair
                 o2m_line[field._fields_id] = (ext_id_members['full'], record_display[1])

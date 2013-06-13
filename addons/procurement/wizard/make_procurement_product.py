@@ -126,6 +126,5 @@ class make_procurement(osv.osv_memory):
 
         return res
 
-make_procurement()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

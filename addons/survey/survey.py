@@ -25,7 +25,7 @@ from dateutil.relativedelta import relativedelta
 from time import strftime
 import os
 
-from openerp import netsvc, tools
+from openerp import tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -36,7 +36,6 @@ class survey_type(osv.osv):
         'name': fields.char("Name", size=128, required=1, translate=True),
         'code': fields.char("Code", size=64),
     }
-survey_type()
 
 class survey(osv.osv):
     _name = 'survey'
@@ -196,7 +195,6 @@ class survey(osv.osv):
             'context': context
         }
 
-survey()
 
 class survey_history(osv.osv):
     _name = 'survey.history'
@@ -210,7 +208,6 @@ class survey_history(osv.osv):
     _defaults = {
          'date': lambda * a: datetime.datetime.now()
     }
-survey_history()
 
 class survey_page(osv.osv):
     _name = 'survey.page'
@@ -260,7 +257,6 @@ class survey_page(osv.osv):
         vals.update({'title':title})
         return super(survey_page, self).copy(cr, uid, ids, vals, context=context)
 
-survey_page()
 
 class survey_question(osv.osv):
     _name = 'survey.question'
@@ -561,7 +557,6 @@ class survey_question(osv.osv):
             data['page_id']= context.get('page_id', False)
         return data
 
-survey_question()
 
 
 class survey_question_column_heading(osv.osv):
@@ -594,7 +589,6 @@ class survey_question_column_heading(osv.osv):
        'in_visible_rating_weight': _get_in_visible_rating_weight,
        'in_visible_menu_choice': _get_in_visible_menu_choice,
     }
-survey_question_column_heading()
 
 class survey_answer(osv.osv):
     _name = 'survey.answer'
@@ -651,7 +645,6 @@ class survey_answer(osv.osv):
         data = super(survey_answer, self).default_get(cr, uid, fields, context)
         return data
 
-survey_answer()
 
 class survey_response(osv.osv):
     _name = "survey.response"
@@ -684,7 +677,6 @@ class survey_response(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         raise osv.except_osv(_('Warning!'),_('You cannot duplicate the resource!'))
 
-survey_response()
 
 class survey_response_line(osv.osv):
     _name = 'survey.response.line'
@@ -708,7 +700,6 @@ class survey_response_line(osv.osv):
         'state' : lambda * a: "draft",
     }
 
-survey_response_line()
 
 class survey_tbl_column_heading(osv.osv):
     _name = 'survey.tbl.column.heading'
@@ -720,7 +711,6 @@ class survey_tbl_column_heading(osv.osv):
         'response_table_id': fields.many2one('survey.response.line', 'Answer', ondelete='cascade'),
     }
 
-survey_tbl_column_heading()
 
 class survey_response_answer(osv.osv):
     _name = 'survey.response.answer'
@@ -736,7 +726,6 @@ class survey_response_answer(osv.osv):
         'comment_field': fields.char('Comment', size = 255)
     }
 
-survey_response_answer()
 
 class res_users(osv.osv):
     _inherit = "res.users"
@@ -745,7 +734,6 @@ class res_users(osv.osv):
         'survey_id': fields.many2many('survey', 'survey_users_rel', 'uid', 'sid', 'Groups'),
     }
 
-res_users()
 
 class survey_request(osv.osv):
     _name = "survey.request"
@@ -786,6 +774,5 @@ class survey_request(osv.osv):
             return {'value': {'email': user.email}}
         return {}
 
-survey_request()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

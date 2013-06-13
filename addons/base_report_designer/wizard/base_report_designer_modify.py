@@ -24,7 +24,7 @@ import base64
 import time
 import urllib
 
-from openerp import osv, pooler, tools
+from openerp import osv, tools
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
@@ -39,9 +39,9 @@ class base_report_sxw(osv.osv_memory):
 
     def get_report(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, context=context)[0]
-        data_obj = self.pool.get('ir.model.data')
+        data_obj = self.pool['ir.model.data']
         id2 = data_obj._get_id(cr, uid, 'base_report_designer', 'view_base_report_file_sxw')
-        report = self.pool.get('ir.actions.report.xml').browse(cr, uid, data['report_id'], context=context)
+        report = self.pool['ir.actions.report.xml'].browse(cr, uid, data['report_id'], context=context)
         if id2:
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
         return {
@@ -54,7 +54,6 @@ class base_report_sxw(osv.osv_memory):
             'target': 'new',
         }
 
-base_report_sxw()
 
 class base_report_file_sxw(osv.osv_memory):
     """Base Report File sxw """
@@ -74,9 +73,9 @@ class base_report_file_sxw(osv.osv_memory):
 
         """
         res = super(base_report_file_sxw, self).default_get(cr, uid, fields, context=context)
-        report_id1 = self.pool.get('base.report.sxw').search(cr,uid,[])
-        data = self.pool.get('base.report.sxw').read(cr, uid, report_id1, context=context)[0]
-        report = self.pool.get('ir.actions.report.xml').browse(cr, uid, data['report_id'], context=context)
+        report_id1 = self.pool['base.report.sxw'].search(cr,uid,[])
+        data = self.pool['base.report.sxw'].read(cr, uid, report_id1, context=context)[0]
+        report = self.pool['ir.actions.report.xml'].browse(cr, uid, data['report_id'], context=context)
         if context is None:
             context={}
         if 'report_id' in fields:
@@ -97,14 +96,14 @@ class base_report_file_sxw(osv.osv_memory):
         sxwval = StringIO.StringIO(base64.decodestring(data['file_sxw_upload']))
         fp = tools.file_open('normalized_oo2rml.xsl',subdir='addons/base_report_designer/openerp_sxw2rml')
         newrmlcontent = str(openerp_sxw2rml.sxw2rml(sxwval, xsl=fp.read()))
-        report = self.pool.get('ir.actions.report.xml').write(cr, uid, [data['report_id']], {
+        report = self.pool['ir.actions.report.xml'].write(cr, uid, [data['report_id']], {
             'report_sxw_content': base64.decodestring(data['file_sxw_upload']),
             'report_rml_content': newrmlcontent
         })
         cr.commit()
-        data_obj = self.pool.get('ir.model.data')
+        data_obj = self.pool['ir.model.data']
         id2 = data_obj._get_id(cr, uid, 'base_report_designer', 'view_base_report_file_rml')
-        report = self.pool.get('ir.actions.report.xml').browse(cr, uid, data['report_id'], context=context)
+        report = self.pool['ir.actions.report.xml'].browse(cr, uid, data['report_id'], context=context)
         if id2:
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
         return {
@@ -116,7 +115,6 @@ class base_report_file_sxw(osv.osv_memory):
             'type': 'ir.actions.act_window',
             'target': 'new',
         }
-base_report_file_sxw()
 
 class base_report_rml_save(osv.osv_memory):
     """Base Report file Save"""
@@ -135,9 +133,9 @@ class base_report_rml_save(osv.osv_memory):
         """
         
         res = super(base_report_rml_save, self).default_get(cr, uid, fields, context=context)
-        report_id = self.pool.get('base.report.sxw').search(cr,uid,[])
-        data = self.pool.get('base.report.file.sxw').read(cr, uid, report_id, context=context)[0]
-        report = self.pool.get('ir.actions.report.xml').browse(cr, uid, data['report_id'], context=context)
+        report_id = self.pool['base.report.sxw'].search(cr,uid,[])
+        data = self.pool['base.report.file.sxw'].read(cr, uid, report_id, context=context)[0]
+        report = self.pool['ir.actions.report.xml'].browse(cr, uid, data['report_id'], context=context)
         
         if 'file_rml' in fields:
             res['file_rml'] =  base64.encodestring(report.report_rml_content)
@@ -146,6 +144,5 @@ class base_report_rml_save(osv.osv_memory):
          'file_rml':fields.binary('Save As'),
          }
 
-base_report_rml_save()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

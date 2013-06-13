@@ -23,7 +23,7 @@
 import base64
 import logging
 
-from openerp import netsvc
+import openerp
 from openerp.osv import osv, fields
 from openerp.osv import fields
 from openerp import tools
@@ -89,7 +89,7 @@ class email_template(osv.osv):
             template = tools.ustr(template)
             record = None
             if res_id:
-                record = self.pool.get(model).browse(cr, uid, res_id, context=context)
+                record = self.pool[model].browse(cr, uid, res_id, context=context)
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             variables = {
                 'object': record,
@@ -297,8 +297,7 @@ class email_template(osv.osv):
                         'copyvalue': self.build_expression(field_value.name, False, null_value or False),
                         'null_value': null_value or False
                         })
-        return {'value':result}
-
+        return {'value': result}
 
     def generate_email(self, cr, uid, template_id, res_id, context=None):
         """Generates an email from the template for given (model, res_id) pair.
@@ -336,29 +335,30 @@ class email_template(osv.osv):
         # Add report in attachments
         if template.report_template:
             report_name = self.render_template(cr, uid, template.report_name, template.model, res_id, context=context)
-            report_service = 'report.' + report_xml_pool.browse(cr, uid, template.report_template.id, context).report_name
+            report_service = report_xml_pool.browse(cr, uid, template.report_template.id, context).report_name
             # Ensure report is rendered using template's language
             ctx = context.copy()
             if template.lang:
                 ctx['lang'] = self.render_template(cr, uid, template.lang, template.model, res_id, context)
-            service = netsvc.LocalService(report_service)
-            (result, format) = service.create(cr, uid, [res_id], {'model': template.model}, ctx)
+            result, format = openerp.report.render_report(cr, uid, [res_id], report_service, {'model': template.model}, ctx)
             result = base64.b64encode(result)
             if not report_name:
-                report_name = report_service
+                report_name = 'report.' + report_service
             ext = "." + format
             if not report_name.endswith(ext):
                 report_name += ext
             attachments.append((report_name, result))
 
+        attachment_ids = []
         # Add template attachments
         for attach in template.attachment_ids:
-            attachments.append((attach.datas_fname, attach.datas))
+            attachment_ids.append(attach.id)
 
         values['attachments'] = attachments
+        values['attachment_ids'] = attachment_ids
         return values
 
-    def send_mail(self, cr, uid, template_id, res_id, force_send=False, context=None):
+    def send_mail(self, cr, uid, template_id, res_id, force_send=False, raise_exception=False, context=None):
         """Generates a new mail message for the given template and record,
            and schedules it for delivery through the ``mail`` module's scheduler.
 
@@ -370,30 +370,37 @@ class email_template(osv.osv):
                 was executed for this message only.
            :returns: id of the mail.message that was created
         """
-        if context is None: context = {}
+        if context is None:
+            context = {}
         mail_mail = self.pool.get('mail.mail')
         ir_attachment = self.pool.get('ir.attachment')
+
+        # create a mail_mail based on values, without attachments
         values = self.generate_email(cr, uid, template_id, res_id, context=context)
-        assert 'email_from' in values, 'email_from is missing or empty after template rendering, send_mail() cannot proceed'
-        attachments = values.pop('attachments') or {}
-        del values['partner_to'] # TODO Properly use them.
+        assert values.get('email_from'), 'email_from is missing or empty after template rendering, send_mail() cannot proceed'
+        del values['partner_to']  # TODO Properly use them.
+        attachment_ids = values.pop('attachment_ids', [])
+        attachments = values.pop('attachments', [])
         msg_id = mail_mail.create(cr, uid, values, context=context)
-        # link attachments
-        attachment_ids = []
-        for fname, fcontent in attachments.iteritems():
+        mail = mail_mail.browse(cr, uid, msg_id, context=context)
+
+        # manage attachments
+        for attachment in attachments:
             attachment_data = {
-                    'name': fname,
-                    'datas_fname': fname,
-                    'datas': fcontent,
-                    'res_model': mail_mail._name,
-                    'res_id': msg_id,
+                    'name': attachment[0],
+                    'datas_fname': attachment[0],
+                    'datas': attachment[1],
+                    'res_model': 'mail.message',
+                    'res_id': mail.mail_message_id.id,
             }
             context.pop('default_type', None)
             attachment_ids.append(ir_attachment.create(cr, uid, attachment_data, context=context))
         if attachment_ids:
+            values['attachment_ids'] = [(6, 0, attachment_ids)]
             mail_mail.write(cr, uid, msg_id, {'attachment_ids': [(6, 0, attachment_ids)]}, context=context)
+
         if force_send:
-            mail_mail.send(cr, uid, [msg_id], context=context)
+            mail_mail.send(cr, uid, [msg_id], raise_exception=raise_exception, context=context)
         return msg_id
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -90,7 +90,7 @@ class mail_notification(osv.Model):
                 continue
             partner = notification.partner_id
             # If partners_to_notify specified: restrict to them
-            if partners_to_notify and partner.id not in partners_to_notify:
+            if partners_to_notify is not None and partner.id not in partners_to_notify:
                 continue
             # Do not send to partners without email address defined
             if not partner.email:
@@ -118,8 +118,8 @@ class mail_notification(osv.Model):
                     Administrator
                 </p>
                 <div>
-                    <small>Send by <a ...>Your Company</a> using <a ...>OpenERP</a>.</small> OR
-                    <small>Send by Administrator using <a ...>OpenERP</a>.</small>
+                    <small>Sent by <a ...>Your Company</a> using <a ...>OpenERP</a>.</small> OR
+                    <small>Sent by Administrator using <a ...>OpenERP</a>.</small>
                 </div>
         """
         footer = ""
@@ -135,11 +135,14 @@ class mail_notification(osv.Model):
         footer = tools.append_content_to_html(footer, signature, plaintext=False, container_tag='p')
 
         # add company signature
-        if user.company_id:
-            company = user.company_id.website and "<a style='color:inherit' href='%s'>%s</a>" % (user.company_id.website, user.company_id.name) or user.company_id.name
+        if user.company_id.website:
+            website_url = ('http://%s' % user.company_id.website) if not user.company_id.website.lower().startswith(('http:', 'https:')) \
+                else user.company_id.website
+            company = "<a style='color:inherit' href='%s'>%s</a>" % (website_url, user.company_id.name)
         else:
-            company = user.name
-        signature_company = _('<small>Send by %(company)s using %(openerp)s.</small>' % {
+            company = user.company_id.name
+        sent_by = _('Sent by %(company)s using %(openerp)s.')
+        signature_company = '<small>%s</small>' % (sent_by % {
                 'company': company,
                 'openerp': "<a style='color:inherit' href='https://www.openerp.com/'>OpenERP</a>"
             })

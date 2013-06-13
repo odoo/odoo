@@ -205,7 +205,7 @@ class share_wizard(osv.TransientModel):
             raise osv.except_osv(_('No email address configured'),
                                  _('You must configure your email address in the user preferences before using the Share button.'))
         model, res_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'action_share_wizard_step1')
-        action = self.pool.get(model).read(cr, uid, res_id, context=context)
+        action = self.pool[model].read(cr, uid, res_id, context=context)
         action['res_id'] = ids[0]
         action.pop('context', '')
         return action
@@ -230,6 +230,7 @@ class share_wizard(osv.TransientModel):
         current_user = user_obj.browse(cr, UID_ROOT, uid, context=context)
         # modify context to disable shortcuts when creating share users
         context['noshortcut'] = True
+        context['no_reset_password'] = True
         created_ids = []
         existing_ids = []
         if wizard_data.user_type == 'emails':
@@ -404,7 +405,7 @@ class share_wizard(osv.TransientModel):
         local_rel_fields = []
         models = [x[1].model for x in relation_fields]
         model_obj = self.pool.get('ir.model')
-        model_osv = self.pool.get(model.model)
+        model_osv = self.pool[model.model]
         for colinfo in model_osv._all_columns.itervalues():
             coldef = colinfo.column
             coltype = coldef._type
@@ -412,8 +413,9 @@ class share_wizard(osv.TransientModel):
             if coltype in ttypes and colinfo.column._obj not in models:
                 relation_model_id = model_obj.search(cr, UID_ROOT, [('model','=',coldef._obj)])[0]
                 relation_model_browse = model_obj.browse(cr, UID_ROOT, relation_model_id, context=context)
-                relation_osv = self.pool.get(coldef._obj)
-                if coltype == 'one2many':
+                relation_osv = self.pool[coldef._obj]
+                #skip virtual one2many fields (related, ...) as there is no reverse relationship
+                if coltype == 'one2many' and hasattr(coldef, '_fields_id'):
                     # don't record reverse path if it's not a real m2o (that happens, but rarely)
                     dest_model_ci = relation_osv._all_columns
                     reverse_rel = coldef._fields_id
@@ -422,7 +424,7 @@ class share_wizard(osv.TransientModel):
                 local_rel_fields.append((relation_field, relation_model_browse))
                 for parent in relation_osv._inherits:
                     if parent not in models:
-                        parent_model = self.pool.get(parent)
+                        parent_model = self.pool[parent]
                         parent_colinfos = parent_model._all_columns
                         parent_model_browse = model_obj.browse(cr, UID_ROOT,
                                                                model_obj.search(cr, UID_ROOT, [('model','=',parent)]))[0]
@@ -458,7 +460,7 @@ class share_wizard(osv.TransientModel):
            """
         # obj0 class and its parents
         obj0 = [(None, model)]
-        model_obj = self.pool.get(model.model)
+        model_obj = self.pool[model.model]
         ir_model_obj = self.pool.get('ir.model')
         for parent in model_obj._inherits:
             parent_model_browse = ir_model_obj.browse(cr, UID_ROOT,
@@ -777,7 +779,7 @@ class share_wizard(osv.TransientModel):
             # Record id not found: issue
             if res_id <= 0:
                 raise osv.except_osv(_('Record id not found'), _('The share engine has not been able to fetch a record_id for your invitation.'))
-            self.pool.get(model.model).message_subscribe(cr, uid, [res_id], new_ids + existing_ids, context=context)
+            self.pool[model.model].message_subscribe(cr, uid, [res_id], new_ids + existing_ids, context=context)
             # self.send_invite_email(cr, uid, wizard_data, context=context)
             # self.send_invite_note(cr, uid, model.model, res_id, wizard_data, context=context)
         
@@ -823,7 +825,7 @@ class share_wizard(osv.TransientModel):
             elif tmp_idx == len(wizard_data.result_line_ids)-2:
                 body += ' and'
         body += '.'
-        return self.pool.get(model_name).message_post(cr, uid, [res_id], body=body, context=context)
+        return self.pool[model_name].message_post(cr, uid, [res_id], body=body, context=context)
     
     def send_invite_email(self, cr, uid, wizard_data, context=None):
         # TDE Note: not updated because will disappear
@@ -831,7 +833,7 @@ class share_wizard(osv.TransientModel):
         notification_obj = self.pool.get('mail.notification')
         user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
         if not user.email:
-            raise osv.except_osv(_('Email required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
+            raise osv.except_osv(_('Email Required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
         
         # TODO: also send an HTML version of this mail
         for result_line in wizard_data.result_line_ids:
@@ -862,7 +864,7 @@ class share_wizard(osv.TransientModel):
         mail_mail = self.pool.get('mail.mail')
         user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
         if not user.email:
-            raise osv.except_osv(_('Email required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
+            raise osv.except_osv(_('Email Required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
         
         # TODO: also send an HTML version of this mail
         mail_ids = []
@@ -902,7 +904,6 @@ class share_wizard(osv.TransientModel):
         options = dict(title=opt_title, search=opt_search)
         return {'value': {'embed_code': self._generate_embedded_code(wizard, options)}}
 
-share_wizard()
 
 class share_result_line(osv.osv_memory):
     _name = 'share.wizard.result.line'

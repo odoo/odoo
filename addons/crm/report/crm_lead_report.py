@@ -145,6 +145,5 @@ class crm_lead_report(osv.osv):
                 WHERE c.active = 'true'
             )""")
 
-crm_lead_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

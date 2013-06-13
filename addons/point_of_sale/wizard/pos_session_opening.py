@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 
 from openerp.osv import osv, fields
 from openerp.tools.translate import _
@@ -115,4 +114,3 @@ class pos_session_opening(osv.osv_memory):
             'pos_config_id' : result,
             'show_config' : show_config,
         }
-pos_session_opening()

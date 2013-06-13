@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="1">
+    <data noupdate="0">
 
     <!-- Tipos de cuenta para PGCE y PGCE PYMES -->
 
@@ -2722,7 +2722,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_281"/>
             <field name="type">view</field>
-            <field name="name">Amortización acumulada de otras instaciones</field>
+            <field name="name">Amortización acumulada de otras instalaciones</field>
             <field name="user_type" ref="inmo"/>
         </record>
         <record id="pgc_2815_child" model="account.account.template">
@@ -2730,7 +2730,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_2815"/>
             <field name="type">other</field>
-            <field name="name">Amortización acumulada de otras instaciones</field>
+            <field name="name">Amortización acumulada de otras instalaciones</field>
             <field name="user_type" ref="inmo"/>
         </record>
         <record id="pgc_2816" model="account.account.template">
@@ -4743,7 +4743,7 @@
         </record>
         <record id="pgc_460_child" model="account.account.template">
             <field name="code">460</field>
-            <field name="reconcile" eval="False"/>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pgc_460"/>
             <field name="type">other</field>
             <field name="name">Anticipos de remuneraciones</field>
@@ -4759,7 +4759,7 @@
         </record>
         <record id="pgc_465_child" model="account.account.template">
             <field name="code">465</field>
-            <field name="reconcile" eval="False"/>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pgc_465"/>
             <field name="type">other</field>
             <field name="name">Remuneraciones pendientes de pago</field>
@@ -4775,7 +4775,7 @@
         </record>
         <record id="pgc_466_child" model="account.account.template">
             <field name="code">466</field>
-            <field name="reconcile" eval="False"/>
+            <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pgc_466"/>
             <field name="type">other</field>
             <field name="name">Remuneraciones mediante sistemas de aportación definida pendientes de pago</field>
@@ -4805,8 +4805,8 @@
             <field name="name">Hacienda Pública, deudora por IVA</field>
             <field name="user_type" ref="tax"/>
         </record>
-        <record id="pgc_4700_child" model="account.account.template">
-            <field name="code">4700</field>
+        <record id="pgc_470000" model="account.account.template">
+            <field name="code">470000</field>
             <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pgc_4700"/>
             <field name="type">receivable</field>
@@ -4869,11 +4869,27 @@
             <field name="name">Hacienda Pública, IVA soportado</field>
             <field name="user_type" ref="tax"/>
         </record>
+        <record id="pgc_472000" model="account.account.template">
+            <field name="code">472000</field>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="pgc_472"/>
+            <field name="type">other</field>
+            <field name="name">Hacienda Pública. IVA soportado</field>
+            <field name="user_type" ref="tax"/>
+        </record>
         <record id="pgc_473" model="account.account.template">
             <field name="code">473</field>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_47"/>
             <field name="type">view</field>
+            <field name="name">Hacienda Pública, retenciones y pagos a cuenta</field>
+            <field name="user_type" ref="tax"/>
+        </record>
+        <record id="pgc_473000" model="account.account.template">
+            <field name="code">473000</field>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="pgc_473"/>
+            <field name="type">other</field>
             <field name="name">Hacienda Pública, retenciones y pagos a cuenta</field>
             <field name="user_type" ref="tax"/>
         </record>
@@ -4949,8 +4965,8 @@
             <field name="name">Hacienda Pública, acreedora por IVA</field>
             <field name="user_type" ref="tax"/>
         </record>
-        <record id="pgc_4750_child" model="account.account.template">
-            <field name="code">4750</field>
+        <record id="pgc_475000" model="account.account.template">
+            <field name="code">475000</field>
             <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pgc_4750"/>
             <field name="type">payable</field>
@@ -4965,8 +4981,8 @@
             <field name="name">Hacienda Pública, acreedora por retenciones practicadas</field>
             <field name="user_type" ref="tax"/>
         </record>
-        <record id="pgc_4751_child" model="account.account.template">
-            <field name="code">4751</field>
+        <record id="pgc_475100" model="account.account.template">
+            <field name="code">475100</field>
             <field name="reconcile" eval="True"/>
             <field name="parent_id" ref="pgc_4751"/>
             <field name="type">payable</field>
@@ -5027,6 +5043,14 @@
             <field name="parent_id" ref="pgc_47"/>
             <field name="type">view</field>
             <field name="name">Hacienda Pública, IVA repercutido</field>
+            <field name="user_type" ref="tax"/>
+        </record>
+        <record id="pgc_477000" model="account.account.template">
+            <field name="code">477000</field>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="pgc_477"/>
+            <field name="type">other</field>
+            <field name="name">Hacienda Pública. IVA repercutido</field>
             <field name="user_type" ref="tax"/>
         </record>
         <record id="pgc_479" model="account.account.template">
@@ -8722,7 +8746,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_66"/>
             <field name="type">view</field>
-            <field name="name">Ingresos de créditos a largo plazo</field>
+            <field name="name">Intereses de deudas</field>
             <field name="user_type" ref="gastos"/>
         </record>
         <record id="pgc_6620" model="account.account.template">
@@ -8730,7 +8754,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_662"/>
             <field name="type">view</field>
-            <field name="name">Ingresos de créditos a largo plazo, empresas del grupo</field>
+            <field name="name">Intereses de deudas, empresas del grupo</field>
             <field name="user_type" ref="gastos"/>
         </record>
         <record id="pgc_6620_child" model="account.account.template">
@@ -8738,7 +8762,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_6620"/>
             <field name="type">other</field>
-            <field name="name">Ingresos de créditos a largo plazo, empresas del grupo</field>
+            <field name="name">Intereses de deudas, empresas del grupo</field>
             <field name="user_type" ref="gastos"/>
         </record>
         <record id="pgc_6621" model="account.account.template">
@@ -8746,7 +8770,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_662"/>
             <field name="type">view</field>
-            <field name="name">Ingresos de créditos a largo plazo, empresas asociadas</field>
+            <field name="name">Intereses de deudas, empresas asociadas</field>
             <field name="user_type" ref="gastos"/>
         </record>
         <record id="pgc_6621_child" model="account.account.template">
@@ -8754,7 +8778,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_6621"/>
             <field name="type">other</field>
-            <field name="name">Ingresos de créditos a largo plazo, empresas asociadas</field>
+            <field name="name">Intereses de deudas, empresas asociadas</field>
             <field name="user_type" ref="gastos"/>
         </record>
         <record id="pgc_6622" model="account.account.template">
@@ -8762,7 +8786,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_662"/>
             <field name="type">view</field>
-            <field name="name">Ingresos de créditos a largo plazo, otras partes vinculadas</field>
+            <field name="name">Intereses de deudas, otras partes vinculadas</field>
             <field name="user_type" ref="gastos"/>
         </record>
         <record id="pgc_6622_child" model="account.account.template">
@@ -8770,7 +8794,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_6622"/>
             <field name="type">other</field>
-            <field name="name">Ingresos de créditos a largo plazo, otras partes vinculadas</field>
+            <field name="name">Intereses de deudas, otras partes vinculadas</field>
             <field name="user_type" ref="gastos"/>
         </record>
         <record id="pgc_6623" model="account.account.template">
@@ -8778,7 +8802,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_662"/>
             <field name="type">view</field>
-            <field name="name">Ingresos de créditos a largo plazo con entidades de crédito</field>
+            <field name="name">Intereses de deudas con entidades de crédito</field>
             <field name="user_type" ref="gastos"/>
         </record>
         <record id="pgc_6623_child" model="account.account.template">
@@ -8786,7 +8810,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_6623"/>
             <field name="type">other</field>
-            <field name="name">Ingresos de créditos a largo plazo con entidades de crédito</field>
+            <field name="name">Intereses de deudas con entidades de crédito</field>
             <field name="user_type" ref="gastos"/>
         </record>
         <record id="pgc_6624" model="account.account.template">
@@ -8794,7 +8818,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_662"/>
             <field name="type">view</field>
-            <field name="name">Ingresos de créditos a largo plazo, otras empresas</field>
+            <field name="name">Intereses de deudas, otras empresas</field>
             <field name="user_type" ref="gastos"/>
         </record>
         <record id="pgc_6624_child" model="account.account.template">
@@ -8802,7 +8826,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_6624"/>
             <field name="type">other</field>
-            <field name="name">Ingresos de créditos a largo plazo, otras empresas</field>
+            <field name="name">Intereses de deudas, otras empresas</field>
             <field name="user_type" ref="gastos"/>
         </record>
         <record id="pgc_663" model="account.account.template">

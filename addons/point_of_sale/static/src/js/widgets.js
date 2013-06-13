@@ -319,6 +319,14 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 this.payment_line.set_amount(amount);
             }
         },
+        checkAmount: function(e){
+            if (e.which !== 0 && e.charCode !== 0) {
+                if(isNaN(String.fromCharCode(e.charCode))){
+                    return (String.fromCharCode(e.charCode) === "." && e.currentTarget.value.toString().split(".").length < 2)?true:false;
+                }
+            }
+            return true
+        },
         changedAmount: function() {
         	if (this.amount !== this.payment_line.get_amount()){
         		this.renderElement();
@@ -328,7 +336,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var self = this;
             this.name =   this.payment_line.get_cashregister().get('journal_id')[1];
             this._super();
-            this.$('input').keyup(function(event){
+            this.$('input').keypress(_.bind(this.checkAmount, this))
+			.keyup(function(event){
                 self.changeAmount(event);
             });
             this.$('.delete-payment-line').click(function() {
@@ -498,7 +507,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
 
         get_image_url: function(category){
-            return instance.session.url('/web/binary/image', {model: 'pos.category', field: 'image', id: category.id});
+            return instance.session.url('/web/binary/image', {model: 'pos.category', field: 'image_medium', id: category.id});
         },
 
         renderElement: function(){
@@ -794,7 +803,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         renderElement: function() {
             var self = this;
             this._super();
-            this.$('.oe_pos_synch-notification-button').click(function(){
+            this.$el.click(function(){
                 self.pos.flush();
             });
         },
@@ -878,6 +887,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             
                 instance.web.unblockUI();
                 self.$('.loader').animate({opacity:0},1500,'swing',function(){self.$('.loader').hide();});
+
+                self.pos.flush();
 
             }).fail(function(){   // error when loading models data from the backend
                 instance.web.unblockUI();

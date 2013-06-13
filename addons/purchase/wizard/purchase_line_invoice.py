@@ -83,7 +83,7 @@ class purchase_line_invoice(osv.osv_memory):
                     'account_id': a,
                     'partner_id': partner.id,
                     'invoice_line': [(6,0,lines_ids)],
-                    'currency_id' : orders[0].pricelist_id.currency_id.id,
+                    'currency_id' : orders[0].currency_id.id,
                     'comment': multiple_order_invoice_notes(orders),
                     'payment_term': orders[0].payment_term_id.id,
                     'fiscal_position': partner.property_account_position.id
@@ -142,7 +142,6 @@ class purchase_line_invoice(osv.osv_memory):
             'context': "{'type':'in_invoice', 'journal_type': 'purchase'}",
             'type': 'ir.actions.act_window'
         }
-purchase_line_invoice()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -53,6 +53,5 @@ class project_account_analytic_line(osv.osv_memory):
               'search_view_id': id['res_id'],
               }
 
-project_account_analytic_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

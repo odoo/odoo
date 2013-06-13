@@ -71,6 +71,5 @@ class account_crossovered_analytic(osv.osv_memory):
             'datas': datas,
         }
 
-account_crossovered_analytic()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

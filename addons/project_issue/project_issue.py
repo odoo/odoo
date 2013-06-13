@@ -19,11 +19,12 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from openerp.addons.base_status.base_stage import base_stage
 from openerp.addons.project.project import _TASK_STATE
 from openerp.addons.crm import crm
 from datetime import datetime
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
 import binascii
 import time
@@ -40,7 +41,6 @@ class project_issue_version(osv.osv):
     _defaults = {
         'active': 1,
     }
-project_issue_version()
 
 class project_issue(base_stage, osv.osv):
     _name = "project.issue"
@@ -50,12 +50,12 @@ class project_issue(base_stage, osv.osv):
 
     _track = {
         'state': {
-            'project_issue.mt_issue_new': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'new',
+            'project_issue.mt_issue_new': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['new', 'draft'],
             'project_issue.mt_issue_closed': lambda self, cr, uid, obj, ctx=None:  obj['state'] == 'done',
             'project_issue.mt_issue_started': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'open',
         },
         'stage_id': {
-            'project_issue.mt_issue_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['new', 'done', 'open'],
+            'project_issue.mt_issue_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['new', 'draft', 'done', 'open'],
         },
         'kanban_state': {
             'project_issue.mt_issue_blocked': lambda self, cr, uid, obj, ctx=None: obj['kanban_state'] == 'blocked',
@@ -70,7 +70,9 @@ class project_issue(base_stage, osv.osv):
             if vals.get('project_id'):
                 ctx['default_project_id'] = vals['project_id']
             vals['stage_id'] = self._get_default_stage_id(cr, uid, context=ctx)
-        return super(project_issue, self).create(cr, uid, vals, context=context)
+        # context: no_log, because subtype already handle this
+        create_context = dict(context, mail_create_nolog=True)
+        return super(project_issue, self).create(cr, uid, vals, context=create_context)
 
     def _get_default_project_id(self, cr, uid, context=None):
         """ Gives default project by checking if present in the context """
@@ -137,6 +139,13 @@ class project_issue(base_stage, osv.osv):
 
         res = {}
         for issue in self.browse(cr, uid, ids, context=context):
+
+            # if the working hours on the project are not defined, use default ones (8 -> 12 and 13 -> 17 * 5), represented by None
+            if not issue.project_id or not issue.project_id.resource_calendar_id:
+                working_hours = None
+            else:
+                working_hours = issue.project_id.resource_calendar_id.id
+
             res[issue.id] = {}
             for field in fields:
                 duration = 0
@@ -150,20 +159,24 @@ class project_issue(base_stage, osv.osv):
                         ans = date_open - date_create
                         date_until = issue.date_open
                         #Calculating no. of working hours to open the issue
-                        if issue.project_id.resource_calendar_id:
-                            hours = cal_obj.interval_hours_get(cr, uid, issue.project_id.resource_calendar_id.id,
+                        hours = cal_obj._interval_hours_get(cr, uid, working_hours,
                                                            date_create,
-                                                           date_open)
+                                                           date_open,
+                                                           timezone_from_uid=issue.user_id.id or uid,
+                                                           exclude_leaves=False,
+                                                           context=context)
                 elif field in ['working_hours_close','day_close']:
                     if issue.date_closed:
                         date_close = datetime.strptime(issue.date_closed, "%Y-%m-%d %H:%M:%S")
                         date_until = issue.date_closed
                         ans = date_close - date_create
                         #Calculating no. of working hours to close the issue
-                        if issue.project_id.resource_calendar_id:
-                            hours = cal_obj.interval_hours_get(cr, uid, issue.project_id.resource_calendar_id.id,
-                               date_create,
-                               date_close)
+                        hours = cal_obj._interval_hours_get(cr, uid, working_hours,
+                                                           date_create,
+                                                           date_close,
+                                                           timezone_from_uid=issue.user_id.id or uid,
+                                                           exclude_leaves=False,
+                                                           context=context)
                 elif field in ['days_since_creation']:
                     if issue.create_date:
                         days_since_creation = datetime.today() - datetime.strptime(issue.create_date, "%Y-%m-%d %H:%M:%S")
@@ -182,27 +195,12 @@ class project_issue(base_stage, osv.osv):
                         resource_ids = res_obj.search(cr, uid, [('user_id','=',issue.user_id.id)])
                         if resource_ids and len(resource_ids):
                             resource_id = resource_ids[0]
-                    duration = float(ans.days)
-                    if issue.project_id and issue.project_id.resource_calendar_id:
-                        duration = float(ans.days) * 24
-
-                        new_dates = cal_obj.interval_min_get(cr, uid,
-                                                             issue.project_id.resource_calendar_id.id,
-                                                             date_create,
-                                                             duration, resource=resource_id)
-                        no_days = []
-                        date_until = datetime.strptime(date_until, '%Y-%m-%d %H:%M:%S')
-                        for in_time, out_time in new_dates:
-                            if in_time.date not in no_days:
-                                no_days.append(in_time.date)
-                            if out_time > date_until:
-                                break
-                        duration = len(no_days)
+                    duration = float(ans.days) + float(ans.seconds)/(24*3600)
 
                 if field in ['working_hours_open','working_hours_close']:
                     res[issue.id][field] = hours
-                else:
-                    res[issue.id][field] = abs(float(duration))
+                elif field in ['day_open','day_close']:
+                    res[issue.id][field] = duration
 
         return res
 
@@ -275,7 +273,7 @@ class project_issue(base_stage, osv.osv):
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'stage_id': fields.many2one ('project.task.type', 'Stage',
                         track_visibility='onchange',
-                        domain="['&', ('fold', '=', False), ('project_ids', '=', project_id)]"),
+                        domain="[('project_ids', '=', project_id)]"),
         'project_id':fields.many2one('project.project', 'Project', track_visibility='onchange'),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
@@ -420,6 +418,12 @@ class project_issue(base_stage, osv.osv):
         self.write(cr, uid, ids, {'date_open': False, 'date_closed': False})
         return res
 
+    def get_empty_list_help(self, cr, uid, help, context=None):
+        context['empty_list_help_model'] = 'project.project'
+        context['empty_list_help_id'] = context.get('default_project_id')
+        context['empty_list_help_document_name'] = _("issues")
+        return super(project_issue, self).get_empty_list_help(cr, uid, help, context=context)
+
     # -------------------------------------------------------
     # Stage management
     # -------------------------------------------------------
@@ -491,13 +495,27 @@ class project_issue(base_stage, osv.osv):
         return [issue.project_id.message_get_reply_to()[0] if issue.project_id else False
                     for issue in self.browse(cr, uid, ids, context=context)]
 
+    def check_mail_message_access(self, cr, uid, mids, operation, model_obj=None, context=None):
+        """ mail.message document permission rule: can post a new message if can read
+            because of portal document. """
+        if not model_obj:
+            model_obj = self
+        if operation == 'create':
+            model_obj.check_access_rights(cr, uid, 'read')
+            model_obj.check_access_rule(cr, uid, mids, 'read', context=context)
+        else:
+            return super(project_issue, self).check_mail_message_access(cr, uid, mids, operation, model_obj=model_obj, context=context)
+
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):
         recipients = super(project_issue, self).message_get_suggested_recipients(cr, uid, ids, context=context)
-        for issue in self.browse(cr, uid, ids, context=context):
-            if issue.partner_id:
-                self._message_add_suggested_recipient(cr, uid, recipients, issue, partner=issue.partner_id, reason=_('Customer'))
-            elif issue.email_from:
-                self._message_add_suggested_recipient(cr, uid, recipients, issue, email=issue.email_from, reason=_('Customer Email'))
+        try:
+            for issue in self.browse(cr, uid, ids, context=context):
+                if issue.partner_id:
+                    self._message_add_suggested_recipient(cr, uid, recipients, issue, partner=issue.partner_id, reason=_('Customer'))
+                elif issue.email_from:
+                    self._message_add_suggested_recipient(cr, uid, recipients, issue, email=issue.email_from, reason=_('Customer Email'))
+        except (osv.except_osv, orm.except_orm):  # no read access rights -> just ignore suggested recipients because this imply modifying followers
+            pass
         return recipients
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
@@ -559,15 +577,13 @@ class project_issue(base_stage, osv.osv):
         """
         if context is None:
             context = {}
-        
         res = super(project_issue, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)
-        
         if thread_id:
-            self.write(cr, uid, thread_id, {'date_action_last': time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)    
-        
-        return res   
+            self.write(cr, SUPERUSER_ID, thread_id, {'date_action_last': time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
+        return res
 
-class project(osv.osv):
+
+class project(osv.Model):
     _inherit = "project.project"
 
     def _get_alias_models(self, cr, uid, context=None):
@@ -582,7 +598,9 @@ class project(osv.osv):
         return res
 
     _columns = {
-        'project_escalation_id' : fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'project_escalation_id': fields.many2one('project.project', 'Project Escalation',
+            help='If any issue is escalated from the current Project, it will be listed under the project selected here.',
+            states={'close': [('readonly', True)], 'cancelled': [('readonly', True)]}),
         'issue_count': fields.function(_issue_count, type='integer', string="Unclosed Issues"),
     }
 
@@ -597,14 +615,13 @@ class project(osv.osv):
         (_check_escalation, 'Error! You cannot assign escalation to the same project!', ['project_escalation_id'])
     ]
 
-project()
 
-class account_analytic_account(osv.osv):
+class account_analytic_account(osv.Model):
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
 
     _columns = {
-        'use_issues' : fields.boolean('Issues', help="Check this field if this project manages issues"),
+        'use_issues': fields.boolean('Issues', help="Check this field if this project manages issues"),
     }
 
     def on_change_template(self, cr, uid, ids, template_id, context=None):
@@ -615,16 +632,34 @@ class account_analytic_account(osv.osv):
         return res
 
     def _trigger_project_creation(self, cr, uid, vals, context=None):
-        if context is None: context = {}
+        if context is None:
+            context = {}
         res = super(account_analytic_account, self)._trigger_project_creation(cr, uid, vals, context=context)
         return res or (vals.get('use_issues') and not 'project_creation_in_progress' in context)
 
-account_analytic_account()
 
-class project_project(osv.osv):
+class project_project(osv.Model):
     _inherit = 'project.project'
+
     _defaults = {
         'use_issues': True
     }
+
+    def _check_create_write_values(self, cr, uid, vals, context=None):
+        """ Perform some check on values given to create or write. """
+        # Handle use_tasks / use_issues: if only one is checked, alias should take the same model
+        if vals.get('use_tasks') and not vals.get('use_issues'):
+            vals['alias_model'] = 'project.task'
+        elif vals.get('use_issues') and not vals.get('use_tasks'):
+            vals['alias_model'] = 'project.issue'
+
+    def create(self, cr, uid, vals, context=None):
+        self._check_create_write_values(cr, uid, vals, context=context)
+        return super(project_project, self).create(cr, uid, vals, context=context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        self._check_create_write_values(cr, uid, vals, context=context)
+        return super(project_project, self).write(cr, uid, ids, vals, context=context)
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

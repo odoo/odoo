@@ -60,24 +60,24 @@
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Prospect Opportunity&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Creating business opportunities from Leads&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_opportunities0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_leads0"/>
+            <field name="target_node_id" ref="process_node_opportunities0"/>
+            <field name="source_node_id" ref="process_node_leads0"/>
         </record>
 
         <record id="process_transition_leadpartner0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Prospect Partner&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Prospect is converting to business partner&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_partner0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_leads0"/>
+            <field name="target_node_id" ref="process_node_partner0"/>
+            <field name="source_node_id" ref="process_node_leads0"/>
         </record>
 
         <record id="process_transition_opportunitymeeting0" model="process.transition">
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;Opportunity Meeting&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;Normal or phone meeting for opportunity&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_meeting0"/>
-            <field model="process.node" name="source_node_id" ref="process_node_opportunities0"/>
+            <field name="target_node_id" ref="process_node_meeting0"/>
+            <field name="source_node_id" ref="process_node_opportunities0"/>
         </record>
 
     </data>
