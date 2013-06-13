@@ -832,7 +832,7 @@ class share_wizard(osv.TransientModel):
         notification_obj = self.pool.get('mail.notification')
         user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
         if not user.email:
-            raise osv.except_osv(_('Email required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
+            raise osv.except_osv(_('Email Required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
         
         # TODO: also send an HTML version of this mail
         for result_line in wizard_data.result_line_ids:
@@ -863,7 +863,7 @@ class share_wizard(osv.TransientModel):
         mail_mail = self.pool.get('mail.mail')
         user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
         if not user.email:
-            raise osv.except_osv(_('Email required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
+            raise osv.except_osv(_('Email Required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
         
         # TODO: also send an HTML version of this mail
         mail_ids = []
