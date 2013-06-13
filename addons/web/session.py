@@ -45,7 +45,8 @@ class Model(object):
         def proxy(*args, **kw):
             # Can't provide any retro-compatibility for this case, so we check it and raise an Exception
             # to tell the programmer to adapt his code
-            if self.session._db != http.request.db or self.session._uid != http.request.uid:
+            if not http.request.db or not http.request.uid or self.session._db != http.request.db \
+                or self.session._uid != http.request.uid:
                 raise Exception("Trying to use Model with badly configured database or user.")
                 
             mod = http.request.registry.get(self.model)
