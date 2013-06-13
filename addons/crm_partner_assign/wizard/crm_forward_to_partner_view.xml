@@ -18,11 +18,10 @@
                     </group>
                     <field name="assignation_lines" attrs="{'invisible': [('forward_type', 'in', ['single',False])]}">
                         <tree create="false" editable="bottom">
-                            <field name="lead_id" invisible="1"/>
-                            <field name="subject" readonly="1"/>
-                            <field name="city" readonly="1"/>
-                            <field name="country_id" readonly="1"/>
-                            <field name="partner_assigned_id"/>
+                            <field name="lead_id" readonly="1" on_change="on_change_lead_id(lead_id)"/>
+                            <field name="lead_location" readonly="1"/>
+                            <field name="partner_assigned_id" on_change="on_change_partner_assigned_id(partner_assigned_id)"/>
+                            <field name="partner_location" readonly="1"/>
                         </tree>
                     </field>
                     <field name="show_mail" />
