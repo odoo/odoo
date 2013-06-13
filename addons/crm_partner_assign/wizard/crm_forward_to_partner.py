@@ -124,6 +124,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
             lead_ids = context and context.get('active_ids', []) or []
             value = self.default_get(cr, uid, ['body', 'email_to', 'email_cc', 'subject', 'history_mode'], context=context)
             value.pop('composition_mode')
+            self.pool.get('crm.lead').message_subscribe(cr, uid, lead_ids, [partner.id for partner in wizard.partner_ids], context=context)
             self.write(cr, uid, ids, value, context=context)
 
         return self.send_mail(cr, uid, ids, context=context)

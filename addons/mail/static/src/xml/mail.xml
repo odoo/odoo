@@ -121,9 +121,11 @@
             To:
             <t t-if="!widget.is_private">
                 <span class="oe_all_follower">
-                    Followers of
-                    <t t-if="widget.parent_thread.parent_message.record_name" t-raw="'&quot;' + widget.parent_thread.parent_message.record_name + '&quot;'"/>
-                    <t t-if="!widget.parent_thread.parent_message.record_name">this document</t>
+                    <t t-if="widget.parent_thread.parent_message.record_name" t-raw="'&quot;' + widget.parent_thread.parent_message.record_name + '&quot;'">
+                        Followers of <t t-raw="'&quot;' + widget.parent_thread.parent_message.record_name + '&quot;'"/>
+                    </t>
+                    <t t-if="!widget.parent_thread.parent_message.record_name and widget.options.view_inbox">My Followers</t>
+                    <t t-if="!widget.parent_thread.parent_message.record_name and !widget.options.view_inbox">Followers of this document</t>
                 </span>
             </t>
             <t t-if="!widget.is_private and (widget.partner_ids.length or (widget.author_id and widget.author_id[0]))"> and </t>
@@ -143,7 +145,7 @@
         <div class="oe_recipients" t-if="!widget.is_log">
             <t t-foreach='widget.recipients' t-as='recipient'>
                 <label t-attf-title="Add as recipient and follower (reason: #{recipient.reason})">
-                    <input type="checkbox" t-att-checked="recipient.checked ? 'checked' : undefined" t-att-data="recipient.email_address"/>
+                    <input type="checkbox" t-att-checked="recipient.checked ? 'checked' : undefined" t-att-data="recipient.full_name"/>
                     <t t-raw="recipient.name"/> 
                     <t t-if="recipient.email_address">(<t t-raw="recipient.email_address"/>)</t>
                     <t t-if="!recipient.email_address">(no email address)</t>
@@ -197,7 +199,15 @@
           </tbody>
         </table>
         <div class="oe_mail-placeholder"></div>
+        <aside class="oe_mail_wall_aside"></aside>
     </div>
+
+    <!--
+        Empty template that holds the sidebar of the Wall
+        -->
+    <t t-name="mail.wall.sidebar">
+        <div class="oe_mail_wall_sidebar"></div>
+    </t>
 
     <!--
         display message on the wall when there are no message
@@ -339,7 +349,4 @@
         </a>
     </span>
 
-    <!-- mail.thread.message.star
-        Template used to display stared/unstared message in a mail.message
-    -->
 </template>
