@@ -91,6 +91,7 @@ class WebRequest(object):
         self.uid = None
         self.func = func
         self.auth_method = auth_method
+        self._cr = None
 
     def init(self, params):
         self.params = dict(params)
@@ -100,8 +101,6 @@ class WebRequest(object):
         if not self.session:
             self.session = session.OpenERPSession()
             self.httpsession[self.session_id] = self.session
-
-        self.authenticate()
 
         # TODO: remove this shit
         # set db/uid trackers - they're cleaned up at the WSGI
@@ -143,19 +142,30 @@ class WebRequest(object):
             self.db = self.session._db
             self.uid = self.session._uid
 
+    @property
     def registry(self):
-        return openerp.modules.registry.RegistryManager.get(self.db)
+        return openerp.modules.registry.RegistryManager.get(self.db) if self.db else None
 
     @property
-    @contextlib.contextmanager
     def cr(self):
-        with registry.cursor() as cr:
-            yield cr
+        return self._cr
 
     @contextlib.contextmanager
     def registry_cr(self):
-        with self.cr() as cr:
-            yield (self.registry(), cr)
+        return (self.registry, cr)
+
+    def call_function(self, *args, **kwargs):
+        self.authenticate()
+        if self.registry:
+            with self.registry.cursor() as cr:
+                self._cr = cr
+                try:
+                    return self.func(*args, **kwargs)
+                finally:
+                    self._cr = None
+        else:
+            return self.func(*args, **kwargs)
+
 
 def noauth(f):
     f.auth = "noauth"
@@ -207,11 +217,8 @@ class JsonRequest(WebRequest):
     def dispatch(self):
         """ Calls the method asked for by the JSON-RPC2 or JSONP request
 
-        :param func: the func which received the request
-
         :returns: an utf8 encoded JSON-RPC2 or JSONP reply
         """
-        func = self.func
         args = self.httprequest.args
         jsonp = args.get('jsonp')
         requestf = None
@@ -248,7 +255,7 @@ class JsonRequest(WebRequest):
             #if _logger.isEnabledFor(logging.DEBUG):
             #    _logger.debug("--> %s.%s\n%s", func.im_class.__name__, func.__name__, pprint.pformat(self.jsonrequest))
             response['id'] = self.jsonrequest.get('id')
-            response["result"] = func(**self.params)
+            response["result"] = self.call_function(**self.params)
         except session.AuthenticationError, e:
             se = serialize_exception(e)
             error = {
@@ -330,7 +337,6 @@ class HttpRequest(WebRequest):
     """ Regular GET/POST request
     """
     def dispatch(self):
-        func = self.func
         params = dict(self.httprequest.args)
         params.update(self.httprequest.form)
         params.update(self.httprequest.files)
@@ -343,7 +349,7 @@ class HttpRequest(WebRequest):
                 akw[key] = type(value)
         #_logger.debug("%s --> %s.%s %r", self.httprequest.func, func.im_class.__name__, func.__name__, akw)
         try:
-            r = func(**self.params)
+            r = self.call_function(**self.params)
         except werkzeug.exceptions.HTTPException, e:
             r = e
         except Exception, e:
