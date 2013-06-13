@@ -596,9 +596,10 @@ class Home(openerpweb.Controller):
         return login_and_redirect(db, login, key)
 
     @openerpweb.jsonrequest
+    @nodb
     def jsonrpc(self, service, method, args):
         """ Method used by client APIs to contact OpenERP. """
-        return getattr(req.session.proxy(service), method)(*args)
+        return openerp.netsvc.dispatch_rpc(service, method, args)
 
 class WebClient(openerpweb.Controller):
     _cp_path = "/web/webclient"
