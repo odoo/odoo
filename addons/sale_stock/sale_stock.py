@@ -605,7 +605,8 @@ class sale_order_line(osv.osv):
                 uom = False
         if not uom2:
             uom2 = product_obj.uom_id
-        # Calling product_packaging_change function after updating updating UoM
+
+        # Calling product_packaging_change function after updating UoM
         res_packing = self.product_packaging_change(cr, uid, ids, pricelist, product, qty, uom, partner_id, packaging, context=context)
         res['value'].update(res_packing.get('value', {}))
         warning_msgs = res_packing.get('warning') and res_packing['warning']['message'] or ''
