@@ -66,6 +66,7 @@ class hr_recruitment_report(osv.osv):
         'available': fields.float("Availability"),
         'delay_close': fields.float('Avg. Delay to Close', digits=(16,2), readonly=True, group_operator="avg",
                                        help="Number of Days to close the project issue"),
+        'previous_stage': fields.char('Previous Stage', size=32),
     }
     _order = 'date desc'
     def init(self, cr):
@@ -89,6 +90,7 @@ class hr_recruitment_report(osv.osv):
                      s.department_id,
                      s.priority,
                      s.stage_id,
+                     s.previous_stage,
                      sum(salary_proposed) as salary_prop,
                      (sum(salary_proposed)/count(*)) as salary_prop_avg,
                      sum(salary_expected) as salary_exp,
@@ -110,6 +112,7 @@ class hr_recruitment_report(osv.osv):
                      s.company_id,
                      s.user_id,
                      s.stage_id,
+                     s.previous_stage,
                      s.type_id,
                      s.priority,
                      s.job_id,
