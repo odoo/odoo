@@ -148,23 +148,39 @@ class WebRequest(object):
 
     @property
     def cr(self):
+        # some magic to lazy create the cr
+        if not self._cr:
+            self._cr = self.registry.cursor()
+            self._cr.__enter__()
         return self._cr
 
+    #TODO: remove
     @contextlib.contextmanager
     def registry_cr(self):
         return (self.registry, cr)
 
-    def call_function(self, *args, **kwargs):
+    def _call_function(self, *args, **kwargs):
         self.authenticate()
-        if self.registry:
-            with self.registry.cursor() as cr:
-                self._cr = cr
-                try:
+        try:
+            if self.registry:
+                # ugly syntax only to get the __exit__ arguments to pass to self._cr
+                request = self
+                class with_obj(object):
+                    def __enter__(self):
+                        pass
+                    def __exit__(self, *args):
+                        if request._cr:
+                            request._cr.__exit__(*args)
+                            request._cr = None
+
+                with with_obj():
                     return self.func(*args, **kwargs)
-                finally:
-                    self._cr = None
-        else:
-            return self.func(*args, **kwargs)
+            else:
+                return self.func(*args, **kwargs)
+        finally:
+            # just to be sure no one tries to re-use the request
+            self.db = None
+            self.uid = None
 
 
 def noauth(f):
@@ -255,7 +271,7 @@ class JsonRequest(WebRequest):
             #if _logger.isEnabledFor(logging.DEBUG):
             #    _logger.debug("--> %s.%s\n%s", func.im_class.__name__, func.__name__, pprint.pformat(self.jsonrequest))
             response['id'] = self.jsonrequest.get('id')
-            response["result"] = self.call_function(**self.params)
+            response["result"] = self._call_function(**self.params)
         except session.AuthenticationError, e:
             se = serialize_exception(e)
             error = {
@@ -349,7 +365,7 @@ class HttpRequest(WebRequest):
                 akw[key] = type(value)
         #_logger.debug("%s --> %s.%s %r", self.httprequest.func, func.im_class.__name__, func.__name__, akw)
         try:
-            r = self.call_function(**self.params)
+            r = self._call_function(**self.params)
         except werkzeug.exceptions.HTTPException, e:
             r = e
         except Exception, e:
@@ -703,7 +719,7 @@ class Root(object):
                     method = getattr(c, method_name, None)
                     if method:
                         exposed = getattr(method, 'exposed', False)
-                        auth = getattr(method, 'auth', None)
+                        auth = getattr(method, 'auth', "auth")
                         method = c.get_wrapped_method(method_name)
                         if exposed == 'json':
                             _logger.debug("Dispatch json to %s %s %s", ps, c, method_name)
