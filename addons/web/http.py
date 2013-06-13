@@ -91,6 +91,7 @@ class WebRequest(object):
         self.uid = None
         self.func = func
         self.auth_method = auth_method
+        self._cr_cm = None
         self._cr = None
 
     def init(self, params):
@@ -149,9 +150,9 @@ class WebRequest(object):
     @property
     def cr(self):
         # some magic to lazy create the cr
-        if not self._cr:
-            self._cr = self.registry.cursor()
-            self._cr.__enter__()
+        if not self._cr_cm:
+            self._cr_cm = self.registry.cursor()
+            self._cr = self._cr_cm.__enter__()
         return self._cr
 
     #TODO: remove
@@ -169,8 +170,9 @@ class WebRequest(object):
                     def __enter__(self):
                         pass
                     def __exit__(self, *args):
-                        if request._cr:
-                            request._cr.__exit__(*args)
+                        if request._cr_cm:
+                            request._cr_cm.__exit__(*args)
+                            request._cr_cm = None
                             request._cr = None
 
                 with with_obj():
@@ -273,6 +275,7 @@ class JsonRequest(WebRequest):
             response['id'] = self.jsonrequest.get('id')
             response["result"] = self._call_function(**self.params)
         except session.AuthenticationError, e:
+            _logger.exception("Exception during JSON request handling.")
             se = serialize_exception(e)
             error = {
                 'code': 100,
@@ -280,6 +283,7 @@ class JsonRequest(WebRequest):
                 'data': se
             }
         except Exception, e:
+            _logger.exception("Exception during JSON request handling.")
             se = serialize_exception(e)
             error = {
                 'code': 200,

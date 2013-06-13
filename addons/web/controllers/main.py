@@ -723,7 +723,6 @@ class WebClient(openerpweb.Controller):
                 "lang_parameters": None}
 
     @openerpweb.jsonrequest
-    @nodb
     def translations(self, mods, lang):
         res_lang = req.session.model('res.lang')
         ids = res_lang.search([("code", "=", lang)])
@@ -882,7 +881,6 @@ class Session(openerpweb.Controller):
         }
 
     @openerpweb.jsonrequest
-    @nodb
     def get_session_info(self):
         return self.session_info()
 
@@ -928,7 +926,6 @@ class Session(openerpweb.Controller):
             return {"error": e, "title": _("Languages")}
 
     @openerpweb.jsonrequest
-    @nodb
     def modules(self):
         # return all installed modules. Web client is smart enough to not load a module twice
         return module_installed()
@@ -1008,7 +1005,6 @@ class Menu(openerpweb.Controller):
         return Menus.search(menu_domain, 0, False, False, req.context)
 
     @openerpweb.jsonrequest
-    @nodb
     def load(self):
         """ Loads all menu items (all applications and their sub-menus).
 

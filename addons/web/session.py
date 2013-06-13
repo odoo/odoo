@@ -8,6 +8,7 @@ import traceback
 import sys
 
 import openerp
+import http
 
 _logger = logging.getLogger(__name__)
 
@@ -42,7 +43,15 @@ class Model(object):
     def __getattr__(self, method):
         self.session.assert_valid()
         def proxy(*args, **kw):
-            result = self.proxy.execute_kw(self.session._db, self.session._uid, self.session._password, self.model, method, args, kw)
+            # Can't provide any retro-compatibility for this case, so we check it and raise an Exception
+            # to tell the programmer to adapt his code
+            if self.session._db != http.request.db or self.session._uid != http.request.uid:
+                raise Exception("Trying to use Model with badly configured database or user.")
+                
+            mod = http.request.registry.get(self.model)
+            meth = getattr(mod, method)
+            cr = http.request.cr
+            result = meth(cr, http.request.uid, *args, **kw)
             # reorder read
             if method == "read":
                 if isinstance(result, list) and len(result) > 0 and "id" in result[0]:
