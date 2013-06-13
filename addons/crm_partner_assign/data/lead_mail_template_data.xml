@@ -1,40 +1,28 @@
 <?xml version="1.0" ?>
 <openerp>
-    <data noupdate="1">
+    <data noupdate="0">
       <record id="email_template_lead_forward_mail" model="email.template">
             <field name="name">Lead Mass Mail</field>
             <field name="model_id" model="ir.model" search="[('name', '=', 'crm.lead.forward.to.partner')]"></field>
             <field name="auto_delete" eval="True"/>
-            <field name="email_to">${object.partner_id.email}</field>
+            <field name="email_to">${ctx['partner_id'].email}</field>
             <field name="email_from">${user.email or ''}</field>
-            <field name="subject">Fwd: Lead: ${object.partner_id.name}</field>
+            <field name="subject">Fwd: Lead: ${ctx['partner_id'].name}</field>
             <field name="body_html"><![CDATA[
             
-Hello ${object.partner_id.name},
+Hello ${ctx['partner_id'].name},
 </br>
 </br>
-% if object.forward_type == 'single':
 
 <blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;">Some leads have been assigned to you. Here are the various leads we propose: </blockquote></br></br>
 <b>
-<ol><ol>
-% for lead in object.assignation_lines:
-     <li><a href="${lead.lead_link}">${lead.subject}</a>, ${lead.lead_id.contact_name}, ${lead.lead_id.country_id.name}, ${lead.lead_id.email_from}, ${lead.lead_id.phone} </li></br>
+<ol>
+% for lead in ctx['partner_leads']:
+     <li><a href="${lead.lead_link}">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or 'Phone Number Undefined'} </li></br>
 % endfor
-</ol></ol>
+</ol>
 </b>
-% endif
 
-
-
-% if object.forward_type == 'assigned':
-<blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;">One leads have been assigned to you. Here given lead we propose:</blockquote> </br></br>
-<b>
-<ol><ol>
-<li><a href="${object.lead_single_link}">${object.lead_single_id.name}</a>, ${object.lead_single_id.contact_name}, ${object.lead_single_id.country_id.name}, ${object.lead_single_id.email_from}, ${object.lead_single_id.phone} </br></li>
-</ol></ol>
-</b>
-% endif
 </br>
 <blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;">Connect you to your <b><a href="${object.get_portal_url()}">Partner Portal</a></b> to see leads details.</blockquote>
 
