@@ -81,5 +81,57 @@ HTTP parameters as named parameters of the method:
 ::
 
     @http.httprequest
-    def some_html(self, name):
-        return "<h1>You name is %s</h1>" % name
+    def say_hello(self, name):
+        return "<h1>Hello %s</h1>" % name
+
+This url could be contacted by typing this url in a browser: ``http://localhost:8069/my_url/say_hello?name=Nicolas``.
+
+JSON Requests
+-------------
+
+The ``@http.jsonrequest`` decorator is used to define JSON requests. The OpenERP Javascript client can contact these
+methods using the JSON-RPC protocol. JSON methods must return JSON. Like the HTTP methods they receive arguments
+as named parameters (except these arguments are JSON-RPC parameters).
+
+::
+
+    @http.jsonrequest
+    def division(self, i, j):
+        return i / j # returns a number
+
+Contacting Models
+-----------------
+
+To use the database you must access the OpenERP models. The global ``request`` object provides the necessary objects:
+
+::
+
+    @http.httprequest
+    def my_name(self):
+        my_user_record = request.registry.get("res.users").browse(request.cr, request.uid, request.ui)
+        return "<h1>Your name is %s</h1>" % my_user_record.name
+
+``request.registry`` is the registry that gives you access to the models. It is the equivalent of ``self.pool`` when
+working inside OpenERP models.
+
+``request.cr`` is the cursor object. This is the ``cr`` parameter you have to pass as first argument of every model
+method in OpenERP.
+
+``request.uid`` is the id of the current logged in user. This is the ``uid`` parameter you have to pass as second
+argument of every model method in OpenERP.
+
+Authorization Levels
+--------------------
+
+By default, all methods can only be used by users logged into OpenERP (OpenERP uses cookies to track logged users).
+There are some cases when you need to enable not-logged in users to access some methods. To do so, add the
+``http.noauth`` decorator to your method:
+
+::
+
+    @http.httprequest
+    @http.noauth
+    def hello(self):
+        return "<div>Hello unknown user!</div>"
+
+Please note the ``request.cr`` cursor will not be available in this case.
