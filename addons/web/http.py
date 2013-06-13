@@ -29,6 +29,7 @@ import werkzeug.exceptions
 import werkzeug.utils
 import werkzeug.wrappers
 import werkzeug.wsgi
+import urllib2
 
 import openerp
 
@@ -97,7 +98,13 @@ class WebRequest(object):
     def init(self, params):
         self.params = dict(params)
         # OpenERP session setup
-        self.session_id = self.params.pop("session_id", None) or uuid.uuid4().hex
+        self.session_id = self.params.pop("session_id", None)
+        if not self.session_id:
+            i0 = self.httprequest.cookies.get("instance0|session_id", None)
+            if i0:
+                self.session_id = simplejson.loads(urllib2.unquote(i0))
+            else:
+                self.session_id = uuid.uuid4().hex
         self.session = self.httpsession.get(self.session_id)
         if not self.session:
             self.session = session.OpenERPSession()

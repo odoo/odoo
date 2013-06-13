@@ -108,7 +108,7 @@ To use the database you must access the OpenERP models. The global ``request`` o
 
     @http.httprequest
     def my_name(self):
-        my_user_record = request.registry.get("res.users").browse(request.cr, request.uid, request.ui)
+        my_user_record = request.registry.get("res.users").browse(request.cr, request.uid, request.uid)
         return "<h1>Your name is %s</h1>" % my_user_record.name
 
 ``request.registry`` is the registry that gives you access to the models. It is the equivalent of ``self.pool`` when
