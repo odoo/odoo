@@ -134,4 +134,5 @@ There are some cases when you need to enable not-logged in users to access some 
     def hello(self):
         return "<div>Hello unknown user!</div>"
 
-Please note the ``request.cr`` cursor will not be available in this case.
+Please note the ``request.uid`` user id will be ``None`` inside this method call. This is due to the fact no user was
+authenticated.
