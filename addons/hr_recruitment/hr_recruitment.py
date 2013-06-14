@@ -386,20 +386,6 @@ class hr_applicant(base_stage, osv.Model):
         if applicant.job_id:
             self.pool.get('hr.job').message_post(cr, uid, [applicant.job_id.id], body=_('Applicant <b>created</b>'), subtype="hr_recruitment.mt_job_new_applicant", context=context)
         return obj_id
-# TODO : Need To Clean
-#    def case_open(self, cr, uid, ids, context=None):
-#        """
-#            open Request of the applicant for the hr_recruitment
-#        """
-#        res = super(hr_applicant, self).case_open(cr, uid, ids, context)
-#        date = self.read(cr, uid, ids, ['date_open'])[0]
-#        if not date['date_open']:
-#            self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S'),})
-#        return res
-
-#    def case_close(self, cr, uid, ids, context=None):
-#        res = super(hr_applicant, self).case_close(cr, uid, ids, context)
-#        return res
 
     def case_close_with_emp(self, cr, uid, ids, context=None):
         if context is None:
@@ -431,27 +417,6 @@ class hr_applicant(base_stage, osv.Model):
             dict_act_window['res_id'] = emp_id
         dict_act_window['view_mode'] = 'form,tree'
         return dict_act_window
-
-# TODO: Need To Clean
-#    def case_cancel(self, cr, uid, ids, context=None):
-#        """Overrides cancel for crm_case for setting probability
-#        """
-#        res = super(hr_applicant, self).case_cancel(cr, uid, ids, context)
-#        self.write(cr, uid, ids, {'probability': 0.0})
-#        return res
-
-#    def case_pending(self, cr, uid, ids, context=None):
-#        """Marks case as pending"""
-#        res = super(hr_applicant, self).case_pending(cr, uid, ids, context)
-#        self.write(cr, uid, ids, {'probability': 0.0})
-#        return res
-
-#    def case_reset(self, cr, uid, ids, context=None):
-#        """Resets case as draft
-#        """
-#        res = super(hr_applicant, self).case_reset(cr, uid, ids, context)
-#        self.write(cr, uid, ids, {'date_open': False, 'date_closed': False})
-#        return res
 
     def set_priority(self, cr, uid, ids, priority, *args):
         """Set applicant priority

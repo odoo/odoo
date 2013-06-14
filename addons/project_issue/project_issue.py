@@ -453,11 +453,6 @@ class project_issue(base_stage, osv.osv):
         if stage_ids:
             return stage_ids[0]
         return False
-# TODO : Need To Clean
-#    def case_cancel(self, cr, uid, ids, context=None):
-#        """ Cancels case """
-#        self.case_set(cr, uid, ids, 'cancelled', {'active': True}, context=context)
-#        return True
 
     def case_escalate(self, cr, uid, ids, context=None):
         cases = self.browse(cr, uid, ids)

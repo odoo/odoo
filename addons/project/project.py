@@ -933,79 +933,6 @@ class task(base_stage, osv.osv):
                         raise osv.except_osv(_("Warning!"), _("Child task still open.\nPlease cancel or complete child task first."))
         return True
 
-# TODO: Need To Clean
-#    def action_close(self, cr, uid, ids, context=None):
-#        """ This action closes the task
-#        """
-#        task_id = len(ids) and ids[0] or False
-#        self._check_child_task(cr, uid, ids, context=context)
-#        if not task_id: return False
-#        return self.do_close(cr, uid, [task_id], context=context)
-
-#    def do_close(self, cr, uid, ids, context=None):
-#        """ Compatibility when changing to case_close. """
-#        return self.case_close(cr, uid, ids, context=context)
-
-#    def case_close(self, cr, uid, ids, context=None):
-#        """ Closes Task """
-#        if not isinstance(ids, list): ids = [ids]
-#        for task in self.browse(cr, uid, ids, context=context):
-#            vals = {}
-#            project = task.project_id
-#            for parent_id in task.parent_ids:
-#                if parent_id.state in ('pending','draft'):
-#                    reopen = True
-#                    for child in parent_id.child_ids:
-#                        if child.id != task.id and child.state not in ('done','cancelled'):
-#                            reopen = False
-#                    if reopen:
-#                        self.do_reopen(cr, uid, [parent_id.id], context=context)
-#            # close task
-#            vals['remaining_hours'] = 0.0
-#            if not task.date_end:
-#                vals['date_end'] = fields.datetime.now()
-#            self.case_set(cr, uid, [task.id], 'done', vals, context=context)
-#        return True
-
-#    def do_reopen(self, cr, uid, ids, context=None):
-#        for task in self.browse(cr, uid, ids, context=context):
-#            project = task.project_id
-#            self.case_set(cr, uid, [task.id], 'open', {}, context=context)
-#        return True
-
-#    def do_cancel(self, cr, uid, ids, context=None):
-#        """ Compatibility when changing to case_cancel. """
-#        return self.case_cancel(cr, uid, ids, context=context)
-
-#    def case_cancel(self, cr, uid, ids, context=None):
-#        tasks = self.browse(cr, uid, ids, context=context)
-#        self._check_child_task(cr, uid, ids, context=context)
-#        for task in tasks:
-#            self.case_set(cr, uid, [task.id], 'cancelled', {'remaining_hours': 0.0}, context=context)
-#        return True
-
-#    def do_open(self, cr, uid, ids, context=None):
-#        """ Compatibility when changing to case_open. """
-#        return self.case_open(cr, uid, ids, context=context)
-
-#    def case_open(self, cr, uid, ids, context=None):
-#        if not isinstance(ids,list): ids = [ids]
-#        return self.case_set(cr, uid, ids, 'open', {'date_start': fields.datetime.now()}, context=context)
-
-#    def do_draft(self, cr, uid, ids, context=None):
-#        """ Compatibility when changing to case_draft. """
-#        return self.case_draft(cr, uid, ids, context=context)
-
-#    def case_draft(self, cr, uid, ids, context=None):
-#        return self.case_set(cr, uid, ids, 'draft', {}, context=context)
-
-#    def do_pending(self, cr, uid, ids, context=None):
-#        """ Compatibility when changing to case_pending. """
-#        return self.case_pending(cr, uid, ids, context=context)
-
-#    def case_pending(self, cr, uid, ids, context=None):
-#        return self.case_set(cr, uid, ids, 'pending', {}, context=context)
-
     def _delegate_task_attachments(self, cr, uid, task_id, delegated_task_id, context=None):
         attachment = self.pool.get('ir.attachment')
         attachment_ids = attachment.search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', task_id)], context=context)
@@ -1209,18 +1136,6 @@ class task(base_stage, osv.osv):
         if act:
             getattr(self,act)(cr, uid, ids, context=context)
         return super(task,self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
-
-# TODO : Need To Clean
-#    def project_task_reevaluate(self, cr, uid, ids, context=None):
-#        if self.pool.get('res.users').has_group(cr, uid, 'project.group_time_work_estimation_tasks'):
-#            return {
-#                'view_type': 'form',
-#                "view_mode": 'form',
-#                'res_model': 'project.task.reevaluate',
-#                'type': 'ir.actions.act_window',
-#                'target': 'new',
-#            }
-#        return self.do_reopen(cr, uid, ids, context=context)
 
 class project_work(osv.osv):
     _name = "project.task.work"

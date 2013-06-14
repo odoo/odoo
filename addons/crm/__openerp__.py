@@ -107,10 +107,10 @@ Dashboard for CRM will include:
     ],
     'test': [
         'test/crm_lead_message.yml',
-#        'test/lead2opportunity2win.yml',
+#        'test/lead2opportunity2win.yml', # TODO: Need To Clean
         'test/lead2opportunity_assign_salesmen.yml',
         'test/crm_lead_merge.yml',
-#        'test/crm_lead_cancel.yml',
+#        'test/crm_lead_cancel.yml',# TODO: Need To Clean
         'test/segmentation.yml',
         'test/phonecalls.yml',
         'test/crm_lead_onchange.yml',

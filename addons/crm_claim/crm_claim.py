@@ -143,14 +143,6 @@ class crm_claim(base_stage, osv.osv):
         if stage_ids:
             return stage_ids[0]
         return False
-#TODO : Need To Clean
-#    def case_refuse(self, cr, uid, ids, context=None):
-#        """ Mark the case as refused: state=done and case_refused=True """
-#        for lead in self.browse(cr, uid, ids):
-#            stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, ['&', ('state', '=', 'done'), ('case_refused', '=', True)], context=context)
-#            if stage_id:
-#                self.case_set(cr, uid, [lead.id], values_to_update={}, new_stage_id=stage_id, context=context)
-#        return True
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
         """This function returns value of partner address based on partner
