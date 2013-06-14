@@ -25,9 +25,10 @@
     'version': '1.0',
     'category': 'Human Resources',
     'sequence': 25,
-    'summary': 'Search applicant by resume index content.',
+    'summary': 'Search job applications by Index content.',
     'description': """
-    This module allows you to search applicant by resume index content.
+    This module allows you to search job applications by Index content
+    of Resumes & Letters.
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
