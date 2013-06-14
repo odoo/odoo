@@ -67,7 +67,7 @@ class sale_order(osv.osv):
         return order
 
     def _get_default_warehouse(self, cr, uid, context=None):
-        company_id = self.pool.get('res.users')._get_company(cr, uid, uid, context=context)
+        company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
         warehouse_ids = self.pool.get('stock.warehouse').search(cr, uid, [('company_id', '=', company_id)], context=context)
         if not warehouse_ids:
             raise osv.except_osv(_('Error!'), _('There is no warehouse defined for current company.'))
