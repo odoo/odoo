@@ -681,26 +681,23 @@ class Root(object):
 
         handler = self.find_handler(request.path)
 
-        if not handler:
-            response = werkzeug.exceptions.NotFound()
-        else:
-            sid = request.cookies.get('sid')
-            if not sid:
-                sid = request.args.get('sid')
+        sid = request.cookies.get('sid')
+        if not sid:
+            sid = request.args.get('sid')
 
-            session_gc(self.session_store)
+        session_gc(self.session_store)
 
-            with session_context(request, self.session_store, self.session_lock, sid) as session:
-                result = handler(request)
+        with session_context(request, self.session_store, self.session_lock, sid) as session:
+            result = handler(request)
 
-                if isinstance(result, basestring):
-                    headers=[('Content-Type', 'text/html; charset=utf-8'), ('Content-Length', len(result))]
-                    response = werkzeug.wrappers.Response(result, headers=headers)
-                else:
-                    response = result
+            if isinstance(result, basestring):
+                headers=[('Content-Type', 'text/html; charset=utf-8'), ('Content-Length', len(result))]
+                response = werkzeug.wrappers.Response(result, headers=headers)
+            else:
+                response = result
 
-                if hasattr(response, 'set_cookie'):
-                    response.set_cookie('sid', session.sid)
+            if hasattr(response, 'set_cookie'):
+                response.set_cookie('sid', session.sid)
 
         return response(environ, start_response)
 
@@ -726,16 +723,20 @@ class Root(object):
                         self.statics['/%s/static' % module] = path_static
 
         self.routing_map = routing.Map()
-        for k, v in controllers_class_path.iteritems():
+        for v in controllers_class_path.itervalues():
             o = v[1]()
             controllers_object[v[0]] = o
             members = inspect.getmembers(o)
             for mk, mv in members:
                 if inspect.ismethod(mv) and getattr(mv, 'exposed', False):
-                    url = os.path.join(o._cp_path, mk)
-                    url += "/<path:path>"
-                    function = (mv, o.get_wrapped_method(mk))
-                    self.routing_map.add(routing.Rule(url, function))
+                    if mk == "index":
+                        url = o._cp_path
+                    else:
+                        url = os.path.join(o._cp_path, mk)
+                    function = (o.get_wrapped_method(mk), mv)
+                    self.routing_map.add(routing.Rule(url, endpoint=function))
+                    url = os.path.join(url, "<path:path>")
+                    self.routing_map.add(routing.Rule(url, endpoint=function))
             controllers_path[o._cp_path] = o
 
         app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, self.statics)
@@ -747,42 +748,25 @@ class Root(object):
         specified by the provided parameters
 
         :param path: path to match
-        :returns: a callable matching the path sections, or ``None``
+        :returns: a callable matching the path sections
         :rtype: ``Controller | None``
         """
-        l = path.split('/')[1:]
-        if l:
-            ps = '/' + '/'.join(filter(None, l))
-            method_name = 'index'
-            while ps:
-                c = controllers_path.get(ps)
-                if c:
-                    method = getattr(c, method_name, None)
-                    if method:
-                        exposed = getattr(method, 'exposed', False)
-                        auth = getattr(method, 'auth', "auth")
-                        method = c.get_wrapped_method(method_name)
-                        if exposed == 'json':
-                            _logger.debug("Dispatch json to %s %s %s", ps, c, method_name)
-                            def fct(_request):
-                                _req = JsonRequest(_request, method, auth)
-                                with set_request(_req):
-                                    return request.dispatch()
-                            return fct
-                        elif exposed == 'http':
-                            _logger.debug("Dispatch http to %s %s %s", ps, c, method_name)
-                            def fct(_request):
-                                _req = HttpRequest(_request, method, auth)
-                                with set_request(_req):
-                                    return request.dispatch()
-                            return fct
-                    if method_name != "index":
-                        method_name = "index"
-                        continue
-                ps, _slash, method_name = ps.rpartition('/')
-                if not ps and method_name:
-                    ps = '/'
-        return None
+        urls = self.routing_map.bind("")
+        func, original = urls.match(path)[0]
+        auth = getattr(original, "auth", "auth")
+
+        if original.exposed == "json":
+            def fct(_request):
+                _req = JsonRequest(_request, func, auth)
+                with set_request(_req):
+                    return request.dispatch()
+            return fct
+        else: # http
+            def fct(_request):
+                _req = HttpRequest(_request, func, auth)
+                with set_request(_req):
+                    return request.dispatch()
+            return fct
 
 def wsgi_postload():
     openerp.wsgi.register_wsgi_handler(Root())
