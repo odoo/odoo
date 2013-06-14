@@ -60,6 +60,8 @@
 		</xsl:if>
 	</xsl:template>
 
+    <xsl:param name="pmaxChars" as="xs:integer" select="80"/>
+
 	<xsl:template match="lot-line" mode="story">
             <blockTable style="mytable" colWidths="2.8cm,5.4cm">
                 <tr>
@@ -75,7 +77,7 @@
                         <barCode><xsl:value-of select="ean13" /></barCode> 
                     </td>
                     <td>
-                        <para style="nospace"><xsl:value-of select="product"/></para><xsl:text>, </xsl:text>
+                        <para style="nospace"><xsl:value-of select="substring(product, 1, pmaxChars)"/></para><xsl:text>, </xsl:text>
                         <para style="nospace"><xsl:value-of select="variant"/></para>
                     </td>
                 </tr>
