@@ -25,13 +25,13 @@
                                         </h3>
                                     </div>
                                     <button string="Automatic Assignation" name="action_assign_partner" type="object" colspan="1"
-                                        class="oe_link oe_inline"  attrs="{'invisible':[('partner_assigned_id','!=', False)]}"/>
+                                        class="oe_inline"  attrs="{'invisible':[('partner_assigned_id','!=', False)]}"/>
                                     <field name="partner_assigned_id" class="oe_inline" on_change="onchange_assign_id(partner_assigned_id)" domain="[('grade_id','&lt;&gt;',False)]"/>
                                     <div colspan="2">
                                         <button string="Forward"
                                             attrs="{'invisible':[('partner_assigned_id','=',False)]}"
                                             name="%(crm_lead_forward_to_partner_act)d"
-                                            class="oe_link" type="action"
+                                            type="action"
                                             context="{'default_composition_mode': 'forward','hide_forward_type': 1 , 'default_partner_ids': [partner_assigned_id]}"/>
                                     </div>
                                 </group>
@@ -91,13 +91,13 @@
                                         </h3>
                                     </div>
                                     <button string="Automatic Assignation" name="action_assign_partner" type="object" colspan="1"
-                                        class="oe_link oe_inline" />
+                                        class="oe_inline" />
                                     <field name="partner_assigned_id" class="oe_inline" on_change="onchange_assign_id(partner_assigned_id)" domain="[('grade_id','&lt;&gt;',False)]"/>
                                     <div>
                                         <button string="Forward"
                                             attrs="{'invisible':[('partner_assigned_id','=',False)]}"
                                             name="%(crm_lead_forward_to_partner_act)d"
-                                            class="oe_link" type="action"
+                                            type="action"
                                             context="{'default_composition_mode': 'forward','hide_forward_type': 1 , 'default_partner_ids': [partner_assigned_id]}"/>
                                     </div>
                                 </group>
