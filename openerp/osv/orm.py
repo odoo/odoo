@@ -5453,6 +5453,8 @@ class BaseModel(object):
                 # a "pure" function field, simply evaluate it on self
                 assert field.compute
                 getattr(self, field.compute)()
+                if self.is_draft():
+                    return self._record_draft[name]
                 return self._record_cache[name]
 
             recomputing = scope_proxy.recomputing(self._name)
@@ -5531,6 +5533,10 @@ class BaseModel(object):
             stored, the value is also written to the database.
         """
         if self.is_draft():
+            for model, field, path in self._recompute[name]:
+                assert model == self._name
+                self._record_cache.pop(field, None)
+                self._record_draft.pop(field, None)
             # store the value in the draft cache, and keep caches disjoint
             self._record_draft[name] = value
             self._record_cache.pop(name, False)
@@ -5720,6 +5726,16 @@ class BaseModel(object):
                         for f in fs:
                             rec[f]
 
+    @api.model
+    def onchange(self, id, changed, values):
+        record = self.draft()
+        record._record_cache = dict(
+            (k, v) for k, v in values.iteritems() if k != changed)
+
+        record[changed] = values[changed]
+
+        return dict((k, record[k]) for k, v in values.iteritems()
+                    if record[k] != v)
 
 # for instance checking
 class Null(object):

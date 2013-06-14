@@ -88,3 +88,32 @@ class res_partner(models.Model):
 
     company_name = fields.Related('company_id', 'name')
 
+class on_change_test(models.Model):
+    _name = 'test_new_api.on_change'
+
+    name = fields.Char()
+    name_size = fields.Integer(compute='compute_name_size', store=False)
+    name_utf8_size = fields.Integer(compute='compute_utf8_size', store=False)
+    description = fields.Char(compute='compute_description')
+    trick = fields.Char(compute='whatever', store=False)
+
+
+    @api.depends('name')
+    def compute_name_size(self):
+        self.name_size = len(self.name or '')
+
+    @api.depends('name')
+    def compute_utf8_size(self):
+        name = self.name or u''
+        self.name_utf8_size = len(name.encode('utf-8'))
+
+    @api.depends('name', 'name_size', 'name_utf8_size')
+    def compute_description(self):
+        if self.name:
+            self.description = "%s (%d:%d)" % (
+                self.name or '', self.name_size, self.name_utf8_size)
+        else:
+            self.description = False
+
+    def whatever(self):
+        self.trick = "wheeeeeld.null()eld.null"
