@@ -293,10 +293,10 @@
                                 </form>
                             </field>
                         </page>
-                        <page string="Internal Notes">
+                        <page name='internal_notes' string="Internal Notes">
                             <field name="comment" placeholder="Put an internal note..."/>
                         </page>
-                        <page string="Sales &amp; Purchases">
+                        <page name='sales_purchases' string="Sales &amp; Purchases">
                             <group>
                                 <group>
                                     <field name="user_id" 
@@ -316,9 +316,6 @@
                                     <field name="active"/>
                                 </group>
                             </group>
-                        </page>
-                        <!-- The History page becomes visible as soon as there is something to display inside -->
-                        <page string="History" name="page_history" invisible="True">
                         </page>
                     </notebook>
                 </sheet>
