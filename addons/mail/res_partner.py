@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from openerp.tools.translate import _
 from openerp.osv import fields, osv
 
@@ -51,22 +52,5 @@ class res_partner_mail(osv.Model):
         for partner in self.browse(cr, uid, ids, context=context):
             self._message_add_suggested_recipient(cr, uid, recipients, partner, partner=partner, reason=_('Partner Profile'))
         return recipients
-
-    def message_post(self, cr, uid, thread_id, **kwargs):
-        """ Override related to res.partner. In case of email message, set it as
-            private:
-            - add the target partner in the message partner_ids
-            - set thread_id as None, because this will trigger the 'private'
-                aspect of the message (model=False, res_id=False)
-        """
-        if isinstance(thread_id, (list, tuple)):
-            thread_id = thread_id[0]
-        if kwargs.get('type') == 'email':
-            partner_ids = kwargs.get('partner_ids', [])
-            if thread_id not in [command[1] for command in partner_ids]:
-                partner_ids.append((4, thread_id))
-            kwargs['partner_ids'] = partner_ids
-            thread_id = False
-        return super(res_partner_mail, self).message_post(cr, uid, thread_id, **kwargs)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
