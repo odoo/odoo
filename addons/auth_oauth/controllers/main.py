@@ -102,7 +102,10 @@ class OAuthController(oeweb.Controller):
         registry = RegistryManager.get(dbname)
         with registry.cursor() as cr:
             IMD = registry['ir.model.data']
-            model, provider_id = IMD.get_object_reference(cr, SUPERUSER_ID, 'auth_oauth', 'provider_openerp')
+            try:
+                model, provider_id = IMD.get_object_reference(cr, SUPERUSER_ID, 'auth_oauth', 'provider_openerp')
+            except ValueError:
+                return set_cookie_and_redirect(req, '/?db=%s' % dbname)
             assert model == 'auth.oauth.provider'
 
         state = {
