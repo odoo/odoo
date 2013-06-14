@@ -24,8 +24,8 @@ import base64
 import logging
 
 import openerp
+from openerp import SUPERUSER_ID
 from openerp.osv import osv, fields
-from openerp.osv import fields
 from openerp import tools
 from openerp.tools.translate import _
 from urllib import urlencode, quote as quote
@@ -191,7 +191,6 @@ class email_template(osv.osv):
     }
 
     def create_action(self, cr, uid, ids, context=None):
-        vals = {}
         action_obj = self.pool.get('ir.actions.act_window')
         data_obj = self.pool.get('ir.model.data')
         for template in self.browse(cr, uid, ids, context=context):
@@ -199,7 +198,7 @@ class email_template(osv.osv):
             model_data_id = data_obj._get_id(cr, uid, 'mail', 'email_compose_message_wizard_form')
             res_id = data_obj.browse(cr, uid, model_data_id, context=context).res_id
             button_name = _('Send Mail (%s)') % template.name
-            vals['ref_ir_act_window'] = action_obj.create(cr, uid, {
+            act_id = action_obj.create(cr, SUPERUSER_ID, {
                  'name': button_name,
                  'type': 'ir.actions.act_window',
                  'res_model': 'mail.compose.message',
@@ -211,27 +210,29 @@ class email_template(osv.osv):
                  'target': 'new',
                  'auto_refresh':1
             }, context)
-            vals['ref_ir_value'] = self.pool.get('ir.values').create(cr, uid, {
+            ir_values_id = self.pool.get('ir.values').create(cr, SUPERUSER_ID, {
                  'name': button_name,
                  'model': src_obj,
                  'key2': 'client_action_multi',
-                 'value': "ir.actions.act_window," + str(vals['ref_ir_act_window']),
+                 'value': "ir.actions.act_window,%s" % act_id,
                  'object': True,
              }, context)
-        self.write(cr, uid, ids, {
-                    'ref_ir_act_window': vals.get('ref_ir_act_window',False),
-                    'ref_ir_value': vals.get('ref_ir_value',False),
-                }, context)
+
+            template.write({
+                'ref_ir_act_window': act_id,
+                'ref_ir_value': ir_values_id,
+            })
+
         return True
 
     def unlink_action(self, cr, uid, ids, context=None):
         for template in self.browse(cr, uid, ids, context=context):
             try:
                 if template.ref_ir_act_window:
-                    self.pool.get('ir.actions.act_window').unlink(cr, uid, template.ref_ir_act_window.id, context)
+                    self.pool.get('ir.actions.act_window').unlink(cr, SUPERUSER_ID, template.ref_ir_act_window.id, context)
                 if template.ref_ir_value:
                     ir_values_obj = self.pool.get('ir.values')
-                    ir_values_obj.unlink(cr, uid, template.ref_ir_value.id, context)
+                    ir_values_obj.unlink(cr, SUPERUSER_ID, template.ref_ir_value.id, context)
             except Exception:
                 raise osv.except_osv(_("Warning"), _("Deletion of the action record failed."))
         return True
