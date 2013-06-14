@@ -11,15 +11,15 @@
             <field name="model">survey.browse.answer</field>
             <field name="arch" type="xml">
                 <form string="Survey" version="7.0">
-                    <header>
-                        <button name="action_next" string="Start" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group col="4">
                         <field name="survey_id"/>
                         <field name="response_id" domain="[('survey_id','=', survey_id)]"/>
                     </group>
+                    <footer>
+                        <button name="action_next" string="Start" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
