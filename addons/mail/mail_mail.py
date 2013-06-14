@@ -118,6 +118,10 @@ class mail_mail(osv.Model):
             if catchall_domain and catchall_alias:
                 email_reply_to = '%s@%s' % (catchall_alias, catchall_domain)
 
+        # still no reply_to -> reply_to will be the email_from
+        if not email_reply_to and email_from:
+            email_reply_to = email_from
+
         # format 'Document name <email_address>'
         if email_reply_to and model and res_id and format_name:
             emails = tools.email_split(email_reply_to)
