@@ -1477,8 +1477,8 @@ class Export(openerpweb.Controller):
         """
         return sorted([
             controller.fmt
-            for path, controller in openerpweb.controllers_path.iteritems()
-            if path.startswith(self._cp_path)
+            for controller in openerpweb.controllers_object.itervalues()
+            if (controller._cp_path or "").startswith(self._cp_path)
             if hasattr(controller, 'fmt')
         ], key=operator.itemgetter("label"))
 

@@ -485,7 +485,6 @@ addons_module = {}
 addons_manifest = {}
 controllers_class_path = {}
 controllers_object = {}
-controllers_object_path = {}
 controllers_path = {}
 
 class ControllerType(type):
@@ -680,7 +679,7 @@ class Root(object):
         request.parameter_storage_class = werkzeug.datastructures.ImmutableDict
         request.app = self
 
-        handler = self.find_handler(*(request.path.split('/')[1:]))
+        handler = self.find_handler(request.path)
 
         if not handler:
             response = werkzeug.exceptions.NotFound()
@@ -726,25 +725,32 @@ class Root(object):
                         addons_manifest[module] = manifest
                         self.statics['/%s/static' % module] = path_static
 
-        for k, v in controllers_class_path.items():
+        self.routing_map = routing.Map()
+        for k, v in controllers_class_path.iteritems():
             o = v[1]()
             controllers_object[v[0]] = o
-            controllers_object_path[k] = o
-            if hasattr(o, '_cp_path'):
-                controllers_path[o._cp_path] = o
+            members = inspect.getmembers(o)
+            for mk, mv in members:
+                if inspect.ismethod(mv) and getattr(mv, 'exposed', False):
+                    url = os.path.join(o._cp_path, mk)
+                    url += "/<path:path>"
+                    function = (mv, o.get_wrapped_method(mk))
+                    self.routing_map.add(routing.Rule(url, function))
+            controllers_path[o._cp_path] = o
 
         app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, self.statics)
         self.dispatch = DisableCacheMiddleware(app)
 
-    def find_handler(self, *l):
+    def find_handler(self, path):
         """
         Tries to discover the controller handling the request for the path
         specified by the provided parameters
 
-        :param l: path sections to a controller or controller method
+        :param path: path to match
         :returns: a callable matching the path sections, or ``None``
         :rtype: ``Controller | None``
         """
+        l = path.split('/')[1:]
         if l:
             ps = '/' + '/'.join(filter(None, l))
             method_name = 'index'
