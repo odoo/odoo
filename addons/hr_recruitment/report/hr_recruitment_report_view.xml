@@ -14,7 +14,6 @@
                 <field name="type_id" invisible="1"/>
                 <field name="partner_id" invisible="1"/>
                 <field name="company_id" groups="base.group_multi_company" invisible="1"/>
-                <field name="state" invisible="1"/>
                 <field name="year" invisible="1"/>
                 <field name="day" invisible="1"/>
                 <field name="month" invisible="1"/>
@@ -46,11 +45,6 @@
         <field name="model">hr.recruitment.report</field>
         <field name="arch" type="xml">
             <search string="Recruitment Analysis">
-                <filter string="New" icon="terp-document-new" domain="[('state','=','draft')]" help = "Draft recruitment"/>
-                <filter string="In progress" icon="terp-camera_test" domain="[('state', '=' ,'open')]" help = "In progress recruitment"/>
-                <filter string="Pending" icon="terp-gtk-media-pause" domain="[('state','=','pending')]" help = "Pending recruitment"/>
-                <filter string="Hired" icon="terp-camera_test" domain="[('state','=','done')]" help = "Hired employees"/>
-                <separator/>
                 <filter icon="terp-personal" string="My Recruitment" help="My Recruitment" domain="[('user_id','=',uid)]"/>
                 <field name="job_id"/>
                 <field name="department_id"/>

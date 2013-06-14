@@ -51,7 +51,6 @@ class report_project_task_user(osv.osv):
         'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'),
 ('0','Very urgent')], 'Priority', readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
-        'state': fields.selection([('draft', 'Draft'), ('open', 'In Progress'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')],'Status', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Contact', readonly=True),
     }
@@ -75,7 +74,6 @@ class report_project_task_user(osv.osv):
                     t.user_id,
                     progress as progress,
                     t.project_id,
-                    t.state,
                     t.effective_hours as hours_effective,
                     t.priority,
                     t.name as name,
@@ -108,7 +106,6 @@ class report_project_task_user(osv.osv):
                     date_deadline,
                     t.user_id,
                     t.project_id,
-                    t.state,
                     t.priority,
                     name,
                     t.company_id,

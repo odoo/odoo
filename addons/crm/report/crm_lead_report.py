@@ -23,14 +23,6 @@ from openerp.osv import fields,osv
 from openerp import tools
 from .. import crm
 
-# AVAILABLE_STATES = [
-#     ('draft','Draft'),
-#     ('open','Open'),
-#     ('cancel', 'Cancelled'),
-#     ('done', 'Closed'),
-#     ('pending','Pending')
-# ]
-
 MONTHS = [
     ('01', 'January'),
     ('02', 'February'),
@@ -70,7 +62,7 @@ class crm_lead_report(osv.osv):
         'date_closed': fields.date('Close Date', readonly=True),
 
         # durations
-        'delay_open': fields.float('Delay to Open',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
+        'delay_open': fields.float('Delay to Assign',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
         'delay_close': fields.float('Delay to Close',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
         'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
 
@@ -136,7 +128,7 @@ class crm_lead_report(osv.osv):
                     c.planned_revenue*(c.probability/100) as probable_revenue,
                     1 as nbr,
                     date_trunc('day',c.create_date) as create_date,
-                    extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
+                    extract('epoch' from (c.write_date-c.create_date))/(3600*24) as  delay_close,
                     abs(extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24)) as  delay_expected,
                     extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open
                 FROM

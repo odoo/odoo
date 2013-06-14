@@ -20,7 +20,7 @@
 ##############################################################################
 
 import project_task_delegate
-import project_task_reevaluate
+#import project_task_reevaluate # TODO: Need To Clean
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

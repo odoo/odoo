@@ -22,14 +22,6 @@
 from openerp.osv import fields,osv
 from openerp import tools
 
-AVAILABLE_STATES = [
-    ('draft','Draft'),
-    ('open','Open'),
-    ('cancel', 'Cancelled'),
-    ('done', 'Closed'),
-    ('pending','Pending')
-]
-
 AVAILABLE_PRIORITIES = [
     ('5', 'Lowest'),
     ('4', 'Low'),
@@ -51,7 +43,6 @@ class crm_claim_report(osv.osv):
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'nbr': fields.integer('# of Cases', readonly=True),
-        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
                                   ('03', 'March'), ('04', 'April'),\
                                   ('05', 'May'), ('06', 'June'), \
@@ -92,7 +83,6 @@ class crm_claim_report(osv.osv):
                     to_char(c.date, 'YYYY-MM-DD') as day,
                     to_char(c.date_closed, 'YYYY-MM-DD') as date_closed,
                     to_char(c.date_deadline, 'YYYY-MM-DD') as date_deadline,
-                    c.state,
                     c.user_id,
                     c.stage_id,
                     c.section_id,
@@ -109,7 +99,7 @@ class crm_claim_report(osv.osv):
                 from
                     crm_claim c
                 group by to_char(c.date, 'YYYY'), to_char(c.date, 'MM'),to_char(c.date, 'YYYY-MM-DD'),\
-                        c.state, c.user_id,c.section_id, c.stage_id,\
+                        c.user_id,c.section_id, c.stage_id,\
                         c.categ_id,c.partner_id,c.company_id,c.create_date,
                         c.priority,c.type_action,c.date_deadline,c.date_closed,c.id
             )""")

@@ -98,21 +98,19 @@ Dashboard for CRM will include:
         'base_partner_merge_view.xml',
 
         'crm_case_section_view.xml',
-
+    ],
+    'demo': [
         'crm_demo.xml',
         'crm_lead_demo.xml',
         'crm_phonecall_demo.xml',
         'crm_action_rule_demo.xml',
     ],
-    'demo': [
-        
-    ],
     'test': [
         'test/crm_lead_message.yml',
-        'test/lead2opportunity2win.yml',
+#        'test/lead2opportunity2win.yml',
         'test/lead2opportunity_assign_salesmen.yml',
         'test/crm_lead_merge.yml',
-        'test/crm_lead_cancel.yml',
+#        'test/crm_lead_cancel.yml',
         'test/segmentation.yml',
         'test/phonecalls.yml',
         'test/crm_lead_onchange.yml',

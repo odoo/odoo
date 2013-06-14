@@ -199,32 +199,32 @@ class base_stage(object):
                 raise osv.except_osv(_('Error!'), _("You are already at the top level of your sales-team category.\nTherefore you cannot escalate furthermore."))
             self.write(cr, uid, [case.id], data, context=context)
         return True
+# TODO: Need To Clean
+#    def case_open(self, cr, uid, ids, context=None):
+#     """ Opens case """
+#     cases = self.browse(cr, uid, ids, context=context)
+#     for case in cases:
+#         data = {'active': True}
+#         if not case.user_id:
+#             data['user_id'] = uid
+#         self.case_set(cr, uid, [case.id], data, context=context)
+#     return True
 
-    # def case_open(self, cr, uid, ids, context=None):
-    #     """ Opens case """
-    #     cases = self.browse(cr, uid, ids, context=context)
-    #     for case in cases:
-    #         data = {'active': True}
-    #         if not case.user_id:
-    #             data['user_id'] = uid
-    #         self.case_set(cr, uid, [case.id], data, context=context)
-    #     return True
+#    def case_close(self, cr, uid, ids, context=None):
+#     """ Closes case """
+#     return self.case_set(cr, uid, ids, None, {'active': True, 'date_closed': fields.datetime.now()}, context=context)
 
-    # def case_close(self, cr, uid, ids, context=None):
-    #     """ Closes case """
-    #     return self.case_set(cr, uid, ids, None, {'active': True, 'date_closed': fields.datetime.now()}, context=context)
+#    def case_cancel(self, cr, uid, ids, context=None):
+#     """ Cancels case """
+#     return self.case_set(cr, uid, ids, None, {'active': True}, context=context)
 
-    # def case_cancel(self, cr, uid, ids, context=None):
-    #     """ Cancels case """
-    #     return self.case_set(cr, uid, ids, None, {'active': True}, context=context)
+#    def case_pending(self, cr, uid, ids, context=None):
+#     """ Set case as pending """
+#     return self.case_set(cr, uid, ids, None, {'active': True}, context=context)
 
-    # def case_pending(self, cr, uid, ids, context=None):
-    #     """ Set case as pending """
-    #     return self.case_set(cr, uid, ids, None, {'active': True}, context=context)
-
-    # def case_reset(self, cr, uid, ids, context=None):
-    #     """ Resets case as draft """
-    #     return self.case_set(cr, uid, ids, None, {'active': True}, context=context)
+#    def case_reset(self, cr, uid, ids, context=None):
+#     """ Resets case as draft """
+#     return self.case_set(cr, uid, ids, None, {'active': True}, context=context)
 
     def case_set(self, cr, uid, ids, new_stage_id, values_to_update=None, context=None):
         """ Generic method for setting case. This methods wraps the update

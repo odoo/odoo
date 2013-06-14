@@ -28,14 +28,6 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools import html2plaintext
 
-AVAILABLE_STATES = [
-    ('draft', 'New'),
-    ('cancel', 'Refused'),
-    ('open', 'In Progress'),
-    ('pending', 'Pending'),
-    ('done', 'Hired')
-]
-
 AVAILABLE_PRIORITIES = [
     ('', ''),
     ('5', 'Not Good'),
@@ -62,13 +54,11 @@ class hr_recruitment_stage(osv.osv):
         'name': fields.char('Name', size=64, required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of stages."),
         'department_id':fields.many2one('hr.department', 'Specific to a Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep this field empty."),
-        'state': fields.selection(AVAILABLE_STATES, 'Status', required=True, help="The related status for the stage. The status of your document will automatically change according to the selected stage. Example, a stage is related to the status 'Close', when your document reach this stage, it will be automatically closed."),
         'fold': fields.boolean('Hide in views if empty', help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
         'requirements': fields.text('Requirements'),
     }
     _defaults = {
         'sequence': 1,
-        'state': 'draft',
         'fold': False,
     }
 
@@ -93,12 +83,8 @@ class hr_applicant(base_stage, osv.Model):
     _order = "id desc"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _track = {
-        'state': {
-            'hr_recruitment.mt_applicant_hired': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
-            'hr_recruitment.mt_applicant_refused': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'cancel',
-        },
         'stage_id': {
-            'hr_recruitment.mt_stage_changed': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['done', 'cancel'],
+            'hr_recruitment.mt_stage_changed': lambda self, cr, uid, obj, ctx=None: obj,
         },
     }
 
@@ -109,7 +95,7 @@ class hr_applicant(base_stage, osv.Model):
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
         department_id = self._get_default_department_id(cr, uid, context=context)
-        return self.stage_find(cr, uid, [], department_id, [('state', '=', 'draft')], context=context)
+        return self.stage_find(cr, uid, [], department_id, [], context=context)
 
     def _resolve_department_id_from_context(self, cr, uid, context=None):
         """ Returns ID of department based on the value of 'default_department_id'
@@ -195,15 +181,7 @@ class hr_applicant(base_stage, osv.Model):
         'partner_id': fields.many2one('res.partner', 'Contact'),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'write_date': fields.datetime('Update Date', readonly=True),
-        'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage', track_visibility='onchange',
-                        domain="['|', ('department_id', '=', department_id), ('department_id', '=', False)]"),
-        'state': fields.related('stage_id', 'state', type="selection", store=True,
-                selection=AVAILABLE_STATES, string="Status", readonly=True,
-                help='The status is set to \'Draft\', when a case is created.\
-                      If the case is in progress the status is set to \'Open\'.\
-                      When the case is over, the status is set to \'Done\'.\
-                      If the case needs to be reviewed then the status is \
-                      set to \'Pending\'.'),
+        'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage', track_visibility='onchange'),
         'categ_ids': fields.many2many('hr.applicant_category', string='Tags'),
         'company_id': fields.many2one('res.company', 'Company'),
         'user_id': fields.many2one('res.users', 'Responsible', track_visibility='onchange'),
@@ -408,20 +386,20 @@ class hr_applicant(base_stage, osv.Model):
         if applicant.job_id:
             self.pool.get('hr.job').message_post(cr, uid, [applicant.job_id.id], body=_('Applicant <b>created</b>'), subtype="hr_recruitment.mt_job_new_applicant", context=context)
         return obj_id
+# TODO : Need To Clean
+#    def case_open(self, cr, uid, ids, context=None):
+#        """
+#            open Request of the applicant for the hr_recruitment
+#        """
+#        res = super(hr_applicant, self).case_open(cr, uid, ids, context)
+#        date = self.read(cr, uid, ids, ['date_open'])[0]
+#        if not date['date_open']:
+#            self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S'),})
+#        return res
 
-    def case_open(self, cr, uid, ids, context=None):
-        """
-            open Request of the applicant for the hr_recruitment
-        """
-        res = super(hr_applicant, self).case_open(cr, uid, ids, context)
-        date = self.read(cr, uid, ids, ['date_open'])[0]
-        if not date['date_open']:
-            self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S'),})
-        return res
-
-    def case_close(self, cr, uid, ids, context=None):
-        res = super(hr_applicant, self).case_close(cr, uid, ids, context)
-        return res
+#    def case_close(self, cr, uid, ids, context=None):
+#        res = super(hr_applicant, self).case_close(cr, uid, ids, context)
+#        return res
 
     def case_close_with_emp(self, cr, uid, ids, context=None):
         if context is None:
@@ -454,25 +432,26 @@ class hr_applicant(base_stage, osv.Model):
         dict_act_window['view_mode'] = 'form,tree'
         return dict_act_window
 
-    def case_cancel(self, cr, uid, ids, context=None):
-        """Overrides cancel for crm_case for setting probability
-        """
-        res = super(hr_applicant, self).case_cancel(cr, uid, ids, context)
-        self.write(cr, uid, ids, {'probability': 0.0})
-        return res
+# TODO: Need To Clean
+#    def case_cancel(self, cr, uid, ids, context=None):
+#        """Overrides cancel for crm_case for setting probability
+#        """
+#        res = super(hr_applicant, self).case_cancel(cr, uid, ids, context)
+#        self.write(cr, uid, ids, {'probability': 0.0})
+#        return res
 
-    def case_pending(self, cr, uid, ids, context=None):
-        """Marks case as pending"""
-        res = super(hr_applicant, self).case_pending(cr, uid, ids, context)
-        self.write(cr, uid, ids, {'probability': 0.0})
-        return res
+#    def case_pending(self, cr, uid, ids, context=None):
+#        """Marks case as pending"""
+#        res = super(hr_applicant, self).case_pending(cr, uid, ids, context)
+#        self.write(cr, uid, ids, {'probability': 0.0})
+#        return res
 
-    def case_reset(self, cr, uid, ids, context=None):
-        """Resets case as draft
-        """
-        res = super(hr_applicant, self).case_reset(cr, uid, ids, context)
-        self.write(cr, uid, ids, {'date_open': False, 'date_closed': False})
-        return res
+#    def case_reset(self, cr, uid, ids, context=None):
+#        """Resets case as draft
+#        """
+#        res = super(hr_applicant, self).case_reset(cr, uid, ids, context)
+#        self.write(cr, uid, ids, {'date_open': False, 'date_closed': False})
+#        return res
 
     def set_priority(self, cr, uid, ids, priority, *args):
         """Set applicant priority

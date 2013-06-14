@@ -6,14 +6,13 @@
     partner_id: base.res_partner_2
     type: opportunity
     stage_id: crm.stage_lead1
-    state: draft
 -
   I create a lead record to call a mailing opt-out onchange method.
 -
   !record {model: crm.lead, id: crm_case_18}:
     name: 'Need 20 Days of Consultancy'
     type: opportunity
-    state: draft
+    stage_id: crm.stage_lead1
     opt_out: True
 -
   I create a phonecall record to call a partner onchange method.

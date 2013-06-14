@@ -44,8 +44,9 @@ automatically new claims based on incoming emails.
         'crm_claim_data.xml',
     ],
     'demo': ['crm_claim_demo.xml'],
-    'test': ['test/process/claim.yml',
-             'test/ui/claim_demo.yml'
+    'test': [
+#        'test/process/claim.yml', #TODO: Need To Clean
+        'test/ui/claim_demo.yml'
     ],
     'installable': True,
     'auto_install': False,

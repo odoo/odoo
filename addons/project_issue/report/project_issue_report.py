@@ -24,13 +24,7 @@ from openerp.osv import fields,osv
 from openerp import tools
 from openerp.addons.crm import crm
 
-AVAILABLE_STATES = [
-    ('draft','Draft'),
-    ('open','Open'),
-    ('cancel', 'Cancelled'),
-    ('done', 'Closed'),
-    ('pending','Pending')
-]
+
 class project_issue_report(osv.osv):
     _name = "project.issue.report"
     _auto = False
@@ -38,7 +32,6 @@ class project_issue_report(osv.osv):
     _columns = {
         'name': fields.char('Year', size=64, required=False, readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Sale Team', readonly=True),
-        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
                                   ('03', 'March'), ('04', 'April'),\
                                   ('05', 'May'), ('06', 'June'), \
@@ -80,7 +73,6 @@ class project_issue_report(osv.osv):
                     to_char(c.create_date, 'YYYY-MM-DD') as day,
                     to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
                     to_char(c.create_date, 'YYYY-MM-DD') as creation_date,
-                    c.state,
                     c.user_id,
                     c.working_hours_open,
                     c.working_hours_close,
@@ -97,7 +89,7 @@ class project_issue_report(osv.osv):
                     c.task_id,
                     date_trunc('day',c.create_date) as create_date,
                     c.day_open as delay_open,
-                    c.day_close as delay_close,
+                    c.write_date as delay_close,
                     (SELECT count(id) FROM mail_message WHERE model='project.issue' AND res_id=c.id) AS email
 
                 FROM

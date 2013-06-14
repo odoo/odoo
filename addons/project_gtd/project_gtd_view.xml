@@ -79,7 +79,6 @@
             <field name="remaining_hours" position="after">
                 <field string="Timeframe" name="timebox_id" invisible=" not context.get('gtd', False)"/>
                 <field name="context_id" invisible="not context.get('context_show', False)" widget="selection"/>
-                <button name="do_reopen" states="done,cancelled" string="Reactivate" type="object" icon="gtk-convert" help="For reopening the tasks" invisible="not context.get('set_visible',False)"/>
             </field>
         </field>
     </record>
@@ -103,8 +102,6 @@
         <field name="arch" type="xml">
            <search string="My Tasks">
                 <field name="name" string="My Tasks"/>
-                <filter name="open" string="In Progress" domain="[('state','in',('draft','open'))]" help="In Progress and draft tasks" icon="terp-camera_test"/>
-                <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
                 <separator/>
                 <filter name="message_unread" string="Unread Messages" domain="[('message_unread','=',True)]"/>
                 <separator/>

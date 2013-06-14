@@ -49,13 +49,8 @@ class project_issue(base_stage, osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     _track = {
-        'state': {
-            'project_issue.mt_issue_new': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['new', 'draft'],
-            'project_issue.mt_issue_closed': lambda self, cr, uid, obj, ctx=None:  obj['state'] == 'done',
-            'project_issue.mt_issue_started': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'open',
-        },
         'stage_id': {
-            'project_issue.mt_issue_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['new', 'draft', 'done', 'open'],
+            'project_issue.mt_issue_stage': lambda self, cr, uid, obj, ctx=None: obj,
         },
         'kanban_state': {
             'project_issue.mt_issue_blocked': lambda self, cr, uid, obj, ctx=None: obj['kanban_state'] == 'blocked',
@@ -81,7 +76,7 @@ class project_issue(base_stage, osv.osv):
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
         project_id = self._get_default_project_id(cr, uid, context=context)
-        return self.stage_find(cr, uid, [], project_id, [('state', '=', 'draft')], context=context)
+        return self.stage_find(cr, uid, [], project_id, [], context=context)
 
     def _resolve_project_id_from_context(self, cr, uid, context=None):
         """ Returns ID of project based on the value of 'default_project_id'
@@ -247,13 +242,6 @@ class project_issue(base_stage, osv.osv):
         'partner_id': fields.many2one('res.partner', 'Contact', select=1),
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Private Note'),
-        'state': fields.related('stage_id', 'state', type="selection", store=True,
-                selection=_TASK_STATE, string="Status", readonly=True,
-                help='The status is set to \'Draft\', when a case is created.\
-                      If the case is in progress the status is set to \'Open\'.\
-                      When the case is over, the status is set to \'Done\'.\
-                      If the case needs to be reviewed then the status is \
-                      set to \'Pending\'.'),
         'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready for next stage')], 'Kanban State',
                                          track_visibility='onchange',
                                          help="A Issue's kanban state indicates special situations affecting it:\n"
@@ -272,8 +260,7 @@ class project_issue(base_stage, osv.osv):
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'stage_id': fields.many2one ('project.task.type', 'Stage',
-                        track_visibility='onchange',
-                        domain="[('project_ids', '=', project_id)]"),
+                        track_visibility='onchange'),
         'project_id':fields.many2one('project.project', 'Project', track_visibility='onchange'),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
@@ -393,15 +380,16 @@ class project_issue(base_stage, osv.osv):
     
         #Update last action date every time the user changes the stage
         if 'stage_id' in vals:
+            stage=self.pool.get('project.task.type').read(cr, uid, vals['stage_id'],['sequence'],context=context)
             vals['date_action_last'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            state = self.pool.get('project.task.type').browse(cr, uid, vals['stage_id'], context=context).state
             for issue in self.browse(cr, uid, ids, context=context):
                 # Change from draft to not draft EXCEPT cancelled: The issue has been opened -> set the opening date
-                if issue.state == 'draft' and state not in ('draft', 'cancelled'):
+                if stage['sequence'] == 1:
                     vals['date_open'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
                 # Change from not done to done: The issue has been closed -> set the closing date
-                if issue.state != 'done' and state == 'done':
-                    vals['date_closed'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+                for stage_type in issue.project_id.type_ids[-2:]:
+                    if stage['sequence'] == stage_type.sequence:
+                        vals['date_closed'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
         return super(project_issue, self).write(cr, uid, ids, vals, context)
 
@@ -465,17 +453,18 @@ class project_issue(base_stage, osv.osv):
         if stage_ids:
             return stage_ids[0]
         return False
-
-    def case_cancel(self, cr, uid, ids, context=None):
-        """ Cancels case """
-        self.case_set(cr, uid, ids, 'cancelled', {'active': True}, context=context)
-        return True
+# TODO : Need To Clean
+#    def case_cancel(self, cr, uid, ids, context=None):
+#        """ Cancels case """
+#        self.case_set(cr, uid, ids, 'cancelled', {'active': True}, context=context)
+#        return True
 
     def case_escalate(self, cr, uid, ids, context=None):
         cases = self.browse(cr, uid, ids)
         for case in cases:
             data = {}
             if case.project_id.project_escalation_id:
+                data['stage_id']=self.pool.get('project.task.type').search(cr, uid, [('sequence','=',1)],context=context)[0]
                 data['project_id'] = case.project_id.project_escalation_id.id
                 if case.project_id.project_escalation_id.user_id:
                     data['user_id'] = case.project_id.project_escalation_id.user_id.id
@@ -483,7 +472,7 @@ class project_issue(base_stage, osv.osv):
                     self.pool.get('project.task').write(cr, uid, [case.task_id.id], {'project_id': data['project_id'], 'user_id': False})
             else:
                 raise osv.except_osv(_('Warning!'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
-            self.case_set(cr, uid, ids, 'draft', data, context=context)
+            self.write(cr, uid, ids, data, context=context)
         return True
 
     # -------------------------------------------------------
@@ -593,8 +582,9 @@ class project(osv.Model):
         res = dict.fromkeys(ids, 0)
         issue_ids = self.pool.get('project.issue').search(cr, uid, [('project_id', 'in', ids)])
         for issue in self.pool.get('project.issue').browse(cr, uid, issue_ids, context):
-            if issue.state not in ('done', 'cancelled'):
-                res[issue.project_id.id] += 1
+            for stage_type in issue.project_id.type_ids[-2:]:
+                if issue.stage_id.sequence == stage_type.sequence :
+                    res[issue.project_id.id] += 1
         return res
 
     _columns = {

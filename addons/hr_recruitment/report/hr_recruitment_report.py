@@ -24,14 +24,6 @@ from .. import hr_recruitment
 from openerp.addons.decimal_precision import decimal_precision as dp
 
 
-AVAILABLE_STATES = [
-    ('draft','New'),
-    ('open','Open'),
-    ('cancel', 'Refused'),
-    ('done', 'Hired'),
-    ('pending','Pending')
-]
-
 class hr_recruitment_report(osv.osv):
     _name = "hr.recruitment.report"
     _description = "Recruitments Statistics"
@@ -41,7 +33,6 @@ class hr_recruitment_report(osv.osv):
     _columns = {
         'user_id': fields.many2one('res.users', 'User', readonly=True),
         'nbr': fields.integer('# of Applications', readonly=True),
-        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
                                   ('03', 'March'), ('04', 'April'),\
                                   ('05', 'May'), ('06', 'June'), \
@@ -79,7 +70,6 @@ class hr_recruitment_report(osv.osv):
                      to_char(s.create_date, 'YYYY') as year,
                      to_char(s.create_date, 'MM') as month,
                      to_char(s.create_date, 'YYYY-MM-DD') as day,
-                     s.state,
                      s.partner_id,
                      s.company_id,
                      s.user_id,
@@ -93,7 +83,7 @@ class hr_recruitment_report(osv.osv):
                      (sum(salary_proposed)/count(*)) as salary_prop_avg,
                      sum(salary_expected) as salary_exp,
                      (sum(salary_expected)/count(*)) as salary_exp_avg,
-                     extract('epoch' from (s.date_closed-s.create_date))/(3600*24) as  delay_close,
+                     extract('epoch' from (s.write_date-s.create_date))/(3600*24) as  delay_close,
                      count(*) as nbr
                  from hr_applicant s
                  group by
@@ -105,7 +95,6 @@ class hr_recruitment_report(osv.osv):
                      s.date_open,
                      s.create_date,
                      s.date_closed,
-                     s.state,
                      s.partner_id,
                      s.company_id,
                      s.user_id,
@@ -113,7 +102,8 @@ class hr_recruitment_report(osv.osv):
                      s.type_id,
                      s.priority,
                      s.job_id,
-                     s.department_id
+                     s.department_id,
+                     s.write_date
             )
         """)
 

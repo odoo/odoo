@@ -28,16 +28,11 @@ from openerp import tools
 from openerp.tools.translate import _
 from openerp.tools import html2plaintext
 
-CRM_CLAIM_PENDING_STATES = (
-    crm.AVAILABLE_STATES[2][0], # Cancelled
-    crm.AVAILABLE_STATES[3][0], # Done
-    crm.AVAILABLE_STATES[4][0], # Pending
-)
 
 class crm_claim_stage(osv.osv):
     """ Model for claim stages. This models the main stages of a claim
         management flow. Main CRM objects (leads, opportunities, project
-        issues, ...) will now use only stages, instead of state and stages.
+        issues, ...) will now use only stages, instead of   stages.
         Stages are for example used to display the kanban view of records.
     """
     _name = "crm.claim.stage"
@@ -50,7 +45,6 @@ class crm_claim_stage(osv.osv):
         'sequence': fields.integer('Sequence', help="Used to order stages. Lower is better."),
         'section_ids':fields.many2many('crm.case.section', 'section_claim_stage_rel', 'stage_id', 'section_id', string='Sections',
                         help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams."),
-        'state': fields.selection(crm.AVAILABLE_STATES, 'Status', required=True, help="The related status for the stage. The status of your document will automatically change regarding the selected stage. For example, if a stage is related to the status 'Close', when your document reaches this stage, it will be automatically have the 'closed' status."),
         'case_refused': fields.boolean('Refused stage',
                         help='Refused stages are specific stages for done.'),
         'case_default': fields.boolean('Common to All Teams',
@@ -61,7 +55,6 @@ class crm_claim_stage(osv.osv):
 
     _defaults = {
         'sequence': lambda *args: 1,
-        'state': 'draft',
         'fold': False,
         'case_refused': False,
     }
@@ -107,13 +100,6 @@ class crm_claim(base_stage, osv.osv):
         'stage_id': fields.many2one ('crm.claim.stage', 'Stage', track_visibility='onchange',
                 domain="['|', ('section_ids', '=', section_id), ('case_default', '=', True)]"),
         'cause': fields.text('Root Cause'),
-        'state': fields.related('stage_id', 'state', type="selection", store=True,
-                selection=crm.AVAILABLE_STATES, string="Status", readonly=True,
-                help='The status is set to \'Draft\', when a case is created.\
-                      If the case is in progress the status is set to \'Open\'.\
-                      When the case is over, the status is set to \'Done\'.\
-                      If the case needs to be reviewed then the status is \
-                      set to \'Pending\'.'),
     }
 
     _defaults = {
@@ -157,14 +143,14 @@ class crm_claim(base_stage, osv.osv):
         if stage_ids:
             return stage_ids[0]
         return False
-
-    def case_refuse(self, cr, uid, ids, context=None):
-        """ Mark the case as refused: state=done and case_refused=True """
-        for lead in self.browse(cr, uid, ids):
-            stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, ['&', ('state', '=', 'done'), ('case_refused', '=', True)], context=context)
-            if stage_id:
-                self.case_set(cr, uid, [lead.id], values_to_update={}, new_stage_id=stage_id, context=context)
-        return True
+#TODO : Need To Clean
+#    def case_refuse(self, cr, uid, ids, context=None):
+#        """ Mark the case as refused: state=done and case_refused=True """
+#        for lead in self.browse(cr, uid, ids):
+#            stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, ['&', ('state', '=', 'done'), ('case_refused', '=', True)], context=context)
+#            if stage_id:
+#                self.case_set(cr, uid, [lead.id], values_to_update={}, new_stage_id=stage_id, context=context)
+#        return True
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
         """This function returns value of partner address based on partner

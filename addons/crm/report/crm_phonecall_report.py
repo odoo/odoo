@@ -23,14 +23,6 @@ from openerp.osv import fields,osv
 from openerp import tools
 from .. import crm
 
-# AVAILABLE_STATES = [
-#     ('draft','Draft'),
-#     ('open','Todo'),
-#     ('cancel', 'Cancelled'),
-#     ('done', 'Held'),
-#     ('pending','Pending')
-# ]
-
 
 class crm_phonecall_report(osv.osv):
     """ Phone calls by user and section """
@@ -45,7 +37,6 @@ class crm_phonecall_report(osv.osv):
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'nbr': fields.integer('# of Cases', readonly=True),
-        # 'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
                                   ('03', 'March'), ('04', 'April'),\
                                   ('05', 'May'), ('06', 'June'), \
@@ -56,7 +47,7 @@ class crm_phonecall_report(osv.osv):
         'day': fields.char('Day', size=128, readonly=True), 
         'delay_close': fields.float('Delay to close', digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
         'duration': fields.float('Duration', digits=(16,2),readonly=True, group_operator="avg"),
-        'delay_open': fields.float('Delay to open',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
+        'delay_open': fields.float('Delay to Assign',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                         domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.phonecall')]"),

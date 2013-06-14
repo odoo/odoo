@@ -254,8 +254,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         'type': fields.selection([('lead', 'Lead'), ('opportunity', 'Opportunity'), ], 'Type', help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'date_closed': fields.datetime('Closed', readonly=True),
-        'stage_id': fields.many2one('crm.case.stage', 'Stage', track_visibility='onchange',
-                        domain="['&', ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"),
+        'stage_id': fields.many2one('crm.case.stage', 'Stage', track_visibility='onchange',),
         'user_id': fields.many2one('res.users', 'Salesperson', select=True, track_visibility='onchange'),
         'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
@@ -322,6 +321,25 @@ class crm_lead(base_stage, format_address, osv.osv):
             return {'value': {}}
         return {'value': {'probability': stage.probability}}
 
+    def on_change_partner(self, cr, uid, ids, partner_id, context=None):
+        result = {}
+        values = {}
+        if partner_id:
+            partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+            values = {
+                'partner_name' : partner.name,
+                'street' : partner.street,
+                'street2' : partner.street2,
+                'city' : partner.city,
+                'state_id' : partner.state_id and partner.state_id.id or False,
+                'country_id' : partner.country_id and partner.country_id.id or False,
+                'email_from' : partner.email,
+                'phone' : partner.phone,
+                'mobile' : partner.mobile,
+                'fax' : partner.fax,
+            }
+        return {'value' : values}
+
     def on_change_user(self, cr, uid, ids, user_id, context=None):
         """ When changing the user, also set a section_id or restrict section id
             to the ones user_id is member of. """
@@ -335,12 +353,12 @@ class crm_lead(base_stage, format_address, osv.osv):
     def _check(self, cr, uid, ids=False, context=None):
         """ Override of the base.stage method.
             Function called by the scheduler to process cases for date actions
-            Only works on not done and cancelled cases
+            Only works on not won and lost cases.
         """
         cr.execute('select * from crm_case \
                 where (date_action_last<%s or date_action_last is null) \
                 and (date_action_next<=%s or date_action_next is null) \
-                and state not in (\'cancel\',\'done\')',
+                and probability not in (0,100)',
                 (time.strftime("%Y-%m-%d %H:%M:%S"),
                     time.strftime('%Y-%m-%d %H:%M:%S')))
 
@@ -603,7 +621,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         sequenced_opps = []
         for opportunity in opportunities:
             sequence = -1
-            if opportunity.stage_id:
+            if opportunity.stage_id and (opportunity.probability == 0 and opportunity.stage_id and opportunity.stage_id.sequence != 1):
                 sequence = opportunity.stage_id.sequence
             sequenced_opps.append(((int(sequence != -1 and opportunity.type == 'opportunity'), sequence, -opportunity.id), opportunity))
 
@@ -888,11 +906,14 @@ class crm_lead(base_stage, format_address, osv.osv):
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
+        stage_pool=self.pool.get('crm.case.stage')
         if vals.get('stage_id') and not vals.get('probability'):
             # change probability of lead(s) if required by stage
-            stage = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
+            stage = stage_pool.browse(cr, uid, vals['stage_id'], context=context)
             if stage.on_change:
                 vals['probability'] = stage.probability
+            if vals.get('probability') == 100:
+                vals['stage_id'] = stage_pool.search(cr, uid, [('probability','=',100.0)],order='sequence')[0]
         return super(crm_lead, self).write(cr, uid, ids, vals, context=context)
 
     def new_mail_send(self, cr, uid, ids, context=None):

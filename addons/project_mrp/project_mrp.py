@@ -66,11 +66,11 @@ class sale_order(osv.osv):
             return {}
         res_sale = {}
         res = super(sale_order, self)._picked_rate(cr, uid, ids, name, arg, context=context)
-        cr.execute('''select sol.order_id as sale_id, t.state as task_state ,
+        cr.execute('''select sol.order_id as sale_id,
                     t.id as task_id, sum(sol.product_uom_qty) as total
                     from project_task as t
                     left join sale_order_line as sol on sol.id = t.sale_line_id
-                    where sol.order_id in %s group by sol.order_id,t.state,t.id ''',(tuple(ids),))
+                    where sol.order_id in %s group by sol.order_id,t.id ''',(tuple(ids),))
         sale_task_data = cr.dictfetchall()
 
         if not sale_task_data:

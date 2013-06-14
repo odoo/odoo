@@ -60,7 +60,9 @@ You can define the different phases of interviews and easily rate the applicant 
         'hr_recruitment_data.xml',
     ],
     'demo': ['hr_recruitment_demo.xml'],
-    'test': ['test/recruitment_process.yml'],
+    'test': [
+#    'test/recruitment_process.yml' # TODO : Need To Clean
+    ],
     'installable': True,
     'auto_install': False,
     'application': True,
