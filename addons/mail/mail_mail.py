@@ -90,6 +90,7 @@ class mail_mail(osv.Model):
         if values.get('reply_to'):
             return values.get('reply_to')
         format_name = True  # whether to use a 'Followers of Pigs <pigs@openerp.com' format
+        email_reply_to = None
 
         ir_config_parameter = self.pool.get("ir.config_parameter")
         catchall_domain = ir_config_parameter.get_param(cr, uid, "mail.catchall.domain", context=context)
