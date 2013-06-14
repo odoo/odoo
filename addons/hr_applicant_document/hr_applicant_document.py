@@ -26,8 +26,7 @@ from datetime import datetime
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
-class applicant_document(osv.osv):
-    _name = 'hr.applicant'
+class hr_applicant(osv.osv):
     _inherit = 'hr.applicant'
 
     def _get_index_content(self, cr, uid, ids, fields, args, context=None):

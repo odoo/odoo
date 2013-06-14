@@ -21,20 +21,17 @@
 
 
 {
-    'name': 'Applicant Resumes and Letters',
+    'name': 'Applicant Resumes and Latters',
     'version': '1.0',
     'category': 'Human Resources',
     'sequence': 25,
-    'summary': 'Applicant Resumes and Letters',
+    'summary': 'Search applicant by resume index content.',
     'description': """
-Manage Applicant Resumes and letters 
-====================================
-This application allows you to keep resumes and letters with applicants.
-
+    This module allows you to search applicant by resume index content.
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'images': ['images/hr_recruitment_analysis.jpeg','images/hr_recruitment_applicants.jpeg'],
+    'images': [],
     'depends': ['hr_recruitment','document'],
     'data': ['hr_applicant_document_view.xml'],
     'demo': [],
