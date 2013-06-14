@@ -89,6 +89,7 @@ class TestRunnerController(http.Controller):
     _cp_path = '/web/tests'
 
     @http.httprequest
+    @http.nodb
     def index(self, req, mod=None, **kwargs):
         ms = module.get_modules()
         manifests = dict(
