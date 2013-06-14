@@ -615,6 +615,7 @@ Relational Types
   	  reference. :guilabel:`relation` is the table to look up that
   	  reference in.
 
+.. _fields-functional:
 
 Functional Fields
 +++++++++++++++++

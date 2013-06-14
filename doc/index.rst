@@ -36,9 +36,10 @@ OpenERP Server API
 .. toctree::
    :maxdepth: 1
 
-   orm-methods.rst
-   api_models.rst
-   routing.rst
+   new_api
+   orm-methods
+   api_models
+   routing
 
 Changelog
 '''''''''
