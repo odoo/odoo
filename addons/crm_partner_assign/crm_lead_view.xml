@@ -25,10 +25,10 @@
                                         </h3>
                                     </div>
                                     <button string="Automatic Assignation" name="action_assign_partner" type="object" colspan="1"
-                                        class="oe_inline"  attrs="{'invisible':[('partner_assigned_id','!=', False)]}"/>
+                                        class="oe_inline"/>
                                     <field name="partner_assigned_id" class="oe_inline" on_change="onchange_assign_id(partner_assigned_id)" domain="[('grade_id','&lt;&gt;',False)]"/>
-                                    <div colspan="2">
-                                        <button string="Forward"
+                                    <div>
+                                        <button string="Send Email"
                                             attrs="{'invisible':[('partner_assigned_id','=',False)]}"
                                             name="%(crm_lead_forward_to_partner_act)d"
                                             type="action"
@@ -94,7 +94,7 @@
                                         class="oe_inline" />
                                     <field name="partner_assigned_id" class="oe_inline" on_change="onchange_assign_id(partner_assigned_id)" domain="[('grade_id','&lt;&gt;',False)]"/>
                                     <div>
-                                        <button string="Forward"
+                                        <button string="Send Email"
                                             attrs="{'invisible':[('partner_assigned_id','=',False)]}"
                                             name="%(crm_lead_forward_to_partner_act)d"
                                             type="action"
