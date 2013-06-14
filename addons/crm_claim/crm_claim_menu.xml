@@ -15,7 +15,11 @@
             <field name="view_id" ref="crm_case_claims_tree_view"/>
             <field name="context">{"search_default_user_id":uid, "stage_type":'claim'}</field>
             <field name="search_view_id" ref="crm_claim.view_crm_case_claims_filter"/>
-            <field name="help">Record and track your customers' claims. Claims may be linked to a sales order or a lot. You can send emails with attachments and keep the full history for a claim (emails sent, intervention type and so on). Claims may automatically be linked to an email address using the mail gateway module.</field>
+            <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Record and track your customers' claims. Claims may be linked to a sales order or a lot.You can send emails with attachments and keep the full history for a claim (emails sent, intervention type and so on).Claims may automatically be linked to an email address using the mail gateway module.
+            </p>
+            </field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_crm_tag_tree_claim0">
