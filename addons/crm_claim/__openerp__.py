@@ -42,6 +42,7 @@ automatically new claims based on incoming emails.
         'security/ir.model.access.csv',
         'report/crm_claim_report_view.xml',
         'crm_claim_data.xml',
+        'res_partner_view.xml',
     ],
     'demo': ['crm_claim_demo.xml'],
     'test': [
@@ -50,7 +51,11 @@ automatically new claims based on incoming emails.
     ],
     'installable': True,
     'auto_install': False,
-    'images': ['images/claim_categories.jpeg','images/claim_stages.jpeg','images/claims.jpeg'],
+    'images': [
+        'images/claim_categories.jpeg',
+        'images/claim_stages.jpeg',
+        'images/claims.jpeg'
+    ],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
