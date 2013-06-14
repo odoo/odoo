@@ -150,9 +150,9 @@ class sale_order(osv.osv):
         for line in self.pool.get('sale.order.line').browse(cr, uid, ids, context=context):
             result[line.order_id.id] = True
         return result.keys()
-    
+
     def _get_default_company(self, cr, uid, context=None):
-        company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        company_id = self.pool.get('res.users')._get_company(cr, uid, uid, context=context)
         if not company_id:
             raise osv.except_osv(_('Error!'), _('There is no default company for the current user!'))
         return company_id
@@ -219,7 +219,7 @@ class sale_order(osv.osv):
         'invoice_quantity': fields.selection([('order', 'Ordered Quantities')], 'Invoice on', help="The sales order will automatically create the invoice proposition (draft invoice).", required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
-        'company_id': fields.many2one('res.company','Company')
+        'company_id': fields.many2one('res.company', 'Company'),
     }
     _defaults = {
         'date_order': fields.date.context_today,

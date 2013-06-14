@@ -63,12 +63,12 @@ class sale_order(osv.osv):
                 vals.update({'invoice_quantity': 'order'})
             if vals['order_policy'] == 'picking':
                 vals.update({'invoice_quantity': 'procurement'})
-        order =  super(sale_order, self).create(cr, uid, vals, context=context)
+        order = super(sale_order, self).create(cr, uid, vals, context=context)
         return order
-    
+
     def _get_default_warehouse(self, cr, uid, context=None):
-        company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-        warehouse_ids = self.pool.get('stock.warehouse').search(cr, uid, [('company_id','=',company_id)], context=context)
+        company_id = self.pool.get('res.users')._get_company(cr, uid, uid, context=context)
+        warehouse_ids = self.pool.get('stock.warehouse').search(cr, uid, [('company_id', '=', company_id)], context=context)
         if not warehouse_ids:
             raise osv.except_osv(_('Error!'), _('There is no warehouse defined for current company.'))
         return warehouse_ids[0]
@@ -140,7 +140,7 @@ class sale_order(osv.osv):
         'picking_ids': fields.one2many('stock.picking.out', 'sale_id', 'Related Picking', readonly=True, help="This is a list of delivery orders that has been generated for this sales order."),
         'shipped': fields.boolean('Delivered', readonly=True, help="It indicates that the sales order has been delivered. This field is updated only after the scheduler(s) have been launched."),
         'picked_rate': fields.function(_picked_rate, string='Picked', type='float'),
-        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse',required=True),
+        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
         'invoice_quantity': fields.selection([('order', 'Ordered Quantities'), ('procurement', 'Shipped Quantities')], 'Invoice on', 
                                              help="The sales order will automatically create the invoice proposition (draft invoice).\
                                               You have to choose  if you want your invoice based on ordered ", required=True, readonly=True, states={'draft': [('readonly', False)]}),
@@ -163,12 +163,12 @@ class sale_order(osv.osv):
                 raise osv.except_osv(_('Invalid Action!'), _('In order to delete a confirmed sales order, you must cancel it.\nTo do so, you must first cancel related picking for delivery orders.'))
 
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
-    
+
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context=None):
         val = {}
         if warehouse_id:
             warehouse = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id, context=context)
-            if warehouse.company_id.id:
+            if warehouse.company_id:
                 val['company_id'] = warehouse.company_id.id
         return {'value': val}
 
