@@ -29,6 +29,7 @@ import werkzeug.exceptions
 import werkzeug.utils
 import werkzeug.wrappers
 import werkzeug.wsgi
+import werkzeug.routing as routing
 import urllib2
 
 import openerp
@@ -482,7 +483,6 @@ request = _request_stack()
 #----------------------------------------------------------
 addons_module = {}
 addons_manifest = {}
-controllers_class = []
 controllers_class_path = {}
 controllers_object = {}
 controllers_object_path = {}
@@ -505,9 +505,8 @@ class ControllerType(type):
 
         # store the controller in the controllers list
         name_class = ("%s.%s" % (cls.__module__, cls.__name__), cls)
-        controllers_class.append(name_class)
         path = attrs.get('_cp_path')
-        if path not in controllers_class_path:
+        if path and path not in controllers_class_path:
             controllers_class_path[path] = name_class
 
 class Controller(object):
@@ -655,6 +654,7 @@ class Root(object):
     def __init__(self):
         self.addons = {}
         self.statics = {}
+        self.routing_map = None
 
         self.load_addons()
 
@@ -727,12 +727,11 @@ class Root(object):
                         self.statics['/%s/static' % module] = path_static
 
         for k, v in controllers_class_path.items():
-            if k not in controllers_object_path and hasattr(v[1], '_cp_path'):
-                o = v[1]()
-                controllers_object[v[0]] = o
-                controllers_object_path[k] = o
-                if hasattr(o, '_cp_path'):
-                    controllers_path[o._cp_path] = o
+            o = v[1]()
+            controllers_object[v[0]] = o
+            controllers_object_path[k] = o
+            if hasattr(o, '_cp_path'):
+                controllers_path[o._cp_path] = o
 
         app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, self.statics)
         self.dispatch = DisableCacheMiddleware(app)
