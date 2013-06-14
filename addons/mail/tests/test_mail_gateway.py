@@ -20,7 +20,7 @@
 ##############################################################################
 
 from openerp.addons.mail.tests.test_mail_base import TestMailBase
-from openerp.tools import mute_logger
+from openerp.tools import mute_logger, email_split
 
 MAIL_TEMPLATE = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
@@ -274,7 +274,7 @@ class TestMailgateway(TestMailBase):
         mail_id = self.mail_mail.create(cr, uid, {'mail_message_id': msg_id, 'state': 'cancel'})
         mail = self.mail_mail.browse(cr, uid, mail_id)
         # Test: mail_mail content
-        self.assertEqual(mail.reply_to, msg.email_from,
+        self.assertEqual(email_split(mail.reply_to), email_split(msg.email_from),
                         'mail_mail: reply_to should be equal to mail_message.email_from when having no document or default alias')
 
         # Data: set catchall domain
