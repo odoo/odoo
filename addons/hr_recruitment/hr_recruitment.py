@@ -236,7 +236,7 @@ class hr_applicant(base_stage, osv.Model):
         'color': fields.integer('Color Index'),
         'emp_id': fields.many2one('hr.employee', 'employee'),
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
-        'previous_stage': fields.char('Previous Stage', size=32),
+        'previous_stage_id': fields.many2one ('hr.recruitment.stage', 'Previous Stage'),
     }
 
     _defaults = {
@@ -256,7 +256,7 @@ class hr_applicant(base_stage, osv.Model):
     def write(self, cr, uid, ids, vals, context=None):
         for data in self.browse(cr, uid, ids, context=context):
             if vals.get('stage_id'):
-                vals['previous_stage'] = data.stage_id.name
+                vals['previous_stage_id'] = data.stage_id.id
         return super(hr_applicant, self).write(cr, uid, ids, vals, context=context)
     
     def onchange_job(self, cr, uid, ids, job, context=None):
