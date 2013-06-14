@@ -22,6 +22,7 @@
 from openerp.osv import fields, osv
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 import time
+from openerp.tools.translate import _
 
 class stock_partial_move_line(osv.osv_memory):
     _inherit = "stock.partial.picking.line"
@@ -67,6 +68,8 @@ class stock_partial_move(osv.osv_memory):
         }
         moves_ids = []
         for move in partial.move_ids:
+            if not move.move_id:
+                raise osv.except_osv(_('Warning !'), _("You have manually created product lines, please delete them to proceed"))
             move_id = move.move_id.id
             partial_data['move%s' % (move_id)] = {
                 'product_id': move.product_id.id,
