@@ -120,3 +120,19 @@ get everything right.
             "compute foo here"
 
 .. todo:: doc
+
+.. todo:: incorrect dependency spec?
+
+.. todo:: dynamic dependencies?
+
+    ::
+
+        @api.depends(???)
+        def foo(self)
+            self.a = self[self.b]
+
+.. todo:: recursive onchange
+
+    Country & state. Change country -> remove state; set state -> set country
+
+.. todo:: onchange list affected?
