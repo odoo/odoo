@@ -267,6 +267,7 @@ openerp.mail = function (session) {
 
             //formating and add some fields for render
             this.date = this.date ? session.web.str_to_datetime(this.date) : false;
+            this.display_date = this.date.toString('ddd MMM dd yyyy HH:mm');
             if (this.date && new Date().getTime()-this.date.getTime() < 7*24*60*60*1000) {
                 this.timerelative = $.timeago(this.date);
             }
@@ -986,8 +987,8 @@ openerp.mail = function (session) {
         expender: function () {
             this.$('.oe_msg_body:first').expander({
                 slicePoint: this.options.truncate_limit,
-                expandText: 'read more',
-                userCollapseText: 'read less',
+                expandText: _t('read more'),
+                userCollapseText: _t('read less'),
                 detailClass: 'oe_msg_tail',
                 moreClass: 'oe_mail_expand',
                 lessClass: 'oe_mail_reduce',
