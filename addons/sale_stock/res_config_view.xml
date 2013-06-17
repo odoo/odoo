@@ -59,12 +59,6 @@
                              <label for="group_mrp_properties"/>
                          </div>
                      </div>
-                     <xpath expr="//div[@name='module_sale_margin']" position="before">
-                         <div>
-                             <field name="group_multiple_shops" class="oe_inline"/>
-                             <label for="group_multiple_shops"/>
-                         </div>
-                     </xpath>
                      <field name="group_invoice_so_lines" position="replace">
                          <field name="group_invoice_so_lines" on_change="onchange_invoice_methods(group_invoice_so_lines, group_invoice_deli_orders)" class="oe_inline"/>
                      </field>
