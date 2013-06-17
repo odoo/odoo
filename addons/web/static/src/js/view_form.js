@@ -213,9 +213,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }
         });
         //bounce effect on red button when click on statusbar.
-        this.$el.on('click', '.oe_form_field_status:not(.oe_form_status_clickable)', function (e) {
-            if(self.get("actual_mode") == "view") {
-                var $button = self.$el.find(".oe_highlight:not(.oe_form_invisible)").css({'float':'left','margin-left':'3px','margin-right':'2px','white-space':'nowrap'});
+        this.$el.find(".oe_form_field_status:not(.oe_form_status_clickable)").on('click', function (e) {
+            if((self.get("actual_mode") == "view")) {
+                var $button = self.$el.find(".oe_highlight:not(.oe_form_invisible)").css({'float':'left','clear':'none'});
                 $button.openerpBounce();
                 e.stopPropagation();
             }
@@ -4769,13 +4769,13 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
             this.dataset.index = null;
         }
         var options = _.clone(self.options.form_view_options) || {};
+        if (this.row_id !== null) {
+            options.initial_mode = this.options.readonly ? "view" : "edit";
+        }
         _.extend(options, {
             $buttons: this.$buttonpane,
         });
         this.view_form = new instance.web.FormView(this, this.dataset, this.options.view_id || false, options);
-        if (this.row_id !== null) {
-            options.initial_mode = this.options.readonly ? "view" : this.view_form.options.initial_mode;
-        }
         if (this.options.alternative_form_view) {
             this.view_form.set_embedded_view(this.options.alternative_form_view);
         }
