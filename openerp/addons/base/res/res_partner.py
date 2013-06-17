@@ -608,9 +608,8 @@ class res_partner(osv.osv, format_address):
                 query_args['limit'] = limit
             cr.execute('''SELECT partner.id FROM res_partner partner
                           LEFT JOIN res_partner company ON partner.parent_id = company.id
-                          WHERE partner.email ''' + operator +''' %(name)s
-                             OR partner.name || ' (' || COALESCE(company.name,'') || ')'
-                          ''' + operator + ' %(name)s ' + limit_str, query_args)
+                          WHERE partner.email ''' + operator +''' %(name)s OR
+                                partner.display_name ''' + operator + ' %(name)s ' + limit_str, query_args)
             ids = map(lambda x: x[0], cr.fetchall())
             ids = self.search(cr, uid, [('id', 'in', ids)] + args, limit=limit, context=context)
             if ids:

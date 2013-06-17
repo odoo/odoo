@@ -293,10 +293,10 @@
                                 </form>
                             </field>
                         </page>
-                        <page string="Internal Notes">
+                        <page name='internal_notes' string="Internal Notes">
                             <field name="comment" placeholder="Put an internal note..."/>
                         </page>
-                        <page string="Sales &amp; Purchases">
+                        <page name='sales_purchases' string="Sales &amp; Purchases">
                             <group>
                                 <group>
                                     <field name="user_id" 
@@ -316,9 +316,6 @@
                                     <field name="active"/>
                                 </group>
                             </group>
-                        </page>
-                        <!-- The History page becomes visible as soon as there is something to display inside -->
-                        <page string="History" name="page_history" invisible="True">
                         </page>
                     </notebook>
                 </sheet>
@@ -580,7 +577,14 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.category</field>
             <field name="view_type">form</field>
-            <field name="help">Manage the partner tags to better classify them for tracking and analysis purposes. A partner may have several tags and tags have a hierarchical structure: a partner with a tag has also the parent tags.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new partner tags.
+              </p><p>
+                Manage the partner tags to better classify them for tracking and analysis purposes.
+                A partner may have several tags and tags have a hierarchical structure: a partner with a tag has also the parent tags.
+              </p>
+            </field>
         </record>
 
         <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Partner Tags" sequence="4" parent="menu_config_address_book" groups="base.group_no_one"/>

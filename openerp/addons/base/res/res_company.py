@@ -317,7 +317,7 @@ class res_company(osv.osv):
     <frame id="first" x1="28.0" y1="28.0" width="%s" height="%s"/>
     <stylesheet>
        <!-- Set here the default font to use for all <para> tags -->
-       <parastyle name='Normal' fontName="DejaVu Sans"/>
+       <paraStyle name='Normal' fontName="DejaVu Sans"/>
     </stylesheet>
     <pageGraphics>
         <fill color="black"/>
