@@ -240,21 +240,42 @@ class mail_thread(osv.AbstractModel):
             fol_obj.create(cr, SUPERUSER_ID, {'res_model': self._name, 'res_id': id, 'partner_id': partner_id})
 
     def _search_followers(self, cr, uid, obj, name, args, context):
+        """Search function for message_follower_ids
+
+        Do not use with operator 'not in'. Use instead message_is_followers
+        """
         fol_obj = self.pool.get('mail.followers')
         res = []
         for field, operator, value in args:
             assert field == name
+            # TOFIX make it work with not in
+            assert operator != "not in", "Do not search message_follower_ids with 'not in'"
             fol_ids = fol_obj.search(cr, SUPERUSER_ID, [('res_model', '=', self._name), ('partner_id', operator, value)])
             res_ids = [fol.res_id for fol in fol_obj.browse(cr, SUPERUSER_ID, fol_ids)]
             res.append(('id', 'in', res_ids))
         return res
 
+    def _search_is_follower(self, cr, uid, obj, name, args, context):
+        """Search function for message_is_follower"""
+        fol_obj = self.pool.get('mail.followers')
+        res = []
+        for field, operator, value in args:
+            assert field == name
+            partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+            if (operator == '=' and value) or (operator == '!=' and not value):  # is a follower
+                res_ids = self.search(cr, uid, [('message_follower_ids', 'in', [partner_id])], context=context)
+            else:  # is not a follower or unknown domain
+                mail_ids = self.search(cr, uid, [('message_follower_ids', 'in', [partner_id])], context=context)
+                res_ids = self.search(cr, uid, [('id', 'not in', mail_ids)], context=context)
+            res.append(('id', 'in', res_ids))
+        return res
+
     _columns = {
-        'message_is_follower': fields.function(_get_followers,
-            type='boolean', string='Is a Follower', multi='_get_followers,'),
+        'message_is_follower': fields.function(_get_followers, type='boolean',
+            fnct_search=_search_is_follower, string='Is a Follower', multi='_get_followers,'),
         'message_follower_ids': fields.function(_get_followers, fnct_inv=_set_followers,
-                fnct_search=_search_followers, type='many2many',
-                obj='res.partner', string='Followers', multi='_get_followers'),
+            fnct_search=_search_followers, type='many2many',
+            obj='res.partner', string='Followers', multi='_get_followers'),
         'message_ids': fields.one2many('mail.message', 'res_id',
             domain=lambda self: [('model', '=', self._name)],
             auto_join=True,
@@ -559,7 +580,7 @@ class mail_thread(osv.AbstractModel):
         ret_dict = {}
         for model_name in self.pool.obj_list():
             model = self.pool[model_name]
-            if 'mail.thread' in getattr(model, '_inherit', []):
+            if hasattr(model, "message_process") and hasattr(model, "message_post"):
                 ret_dict[model_name] = model._description
         return ret_dict
 
@@ -794,6 +815,9 @@ class mail_thread(osv.AbstractModel):
             else:
                 assert thread_id == 0, "Posting a message without model should be with a null res_id, to create a private message."
                 model_pool = self.pool.get('mail.thread')
+            if not hasattr(model_pool, 'message_post'):
+                context['thread_model'] = model
+                model_pool = self.pool['mail.thread']
             new_msg_id = model_pool.message_post(cr, uid, [thread_id], context=context, subtype='mail.mt_comment', **msg)
 
             if partner_ids:
@@ -1128,7 +1152,7 @@ class mail_thread(osv.AbstractModel):
         model = False
         if thread_id:
             model = context.get('thread_model', self._name) if self._name == 'mail.thread' else self._name
-            if model != self._name:
+            if model != self._name and hasattr(self.pool[model], 'message_post'):
                 del context['thread_model']
                 return self.pool[model].message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)
 
@@ -1287,7 +1311,10 @@ class mail_thread(osv.AbstractModel):
 
     def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, context=None):
         """ Add partners to the records followers. """
-        user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+        mail_followers_obj = self.pool.get('mail.followers')
+        subtype_obj = self.pool.get('mail.message.subtype')
+
+        user_pid = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
         if set(partner_ids) == set([user_pid]):
             try:
                 self.check_access_rights(cr, uid, 'read')
@@ -1296,27 +1323,35 @@ class mail_thread(osv.AbstractModel):
         else:
             self.check_access_rights(cr, uid, 'write')
 
-        # subscribe partners
-        self.write(cr, SUPERUSER_ID, ids, {'message_follower_ids': [(4, pid) for pid in partner_ids]}, context=context)
+        for record in self.browse(cr, SUPERUSER_ID, ids, context=context):
+            existing_pids = set([f.id for f in record.message_follower_ids
+                                            if f.id in partner_ids])
+            new_pids = set(partner_ids) - existing_pids
 
-        # subtype specified: update the subscriptions
-        fol_obj = self.pool.get('mail.followers')
-        if subtype_ids is not None:
-            fol_ids = fol_obj.search(cr, SUPERUSER_ID, [('res_model', '=', self._name), ('res_id', 'in', ids), ('partner_id', 'in', partner_ids)], context=context)
-            fol_obj.write(cr, SUPERUSER_ID, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
-        # no subtypes: default ones for new subscription, do not update existing subscriptions
-        else:
-            # search new subscriptions: subtype_ids is False
-            fol_ids = fol_obj.search(cr, SUPERUSER_ID, [
-                            ('res_model', '=', self._name),
-                            ('res_id', 'in', ids),
-                            ('partner_id', 'in', partner_ids),
-                            ('subtype_ids', '=', False)
-                        ], context=context)
-            if fol_ids:
-                subtype_obj = self.pool.get('mail.message.subtype')
-                subtype_ids = subtype_obj.search(cr, uid, [('default', '=', True), '|', ('res_model', '=', self._name), ('res_model', '=', False)], context=context)
-                fol_obj.write(cr, SUPERUSER_ID, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
+            # subtype_ids specified: update already subscribed partners
+            if subtype_ids and existing_pids:
+                fol_ids = mail_followers_obj.search(cr, SUPERUSER_ID, [
+                                                        ('res_model', '=', self._name),
+                                                        ('res_id', '=', record.id),
+                                                        ('partner_id', 'in', list(existing_pids)),
+                                                    ], context=context)
+                mail_followers_obj.write(cr, SUPERUSER_ID, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
+            # subtype_ids not specified: do not update already subscribed partner, fetch default subtypes for new partners
+            else:
+                subtype_ids = subtype_obj.search(cr, uid, [
+                                                        ('default', '=', True),
+                                                        '|',
+                                                        ('res_model', '=', self._name),
+                                                        ('res_model', '=', False)
+                                                    ], context=context)
+            # subscribe new followers
+            for new_pid in new_pids:
+                mail_followers_obj.create(cr, SUPERUSER_ID, {
+                                                'res_model': self._name,
+                                                'res_id': record.id,
+                                                'partner_id': new_pid,
+                                                'subtype_ids': [(6, 0, subtype_ids)],
+                                            }, context=context)
 
         return True
 
@@ -1454,4 +1489,33 @@ class mail_thread(osv.AbstractModel):
         ''', (ids, self._name, partner_id))
         return True
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    #------------------------------------------------------
+    # Thread suggestion
+    #------------------------------------------------------
+
+    def get_suggested_thread(self, cr, uid, removed_suggested_threads=None, context=None):
+        """Return a list of suggested threads, sorted by the numbers of followers"""
+        if context is None:
+            context = {}
+
+        # TDE HACK: originally by MAT from portal/mail_mail.py but not working until the inheritance graph bug is not solved in trunk
+        # TDE FIXME: relocate in portal when it won't be necessary to reload the hr.employee model in an additional bridge module
+        if self.pool['res.groups']._all_columns.get('is_portal'):
+            user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
+            if any(group.is_portal for group in user.groups_id):
+                return []
+
+        threads = []
+        if removed_suggested_threads is None:
+            removed_suggested_threads = []
+
+        thread_ids = self.search(cr, uid, [('id', 'not in', removed_suggested_threads), ('message_is_follower', '=', False)], context=context)
+        for thread in self.browse(cr, uid, thread_ids, context=context):
+            data = {
+                'id': thread.id,
+                'popularity': len(thread.message_follower_ids),
+                'name': thread.name,
+                'image_small': thread.image_small
+            }
+            threads.append(data)
+        return sorted(threads, key=lambda x: (x['popularity'], x['id']), reverse=True)[:3]
