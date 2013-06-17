@@ -387,9 +387,9 @@ class project_issue(base_stage, osv.osv):
                 if stage['sequence'] == 1:
                     vals['date_open'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
                 # Change from not done to done: The issue has been closed -> set the closing date
-                for stage_type in issue.project_id.type_ids[-2:]:
-                    if stage['sequence'] == stage_type.sequence:
-                        vals['date_closed'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+                sequence = [stage.sequence for stage in issue.project_id.type_ids[-2:]]
+                if stage['sequence'] in sequence:
+                    vals['date_closed'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
 
         return super(project_issue, self).write(cr, uid, ids, vals, context)
 
@@ -577,9 +577,9 @@ class project(osv.Model):
         res = dict.fromkeys(ids, 0)
         issue_ids = self.pool.get('project.issue').search(cr, uid, [('project_id', 'in', ids)])
         for issue in self.pool.get('project.issue').browse(cr, uid, issue_ids, context):
-            for stage_type in issue.project_id.type_ids[-2:]:
-                if issue.stage_id.sequence == stage_type.sequence :
-                    res[issue.project_id.id] += 1
+            sequence = [stage.sequence for stage in issue.project_id.type_ids[-2:]]
+            if issue.stage_id.sequence not in sequence:
+                res[issue.project_id.id] += 1
         return res
 
     _columns = {
