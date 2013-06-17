@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-Today OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -21,12 +21,12 @@
 
 from openerp.osv import osv
 from openerp.osv import fields
-from openerp.tools.translate import _
-import time
+
 
 VoteValues = [('-1', 'Not Voted'), ('0', 'Very Bad'), ('25', 'Bad'), \
-              ('50', 'Normal'), ('75', 'Good'), ('100', 'Very Good') ]
+              ('50', 'Normal'), ('75', 'Good'), ('100', 'Very Good')]
 DefaultVoteValue = '50'
+
 
 class idea_category(osv.osv):
     """ Category of Idea """
@@ -42,20 +42,24 @@ class idea_category(osv.osv):
 
 
 class idea_idea(osv.osv):
-    """ Idea """
+    """ Model of an Idea """
     _name = 'idea.idea'
     _inherit = ['mail.thread']
     _columns = {
         'create_uid': fields.many2one('res.users', 'Creator', required=True, readonly=True),
-        'name': fields.char('Idea Summary', size=64, required=True, readonly=True, oldname='title', states={'draft': [('readonly', False)]}),
-        'description': fields.text('Description', help='Content of the idea', readonly=True, states={'draft': [('readonly', False)]}),
-        'category_ids': fields.many2many('idea.category', string='Tags', readonly=True, states={'draft': [('readonly', False)]}),
+        'name': fields.char('Idea Summary', size=64, required=True, readonly=True,
+            states={'draft': [('readonly', False)]},
+            oldname='title'),
+        'description': fields.text('Description', readonly=True,
+            states={'draft': [('readonly', False)]},
+            help='Content of the idea'),
+        'category_ids': fields.many2many('idea.category', string='Tags', readonly=True,
+            states={'draft': [('readonly', False)]}),
         'state': fields.selection([('draft', 'New'),
-            ('open', 'Accepted'),
-            ('cancel', 'Refused'),
-            ('close', 'Done')],
-            'Status', readonly=True, track_visibility='onchange',
-        )
+                                    ('open', 'Accepted'),
+                                    ('cancel', 'Refused'),
+                                    ('close', 'Done')],
+            'Status', readonly=True, track_visibility='onchange'),
     }
     _sql_constraints = [
         ('name', 'unique(name)', 'The name of the idea must be unique')
