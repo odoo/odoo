@@ -99,15 +99,18 @@ class on_change_test(models.Model):
 
 
     @api.depends('name')
+    @api.record
     def compute_name_size(self):
         self.name_size = len(self.name or '')
 
     @api.depends('name')
+    @api.record
     def compute_utf8_size(self):
         name = self.name or u''
         self.name_utf8_size = len(name.encode('utf-8'))
 
     @api.depends('name', 'name_size', 'name_utf8_size')
+    @api.record
     def compute_description(self):
         if self.name:
             self.description = "%s (%d:%d)" % (
@@ -115,5 +118,6 @@ class on_change_test(models.Model):
         else:
             self.description = False
 
+    @api.record
     def whatever(self):
         self.trick = "wheeeeeld.null()eld.null"
