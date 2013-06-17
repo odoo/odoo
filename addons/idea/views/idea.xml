@@ -1,9 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <!-- Top menu item -->
-        <menuitem name="Tools" id="base.menu_tools" sequence="120" groups="base.group_tool_user"/>
-
         <!-- Idea Categories Search View-->
         <record model="ir.ui.view" id="view_idea_category_search">
             <field name="name">idea.category.search</field>
@@ -49,16 +46,6 @@
             <field name="search_view_id" ref="view_idea_category_search"/>
         </record>
 
-        <menuitem name="Configuration" parent="base.menu_tools"
-                id="base.menu_lunch_survey_root" sequence="20"/>
-
-        <menuitem name="Ideas" parent="base.menu_lunch_survey_root"
-                id="menu_ideas" sequence="3"/>
-
-        <menuitem name="Categories" parent="menu_ideas"
-                id="menu_idea_category" action="action_idea_category"/>
-
-
         <!-- New Idea Form View -->
         <record model="ir.ui.view" id="view_idea_idea_form">
             <field name="name">idea.idea.form</field>
@@ -79,10 +66,6 @@
                         <label for="description"/><newline/>
                         <field name="description"/>
                     </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="message_ids" widget="mail_thread"/>
-                    </div>
                 </form>
             </field>
         </record>
@@ -128,8 +111,21 @@
             <field name="search_view_id" ref="view_idea_idea_search"/>
         </record>
 
+        <!-- MENUS
+                -->
+
+        <!-- Top menu item -->
+        <menuitem name="Tools"
+                id="base.menu_tools" sequence="120"/>
+
+        <!-- Main menu -->
+        <menuitem name="Ideas" parent="base.menu_tools"
+                id="menu_ideas" sequence="10"/>
+
         <menuitem name="Ideas" parent="menu_ideas"
-                id="menu_idea_idea" action="action_idea_idea" sequence="1"/>
+                id="menu_idea_idea" action="action_idea_idea" sequence="10"/>
+        <menuitem name="Categories" parent="menu_ideas"
+                id="menu_idea_category" action="action_idea_category" sequence="20"/>
 
     </data>
 </openerp>

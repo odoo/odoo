@@ -32,19 +32,25 @@ class idea_category(osv.osv):
     """ Category of Idea """
     _name = "idea.category"
     _description = "Idea Category"
+    _order = 'name asc'
+
     _columns = {
         'name': fields.char('Category Name', size=64, required=True),
     }
+
     _sql_constraints = [
         ('name', 'unique(name)', 'The name of the category must be unique')
     ]
-    _order = 'name asc'
 
 
 class idea_idea(osv.osv):
     """ Model of an Idea """
     _name = 'idea.idea'
-    _inherit = ['mail.thread']
+    _description = 'Propose and Share your Ideas'
+    _rec_name = 'name'
+    _order = 'name asc'
+    # _inherit = ['mail.thread']
+
     _columns = {
         'create_uid': fields.many2one('res.users', 'Creator', required=True, readonly=True),
         'name': fields.char('Idea Summary', size=64, required=True, readonly=True,
@@ -67,7 +73,6 @@ class idea_idea(osv.osv):
     _defaults = {
         'state': lambda *a: 'draft',
     }
-    _order = 'name asc'
 
     def idea_cancel(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'cancel'}, context=context)

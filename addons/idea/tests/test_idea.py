@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-Today OpenERP S.A. (<http://openerp.com>).
+#    OpenERP, Open Source Business Applications
+#    Copyright (c) 2013-TODAY OpenERP S.A. <http://openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,4 +19,21 @@
 #
 ##############################################################################
 
-import models
+from openerp.tests import common
+
+
+class TestIdeaBase(common.TransactionCase):
+
+    def setUp(self):
+        super(TestIdeaBase, self).setUp()
+        cr, uid = self.cr, self.uid
+
+        # Usefull models
+        self.idea_category = self.registry('idea.category')
+        self.idea_idea = self.registry('idea.idea')
+
+    def tearDown(self):
+        super(TestIdeaBase, self).tearDown()
+
+    def test_OO(self):
+        pass

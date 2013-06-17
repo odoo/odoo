@@ -22,29 +22,36 @@
 
 {
     'name': 'Ideas',
-    'version': '0.1',
+    'summary': 'Share and Vote for your Ideas',
+    'version': '1.0',
     'category': 'Tools',
     'description': """
-This module allows user to easily and efficiently participate in enterprise innovation.
-=======================================================================================
+Share your ideas and participate in enterprise innovation
+=========================================================
 
-It allows everybody to express ideas about different subjects.
-Then, other users can comment on these ideas and vote for particular ideas.
-Each idea has a score based on the different votes.
-The managers can obtain an easy view of best ideas from all the users.
+The Ideas module give users a way to express and discuss ideas, allowing everybody
+to participate in enterprise innovation. Every user can suggest, comment ideas.
+A vote mechanism is included. Each idea has a score based on the different
+votes. The managers can obtain an easy view of best ideas from all the users.
 Once installed, check the menu 'Ideas' in the 'Tools' main menu.""",
     'author': 'OpenERP SA',
-    'website': 'http://openerp.com',
-    'depends': ['mail'],
+    'website': 'http://www.openerp.com',
+    'depends': ['base', 'base_setup'],
     'data': [
-        'security/idea_security.xml',
+        'security/idea.xml',
         'security/ir.model.access.csv',
-        'idea_view.xml',
-        'idea_workflow.xml',
+        'views/idea.xml',
+        'data/idea_workflow.xml',
     ],
-    'demo': ['idea_data.xml'],
-    'test': [],
+    'demo': [
+        'demo/idea.xml'
+    ],
     'installable': True,
+    'application': True,
     'images': [],
+    'css': [],
+    'js': [],
+    'qweb': [],
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
