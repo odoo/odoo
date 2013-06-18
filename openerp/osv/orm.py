@@ -585,7 +585,7 @@ class BaseModel(object):
         cls._fields[name] = field
 
         # if stored, add a corresponding column in cls._columns
-        if field.store and name not in cls._columns:
+        if field.store and not field.interface:
             _logger.debug("Create column for field %s.%s", cls._name, name)
             cls._columns[name] = field.to_column()
 

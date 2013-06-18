@@ -121,3 +121,13 @@ class on_change_test(models.Model):
     @api.record
     def whatever(self):
         self.trick = "wheeeeeld.null()eld.null"
+
+class defaults(models.Model):
+    _name = 'test_new_api.defaults'
+
+    name = fields.Char(required=True, compute='name_default')
+    description = fields.Char()
+
+    @api.record
+    def name_default(self):
+        self.name = u'Bob the Builder'

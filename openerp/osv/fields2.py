@@ -344,9 +344,11 @@ class Many2one(Field):
     type = 'many2one'
     relational = True
     comodel = None                      # model of values
+    _attrs = Field._attrs + ('ondelete',)
 
-    def __init__(self, comodel, string=None, **kwargs):
-        super(Many2one, self).__init__(comodel=comodel, string=string, **kwargs)
+    def __init__(self, comodel, string=None, ondelete=None, **kwargs):
+        super(Many2one, self).__init__(
+            comodel=comodel, string=string, ondelete=ondelete, **kwargs)
 
     @lazy_property
     def inverse(self):

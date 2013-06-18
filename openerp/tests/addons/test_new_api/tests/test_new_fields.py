@@ -280,4 +280,6 @@ class TestMagicalFields(common.TransactionCase):
     def test_write_date(self):
         id = self.Model.create({'name': 'Booba'})
 
-        self.Model.browse(id).read(['write_date'])
+        self.assertEqual(
+            self.Model.browse(id).write_uid,
+            self.registry('res.users').browse(self.uid))
