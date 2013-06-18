@@ -147,21 +147,27 @@ class account_cash_statement(osv.osv):
         return result
 
     def onchange_journal_id(self, cr, uid, ids, journal_id, context=None):
-        result = {}
-        if journal_id:
-            result = super(account_cash_statement, self).onchange_journal_id(cr, uid, ids, journal_id)
-            statement_ids = self.search(cr, uid,
-                    [('journal_id', '=', journal_id),('state', '=', 'confirm')],
-                    order='create_date desc',
-                    limit=1,
-                    context=context
-            )
-            if statement_ids:
-                st = self.browse(cr, uid, statement_ids[0], context=context)
-                result.setdefault('value', {}).update({'last_closing_balance' : st.balance_end_real})
+        result = super(account_cash_statement, self).onchange_journal_id(cr, uid, ids, journal_id)
+
+        if not journal_id:
+            return result
+
+        statement_ids = self.search(cr, uid,
+                [('journal_id', '=', journal_id),('state', '=', 'confirm')],
+                order='create_date desc',
+                limit=1,
+                context=context
+        )
+        
         opening_details_ids = self._get_cash_open_box_lines(cr, uid, journal_id, context)
         if opening_details_ids:
             result['value']['opening_details_ids'] = opening_details_ids
+
+        if statement_ids:
+            return result
+
+        st = self.browse(cr, uid, statement_ids[0], context=context)
+        result.setdefault('value', {}).update({'last_closing_balance' : st.balance_end_real})
         return result
 
     _columns = {
