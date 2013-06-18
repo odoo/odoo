@@ -106,16 +106,8 @@
         <!-- MENUS
                 -->
 
-        <!-- Top menu item -->
-        <menuitem name="Tools"
-                id="base.menu_tools" sequence="120"/>
-
-        <!-- Main menu -->
-        <menuitem name="Ideas" parent="base.menu_tools"
-                id="menu_ideas" sequence="10"/>
-
-        <menuitem name="Ideas" parent="menu_ideas"
-                id="menu_idea_idea" action="action_idea_idea" sequence="10"/>
+        <menuitem name="Ideas" parent="mail.mail_my_stuff"
+                id="menu_idea_idea" action="action_idea_idea" sequence="30"/>
 
     </data>
 </openerp>

@@ -47,6 +47,7 @@ class IdeaIdea(osv.Model):
     """ Model of an Idea """
     _name = 'idea.idea'
     _description = 'Propose and Share your Ideas'
+
     _rec_name = 'name'
     _order = 'name asc'
 
