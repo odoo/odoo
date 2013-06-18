@@ -23,11 +23,6 @@ from openerp.osv import osv
 from openerp.osv import fields
 
 
-VoteValues = [('-1', 'Not Voted'), ('0', 'Very Bad'), ('25', 'Bad'), \
-              ('50', 'Normal'), ('75', 'Good'), ('100', 'Very Good')]
-DefaultVoteValue = '50'
-
-
 class IdeaCategory(osv.Model):
     """ Category of Idea """
     _name = "idea.category"
@@ -58,15 +53,14 @@ class IdeaIdea(osv.Model):
                     ('cancel', 'Refused')]
 
     _columns = {
-        'user_id': fields.many2one('res.users', 'Responsible', required=True, readonly=True),
-        'name': fields.char('Idea Summary', required=True, readonly=True,
+        'user_id': fields.many2one('res.users', 'Responsible', required=True),
+        'name': fields.char('Summary', required=True, readonly=True,
             states={'draft': [('readonly', False)]},
             oldname='title'),
-        'description': fields.text('Description', readonly=True,
+        'description': fields.text('Description', required=True,
             states={'draft': [('readonly', False)]},
             help='Content of the idea'),
-        'category_ids': fields.many2many('idea.category', string='Tags', readonly=True,
-            states={'draft': [('readonly', False)]}),
+        'category_ids': fields.many2many('idea.category', string='Tags'),
         'state': fields.selection(_get_state_list, string='Status'),
     }
 
