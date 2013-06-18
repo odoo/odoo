@@ -283,7 +283,7 @@ class purchase_requisition(osv.osv):
             if po_line.state == 'confirmed' and po_line.order_id.state in ['draft', 'sent', 'bid', 'cancel']:
                 partner = po_line.partner_id.id
                 if id_per_supplier.get(partner):
-                    id_per_supplier[partner].append(po_line.id)
+                    id_per_supplier[partner].append(po_line)
                 else:
                     id_per_supplier[partner] = [po_line]
 
