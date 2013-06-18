@@ -52,13 +52,13 @@ class IdeaIdea(osv.Model):
 
     def _get_state_list(self, cr, uid, context=None):
         return [('draft', 'New'),
-                    ('open', 'Accepted'),
-                    ('cancel', 'Refused'),
-                    ('close', 'Done')]
+                    ('open', 'In discussion'),
+                    ('close', 'Accepted'),
+                    ('cancel', 'Refused')]
 
     _columns = {
-        'create_uid': fields.many2one('res.users', 'Creator', required=True, readonly=True),
-        'name': fields.char('Idea Summary', size=64, required=True, readonly=True,
+        'user_id': fields.many2one('res.users', 'Responsible', required=True, readonly=True),
+        'name': fields.char('Idea Summary', required=True, readonly=True,
             states={'draft': [('readonly', False)]},
             oldname='title'),
         'description': fields.text('Description', readonly=True,
@@ -66,8 +66,7 @@ class IdeaIdea(osv.Model):
             help='Content of the idea'),
         'category_ids': fields.many2many('idea.category', string='Tags', readonly=True,
             states={'draft': [('readonly', False)]}),
-        'state': fields.selection(_get_state_list, string='Status',
-            readonly=True, track_visibility='onchange'),
+        'state': fields.selection(_get_state_list, string='Status'),
     }
 
     _sql_constraints = [
@@ -75,6 +74,7 @@ class IdeaIdea(osv.Model):
     ]
 
     _defaults = {
+        'user_id': lambda self, cr, uid, ctx=None: uid,
         'state': lambda self, cr, uid, ctx=None: self._get_state_list(cr, uid, ctx)[0][0],
     }
 

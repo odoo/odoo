@@ -22,7 +22,7 @@
 
 {
     'name': 'Ideas',
-    'summary': 'Share and Vote for your Ideas',
+    'summary': 'Share and Discuss your Ideas',
     'version': '1.0',
     'category': 'Tools',
     'description': """
@@ -31,8 +31,7 @@ Share your ideas and participate in enterprise innovation
 
 The Ideas module give users a way to express and discuss ideas, allowing everybody
 to participate in enterprise innovation. Every user can suggest, comment ideas.
-A vote mechanism is included. Each idea has a score based on the different
-votes. The managers can obtain an easy view of best ideas from all the users.
+The managers can obtain an easy view of best ideas from all the users.
 Once installed, check the menu 'Ideas' in the 'Tools' main menu.""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
@@ -45,7 +44,7 @@ Once installed, check the menu 'Ideas' in the 'Tools' main menu.""",
         'data/idea_workflow.xml',
     ],
     'demo': [
-        'demo/idea.xml'
+        'demo/idea.xml',
     ],
     'installable': True,
     'application': True,
