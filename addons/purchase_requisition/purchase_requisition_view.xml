@@ -30,7 +30,7 @@
         <field name="arch" type="xml">
             <form string="Request for Tender" version="7.0">
             <header>              
-                <button name="sent_suppliers" states="draft" string="Send to Suppliers" class="oe_highlight"/>
+                <button name="sent_suppliers" states="draft" string="Confirm Tender" class="oe_highlight"/>
                 <button name="open_bid" states="in_progress" string="Choose supplier(s)" class="oe_highlight"/>
                 <button name="tender_reset" states="cancel" string="Reset to Draft" type="object" />
                 <button name="open_product_line" states="open" string="Choose product lines" type="object" class="oe_highlight" groups="purchase.group_advance_bidding"/>
@@ -47,27 +47,27 @@
                     <label for="name" class="oe_inline"/>
                 </div>
                 <h1>
-                    <field name="name" class="oe_inline"/>
+                    <field name="name" class="oe_inline" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                 </h1>
                 <group>
                     <group>
-                        <field name="user_id"/>
-                        <field name="exclusive"/>
-                        <field name="account_analytic_id" colspan="2" groups="purchase.group_analytic_accounting"/>
-                        <field name="multiple_rfq_per_supplier"/>
+                        <field name="user_id" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                        <field name="exclusive" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                        <field name="account_analytic_id" colspan="2" groups="purchase.group_analytic_accounting" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                        <field name="multiple_rfq_per_supplier" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                     </group>
                     <group>
-                        <field name="date_start"/>
-                        <field name="date_end"/>
-                        <field name="schedule_date"/>
-                        <field name="origin" placeholder="e.g. OP0025"/>
-                        <field name="warehouse_id" widget="selection" groups="stock.group_locations"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        <field name="date_start" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                        <field name="date_end" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                        <field name="schedule_date" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                        <field name="origin" placeholder="e.g. OP0025" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                        <field name="warehouse_id" widget="selection" groups="stock.group_locations" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                        <field name="company_id" groups="base.group_multi_company" widget="selection" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                     </group>
                 </group>
                 <notebook>
                     <page string="Products">
-                        <field name="line_ids">
+                        <field name="line_ids" attrs="{'readonly': [('state','not in',('draft'))]}">
                             <tree string="Products" editable="bottom">
                                 <field name="product_id" on_change="onchange_product_id(product_id,product_uom_id,parent.account_analytic_id,account_analytic_id,parent.schedule_date,schedule_date)"/>
                                 <field name="product_qty"/>
@@ -90,7 +90,7 @@
                         <div class="oe_right oe_button_box" style="margin-top: 10px">
                             <button name="%(action_purchase_requisition_partner)d" type="action"
                                 string="Request a Quotation" icon="gtk-execute"
-                                attrs="{'invisible': ['|', ('line_ids','=',[]),('state', 'in', ('open','done'))]}"/>
+                                attrs="{'invisible': ['|', ('line_ids','=',[]),('state', 'in', ('draft' ,'open','done'))]}"/>
                         </div>
                         <separator string="Requests for Quotation"/>
                         <field name="purchase_ids" readonly="1">
@@ -110,7 +110,7 @@
                             </tree>
                         </field>
                         <separator string="Terms and Conditions"/>
-                        <field name="description"/>
+                        <field name="description" attrs="{'readonly': [('state','not in',('draft'))]}"/>
                     </page>
                 </notebook>
             </sheet>

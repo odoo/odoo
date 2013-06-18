@@ -58,7 +58,7 @@ class purchase_requisition(osv.osv):
         'line_ids' : fields.one2many('purchase.requisition.line','requisition_id','Products to Purchase',states={'done': [('readonly', True)]}),
         'move_dest_id': fields.many2one('stock.move', 'Reservation Destination', ondelete='set null'),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),        
-        'state': fields.selection([('draft','Draft Tender'),('in_progress','Sent to Suppliers'),('open','Choosing Lines'),('done','PO Created'),('cancel','Cancelled')],
+        'state': fields.selection([('draft','Draft Tender'),('in_progress','Tender Confirmed'),('open','Choosing Lines'),('done','PO Created'),('cancel','Cancelled')],
             'Status', track_visibility='onchange', required=True),
         'multiple_rfq_per_supplier': fields.boolean('Multiple RFQ per supplier'),
         'account_analytic_id':fields.many2one('account.analytic.account', 'Analytic Account'),
@@ -93,11 +93,6 @@ class purchase_requisition(osv.osv):
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def tender_in_progress(self, cr, uid, ids, context=None):
-        #check if all quotations are not in a draft state before going to that state
-        for purchase in self.browse(cr, uid, ids, context=context):
-            for purchase_id in purchase.purchase_ids:
-                if purchase_id.state == 'draft':
-                    raise osv.except_osv(_('Warning!'), _('You still have some quotation(s) in draft state.'))
         return self.write(cr, uid, ids, {'state':'in_progress'} ,context=context)
 
     def tender_open(self, cr, uid, ids, context=None):
