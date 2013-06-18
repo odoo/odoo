@@ -196,6 +196,14 @@ class mail_message(osv.Model):
     def _needaction_domain_get(self, cr, uid, context=None):
         return [('to_read', '=', True)]
 
+    def _get_default_from(self, cr, uid, context=None):
+        this = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
+        if this.alias_domain:
+            return '%s <%s@%s>' % (this.name, this.alias_name, this.alias_domain)
+        elif this.email:
+            return '%s <%s>' % (this.name, this.email)
+        raise osv.except_osv(_('Invalid Action!'), _("Unable to send email, please configure the sender's email address or alias."))
+
     def _get_default_author(self, cr, uid, context=None):
         return self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
 
@@ -204,7 +212,7 @@ class mail_message(osv.Model):
         'date': lambda *a: fields.datetime.now(),
         'author_id': lambda self, cr, uid, ctx=None: self._get_default_author(cr, uid, ctx),
         'body': '',
-        'email_from': lambda self, cr, uid, ctx=None: self.pool.get('mail.mail')._get_default_from(cr, uid, ctx),
+        'email_from': lambda self, cr, uid, ctx=None: self._get_default_from(cr, uid, ctx),
     }
 
     #------------------------------------------------------
@@ -329,8 +337,10 @@ class mail_message(osv.Model):
         for key, message in message_tree.iteritems():
             if message.author_id:
                 partner_ids |= set([message.author_id.id])
-            if message.notified_partner_ids:
+            if message.subtype_id and message.notified_partner_ids:  # take notified people of message with a subtype
                 partner_ids |= set([partner.id for partner in message.notified_partner_ids])
+            elif not message.subtype_id and message.partner_ids:  # take specified people of message without a subtype (log)
+                partner_ids |= set([partner.id for partner in message.partner_ids])
             if message.attachment_ids:
                 attachment_ids |= set([attachment.id for attachment in message.attachment_ids])
         # Read partners as SUPERUSER -> display the names like classic m2o even if no access
@@ -350,9 +360,12 @@ class mail_message(osv.Model):
             else:
                 author = (0, message.email_from)
             partner_ids = []
-            for partner in message.notified_partner_ids:
-                if partner.id in partner_tree:
-                    partner_ids.append(partner_tree[partner.id])
+            if message.subtype_id:
+                partner_ids = [partner_tree[partner.id] for partner in message.notified_partner_ids
+                                if partner.id in partner_tree]
+            else:
+                partner_ids = [partner_tree[partner.id] for partner in message.partner_ids
+                                if partner.id in partner_tree]
             attachment_ids = []
             for attachment in message.attachment_ids:
                 if attachment.id in attachments_tree:
@@ -766,7 +779,9 @@ class mail_message(osv.Model):
         elif not values.get('message_id'):
             values['message_id'] = tools.generate_tracking_message_id('private')
         newid = super(mail_message, self).create(cr, uid, values, context)
-        self._notify(cr, uid, newid, context=context)
+        self._notify(cr, uid, newid, context=context,
+                        force_send=context.get('mail_notify_force_send', True),
+                        user_signature=context.get('mail_notify_user_signature', True))
         # TDE FIXME: handle default_starred. Why not setting an inv on starred ?
         # Because starred will call set_message_starred, that looks for notifications.
         # When creating a new mail_message, it will create a notification to a message
@@ -880,20 +895,16 @@ class mail_message(osv.Model):
             return ''
         return result
 
-    def _notify(self, cr, uid, newid, context=None):
+    def _notify(self, cr, uid, newid, context=None, force_send=False, user_signature=True):
         """ Add the related record followers to the destination partner_ids if is not a private message.
             Call mail_notification.notify to manage the email sending
         """
         notification_obj = self.pool.get('mail.notification')
         message = self.browse(cr, uid, newid, context=context)
-
         partners_to_notify = set([])
-        # message has no subtype_id: pure log message -> no partners, no one notified
-        if not message.subtype_id:
-            return True
 
-        # all followers of the mail.message document have to be added as partners and notified
-        if message.model and message.res_id:
+        # all followers of the mail.message document have to be added as partners and notified if a subtype is defined (otherwise: log message)
+        if message.subtype_id and message.model and message.res_id:
             fol_obj = self.pool.get("mail.followers")
             # browse as SUPERUSER because rules could restrict the search results
             fol_ids = fol_obj.search(cr, SUPERUSER_ID, [
@@ -903,7 +914,7 @@ class mail_message(osv.Model):
                 ], context=context)
             partners_to_notify |= set(fo.partner_id for fo in fol_obj.browse(cr, SUPERUSER_ID, fol_ids, context=context))
         # remove me from notified partners, unless the message is written on my own wall
-        if message.author_id and message.model == "res.partner" and message.res_id == message.author_id.id:
+        if message.subtype_id and message.author_id and message.model == "res.partner" and message.res_id == message.author_id.id:
             partners_to_notify |= set([message.author_id])
         elif message.author_id:
             partners_to_notify -= set([message.author_id])
@@ -914,7 +925,8 @@ class mail_message(osv.Model):
 
         # notify
         if partners_to_notify:
-            notification_obj._notify(cr, uid, newid, partners_to_notify=[p.id for p in partners_to_notify], context=context)
+            notification_obj._notify(cr, uid, newid, partners_to_notify=[p.id for p in partners_to_notify], context=context,
+                                            force_send=force_send, user_signature=user_signature)
         message.refresh()
 
         # An error appear when a user receive a notification without notifying
