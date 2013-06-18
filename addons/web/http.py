@@ -483,7 +483,7 @@ request = _request_stack()
 #----------------------------------------------------------
 addons_module = {}
 addons_manifest = {}
-controllers_class_path = {}
+controllers_per_module = {}
 controllers_object = {}
 
 class ControllerType(type):
@@ -503,9 +503,12 @@ class ControllerType(type):
 
         # store the controller in the controllers list
         name_class = ("%s.%s" % (cls.__module__, cls.__name__), cls)
+        class_path = name_class[0].split(".")
         path = attrs.get('_cp_path')
-        if path and path not in controllers_class_path:
-            controllers_class_path[path] = name_class
+        if not path or not class_path[:2] == ["openerp", "addons"]:
+            return
+        module = class_path[2]
+        controllers_per_module.setdefault(module, []).append(name_class)
 
 class Controller(object):
     __metaclass__ = ControllerType
@@ -722,20 +725,25 @@ class Root(object):
                         self.statics['/%s/static' % module] = path_static
 
         self.routing_map = routing.Map()
-        for v in controllers_class_path.itervalues():
-            o = v[1]()
-            controllers_object[v[0]] = o
-            members = inspect.getmembers(o)
-            for mk, mv in members:
-                if inspect.ismethod(mv) and getattr(mv, 'exposed', False):
-                    if mk == "index":
-                        url = o._cp_path
-                    else:
-                        url = os.path.join(o._cp_path, mk)
-                    function = (o.get_wrapped_method(mk), mv)
-                    self.routing_map.add(routing.Rule(url, endpoint=function))
-                    url = os.path.join(url, "<path:path>")
-                    self.routing_map.add(routing.Rule(url, endpoint=function))
+        modules = controllers_per_module.keys()
+        modules.sort()
+        modules.remove("web")
+        modules = ["web"] + modules
+        for module in modules:
+            for v in controllers_per_module[module]:
+                o = v[1]()
+                controllers_object[v[0]] = o
+                members = inspect.getmembers(o)
+                for mk, mv in members:
+                    if inspect.ismethod(mv) and getattr(mv, 'exposed', False):
+                        if mk == "index":
+                            url = o._cp_path
+                        else:
+                            url = os.path.join(o._cp_path, mk)
+                        function = (o.get_wrapped_method(mk), mv)
+                        self.routing_map.add(routing.Rule(url, endpoint=function))
+                        url = os.path.join(url, "<path:path>")
+                        self.routing_map.add(routing.Rule(url, endpoint=function))
 
         app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, self.statics)
         self.dispatch = DisableCacheMiddleware(app)
