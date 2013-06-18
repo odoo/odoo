@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Applicant Resumes and Latters',
+    'name': 'Applicant Resumes and Letters',
     'version': '1.0',
     'category': 'Human Resources',
     'sequence': 25,

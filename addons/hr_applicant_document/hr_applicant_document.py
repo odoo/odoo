@@ -18,13 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 ##############################################################################
-
-
-import time
-from openerp import tools
-from datetime import datetime
 from openerp.osv import fields, osv
-from openerp.tools.translate import _
 
 class hr_applicant(osv.osv):
     _inherit = 'hr.applicant'
@@ -34,19 +28,19 @@ class hr_applicant(osv.osv):
         attachment_pool = self.pool.get('ir.attachment')
         for applicant in self.browse(cr, uid, ids, context=context):
             res[applicant.id] = 0
-            attach_id = attachment_pool.search(cr, uid, [('res_model','=','hr.applicant'),('res_id','=',applicant.id)])
-            if attach_id:
-                for attach in attachment_pool.browse(cr, uid, attach_id, context):
-                    res[applicant.id] = attach.index_content
+            attachment_ids = attachment_pool.search(cr, uid, [('res_model','=','hr.applicant'),('res_id','=',applicant.id)])
+            if attachment_ids:
+                for attachment in attachment_pool.browse(cr, uid, attachment_ids, context):
+                    res[applicant.id] = attachment.index_content
         return res
 
     def _content_search(self, cursor, user, obj, name, args, context=None):
         record_ids = []
         attachment_pool = self.pool.get('ir.attachment')
         args += [('res_model','=','hr.applicant')]
-        attach_ids = attachment_pool.search(cursor, user, args)
-        for attach in attachment_pool.browse(cursor, user, attach_ids):
-            record_ids.append(attach.res_id)			
+        attachment_ids = attachment_pool.search(cursor, user, args)
+        for attachment in attachment_pool.browse(cursor, user, attachment_ids):
+            record_ids.append(attachment.res_id)			
         return [('id', 'in', record_ids)]
 
     _columns = {
