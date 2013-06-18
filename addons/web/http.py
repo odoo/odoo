@@ -680,8 +680,6 @@ class Root(object):
         httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableDict
         httprequest.app = self
 
-        handler = self.find_handler(httprequest.path)
-
         sid = httprequest.cookies.get('sid')
         if not sid:
             sid = httprequest.args.get('sid')
@@ -689,6 +687,8 @@ class Root(object):
         session_gc(self.session_store)
 
         with session_context(httprequest, self.session_store, self.session_lock, sid) as session:
+            handler = self.find_handler(httprequest.path)
+
             result = handler(httprequest)
 
             if isinstance(result, basestring):
