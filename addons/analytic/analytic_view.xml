@@ -22,7 +22,7 @@
                         <group name="main">
                             <group>
                                 <field name="partner_id" on_change="on_change_partner_id(partner_id, name)"/>
-                                <field name="manager_id" context="{'default_groups_ref': ['account.group_account_manager']}"/>
+                                <field name="manager_id" context="{'default_groups_ref': ['base.group_user', 'account.group_account_manager']}"/>
                                 <field name="currency_id" attrs="{'invisible': ['|',('type', '&lt;&gt;', 'view'), ('company_id', '&lt;&gt;', False)]}"/>
                             </group>
                             <group>
