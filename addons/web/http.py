@@ -95,14 +95,14 @@ class WebRequest(object):
         ``int``, the id of the user related to the current request. Can be ``None``
         if the current request uses the @nodb or the @noauth decorator.
     """
-    def __init__(self, httprequest, func, auth_method="auth"):
+    def __init__(self, httprequest):
         self.httprequest = httprequest
         self.httpresponse = None
         self.httpsession = httprequest.session
         self.db = None
         self.uid = None
-        self.func = func
-        self.auth_method = auth_method
+        self.func = None
+        self.auth_method = None
         self._cr_cm = None
         self._cr = None
 
@@ -687,9 +687,12 @@ class Root(object):
         session_gc(self.session_store)
 
         with session_context(httprequest, self.session_store, self.session_lock, sid) as session:
-            handler = self.find_handler(httprequest.path)
+            request = self._build_request(httprequest)
 
-            result = handler(httprequest)
+            self.find_handler(httprequest.path, request)
+
+            with set_request(request):
+                result = request.dispatch()
 
             if isinstance(result, basestring):
                 headers=[('Content-Type', 'text/html; charset=utf-8'), ('Content-Length', len(result))]
@@ -700,7 +703,20 @@ class Root(object):
             if hasattr(response, 'set_cookie'):
                 response.set_cookie('sid', session.sid)
 
-        return response(environ, start_response)
+            return response(environ, start_response)
+
+    def _build_request(self, httprequest):
+        if httprequest.args.get('jsonp'):
+            return JsonRequest(httprequest)
+
+        content = httprequest.stream.read()
+        import cStringIO
+        httprequest.stream = cStringIO.StringIO(content)
+        try:
+            simplejson.loads(content)
+            return JsonRequest(httprequest)
+        except:
+            return HttpRequest(httprequest)
 
     def load_addons(self):
         """ Load all addons from addons patch containg static files and
@@ -747,7 +763,7 @@ class Root(object):
         app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, self.statics)
         self.dispatch = DisableCacheMiddleware(app)
 
-    def find_handler(self, path):
+    def find_handler(self, path, request):
         """
         Tries to discover the controller handling the request for the path
         specified by the provided parameters
@@ -760,18 +776,8 @@ class Root(object):
         func, original = urls.match(path)[0]
         auth = getattr(original, "auth", "auth")
 
-        if original.exposed == "json":
-            def fct(httprequest):
-                _req = JsonRequest(httprequest, func, auth)
-                with set_request(_req):
-                    return request.dispatch()
-            return fct
-        else: # http
-            def fct(httprequest):
-                _req = HttpRequest(httprequest, func, auth)
-                with set_request(_req):
-                    return request.dispatch()
-            return fct
+        request.func = func
+        request.auth_method = auth
 
 def wsgi_postload():
     openerp.wsgi.register_wsgi_handler(Root())
