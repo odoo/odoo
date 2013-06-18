@@ -377,7 +377,6 @@ class project_issue(base_stage, osv.osv):
                 context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-    
         #Update last action date every time the user changes the stage
         if 'stage_id' in vals:
             stage=self.pool.get('project.task.type').read(cr, uid, vals['stage_id'],['sequence'],context=context)
@@ -390,7 +389,6 @@ class project_issue(base_stage, osv.osv):
                 sequence = [stage.sequence for stage in issue.project_id.type_ids[-2:]]
                 if stage['sequence'] in sequence:
                     vals['date_closed'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
-
         return super(project_issue, self).write(cr, uid, ids, vals, context)
 
     def onchange_task_id(self, cr, uid, ids, task_id, context=None):

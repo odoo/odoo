@@ -30,7 +30,12 @@ class project_task(osv.osv):
         'sale_line_id': fields.related('procurement_id', 'sale_line_id', type='many2one', relation='sale.order.line', store=True, string='Sales Order Line'),
     }
 
-    def _validate_subflows(self, cr, uid, ids):
+    def action_task_close(self, cr, uid, ids, context=None):
+        res = super(project_task, self).action_task_close(cr, uid, ids,context)
+        self._validate_subflows(cr, uid, ids,context)
+        return res
+
+    def _validate_subflows(self, cr, uid, ids,context):
         wf_service = netsvc.LocalService("workflow")
         for task in self.browse(cr, uid, ids):
             if task.procurement_id:

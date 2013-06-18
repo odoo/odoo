@@ -39,7 +39,7 @@ class procurement_order(osv.osv):
         @return: True or False.
         """
         for p in self.browse(cr, uid, ids, context=context):
-            if (p.product_id.type=='service') and (p.procure_method=='make_to_order') and p.task_id :
+            if (p.product_id.type=='service') and (p.procure_method=='make_to_order') and p.task_id and (not p.task_id.is_close):
                 return False
         return True
 
