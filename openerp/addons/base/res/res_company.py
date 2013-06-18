@@ -166,7 +166,7 @@ class res_company(osv.osv):
         'vat': fields.related('partner_id', 'vat', string="Tax ID", type="char", size=32),
         'company_registry': fields.char('Company Registry', size=64),
         'paper_format': fields.selection([('a4', 'A4'), ('us_letter', 'US Letter')], "Paper Format", required=True),
-        'font': fields.selection(_select_font, "Select Font"),
+        'font': fields.selection(_select_font, "Select Font",help="Set your favorite font into company header"),
     }
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
@@ -200,11 +200,9 @@ class res_company(osv.osv):
         return {}
         
     def onchange_font_name(self, cr, uid, ids, font, rml_header, rml_header2, rml_header3, context=None):
-        
         """ To change default header style of all <para> and drawstring. """
         
         def _change_header(header,font):
-        
             """ Replace default fontname use in header and setfont tag """
             
             default_para = re.sub('fontName.?=.?".*"', 'fontName="%s"'% font,header)
