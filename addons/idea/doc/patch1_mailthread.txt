@@ -1,0 +1,29 @@
+=== modified file 'idea/models/idea.py'
+--- idea/models/idea.py	2013-06-18 10:16:21 +0000
++++ idea/models/idea.py	2013-06-18 10:16:39 +0000
+@@ -47,6 +47,7 @@
+     """ Model of an Idea """
+     _name = 'idea.idea'
+     _description = 'Propose and Share your Ideas'
++    _inherit = ['mail.thread']
+ 
+     _rec_name = 'name'
+     _order = 'name asc'
+
+=== modified file 'idea/views/idea.xml'
+--- idea/views/idea.xml	2013-06-18 10:16:21 +0000
++++ idea/views/idea.xml	2013-06-18 10:16:47 +0000
+@@ -56,6 +56,12 @@
+                             <field name="description"/>
+                         </group>
+                     </sheet>
++                    <div class="oe_chatter">
++                        <field name="message_follower_ids" widget="mail_followers"
++                                groups="base.group_user"/>
++                        <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}'
++                                placeholder="Share your thoughts about the idea"/>
++                    </div>
+                 </form>
+             </field>
+         </record>
+

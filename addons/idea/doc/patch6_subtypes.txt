@@ -1,0 +1,55 @@
+=== modified file 'idea/__openerp__.py'
+--- idea/__openerp__.py	2013-06-18 10:16:21 +0000
++++ idea/__openerp__.py	2013-06-18 13:23:42 +0000
+@@ -41,6 +41,7 @@
+         'security/ir.model.access.csv',
+         'views/idea.xml',
+         'views/category.xml',
++        'data/idea.xml',
+         'data/idea_workflow.xml',
+     ],
+     'demo': [
+
+=== modified file 'idea/data/idea.xml'
+--- idea/data/idea.xml	2013-06-18 13:23:19 +0000
++++ idea/data/idea.xml	2013-06-18 13:23:56 +0000
+@@ -2,5 +2,19 @@
+ <openerp>
+     <data>
+ 
++        <!-- CRM-related subtypes for messaging / Chatter -->
++        <record id="mt_state_change" model="mail.message.subtype">
++            <field name="name">State Changed</field>
++            <field name="res_model">idea.idea</field>
++            <field name="default" eval="False"/>
++            <field name="description">State changed</field>
++        </record>
++        <record id="mt_state_approved" model="mail.message.subtype">
++            <field name="name">Idea Approved</field>
++            <field name="res_model">idea.idea</field>
++            <field name="default" eval="True"/>
++            <field name="description">Idea approved</field>
++        </record>
++
+     </data>
+ </openerp>
+\ No newline at end of file
+
+=== modified file 'idea/models/idea.py'
+--- idea/models/idea.py	2013-06-18 13:23:37 +0000
++++ idea/models/idea.py	2013-06-18 13:23:42 +0000
+@@ -47,6 +47,13 @@
+     _rec_name = 'name'
+     _order = 'name asc'
+ 
++    _track = {
++        'state': {
++            'idea.mt_state_approved': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'close',
++            'idea.mt_state_change': lambda self, cr, uid, obj, ctx=None: obj['state'] != 'close',
++        },
++    }
++
+     def _get_state_list(self, cr, uid, context=None):
+         return [('draft', 'New'),
+                     ('open', 'In discussion'),
+

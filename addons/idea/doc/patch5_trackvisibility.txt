@@ -1,0 +1,28 @@
+=== modified file 'idea/models/idea.py'
+--- idea/models/idea.py	2013-06-18 13:29:15 +0000
++++ idea/models/idea.py	2013-06-18 13:29:38 +0000
+@@ -63,7 +63,8 @@
+         return res
+ 
+     _columns = {
+-        'user_id': fields.many2one('res.users', 'Responsible', required=True),
++        'user_id': fields.many2one('res.users', 'Responsible', required=True,
++            track_visibility='onchange'),
+         'name': fields.char('Summary', required=True, readonly=True,
+             states={'draft': [('readonly', False)]},
+             oldname='title'),
+@@ -71,9 +72,11 @@
+             states={'draft': [('readonly', False)]},
+             help='Content of the idea'),
+         'category_ids': fields.many2many('idea.category', string='Tags'),
+-        'state': fields.selection(_get_state_list, string='Status', required=True),
++        'state': fields.selection(_get_state_list, string='Status', required=True,
++            track_visibility='onchange'),
+         'priority': fields.selection([('low', 'Low'), ('normal', 'Normal'), ('high', 'High')],
+-            string='Priority', required=True),
++            string='Priority', required=True,
++            track_visibility='always'),
+         'color': fields.function(_get_color, type='integer', string='Color Index'),
+     }
+ 
+

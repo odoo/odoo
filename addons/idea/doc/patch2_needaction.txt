@@ -1,0 +1,27 @@
+=== modified file 'idea/models/idea.py'
+--- idea/models/idea.py	2013-06-18 10:34:31 +0000
++++ idea/models/idea.py	2013-06-18 10:36:26 +0000
+@@ -47,7 +47,7 @@
+     """ Model of an Idea """
+     _name = 'idea.idea'
+     _description = 'Propose and Share your Ideas'
+-    _inherit = ['mail.thread']
++    _inherit = ['mail.thread', 'ir.needaction_mixin']
+ 
+     _rec_name = 'name'
+     _order = 'name asc'
+
+=== modified file 'idea/views/idea.xml'
+--- idea/views/idea.xml	2013-06-18 10:34:31 +0000
++++ idea/views/idea.xml	2013-06-18 10:36:08 +0000
+@@ -92,6 +92,9 @@
+                             help="Open Ideas"/>
+                     <filter string="Accepted" domain="[('state','=', 'close')]"
+                             help="Accepted Ideas" />
++                    <filter string="Unread Messages" name="message_unread"
++                            domain="[('message_unread','=',True)]"
++                            help="Unread messages"/>
+                     <group expand="0" string="Group By...">
+                         <filter string="Creator" help="By Responsible" context="{'group_by': 'user_id'}"/>
+                         <filter string="Category" help="By Category" context="{'group_by': 'category_ids'}"/>
+

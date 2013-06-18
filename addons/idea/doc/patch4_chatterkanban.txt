@@ -1,0 +1,27 @@
+=== modified file 'idea/views/idea.xml'
+--- idea/views/idea.xml	2013-06-18 10:58:33 +0000
++++ idea/views/idea.xml	2013-06-18 11:03:38 +0000
+@@ -8,6 +8,9 @@
+             <field name="arch" type="xml">
+                 <kanban version="7.0" default_group_by="state" class="oe_background_grey">
+                     <field name="user_id"/>
++                    <field name="message_follower_ids"/>
++                    <field name="message_ids"/>
++                    <field name="message_summary"/>
+                     <templates>
+                         <t t-name="kanban-box">
+                             <div t-attf-class="oe_kanban_card oe_kanban_idea_idea oe_kanban_global_click">
+@@ -27,6 +30,12 @@
+                                     <div class="oe_kanban_bottom_right">
+                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar" t-if="record.user_id.value"/>
+                                     </div>
++
++                                    <div class="oe_kanban_footer_left">
++                                        <t t-raw="record.message_summary.raw_value"/>
++                                        <span title='Messages'><span class='oe_e'>9</span><t t-esc="record.message_ids.raw_value.length"/></span>
++                                        <span title='Followers'><span class='oe_e'>+</span><t t-esc="record.message_follower_ids.raw_value.length"/></span>
++                                    </div>
+                                 </div>
+                                 <div class="oe_clear"></div>
+                             </div>
+

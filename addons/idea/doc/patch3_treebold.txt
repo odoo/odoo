@@ -1,0 +1,20 @@
+=== modified file 'idea/views/idea.xml'
+--- idea/views/idea.xml	2013-06-18 13:17:10 +0000
++++ idea/views/idea.xml	2013-06-18 13:17:57 +0000
+@@ -75,11 +75,14 @@
+             <field name="name">idea.idea.tree</field>
+             <field name="model">idea.idea</field>
+             <field name="arch" type="xml">
+-            <tree colors="blue:state == 'draft';black:state in ('open', 'close'); gray:state == 'cancel'" string="Ideas">
++            <tree string="Ideas"
++                    colors="blue:state == 'draft';black:state in ('open', 'close'); gray:state == 'cancel';"
++                    fonts="bold:message_unread==True">
+                 <field name="name"/>
+                 <field name="user_id"/>
+                 <field name="priority"/>
+                 <field name="state"/>
++                <field name="message_unread" invisible="True"/>
+             </tree>
+             </field>
+         </record>
+

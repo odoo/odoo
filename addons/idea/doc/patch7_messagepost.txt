@@ -1,0 +1,31 @@
+=== modified file 'idea/data/idea.xml'
+--- idea/data/idea.xml	2013-06-18 13:25:00 +0000
++++ idea/data/idea.xml	2013-06-18 13:27:58 +0000
+@@ -15,6 +15,11 @@
+             <field name="default" eval="True"/>
+             <field name="description">Idea approved</field>
+         </record>
++        <record id="mt_priority_high" model="mail.message.subtype">
++            <field name="name">Priority High</field>
++            <field name="res_model">idea.idea</field>
++            <field name="description">Priority set to high</field>
++        </record>
+ 
+     </data>
+ </openerp>
+\ No newline at end of file
+
+=== modified file 'idea/models/idea.py'
+--- idea/models/idea.py	2013-06-18 13:25:00 +0000
++++ idea/models/idea.py	2013-06-18 13:26:50 +0000
+@@ -136,4 +136,9 @@
+         return self.write(cr, uid, ids, {'priority': 'normal'}, context=context)
+ 
+     def idea_set_high_priority(self, cr, uid, ids, context={}):
++        for idea in self.browse(cr, uid, ids, context=context):
++            self.message_post(cr, uid, ids, body='Your idea has been set as high priority. Congratulations!',
++                            subtype='idea.mt_priority_high',
++                            partner_ids=[idea.user_id.partner_id.id],
++                            context=context)
+         return self.write(cr, uid, ids, {'priority': 'high'}, context=context)
+
