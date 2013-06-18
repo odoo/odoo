@@ -451,7 +451,6 @@ class BaseModel(object):
     _invalids = set()
     _log_create = False
     _sql_constraints = []
-    _protected = ['read', 'write', 'create', 'default_get', 'perm_read', 'unlink', 'fields_get', 'fields_view_get', 'search', 'name_get', 'distinct_field_get', 'name_search', 'copy', 'import_data', 'search_count', 'exists']
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
 
