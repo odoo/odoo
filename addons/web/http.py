@@ -121,7 +121,10 @@ class WebRequest(object):
             self.session = session.OpenERPSession()
             self.httpsession[self.session_id] = self.session
 
-        # TODO: remove this shit
+        with set_request(self):
+            self.db = (self.session._db or openerp.addons.web.controllers.main.db_monodb()).lower()
+
+        # TODO: remove this
         # set db/uid trackers - they're cleaned up at the WSGI
         # dispatching phase in openerp.service.wsgi_server.application
         if self.session._db:
@@ -269,7 +272,6 @@ class JsonRequest(WebRequest):
         """
         args = self.httprequest.args
         jsonp = args.get('jsonp')
-        requestf = None
         request = None
         request_id = args.get('id')
 
@@ -289,16 +291,13 @@ class JsonRequest(WebRequest):
             request = self.session.jsonp_requests.pop(request_id, "")
         else:
             # regular jsonrpc2
-            requestf = self.httprequest.stream
+            request = self.httprequest.stream.read()
 
         response = {"jsonrpc": "2.0" }
         error = None
         try:
             # Read POST content or POST Form Data named "request"
-            if requestf:
-                self.jsonrequest = simplejson.load(requestf, object_hook=reject_nonliteral)
-            else:
-                self.jsonrequest = simplejson.loads(request, object_hook=reject_nonliteral)
+            self.jsonrequest = simplejson.loads(request, object_hook=reject_nonliteral)
             self.init(self.jsonrequest.get("params", {}))
             #if _logger.isEnabledFor(logging.DEBUG):
             #    _logger.debug("--> %s.%s\n%s", func.im_class.__name__, func.__name__, pprint.pformat(self.jsonrequest))
