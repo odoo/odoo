@@ -1,52 +1,35 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <!-- Idea Categories Search View-->
-        <record model="ir.ui.view" id="view_idea_category_search">
-            <field name="name">idea.category.search</field>
-            <field name="model">idea.category</field>
+
+        <record model="ir.ui.view" id="view_idea_idea_kanban">
+            <field name="name">idea.idea.kanban</field>
+            <field name="model">idea.idea</field>
             <field name="arch" type="xml">
-                <search string="Ideas Categories">
-                    <field name="name" string="Category"/>
-                </search>
+                <kanban version="7.0" default_group_by="state" class="oe_background_grey">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_idea_idea oe_kanban_global_click_edit">
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban"
+                                        groups="base.group_user">
+                                    <span class="oe_e">í</span>
+                                    <ul class="oe_dropdown_menu">
+                                        <t t-if="widget.view.is_action_enabled('delete')">
+                                            <li><a type="delete">Delete</a></li>
+                                        </t>
+                                    </ul>
+                                </div>
+                                <div class="oe_kanban_content">
+                                    <h4><field name="name"/></h4>
+                                    <field name="category_ids"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
             </field>
         </record>
 
-        <!-- Idea Category Form View -->
-        <record model="ir.ui.view" id="view_idea_category_form">
-            <field name="name">idea.category.form</field>
-            <field name="model">idea.category</field>
-            <field name="arch" type="xml">
-                <form string="Category of Ideas" version="7.0">
-                    <group>
-                        <field name="name"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-
-        <!-- Idea Category Tree View -->
-        <record model="ir.ui.view" id="view_idea_category_tree">
-            <field name="name">idea.category.tree</field>
-            <field name="model">idea.category</field>
-            <field name="field_parent"></field>
-            <field name="arch" type="xml">
-                <tree string="Category of ideas">
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
-
-        <!-- Idea Category Action -->
-        <record model="ir.actions.act_window" id="action_idea_category">
-            <field name="name">Categories</field>
-            <field name="res_model">idea.category</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="view_idea_category_search"/>
-        </record>
-
-        <!-- New Idea Form View -->
         <record model="ir.ui.view" id="view_idea_idea_form">
             <field name="name">idea.idea.form</field>
             <field name="model">idea.idea</field>
@@ -70,7 +53,6 @@
             </field>
         </record>
 
-        <!-- New Idea Tree View -->
         <record model="ir.ui.view" id="view_idea_idea_tree">
             <field name="name">idea.idea.tree</field>
             <field name="model">idea.idea</field>
@@ -83,21 +65,23 @@
             </field>
         </record>
 
-        <!-- Search Idea  -->
         <record model="ir.ui.view" id="view_idea_idea_search">
             <field name="name">idea.idea.search</field>
             <field name="model">idea.idea</field>
             <field name="arch" type="xml">
                 <search string="Ideas">
                     <field name="name" string="Idea"/>
-                    <filter icon="terp-document-new" string="New" domain="[('state','=', 'draft')]" help="New Ideas"/>
-                    <filter icon="terp-camera_test" string="In Progress" domain="[('state','=', 'open')]" help="Open Ideas"/>
-                    <filter icon="terp-check" string="Accepted" domain="[('state','=','close')]" help="Accepted Ideas" />
                     <field name="category_ids"/>
+                    <filter string="New" domain="[('state', '=', 'draft')]"
+                            help="New Ideas"/>
+                    <filter string="In Progress" domain="[('state','=', 'open')]"
+                            help="Open Ideas"/>
+                    <filter string="Accepted" domain="[('state','=', 'close')]"
+                            help="Accepted Ideas" />
                     <group expand="0" string="Group By...">
-                        <filter icon="terp-personal" string="Creator" help="By Creators" context="{'group_by':'create_uid'}"/>
-                        <filter icon="terp-stock_symbol-selection" string="Category" help="By Idea Category" context="{'group_by':'category_ids'}"/>
-                        <filter icon="terp-stock_effects-object-colorize" string="Status" help="By States" context="{'group_by':'state'}"/>
+                        <filter string="Creator" help="By Creators" context="{'group_by': 'create_uid'}"/>
+                        <filter string="Category" help="By Category" context="{'group_by': 'category_ids'}"/>
+                        <filter string="Status" help="By States" context="{'group_by': 'state'}"/>
                     </group>
                 </search>
             </field>
@@ -107,7 +91,7 @@
             <field name="name">Ideas</field>
             <field name="res_model">idea.idea</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">kanban,tree,form</field>
             <field name="search_view_id" ref="view_idea_idea_search"/>
         </record>
 
@@ -124,8 +108,6 @@
 
         <menuitem name="Ideas" parent="menu_ideas"
                 id="menu_idea_idea" action="action_idea_idea" sequence="10"/>
-        <menuitem name="Categories" parent="menu_ideas"
-                id="menu_idea_category" action="action_idea_category" sequence="20"/>
 
     </data>
 </openerp>

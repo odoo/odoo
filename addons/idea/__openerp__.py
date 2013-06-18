@@ -41,6 +41,7 @@ Once installed, check the menu 'Ideas' in the 'Tools' main menu.""",
         'security/idea.xml',
         'security/ir.model.access.csv',
         'views/idea.xml',
+        'views/category.xml',
         'data/idea_workflow.xml',
     ],
     'demo': [
@@ -49,7 +50,9 @@ Once installed, check the menu 'Ideas' in the 'Tools' main menu.""",
     'installable': True,
     'application': True,
     'images': [],
-    'css': [],
+    'css': [
+        'static/src/css/idea_idea.css',
+    ],
     'js': [],
     'qweb': [],
 }

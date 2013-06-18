@@ -2,14 +2,33 @@
 <openerp>
     <data>
 
-        <record model="idea.category" id="idea_category_sales">
+        <record model="idea.category" id="idea_cat_0">
             <field name="name">Sales</field>
         </record>
-        <record model="idea.category" id="idea_category_general">
+        <record model="idea.category" id="idea_cat_1">
             <field name="name">Organization</field>
         </record>
-        <record model="idea.category" id="idea_category_technical">
+        <record model="idea.category" id="idea_cat_2">
             <field name="name">Technical</field>
+        </record>
+
+        <record model="idea.idea" id="idea_idea_1">
+            <field name="name">Name</field>
+            <field name="description">Description</field>
+            <field name="state">draft</field>
+            <field name="category_ids" eval="(4, ref('idea.idea_cat_0'))"/>
+        </record>
+        <record model="idea.idea" id="idea_idea_2">
+            <field name="name">Name2</field>
+            <field name="description">Description</field>
+            <field name="state">draft</field>
+            <field name="category_ids" eval="(4, ref('idea.idea_cat_1'))"/>
+        </record>
+        <record model="idea.idea" id="idea_idea_3">
+            <field name="name">Name3</field>
+            <field name="description">Description</field>
+            <field name="state">draft</field>
+            <field name="category_ids" eval="(4, ref('idea.idea_cat_2'))"/>
         </record>
 
     </data>

@@ -28,7 +28,7 @@ VoteValues = [('-1', 'Not Voted'), ('0', 'Very Bad'), ('25', 'Bad'), \
 DefaultVoteValue = '50'
 
 
-class idea_category(osv.osv):
+class IdeaCategory(osv.Model):
     """ Category of Idea """
     _name = "idea.category"
     _description = "Idea Category"
@@ -43,13 +43,18 @@ class idea_category(osv.osv):
     ]
 
 
-class idea_idea(osv.osv):
+class IdeaIdea(osv.Model):
     """ Model of an Idea """
     _name = 'idea.idea'
     _description = 'Propose and Share your Ideas'
     _rec_name = 'name'
     _order = 'name asc'
-    # _inherit = ['mail.thread']
+
+    def _get_state_list(self, cr, uid, context=None):
+        return [('draft', 'New'),
+                    ('open', 'Accepted'),
+                    ('cancel', 'Refused'),
+                    ('close', 'Done')]
 
     _columns = {
         'create_uid': fields.many2one('res.users', 'Creator', required=True, readonly=True),
@@ -61,18 +66,47 @@ class idea_idea(osv.osv):
             help='Content of the idea'),
         'category_ids': fields.many2many('idea.category', string='Tags', readonly=True,
             states={'draft': [('readonly', False)]}),
-        'state': fields.selection([('draft', 'New'),
-                                    ('open', 'Accepted'),
-                                    ('cancel', 'Refused'),
-                                    ('close', 'Done')],
-            'Status', readonly=True, track_visibility='onchange'),
+        'state': fields.selection(_get_state_list, string='Status',
+            readonly=True, track_visibility='onchange'),
     }
+
     _sql_constraints = [
         ('name', 'unique(name)', 'The name of the idea must be unique')
     ]
+
     _defaults = {
-        'state': lambda *a: 'draft',
+        'state': lambda self, cr, uid, ctx=None: self._get_state_list(cr, uid, ctx)[0][0],
     }
+
+    #------------------------------------------------------
+    # Technical stuff
+    #------------------------------------------------------
+
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
+        """ Override read_group to always display all states. """
+        # Default result structure
+        states = self._get_state_list(cr, uid, context=context)
+        read_group_all_states = [{
+                    '__context': {'group_by': groupby[1:]},
+                    '__domain': domain + [('state', '=', state_value)],
+                    'state': state_value,
+                    'state_count': 0,
+                } for state_value, state_name in states]
+        # Get standard results
+        read_group_res = super(IdeaIdea, self).read_group(cr, uid, domain, fields, groupby, offset, limit, context, orderby)
+        # Update standard results with default results
+        result = []
+        for state_value, state_name in states:
+            res = filter(lambda x: x['state'] == state_value, read_group_res)
+            if not res:
+                res = filter(lambda x: x['state'] == state_value, read_group_all_states)
+            res[0]['state'] = [state_value, state_name]
+            result.append(res[0])
+        return result
+
+    #------------------------------------------------------
+    # Workflow / Actions
+    #------------------------------------------------------
 
     def idea_cancel(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
