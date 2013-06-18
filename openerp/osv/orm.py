@@ -357,17 +357,8 @@ class MetaModel(api.Meta):
             self.module_to_models.setdefault(self._module, []).append(self)
 
 
-# Definition of log access columns, automatically added to models if
-# self._log_access is True
-LOG_ACCESS_COLUMNS = {
-    'create_uid': 'INTEGER REFERENCES res_users ON DELETE SET NULL',
-    'create_date': 'TIMESTAMP',
-    'write_uid': 'INTEGER REFERENCES res_users ON DELETE SET NULL',
-    'write_date': 'TIMESTAMP'
-}
 # special columns automatically created by the ORM
-MAGIC_COLUMNS = ['id'] + LOG_ACCESS_COLUMNS.keys()
-
+MAGIC_COLUMNS = ['id', 'create_uid', 'create_date', 'write_uid', 'write_date']
 
 class BaseModel(object):
     """ Base class for OpenERP models.
@@ -586,6 +577,72 @@ class BaseModel(object):
         self.invalidate_cache()
         cr.commit()
 
+    @classmethod
+    def set_field_descriptor(cls, name, field):
+        field.set_model_name(cls._name, name)
+
+        # add field as an attribute and in _fields (for reflection)
+        setattr(cls, name, field)
+        cls._fields[name] = field
+
+        # if stored, add a corresponding column in cls._columns
+        if field.store and name not in cls._columns:
+            _logger.debug("Create column for field %s.%s", cls._name, name)
+            cls._columns[name] = field.to_column()
+
+        # retrieve field dependencies
+        if field.compute:
+            compute_method = getattr(cls, field.compute)
+            field.depends = getattr(compute_method, '_depends', ())
+
+    @classmethod
+    def set_log_access_fields(cls):
+        """ Sets log access field on the current class
+
+        * create_uid, create_date, write_uid and write_date have become
+          "normal" fields
+        * $CONCURRENCY_CHECK_FIELD is a computed field with its computing
+          method defined dynamically. Uses ``str(datetime.datetime.utcnow())``
+          to get the same structure as the previous
+          ``(now() at time zone 'UTC')::timestamp``::
+
+              # select (now() at time zone 'UTC')::timestamp;
+                        timezone
+              ----------------------------
+               2013-06-18 08:30:37.292809
+
+              >>> str(datetime.datetime.utcnow())
+              '2013-06-18 08:31:32.821177'
+        """
+        log_access = getattr(cls, '_log_access', getattr(cls, '_auto', True))
+
+        @api.record
+        def compute_concurrency_field(self):
+            self[cls.CONCURRENCY_CHECK_FIELD] = str(datetime.datetime.utcnow())
+
+        if log_access:
+            # FIXME: what if these fields are already defined on the class?
+            cls.set_field_descriptor(
+                'create_uid', fields2.Many2one('res.users', delete='set null'))
+            cls.set_field_descriptor('create_date', fields2.Datetime())
+
+            cls.set_field_descriptor(
+                'write_uid', fields2.Many2one('res.users', delete='set null'))
+            cls.set_field_descriptor('write_date', fields2.Datetime())
+
+            @api.record
+            @api.depends('create_date', 'write_date')
+            def compute_concurrency_field(self):
+                self[cls.CONCURRENCY_CHECK_FIELD] = "%s%s%s" % (
+                    self.write_date,
+                    self.create_date,
+                    datetime.datetime.utcnow(),
+                )
+
+        cls.compute_concurrency_field = compute_concurrency_field
+        cls.set_field_descriptor(
+            cls.CONCURRENCY_CHECK_FIELD,
+            fields2.Char(compute="compute_concurrency_field", store=False))
     #
     # Goal: try to apply inheritance at the instanciation level and
     #       put objects in the pool var
@@ -685,26 +742,11 @@ class BaseModel(object):
 
         # duplicate all new-style fields to avoid clashes with inheritance
         cls._fields = {}
+        cls.set_log_access_fields()
         for attr in dir(cls):
             value = getattr(cls, attr)
             if isinstance(value, Field):
-                field = value.copy()
-                field.set_model_name(cls._name, attr)
-
-                # add field as an attribute and in _fields (for reflection)
-                setattr(cls, attr, field)
-                cls._fields[attr] = field
-
-                # if stored, add a corresponding column in cls._columns
-                if field.store and attr not in cls._columns:
-                    _logger.debug("Create column for field %s.%s", cls._name, attr)
-                    cls._columns[attr] = field.to_column()
-
-                # retrieve field dependencies
-                if field.compute:
-                    compute_method = getattr(cls, field.compute)
-                    field.depends = getattr(compute_method, '_depends', ())
-
+                cls.set_field_descriptor(attr, value.copy())
         # triggers to recompute stored function fields on other models
         #   cls._recompute = {trigger_field: [(model, field, path), ...], ...}
         #
@@ -2726,7 +2768,6 @@ class BaseModel(object):
         self._m2o_add_foreign_key_checked(source_field, dest_model, ondelete)
 
 
-
     def _auto_init(self, cr, context=None):
         """
 
@@ -2766,17 +2807,13 @@ class BaseModel(object):
                     self._create_parent_columns(cr)
                     store_compute = True
 
-            # Create the create_uid, create_date, write_uid, write_date, columns if desired.
-            if self._log_access:
-                self._add_log_columns(cr)
-
             self._check_removed_columns(cr, log=False)
 
             # iterate on the "object columns"
             column_data = self._select_column_data(cr)
 
             for k, f in self._columns.iteritems():
-                if k in MAGIC_COLUMNS:
+                if k == 'id': # FIXME: maybe id should be a regular column?
                     continue
                 # Don't update custom (also called manual) fields
                 if f.manual and not update_custom_fields:
@@ -3065,20 +3102,6 @@ class BaseModel(object):
                           self._parent_name, self._name)
 
         cr.commit()
-
-
-    def _add_log_columns(self, cr):
-        for field, field_def in LOG_ACCESS_COLUMNS.iteritems():
-            cr.execute("""
-                SELECT c.relname
-                  FROM pg_class c, pg_attribute a
-                 WHERE c.relname=%s AND a.attname=%s AND c.oid=a.attrelid
-                """, (self._table, field))
-            if not cr.rowcount:
-                cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, field, field_def))
-                cr.commit()
-                _schema.debug("Table '%s': added column '%s' with definition=%s",
-                    self._table, field, field_def)
 
 
     def _select_column_data(self, cr):
@@ -3491,12 +3514,6 @@ class BaseModel(object):
         if fields_pre or rule_clause:
             def convert_field(f):
                 f_qual = '%s."%s"' % (self._table, f) # need fully-qualified references in case len(tables) > 1
-                if f in ('create_date', 'write_date'):
-                    return "date_trunc('second', %s) as %s" % (f_qual, f)
-                if f == self.CONCURRENCY_CHECK_FIELD:
-                    if self._log_access:
-                        return "COALESCE(%s.write_date, %s.create_date, (now() at time zone 'UTC'))::timestamp AS %s" % (self._table, self._table, f,)
-                    return "(now() at time zone 'UTC')::timestamp AS %s" % (f,)
                 if isinstance(self._columns[f], fields.binary) and context.get('bin_size', False):
                     return 'length(%s) as "%s"' % (f_qual, f)
                 return f_qual
@@ -3519,8 +3536,6 @@ class BaseModel(object):
 
         if context.get('lang'):
             for f in fields_pre:
-                if f == self.CONCURRENCY_CHECK_FIELD:
-                    continue
                 if self._columns[f].translate:
                     ids = [x['id'] for x in res]
                     #TODO: optimize out of this loop
@@ -4222,14 +4237,11 @@ class BaseModel(object):
         if self.is_transient():
             self._transient_vacuum(cr, user)
 
+        # FIXME: filtering of these columns should be done somewhere else
+        for field in MAGIC_COLUMNS: vals.pop(field, None)
+
         self.check_access_rights(cr, user, 'create')
 
-        if self._log_access:
-            for f in LOG_ACCESS_COLUMNS:
-                if vals.pop(f, None) is not None:
-                    _logger.warning(
-                        'Field `%s` is not allowed when creating the model `%s`.',
-                        f, self._name)
         vals = self._add_missing_default_values(cr, user, vals, context)
 
         tocreate = {}
@@ -4714,7 +4726,7 @@ class BaseModel(object):
                 order_field = order_split[0].strip()
                 order_direction = order_split[1].strip() if len(order_split) == 2 else ''
                 inner_clause = None
-                if order_field == 'id' or (self._log_access and order_field in LOG_ACCESS_COLUMNS.keys()):
+                if order_field == 'id':
                     order_by_elements.append('"%s"."%s" %s' % (self._table, order_field, order_direction))
                 elif order_field in self._columns:
                     order_column = self._columns[order_field]
@@ -5876,6 +5888,7 @@ PGERROR_TO_OE = defaultdict(
 
 # keep those imports here to avoid dependency cycle errors
 import expression
+import fields2
 from fields2 import Field, Related
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

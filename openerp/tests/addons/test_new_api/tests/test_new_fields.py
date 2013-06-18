@@ -271,3 +271,13 @@ class TestNewFields(common.TransactionCase):
         self.assertEqual(defaults['active'], True)
         self.assertEqual(defaults['number_of_employees'], 1)
 
+class TestMagicalFields(common.TransactionCase):
+
+    def setUp(self):
+        super(TestMagicalFields, self).setUp()
+        self.Model = self.registry('test_new_api.on_change')
+
+    def test_write_date(self):
+        id = self.Model.create({'name': 'Booba'})
+
+        self.Model.browse(id).read(['write_date'])
