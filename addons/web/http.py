@@ -676,20 +676,20 @@ class Root(object):
 
         Call the object directly.
         """
-        request = werkzeug.wrappers.Request(environ)
-        request.parameter_storage_class = werkzeug.datastructures.ImmutableDict
-        request.app = self
+        httprequest = werkzeug.wrappers.Request(environ)
+        httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableDict
+        httprequest.app = self
 
-        handler = self.find_handler(request.path)
+        handler = self.find_handler(httprequest.path)
 
-        sid = request.cookies.get('sid')
+        sid = httprequest.cookies.get('sid')
         if not sid:
-            sid = request.args.get('sid')
+            sid = httprequest.args.get('sid')
 
         session_gc(self.session_store)
 
-        with session_context(request, self.session_store, self.session_lock, sid) as session:
-            result = handler(request)
+        with session_context(httprequest, self.session_store, self.session_lock, sid) as session:
+            result = handler(httprequest)
 
             if isinstance(result, basestring):
                 headers=[('Content-Type', 'text/html; charset=utf-8'), ('Content-Length', len(result))]
@@ -761,14 +761,14 @@ class Root(object):
         auth = getattr(original, "auth", "auth")
 
         if original.exposed == "json":
-            def fct(_request):
-                _req = JsonRequest(_request, func, auth)
+            def fct(httprequest):
+                _req = JsonRequest(httprequest, func, auth)
                 with set_request(_req):
                     return request.dispatch()
             return fct
         else: # http
-            def fct(_request):
-                _req = HttpRequest(_request, func, auth)
+            def fct(httprequest):
+                _req = HttpRequest(httprequest, func, auth)
                 with set_request(_req):
                     return request.dispatch()
             return fct
