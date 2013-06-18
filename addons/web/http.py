@@ -485,7 +485,6 @@ addons_module = {}
 addons_manifest = {}
 controllers_class_path = {}
 controllers_object = {}
-controllers_path = {}
 
 class ControllerType(type):
     def __init__(cls, name, bases, attrs):
@@ -737,7 +736,6 @@ class Root(object):
                     self.routing_map.add(routing.Rule(url, endpoint=function))
                     url = os.path.join(url, "<path:path>")
                     self.routing_map.add(routing.Rule(url, endpoint=function))
-            controllers_path[o._cp_path] = o
 
         app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, self.statics)
         self.dispatch = DisableCacheMiddleware(app)
