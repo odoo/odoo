@@ -1181,7 +1181,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
         return $.when(_.map(facet_values, function (facet_value) {
             return {
                 label: _.str.sprintf(self.completion_label.toString(),
-                                     facet_value.label),
+                                     _.escape(facet_value.label)),
                 facet: self.make_facet([facet_value])
             }
         }));
@@ -1349,8 +1349,8 @@ instance.web.search.CharField = instance.web.search.Field.extend( /** @lends ins
         if (_.isEmpty(value)) { return $.when(null); }
         var label = _.str.sprintf(_.str.escapeHTML(
             _t("Search %(field)s for: %(value)s")), {
-                field: '<em>' + this.attrs.string + '</em>',
-                value: '<strong>' + _.str.escapeHTML(value) + '</strong>'});
+                field: '<em>' + _.escape(this.attrs.string) + '</em>',
+                value: '<strong>' + _.escape(value) + '</strong>'});
         return $.when([{
             label: label,
             facet: {
@@ -1367,8 +1367,8 @@ instance.web.search.NumberField = instance.web.search.Field.extend(/** @lends in
         if (isNaN(val)) { return $.when(); }
         var label = _.str.sprintf(
             _t("Search %(field)s for: %(value)s"), {
-                field: '<em>' + this.attrs.string + '</em>',
-                value: '<strong>' + _.str.escapeHTML(value) + '</strong>'});
+                field: '<em>' + _.escape(this.attrs.string) + '</em>',
+                value: '<strong>' + _.escape(value) + '</strong>'});
         return $.when([{
             label: label,
             facet: {
@@ -1456,13 +1456,13 @@ instance.web.search.SelectionField = instance.web.search.Field.extend(/** @lends
             })
             .map(function (sel) {
                 return {
-                    label: sel[1],
+                    label: _.escape(sel[1]),
                     facet: facet_from(self, sel)
                 };
             }).value();
         if (_.isEmpty(results)) { return $.when(null); }
         return $.when.call(null, [{
-            label: this.attrs.string
+            label: _.escape(this.attrs.string)
         }].concat(results));
     },
     facet_for: function (value) {
@@ -1500,7 +1500,7 @@ instance.web.search.DateField = instance.web.search.Field.extend(/** @lends inst
         var date_string = instance.web.format_value(d, this.attrs);
         var label = _.str.sprintf(_.str.escapeHTML(
             _t("Search %(field)s at: %(value)s")), {
-                field: '<em>' + this.attrs.string + '</em>',
+                field: '<em>' + _.escape(this.attrs.string) + '</em>',
                 value: '<strong>' + date_string + '</strong>'});
         return $.when([{
             label: label,
@@ -1547,10 +1547,10 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
             context: context
         }).then(function (results) {
             if (_.isEmpty(results)) { return null; }
-            return [{label: self.attrs.string}].concat(
+            return [{label: _.escape(self.attrs.string)}].concat(
                 _(results).map(function (result) {
                     return {
-                        label: result[1],
+                        label: _.escape(result[1]),
                         facet: facet_from(self, result)
                     };
                 }));
