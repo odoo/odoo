@@ -265,10 +265,6 @@ create table wkf_logs
 
 CREATE TABLE ir_module_category (
     id serial NOT NULL,
-    create_uid integer references res_users on delete set null,
-    create_date timestamp without time zone,
-    write_date timestamp without time zone,
-    write_uid integer references res_users on delete set null,
     parent_id integer REFERENCES ir_module_category ON DELETE SET NULL,
     name character varying(128) NOT NULL,
     primary key(id)
@@ -277,10 +273,6 @@ CREATE TABLE ir_module_category (
 
 CREATE TABLE ir_module_module (
     id serial NOT NULL,
-    create_uid integer references res_users on delete set null,
-    create_date timestamp without time zone,
-    write_date timestamp without time zone,
-    write_uid integer references res_users on delete set null,
     website character varying(256),
     summary character varying(256),
     name character varying(128) NOT NULL,
@@ -305,10 +297,6 @@ ALTER TABLE ir_module_module add constraint name_uniq unique (name);
 
 CREATE TABLE ir_module_module_dependency (
     id serial NOT NULL,
-    create_uid integer references res_users on delete set null,
-    create_date timestamp without time zone,
-    write_date timestamp without time zone,
-    write_uid integer references res_users on delete set null,
     name character varying(128),
     version_pattern character varying(128) default NULL,
     module_id integer REFERENCES ir_module_module ON DELETE cascade,
@@ -346,10 +334,6 @@ CREATE TABLE res_lang (
 
 CREATE TABLE ir_model_data (
     id serial NOT NULL,
-    create_uid integer,
-    create_date timestamp without time zone,
-    write_date timestamp without time zone,
-    write_uid integer,
     noupdate boolean,
     name character varying(128) NOT NULL,
     date_init timestamp without time zone,
@@ -365,10 +349,6 @@ CREATE TABLE ir_model_data (
 --   - for a constraint: type is 'u' (this is the convention PostgreSQL uses).
 CREATE TABLE ir_model_constraint (
     id serial NOT NULL,
-    create_uid integer,
-    create_date timestamp without time zone,
-    write_date timestamp without time zone,
-    write_uid integer,
     date_init timestamp without time zone,
     date_update timestamp without time zone,
     module integer NOT NULL references ir_module_module on delete restrict,
@@ -381,10 +361,6 @@ CREATE TABLE ir_model_constraint (
 -- (so they can be removed when the module is uninstalled).
 CREATE TABLE ir_model_relation (
     id serial NOT NULL,
-    create_uid integer,
-    create_date timestamp without time zone,
-    write_date timestamp without time zone,
-    write_uid integer,
     date_init timestamp without time zone,
     date_update timestamp without time zone,
     module integer NOT NULL references ir_module_module on delete restrict,
