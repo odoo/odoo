@@ -470,9 +470,88 @@ class stock_location(osv.osv):
                     continue
         return False
 
+class stock_quant(osv.osv):
+    """
+    Quants are the smallest indivisible unit of stock
+    
+    """
+    _name = "stock.quant"
+    _description = "Quants"
+    _columns = {
+        'location_id': fields.many2one("stock.location", "Location", required=True),
+        'qty': fields.float("Quantity", required=True), #should be in units of the product UoM
+        'pack_id': fields.many2one("stock.quant.package"), 
+        'reservation_id': fields.many2one("stock.move", "Stock Move"), 
+        'prodlot_id': fields.many2one("stock.production.lot", "Serial Number"), 
+        'history_ids': fields.many2many("stock.move", "quant", "move", string="Moves History"), 
+        'price_unit': fields.float("Cost price"), 
+        'create_date': fields.date("Created date or date the quant entered the system"), 
+        #Maybe add date of last move
+        }
+
+    def split_and_assign_quants(self, cr, uid, ids, move, qty, context=None):
+        """
+        This method will split off the quants with the specified quantity 
+        and assign the move to this quant by using reserved_id
+        
+        Should be triggered when assigning the move
+        Should be executed on one id
+        """
+        assert len(ids) == 1, _("Only split one quant at a time")
+        #quant = 
+        #if (move.): 
+
+    def move_quants(self, cr, uid, ids, move, context=None):
+        """
+        Change location of quants
+        When a move is done, the quants will already have been split because of the previous method
+        => you only need to change the location of the quant
+        :param move: browse_record
+        """
+        self.write(cr, uid, ids, {'location_id': move.location_dest_id.id}, context=context)
+    
+    def choose_quants(self, cr, uid, ids, location_id,  product_id, qty, context=None):
+        """
+        Use the removal strategies of product to search for the correct quants
+        
+        :param location_id: child_of this location_id
+        :param product_id: id of product
+        :param qty in UoM of product
+        :returns: tuples of (quants, qty)
+        """
+        #TODO Normally, you should check the removal strategy now
+        #But we will assume it is FIFO for the moment
+        possible_quants = self.search(cr, uid, [('location_id', 'child_of', location_id), ('product_id','=',product_id), 
+                                                ('qty', '>', 0.0)], order = 'create_date, id', context=context)
+        qty_todo = qty
+        res = []
+        for quant in self.browse(cr, uid, possible_quants, context=context):
+            if qty_todo >= quant.qty:
+                res += [(quant.id, quant.qty)]
+                qty_todo -= quant.qty
+            else:
+                res += [(quant.id, qty_todo)]
+                qty_todo = 0
+            if qty_todo == 0: 
+                break
+        return res
+
+
+class stock_quant_package(osv.osv):
+    """
+    These are the packages, it replaces the stock.tracking and are applied on quants instead of on moves
+    """
+    _name = "stock.quant.package"
+    _columns = {
+        'quant_ids':fields.one2many("stock.quant", "Quants"), 
+        'name': fields.char('Pack Reference', required = True), 
+    }
 
 
 class stock_tracking(osv.osv):
+    """
+    THIS CLASS WILL BE REMOVED (=> DEPRECATED)
+    """
     _name = "stock.tracking"
     _description = "Packs"
 
@@ -1617,6 +1696,7 @@ class stock_move(osv.osv):
         # used for colors in tree views:
         'scrapped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scrapped', readonly=True),
         'type': fields.related('picking_id', 'type', type='selection', selection=[('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], string='Shipping Type'),
+        'reserved_quant_ids': fields.one2many('stock.quant', 'reservation_id', 'Reserved quants'), 
     }
 
     def _check_location(self, cr, uid, ids, context=None):
@@ -2361,6 +2441,17 @@ class stock_move(osv.osv):
                          'line_id': move_lines,
                          'ref': move.picking_id and move.picking_id.name})
 
+    def split_quants_for_pack(self, cr, uid, ids, context=None):
+        """
+        Suppose for the moment we don't have any packaging
+        """
+        res = {}
+        for move in self.browse(cr, uid, ids, context=context):
+            #Split according to pack wizard if necessary
+            res[move.id] = move.reserved_quant_ids
+        return res
+
+
     def action_done(self, cr, uid, ids, context=None):
         """ Makes the move done and if all moves are done, it will finish the picking.
         @return:
@@ -2379,8 +2470,14 @@ class stock_move(osv.osv):
             self.action_confirm(cr, uid, todo, context=context)
             todo = []
 
-        #Do price calculation on moves
-        matchresults = self.price_calculation(cr, uid, ids, context=context)
+        #Do price calc on move
+        for move in self.browse(cr, uid, ids, context=context):
+            quants = self.split_quants_for_pack(cr, uid, [move.id], context=context)
+            
+            self.pool.get("stock.quant").move_quants(cr, uid, quants[move.id], context=context)
+            #Do price calculation on move -> SHould PASS Quants here
+            matchresults = self.price_calculation(cr, uid, ids, context=context)
+        
         for move in self.browse(cr, uid, ids, context=context):
             if move.state in ['done','cancel']:
                 continue
