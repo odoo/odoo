@@ -65,8 +65,7 @@ class mail_alias(osv.Model):
 
     _columns = {
         'alias_name': fields.char('Alias',
-                            help="The name of the email alias, e.g. 'jobs' "
-                                 "if you want to catch emails for <jobs@example.my.openerp.com>",),
+            help="The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.my.openerp.com>",),
         'alias_model_id': fields.many2one('ir.model', 'Aliased Model', required=True, ondelete="cascade",
                                           help="The model (OpenERP Document Kind) to which this alias "
                                                "corresponds. Any incoming email that does not reply to an "
@@ -90,9 +89,10 @@ class mail_alias(osv.Model):
         'alias_domain': fields.function(_get_alias_domain, string="Alias domain", type='char', size=None),
         'alias_parent_model_id': fields.many2one('ir.model', 'Parent Model',
             help="Parent model holding the alias. The model holding the alias reference\n"
-                    "is not necessarily the model given by alias_model_id (hint: project and task)"),
+                    "is not necessarily the model given by alias_model_id\n"
+                    "(example: project (parent_model) and task (model))"),
         'alias_parent_thread_id': fields.integer('Parent Record Thread ID',
-            help="ID of the parent record holding the alias."),
+            help="ID of the parent record holding the alias (example: project holding the task creation alias)"),
         'alias_contact': fields.selection([
                 ('everyone', 'Everyone'),
                 ('partners', 'Authenticated Partners'),
@@ -163,12 +163,16 @@ class mail_alias(osv.Model):
             :param child_table_name: table name of the child class (i.e. res_users)
             :param child_model_auto_init_fct: pointer to the _auto_init function
                 (i.e. super(res_users,self)._auto_init(cr, context=context))
+            :param alias_model_name: name of the aliased model
             :param alias_id_column: alias_id column (i.e. self._columns['alias_id'])
             :param alias_key: name of the column used for the unique name (i.e. 'login')
+            :param alias_prefix: prefix for the unique name (i.e. 'jobs' + ...)
             :param alias_force_key': name of the column for force_thread_id;
                 if empty string, not taken into account
             :param alias_defaults: dict, keys = mail.alias columns, values = child
                 model column name used for default values (i.e. {'job_id': 'id'})
+            :param alias_generate_name: automatically generate alias name using prefix / alias key;
+                default alias_name value is False because since 8.0 it is not required anymore
         """
         if context is None:
             context = {}
@@ -222,8 +226,8 @@ class mail_alias(osv.Model):
             context = {}
         model_name = context.get('alias_model_name')
         parent_model_name = context.get('alias_parent_model_name')
-        # when an alias name appears to already be an email, we keep the local part only
         if vals.get('alias_name'):
+            # when an alias name appears to already be an email, we keep the local part only
             alias_name = remove_accents(vals['alias_name']).lower().split('@')[0]
             alias_name = re.sub(r'[^\w+.]+', '-', alias_name)
             alias_name = self._find_unique(cr, uid, alias_name, context=context)
@@ -234,8 +238,7 @@ class mail_alias(osv.Model):
         if parent_model_name:
             model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', parent_model_name)], context=context)[0]
             vals['alias_parent_model_id'] = model_id
-        res = super(mail_alias, self).create(cr, uid, vals, context=context)
-        return res
+        return super(mail_alias, self).create(cr, uid, vals, context=context)
 
     def open_document(self, cr, uid, ids, context=None):
         alias = self.browse(cr, uid, ids, context=context)[0]
