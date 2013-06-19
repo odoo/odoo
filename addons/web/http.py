@@ -203,8 +203,8 @@ class WebRequest(object):
 
             with with_obj():
                 if self.func_request_type != self._request_type:
-                    raise Exception("%s: Function declared as capable of handling request of type '%s' but called with a request of type '%s'" \
-                        % (self.httprequest.path, self.func_request_type, self._request_type))
+                    raise Exception("%s, %s: Function declared as capable of handling request of type '%s' but called with a request of type '%s'" \
+                        % (self.func, self.httprequest.path, self.func_request_type, self._request_type))
                 return self.func(*args, **kwargs)
         finally:
             # just to be sure no one tries to re-use the request
@@ -722,8 +722,8 @@ class Root(object):
                     with self.db_routers_lock:
                         del self.db_routers[db]
 
-            self.find_handler(request)
             with set_request(request):
+                self.find_handler()
                 result = request.dispatch()
 
             if db:
@@ -778,20 +778,45 @@ class Root(object):
         self.dispatch = DisableCacheMiddleware(app)
 
     def _build_router(self, db):
+        _logger.info("Generating routing configuration for database %s" % db)
         routing_map = routing.Map()
-        modules = controllers_per_module.keys()
-        modules.sort()
-        modules.remove("web")
-        modules = ["web"] + modules
+        modules_set = set(controllers_per_module.keys())
+        modules_set -= set("web")
+
+        modules = ["web"] + sorted(modules_set)
+        # building all nodb methods
+        for module in modules:
+            for v in controllers_per_module[module]:
+                members = inspect.getmembers(v[1]())
+                for mk, mv in members:
+                    if inspect.ismethod(mv) and getattr(mv, 'exposed', False) and getattr(mv, 'auth', None) == "nodb":
+                        o = v[1]()
+                        if mk == "index":
+                            url = o._cp_path
+                        else:
+                            url = os.path.join(o._cp_path, mk)
+                        function = (o.get_wrapped_method(mk), mv)
+                        routing_map.add(routing.Rule(url, endpoint=function))
+                        url = os.path.join(url, "<path:path>")
+                        routing_map.add(routing.Rule(url, endpoint=function))
+
+        if not db:
+            return routing_map
+
+        registry = openerp.modules.registry.RegistryManager.get(db)
+        with registry.cursor() as cr:
+            m = registry.get('ir.module.module')
+            ids = m.search(cr, openerp.SUPERUSER_ID, [('state','=','installed')])
+            installed = set([x['name'] for x in m.read(cr, 1, ids, ['name'])])
+            modules_set -= set(installed)
+        modules = ["web"] + sorted(modules_set)
+        # building all other methods
         for module in modules:
             for v in controllers_per_module[module]:
                 o = v[1]()
                 members = inspect.getmembers(o)
                 for mk, mv in members:
-                    if inspect.ismethod(mv) and getattr(mv, 'exposed', False):
-                        auth = getattr(mv, 'auth', None)
-                        if (db is None and auth != 'nodb'):
-                            continue
+                    if inspect.ismethod(mv) and getattr(mv, 'exposed', False) and getattr(mv, 'auth', None) != "nodb":
                         if mk == "index":
                             url = o._cp_path
                         else:
@@ -811,7 +836,7 @@ class Root(object):
                 router = self.db_routers[db] = router
         return router
 
-    def find_handler(self, request):
+    def find_handler(self):
         """
         Tries to discover the controller handling the request for the path
         specified by the provided parameters
