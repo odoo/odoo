@@ -47,8 +47,8 @@ class purchase_requisition(osv.osv):
     _columns = {
         'name': fields.char('Requisition Reference', size=32,required=True),
         'origin': fields.char('Source Document', size=32),
-        'date_start': fields.datetime('Requisition Date'),
-        'date_end': fields.datetime('Requisition Deadline'),
+        'date_start': fields.datetime('Date'),
+        'date_end': fields.datetime('Bid Submission Deadline'),
         'user_id': fields.many2one('res.users', 'Responsible'),
         'exclusive': fields.selection([('exclusive','Purchase Requisition (exclusive)'),('multiple','Multiple Requisitions')],'Requisition Type', required=True, help="Purchase Requisition (exclusive):  On the confirmation of a purchase order, it cancels the remaining purchase order.\nPurchase Requisition(Multiple):  It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"""),
         'description': fields.text('Description'),
@@ -332,7 +332,7 @@ class purchase_requisition_line(osv.osv):
         'product_uom_id': fields.many2one('product.uom', 'Product Unit of Measure'),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
         'po_line_buy': fields.many2one('purchase.order.line', 'Purchase Order Line'),
-        'requisition_id': fields.many2one('purchase.requisition','Request for Tender', ondelete='cascade'),
+        'requisition_id': fields.many2one('purchase.requisition','Call for Bids', ondelete='cascade'),
         'po_line_ids': fields.related('requisition_id', 'po_line_ids', string='PO lines', readonly=True, type="one2many"),
         'company_id': fields.related('requisition_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
         'account_analytic_id':fields.many2one('account.analytic.account', 'Analytic Account',),
@@ -364,7 +364,7 @@ class purchase_order(osv.osv):
     _inherit = "purchase.order"
 
     _columns = {
-        'requisition_id' : fields.many2one('purchase.requisition','Request for Tender'),
+        'requisition_id' : fields.many2one('purchase.requisition','Call for Bids'),
     }
 
     def wkf_confirm_order(self, cr, uid, ids, context=None):
@@ -419,7 +419,7 @@ class product_product(osv.osv):
     _inherit = 'product.product'
 
     _columns = {
-        'purchase_requisition': fields.boolean('Requests for Tender', help="Check this box to generate requests for tender instead of generating requests for quotation from procurement.")
+        'purchase_requisition': fields.boolean('Call for Bids', help="Check this box to generate Call for Bids instead of generating requests for quotation from procurement.")
     }
     _defaults = {
         'purchase_requisition': False
