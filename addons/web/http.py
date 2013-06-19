@@ -265,23 +265,28 @@ class JsonRequest(WebRequest):
            "id": null}
 
     """
-    def dispatch(self):
-        """ Calls the method asked for by the JSON-RPC2 or JSONP request
+    def __init__(self, *args):
+        super(JsonRequest, self).__init__(*args)
 
-        :returns: an utf8 encoded JSON-RPC2 or JSONP reply
-        """
+        self.jsonp_handler = None
+
         args = self.httprequest.args
         jsonp = args.get('jsonp')
+        self.jsonp = jsonp
         request = None
         request_id = args.get('id')
 
         if jsonp and self.httprequest.method == 'POST':
             # jsonp 2 steps step1 POST: save call
             self.init(args)
-            self.session.jsonp_requests[request_id] = self.httprequest.form['r']
-            headers=[('Content-Type', 'text/plain; charset=utf-8')]
-            r = werkzeug.wrappers.Response(request_id, headers=headers)
-            return r
+
+            def handler():
+                self.session.jsonp_requests[request_id] = self.httprequest.form['r']
+                headers=[('Content-Type', 'text/plain; charset=utf-8')]
+                r = werkzeug.wrappers.Response(request_id, headers=headers)
+                return r
+            self.jsonp_handler = handler
+            return
         elif jsonp and args.get('r'):
             # jsonp method GET
             request = args.get('r')
@@ -293,12 +298,20 @@ class JsonRequest(WebRequest):
             # regular jsonrpc2
             request = self.httprequest.stream.read()
 
+        # Read POST content or POST Form Data named "request"
+        self.jsonrequest = simplejson.loads(request, object_hook=reject_nonliteral)
+        self.init(self.jsonrequest.get("params", {}))
+
+    def dispatch(self):
+        """ Calls the method asked for by the JSON-RPC2 or JSONP request
+
+        :returns: an utf8 encoded JSON-RPC2 or JSONP reply
+        """
+        if self.jsonp_handler:
+            return self.jsonp_handler()
         response = {"jsonrpc": "2.0" }
         error = None
         try:
-            # Read POST content or POST Form Data named "request"
-            self.jsonrequest = simplejson.loads(request, object_hook=reject_nonliteral)
-            self.init(self.jsonrequest.get("params", {}))
             #if _logger.isEnabledFor(logging.DEBUG):
             #    _logger.debug("--> %s.%s\n%s", func.im_class.__name__, func.__name__, pprint.pformat(self.jsonrequest))
             response['id'] = self.jsonrequest.get('id')
@@ -325,13 +338,13 @@ class JsonRequest(WebRequest):
         if _logger.isEnabledFor(logging.DEBUG):
             _logger.debug("<--\n%s", pprint.pformat(response))
 
-        if jsonp:
+        if self.jsonp:
             # If we use jsonp, that's mean we are called from another host
             # Some browser (IE and Safari) do no allow third party cookies
             # We need then to manage http sessions manually.
             response['httpsessionid'] = self.httpsession.sid
             mime = 'application/javascript'
-            body = "%s(%s);" % (jsonp, simplejson.dumps(response),)
+            body = "%s(%s);" % (self.jsonp, simplejson.dumps(response),)
         else:
             mime = 'application/json'
             body = simplejson.dumps(response)
@@ -385,11 +398,14 @@ def jsonrequest(f):
 class HttpRequest(WebRequest):
     """ Regular GET/POST request
     """
-    def dispatch(self):
+    def __init__(self, *args):
+        super(HttpRequest, self).__init__(*args)
         params = dict(self.httprequest.args)
         params.update(self.httprequest.form)
         params.update(self.httprequest.files)
         self.init(params)
+
+    def dispatch(self):
         akw = {}
         for key, value in self.httprequest.args.iteritems():
             if isinstance(value, basestring) and len(value) < 1024:
