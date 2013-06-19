@@ -670,7 +670,9 @@ class Root(object):
     def __init__(self):
         self.addons = {}
         self.statics = {}
-        self.routing_map = None
+        
+        self.db_routers = {}
+        self.db_routers_lock = threading.Lock()
 
         self.load_addons()
 
@@ -679,6 +681,7 @@ class Root(object):
         self.session_store = werkzeug.contrib.sessions.FilesystemSessionStore(path)
         self.session_lock = threading.Lock()
         _logger.debug('HTTP sessions stored in: %s', path)
+
 
     def __call__(self, environ, start_response):
         """ Handle a WSGI request
@@ -755,7 +758,13 @@ class Root(object):
                         addons_manifest[module] = manifest
                         self.statics['/%s/static' % module] = path_static
 
-        self.routing_map = routing.Map()
+        self.db_routers[None] = self._build_router(None)
+
+        app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, self.statics)
+        self.dispatch = DisableCacheMiddleware(app)
+
+    def _build_router(self, db):
+        routing_map = routing.Map()
         modules = controllers_per_module.keys()
         modules.sort()
         modules.remove("web")
@@ -767,17 +776,27 @@ class Root(object):
                 members = inspect.getmembers(o)
                 for mk, mv in members:
                     if inspect.ismethod(mv) and getattr(mv, 'exposed', False):
+                        auth = getattr(mv, 'auth', None)
+                        if (db is None and auth != 'nodb'):
+                            continue
                         if mk == "index":
                             url = o._cp_path
                         else:
                             url = os.path.join(o._cp_path, mk)
                         function = (o.get_wrapped_method(mk), mv)
-                        self.routing_map.add(routing.Rule(url, endpoint=function))
+                        routing_map.add(routing.Rule(url, endpoint=function))
                         url = os.path.join(url, "<path:path>")
-                        self.routing_map.add(routing.Rule(url, endpoint=function))
+                        routing_map.add(routing.Rule(url, endpoint=function))
+        return routing_map
 
-        app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, self.statics)
-        self.dispatch = DisableCacheMiddleware(app)
+    def get_db_router(self, db):
+        with self.db_routers_lock:
+            router = self.db_routers.get(db)
+        if not router:
+            router = self._build_router(db)
+            with self.db_routers_lock:
+                router = self.db_routers[db] = router
+        return router
 
     def find_handler(self, request):
         """
@@ -789,8 +808,9 @@ class Root(object):
         :rtype: ``Controller | None``
         """
         path = request.httprequest.path
-        urls = self.routing_map.bind("")
+        urls = self.get_db_router(request.db).bind("")
         func, original = urls.match(path)[0]
+
         auth = getattr(original, "auth", "auth")
 
         request.func = func
