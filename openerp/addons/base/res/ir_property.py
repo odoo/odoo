@@ -35,7 +35,7 @@ class ir_property(osv.osv):
     def _models_field_get(self, cr, uid, field_key, field_value, context=None):
         get = attrgetter(field_key, field_value)
         obj = self.pool.get('ir.model.fields')
-        ids = obj.search(cr, uid, [('view_load','=',1)], context=context)
+        ids = obj.search(cr, uid, [], context=context)
         res = set()
         for o in obj.browse(cr, uid, ids, context=context):
             res.add(get(o))

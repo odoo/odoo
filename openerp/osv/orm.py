@@ -773,7 +773,6 @@ class BaseModel(object):
                 'field_description': f.string,
                 'ttype': f._type,
                 'relation': f._obj or '',
-                'view_load': (f.view_load and 1) or 0,
                 'select_level': tools.ustr(f.select or 0),
                 'readonly': (f.readonly and 1) or 0,
                 'required': (f.required and 1) or 0,
@@ -803,12 +802,12 @@ class BaseModel(object):
                 vals['id'] = id
                 cr.execute("""INSERT INTO ir_model_fields (
                     id, model_id, model, name, field_description, ttype,
-                    relation,view_load,state,select_level,relation_field, translate, serialization_field_id
+                    relation,state,select_level,relation_field, translate, serialization_field_id
                 ) VALUES (
-                    %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
+                    %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
                 )""", (
                     id, vals['model_id'], vals['model'], vals['name'], vals['field_description'], vals['ttype'],
-                     vals['relation'], bool(vals['view_load']), 'base',
+                     vals['relation'], 'base',
                     vals['select_level'], vals['relation_field'], bool(vals['translate']), vals['serialization_field_id']
                 ))
                 if 'module' in context:
@@ -826,11 +825,11 @@ class BaseModel(object):
                         cr.commit()
                         cr.execute("""UPDATE ir_model_fields SET
                             model_id=%s, field_description=%s, ttype=%s, relation=%s,
-                            view_load=%s, select_level=%s, readonly=%s ,required=%s, selectable=%s, relation_field=%s, translate=%s, serialization_field_id=%s
+                            select_level=%s, readonly=%s ,required=%s, selectable=%s, relation_field=%s, translate=%s, serialization_field_id=%s
                         WHERE
                             model=%s AND name=%s""", (
                                 vals['model_id'], vals['field_description'], vals['ttype'],
-                                vals['relation'], bool(vals['view_load']),
+                                vals['relation'],
                                 vals['select_level'], bool(vals['readonly']), bool(vals['required']), bool(vals['selectable']), vals['relation_field'], bool(vals['translate']), vals['serialization_field_id'], vals['model'], vals['name']
                             ))
                         break

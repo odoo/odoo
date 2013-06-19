@@ -109,7 +109,6 @@ class _column(object):
         self._context = context
         self.write = False
         self.read = False
-        self.view_load = 0
         self.select = select
         self.manual = manual
         self.selectable = True
@@ -1477,11 +1476,13 @@ class property(function):
             self.field_id[cr.dbname] = res and res[0]
         return self.field_id[cr.dbname]
 
-    def __init__(self, obj_prop, **args):
-        # TODO remove obj_prop parameter (use many2one type)
+
+    def __init__(self, **args):
         self.field_id = {}
-        function.__init__(self, self._fnct_read, False, self._fnct_write,
-                          obj_prop, multi='properties', **args)
+        if 'view_load' in args:
+            _logger.warning("view_load attribute is deprecated on ir.fields. Args: %r", args)
+        obj = 'relation' in args and args['relation'] or ''
+        function.__init__(self, self._fnct_read, False, self._fnct_write, obj=obj, multi='properties', **args)
 
     def restart(self):
         self.field_id = {}
