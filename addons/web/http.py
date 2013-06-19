@@ -670,7 +670,7 @@ class Root(object):
     def __init__(self):
         self.addons = {}
         self.statics = {}
-        
+
         self.db_routers = {}
         self.db_routers_lock = threading.Lock()
 
@@ -707,11 +707,15 @@ class Root(object):
 
         with session_context(httprequest, self.session_store, self.session_lock, sid) as session:
             request = self._build_request(httprequest)
+            db = request.db
+
+            updated = openerp.modules.registry.RegistryManager.check_registry_signaling(db)
 
             self.find_handler(request)
-
             with set_request(request):
                 result = request.dispatch()
+
+            openerp.modules.registry.RegistryManager.signal_caches_change(db)
 
             if isinstance(result, basestring):
                 headers=[('Content-Type', 'text/html; charset=utf-8'), ('Content-Length', len(result))]
