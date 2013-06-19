@@ -367,6 +367,12 @@ class stock_location(osv.osv):
             states = ['done']
         return self._product_all_get(cr, uid, id, product_ids, context, ['confirmed', 'waiting', 'assigned', 'done'])
 
+
+
+        
+
+
+
     def _product_reserve(self, cr, uid, ids, product_id, product_qty, context=None, lock=False):
         """
         Attempt to find a quantity ``product_qty`` (in the product's default uom or the uom passed in ``context``) of product ``product_id``
@@ -478,6 +484,7 @@ class stock_quant(osv.osv):
     _name = "stock.quant"
     _description = "Quants"
     _columns = {
+        'product_id': fields.many2one("product.product", "Product", required=True), 
         'location_id': fields.many2one("stock.location", "Location", required=True),
         'qty': fields.float("Quantity", required=True), #should be in units of the product UoM
         'pack_id': fields.many2one("stock.quant.package"), 
@@ -486,38 +493,69 @@ class stock_quant(osv.osv):
         'history_ids': fields.many2many("stock.move", "quant", "move", string="Moves History"), 
         'price_unit': fields.float("Cost price"), 
         'create_date': fields.date("Created date or date the quant entered the system"), 
-        #Maybe add date of last move
+        #Might add date of last change of location also
         }
 
-    def split_and_assign_quants(self, cr, uid, ids, move, qty, context=None):
+    def split_and_assign_quant(self, cr, uid, ids, move, qty, context=None):
         """
         This method will split off the quants with the specified quantity 
         and assign the move to this quant by using reserved_id
         
         Should be triggered when assigning the move
-        Should be executed on one id
+        Should be executed on move only
         """
         assert len(ids) == 1, _("Only split one quant at a time")
         #quant = 
         #if (move.): 
+        
+
+
+    def split_and_assign_quants(self, cr, uid, quant_tuples, move, context=None):
+        """
+        This method will split off the quants with the specified quantity 
+        and assign the move to this quant by using reserved_id
+        
+        Should be triggered when assigning the move
+        Should be executed on move only
+        :param quant_tuples: are the tuples from choose_quants (quant_id, qty)
+        """
+        quants_to_reserve = []
+        for quant_tuple in quant_tuples:
+
+            quant = self.browse(cr, uid, quant_tuple[0], context=context)
+            if quant_tuple[1] == quant.qty: 
+                quants_to_reserve.append(quant.id)
+            else:
+                #Split demanded qty frrm quant and add new quant to reserved
+                new_quant = self.copy(cr, uid, quant.id, default={'qty': quant_tuple[1]}, context=context)
+                new_qty = quant.qty - quant_tuple[1]
+                self.write(cr, uid, quant.id, {'qty': new_qty}, context=context)
+                quants_to_reserve.append(new_quant)
+        self.write(cr, uid, quants_to_reserve, {'reservation_id': move.id}, context=context)
+        self.pool.get("stock.move").write(cr, uid, [move.id], {'reserved_quant_ids': [(4, x) for x in quants_to_reserve]}, context=context)
+
 
     def move_quants(self, cr, uid, ids, move, context=None):
         """
         Change location of quants
         When a move is done, the quants will already have been split because of the previous method
         => you only need to change the location of the quant
+        -> At the same time the reservations will be removed
         :param move: browse_record
         """
-        self.write(cr, uid, ids, {'location_id': move.location_dest_id.id}, context=context)
+        self.write(cr, uid, ids, {'location_id': move.location_dest_id.id,
+                                  'reservation_id': False}, context=context)
+        self.pool.get("stock.move").write(cr, uid, [move.id], {"reserved_quant_ids": [(5, 0)]}, context=context)
+
     
-    def choose_quants(self, cr, uid, ids, location_id,  product_id, qty, context=None):
+    def choose_quants(self, cr, uid, location_id,  product_id, qty, context=None):
         """
         Use the removal strategies of product to search for the correct quants
         
         :param location_id: child_of this location_id
         :param product_id: id of product
         :param qty in UoM of product
-        :returns: tuples of (quants, qty)
+        :returns: tuples of (quant_id, qty)
         """
         #TODO Normally, you should check the removal strategy now
         #But we will assume it is FIFO for the moment
@@ -543,7 +581,7 @@ class stock_quant_package(osv.osv):
     """
     _name = "stock.quant.package"
     _columns = {
-        'quant_ids':fields.one2many("stock.quant", "Quants"), 
+        'quant_ids':fields.one2many("stock.quant", "pack_id", "Quants"), 
         'name': fields.char('Pack Reference', required = True), 
     }
 
@@ -2205,6 +2243,8 @@ class stock_move(osv.osv):
         done = []
         count = 0
         pickings = {}
+        quant_obj = self.pool.get("stock.quant")
+        uom_obj = self.pool.get("product.uom")
         if context is None:
             context = {}
         for move in self.browse(cr, uid, ids, context=context):
@@ -2215,7 +2255,27 @@ class stock_move(osv.osv):
                 continue
             if move.state in ('confirmed', 'waiting'):
                 # Important: we must pass lock=True to _product_reserve() to avoid race conditions and double reservations
-                res = self.pool.get('stock.location')._product_reserve(cr, uid, [move.location_id.id], move.product_id.id, move.product_qty, {'uom': move.product_uom.id}, lock=True)
+                #res = self.pool.get('stock.location')._product_reserve(cr, uid, [move.location_id.id], move.product_id.id, move.product_qty, {'uom': move.product_uom.id}, lock=True)
+                
+                #Convert UoM qty -> check rounding now in product_reserver
+                qty = uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, move.product_id.uom_id.id)
+                res2 = quant_obj.choose_quants(cr, uid, move.location_id.id, move.product_id.id, qty, context=context)
+                
+                #Should group quants by location:
+                quants = {}
+                qtys = {}
+                qty = {}
+                for tuple in res2:
+                    quant = quant_obj.browse(cr, uid, tuple[0], context=context) #should be out of the loop
+                    if quant.location_id.id not in quants:
+                        quants[quant.location_id.id] = []
+                        qtys[quant.location_id.id] = []
+                        qty[quant.location_id.id] = 0
+                    quants[quant.location_id.id] += [quant.id]
+                    qtys[quant.location_id.id] += [tuple[1]]
+                    qty[quant.location_id.id] += tuple[1]
+                
+                res = [(qty[key], key) for key in quants.keys()]
                 if res:
                     #_product_available_test depends on the next status for correct functioning
                     #the test does not work correctly if the same product occurs multiple times
@@ -2227,11 +2287,13 @@ class stock_move(osv.osv):
                     r = res.pop(0)
                     product_uos_qty = self.pool.get('stock.move').onchange_quantity(cr, uid, ids, move.product_id.id, r[0], move.product_id.uom_id.id, move.product_id.uos_id.id)['value']['product_uos_qty']
                     cr.execute('update stock_move set location_id=%s, product_qty=%s, product_uos_qty=%s where id=%s', (r[1], r[0],product_uos_qty, move.id))
-
+                    #assign and split quants
+                    quant_obj.split_and_assign_quants(cr, uid, zip(quants[r[1]], qtys[r[1]]), move, context=context)
                     while res:
                         r = res.pop(0)
                         move_id = self.copy(cr, uid, move.id, {'product_uos_qty': product_uos_qty, 'product_qty': r[0], 'location_id': r[1]})
                         done.append(move_id)
+                        quant_obj.split_and_assign_quants(cr, uid, zip(quants[r[1]], qtys[r[1]]), self.browse(cr, uid, move_id, context=context), context=context)
         if done:
             count += len(done)
             self.write(cr, uid, done, {'state': 'assigned'})
@@ -2441,14 +2503,14 @@ class stock_move(osv.osv):
                          'line_id': move_lines,
                          'ref': move.picking_id and move.picking_id.name})
 
-    def split_quants_for_pack(self, cr, uid, ids, context=None):
+    def _get_quants_from_pack(self, cr, uid, ids, context=None):
         """
         Suppose for the moment we don't have any packaging
         """
         res = {}
         for move in self.browse(cr, uid, ids, context=context):
             #Split according to pack wizard if necessary
-            res[move.id] = move.reserved_quant_ids
+            res[move.id] = [x.id for x in move.reserved_quant_ids]
         return res
 
 
@@ -2470,13 +2532,25 @@ class stock_move(osv.osv):
             self.action_confirm(cr, uid, todo, context=context)
             todo = []
 
+        uom_obj = self.pool.get("product.uom")
         #Do price calc on move
+        quants = {}
         for move in self.browse(cr, uid, ids, context=context):
-            quants = self.split_quants_for_pack(cr, uid, [move.id], context=context)
-            
-            self.pool.get("stock.quant").move_quants(cr, uid, quants[move.id], context=context)
-            #Do price calculation on move -> SHould PASS Quants here
-            matchresults = self.price_calculation(cr, uid, ids, context=context)
+            quants.update(self._get_quants_from_pack(cr, uid, [move.id], context=context)) 
+            if (move.location_id.usage in ['supplier']):
+                #Create quants
+                vals = {'product_id': move.product_id.id, 
+                        'location_id': move.location_dest_id.id, 
+                        'qty': uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, move.product_id.uom_id.id), 
+                        'create_date': fields.date.context_today(self, cr, uid, context=context), 
+                        'price_unit': move.price_unit, 
+                        }
+                quant_id = self.pool.get("stock.quant").create(cr, uid, vals, context=context)
+                quants[move.id].append(quant_id)
+            else:
+                self.pool.get("stock.quant").move_quants(cr, uid, quants[move.id], move, context=context)
+        #Do price calculation on move -> Should pass Quants here -> is a dictionary 
+        matchresults = self.price_calculation(cr, uid, ids, quants, context=context)
         
         for move in self.browse(cr, uid, ids, context=context):
             if move.state in ['done','cancel']:
@@ -2799,7 +2873,7 @@ class stock_move(osv.osv):
                         product_obj.write(cr, uid, [product.id], {'standard_price': total_price / amount}, context=context)
         return res
 
-    def price_calculation(self, cr, uid, ids, context=None):
+    def price_calculation(self, cr, uid, ids, quants, context=None):
         '''
         This method puts the right price on the stock move, 
         adapts the price on the product when necessary
