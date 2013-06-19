@@ -248,7 +248,12 @@ class mail_thread(osv.AbstractModel):
         # subscribe uid unless asked not to
         if not context.get('mail_create_nosubscribe'):
             self.message_subscribe_users(cr, uid, [thread_id], [uid], context=context)
-        self.message_auto_subscribe(cr, uid, [thread_id], values.keys(), context=context)
+        # auto_subscribe: take values and defaults into account
+        create_values = set(values.keys())
+        for key, val in context.iteritems():
+            if key.startswith('default_'):
+                create_values.add(key[8:])
+        self.message_auto_subscribe(cr, uid, [thread_id], list(create_values), context=context)
 
         # track values
         tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=context)
