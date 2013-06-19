@@ -232,6 +232,8 @@ def route(route, type="http", authentication="auth"):
         * ``nodb``: The method is always active, even if there is no database. Mainly used by the framework and
         authentication modules.
     """
+    assert type in ["http", "json"]
+    assert authentication in ["auth", "noauth", "nodb"]
     def decorator(f):
         if isinstance(route, list):
             f.routes = route
@@ -242,14 +244,6 @@ def route(route, type="http", authentication="auth"):
             f.auth = authentication
         return f
     return decorator
-
-def noauth(f):
-    f.auth = "noauth"
-    return f
-
-def nodb(f):
-    f.auth = "nodb"
-    return f
 
 def reject_nonliteral(dct):
     if '__ref' in dct:
@@ -873,7 +867,11 @@ class Root(object):
         """
         path = request.httprequest.path
         urls = self.get_db_router(request.db).bind("")
-        func, original = urls.match(path)[0]
+        try:
+            func, original = urls.match(path)[0]
+        except:
+            _logger.exception("Routing error for url %s" % path)
+            raise
 
         request.func = func
         request.auth_method = getattr(original, "auth", "auth")
