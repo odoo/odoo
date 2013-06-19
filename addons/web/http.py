@@ -88,12 +88,12 @@ class WebRequest(object):
     .. attribute:: db
 
         ``str``, the name of the database linked to the current request. Can be ``None``
-        if the current request uses the @nodb decorator.
+        if the current request uses the ``nodb`` authentication.
 
     .. attribute:: uid
 
         ``int``, the id of the user related to the current request. Can be ``None``
-        if the current request uses the @nodb or the @noauth decorator.
+        if the current request uses the ``nodb`` or the ``noauth`` authenticatoin.
     """
     def __init__(self, httprequest):
         self.httprequest = httprequest
@@ -171,14 +171,14 @@ class WebRequest(object):
     def registry(self):
         """
         The registry to the database linked to this request. Can be ``None`` if the current request uses the
-        @nodb decorator.
+        ``nodb'' authentication.
         """
         return openerp.modules.registry.RegistryManager.get(self.db) if self.db else None
 
     @property
     def cr(self):
         """
-        The cursor initialized for the current method call. If the current request uses the @nodb decorator
+        The cursor initialized for the current method call. If the current request uses the ``nodb`` authentication
         trying to access this property will raise an exception.
         """
         # some magic to lazy create the cr
@@ -211,22 +211,43 @@ class WebRequest(object):
             self.db = None
             self.uid = None
 
-
-def noauth(f):
+def route(route, type="http", authentication="auth"):
     """
+    Decorator marking the decorated method as being a handler for requests. The method must be part of a subclass
+    of ``Controller``.
+
     Decorator to put on a controller method to inform it does not require a user to be logged. When this decorator
     is used, ``request.uid`` will be ``None``. The request will still try to detect the database and an exception
     will be launched if there is no way to guess it.
+
+    :param route: string or array. The route part that will determine which http requests will match the decorated
+    method. Can be a single string or an array of strings. See werkzeug's routing documentation for the format of
+    route expression ( http://werkzeug.pocoo.org/docs/routing/ ).
+    :param type: The type of request, can be ``'http'`` or ``'json'``.
+    :param authentication: The type of authentication method, can on of the following:
+
+        * ``auth``: The user must be authenticated.
+        * ``noauth``: There is no need for the user to be authenticated but there must be a way to find the current
+        database.
+        * ``nodb``: The method is always active, even if there is no database. Mainly used by the framework and
+        authentication modules.
     """
+    def decorator(f):
+        if isinstance(route, list):
+            f.routes = route
+        else:
+            f.routes = [route]
+        f.exposed = type
+        if getattr(f, "auth", None) is None:
+            f.auth = authentication
+        return f
+    return decorator
+
+def noauth(f):
     f.auth = "noauth"
     return f
 
 def nodb(f):
-    """
-    Decorator to put on a controller method to inform it does not require authentication nor any link to a database.
-    When this decorator is used, ``request.uid`` and ``request.db`` will be ``None``. Trying to use ``request.cr``
-    will launch an exception.
-    """
     f.auth = "nodb"
     return f
 
@@ -398,8 +419,11 @@ def jsonrequest(f):
     the ``session_id``, ``context`` and ``debug`` keys (which are stripped out
     beforehand)
     """
-    f.exposed = 'json'
-    return f
+    f.combine = True
+    base = f.__name__
+    if f.__name__ == "index":
+        base = ""
+    return route([base, os.path.join(base, "<path:path>")], type="json", authentication="auth")(f)
 
 class HttpRequest(WebRequest):
     """ Regular GET/POST request
@@ -478,8 +502,11 @@ def httprequest(f):
     merged in the same dictionary), apart from the ``session_id``, ``context``
     and ``debug`` keys (which are stripped out beforehand)
     """
-    f.exposed = 'http'
-    return f
+    f.combine = True
+    base = f.__name__
+    if f.__name__ == "index":
+        base = ""
+    return route([base, os.path.join(base, "<path:path>")], type="http", authentication="auth")(f)
 
 #----------------------------------------------------------
 # Local storage of requests
@@ -526,8 +553,7 @@ class ControllerType(type):
         # store the controller in the controllers list
         name_class = ("%s.%s" % (cls.__module__, cls.__name__), cls)
         class_path = name_class[0].split(".")
-        path = attrs.get('_cp_path')
-        if not path or not class_path[:2] == ["openerp", "addons"]:
+        if not class_path[:2] == ["openerp", "addons"]:
             return
         module = class_path[2]
         controllers_per_module.setdefault(module, []).append(name_class)
@@ -535,13 +561,13 @@ class ControllerType(type):
 class Controller(object):
     __metaclass__ = ControllerType
 
-    def __new__(cls, *args, **kwargs):
-        subclasses = [c for c in cls.__subclasses__() if c._cp_path == cls._cp_path]
+    """def __new__(cls, *args, **kwargs):
+        subclasses = [c for c in cls.__subclasses__() if getattr(c, "_cp_path", None) == getattr(cls, "_cp_path", None)]
         if subclasses:
             name = "%s (extended by %s)" % (cls.__name__, ', '.join(sub.__name__ for sub in subclasses))
             cls = type(name, tuple(reversed(subclasses)), {})
 
-        return object.__new__(cls)
+        return object.__new__(cls)"""
 
     def get_wrapped_method(self, name):
         if name in self.__class__._methods_wrapper:
@@ -791,14 +817,14 @@ class Root(object):
                 for mk, mv in members:
                     if inspect.ismethod(mv) and getattr(mv, 'exposed', False) and getattr(mv, 'auth', None) == "nodb":
                         o = v[1]()
-                        if mk == "index":
-                            url = o._cp_path
-                        else:
-                            url = os.path.join(o._cp_path, mk)
                         function = (o.get_wrapped_method(mk), mv)
-                        routing_map.add(routing.Rule(url, endpoint=function))
-                        url = os.path.join(url, "<path:path>")
-                        routing_map.add(routing.Rule(url, endpoint=function))
+                        for url in mv.routes:
+                            if getattr(mv, "combine", False):
+                                url = os.path.join(o._cp_path, url)
+                                if url.endswith("/") and len(url) > 1:
+                                    url = url[: -1]
+                            print "<<<<<<<<<<<<<<<< nodb", url
+                            routing_map.add(routing.Rule(url, endpoint=function))
 
         if not db:
             return routing_map
@@ -817,14 +843,14 @@ class Root(object):
                 members = inspect.getmembers(o)
                 for mk, mv in members:
                     if inspect.ismethod(mv) and getattr(mv, 'exposed', False) and getattr(mv, 'auth', None) != "nodb":
-                        if mk == "index":
-                            url = o._cp_path
-                        else:
-                            url = os.path.join(o._cp_path, mk)
                         function = (o.get_wrapped_method(mk), mv)
-                        routing_map.add(routing.Rule(url, endpoint=function))
-                        url = os.path.join(url, "<path:path>")
-                        routing_map.add(routing.Rule(url, endpoint=function))
+                        for url in mv.routes:
+                            if getattr(mv, "combine", False):
+                                url = os.path.join(o._cp_path, url)
+                                if url.endswith("/") and len(url) > 1:
+                                    url = url[: -1]
+                            print "<<<<<<<<<<<<<<<< db", url
+                            routing_map.add(routing.Rule(url, endpoint=function))
         return routing_map
 
     def get_db_router(self, db):
