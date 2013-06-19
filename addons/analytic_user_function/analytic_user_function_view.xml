@@ -124,7 +124,7 @@
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="/tree/field[@name='user_id']" position="replace">
-                    <field name="user_id"  required="1" on_change="on_change_user_id(user_id, account_id, unit_amount)"/>
+                    <field name="user_id"  required="1" on_change="on_change_user_id(user_id, account_id, unit_amount)" context="{'default_groups_ref': ['base.group_user']}"/>
                 </xpath>
             </field>
         </record>
