@@ -705,7 +705,7 @@ class Root(object):
         with session_context(httprequest, self.session_store, self.session_lock, sid) as session:
             request = self._build_request(httprequest)
 
-            self.find_handler(httprequest.path, request)
+            self.find_handler(request)
 
             with set_request(request):
                 result = request.dispatch()
@@ -779,7 +779,7 @@ class Root(object):
         app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, self.statics)
         self.dispatch = DisableCacheMiddleware(app)
 
-    def find_handler(self, path, request):
+    def find_handler(self, request):
         """
         Tries to discover the controller handling the request for the path
         specified by the provided parameters
@@ -788,6 +788,7 @@ class Root(object):
         :returns: a callable matching the path sections
         :rtype: ``Controller | None``
         """
+        path = request.httprequest.path
         urls = self.routing_map.bind("")
         func, original = urls.match(path)[0]
         auth = getattr(original, "auth", "auth")
