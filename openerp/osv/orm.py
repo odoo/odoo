@@ -5618,12 +5618,8 @@ class BaseModel(object):
             return (lambda *args, **kwargs:
                     self.signal_workflow(*args, signal=signal_name, **kwargs))
 
-        if not name.startswith('_'):
-            try:
-                # get the value of the field with the given name
-                return self._get_field(name)
-            except KeyError as e:
-                raise AttributeError, e.message, sys.exc_info()[2]
+        if name == 'id':
+            return self._get_field('id')
 
         get = getattr(super(BaseModel, self), '__getattr__', None)
         if get is not None:
