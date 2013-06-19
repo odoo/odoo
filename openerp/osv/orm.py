@@ -2911,17 +2911,27 @@ class BaseModel(object):
 
                             # if the field is required and hasn't got a NOT NULL constraint
                             if f.required and f_pg_notnull == 0:
-                                # set the field to the default value if any
+                                # ideally shoud use add_default_value but fails
+                                # due to ir.values not being ready
+                                default = None
+                                # get old-style default
                                 if k in self._defaults:
                                     if callable(self._defaults[k]):
                                         default = self._defaults[k](self, cr, SUPERUSER_ID, context)
                                     else:
                                         default = self._defaults[k]
+                                # get new_style default if no old-style
+                                if default is None:
+                                    draft = self.draft()
+                                    field = self._fields[k]
+                                    field.compute_default(draft)
+                                    if draft[k] != field.null():
+                                        default = draft[k]
 
-                                    if default is not None:
-                                        ss = self._columns[k]._symbol_set
-                                        query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" is NULL' % (self._table, k, ss[0], k)
-                                        cr.execute(query, (ss[1](default),))
+                                if default is not None:
+                                    ss = self._columns[k]._symbol_set
+                                    query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" is NULL' % (self._table, k, ss[0], k)
+                                    cr.execute(query, (ss[1](default),))
                                 # add the NOT NULL constraint
                                 cr.commit()
                                 try:
