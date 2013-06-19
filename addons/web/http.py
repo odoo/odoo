@@ -774,8 +774,6 @@ class Root(object):
                         addons_manifest[module] = manifest
                         self.statics['/%s/static' % module] = path_static
 
-        self.db_routers[None] = self._build_router(None)
-
         app = werkzeug.wsgi.SharedDataMiddleware(self.dispatch, self.statics)
         self.dispatch = DisableCacheMiddleware(app)
 
