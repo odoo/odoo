@@ -303,10 +303,10 @@
     <!-- HR Job -->
 
     <record model="ir.actions.act_window" id="action_hr_job_applications">
-            <field name="name">Applications</field>
-            <field name="res_model">hr.applicant</field>
-            <field name="view_mode">kanban,tree,form,graph,calendar</field>
-            <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id}</field>
+        <field name="name">Applications</field>
+        <field name="res_model">hr.applicant</field>
+        <field name="view_mode">kanban,tree,form,graph,calendar</field>
+        <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id}</field>
     </record>
 
     <record id="hr_job_survey" model="ir.ui.view">
@@ -318,26 +318,22 @@
                 <label for="survey_id" groups="base.group_user"/>
                 <div groups="base.group_user">
                     <field name="survey_id" class="oe_inline" domain="[('type','=','Human Resources')]"/>
-                    <button class="oe_inline oe_link"
-                        string="Interview"
-                        icon="gtk-go-forward"
-                        name="action_print_survey" type="object"
-                        attrs="{'invisible':[('survey_id','=',False)]}"/>
                 </div>
             </field>
-            <xpath expr="//div[@class='oe_title']//h2" position="after">
-                <div name="group_alias"
-                        attrs="{'invisible': [('alias_domain', '=', False)]}">
-                    <label for="alias_id" string="Email Alias"/>
-                    <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/>
+            <field name="company_id" position="after">
+                <div name="group_alias" attrs="{'invisible': [('alias_domain', '=', False)]}" col="8" colspan="8">
+                    <label for="alias_id" string="Email Alias" colspan="2"/>
+                    <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1" colspan="2"/>
                     <span name="edit_alias" class="oe_edit_only">
-                        <field name="alias_name" class="oe_inline"
-                                attrs="{'required': [('alias_id', '!=', False)]}"/>
-                        @
-                        <field name="alias_domain" class="oe_inline" readonly="1"/>
+                        <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}" colspan="2"/> @
+                        <field name="alias_domain" class="oe_inline" readonly="1" colspan="2"/>
                     </span>
                 </div>
-            </xpath>
+            </field>
+            <div name="buttons" position="inside">
+                <button string="Applications" name="%(action_hr_job_applications)d" type="action"/>
+                <button string="Interview" name="action_print_survey" type="object" attrs="{'invisible':[('survey_id','=',False)]}"/>
+            </div>
         </field>
     </record>
 
@@ -372,22 +368,34 @@
                                     </ul>
                                 </div>
                                 <div class = "oe_kanban_content">
-                                    <div class="oe_job oe_name oe_kanban_ellipsis">
-                                        <field name="name"/>
+                                    <t t-if="record.manager_id.raw_value">
+                                        <img t-att-src="kanban_image('hr.employee', 'image_medium', record.manager_id.raw_value[0])" class="oe_kanban_avatar oe_job_avatar"/>
+                                    </t>
+                                    <t t-if="record.manager_id.raw_value === false">
+                                        <img t-att-src='_s + "/base/static/src/img/avatar.png"' class="oe_kanban_avatar oe_job_avatar"/>
+                                    </t>
+                                    <div class="oe_job_detail">
+                                        <div class="oe_job oe_name oe_kanban_ellipsis">
+                                            <field name="name"/>
+                                        </div>
+                                        <div class="oe_job_alias oe_kanban_ellipsis" t-if=" record.alias_id.value">
+                                            <span class="oe_e">%%</span><small><field name="alias_id"/></small>
+                                        </div>
+                                        <div class="oe_job oe_kanban_ellipsis">
+                                            <field name="department_id"/>
+                                        </div>
+                                        <div class="oe_job oe_manager_name oe_kanban_ellipsis">
+                                            <t t-esc="record.manager_id.value"/>
+                                        </div>
                                     </div>
-                                    <div class="oe_job oe_kanban_ellipsis">
-                                        <field name="department_id"/>
-                                    </div>
-                                    <div class="oe_job oe_manager_name">
-                                        <t t-esc="record.manager_id.value"/>
-                                    </div>
-                                    <img t-att-src="kanban_image('hr.employee', 'image', record.manager_id.raw_value, {'preview_image': 'image_small'})" t-att-title="record.manager_id.value.name" class="oe_kanban_avatar oe_job_avatar"/>
                                     <t t-if="record.state.raw_value == 'recruit'">
                                         <div class="oe_applications">
-                                            <a name="%(action_hr_job_applications)d" type="action" t-if="record.application_count.value gt 1" class="oe_link"><t t-esc="record.application_count.value"/> Applications</a>
-                                            <a name="%(action_hr_job_applications)d" type="action" t-if="record.application_count.value lt 2" class="oe_link"><t t-esc="record.application_count.value"/> Application</a>
+                                            <a name="%(action_hr_job_applications)d" type="action">
+                                                <span t-if="record.application_count.value gt 1"><field name="application_count"/> Applications</span>
+                                                <span t-if="record.application_count.value lt 2"><field name="application_count"/> Application</span>
+                                            </a>
                                         </div>
-                                        <field state="recruit" name="no_of_recruitment" widget="justgage" options="{'min_field': 'no_of_hired_employee','max_field': 'no_of_recruitment', 'label_field': 'no_of_hired_employee', 'action_change': 'action_hired_employee'}">Forecast</field>
+                                        <field state="recruit" name="no_of_recruitment" widget="justgage" options="{'label_field': 'no_of_hired_employee', 'action_change': 'action_employee_to_hire'}">Forecast</field>
                                     </t>
                                     <t t-if="record.state.raw_value == 'open'">
                                         <div class="oe_start_recruitment">

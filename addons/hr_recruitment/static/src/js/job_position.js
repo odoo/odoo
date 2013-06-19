@@ -39,7 +39,7 @@ openerp.hr_recruitment = function (openerp) {
                 }
                 if (!self.$el.find(".oe_justgage_edit").size()) {
                     var $svg = self.$el.find('svg');
-                    $div = $('<div class="oe_justgage_edit" style="text-align: center; z-index: 1; position: absolute; width: ' + $svg.outerWidth() + 'px; top: ' + ($svg.outerHeight()/2-5) + 'px;"/>');
+                    $div = $('<div class="oe_justgage_edit" style="text-align: center; z-index: 1; position: absolute; width: ' + $svg.outerWidth() + 'px; top: ' + ($svg.outerHeight()/2+20) + 'px;"/>');
                     $input = $('<input style="text-align: center; width: ' + ($svg.outerWidth()/2) + 'px; margin: auto;"/>').val(value);
                     $div.append($input);
                     self.$el.prepend($div)
@@ -73,5 +73,16 @@ openerp.hr_recruitment = function (openerp) {
         }
     },
   });
-openerp.web_kanban.fields_registry.add("justgage", "openerp.hr_recruitment.GaugeWidget");
+
+  openerp.web_kanban.KanbanRecord.include({
+      on_card_clicked: function() {
+          if (this.view.dataset.model === 'hr.job') {
+              this.$('.oe_applications a').first().click();
+          } else {
+              this._super.apply(this, arguments);
+          }
+      },
+  });
+
+  openerp.web_kanban.fields_registry.add("justgage", "openerp.hr_recruitment.GaugeWidget");
 }

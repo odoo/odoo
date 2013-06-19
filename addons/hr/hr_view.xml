@@ -343,31 +343,29 @@
                         <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
                     </header>
                     <sheet>
-                        <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1><field name="name" class="oe_inline"/></h1>
-                            <label for="department_id" class="oe_edit_only"/>
-                            <h2><field name="department_id" class="oe_inline"/></h2>
-                        </div>
+                        <div class="oe_right oe_button_box" name="buttons"/>
                         <group>
-                            <group>
-                                <field name="no_of_employee" groups="base.group_user"/>
-                                <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)"/>
-                                <field name="no_of_hired_employee" attrs="{'invisible':[('state','=','open')]}"/>
-                                <field name="expected_employees" groups="base.group_user"/>
+                            <label string="Job Name and Department" class="oe_edit_only" colspan="4"/>
+                            <h1><field name="name" class="oe_inline" nolabel="1" colspan="2"/>(<field name="department_id" class="oe_inline" nolabel="1" colspan="2"/>)</h1>
+                            <group colspan="4">
+                                <group>
+                                    <field name="no_of_employee" groups="base.group_user"/>
+                                    <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)"/>
+                                    <field name="expected_employees" groups="base.group_user"/>
+                                </group>
+                                <group>
+                                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                                </group>
                             </group>
-                            <group>
-                                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                            </group>
+                            <div colspan="4">
+                                <label for="description"/>
+                                <field name="description"/>
+                            </div>
+                            <div colspan="4">
+                                <label for="requirements"/>
+                                <field name="requirements"/>
+                            </div>
                         </group>
-                        <div>
-                            <label for="description"/>
-                            <field name="description"/>
-                        </div>
-                        <div>
-                            <label for="requirements"/>
-                            <field name="requirements"/>
-                        </div>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
