@@ -457,7 +457,7 @@ class hr_applicant(base_stage, osv.Model):
         try:
             template = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'email_template_approve_applicant')
         except ValueError:
-            pass
+            template = False
         self._get_mail_template(cr, uid, ids, template, context)
         return res
 
@@ -504,7 +504,7 @@ class hr_applicant(base_stage, osv.Model):
         try:
             template = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'email_template_refuse_applicant')
         except ValueError:
-            pass
+            template = False
         self._get_mail_template(cr, uid, ids, template, context)
         return res
     
