@@ -206,7 +206,7 @@ class hr_applicant(base_stage, osv.Model):
         attachment_pool = self.pool.get('ir.attachment')
         for applicant in self.browse(cr, uid, ids, context=context):
             res[applicant.id] = 0
-            attach = attachment_pool.search(cr, uid, [('res_model','=','hr.applicant'),('res_id','=',applicant.id)])
+            attach = attachment_pool.search(cr, uid, [('res_model','=','hr.applicant'),('res_id','=',applicant.id)], context=context)
             if attach:
                 res[applicant.id] = len(attach)
         return res
@@ -455,10 +455,10 @@ class hr_applicant(base_stage, osv.Model):
     def case_close(self, cr, uid, ids, context=None):
         res = super(hr_applicant, self).case_close(cr, uid, ids, context)
         try:
-            template = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'email_template_approve_applicant')
+            template_id = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'email_template_approve_applicant')
         except ValueError:
-            template = False
-        self._get_mail_template(cr, uid, ids, template, context)
+            template_id = False
+        self._get_mail_template(cr, uid, ids, template_id, context)
         return res
 
     def case_close_with_emp(self, cr, uid, ids, context=None):
@@ -500,18 +500,17 @@ class hr_applicant(base_stage, osv.Model):
         """
         res = super(hr_applicant, self).case_cancel(cr, uid, ids, context)
         self.write(cr, uid, ids, {'probability': 0.0})
-        template = False
         try:
-            template = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'email_template_refuse_applicant')
+            template_id = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_recruitment', 'email_template_refuse_applicant')
         except ValueError:
-            template = False
-        self._get_mail_template(cr, uid, ids, template, context)
+            template_id = False
+        self._get_mail_template(cr, uid, ids, template_id, context)
         return res
     
     def _get_mail_template(self, cr, uid, ids, template, context):
         mail_obj = self.pool.get('mail.mail')
         assert template._name == 'email.template'
-        for applications in self.browse(cr, uid, ids, context):
+        for applications in self.browse(cr, uid, ids, context=context):
             if applications.email_from:
                 mail_id = self.pool.get('email.template').send_mail(cr, uid, template.id, applications.id, True, context=context)
                 mail_state = mail_obj.read(cr, uid, mail_id, ['state'], context=context)

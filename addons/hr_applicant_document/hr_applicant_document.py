@@ -28,9 +28,9 @@ class hr_applicant(osv.osv):
         attachment_pool = self.pool.get('ir.attachment')
         for applicant in self.browse(cr, uid, ids, context=context):
             res[applicant.id] = 0
-            attachment_ids = attachment_pool.search(cr, uid, [('res_model','=','hr.applicant'),('res_id','=',applicant.id)])
+            attachment_ids = attachment_pool.search(cr, uid, [('res_model','=','hr.applicant'),('res_id','=',applicant.id)], context=context)
             if attachment_ids:
-                for attachment in attachment_pool.browse(cr, uid, attachment_ids, context):
+                for attachment in attachment_pool.browse(cr, uid, attachment_ids, context=context):
                     res[applicant.id] = attachment.index_content
         return res
 
@@ -38,8 +38,8 @@ class hr_applicant(osv.osv):
         record_ids = []
         attachment_pool = self.pool.get('ir.attachment')
         args += [('res_model','=','hr.applicant')]
-        attachment_ids = attachment_pool.search(cursor, user, args)
-        for attachment in attachment_pool.browse(cursor, user, attachment_ids):
+        attachment_ids = attachment_pool.search(cursor, user, args, context=context)
+        for attachment in attachment_pool.browse(cursor, user, attachment_ids, context=context):
             record_ids.append(attachment.res_id)			
         return [('id', 'in', record_ids)]
 
