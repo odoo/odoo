@@ -116,7 +116,7 @@
                             <field name="privacy_visibility"/>
                             <field name="user_id" string="Project Manager" 
                                 attrs="{'readonly':[('state','in',['close', 'cancelled'])]}" 
-                                context="{'default_groups_ref': ['base.group_user', 'project.group_project_manager']}"/>
+                                context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_manager']}"/>
                         </group>
                         <group>
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
@@ -337,7 +337,7 @@
                         <field colspan="4" name="name"/>
                         <field name="hours" widget="float_time"/>
                         <field name="date"/>
-                        <field name="user_id" options='{"no_open": True}' context="{'default_groups_ref': ['base.group_user', 'project.group_project_user']}"/>
+                        <field name="user_id" options='{"no_open": True}' context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_partner_manager', 'project.group_project_user']}"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                 </form>
@@ -394,7 +394,7 @@
                             <field name="user_id" 
                                 attrs="{'readonly':[('state','in',['done', 'cancelled'])]}" 
                                 options='{"no_open": True}'
-                                context="{'default_groups_ref': ['base.group_user', 'project.group_project_user']}"/>
+                                context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_user']}"/>
                             <field name="planned_hours" widget="float_time"
                                     groups="project.group_time_work_estimation_tasks"
                                     on_change="onchange_planned(planned_hours, effective_hours)"/>
@@ -414,7 +414,7 @@
                                     <field name="name"/>
                                     <field name="hours" widget="float_time" sum="Spent Hours"/>
                                     <field name="date"/>
-                                    <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'project.group_project_user']}"/>
+                                    <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'project.group_project_user']}"/>
                                 </tree>
                             </field>
                             <group>
