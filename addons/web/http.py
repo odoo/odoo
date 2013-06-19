@@ -105,6 +105,7 @@ class WebRequest(object):
         self.auth_method = None
         self._cr_cm = None
         self._cr = None
+        self.func_request_type = None
 
     def init(self, params):
         self.params = dict(params)
@@ -201,6 +202,9 @@ class WebRequest(object):
                         request._cr = None
 
             with with_obj():
+                if self.func_request_type != self._request_type:
+                    raise Exception("%s: Function declared as capable of handling request of type '%s' but called with a request of type '%s'" \
+                        % (self.httprequest.path, self.func_request_type, self._request_type))
                 return self.func(*args, **kwargs)
         finally:
             # just to be sure no one tries to re-use the request
@@ -265,6 +269,8 @@ class JsonRequest(WebRequest):
            "id": null}
 
     """
+    _request_type = "json"
+
     def __init__(self, *args):
         super(JsonRequest, self).__init__(*args)
 
@@ -398,6 +404,8 @@ def jsonrequest(f):
 class HttpRequest(WebRequest):
     """ Regular GET/POST request
     """
+    _request_type = "http"
+
     def __init__(self, *args):
         super(HttpRequest, self).__init__(*args)
         params = dict(self.httprequest.args)
@@ -499,7 +507,6 @@ request = _request_stack()
 addons_module = {}
 addons_manifest = {}
 controllers_per_module = {}
-controllers_object = {}
 
 class ControllerType(type):
     def __init__(cls, name, bases, attrs):
@@ -709,13 +716,18 @@ class Root(object):
             request = self._build_request(httprequest)
             db = request.db
 
-            updated = openerp.modules.registry.RegistryManager.check_registry_signaling(db)
+            if db:
+                updated = openerp.modules.registry.RegistryManager.check_registry_signaling(db)
+                if updated:
+                    with self.db_routers_lock:
+                        del self.db_routers[db]
 
             self.find_handler(request)
             with set_request(request):
                 result = request.dispatch()
 
-            openerp.modules.registry.RegistryManager.signal_caches_change(db)
+            if db:
+                openerp.modules.registry.RegistryManager.signal_caches_change(db)
 
             if isinstance(result, basestring):
                 headers=[('Content-Type', 'text/html; charset=utf-8'), ('Content-Length', len(result))]
@@ -776,7 +788,6 @@ class Root(object):
         for module in modules:
             for v in controllers_per_module[module]:
                 o = v[1]()
-                controllers_object[v[0]] = o
                 members = inspect.getmembers(o)
                 for mk, mv in members:
                     if inspect.ismethod(mv) and getattr(mv, 'exposed', False):
@@ -815,10 +826,9 @@ class Root(object):
         urls = self.get_db_router(request.db).bind("")
         func, original = urls.match(path)[0]
 
-        auth = getattr(original, "auth", "auth")
-
         request.func = func
-        request.auth_method = auth
+        request.auth_method = getattr(original, "auth", "auth")
+        request.func_request_type = original.exposed
 
 def wsgi_postload():
     openerp.wsgi.register_wsgi_handler(Root())
