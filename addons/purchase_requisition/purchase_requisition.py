@@ -58,7 +58,7 @@ class purchase_requisition(osv.osv):
         'line_ids' : fields.one2many('purchase.requisition.line','requisition_id','Products to Purchase',states={'done': [('readonly', True)]}),
         'move_dest_id': fields.many2one('stock.move', 'Reservation Destination', ondelete='set null'),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),        
-        'state': fields.selection([('draft','Draft Tender'),('in_progress','Tender Confirmed'),('open','Choosing Lines'),('done','PO Created'),('cancel','Cancelled')],
+        'state': fields.selection([('draft','Draft Tender'),('in_progress','Tender Confirmed'),('open','Close Bids'),('done','PO Created'),('cancel','Cancelled')],
             'Status', track_visibility='onchange', required=True),
         'multiple_rfq_per_supplier': fields.boolean('Multiple RFQ per supplier'),
         'account_analytic_id':fields.many2one('account.analytic.account', 'Analytic Account'),
