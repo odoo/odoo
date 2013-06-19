@@ -161,6 +161,22 @@ class purchase_requisition(osv.osv):
         res['domain'] = [('id','in', po_ids)]
         return res
 
+
+    def open_rfq(self, cr, uid, ids, context=None):
+        """ This opens rfq view to view all quotations associated to the tender
+            @return: the RFQ tree view
+        """
+        if context is None:
+            context = {}
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'purchase','purchase_rfq', context=context)
+        res['context'] = context
+        po_ids_browse = self.browse(cr, uid, ids, context=context)[0].purchase_ids
+        po_ids=[]
+        for po in po_ids_browse:
+            po_ids.append(po.id)
+        res['domain'] = [('id','in', po_ids)]
+        return res
+
     def _prepare_purchase_order(self, cr, uid, requisition, supplier, context=None):
         if not requisition.warehouse_id:
             warehouse_obj = self.pool.get('stock.warehouse')
