@@ -195,6 +195,15 @@ openerp_mail_followers = function(session, mail) {
             // clean and display title
             var node_user_list = this.$('.oe_follower_list').empty();
             this.$('.oe_follower_title').html(this._format_followers(this.followers.length));
+            // On mouseenter it will show the edit_subtype penil
+            this.$el.on('mouseenter', 'div.oe_follower_list', function() {
+                $("img.oe_edit_subtype").removeClass("hidden");
+                $('div.oe_follower_list').find('.oe_partner').addClass('oe_partner_name');
+            }).on('mouseleave', 'div.oe_follower_list', function(){
+                $("img.oe_edit_subtype").addClass("hidden");
+                $('div.oe_follower_list').find('.oe_partner').removeClass('oe_partner_name');
+            });
+
             // truncate number of displayed followers
             var truncated = this.followers.slice(0, this.displayed_nb);
             _(truncated).each(function (record) {
