@@ -111,7 +111,8 @@
                         <group>
                             <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
                             <field name="function" placeholder="e.g. Sales Director"/>
-                            <field name="email" required="context.get('force_email', False)"/>
+                            <field name="user_ids" invisible="1"/>
+                            <field name="email" widget="email" required="context.get('force_email', False)" attrs="{'required': [('user_ids','!=', [])]}"/>
                             <field name="phone"/>
                             <field name="mobile"/>
                         </group>
@@ -138,7 +139,7 @@
                         </h1>
                         <field name="parent_id"
                             placeholder="Company"
-                            domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'default_supplier': supplier}"
+                            domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'default_supplier': supplier, 'default_customer': customer}"
                             attrs="{'invisible': [('is_company','=', True),('parent_id', '=', False)]}"
                             on_change="onchange_address(use_parent_address, parent_id)"/>
                         <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
@@ -157,8 +158,8 @@
                             <div>
                                 <field name="use_parent_address" class="oe_edit_only oe_inline"
                                        on_change="onchange_address(use_parent_address, parent_id)"
-                                       attrs="{'invisible': [('parent_id','=', False)]}"/>
-                                <label for="use_parent_address" class="oe_edit_only" attrs="{'invisible': [('parent_id','=', False)]}"/>
+                                       attrs="{'invisible': [('parent_id','=', False),('use_parent_address','=',False)]}"/>
+                                <label for="use_parent_address" class="oe_edit_only" attrs="{'invisible': [('parent_id','=', False),('use_parent_address','=',False)]}"/>
                                 <button name="open_parent" type="object" string="(edit company address)" class="oe_link oe_edit_only"
                                         attrs="{'invisible': ['|',('parent_id','=', False),('use_parent_address','=',False)]}"/>
                                 <field name="street" placeholder="Street..."  attrs="{'readonly': [('use_parent_address','=',True)]}"/>
@@ -178,7 +179,8 @@
                             <field name="phone" placeholder="e.g. +32.81.81.37.00"/>
                             <field name="mobile"/>
                             <field name="fax"/>
-                            <field name="email" widget="email"/>
+                            <field name="user_ids" invisible="1"/>
+                            <field name="email" widget="email" attrs="{'required': [('user_ids','!=', [])]}"/>
                             <field name="title" domain="[('domain', '=', 'contact')]"
                                 options='{"no_open": True}' attrs="{'invisible': [('is_company','=', True)]}" />
                         </group>
@@ -186,7 +188,7 @@
 
                     <notebook colspan="4">
                         <page string="Contacts" attrs="{'invisible': [('is_company','=',False), ('child_ids', '=', [])]}" autofocus="autofocus">
-                            <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier}">
+                            <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer}">
                                 <kanban>
                                     <field name="color"/>
                                     <field name="name"/>
@@ -286,14 +288,15 @@
                                             </div>
                                         </group>
                                         <field name="supplier" invisible="True"/>
+                                        <field name="customer" invisible="True"/>
                                     </sheet>
                                 </form>
                             </field>
                         </page>
-                        <page string="Internal Notes">
+                        <page name='internal_notes' string="Internal Notes">
                             <field name="comment" placeholder="Put an internal note..."/>
                         </page>
-                        <page string="Sales &amp; Purchases">
+                        <page name='sales_purchases' string="Sales &amp; Purchases">
                             <group>
                                 <group>
                                     <field name="user_id" 
@@ -313,9 +316,6 @@
                                     <field name="active"/>
                                 </group>
                             </group>
-                        </page>
-                        <!-- The History page becomes visible as soon as there is something to display inside -->
-                        <page string="History" name="page_history" invisible="True">
                         </page>
                     </notebook>
                 </sheet>
@@ -510,10 +510,10 @@
 
         <!-- Categories -->
         <record id="view_partner_category_form" model="ir.ui.view">
-            <field name="name">Partner Categories</field>
+            <field name="name">Partner Tags</field>
             <field name="model">res.partner.category</field>
             <field name="arch" type="xml">
-                <form string="Partner Category" version="7.0">
+                <form string="Partner Tag" version="7.0">
                     <group col="4">
                         <field name="name"/>
                         <field name="active"/>
@@ -523,11 +523,11 @@
             </field>
         </record>
         <record id="view_partner_category_list" model="ir.ui.view">
-            <field name="name">Partner Categories</field>
+            <field name="name">Partner Tags</field>
             <field name="model">res.partner.category</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Partner Categories">
+                <tree string="Partner Tags">
                     <field name="complete_name"/>
                 </tree>
             </field>
@@ -537,7 +537,7 @@
             <field name="model">res.partner.category</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree toolbar="1" string="Partner Categories">
+                <tree toolbar="1" string="Partner Tags">
                     <field name="name"/>
                 </tree>
             </field>
@@ -556,7 +556,7 @@
         -->
 
         <record id="action_partner_by_category" model="ir.actions.act_window">
-            <field name="name">Partner Categories</field>
+            <field name="name">Partner Tags</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -573,11 +573,18 @@
         </record>
 
         <record id="action_partner_category_form" model="ir.actions.act_window">
-            <field name="name">Partner Categories</field>
+            <field name="name">Partner Tags</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.category</field>
             <field name="view_type">form</field>
-            <field name="help">Manage the partner categories in order to better classify them for tracking and analysis purposes. A partner may belong to several categories and categories have a hierarchy structure: a partner belonging to a category also belong to his parent category.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new partner tags.
+              </p><p>
+                Manage the partner tags to better classify them for tracking and analysis purposes.
+                A partner may have several tags and tags have a hierarchical structure: a partner with a tag has also the parent tags.
+              </p>
+            </field>
         </record>
 
         <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Partner Tags" sequence="4" parent="menu_config_address_book" groups="base.group_no_one"/>

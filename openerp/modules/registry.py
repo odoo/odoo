@@ -286,6 +286,14 @@ class RegistryManager(object):
 
     @classmethod
     def check_registry_signaling(cls, db_name):
+        """
+        Check if the modules have changed and performs all necessary operations to update
+        the registry of the corresponding database.
+
+
+        :returns: True if changes has been detected in the database and False otherwise.
+        """
+        changed = False
         if openerp.multi_process and db_name in cls.registries:
             registry = cls.get(db_name)
             cr = registry.db.cursor()
@@ -298,6 +306,7 @@ class RegistryManager(object):
                 # Check if the model registry must be reloaded (e.g. after the
                 # database has been updated by another process).
                 if registry.base_registry_signaling_sequence != r:
+                    changed = True
                     _logger.info("Reloading the model registry after database signaling.")
                     registry = cls.new(db_name)
                     registry.base_registry_signaling_sequence = r
@@ -305,6 +314,7 @@ class RegistryManager(object):
                 # occured on another process). Don't clear right after a registry
                 # has been reload.
                 elif registry.base_cache_signaling_sequence != c:
+                    changed = True
                     _logger.info("Invalidating all model caches after database signaling.")
                     registry.base_cache_signaling_sequence = c
                     registry.clear_caches()
@@ -318,6 +328,7 @@ class RegistryManager(object):
                                 column.digits_change(cr)
             finally:
                 cr.close()
+        return changed
 
     @classmethod
     def signal_caches_change(cls, db_name):

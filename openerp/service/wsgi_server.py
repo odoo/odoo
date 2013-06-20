@@ -449,7 +449,10 @@ def start_service():
     interface = config['xmlrpc_interface'] or '0.0.0.0'
     port = config['xmlrpc_port']
     _logger.info('HTTP service (werkzeug) running on %s:%s', interface, port)
-    threading.Thread(target=serve, args=(interface, port, True)).start()
+    if not openerp.evented:
+        threading.Thread(target=serve, args=(interface, port, True)).start()
+    else:
+        serve(interface, port, True)
 
 def stop_service():
     """ Initiate the shutdown of the WSGI server.

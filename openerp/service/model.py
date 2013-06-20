@@ -153,7 +153,7 @@ def check(f):
 def execute_cr(cr, uid, obj, method, *args, **kw):
     object = openerp.registry(cr.dbname).get(obj)
     if not object:
-        raise except_orm('Object Error', 'Object %s doesn\'t exist' % str(obj))
+        raise except_orm('Object Error', "Object %s doesn't exist" % obj)
     return getattr(object, method)(cr, uid, *args, **kw)
 
 def execute_kw(db, uid, obj, method, args, kw=None):
@@ -179,11 +179,8 @@ def execute(db, uid, obj, method, *args, **kw):
     return res
 
 def exec_workflow_cr(cr, uid, obj, signal, *args):
-    object = openerp.registry(cr.dbname).get(obj)
-    if not object:
-        raise except_orm('Object Error', 'Object %s doesn\'t exist' % str(obj))
     res_id = args[0]
-    return object.signal_workflow(cr, uid, [res_id], signal)[res_id]
+    return execute_cr(cr, uid, obj, 'signal_workflow', [res_id], signal)[res_id]
 
 @check
 def exec_workflow(db, uid, obj, signal, *args):

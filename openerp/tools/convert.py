@@ -48,6 +48,7 @@ except:
 
 
 from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 from lxml import etree
 import misc
 from config import config
@@ -86,7 +87,9 @@ def _get_idref(self, cr, uid, model_str, context, idref):
     idref2 = dict(idref,
                   time=time,
                   DateTime=datetime,
+                  datetime=datetime,
                   timedelta=timedelta,
+                  relativedelta=relativedelta,
                   version=openerp.release.major_version,
                   ref=_ref(self, cr),
                   pytz=pytz)
@@ -496,7 +499,7 @@ form: module.record_id""" % (xml_id,)
         if rec.get('target'):
             res['target'] = rec.get('target','')
         if rec.get('multi'):
-            res['multi'] = rec.get('multi', False)
+            res['multi'] = eval(rec.get('multi', 'False'))
         id = self.pool['ir.model.data']._update(cr, self.uid, 'ir.actions.act_window', self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
 

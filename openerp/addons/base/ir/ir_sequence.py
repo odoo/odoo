@@ -54,6 +54,34 @@ class ir_sequence(openerp.osv.osv.osv):
     """
     _name = 'ir.sequence'
     _order = 'name'
+    
+    def _get_number_next_actual(self, cr, user, ids, field_name, arg, context=None):
+        '''Return number from ir_sequence row when no_gap implementation,
+        and number from postgres sequence when standard implementation.'''
+        res = dict.fromkeys(ids)
+        for element in self.browse(cr, user, ids, context=context):
+            if  element.implementation != 'standard':
+                res[element.id] = element.number_next
+            else:
+                # get number from postgres sequence. Cannot use
+                # currval, because that might give an error when
+                # not having used nextval before.
+                statement = (
+                    "SELECT last_value, increment_by, is_called"
+                    " FROM ir_sequence_%03d"
+                    % element.id)
+                cr.execute(statement)
+                (last_value, increment_by, is_called) = cr.fetchone()
+                if is_called:
+                    res[element.id] = last_value + increment_by
+                else:
+                    res[element.id] = last_value
+        return res
+
+    def _set_number_next_actual(self, cr, uid, id, name, value, args=None, context=None):
+        return self.write(cr, uid, id, {'number_next': value or 0}, context=context)
+
+
     _columns = {
         'name': openerp.osv.fields.char('Name', size=64, required=True),
         'code': openerp.osv.fields.selection(_code_get, 'Code', size=64),
@@ -67,6 +95,7 @@ class ir_sequence(openerp.osv.osv.osv):
         'prefix': openerp.osv.fields.char('Prefix', size=64, help="Prefix value of the record for the sequence"),
         'suffix': openerp.osv.fields.char('Suffix', size=64, help="Suffix value of the record for the sequence"),
         'number_next': openerp.osv.fields.integer('Next Number', required=True, help="Next number of this sequence"),
+        'number_next_actual': openerp.osv.fields.function(_get_number_next_actual, fnct_inv=_set_number_next_actual, type='integer', required=True, string='Next Number', help='Next number that will be used. This number can be incremented frequently so the displayed value might already be obsolete'),
         'number_increment': openerp.osv.fields.integer('Increment Number', required=True, help="The next number of the sequence will be incremented by this number"),
         'padding' : openerp.osv.fields.integer('Number Padding', required=True, help="OpenERP will automatically adds some '0' on the left of the 'Next Number' to get the required padding size."),
         'company_id': openerp.osv.fields.many2one('res.company', 'Company'),
@@ -77,6 +106,7 @@ class ir_sequence(openerp.osv.osv.osv):
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'ir.sequence', context=c),
         'number_increment': 1,
         'number_next': 1,
+        'number_next_actual': 1,
         'padding' : 0,
     }
 
@@ -121,7 +151,7 @@ class ir_sequence(openerp.osv.osv.osv):
         # object depends on it.
         cr.execute("DROP SEQUENCE IF EXISTS %s RESTRICT " % names)
 
-    def _alter_sequence(self, cr, id, number_increment, number_next):
+    def _alter_sequence(self, cr, id, number_increment, number_next=None):
         """ Alter a PostreSQL sequence.
 
         There is no access rights check.
@@ -129,9 +159,15 @@ class ir_sequence(openerp.osv.osv.osv):
         if number_increment == 0:
              raise osv.except_osv(_('Warning!'),_("Increment number must not be zero."))
         assert isinstance(id, (int, long))
-        cr.execute("""
-            ALTER SEQUENCE ir_sequence_%03d INCREMENT BY %%s RESTART WITH %%s
-            """ % id, (number_increment, number_next))
+        seq_name = 'ir_sequence_%03d' % (id,)
+        cr.execute("SELECT relname FROM pg_class WHERE relkind = %s AND relname=%s", ('S', seq_name))
+        if not cr.fetchone():
+            # sequence is not created yet, we're inside create() so ignore it, will be set later
+            return
+        statement = "ALTER SEQUENCE %s INCREMENT BY %d" % (seq_name, number_increment)
+        if number_next is not None:
+            statement += " RESTART WITH %d" % (number_next, )
+        cr.execute(statement)
 
     def create(self, cr, uid, values, context=None):
         """ Create a sequence, in implementation == standard a fast gaps-allowed PostgreSQL sequence is used.
@@ -160,7 +196,13 @@ class ir_sequence(openerp.osv.osv.osv):
             n = values.get('number_next', row['number_next'])
             if row['implementation'] == 'standard':
                 if new_implementation in ('standard', None):
-                    self._alter_sequence(cr, row['id'], i, n)
+                    # Implementation has NOT changed.
+                    # Only change sequence if really requested.
+                    if row['number_next'] != n:
+                        self._alter_sequence(cr, row['id'], i, n)
+                    else:
+                        # Just in case only increment changed
+                        self._alter_sequence(cr, row['id'], i)
                 else:
                     self._drop_sequence(cr, row['id'])
             else:
@@ -200,7 +242,7 @@ class ir_sequence(openerp.osv.osv.osv):
         force_company = context.get('force_company')
         if not force_company:
             force_company = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
-        sequences = self.read(cr, uid, seq_ids, ['company_id','implementation','number_next','prefix','suffix','padding'])
+        sequences = self.read(cr, uid, seq_ids, ['name','company_id','implementation','number_next','prefix','suffix','padding'])
         preferred_sequences = [s for s in sequences if s['company_id'] and s['company_id'][0] == force_company ]
         seq = preferred_sequences[0] if preferred_sequences else sequences[0]
         if seq['implementation'] == 'standard':
@@ -210,8 +252,11 @@ class ir_sequence(openerp.osv.osv.osv):
             cr.execute("SELECT number_next FROM ir_sequence WHERE id=%s FOR UPDATE NOWAIT", (seq['id'],))
             cr.execute("UPDATE ir_sequence SET number_next=number_next+number_increment WHERE id=%s ", (seq['id'],))
         d = self._interpolation_dict()
-        interpolated_prefix = self._interpolate(seq['prefix'], d)
-        interpolated_suffix = self._interpolate(seq['suffix'], d)
+        try:
+            interpolated_prefix = self._interpolate(seq['prefix'], d)
+            interpolated_suffix = self._interpolate(seq['suffix'], d)
+        except ValueError:
+            raise osv.except_osv(_('Warning'), _('Invalid prefix or suffix for sequence \'%s\'') % (seq.get('name')))
         return interpolated_prefix + '%%0%sd' % seq['padding'] % seq['number_next'] + interpolated_suffix
 
     def next_by_id(self, cr, uid, sequence_id, context=None):

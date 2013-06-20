@@ -282,6 +282,9 @@ class browse_null(object):
     def __unicode__(self):
         return u''
 
+    def __iter__(self):
+        raise NotImplementedError("Iteration is not allowed on %s" % self)
+
 
 #
 # TODO: execute an object method on browse_record_list
@@ -1557,7 +1560,7 @@ class BaseModel(object):
                 else:
                     translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, msg)
                 error_msgs.append(
-                        _("Error occurred while validating the field(s) %s: %s") % (','.join(fields), translated_msg)
+                        _("The field(s) `%s` failed against a constraint: %s") % (', '.join(fields), translated_msg)
                 )
                 self._invalids.update(fields)
         if error_msgs:
@@ -2563,7 +2566,7 @@ class BaseModel(object):
         update_custom_fields = context.get('update_custom_fields', False)
         self._field_create(cr, context=context)
         create = not self._table_exist(cr)
-        if getattr(self, '_auto', True):
+        if self._auto:
 
             if create:
                 self._create_table(cr)
@@ -2797,7 +2800,8 @@ class BaseModel(object):
 
         cr.commit()     # start a new transaction
 
-        self._add_sql_constraints(cr)
+        if self._auto:
+            self._add_sql_constraints(cr)
 
         if create:
             self._execute_sql(cr)
@@ -3445,11 +3449,12 @@ class BaseModel(object):
             # Attempt to distinguish record rule restriction vs deleted records,
             # to provide a more specific error message - check if the missinf
             cr.execute('SELECT id FROM ' + self._table + ' WHERE id IN %s', (tuple(missing_ids),))
-            if cr.rowcount:
+            forbidden_ids = [x[0] for x in cr.fetchall()]
+            if forbidden_ids:
                 # the missing ids are (at least partially) hidden by access rules
                 if uid == SUPERUSER_ID:
                     return
-                _logger.warning('Access Denied by record rules for operation: %s, uid: %s, model: %s', operation, uid, self._name)
+                _logger.warning('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, forbidden_ids, uid, self._name)
                 raise except_orm(_('Access Denied'),
                                  _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
                                     (self._description, operation))
