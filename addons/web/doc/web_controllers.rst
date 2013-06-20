@@ -48,7 +48,7 @@ In your controllers file, you can now declare a controller this way:
 
     class MyController(http.Controller):
 
-        @http.route('/my_url/some_html', type="html")
+        @http.route('/my_url/some_html', type="http")
         def some_html(self):
             return "<h1>This is a test</h1>"
 
@@ -62,12 +62,12 @@ url to match. As example, the ``some_html()`` method will be called a client que
 Pure HTTP Requests
 ------------------
 
-You can define methods to get any normal http requests by passing ``'html'`` to the ``type`` argument of
+You can define methods to get any normal http requests by passing ``'http'`` to the ``type`` argument of
 ``http.route()``. When doing so, you get the HTTP parameters as named parameters of the method:
 
 ::
 
-    @http.route('/say_hello', type="html")
+    @http.route('/say_hello', type="http")
     def say_hello(self, name):
         return "<h1>Hello %s</h1>" % name
 
@@ -93,7 +93,7 @@ Any URL passed to ``http.route()`` can contain patterns. Example:
 
 ::
 
-    @http.route('/files/<path:file_path>', type="html")
+    @http.route('/files/<path:file_path>', type="http")
     def files(self, file_path):
         ... # return a file identified by the path store in the 'my_path' variable
 
@@ -106,7 +106,7 @@ Also note you can pass multiple urls to ``http.route()``:
 
 ::
 
-    @http.route(['/files/<path:file_path>', '/other_url/<path:file_path>'], type="html")
+    @http.route(['/files/<path:file_path>', '/other_url/<path:file_path>'], type="http")
     def files(self, file_path):
         ...
 
@@ -117,7 +117,7 @@ To use the database you must access the OpenERP models. The global ``request`` o
 
 ::
 
-    @http.route('/my_name', type="html")
+    @http.route('/my_name', type="http")
     def my_name(self):
         my_user_record = request.registry.get("res.users").browse(request.cr, request.uid, request.uid)
         return "<h1>Your name is %s</h1>" % my_user_record.name
@@ -140,9 +140,27 @@ value to the ``authentication`` parameter of ``http.route()``:
 
 ::
 
-    @http.route('/hello', type="html", authentication="noauth")
+    @http.route('/hello', type="http", authentication="noauth")
     def hello(self):
         return "<div>Hello unknown user!</div>"
 
 Please note the ``request.uid`` user id will be ``None`` inside this method call. This is due to the fact no user was
 authenticated.
+
+Overriding Controllers
+----------------------
+
+Existing routes can be overridden. To do so, create a controller that inherit the controller containing the route you
+want to override. Example that redefine the home page of your OpenERP application.
+
+::
+
+    import openerp.addons.web.controllers.main as main
+
+    class Home2(main.Home):
+        @http.route('/', type="http", authentication="noauth")
+        def index(self):
+            return "<div>This is my new home page.</div>"
+
+By re-defining the ``index()`` method, you change the behavior of the original ``Home`` class. Now the ``'/'`` route
+will match the new ``index()`` method in ``Home2``.
