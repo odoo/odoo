@@ -248,7 +248,7 @@ class account_coda_import(osv.osv_memory):
             elif line[0] == '9':
                 statement['balanceMin'] = float(rmspaces(line[22:37])) / 1000
                 statement['balancePlus'] = float(rmspaces(line[37:52])) / 1000
-                if not statement['balance_end_real']:
+                if not statement.get('balance_end_real'):
                     statement['balance_end_real'] = statement['balance_start'] + statement['balancePlus'] - statement['balanceMin']
         for i, statement in enumerate(statements):
             statement['coda_note'] = ''
@@ -266,6 +266,8 @@ class account_coda_import(osv.osv_memory):
                     raise osv.except_osv(_('Error'), _("Configuration Error in journal %s!\nPlease verify the Default Debit and Credit Account settings.") % statement['journal_id'].name)
             if balance_start_check != statement['balance_start']:
                 statement['coda_note'] = _("The CODA Statement %s Starting Balance (%.2f) does not correspond with the previous Closing Balance (%.2f) in journal %s!") % (statement['description'] + ' #' + statement['paperSeqNumber'], statement['balance_start'], balance_start_check, statement['journal_id'].name)
+            if not(statement.get('period_id')):
+                raise osv.except_osv(_('Error') + ' R3006', _(' No transactions or no period in coda file !'))
             data = {
                 'name': statement['paperSeqNumber'],
                 'date': statement['date'],
