@@ -35,14 +35,20 @@
 % endfor
 </ol>
 
+% if ctx.get('partner_in_portal'):
 <p>Please connect to your <a href="${object.get_portal_url()}">Partner Portal</a> to get details. On each lead are two buttons on the top left corner that you should press after having contacted the lead: "I'm interested" & "I'm not interested".</p>
-
-<p>The lead will be send to another partner if you do not contact the lead before 20 days.</p>
+% else:
+<p>
+    You do not have yet a Portal access to our database. Please contact 
+    ${ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % (ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or 'us'}.
+</p>
+% endif
+<p>The lead will be sent to another partner if you do not contact the lead before 20 days.</p>
 
 <p>Thanks,</p>
 
 <pre>
-${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or 'The OpenERP Team'}
+${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or ''}
 </pre>
 % if not ctx['partner_id'].user_id:
 PS: It looks like you do not have an account manager assigned to you, please contact us.
