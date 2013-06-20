@@ -59,19 +59,19 @@ class crm_lead_forward_to_partner(osv.TransientModel):
                     lead_location.append(lead.country_id.name)
                 if lead.city:
                     lead_location.append(lead.city)
-                    partner_id = partner_assigned_ids.get(lead.id) or False
-                    if partner_id:
-                        partner = partner_obj.browse(cr, uid, partner_id, context=context)
-                        if partner.country_id:
-                            partner_location.append(partner.country_id.name)
-                        if partner.city:
-                            partner_location.append(partner.city)
-                    res['assignation_lines'].append({'lead_id': lead.id,
-                                                     'lead_location': ", ".join(lead_location),
-                                                     'partner_assigned_id': partner_id,
-                                                     'partner_location': ", ".join(partner_location),
-                                                     'lead_link': "%s/?db=%s#id=%s&model=crm.lead" % (base_url, cr.dbname, lead.id)
-                                                     })
+                partner_id = partner_assigned_ids.get(lead.id) or False
+                if partner_id:
+                    partner = partner_obj.browse(cr, uid, partner_id, context=context)
+                    if partner.country_id:
+                        partner_location.append(partner.country_id.name)
+                    if partner.city:
+                        partner_location.append(partner.city)
+                res['assignation_lines'].append({'lead_id': lead.id,
+                                                 'lead_location': ", ".join(lead_location),
+                                                 'partner_assigned_id': partner_id,
+                                                 'partner_location': ", ".join(partner_location),
+                                                 'lead_link': "%s/?db=%s#id=%s&model=crm.lead" % (base_url, cr.dbname, lead.id)
+                                                 })
         return res
 
     def action_forward(self, cr, uid, ids, context=None):
