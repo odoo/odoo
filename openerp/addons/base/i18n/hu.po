@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-server\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:35+0000\n"
-"PO-Revision-Date: 2013-04-07 14:30+0000\n"
-"Last-Translator: krnkris <Unknown>\n"
+"PO-Revision-Date: 2013-06-14 11:19+0000\n"
+"Last-Translator: Csaba TOTH <csaba.toth@i3rendszerhaz.hu>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-08 06:54+0000\n"
+"X-Launchpad-Export-Date: 2013-06-15 06:13+0000\n"
 "X-Generator: Launchpad (build 16667)\n"
 
 #. module: base
@@ -332,6 +332,39 @@ msgid ""
 "launchpad:\n"
 " https://launchpad.net/openerp-swiss-localization\n"
 msgstr ""
+"\n"
+" Svájci könyvelés lokalizéció\n"
+" Swiss localization :\n"
+" ====================\n"
+" **Multilang swiss STERCHI account chart and taxes**\n"
+"  **Author:** Camptocamp SA\n"
+"\n"
+"  **Financial contributors:** Prisme Solutions Informatique SA, Quod SA\n"
+"\n"
+"  **Translation contributors:** brain-tec AG, Agile Business Group\n"
+"\n"
+" **This release will introduce major changes to l10n_ch.**\n"
+"\n"
+" Due to important refactoring needs and the Switzerland adoption of new "
+"international payment standard during 2013-2014. We have reorganised the "
+"swiss localization addons this way:\n"
+"\n"
+" - **l10n_ch**: Multilang swiss STERCHI account chart and taxes (official "
+"addon)\n"
+" - **l10n_ch_base_bank**: Technical module that introduces a new and "
+"simplified version of bank type management\n"
+" - **l10n_ch_bank**: List of swiss banks\n"
+" - **l10n_ch_zip**: List of swiss postal zip\n"
+" - **l10n_ch_dta**: Support of dta payment protocol (will be deprecated end "
+"2014)\n"
+" - **l10n_ch_payment_slip**: Support of ESR/BVR payment slip report and "
+"reconciliation. Report refactored with easy element positioning.\n"
+" - **l10n_ch_sepa**: Alpha implementation of PostFinance SEPA/PAIN support "
+"will be completed during 2013/2014\n"
+"\n"
+" The modules will be soon available on OpenERP swiss localization on "
+"launchpad:\n"
+" https://launchpad.net/openerp-swiss-localization\n"
 
 #. module: base
 #: model:res.groups,name:base.group_multi_currency
@@ -506,7 +539,7 @@ msgstr "Hitelkeret"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_portal_project_long_term
 msgid "Portal Project Long Term"
-msgstr ""
+msgstr "Hooszó távú portál projekt"
 
 #. module: base
 #: field:ir.model.constraint,date_update:0
@@ -1059,6 +1092,7 @@ msgstr "Meglévő kifejezések felülírása"
 #, python-format
 msgid "No currency rate associated for currency %d for the given period"
 msgstr ""
+"A megadott időintervallumra nincs meghatározva árfolyam a %d pénznemre"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_holidays
@@ -2106,6 +2140,19 @@ msgid ""
 "              </p>  \n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"               Kattintson bankszámla létrehozásához.\n"
+"              </p><p>\n"
+"                Állítsa be a vállalkozása bankszámla számait és jelölje ki "
+"melyik jelenjen meg a lábjegyzeten.\n"
+"                Újra rendszerezheti a számla számokat a lista nézetben.\n"
+"              </p>\n"
+"              <p>\n"
+"                Ha használja az OpenERP könyvelési alkalmazás modulját, "
+"akkor a könyvelési tételek és számlák automatikusa létre lesznek hozva ezen "
+"adatok alapján.\n"
+"              </p>  \n"
+"            "
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_action_report_xml
@@ -2143,7 +2190,7 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:85
 #, python-format
 msgid "Invalid Search Criteria"
-msgstr ""
+msgstr "Nem létező keresési kritérium"
 
 #. module: base
 #: field:res.users,login:0
@@ -2665,7 +2712,7 @@ msgstr "Koreai (KP)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_vn
 msgid "Vietnam Chart of Accounts"
-msgstr ""
+msgstr "Vietnámi könyvelési modul"
 
 #. module: base
 #: model:res.country,name:base.ax
@@ -3268,6 +3315,38 @@ msgid ""
 "and\n"
 "directly integrated in the core accounting. \n"
 msgstr ""
+"\n"
+"Egy extra vállalati viszonyítási értéket ad hozzá a számlákhoz a gyűjtő "
+"számla analízishez\n"
+"============================================================================"
+"\n"
+"\n"
+"Alap értelmezésben a Vevői és a Beszállítói számlák egy vállalati "
+"kapcsolathoz köthetők, \n"
+"de a vállalat nem közvetlen referencia a számlákhoz az adatbázis "
+"felépítésben.\n"
+"Könyvelési tételek azonban mindig vállalathoz fűződnek, nem a kapcsolathoz,\n"
+"így a fizetendő és bevételi számlák mindig pontosak és összegyűjtöttek "
+"vállalati szinten.\n"
+"\n"
+"Ha sok különböző kapcsolatnak/osztálynak kell számlázni ugyanannál a szülő "
+"vállalatnál,\n"
+"ennek a vállalat szintű könyvelése nehezebb lehet: a könyvelés közvetlenül "
+"az \n"
+"adatbázis felépítéséből történik és az nem fog létrehozni egy megfelelő "
+"csoportos\n"
+"vállalati viszonyítást.\n"
+"\n"
+"Ez a modul megoldja a problémát egy világos, a számlákon feltüntetett "
+"vállalati hivatkozással,\n"
+"automatikusan a kapcsolat számlájából létrehozva, és ezt az új viszonyítási "
+"adatot használja\n"
+"amikor a számlákat csoportosítja vagy partnerenkénti számla "
+"analízist/kimutatást készít. \n"
+"\n"
+"Megjegyzés: ez a modul a következő nagy OpenERP verzió váltáskor lehet, hogy "
+"el lesz távolítva\n"
+"és direkt be lesz integrálva az alap könyvelési programba. \n"
 
 #. module: base
 #: model:res.country,name:base.ai
@@ -3998,7 +4077,7 @@ msgstr ""
 #: code:addons/base/ir/ir_mail_server.py:222
 #, python-format
 msgid "Connection Test Succeeded!"
-msgstr ""
+msgstr "Kapcsolódási teszt sikeresen végrehajtva!"
 
 #. module: base
 #: field:ir.actions.client,params_store:0
@@ -4406,7 +4485,7 @@ msgstr "Mező leképezés"
 #: code:addons/base/module/wizard/base_module_upgrade.py:84
 #, python-format
 msgid "Unmet Dependency!"
-msgstr ""
+msgstr "Rendszertelen függőség!"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_sir
@@ -4670,7 +4749,7 @@ msgstr "Szűrők"
 #: code:addons/base/module/wizard/base_module_import.py:67
 #, python-format
 msgid "Can not create the module file: %s!"
-msgstr ""
+msgstr "Nem hozható létre a modul fájl: %s!"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_cron_act
@@ -5561,7 +5640,7 @@ msgstr "'kód'-nak egyedinek kell lennie."
 #: code:addons/base/ir/workflow/workflow.py:99
 #, python-format
 msgid "Operation Forbidden"
-msgstr ""
+msgstr "Művelet nem megengedett"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_knowledge
@@ -6028,6 +6107,8 @@ msgid ""
 "Next number that will be used. This number can be incremented frequently so "
 "the displayed value might already be obsolete"
 msgstr ""
+"A legközelebb használni kívánt szám. Ez a szám többször növekedhet, így a "
+"kijelzett szám elavult lehet"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_marketing
@@ -6058,7 +6139,7 @@ msgstr "Irány"
 #: code:addons/orm.py:4815
 #, python-format
 msgid "Sorting field %s not found on model %s"
-msgstr ""
+msgstr "Osztályozó mező %s nem található ezen  a modellen %s"
 
 #. module: base
 #: view:ir.actions.act_window:0
@@ -7771,6 +7852,16 @@ msgid ""
 "\n"
 "**Credits:** General Solutions.\n"
 msgstr ""
+"\n"
+"Vietnámi könyvelési modul\n"
+"\n"
+"This is the module to manage the accounting chart for Vietnam in OpenERP.\n"
+"========================================================================\n"
+"\n"
+"This module applies to companies based in Vietnamese Accounting Standard "
+"(VAS).\n"
+"\n"
+"**Credits:** General Solutions.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_coda
@@ -8192,7 +8283,7 @@ msgstr "Adatbázis  névtelenítése/titkosítása"
 #. module: base
 #: field:res.partner,commercial_partner_id:0
 msgid "Commercial Entity"
-msgstr ""
+msgstr "Értékesítő személy"
 
 #. module: base
 #: selection:ir.mail_server,smtp_encryption:0
@@ -8301,6 +8392,7 @@ msgstr "Aktuális év század nélkül: %(y)s"
 #: model:ir.module.module,shortdesc:base.module_l10n_es
 msgid "Spanish Charts of Accounts (PGCE 2008)"
 msgstr ""
+"Spanyol könyvelési modul          Spanish Charts of Accounts (PGCE 2008)"
 
 #. module: base
 #: help:ir.actions.client,tag:0
@@ -8379,6 +8471,8 @@ msgid ""
 "You cannot delete the language which is Active!\n"
 "Please de-activate the language first."
 msgstr ""
+"Nem törölhető az aktív nyelv!\n"
+"Először váltsa át inaktívvá a nyelvet."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr
@@ -9387,7 +9481,7 @@ msgstr "Hiba"
 #: code:addons/base/res/res_partner.py:566
 #, python-format
 msgid "Couldn't create contact without email address!"
-msgstr ""
+msgstr "Nem hozható létre Kontakt e-mail cím nélkül!"
 
 #. module: base
 #: help:res.partner,tz:0
@@ -9920,7 +10014,7 @@ msgstr "Szabályok nem érvényesíthetőek az ideiglenes medel-en."
 #: code:addons/base/ir/ir_mail_server.py:215
 #, python-format
 msgid "Connection Test Failed!"
-msgstr ""
+msgstr "Kapcsolódási teszt meghiúsult!"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -10253,6 +10347,12 @@ msgid ""
 "================\n"
 "    "
 msgstr ""
+"\n"
+"Ez a modul hozzáadja a szükséges biztonsági szabályokat és hozzáférési "
+"jogokat a hosszú távú portál projektekhez.\n"
+"============================================================================="
+"================\n"
+"    "
 
 #. module: base
 #: help:res.currency,position:0
@@ -12150,7 +12250,7 @@ msgstr "Új nyelv (Üres fordítási sablon)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_report_company
 msgid "Invoice Analysis per Company"
-msgstr ""
+msgstr "Vállalatonkénti számla analízis"
 
 #. module: base
 #: help:ir.actions.server,email:0
@@ -12843,6 +12943,19 @@ msgid ""
 "    * Defines templates for sale and purchase VAT\n"
 "    * Defines tax code templates\n"
 msgstr ""
+"\n"
+"Spanyol könyvelési modul \n"
+"\n"
+"Spanish Charts of Accounts (PGCE 2008).\n"
+"=======================================\n"
+"\n"
+"    * Defines the following chart of account templates:\n"
+"        * Spanish General Chart of Accounts 2008\n"
+"        * Spanish General Chart of Accounts 2008 for small and medium "
+"companies\n"
+"        * Spanish General Chart of Accounts 2008 for associations\n"
+"    * Defines templates for sale and purchase VAT\n"
+"    * Defines tax code templates\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_visible_discount
@@ -14070,6 +14183,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Kattintson új partner kategória létrehozásához.\n"
+"              </p><p>\n"
+"                Itt rendszerezheti a partner kategóriákat azok "
+"osztályozásának tökéletesítéséhez a nyomon követés és analízis "
+"szempontjából.\n"
+"                Egy partner több kategóriához is tartozhat és a "
+"kategóriáknak rangsorolt felépítése is lehet: egy kategóriához tartozó "
+"partner a kategória alcsoportjaihoz is tartozik.\n"
+"              </p>\n"
+"            "
 
 #. module: base
 #: field:ir.actions.act_window,filter:0
@@ -14090,6 +14214,10 @@ msgid ""
 "a new contact should be created under that new company. You can use the "
 "\"Discard\" button to abandon this change."
 msgstr ""
+"Egy kapcsolat vállalatát csak akkor változtassa meg, ha az soha nem lett jól "
+"beállítva. Ha egy meglévő kapcsolata egy másik vállalatnál kezd el dolgozni, "
+"akkor egy új kapcsolatot kell létrehozni az új vállalat alatt. Használhatja "
+"az \"Eldob\" gombot ennek a változtatásnak az eldobásához."
 
 #. module: base
 #: help:res.partner,customer:0
@@ -14806,7 +14934,7 @@ msgstr "Falkland-szigetek"
 #: code:addons/base/ir/ir_actions.py:606
 #, python-format
 msgid "Please specify an action to launch!"
-msgstr ""
+msgstr "Kérem válassza ki az elindítani kívánt műveletet!"
 
 #. module: base
 #: model:res.country,name:base.lb
@@ -15243,7 +15371,7 @@ msgstr "Címek létrehozása"
 #. module: base
 #: constraint:res.partner:0
 msgid "You cannot create recursive Partner hierarchies."
-msgstr ""
+msgstr "Nem hozhat létre rekurzív partner hierarchiákat."
 
 #. module: base
 #: model:ir.model,name:base.model_change_password_user
@@ -15490,7 +15618,7 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:295
 #, python-format
 msgid "Size of the field can never be less than 0 !"
-msgstr ""
+msgstr "A mező mérete nem lehet kisebb mint 0!"
 
 #. module: base
 #: help:ir.actions.server,sequence:0
@@ -16656,7 +16784,7 @@ msgstr ""
 #: code:addons/base/res/res_lang.py:187
 #, python-format
 msgid "You cannot delete the language which is User's Preferred Language!"
-msgstr ""
+msgstr "Nem törölheti a felhasználókhoz kötött nyelvet!"
 
 #. module: base
 #: view:ir.model.data:0
@@ -17222,7 +17350,7 @@ msgstr "Luxemburg"
 #. module: base
 #: view:res.partner:0
 msgid "(edit company address)"
-msgstr ""
+msgstr "(vállalati cím szerkesztése)"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_base_calendar
@@ -18822,7 +18950,7 @@ msgstr "Bankszámlák"
 #: code:addons/base/res/res_lang.py:185
 #, python-format
 msgid "Base Language 'en_US' can not be deleted!"
-msgstr ""
+msgstr "Az alap 'en_US' nyelv nem törölhető!"
 
 #. module: base
 #: model:res.country,name:base.sl
@@ -19176,7 +19304,7 @@ msgstr "Név exportálása"
 #: code:addons/base/ir/ir_sequence.py:259
 #, python-format
 msgid "Invalid prefix or suffix for sequence '%s'"
-msgstr ""
+msgstr "Nem valós elő- vagy utótag a sorozathoz '%s'"
 
 #. module: base
 #: help:res.partner,type:0

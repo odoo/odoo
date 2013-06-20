@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-07 19:36+0000\n"
+"POT-Creation-Date: 2013-06-14 22:29+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Bosnian <bs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-08 07:02+0000\n"
+"X-Launchpad-Export-Date: 2013-06-15 06:13+0000\n"
 "X-Generator: Launchpad (build 16667)\n"
 
 #. module: account
@@ -136,10 +136,10 @@ msgstr ""
 #: code:addons/account/account.py:686
 #: code:addons/account/account.py:781
 #: code:addons/account/account.py:1058
-#: code:addons/account/account_invoice.py:817
 #: code:addons/account/account_invoice.py:820
 #: code:addons/account/account_invoice.py:823
-#: code:addons/account/account_invoice.py:1542
+#: code:addons/account/account_invoice.py:826
+#: code:addons/account/account_invoice.py:1545
 #: code:addons/account/account_move_line.py:98
 #: code:addons/account/account_move_line.py:771
 #: code:addons/account/account_move_line.py:824
@@ -337,7 +337,7 @@ msgid "Allow multi currencies"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:74
+#: code:addons/account/account_invoice.py:77
 #, python-format
 msgid "You must define an analytic journal of type '%s'!"
 msgstr ""
@@ -598,8 +598,10 @@ msgid "The accountant confirms the statement."
 msgstr ""
 
 #. module: account
+#: report:account.account.balance:0
 #: selection:account.balance.report,display_account:0
 #: selection:account.common.account.report,display_account:0
+#: report:account.general.ledger_landscape:0
 #: selection:account.report.general.ledger,display_account:0
 #: selection:account.tax,type_tax_use:0
 #: selection:account.tax.template,type_tax_use:0
@@ -754,7 +756,9 @@ msgstr ""
 #: selection:account.common.partner.report,result_selection:0
 #: selection:account.partner.balance,result_selection:0
 #: selection:account.partner.ledger,result_selection:0
+#: report:account.third_party_ledger:0
 #: code:addons/account/report/account_partner_balance.py:297
+#: code:addons/account/report/account_partner_ledger.py:272
 #, python-format
 msgid "Receivable Accounts"
 msgstr "Potražni računi"
@@ -792,7 +796,7 @@ msgid "Are you sure you want to create entries?"
 msgstr "Jeste sigurni da želite stvortiti stavke?"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1358
+#: code:addons/account/account_invoice.py:1361
 #, python-format
 msgid "Invoice partially paid: %s%s of %s%s (%s%s remaining)."
 msgstr ""
@@ -866,7 +870,7 @@ msgid "Type"
 msgstr "Tip"
 
 #. module: account
-#: code:addons/account/account_invoice.py:823
+#: code:addons/account/account_invoice.py:826
 #, python-format
 msgid ""
 "Taxes are missing!\n"
@@ -1052,7 +1056,7 @@ msgid "Liability"
 msgstr "Obveza"
 
 #. module: account
-#: code:addons/account/account_invoice.py:896
+#: code:addons/account/account_invoice.py:899
 #, python-format
 msgid "Please define sequence on the journal related to this invoice."
 msgstr ""
@@ -1125,8 +1129,8 @@ msgstr ""
 #. module: account
 #: code:addons/account/account.py:2346
 #: code:addons/account/account_bank_statement.py:424
-#: code:addons/account/account_invoice.py:74
-#: code:addons/account/account_invoice.py:772
+#: code:addons/account/account_invoice.py:77
+#: code:addons/account/account_invoice.py:775
 #: code:addons/account/account_move_line.py:195
 #, python-format
 msgid "No Analytic Journal !"
@@ -1549,8 +1553,10 @@ msgid "%s (copy)"
 msgstr ""
 
 #. module: account
+#: report:account.account.balance:0
 #: selection:account.balance.report,display_account:0
 #: selection:account.common.account.report,display_account:0
+#: report:account.general.ledger_landscape:0
 #: selection:account.partner.balance,display_partner:0
 #: selection:account.report.general.ledger,display_account:0
 msgid "With balance is not equal to 0"
@@ -1793,7 +1799,7 @@ msgstr ""
 #: view:account.invoice:0
 #: view:account.invoice.report:0
 #: field:account.move.line,invoice:0
-#: code:addons/account/account_invoice.py:1154
+#: code:addons/account/account_invoice.py:1157
 #: model:ir.model,name:account.model_account_invoice
 #: model:res.request.link,name:account.req_link_invoice
 #, python-format
@@ -2038,9 +2044,9 @@ msgstr ""
 #: code:addons/account/account_bank_statement.py:419
 #: code:addons/account/account_cash_statement.py:256
 #: code:addons/account/account_cash_statement.py:300
-#: code:addons/account/account_invoice.py:896
-#: code:addons/account/account_invoice.py:930
-#: code:addons/account/account_invoice.py:1121
+#: code:addons/account/account_invoice.py:899
+#: code:addons/account/account_invoice.py:933
+#: code:addons/account/account_invoice.py:1124
 #: code:addons/account/account_move_line.py:579
 #: code:addons/account/account_move_line.py:828
 #: code:addons/account/account_move_line.py:851
@@ -2276,7 +2282,9 @@ msgstr ""
 #: selection:account.common.partner.report,result_selection:0
 #: selection:account.partner.balance,result_selection:0
 #: selection:account.partner.ledger,result_selection:0
+#: report:account.third_party_ledger:0
 #: code:addons/account/report/account_partner_balance.py:299
+#: code:addons/account/report/account_partner_ledger.py:274
 #, python-format
 msgid "Payable Accounts"
 msgstr "Dugovni računi"
@@ -2581,7 +2589,7 @@ msgid "Create an Account Based on this Template"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:930
+#: code:addons/account/account_invoice.py:933
 #, python-format
 msgid ""
 "Cannot create the invoice.\n"
@@ -2838,11 +2846,11 @@ msgstr ""
 #. module: account
 #: code:addons/account/account.py:3541
 #: code:addons/account/account_bank_statement.py:405
-#: code:addons/account/account_invoice.py:504
-#: code:addons/account/account_invoice.py:606
-#: code:addons/account/account_invoice.py:621
-#: code:addons/account/account_invoice.py:629
-#: code:addons/account/account_invoice.py:654
+#: code:addons/account/account_invoice.py:507
+#: code:addons/account/account_invoice.py:609
+#: code:addons/account/account_invoice.py:624
+#: code:addons/account/account_invoice.py:632
+#: code:addons/account/account_invoice.py:657
 #: code:addons/account/account_move_line.py:536
 #, python-format
 msgid "Configuration Error!"
@@ -3069,7 +3077,7 @@ msgstr ""
 
 #. module: account
 #: code:addons/account/account.py:2346
-#: code:addons/account/account_invoice.py:772
+#: code:addons/account/account_invoice.py:775
 #: code:addons/account/account_move_line.py:195
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
@@ -3128,6 +3136,11 @@ msgstr ""
 #: field:accounting.report,debit_credit:0
 msgid "Display Debit/Credit Columns"
 msgstr ""
+
+#. module: account
+#: report:account.journal.period.print:0
+msgid "Reference Number"
+msgstr "Broj reference"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -3228,7 +3241,7 @@ msgid "Fiscal Position"
 msgstr "Fiskalna pozicija"
 
 #. module: account
-#: code:addons/account/account_invoice.py:820
+#: code:addons/account/account_invoice.py:823
 #, python-format
 msgid ""
 "Tax base different!\n"
@@ -3390,7 +3403,7 @@ msgstr "Prikaz"
 
 #. module: account
 #: code:addons/account/account.py:3460
-#: code:addons/account/account_bank.py:95
+#: code:addons/account/account_bank.py:94
 #, python-format
 msgid "BNK"
 msgstr ""
@@ -3646,7 +3659,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:1013
+#: code:addons/account/account_invoice.py:1016
 #, python-format
 msgid ""
 "You cannot create an invoice on a centralized journal. Uncheck the "
@@ -3661,7 +3674,7 @@ msgid "Starting Balance"
 msgstr "Početni saldo"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1462
+#: code:addons/account/account_invoice.py:1465
 #, python-format
 msgid "No Partner Defined !"
 msgstr ""
@@ -3925,9 +3938,13 @@ msgid "This purchase tax will be assigned by default on new products."
 msgstr ""
 
 #. module: account
+#: report:account.account.balance:0
 #: report:account.central.journal:0
 #: view:account.config.settings:0
+#: report:account.general.journal:0
 #: report:account.general.ledger:0
+#: report:account.general.ledger_landscape:0
+#: report:account.journal.period.print:0
 #: report:account.partner.balance:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
@@ -4286,7 +4303,7 @@ msgid "Consolidated Children"
 msgstr "Konsolidirani potomci"
 
 #. module: account
-#: code:addons/account/account_invoice.py:570
+#: code:addons/account/account_invoice.py:573
 #: code:addons/account/wizard/account_invoice_refund.py:146
 #, python-format
 msgid "Insufficient Data!"
@@ -4553,8 +4570,8 @@ msgid "Supplier invoice sequence"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:607
-#: code:addons/account/account_invoice.py:622
+#: code:addons/account/account_invoice.py:610
+#: code:addons/account/account_invoice.py:625
 #, python-format
 msgid ""
 "Cannot find a chart of account, you should create one from Settings\\"
@@ -4832,7 +4849,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:655
+#: code:addons/account/account_invoice.py:658
 #, python-format
 msgid ""
 "Cannot find any account journal of %s type for this company.\n"
@@ -5175,7 +5192,7 @@ msgid "Tax Application"
 msgstr "Porezna prijava"
 
 #. module: account
-#: code:addons/account/account_invoice.py:919
+#: code:addons/account/account_invoice.py:922
 #, python-format
 msgid ""
 "Please verify the price of the invoice !\n"
@@ -5506,7 +5523,7 @@ msgid "Compute Code (if type=code)"
 msgstr "Kod za izračunavanje (ako je tip=Python kod)"
 
 #. module: account
-#: code:addons/account/account_invoice.py:505
+#: code:addons/account/account_invoice.py:508
 #, python-format
 msgid ""
 "Cannot find a chart of accounts for this company, you should create one."
@@ -5890,7 +5907,7 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:471
+#: code:addons/account/account_invoice.py:474
 #, python-format
 msgid ""
 "You cannot delete an invoice after it has been validated (and received a "
@@ -6050,7 +6067,7 @@ msgstr "Prihod"
 #: view:account.config.settings:0
 #: view:account.invoice:0
 #: view:account.invoice.report:0
-#: code:addons/account/account_invoice.py:387
+#: code:addons/account/account_invoice.py:390
 #, python-format
 msgid "Supplier"
 msgstr "Dobavljač"
@@ -6076,7 +6093,7 @@ msgid "Account n°"
 msgstr "Broj računa"
 
 #. module: account
-#: code:addons/account/account_invoice.py:92
+#: code:addons/account/account_invoice.py:95
 #, python-format
 msgid "Free Reference"
 msgstr ""
@@ -6086,7 +6103,9 @@ msgstr ""
 #: selection:account.common.partner.report,result_selection:0
 #: selection:account.partner.balance,result_selection:0
 #: selection:account.partner.ledger,result_selection:0
+#: report:account.third_party_ledger:0
 #: code:addons/account/report/account_partner_balance.py:301
+#: code:addons/account/report/account_partner_ledger.py:276
 #, python-format
 msgid "Receivable and Payable Accounts"
 msgstr "Konta potraživanja i dugovanja"
@@ -6379,7 +6398,7 @@ msgid "Models"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:1121
+#: code:addons/account/account_invoice.py:1124
 #, python-format
 msgid ""
 "You cannot cancel an invoice which is partially paid. You need to "
@@ -6552,7 +6571,7 @@ msgid "You cannot create journal items on closed account."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:630
+#: code:addons/account/account_invoice.py:633
 #, python-format
 msgid "Invoice line account's company and invoice's compnay does not match."
 msgstr ""
@@ -6704,7 +6723,7 @@ msgstr ""
 #: code:addons/account/account.py:1453
 #: code:addons/account/account.py:1482
 #: code:addons/account/account.py:1489
-#: code:addons/account/account_invoice.py:1012
+#: code:addons/account/account_invoice.py:1015
 #: code:addons/account/account_move_line.py:1005
 #: code:addons/account/wizard/account_automatic_reconcile.py:148
 #: code:addons/account/wizard/account_fiscalyear_close.py:88
@@ -6783,7 +6802,7 @@ msgstr ""
 #: report:account.invoice:0
 #: selection:account.invoice,type:0
 #: selection:account.invoice.report,type:0
-#: code:addons/account/account_invoice.py:1157
+#: code:addons/account/account_invoice.py:1160
 #: selection:report.invoice.created,type:0
 #, python-format
 msgid "Supplier Refund"
@@ -7916,7 +7935,7 @@ msgid "May"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:817
+#: code:addons/account/account_invoice.py:820
 #, python-format
 msgid "Global taxes defined, but they are not in invoice lines !"
 msgstr ""
@@ -7957,7 +7976,7 @@ msgstr ""
 #: view:account.config.settings:0
 #: view:account.invoice:0
 #: view:account.invoice.report:0
-#: code:addons/account/account_invoice.py:385
+#: code:addons/account/account_invoice.py:388
 #, python-format
 msgid "Customer"
 msgstr "Kupac"
@@ -8094,7 +8113,7 @@ msgid "Reconciliation Transactions"
 msgstr "Transakcije za usklađivanje"
 
 #. module: account
-#: code:addons/account/account_invoice.py:469
+#: code:addons/account/account_invoice.py:472
 #, python-format
 msgid ""
 "You cannot delete an invoice which is not draft or cancelled. You should "
@@ -8219,7 +8238,7 @@ msgid "Select a currency to apply on the invoice"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:898
+#: code:addons/account/account_invoice.py:901
 #, python-format
 msgid "No Invoice Lines !"
 msgstr ""
@@ -8294,7 +8313,7 @@ msgid "Associated Partner"
 msgstr "Vezani partner"
 
 #. module: account
-#: code:addons/account/account_invoice.py:1462
+#: code:addons/account/account_invoice.py:1465
 #, python-format
 msgid "You must first select a partner !"
 msgstr ""
@@ -9240,7 +9259,7 @@ msgid "Purchase Tax(%)"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:898
+#: code:addons/account/account_invoice.py:901
 #, python-format
 msgid "Please create some invoice lines."
 msgstr ""
@@ -9813,7 +9832,7 @@ msgid "Unreconciled"
 msgstr "Neusklađen"
 
 #. module: account
-#: code:addons/account/account_invoice.py:919
+#: code:addons/account/account_invoice.py:922
 #, python-format
 msgid "Bad total !"
 msgstr ""
@@ -10278,6 +10297,7 @@ msgstr "Otvoren za bankovno usklađivanje"
 
 #. module: account
 #: field:account.account,company_id:0
+#: report:account.account.balance:0
 #: field:account.aged.trial.balance,company_id:0
 #: field:account.analytic.journal,company_id:0
 #: field:account.balance.report,company_id:0
@@ -10293,7 +10313,9 @@ msgstr "Otvoren za bankovno usklađivanje"
 #: field:account.entries.report,company_id:0
 #: field:account.fiscal.position,company_id:0
 #: field:account.fiscalyear,company_id:0
+#: report:account.general.journal:0
 #: field:account.general.journal,company_id:0
+#: report:account.general.ledger_landscape:0
 #: field:account.installer,company_id:0
 #: field:account.invoice,company_id:0
 #: field:account.invoice.line,company_id:0
@@ -10302,6 +10324,7 @@ msgstr "Otvoren za bankovno usklađivanje"
 #: field:account.invoice.tax,company_id:0
 #: field:account.journal,company_id:0
 #: field:account.journal.period,company_id:0
+#: report:account.journal.period.print:0
 #: field:account.model,company_id:0
 #: field:account.move,company_id:0
 #: field:account.move.line,company_id:0
@@ -10462,7 +10485,7 @@ msgstr ""
 #: view:account.invoice:0
 #: selection:account.invoice,type:0
 #: selection:account.invoice.report,type:0
-#: code:addons/account/account_invoice.py:1155
+#: code:addons/account/account_invoice.py:1158
 #: model:process.process,name:account.process_process_supplierinvoiceprocess0
 #: selection:report.invoice.created,type:0
 #, python-format
@@ -10545,8 +10568,10 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: report:account.account.balance:0
 #: selection:account.balance.report,display_account:0
 #: selection:account.common.account.report,display_account:0
+#: report:account.general.ledger_landscape:0
 #: selection:account.report.general.ledger,display_account:0
 msgid "With movements"
 msgstr "Sa kretanjima"
@@ -10641,7 +10666,7 @@ msgid "Entries Sorted by"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:1543
+#: code:addons/account/account_invoice.py:1546
 #, python-format
 msgid ""
 "The selected unit of measure is not compatible with the unit of measure of "
@@ -10722,7 +10747,7 @@ msgstr ""
 #: report:account.invoice:0
 #: view:account.invoice:0
 #: view:account.invoice.report:0
-#: code:addons/account/account_invoice.py:1156
+#: code:addons/account/account_invoice.py:1159
 #, python-format
 msgid "Refund"
 msgstr "Povrat"
@@ -10794,7 +10819,7 @@ msgid "Manual Invoice Taxes"
 msgstr "Ručni porezi fakture"
 
 #. module: account
-#: code:addons/account/account_invoice.py:570
+#: code:addons/account/account_invoice.py:573
 #, python-format
 msgid "The payment term of supplier does not have a payment term line."
 msgstr ""

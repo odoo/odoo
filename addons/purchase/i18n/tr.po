@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-05-02 09:01+0000\n"
+"PO-Revision-Date: 2013-06-17 01:12+0000\n"
 "Last-Translator: Ediz Duman <neps1192@gmail.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-08 07:41+0000\n"
-"X-Generator: Launchpad (build 16667)\n"
+"X-Launchpad-Export-Date: 2013-06-18 06:51+0000\n"
+"X-Generator: Launchpad (build 16673)\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
@@ -48,7 +48,7 @@ msgstr ""
 #. module: purchase
 #: model:product.pricelist,name:purchase.list0
 msgid "Default Purchase Pricelist"
-msgstr "Varsayılan Satınalma Fiyat Listesi"
+msgstr "Öntanımlı Satınalma Fiyat Listesi"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -74,7 +74,7 @@ msgstr "Gün"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Cancel Order"
-msgstr "Sipariş İptal et"
+msgstr "Sipariş İptal Et"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -164,7 +164,7 @@ msgstr "İstisna durumundaki Satınalma Siparişleri"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_order_group
 msgid "Merge Purchase orders"
-msgstr "Satınalma Siparişlerini birleştir"
+msgstr "Satınalma Siparişlerini Birleştir"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -278,7 +278,7 @@ msgstr ""
 #: field:purchase.order.line,state:0
 #: view:purchase.report:0
 msgid "Status"
-msgstr "Durum"
+msgstr "Durumu"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -382,7 +382,7 @@ msgstr "Miktar"
 #. module: purchase
 #: field:purchase.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr "Mali Durum"
+msgstr "Mali Durumu"
 
 #. module: purchase
 #: field:purchase.config.settings,default_invoice_method:0
@@ -432,7 +432,7 @@ msgstr "Satınalma Siparişi Ara"
 #. module: purchase
 #: report:purchase.order:0
 msgid "Date Req."
-msgstr "İstek Tar."
+msgstr "İstek Tarihi"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -486,7 +486,7 @@ msgstr "Para Birimi"
 #. module: purchase
 #: field:purchase.order,journal_id:0
 msgid "Journal"
-msgstr "Günlük"
+msgstr "Yevmiye"
 
 #. module: purchase
 #: view:board.board:0
@@ -541,7 +541,7 @@ msgstr "ya da"
 #. module: purchase
 #: field:res.company,po_lead:0
 msgid "Purchase Lead Time"
-msgstr "Satınalma Tedarik Süresii"
+msgstr "Satınalma Tedarik Süresi"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_invoicefrompurchase0
@@ -890,7 +890,7 @@ msgstr "Bir faturanın ödendiğini gösterir"
 #. module: purchase
 #: field:purchase.order,notes:0
 msgid "Terms and Conditions"
-msgstr "Hükümler ve Şartlar"
+msgstr "Şartlar ve Koşullar"
 
 #. module: purchase
 #: help:purchase.order,date_order:0
@@ -947,7 +947,7 @@ msgstr "Siparişlerde birden çok analitik hesap kullanın"
 #. module: purchase
 #: view:product.product:0
 msgid "will be created in order to subcontract the job"
-msgstr "işi taşere etmek için oluşturulacaktır"
+msgstr "işi taşeron etmek için oluşturulacaktır"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
@@ -1030,7 +1030,7 @@ msgstr "Sipariş Tarihi"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 msgid "RFQs and Purchases"
-msgstr "Tİ leri ve Satınalmalar"
+msgstr "Tİ'leri ve Satınalmalar"
 
 #. module: purchase
 #: field:account.config.settings,group_analytic_account_for_purchases:0
@@ -1196,7 +1196,7 @@ msgstr "Ürünler"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Terms and conditions..."
-msgstr "Hükümler ve şartlar..."
+msgstr "Şartlar ve Koşullar..."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
@@ -1331,6 +1331,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Yeni gelen bir sevkiyat oluşturmak için tıklayın.\n"
+"              </p><p> \n"
+"                Burada satınalınan tüm ürün kabullerini izleyebilirsiniz\n"
+"                siparişleri faturaya bilirsiniz \"SevkiyatBazında\",\n"
+"                ve bunlar için henüz bir tedarikçi faturası yoksa.\n"
+"                kabul bazalı bir tedarikçi faturası oluşturabilir.\n"
+"              </p>\n"
+"            "
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
@@ -1356,7 +1365,7 @@ msgstr "Fatura Kabul"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Receive Products"
-msgstr "Ürünleri Kabul"
+msgstr "Ürün Kabulleri"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -1436,7 +1445,7 @@ msgstr "Faturalandırılacak giden ürünler"
 #: code:addons/purchase/purchase.py:517
 #, python-format
 msgid "Define purchase journal for this company: \"%s\" (id:%d)."
-msgstr "Bu firma için satınlama günlüğü tanımla: \"%s\" (id:%d)."
+msgstr "Bu firma için satınlama yevmiyesi tanımla: \"%s\" (id:%d)."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1640,7 +1649,7 @@ msgstr "Onaylama"
 #. module: purchase
 #: report:purchase.order:0
 msgid "TIN :"
-msgstr "TIN:"
+msgstr "Vergi No:"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
@@ -1702,7 +1711,7 @@ msgstr "Yönetici"
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "Based on Purchase Order lines"
-msgstr "Satınalma Siparişi kalemlerine göre"
+msgstr "Satınalma Siparişi Kalemlerine Göre"
 
 #. module: purchase
 #: field:purchase.order,amount_total:0
@@ -1856,7 +1865,7 @@ msgstr "İptal edildi"
 #. module: purchase
 #: field:res.partner,purchase_order_count:0
 msgid "# of Purchase Order"
-msgstr "Satınalma Siparişi sayısı"
+msgstr "Satınalma Siparişi Sayısı"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_compose_message
@@ -2268,6 +2277,81 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: #FFF; \">\n"
+"\n"
+"    <p>Sayın ${object.partner_id.name},</p>\n"
+"    \n"
+"    <p>Here is a ${object.state in ('draft', 'sent') ve 'teklif isteği'     "
+"veya 'satınalama sipariş teyyidi'} from ${object.company_id.name}: </p>\n"
+"    \n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+"       &nbsp;&nbsp;Sipariş Numarası: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Sipariş Toplamı: <strong>${object.amount_total} "
+"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Sipariş Tarihi: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Sipariş Referansı: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.partner_ref:\n"
+"       &nbsp;&nbsp;sizin referansınız: ${object.partner_ref}<br />\n"
+"       % endif\n"
+"       % if object.validator:\n"
+"       &nbsp;&nbsp;Kontağınız: <a href=\"mailto:${object.validator.email or "
+"''}?subject=Order%20${object.name}\">${object.validator.name}</a>\n"
+"       % endif\n"
+"    </p>\n"
+"\n"
+"    <br/>\n"
+"    <p>Herhangi bir sorunuz varsa, bizimle temas kurmaktan çekinmeyin.</p>\n"
+"    <p>teşekkürler!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#DDD;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Telefon:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
 
 #. module: purchase
 #: selection:purchase.report,month:0
