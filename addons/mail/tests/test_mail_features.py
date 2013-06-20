@@ -22,7 +22,7 @@
 from openerp.addons.mail.mail_mail import mail_mail
 from openerp.addons.mail.mail_thread import mail_thread
 from openerp.addons.mail.tests.test_mail_base import TestMailBase
-from openerp.tools import mute_logger
+from openerp.tools import mute_logger, email_split
 from openerp.tools.mail import html_sanitize
 
 
@@ -479,7 +479,7 @@ class test_mail(TestMailBase):
                             'message_post: notification email sent to more than one email address instead of a precise partner')
             self.assertIn(sent_email['email_to'][0], test_emailto,
                             'message_post: notification email email_to incorrect')
-            self.assertEqual(sent_email['reply_to'], 'r@r',  # was '"Followers of Pigs" <r@r>', but makes no sense
+            self.assertEqual(email_split(sent_email['reply_to']), ['r@r'],  # was '"Followers of Pigs" <r@r>', but makes no sense
                             'message_post: notification email reply_to incorrect: should have raoul email')
             self.assertEqual(_mail_subject, sent_email['subject'],
                             'message_post: notification email subject incorrect')
