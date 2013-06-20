@@ -1269,7 +1269,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
 
         def get_end_date(data):
             if data.get('end_date'):
-                data['end_date_new'] = ''.join((re.compile('\d')).findall(data.get('end_date'))) + 'T235959Z'
+                data['end_date_new'] = ''.join((re.compile('\d')).findall(data.get('end_date'))) + 'T235959'
 
             return (data.get('end_type') == 'count' and (';COUNT=' + str(data.get('count'))) or '') +\
                              ((data.get('end_date_new') and data.get('end_type') == 'end_date' and (';UNTIL=' + data.get('end_date_new'))) or '')
