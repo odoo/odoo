@@ -44,7 +44,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
                 'lead_location': ", ".join(lead_location),
                 'partner_assigned_id': partner and partner.id or False,
                 'partner_location': ", ".join(partner_location),
-                'lead_link': self.get_portal_url(cr, uid, lead.id, context=context),
+                'lead_link': self.get_lead_portal_url(cr, uid, lead.id, lead.type, context=context),
                 }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -112,25 +112,36 @@ class crm_lead_forward_to_partner(osv.TransientModel):
                     partner_leads['leads'].append(lead_details)
                 else:
                     partners_leads[partner.id] = {'partner': partner, 'leads': [lead_details]}
-        try:
-            stage_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_channel', 'stage_portal_lead_assigned')[1]
-        except ValueError:
-            stage_id = False
+        stage_id = False
+        if record.assignation_lines and record.assignation_lines[0].lead_id.type == 'lead':
+            try:
+                stage_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_channel', 'stage_portal_lead_assigned')[1]
+            except ValueError:
+                pass
+
         for partner_id, partner_leads in partners_leads.items():
             local_context['partner_id'] = partner_leads['partner']
             local_context['partner_leads'] = partner_leads['leads']
             email_template_obj.send_mail(cr, uid, template_id, ids[0], context=local_context)
             lead_ids = [lead['lead_id'].id for lead in partner_leads['leads']]
-            lead_obj.write(cr, uid, lead_ids, {'partner_assigned_id': partner_id, 'user_id': partner_leads['partner'].user_id.id, 'stage_id': stage_id})
+            values = {'partner_assigned_id': partner_id, 'user_id': partner_leads['partner'].user_id.id}
+            if stage_id:
+                values['stage_id'] = stage_id
+            lead_obj.write(cr, uid, lead_ids, values)
             self.pool.get('crm.lead').message_subscribe(cr, uid, lead_ids, [partner_id], context=context)
         return True
 
-    def get_portal_url(self, cr, uid, lead_id, context=None):
+    def get_lead_portal_url(self, cr, uid, lead_id, type, context=None):
+        action = type == 'opportunity' and 'action_portal_opportunities' or 'action_portal_leads'
         try:
-            action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_channel', 'action_portal_leads')[1]
+            action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_channel', action)[1]
         except ValueError:
             action_id = False
         portal_link = "%s/?db=%s#id=%s&action=%s&view_type=form" % (self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url'), cr.dbname, lead_id, action_id)
+        return portal_link
+
+    def get_portal_url(self, cr, uid, ids, context=None):
+        portal_link = "%s/?db=%s" % (self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url'), cr.dbname)
         return portal_link
 
     _columns = {
