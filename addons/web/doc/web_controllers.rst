@@ -86,6 +86,30 @@ HTTP methods they receive arguments as named parameters (except these arguments 
     def division(self, i, j):
         return i / j # returns a number
 
+URL Patterns
+------------
+
+Any URL passed to ``http.route()`` can contain patterns. Example:
+
+::
+
+    @http.route('/files/<path:file_path>', type="html")
+    def files(self, file_path):
+        ... # return a file identified by the path store in the 'my_path' variable
+
+When such patterns are used, the method will received additional parameters that correspond to the parameters defined in
+the url. For exact documentation about url patterns, see Werkzeug's documentation:
+http://werkzeug.pocoo.org/docs/routing/ .
+
+Also note you can pass multiple urls to ``http.route()``:
+
+
+::
+
+    @http.route(['/files/<path:file_path>', '/other_url/<path:file_path>'], type="html")
+    def files(self, file_path):
+        ...
+
 Contacting Models
 -----------------
 
