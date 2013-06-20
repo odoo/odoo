@@ -95,11 +95,6 @@ class hr_job(osv.osv):
     _name = "hr.job"
     _description = "Job Position"
     _inherit = ['mail.thread','ir.needaction_mixin']
-    _track = {
-        'state': {
-            'hr.mt_job_recruit': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'recruit',
-        },
-    }
     _columns = {
         'name': fields.char('Job Name', size=128, required=True, select=True),
         # TO CLEAN: when doing a cleaning, we should change like this:
@@ -159,6 +154,10 @@ class hr_job(osv.osv):
         self.write(cr, uid, ids, {'state': 'open', 'no_of_recruitment': 0,'no_of_hired_employee': 0})
         return True
 
+    def write(self, cr, uid, ids, vals, context=None):
+        if vals.get('state') == 'recruit':
+            self.message_post(cr, uid, ids, body=_('job in <b>Recruitment</b> Stage'), subtype="hr.mt_job_recruit", context=context)
+        return super(hr_job, self).write(cr, uid, ids, vals, context=context)
 
 class hr_employee(osv.osv):
     _name = "hr.employee"

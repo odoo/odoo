@@ -409,6 +409,9 @@
                                         <a t-if="record.state.raw_value == 'open'" data-name="job_recruitment" data-type="object" class="oe_kanban_action">Launch Recruitment</a>
                                         <a t-if="record.state.raw_value == 'recruit'" data-name="job_open" data-type="object" class="oe_kanban_action">Recruitment Done</a>
                                     </div>
+                                    <div class="oe_kanban_footer_left oe_job_messages">
+                                        <t t-raw="record.message_summary.raw_value"/>
+                                    </div>
                                 </div>
                             </div>
                         </t>
