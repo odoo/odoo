@@ -3,6 +3,12 @@
     <data noupdate="1">
 
         <!-- Crm stages -->
+        <record model="crm.case.stage" id="stage_portal_lead_assigned">
+            <field name="name">Assigned</field>
+            <field eval="1" name="case_default"/>
+            <field eval="0" name="probability"/>
+            <field eval="4" name="sequence"/>
+        </record>
         <record model="crm.case.stage" id="stage_portal_lead_recycle">
             <field name="name">To Recycle</field>
             <field eval="1" name="case_default"/>

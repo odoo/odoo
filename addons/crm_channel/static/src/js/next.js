@@ -7,6 +7,7 @@ openerp.crm_channel = function (instance) {
 		if (!form.dataset.ids.length){
 			parent.inner_widget.switch_mode('list');
 		}
+		parent.do_action({ type: 'ir.actions.act_window_close' });
 	};
 	instance.web.client_actions.add("next_or_list", "instance.crm_channel.next_or_list");
 }

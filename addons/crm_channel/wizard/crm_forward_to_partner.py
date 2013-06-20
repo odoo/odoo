@@ -28,8 +28,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
     """ Forward info history to partners. """
     _name = 'crm.lead.forward.to.partner'
 
-    def _convert_to_assignation_line(self, cr, uid, lead, partner):
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+    def _convert_to_assignation_line(self, cr, uid, lead, partner, context=None):
         lead_location = []
         partner_location = []
         if lead.country_id:
@@ -45,7 +44,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
                 'lead_location': ", ".join(lead_location),
                 'partner_assigned_id': partner and partner.id or False,
                 'partner_location': ", ".join(partner_location),
-                'lead_link': "%s/?db=%s#id=%s&model=crm.lead" % (base_url, cr.dbname, lead.id)
+                'lead_link': self.get_portal_url(cr, uid, lead.id, context=context),
                 }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -89,10 +88,10 @@ class crm_lead_forward_to_partner(osv.TransientModel):
                                  _('The Forward Email Template is not in the database'))
         local_context = context.copy()
         if not (record.forward_type == 'single'):
-            no_email = []
+            no_email = set()
             for lead in record.assignation_lines:
                 if lead.partner_assigned_id and not lead.partner_assigned_id.email:
-                    no_email.append(lead.partner_assigned_id.name)
+                    no_email.add(lead.partner_assigned_id.name)
             if no_email:
                 raise osv.except_osv(_('Email Error'),
                                     ('Set an email address for the partner(s): %s' % ", ".join(no_email)))
@@ -113,29 +112,25 @@ class crm_lead_forward_to_partner(osv.TransientModel):
                     partner_leads['leads'].append(lead_details)
                 else:
                     partners_leads[partner.id] = {'partner': partner, 'leads': [lead_details]}
+        try:
+            stage_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_channel', 'stage_portal_lead_assigned')[1]
+        except ValueError:
+            stage_id = False
         for partner_id, partner_leads in partners_leads.items():
             local_context['partner_id'] = partner_leads['partner']
             local_context['partner_leads'] = partner_leads['leads']
             email_template_obj.send_mail(cr, uid, template_id, ids[0], context=local_context)
             lead_ids = [lead['lead_id'].id for lead in partner_leads['leads']]
-            lead_obj.write(cr, uid, lead_ids, {'partner_assigned_id': partner_id, 'user_id': partner_leads['partner'].user_id.id})
+            lead_obj.write(cr, uid, lead_ids, {'partner_assigned_id': partner_id, 'user_id': partner_leads['partner'].user_id.id, 'stage_id': stage_id})
             self.pool.get('crm.lead').message_subscribe(cr, uid, lead_ids, [partner_id], context=context)
         return True
 
-    # def action_clean_lines(self, cr, uid, ids, context=None):
-    #     record = self.browse(cr, uid, ids[0], context=context)
-    #     invalid_lines = []
-    #     for line in record.assignation_lines:
-    #         if not line.partner_assigned_id:
-    #             invalid_lines.append((2, line.id))
-    #     self.write(cr, uid, ids[0], {'assignation_lines': invalid_lines}, context=context)
-    #     model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_channel', 'action_crm_send_mass_forward')
-    #     action = self.pool[model].read(cr, uid, action_id, context=context)
-    #     action['res_id'] = ids[0]
-    #     return action
-
-    def get_portal_url(self, cr, uid, ids, context=None):
-        portal_link = "%s/?db=%s" % (self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url'), cr.dbname)
+    def get_portal_url(self, cr, uid, lead_id, context=None):
+        try:
+            action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_channel', 'action_portal_leads')[1]
+        except ValueError:
+            action_id = False
+        portal_link = "%s/?db=%s#id=%s&action=%s&view_type=form" % (self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url'), cr.dbname, lead_id, action_id)
         return portal_link
 
     _columns = {

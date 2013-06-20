@@ -20,38 +20,25 @@
 ##############################################################################
 
 from openerp.osv import osv
-from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
 
 
 class crm_lead(osv.osv):
     _inherit = 'crm.lead'
 
-    def case_interested(self, cr, uid, ids, context=None):
-        self.check_access_rights(cr, uid, 'write')
+    def get_interested_action(self, cr, uid, interested, context=None):
         try:
-            stage_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_channel', 'stage_portal_lead_interested')[1]
+            model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_channel', 'crm_lead_channel_interested_act')
         except ValueError:
-            stage_id = False
-        if stage_id:
-            self.write(cr, SUPERUSER_ID, ids, {'stage_id': stage_id})
-        self.message_post(cr, uid, ids, body=_('I am interested by this lead'), context=context)
+            raise osv.except_osv(_('Error!'), _("The CRM Channel Interested Action is missing"))
+        action = self.pool[model].read(cr, uid, action_id, context=context)
+        action_context = eval(action['context'])
+        action_context['interested'] = interested
+        action['context'] = str(action_context)
+        return action
+
+    def case_interested(self, cr, uid, ids, context=None):
+        return self.get_interested_action(cr, uid, True, context=context)
 
     def case_disinterested(self, cr, uid, ids, context=None):
-        self.check_access_rights(cr, uid, 'write')
-        try:
-            stage_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_channel', 'stage_portal_lead_recycle')[1]
-        except ValueError:
-            stage_id = False
-        values = {}
-        values = {'partner_assigned_id': False}
-        if stage_id:
-            values['stage_id'] = stage_id
-        self.message_post(cr, uid, ids, body=_('I am not interested by this lead'), context=context)
-        self.write(cr, SUPERUSER_ID, ids, values, context=context)
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'next_or_list',
-            'params': {
-            },
-        }
+        return self.get_interested_action(cr, uid, False, context=context)

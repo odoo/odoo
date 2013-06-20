@@ -43,6 +43,7 @@ You can also use the geolocalization without using the GPS coordinates.
         'security/ir.model.access.csv',
         'res_partner_view.xml',
         'wizard/crm_forward_to_partner_view.xml',
+        'wizard/crm_channel_interested_view.xml',
         'crm_lead_view.xml',
         'crm_channel_data.xml',
         'crm_data.xml',
