@@ -195,14 +195,6 @@ openerp_mail_followers = function(session, mail) {
             // clean and display title
             var node_user_list = this.$('.oe_follower_list').empty();
             this.$('.oe_follower_title').html(this._format_followers(this.followers.length));
-            // On mouseenter it will show the edit_subtype penil
-            this.$el.on('mouseenter', 'div.oe_follower_list', function() {
-                $("img.oe_edit_subtype").removeClass("hidden");
-                $('div.oe_follower_list').find('.oe_partner').addClass('oe_partner_name');
-            }).on('mouseleave', 'div.oe_follower_list', function(){
-                $("img.oe_edit_subtype").addClass("hidden");
-                $('div.oe_follower_list').find('.oe_partner').removeClass('oe_partner_name');
-            });
 
             // truncate number of displayed followers
             var truncated = this.followers.slice(0, this.displayed_nb);
@@ -211,6 +203,16 @@ openerp_mail_followers = function(session, mail) {
                     self.check_access = result;
                     record.avatar_url = mail.ChatterUtils.get_image(self.session, 'res.partner', 'image_small', record.id);
                     $(session.web.qweb.render('mail.followers.partner', {'record': record, 'widget': self})).appendTo(node_user_list);
+                    // On mouseenter it will show the edit_subtype penil
+                    if (self.check_access == true) {
+                        self.$el.on('mouseenter', 'div.oe_follower_list', function() {
+                            $("img.oe_edit_subtype").removeClass("hidden");
+                            $('div.oe_follower_list').find('.oe_partner').addClass('oe_partner_name');
+                        }).on('mouseleave', 'div.oe_follower_list', function(){
+                            $("img.oe_edit_subtype").addClass("hidden");
+                            $('div.oe_follower_list').find('.oe_partner').removeClass('oe_partner_name');
+                        });
+                    }
               })
             });
             // FVA note: be sure it is correctly translated
@@ -270,9 +272,6 @@ openerp_mail_followers = function(session, mail) {
             });
             if (_.size(records) > 1) {
                 $list.show();
-            }
-            if (this.check_access && this.session.debug) {
-                $('div.oe_follower_list').find('.oe_partner').css('margin-right', '28px');
             }
         },
 
