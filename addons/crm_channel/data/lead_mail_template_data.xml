@@ -10,25 +10,29 @@
             <field name="subject">Fwd: Lead: ${ctx['partner_id'].name}</field>
             <field name="body_html"><![CDATA[
             
-Hello ${ctx['partner_id'].name},
-</br>
-</br>
+<p>Hello,</p>
 
-<blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;">Some leads have been assigned to you. Here are the various leads we propose: </blockquote></br></br>
-<b>
+
+<p>We have been contacted by those prospects that are in your region. Thus, the following leads have been assigned to ${ctx['partner_id'].name}:</p>
+
 <ol>
 % for lead in ctx['partner_leads']:
-     <li><a href="${lead.lead_link}">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or 'Phone Number Undefined'} </li></br>
+     <li><a href="${lead.lead_link}">${lead.lead_id.name or 'Subject Undefined'}</a>, ${lead.lead_id.contact_name or 'Contact Name Undefined'}, ${lead.lead_id.country_id and lead.lead_id.country_id.name or 'Country Undefined' }, ${lead.lead_id.email_from or 'Email Undefined'}, ${lead.lead_id.phone or ''} </li></br>
 % endfor
 </ol>
-</b>
 
-</br>
-<blockquote style="margin: 0 0 0 40px; border: none; padding: 0px;">Connect you to your <b><a href="${object.get_portal_url()}">Partner Portal</a></b> to see leads details.</blockquote>
+<p>Please connect to your <a href="${object.get_portal_url()}">Partner Portal</a> to get details. On each lead are two buttons on the top left corner that you should press after having contacted the lead: "I'm interested" & "I'm not interested".</p>
 
-</br>   
-Thanks,</br>
-    Account Manager
+<p>If you did not contact the lead after 4 weeks (20 days), the lead will be send to another partner.</p>
+
+<p>Thanks,</p>
+
+<pre>
+${ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or 'The OpenERP Team'}
+</pre>
+% if not ctx['partner_id'].user_id:
+PS: It looks like you do not have an account manager assigned to you, please contact us.
+% endif
             ]]></field>
         </record>
     </data>

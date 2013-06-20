@@ -91,10 +91,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
         if not (record.forward_type == 'single'):
             no_email = []
             for lead in record.assignation_lines:
-                if not lead.partner_assigned_id:
-                    raise osv.except_osv(_('Assignation Error'),
-                                         _('Some leads have not been assigned to any partner so assign partners manualy'))
-                if not lead.partner_assigned_id.email:
+                if lead.partner_assigned_id and not lead.partner_assigned_id.email:
                     no_email.append(lead.partner_assigned_id.name)
             if no_email:
                 raise osv.except_osv(_('Email Error'),
@@ -105,16 +102,17 @@ class crm_lead_forward_to_partner(osv.TransientModel):
 
         partners_leads = {}
         for lead in record.assignation_lines:
+            partner = record.forward_type == 'single' and record.partner_id or lead.partner_assigned_id
             lead_details = {
                 'lead_link': lead.lead_link,
                 'lead_id': lead.lead_id,
             }
-            partner = record.forward_type == 'single' and record.partner_id or lead.partner_assigned_id
-            partner_leads = partners_leads.get(partner.id)
-            if partner_leads:
-                partner_leads['leads'].append(lead_details)
-            else:
-                partners_leads[partner.id] = {'partner': partner, 'leads': [lead_details]}
+            if partner:
+                partner_leads = partners_leads.get(partner.id)
+                if partner_leads:
+                    partner_leads['leads'].append(lead_details)
+                else:
+                    partners_leads[partner.id] = {'partner': partner, 'leads': [lead_details]}
         for partner_id, partner_leads in partners_leads.items():
             local_context['partner_id'] = partner_leads['partner']
             local_context['partner_leads'] = partner_leads['leads']
@@ -124,17 +122,17 @@ class crm_lead_forward_to_partner(osv.TransientModel):
             self.pool.get('crm.lead').message_subscribe(cr, uid, lead_ids, [partner_id], context=context)
         return True
 
-    def action_clean_lines(self, cr, uid, ids, context=None):
-        record = self.browse(cr, uid, ids[0], context=context)
-        invalid_lines = []
-        for line in record.assignation_lines:
-            if not line.partner_assigned_id:
-                invalid_lines.append((2, line.id))
-        self.write(cr, uid, ids[0], {'assignation_lines': invalid_lines}, context=context)
-        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_channel', 'action_crm_send_mass_forward')
-        action = self.pool[model].read(cr, uid, action_id, context=context)
-        action['res_id'] = ids[0]
-        return action
+    # def action_clean_lines(self, cr, uid, ids, context=None):
+    #     record = self.browse(cr, uid, ids[0], context=context)
+    #     invalid_lines = []
+    #     for line in record.assignation_lines:
+    #         if not line.partner_assigned_id:
+    #             invalid_lines.append((2, line.id))
+    #     self.write(cr, uid, ids[0], {'assignation_lines': invalid_lines}, context=context)
+    #     model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_channel', 'action_crm_send_mass_forward')
+    #     action = self.pool[model].read(cr, uid, action_id, context=context)
+    #     action['res_id'] = ids[0]
+    #     return action
 
     def get_portal_url(self, cr, uid, ids, context=None):
         portal_link = "%s/?db=%s" % (self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url'), cr.dbname)
@@ -144,7 +142,6 @@ class crm_lead_forward_to_partner(osv.TransientModel):
         'forward_type': fields.selection([('single', 'a single partner: manual selection of partner'), ('assigned', "several partners: automatic assignation, using GPS coordinates and partner's grades"), ], 'Forward selected leads to'),
         'partner_id': fields.many2one('res.partner', 'Forward Leads To'),
         'assignation_lines': fields.one2many('crm.lead.assignation', 'forward_id', 'Partner Assignation'),
-        'show_mail': fields.boolean('Show the email will be sent'),
         'body': fields.html('Contents', help='Automatically sanitized HTML contents'),
     }
 

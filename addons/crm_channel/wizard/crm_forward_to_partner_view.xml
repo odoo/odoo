@@ -16,7 +16,7 @@
                         <group>
                         </group>
                     </group>
-                    <button name="action_clean_lines" string="Clean Unassigned" type="object" attrs="{'invisible': [('forward_type', 'in', ['single',False])]}"/>
+                    <!-- <button name="action_clean_lines" string="Clean Unassigned" type="object" attrs="{'invisible': [('forward_type', 'in', ['single',False])]}"/> -->
                     <field name="assignation_lines" attrs="{'invisible': [('forward_type', 'in', ['single',False])]}">
                         <tree create="false" editable="bottom">
                             <field name="lead_id" readonly="1" on_change="on_change_lead_id(lead_id)"/>
@@ -25,10 +25,8 @@
                             <field name="partner_location" readonly="1"/>
                         </tree>
                     </field>
-                    <field name="show_mail" />
-                    <label for="show_mail" />
-                    <notebook colspan="4" attrs="{'invisible': [('show_mail', '=', False)]}">
-                        <page string="Body">
+                    <notebook colspan="4" groups="base.group_no_one">
+                        <page string="Email Template">
                             <field name="body" readonly="1"/>
                         </page>
                     </notebook>
