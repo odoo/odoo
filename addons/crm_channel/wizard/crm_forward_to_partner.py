@@ -85,10 +85,20 @@ class crm_lead_forward_to_partner(osv.TransientModel):
                                  _('The Forward Email Template is not in the database'))
         local_context = context.copy()
         if not (record.forward_type == 'single'):
+            no_email = []
             for lead in record.assignation_lines:
                 if not lead.partner_assigned_id:
                     raise osv.except_osv(_('Assignation Error'),
                                          _('Some leads have not been assigned to any partner so assign partners manualy'))
+                if not lead.partner_assigned_id.email:
+                    no_email.append(lead.partner_assigned_id.name)
+            if no_email:
+                raise osv.except_osv(_('Email Error'),
+                                    ('Set an email address for the partner(s): %s' % ", ".join(no_email)))
+        if record.forward_type == 'single' and not record.partner_id.email:
+            raise osv.except_osv(_('Email Error'),
+                                ('Set an email address for the partner %s' % record.partner_id.name))
+
         partners_leads = {}
         for lead in record.assignation_lines:
             lead_details = {
