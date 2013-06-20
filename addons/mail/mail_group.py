@@ -208,3 +208,12 @@ class mail_group(osv.Model):
         """ Wrapper because message_unsubscribe_users take a user_ids=None
             that receive the context without the wrapper. """
         return self.message_unsubscribe_users(cr, uid, ids, context=context)
+
+    def get_suggested_thread(self, cr, uid, removed_suggested_threads=None, context=None):
+        """Show the suggestion of groups if display_groups_suggestions if the
+        user perference allows it."""
+        user = self.pool.get('res.users').browse(cr, uid, uid, context)
+        if not user.display_groups_suggestions:
+            return []
+        else:
+            return super(mail_group, self).get_suggested_thread(cr, uid, removed_suggested_threads, context)
