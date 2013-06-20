@@ -30,12 +30,12 @@
         <field name="arch" type="xml">
             <form string="Call for Bids" version="7.0">
             <header>              
-                <button name="sent_suppliers" states="draft" string="Confirm Tender" class="oe_highlight"/>
-                <button name="open_bid" states="in_progress" string="Close Bids" class="oe_highlight"/>
+                <button name="sent_suppliers" states="draft" string="Confirm Call" class="oe_highlight"/>
+                <button name="open_bid" states="in_progress" string="Close Call for Bids" class="oe_highlight"/>
                 <button name="tender_reset" states="cancel" string="Reset to Draft" type="object" />
                 <button name="open_product_line" states="open" string="Choose product lines" type="object" class="oe_highlight" groups="purchase.group_advance_bidding"/>
                 <button name="generate_po" states="open" string="Make Purchase" type="object" class="oe_highlight"/>
-                <button name="cancel_requisition" states="draft,in_progress" string="Cancel Requisition"/>
+                <button name="cancel_requisition" states="draft,in_progress" string="Cancel Call"/>
                 <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,open,done" statusbar_colors='{"in_progress":"blue"}'/>
             </header>
             <sheet>
@@ -92,7 +92,7 @@
                             <button name="%(action_purchase_requisition_partner)d" type="action"
                                 string="Request a Quotation" icon="gtk-execute"
                                 attrs="{'invisible': ['|', ('line_ids','=',[]),('state', 'in', ('draft' ,'open','done'))]}"/>
-                            <button name="open_rfq" type="object" string="View RFQ" attrs="{'invisible': [('state', 'in', ('draft'))]}"/>
+                            <button name="open_rfq" type="object" string="View RFQs/Bids" attrs="{'invisible': [('state', 'in', ('draft'))]}"/>
                         </div>
                         <separator string="Requests for Quotation"/>
                         <field name="purchase_ids" readonly="1">
@@ -166,7 +166,7 @@
 
 
     <record model="ir.actions.act_window" id="action_purchase_requisition">
-        <field name="name">Call for Bids</field>
+        <field name="name">Calls for Bids</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">purchase.requisition</field>
         <field name="view_type">form</field>
