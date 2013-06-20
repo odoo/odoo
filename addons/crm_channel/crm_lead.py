@@ -44,8 +44,14 @@ class crm_lead(osv.osv):
         except ValueError:
             stage_id = False
         values = {}
-        # values = {'partner_assigned_id': False}
+        values = {'partner_assigned_id': False}
         if stage_id:
             values['stage_id'] = stage_id
-        self.write(cr, SUPERUSER_ID, ids, values, context=context)
         self.message_post(cr, uid, ids, body=_('I am not interested by this lead'), context=context)
+        self.write(cr, SUPERUSER_ID, ids, values, context=context)
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'next_or_list',
+            'params': {
+            },
+        }

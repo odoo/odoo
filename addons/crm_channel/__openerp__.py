@@ -52,6 +52,9 @@ You can also use the geolocalization without using the GPS coordinates.
         'report/crm_partner_report_view.xml',
         'data/lead_mail_template_data.xml',
     ],
+    'js': [
+        'static/src/js/next.js',
+    ],
     'test': ['test/partner_assign.yml'],
     'installable': True,
     'auto_install': False,
