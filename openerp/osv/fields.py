@@ -1067,6 +1067,8 @@ class function(_column):
             self._classic_write = True
             if type=='binary':
                 self._symbol_get=lambda x:x and str(x)
+            else:
+                self._prefetch = True
 
         if type == 'float':
             self._symbol_c = float._symbol_c
