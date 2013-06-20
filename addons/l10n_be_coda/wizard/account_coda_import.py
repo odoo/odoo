@@ -117,6 +117,8 @@ class account_coda_import(osv.osv_memory):
                     # and so a 'like' operator would return the first account number in the database which matches.
                     cr.execute("select id from res_partner_bank where replace(replace(acc_number,' ',''),'-','') = %s", (statement['acc_number'],))
                 bank_ids = [id[0] for id in cr.fetchall()]
+                # Filter bank accounts which are not allowed
+                bank_ids = self.pool.get('res.partner.bank').search(cr, uid, [('id', 'in', bank_ids)])
                 if bank_ids and len(bank_ids) > 0:
                     bank_accs = self.pool.get('res.partner.bank').browse(cr, uid, bank_ids)
                     for bank_acc in bank_accs:
