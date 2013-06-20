@@ -1115,7 +1115,7 @@ class DataSet(http.Controller):
         return self._call_kw(model, method, args, {})
 
     @http.route(['/web/dataset/call_kw', '/web/dataset/call_kw/<path:path>'], type='json', authentication="auth")
-    def call_kw(self, model, method, args, kwargs):
+    def call_kw(self, model, method, args, kwargs, path=None):
         return self._call_kw(model, method, args, kwargs)
 
     @http.route('/web/dataset/call_button', type='json', authentication="auth")

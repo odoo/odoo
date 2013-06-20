@@ -417,7 +417,7 @@ def jsonrequest(f):
     base = f.__name__
     if f.__name__ == "index":
         base = ""
-    return route([base, os.path.join(base, "<path:path>")], type="json", authentication="auth")(f)
+    return route([base, os.path.join(base, "<path:_ignored_path>")], type="json", authentication="auth")(f)
 
 class HttpRequest(WebRequest):
     """ Regular GET/POST request
@@ -500,7 +500,7 @@ def httprequest(f):
     base = f.__name__
     if f.__name__ == "index":
         base = ""
-    return route([base, os.path.join(base, "<path:path>")], type="http", authentication="auth")(f)
+    return route([base, os.path.join(base, "<path:_ignored_path>")], type="http", authentication="auth")(f)
 
 #----------------------------------------------------------
 # Local storage of requests
@@ -865,9 +865,15 @@ class Root(object):
         """
         path = request.httprequest.path
         urls = self.get_db_router(request.db).bind("")
-        func, original = urls.match(path)[0]
+        matched, arguments = urls.match(path)
+        arguments = dict([(k, v) for k, v in arguments.items() if not k.startswith("_ignored_")])
+        func, original = matched
 
-        request.func = func
+        def nfunc(*args, **kwargs):
+            kwargs.update(arguments)
+            return func(*args, **kwargs)
+
+        request.func = nfunc
         request.auth_method = getattr(original, "auth", "auth")
         request.func_request_type = original.exposed
 
