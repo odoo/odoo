@@ -38,42 +38,27 @@
                 </header>
                 <sheet>
                   <group>
-                    <field name="priority" readonly="1"/>
-                    <field name="type" invisible="1" readonly="1"/>
-                    <field name="partner_name" string="Partner Name" readonly="1"/>
-                    <field name="stage_id" string="Interest Status"/>
+                    <group>
+                      <field name="partner_name" string="Partner Name" readonly="1"/>
+                      <field name="title" widget="selection" readonly="1"/>
+                      <field name="contact_name" readonly="1"/>
+                      <field name="function" readonly="1"/>
+                      <field name="email_from" readonly="1"/>
+                      <field name="phone" readonly="1"/>
+                      <field name="fax" readonly="1"/>
+                      <field name="mobile" readonly="1"/>
+                    </group>
+                    <group>
+                      <field name="street" readonly="1"/>
+                      <field name="street2" readonly="1"/>
+                      <field name="zip" readonly="1"/>
+                      <field name="city" readonly="1"/>
+                      <field name="country_id" readonly="1"/>
+                      <field name="state_id" readonly="1"/>
+                    </group>
+                    <label for="description" colspan="2"/>
+                    <field name="description" nolabel="1" colspan="2"/>
                   </group>
-                  <notebook>
-                    <page string='Lead'>
-                      <group col="2">
-                        <separator string="Contact" colspan="2"/>
-                        <group col="2">
-                           <field name="contact_name" readonly="1"/>
-                           <field domain="[('domain', '=', 'contact')]" name="title" widget="selection" readonly="1"/>
-                           <field name="function" readonly="1"/>
-                           <field name="street" readonly="1"/>
-                           <field name="street2" readonly="1"/>
-                        </group>
-                        <group col="2">
-                           <field name="zip" readonly="1"/>
-                           <field name="city" readonly="1"/>
-                           <field name="country_id" readonly="1"/>
-                           <field name="state_id" readonly="1"/>
-                        </group>
-                      </group>
-                      <group col="2">
-                        <group col="2">
-                           <separator string="Communication" colspan="2"/>
-                           <field name="email_from" readonly="1"/>
-                           <field name="phone" readonly="1"/>
-                           <field name="fax" readonly="1"/>
-                           <field name="mobile" readonly="1"/>
-                        </group>
-                      </group>
-                      <separator string="Details" />
-                      <field name="description" nolabel="1" />
-                    </page>
-                  </notebook>
                 </sheet>
               </form>
             </field>
