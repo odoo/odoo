@@ -60,7 +60,7 @@
         <field name="type_tax_use">sale</field>
         <field name="amount">1</field>
         <field name="type">percent</field>
-        <field name="child_depend">1</field>
+        <field name="child_depend" eval="True"/>
     </record>
 
     <record id="gstpst_sale_mb_gst_en" model="account.tax.template">
@@ -107,7 +107,7 @@
         <field name="type_tax_use">sale</field>
         <field name="amount">1</field>
         <field name="type">percent</field>
-        <field name="child_depend">1</field>
+        <field name="child_depend" eval="True"/>
     </record>
 
     <record id="gstqst_sale_gst_en" model="account.tax.template">
@@ -153,7 +153,7 @@
         <field name="type_tax_use">sale</field>
         <field name="amount">1</field>
         <field name="type">percent</field>
-        <field name="child_depend">1</field>
+        <field name="child_depend" eval="True"/>
     </record>
 
     <record id="gstpst_sale_sk_gst_en" model="account.tax.template">
@@ -255,7 +255,6 @@
         <field name="ref_tax_code_id" ref="vat_code_payable_gst_en"/>
     </record>
 
-
     <!-- PURCHASE TAXES -->
 
     <!-- British Columbia PST -->
@@ -314,7 +313,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="amount">1</field>
         <field name="type">percent</field>
-        <field name="child_depend">1</field>
+        <field name="child_depend" eval="True"/>
     </record>
 
     <record id="gstpst_purc_mb_gst_en" model="account.tax.template">
@@ -361,7 +360,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="amount">1</field>
         <field name="type">percent</field>
-        <field name="child_depend">1</field>
+        <field name="child_depend" eval="True"/>
     </record>
 
     <record id="gstqst_purc_gst_en" model="account.tax.template">
@@ -407,7 +406,7 @@
         <field name="type_tax_use">purchase</field>
         <field name="amount">1</field>
         <field name="type">percent</field>
-        <field name="child_depend">1</field>
+        <field name="child_depend" eval="True"/>
     </record>
 
     <record id="gstpst_purc_sk_gst_en" model="account.tax.template">
