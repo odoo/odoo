@@ -16,6 +16,7 @@
                         <group>
                         </group>
                     </group>
+                    <button name="action_clean_lines" string="Clean Unassigned" type="object" attrs="{'invisible': [('forward_type', 'in', ['single',False])]}"/>
                     <field name="assignation_lines" attrs="{'invisible': [('forward_type', 'in', ['single',False])]}">
                         <tree create="false" editable="bottom">
                             <field name="lead_id" readonly="1" on_change="on_change_lead_id(lead_id)"/>

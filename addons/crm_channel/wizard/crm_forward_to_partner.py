@@ -28,13 +28,31 @@ class crm_lead_forward_to_partner(osv.TransientModel):
     """ Forward info history to partners. """
     _name = 'crm.lead.forward.to.partner'
 
+    def _convert_to_assignation_line(self, cr, uid, lead, partner):
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        lead_location = []
+        partner_location = []
+        if lead.country_id:
+            lead_location.append(lead.country_id.name)
+        if lead.city:
+            lead_location.append(lead.city)
+        if partner:
+            if partner.country_id:
+                partner_location.append(partner.country_id.name)
+            if partner.city:
+                partner_location.append(partner.city)
+        return {'lead_id': lead.id,
+                'lead_location': ", ".join(lead_location),
+                'partner_assigned_id': partner and partner.id or False,
+                'partner_location': ", ".join(partner_location),
+                'lead_link': "%s/?db=%s#id=%s&model=crm.lead" % (base_url, cr.dbname, lead.id)
+                }
+
     def default_get(self, cr, uid, fields, context=None):
         if context is None:
             context = {}
         lead_obj = self.pool.get('crm.lead')
-        partner_obj = self.pool.get('res.partner')
         email_template_obj = self.pool.get('email.template')
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         try:
             template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_channel', 'email_template_lead_forward_mail')[1]
         except ValueError:
@@ -53,25 +71,11 @@ class crm_lead_forward_to_partner(osv.TransientModel):
                 partner_assigned_ids = dict((lead.id, lead.partner_assigned_id and lead.partner_assigned_id.id or False) for lead in lead_ids)
                 res['partner_id'] = lead_ids[0].partner_assigned_id.id
             for lead in lead_ids:
-                lead_location = []
-                partner_location = []
-                if lead.country_id:
-                    lead_location.append(lead.country_id.name)
-                if lead.city:
-                    lead_location.append(lead.city)
                 partner_id = partner_assigned_ids.get(lead.id) or False
+                partner = False
                 if partner_id:
-                    partner = partner_obj.browse(cr, uid, partner_id, context=context)
-                    if partner.country_id:
-                        partner_location.append(partner.country_id.name)
-                    if partner.city:
-                        partner_location.append(partner.city)
-                res['assignation_lines'].append({'lead_id': lead.id,
-                                                 'lead_location': ", ".join(lead_location),
-                                                 'partner_assigned_id': partner_id,
-                                                 'partner_location': ", ".join(partner_location),
-                                                 'lead_link': "%s/?db=%s#id=%s&model=crm.lead" % (base_url, cr.dbname, lead.id)
-                                                 })
+                    partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+                res['assignation_lines'].append(self._convert_to_assignation_line(cr, uid, lead, partner))
         return res
 
     def action_forward(self, cr, uid, ids, context=None):
@@ -120,6 +124,18 @@ class crm_lead_forward_to_partner(osv.TransientModel):
             self.pool.get('crm.lead').message_subscribe(cr, uid, lead_ids, [partner_id], context=context)
         return True
 
+    def action_clean_lines(self, cr, uid, ids, context=None):
+        record = self.browse(cr, uid, ids[0], context=context)
+        invalid_lines = []
+        for line in record.assignation_lines:
+            if not line.partner_assigned_id:
+                invalid_lines.append((2, line.id))
+        self.write(cr, uid, ids[0], {'assignation_lines': invalid_lines}, context=context)
+        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_channel', 'action_crm_send_mass_forward')
+        action = self.pool[model].read(cr, uid, action_id, context=context)
+        action['res_id'] = ids[0]
+        return action
+
     def get_portal_url(self, cr, uid, ids, context=None):
         portal_link = "%s/?db=%s" % (self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url'), cr.dbname)
         return portal_link
@@ -133,7 +149,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
     }
 
     _defaults = {
-        'forward_type': 'single',
+        'forward_type': lambda self, cr, uid, c: c.get('forward_type') or 'single',
     }
 
 
