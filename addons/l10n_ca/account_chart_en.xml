@@ -147,10 +147,36 @@
 	<record id="chart1183_en" model="account.account.template">
 		<field name="code">1183</field>
 		<field name="parent_id" ref="chart118_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="account.data_account_type_view"/>
+		<field name="name">HST receivable</field>
+	</record>
+
+	<record id="chart11831_en" model="account.account.template">
+		<field name="code">11831</field>
+		<field name="parent_id" ref="chart1183_en"/>
 		<field name="type">other</field>
 		<field name="user_type" ref="account.data_account_type_receivable"/>
 		<field name="reconcile" eval="True"/>
-		<field name="name">HST receivable</field>
+		<field name="name">HST receivable - 13%</field>
+	</record>
+
+	<record id="chart11832_en" model="account.account.template">
+		<field name="code">11832</field>
+		<field name="parent_id" ref="chart1183_en"/>
+		<field name="type">other</field>
+		<field name="user_type" ref="account.data_account_type_receivable"/>
+		<field name="reconcile" eval="True"/>
+		<field name="name">HST receivable - 14%</field>
+	</record>
+
+	<record id="chart11833_en" model="account.account.template">
+		<field name="code">11833</field>
+		<field name="parent_id" ref="chart1183_en"/>
+		<field name="type">other</field>
+		<field name="user_type" ref="account.data_account_type_receivable"/>
+		<field name="reconcile" eval="True"/>
+		<field name="name">HST receivable - 15%</field>
 	</record>
 
 	<record id="chart15_en" model="account.account.template">
@@ -273,10 +299,36 @@
 	<record id="chart2133_en" model="account.account.template">
 		<field name="code">2133</field>
 		<field name="parent_id" ref="chart213_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="account.data_account_type_view"/>
+		<field name="name">HST to pay</field>
+	</record>
+
+	<record id="chart21331_en" model="account.account.template">
+		<field name="code">21331</field>
+		<field name="parent_id" ref="chart2133_en"/>
 		<field name="type">other</field>
 		<field name="user_type" ref="account.data_account_type_payable"/>
 		<field name="reconcile" eval="True"/>
-		<field name="name">HST to pay</field>
+		<field name="name">HST to pay - 13%</field>
+	</record>
+
+	<record id="chart21332_en" model="account.account.template">
+		<field name="code">21332</field>
+		<field name="parent_id" ref="chart2133_en"/>
+		<field name="type">other</field>
+		<field name="user_type" ref="account.data_account_type_payable"/>
+		<field name="reconcile" eval="True"/>
+		<field name="name">HST to pay - 14%</field>
+	</record>
+
+	<record id="chart21333_en" model="account.account.template">
+		<field name="code">21333</field>
+		<field name="parent_id" ref="chart2133_en"/>
+		<field name="type">other</field>
+		<field name="user_type" ref="account.data_account_type_payable"/>
+		<field name="reconcile" eval="True"/>
+		<field name="name">HST to pay - 15%</field>
 	</record>
 
 	<record id="chart214_en" model="account.account.template">
