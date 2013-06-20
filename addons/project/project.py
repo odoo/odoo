@@ -567,7 +567,8 @@ class task(base_stage, osv.osv):
 
     _track = {
         'stage_id': {
-            'project.mt_task_stage': lambda self, cr, uid, obj, ctx=None: obj
+            'project.mt_task_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence == 1,
+            'project.mt_task_stage': lambda self, cr, uid, obj, ctx=None: obj.stage_id.sequence != 1,
         },
         'kanban_state': {  # kanban state: tracked, but only block subtype
             'project.mt_task_blocked': lambda self, cr, uid, obj, ctx=None: obj['kanban_state'] == 'blocked',
@@ -678,7 +679,7 @@ class task(base_stage, osv.osv):
         return {}
 
     def onchange_user_assigned(self, cr, uid, ids, context=None):
-        return {'value':{'date_start': fields.datetime.now(),'date_end':False}}
+        return {'value':{'date_start': time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),'date_end':False}}
 
     def duplicate_task(self, cr, uid, map_ids, context=None):
         for new in map_ids.values():
@@ -1058,6 +1059,7 @@ class task(base_stage, osv.osv):
             action=self.pool.get('project.task.type').read(cr, uid, new_stage, ['action'],context=context)
             if action['action']:
                self._trigger_stage_action(cr, uid, ids, action, context)
+            vals['date_end'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
             vals_reset_kstate = dict(vals, kanban_state='normal')
             for t in self.browse(cr, uid, ids, context=context):
                 #TO FIX:Kanban view doesn't raise warning

@@ -33,6 +33,8 @@
                     <field name="closing_days" sum='Days to Close'/>
                     <field name="delay_endings_days" sum='OverPass delay'/>
                     <field name="progress" sum='Progress' widget='progressbar'/>
+                    <field name="update_month" invisible="1"/>
+                    <field name="stage_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -72,6 +74,9 @@
                         <filter string="Task" icon="terp-stock_align_left_24" context="{'group_by':'name'}" />
                         <filter string="Contact" icon="terp-partner" context="{'group_by':'partner_id'}" />
                         <filter string="Assigned to" name="User" icon="terp-personal" context="{'group_by':'user_id'}" />
+                        <filter string="Assigned Month" icon="terp-go-month" context="{'group_by':'month'}" help="Assigned Month"/>
+                        <filter string="Last Update" icon="terp-go-month" context="{'group_by':'update_month'}" help="Last Update Month"/>
+                        <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}"  groups="base.group_multi_company"/>
                         <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Creation Date"/>
                         <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}" help="Creation Date"/>

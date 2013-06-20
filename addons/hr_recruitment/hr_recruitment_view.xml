@@ -58,6 +58,7 @@
                 <field name="availability" invisible="1"/>
                 <field name="department_id" invisible="context.get('invisible_department', True)"/>
                 <field name="user_id"/>
+                <field name="date_closed" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -195,6 +196,7 @@
                     <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
                     <filter string="Source" domain="[]" context="{'group_by':'source_id'}"/>
                     <filter string="Creation Date" domain="[]" context="{'group_by':'create_date'}"/>
+                    <filter string="Last Update Month" name="group_close_date" icon="terp-go-month" domain="[]" context="{'group_by':'date_closed'}"/>
                 </group>
            </search>
         </field>

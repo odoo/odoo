@@ -467,17 +467,11 @@
         <field name="default" eval="False"/>
         <field name="description">Stage changed</field>
     </record>
-    <record id="mt_applicant_hired" model="mail.message.subtype">
-        <field name="name">Applicant Hired</field>
+    <record id="mt_applicant_assigned" model="mail.message.subtype">
+        <field name="name">Application Assigned</field>
         <field name="res_model">hr.applicant</field>
         <field name="default" eval="False"/>
-        <field name="description">Applicant hired</field>
-    </record>
-    <record id="mt_applicant_refused" model="mail.message.subtype">
-        <field name="name">Applicant Refused</field>
-        <field name="res_model">hr.applicant</field>
-        <field name="default" eval="False"/>
-        <field name="description">Applicant refused</field>
+        <field name="description">Application Assigned</field>
     </record>
     <!-- Applicant Categories(Tag) -->
     <record id="tag_applicant_reserve" model="hr.applicant_category">

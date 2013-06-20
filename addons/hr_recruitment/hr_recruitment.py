@@ -407,7 +407,6 @@ class hr_applicant(base_stage, osv.Model):
                                                      'department_id': applicant.department_id.id
                                                      })
                 self.write(cr, uid, [applicant.id], {'emp_id': emp_id}, context=context)
-                self.case_close(cr, uid, [applicant.id], context)
             else:
                 raise osv.except_osv(_('Warning!'), _('You must define an Applied Job and a Contact Name for this applicant.'))
 
@@ -438,6 +437,12 @@ class hr_applicant(base_stage, osv.Model):
         context['empty_list_help_id'] = context.get('default_job_id', None)
         context['empty_list_help_document_name'] = _("job applicants")
         return super(hr_applicant, self).get_empty_list_help(cr, uid, help, context=context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if 'stage_id' in vals:
+            vals['date_closed'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            result = super(hr_applicant, self).write(cr, uid, ids, vals, context=context)
+        return result
 
 
 class hr_job(osv.osv):

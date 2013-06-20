@@ -199,3 +199,29 @@ class base_stage(object):
                 raise osv.except_osv(_('Error!'), _("You are already at the top level of your sales-team category.\nTherefore you cannot escalate furthermore."))
             self.write(cr, uid, [case.id], data, context=context)
         return True
+
+    def case_set(self, cr, uid, ids, new_state_name=None, values_to_update=None, new_stage_id=None, context=None):
+        """ Generic method for setting case. This methods wraps the update
+            of the record.
+
+            :params new_state_name: the new state of the record; this method
+                                    will call ``stage_set_with_state_name``
+                                    that will find the stage matching the
+                                    new state, using the ``stage_find`` method.
+            :params new_stage_id: alternatively, you may directly give the
+                                  new stage of the record
+            :params state_name: the new value of the state, such as
+                     'draft' or 'close'.
+            :params update_values: values that will be added with the state
+                     update when writing values to the record.
+        """
+        cases = self.browse(cr, uid, ids, context=context)
+        # 1. update the stage
+        if new_state_name:
+            self.stage_set_with_state_name(cr, uid, cases, new_state_name, context=context)
+        elif not (new_stage_id is None):
+            self.stage_set(cr, uid, ids, new_stage_id, context=context)
+        # 2. update values
+        if values_to_update:
+            self.write(cr, uid, ids, values_to_update, context=context)
+        return True

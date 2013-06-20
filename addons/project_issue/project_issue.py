@@ -50,7 +50,8 @@ class project_issue(base_stage, osv.osv):
 
     _track = {
         'stage_id': {
-            'project_issue.mt_issue_stage': lambda self, cr, uid, obj, ctx=None: obj,
+            'project_issue.mt_issue_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence == 1,
+            'project_issue.mt_issue_stage': lambda self, cr, uid, obj, ctx=None:obj.stage_id.sequence != 1,
         },
         'kanban_state': {
             'project_issue.mt_issue_blocked': lambda self, cr, uid, obj, ctx=None: obj['kanban_state'] == 'blocked',
@@ -65,6 +66,8 @@ class project_issue(base_stage, osv.osv):
             if vals.get('project_id'):
                 ctx['default_project_id'] = vals['project_id']
             vals['stage_id'] = self._get_default_stage_id(cr, uid, context=ctx)
+        if vals.get('user_id'):
+            vals['date_open'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
         # context: no_log, because subtype already handle this
         create_context = dict(context, mail_create_nolog=True)
         return super(project_issue, self).create(cr, uid, vals, context=create_context)
@@ -383,12 +386,10 @@ class project_issue(base_stage, osv.osv):
             vals['date_action_last'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
             for issue in self.browse(cr, uid, ids, context=context):
                 # Change from draft to not draft EXCEPT cancelled: The issue has been opened -> set the opening date
+                vals['date_closed'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
                 if stage['sequence'] == 1:
                     vals['date_open'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
-                # Change from not done to done: The issue has been closed -> set the closing date
-                sequence = [stage.sequence for stage in issue.project_id.type_ids[-2:]]
-                if stage['sequence'] in sequence:
-                    vals['date_closed'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+                    vals['date_closed'] = False
         return super(project_issue, self).write(cr, uid, ids, vals, context)
 
     def onchange_task_id(self, cr, uid, ids, task_id, context=None):
@@ -564,6 +565,8 @@ class project_issue(base_stage, osv.osv):
             self.write(cr, SUPERUSER_ID, thread_id, {'date_action_last': time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
         return res
 
+    def onchange_user_assigned(self, cr, uid, ids, context=None):
+        return self.write(cr,uid,ids,{'date_open': time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT),'date_close':False},context)
 
 class project(osv.Model):
     _inherit = "project.project"

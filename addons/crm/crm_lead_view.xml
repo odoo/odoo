@@ -328,7 +328,7 @@
                     <separator/>
                     <filter string="Open" name="open" domain="[('user_id', '!=', 'False'), ('probability', '!=', 100)]" help="Open and Assigned Leads"/>
                     <filter string="Dead" name="dead" domain="[('probability', '=', '0'), ('stage_id.sequence', '!=', 1)]"/>
-                    <filter string="Unassigned" name="unassigned" domain="[('user_id','=', False), ('probability', '!=', 100)]" help="No salesperson"/>
+                    <filter string="Unassigned" name="unassigned" domain="[('user_id','=', False)]" help="No salesperson"/>
                     <filter string="Assigned to Me"
                             domain="[('user_id','=',uid)]" context="{'invisible_section': False}"
                             help="Leads that are assigned to me"/>
@@ -378,7 +378,7 @@
                         <button name="case_mark_lost" string="Mark Lost" type="object" class="oe_highlight"
                                 attrs="{'invisible': [('probability', '=', 0)]}"/>
                         <field name="stage_id" widget="statusbar" clickable="True"
-                                domain="['&amp;', '|', ('case_default', '=', True), ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"/>
+                                domain="['&amp;', ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"/>
                     </header>
                     <sheet>
                         <div class="oe_right oe_button_box">
@@ -524,6 +524,7 @@
                     <field name="priority" invisible="1"/>
                     <field name="message_unread" invisible="1"/>
                     <field name="probability" invisible="1"/>
+                    <field name="write_date" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -567,6 +568,8 @@
                         <filter string="Campaign" domain="[]" context="{'group_by':'type_id'}"/>
                         <filter string="Channel" domain="[]" context="{'group_by':'channel_id'}"/>
                         <filter string="Creation" domain="[]" context="{'group_by':'create_date'}"/>
+                        <filter string="Last Update Month"  icon="terp-go-month"
+                            domain="[]" context="{'group_by':'write_date'}"/>
                     </group>
                     <group string="Display">
                         <filter string="Show Sales Team" context="{'invisible_section': False}" domain="[]" help="Show Sales Team" groups="base.group_multi_salesteams"/>

@@ -413,10 +413,9 @@ class crm_lead(base_stage, format_address, osv.osv):
             if stage_id:
                 self.case_set(cr, uid, [lead.id], new_stage_id=stage_id, context=context)
             else:
-                raise self.pool.get('res.config.settings').get_config_warning(cr,
-                    _("To relieve your sales pipe and group all Lost opportunities, configure one of your sales stage as follow:\n"
-                        "probability = 0, sequence != 1 and on_change = True.\n"
-                        "You can create a specific column or edit an existing one from the menu %(menu:crm.menu_crm_case_section_act)s"), context=context)
+                raise osv.except_osv(_('Warning!'), _('To relieve your sales pipe and group all Lost opportunities, configure one of your sales stage as follow:\n' 
+                'probability = 0 %, select "Change Probability Automatically".\n' 
+                'Create a specific stage or edit an existing one by editing columns of your opportunity pipe.'))
         return True
 
     def case_mark_won(self, cr, uid, ids, context=None):
@@ -426,10 +425,9 @@ class crm_lead(base_stage, format_address, osv.osv):
             if stage_id:
                 self.case_set(cr, uid, [lead.id], new_stage_id=stage_id, context=context)
             else:
-                raise self.pool.get('res.config.settings').get_config_warning(cr,
-                    _("To relieve your sales pipe and group all Won opportunities, configure one of your sales stage as follow:\n"
-                        "probability = 100 and on_change = True.\n"
-                        "You can create a specific column or edit an existing one from the menu %(menu:crm.menu_crm_case_section_act)s"), context=context)
+                raise osv.except_osv(_('Warning!'), _('To relieve your sales pipe and group all Won opportunities, configure one of your sales stage as follow:\n' 
+                'probability = 100 % and select "Change Probability Automatically".\n'
+                'Create a specific stage or edit an existing one by editing columns of your opportunity pipe.'))
         return True
 
     def set_priority(self, cr, uid, ids, priority):

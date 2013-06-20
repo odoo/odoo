@@ -22,6 +22,21 @@
 from openerp.osv import fields,osv
 from openerp import tools
 
+MONTHS = [
+    ('01', 'January'),
+    ('02', 'February'),
+    ('03', 'March'),
+    ('04', 'April'),
+    ('05', 'May'),
+    ('06', 'June'),
+    ('07', 'July'),
+    ('08', 'August'),
+    ('09', 'September'),
+    ('10', 'October'),
+    ('11', 'November'),
+    ('12', 'December')
+]
+
 class report_project_task_user(osv.osv):
     _name = "report.project.task.user"
     _description = "Tasks by user and project"
@@ -44,15 +59,17 @@ class report_project_task_user(osv.osv):
         'total_hours': fields.float('Total Hours', readonly=True),
         'closing_days': fields.float('Days to Close', digits=(16,2), readonly=True, group_operator="avg",
                                        help="Number of Days to close the task"),
-        'opening_days': fields.float('Days to Open', digits=(16,2), readonly=True, group_operator="avg",
-                                       help="Number of Days to Open the task"),
+        'opening_days': fields.float('Delay to Assign', digits=(16,2), readonly=True, group_operator="avg",
+                                       help="Number of Delay to Assign the task"),
         'delay_endings_days': fields.float('Overpassed Deadline', digits=(16,2), readonly=True),
         'nbr': fields.integer('# of tasks', readonly=True),
         'priority' : fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Urgent'),
 ('0','Very urgent')], 'Priority', readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
+        'month':fields.selection(MONTHS, 'Month', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Contact', readonly=True),
+        'update_month': fields.selection(MONTHS,'Last Update', readonly=True),
+        'stage_id': fields.many2one('project.task.type', 'Stage'),
     }
     _order = 'name desc, project_id'
 
@@ -65,6 +82,7 @@ class report_project_task_user(osv.osv):
                     t.id as id,
                     to_char(date_start, 'YYYY') as year,
                     to_char(date_start, 'MM') as month,
+                    to_char(date_end, 'MM') as update_month,
                     to_char(date_start, 'YYYY-MM-DD') as day,
                     date_trunc('day',t.date_start) as date_start,
                     date_trunc('day',t.date_end) as date_end,

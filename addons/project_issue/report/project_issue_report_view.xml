@@ -16,6 +16,8 @@
                     <field name="company_id" invisible="1" groups="base.group_multi_company"/>
                     <field name="section_id" invisible="1" groups="base.group_multi_salesteams"/>
                     <field name="user_id" invisible="1"/>
+                    <field name="assign_month" invisible="1"/>
+                    <field name="update_month" invisible="1"/>
                     <field name="channel_id" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
                     <field name="task_id" invisible="1"/>
@@ -51,8 +53,11 @@
                     <field name="user_id"/>
                     <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <field name="version_id"/>
+                    <field name="stage_id"/>
                     <group  expand="1" string="Group By...">
                         <filter string="Assigned to" name="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" />
+                        <filter string="Assigned Month" icon="terp-go-month" domain="[]" context="{'group_by':'assign_month'}" help="Assigned Month"/>
+                        <filter string="Last Update" icon="terp-go-month" domain="[]" context="{'group_by':'update_month'}" help="Update Month"/>
                         <filter string="Contact" icon="terp-partner" context="{'group_by':'partner_id'}" />
                         <filter string="Sale Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}" />
                         <filter string="Project"  name="project" icon="terp-folder-violet" context="{'group_by':'project_id'}" />

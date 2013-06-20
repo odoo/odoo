@@ -24,6 +24,20 @@ from openerp.osv import fields,osv
 from openerp import tools
 from openerp.addons.crm import crm
 
+MONTHS = [
+    ('01', 'January'),
+    ('02', 'February'),
+    ('03', 'March'),
+    ('04', 'April'),
+    ('05', 'May'),
+    ('06', 'June'),
+    ('07', 'July'),
+    ('08', 'August'),
+    ('09', 'September'),
+    ('10', 'October'),
+    ('11', 'November'),
+    ('12', 'December')
+]
 
 class project_issue_report(osv.osv):
     _name = "project.issue.report"
@@ -32,12 +46,7 @@ class project_issue_report(osv.osv):
     _columns = {
         'name': fields.char('Year', size=64, required=False, readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Sale Team', readonly=True),
-        'month':fields.selection([('01', 'January'), ('02', 'February'), \
-                                  ('03', 'March'), ('04', 'April'),\
-                                  ('05', 'May'), ('06', 'June'), \
-                                  ('07', 'July'), ('08', 'August'),\
-                                  ('09', 'September'), ('10', 'October'),\
-                                  ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
+        'month':fields.selection(MONTHS, 'Month', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'opening_date': fields.date('Date of Opening', readonly=True),
@@ -56,6 +65,8 @@ class project_issue_report(osv.osv):
         'project_id':fields.many2one('project.project', 'Project',readonly=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'user_id' : fields.many2one('res.users', 'Assigned to',readonly=True),
+        'assign_month':fields.selection(MONTHS, 'Assigned Month', readonly=True),
+        'update_month': fields.selection(MONTHS,'Last Update', readonly=True),
         'partner_id': fields.many2one('res.partner','Contact'),
         'channel_id': fields.many2one('crm.case.channel', 'Channel',readonly=True),
         'task_id': fields.many2one('project.task', 'Task'),
@@ -74,6 +85,8 @@ class project_issue_report(osv.osv):
                     to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
                     to_char(c.create_date, 'YYYY-MM-DD') as creation_date,
                     c.user_id,
+                    to_char(c.date_open, 'MM') as assign_month,
+                    to_char(c.date_closed, 'MM') as update_month,
                     c.working_hours_open,
                     c.working_hours_close,
                     c.section_id,
@@ -89,7 +102,7 @@ class project_issue_report(osv.osv):
                     c.task_id,
                     date_trunc('day',c.create_date) as create_date,
                     c.day_open as delay_open,
-                    c.write_date as delay_close,
+                    c.day_close as delay_close,
                     (SELECT count(id) FROM mail_message WHERE model='project.issue' AND res_id=c.id) AS email
 
                 FROM
