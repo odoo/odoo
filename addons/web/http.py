@@ -817,7 +817,6 @@ class Root(object):
                                 url = os.path.join(o._cp_path, url)
                                 if url.endswith("/") and len(url) > 1:
                                     url = url[: -1]
-                            print "<<<<<<<<<<<<<<<< nodb", url
                             routing_map.add(routing.Rule(url, endpoint=function))
 
         if not db:
@@ -843,7 +842,6 @@ class Root(object):
                                 url = os.path.join(o._cp_path, url)
                                 if url.endswith("/") and len(url) > 1:
                                     url = url[: -1]
-                            print "<<<<<<<<<<<<<<<< db", url
                             routing_map.add(routing.Rule(url, endpoint=function))
         return routing_map
 
@@ -867,11 +865,7 @@ class Root(object):
         """
         path = request.httprequest.path
         urls = self.get_db_router(request.db).bind("")
-        try:
-            func, original = urls.match(path)[0]
-        except:
-            _logger.exception("Routing error for url %s" % path)
-            raise
+        func, original = urls.match(path)[0]
 
         request.func = func
         request.auth_method = getattr(original, "auth", "auth")
