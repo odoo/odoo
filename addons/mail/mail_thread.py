@@ -1186,7 +1186,7 @@ class mail_thread(osv.AbstractModel):
                                                     ], context=context)
                 mail_followers_obj.write(cr, SUPERUSER_ID, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
             # subtype_ids not specified: do not update already subscribed partner, fetch default subtypes for new partners
-            else:
+            elif subtype_ids is None:
                 subtype_ids = subtype_obj.search(cr, uid, [
                                                         ('default', '=', True),
                                                         '|',
