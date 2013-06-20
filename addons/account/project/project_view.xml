@@ -68,6 +68,7 @@
                     <field name="parent_id" invisible="1"/>
                     <field name="type"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="template_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -361,7 +362,7 @@
             <field name="inherit_id" ref="account.view_account_journal_form"/>
             <field name="arch" type="xml">
                 <field name="type" position="after">
-                    <field name="analytic_journal_id"/>
+                    <field name="analytic_journal_id" groups="analytic.group_analytic_accounting"/>
                 </field>
             </field>
         </record>

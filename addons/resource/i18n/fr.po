@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
 "PO-Revision-Date: 2013-05-21 15:58+0000\n"
 "Last-Translator: Quentin THEURET <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-05-22 05:27+0000\n"
-"X-Generator: Launchpad (build 16626)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:42+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: resource
 #: help:resource.calendar.leaves,resource_id:0
@@ -52,6 +52,16 @@ msgstr "Congés des ressources"
 #: field:resource.calendar.attendance,dayofweek:0
 msgid "Day of Week"
 msgstr "Jour de la semaine"
+
+#. module: resource
+#: model:ir.actions.act_window,help:resource.action_resource_calendar_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Define working hours and time table that could be scheduled "
+"to your project members\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -91,7 +101,7 @@ msgid "Resources"
 msgstr "Ressources"
 
 #. module: resource
-#: code:addons/resource/resource.py:389
+#: code:addons/resource/resource.py:455
 #, python-format
 msgid "Make sure the Working time has been configured with proper week days!"
 msgstr ""
@@ -99,7 +109,7 @@ msgstr ""
 "la semaine !"
 
 #. module: resource
-#: code:addons/resource/resource.py:307
+#: code:addons/resource/resource.py:373
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copie)"
@@ -252,15 +262,6 @@ msgid "Work from"
 msgstr "Travaille à partir de"
 
 #. module: resource
-#: model:ir.actions.act_window,help:resource.action_resource_calendar_form
-msgid ""
-"Define working hours and time table that could be scheduled to your project "
-"members"
-msgstr ""
-"Définissez les heures de travail et les horaires pendant lesquels les "
-"membres de votre projet peuvent être sollicités."
-
-#. module: resource
 #: help:resource.resource,user_id:0
 msgid "Related user name for the resource to manage its access."
 msgstr "Utilisateur associé à la ressource pour gérer les droits d'accès."
@@ -344,7 +345,7 @@ msgid "(vacation)"
 msgstr "(vacances)"
 
 #. module: resource
-#: code:addons/resource/resource.py:389
+#: code:addons/resource/resource.py:455
 #, python-format
 msgid "Configuration Error!"
 msgstr "Erreur de paramétrage !"
@@ -368,3 +369,10 @@ msgstr "Date de début"
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Saturday"
 msgstr "Samedi"
+
+#~ msgid ""
+#~ "Define working hours and time table that could be scheduled to your project "
+#~ "members"
+#~ msgstr ""
+#~ "Définissez les heures de travail et les horaires pendant lesquels les "
+#~ "membres de votre projet peuvent être sollicités."

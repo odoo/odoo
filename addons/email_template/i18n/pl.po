@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:38+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:21+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: email_template
 #: field:email.template,email_from:0
@@ -24,9 +24,10 @@ msgid "From"
 msgstr "Od"
 
 #. module: email_template
-#: field:mail.compose.message,template_id:0
-msgid "Template"
-msgstr "Szablon"
+#: view:res.partner:0
+msgid ""
+"Partners that did not ask not to be included in mass mailing campaigns"
+msgstr ""
 
 #. module: email_template
 #: help:email.template,ref_ir_value:0
@@ -45,10 +46,12 @@ msgid "Email contents (in raw HTML format)"
 msgstr ""
 
 #. module: email_template
-#: field:email.template,email_to:0
-#: field:email_template.preview,email_to:0
-msgid "To (Emails)"
-msgstr "Do (adresy)"
+#: help:email.template,email_from:0
+#: help:email_template.preview,email_from:0
+msgid ""
+"Sender address (placeholders may be used here). If not set, the default "
+"value will be the author's email alias if configured, or email address."
+msgstr ""
 
 #. module: email_template
 #: field:email.template,mail_server_id:0
@@ -72,31 +75,21 @@ msgid "Field"
 msgstr "Pole"
 
 #. module: email_template
-#: help:email.template,email_from:0
-#: help:email_template.preview,email_from:0
-msgid "Sender address (placeholders may be used here)"
-msgstr "Adres nadawcy (można stosować wyrażenia)"
-
-#. module: email_template
 #: view:email.template:0
 msgid "Remove context action"
 msgstr "Usuń akcję kontekstową"
-
-#. module: email_template
-#: help:email.template,mail_server_id:0
-#: help:email_template.preview,mail_server_id:0
-msgid ""
-"Optional preferred server for outgoing mails. If not set, the highest "
-"priority one will be used."
-msgstr ""
-"Opcjonalny preferowany serwer poczty wychodzącej. Jeśli nie ustawione, to "
-"zostanie zastosowany serwer o najwyższym priorytecie."
 
 #. module: email_template
 #: field:email.template,report_name:0
 #: field:email_template.preview,report_name:0
 msgid "Report Filename"
 msgstr "Nazwa pliki raportu"
+
+#. module: email_template
+#: field:email.template,email_to:0
+#: field:email_template.preview,email_to:0
+msgid "To (Emails)"
+msgstr "Do (adresy)"
 
 #. module: email_template
 #: view:email.template:0
@@ -121,10 +114,15 @@ msgid "Body"
 msgstr "Treść"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:244
+#: code:addons/email_template/email_template.py:247
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (kopia)"
+
+#. module: email_template
+#: field:mail.compose.message,template_id:0
+msgid "Template"
+msgstr "Szablon"
 
 #. module: email_template
 #: help:email.template,user_signature:0
@@ -156,6 +154,11 @@ msgstr ""
 "którego relacja dotyczy."
 
 #. module: email_template
+#: view:res.partner:0
+msgid "Available for mass mailing"
+msgstr ""
+
+#. module: email_template
 #: model:ir.model,name:email_template.model_email_template
 msgid "Email Templates"
 msgstr "Szablony wiadomości"
@@ -169,6 +172,12 @@ msgid ""
 msgstr ""
 "Nazwa dla pliku raportu (może zawierać wyrażenia)\n"
 "Rozszerzenie można ominąć. Będzie pobrane z typu raportu."
+
+#. module: email_template
+#: code:addons/email_template/email_template.py:234
+#, python-format
+msgid "Warning"
+msgstr "Ostrzeżenie"
 
 #. module: email_template
 #: field:email.template,ref_ir_act_window:0
@@ -253,6 +262,14 @@ msgstr "Podgląd"
 #: view:email_template.preview:0
 msgid "Using sample document"
 msgstr "Stosowanie przykładowego dokumentu"
+
+#. module: email_template
+#: help:res.partner,opt_out:0
+msgid ""
+"If opt-out is checked, this contact has refused to receive emails for mass "
+"mailing and marketing campaign. Filter 'Available for Mass Mailing' allows "
+"users to filter the partners when performing mass mailing."
+msgstr ""
 
 #. module: email_template
 #: view:email.template:0
@@ -400,7 +417,7 @@ msgid "Attachments"
 msgstr "Załączniki"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:231
+#: code:addons/email_template/email_template.py:234
 #, python-format
 msgid "Deletion of the action record failed."
 msgstr "Usunięcie rekordu akcji nie udało się."
@@ -429,19 +446,20 @@ msgid "Email Details"
 msgstr "Szczegóły e-mail"
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:196
+#: code:addons/email_template/email_template.py:199
 #, python-format
 msgid "Send Mail (%s)"
 msgstr "Wyślij wiadomość (%s)"
 
 #. module: email_template
-#: help:res.partner,opt_out:0
+#: help:email.template,mail_server_id:0
+#: help:email_template.preview,mail_server_id:0
 msgid ""
-"If checked, this partner will not receive any automated email notifications, "
-"such as the availability of invoices."
+"Optional preferred server for outgoing mails. If not set, the highest "
+"priority one will be used."
 msgstr ""
-"Jeśli zaznaczysz tę opcję, to partner nie dostanie żadnych automatycznych "
-"powiadomień. Np. o dostępności faktur."
+"Opcjonalny preferowany serwer poczty wychodzącej. Jeśli nie ustawione, to "
+"zostanie zastosowany serwer o najwyższym priorytecie."
 
 #. module: email_template
 #: help:email.template,auto_delete:0
@@ -465,10 +483,9 @@ msgstr ""
 "pole docelowe w docelowym modelu (podmodelu)."
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:231
-#, python-format
-msgid "Warning"
-msgstr "Ostrzeżenie"
+#: view:res.partner:0
+msgid "Suppliers"
+msgstr ""
 
 #. module: email_template
 #: field:email.template,user_signature:0
@@ -513,3 +530,13 @@ msgstr "Zawartość"
 #: field:email_template.preview,subject:0
 msgid "Subject"
 msgstr "Temat"
+
+#~ msgid "Sender address (placeholders may be used here)"
+#~ msgstr "Adres nadawcy (można stosować wyrażenia)"
+
+#~ msgid ""
+#~ "If checked, this partner will not receive any automated email notifications, "
+#~ "such as the availability of invoices."
+#~ msgstr ""
+#~ "Jeśli zaznaczysz tę opcję, to partner nie dostanie żadnych automatycznych "
+#~ "powiadomień. Np. o dostępności faktur."

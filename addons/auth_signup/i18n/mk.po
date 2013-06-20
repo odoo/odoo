@@ -7,16 +7,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2013-03-31 13:31+0000\n"
 "Last-Translator: Sofce Dimitrijeva <Unknown>\n"
 "Language-Team: ESKON-INZENERING\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-01 05:31+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:14+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 "Language: mk\n"
+
+#. module: auth_signup
+#: view:res.users:0
+msgid ""
+"A password reset has been requested for this user. An email containing the "
+"following link has been sent:"
+msgstr ""
 
 #. module: auth_signup
 #: field:res.partner,signup_type:0
@@ -30,7 +37,7 @@ msgstr "Дозволи регистрација на надворешни кор
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:16
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:19
 #, python-format
 msgid "Confirm Password"
 msgstr "Потврди лозинка"
@@ -42,20 +49,30 @@ msgstr ""
 "Доколку е одштиклирано, само поканети корисници можат да се регистрираат."
 
 #. module: auth_signup
+#: view:res.users:0
+msgid "Send an invitation email"
+msgstr ""
+
+#. module: auth_signup
+#: selection:res.users,state:0
+msgid "Activated"
+msgstr ""
+
+#. module: auth_signup
 #: model:ir.model,name:auth_signup.model_base_config_settings
 msgid "base.config.settings"
 msgstr "base.config.settings"
 
 #. module: auth_signup
-#: code:addons/auth_signup/res_users.py:265
+#: code:addons/auth_signup/res_users.py:266
 #, python-format
 msgid "Cannot send email: user has no email address."
 msgstr "Неможе да се испрати e-mail: Корисникот нема e-mail адреса."
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:24
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:28
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:27
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:31
 #, python-format
 msgid "Reset password"
 msgstr "Ресетирај лозинка"
@@ -72,28 +89,15 @@ msgstr "Ресетирај лозинка"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:117
+#: code:addons/auth_signup/static/src/js/auth_signup.js:120
 #, python-format
 msgid "Please enter a password and confirm it."
 msgstr "Ве молиме внесете лозинка и потврдете ја."
 
 #. module: auth_signup
-#. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:23
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:26
-#, python-format
-msgid "Sign Up"
-msgstr "Регистрирај се"
-
-#. module: auth_signup
-#: selection:res.users,state:0
-msgid "New"
-msgstr "Нов"
-
-#. module: auth_signup
-#: field:res.users,state:0
-msgid "Status"
-msgstr "Статус"
+#: view:res.users:0
+msgid "Send reset password link by email"
+msgstr ""
 
 #. module: auth_signup
 #: model:email.template,body_html:auth_signup.reset_password_email
@@ -118,8 +122,24 @@ msgstr ""
 "порака.</p>"
 
 #. module: auth_signup
+#: view:res.users:0
+msgid ""
+"An invitation email containing the following subscription link has been sent:"
+msgstr ""
+
+#. module: auth_signup
+#: field:res.users,state:0
+msgid "Status"
+msgstr "Статус"
+
+#. module: auth_signup
+#: selection:res.users,state:0
+msgid "Never Connected"
+msgstr ""
+
+#. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:111
+#: code:addons/auth_signup/static/src/js/auth_signup.js:114
 #, python-format
 msgid "Please enter a name."
 msgstr "Ве молиме внесете име."
@@ -199,18 +219,13 @@ msgstr ""
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:114
+#: code:addons/auth_signup/static/src/js/auth_signup.js:117
 #, python-format
 msgid "Please enter a username."
 msgstr "Ве молиме внесете корисничко име."
 
 #. module: auth_signup
-#: selection:res.users,state:0
-msgid "Active"
-msgstr "Активен"
-
-#. module: auth_signup
-#: code:addons/auth_signup/res_users.py:269
+#: code:addons/auth_signup/res_users.py:270
 #, python-format
 msgid ""
 "Cannot send email: no outgoing email server configured.\n"
@@ -221,7 +236,7 @@ msgstr ""
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:174
+#: code:addons/auth_signup/static/src/js/auth_signup.js:177
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr "Беше испратен e-mail со акредитиви за ресетирање на вашата лозинка"
@@ -242,15 +257,10 @@ msgstr "Име"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:170
+#: code:addons/auth_signup/static/src/js/auth_signup.js:173
 #, python-format
 msgid "Please enter a username or email address."
 msgstr "Ве молиме внесете корисничко име или e-mail адреса."
-
-#. module: auth_signup
-#: selection:res.users,state:0
-msgid "Resetting Password"
-msgstr "ресетирање на лозинка"
 
 #. module: auth_signup
 #. openerp-web
@@ -273,7 +283,7 @@ msgstr ""
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:22
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:25
 #, python-format
 msgid "Log in"
 msgstr "Најави се"
@@ -285,35 +295,35 @@ msgstr "Токенот за регистрација е валиден"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:108
 #: code:addons/auth_signup/static/src/js/auth_signup.js:111
 #: code:addons/auth_signup/static/src/js/auth_signup.js:114
 #: code:addons/auth_signup/static/src/js/auth_signup.js:117
 #: code:addons/auth_signup/static/src/js/auth_signup.js:120
-#: code:addons/auth_signup/static/src/js/auth_signup.js:167
+#: code:addons/auth_signup/static/src/js/auth_signup.js:123
 #: code:addons/auth_signup/static/src/js/auth_signup.js:170
+#: code:addons/auth_signup/static/src/js/auth_signup.js:173
 #, python-format
 msgid "Login"
 msgstr "Најавување"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:94
+#: code:addons/auth_signup/static/src/js/auth_signup.js:97
 #, python-format
 msgid "Invalid signup token"
 msgstr "Невалиден токен за регистрација"
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:120
+#: code:addons/auth_signup/static/src/js/auth_signup.js:123
 #, python-format
 msgid "Passwords do not match; please retype them."
 msgstr "Лозинките не се совпаѓаат; Внесете ги повторно."
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/js/auth_signup.js:108
-#: code:addons/auth_signup/static/src/js/auth_signup.js:167
+#: code:addons/auth_signup/static/src/js/auth_signup.js:111
+#: code:addons/auth_signup/static/src/js/auth_signup.js:170
 #, python-format
 msgid "No database selected !"
 msgstr "Не е избрана база на податоци !"
@@ -330,7 +340,7 @@ msgstr "${object.company_id.name} покана за поврзување на Op
 
 #. module: auth_signup
 #. openerp-web
-#: code:addons/auth_signup/static/src/xml/auth_signup.xml:27
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:30
 #, python-format
 msgid "Back to Login"
 msgstr "Врати се на најава"
@@ -341,21 +351,33 @@ msgid "Partner"
 msgstr "Партнер"
 
 #. module: auth_signup
-#: view:res.users:0
-msgid "Send reset password instructions by email"
-msgstr "Испрати инструкции за ресетирање на лозинка преку e-mail"
-
-#. module: auth_signup
 #: field:res.partner,signup_token:0
 msgid "Signup Token"
 msgstr "Токен за регистрација"
 
+#. module: auth_signup
+#. openerp-web
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:26
+#: code:addons/auth_signup/static/src/xml/auth_signup.xml:29
+#, python-format
+msgid "Sign Up"
+msgstr "Регистрирај се"
+
 #~ msgid "Send an email to the user to (re)set their password."
 #~ msgstr "Испрати e-mail до корисникот за (ре)сетирање на лозинка."
+
+#~ msgid "New"
+#~ msgstr "Нов"
 
 #, python-format
 #~ msgid "Mail sent to:"
 #~ msgstr "Пораката е испратена до:"
+
+#~ msgid "Active"
+#~ msgstr "Активен"
+
+#~ msgid "Resetting Password"
+#~ msgstr "ресетирање на лозинка"
 
 #~ msgid "Reset Password"
 #~ msgstr "Ресетирај лозинка"

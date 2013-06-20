@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2013-02-05 11:31+0000\n"
 "Last-Translator: Denis Karataev <dskarataev@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 06:03+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:46+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -129,8 +129,8 @@ msgid "Product Moves"
 msgstr "Перемещения продукта"
 
 #. module: stock
-#: code:addons/stock/stock.py:2519
-#: code:addons/stock/stock.py:2580
+#: code:addons/stock/stock.py:2524
+#: code:addons/stock/stock.py:2585
 #, python-format
 msgid "Please provide proper quantity."
 msgstr "Пожалуйста введите правильное количество."
@@ -362,9 +362,9 @@ msgstr ""
 
 #. module: stock
 #: code:addons/stock/stock.py:768
-#: code:addons/stock/stock.py:2475
-#: code:addons/stock/stock.py:2519
-#: code:addons/stock/stock.py:2580
+#: code:addons/stock/stock.py:2473
+#: code:addons/stock/stock.py:2524
+#: code:addons/stock/stock.py:2585
 #: code:addons/stock/wizard/stock_change_product_qty.py:91
 #: code:addons/stock/wizard/stock_fill_inventory.py:124
 #: code:addons/stock/wizard/stock_inventory_merge.py:43
@@ -484,14 +484,18 @@ msgid "Ready to Deliver"
 msgstr "Готово к доставке"
 
 #. module: stock
-#: model:ir.model,name:stock.model_action_traceability
-msgid "Action traceability "
-msgstr "Слежение за действиями "
+#: code:addons/stock/stock.py:2481
+#, python-format
+msgid ""
+"Forbidden operation: it is not allowed to scrap products from a virtual "
+"location."
+msgstr ""
 
 #. module: stock
 #: selection:stock.move,state:0
 #: selection:stock.picking,state:0
 #: selection:stock.picking.in,state:0
+#: report:stock.picking.list:0
 #: selection:stock.picking.out,state:0
 msgid "Waiting Availability"
 msgstr "Ожидание поступления"
@@ -500,6 +504,7 @@ msgstr "Ожидание поступления"
 #: selection:report.stock.inventory,state:0
 #: selection:report.stock.move,state:0
 #: selection:stock.move,state:0
+#: report:stock.picking.list:0
 #: view:stock.production.lot:0
 #: field:stock.production.lot,stock_available:0
 msgid "Available"
@@ -666,6 +671,8 @@ msgid ""
 "Forces to specify a Serial Number for all moves containing this product and "
 "going to a Customer Location"
 msgstr ""
+"Принудительно установить порядковый номер для всех перемещений этой "
+"продукции в место хранения заказчика"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_products_moves
@@ -851,6 +858,8 @@ msgid ""
 "Forces to specify a Serial Number for all moves containing this product and "
 "coming from a Supplier Location"
 msgstr ""
+"Принудительно установить порядковый номер для всех перемещений этой "
+"продукции из мест хранения поставщика"
 
 #. module: stock
 #: help:stock.config.settings,group_uos:0
@@ -924,14 +933,7 @@ msgid "Reference must be unique per Company!"
 msgstr "Ссылка должна быть уникальна для каждой компании!"
 
 #. module: stock
-#: field:stock.picking,date:0
-#: field:stock.picking.in,date:0
-#: field:stock.picking.out,date:0
-msgid "Time"
-msgstr "Время"
-
-#. module: stock
-#: code:addons/stock/product.py:447
+#: code:addons/stock/product.py:449
 #, python-format
 msgid "Future Receptions"
 msgstr "Будущие приходы"
@@ -1038,7 +1040,7 @@ msgid "Change Product Quantity"
 msgstr "Изменить количество продукта"
 
 #. module: stock
-#: code:addons/stock/product.py:463
+#: code:addons/stock/product.py:465
 #, python-format
 msgid "Future P&L"
 msgstr "Будущие п/у"
@@ -1050,6 +1052,13 @@ msgstr "Будущие п/у"
 #: view:stock.picking.in:0
 msgid "Incoming Shipments"
 msgstr "Поступающие грузы"
+
+#. module: stock
+#: help:stock.picking,date:0
+#: help:stock.picking.in,date:0
+#: help:stock.picking.out,date:0
+msgid "Creation date, usually the time of the order."
+msgstr ""
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -1354,7 +1363,7 @@ msgid "Supplier"
 msgstr "Поставщик"
 
 #. module: stock
-#: code:addons/stock/stock.py:2859
+#: code:addons/stock/stock.py:2864
 #, python-format
 msgid ""
 "In order to cancel this inventory, you must first unpost related journal "
@@ -1558,7 +1567,7 @@ msgid "To be refunded/invoiced"
 msgstr "Будет возвращено / выставлено в счете"
 
 #. module: stock
-#: code:addons/stock/stock.py:2450
+#: code:addons/stock/stock.py:2448
 #, python-format
 msgid "You can only delete draft moves."
 msgstr "Вы можете удалить только черновик перемещения."
@@ -1601,7 +1610,7 @@ msgid "Additional Info"
 msgstr "Доп. инфо"
 
 #. module: stock
-#: code:addons/stock/stock.py:2648
+#: code:addons/stock/stock.py:2653
 #, python-format
 msgid "Missing partial picking data for move #%s."
 msgstr "Недостаточно данных частичного комплектования для перемещения №%s."
@@ -1699,6 +1708,9 @@ msgstr ""
 #. module: stock
 #: field:stock.inventory,date:0
 #: field:stock.move,create_date:0
+#: field:stock.picking,date:0
+#: field:stock.picking.in,date:0
+#: field:stock.picking.out,date:0
 #: field:stock.production.lot,date:0
 #: field:stock.tracking,date:0
 msgid "Creation Date"
@@ -1826,7 +1838,7 @@ msgid "Stock Invoice Onshipping"
 msgstr "Счёт по доставке"
 
 #. module: stock
-#: code:addons/stock/stock.py:2475
+#: code:addons/stock/stock.py:2473
 #, python-format
 msgid "Please provide a positive quantity to scrap."
 msgstr "Пожалуйста, предоставьте положительное количество брака."
@@ -1975,10 +1987,10 @@ msgid "Shelf 2"
 msgstr "Полка 2"
 
 #. module: stock
-#: code:addons/stock/stock.py:529
+#: code:addons/stock/stock.py:528
 #, python-format
 msgid "You cannot remove a lot line."
-msgstr ""
+msgstr "Нельзя удалить позицию партии"
 
 #. module: stock
 #: help:stock.location,posx:0
@@ -1999,7 +2011,7 @@ msgid "Localization"
 msgstr "Локализация"
 
 #. module: stock
-#: code:addons/stock/product.py:459
+#: code:addons/stock/product.py:461
 #, python-format
 msgid "Delivered Qty"
 msgstr "Доставленое кол-во"
@@ -2289,7 +2301,7 @@ msgid "Generate accounting entries per stock movement"
 msgstr "Генерировать с проводки по складским перемещениям"
 
 #. module: stock
-#: code:addons/stock/product.py:449
+#: code:addons/stock/product.py:451
 #, python-format
 msgid "Received Qty"
 msgstr "Полученное кол-во"
@@ -2363,8 +2375,8 @@ msgid "Customer Locations"
 msgstr "Места хранения заказчиков"
 
 #. module: stock
-#: code:addons/stock/stock.py:2449
-#: code:addons/stock/stock.py:2858
+#: code:addons/stock/stock.py:2448
+#: code:addons/stock/stock.py:2863
 #, python-format
 msgid "User Error!"
 msgstr "Ошибка пользователя!"
@@ -2412,7 +2424,7 @@ msgstr "Место хранения поставщика"
 #. module: stock
 #: view:stock.location.product:0
 msgid "View Products Inventory"
-msgstr ""
+msgstr "Новая инвентаризация продукции"
 
 #. module: stock
 #: view:stock.move:0
@@ -2545,6 +2557,7 @@ msgid ""
 "Current quantity of products with this Serial Number available in company "
 "warehouses"
 msgstr ""
+"Текущее количество продукции с этим серийный номером на складах компании"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -2595,7 +2608,7 @@ msgid "Warehouse board"
 msgstr "Панель склада"
 
 #. module: stock
-#: code:addons/stock/product.py:469
+#: code:addons/stock/product.py:471
 #, python-format
 msgid "Future Qty"
 msgstr "Будущее Кол-во"
@@ -2717,7 +2730,7 @@ msgid "Move"
 msgstr "Перемещение"
 
 #. module: stock
-#: code:addons/stock/product.py:465
+#: code:addons/stock/product.py:467
 #, python-format
 msgid "P&L Qty"
 msgstr "Кол-во п/у"
@@ -3307,7 +3320,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2496
+#: code:addons/stock/stock.py:2501
 #, python-format
 msgid "%s %s %s has been <b>moved to</b> scrap."
 msgstr "%s %s %s было <b>перемещено в</b> брак."
@@ -3326,6 +3339,7 @@ msgstr "Упаковки заказчиков"
 #: selection:stock.move,state:0
 #: view:stock.picking:0
 #: view:stock.picking.in:0
+#: report:stock.picking.list:0
 msgid "Done"
 msgstr "Сделано"
 
@@ -3635,13 +3649,6 @@ msgid "Shelf 1"
 msgstr "Полка 1"
 
 #. module: stock
-#: help:stock.picking,date:0
-#: help:stock.picking.in,date:0
-#: help:stock.picking.out,date:0
-msgid "Creation time, usually the time of the order."
-msgstr "Время создания, обычно время заказа."
-
-#. module: stock
 #: field:stock.tracking,name:0
 msgid "Pack Reference"
 msgstr "Ссылка на упаковку"
@@ -3713,7 +3720,7 @@ msgid "Inventory Move"
 msgstr "Инвентаризац. перемещение"
 
 #. module: stock
-#: code:addons/stock/product.py:475
+#: code:addons/stock/product.py:477
 #, python-format
 msgid "Future Productions"
 msgstr "Будущие производства"
@@ -3903,7 +3910,7 @@ msgstr "Неевропейские заказчики"
 #: code:addons/stock/product.py:167
 #: code:addons/stock/report/report_stock.py:78
 #: code:addons/stock/report/report_stock.py:134
-#: code:addons/stock/stock.py:529
+#: code:addons/stock/stock.py:528
 #: code:addons/stock/stock.py:790
 #: code:addons/stock/stock.py:1190
 #: code:addons/stock/stock.py:1199
@@ -3913,7 +3920,8 @@ msgstr "Неевропейские заказчики"
 #: code:addons/stock/stock.py:2252
 #: code:addons/stock/stock.py:2255
 #: code:addons/stock/stock.py:2258
-#: code:addons/stock/stock.py:2585
+#: code:addons/stock/stock.py:2481
+#: code:addons/stock/stock.py:2590
 #: code:addons/stock/wizard/stock_fill_inventory.py:59
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:112
 #: code:addons/stock/wizard/stock_splitinto.py:53
@@ -4082,7 +4090,7 @@ msgid "Followers"
 msgstr "Подписчики"
 
 #. module: stock
-#: code:addons/stock/stock.py:2585
+#: code:addons/stock/stock.py:2590
 #, python-format
 msgid "Cannot consume a move with negative or zero quantity."
 msgstr "Нельзя израсходовать негативное или нулевое количество."
@@ -4106,6 +4114,11 @@ msgstr "Общее исходящее количество"
 #: field:stock.picking.out,backorder_id:0
 msgid "Back Order of"
 msgstr "Дозаказ из"
+
+#. module: stock
+#: model:ir.model,name:stock.model_action_traceability
+msgid "Action traceability "
+msgstr "Слежение за действиями "
 
 #. module: stock
 #: help:stock.partial.move.line,cost:0
@@ -4163,7 +4176,7 @@ msgstr ""
 "кредитоваться, а счет исходящих ТМЦ  дебитоваться."
 
 #. module: stock
-#: code:addons/stock/stock.py:2811
+#: code:addons/stock/stock.py:2816
 #, python-format
 msgid "INV:"
 msgstr "ИНВ:"
@@ -4219,7 +4232,7 @@ msgstr ""
 "товаре. Это не оказывает влияния на внутренние места хранения."
 
 #. module: stock
-#: code:addons/stock/product.py:457
+#: code:addons/stock/product.py:459
 #, python-format
 msgid "Future Deliveries"
 msgstr "Будущие доставки"
@@ -4505,7 +4518,7 @@ msgid "November"
 msgstr "Ноябрь"
 
 #. module: stock
-#: code:addons/stock/product.py:471
+#: code:addons/stock/product.py:473
 #, python-format
 msgid "Unplanned Qty"
 msgstr "Незапланированное кол-во"
@@ -4558,7 +4571,7 @@ msgid "Move History (parent moves)"
 msgstr "История перемещений (родительские перемещения)"
 
 #. module: stock
-#: code:addons/stock/product.py:453
+#: code:addons/stock/product.py:455
 #, python-format
 msgid "Future Stock"
 msgstr "Будущие остатки"
@@ -4765,7 +4778,7 @@ msgid "Location Content"
 msgstr "Содержимое места хранения"
 
 #. module: stock
-#: code:addons/stock/product.py:477
+#: code:addons/stock/product.py:479
 #, python-format
 msgid "Produced Qty"
 msgstr "Произведенное кол-во"
@@ -4975,3 +4988,9 @@ msgstr "Адрес склада:"
 
 #~ msgid "_Cancel"
 #~ msgstr "_Отмена"
+
+#~ msgid "Time"
+#~ msgstr "Время"
+
+#~ msgid "Creation time, usually the time of the order."
+#~ msgstr "Время создания, обычно время заказа."

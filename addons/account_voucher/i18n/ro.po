@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2013-03-07 18:21+0000\n"
-"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
+"Last-Translator: ERPSystems.ro <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:31+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:13+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
@@ -28,7 +28,7 @@ msgid "account.config.settings"
 msgstr "setari.config.cont"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:369
+#: code:addons/account_voucher/account_voucher.py:417
 #, python-format
 msgid "Write-Off"
 msgstr "Pierdere"
@@ -116,9 +116,16 @@ msgid "Transaction reference number."
 msgstr "Numar de referinta tranzactie."
 
 #. module: account_voucher
-#: view:sale.receipt.report:0
-msgid "Group by year of Invoice Date"
-msgstr "Grupati dupa anul Datei Facturii"
+#: view:account.voucher:0
+msgid "Allocation"
+msgstr "Alocare"
+
+#. module: account_voucher
+#: help:account.voucher,currency_help_label:0
+msgid ""
+"This sentence helps you to know how to specify the payment rate by giving "
+"you the direct effect it has"
+msgstr ""
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -132,7 +139,7 @@ msgid "Voucher Statistics"
 msgstr "Statistici voucher"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1547
+#: code:addons/account_voucher/account_voucher.py:1641
 #, python-format
 msgid ""
 "You can not change the journal as you already reconciled some statement "
@@ -240,8 +247,8 @@ msgid "Journal Item"
 msgstr "Element Jurnal"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:508
-#: code:addons/account_voucher/account_voucher.py:981
+#: code:addons/account_voucher/account_voucher.py:558
+#: code:addons/account_voucher/account_voucher.py:1073
 #, python-format
 msgid "Error!"
 msgstr "Eroare!"
@@ -273,7 +280,7 @@ msgid "Cancelled"
 msgstr "Anulat(a)"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1153
+#: code:addons/account_voucher/account_voucher.py:1249
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -325,7 +332,7 @@ msgid "Tax"
 msgstr "Taxa"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:879
+#: code:addons/account_voucher/account_voucher.py:971
 #, python-format
 msgid "Invalid Action!"
 msgstr "Actiune Nevalida!"
@@ -383,7 +390,7 @@ msgid "e.g. Invoice SAJ/0042"
 msgstr "de exemplu Factura SAJ/0042"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1112
+#: code:addons/account_voucher/account_voucher.py:1208
 #, python-format
 msgid "Wrong voucher line"
 msgstr "Linie incorecta a voucher-ului"
@@ -402,7 +409,7 @@ msgid "Receipt"
 msgstr "Chitanta"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1018
+#: code:addons/account_voucher/account_voucher.py:1110
 #, python-format
 msgid ""
 "You should configure the 'Gain Exchange Rate Account' in the accounting "
@@ -431,7 +438,7 @@ msgstr "Perioada"
 
 #. module: account_voucher
 #: view:account.voucher:0
-#: code:addons/account_voucher/account_voucher.py:211
+#: code:addons/account_voucher/account_voucher.py:231
 #, python-format
 msgid "Supplier"
 msgstr "Furnizor"
@@ -452,7 +459,7 @@ msgid "Debit"
 msgstr "Debit"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1547
+#: code:addons/account_voucher/account_voucher.py:1641
 #, python-format
 msgid "Unable to change journal !"
 msgstr "Registrul nu a putut fi schimbat !"
@@ -475,10 +482,12 @@ msgid "Pro-forma Vouchers"
 msgstr "Vouchere Pro-forma"
 
 #. module: account_voucher
-#: view:account.voucher:0
-#: model:ir.actions.act_window,name:account_voucher.act_journal_voucher_open
-msgid "Voucher Entries"
-msgstr "Inregistrari vouchere"
+#: code:addons/account_voucher/account_voucher.py:318
+#, python-format
+msgid ""
+"At the operation date, the exchange rate was\n"
+"%s = %s"
+msgstr ""
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_vendor_payment
@@ -586,7 +595,7 @@ msgid "Are you sure you want to unreconcile this record?"
 msgstr "Sunteti sigur(a) ca doriti sa desreconciliati aceasta inregistrare?"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1153
+#: code:addons/account_voucher/account_voucher.py:1249
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr ""
@@ -651,15 +660,15 @@ msgid "To Review"
 msgstr "De verificat"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1025
-#: code:addons/account_voucher/account_voucher.py:1039
-#: code:addons/account_voucher/account_voucher.py:1194
+#: code:addons/account_voucher/account_voucher.py:1120
+#: code:addons/account_voucher/account_voucher.py:1134
+#: code:addons/account_voucher/account_voucher.py:1286
 #, python-format
 msgid "change"
 msgstr "schimbati"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1014
+#: code:addons/account_voucher/account_voucher.py:1106
 #, python-format
 msgid ""
 "You should configure the 'Loss Exchange Rate Account' in the accounting "
@@ -713,6 +722,7 @@ msgstr "Luna"
 #. module: account_voucher
 #: field:account.voucher,currency_id:0
 #: field:account.voucher.line,currency_id:0
+#: model:ir.model,name:account_voucher.model_res_currency
 #: field:sale.receipt.report,currency_id:0
 msgid "Currency"
 msgstr "Moneda"
@@ -756,7 +766,7 @@ msgid "Cancel Receipt"
 msgstr "Anulati Chitanta"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:975
+#: code:addons/account_voucher/account_voucher.py:1067
 #, python-format
 msgid "Configuration Error !"
 msgstr "Eroare de Configurare !"
@@ -786,9 +796,9 @@ msgid "Status"
 msgstr "Stare"
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Allocation"
-msgstr "Alocare"
+#: view:sale.receipt.report:0
+msgid "Group by year of Invoice Date"
+msgstr "Grupati dupa anul Datei Facturii"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice.lines:0
@@ -822,7 +832,7 @@ msgid "October"
 msgstr "Octombrie"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:976
+#: code:addons/account_voucher/account_voucher.py:1068
 #, python-format
 msgid "Please activate the sequence of selected journal !"
 msgstr "Va rugam sa activati secventa registrului selectat !"
@@ -902,7 +912,7 @@ msgid "Previous Payments ?"
 msgstr "Plati anterioare ?"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1112
+#: code:addons/account_voucher/account_voucher.py:1208
 #, python-format
 msgid "The invoice you are willing to pay is not valid anymore."
 msgstr "Factura pe care doriti sa o achitati nu mai este valabila."
@@ -934,7 +944,7 @@ msgid "Active"
 msgstr "Activ(a)"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:982
+#: code:addons/account_voucher/account_voucher.py:1074
 #, python-format
 msgid "Please define a sequence on the journal."
 msgstr "Va rugam sa definiti o secventa in registru."
@@ -967,6 +977,11 @@ msgstr "Afisati"
 #: view:account.voucher:0
 msgid "Invoices and outstanding transactions"
 msgstr "Facturi si tranzactii nesolutionate"
+
+#. module: account_voucher
+#: field:account.voucher,currency_help_label:0
+msgid "Helping Sentence"
+msgstr ""
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -1062,7 +1077,7 @@ msgid "Journal Items"
 msgstr "Elementele Jurnalului"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:508
+#: code:addons/account_voucher/account_voucher.py:558
 #, python-format
 msgid "Please define default credit/debit accounts on the journal \"%s\"."
 msgstr ""
@@ -1222,6 +1237,12 @@ msgid "Ref #"
 msgstr "Ref #"
 
 #. module: account_voucher
+#: view:account.voucher:0
+#: model:ir.actions.act_window,name:account_voucher.act_journal_voucher_open
+msgid "Voucher Entries"
+msgstr "Inregistrari vouchere"
+
+#. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,year:0
 msgid "Year"
@@ -1284,7 +1305,7 @@ msgstr ""
 "Valoarea voucher-ului trebuie sa fie acceasi ca si cea din linia extrasului."
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:879
+#: code:addons/account_voucher/account_voucher.py:971
 #, python-format
 msgid "Cannot delete voucher(s) which are already opened or paid."
 msgstr "Nu pot fi sterse voucherele care sunt deja deschise sau platite."
@@ -1342,8 +1363,8 @@ msgid "Open Balance"
 msgstr "Sold la deschidere"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:1014
-#: code:addons/account_voucher/account_voucher.py:1018
+#: code:addons/account_voucher/account_voucher.py:1106
+#: code:addons/account_voucher/account_voucher.py:1110
 #, python-format
 msgid "Insufficient Configuration!"
 msgstr "Configurare Insuficienta!"

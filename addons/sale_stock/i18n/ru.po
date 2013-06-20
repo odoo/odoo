@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:39+0000\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
 "PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 06:01+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:44+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -23,11 +23,13 @@ msgid ""
 "To allow your salesman to make invoices for Delivery Orders using the menu "
 "'Deliveries to Invoice'."
 msgstr ""
+"Позволяет вашему продавцу создавать счета для заказов доставки используя "
+"меню \"Доставки в счета\"."
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_deliveryorder0
 msgid "Delivery Order"
-msgstr "Заказ на доставку"
+msgstr "Заказ доставки"
 
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
@@ -36,7 +38,7 @@ msgid "Deliveries to Invoice"
 msgstr "Доставки в счета"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:544
+#: code:addons/sale_stock/sale_stock.py:570
 #, python-format
 msgid "Picking Information ! : "
 msgstr "Информация по комплектованию ! : "
@@ -47,7 +49,7 @@ msgid "Pick List"
 msgstr "Комплектовочный лист"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:539
+#: code:addons/sale_stock/sale_stock.py:565
 #, python-format
 msgid ""
 "You selected a quantity of %d Units.\n"
@@ -81,7 +83,7 @@ msgid "Cancel Order"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:207
+#: code:addons/sale_stock/sale_stock.py:209
 #, python-format
 msgid ""
 "You must first cancel all delivery order(s) attached to this sales order."
@@ -92,12 +94,12 @@ msgstr ""
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_saleprocurement0
 msgid "Create Procurement Order"
-msgstr "Создать заказ на снабжение"
+msgstr "Создать заказ снабжения"
 
 #. module: sale_stock
 #: field:stock.picking.out,sale_id:0
 msgid "Sale Order"
-msgstr "Заказ"
+msgstr "Заказ продажи"
 
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_saleorderprocurement0
@@ -105,27 +107,13 @@ msgid ""
 "For every sales order line, a procurement order is created to supply the "
 "sold product."
 msgstr ""
-"Для каждой позиции заказа на продажу создается заказ на снабжение для "
-"поставки проданных ТМЦ."
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:615
-#, python-format
-msgid "Error!"
-msgstr "Ошибка!"
+"Для каждой позиции заказа продаж создается заказ снабжения для поставки "
+"проданных ТМЦ."
 
 #. module: sale_stock
 #: field:sale.order,picking_policy:0
 msgid "Shipping Policy"
 msgstr "Политика доставки"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:616
-#, python-format
-msgid ""
-"You cannot make an advance on a sales order                      that is "
-"defined as 'Automatic Invoice after delivery'."
-msgstr ""
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_action_shop_form
@@ -135,8 +123,7 @@ msgstr "Магазин"
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_saleorderprocurement0
 msgid "Drives procurement orders for every sales order line."
-msgstr ""
-"Управление заказами на снабжение для каждой позиции заказа на продажу."
+msgstr "Управление заказами снабжения для каждой позиции заказа продаж."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -144,7 +131,7 @@ msgid "Stock Move"
 msgstr "Движение запасов"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:161
+#: code:addons/sale_stock/sale_stock.py:163
 #, python-format
 msgid "Invalid Action!"
 msgstr "Неверное действие!"
@@ -157,11 +144,11 @@ msgstr "Табель проекта"
 #. module: sale_stock
 #: field:sale.config.settings,group_sale_delivery_address:0
 msgid "Allow a different address for delivery and invoicing "
-msgstr ""
+msgstr "Разрешить различные адреса для доставки и выставления счета "
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:546
-#: code:addons/sale_stock/sale_stock.py:597
+#: code:addons/sale_stock/sale_stock.py:572
+#: code:addons/sale_stock/sale_stock.py:623
 #, python-format
 msgid "Configuration Error!"
 msgstr "Ошибка конфигурации!"
@@ -169,7 +156,7 @@ msgstr "Ошибка конфигурации!"
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_saleprocurement0
 msgid "Procurement Order"
-msgstr "Заказ на закупку"
+msgstr "Заказ снабжения"
 
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.res_partner_rule_children
@@ -179,13 +166,13 @@ msgstr ""
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on deliveries"
-msgstr "Счет основанный на отгрузке"
+msgstr "Счет основанный на доставках"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
 #: field:stock.picking,sale_id:0
 msgid "Sales Order"
-msgstr "Заказ на продажу"
+msgstr "Заказ продаж"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking_out
@@ -196,7 +183,7 @@ msgstr "Заказы доставки"
 #: model:ir.model,name:sale_stock.model_sale_order_line
 #: field:stock.move,sale_line_id:0
 msgid "Sales Order Line"
-msgstr "Позиция заказа на продажу"
+msgstr "Позиция заказа продаж"
 
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_packing0
@@ -206,17 +193,11 @@ msgid ""
 "parts to the sales order. There is 1 pick list by sales order line which "
 "evolves with the availability of parts."
 msgstr ""
-"Форма комплектовочного листа создастся как только заказ на продажу будет "
-"подтвержден, в одно время с заказом на снабжение. Он представляет собой "
-"определение комплектующих для заказа на продажу. Один комплектовочный лист "
-"на позицию заказа на продажу, который будет меняться в соответствии с "
-"наличием комплектующих."
-
-#. module: sale_stock
-#: help:res.company,security_lead:0
-msgid ""
-"This is the days added to what you promise to customers for security purpose"
-msgstr "Это количество дней, добавляемых к обещанному сроку для надежности"
+"Форма комплектовочного листа создастся как только заказ продаж будет "
+"подтвержден, в одно время с заказом снабжения. Он представляет собой "
+"определение комплектующих для заказа продаж. Один комплектовочный лист на "
+"позицию заказа продаж, который будет меняться в соответствии с наличием "
+"комплектующих."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -251,7 +232,7 @@ msgstr "Документ перемещения к заказчику."
 #. module: sale_stock
 #: view:sale.order:0
 msgid "View Delivery Order"
-msgstr ""
+msgstr "Вид заказа доставки"
 
 #. module: sale_stock
 #: field:sale.order.line,move_ids:0
@@ -271,11 +252,12 @@ msgstr ""
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_invoiceafterdelivery0
 msgid ""
-"The invoice is created automatically if the shipping policy is 'Invoice from "
-"pick' or 'Invoice on order after delivery'."
+"If the sale order was set to create the invoice 'On Delivery Order', then an "
+"invoice is automatically created based on what you delivered. If you rather "
+"want to create your invoice based on your sale order, you can set the sale "
+"order to create invoice 'On Demand', then track and process the sales order "
+"that have been fully delivered and invoice them from there."
 msgstr ""
-"Счет создается автоматически если политика доставки \"Счет из "
-"комплектования\" или \"Счет на заказ после доставки\"."
 
 #. module: sale_stock
 #: field:sale.order.line,procurement_id:0
@@ -287,10 +269,10 @@ msgstr "Снабжение"
 #: field:sale.report,shipped:0
 #: field:sale.report,shipped_qty_1:0
 msgid "Shipped"
-msgstr "Доставлено"
+msgstr "Отправлено"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:240
+#: code:addons/sale_stock/sale_stock.py:265
 #, python-format
 msgid "invalid mode for test_state"
 msgstr "неверный режим для test_state"
@@ -303,24 +285,24 @@ msgid ""
 "production of products regarding to the rules and to the sales order's "
 "parameters. "
 msgstr ""
-"Заказ на снабжение создастся автоматически как только заказ на продажу будет "
+"Заказ снабжения создастся автоматически как только заказ продаж будет "
 "подтвержден или счет будет оплачен. Он определяет закупку и производство ТМЦ "
-"по правилам и параметрам заказа на продажу. "
+"по правилам и параметрам заказа продаж. "
 
 #. module: sale_stock
 #: help:sale.config.settings,group_mrp_properties:0
 msgid "Allows you to tag sales order lines with properties."
-msgstr ""
+msgstr "Позволяет отмечать тегами позиции заказа продажи со свойствами"
 
 #. module: sale_stock
 #: field:sale.config.settings,group_invoice_deli_orders:0
 msgid "Generate invoices after and based on delivery orders"
-msgstr ""
+msgstr "Генерировать счета после и из заказов доставки"
 
 #. module: sale_stock
 #: field:sale.config.settings,module_delivery:0
 msgid "Allow adding shipping costs"
-msgstr ""
+msgstr "Позволяет добавлять стоимость доставки"
 
 #. module: sale_stock
 #: view:sale.order:0
@@ -338,6 +320,8 @@ msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
+"Международные правила по толкованию наиболее широко используемых торговых "
+"терминов в области внешней торговли."
 
 #. module: sale_stock
 #: help:sale.config.settings,module_delivery:0
@@ -356,7 +340,7 @@ msgstr "Доставка всего сразу, если все готово."
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_invoice_deli_orders
 msgid "Enable Invoicing Delivery orders"
-msgstr ""
+msgstr "Разрешить выставлять счета на заказы доставки"
 
 #. module: sale_stock
 #: field:res.company,security_lead:0
@@ -373,9 +357,11 @@ msgstr "Закупка проданного материала"
 msgid ""
 "Pick 'Deliver each product when available' if you allow partial delivery."
 msgstr ""
+"Выбрать \"Доставить каждый товар по готовности\" если вы разрешили частичную "
+"доставки"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:206
+#: code:addons/sale_stock/sale_stock.py:208
 #, python-format
 msgid "Cannot cancel sales order!"
 msgstr "Нельзя отменить заказ продажи!"
@@ -391,13 +377,21 @@ msgid ""
 "It indicates that the sales order has been delivered. This field is updated "
 "only after the scheduler(s) have been launched."
 msgstr ""
-"Показывает, что заказ на продажу был доставлен. Это поле обновляется только "
+"Показывает, что заказ продаж был доставлен. Это поле обновляется только "
 "после запуска планировщика."
 
 #. module: sale_stock
 #: field:sale.order.line,property_ids:0
 msgid "Properties"
 msgstr "Свойства"
+
+#. module: sale_stock
+#: help:res.company,security_lead:0
+msgid ""
+"Margin of error for dates promised to customers. Products will be scheduled "
+"for procurement and delivery that many days earlier than the actual promised "
+"date, to cope with unexpected delays in the supply chain."
+msgstr ""
 
 #. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
@@ -409,12 +403,12 @@ msgstr "Свойства изделия в позиции заказа"
 msgid ""
 "You can generate invoices based on sales orders or based on shippings."
 msgstr ""
-"Вы можете создать счет на основе заказов на продажу или на основе доставок."
+"Вы можете создать счет на основе заказов продаж или на основе доставок."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
 msgid "Sales Orders Statistics"
-msgstr "Статистика заказов на продажу"
+msgstr "Статистика заказов продаж"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -439,6 +433,8 @@ msgid ""
 "Allows you to specify different delivery and invoice addresses on a sales "
 "order."
 msgstr ""
+"Позволяет задавать разные адреса для доставки и выставления счета в заказе "
+"продажи."
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_saleprocurement0
@@ -446,7 +442,7 @@ msgid ""
 "One Procurement order for each sales order line and for each of the "
 "components."
 msgstr ""
-"Один заказ на снабжение для каждой позиции заказа на продажу и для каждого "
+"Один заказ снабжения для каждой позиции заказа продаж и для каждого "
 "компонента."
 
 #. module: sale_stock
@@ -455,7 +451,7 @@ msgid "Assign"
 msgstr "Назначить"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:592
+#: code:addons/sale_stock/sale_stock.py:618
 #, python-format
 msgid "Not enough stock ! : "
 msgstr "Не достаточно запасов ! : "
@@ -466,6 +462,7 @@ msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products to the customer"
 msgstr ""
+"Количество дней между подтверждением заказа и отгрузкой продукции заказчику"
 
 #. module: sale_stock
 #: help:sale.config.settings,default_picking_policy:0
@@ -478,7 +475,7 @@ msgstr ""
 #. module: sale_stock
 #: selection:sale.config.settings,default_order_policy:0
 msgid "Invoice based on sales orders"
-msgstr ""
+msgstr "Счет основан на заказах продаж"
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_invoiceafterdelivery0
@@ -492,12 +489,15 @@ msgid "Cancel"
 msgstr "Отмена"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:161
+#: code:addons/sale_stock/sale_stock.py:163
 #, python-format
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it.\n"
 "To do so, you must first cancel related picking for delivery orders."
 msgstr ""
+"Для того, чтобы удалить подтвержденный заказ, вы должны отменить его.\n"
+"Чтобы сделать это, Вы должны сначала отменить комплектование для заказов "
+"доставки."
 
 #. module: sale_stock
 #: field:sale.order.line,number_packages:0
@@ -517,7 +517,7 @@ msgstr "Создать счет"
 #. module: sale_stock
 #: field:sale.config.settings,task_work:0
 msgid "Prepare invoices based on task's activities"
-msgstr ""
+msgstr "Подготовка счетов основанных на действиях по задачам"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_advance_payment_inv
@@ -525,15 +525,15 @@ msgid "Sales Advance Payment Invoice"
 msgstr "Счет на авансовый платеж"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:497
+#: code:addons/sale_stock/sale_stock.py:523
 #, python-format
 msgid "You must first cancel stock moves attached to this sales order line."
 msgstr ""
 "Сначала вы должны отменить перемещения ТМЦ связанные с этой позицией заказа "
-"на продажу."
+"продаж."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:535
+#: code:addons/sale_stock/sale_stock.py:561
 #, python-format
 msgid "(n/a)"
 msgstr "(нет)"
@@ -544,10 +544,10 @@ msgid "Incoterm"
 msgstr "Инкотерм"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:496
+#: code:addons/sale_stock/sale_stock.py:522
 #, python-format
 msgid "Cannot cancel sales order line!"
-msgstr ""
+msgstr "Нельзя отменить позицию заказа продаж!"
 
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_cancelassignation0
@@ -562,7 +562,7 @@ msgstr "На основании отгруженного или заказанн
 #. module: sale_stock
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr "Отгрузка всех товаров за раз"
+msgstr "Доставка всех товаров за раз"
 
 #. module: sale_stock
 #: field:sale.order,picking_ids:0
@@ -572,7 +572,7 @@ msgstr "Связанное комплектование"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr ""
+msgstr "sale.config.settings"
 
 #. module: sale_stock
 #: help:sale.order,picking_ids:0
@@ -580,24 +580,25 @@ msgid ""
 "This is a list of delivery orders that has been generated for this sales "
 "order."
 msgstr ""
+"Это список заказов доставки который был создан для этого заказа продажи."
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_saleorderprocurement0
 msgid "Sales Order Requisition"
-msgstr "Запрос заказа на продажу"
+msgstr "Запрос заказа продаж"
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_deliver0
 msgid "Create Delivery Order"
-msgstr "Создать заказ на доставку"
+msgstr "Создать заказ доставки"
 
 #. module: sale_stock
 #: view:sale.order:0
 msgid "Ignore Exception"
-msgstr "Игнорировать исключение"
+msgstr "Игнорировать исключительную ситуацию"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:588
+#: code:addons/sale_stock/sale_stock.py:614
 #, python-format
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
@@ -609,12 +610,12 @@ msgstr ""
 #. module: sale_stock
 #: view:sale.order:0
 msgid "Recreate Delivery Order"
-msgstr ""
+msgstr "Воссоздать заказ доставки"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_multiple_shops:0
 msgid "This allows to configure and use multiple shops."
-msgstr ""
+msgstr "Это позволяет настроить и использовать несколько магазинов."
 
 #. module: sale_stock
 #: field:sale.order,picked_rate:0
@@ -639,5 +640,20 @@ msgid ""
 "automatically."
 msgstr ""
 "В зависимости от настройки исходящего места хранения, перемещение между "
-"зоной отгрузки и заказчиком выполняется с помощью заказа на доставку вручную "
+"зоной отгрузки и заказчиком выполняется с помощью заказа доставки вручную "
 "или автоматически."
+
+#~ msgid ""
+#~ "The invoice is created automatically if the shipping policy is 'Invoice from "
+#~ "pick' or 'Invoice on order after delivery'."
+#~ msgstr ""
+#~ "Счет создается автоматически если политика доставки \"Счет из "
+#~ "комплектования\" или \"Счет на заказ после доставки\"."
+
+#~ msgid ""
+#~ "This is the days added to what you promise to customers for security purpose"
+#~ msgstr "Это количество дней, добавляемых к обещанному сроку для надежности"
+
+#, python-format
+#~ msgid "Error!"
+#~ msgstr "Ошибка!"

@@ -7,20 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
 "PO-Revision-Date: 2013-02-07 10:16+0000\n"
 "Last-Translator: Denis Karataev <dskarataev@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:54+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:37+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: product
 #: field:product.packaging,rows:0
 msgid "Number of Layers"
 msgstr "Количество уровней"
+
+#. module: product
+#: view:res.partner:0
+msgid "the parent company"
+msgstr ""
 
 #. module: product
 #: help:product.pricelist.item,base:0
@@ -789,13 +794,9 @@ msgid "describe the product characteristics..."
 msgstr ""
 
 #. module: product
-#: help:product.template,standard_price:0
-msgid ""
-"Cost price of the product used for standard stock valuation in accounting "
-"and used as a base price on purchase orders."
+#: view:res.partner:0
+msgid "Pricelists are managed on"
 msgstr ""
-"Себестоимость товара используется для стандартной оценки запасов в учете и "
-"используется как базовая цена в заказах  закупки."
 
 #. module: product
 #: field:product.category,child_id:0
@@ -1138,10 +1139,10 @@ msgid "Price Surcharge"
 msgstr "Надбавка к цене"
 
 #. module: product
-#: field:product.product,code:0
-#: field:product.product,default_code:0
-msgid "Internal Reference"
-msgstr "Внутренняя ссылка"
+#: code:addons/product/pricelist.py:380
+#, python-format
+msgid "Supplier Prices on the product form"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_8_product_template
@@ -1370,7 +1371,7 @@ msgid "Supplier Info"
 msgstr "Информация о поставщике"
 
 #. module: product
-#: code:addons/product/product.py:729
+#: code:addons/product/product.py:732
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копия)"
@@ -1397,6 +1398,13 @@ msgstr "Единицы измерения"
 #: field:product.supplierinfo,min_qty:0
 msgid "Minimal Quantity"
 msgstr "Минимальное количество"
+
+#. module: product
+#: view:product.supplierinfo:0
+msgid ""
+"The prices below will only be taken into account when your pricelist is set "
+"as based on supplier prices."
+msgstr ""
 
 #. module: product
 #: help:product.supplierinfo,product_code:0
@@ -1743,6 +1751,11 @@ msgid "Price:"
 msgstr "Цена:"
 
 #. module: product
+#: view:product.pricelist.item:0
+msgid "Min. Margin"
+msgstr "Мин. маржа"
+
+#. module: product
 #: field:product.template,weight:0
 msgid "Gross Weight"
 msgstr "Вес брутто"
@@ -1885,12 +1898,6 @@ msgid "Default Unit of Measure"
 msgstr "Единица измерения по умолчанию"
 
 #. module: product
-#: code:addons/product/pricelist.py:377
-#, python-format
-msgid "Partner section of the product form"
-msgstr "Раздел партнера в форме продукта"
-
-#. module: product
 #: help:product.price.type,name:0
 msgid "Name of this kind of price."
 msgstr "Наименование типа цены"
@@ -1935,6 +1942,12 @@ msgstr "Длинна / Расстояние"
 #: model:product.category,name:product.product_category_8
 msgid "Components"
 msgstr "Компоненты"
+
+#. module: product
+#: field:product.product,code:0
+#: field:product.product,default_code:0
+msgid "Internal Reference"
+msgstr "Внутренняя ссылка"
 
 #. module: product
 #: view:product.product:0
@@ -2275,9 +2288,13 @@ msgid "Max. Price Margin"
 msgstr "Максимальная маржа цены"
 
 #. module: product
-#: view:product.pricelist.item:0
-msgid "Min. Margin"
-msgstr "Мин. маржа"
+#: help:product.template,standard_price:0
+msgid ""
+"Cost price of the product used for standard stock valuation in accounting "
+"and used as a base price on purchase orders."
+msgstr ""
+"Себестоимость товара используется для стандартной оценки запасов в учете и "
+"используется как базовая цена в заказах  закупки."
 
 #. module: product
 #: help:product.supplierinfo,product_name:0
@@ -2476,7 +2493,7 @@ msgid "15” LCD Monitor"
 msgstr "15” LCD Монитор"
 
 #. module: product
-#: code:addons/product/pricelist.py:376
+#: code:addons/product/pricelist.py:379
 #: field:product.pricelist.item,base_pricelist_id:0
 #, python-format
 msgid "Other Pricelist"
@@ -2630,3 +2647,7 @@ msgstr "Объём в метрах куб."
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Скидка с цены"
+
+#, python-format
+#~ msgid "Partner section of the product form"
+#~ msgstr "Раздел партнера в форме продукта"

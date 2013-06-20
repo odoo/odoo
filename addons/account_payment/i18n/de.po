@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:37+0000\n"
+"POT-Creation-Date: 2013-06-07 19:36+0000\n"
 "PO-Revision-Date: 2013-04-21 18:57+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -15,8 +15,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-04-23 06:09+0000\n"
-"X-Generator: Launchpad (build 16580)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:12+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: account_payment
 #: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
@@ -72,15 +72,6 @@ msgstr "Zahlungsvorschlag Positionen"
 #: view:payment.order:0
 msgid "Owner Account"
 msgstr "Inhaber des Bankkontos"
-
-#. module: account_payment
-#: help:account.invoice,amount_to_pay:0
-msgid ""
-"The amount which should be paid at the current date\n"
-"minus the amount which is already in payment order"
-msgstr ""
-"Der Betrag der zum aktuellen Datum bezahlt werden soll \n"
-"minus des Betrages der bereits in Zahlungsvorschlägen bearbeitet wurde."
 
 #. module: account_payment
 #: field:payment.line,company_id:0
@@ -690,10 +681,21 @@ msgid "Total"
 msgstr "Betrag gesammt"
 
 #. module: account_payment
+#: code:addons/account_payment/wizard/account_payment_order.py:112
+#, python-format
+msgid "Entry Lines"
+msgstr ""
+
+#. module: account_payment
 #: view:account.payment.make.payment:0
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
 msgstr "Bezahlung"
+
+#. module: account_payment
+#: help:account.invoice,amount_to_pay:0
+msgid "The amount which should be paid at the current date. "
+msgstr ""
 
 #. module: account_payment
 #: field:payment.order,date_prefered:0
@@ -711,3 +713,10 @@ msgstr "oder"
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
 msgstr "Bankkonto für diesen Zahlungsmodus"
+
+#~ msgid ""
+#~ "The amount which should be paid at the current date\n"
+#~ "minus the amount which is already in payment order"
+#~ msgstr ""
+#~ "Der Betrag der zum aktuellen Datum bezahlt werden soll \n"
+#~ "minus des Betrages der bereits in Zahlungsvorschlägen bearbeitet wurde."

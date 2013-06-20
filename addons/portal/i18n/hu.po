@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
 "PO-Revision-Date: 2013-03-10 21:01+0000\n"
 "Last-Translator: krnkris <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:53+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:35+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_mail
@@ -55,9 +55,9 @@ msgid "Company Jobs"
 msgstr "Vállalati feladatok"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid "amount: the total amount to pay, as a float"
-msgstr "összeg: a teljes fizetendő mennyiség, mind összegezve"
+#: model:ir.ui.menu,name:portal.portal_orders
+msgid "Billing"
+msgstr ""
 
 #. module: portal
 #: view:portal.wizard.user:0
@@ -118,11 +118,6 @@ msgstr "Kérem legalább egy csoport kiválasztását akivel megosztja"
 #: model:ir.ui.menu,name:portal.portal_mail_archivesfeeds
 msgid "Archives"
 msgstr "Archívumok"
-
-#. module: portal
-#: model:ir.ui.menu,name:portal.portal_orders
-msgid "Quotations and Sales Orders"
-msgstr "Árajánlatok és vevői megrendelések"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -213,13 +208,14 @@ msgid "No online payment acquirers configured"
 msgstr "Nincs online fizetési igénylő beállítva"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
+#: code:addons/portal/mail_message.py:54
+#, python-format
 msgid ""
-"kind: the kind of document on which the payment form is rendered (translated "
-"to user language, e.g. \"Invoice\")"
+"The requested operation cannot be completed due to security restrictions. "
+"Please contact your system administrator.\n"
+"\n"
+"(Document type: %s, Operation: %s)"
 msgstr ""
-"fajta: a dokumentum fajtája amelyen a fizetés űrlap elő lesz terjesztve "
-"(lefordítva a felhasználó nyelvére, stb. \"Számla\")"
 
 #. module: portal
 #: help:portal.wizard,portal_id:0
@@ -361,11 +357,25 @@ msgstr "uid: the current user id"
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid ""
+"kind: the kind of document on which the payment form is rendered (translated "
+"to user language, e.g. \"Invoice\")"
+msgstr ""
+"fajta: a dokumentum fajtája amelyen a fizetés űrlap elő lesz terjesztve "
+"(lefordítva a felhasználó nyelvére, stb. \"Számla\")"
+
+#. module: portal
+#: view:portal.payment.acquirer:0
+msgid ""
 "quote(): a method to quote special string character to make them suitable "
 "for inclusion in a URL"
 msgstr ""
 "idézet(): egy mód, mellyel egy speciális karakter láncot be lehet írni egy "
 "URL névbe"
+
+#. module: portal
+#: view:portal.payment.acquirer:0
+msgid "amount: the total amount to pay, as a float"
+msgstr "összeg: a teljes fizetendő mennyiség, mind összegezve"
 
 #. module: portal
 #: code:addons/portal/mail_mail.py:44
@@ -413,6 +423,12 @@ msgstr ""
 #: model:ir.model,name:portal.model_portal_payment_acquirer
 msgid "Online Payment Acquirer"
 msgstr "Online fizetési igénylő"
+
+#. module: portal
+#: code:addons/portal/mail_message.py:53
+#, python-format
+msgid "Access Denied"
+msgstr ""
 
 #. module: portal
 #: model:mail.group,name:portal.company_news_feed
@@ -593,6 +609,11 @@ msgid "Apply"
 msgstr "Alkalmaz"
 
 #. module: portal
+#: model:ir.model,name:portal.model_mail_message
+msgid "Message"
+msgstr ""
+
+#. module: portal
 #: view:portal.payment.acquirer:0
 msgid "ctx: the current context dictionary"
 msgstr "ctx: a jelenlegi összefüggés szótár"
@@ -639,6 +660,9 @@ msgstr "Sablon űrlap"
 #: view:share.wizard:0
 msgid "Details"
 msgstr "Részletek"
+
+#~ msgid "Quotations and Sales Orders"
+#~ msgstr "Árajánlatok és vevői megrendelések"
 
 #, python-format
 #~ msgid ""

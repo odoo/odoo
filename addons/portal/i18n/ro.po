@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-03-07 08:38+0000\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
 "PO-Revision-Date: 2013-03-07 19:30+0000\n"
-"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
+"Last-Translator: ERPSystems.ro <mihai@erpsystems.ro>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-28 05:53+0000\n"
-"X-Generator: Launchpad (build 16546)\n"
+"X-Launchpad-Export-Date: 2013-06-08 07:35+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -52,9 +52,9 @@ msgid "Company Jobs"
 msgstr "Locurile de munca din companie"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid "amount: the total amount to pay, as a float"
-msgstr "suma: suma totala de plata, ca emitere"
+#: model:ir.ui.menu,name:portal.portal_orders
+msgid "Billing"
+msgstr ""
 
 #. module: portal
 #: view:portal.wizard.user:0
@@ -113,11 +113,6 @@ msgstr ""
 #: model:ir.ui.menu,name:portal.portal_mail_archivesfeeds
 msgid "Archives"
 msgstr "Arhive"
-
-#. module: portal
-#: model:ir.ui.menu,name:portal.portal_orders
-msgid "Quotations and Sales Orders"
-msgstr "Cotatii si Comenzi de Vanzare"
 
 #. module: portal
 #: view:portal.payment.acquirer:0
@@ -209,13 +204,14 @@ msgid "No online payment acquirers configured"
 msgstr "Nu au fost configurati beneficiarii platii online"
 
 #. module: portal
-#: view:portal.payment.acquirer:0
+#: code:addons/portal/mail_message.py:54
+#, python-format
 msgid ""
-"kind: the kind of document on which the payment form is rendered (translated "
-"to user language, e.g. \"Invoice\")"
+"The requested operation cannot be completed due to security restrictions. "
+"Please contact your system administrator.\n"
+"\n"
+"(Document type: %s, Operation: %s)"
 msgstr ""
-"tip: tipul de document in care este redat formularul de plata (tradus in "
-"limba utilizatorului, de exemplu 'Factura\")"
 
 #. module: portal
 #: help:portal.wizard,portal_id:0
@@ -355,11 +351,25 @@ msgstr "uid: id-ul utilizatorului actual"
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid ""
+"kind: the kind of document on which the payment form is rendered (translated "
+"to user language, e.g. \"Invoice\")"
+msgstr ""
+"tip: tipul de document in care este redat formularul de plata (tradus in "
+"limba utilizatorului, de exemplu 'Factura\")"
+
+#. module: portal
+#: view:portal.payment.acquirer:0
+msgid ""
 "quote(): a method to quote special string character to make them suitable "
 "for inclusion in a URL"
 msgstr ""
 "cotatie(): o metoda de a stabili un sir de caractere speciale pentru a le "
 "face potrivite includerii intr-un URL"
+
+#. module: portal
+#: view:portal.payment.acquirer:0
+msgid "amount: the total amount to pay, as a float"
+msgstr "suma: suma totala de plata, ca emitere"
 
 #. module: portal
 #: code:addons/portal/mail_mail.py:44
@@ -412,6 +422,12 @@ msgstr ""
 #: model:ir.model,name:portal.model_portal_payment_acquirer
 msgid "Online Payment Acquirer"
 msgstr "Beneficiarul Platii Online"
+
+#. module: portal
+#: code:addons/portal/mail_message.py:53
+#, python-format
+msgid "Access Denied"
+msgstr ""
 
 #. module: portal
 #: model:mail.group,name:portal.company_news_feed
@@ -609,6 +625,11 @@ msgid "Apply"
 msgstr "Aplica"
 
 #. module: portal
+#: model:ir.model,name:portal.model_mail_message
+msgid "Message"
+msgstr ""
+
+#. module: portal
 #: view:portal.payment.acquirer:0
 msgid "ctx: the current context dictionary"
 msgstr "cxt: dictionarul contextului actual"
@@ -655,6 +676,9 @@ msgstr "Sablon Formular"
 #: view:share.wizard:0
 msgid "Details"
 msgstr "Detalii"
+
+#~ msgid "Quotations and Sales Orders"
+#~ msgstr "Cotatii si Comenzi de Vanzare"
 
 #, python-format
 #~ msgid ""

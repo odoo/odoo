@@ -241,14 +241,20 @@ class mail_thread(osv.AbstractModel):
             context = {}
         thread_id = super(mail_thread, self).create(cr, uid, values, context=context)
 
+        # automatic logging unless asked not to (mainly for various testing purpose)
+        if not context.get('mail_create_nolog'):
+            self.message_post(cr, uid, thread_id, body=_('%s created') % (self._description), context=context)
+
         # subscribe uid unless asked not to
         if not context.get('mail_create_nosubscribe'):
             self.message_subscribe_users(cr, uid, [thread_id], [uid], context=context)
         self.message_auto_subscribe(cr, uid, [thread_id], values.keys(), context=context)
 
-        # automatic logging unless asked not to (mainly for various testing purpose)
-        if not context.get('mail_create_nolog'):
-            self.message_post(cr, uid, thread_id, body=_('Document created'), context=context)
+        # track values
+        tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=context)
+        if tracked_fields:
+            initial_values = {thread_id: dict((item, False) for item in tracked_fields)}
+            self.message_track(cr, uid, [thread_id], tracked_fields, initial_values, context=context)
         return thread_id
 
     def write(self, cr, uid, ids, values, context=None):
@@ -430,7 +436,7 @@ class mail_thread(osv.AbstractModel):
         ret_dict = {}
         for model_name in self.pool.obj_list():
             model = self.pool.get(model_name)
-            if 'mail.thread' in getattr(model, '_inherit', []):
+            if hasattr(model, "message_process") and hasattr(model, "message_post"):
                 ret_dict[model_name] = model._description
         return ret_dict
 
@@ -1154,7 +1160,10 @@ class mail_thread(osv.AbstractModel):
 
     def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, context=None):
         """ Add partners to the records followers. """
-        user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+        mail_followers_obj = self.pool.get('mail.followers')
+        subtype_obj = self.pool.get('mail.message.subtype')
+
+        user_pid = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
         if set(partner_ids) == set([user_pid]):
             try:
                 self.check_access_rights(cr, uid, 'read')
@@ -1163,27 +1172,35 @@ class mail_thread(osv.AbstractModel):
         else:
             self.check_access_rights(cr, uid, 'write')
 
-        # subscribe partners
-        self.write(cr, SUPERUSER_ID, ids, {'message_follower_ids': [(4, pid) for pid in partner_ids]}, context=context)
+        for record in self.browse(cr, SUPERUSER_ID, ids, context=context):
+            existing_pids = set([f.id for f in record.message_follower_ids
+                                            if f.id in partner_ids])
+            new_pids = set(partner_ids) - existing_pids
 
-        # subtype specified: update the subscriptions
-        fol_obj = self.pool.get('mail.followers')
-        if subtype_ids is not None:
-            fol_ids = fol_obj.search(cr, SUPERUSER_ID, [('res_model', '=', self._name), ('res_id', 'in', ids), ('partner_id', 'in', partner_ids)], context=context)
-            fol_obj.write(cr, SUPERUSER_ID, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
-        # no subtypes: default ones for new subscription, do not update existing subscriptions
-        else:
-            # search new subscriptions: subtype_ids is False
-            fol_ids = fol_obj.search(cr, SUPERUSER_ID, [
-                            ('res_model', '=', self._name),
-                            ('res_id', 'in', ids),
-                            ('partner_id', 'in', partner_ids),
-                            ('subtype_ids', '=', False)
-                        ], context=context)
-            if fol_ids:
-                subtype_obj = self.pool.get('mail.message.subtype')
-                subtype_ids = subtype_obj.search(cr, uid, [('default', '=', True), '|', ('res_model', '=', self._name), ('res_model', '=', False)], context=context)
-                fol_obj.write(cr, SUPERUSER_ID, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
+            # subtype_ids specified: update already subscribed partners
+            if subtype_ids and existing_pids:
+                fol_ids = mail_followers_obj.search(cr, SUPERUSER_ID, [
+                                                        ('res_model', '=', self._name),
+                                                        ('res_id', '=', record.id),
+                                                        ('partner_id', 'in', list(existing_pids)),
+                                                    ], context=context)
+                mail_followers_obj.write(cr, SUPERUSER_ID, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
+            # subtype_ids not specified: do not update already subscribed partner, fetch default subtypes for new partners
+            else:
+                subtype_ids = subtype_obj.search(cr, uid, [
+                                                        ('default', '=', True),
+                                                        '|',
+                                                        ('res_model', '=', self._name),
+                                                        ('res_model', '=', False)
+                                                    ], context=context)
+            # subscribe new followers
+            for new_pid in new_pids:
+                mail_followers_obj.create(cr, SUPERUSER_ID, {
+                                                'res_model': self._name,
+                                                'res_id': record.id,
+                                                'partner_id': new_pid,
+                                                'subtype_ids': [(6, 0, subtype_ids)],
+                                            }, context=context)
 
         return True
 

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-07 08:39+0000\n"
-"PO-Revision-Date: 2013-03-07 08:39+0000\n"
+"POT-Creation-Date: 2013-06-07 19:37+0000\n"
+"PO-Revision-Date: 2013-06-07 19:37+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,15 +16,20 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:90
+#: code:addons/sale_crm/wizard/crm_make_sale.py:92
 #, python-format
 msgid "Insufficient Data!"
 msgstr ""
 
 #. module: sale_crm
-#: view:crm.lead:0
-#: view:crm.make.sale:0
-msgid "Convert to Quotation"
+#: code:addons/sale_crm/wizard/crm_make_sale.py:113
+#, python-format
+msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_crm_lead
+msgid "Lead/Opportunity"
 msgstr ""
 
 #. module: sale_crm
@@ -68,8 +73,8 @@ msgid "Categories"
 msgstr ""
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:124
-#: code:addons/sale_crm/wizard/crm_make_sale.py:135
+#: code:addons/sale_crm/wizard/crm_make_sale.py:127
+#: code:addons/sale_crm/wizard/crm_make_sale.py:138
 #, python-format
 msgid "Quotation"
 msgstr ""
@@ -95,15 +100,15 @@ msgid "Invoice"
 msgstr ""
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:93
+#: code:addons/sale_crm/wizard/crm_make_sale.py:95
 #, python-format
 msgid "Opportunity: %s"
 msgstr ""
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:110
-#, python-format
-msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
+#: view:crm.lead:0
+#: view:crm.make.sale:0
+msgid "Convert to Quotation"
 msgstr ""
 
 #. module: sale_crm
@@ -112,7 +117,7 @@ msgid "Shop"
 msgstr ""
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:90
+#: code:addons/sale_crm/wizard/crm_make_sale.py:92
 #, python-format
 msgid "No addresse(s) defined for this customer."
 msgstr ""
