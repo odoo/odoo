@@ -27,11 +27,13 @@ import os
 import time
 
 from openerp import tools
+from openerp.modules import module
 from openerp.osv import fields, osv, orm
 from openerp.tools import graph, SKIPPED_ELEMENT_TYPES
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 from openerp.tools.view_validation import valid_view
+from openerp.tools import misc
 
 _logger = logging.getLogger(__name__)
 
@@ -66,6 +68,32 @@ class view(osv.osv):
                 result[record.id] = etree.fromstring(record.arch.encode('utf8')).tag
         return result
 
+    def _arch_get(self, cr, uid, ids, name, arg, context=None):
+        """
+        For each id being read, return arch_db or the content of arch_file
+        """
+        result = {}
+        for record in self.read(cr, uid, ids, ['arch_file', 'arch_db'], context=context):
+            if record['arch_db']:
+                result[record['id']] = record['arch_db']
+                continue
+
+            view_module, path = record['arch_file'].split('/', 1)
+            arch_path = module.get_module_resource(view_module, path)
+            if not arch_path:
+                raise IOError("No file '%s' in module '%s'" % (path, view_module))
+
+            with misc.file_open(arch_path) as f:
+                result[record['id']] = f.read().decode('utf-8')
+
+        return result
+
+    def _arch_set(self, cr, uid, id, name, value, arg, context=None):
+        """
+        Forward writing to arch_db
+        """
+        self.write(cr, uid, id, {'arch_db': value}, context=context)
+
     _columns = {
         'name': fields.char('View Name', required=True),
         'model': fields.char('Object', size=64, select=True),
@@ -80,7 +108,9 @@ class view(osv.osv):
             ('gantt', 'Gantt'),
             ('kanban', 'Kanban'),
             ('search','Search')], string='View Type', select=True, store=True),
-        'arch': fields.text('View Architecture', required=True),
+        'arch_file': fields.char("View path"),
+        'arch_db': fields.text("Arch content", oldname='arch'),
+        'arch': fields.function(_arch_get, fnct_inv=_arch_set, store=False, string="View Architecture", type='text', nodrop=True),
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade', select=True),
         'field_parent': fields.char('Child Field',size=64),
         'xml_id': fields.function(osv.osv.get_xml_id, type='char', size=128, string="External ID",

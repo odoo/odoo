@@ -615,9 +615,8 @@ form: module.record_id""" % (xml_id,)
                     "Verify that this is a window action or add a type argument." % (a_action,)
                 action_type,action_mode,action_name,view_id,target = rrres
                 if view_id:
-                    cr.execute('SELECT arch FROM ir_ui_view WHERE id=%s', (int(view_id),))
-                    arch, = cr.fetchone()
-                    action_mode = etree.fromstring(arch.encode('utf8')).tag
+                    view_arch = self.pool['ir.ui.view'].read(cr, 1, [view_id], ['arch'])
+                    action_mode = etree.fromstring(view_arch[0]['arch'].encode('utf8')).tag
                 cr.execute('SELECT view_mode FROM ir_act_window_view WHERE act_window_id=%s ORDER BY sequence LIMIT 1', (int(a_id),))
                 if cr.rowcount:
                     action_mode, = cr.fetchone()
