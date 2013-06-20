@@ -23,6 +23,7 @@ import time
 from lxml import etree
 
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class payment_order_create(osv.osv_memory):
     """
@@ -82,11 +83,12 @@ class payment_order_create(osv.osv_memory):
                 date_to_pay = payment.date_scheduled
             payment_obj.create(cr, uid,{
                     'move_line_id': line.id,
-                    'amount_currency': line.amount_to_pay,
+                    'amount_currency': line.amount_residual_currency,
                     'bank_id': line2bank.get(line.id),
                     'order_id': payment.id,
                     'partner_id': line.partner_id and line.partner_id.id or False,
                     'communication': line.ref or '/',
+                    'state': line.invoice and line.invoice.reference_type != 'none' and 'structured' or 'normal',
                     'date': date_to_pay,
                     'currency': (line.invoice and line.invoice.currency_id.id) or line.journal_id.currency.id or line.journal_id.company_id.currency_id.id,
                 }, context=context)
@@ -102,13 +104,13 @@ class payment_order_create(osv.osv_memory):
 #        payment = self.pool.get('payment.order').browse(cr, uid, context['active_id'], context=context)
 
         # Search for move line to pay:
-        domain = [('reconcile_id', '=', False), ('account_id.type', '=', 'payable'), ('amount_to_pay', '>', 0)]
+        domain = [('reconcile_id', '=', False), ('account_id.type', '=', 'payable'), ('amount_residual', '>', 0)]
         domain = domain + ['|', ('date_maturity', '<=', search_due_date), ('date_maturity', '=', False)]
         line_ids = line_obj.search(cr, uid, domain, context=context)
         context.update({'line_ids': line_ids})
         model_data_ids = mod_obj.search(cr, uid,[('model', '=', 'ir.ui.view'), ('name', '=', 'view_create_payment_order_lines')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-        return {'name': ('Entrie Lines'),
+        return {'name': _('Entry Lines'),
                 'context': context,
                 'view_type': 'form',
                 'view_mode': 'form',
@@ -118,6 +120,5 @@ class payment_order_create(osv.osv_memory):
                 'target': 'new',
         }
 
-payment_order_create()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

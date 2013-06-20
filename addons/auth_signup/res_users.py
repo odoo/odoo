@@ -23,6 +23,7 @@ import random
 from urllib import urlencode
 from urlparse import urljoin
 
+from openerp.addons.base.ir.ir_mail_server import MailDeliveryException
 from openerp.osv import osv, fields
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval
@@ -55,19 +56,22 @@ class res_partner(osv.Model):
     def _get_signup_url_for_action(self, cr, uid, ids, action='login', view_type=None, menu_id=None, res_id=None, model=None, context=None):
         """ generate a signup url for the given partner ids and action, possibly overriding
             the url state components (menu_id, id, view_type) """
+        if context is None:
+            context= {}
         res = dict.fromkeys(ids, False)
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         for partner in self.browse(cr, uid, ids, context):
             # when required, make sure the partner has a valid signup token
-            if context and context.get('signup_valid') and not partner.user_ids:
+            if context.get('signup_valid') and not partner.user_ids:
                 self.signup_prepare(cr, uid, [partner.id], context=context)
                 partner.refresh()
 
             # the parameters to encode for the query and fragment part of url
             query = {'db': cr.dbname}
-            fragment = {'action': action, 'type': partner.signup_type}
+            signup_type = context.get('signup_force_type_in_url', partner.signup_type or '')
+            fragment = {'action': action, 'type': signup_type}
 
-            if partner.signup_token:
+            if partner.signup_token and signup_type:
                 fragment['token'] = partner.signup_token
             elif partner.user_ids:
                 fragment['db'] = cr.dbname
@@ -102,6 +106,9 @@ class res_partner(osv.Model):
 
     def action_signup_prepare(self, cr, uid, ids, context=None):
         return self.signup_prepare(cr, uid, ids, context=context)
+
+    def signup_cancel(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'signup_token': False, 'signup_type': False, 'signup_expiration': False}, context=context)
 
     def signup_prepare(self, cr, uid, ids, signup_type="signup", expiration=False, context=None):
         """ generate a new token for the partners with the given validity, if necessary
@@ -161,14 +168,12 @@ class res_users(osv.Model):
     def _get_state(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for user in self.browse(cr, uid, ids, context):
-            res[user.id] = ('reset' if user.signup_valid else
-                            'active' if user.login_date else
-                            'new')
+            res[user.id] = ('active' if user.login_date else 'new')
         return res
 
     _columns = {
         'state': fields.function(_get_state, string='Status', type='selection',
-                    selection=[('new', 'New'), ('active', 'Active'), ('reset', 'Resetting Password')]),
+                    selection=[('new', 'Never Connected'), ('active', 'Activated')]),
     }
 
     def signup(self, cr, uid, values, token=None, context=None):
@@ -202,6 +207,9 @@ class res_users(osv.Model):
                     'partner_id': partner.id,
                     'email': values.get('email') or values.get('login'),
                 })
+                if partner.company_id:
+                    values['company_id'] = partner.company_id.id
+                    values['company_ids'] = [(6, 0, [partner.company_id.id])]
                 self._signup_create_user(cr, uid, values, context=context)
         else:
             # no token, sign up an external user
@@ -258,34 +266,26 @@ class res_users(osv.Model):
                 pass
         if not bool(template):
             template = self.pool.get('ir.model.data').get_object(cr, uid, 'auth_signup', 'reset_password_email')
-        mail_obj = self.pool.get('mail.mail')
         assert template._name == 'email.template'
 
         for user in self.browse(cr, uid, ids, context):
             if not user.email:
                 raise osv.except_osv(_("Cannot send email: user has no email address."), user.name)
-            mail_id = self.pool.get('email.template').send_mail(cr, uid, template.id, user.id, True, context=context)
-            mail_state = mail_obj.read(cr, uid, mail_id, ['state'], context=context)
-
-            if mail_state and mail_state['state'] == 'exception':
-                raise self.pool.get('res.config.settings').get_config_warning(cr, _("Cannot send email: no outgoing email server configured.\nYou can configure it under %(menu:base_setup.menu_general_configuration)s."), context)
-            else:
-                return {
-                    'type': 'ir.actions.client',
-                    'name': '_(Server Notification)',
-                    'tag': 'action_notify',
-                    'params': {
-                        'title': 'Mail Sent to: %s' % user.name,
-                        'text': 'You can reset the password by yourself using this <a href=%s>link</a>' % user.partner_id.signup_url,
-                        'sticky': True,
-                    }
-                }
+            try:
+                self.pool.get('email.template').send_mail(cr, uid, template.id, user.id, force_send=True, raise_exception=True, context=context)
+            except Exception:
+                raise
 
     def create(self, cr, uid, values, context=None):
+        if context is None:
+            context = {}
         # overridden to automatically invite user to sign up
         user_id = super(res_users, self).create(cr, uid, values, context=context)
         user = self.browse(cr, uid, user_id, context=context)
-        if context and context.get('reset_password') and user.email:
-            ctx = dict(context, create_user=True)
-            self.action_reset_password(cr, uid, [user.id], context=ctx)
+        if user.email and not context.get('no_reset_password'):
+            context.update({'create_user': True})
+            try:
+                self.action_reset_password(cr, uid, [user.id], context=context)
+            except MailDeliveryException:
+                self.pool.get('res.partner').signup_cancel(cr, uid, [user.partner_id.id], context=context)
         return user_id

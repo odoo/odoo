@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-from openerp import netsvc
 import time
 
 from openerp.osv import osv,fields
@@ -39,7 +38,6 @@ class stock_return_picking_memory(osv.osv_memory):
 
     }
 
-stock_return_picking_memory()
 
 
 class stock_return_picking(osv.osv_memory):
@@ -182,6 +180,8 @@ class stock_return_picking(osv.osv_memory):
         for v in val_id:
             data_get = data_obj.browse(cr, uid, v, context=context)
             mov_id = data_get.move_id.id
+            if not mov_id:
+                raise osv.except_osv(_('Warning !'), _("You have manually created product lines, please delete them to proceed"))
             new_qty = data_get.quantity
             move = move_obj.browse(cr, uid, mov_id, context=context)
             new_location = move.location_dest_id.id
@@ -226,6 +226,5 @@ class stock_return_picking(osv.osv_memory):
             'context':context,
         }
 
-stock_return_picking()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -21,7 +21,6 @@
 
 from openerp.osv import fields
 from openerp.osv import osv
-from openerp import netsvc
 import time
 from datetime import datetime
 from openerp.tools.translate import _
@@ -47,7 +46,6 @@ class stock_move(osv.osv):
         })
         return super(stock_move, self).copy(cr, uid, id, default, context)
 
-stock_move()
 
 class mrp_production_workcenter_line(osv.osv):
 
@@ -130,7 +128,7 @@ class mrp_production_workcenter_line(osv.osv):
                elif prod_obj.state =='in_production':
                    return
                else:
-                   raise osv.except_osv(_('Error!'),_('Manufacturing order cannot start in state "%s"!') % (prod_obj.state,))
+                   raise osv.except_osv(_('Error!'),_('Manufacturing order cannot be started in state "%s"!') % (prod_obj.state,))
         else:
             oper_ids = self.search(cr,uid,[('production_id','=',prod_obj.id)])
             obj = self.browse(cr,uid,oper_ids)
@@ -372,7 +370,6 @@ class mrp_production(osv.osv):
         self._compute_planned_workcenter(cr, uid, ids, context=context)
         return result
 
-mrp_production()
 
 class mrp_operations_operation_code(osv.osv):
     _name="mrp_operations.operation.code"
@@ -381,7 +378,6 @@ class mrp_operations_operation_code(osv.osv):
         'code': fields.char('Code', size=16, required=True),
         'start_stop': fields.selection([('start','Start'),('pause','Pause'),('resume','Resume'),('cancel','Cancelled'),('done','Done')], 'Status', required=True),
     }
-mrp_operations_operation_code()
 
 class mrp_operations_operation(osv.osv):
     _name="mrp_operations.operation"
@@ -447,7 +443,7 @@ class mrp_operations_operation(osv.osv):
 
         if not oper_objs:
             if code.start_stop!='start':
-                raise osv.except_osv(_('Sorry!'),_('Operation is not started yet !'))
+                raise osv.except_osv(_('Sorry!'),_('Operation is not started yet!'))
                 return False
         else:
             for oper in oper_objs:
@@ -561,6 +557,5 @@ class mrp_operations_operation(osv.osv):
         'date_start': lambda *a:datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     }
 
-mrp_operations_operation()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

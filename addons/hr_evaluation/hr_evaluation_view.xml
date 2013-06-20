@@ -160,14 +160,19 @@
                     <button name="button_final_validation" string="Validate Appraisal" states="wait" type="object" class="oe_highlight"/>
                     <button name="button_done" string="Done" states="progress" type="object" class="oe_highlight"/>
                     <button name="button_draft" string="Reset to Draft" states="cancel" type="object" />
-                    <button name="button_cancel" string="Cancel" states="draft,wait,progress" type="object"/>
+                    <button name="button_cancel" string="Cancel Appraisal" states="draft,wait,progress" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,progress,wait,done" statusbar_colors='{"progress":"blue"}'/>
                 </header>
                 <sheet>
                     <label for="employee_id" class="oe_edit_only"/>
-                    <h1><field name="employee_id" on_change="onchange_employee_id(employee_id)" class="oe_inline"/>, <field name="date" class="oe_inline"/></h1>
+                    <h1><field name="employee_id" class="oe_inline"
+                                attrs="{'readonly': [('state', '=', 'done')]}"
+                                on_change="onchange_employee_id(employee_id)"/>,
+                        <field name="date"
+                                attrs="{'readonly': [('state', '=', 'done')]}"/>
+                    </h1>
                     <label for="plan_id" class="oe_edit_only"/>
-                    <h2><field name="plan_id"/></h2>
+                    <h2><field name="plan_id" attrs="{'readonly': [('state', '=', 'done')]}"/></h2>
                     <group>
                         <group colspan="4" attrs="{'invisible':['|', ('state','=','draft'), ('state', '=', 'wait')]}">
                             <field name="rating" attrs="{'readonly':[('state','&lt;&gt;','progress')]}"/>
@@ -175,7 +180,7 @@
                         </group>
                     </group>
                     <group string="Appraisal Forms" attrs="{'invisible':[('state','=','draft')]}">
-                        <field nolabel="1" name="survey_request_ids">
+                        <field nolabel="1" name="survey_request_ids" attrs="{'readonly': [('state', '=', 'done')]}">
                             <form string="Interview Appraisal" version="7.0">
                                 <div class="oe_right oe_button_box">
                                     <button name="%(survey.action_view_survey_question_message)d" string="Answer Survey" type="action" states="waiting_answer" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
@@ -282,7 +287,7 @@
             <field name="arch" type="xml">
                 <form string="Interview Appraisal" version="7.0">
                     <header>
-                        <button string="Cancel" name="survey_req_cancel" type="object"
+                        <button string="Cancel Survey" name="survey_req_cancel" type="object"
                             states="draft,waiting_answer" class="oe_left"/>
                         <button string="Print Survey" name="action_print_survey"  type="object"
                             states="draft" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}"

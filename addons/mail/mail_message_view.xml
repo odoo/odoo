@@ -30,9 +30,9 @@
                                 <field name="subject"/>
                                 <field name="author_id"/>
                                 <field name="email_from"/>
+                                <field name="reply_to"/>
                                 <field name="date"/>
                                 <field name="type"/>
-                                <field name="subtype_id"/>
                             </group>
                             <group>
                                 <field name="model"/>
@@ -40,6 +40,7 @@
                                 <field name="parent_id"/>
                                 <field name="partner_ids" widget="many2many_tags"/>
                                 <field name="notified_partner_ids" widget="many2many_tags"/>
+                                <field name="subtype_id"/>
                             </group>
                         </group>
                         <field name="body"/>
@@ -59,12 +60,15 @@
                     <field name="type"/>
                     <field name="author_id"/>
                     <field name="partner_ids"/>
-                    <filter string="Read"
-                            name="message_read" help="Show messages to read"
-                            domain="[('to_read', '=', False)]"/>
-                    <filter string="Unread"
+                    <field name="model"/>
+                    <field name="res_id"/>
+                    <field name="parent_id"/>
+                    <filter string="To Read"
                             name="message_unread" help="Show messages to read"
                             domain="[('to_read', '=', True)]"/>
+                    <filter string="Read"
+                            name="message_read" help="Show already read messages"
+                            domain="[('to_read', '=', False)]"/>
                     <separator/>
                     <filter string="Comments"
                             name="comments" help="Comments"

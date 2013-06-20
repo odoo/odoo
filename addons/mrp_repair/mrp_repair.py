@@ -365,7 +365,7 @@ class mrp_repair(osv.osv):
             if repair.state in ('draft','cancel') or repair.invoice_id:
                 continue
             if not (repair.partner_id.id and repair.partner_invoice_id.id):
-                raise osv.except_osv(_('No partner !'),_('You have to select a Partner Invoice Address in the repair form !'))
+                raise osv.except_osv(_('No partner!'),_('You have to select a Partner Invoice Address in the repair form!'))
             comment = repair.quotation_notes
             if (repair.invoice_method != 'none'):
                 if group and repair.partner_invoice_id.id in invoices_group:
@@ -582,7 +582,7 @@ class ProductChangeMixin(object):
             result['product_uom'] = product_obj.uom_id and product_obj.uom_id.id or False
             if not pricelist:
                 warning = {
-                    'title':'No Pricelist !',
+                    'title':'No Pricelist!',
                     'message':
                         'You have to select a pricelist in the Repair form !\n'
                         'Please set one before choosing a product.'
@@ -699,7 +699,6 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
                 'location_dest_id': scrap_location_ids and scrap_location_ids[0] or False,
                 }}
 
-mrp_repair_line()
 
 class mrp_repair_fee(osv.osv, ProductChangeMixin):
     _name = 'mrp.repair.fee'
@@ -741,5 +740,4 @@ class mrp_repair_fee(osv.osv, ProductChangeMixin):
         'to_invoice': lambda *a: True,
     }
 
-mrp_repair_fee()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

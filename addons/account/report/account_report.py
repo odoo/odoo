@@ -23,7 +23,6 @@ import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from openerp import pooler
 from openerp import tools
 from openerp.osv import fields,osv
 
@@ -67,7 +66,6 @@ class report_account_receivable(osv.osv):
                 group by
                     to_char(date,'YYYY:IW'), a.type
             )""")
-report_account_receivable()
 
                     #a.type in ('receivable','payable')
 class temp_range(osv.osv):
@@ -78,7 +76,6 @@ class temp_range(osv.osv):
         'name': fields.char('Range',size=64)
     }
 
-temp_range()
 
 class report_aged_receivable(osv.osv):
     _name = "report.aged.receivable"
@@ -123,7 +120,7 @@ class report_aged_receivable(osv.osv):
         """ This view will be used in dashboard
         The reason writing this code here is, we need to check date range from today to first date of fiscal year.
         """
-        pool_obj_fy = pooler.get_pool(cr.dbname).get('account.fiscalyear')
+        pool_obj_fy = self.pool['account.fiscalyear']
         today = time.strftime('%Y-%m-%d')
         fy_id = pool_obj_fy.find(cr, uid, exception=False)
         LIST_RANGES = []
@@ -141,14 +138,13 @@ class report_aged_receivable(osv.osv):
             cr.execute('delete from temp_range')
 
             for range in LIST_RANGES:
-                pooler.get_pool(cr.dbname).get('temp.range').create(cr, uid, {'name':range})
+                self.pool['temp.range'].create(cr, uid, {'name':range})
 
         cr.execute("""
             create or replace view report_aged_receivable as (
                 select id,name from temp_range
             )""")
 
-report_aged_receivable()
 
 class report_invoice_created(osv.osv):
     _name = "report.invoice.created"
@@ -201,7 +197,6 @@ class report_invoice_created(osv.osv):
                 AND
                 (to_date(to_char(inv.create_date, 'YYYY-MM-dd'),'YYYY-MM-dd') > (CURRENT_DATE-15))
             )""")
-report_invoice_created()
 
 class report_account_type_sales(osv.osv):
     _name = "report.account_type.sales"
@@ -242,7 +237,6 @@ class report_account_type_sales(osv.osv):
             group by
                 to_char(inv.date_invoice, 'YYYY'),to_char(inv.date_invoice,'MM'),inv.currency_id, inv.period_id, inv_line.product_id, account.user_type
             )""")
-report_account_type_sales()
 
 
 class report_account_sales(osv.osv):
@@ -284,6 +278,5 @@ class report_account_sales(osv.osv):
             group by
                 to_char(inv.date_invoice, 'YYYY'),to_char(inv.date_invoice,'MM'),inv.currency_id, inv.period_id, inv_line.product_id, account.id
             )""")
-report_account_sales()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

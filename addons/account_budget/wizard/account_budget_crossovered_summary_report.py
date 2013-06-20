@@ -53,7 +53,6 @@ class account_budget_crossvered_summary_report(osv.osv_memory):
             'datas': datas,
         }
 
-account_budget_crossvered_summary_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

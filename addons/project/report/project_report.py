@@ -117,5 +117,4 @@ class report_project_task_user(osv.osv):
 
         """)
 
-report_project_task_user()
 

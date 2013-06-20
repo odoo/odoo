@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-07 04:53+0000\n"
-"X-Generator: Launchpad (build 16477)\n"
+"X-Launchpad-Export-Date: 2013-03-16 05:43+0000\n"
+"X-Generator: Launchpad (build 16532)\n"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -73,7 +73,7 @@ msgstr "Tedarik Yöntemi"
 #. module: procurement
 #: selection:product.template,supply_method:0
 msgid "Manufacture"
-msgstr "Üretici"
+msgstr "Üretim"
 
 #. module: procurement
 #: model:process.process,name:procurement.process_process_serviceproductprocess0
@@ -176,7 +176,7 @@ msgstr "Kalıcı Tedarik İstisnaları"
 #. module: procurement
 #: help:procurement.order,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Eğer işaretliyse yeni iletiler ilginizi gerektirir."
 
 #. module: procurement
 #: view:procurement.order.compute.all:0
@@ -194,7 +194,7 @@ msgid "Stockable products"
 msgstr "Stoklanabilir Ürünler"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:137
+#: code:addons/procurement/procurement.py:138
 #, python-format
 msgid "Invalid Action!"
 msgstr "Geçersiz İşlem!"
@@ -205,6 +205,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Sohbetçi özetini tutar (mesajların sayısı, ...). Bu özet kanban ekranlarına "
+"eklenebilmesi için html biçimindedir."
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -278,7 +280,7 @@ msgid "Minimum Inventory Rule"
 msgstr "Minimum Envanter Kuralı"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:369
+#: code:addons/procurement/procurement.py:370
 #, python-format
 msgid "Procurement '%s' is in exception: "
 msgstr "Tedarik '%s' de istisnalar var: "
@@ -291,7 +293,7 @@ msgstr "Öncelik"
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Reordering Rules Search"
-msgstr ""
+msgstr "Sipariş Yenileme Kuralı Ara"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -365,7 +367,7 @@ msgid "Quantity"
 msgstr "Miktar"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:364
+#: code:addons/procurement/procurement.py:365
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr "Yeterli stok yok ve minimum sipariş noktası kuralı tanımlı değil!"
@@ -615,7 +617,7 @@ msgid "Is a Follower"
 msgstr "Bir Takipçisi mi"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:366
+#: code:addons/procurement/procurement.py:367
 #, python-format
 msgid "Not enough stock."
 msgstr "Yeterli stok yok."
@@ -631,7 +633,7 @@ msgid "Procure Products"
 msgstr "Tedarik Ürünleri"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:311
+#: code:addons/procurement/procurement.py:312
 #, python-format
 msgid ""
 "Please check the quantity in procurement order(s) for the product \"%s\", it "
@@ -725,7 +727,7 @@ msgid "Properties composition"
 msgstr "Bileşim Özellikleri"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:310
+#: code:addons/procurement/procurement.py:311
 #, python-format
 msgid "Data Insufficient !"
 msgstr "Yetersiz Bilgi !"
@@ -759,7 +761,6 @@ msgstr "Biten"
 
 #. module: procurement
 #: view:make.procurement:0
-#: view:procurement.order:0
 #: view:procurement.order.compute:0
 #: view:procurement.order.compute.all:0
 #: view:procurement.orderpoint.compute:0
@@ -926,10 +927,10 @@ msgstr "maks"
 #: model:ir.ui.menu,name:procurement.menu_stock_order_points
 #: view:stock.warehouse.orderpoint:0
 msgid "Reordering Rules"
-msgstr "Yeniden Siparişleme Kuralı"
+msgstr "Sipariş Yenileleme Kurallları"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:138
+#: code:addons/procurement/procurement.py:139
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s state."
 msgstr ""
@@ -1019,7 +1020,7 @@ msgid "PROC %d: on order - %3.2f %-5s - %s"
 msgstr "SATIN %d: siparişte - %3.2f %-5s - %s"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:338
+#: code:addons/procurement/procurement.py:339
 #, python-format
 msgid "Products reserved from stock."
 msgstr "Ürünler stoktan ayrılmış"

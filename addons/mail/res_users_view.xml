@@ -23,13 +23,19 @@
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
             <data>
-                <field name="email" position="before">
+                <field name="signature" position="before">
                     <field name="notification_email_send"/>
                 </field>
-                <field name="email" position="after">
+                <field name="signature" position="before">
                     <field name="alias_domain" invisible="1"/>
                     <field name="alias_id" readonly="1" required="0" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
                 </field>
+                <group string="Email preferences" position="after">
+                    <group name="misc" string="Miscellaneous"
+                            groups="base.group_no_one">
+                        <field name="display_groups_suggestions"/>
+                    </group>
+                </group>
             </data>
             </field>
         </record>

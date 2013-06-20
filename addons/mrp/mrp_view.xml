@@ -440,7 +440,7 @@
             <field name="model">mrp.bom</field>
             <field name="field_parent">child_complete_ids</field>
             <field name="arch" type="xml">
-                <tree string="Bill of Materials" colors="blue:method">
+                <tree string="Bill of Materials">
                     <field name="sequence" invisible="1"/>
                     <field name="name" invisible="1"/>
                     <field name="product_id"/>
@@ -448,7 +448,6 @@
                     <field name="product_uom" groups="product.group_uom"/>
                     <field name="code"/>
                     <field name="type"/>
-                    <field name="method"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
@@ -460,19 +459,18 @@
             <field name="model">mrp.bom</field>
             <field name="field_parent">child_complete_ids</field>
             <field name="arch" type="xml">
-                <tree string="BoM Structure" colors="blue:method">
+                <tree string="BoM Structure">
                     <field name="sequence" invisible="1"/>
                     <field name="name" groups="base.group_no_one"/>
                     <field name="code"/>
                     <field name="product_id"/>
-                    <field name="bom_id"/>
+                    <field name="bom_id" groups="product.group_mrp_properties"/>
                     <field name="product_qty"/>
                     <field name="product_uom" groups="product.group_uom"/>
                     <field name="type"/>
-                    <field name="method"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
-                    <field name="date_start"/>
-                    <field name="date_stop"/>
+                    <field name="date_start" groups="product.group_mrp_properties"/>
+                    <field name="date_stop" groups="product.group_mrp_properties"/>
                 </tree>
             </field>
         </record>
@@ -545,6 +543,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom</field>
             <field name="domain">[('bom_id', '=',active_ids)]</field>
+            <field name="view_type">tree</field>
             <field name="view_id" ref="mrp_bom_tree_view"/>
         </record>
         <record id="ir_BOM_structure" model="ir.values">
@@ -625,8 +624,8 @@
                     <button name="force_production" states="picking_except" string="Force Reservation" type="object"/>
                     <button name="button_produce" states="ready" string="Mark as Started"/>
                     <button name="button_recreate" states="picking_except" string="Recreate Picking"/>
-                    <button name="button_cancel" states="draft,ready,in_production,picking_except" string="Cancel"/>
-                    <button name="action_cancel" type="object" states="confirmed" string="Cancel"/>
+                    <button name="button_cancel" states="draft,ready,in_production,picking_except" string="Cancel Production"/>
+                    <button name="action_cancel" type="object" states="confirmed" string="Cancel Production"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,ready,in_production,done" statusbar_colors='{"picking_except":"red","confirmed":"blue"}'/>
                 </header>
                 <sheet>
@@ -701,11 +700,6 @@
                                            <field name="prodlot_id" context="{'product_id': product_id}" groups="stock.group_production_lot"/>
                                            <field name="state" invisible="1"/>
                                            <field name="scrapped" invisible="1"/>
-                                           <button
-                                               name="%(stock.move_scrap)d"
-                                               string="Scrap Products" type="action"
-                                               icon="terp-gtk-jump-to-ltr"
-                                               states="done,cancel"/>
                                        </tree>
                                     </field>
                                 </group>
@@ -724,10 +718,6 @@
                                                 string="Partial"
                                                 type="action" states="confirmed,assigned"
                                                 icon="gtk-justify-fill"/>
-                                            <button name="%(stock.move_scrap)d"
-                                                string="Scrap Products" type="action"
-                                                icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
-                                                states="draft,waiting,confirmed,assigned"/>
                                         </tree>
                                     </field>
                                 </group>

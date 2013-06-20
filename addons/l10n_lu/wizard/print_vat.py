@@ -5,13 +5,14 @@
 #Tranquil IT Systems
 
 from __future__ import with_statement
+
+import openerp
 from openerp.osv import fields, osv
-from openerp import pooler
 from openerp import tools
+from openerp.modules.module import get_module_resource
 from openerp.tools.translate import _
 from openerp.report.render import render
 from openerp.report.interface import report_int
-from openerp import addons
 import tempfile
 import os
 
@@ -30,8 +31,8 @@ class report_custom(report_int):
 
     def create(self, cr, uid, ids, datas, context=None):
 
-        pool = pooler.get_pool(cr.dbname)
-        taxobj = pool.get('account.tax.code')
+        registry = openerp.registry(cr.dbname)
+        taxobj = registry['account.tax.code']
 
         if context is None:
             context = {}
@@ -40,7 +41,7 @@ class report_custom(report_int):
         for t in taxobj.browse(cr, uid, code_ids, {'period_id': datas['form']['period_id']}):
             if str(t.code):
                 result['case_'+str(t.code)] = '%.2f' % (t.sum_period or 0.0, )
-        user = pool.get('res.users').browse(cr, uid, uid, context)
+        user = registry['res.users'].browse(cr, uid, uid, context)
 
         # Not Clean, to be changed
         partner = user.company_id.partner_id
@@ -52,7 +53,7 @@ class report_custom(report_int):
         try:
             tmp_file = tempfile.mkstemp(".pdf")[1]
             try:
-                tools.pdf_utils.fill_pdf(addons.get_module_resource('l10n_lu','wizard', '2008_DECL_F_M10.pdf'), tmp_file, result)
+                tools.pdf_utils.fill_pdf(get_module_resource('l10n_lu','wizard', '2008_DECL_F_M10.pdf'), tmp_file, result)
                 with open(tmp_file, "r") as ofile:
                     self.obj = external_pdf(ofile.read())
             finally:
@@ -63,7 +64,7 @@ class report_custom(report_int):
             self.obj.render()
             return (self.obj.pdf, 'pdf')
         except Exception:
-            raise osv.except_osv(_('pdf not created !'), _('Please check if package pdftk is installed!'))
+            raise osv.except_osv(_('PDF Not Created!'), _('Please check if package pdftk is installed!'))
 
 report_custom('report.l10n_lu.tax.report.print')
 
@@ -91,6 +92,5 @@ class vat_declaration_report(osv.osv_memory):
         data['form']['period_id'] = self.browse(cr, uid, ids)[0].period_id.id
         return { 'type': 'ir.actions.report.xml', 'report_name': 'l10n_lu.tax.report.print', 'datas': data}
 
-vat_declaration_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

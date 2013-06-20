@@ -20,7 +20,7 @@
 ##############################################################################
 {
     'name': 'Canada - Accounting',
-    'version': '1.0',
+    'version': '1.1',
     'author': 'Savoir-faire Linux',
     'website': 'http://www.savoirfairelinux.com',
     'category': 'Localization/Account Charts',
@@ -49,7 +49,7 @@ Canadian accounting charts and localizations.
         'account_chart_template_fr.xml',
         'account_tax_fr.xml',
         'fiscal_templates_fr.xml',
-        'l10n_ca_wizard.xml',
+        'l10n_ca_wizard.xml'
     ],
     'demo': [],
     'installable': True,

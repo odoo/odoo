@@ -116,7 +116,7 @@
                     <group colspan="4" col="4"  groups="base.group_user">
                         <field name="user_id"/>
                         <field name="priority"/>
-                        <field name="section_id"/>
+                        <field name="section_id" groups="base.group_multi_salesteams"/>
                         <field name="date_deadline"/>
                         <field name="state" groups="base.group_no_one"/>
                     </group>
@@ -168,7 +168,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                    <field name="message_ids" widget="mail_thread" placeholder="Share a note..."/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </div>
                 </form>
             </field>
@@ -201,7 +201,7 @@
                     <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]"/>
                     <separator/>
                     <filter string="Unassigned Claims" icon="terp-personal-" domain="[('user_id','=', False)]" help="Unassigned Claims" />
-                    <field name="partner_id"/>
+                    <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="user_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner" domain="[]" help="Partner" context="{'group_by':'partner_id'}"/>
@@ -216,35 +216,5 @@
                 </search>
             </field>
         </record>
-
-        <record id="view_claim_partner_info_form1" model="ir.ui.view">
-            <field name="name">res.partner.claim.info.form</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="priority">20</field>
-            <field name="arch" type="xml">
-                <xpath expr="//page[@name='page_history']" position="attributes">
-                    <attribute name="invisible">False</attribute>
-                </xpath>
-                <xpath expr="//page[@name='page_history']" position="inside">
-                    <group name="grp_claim" string="Claims">
-                        <field name="claims_ids" colspan="4" nolabel="1">
-                            <tree string="Partners Claim" editable="bottom">
-                                <field name="name"/>
-                            </tree>
-                        </field>
-                    </group>
-                </xpath>
-            </field>
-        </record>
-
-        <act_window
-            context="{'search_default_partner_id': [active_id], 'default_partner_id': active_id}"
-            id="act_claim_partner"
-            name="Claims"
-            view_mode="tree,form"
-            res_model="crm.claim"
-            src_model="res.partner"/>
-
      </data>
 </openerp>
