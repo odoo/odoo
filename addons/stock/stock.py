@@ -487,7 +487,7 @@ class stock_quant(osv.osv):
         'product_id': fields.many2one("product.product", "Product", required=True), 
         'location_id': fields.many2one("stock.location", "Location", required=True),
         'qty': fields.float("Quantity", required=True), #should be in units of the product UoM
-        'pack_id': fields.many2one("stock.quant.package"), 
+        'package_id': fields.many2one("stock.quant.package"), 
         'reservation_id': fields.many2one("stock.move", "Stock Move"), 
         'prodlot_id': fields.many2one("stock.production.lot", "Serial Number"), 
         'history_ids': fields.many2many("stock.move", "quant", "move", string="Moves History"), 
@@ -573,17 +573,6 @@ class stock_quant(osv.osv):
             if qty_todo == 0: 
                 break
         return res
-
-
-class stock_quant_package(osv.osv):
-    """
-    These are the packages, it replaces the stock.tracking and are applied on quants instead of on moves
-    """
-    _name = "stock.quant.package"
-    _columns = {
-        'quant_ids':fields.one2many("stock.quant", "pack_id", "Quants"), 
-        'name': fields.char('Pack Reference', required = True), 
-    }
 
 
 class stock_tracking(osv.osv):
@@ -778,6 +767,7 @@ class stock_picking(osv.osv):
             ("none", "Not Applicable")], "Invoice Control",
             select=True, required=True, readonly=True, track_visibility='onchange', states={'draft': [('readonly', False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
+        'pack_operation_ids': fields.one2many('stock.pack.operation', 'picking_id', string='Related Packing Operations'),
     }
     _defaults = {
         'name': lambda self, cr, uid, context: '/',
@@ -3379,5 +3369,62 @@ class stock_picking_out(osv.osv):
     _defaults = {
         'type': 'out',
     }
+
+
+# -------------------------
+# Packaging related stuff
+# -------------------------
+class stock_package(osv.osv):
+    """
+    These are the packages, it replaces the stock.tracking and are applied on quants instead of on moves
+    """
+    _name = "stock.quant.package"
+    _description = "Physical Package"
+    _columns = {
+        'name': fields.char('Package Reference', size=64, select=True),
+        'packaging_id': fields.many2one('product.packaging', 'Type of Packaging'),
+        'quant_ids': fields.one2many('stock.quant’', 'package_id', 'Bulk Content'),
+        'parent_id': fields.many2one('stock.quant.package', 'Parent Package', help="The package containing this item"),
+        'children_ids': fields.one2many('stock.quant.package', 'parent_id', 'Packaged Content'),
+        'location_id': fields.related('quant_ids', 'location_id', type='many2one', relation='stock.location', string='Location', readonly=True),
+        'pack_operation_id': fields.many2one('stock.pack.operation', string="Package Operation", help="The pack operation that built this package"),
+    }
+
+    def _check_location(self, cr, uid, ids, context=None):
+        '''Simply check that all quants in a package are stored in the same location'''
+        for pack in self.browse(cr, uid, ids, context=context):
+            if not all([quant == pack.quant_ids[0].location_id.id for quant in pack.quant_ids]):
+                return False
+        return True
+
+    _constraints = [
+        (_check_location, 'All quant inside a package should share the same location', ['location_id']),
+    ]
+
+#TOCHECK: i would have done a osv_memory here
+class stock_pack_operation(osv.osv):
+    _name = "stock.pack.operation"
+    _description = "Packing Operation"
+    _columns = {
+        'name': fields.char('Package Serie', size=64, select=True),   # sequence
+        'number_of_packages': fields.integer('Number of Identical Packages'),
+        'picking_id': fields.many2one('stock.picking', 'Stock Picking', help='The stock operation where the packing has been made'),
+        'result_package_ids': fields.one2many('product.quant.pack', 'pack_operation_id', 'Packages Made', help="The resulf of the packaging of this serie"),
+        'pack_operation_line_ids': fields.one2many('stock.pack.operation.line', 'operation_id', 'Operation Lines'),
+    }
+
+#TOCHECK: i would have done a osv_memory here
+class stock_pack_operation_line(osv.osv):
+    _name = "stock.pack.operation.line"
+    _description = "Packing Operation Line"
+    _columns = {
+        'operation_id': fields.many2one('stock.pack.operation', 'Operation'),
+        'product_id': fields.many2one('product.product', 'Product'),
+        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
+        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
+        'package_id': fields.many2one('stock.quant.package', 'Package'),
+        'quant_id': fields.many2one('stock.quant', 'Quant'),
+    }
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
