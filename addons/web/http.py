@@ -549,19 +549,16 @@ class ControllerType(type):
         class_path = name_class[0].split(".")
         if not class_path[:2] == ["openerp", "addons"]:
             return
+        # we want to know all modules that have controllers
         module = class_path[2]
+        controllers_per_module.setdefault(module, [])
+        # but we only store controllers directly inheriting from Controller
+        if not "Controller" in globals() or not Controller in bases:
+            return
         controllers_per_module.setdefault(module, []).append(name_class)
 
 class Controller(object):
     __metaclass__ = ControllerType
-
-    """def __new__(cls, *args, **kwargs):
-        subclasses = [c for c in cls.__subclasses__() if getattr(c, "_cp_path", None) == getattr(cls, "_cp_path", None)]
-        if subclasses:
-            name = "%s (extended by %s)" % (cls.__name__, ', '.join(sub.__name__ for sub in subclasses))
-            cls = type(name, tuple(reversed(subclasses)), {})
-
-        return object.__new__(cls)"""
 
     def get_wrapped_method(self, name):
         if name in self.__class__._methods_wrapper:
@@ -800,25 +797,36 @@ class Root(object):
     def _build_router(self, db):
         _logger.info("Generating routing configuration for database %s" % db)
         routing_map = routing.Map()
+
+        def gen(modules, nodb_only):
+            for module in modules:
+                for v in controllers_per_module[module]:
+                    cls = v[1]
+
+                    subclasses = cls.__subclasses__()
+                    subclasses = [c for c in subclasses if c.__module__.split(".")[:2] == ["openerp", "addons"] and \
+                        cls.__module__.split(".")[2] in modules]
+                    if subclasses:
+                        name = "%s (extended by %s)" % (cls.__name__, ', '.join(sub.__name__ for sub in subclasses))
+                        cls = type(name, tuple(reversed(subclasses)), {})
+
+                    o = cls()
+                    members = inspect.getmembers(o)
+                    for mk, mv in members:
+                        if inspect.ismethod(mv) and getattr(mv, 'exposed', False) and \
+                                nodb_only == (getattr(mv, 'auth', None) == "nodb"):
+                            function = (o.get_wrapped_method(mk), mv)
+                            for url in mv.routes:
+                                if getattr(mv, "combine", False):
+                                    url = os.path.join(o._cp_path, url)
+                                    if url.endswith("/") and len(url) > 1:
+                                        url = url[: -1]
+                                routing_map.add(routing.Rule(url, endpoint=function))
+
         modules_set = set(controllers_per_module.keys())
         modules_set -= set("web")
-
-        modules = ["web"] + sorted(modules_set)
         # building all nodb methods
-        for module in modules:
-            for v in controllers_per_module[module]:
-                members = inspect.getmembers(v[1]())
-                for mk, mv in members:
-                    if inspect.ismethod(mv) and getattr(mv, 'exposed', False) and getattr(mv, 'auth', None) == "nodb":
-                        o = v[1]()
-                        function = (o.get_wrapped_method(mk), mv)
-                        for url in mv.routes:
-                            if getattr(mv, "combine", False):
-                                url = os.path.join(o._cp_path, url)
-                                if url.endswith("/") and len(url) > 1:
-                                    url = url[: -1]
-                            routing_map.add(routing.Rule(url, endpoint=function))
-
+        gen(["web"] + sorted(modules_set), True)
         if not db:
             return routing_map
 
@@ -830,19 +838,8 @@ class Root(object):
             modules_set = modules_set.intersection(set(installed))
         modules = ["web"] + sorted(modules_set)
         # building all other methods
-        for module in modules:
-            for v in controllers_per_module[module]:
-                o = v[1]()
-                members = inspect.getmembers(o)
-                for mk, mv in members:
-                    if inspect.ismethod(mv) and getattr(mv, 'exposed', False) and getattr(mv, 'auth', None) != "nodb":
-                        function = (o.get_wrapped_method(mk), mv)
-                        for url in mv.routes:
-                            if getattr(mv, "combine", False):
-                                url = os.path.join(o._cp_path, url)
-                                if url.endswith("/") and len(url) > 1:
-                                    url = url[: -1]
-                            routing_map.add(routing.Rule(url, endpoint=function))
+        gen(["web"] + sorted(modules_set), False)
+
         return routing_map
 
     def get_db_router(self, db):
