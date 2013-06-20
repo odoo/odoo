@@ -69,6 +69,7 @@ class TestMailBase(common.TransactionCase):
         self.group_employee_id = group_employee_ref and group_employee_ref[1] or False
 
         # Test users to use through the various tests
+        self.res_users.write(cr, uid, uid, {'name': 'Administrator'})
         self.user_raoul_id = self.res_users.create(cr, uid,
             {'name': 'Raoul Grosbedon', 'signature': 'SignRaoul', 'email': 'raoul@raoul.fr', 'login': 'raoul', 'groups_id': [(6, 0, [self.group_employee_id])]})
         self.user_bert_id = self.res_users.create(cr, uid,
