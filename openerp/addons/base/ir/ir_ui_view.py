@@ -122,16 +122,14 @@ class view(osv.osv):
 
     def _check_render_view(self, cr, uid, view, context=None):
         """Verify that the given view's hierarchy is valid for rendering, along with all the changes applied by
-           its inherited views, by rendering it using ``fields_view_get()``.
+           its inherited views, by rendering it using ``read_combined()``.
            
            @param browse_record view: view to validate
            @return: the rendered definition (arch) of the view, always utf-8 bytestring (legacy convention)
                if no error occurred, else False.  
         """
-        if view.model and view.model not in self.pool:
-            return False
         try:
-            fvg = self.pool[view.model].fields_view_get(cr, uid, view_id=view.id, view_type=view.type, context=context)
+            fvg = self.read_combined(cr, uid, view.id, view.type, view.model)
             return fvg['arch']
         except:
             return False
@@ -166,7 +164,7 @@ class view(osv.osv):
         return True
 
     _constraints = [
-        #(_check_xml, 'Invalid XML for View Architecture!', ['arch'])
+        (_check_xml, 'Invalid XML for View Architecture!', ['arch'])
         #(_check_model, 'The model name does not exist.', ['model']),
     ]
 
