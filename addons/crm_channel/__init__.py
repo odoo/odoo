@@ -20,6 +20,7 @@
 ##############################################################################
 
 import crm_channel
+import crm_lead
 import wizard
 import report
 

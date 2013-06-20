@@ -37,7 +37,7 @@ The most appropriate partner can be assigned.
 You can also use the geolocalization without using the GPS coordinates.
     """,
     'author': 'OpenERP SA',
-    'depends': ['crm', 'account'],
+    'depends': ['crm', 'account', 'portal'],
     'demo': ['res_partner_demo.xml'],
     'data': [
         'security/ir.model.access.csv',
@@ -45,9 +45,12 @@ You can also use the geolocalization without using the GPS coordinates.
         'wizard/crm_forward_to_partner_view.xml',
         'crm_lead_view.xml',
         'crm_channel_data.xml',
+        'crm_data.xml',
+        'crm_portal_view.xml',
+        'portal_data.xml',
         'report/crm_lead_report_view.xml',
         'report/crm_partner_report_view.xml',
-        'data/lead_mail_template_data.xml'
+        'data/lead_mail_template_data.xml',
     ],
     'test': ['test/partner_assign.yml'],
     'installable': True,
