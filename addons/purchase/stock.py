@@ -70,7 +70,7 @@ class stock_picking(osv.osv):
 
     def get_currency_id(self, cursor, user, picking):
         if picking.purchase_id:
-            return picking.purchase_id.pricelist_id.currency_id.id
+            return picking.purchase_id.currency_id.id
         else:
             return super(stock_picking, self).get_currency_id(cursor, user, picking)
 
@@ -129,7 +129,7 @@ class stock_partial_picking(osv.osv_memory):
     def _product_cost_for_average_update(self, cr, uid, move):
         if move.picking_id.purchase_id:
             return {'cost': move.purchase_line_id.price_unit,
-                    'currency': move.picking_id.purchase_id.pricelist_id.currency_id.id}
+                    'currency': move.picking_id.purchase_id.currency_id.id}
         return super(stock_partial_picking, self)._product_cost_for_average_update(cr, uid, move)
 
 # Redefinition of the new field in order to update the model stock.picking.in in the orm
