@@ -572,7 +572,7 @@ html_template = """<!DOCTYPE html>
 
 class Home(http.Controller):
 
-    @http.route('/', type='http', authentication="nodb")
+    @http.route('/', type='http', auth="none")
     def index(self, s_action=None, db=None, **kw):
         db, redir = db_monodb_redirect()
         if redir:
@@ -589,30 +589,30 @@ class Home(http.Controller):
         }
         return r
 
-    @http.route('/login', type='http', authentication="auth")
+    @http.route('/login', type='http', auth="user")
     def login(self, db, login, key):
         return login_and_redirect(db, login, key)
 
-    @http.route('/jsonrpc', type='json', authentication="nodb")
+    @http.route('/jsonrpc', type='json', auth="none")
     def jsonrpc(self, service, method, args):
         """ Method used by client APIs to contact OpenERP. """
         return openerp.netsvc.dispatch_rpc(service, method, args)
 
 class WebClient(http.Controller):
 
-    @http.route('/web/webclient/csslist', type='json', authentication="nodb")
+    @http.route('/web/webclient/csslist', type='json', auth="none")
     def csslist(self, mods=None):
         return manifest_list('css', mods=mods)
 
-    @http.route('/web/webclient/jslist', type='json', authentication="nodb")
+    @http.route('/web/webclient/jslist', type='json', auth="none")
     def jslist(self, mods=None):
         return manifest_list('js', mods=mods)
 
-    @http.route('/web/webclient/qweblist', type='json', authentication="nodb")
+    @http.route('/web/webclient/qweblist', type='json', auth="none")
     def qweblist(self, mods=None):
         return manifest_list('qweb', mods=mods)
 
-    @http.route('/web/webclient/css', type='http', authentication="nodb")
+    @http.route('/web/webclient/css', type='http', auth="none")
     def css(self, mods=None, db=None):
         files = list(manifest_glob('css', addons=mods, db=db))
         last_modified = get_last_modified(f[0] for f in files)
@@ -663,7 +663,7 @@ class WebClient(http.Controller):
             request.make_response(content, [('Content-Type', 'text/css')]),
             last_modified, checksum)
 
-    @http.route('/web/webclient/js', type='http', authentication="nodb")
+    @http.route('/web/webclient/js', type='http', auth="none")
     def js(self, mods=None, db=None):
         files = [f[0] for f in manifest_glob('js', addons=mods, db=db)]
         last_modified = get_last_modified(files)
@@ -676,7 +676,7 @@ class WebClient(http.Controller):
             request.make_response(content, [('Content-Type', 'application/javascript')]),
             last_modified, checksum)
 
-    @http.route('/web/webclient/qweb', type='http', authentication="nodb")
+    @http.route('/web/webclient/qweb', type='http', auth="none")
     def qweb(self, mods=None, db=None):
         files = [f[0] for f in manifest_glob('qweb', addons=mods, db=db)]
         last_modified = get_last_modified(files)
@@ -689,7 +689,7 @@ class WebClient(http.Controller):
             request.make_response(content, [('Content-Type', 'text/xml')]),
             last_modified, checksum)
 
-    @http.route('/web/webclient/bootstrap_translations', type='json', authentication="nodb")
+    @http.route('/web/webclient/bootstrap_translations', type='json', auth="none")
     def bootstrap_translations(self, mods):
         """ Load local translations from *.po files, as a temporary solution
             until we have established a valid session. This is meant only
@@ -712,7 +712,7 @@ class WebClient(http.Controller):
         return {"modules": translations_per_module,
                 "lang_parameters": None}
 
-    @http.route('/web/webclient/translations', type='json', authentication="auth")
+    @http.route('/web/webclient/translations', type='json', auth="user")
     def translations(self, mods, lang):
         res_lang = request.session.model('res.lang')
         ids = res_lang.search([("code", "=", lang)])
@@ -737,13 +737,13 @@ class WebClient(http.Controller):
         return {"modules": translations_per_module,
                 "lang_parameters": lang_params}
 
-    @http.route('/web/webclient/version_info', type='json', authentication="nodb")
+    @http.route('/web/webclient/version_info', type='json', auth="none")
     def version_info(self):
         return openerp.service.common.exp_version()
 
 class Proxy(http.Controller):
 
-    @http.route('/web/proxy/load', type='json', authentication="nodb")
+    @http.route('/web/proxy/load', type='json', auth="none")
     def load(self, path):
         """ Proxies an HTTP request through a JSON request.
 
@@ -760,11 +760,11 @@ class Proxy(http.Controller):
 
 class Database(http.Controller):
 
-    @http.route('/web/database/get_list', type='json', authentication="nodb")
+    @http.route('/web/database/get_list', type='json', auth="none")
     def get_list(self):
         return db_list()
 
-    @http.route('/web/database/create', type='json', authentication="nodb")
+    @http.route('/web/database/create', type='json', auth="none")
     def create(self, fields):
         params = dict(map(operator.itemgetter('name', 'value'), fields))
         return request.session.proxy("db").create_database(
@@ -774,7 +774,7 @@ class Database(http.Controller):
             params['db_lang'],
             params['create_admin_pwd'])
 
-    @http.route('/web/database/duplicate', type='json', authentication="nodb")
+    @http.route('/web/database/duplicate', type='json', auth="none")
     def duplicate(self, fields):
         params = dict(map(operator.itemgetter('name', 'value'), fields))
         duplicate_attrs = (
@@ -785,7 +785,7 @@ class Database(http.Controller):
 
         return request.session.proxy("db").duplicate_database(*duplicate_attrs)
 
-    @http.route('/web/database/drop', type='json', authentication="nodb")
+    @http.route('/web/database/drop', type='json', auth="none")
     def drop(self, fields):
         password, db = operator.itemgetter(
             'drop_pwd', 'drop_db')(
@@ -798,7 +798,7 @@ class Database(http.Controller):
         except Exception:
             return {'error': _('Could not drop database !'), 'title': _('Drop Database')}
 
-    @http.route('/web/database/backup', type='http', authentication="nodb")
+    @http.route('/web/database/backup', type='http', auth="none")
     def backup(self, backup_db, backup_pwd, token):
         try:
             db_dump = base64.b64decode(
@@ -816,7 +816,7 @@ class Database(http.Controller):
         except Exception, e:
             return simplejson.dumps([[],[{'error': openerp.tools.ustr(e), 'title': _('Backup Database')}]])
 
-    @http.route('/web/database/restore', type='http', authentication="nodb")
+    @http.route('/web/database/restore', type='http', auth="none")
     def restore(self, db_file, restore_pwd, new_db):
         try:
             data = base64.b64encode(db_file.read())
@@ -825,7 +825,7 @@ class Database(http.Controller):
         except openerp.exceptions.AccessDenied, e:
             raise Exception("AccessDenied")
 
-    @http.route('/web/database/change_password', type='json', authentication="nodb")
+    @http.route('/web/database/change_password', type='json', auth="none")
     def change_password(self, fields):
         old_password, new_password = operator.itemgetter(
             'old_pwd', 'new_pwd')(
@@ -849,13 +849,13 @@ class Session(http.Controller):
             "username": request.session._login,
         }
 
-    @http.route('/web/session/get_session_info', type='json', authentication="nodb")
+    @http.route('/web/session/get_session_info', type='json', auth="none")
     def get_session_info(self):
         request.uid = request.session._uid
         request.db = request.session._db
         return self.session_info()
 
-    @http.route('/web/session/authenticate', type='json', authentication="nodb")
+    @http.route('/web/session/authenticate', type='json', auth="none")
     def authenticate(self, db, login, password, base_location=None):
         wsgienv = request.httprequest.environ
         env = dict(
@@ -867,7 +867,7 @@ class Session(http.Controller):
 
         return self.session_info()
 
-    @http.route('/web/session/change_password', type='json', authentication="auth")
+    @http.route('/web/session/change_password', type='json', auth="user")
     def change_password(self, fields):
         old_password, new_password,confirm_password = operator.itemgetter('old_pwd', 'new_password','confirm_pwd')(
                 dict(map(operator.itemgetter('name', 'value'), fields)))
@@ -883,24 +883,24 @@ class Session(http.Controller):
             return {'error': _('The old password you provided is incorrect, your password was not changed.'), 'title': _('Change Password')}
         return {'error': _('Error, password not changed !'), 'title': _('Change Password')}
 
-    @http.route('/web/session/sc_list', type='json', authentication="auth")
+    @http.route('/web/session/sc_list', type='json', auth="user")
     def sc_list(self):
         return request.session.model('ir.ui.view_sc').get_sc(
             request.session._uid, "ir.ui.menu", request.context)
 
-    @http.route('/web/session/get_lang_list', type='json', authentication="nodb")
+    @http.route('/web/session/get_lang_list', type='json', auth="none")
     def get_lang_list(self):
         try:
             return request.session.proxy("db").list_lang() or []
         except Exception, e:
             return {"error": e, "title": _("Languages")}
 
-    @http.route('/web/session/modules', type='json', authentication="auth")
+    @http.route('/web/session/modules', type='json', auth="user")
     def modules(self):
         # return all installed modules. Web client is smart enough to not load a module twice
         return module_installed()
 
-    @http.route('/web/session/save_session_action', type='json', authentication="auth")
+    @http.route('/web/session/save_session_action', type='json', auth="user")
     def save_session_action(self, the_action):
         """
         This method store an action object in the session object and returns an integer
@@ -924,7 +924,7 @@ class Session(http.Controller):
         saved_actions["next"] = key + 1
         return key
 
-    @http.route('/web/session/get_session_action', type='json', authentication="auth")
+    @http.route('/web/session/get_session_action', type='json', auth="user")
     def get_session_action(self, key):
         """
         Gets back a previously saved action. This method can return None if the action
@@ -940,18 +940,18 @@ class Session(http.Controller):
             return None
         return saved_actions["actions"].get(key)
 
-    @http.route('/web/session/check', type='json', authentication="auth")
+    @http.route('/web/session/check', type='json', auth="user")
     def check(self):
         request.session.assert_valid()
         return None
 
-    @http.route('/web/session/destroy', type='json', authentication="auth")
+    @http.route('/web/session/destroy', type='json', auth="user")
     def destroy(self):
         request.session._suicide = True
 
 class Menu(http.Controller):
 
-    @http.route('/web/menu/get_user_roots', type='json', authentication="auth")
+    @http.route('/web/menu/get_user_roots', type='json', auth="user")
     def get_user_roots(self):
         """ Return all root menu ids visible for the session user.
 
@@ -973,7 +973,7 @@ class Menu(http.Controller):
 
         return Menus.search(menu_domain, 0, False, False, request.context)
 
-    @http.route('/web/menu/load', type='json', authentication="auth")
+    @http.route('/web/menu/load', type='json', auth="user")
     def load(self):
         """ Loads all menu items (all applications and their sub-menus).
 
@@ -1024,7 +1024,7 @@ class Menu(http.Controller):
 
         return menu_root
 
-    @http.route('/web/menu/load_needaction', type='json', authentication="auth")
+    @http.route('/web/menu/load_needaction', type='json', auth="user")
     def load_needaction(self, menu_ids):
         """ Loads needaction counters for specific menu ids.
 
@@ -1033,7 +1033,7 @@ class Menu(http.Controller):
         """
         return request.session.model('ir.ui.menu').get_needaction_data(menu_ids, request.context)
 
-    @http.route('/web/menu/action', type='json', authentication="auth")
+    @http.route('/web/menu/action', type='json', auth="user")
     def action(self, menu_id):
         # still used by web_shortcut
         actions = load_actions_from_ir_values('action', 'tree_but_open',
@@ -1042,7 +1042,7 @@ class Menu(http.Controller):
 
 class DataSet(http.Controller):
 
-    @http.route('/web/dataset/search_read', type='json', authentication="auth")
+    @http.route('/web/dataset/search_read', type='json', auth="user")
     def search_read(self, model, fields=False, offset=0, limit=False, domain=None, sort=None):
         return self.do_search_read(model, fields, offset, limit, domain, sort)
     def do_search_read(self, model, fields=False, offset=0, limit=False, domain=None
@@ -1084,7 +1084,7 @@ class DataSet(http.Controller):
             'records': records
         }
 
-    @http.route('/web/dataset/load', type='json', authentication="auth")
+    @http.route('/web/dataset/load', type='json', auth="user")
     def load(self, model, id, fields):
         m = request.session.model(model)
         value = {}
@@ -1110,26 +1110,26 @@ class DataSet(http.Controller):
 
         return getattr(request.session.model(model), method)(*args, **kwargs)
 
-    @http.route('/web/dataset/call', type='json', authentication="auth")
+    @http.route('/web/dataset/call', type='json', auth="user")
     def call(self, model, method, args, domain_id=None, context_id=None):
         return self._call_kw(model, method, args, {})
 
-    @http.route(['/web/dataset/call_kw', '/web/dataset/call_kw/<path:path>'], type='json', authentication="auth")
+    @http.route(['/web/dataset/call_kw', '/web/dataset/call_kw/<path:path>'], type='json', auth="user")
     def call_kw(self, model, method, args, kwargs, path=None):
         return self._call_kw(model, method, args, kwargs)
 
-    @http.route('/web/dataset/call_button', type='json', authentication="auth")
+    @http.route('/web/dataset/call_button', type='json', auth="user")
     def call_button(self, model, method, args, domain_id=None, context_id=None):
         action = self._call_kw(model, method, args, {})
         if isinstance(action, dict) and action.get('type') != '':
             return clean_action(action)
         return False
 
-    @http.route('/web/dataset/exec_workflow', type='json', authentication="auth")
+    @http.route('/web/dataset/exec_workflow', type='json', auth="user")
     def exec_workflow(self, model, id, signal):
         return request.session.exec_workflow(model, id, signal)
 
-    @http.route('/web/dataset/resequence', type='json', authentication="auth")
+    @http.route('/web/dataset/resequence', type='json', auth="user")
     def resequence(self, model, ids, field='sequence', offset=0):
         """ Re-sequences a number of records in the model, by their ids
 
@@ -1154,7 +1154,7 @@ class DataSet(http.Controller):
 
 class View(http.Controller):
 
-    @http.route('/web/view/add_custom', type='json', authentication="auth")
+    @http.route('/web/view/add_custom', type='json', auth="user")
     def add_custom(self, view_id, arch):
         CustomView = request.session.model('ir.ui.view.custom')
         CustomView.create({
@@ -1164,7 +1164,7 @@ class View(http.Controller):
         }, request.context)
         return {'result': True}
 
-    @http.route('/web/view/undo_custom', type='json', authentication="auth")
+    @http.route('/web/view/undo_custom', type='json', auth="user")
     def undo_custom(self, view_id, reset=False):
         CustomView = request.session.model('ir.ui.view.custom')
         vcustom = CustomView.search([('user_id', '=', request.session._uid), ('ref_id' ,'=', view_id)],
@@ -1179,7 +1179,7 @@ class View(http.Controller):
 
 class TreeView(View):
 
-    @http.route('/web/treeview/action', type='json', authentication="auth")
+    @http.route('/web/treeview/action', type='json', auth="user")
     def action(self, model, id):
         return load_actions_from_ir_values(
             'action', 'tree_but_open',[(model, id)],
@@ -1187,7 +1187,7 @@ class TreeView(View):
 
 class Binary(http.Controller):
 
-    @http.route('/web/binary/image', type='http', authentication="auth")
+    @http.route('/web/binary/image', type='http', auth="user")
     def image(self, model, id, field, **kw):
         last_update = '__last_update'
         Model = request.session.model(model)
@@ -1242,7 +1242,7 @@ class Binary(http.Controller):
         addons_path = http.addons_manifest['web']['addons_path']
         return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', image), 'rb').read()
 
-    @http.route('/web/binary/saveas', type='http', authentication="auth")
+    @http.route('/web/binary/saveas', type='http', auth="user")
     def saveas(self, model, field, id=None, filename_field=None, **kw):
         """ Download link for files stored as binary fields.
 
@@ -1275,7 +1275,7 @@ class Binary(http.Controller):
                 [('Content-Type', 'application/octet-stream'),
                  ('Content-Disposition', content_disposition(filename))])
 
-    @http.route('/web/binary/saveas_ajax', type='http', authentication="auth")
+    @http.route('/web/binary/saveas_ajax', type='http', auth="user")
     def saveas_ajax(self, data, token):
         jdata = simplejson.loads(data)
         model = jdata['model']
@@ -1308,7 +1308,7 @@ class Binary(http.Controller):
                         ('Content-Disposition', content_disposition(filename))],
                 cookies={'fileToken': int(token)})
 
-    @http.route('/web/binary/upload', type='http', authentication="auth")
+    @http.route('/web/binary/upload', type='http', auth="user")
     def upload(self, callback, ufile):
         # TODO: might be useful to have a configuration flag for max-length file uploads
         out = """<script language="javascript" type="text/javascript">
@@ -1323,7 +1323,7 @@ class Binary(http.Controller):
             args = [False, e.message]
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
-    @http.route('/web/binary/upload_attachment', type='http', authentication="auth")
+    @http.route('/web/binary/upload_attachment', type='http', auth="user")
     def upload_attachment(self, callback, model, id, ufile):
         Model = request.session.model('ir.attachment')
         out = """<script language="javascript" type="text/javascript">
@@ -1346,7 +1346,7 @@ class Binary(http.Controller):
             args = {'error': "Something horrible happened"}
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
-    @http.route('/web/binary/company_logo', type='http', authentication="nodb")
+    @http.route('/web/binary/company_logo', type='http', auth="none")
     def company_logo(self, dbname=None):
         # TODO add etag, refactor to use /image code for etag
         uid = None
@@ -1388,7 +1388,7 @@ class Binary(http.Controller):
 
 class Action(http.Controller):
 
-    @http.route('/web/action/load', type='json', authentication="auth")
+    @http.route('/web/action/load', type='json', auth="user")
     def load(self, action_id, do_not_eval=False):
         Actions = request.session.model('ir.actions.actions')
         value = False
@@ -1414,7 +1414,7 @@ class Action(http.Controller):
                 value = clean_action(action[0])
         return value
 
-    @http.route('/web/action/run', type='json', authentication="auth")
+    @http.route('/web/action/run', type='json', auth="user")
     def run(self, action_id):
         return_action = request.session.model('ir.actions.server').run(
             [action_id], request.context)
@@ -1425,7 +1425,7 @@ class Action(http.Controller):
 
 class Export(http.Controller):
 
-    @http.route('/web/export/formats', type='json', authentication="auth")
+    @http.route('/web/export/formats', type='json', auth="user")
     def formats(self):
         """ Returns all valid export formats
 
@@ -1439,7 +1439,7 @@ class Export(http.Controller):
         fields = Model.fields_get(False, request.context)
         return fields
 
-    @http.route('/web/export/get_fields', type='json', authentication="auth")
+    @http.route('/web/export/get_fields', type='json', auth="user")
     def get_fields(self, model, prefix='', parent_name= '',
                    import_compat=True, parent_field_type=None,
                    exclude=None):
@@ -1488,7 +1488,7 @@ class Export(http.Controller):
 
         return records
 
-    @http.route('/web/export/namelist', type='json', authentication="auth")
+    @http.route('/web/export/namelist', type='json', auth="user")
     def namelist(self, model, export_id):
         # TODO: namelist really has no reason to be in Python (although itertools.groupby helps)
         export = request.session.model("ir.exports").read([export_id])[0]
@@ -1608,7 +1608,7 @@ class ExportFormat(object):
 class CSVExport(ExportFormat, http.Controller):
     fmt = {'tag': 'csv', 'label': 'CSV'}
 
-    @http.route('/web/export/csv', type='http', authentication="auth")
+    @http.route('/web/export/csv', type='http', auth="user")
     def index(self, data, token):
         return self.base(data, token)
 
@@ -1650,7 +1650,7 @@ class ExcelExport(ExportFormat, http.Controller):
         'error': None if xlwt else "XLWT required"
     }
 
-    @http.route('/web/export/xls', type='http', authentication="auth")
+    @http.route('/web/export/xls', type='http', auth="user")
     def index(self, data, token):
         return self.base(data, token)
 
@@ -1696,7 +1696,7 @@ class Reports(http.Controller):
         'xls': 'application/vnd.ms-excel',
     }
 
-    @http.route('/web/report', type='http', authentication="auth")
+    @http.route('/web/report', type='http', auth="user")
     def index(self, action, token):
         action = simplejson.loads(action)
 

@@ -135,12 +135,12 @@ Authorization Levels
 --------------------
 
 By default, all methods can only be used by users logged into OpenERP (OpenERP uses cookies to track logged users).
-There are some cases when you need to enable not-logged in users to access some methods. To do so, add the ``'noauth'``
-value to the ``authentication`` parameter of ``http.route()``:
+There are some cases when you need to enable not-logged in users to access some methods. To do so, add the ``'db'``
+value to the ``auth`` parameter of ``http.route()``:
 
 ::
 
-    @http.route('/hello', type="http", authentication="noauth")
+    @http.route('/hello', type="http", auth="db")
     def hello(self):
         return "<div>Hello unknown user!</div>"
 
@@ -158,7 +158,7 @@ want to override. Example that redefine the home page of your OpenERP applicatio
     import openerp.addons.web.controllers.main as main
 
     class Home2(main.Home):
-        @http.route('/', type="http", authentication="noauth")
+        @http.route('/', type="http", auth="db")
         def index(self):
             return "<div>This is my new home page.</div>"
 

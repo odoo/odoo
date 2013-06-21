@@ -87,7 +87,7 @@ TESTING = Template(u"""<!DOCTYPE html>
 
 class TestRunnerController(http.Controller):
 
-    @http.route('/web/tests', type='http', authentication="nodb")
+    @http.route('/web/tests', type='http', auth="none")
     def index(self, req, mod=None, **kwargs):
         ms = module.get_modules()
         manifests = dict(

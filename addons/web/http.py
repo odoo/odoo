@@ -86,12 +86,12 @@ class WebRequest(object):
     .. attribute:: db
 
         ``str``, the name of the database linked to the current request. Can be ``None``
-        if the current request uses the ``nodb`` authentication.
+        if the current request uses the ``none`` authentication.
 
     .. attribute:: uid
 
         ``int``, the id of the user related to the current request. Can be ``None``
-        if the current request uses the ``nodb`` or the ``noauth`` authenticatoin.
+        if the current request uses the ``none`` or the ``db`` authenticatoin.
     """
     def __init__(self, httprequest):
         self.httprequest = httprequest
@@ -149,10 +149,10 @@ class WebRequest(object):
         self.lang = lang.replace('-', '_')
 
     def _authenticate(self):
-        if self.auth_method == "nodb":
+        if self.auth_method == "none":
             self.db = None
             self.uid = None
-        elif self.auth_method == "noauth":
+        elif self.auth_method == "db":
             self.db = (self.session._db or openerp.addons.web.controllers.main.db_monodb()).lower()
             if not self.db:
                 raise SessionExpiredException("No valid database for request %s" % self.httprequest)
@@ -169,14 +169,14 @@ class WebRequest(object):
     def registry(self):
         """
         The registry to the database linked to this request. Can be ``None`` if the current request uses the
-        ``nodb'' authentication.
+        ``none'' authentication.
         """
         return openerp.modules.registry.RegistryManager.get(self.db) if self.db else None
 
     @property
     def cr(self):
         """
-        The cursor initialized for the current method call. If the current request uses the ``nodb`` authentication
+        The cursor initialized for the current method call. If the current request uses the ``none`` authentication
         trying to access this property will raise an exception.
         """
         # some magic to lazy create the cr
@@ -209,7 +209,7 @@ class WebRequest(object):
             self.db = None
             self.uid = None
 
-def route(route, type="http", authentication="auth"):
+def route(route, type="http", auth="user"):
     """
     Decorator marking the decorated method as being a handler for requests. The method must be part of a subclass
     of ``Controller``.
@@ -222,16 +222,16 @@ def route(route, type="http", authentication="auth"):
     method. Can be a single string or an array of strings. See werkzeug's routing documentation for the format of
     route expression ( http://werkzeug.pocoo.org/docs/routing/ ).
     :param type: The type of request, can be ``'http'`` or ``'json'``.
-    :param authentication: The type of authentication method, can on of the following:
+    :param auth: The type of authentication method, can on of the following:
 
         * ``auth``: The user must be authenticated.
-        * ``noauth``: There is no need for the user to be authenticated but there must be a way to find the current
+        * ``db``: There is no need for the user to be authenticated but there must be a way to find the current
         database.
-        * ``nodb``: The method is always active, even if there is no database. Mainly used by the framework and
+        * ``none``: The method is always active, even if there is no database. Mainly used by the framework and
         authentication modules.
     """
     assert type in ["http", "json"]
-    assert authentication in ["auth", "noauth", "nodb"]
+    assert auth in ["user", "db", "none"]
     def decorator(f):
         if isinstance(route, list):
             f.routes = route
@@ -239,7 +239,7 @@ def route(route, type="http", authentication="auth"):
             f.routes = [route]
         f.exposed = type
         if getattr(f, "auth", None) is None:
-            f.auth = authentication
+            f.auth = auth
         return f
     return decorator
 
@@ -415,7 +415,7 @@ def jsonrequest(f):
     base = f.__name__
     if f.__name__ == "index":
         base = ""
-    return route([base, os.path.join(base, "<path:_ignored_path>")], type="json", authentication="auth")(f)
+    return route([base, os.path.join(base, "<path:_ignored_path>")], type="json", auth="user")(f)
 
 class HttpRequest(WebRequest):
     """ Regular GET/POST request
@@ -498,7 +498,7 @@ def httprequest(f):
     base = f.__name__
     if f.__name__ == "index":
         base = ""
-    return route([base, os.path.join(base, "<path:_ignored_path>")], type="http", authentication="auth")(f)
+    return route([base, os.path.join(base, "<path:_ignored_path>")], type="http", auth="user")(f)
 
 #----------------------------------------------------------
 # Local storage of requests
@@ -604,14 +604,14 @@ class Model(object):
         def proxy(*args, **kw):
             # Can't provide any retro-compatibility for this case, so we check it and raise an Exception
             # to tell the programmer to adapt his code
-            if not http.request.db or not http.request.uid or self.session._db != http.request.db \
-                or self.session._uid != http.request.uid:
+            if not request.db or not request.uid or self.session._db != request.db \
+                or self.session._uid != request.uid:
                 raise Exception("Trying to use Model with badly configured database or user.")
                 
-            mod = http.request.registry.get(self.model)
+            mod = request.registry.get(self.model)
             meth = getattr(mod, method)
-            cr = http.request.cr
-            result = meth(cr, http.request.uid, *args, **kw)
+            cr = request.cr
+            result = meth(cr, request.uid, *args, **kw)
             # reorder read
             if method == "read":
                 if isinstance(result, list) and len(result) > 0 and "id" in result[0]:
@@ -659,8 +659,8 @@ class OpenERPSession(object):
         self._uid = uid
         self._login = login
         self._password = password
-        http.request.db = db
-        http.request.uid = uid
+        request.db = db
+        request.uid = uid
 
         if uid: self.get_context()
         return uid
@@ -685,7 +685,7 @@ class OpenERPSession(object):
         :returns: the new context
         """
         assert self._uid, "The user needs to be logged-in to initialize his context"
-        self.context = http.request.registry.get('res.users').context_get(http.request.cr, http.request.uid) or {}
+        self.context = request.registry.get('res.users').context_get(request.cr, request.uid) or {}
         self.context['uid'] = self._uid
         self._fix_lang(self.context)
         return self.context
@@ -1031,7 +1031,7 @@ class Root(object):
                     members = inspect.getmembers(o)
                     for mk, mv in members:
                         if inspect.ismethod(mv) and getattr(mv, 'exposed', False) and \
-                                nodb_only == (getattr(mv, 'auth', None) == "nodb"):
+                                nodb_only == (getattr(mv, "user", None) == "none"):
                             function = (o.get_wrapped_method(mk), mv)
                             for url in mv.routes:
                                 if getattr(mv, "combine", False):
@@ -1042,7 +1042,7 @@ class Root(object):
 
         modules_set = set(controllers_per_module.keys())
         modules_set -= set("web")
-        # building all nodb methods
+        # building all none methods
         gen(["web"] + sorted(modules_set), True)
         if not db:
             return routing_map
@@ -1088,7 +1088,7 @@ class Root(object):
             return func(*args, **kwargs)
 
         request.func = nfunc
-        request.auth_method = getattr(original, "auth", "auth")
+        request.auth_method = getattr(original, "auth", "user")
         request.func_request_type = original.exposed
 
 def wsgi_postload():
