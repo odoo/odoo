@@ -176,7 +176,7 @@ class account_analytic_line(osv.osv):
         journal_types = {}
         price = 0.0
         for line in self.pool.get('account.analytic.line').browse(cr, uid, ids, context=context):
-            price = abs(line.amount)
+            price += abs(line.amount)
             line_name = line.name
             if line.journal_id.type not in journal_types:
                 journal_types[line.journal_id.type] = set()
@@ -208,7 +208,6 @@ class account_analytic_line(osv.osv):
                     'date_due': date_due,
                     'fiscal_position': account.partner_id.property_account_position.id
                 }
-
                 context2 = context.copy()
                 context2['lang'] = partner.lang
                 # set company_id in context, so the correct default journal will be selected
@@ -232,23 +231,24 @@ class account_analytic_line(osv.osv):
                     factor = invoice_factor_obj.browse(cr, uid, factor_id, context=context2)
                     factor_name = line_name + ' - ' + factor.customer_name
                     curr_line = {
-                                     'price_unit': price,
-                                     'quantity': qty,
-                                     'discount':factor.factor,
-                                     'invoice_id': last_invoice,
-                                     'name': factor_name,
-                                     'uos_id': uom,
-                                     'account_analytic_id': account.id,
-                                     }
+                        'price_unit': price,
+                        'quantity': qty,
+                        'discount': factor.factor,
+                        'invoice_id': last_invoice,
+                        'name': factor_name,
+                        'uos_id': uom,
+                        'account_analytic_id': account.id,
+                    }
                     if product:
                         factor_name = product_obj.name_get(cr, uid, [product_id], context=context2)[0][1]
                         if factor.customer_name:
                             factor_name += ' - ' + factor.customer_name
 
-                        ctx =  context.copy()
-                        ctx.update({'uom':uom})
+                        ctx = context.copy()
+                        ctx.update({'uom': uom})
 
-                        if price <= 0.0 :
+                        # check force product
+                        if price <= 0.0 or data.get('product'):
                             price = self._get_invoice_price(cr, uid, account, product_id, user_id, qty, ctx)
 
                         general_account = product.property_account_income or product.categ_id.property_account_income_categ
@@ -257,14 +257,14 @@ class account_analytic_line(osv.osv):
                         taxes = product.taxes_id or general_account.tax_ids
                         tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
                         curr_line.update({
-                                     'price_unit': price,
-                                     'invoice_line_tax_id': [(6,0,tax )],
-                                     'name': factor_name,
-                                     'product_id': product_id,
-                                     'invoice_line_tax_id': [(6,0,tax)],
-                                     'account_id': general_account.id,
-                                     })
-                        
+                            'price_unit': price,
+                            'invoice_line_tax_id': [(6,0,tax )],
+                            'name': factor_name,
+                            'product_id': product_id,
+                            'invoice_line_tax_id': [(6,0,tax)],
+                            'account_id': general_account.id,
+                        })
+
                     #
                     # Compute for lines
                     #
