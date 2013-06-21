@@ -11,7 +11,7 @@
             <field name="model_id" eval="ref('base.model_res_users')" />
             <field name="domain">[('id','=',user.id),('partner_id.tz', '!=', False)]</field>
             <field name="action_id" eval="ref('base.action_res_users_my')" />
-            <field name="res_id_field">id</field>
+            <field name="res_id_field">user.id</field>
         </record>
 
         <record model="gamification.goal.type" id="type_base_avatar">
@@ -21,7 +21,7 @@
             <field name="display_mode">checkbox</field>
             <!-- problem : default avatar != False -> manually + check in write function -->
             <field name="action_id" eval="ref('base.action_res_users_my')" />
-            <field name="res_id_field">id</field>
+            <field name="res_id_field">user.id</field>
         </record>
 
 
@@ -33,7 +33,7 @@
             <field name="model_id" eval="ref('base.model_res_company')" />
             <field name="domain">[('user_ids', 'in', user.id), ('name', '!=', 'Your Company')]</field>
             <field name="action_id" eval="ref('base.action_res_company_form')" />
-            <field name="res_id_field">company_id.id</field>
+            <field name="res_id_field">user.company_id.id</field>
         </record>
 
         <record model="gamification.goal.type" id="type_base_company_logo">
@@ -43,7 +43,7 @@
             <field name="model_id" eval="ref('base.model_res_company')" />
             <field name="domain">[('user_ids', 'in', user.id),('logo', '!=', False)]</field>
             <field name="action_id" eval="ref('base.action_res_company_form')" />
-            <field name="res_id_field">company_id.id</field>
+            <field name="res_id_field">user.company_id.id</field>
         </record>
 
         <record id="action_new_simplified_res_users" model="ir.actions.act_window">

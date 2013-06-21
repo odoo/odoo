@@ -179,7 +179,6 @@ class gamification_goal(osv.Model):
             help="In case of manual goal, reminders are sent if the goal as not been updated for a while (defined in goal plan). Ignored in case of non-manual goal or goal not linked to a plan."),
 
         'type_description': fields.related('type_id', 'description', type='char', string='Type Description', readonly=True),
-        'type_suffix': fields.related('type_id', 'suffix', type='char', string='Type Description', readonly=True),
         'type_condition': fields.related('type_id', 'condition', type='char', string='Type Condition', readonly=True),
         'type_suffix': fields.related('type_id', 'full_suffix', type="char", string="Suffix", readonly=True),
         'type_display': fields.related('type_id', 'display_mode', type="char", string="Display Mode", readonly=True),
@@ -345,12 +344,7 @@ class gamification_goal(osv.Model):
 
             if goal.type_id.res_id_field:
                 current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-                # this loop manages the cases where res_id_field is a browse record path (eg : company_id.currency_id.id)
-                field_names = goal.type_id.res_id_field.split('.')
-                res = current_user
-                for field_name in field_names[:]:
-                    res = res.__getitem__(field_name)
-                action['res_id'] = res
+                action['res_id'] = safe_eval(goal.type_id.res_id_field, {'user': current_user})
 
                 # if one element to display, should see it in form mode if possible
                 views = action['views']
