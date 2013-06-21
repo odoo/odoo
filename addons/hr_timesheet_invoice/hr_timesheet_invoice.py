@@ -176,7 +176,7 @@ class account_analytic_line(osv.osv):
         journal_types = {}
         price = 0.0
         for line in self.pool.get('account.analytic.line').browse(cr, uid, ids, context=context):
-            price += abs(line.amount)
+            price += line.amount*-1
             line_name = line.name
             if line.journal_id.type not in journal_types:
                 journal_types[line.journal_id.type] = set()
@@ -229,7 +229,7 @@ class account_analytic_line(osv.osv):
                         product_id = data['product'][0]
                     product = product_obj.browse(cr, uid, product_id, context=context2)
                     factor = invoice_factor_obj.browse(cr, uid, factor_id, context=context2)
-                    factor_name = line_name + ' - ' + factor.customer_name
+                    factor_name = factor.customer_name and line_name + ' - ' + factor.customer_name or line_name
                     curr_line = {
                         'price_unit': price,
                         'quantity': qty,
@@ -248,7 +248,7 @@ class account_analytic_line(osv.osv):
                         ctx.update({'uom': uom})
 
                         # check force product
-                        if price <= 0.0 or data.get('product'):
+                        if data.get('product'):
                             price = self._get_invoice_price(cr, uid, account, product_id, user_id, qty, ctx)
 
                         general_account = product.property_account_income or product.categ_id.property_account_income_categ
