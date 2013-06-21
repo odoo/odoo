@@ -125,8 +125,10 @@ class TestInherits(common.TransactionCase):
         """ copying a user should automatically copy its partner, too """
         foo_id = self.user.create(self.cr, UID, {'name': 'Foo', 'login': 'foo', 'password': 'foo'})
         foo_before, = self.user.read(self.cr, UID, [foo_id])
+        del foo_before['__last_update']
         bar_id = self.user.copy(self.cr, UID, foo_id, {'login': 'bar', 'password': 'bar'})
         foo_after, = self.user.read(self.cr, UID, [foo_id])
+        del foo_after['__last_update']
 
         self.assertEqual(foo_before, foo_after)
 
@@ -142,9 +144,11 @@ class TestInherits(common.TransactionCase):
         par_id = self.partner.create(self.cr, UID, {'name': 'Bar'})
 
         foo_before, = self.user.read(self.cr, UID, [foo_id])
+        del foo_before['__last_update']
         partners_before = self.partner.search(self.cr, UID, [])
         bar_id = self.user.copy(self.cr, UID, foo_id, {'partner_id': par_id, 'login': 'bar'})
         foo_after, = self.user.read(self.cr, UID, [foo_id])
+        del foo_after['__last_update']
         partners_after = self.partner.search(self.cr, UID, [])
 
         self.assertEqual(foo_before, foo_after)

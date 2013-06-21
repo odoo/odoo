@@ -584,8 +584,7 @@ class BaseModel(object):
         setattr(cls, name, field)
         cls._fields[name] = field
 
-        # if stored, add a corresponding column in cls._columns
-        if field.store and not field.interface:
+        if not field.interface:
             _logger.debug("Create column for field %s.%s", cls._name, name)
             cls._columns[name] = field.to_column()
 
@@ -3471,32 +3470,26 @@ class BaseModel(object):
         self.check_access_rights(cr, user, 'read')
         fields = self.check_field_access_rights(cr, user, 'read', fields)
 
-        # split up fields into old-style and pure new-style ones
-        if fields is None:
-            old_fields = set(self._columns)
-            new_fields = set(self._fields) - old_fields
-        else:
-            old_fields = set(fields) & set(self._columns)
-            new_fields = set(fields) - old_fields
+        fields = set(fields if fields is not None else self._columns)
 
         # read old-style fields with (low-level) method _read_flat
         select = self.browse(ids)
-        result = select.to_recordset()._read_flat(list(old_fields), load=load)
+        result = select.to_recordset()._read_flat(list(fields), load=load)
 
         # associate each result to its corresponding record
         record_values = [(self.record(values['id']), values) for values in result]
 
         # update record caches
-        for f in old_fields:
-            convert = self._fields[f].convert_from_read
-            for record, values in record_values:
-                record._record_cache[f] = convert(values[f])
-
-        # read new-style fields with records
-        for f in new_fields:
-            convert = self._fields[f].convert_to_read
-            for record, values in record_values:
-                values[f] = convert(record[f])
+        for name in fields:
+            field = self._fields[name]
+            if field.store:
+                convert = field.convert_from_read
+                for record, values in record_values:
+                    record._record_cache[name] = convert(values[name])
+            else:
+                convert = self._fields[name].convert_to_read
+                for record, values in record_values:
+                    values[name] = convert(record[name])
 
         return result if select.is_recordset() else (bool(result) and result[0])
 
@@ -3514,9 +3507,8 @@ class BaseModel(object):
         rule_clause, rule_params, tables = self.pool.get('ir.rule').domain_get(cr, user, self._name, 'read', context=context)
 
         # all inherited fields + all non inherited fields for which the attribute whose name is in load is True
-        fields_pre = [f for f in fields_to_read if
-                           f == self.CONCURRENCY_CHECK_FIELD
-                        or (f in self._columns and getattr(self._columns[f], '_classic_write'))
+        fields_pre = [f for f in fields_to_read
+                      if getattr(self._columns.get(f), '_classic_write', False)
                      ] + self._inherits.values()
 
         res = []
@@ -5566,7 +5558,8 @@ class BaseModel(object):
         if self.is_null():
             return
 
-        if name in self._columns:
+        # FIXME: no fnct_inv
+        if self._fields[name].store:
             # store value in database
             with self._scope:
                 field = self._fields[name]
