@@ -35,7 +35,6 @@ from openerp.tools.translate import _
 from openerp.tools import config
 
 from .. import http
-http = http
 
 from openerp.addons.web.http import request
 

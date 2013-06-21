@@ -1075,7 +1075,7 @@ class Root(object):
         if not router:
             router = self._build_router(db)
             with self.db_routers_lock:
-                router = self.db_routers[db] = router
+                self.db_routers[db] = router
         return router
 
     def find_handler(self):
