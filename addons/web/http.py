@@ -34,6 +34,7 @@ import werkzeug.routing as routing
 import urllib2
 
 import openerp
+import openerp.service.security as security
 
 import inspect
 import functools
@@ -650,12 +651,17 @@ class OpenERPSession(object):
         self.context = {}
         self.jsonp_requests = {}     # FIXME use a LRU
 
-    def authenticate(self, db, login, password, env=None):
+    def authenticate(self, db, login=None, password=None, env=None, uid=None):
         """
         Authenticate the current user with the given db, login and password. If successful, store
         the authentication parameters in the current session and request.
+
+        :param uid: If not None, that user id will be used instead the login to authenticate the user.
         """
-        uid = openerp.netsvc.dispatch_rpc('common', 'authenticate', [db, login, password, env])
+        if uid is None:
+            uid = openerp.netsvc.dispatch_rpc('common', 'authenticate', [db, login, password, env])
+        else:
+            security.check(db, uid, password)
         self._db = db
         self._uid = uid
         self._login = login
@@ -674,7 +680,6 @@ class OpenERPSession(object):
         """
         if not self._db or not self._uid:
             raise SessionExpiredException("Session expired")
-        import openerp.service.security as security
         security.check(self._db, self._uid, self._password)
 
     def get_context(self):
