@@ -52,8 +52,7 @@ class crm_lead_forward_to_partner(osv.TransientModel):
             message = _('<p>I am not interested by this lead. I %scontacted the lead.</p>') % (not wizard.contacted and 'have not ' or '')
             values = {'partner_assigned_id': False}
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-            partner_id = user.parent_id.id or user.partner_id.id
-            partner_ids = self.pool.get('res.partner').search(cr, SUPERUSER_ID, ['|', ('id', '=', partner_id), ('parent_id', '=', partner_id)], context=context)
+            partner_ids = self.pool.get('res.partner').search(cr, SUPERUSER_ID, [('id', 'child_of', user.partner_id.commercial_partner_id.id)], context=context)
             lead_obj.message_unsubscribe(cr, SUPERUSER_ID, context.get('active_ids'), partner_ids, context=None)
             try:
                 stage_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'crm_partner_assign', stage)[1]
