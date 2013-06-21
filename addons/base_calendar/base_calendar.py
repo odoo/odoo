@@ -619,6 +619,8 @@ property or property parameter."),
             email = filter(lambda x:x.__contains__('@'), cnval)
             vals['email'] = email and email[0] or ''
             vals['cn'] = vals.get("cn")
+        if vals.get('user_id'):
+            vals['state'] = 'accepted'
         res = super(calendar_attendee, self).create(cr, uid, vals, context=context)
         return res
 
