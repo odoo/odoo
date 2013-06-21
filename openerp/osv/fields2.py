@@ -362,9 +362,9 @@ class Many2one(Field):
     comodel = None                      # model of values
     _attrs = Field._attrs + ('ondelete',)
 
-    def __init__(self, comodel, string=None, ondelete=None, **kwargs):
+    def __init__(self, comodel, string=None, ondelete=None, domain=None, **kwargs):
         super(Many2one, self).__init__(
-            comodel=comodel, string=string, ondelete=ondelete, **kwargs)
+            comodel=comodel, string=string, ondelete=ondelete, domain=domain, **kwargs)
 
     @lazy_property
     def inverse(self):
@@ -390,6 +390,7 @@ class Many2one(Field):
 
     def _to_column(self, column_type, kwargs):
         kwargs['obj'] = self.comodel
+        kwargs['domain'] = self.domain or []
         return super(Many2one, self)._to_column(column_type, kwargs)
 
     def null(self):
@@ -430,9 +431,10 @@ class One2many(Field):
     comodel = None                      # model of values
     inverse = None                      # name of inverse field
 
-    def __init__(self, comodel, inverse=None, string=None, **kwargs):
+    def __init__(self, comodel, inverse=None, string=None, domain=None, **kwargs):
         super(One2many, self).__init__(
-            comodel=comodel, inverse=inverse, string=string, **kwargs)
+            comodel=comodel, inverse=inverse, string=string, domain=domain,
+            **kwargs)
 
     @classmethod
     def _from_column(cls, column):
@@ -445,6 +447,7 @@ class One2many(Field):
     def _to_column(self, column_type, kwargs):
         kwargs['obj'] = self.comodel
         kwargs['fields_id'] = self.inverse
+        kwargs['domain'] = self.domain or []
         return super(One2many, self)._to_column(column_type, kwargs)
 
     def null(self):
@@ -483,9 +486,10 @@ class Many2many(Field):
     column2 = None                      # column of table referring to comodel
 
     def __init__(self, comodel, relation=None, column1=None, column2=None,
-                string=None, **kwargs):
+                string=None, domain=None, **kwargs):
         super(Many2many, self).__init__(comodel=comodel, relation=relation,
-            column1=column1, column2=column2, string=string, **kwargs)
+            column1=column1, column2=column2, string=string, domain=domain,
+            **kwargs)
 
     @lazy_property
     def inverse(self):
@@ -514,6 +518,7 @@ class Many2many(Field):
         kwargs['rel'] = self.relation
         kwargs['id1'] = self.column1
         kwargs['id2'] = self.column2
+        kwargs['domain'] = self.domain or []
         return super(Many2many, self)._to_column(column_type, kwargs)
 
     def null(self):
