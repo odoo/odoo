@@ -787,20 +787,20 @@ class OpenERPSession(object):
 # Session context manager
 #----------------------------------------------------------
 @contextlib.contextmanager
-def session_context(request, session_store, session_lock, sid):
+def session_context(httprequest, session_store, session_lock, sid):
     with session_lock:
         if sid:
-            request.session = session_store.get(sid)
+            httprequest.session = session_store.get(sid)
         else:
-            request.session = session_store.new()
+            httprequest.session = session_store.new()
     try:
-        yield request.session
+        yield httprequest.session
     finally:
         # Remove all OpenERPSession instances with no uid, they're generated
         # either by login process or by HTTP requests without an OpenERP
         # session id, and are generally noise
         removed_sessions = set()
-        for key, value in request.session.items():
+        for key, value in httprequest.session.items():
             if not isinstance(value, OpenERPSession):
                 continue
             if getattr(value, '_suicide', False) or (
@@ -810,7 +810,7 @@ def session_context(request, session_store, session_lock, sid):
                     and value._creation_time + (60*5) < time.time()):
                 _logger.debug('remove session %s', key)
                 removed_sessions.add(key)
-                del request.session[key]
+                del httprequest.session[key]
 
         with session_lock:
             if sid:
@@ -827,7 +827,7 @@ def session_context(request, session_store, session_lock, sid):
                 # other to get the right result, if we want to merge the
                 # ``context`` dict we'll need something smarter
                 in_store = session_store.get(sid)
-                for k, v in request.session.iteritems():
+                for k, v in httprequest.session.iteritems():
                     stored = in_store.get(k)
                     if stored and isinstance(v, OpenERPSession):
                         if hasattr(v, 'contexts_store'):
@@ -841,10 +841,10 @@ def session_context(request, session_store, session_lock, sid):
 
                 # add missing keys
                 for k, v in in_store.iteritems():
-                    if k not in request.session and k not in removed_sessions:
-                        request.session[k] = v
+                    if k not in httprequest.session and k not in removed_sessions:
+                        httprequest.session[k] = v
 
-            session_store.save(request.session)
+            session_store.save(httprequest.session)
 
 def session_gc(session_store):
     if random.random() < 0.001:
