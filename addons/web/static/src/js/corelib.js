@@ -1144,7 +1144,8 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
             }
             qs = '?' + $.param(params);
         }
-        return this.prefix + path + qs;
+        var prefix = _.any(['http://', 'https://', '//'], _.bind(_.str.startsWith, null, path)) ? '' : this.prefix; 
+        return prefix + path + qs;
     },
 });
 

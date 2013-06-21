@@ -503,12 +503,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         var reloaded = $.Deferred();
         this.$el.find('.oe_list_content').append(
             this.groups.render(function () {
-                if (self.dataset.index == null) {
-                    var has_one = false;
-                    self.records.each(function () { has_one = true; });
-                    if (has_one) {
+                if (self.dataset.index == null && self.records.length ||
+                    self.dataset.index >= self.records.length) {
                         self.dataset.index = 0;
-                    }
                 }
                 self.compute_aggregates();
                 reloaded.resolve();
@@ -530,12 +527,13 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                     return r.tag === 'field';
                 }), 'name')
         ).done(function (records) {
-            if (!records[0]) {
+            var values = records[0];
+            if (!values) {
                 self.records.remove(record);
                 return;
             }
-            _(records[0]).each(function (value, key) {
-                record.set(key, value, {silent: true});
+            _(_.keys(values)).each(function(key){
+                record.set(key, values[key], {silent: true});
             });
             record.trigger('change', record);
         });
@@ -578,7 +576,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         this.no_leaf = !!context['group_by_no_leaf'];
         this.grouped = !!group_by;
 
-        return this.load_view(context).then(
+        return this.alive(this.load_view(context)).then(
             this.proxy('reload_content'));
     },
     /**
@@ -895,8 +893,9 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
 
         this.record_callbacks = {
             'remove': function (event, record) {
-                var $row = self.$current.children(
-                    '[data-id=' + record.get('id') + ']');
+                var id = record.get('id');
+                self.dataset.remove_ids([id]);
+                var $row = self.$current.children('[data-id=' + id + ']');
                 var index = $row.data('index');
                 $row.remove();
             },
@@ -908,12 +907,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                         throw new Error(_.str.sprintf( _t("Setting 'id' attribute on existing record %s"),
                             JSON.stringify(record.attributes) ));
                     }
-                    if (!_.contains(self.dataset.ids, value)) {
-                        // add record to dataset if not already in (added by
-                        // the form view?)
-                        self.dataset.ids.splice(
-                            self.records.indexOf(record), 0, value);
-                    }
+                    self.dataset.add_ids([value], self.records.indexOf(record));
                     // Set id on new record
                     $row = self.$current.children('[data-id=false]');
                 } else {
@@ -924,6 +918,8 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
             },
             'add': function (ev, records, record, index) {
                 var $new_row = $(self.render_record(record));
+                var id = record.get('id');
+                if (id) { self.dataset.add_ids([id], index); }
 
                 if (index === 0) {
                     $new_row.prependTo(self.$current);
@@ -2060,6 +2056,7 @@ instance.web.list.columns = new instance.web.Registry({
     'field': 'instance.web.list.Column',
     'field.boolean': 'instance.web.list.Boolean',
     'field.binary': 'instance.web.list.Binary',
+    'field.char': 'instance.web.list.Char',
     'field.progressbar': 'instance.web.list.ProgressBar',
     'field.handle': 'instance.web.list.Handle',
     'button': 'instance.web.list.Button',
@@ -2226,6 +2223,20 @@ instance.web.list.Binary = instance.web.list.Column.extend({
             href: download_url,
             size: instance.web.binary_to_binsize(value),
         });
+    }
+});
+instance.web.list.Char = instance.web.list.Column.extend({
+    replacement: '*',
+    /**
+     * If password field, only display replacement characters (if value is
+     * non-empty)
+     */
+    _format: function (row_data, options) {
+        var value = row_data[this.id].value;
+        if (value && this.password === 'True') {
+            return value.replace(/[\s\S]/g, _.escape(this.replacement))
+        }
+        return this._super(row_data, options);
     }
 });
 instance.web.list.ProgressBar = instance.web.list.Column.extend({

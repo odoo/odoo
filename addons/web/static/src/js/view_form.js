@@ -91,6 +91,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     init: function(parent, dataset, view_id, options) {
         var self = this;
         this._super(parent);
+        this.ViewManager = parent;
         this.set_default_options(options);
         this.dataset = dataset;
         this.model = dataset.model;
@@ -203,7 +204,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.has_been_loaded.resolve();
 
         // Add bounce effect on button 'Edit' when click on readonly page view.
-        this.$el.find(".oe_form_group_row,.oe_form_field,label").on('click', function (e) {
+        this.$el.find(".oe_form_group_row,.oe_form_field,label,h1,.oe_title,.oe_notebook_page, .oe_list_content").on('click', function (e) {
             if(self.get("actual_mode") == "view") {
                 var $button = self.options.$buttons.find(".oe_form_button_edit");
                 $button.openerpBounce();
@@ -720,6 +721,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         return this.save().done(function(result) {
             self.trigger("save", result);
             self.to_view_mode();
+        }).then(function(result) {
+            self.ViewManager.ActionManager.__parentedParent.menu.do_reload_needaction();
         });
     },
     on_button_cancel: function(event) {
@@ -2343,7 +2346,7 @@ instance.web.form.FieldEmail = instance.web.form.FieldChar.extend({
     },
     on_button_clicked: function() {
         if (!this.get('value') || !this.is_syntax_valid()) {
-            this.do_warn(_t("E-mail error"), _t("Can't send email to invalid e-mail address"));
+            this.do_warn(_t("E-mail Error"), _t("Can't send email to invalid e-mail address"));
         } else {
             location.href = 'mailto:' + this.get('value');
         }
@@ -2373,7 +2376,7 @@ instance.web.form.FieldUrl = instance.web.form.FieldChar.extend({
     },
     on_button_clicked: function() {
         if (!this.get('value')) {
-            this.do_warn(_t("Resource error"), _t("This resource is empty"));
+            this.do_warn(_t("Resource Error"), _t("This resource is empty"));
         } else {
             var url = $.trim(this.get('value'));
             if(/^www\./i.test(url))
@@ -2718,6 +2721,11 @@ instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instanc
                     self.internal_set_value(self.$textarea.val());
                 }
             });
+            if (this.field.translate) {
+                var $img = $('<img class="oe_field_translate oe_input_icon" src="/web/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/>')
+                    .click(this.on_translate);
+                this.$cleditor.$toolbar.append($img);
+            }
         }
     },
     render_value: function() {
@@ -2743,6 +2751,7 @@ instance.web.form.FieldBoolean = instance.web.form.AbstractField.extend({
         }, this));
         var check_readonly = function() {
             self.$checkbox.prop('disabled', self.get("effective_readonly"));
+            self.click_disabled_boolean();
         };
         this.on("change:effective_readonly", this, check_readonly);
         check_readonly.call(this);
@@ -2754,6 +2763,13 @@ instance.web.form.FieldBoolean = instance.web.form.AbstractField.extend({
     focus: function() {
         var input = this.$checkbox && this.$checkbox[0];
         return input ? input.focus() : false;
+    },
+    click_disabled_boolean: function(){
+        var $disabled = this.$el.find('input[type=checkbox]:disabled');
+        $disabled.each(function (){
+            $(this).next('div').remove();
+            $(this).closest("span").append($('<div class="boolean"></div>'));
+        });
     }
 });
 
@@ -2893,7 +2909,7 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
             var domain = instance.web.pyeval.eval('domain', this.build_domain()) || [];
             if (! _.isEqual(self.domain, domain)) {
                 self.domain = domain;
-                var ds = new instance.web.DataSet(self, self.field.relation);
+                var ds = new instance.web.DataSetStatic(self, self.field.relation, self.build_context());
                 ds.call('search', [self.domain])
                     .then(function (records) {
                         ds.name_get(records).then(function (records) {
@@ -3143,6 +3159,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         instance.web.form.CompletionFieldMixin.init.call(this);
         this.set({'value': false});
         this.display_value = {};
+        this.display_value_backup = {};
         this.last_search = [];
         this.floating = false;
         this.current_display = null;
@@ -3226,8 +3243,10 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             );
             pop.on('write_completed', self, function(){
                 self.display_value = {};
+                self.display_value_backup = {};
                 self.render_value();
                 self.focus();
+                self.view.do_onchange(self);
             });
         });
 
@@ -3276,6 +3295,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 if (self.last_search.length > 0) {
                     if (self.last_search[0][0] != self.get("value")) {
                         self.display_value = {};
+                        self.display_value_backup = {};
                         self.display_value["" + self.last_search[0][0]] = self.last_search[0][1];
                         self.reinit_value(self.last_search[0][0]);
                     } else {
@@ -3341,6 +3361,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 var item = ui.item;
                 if (item.id) {
                     self.display_value = {};
+                    self.display_value_backup = {};
                     self.display_value["" + item.id] = item.name;
                     self.reinit_value(item.id);
                 } else if (item.action) {
@@ -3386,6 +3407,11 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             this.alive(dataset.name_get([self.get("value")])).done(function(data) {
                 self.display_value["" + self.get("value")] = data[0][1];
                 self.render_value(true);
+            }).fail( function (data, event) {
+                // avoid displaying crash errors as many2One should be name_get compliant
+                event.preventDefault();
+                self.display_value["" + self.get("value")] = self.display_value_backup["" + self.get("value")];
+                self.render_value(true);
             });
         }
     },
@@ -3429,8 +3455,12 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         var self = this;
         if (value_ instanceof Array) {
             this.display_value = {};
+            this.display_value_backup = {}
             if (! this.options.always_reload) {
                 this.display_value["" + value_[0]] = value_[1];
+            }
+            else {
+                this.display_value_backup["" + value_[0]] = value_[1];
             }
             value_ = value_[0];
         }
@@ -3442,6 +3472,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
     },
     add_id: function(id) {
         this.display_value = {};
+        this.display_value_backup = {};
         this.reinit_value(id);
     },
     is_false: function() {
@@ -4192,7 +4223,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
             ext: {
                 autocomplete: {
                     selectFromDropdown: function() {
-                        $(this).trigger('hideDropdown');
+                        this.trigger('hideDropdown');
                         var index = Number(this.selectedSuggestionElement().children().children().data('index'));
                         var data = self.search_result[index];
                         if (data.id) {
@@ -4201,6 +4232,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
                             ignore_blur = true;
                             data.action();
                         }
+                        this.trigger('setSuggestions', {result : []});
                     },
                 },
                 tags: {
@@ -4935,7 +4967,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
             this.searchview.hide();
         }
         if (this.view_list) {
-            this.view_list.$el.hide();
+            this.view_list.do_hide();
         }
         this.setup_form_view();
     },
@@ -5213,6 +5245,13 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
             url = this.placeholder;
         }
         var $img = $(QWeb.render("FieldBinaryImage-img", { widget: this, url: url }));
+        $($img).click(function(e) {
+            if(self.view.get("actual_mode") == "view") {
+                var $button = $(".oe_form_button_edit");
+                $button.openerpBounce();
+                e.stopPropagation();
+            }
+        });
         this.$el.find('> img').remove();
         this.$el.prepend($img);
         $img.load(function() {
@@ -5358,7 +5397,7 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
         }
 
         if (result.error || !result.id ) {
-            this.do_warn( _t('Uploading error'), result.error);
+            this.do_warn( _t('Uploading Error'), result.error);
             delete this.data[0];
         } else {
             if (this.data[0] && this.data[0].filename == result.filename && this.data[0].upload) {
@@ -5514,7 +5553,12 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     on_click_stage: function (ev) {
         var self = this;
         var $li = $(ev.currentTarget);
-        var val = parseInt($li.data("id"));
+        if (this.field.type == "many2one") {
+            var val = parseInt($li.data("id"));
+        }
+        else {
+            var val = $li.data("id");
+        }
         if (val != self.get('value')) {
             this.view.recursive_save().done(function() {
                 var change = {};

@@ -251,9 +251,9 @@ instance.web.CrashManager = instance.web.Class.extend({
         if (handler) {
             new (handler)(this, error).display();
             return;
-        };
+        }
         if (error.data.name === "openerp.addons.web.session SessionExpiredException") {
-            this.show_warning({type: "Session Expired", data: { message: "Your OpenERP session expired. Please refresh the current web page." }});
+            this.show_warning({type: "Session Expired", data: { message: _t("Your OpenERP session expired. Please refresh the current web page.") }});
             return;
         }
         if (error.data.exception_type === "except_osv" || error.data.exception_type === "warning"
@@ -430,7 +430,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
         var fetch_langs = this.rpc("/web/session/get_lang_list", {}).done(function(result) {
             self.lang_list = result;
         });
-        return $.when(fetch_db, fetch_langs).done(self.do_render);
+        return $.when(fetch_db, fetch_langs).always(self.do_render);
     },
     do_render: function() {
         var self = this;
@@ -530,16 +530,11 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                     'login': 'admin',
                     'password': form_obj['create_admin_pwd'],
                     'login_successful': function() {
-                        var action = {
-                            type: "ir.actions.client",
-                            tag: 'reload',
-                            params: {
-                                url_search : {
-                                    db: form_obj['db_name'],
-                                },
-                            }
-                        };
-                        self.do_action(action);
+                        var url = '/?db=' + form_obj['db_name'];
+                        if (self.session.debug) {
+                            url += '&debug';
+                        }
+                        instance.web.redirect(url);
                     },
                 },
                 _push_me: false,
@@ -918,9 +913,7 @@ instance.web.Menu =  instance.web.Widget.extend({
             self.reflow();
             // launch the fetch of needaction counters, asynchronous
             if (!_.isEmpty(menu_data.all_menu_ids)) {
-                this.rpc("/web/menu/load_needaction", {menu_ids: menu_data.all_menu_ids}).done(function(r) {
-                    self.on_needaction_loaded(r);
-                });
+                this.do_load_needaction(menu_data.all_menu_ids);
             }
         });
         var lazyreflow = _.debounce(this.reflow.bind(this), 200);
@@ -946,7 +939,7 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.data = {data: data};
         this.renderElement();
         this.$secondary_menus.html(QWeb.render("Menu.secondary", { widget : this }));
-        this.$el.on('click', 'a[data-menu]', this.on_menu_click);
+        this.$el.on('click', 'a[data-menu]', this.on_top_menu_click);
         // Hide second level submenus
         this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').hide();
         if (self.current_menu) {
@@ -954,6 +947,16 @@ instance.web.Menu =  instance.web.Widget.extend({
         }
         this.trigger('menu_loaded', data);
         this.has_been_loaded.resolve();
+    },
+    do_load_needaction: function (menu_ids) {
+        var self = this;
+        menu_ids = _.compact(menu_ids);
+        if (_.isEmpty(menu_ids)) {
+            return $.when();
+        }
+        return this.rpc("/web/menu/load_needaction", {'menu_ids': menu_ids}).done(function(r) {
+            self.on_needaction_loaded(r);
+        });
     },
     on_needaction_loaded: function(data) {
         var self = this;
@@ -1086,11 +1089,38 @@ instance.web.Menu =  instance.web.Widget.extend({
         }
         this.open_menu(id);
     },
+    do_reload_needaction: function () {
+        var self = this;
+        if (self.current_menu) {
+            self.do_load_needaction([self.current_menu]).then(function () {
+                self.trigger("need_action_reloaded");
+            });
+        }
+    },
     /**
      * Jquery event handler for menu click
      *
      * @param {Event} ev the jquery event
      */
+    on_top_menu_click: function(ev) {
+        var self = this;
+        var id = $(ev.currentTarget).data('menu');
+        var menu_ids = [id];
+        var menu = _.filter(this.data.data.children, function (menu) {return menu.id == id;})[0];
+        function add_menu_ids (menu) {
+            if (menu.children) {
+                _.each(menu.children, function (menu) {
+                    menu_ids.push(menu.id);
+                    add_menu_ids(menu);
+                });
+            }
+        };
+        add_menu_ids(menu);
+        self.do_load_needaction(menu_ids).then(function () {
+            self.trigger("need_action_reloaded");
+        });
+        this.on_menu_click(ev);
+    },
     on_menu_click: function(ev) {
         ev.preventDefault();
         var needaction = $(ev.target).is('div.oe_menu_counter');
@@ -1151,6 +1181,25 @@ instance.web.UserMenu =  instance.web.Widget.extend({
             self.rpc("/web/action/load", { action_id: "base.action_res_users_my" }).done(function(result) {
                 result.res_id = instance.session.uid;
                 self.getParent().action_manager.do_action(result);
+            });
+        }
+    },
+    on_menu_account: function() {
+        var self = this;
+        if (!this.getParent().has_uncommitted_changes()) {
+            var P = new instance.web.Model('ir.config_parameter');
+            P.call('get_param', ['database.uuid']).then(function(dbuuid) {
+                var state = {
+                            'd': instance.session.db,
+                            'u': window.location.protocol + '//' + window.location.host,
+                        };
+                var params = {
+                    response_type: 'token',
+                    client_id: dbuuid || '',
+                    state: JSON.stringify(state),
+                    scope: 'userinfo',
+                };
+                instance.web.redirect('https://accounts.openerp.com/oauth2/auth?'+$.param(params));
             });
         }
     },
@@ -1374,7 +1423,7 @@ instance.web.WebClient = instance.web.Client.extend({
             if (browser_offset !== user_offset) {
                 var $icon = $(QWeb.render('WebClient.timezone_systray'));
                 $icon.on('click', function() {
-                    var notification = self.do_warn(_t("Timezone mismatch"), QWeb.render('WebClient.timezone_notification', {
+                    var notification = self.do_warn(_t("Timezone Mismatch"), QWeb.render('WebClient.timezone_notification', {
                         user_timezone: instance.session.user_context.tz || 'UTC',
                         user_offset: user_offset,
                         browser_offset: browser_offset,

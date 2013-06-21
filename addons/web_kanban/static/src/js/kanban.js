@@ -265,10 +265,13 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             var remaining = groups.length - 1,
                 groups_array = [];
             return $.when.apply(null, _.map(groups, function (group, index) {
+                var def = $.when([]);
                 var dataset = new instance.web.DataSetSearch(self, self.dataset.model,
                     new instance.web.CompoundContext(self.dataset.get_context(), group.model.context()), group.model.domain());
-                return dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit })
-                    .then(function (records) {
+                if (group.attributes.length >= 1) {
+                    def = dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit });
+                }
+                return def.then(function(records) {
                         self.nb_records += records.length;
                         self.dataset.ids.push.apply(self.dataset.ids, dataset.ids);
                         groups_array[index] = new instance.web_kanban.KanbanGroup(self, records, group, dataset);
@@ -1099,6 +1102,11 @@ instance.web_kanban.QuickCreate = instance.web.Widget.extend({
                 self.quick_add();
             }
         });
+        $(".oe_kanban_quick_create").focusout(function (e) {
+            var val = self.$el.find('input').val();
+            if (/^\s*$/.test(val)) { self.trigger('close'); }
+            e.stopImmediatePropagation();
+        });
         $(".oe_kanban_quick_create_add", this.$el).click(function () {
             self.quick_add();
             self.focus();
@@ -1122,7 +1130,7 @@ instance.web_kanban.QuickCreate = instance.web.Widget.extend({
     quick_add: function () {
         var self = this;
         var val = this.$input.val();
-        if (/^\s*$/.test(val)) { return; }
+        if (/^\s*$/.test(val)) { this.$el.remove(); return; }
         this._dataset.call(
             'name_create', [val, new instance.web.CompoundContext(
                     this._dataset.get_context(), this._context)])
