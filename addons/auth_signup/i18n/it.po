@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2012-12-24 20:15+0000\n"
-"Last-Translator: Davide Corio <enlightx@gmail.com>\n"
+"PO-Revision-Date: 2013-06-14 11:01+0000\n"
+"Last-Translator: electro <Unknown>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-08 07:14+0000\n"
+"X-Launchpad-Export-Date: 2013-06-15 06:20+0000\n"
 "X-Generator: Launchpad (build 16667)\n"
 
 #. module: auth_signup
@@ -23,6 +23,8 @@ msgid ""
 "A password reset has been requested for this user. An email containing the "
 "following link has been sent:"
 msgstr ""
+"Un reset della password è stato richiesto per questo utente. Una email "
+"contente le seguenti informazioni gli è stata inviata"
 
 #. module: auth_signup
 #: field:res.partner,signup_type:0
@@ -39,7 +41,7 @@ msgstr "Permetti a utenti esterni di autenticarsi"
 #: code:addons/auth_signup/static/src/xml/auth_signup.xml:19
 #, python-format
 msgid "Confirm Password"
-msgstr "Conferma Password"
+msgstr "Conferma la password"
 
 #. module: auth_signup
 #: help:base.config.settings,auth_signup_uninvited:0
@@ -49,12 +51,12 @@ msgstr "Se spuntato, solo gli utenti invitati possono autenticarsi"
 #. module: auth_signup
 #: view:res.users:0
 msgid "Send an invitation email"
-msgstr ""
+msgstr "Invia una email di invito"
 
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Activated"
-msgstr ""
+msgstr "Attivato"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_base_config_settings
@@ -97,7 +99,7 @@ msgstr "Prego inserire una password e confermarla"
 #. module: auth_signup
 #: view:res.users:0
 msgid "Send reset password link by email"
-msgstr ""
+msgstr "Invia per email il link per il reset della password"
 
 #. module: auth_signup
 #: model:email.template,body_html:auth_signup.reset_password_email
@@ -126,6 +128,8 @@ msgstr ""
 msgid ""
 "An invitation email containing the following subscription link has been sent:"
 msgstr ""
+"E' stata inviata una email di invito contenente link per le seguenti "
+"sottoscrizioni:"
 
 #. module: auth_signup
 #: field:res.users,state:0
@@ -135,7 +139,7 @@ msgstr "Stato"
 #. module: auth_signup
 #: selection:res.users,state:0
 msgid "Never Connected"
-msgstr ""
+msgstr "Mai connesso"
 
 #. module: auth_signup
 #. openerp-web
@@ -187,6 +191,33 @@ msgid ""
 "                \n"
 "            "
 msgstr ""
+"\n"
+"                \n"
+"                    <p>\n"
+"                        ${object.name},\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        Sei stato invitato a connetterti al sistema  OpenERP "
+"di \"${object.company_id.name}\" per avere accesso ai tuoi documenti.\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        Per accettare l'invito click sul link seguente\n"
+"                    </p>\n"
+"                    <ul>\n"
+"                        <li><a href=\"${object.signup_url}\">Accetto "
+"l'invito di \"${object.company_id.name}\"</a></li>\n"
+"                    </ul>\n"
+"                    <p>\n"
+"                        Grazie,\n"
+"                    </p>\n"
+"                    <pre>\n"
+"--\n"
+"${object.company_id.name or ''}\n"
+"${object.company_id.email or ''}\n"
+"${object.company_id.phone or ''}\n"
+"                    </pre>\n"
+"                \n"
+"            "
 
 #. module: auth_signup
 #. openerp-web
@@ -211,6 +242,7 @@ msgstr ""
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
 msgstr ""
+"Una email è stata inviata con le credenziali per resettare la tua password"
 
 #. module: auth_signup
 #. openerp-web
@@ -307,7 +339,7 @@ msgstr "Abilita il reset della password dalla pagina di login"
 #. module: auth_signup
 #: model:email.template,subject:auth_signup.set_password_email
 msgid "${object.company_id.name} invitation to connect on OpenERP"
-msgstr ""
+msgstr "${object.company_id.name} invito a connetterti ad OpenERP"
 
 #. module: auth_signup
 #. openerp-web
