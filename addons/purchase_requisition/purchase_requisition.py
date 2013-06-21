@@ -50,7 +50,7 @@ class purchase_requisition(osv.osv):
         'date_start': fields.datetime('Date'),
         'date_end': fields.datetime('Bid Submission Deadline'),
         'user_id': fields.many2one('res.users', 'Responsible'),
-        'exclusive': fields.selection([('exclusive','Select one entire bid'),('multiple','Select lines from different bids')],'Bid Selection Type', required=True, help="Purchase Requisition (exclusive):  On the confirmation of a purchase order, it cancels the remaining purchase order.\nPurchase Requisition(Multiple):  It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"""),
+        'exclusive': fields.selection([('exclusive','Select only one RFQ (exclusive)'),('multiple','Select multiple RFQ')],'Bid Selection Type', required=True, help="Purchase Requisition (exclusive):  On the confirmation of a purchase order, it cancels the remaining purchase order.\nPurchase Requisition(Multiple):  It allows to have multiple purchase orders.On confirmation of a purchase order it does not cancel the remaining orders"""),
         'description': fields.text('Description'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'purchase_ids' : fields.one2many('purchase.order','requisition_id','Purchase Orders',states={'done': [('readonly', True)]}),
@@ -275,12 +275,18 @@ class purchase_requisition(osv.osv):
 
         confirm = False
         #check that we have at least confirm one line
-        for po_line in tender.po_line_ids:
-            if po_line.state == 'confirmed':
-                confirm = True
-                break
-        if not confirm:
-            raise osv.except_osv(_('Warning!'), _('You have no line selected for buying.'))
+        if len(tender.po_line_ids) > 0:
+            for po_line in tender.po_line_ids:
+                if po_line.state == 'confirmed':
+                    confirm = True
+                    break
+            if not confirm:
+                raise osv.except_osv(_('Warning!'), _('You have no line selected for buying.'))
+        else:
+            #set tender to state done because no line exists
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'purchase.requisition', tender.id, 'done', cr)
+            return True
 
         #check for complete RFQ
         for quotation in tender.purchase_ids:
