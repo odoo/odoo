@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 from openerp.tools.translate import _
@@ -28,6 +29,7 @@ from datetime import date
 import logging
 
 _logger = logging.getLogger(__name__)
+
 
 class gamification_badge_user(osv.Model):
     """User having received a badge"""
@@ -206,9 +208,8 @@ class gamification_badge(osv.Model):
 
             body_html = temp_obj.render_template(cr, uid, template_id.body_html, 'gamification.badge.user', badge_user.id, context=ctx)
 
-            # values = {'badge_user': badge_user, 'user_from': user_from}
-            # body_html = template_env.get_template('badge_received.mako').render(values)
-            res = self.message_post(cr, uid, badge.id, body=body_html, type='comment', subtype='mt_comment', context=context)
+            # as SUPERUSER as normal user don't have write access on a badge
+            res = self.message_post(cr, SUPERUSER_ID, badge.id, partner_ids=[badge_user.user_id.partner_id.id], body=body_html, type='comment', subtype='mt_comment', context=context)
         return res
 
     def check_granting(self, cr, uid, user_from_id, badge_id, context=None):
@@ -292,6 +293,7 @@ class grant_badge_wizard(osv.TransientModel):
                 }
                 badge_user = badge_user_obj.create(cr, uid, values, context=context)
                 #notify the user
-                badge_obj.send_badge(cr, uid, wiz.badge_id.id, [badge_user], user_from=uid, context=context)
+                result = badge_obj.send_badge(cr, uid, wiz.badge_id.id, [badge_user], user_from=uid, context=context)
 
+        return result
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
