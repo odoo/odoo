@@ -8,8 +8,6 @@ Models
 
 ``gamification.goal`` for the generated goals from plans
 
-.. versionchanged:: 7.0
-
 Fields
 ++++++
 
@@ -35,7 +33,7 @@ Fields
  - ``type_description`` : related field from the linked goal type
  - ``type_suffix`` : related field from the linked goal type
  - ``type_condition`` : related field from the linked goal type
-
+ - ``type_display`` : related field from the linked goal type
 
 Methods
 +++++++

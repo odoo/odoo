@@ -9,9 +9,9 @@ A module to create and manage groceries lists has been developped. To motivate u
 Module
 ++++++
 
-The challenge for my addon will consist of an auto-installed module containing only the definition of goals. Goal type are quite technical to create and should not be seen or modified through the web interface.
+The challenge for my addon will consist of an auto-installed module containing only the definition of goals. Goal type are quite technical to create and should not be seen or modified through the web interface. By default, goal types can only be modified by "Gamification Manager". After installing the hr_gamification module, HR Officers will be able to see goal types but not modying it.
 
-If our groceries module is called ``groceries``, the structure will be consisted of three addons :
+If our groceries module is called ``groceries``, the addons structure will be consisted of three addons :
 
 ::
 
