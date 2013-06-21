@@ -38,6 +38,7 @@
                     <field name="alias_model_id"/>
                     <field name="alias_user_id"/>
                     <field name="alias_defaults"/>
+                    <field name="alias_contact"/>
                 </tree>
             </field>
         </record>
@@ -50,6 +51,9 @@
                 <search string="Search Alias">
                     <field name="alias_name"/>
                     <field name="alias_model_id"/>
+                    <field name="alias_force_thread_id"/>
+                    <field name="alias_parent_model_id"/>
+                    <field name="alias_parent_thread_id"/>
                     <separator/>
                     <filter string="Active" name="active" domain="[('alias_name', '!=', False)]"/>
                     <group expand="0" string="Group By...">

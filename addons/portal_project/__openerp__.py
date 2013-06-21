@@ -36,9 +36,7 @@ This module adds project menu and features (tasks) to your portal if project and
         'security/ir.model.access.csv',
         'portal_project_view.xml',
     ],
-    'demo': [
-        'project_demo.xml',
-    ],
+    'demo': [],
     'installable': True,
     'auto_install': True,
     'category': 'Hidden',

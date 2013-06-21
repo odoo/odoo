@@ -27,22 +27,31 @@
                     <field name="notification_email_send"/>
                 </field>
                 <field name="email" position="after">
-                    <label for="alias_id" string="Alias"/>
+                    <!-- <label for="alias_id" string="Alias" -->
+                            <!-- attrs="{'invisible': [('alias_domain', '=', False)]}"/> -->
                     <div name="group_alias"
-                                    attrs="{'invisible': [('alias_domain', '=', False)]}">
-                        <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/>
+                            attrs="{'invisible': [('alias_domain', '=', False)]}">
+                        <!-- <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/> -->
                         <div name="edit_alias" class="oe_edit_only">
-                            <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                            <!-- <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/> -->
                         </div>
+                        <!-- <field name="alias_contact" string="Accept Emails From"/> -->
                     </div>
-                    <field name="alias_contact" string="Accept Emails From"/>
                 </field>
-                <group string="Email preferences" position="after">
-                    <group name="misc" string="Miscellaneous"
-                            groups="base.group_no_one">
-                        <field name="display_groups_suggestions"/>
-                    </group>
-                </group>
+                <field name="signature" position="before">
+                    <label for="alias_id" string="Messaging Alias" class="oe_read_only"
+                            attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                    <field name="alias_id" class="oe_read_only" required="0" nolabel="1"
+                            attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                    <label for="alias_name" string="Messaging Alias" class="oe_edit_only"
+                            attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                    <div class="oe_edit_only" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                        <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                    </div>
+                    <field name="alias_contact" string="Alias Accepts Emails From"
+                            attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                    <field name="display_groups_suggestions" groups="base.group_no_one"/>
+                </field>
             </data>
             </field>
         </record>
