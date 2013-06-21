@@ -590,7 +590,7 @@ class task(base_stage, osv.osv):
         if project_id:
             project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
             if project and project.partner_id:
-                return project.partner.id
+                return project.partner_id.id
         return super(task, self)._get_default_partner(cr, uid, context=context)
 
     def _get_default_project_id(self, cr, uid, context=None):
