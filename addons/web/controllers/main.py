@@ -96,13 +96,32 @@ def db_list():
     return dbs
 
 def db_monodb_redirect():
-    db = False
+    db = db_monodb()
+
+    if request.params.get('db'):
+        return (db, False)
+
+    try:
+        dbs = db_list()
+    except Exception:
+        # ignore access denied
+        dbs = []
+
+    # redirect to the chosen db if multiple are available
     redirect = False
+    if db and len(dbs) > 1:
+        query = dict(urlparse.parse_qsl(request.httprequest.query_string, keep_blank_values=True))
+        query.update({ 'db': db })
+        redirect = request.httprequest.path + '?' + urllib.urlencode(query)
+    return (db, redirect)
+
+def db_monodb():
+    db = False
 
     # 1 try the db in the url
     db_url = request.params.get('db')
     if db_url:
-        return (db_url, False)
+        return db_url
 
     try:
         dbs = db_list()
@@ -118,17 +137,7 @@ def db_monodb_redirect():
     # 3 use the first db
     if dbs and not db:
         db = dbs[0]
-
-    # redirect to the chosen db if multiple are available
-    if db and len(dbs) > 1:
-        query = dict(urlparse.parse_qsl(request.httprequest.query_string, keep_blank_values=True))
-        query.update({ 'db': db })
-        redirect = request.httprequest.path + '?' + urllib.urlencode(query)
-    return (db, redirect)
-
-def db_monodb():
-    # if only one db exists, return it else return False
-    return db_monodb_redirect()[0]
+    return db
 
 def redirect_with_hash(url, code=303):
     if request.httprequest.user_agent.browser == 'msie':
