@@ -32,6 +32,7 @@ except ImportError:
 import openerp
 import openerp.modules.registry
 from openerp.tools.translate import _
+from openerp.tools import config
 
 from .. import http
 http = http
@@ -94,12 +95,7 @@ def db_monodb_redirect():
     if request.params.get('db'):
         return (db, False)
 
-    try:
-        dbs = db_list()
-    except Exception:
-        # ignore access denied
-        dbs = []
-
+    dbs = db_list(True)
     # redirect to the chosen db if multiple are available
     redirect = False
     if db and len(dbs) > 1:
@@ -263,8 +259,9 @@ def concat_files(file_list, reader=None, intersperse=""):
 
     if reader is None:
         def reader(f):
-            with open(f, 'rb') as fp:
-                return fp.read()
+            import codecs
+            with codecs.open(f, 'rb', "utf-8-sig") as fp:
+                return fp.read().encode("utf-8")
 
     files_content = []
     for fname in file_list:
@@ -742,7 +739,14 @@ class Database(http.Controller):
 
     @http.route('/web/database/get_list', type='json', auth="none")
     def get_list(self):
-        return db_list()
+        # TODO change js to avoid calling this method if in monodb mode
+        try:
+            return db_list()
+        except openerp.exceptions.AccessDenied:
+            monodb = db_monodb(req)
+            if monodb:
+                return [monodb]
+            raise
 
     @http.route('/web/database/create', type='json', auth="none")
     def create(self, fields):
@@ -770,9 +774,12 @@ class Database(http.Controller):
         password, db = operator.itemgetter(
             'drop_pwd', 'drop_db')(
                 dict(map(operator.itemgetter('name', 'value'), fields)))
-
+        
         try:
-            return request.session.proxy("db").drop(password, db)
+            if request.session.proxy("db").drop(password, db):
+                return True
+            else:
+                return False
         except openerp.exceptions.AccessDenied:
             return {'error': 'AccessDenied', 'title': 'Drop Database'}
         except Exception:
@@ -1344,7 +1351,7 @@ class Binary(http.Controller):
         else:
             try:
                 # create an empty registry
-                registry = openerp.modules.registry.Registry(dbname.lower())
+                registry = openerp.modules.registry.Registry(dbname)
                 with registry.cursor() as cr:
                     cr.execute("""SELECT c.logo_web
                                     FROM res_users u
@@ -1447,6 +1454,8 @@ class Export(http.Controller):
                     if all(dict(attrs).get('readonly', True)
                            for attrs in field.get('states', {}).values()):
                         continue
+            if not field.get('exportable', True):
+                continue
 
             id = prefix + (prefix and '/'or '') + field_name
             name = parent_name + (parent_name and '/' or '') + field['string']

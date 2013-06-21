@@ -213,9 +213,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }
         });
         //bounce effect on red button when click on statusbar.
-        this.$el.on('click', '.oe_form_field_status:not(.oe_form_status_clickable)', function (e) {
-            if(self.get("actual_mode") == "view") {
-                var $button = self.$el.find(".oe_highlight:not(.oe_form_invisible)").css({'float':'left','margin-left':'3px','margin-right':'2px','white-space':'nowrap'});
+        this.$el.find(".oe_form_field_status:not(.oe_form_status_clickable)").on('click', function (e) {
+            if((self.get("actual_mode") == "view")) {
+                var $button = self.$el.find(".oe_highlight:not(.oe_form_invisible)").css({'float':'left','clear':'none'});
                 $button.openerpBounce();
                 e.stopPropagation();
             }
@@ -2721,6 +2721,11 @@ instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instanc
                     self.internal_set_value(self.$textarea.val());
                 }
             });
+            if (this.field.translate) {
+                var $img = $('<img class="oe_field_translate oe_input_icon" src="/web/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/>')
+                    .click(this.on_translate);
+                this.$cleditor.$toolbar.append($img);
+            }
         }
     },
     render_value: function() {
@@ -3241,6 +3246,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 self.display_value_backup = {};
                 self.render_value();
                 self.focus();
+                self.view.do_onchange(self);
             });
         });
 
@@ -4217,7 +4223,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
             ext: {
                 autocomplete: {
                     selectFromDropdown: function() {
-                        $(this).trigger('hideDropdown');
+                        this.trigger('hideDropdown');
                         var index = Number(this.selectedSuggestionElement().children().children().data('index'));
                         var data = self.search_result[index];
                         if (data.id) {
@@ -4226,6 +4232,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
                             ignore_blur = true;
                             data.action();
                         }
+                        this.trigger('setSuggestions', {result : []});
                     },
                 },
                 tags: {
@@ -4762,13 +4769,13 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
             this.dataset.index = null;
         }
         var options = _.clone(self.options.form_view_options) || {};
+        if (this.row_id !== null) {
+            options.initial_mode = this.options.readonly ? "view" : "edit";
+        }
         _.extend(options, {
             $buttons: this.$buttonpane,
         });
         this.view_form = new instance.web.FormView(this, this.dataset, this.options.view_id || false, options);
-        if (this.row_id !== null) {
-            options.initial_mode = this.options.readonly ? "view" : this.view_form.options.initial_mode;
-        }
         if (this.options.alternative_form_view) {
             this.view_form.set_embedded_view(this.options.alternative_form_view);
         }
@@ -4960,7 +4967,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
             this.searchview.hide();
         }
         if (this.view_list) {
-            this.view_list.$el.hide();
+            this.view_list.do_hide();
         }
         this.setup_form_view();
     },
@@ -5546,7 +5553,12 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     on_click_stage: function (ev) {
         var self = this;
         var $li = $(ev.currentTarget);
-        var val = parseInt($li.data("id"));
+        if (this.field.type == "many2one") {
+            var val = parseInt($li.data("id"));
+        }
+        else {
+            var val = $li.data("id");
+        }
         if (val != self.get('value')) {
             this.view.recursive_save().done(function() {
                 var change = {};

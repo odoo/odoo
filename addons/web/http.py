@@ -896,9 +896,13 @@ class DisableCacheMiddleware(object):
 
 def session_path():
     try:
-        username = getpass.getuser()
-    except Exception:
-        username = "unknown"
+        import pwd
+        username = pwd.getpwuid(os.geteuid()).pw_name
+    except ImportError:
+        try:
+            username = getpass.getuser()
+        except Exception:
+            username = "unknown"
     path = os.path.join(tempfile.gettempdir(), "oe-sessions-" + username)
     try:
         os.mkdir(path, 0700)
@@ -1097,9 +1101,9 @@ class Root(object):
         request.auth_method = getattr(original, "auth", "user")
         request.func_request_type = original.exposed
 
-def db_list():
+def db_list(force=False):
     proxy = request.session.proxy("db")
-    dbs = proxy.list()
+    dbs = proxy.list(force)
     h = request.httprequest.environ['HTTP_HOST'].split(':')[0]
     d = h.split('.')[0]
     r = openerp.tools.config['dbfilter'].replace('%h', h).replace('%d', d)
