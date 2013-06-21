@@ -28,6 +28,7 @@ class res_users(osv.Model):
         - add a preference about sending emails about notifications
         - make a new user follow itself
         - add a welcome message
+        - add suggestion preference
     """
     _name = 'res.users'
     _inherit = ['res.users']
@@ -37,10 +38,12 @@ class res_users(osv.Model):
         'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
             help="Email address internally associated with this user. Incoming "\
                  "emails will appear in the user's notifications."),
+        'display_groups_suggestions': fields.boolean("Display Groups Suggestions"),
     }
 
     _defaults = {
         'alias_domain': False,  # always hide alias during creation
+        'display_groups_suggestions': True,
     }
 
     def __init__(self, pool, cr):
@@ -51,10 +54,10 @@ class res_users(osv.Model):
         init_res = super(res_users, self).__init__(pool, cr)
         # duplicate list to avoid modifying the original reference
         self.SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
-        self.SELF_WRITEABLE_FIELDS.append('notification_email_send')
+        self.SELF_WRITEABLE_FIELDS.extend(['notification_email_send', 'display_groups_suggestions'])
         # duplicate list to avoid modifying the original reference
         self.SELF_READABLE_FIELDS = list(self.SELF_READABLE_FIELDS)
-        self.SELF_READABLE_FIELDS.extend(['notification_email_send', 'alias_domain', 'alias_name'])
+        self.SELF_READABLE_FIELDS.extend(['notification_email_send', 'alias_domain', 'alias_name', 'display_groups_suggestions'])
         return init_res
 
     def _auto_init(self, cr, context=None):
@@ -109,7 +112,7 @@ class res_users(osv.Model):
     def _message_post_get_pid(self, cr, uid, thread_id, context=None):
         assert thread_id, "res.users does not support posting global messages"
         if context and 'thread_model' in context:
-            context['thread_model'] = 'res.partner'
+            context['thread_model'] = 'res.users'
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id[0]
         return self.browse(cr, SUPERUSER_ID, thread_id).partner_id.id
@@ -118,44 +121,32 @@ class res_users(osv.Model):
         """ Redirect the posting of message on res.users to the related partner.
             This is done because when giving the context of Chatter on the
             various mailboxes, we do not have access to the current partner_id. """
+        if isinstance(thread_id, (list, tuple)):
+            thread_id = thread_id[0]
+        partner_ids = kwargs.get('partner_ids', [])
         partner_id = self._message_post_get_pid(cr, uid, thread_id, context=context)
-        return self.pool.get('res.partner').message_post(cr, uid, partner_id, context=context, **kwargs)
+        if partner_id not in [command[1] for command in partner_ids]:
+            partner_ids.append(partner_id)
+        kwargs['partner_ids'] = partner_ids
+        return self.pool.get('mail.thread').message_post(cr, uid, False, **kwargs)
 
     def message_update(self, cr, uid, ids, msg_dict, update_vals=None, context=None):
-        for id in ids:
-            partner_id = self.browse(cr, SUPERUSER_ID, id).partner_id.id
-            self.pool.get('res.partner').message_update(cr, uid, [partner_id], msg_dict, update_vals=update_vals, context=context)
         return True
 
     def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, context=None):
-        for id in ids:
-            partner_id = self.browse(cr, SUPERUSER_ID, id).partner_id.id
-            self.pool.get('res.partner').message_subscribe(cr, uid, [partner_id], partner_ids, subtype_ids=subtype_ids, context=context)
         return True
 
     def message_get_partner_info_from_emails(self, cr, uid, emails, link_mail=False, context=None):
-        return self.pool.get('res.partner').message_get_partner_info_from_emails(cr, uid, emails, link_mail=link_mail, context=context)
+        return self.pool.get('mail.thread').message_get_partner_info_from_emails(cr, uid, emails, link_mail=link_mail, context=context)
 
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):
-        partner_ids = []
-        for id in ids:
-            partner_ids.append(self.browse(cr, SUPERUSER_ID, id).partner_id.id)
-        return self.pool.get('res.partner').message_get_suggested_recipients(cr, uid, partner_ids, context=context)
+        return dict.fromkeys(ids, list())
 
-    #------------------------------------------------------
-    # Compatibility methods: do not use
-    # TDE TODO: remove me in 8.0
-    #------------------------------------------------------
-
-    def message_post_user_api(self, cr, uid, thread_id, context=None, **kwargs):
-        """ Redirect the posting of message on res.users to the related partner.
-            This is done because when giving the context of Chatter on the
-            various mailboxes, we do not have access to the current partner_id. """
-        partner_id = self._message_post_get_pid(cr, uid, thread_id, context=context)
-        return self.pool.get('res.partner').message_post_user_api(cr, uid, partner_id, context=context, **kwargs)
-
-    def message_create_partners_from_emails(self, cr, uid, emails, context=None):
-        return self.pool.get('res.partner').message_create_partners_from_emails(cr, uid, emails, context=context)
+    def stop_showing_groups_suggestions(self, cr, uid, user_id, context=None):
+        """Update display_groups_suggestions value to False"""
+        if context is None:
+            context = {}
+        self.write(cr, uid, user_id, {"display_groups_suggestions": False}, context)
 
 
 class res_users_mail_group(osv.Model):

@@ -23,6 +23,7 @@ import time
 from lxml import etree
 
 from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class payment_order_create(osv.osv_memory):
     """
@@ -87,6 +88,7 @@ class payment_order_create(osv.osv_memory):
                     'order_id': payment.id,
                     'partner_id': line.partner_id and line.partner_id.id or False,
                     'communication': line.ref or '/',
+                    'state': line.invoice and line.invoice.reference_type != 'none' and 'structured' or 'normal',
                     'date': date_to_pay,
                     'currency': (line.invoice and line.invoice.currency_id.id) or line.journal_id.currency.id or line.journal_id.company_id.currency_id.id,
                 }, context=context)
@@ -108,7 +110,7 @@ class payment_order_create(osv.osv_memory):
         context.update({'line_ids': line_ids})
         model_data_ids = mod_obj.search(cr, uid,[('model', '=', 'ir.ui.view'), ('name', '=', 'view_create_payment_order_lines')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-        return {'name': ('Entrie Lines'),
+        return {'name': _('Entry Lines'),
                 'context': context,
                 'view_type': 'form',
                 'view_mode': 'form',
