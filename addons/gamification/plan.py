@@ -638,7 +638,7 @@ class gamification_goal_plan(osv.Model):
             yesterday = date.today() - timedelta(days=1)
             if end_date == yesterday.isoformat() or force:
                 # open chatter message
-                message_body = "The challenge %s is finished." % plan.name
+                message_body = _("The challenge %s is finished." % plan.name)
 
                 # reward for everybody succeeding
                 rewarded_users = []
@@ -656,19 +656,19 @@ class gamification_goal_plan(osv.Model):
                             rewarded_users.append(user)
 
                     if rewarded_users:
-                        message_body += "<br/>Reward (badge %s) for every succeeding user was sent to %s." % (plan.reward_id.name, ", ".join([user.name for user in rewarded_users]))
+                        message_body += _("<br/>Reward (badge %s) for every succeeding user was sent to %s." % (plan.reward_id.name, ", ".join([user.name for user in rewarded_users])))
                     else:
-                        message_body += "<br/>Nobody succeeded every goal, no reward is then sent for this challenge."
+                        message_body += _("<br/>Nobody has succeeded to reach every goal, no badge is rewared for this challenge.")
 
                 # reward bests
                 if plan.reward_first_id:
                     (first_user, second_user, third_user) = self.get_top3_users(cr, uid, plan, context)
                     if first_user:
                         self.reward_user(cr, uid, first_user.id, plan.reward_first_id.id, context)
-                        message_body += "<br/>Special rewards were sent to the top competing users. The ranking for this challenge is :"
+                        message_body += _("<br/>Special rewards were sent to the top competing users. The ranking for this challenge is :")
                         message_body += "<br/> 1. %s - %s" % (first_user.name, plan.reward_first_id.name)
                     else:
-                        message_body += "Nobody reached the required conditions to receive special rewards."
+                        message_body += _("Nobody reached the required conditions to receive special badges.")
 
                     if second_user and plan.reward_second_id:
                         self.reward_user(cr, uid, second_user.id, plan.reward_second_id.id, context)
