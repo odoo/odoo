@@ -441,8 +441,7 @@ class hr_applicant(base_stage, osv.Model):
     def write(self, cr, uid, ids, vals, context=None):
         if 'stage_id' in vals:
             vals['date_closed'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            result = super(hr_applicant, self).write(cr, uid, ids, vals, context=context)
-        return result
+        return super(hr_applicant, self).write(cr, uid, ids, vals, context=context)
 
 
 class hr_job(osv.osv):
