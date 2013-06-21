@@ -569,11 +569,6 @@ class Home(http.Controller):
     def login(self, db, login, key):
         return login_and_redirect(db, login, key)
 
-    @http.route('/jsonrpc', type='json', auth="none")
-    def jsonrpc(self, service, method, args):
-        """ Method used by client APIs to contact OpenERP. """
-        return openerp.netsvc.dispatch_rpc(service, method, args)
-
 class WebClient(http.Controller):
 
     @http.route('/web/webclient/csslist', type='json', auth="none")

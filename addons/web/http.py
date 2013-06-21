@@ -1134,6 +1134,14 @@ def db_monodb():
         db = dbs[0]
     return db.lower() if db else db
 
+
+class JsonRpcController(Controller):
+
+    @route('/jsonrpc', type='json', auth="none")
+    def jsonrpc(self, service, method, args):
+        """ Method used by client APIs to contact OpenERP. """
+        return openerp.netsvc.dispatch_rpc(service, method, args)
+
 def wsgi_postload():
     openerp.wsgi.register_wsgi_handler(Root())
 
