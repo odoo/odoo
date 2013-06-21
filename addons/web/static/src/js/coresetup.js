@@ -283,6 +283,16 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             CHECK_INTERVAL = 1000, id = _.uniqueId('get_file_frame'),
             remove_form = false;
 
+
+        // iOS devices doesn't allow iframe use the way we do it,
+        // opening a new window seems the best way to workaround
+        if (navigator.userAgent.match(/(iPod|iPhone|iPad)/) || true) {
+            var params = _.extend({}, options.data || {}, {token: token});
+            var url = this.url(options.url, params);
+            instance.web.unblockUI();
+            return window.open(url);
+        }
+
         var $form, $form_data = $('<div>');
 
         var complete = function () {
