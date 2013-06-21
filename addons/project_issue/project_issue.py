@@ -65,14 +65,21 @@ class project_issue(base_stage, osv.osv):
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
-        if not vals.get('stage_id'):
-            ctx = context.copy()
-            if vals.get('project_id'):
-                ctx['default_project_id'] = vals['project_id']
-            vals['stage_id'] = self._get_default_stage_id(cr, uid, context=ctx)
+        if vals.get('project_id') and not context.get('default_project_id'):
+            context['default_project_id'] = vals.get('project_id')
+
         # context: no_log, because subtype already handle this
         create_context = dict(context, mail_create_nolog=True)
         return super(project_issue, self).create(cr, uid, vals, context=create_context)
+
+    def _get_default_partner(self, cr, uid, context=None):
+        """ Override of base_stage to add project specific behavior """
+        project_id = self._get_default_project_id(cr, uid, context)
+        if project_id:
+            project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
+            if project and project.partner_id:
+                return project.partner_id.id
+        return super(project_issue, self)._get_default_partner(cr, uid, context=context)
 
     def _get_default_project_id(self, cr, uid, context=None):
         """ Gives default project by checking if present in the context """
@@ -215,6 +222,10 @@ class project_issue(base_stage, osv.osv):
         return res
 
     def on_change_project(self, cr, uid, ids, project_id, context=None):
+        if project_id:
+            project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
+            if project and project.partner_id:
+                return {'value': {'partner_id': project.partner_id.id}}
         return {}
 
     def _get_issue_task(self, cr, uid, ids, context=None):
@@ -309,6 +320,7 @@ class project_issue(base_stage, osv.osv):
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': crm.AVAILABLE_PRIORITIES[2][0],
         'kanban_state': 'normal',
+        'user_id': lambda obj, cr, uid, context: uid,
     }
 
     _group_by_full = {
