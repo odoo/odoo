@@ -86,14 +86,7 @@ def rjsmin(script):
     ).strip()
     return result
 
-def db_list():
-    proxy = request.session.proxy("db")
-    dbs = proxy.list()
-    h = request.httprequest.environ['HTTP_HOST'].split(':')[0]
-    d = h.split('.')[0]
-    r = openerp.tools.config['dbfilter'].replace('%h', h).replace('%d', d)
-    dbs = [i for i in dbs if re.match(r, i)]
-    return dbs
+db_list = http.db_list
 
 def db_monodb_redirect():
     db = db_monodb()
@@ -115,29 +108,7 @@ def db_monodb_redirect():
         redirect = request.httprequest.path + '?' + urllib.urlencode(query)
     return (db, redirect)
 
-def db_monodb():
-    db = False
-
-    # 1 try the db in the url
-    db_url = request.params.get('db')
-    if db_url:
-        return db_url
-
-    try:
-        dbs = db_list()
-    except Exception:
-        # ignore access denied
-        dbs = []
-
-    # 2 use the database from the cookie if it's listable and still listed
-    cookie_db = request.httprequest.cookies.get('last_used_database')
-    if cookie_db in dbs:
-        db = cookie_db
-
-    # 3 use the first db
-    if dbs and not db:
-        db = dbs[0]
-    return db
+db_monodb = http.db_monodb
 
 def redirect_with_hash(url, code=303):
     if request.httprequest.user_agent.browser == 'msie':
