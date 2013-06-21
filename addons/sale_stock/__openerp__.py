@@ -57,7 +57,6 @@ You can choose flexible invoicing methods:
                    'report/sale_report_view.xml',
                    'process/sale_stock_process.xml',
                    ],
-   'data': ['sale_stock_data.xml'],
    'demo_xml': ['sale_stock_demo.xml'],
     'test': ['test/cancel_order_sale_stock.yml',
              'test/picking_order_policy.yml',
