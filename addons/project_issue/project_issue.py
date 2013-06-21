@@ -52,6 +52,7 @@ class project_issue(base_stage, osv.osv):
         'stage_id': {
             'project_issue.mt_issue_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence == 1,
             'project_issue.mt_issue_stage': lambda self, cr, uid, obj, ctx=None:obj.stage_id.sequence != 1,
+            'project_issue.mt_issue_assigned': lambda self, cr, uid, obj, ctx=None:obj.user_id,
         },
         'kanban_state': {
             'project_issue.mt_issue_blocked': lambda self, cr, uid, obj, ctx=None: obj['kanban_state'] == 'blocked',

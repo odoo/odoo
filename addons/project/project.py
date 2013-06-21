@@ -569,6 +569,7 @@ class task(base_stage, osv.osv):
         'stage_id': {
             'project.mt_task_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence == 1,
             'project.mt_task_stage': lambda self, cr, uid, obj, ctx=None: obj.stage_id.sequence != 1,
+            'project.mt_task_assigned': lambda self, cr, uid, obj, ctx=None: obj.user_id,
         },
         'kanban_state': {  # kanban state: tracked, but only block subtype
             'project.mt_task_blocked': lambda self, cr, uid, obj, ctx=None: obj['kanban_state'] == 'blocked',
