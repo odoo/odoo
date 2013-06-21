@@ -88,8 +88,6 @@ class gamification_goal_type(osv.Model):
         'field_date_id': fields.many2one('ir.model.fields',
             string='Date Field',
             help='The date to use for the time period evaluated'),
-                #TODO: actually it would be better to use 'user.id' in the domain definition, because it means user is a browse record and it's more flexible (i can do '[(country_id,=,user.partner_id.country_id.id)])
-
         'domain': fields.char("Filter Domain",
             help="Technical filters rules to apply. Use 'user.id' (without marks) to limit the search to the evaluated user.",
             required=True),
@@ -223,7 +221,6 @@ class gamification_goal(osv.Model):
         the target value being reached, the goal is set as failed."""
 
         for goal in self.browse(cr, uid, ids, context=context):
-            #TODO: towrite may be falsy, to avoid useless write on the object. Please check the whole thing is still working
             towrite = {}
             if goal.state in ('draft', 'canceled'):
                 # skip if goal draft or canceled
@@ -247,7 +244,7 @@ class gamification_goal(osv.Model):
                 obj = self.pool.get(goal.type_id.model_id.model)
                 field_date_name = goal.type_id.field_date_id.name
 
-                # eval the domain with user_id replaced by goal user
+                # eval the domain with user replaced by goal user object
                 domain = safe_eval(goal.type_id.domain, {'user': goal.user_id})
 
                 #add temporal clause(s) to the domain if fields are filled on the goal
@@ -269,7 +266,6 @@ class gamification_goal(osv.Model):
                     towrite['current'] = new_value
 
             # check goal target reached
-            #TODO: reached condition is wrong because it should check time constraints.
             if (goal.type_id.condition == 'higher' and towrite.get('current', goal.current) >= goal.target_goal) or (goal.type_id.condition == 'lower' and towrite.get('current', goal.current) <= goal.target_goal):
                 towrite['state'] = 'reached'
 
