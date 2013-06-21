@@ -76,9 +76,9 @@ class project_issue(base_stage, osv.osv):
         """ Override of base_stage to add project specific behavior """
         project_id = self._get_default_project_id(cr, uid, context)
         if project_id:
-            partner = self.pool.get('project.project').browse(cr, uid, project_id, context=context).partner_id
-            if partner:
-                return partner.id
+            project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
+            if project and project.partner_id:
+                return project.partner.id
         return super(project_issue, self)._get_default_partner(cr, uid, context=context)
 
     def _get_default_project_id(self, cr, uid, context=None):
