@@ -325,16 +325,15 @@ class gamification_goal(osv.Model):
         for goal in self.browse(cr, uid, ids, context=context):
             if goal.state != "draft" and ('type_id' in vals or 'user_id' in vals):
                 # avoid drag&drop in kanban view
-                raise osv.except_osv(_('Error!'), _('Can not modify a started goal'))
+                raise osv.except_osv(_('Error!'), _('Can not modify the configuration of a started goal'))
 
-            if 'current' in vals:
+            if vals.get('current'):
                 if 'no_remind_goal' in context:
                     # new goals should not be reported
                     continue
 
                 if goal.plan_id and goal.plan_id.report_message_frequency == 'onchange':
-                    plan_obj = self.pool.get('gamification.goal.plan')
-                    plan_obj.report_progress(cr, SUPERUSER_ID, goal.plan_id, users=[goal.user_id], context=context)
+                    self.pool.get('gamification.goal.plan').report_progress(cr, SUPERUSER_ID, goal.plan_id, users=[goal.user_id], context=context)
         return result
 
     def get_action(self, cr, uid, goal_id, context=None):

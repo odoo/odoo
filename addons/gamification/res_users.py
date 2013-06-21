@@ -119,7 +119,7 @@ class res_users_gamification_group(osv.Model):
                     continue
 
                 serialized_goals_info['goals'] = []
-                for goal in goals_info['goals']:
+                for goal in goals_info:
                     serialized_goals_info['goals'].append({
                         'id': goal.id,
                         'type_name': goal.type_id.name,

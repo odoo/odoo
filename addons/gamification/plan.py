@@ -505,7 +505,7 @@ class gamification_goal_plan(osv.Model):
         if len(related_goal_ids) == 0:
             return False
 
-        values = {'goals': []}
+        goals = []
         all_done = True
         for goal in goal_obj.browse(cr, uid, related_goal_ids, context=context):
             if goal.end_date:
@@ -518,13 +518,13 @@ class gamification_goal_plan(osv.Model):
                 if goal.state == 'inprogress' or goal.state == 'inprogress_update':
                     all_done = False
 
-            values['goals'].append(goal)
+            goals.append(goal)
 
         if all_done:
             # skip plans where all goal are done or failed
             return False
         else:
-            return values
+            return goals
 
     ##### Reporting #####
 
@@ -571,19 +571,13 @@ class gamification_goal_plan(osv.Model):
         else:
             # generate individual reports
             for user in users or plan.user_ids:
-                values = self.get_indivual_goal_info(cr, uid, user.id, plan, subset_goal_ids, context=context)
-                if not values:
+                goals = self.get_indivual_goal_info(cr, uid, user.id, plan, subset_goal_ids, context=context)
+                if not goals:
                     continue
 
-                # values['object'] = plan
-                # values['user'] = user
-
-                ctx.update({'planlines_boards': planlines_boards})
+                ctx.update({'goals': goals})
                 template_id = self.pool['ir.model.data'].get_object(cr, uid, 'gamification', 'email_template_goal_progress_perso', context)
                 body_html = temp_obj.render_template(cr, user.id, template_id.body_html, 'gamification.goal.plan', plan.id, context=context)
-
-                # body_html = template_env.get_template('personal_progress.mako').render(values)
-
                 # send message only to users
                 self.message_post(cr, uid, 0,
                                   body=body_html,

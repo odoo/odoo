@@ -161,7 +161,7 @@
         <th>Current</th>
         <th>Completeness</th>
     </tr>
-    % for goal in ${ctx["goals"]}:
+    % for goal in ctx["goals"]:
         <tr
             % if goal.completeness >= 100:
                 style="font-weight:bold;"
