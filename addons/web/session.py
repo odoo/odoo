@@ -23,7 +23,8 @@ class SessionExpiredException(Exception):
 
 class Service(object):
     """
-        Deprecated. Use ``openerp.netsvc.dispatch_rpc()`` instead.
+        .. deprecated:: 8.0
+        Use ``openerp.netsvc.dispatch_rpc()`` instead.
     """
     def __init__(self, session, service_name):
         self.session = session
@@ -37,7 +38,8 @@ class Service(object):
 
 class Model(object):
     """
-        Deprecated. Use the resistry and cursor in ``openerp.addons.web.http.request`` instead.
+        .. deprecated:: 8.0
+        Use the resistry and cursor in ``openerp.addons.web.http.request`` instead.
     """
     def __init__(self, session, model):
         self.session = session
@@ -66,12 +68,6 @@ class Model(object):
                     result = [index[x] for x in args[0] if x in index]
             return result
         return proxy
-
-    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None, context=None):
-        record_ids = self.search(domain or [], offset, limit or False, order or False, context or {})
-        if not record_ids: return []
-        records = self.read(record_ids, fields or [], context or {})
-        return records
 
 class OpenERPSession(object):
     """
@@ -163,19 +159,22 @@ class OpenERPSession(object):
 
     def send(self, service_name, method, *args):
         """
-        Deprecated. Use ``openerp.netsvc.dispatch_rpc()`` instead.
+        .. deprecated:: 8.0
+        Use ``openerp.netsvc.dispatch_rpc()`` instead.
         """
         return openerp.netsvc.dispatch_rpc(service_name, method, args)
 
     def proxy(self, service):
         """
-        Deprecated. Use ``openerp.netsvc.dispatch_rpc()`` instead.
+        .. deprecated:: 8.0
+        Use ``openerp.netsvc.dispatch_rpc()`` instead.
         """
         return Service(self, service)
 
     def assert_valid(self, force=False):
         """
-        Deprecated. Use ``check_security()`` instead.
+        .. deprecated:: 8.0
+        Use ``check_security()`` instead.
 
         Ensures this session is valid (logged into the openerp server)
         """
@@ -188,7 +187,8 @@ class OpenERPSession(object):
 
     def ensure_valid(self):
         """
-        Deprecated. Use ``check_security()`` instead.
+        .. deprecated:: 8.0
+        Use ``check_security()`` instead.
         """
         if self._uid:
             try:
@@ -198,7 +198,8 @@ class OpenERPSession(object):
 
     def execute(self, model, func, *l, **d):
         """
-        Deprecated. Use the resistry and cursor in ``openerp.addons.web.http.request`` instead.
+        .. deprecated:: 8.0
+        Use the resistry and cursor in ``openerp.addons.web.http.request`` instead.
         """
         model = self.model(model)
         r = getattr(model, func)(*l, **d)
@@ -206,7 +207,8 @@ class OpenERPSession(object):
 
     def exec_workflow(self, model, id, signal):
         """
-        Deprecated. Use the resistry and cursor in ``openerp.addons.web.http.request`` instead.
+        .. deprecated:: 8.0
+        Use the resistry and cursor in ``openerp.addons.web.http.request`` instead.
         """
         self.assert_valid()
         r = self.proxy('object').exec_workflow(self._db, self._uid, self._password, model, signal, id)
@@ -214,7 +216,8 @@ class OpenERPSession(object):
 
     def model(self, model):
         """
-        Deprecated. Use the resistry and cursor in ``openerp.addons.web.http.request`` instead.
+        .. deprecated:: 8.0
+        Use the resistry and cursor in ``openerp.addons.web.http.request`` instead.
 
         Get an RPC proxy for the object ``model``, bound to this session.
 
