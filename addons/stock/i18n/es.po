@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-10-08 12:28+0000\n"
-"PO-Revision-Date: 2012-11-09 12:05+0000\n"
+"PO-Revision-Date: 2013-06-19 11:05+0000\n"
 "Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-05-29 07:24+0000\n"
-"X-Generator: Launchpad (build 16640)\n"
+"X-Launchpad-Export-Date: 2013-06-20 05:48+0000\n"
+"X-Generator: Launchpad (build 16673)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -24,7 +24,7 @@ msgstr "Seguimiento de lotes salientes"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split_lines
 msgid "Stock move Split lines"
-msgstr "Dividir líneas de movimientos de stock"
+msgstr "Dividir líneas de movimientos de existencias"
 
 #. module: stock
 #: help:product.category,property_stock_account_input_categ:0
@@ -64,7 +64,7 @@ msgstr "Trazabilidad hacia arriba"
 #. module: stock
 #: model:ir.actions.todo.category,name:stock.category_stock_management_config
 msgid "Stock Management"
-msgstr "Gestión de stocks"
+msgstr "Gestión de existencias"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
@@ -121,7 +121,8 @@ msgstr ""
 #: code:addons/stock/wizard/stock_fill_inventory.py:59
 #, python-format
 msgid "You cannot perform this operation on more than one Stock Inventories."
-msgstr "No puedes realizar esta operación en más de un Inventario de Stock."
+msgstr ""
+"No puede realizar esta operación en más de un inventario de existencias."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_inventory_form
@@ -133,7 +134,7 @@ msgstr ""
 "Los inventarios periódicos se utilizan para contar el número de productos "
 "disponibles por ubicación. Lo puede utilizar una vez al año cuando realice "
 "el inventario general, o cuando lo necesite, para corregir el nivel actual "
-"de stock de un producto."
+"de existencias de un producto."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_change_product_qty.py:91
@@ -203,7 +204,7 @@ msgstr "Inventarios físicos"
 #: view:report.stock.move:0
 #: field:stock.change.standard.price,stock_journal:0
 msgid "Stock journal"
-msgstr "Diario de inventario"
+msgstr "Diario de existencias"
 
 #. module: stock
 #: view:report.stock.inventory:0 view:report.stock.move:0
@@ -334,14 +335,14 @@ msgstr "_Validar"
 #, python-format
 msgid "You cannot cancel picking because stock move is in done state !"
 msgstr ""
-"¡No puede cancelar el albarán porqué el movimiento de stock está en estado "
-"realizado!"
+"¡No puede cancelar el albarán porqué el movimiento de existencias está en "
+"estado realizado!"
 
 #. module: stock
 #: code:addons/stock/stock.py:768
-#: code:addons/stock/stock.py:2475
-#: code:addons/stock/stock.py:2519
-#: code:addons/stock/stock.py:2580
+#: code:addons/stock/stock.py:2473
+#: code:addons/stock/stock.py:2524
+#: code:addons/stock/stock.py:2585
 #: code:addons/stock/wizard/stock_change_product_qty.py:91
 #: code:addons/stock/wizard/stock_fill_inventory.py:124
 #: code:addons/stock/wizard/stock_inventory_merge.py:43
@@ -453,7 +454,7 @@ msgstr "Información contable"
 #. module: stock
 #: field:stock.location,stock_real_value:0
 msgid "Real Stock Value"
-msgstr "Valor stock real"
+msgstr "Valor de existencias reales"
 
 #. module: stock
 #: field:report.stock.move,day_diff2:0
@@ -474,6 +475,7 @@ msgstr "UdM"
 #: selection:report.stock.inventory,state:0
 #: selection:report.stock.move,state:0
 #: selection:stock.move,state:0
+#: report:stock.picking.list:0
 #: view:stock.production.lot:0
 #: field:stock.production.lot,stock_available:0
 msgid "Available"
@@ -588,8 +590,8 @@ msgid ""
 "There is no stock output account defined for this product or its category: "
 "\"%s\" (id: %d)"
 msgstr ""
-"No se ha definido una cuenta de salida de stock para este producto o su "
-"categoría: \"%s\" (id: %d)"
+"No se ha definido una cuenta de salida de existencias para este producto o "
+"su categoría: \"%s\" (id: %d)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree6
@@ -608,13 +610,13 @@ msgstr "Ubicación destino"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_partial_move_line
 msgid "stock.partial.move.line"
-msgstr "stock.partial.move.line"
+msgstr "Línea de movimiento parcial de existencias"
 
 #. module: stock
 #: code:addons/stock/stock.py:760
 #, python-format
 msgid "You can not process picking without stock moves"
-msgstr "No puede procesar un albarán sin movimientos de stock"
+msgstr "No puede procesar un albarán sin movimientos de existencias"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_packaging_stock_action
@@ -692,7 +694,7 @@ msgid ""
 "worker/team that should perform the operation. Examples of stock journals "
 "may be: quality control, pick lists, packing, etc."
 msgstr ""
-"El sistema de existencias diarias le permite asignar a cada operación de "
+"El sistema de existencias diarias le permite asignar cada operación de "
 "existencias a un diario específico según el tipo de operación a realizar por "
 "el trabajador/equipo que debe realizar la operación. Ejemplos de diarios de "
 "existencias pueden ser: control de calidad, listas de selección, embalaje, "
@@ -842,7 +844,7 @@ msgid ""
 msgstr ""
 "Al hacer la valoración de inventario en tiempo real, éste es el diario "
 "contable donde los asientos se crearán automáticamente cuando los "
-"movimientos de stock se procesen."
+"movimientos de existencias se procesen."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_partial_picking
@@ -857,7 +859,7 @@ msgid "Reference must be unique per Company!"
 msgstr "¡La referencia debe ser única por compañía!"
 
 #. module: stock
-#: code:addons/stock/product.py:447
+#: code:addons/stock/product.py:449
 #, python-format
 msgid "Future Receptions"
 msgstr "Recepciones futuras"
@@ -963,7 +965,7 @@ msgid "Merge Inventory"
 msgstr "Fusionar inventario"
 
 #. module: stock
-#: code:addons/stock/product.py:463
+#: code:addons/stock/product.py:465
 #, python-format
 msgid "Future P&L"
 msgstr "P&L futuras"
@@ -990,7 +992,7 @@ msgstr "Contiene"
 #. module: stock
 #: view:stock.location:0
 msgid "Stock Locations"
-msgstr "Ubicaciones stock"
+msgstr "Ubicaciones de existencias"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -1108,7 +1110,7 @@ msgstr "Albaranes confirmados"
 #. module: stock
 #: field:stock.location,stock_virtual:0
 msgid "Virtual Stock"
-msgstr "Stock virtual"
+msgstr "Existencias virtuales"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -1148,8 +1150,8 @@ msgstr "Error: Código EAN no válido"
 msgid ""
 "There is no stock output account defined for this product: \"%s\" (id: %d)"
 msgstr ""
-"No se ha definido una cuenta de salida de stock para este producto: \"%s\" "
-"(id: %d)"
+"No se ha definido una cuenta de salida de existencias para este producto: "
+"\"%s\" (id: %d)"
 
 #. module: stock
 #: field:product.template,property_stock_production:0
@@ -1243,7 +1245,7 @@ msgid "Supplier"
 msgstr "Proveedor"
 
 #. module: stock
-#: code:addons/stock/stock.py:2859
+#: code:addons/stock/stock.py:2864
 #, python-format
 msgid ""
 "In order to cancel this inventory, you must first unpost related journal "
@@ -1273,7 +1275,8 @@ msgstr ""
 #: view:stock.move:0
 msgid "Stock moves that are Available (Ready to process)"
 msgstr ""
-"Movimientos de stock que están disponibles (preparados para ser procesados)"
+"Movimientos de existencias que están disponibles (preparados para ser "
+"procesados)"
 
 #. module: stock
 #: report:stock.picking.list:0
@@ -1330,7 +1333,7 @@ msgstr "Ubicaciones de empresas"
 #: code:addons/stock/report/stock_graph.py:106
 #, python-format
 msgid "Virtual Stock (Unit)"
-msgstr "Stock virtual (Unidades)"
+msgstr "Existencias virtuales (Unidades)"
 
 #. module: stock
 #: view:report.stock.inventory:0 view:report.stock.move:0
@@ -1374,9 +1377,9 @@ msgid ""
 "location is replaced in the original move."
 msgstr ""
 "Se utiliza sólo si selecciona un tipo de ubicación encadenada.\n"
-"La opción 'Movimiento automático' creará un movimiento de stock después del "
-"actual que se validará automáticamente. Con 'Operación manual', el "
-"movimiento de stock debe ser validado por un trabajador. Con 'Mov. "
+"La opción 'Movimiento automático' creará un movimiento de existencias "
+"después del actual que se validará automáticamente. Con 'Operación manual', "
+"el movimiento de stock debe ser validado por un trabajador. Con 'Mov. "
 "automático, paso no añadido', la ubicación se reemplaza en el movimiento "
 "original."
 
@@ -1402,14 +1405,14 @@ msgid ""
 "default one, as the source location for stock moves generated by production "
 "orders"
 msgstr ""
-"Para los productos actuales, esta ubicación de stock se utilizará, en lugar "
-"de la de por defecto, como la ubicación de origen para los movimientos de "
-"stock generados por las órdenes de producción."
+"Para los productos actuales, esta ubicación de existencias se utilizará, en "
+"lugar de la de por defecto, como la ubicación de origen para los movimientos "
+"de existencias generados por las órdenes de producción."
 
 #. module: stock
 #: view:product.product:0
 msgid "Expected Stock Variations"
-msgstr "Variaciones de stock esperadas"
+msgstr "Variaciones de existencias esperadas"
 
 #. module: stock
 #: help:stock.move,price_unit:0
@@ -1535,7 +1538,7 @@ msgstr "Dividir"
 #. module: stock
 #: view:stock.picking:0
 msgid "Search Stock Picking"
-msgstr "Buscar albarán stock"
+msgstr "Buscar albarán"
 
 #. module: stock
 #: code:addons/stock/product.py:92
@@ -1561,7 +1564,7 @@ msgstr "Proveedores TI genéricos"
 #. module: stock
 #: view:stock.move:0
 msgid "Stock to be receive"
-msgstr "Stock a recibir"
+msgstr "Existencias a recibir"
 
 #. module: stock
 #: help:stock.location,valuation_out_account_id:0
@@ -1575,9 +1578,9 @@ msgstr ""
 "Usado para una valoración en tiempo real del inventario. Cuando está "
 "establecido en una ubicación virtual (no de tipo interno), esta cuenta se "
 "usará para mantener el valor de los productos que son movidos fuera de la "
-"ubicación a una ubicación interna, en lugar de la cuenta de salida de stock "
-"genérica establecida en el producto. No tiene efecto para ubicaciones "
-"internas."
+"ubicación a una ubicación interna, en lugar de la cuenta de salida de "
+"existencias genérica establecida en el producto. No tiene efecto para "
+"ubicaciones internas."
 
 #. module: stock
 #: report:stock.picking.list:0
@@ -1587,6 +1590,9 @@ msgstr "Albarán:"
 #. module: stock
 #: field:stock.inventory,date:0
 #: field:stock.move,create_date:0
+#: field:stock.picking,date:0
+#: field:stock.picking.in,date:0
+#: field:stock.picking.out,date:0
 #: field:stock.production.lot,date:0
 #: field:stock.tracking,date:0
 msgid "Creation Date"
@@ -1615,7 +1621,7 @@ msgid "Customer Location"
 msgstr "Ubicación del cliente"
 
 #. module: stock
-#: code:addons/stock/stock.py:2450
+#: code:addons/stock/stock.py:2448
 #, python-format
 msgid "You can only delete draft moves."
 msgstr "Sólo puede eliminar movimientos borrador."
@@ -1645,7 +1651,8 @@ msgstr "Información general"
 #: view:report.stock.inventory:0
 msgid "Analysis including future moves (similar to virtual stock)"
 msgstr ""
-"El análisis incluye los movimientos futuros (similar al stock virtual)"
+"El análisis incluye los movimientos futuros (similar a las existencias "
+"virtuales)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action3
@@ -1739,7 +1746,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_invoice_onshipping
 msgid "Stock Invoice Onshipping"
-msgstr "Stock factura en el envío"
+msgstr "Factura en el envío de existencias"
 
 #. module: stock
 #: help:stock.move,state:0
@@ -1751,11 +1758,11 @@ msgid ""
 " When the picking is done the state is 'Done'.              \n"
 "The state is 'Waiting' if the move is waiting for another one."
 msgstr ""
-"Cuando se crea un movimiento de stock está en estado 'Borrador'.\n"
-" Después se establece en estado 'No disponible' si el planificador no ha "
+"Cuando se crea un movimiento de existencias, está en estado 'Borrador'.\n"
+"Después, se establece en estado 'No disponible' si el planificador no ha "
 "encontrado los productos.\n"
-" Cuando los productos están reservados se establece como 'Reservado'.\n"
-" Cuando el albarán se envía el estado es 'Realizado'.              \n"
+"Cuando los productos están reservados, se establece como 'Reservado'.\n"
+"Cuando el albarán se envía, el estado es 'Realizado'.              \n"
 "El estado es 'En espera' si el movimiento está a la espera de otro."
 
 #. module: stock
@@ -1795,7 +1802,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_inventory
 msgid "Stock Statistics"
-msgstr "Estadísticas de stock"
+msgstr "Estadísticas de existencias"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -1825,7 +1832,7 @@ msgstr "Cuenta de valoracion de existencias (salida)"
 #: view:stock.move:0
 #: view:stock.production.lot:0
 msgid "Stock Moves"
-msgstr "Movimientos de stock"
+msgstr "Movimientos de existencias"
 
 #. module: stock
 #: selection:report.stock.move,type:0
@@ -1890,7 +1897,7 @@ msgid "Localization"
 msgstr "Ubicación"
 
 #. module: stock
-#: code:addons/stock/product.py:459
+#: code:addons/stock/product.py:461
 #, python-format
 msgid "Delivered Qty"
 msgstr "Ctdad enviada"
@@ -1947,7 +1954,7 @@ msgstr "Filtros extendidos..."
 #. module: stock
 #: field:stock.warehouse,lot_stock_id:0
 msgid "Location Stock"
-msgstr "Ubicación stock"
+msgstr "Ubicación de existencias"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:64
@@ -2071,9 +2078,9 @@ msgstr ""
 "Usado para una valoración en tiempo real del inventario. Cuando está "
 "establecido en una ubicación virtual (no de tipo interno), esta cuenta se "
 "usará para mantener el valor de los productos que son movidos de una "
-"ubicación interna a esta ubicación, en lugar de la cuenta de salida de stock "
-"genérica establecida en el producto. No tiene efecto para ubicaciones "
-"internas."
+"ubicación interna a esta ubicación, en lugar de la cuenta de salida de "
+"existencias genérica establecida en el producto. No tiene efecto para "
+"ubicaciones internas."
 
 #. module: stock
 #: view:stock.return.picking:0
@@ -2108,7 +2115,7 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for goods you receive from the current partner"
 msgstr ""
-"Esta ubicación de stock será utilizada, en lugar de la ubicación por "
+"Esta ubicación de existencias será utilizada, en lugar de la ubicación por "
 "defecto, como la ubicación de origen para recibir mercancías desde esta "
 "empresa"
 
@@ -2125,9 +2132,9 @@ msgid ""
 "by your products and inventory management performance."
 msgstr ""
 "El análisis de movimientos le permite analizar y verificar fácilmente los "
-"movimientos de stock de su compañía. Utilice este informe cuando quiera "
-"analizar las diferentes rutas tomadas por sus productos y el rendimiento de "
-"la gestión de su inventario."
+"movimientos de existencias de su compañía. Utilice este informe cuando "
+"quiera analizar las diferentes rutas tomadas por sus productos y el "
+"rendimiento de la gestión de su inventario."
 
 #. module: stock
 #: code:addons/stock/stock.py:2116
@@ -2163,7 +2170,7 @@ msgstr "Buscar inventario"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_tracklots
 msgid "Stock report by tracking lots"
-msgstr "Informe de stock por lotes de seguimiento"
+msgstr "Informe de existencias por lotes de seguimiento"
 
 #. module: stock
 #: code:addons/stock/stock.py:2122
@@ -2172,11 +2179,11 @@ msgid ""
 "There is no stock input account defined for this product or its category: "
 "\"%s\" (id: %d)"
 msgstr ""
-"No se ha definido una cuenta de entrada de stock para este producto o su "
-"categoría: \"%s\" (id: %d)"
+"No se ha definido una cuenta de entrada de existencias para este producto o "
+"su categoría: \"%s\" (id: %d)"
 
 #. module: stock
-#: code:addons/stock/product.py:449
+#: code:addons/stock/product.py:451
 #, python-format
 msgid "Received Qty"
 msgstr "Ctdad recibida"
@@ -2210,7 +2217,7 @@ msgstr "Nombre"
 #. module: stock
 #: view:product.product:0
 msgid "Stocks"
-msgstr "Stocks"
+msgstr "Existencias"
 
 #. module: stock
 #: help:stock.partial.move,hide_tracking:0
@@ -2229,9 +2236,9 @@ msgid ""
 "default one, as the source location for stock moves generated when you do an "
 "inventory"
 msgstr ""
-"Para los productos actuales, esta ubicación de stock se utilizará, en lugar "
-"de la por defecto, como la ubicación de origen para los movimientos de stock "
-"generados cuando realiza un inventario."
+"Para los productos actuales, esta ubicación de existencias se utilizará, en "
+"lugar de la de por defecto, como la ubicación de origen para los movimientos "
+"de existencias generados cuando realiza un inventario."
 
 #. module: stock
 #: view:report.stock.lines.date:0
@@ -2309,7 +2316,7 @@ msgstr "Coste"
 #: field:product.template,property_stock_account_input:0
 #: field:stock.change.standard.price,stock_account_input:0
 msgid "Stock Input Account"
-msgstr "Cuenta entrada stock"
+msgstr "Cuenta de entrada de existencias"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -2334,7 +2341,7 @@ msgstr "Mov. automático, paso no añadido"
 #. module: stock
 #: view:stock.location.product:0
 msgid "Stock Location Analysis"
-msgstr "Análisis ubicación stock"
+msgstr "Análisis de ubicación de existencias"
 
 #. module: stock
 #: help:stock.move,date:0
@@ -2418,7 +2425,7 @@ msgstr "Cambiar a borrador"
 #: model:ir.actions.act_window,name:stock.action_stock_journal_form
 #: model:ir.ui.menu,name:stock.menu_action_stock_journal_form
 msgid "Stock Journals"
-msgstr "Diarios de stock"
+msgstr "Diarios de existencias"
 
 #. module: stock
 #: selection:report.stock.move,type:0
@@ -2455,7 +2462,7 @@ msgid "Warehouse board"
 msgstr "Tablero almacén"
 
 #. module: stock
-#: code:addons/stock/product.py:469
+#: code:addons/stock/product.py:471
 #, python-format
 msgid "Future Qty"
 msgstr "Ctdad futura"
@@ -2488,7 +2495,8 @@ msgstr "Tipo de envío"
 #: view:stock.move:0
 msgid "Stock moves that are Confirmed, Available or Waiting"
 msgstr ""
-"Los movimientos de stock que están confirmados, disponibles o en espera."
+"Los movimientos de existencias que están confirmados, disponibles o en "
+"espera."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_location_open
@@ -2531,7 +2539,7 @@ msgstr "Ubicación donde el sistema almacenará los productos finalizados."
 #. module: stock
 #: view:stock.move:0
 msgid "Stock to be delivered (Available or not)"
-msgstr "Stock para ser entregado (disponible o no)"
+msgstr "Existencias a ser entregadas (disponibles o no)"
 
 #. module: stock
 #: view:board.board:0
@@ -2559,7 +2567,7 @@ msgstr ""
 #: model:ir.model,name:stock.model_stock_move
 #: view:stock.partial.move:0
 msgid "Stock Move"
-msgstr "Movimiento stock"
+msgstr "Movimiento de existencias"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -2578,7 +2586,7 @@ msgid "Expected date for the picking to be processed"
 msgstr "Fecha prevista para procesar el albarán."
 
 #. module: stock
-#: code:addons/stock/product.py:465
+#: code:addons/stock/product.py:467
 #, python-format
 msgid "P&L Qty"
 msgstr "Ctdad P&L"
@@ -2615,10 +2623,10 @@ msgid ""
 msgstr ""
 "Si la valoración en tiempo real está habilitada para un producto, el sistema "
 "automáticamente escribirá asientos en el diario correspondientes a los "
-"movimientos de stock. La cuenta de variación de inventario especificada en "
-"la categoría del producto representará el valor de inventario actual, y la "
-"cuenta de entrada y salida de stock contendrán las contrapartidas para los "
-"productos entrantes y salientes."
+"movimientos de existencias. La cuenta de variación de inventario "
+"especificada en la categoría del producto representará el valor de "
+"inventario actual, y la cuenta de entrada y salida de existencias contendrán "
+"las contrapartidas para los productos entrantes y salientes."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_inventory_report
@@ -2628,8 +2636,8 @@ msgid ""
 "manage your company  activities."
 msgstr ""
 "El análisis de inventario le permite verificar y analizar fácilmente los "
-"niveles de stock de su compañia. Ordene y agrupe por criterios de selección "
-"para analizar y gestionar mejor las actividades de su empresa."
+"niveles de existencias de su compañía. Ordene y agrupe por criterios de "
+"selección para analizar y gestionar mejor las actividades de su empresa."
 
 #. module: stock
 #: help:report.stock.move,location_id:0
@@ -2659,10 +2667,11 @@ msgstr ""
 "estante, caja, etc.), ubicaciones de empresa (clientes, proveedores) y "
 "ubicaciones virtuales que son la contrapartida de las operaciones de stock "
 "como los consumos por órdenes de la fabricación, inventarios, etc. Cada "
-"operación de stock en OpenERP mueve los productos de una ubicación a otra. "
-"Por ejemplo, si recibe productos de un proveedor, OpenERP moverá productos "
-"desde la ubicación del proveedor a la ubicación del stock. Cada informe "
-"puede ser realizado sobre ubicaciones físicas, de empresa o virtuales."
+"operación de existencias en OpenERP mueve los productos de una ubicación a "
+"otra. Por ejemplo, si recibe productos de un proveedor, OpenERP moverá "
+"productos desde la ubicación del proveedor a la ubicación de existencias. "
+"Cada informe puede ser realizado sobre ubicaciones físicas, de empresa o "
+"virtuales."
 
 #. module: stock
 #: view:stock.invoice.onshipping:0
@@ -2772,8 +2781,8 @@ msgid ""
 msgstr ""
 "Muestra los últimos inventarios realizados sobre sus productos y los ordena "
 "fácilmente con filtros específicos. Si realiza inventarios parciales "
-"frecuentemente, necesita este informe para asegurar que el stock de cada "
-"producto ha sido controlado al menos una vez al año."
+"frecuentemente, necesita este informe para asegurar que las existencias de "
+"cada producto han sido controladas al menos una vez al año."
 
 #. module: stock
 #: model:stock.location,name:stock.location_opening
@@ -2783,7 +2792,7 @@ msgstr "abriendo"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_product_history
 msgid "Stock Level Forecast"
-msgstr "Previsión nivel de stock"
+msgstr "Previsión niveles de existencias"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_journal
@@ -2795,7 +2804,7 @@ msgstr "Previsión nivel de stock"
 #: field:stock.picking.in,stock_journal_id:0
 #: field:stock.picking.out,stock_journal_id:0
 msgid "Stock Journal"
-msgstr "Diario de inventario"
+msgstr "Diario de existencias"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -2843,7 +2852,7 @@ msgstr "Enviar productos"
 #. module: stock
 #: view:stock.location.product:0
 msgid "View Stock of Products"
-msgstr "Ver stock de productos"
+msgstr "Ver existencias de productos"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -2926,8 +2935,8 @@ msgstr "Unidad de medida"
 msgid ""
 "There is no stock input account defined for this product: \"%s\" (id: %d)"
 msgstr ""
-"No se ha definido una cuenta de entrada de stock para este producto: \"%s\" "
-"(id: %d)"
+"No se ha definido una cuenta de entrada de existencias para este producto: "
+"\"%s\" (id: %d)"
 
 #. module: stock
 #: code:addons/stock/stock.py:2445
@@ -2939,7 +2948,7 @@ msgstr ""
 #. module: stock
 #: field:stock.location,stock_real:0
 msgid "Real Stock"
-msgstr "Stock real"
+msgstr "Existencias reales"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_fill_inventory
@@ -3126,7 +3135,7 @@ msgstr "Confirmar el inventario"
 #. module: stock
 #: view:product.category:0
 msgid "Accounting Stock Properties"
-msgstr "Propiedades contables del stock"
+msgstr "Propiedades contables de existencias"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_out
@@ -3142,6 +3151,7 @@ msgstr "Paquetes cliente"
 #: selection:stock.move,state:0
 #: view:stock.picking:0
 #: view:stock.picking.in:0
+#: report:stock.picking.list:0
 msgid "Done"
 msgstr "Realizado"
 
@@ -3209,7 +3219,7 @@ msgstr "Diario de destino"
 #: model:ir.actions.act_window,name:stock.act_stock_tracking_lot_2_stock_report_tracklots
 #: model:stock.location,name:stock.stock_location_stock
 msgid "Stock"
-msgstr "Stock"
+msgstr "Existencias"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_product
@@ -3282,7 +3292,7 @@ msgstr "Consumir productos"
 #: code:addons/stock/stock.py:1742
 #, python-format
 msgid "Insufficient Stock in Lot !"
-msgstr "¡Stock insuficiente en el lote!"
+msgstr "¡Existencias insuficientes en el lote!"
 
 #. module: stock
 #: field:stock.location,parent_right:0
@@ -3343,7 +3353,7 @@ msgstr "Asistente"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Completed Stock-Moves"
-msgstr "Movimientos de stock completados"
+msgstr "Movimientos de existencias completados"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_location_product
@@ -3373,11 +3383,11 @@ msgid ""
 msgstr ""
 "Los movimientos internos muestran todas las operaciones de inventario que se "
 "deben realizar en su almacén. Todas las operaciones pueden ser clasificadas "
-"en diarios de stock, para que cada trabajador tenga su propia lista de "
+"en diarios de existencias, para que cada trabajador tenga su propia lista de "
 "operaciones a realizar en su propio diario. La mayor parte de operaciones "
 "son preparadas automáticamente por OpenERP según sus reglas de logística "
-"preconfiguradas, pero también puede registrar operaciones de stock de forma "
-"manual."
+"preconfiguradas, pero también puede registrar operaciones de existencias de "
+"forma manual."
 
 #. module: stock
 #: view:stock.move:0
@@ -3436,7 +3446,7 @@ msgstr "Activa cuenta relacionada"
 #. module: stock
 #: field:stock.location,stock_virtual_value:0
 msgid "Virtual Stock Value"
-msgstr "Valor stock virtual"
+msgstr "Valor de las existencias virtuales"
 
 #. module: stock
 #: view:product.product:0
@@ -3470,11 +3480,11 @@ msgid ""
 "that have already been processed (except by the Administrator)"
 msgstr ""
 "Las cantidades, UdM, productos y ubicaciones no se pueden modificar en los "
-"movimientos de stock que ya han sido procesados (excepto por el "
+"movimientos de existencias que ya han sido procesados (excepto por el "
 "administrador)"
 
 #. module: stock
-#: code:addons/stock/product.py:475
+#: code:addons/stock/product.py:477
 #, python-format
 msgid "Future Productions"
 msgstr "Producciones futuras"
@@ -3610,7 +3620,7 @@ msgstr "Clientes no europeos"
 #: code:addons/stock/product.py:167
 #: code:addons/stock/report/report_stock.py:78
 #: code:addons/stock/report/report_stock.py:134
-#: code:addons/stock/stock.py:529
+#: code:addons/stock/stock.py:528
 #: code:addons/stock/stock.py:790
 #: code:addons/stock/stock.py:1190
 #: code:addons/stock/stock.py:1199
@@ -3620,7 +3630,8 @@ msgstr "Clientes no europeos"
 #: code:addons/stock/stock.py:2252
 #: code:addons/stock/stock.py:2255
 #: code:addons/stock/stock.py:2258
-#: code:addons/stock/stock.py:2585
+#: code:addons/stock/stock.py:2481
+#: code:addons/stock/stock.py:2590
 #: code:addons/stock/wizard/stock_fill_inventory.py:59
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:112
 #: code:addons/stock/wizard/stock_splitinto.py:53
@@ -3740,7 +3751,7 @@ msgid ""
 "This stock location will be used, instead of the default one, as the "
 "destination location for goods you send to this partner"
 msgstr ""
-"Esta ubicación de stock será utilizada, en lugar de la ubicación por "
+"Se utilizará esta ubicación de existencias, en lugar de la ubicación por "
 "defecto, como la ubicación de destino para enviar mercancías a esta empresa"
 
 #. module: stock
@@ -3838,7 +3849,7 @@ msgstr "Cantidad a dejar en el paquete actual"
 #. module: stock
 #: view:stock.move:0
 msgid "Stock available to be delivered"
-msgstr "Stock disponible para ser enviado"
+msgstr "Existencias disponibles para ser enviadas"
 
 #. module: stock
 #: view:stock.invoice.onshipping:0
@@ -3864,7 +3875,7 @@ msgstr "Lotes existentes"
 #. module: stock
 #: view:stock.location:0
 msgid "Stock Location"
-msgstr "Ubicación de stock"
+msgstr "Ubicación de existencias"
 
 #. module: stock
 #: help:stock.change.standard.price,new_price:0
@@ -3876,10 +3887,10 @@ msgid ""
 "stock input account will be debited."
 msgstr ""
 "Si el precio de coste se incrementa, la cuenta la variación de existencias "
-"irá al debe y la cuenta de salida de stock irá al haber con el valor = "
+"irá al debe y la cuenta de salida de existencias irá al haber con el valor = "
 "(diferencia de cantidad * cantidad disponible).\n"
 "Si el precio de coste se reduce, la cuenta la variación de existencias irá "
-"al haber y la cuenta de entrada de stock irá al debe."
+"al haber y la cuenta de entrada de existencias irá al debe."
 
 #. module: stock
 #: field:stock.location,chained_journal_id:0
@@ -3895,7 +3906,8 @@ msgstr "Albarán"
 #: code:addons/stock/stock.py:768
 #, python-format
 msgid "Not enough stock, unable to reserve the products."
-msgstr "No suficiente stock, no ha sido posible reservar los productos."
+msgstr ""
+"No hay suficientes existencias. No ha sido posible reservar los productos."
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_customers
@@ -3906,6 +3918,7 @@ msgstr "Clientes"
 #: selection:stock.move,state:0
 #: selection:stock.picking,state:0
 #: selection:stock.picking.in,state:0
+#: report:stock.picking.list:0
 #: selection:stock.picking.out,state:0
 msgid "Waiting Availability"
 msgstr "Esperando disponibilidad"
@@ -3919,7 +3932,7 @@ msgstr "está cancelado."
 #. module: stock
 #: view:stock.inventory.line:0
 msgid "Stock Inventory Lines"
-msgstr "Líneas regularización de inventario"
+msgstr "Líneas de regularización de inventario"
 
 #. module: stock
 #: view:stock.move:0
@@ -3927,7 +3940,7 @@ msgid "Waiting "
 msgstr "Esperando "
 
 #. module: stock
-#: code:addons/stock/product.py:457
+#: code:addons/stock/product.py:459
 #, python-format
 msgid "Future Deliveries"
 msgstr "Entregas futuras"
@@ -4011,7 +4024,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_fill_inventory.py:53
 #, python-format
 msgid "Stock Inventory is already Validated."
-msgstr "El Inventario de Stock está ya Validado."
+msgstr "El Inventario de existencias está ya validado."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_products_moves
@@ -4076,7 +4089,7 @@ msgstr "Borrador"
 #: model:ir.actions.report.xml,name:stock.report_stock_inventory_move
 #: report:stock.inventory.move:0
 msgid "Stock Inventory"
-msgstr "Inventario stock"
+msgstr "Inventario de existencias"
 
 #. module: stock
 #: help:report.stock.inventory,state:0
@@ -4087,10 +4100,10 @@ msgid ""
 " When the picking it done the state is 'Done'.              \n"
 "The state is 'Waiting' if the move is waiting for another one."
 msgstr ""
-"Cuando se crea un movimiento de stock está en estado 'Borrador'.\n"
-" Después se establece en estado 'Confirmado'.\n"
-" Si está reservado en stock se establece como 'Reservado'.\n"
-" Cuando el albarán se envía el estado es 'Realizado'.              \n"
+"Cuando se crea un movimiento de existencias, está en estado 'Borrador'.\n"
+"Después, se establece en estado 'Confirmado'.\n"
+"Si las existencias están disponibles, se establece como 'Disponible'.\n"
+"Cuando el albarán se envía, el estado es 'Realizado'.              \n"
 "El estado es 'En espera' si el movimiento está a la espera de otro."
 
 #. module: stock
@@ -4110,9 +4123,9 @@ msgid ""
 "For the current product, this stock location will be used, instead of the "
 "default one, as the source location for stock moves generated by procurements"
 msgstr ""
-"Para los productos actuales, esta ubicación de stock se utilizará, en lugar "
-"de la por defecto, como la ubicación de origen para los movimientos de stock "
-"generados por los abastecimientos."
+"Para los productos actuales, se utilizará esta ubicación de existencias, en "
+"lugar de la por defecto, como la ubicación de origen para los movimientos de "
+"existencias generados por los abastecimientos."
 
 #. module: stock
 #: code:addons/stock/stock.py:1410
@@ -4165,7 +4178,7 @@ msgstr ""
 "No se ha definido un diario en la categoría de producto: \"%s\" (id: %d)"
 
 #. module: stock
-#: code:addons/stock/product.py:471
+#: code:addons/stock/product.py:473
 #, python-format
 msgid "Unplanned Qty"
 msgstr "Ctdad no planificada"
@@ -4198,7 +4211,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_stock_move_futur_open
 msgid "Future Stock Moves"
-msgstr "Movimientos de stock futuros"
+msgstr "Movimientos de existencias futuros"
 
 #. module: stock
 #: field:stock.move,move_history_ids2:0
@@ -4206,10 +4219,10 @@ msgid "Move History (parent moves)"
 msgstr "Historial movimientos (mov. padres)"
 
 #. module: stock
-#: code:addons/stock/product.py:453
+#: code:addons/stock/product.py:455
 #, python-format
 msgid "Future Stock"
-msgstr "Stock futuro"
+msgstr "Existencias futuras"
 
 #. module: stock
 #: code:addons/stock/stock.py:1663
@@ -4232,7 +4245,7 @@ msgid ""
 msgstr ""
 "Esta es la estructura de los almacenes y ubicaciones de su compañía. Puede "
 "pulsar sobre una ubicación para obtener la lista de los productos y su nivel "
-"de stock en esta ubicación específica y todos sus hijas."
+"de existencias en esta ubicación específica y todas sus hijas."
 
 #. module: stock
 #: report:stock.inventory.move:0
@@ -4363,7 +4376,7 @@ msgstr ""
 #. module: stock
 #: view:report.stock.move:0
 msgid "Future Stock-Moves"
-msgstr "Movimientos de stock futuros"
+msgstr "Movimientos de existencias futuros"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split
@@ -4407,7 +4420,7 @@ msgid "Location Content"
 msgstr "Contenido ubicación"
 
 #. module: stock
-#: code:addons/stock/product.py:477
+#: code:addons/stock/product.py:479
 #, python-format
 msgid "Produced Qty"
 msgstr "Ctdad producida"
@@ -4417,7 +4430,7 @@ msgstr "Ctdad producida"
 #: field:product.template,property_stock_account_output:0
 #: field:stock.change.standard.price,stock_account_output:0
 msgid "Stock Output Account"
-msgstr "Cuenta salida stock"
+msgstr "Cuenta de salida de existencias"
 
 #. module: stock
 #: field:stock.location,chained_location_type:0
@@ -4427,7 +4440,7 @@ msgstr "Tipo ubicaciones encadenadas"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_prodlots
 msgid "Stock report by production lots"
-msgstr "Reporte de inventario por lotes de producción"
+msgstr "Informe de existencias por lotes de producción"
 
 #. module: stock
 #: view:stock.location:0
@@ -4539,7 +4552,7 @@ msgstr "¡Error! No puede crear categorías recursivas."
 #. module: stock
 #: help:stock.move,move_dest_id:0
 msgid "Optional: next stock move when chaining them"
-msgstr "Opcional: Siguiente movimiento de stock cuando se encadenan."
+msgstr "Opcional: Siguiente movimiento de existencias, cuando se encadenan."
 
 #. module: stock
 #: view:report.stock.inventory:0
