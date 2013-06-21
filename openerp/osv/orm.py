@@ -5288,6 +5288,34 @@ class BaseModel(object):
     # for backward compatibility
     resolve_o2m_commands_to_record_dicts = resolve_2many_commands
 
+    def search_read(self, cr, uid, domain=None, fields=None, offset=0, limit=None, order=None, context=None):
+        """
+        Performs a ``search()`` followed by a ``read()``.
+
+        :param cr: database cursor
+        :param user: current user id
+        :param domain: Search domain, see ``args`` parameter in ``search()``. Defaults to an empty domain that will match all records.
+        :param fields: List of fields to read, see ``fields`` parameter in ``read()``. Defaults to all fields.
+        :param offset: Number of records to skip, see ``offset`` parameter in ``search()``. Defaults to 0.
+        :param limit: Maximum number of records to return, see ``limit`` parameter in ``search()``. Defaults to no limit.
+        :param order: Columns to sort result, see ``order`` parameter in ``search()``. Defaults to no sort.
+        :param context: context arguments.
+        :return: List of dictionaries containing the asked fields.
+        :rtype: List of dictionaries.
+
+        """
+        record_ids = self.search(cr, uid, domain or [], offset, limit or False, order or False, context or {})
+        if not record_ids:
+            return []
+        result = self.read(cr, uid, record_ids, fields or [], context or {})
+        # reorder read
+        if len(result) >= 1:
+            index = {}
+            for r in result:
+                index[r['id']] = r
+            result = [index[x] for x in record_ids if x in index]
+        return result
+
     def _register_hook(self, cr):
         """ stuff to do right after the registry is built """
         pass
