@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data noupdate="1">
+        <record model="ir.module.category" id="module_goal_category">
+            <field name="name">Gamification</field>
+            <field name="description"></field>
+            <field name="sequence">17</field>
+        </record>
+        <record id="group_goal_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="category_id" ref="module_goal_category"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+        <record id="goal_user_visibility" model="ir.rule">
+            <field name="name">User can only see his/her goals or goal from the same plan in board visibility</field>
+            <field name="model_id" ref="model_gamification_goal"/>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">[
+                '|',
+                    ('user_id','=',user.id),
+                    '&amp;',
+                        ('plan_id.user_ids','in',user.id),
+                        ('plan_id.visibility_mode','=','board')]</field>
+        </record>
+    </data>
+</openerp>

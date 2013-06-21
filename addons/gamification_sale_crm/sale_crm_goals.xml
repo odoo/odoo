@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- goal types -->
+        <record model="gamification.goal.type" id="type_crm_tot_invoices">
+            <field name="name">Total Invoiced</field>
+            <field name="description"></field>
+            <field name="computation_mode">sum</field>
+            <field name="monetary">True</field>
+            <field name="model_id" eval="ref('account.model_account_invoice_report')" />
+            <field name="field_id" eval="ref('account.field_account_invoice_report_price_total')" />
+            <field name="field_date_id" eval="ref('account.field_account_invoice_report_day')" />
+            <field name="domain">[('state','!=','cancel'),('user_id','=',user.id),('type','=','out_invoice')]</field>
+        </record>
+
+        <record model="gamification.goal.type" id="type_crm_nbr_new_leads">
+            <field name="name">New Leads</field>
+            <field name="description">Based on the creation date</field>
+            <field name="computation_mode">count</field>
+            <field name="unit">leads</field>
+            <field name="model_id" eval="ref('crm.model_crm_lead')" />
+            <field name="field_date_id" eval="ref('crm.field_crm_lead_create_date')" />
+            <field name="domain">[('user_id','=',user.id),('type', '=', 'lead')]</field>
+        </record>
+
+        <record model="gamification.goal.type" id="type_crm_lead_delay_open">
+            <field name="name">Time to Qualify a Lead</field>
+            <field name="description">The average number of days to open the case (lower than)</field>
+            <field name="computation_mode">sum</field>
+            <field name="condition">lower</field>
+            <field name="unit">days</field>
+            <field name="model_id" eval="ref('crm.model_crm_lead_report')" />
+            <field name="field_id" eval="ref('crm.field_crm_lead_report_delay_close')" />
+            <field name="field_date_id" eval="ref('crm.field_crm_lead_report_date_closed')" />
+            <field name="domain">[('user_id','=',user.id),('type', '=', 'lead')]</field>
+        </record> 
+
+        <record model="gamification.goal.type" id="type_crm_lead_delay_close">
+            <field name="name">Days to Close a Deal</field>
+            <field name="description">The average number of days to close the case (lower than)</field>
+            <field name="computation_mode">sum</field>
+            <field name="condition">lower</field>
+            <field name="unit">days</field>
+            <field name="model_id" eval="ref('crm.model_crm_lead_report')" />
+            <field name="field_id" eval="ref('crm.field_crm_lead_report_delay_open')" />
+            <field name="field_date_id" eval="ref('crm.field_crm_lead_report_opening_date')" />
+            <field name="domain">[('user_id','=',user.id)]</field>
+        </record> 
+
+
+        <record model="gamification.goal.type" id="type_crm_nbr_call">
+            <field name="name">Logged Calls</field>
+            <field name="description">Log a certain number of calls to reach this goal</field>
+            <field name="computation_mode">count</field>
+            <field name="unit">calls</field>
+            <field name="model_id" eval="ref('crm.model_crm_phonecall')" />
+            <field name="field_date_id" eval="ref('crm.field_crm_phonecall_date_closed')" />
+            <field name="domain">[('user_id','=',user.id),('state','=','done')]</field>
+        </record> 
+
+        <record model="gamification.goal.type" id="type_crm_nbr_new_opportunities">
+            <field name="name">New Opportunities</field>
+            <field name="description">Based on the opening date</field>
+            <field name="computation_mode">count</field>
+            <field name="unit">opportunities</field>
+            <field name="model_id" eval="ref('crm.model_crm_lead')" />
+            <field name="field_date_id" eval="ref('crm.field_crm_lead_date_open')" />
+            <field name="domain">[('user_id','=',user.id),('type','=','opportunity')]</field>
+        </record>
+
+        <record model="gamification.goal.type" id="type_crm_nbr_sale_order_created">
+            <field name="name">New Sales Orders</field>
+            <field name="description">Based on the creation date</field>
+            <field name="computation_mode">count</field>
+            <field name="unit">orders</field>
+            <field name="model_id" eval="ref('sale.model_sale_order')" />
+            <field name="field_date_id" eval="ref('sale.field_sale_order_date_order')" />
+            <field name="domain">[('user_id','=',user.id),('state','not in',('draft', 'sent', 'cancel'))]</field>
+        </record>
+
+        <record model="gamification.goal.type" id="type_crm_nbr_paid_sale_order">
+            <field name="name">Paid Sales Orders</field>
+            <field name="description">Based on the invoice date</field>
+            <field name="computation_mode">count</field>
+            <field name="unit">orders</field>
+            <field name="model_id" eval="ref('account.model_account_invoice_report')" />
+            <field name="field_date_id" eval="ref('account.field_account_invoice_report_day')" />
+            <field name="domain">[('state','=','paid'),('user_id','=',user.id),('type','=','out_invoice')]</field>
+        </record>
+        <record model="gamification.goal.type" id="type_crm_tot_paid_sale_order">
+            <field name="name">Total Paid Sales Orders</field>
+            <field name="description">Based on the invoice date</field>
+            <field name="computation_mode">count</field>
+            <field name="monetary">True</field>
+            <field name="model_id" eval="ref('account.model_account_invoice_report')" />
+            <field name="field_id" eval="ref('account.field_account_invoice_report_price_total')" />
+            <field name="field_date_id" eval="ref('account.field_account_invoice_report_day')" />
+            <field name="domain">[('state','=','paid'),('user_id','=',user.id),('type','=','out_invoice')]</field>
+        </record>
+
+
+        <record model="gamification.goal.type" id="type_crm_nbr_customer_refunds">
+            <field name="name">Customer Refunds</field>
+            <field name="description">Refund the least customers (lower than)</field>
+            <field name="computation_mode">count</field>
+            <field name="condition">lower</field>
+            <field name="unit">invoices</field>
+            <field name="model_id" eval="ref('account.model_account_invoice_report')" />
+            <field name="field_date_id" eval="ref('account.field_account_invoice_report_day')" />
+            <field name="domain">[('state','!=','cancel'),('user_id','=',user.id),('type','=','out_refund')]</field>
+        </record>
+        <record model="gamification.goal.type" id="type_crm_tot_customer_refunds">
+            <field name="name">Total Customer Refunds</field>
+            <field name="description">The total refunded value is a negative value. Validated when higher (min refunded).</field>
+            <field name="computation_mode">sum</field>
+            <field name="condition">higher</field>
+            <field name="monetary">True</field>
+            <field name="model_id" eval="ref('account.model_account_invoice_report')" />
+            <field name="field_id" eval="ref('account.field_account_invoice_report_price_total')" />
+            <field name="field_date_id" eval="ref('account.field_account_invoice_report_day')" />
+            <field name="domain">[('state','!=','cancel'),('user_id','=',user.id),('type','=','out_refund')]</field>
+        </record>
+
+
+
+        <!-- plans -->
+        <record model="gamification.goal.plan" id="plan_crm_sale">
+            <field name="name">Monthly Sales Targets</field>
+            <field name="period">monthly</field>
+            <field name="visibility_mode">board</field>
+            <field name="autojoin_group_id" eval="ref('base.group_sale_salesman')" />
+            <field name="report_message_frequency">weekly</field>
+            <field name="report_header">The following message contains the current progress of the sale team based on several criterias. The progress is reinitialised each month and shared weekly.</field>
+        </record>
+
+        <record model="gamification.goal.plan" id="plan_crm_marketing">
+            <field name="name">Lead Acquisition</field>
+            <field name="period">monthly</field>
+            <field name="visibility_mode">progressbar</field>
+            <field name="autojoin_group_id" eval="ref('base.group_sale_salesman')" />
+            <field name="report_message_frequency">weekly</field>
+            <field name="report_header">The following message contains the current progress of the marketing team based on several criterias. The progress is reinitialised each month and shared weekly.</field>
+        </record>
+
+         <!-- planlines -->
+        <record model="gamification.goal.planline" id="planline_crm_sale1">
+            <field name="type_id" eval="ref('type_crm_tot_invoices')" />
+            <field name="target_goal">20000</field>
+            <field name="plan_id" eval="ref('plan_crm_sale')" />
+        </record>
+
+
+        <record model="gamification.goal.planline" id="planline_crm_marketing1">
+            <field name="type_id" eval="ref('type_crm_nbr_new_leads')" />
+            <field name="target_goal">7</field>
+            <field name="plan_id" eval="ref('plan_crm_marketing')" />
+            <field name="sequence">1</field>
+        </record>
+        <record model="gamification.goal.planline" id="planline_crm_marketing2">
+            <field name="type_id" eval="ref('type_crm_lead_delay_open')" />
+            <field name="target_goal">15</field>
+            <field name="plan_id" eval="ref('plan_crm_marketing')" />
+            <field name="sequence">2</field>
+        </record>
+        <record model="gamification.goal.planline" id="planline_crm_marketing3">
+            <field name="type_id" eval="ref('type_crm_nbr_new_opportunities')" />
+            <field name="target_goal">5</field>
+            <field name="plan_id" eval="ref('plan_crm_marketing')" />
+            <field name="sequence">3</field>
+        </record>
+
+    </data>
+</openerp>

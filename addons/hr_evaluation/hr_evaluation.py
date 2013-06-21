@@ -101,6 +101,8 @@ Thanks,
 class hr_employee(osv.osv):
     _name = "hr.employee"
     _inherit="hr.employee"
+    
+
     _columns = {
         'evaluation_plan_id': fields.many2one('hr_evaluation.plan', 'Appraisal Plan'),
         'evaluation_date': fields.date('Next Appraisal Date', help="The date of the next appraisal is computed by the appraisal plan's dates (first appraisal + periodicity)."),
@@ -122,6 +124,8 @@ class hr_employee(osv.osv):
             plan_id = obj_evaluation.create(cr, uid, {'employee_id': emp.id, 'plan_id': emp.evaluation_plan_id.id}, context=context)
             obj_evaluation.button_plan_in_progress(cr, uid, [plan_id], context=context)
         return True
+
+
 
 class hr_evaluation(osv.osv):
     _name = "hr_evaluation.evaluation"
