@@ -587,7 +587,7 @@ property or property parameter."),
         """
         if context is None:
             context = {}
-        return self.write(cr, uid, vals.id, {'state': 'accepted'}, context)
+        return self.write(cr, uid, ids, {'state': 'accepted'}, context)
 
     def do_decline(self, cr, uid, ids, context=None, *args):
         """
