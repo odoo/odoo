@@ -111,6 +111,13 @@
         <field name="tax_src_id" ref="gst_sale_fr"/>
     </record>
 
+    <!-- Purchases -->
+
+    <record id="fiscal_position_tax_template_intl2ab_purc_fr" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="fiscal_position_template_intl_fr"/>
+        <field name="tax_src_id" ref="gst_purc_fr"/>
+    </record>
+
     <!-- Company is in British Columbia (default is gstpst_bc) -->
 
     <!-- Sale taxes -->
