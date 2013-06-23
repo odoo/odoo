@@ -153,7 +153,7 @@
             -->
             <field name="act_from" ref="act_confirm_mto"/>
             <field name="act_to" ref="act_make_done"/>
-            <field name="condition">not check_produce() and not check_buy()</field>
+            <field name="condition">not check_produce() and not check_buy() and not check_move()</field>
         </record>
 
         <record id="trans_make_to_stock_make_done" model="workflow.transition">
