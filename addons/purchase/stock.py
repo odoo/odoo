@@ -70,7 +70,7 @@ class stock_picking(osv.osv):
 
     def get_currency_id(self, cursor, user, picking):
         if picking.purchase_id:
-            return picking.purchase_id.pricelist_id.currency_id.id
+            return picking.purchase_id.currency_id.id
         else:
             return super(stock_picking, self).get_currency_id(cursor, user, picking)
 
@@ -128,6 +128,7 @@ class stock_partial_picking(osv.osv_memory):
     # incoming pickings.
     def _product_cost_for_average_update(self, cr, uid, move):
         if move.picking_id.purchase_id:
+            #always write the cost price of products in the company currency, for easiness in further computation
             currency_obj = self.pool.get("res.currency")
             new_price = currency_obj.compute(cr, uid, move.picking_id.purchase_id.pricelist_id.currency_id.id, move.company_id.currency_id.id, 
                                                  move.purchase_line_id.price_unit, round=False)
