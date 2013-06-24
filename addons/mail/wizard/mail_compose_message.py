@@ -126,7 +126,6 @@ class mail_compose_message(osv.TransientModel):
 
     _defaults = {
         'composition_mode': 'comment',
-        'email_from': lambda self, cr, uid, ctx={}: self.pool.get('mail.mail')._get_default_from(cr, uid, context=ctx),
         'body': lambda self, cr, uid, ctx={}: '',
         'subject': lambda self, cr, uid, ctx={}: False,
         'partner_ids': lambda self, cr, uid, ctx={}: [],
@@ -158,7 +157,7 @@ class mail_compose_message(osv.TransientModel):
 
         return super(mail_compose_message, self).check_access_rule(cr, uid, ids, operation, context=context)
 
-    def _notify(self, cr, uid, newid, context=None):
+    def _notify(self, cr, uid, newid, context=None, force_send=False, user_signature=True):
         """ Override specific notify method of mail.message, because we do
             not want that feature in the wizard. """
         return
@@ -235,6 +234,9 @@ class mail_compose_message(osv.TransientModel):
         for wizard in self.browse(cr, uid, ids, context=context):
             mass_mail_mode = wizard.composition_mode == 'mass_mail'
             active_model_pool = self.pool[wizard.model if wizard.model else 'mail.thread']
+            if not hasattr(active_model_pool, 'message_post'):
+                context['thread_model'] = wizard.model
+                active_model_pool = self.pool['mail.thread']
 
             # wizard works in batch mode: [res_id] or active_ids
             res_ids = active_ids if mass_mail_mode and wizard.model and active_ids else [wizard.res_id]
@@ -257,13 +259,15 @@ class mail_compose_message(osv.TransientModel):
                         new_attach_id = ir_attachment_obj.copy(cr, uid, attach_id, {'res_model': self._name, 'res_id': wizard.id}, context=context)
                         attachment_ids.append(new_attach_id)
                     post_values['attachment_ids'] = attachment_ids
-                    post_values.update(email_dict)
                     # email_from: mass mailing only can specify another email_from
                     if email_dict.get('email_from'):
                         post_values['email_from'] = email_dict.pop('email_from')
                     # replies redirection: mass mailing only
                     if not wizard.same_thread:
                         post_values['reply_to'] = email_dict.pop('reply_to')
+                    else:
+                        email_dict.pop('reply_to')
+                    post_values.update(email_dict)
                 # clean the context (hint: mass mailing sets some default values that
                 # could be wrongly interpreted by mail_mail)
                 context.pop('default_email_to', None)
@@ -280,11 +284,10 @@ class mail_compose_message(osv.TransientModel):
                     elif mass_mail_mode:  # mass mail: is a log pushed to recipients unless specified, author not added
                         if not wizard.notify:
                             subtype = False
-                        context = dict(context, mail_create_nosubscribe=True)  # add context key to avoid subscribing the author
-                    msg_id = active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype=subtype, context=context, **post_values)
-                    # mass_mailing, post without notify: notify specific partners
-                    if mass_mail_mode and not wizard.notify and post_values['partner_ids']:
-                        self.pool.get('mail.notification')._notify(cr, uid, msg_id, post_values['partner_ids'], context=context)
+                        context = dict(context,
+                                    mail_notify_force_send=False,  # do not send emails directly but use the queue instead
+                                    mail_create_nosubscribe=True)  # add context key to avoid subscribing the author
+                    active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype=subtype, context=context, **post_values)
 
         return {'type': 'ir.actions.act_window_close'}
 

@@ -25,18 +25,14 @@ class product_category(osv.osv):
     _inherit = "product.category"
     _columns = {
         'property_account_income_categ': fields.property(
-            'account.account',
             type='many2one',
             relation='account.account',
             string="Income Account",
-            view_load=True,
             help="This account will be used for invoices to value sales."),
         'property_account_expense_categ': fields.property(
-            'account.account',  
             type='many2one',
             relation='account.account',
             string="Expense Account",
-            view_load=True,
             help="This account will be used for invoices to value expenses."),
     }
 
@@ -54,18 +50,14 @@ class product_template(osv.osv):
             'product_supplier_taxes_rel', 'prod_id', 'tax_id',
             'Supplier Taxes', domain=[('parent_id', '=', False),('type_tax_use','in',['purchase','all'])]),
         'property_account_income': fields.property(
-            'account.account',
             type='many2one',
             relation='account.account',
             string="Income Account",
-            view_load=True,
             help="This account will be used for invoices instead of the default one to value sales for the current product."),
         'property_account_expense': fields.property(
-            'account.account',
             type='many2one',
             relation='account.account',
             string="Expense Account",
-            view_load=True,
             help="This account will be used for invoices instead of the default one to value expenses for the current product."),
     }
 
