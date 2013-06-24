@@ -28,6 +28,7 @@ from tools.translate import _
 class stock_return_picking(osv.osv_memory):
     _name = 'stock.return.picking'
     _description = 'Return Picking'
+    _columns = {}
 
     def default_get(self, cr, uid, fields, context=None):
         """
