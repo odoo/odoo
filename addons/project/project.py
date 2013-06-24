@@ -46,7 +46,6 @@ class project_task_type(osv.osv):
         'project_ids': fields.many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', 'Projects'),
         'fold': fields.boolean('Folded by Default',
                         help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
-        'action': fields.text('Python Action'),
     }
     def _get_default_project_id(self, cr, uid, ctx={}):
         proj = ctx.get('default_project_id', False)
@@ -785,7 +784,6 @@ class task(base_stage, osv.osv):
         'id': fields.integer('ID', readonly=True),
         'color': fields.integer('Color Index'),
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
-        'is_close': fields.boolean('Task is Close ?'),
     }
     _defaults = {
         'stage_id': _get_default_stage_id,
@@ -925,13 +923,7 @@ class task(base_stage, osv.osv):
         if stage_ids:
             return stage_ids[0]
         return False
-
-    def action_task_close(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'is_close': True})
-
-    def action_task_open(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'is_close': False})
-
+    # TODO : Need to Clean 
     def _check_child_task(self, cr, uid, ids, context=None):
         if context == None:
             context = {}
@@ -1036,15 +1028,6 @@ class task(base_stage, osv.osv):
         self._store_history(cr, uid, [task_id], context=context)
         return task_id
 
-    def _trigger_stage_action(self, cr, uid, ids, action, context):
-        for line in action['action'].split('\n'):
-            line = line.strip()
-            if line and hasattr(self,line):
-                getattr(self,line)(cr,uid,ids,context)
-            else:
-                raise osv.except_osv(_("Warning!"), _("Invalid Python Action."))
-        return True
-
     # Overridden to reset the kanban_state to normal whenever
     # the stage (stage_id) of the task changes.
     def write(self, cr, uid, ids, vals, context=None):
@@ -1057,9 +1040,6 @@ class task(base_stage, osv.osv):
                 vals['message_follower_ids'] += [(6, 0,[follower.id]) for follower in project_id.message_follower_ids]
         if vals and not 'kanban_state' in vals and 'stage_id' in vals:
             new_stage = vals.get('stage_id')
-            action=self.pool.get('project.task.type').read(cr, uid, new_stage, ['action'],context=context)
-            if action['action']:
-               self._trigger_stage_action(cr, uid, ids, action, context)
             vals['date_end'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
             vals_reset_kstate = dict(vals, kanban_state='normal')
             for t in self.browse(cr, uid, ids, context=context):
@@ -1079,7 +1059,7 @@ class task(base_stage, osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         if context == None:
             context = {}
-        self._check_child_task(cr, uid, ids, context=context)
+#        self._check_child_task(cr, uid, ids, context=context) TODO : If child task is open then parent task should not be deleted.
         res = super(task, self).unlink(cr, uid, ids, context)
         return res
 

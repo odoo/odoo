@@ -28,12 +28,8 @@ class project_task(osv.osv):
     _columns = {
         'procurement_id': fields.many2one('procurement.order', 'Procurement', ondelete='set null'),
         'sale_line_id': fields.related('procurement_id', 'sale_line_id', type='many2one', relation='sale.order.line', store=True, string='Sales Order Line'),
+        'is_close': fields.boolean('Task is Close ?'),
     }
-
-    def action_task_close(self, cr, uid, ids, context=None):
-        res = super(project_task, self).action_task_close(cr, uid, ids,context)
-        self._validate_subflows(cr, uid, ids,context)
-        return res
 
     def _validate_subflows(self, cr, uid, ids,context):
         wf_service = netsvc.LocalService("workflow")
@@ -50,6 +46,18 @@ class project_task(osv.osv):
         res = super(project_task, self).do_cancel(cr, uid, ids, *args, **kwargs)
         self._validate_subflows(cr, uid, ids)
         return res
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if 'stage_id' in vals:
+            curr_stage = self.pool.get('project.task.type').browse(cr, uid, vals.get('stage_id'),context)
+            task = self.browse(cr, uid, ids[0],context)
+            sequence = [stage.sequence for stage in task.project_id.type_ids[-2:]]
+            if curr_stage.sequence in sequence:
+                self.write(cr, uid, ids, {'is_close': True})
+                self._validate_subflows(cr, uid, ids,context)
+            else:
+                self.write(cr, uid, ids, {'is_close': False})
+        return super(project_task, self).write(cr, uid, ids, vals, context=context)
 
 class product_product(osv.osv):
     _inherit = "product.product"

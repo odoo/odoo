@@ -685,7 +685,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             customer = partner.browse(cr, uid, partner_id, context=context)
         for lead in self.browse(cr, uid, ids, context=context):
             # avoid done / cancelled leads
-            if lead.probability == 100 or (lead.probability == 0 and lead.stage_id and lead.stage_id.sequence == 1):
+            if lead.probability == 100 or (lead.probability == 0 and lead.stage_id and lead.stage_id.sequence != 1):
                 continue
             vals = self._convert_opportunity_data(cr, uid, lead, customer, section_id, context=context)
             self.write(cr, uid, [lead.id], vals, context=context)
