@@ -163,12 +163,6 @@
             <field name="default" eval="False"/>
             <field name="description">Opportunity created</field>
         </record>
-        <record id="mt_lead_convert_to_opportunity" model="mail.message.subtype">
-            <field name="name">Lead to Opportunity</field>
-            <field name="res_model">crm.lead</field>
-            <field name="default" eval="False"/>
-            <field name="description">Lead converted into an opportunity</field>
-        </record>
         <record id="mt_lead_stage" model="mail.message.subtype">
             <field name="name">Stage Changed</field>
             <field name="res_model">crm.lead</field>
@@ -193,13 +187,6 @@
             <field name="res_model">crm.case.section</field>
             <field name="default" eval="False"/>
             <field name="parent_id" eval="ref('mt_lead_create')"/>
-            <field name="relation_field">section_id</field>
-        </record>
-        <record id="mt_salesteam_lead_opportunity" model="mail.message.subtype">
-            <field name="name">Lead to Opportunity</field>
-            <field name="default" eval="False"/>
-            <field name="res_model">crm.case.section</field>
-            <field name="parent_id" eval="ref('mt_lead_convert_to_opportunity')"/>
             <field name="relation_field">section_id</field>
         </record>
         <record id="mt_salesteam_lead_stage" model="mail.message.subtype">
