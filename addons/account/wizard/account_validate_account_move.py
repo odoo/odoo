@@ -45,7 +45,8 @@ validate_account_move()
 class validate_account_move_lines(osv.osv_memory):
     _name = "validate.account.move.lines"
     _description = "Validate Account Move Lines"
-
+    _columns = {}
+    
     def validate_move_lines(self, cr, uid, ids, context=None):
         obj_move_line = self.pool.get('account.move.line')
         obj_move = self.pool.get('account.move')
