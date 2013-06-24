@@ -602,6 +602,85 @@ openerp.web.pyeval = function (instance) {
         }
     });
 
+    // recursively wraps JS objects passed into the context to attributedicts
+    // which jsonify back to JS objects
+    var wrap = function (value) {
+        if (value === null) { return py.None; }
+
+        switch (typeof value) {
+        case 'undefined': throw new Error("No conversion for undefined");
+        case 'boolean': return py.bool.fromJSON(value);
+        case 'number': return py.float.fromJSON(value);
+        case 'string': return py.str.fromJSON(value);
+        }
+
+        switch(value.constructor) {
+        case Object: return wrapping_dict.fromJSON(value);
+        case Array: return wrapping_list.fromJSON(value);
+        }
+
+        throw new Error("ValueError: unable to wrap " + value);
+    };
+    var wrapping_dict = py.type('wrapping_dict', null, {
+        __init__: function () {
+            this._store = {};
+        },
+        __getitem__: function (key) {
+            var k = key.toJSON();
+            if (!(k in this._store)) {
+                throw new Error("KeyError: '" + k + "'");
+            }
+            return wrap(this._store[k]);
+        },
+        __getattr__: function (key) {
+            return this.__getitem__(py.str.fromJSON(key));
+        },
+        get: function () {
+            var args = py.PY_parseArgs(arguments, ['k', ['d', py.None]]);
+
+            if (!(args.k.toJSON() in this._store)) { return args.d; }
+            return this.__getitem__(args.k);
+        },
+        fromJSON: function (d) {
+            var instance = py.PY_call(wrapping_dict);
+            instance._store = d;
+            return instance;
+        },
+        toJSON: function () {
+            return this._store;
+        },
+    });
+    var wrapping_list = py.type('wrapping_list', null, {
+        __init__: function () {
+            this._store = [];
+        },
+        __getitem__: function (index) {
+            return wrap(this._store[index.toJSON()]);
+        },
+        fromJSON: function (ar) {
+            var instance = py.PY_call(wrapping_list);
+            instance._store = ar;
+            return instance;
+        },
+        toJSON: function () {
+            return this._store;
+        },
+    });
+    var wrap_context = function (context) {
+        for (var k in context) {
+            if (!context.hasOwnProperty(k)) { continue; }
+            var val = context[k];
+
+            if (val.constructor === Array) {
+                context[k] = wrapping_list.fromJSON(val);
+            } else if (val.constructor === Object
+                       && !py.PY_isInstance(val, py.object)) {
+                context[k] = wrapping_dict.fromJSON(val);
+            }
+        }
+        return context;
+    };
+
     var eval_contexts = function (contexts, evaluation_context) {
         evaluation_context = _.extend(instance.web.pyeval.context(), evaluation_context || {});
         return _(contexts).reduce(function (result_context, ctx) {
@@ -615,8 +694,8 @@ openerp.web.pyeval = function (instance) {
             var evaluated = ctx;
             switch(ctx.__ref) {
             case 'context':
-                evaluation_context.context = py.dict.fromJSON(evaluation_context);
-                evaluated = py.eval(ctx.__debug, evaluation_context);
+                evaluation_context.context = evaluation_context;
+                evaluated = py.eval(ctx.__debug, wrap_context(evaluation_context));
                 break;
             case 'compound_context':
                 var eval_context = eval_contexts([ctx.__eval_context]);
@@ -640,9 +719,9 @@ openerp.web.pyeval = function (instance) {
             }
             switch(domain.__ref) {
             case 'domain':
-                evaluation_context.context = py.dict.fromJSON(evaluation_context);
+                evaluation_context.context = evaluation_context;
                 result_domain.push.apply(
-                    result_domain, py.eval(domain.__debug, evaluation_context));
+                    result_domain, py.eval(domain.__debug, wrap_context(evaluation_context)));
                 break;
             case 'compound_domain':
                 var eval_context = eval_contexts([domain.__eval_context]);
@@ -669,8 +748,8 @@ openerp.web.pyeval = function (instance) {
             var evaluated = ctx;
             switch(ctx.__ref) {
             case 'context':
-                evaluation_context.context = py.dict.fromJSON(evaluation_context);
-                evaluated = py.eval(ctx.__debug, evaluation_context);
+                evaluation_context.context = evaluation_context;
+                evaluated = py.eval(ctx.__debug, wrap_context(evaluation_context));
                 break;
             case 'compound_context':
                 var eval_context = eval_contexts([ctx.__eval_context]);
@@ -712,7 +791,6 @@ openerp.web.pyeval = function (instance) {
     instance.web.pyeval.eval = function (type, object, context, options) {
         options = options || {};
         context = _.extend(instance.web.pyeval.context(), context || {});
-        context['context'] = py.dict.fromJSON(context);
 
         //noinspection FallthroughInSwitchStatementJS
         switch(type) {
