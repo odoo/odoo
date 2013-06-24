@@ -8,8 +8,18 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route('/', type='http', auth="db")
     def index(self, **kw):
-        with open(openerp.addons.get_module_resource('website', 'views', 'homepage.html'), 'rb') as f:
-            return f.read()
+        editable = bool(request.session._uid)
+        # WIP !!!
+        html = open(openerp.addons.get_module_resource('website', 'views', 'homepage.html'), 'rb').read()
+        if editable:
+            html = html.replace('<!--editable-->', """
+                <script type="text/javascript">
+                    $(function() {
+                        $('.editable').css('outline', '1px solid red').attr('contentEditable', 'true').find('*').click(void(0));
+                    });
+                </script>
+            """)
+        return html
 
     @http.route('/admin', type='http', auth="none")
     def admin(self, *args, **kw):
