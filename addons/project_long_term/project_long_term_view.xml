@@ -120,7 +120,8 @@
                 </field>
                 <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="inside">
                     <a t-if="record.use_phases.raw_value"
-                        name="%(act_project_phases)d" type="action">
+                        name="%(act_project_phases)d" type="action"
+                        groups="base.group_user">
                         <span t-if="record.phase_count.raw_value gt 1"><field name="phase_count"/> Phases</span>
                         <span t-if="record.phase_count.raw_value lt 2"><field name="phase_count"/> Phase</span>
                     </a>
@@ -322,7 +323,7 @@
             <field name="inherit_id" ref="project.view_task_search_form"/>
             <field name="arch" type="xml">
                 <field name="user_id" position="before">
-                    <field name="phase_id"/>
+                    <field name="phase_id" domain="[]"/>
                 </field>
             </field>
         </record>
