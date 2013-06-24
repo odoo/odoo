@@ -781,11 +781,12 @@ class mail_thread(osv.AbstractModel):
         # 3. Look for a matching mail.alias entry
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
         # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
-        rcpt_tos = ','.join([decode_header(message, 'Delivered-To'),
-                                decode_header(message, 'To'),
-                                decode_header(message, 'Cc'),
-                                decode_header(message, 'Resent-To'),
-                                decode_header(message, 'Resent-Cc')])
+        rcpt_tos = \
+             ','.join([decode_header(message, 'Delivered-To'),
+                       decode_header(message, 'To'),
+                       decode_header(message, 'Cc'),
+                       decode_header(message, 'Resent-To'),
+                       decode_header(message, 'Resent-Cc')])
         local_parts = [e.split('@')[0] for e in tools.email_split(rcpt_tos)]
         if local_parts:
             mail_alias = self.pool.get('mail.alias')
@@ -831,9 +832,8 @@ class mail_thread(osv.AbstractModel):
 
         # AssertionError if no routes found and if no bounce occured
         assert False, \
-            "Routing mail from %s to %s with Message-Id %s: no possible route found. " \
-            "Create an appropriate mail.alias or force the destination model." % \
-                (email_from, email_to, message_id)
+            "No possible route found for incoming message from %s to %s (Message-Id %s:)." \
+            "Create an appropriate mail.alias or force the destination model." % (email_from, email_to, message_id)
 
     def message_process(self, cr, uid, model, message, custom_values=None,
                         save_original=False, strip_attachments=False,
