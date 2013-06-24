@@ -150,26 +150,15 @@ class view(osv.osv):
                 frng.close()
         return self._relaxng_validator
 
-    def _check_render_view(self, cr, uid, view, context=None):
-        """Verify that the given view's hierarchy is valid for rendering, along with all the changes applied by
-           its inherited views, by rendering it using ``read_combined()``.
-           
-           @param browse_record view: view to validate
-           @return: the rendered definition (arch) of the view, always utf-8 bytestring (legacy convention)
-               if no error occurred, else False.  
-        """
-        try:
-            fvg = self.read_combined(cr, uid, view.id, view.type, view.model)
-            return fvg['arch']
-        except:
-            return False
-
     def _check_xml(self, cr, uid, ids, context=None):
         for view in self.browse(cr, uid, ids, context):
             # Sanity check: the view should not break anything upon rendering!
-            view_arch_utf8 = self._check_render_view(cr, uid, view, context=context)
-            # always utf-8 bytestring - legacy convention
-            if not view_arch_utf8: return False
+            try:
+                fvg = self.read_combined(cr, uid, view.id, view.type, view.model, context=context)
+                view_arch_utf8 = fvg['arch']
+            except Exception, e:
+                _logger.exception(e)
+                return False
 
             # RNG-based validation is not possible anymore with 7.0 forms
             # TODO 7.0: provide alternative assertion-based validation of view_arch_utf8
@@ -247,12 +236,12 @@ class view(osv.osv):
                 else view['arch'])
             descendants = self.iter(
                 cr, uid, view['id'], model, exclude_base=True, context=context)
+
+
             arch = self.apply_inherited_archs(
                 cr, uid, arch_tree, descendants,
                 model, view['id'], context=context)
 
-            if view['model'] != model:
-                context = dict(context, base_model_name=view['model'])
         except self.NoViewError:
             # defaultdict is "empty" until first __getattr__
             if fallback is None: raise
