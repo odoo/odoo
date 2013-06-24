@@ -61,14 +61,14 @@
             <field name="name">partner.view.buttons</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form" />
-            <field name="priority" eval="10"/>
+            <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='buttons']" position="inside">
                     <button type="action" string="Invoices" 
                         name="%(account.action_invoice_tree)d" 
                         context="{'search_default_partner_id': active_id,'default_partner_id': active_id}" groups="account.group_account_invoice"/>
                     <button type="action" string="Journal Items" name="%(account.action_account_moves_all_tree)d" groups="account.group_account_user"/>
-                    <button type="action" string="Contracts/Analytic Accounts" name="%(account.action_open_partner_analytic_accounts)d"
+                    <button type="action" string="Contracts" name="%(account.action_open_partner_analytic_accounts)d"
                             groups="analytic.group_analytic_accounting"/>
                 </xpath>
             </field>
@@ -96,7 +96,7 @@
             <field name="priority">2</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <page string="History" position="before" version="7.0">
+                <page name="sales_purchases" position="after" version="7.0">
                 <page string="Accounting" col="4" name="accounting" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}">
                     <group>
                         <group>

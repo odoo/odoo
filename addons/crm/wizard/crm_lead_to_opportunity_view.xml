@@ -102,7 +102,9 @@
             res_model="crm.lead2opportunity.partner.mass" src_model="crm.lead"
             view_mode="form" target="new" view_type="form"
             context="{'mass_convert' : True}"
-            view_id="view_crm_lead2opportunity_partner_mass"/>
+            view_id="view_crm_lead2opportunity_partner_mass"
+            groups="base.group_sale_salesman"
+        />
 
     </data>
 </openerp>

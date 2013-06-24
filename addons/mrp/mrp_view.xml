@@ -440,7 +440,7 @@
             <field name="model">mrp.bom</field>
             <field name="field_parent">child_complete_ids</field>
             <field name="arch" type="xml">
-                <tree string="Bill of Materials" colors="blue:method">
+                <tree string="Bill of Materials">
                     <field name="sequence" invisible="1"/>
                     <field name="name" invisible="1"/>
                     <field name="product_id"/>
@@ -448,7 +448,6 @@
                     <field name="product_uom" groups="product.group_uom"/>
                     <field name="code"/>
                     <field name="type"/>
-                    <field name="method"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
                     <field name="date_start"/>
                     <field name="date_stop"/>
@@ -460,19 +459,18 @@
             <field name="model">mrp.bom</field>
             <field name="field_parent">child_complete_ids</field>
             <field name="arch" type="xml">
-                <tree string="BoM Structure" colors="blue:method">
+                <tree string="BoM Structure">
                     <field name="sequence" invisible="1"/>
                     <field name="name" groups="base.group_no_one"/>
                     <field name="code"/>
                     <field name="product_id"/>
-                    <field name="bom_id"/>
+                    <field name="bom_id" groups="product.group_mrp_properties"/>
                     <field name="product_qty"/>
                     <field name="product_uom" groups="product.group_uom"/>
                     <field name="type"/>
-                    <field name="method"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
-                    <field name="date_start"/>
-                    <field name="date_stop"/>
+                    <field name="date_start" groups="product.group_mrp_properties"/>
+                    <field name="date_stop" groups="product.group_mrp_properties"/>
                 </tree>
             </field>
         </record>
