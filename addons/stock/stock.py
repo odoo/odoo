@@ -479,29 +479,27 @@ class stock_location(osv.osv):
 class stock_quant(osv.osv):
     """
     Quants are the smallest indivisible unit of stock
-    
     """
     _name = "stock.quant"
     _description = "Quants"
     _columns = {
-
-        'product_id': fields.many2one('product.product', 'Product', required=True), 
+        'product_id': fields.many2one('product.product', 'Product', required=True),
         'location_id': fields.many2one('stock.location', 'Location', required=True),
-        'qty': fields.float('Quantity', required=True), #should be in units of the product UoM
-        'package_id': fields.many2one('stock.quant.package'), 
-        'reservation_id': fields.many2one('stock.move', 'Stock Move'), 
-        'prodlot_id': fields.many2one('stock.production.lot', 'Serial Number'), 
-        'price_unit': fields.float('Cost price'), 
-        'create_date': fields.datetime('Created date or date the quant entered the system'), 
-        'propagated_from_id': fields.many2one('stock.quant', 'Quant', help = 'The negative quant this is coming from'), 
-        'history_ids': fields.many2many('stock.move', 'quant_move_rel', 'quant_id', 'move_id', 'Moves', help='Moves that operate(d) on this quant'), 
-        'company_id': fields.many2one('res.company', 'Company', help="The company to which the quants belong")
+        'qty': fields.float('Quantity', required=True, help='The quantity is always expressed in the product UoM'),
+        'package_id': fields.many2one('stock.quant.package'),
+        'reservation_id': fields.many2one('stock.move', 'Stock Move'),
+        'prodlot_id': fields.many2one('stock.production.lot', 'Serial Number'),
+        'price_unit': fields.float('Cost price'),
+        'create_date': fields.datetime('Created date or date the quant entered the system'),
+        'propagated_from_id': fields.many2one('stock.quant', 'Quant', help='The negative quant this is coming from'),
+        'history_ids': fields.many2many('stock.move', 'quant_move_rel', 'quant_id', 'move_id', 'Moves', help='Moves that operate(d) on this quant'),
+        'company_id': fields.many2one('res.company', 'Company', help="The company to which the quants belong"),
         #Might add date of last change of location also
         }
 
     def split_and_assign_quant(self, cr, uid, ids, move, qty, context=None):
         """
-        This method will split off the quants with the specified quantity 
+        This method will split off the quants with the specified quantity
         and assign the move to this quant by using reserved_id
         
         Should be triggered when assigning the move
@@ -3605,30 +3603,19 @@ class stock_package(osv.osv):
         (_check_location, 'All quant inside a package should share the same location', ['location_id']),
     ]
 
-#TOCHECK: i would have done a osv_memory here
 class stock_pack_operation(osv.osv):
     _name = "stock.pack.operation"
     _description = "Packing Operation"
     _columns = {
-        'name': fields.char('Package Serie', size=64, select=True),   # sequence
-        'number_of_packages': fields.integer('Number of Identical Packages'),
         'picking_id': fields.many2one('stock.picking', 'Stock Picking', help='The stock operation where the packing has been made'),
-        'result_package_ids': fields.one2many('product.quant.pack', 'pack_operation_id', 'Packages Made', help="The resulf of the packaging of this serie"),
-        'pack_operation_line_ids': fields.one2many('stock.pack.operation.line', 'operation_id', 'Operation Lines'),
-    }
-
-#TOCHECK: i would have done a osv_memory here
-class stock_pack_operation_line(osv.osv):
-    _name = "stock.pack.operation.line"
-    _description = "Packing Operation Line"
-    _columns = {
-        'operation_id': fields.many2one('stock.pack.operation', 'Operation'),
-        'product_id': fields.many2one('product.product', 'Product'),
+        'product_id': fields.many2one('product.product', 'Product'),  # 1
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
-        'package_id': fields.many2one('stock.quant.package', 'Package'),
-        'quant_id': fields.many2one('stock.quant', 'Quant'),
+        'package_id': fields.many2one('stock.quant.package', 'Package'),  # 2
+        'quant_id': fields.many2one('stock.quant', 'Quant'),  # 3
+        'result_package_id': fields.many2one('product.quant.pack', 'Packages Made', help="The resulf of the packaging.", required=False),
     }
 
-
+    def _get_barcode_and_return_todo_stuff(self, barcode_str):
+        return {'warnings': '', 'stock_move_to_update': [{}], 'package_to_update': [{}]}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
