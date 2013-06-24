@@ -3621,7 +3621,7 @@ class stock_pack_operation(osv.osv):
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'package_id': fields.many2one('stock.quant.package', 'Package'),  # 2
         'quant_id': fields.many2one('stock.quant', 'Quant'),  # 3
-        'result_package_id': fields.many2one('product.quant.pack', 'Packages Made', help="The resulf of the packaging.", required=False),
+        'result_package_id': fields.many2one('stock.quant.package', 'Package Made', help="The resulf of the packaging.", required=False),
     }
 
     def _get_barcode_and_return_todo_stuff(self, barcode_str):
