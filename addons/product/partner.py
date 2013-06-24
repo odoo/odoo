@@ -27,12 +27,10 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
     _columns = {
         'property_product_pricelist': fields.property(
-            'product.pricelist',
             type='many2one', 
             relation='product.pricelist', 
             domain=[('type','=','sale')],
             string="Sale Pricelist", 
-            view_load=True,
             help="This pricelist will be used, instead of the default one, for sales to the current partner"),
     }
 
