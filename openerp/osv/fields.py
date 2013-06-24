@@ -1382,8 +1382,10 @@ class property(function):
     def _get_by_id(self, obj, cr, uid, prop_name, ids, context=None):
         prop = obj.pool.get('ir.property')
         vids = [obj._name + ',' + str(oid) for oid in  ids]
-
-        domain = [('fields_id.model', '=', obj._name), ('fields_id.name', 'in', prop_name)]
+        def_id = self._field_get(cr, uid, obj._name, prop_name[0])
+        company = obj.pool.get('res.company')
+        cid = company._company_default_get(cr, uid, obj._name, def_id, context=context)
+        domain = [('fields_id.model', '=', obj._name), ('fields_id.name', 'in', prop_name), ('company_id', '=', cid)]
         #domain = prop._get_domain(cr, uid, prop_name, obj._name, context)
         if vids:
             domain = [('res_id', 'in', vids)] + domain

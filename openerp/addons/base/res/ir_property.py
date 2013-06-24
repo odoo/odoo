@@ -147,7 +147,8 @@ class ir_property(osv.osv):
         domain = self._get_domain(cr, uid, name, model, context=context)
         if domain is not None:
             domain = [('res_id', '=', res_id)] + domain
-            nid = self.search(cr, uid, domain, context=context)
+            #make the search with company_id asc to make sure that properties specific to a company are given first
+            nid = self.search(cr, uid, domain, limit=1, order='company_id asc', context=context)
             if not nid: return False
             record = self.browse(cr, uid, nid[0], context=context)
             return self.get_by_record(cr, uid, record, context=context)
