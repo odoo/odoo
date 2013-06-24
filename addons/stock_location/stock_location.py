@@ -95,6 +95,11 @@ class product_product(osv.osv):
             "whole location tree.")
     }
 
+
+
+
+
+
 class stock_move(osv.osv):
     _inherit = 'stock.move'
     _columns = {

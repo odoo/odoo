@@ -485,15 +485,16 @@ class stock_quant(osv.osv):
     _columns = {
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'location_id': fields.many2one('stock.location', 'Location', required=True),
-        'qty': fields.float('Quantity', required=True, help='The quantity is always expressed in the product UoM'),
-        'package_id': fields.many2one('stock.quant.package'),
-        'reservation_id': fields.many2one('stock.move', 'Stock Move'),
-        'prodlot_id': fields.many2one('stock.production.lot', 'Serial Number'),
-        'price_unit': fields.float('Cost price'),
-        'create_date': fields.datetime('Created date or date the quant entered the system'),
-        'propagated_from_id': fields.many2one('stock.quant', 'Quant', help='The negative quant this is coming from'),
-        'history_ids': fields.many2many('stock.move', 'quant_move_rel', 'quant_id', 'move_id', 'Moves', help='Moves that operate(d) on this quant'),
-        'company_id': fields.many2one('res.company', 'Company', help="The company to which the quants belong"),
+        'qty': fields.float('Quantity', required=True), #should be in units of the product UoM
+        'package_id': fields.many2one('stock.quant.package'), 
+        'reservation_id': fields.many2one('stock.move', 'Stock Move'), 
+        'prodlot_id': fields.many2one('stock.production.lot', 'Serial Number'), 
+        'price_unit': fields.float('Cost price'), 
+        'create_date': fields.datetime('Created date'), 
+        'in_date': fields.datetime('Date in', help="Date the original quant came into the system"), 
+        'propagated_from_id': fields.many2one('stock.quant', 'Quant', help = 'The negative quant this is coming from'), 
+        'history_ids': fields.many2many('stock.move', 'quant_move_rel', 'quant_id', 'move_id', 'Moves', help='Moves that operate(d) on this quant'), 
+        'company_id': fields.many2one('res.company', 'Company', help="The company to which the quants belong")
         #Might add date of last change of location also
         }
 
@@ -528,7 +529,7 @@ class stock_quant(osv.osv):
                 quants_to_reserve.append(quant.id)
             else:
                 #Split demanded qty frrm quant and add new quant to reserved
-                new_quant = self.copy(cr, uid, quant.id, default={'qty': quant_tuple[1]}, context=context)
+                new_quant = self.copy(cr, uid, quant.id, default={'qty': quant_tuple[1],'in_date': quant.create_date}, context=context)
                 new_qty = quant.qty - quant_tuple[1]
                 self.write(cr, uid, quant.id, {'qty': new_qty}, context=context)
                 quants_to_reserve.append(new_quant)
@@ -551,11 +552,12 @@ class stock_quant(osv.osv):
         res = {'refreshed_quants': []}
         qty_to_go = qty
         for quant in self.browse(cr, uid, ids, context=context):
-            propagated_quants = self.search(cr, uid, [('propagated_from_id','=',quant.id)], order = 'create_date, id') #Search quants that propagated
+            propagated_quants = self.search(cr, uid, [('propagated_from_id','=',quant.id)], order = 'in_date, id') #Search quants that propagated
             if -quant.qty < qty_to_go:
                 recon_qty = -quant.qty
                 #Remove propagated and put correct price on all propagated quants
                 self.write(cr, uid, propagated_quants, {'propagated_from_id': False, 'price_unit': price, 'history_ids': [(4, move.id)] + [(4, x.id) for x in history_moves_to_transfer]})
+                res['refreshed_quants'] += propagated_quants
                 #Remove negative quant entirely
                 self.unlink(cr, uid, [quant.id], context=context)
             else:
@@ -570,7 +572,7 @@ class stock_quant(osv.osv):
                         qty_to_go_prop -= prop_quant.qty
                     else:
                         #Split quant
-                        split_quant = self.copy(cr, uid, prop_quant.id, default = {'qty': qty_to_go_prop, 'price_unit': price}, context=context)
+                        split_quant = self.copy(cr, uid, prop_quant.id, default = {'qty': qty_to_go_prop, 'price_unit': price, 'in_date': prop_quant.create_date}, context=context)
                         res['refreshed_quants'].append(prop_quant.id)
                         self.write(cr, uid, [prop_quant.id], {'qty': prop_quant.qty - qty_to_go_prop}, context=context)
                         self.write(cr, uid, [split_quant], {'history_ids': [(4, move.id)] + [(4, x.id) for x in history_moves_to_transfer], 'propagated_from_id': False}, context=context)
@@ -618,7 +620,7 @@ class stock_quant(osv.osv):
         quants_rec = []
         uom_obj = self.pool.get("product.uom")
         #Check if negative quants in destination location: 
-        neg_quants = self.search(cr, uid, [('location_id', '=', move.location_dest_id.id), ('qty', '<', 0.0)], order = 'create_date, id') #= for location_id, no child_of?...
+        neg_quants = self.search(cr, uid, [('location_id', '=', move.location_dest_id.id), ('qty', '<', 0.0)], order = 'in_date, id') #= for location_id, no child_of?...
         product_uom_qty = uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, move.product_id.uom_id.id)
         product_uom_price = uom_obj._compute_price(cr, uid, move.product_uom.id, move.price_unit, move.product_id.uom_id.id)
         qty_to_go = product_uom_qty
@@ -631,9 +633,11 @@ class stock_quant(osv.osv):
                     'location_id': move.location_dest_id.id, 
                     'qty': product_uom_qty, 
                     'price_unit': product_uom_price, 
-                    'history_ids': [(4, move.id)]
+                    'history_ids': [(4, move.id)], 
+                    'in_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                     }
             quant_id = self.pool.get("stock.quant").create(cr, uid, vals, context=context)
+        print "Negative quants, ", quants_rec,self.filter_quants_with_out_history(cr, uid, quants_rec, context=context)
         return self.filter_quants_with_out_history(cr, uid, quants_rec, context=context)
 
 
@@ -655,7 +659,7 @@ class stock_quant(osv.osv):
             #now we need to reconcile the quant
             qty_for_reconcile = orig_quant.qty
             qty_to_go = qty_for_reconcile
-            neg_quants = self.search(cr, uid, [('location_id', '=', move.location_dest_id.id), ('qty', '<', 0.0)], order = 'create_date, id') #= for location_id, no child_of?...
+            neg_quants = self.search(cr, uid, [('location_id', '=', move.location_dest_id.id), ('qty', '<', 0.0)], order = 'in_date, id') #= for location_id, no child_of?...
             if neg_quants:
                 recres = self.reconcile_negative_quants(cr, uid, neg_quants, move, qty_to_go, orig_quant.price_unit, history_moves_to_transfer=orig_quant.history_ids ,context=context)
                 product_uom_qty = recres['amount']
@@ -688,7 +692,7 @@ class stock_quant(osv.osv):
         #TODO Normally, you should check the removal strategy now
         #But we will assume it is FIFO for the moment
         possible_quants = self.search(cr, uid, [('location_id', 'child_of', location_id), ('product_id','=',product_id), 
-                                                ('qty', '>', 0.0), ('reservation_id', '=', False)], order = 'create_date, id', context=context)
+                                                ('qty', '>', 0.0), ('reservation_id', '=', False)], order = 'in_date, id', context=context)
         qty_todo = qty
         res = []
         for quant in self.browse(cr, uid, possible_quants, context=context):
@@ -2671,6 +2675,7 @@ class stock_move(osv.osv):
                         'product_id': move.product_id.id, 
                         'location_id': move.location_id.id, 
                         'qty': -(qty_from_move - product_qty),
+                        'in_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                             }
                     quant_id_neg = quant_obj.create(cr, uid, vals_neg, context=context)
                     vals_pos = {
@@ -2678,7 +2683,8 @@ class stock_move(osv.osv):
                         'location_id': move.location_dest_id.id, 
                         'qty': qty_from_move - product_qty,
                         'history_ids': [(4, move.id)], 
-                        'propagated_from_id': quant_id_neg
+                        'propagated_from_id': quant_id_neg, 
+                        'in_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
                             }
                     quant_id_pos = quant_obj.create(cr, uid, vals_pos, context=context)
 
@@ -2716,6 +2722,7 @@ class stock_move(osv.osv):
                 self.check_total_qty(cr, uid, ids, context=context)
                 reconciled_quants = self.pool.get("stock.quant").move_quants(cr, uid, quants[move.id], move, context=context)
                 quants[move.id] += reconciled_quants
+        print "Reconciled quants", quants[move.id]
                 #Generate negative quants if necessary
         
                 
@@ -2758,7 +2765,7 @@ class stock_move(osv.osv):
 
         ids = self.pool.get("stock.quant").search(cr, uid, [])
         for x in  self.pool.get("stock.quant").browse(cr, uid, ids):
-            print (x.id, x.product_id.id, x.qty, x.price_unit, x.location_id.name)
+            print (x.id, x.product_id.id, x.qty, x.price_unit, x.location_id.name, x.in_date)
             print "     ", [(y.id, y.product_qty, y.price_unit) for y in x.history_ids]
         return True
 
@@ -3041,9 +3048,9 @@ class stock_move(osv.osv):
         if cost_method in ['fifo', 'lifo']:
             quants_dict = quant_obj.get_out_moves_from_quants(cr, uid, quants, context=context)
             for out_mov in self.browse(cr, uid, quants_dict.keys(), context=context):
-                quants_from_move = quant_obj.search(cr, uid, [('history_ids', 'in', move.id), ('propagated_from_id', '=', False)], context=context)
+                quants_from_move = quant_obj.search(cr, uid, [('history_ids', 'in', out_mov.id), ('propagated_from_id', '=', False)], context=context)
                 print "Quants from move", quants_from_move
-                out_qty_converted =  uom_obj._compute_qty(cr, uid, out_mov.product_uom.id, out_mov.qty_remaining, move.product_uom.id, round=False)
+                out_qty_converted =  uom_obj._compute_qty(cr, uid, out_mov.product_uom.id, out_mov.product_qty, move.product_uom.id, round=False)
                 amount = 0.0
                 total_price = 0.0
                 for qua in quant_obj.browse(cr, uid, quants_from_move, context=context):
