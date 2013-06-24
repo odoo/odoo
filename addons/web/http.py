@@ -946,43 +946,46 @@ class Root(object):
 
         Call the object directly.
         """
-        httprequest = werkzeug.wrappers.Request(environ)
-        httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableDict
-        httprequest.app = self
+        try:
+            httprequest = werkzeug.wrappers.Request(environ)
+            httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableDict
+            httprequest.app = self
 
-        sid = httprequest.cookies.get('sid')
-        if not sid:
-            sid = httprequest.args.get('sid')
+            sid = httprequest.cookies.get('sid')
+            if not sid:
+                sid = httprequest.args.get('sid')
 
-        session_gc(self.session_store)
+            session_gc(self.session_store)
 
-        with session_context(httprequest, self.session_store, self.session_lock, sid) as session:
-            request = self._build_request(httprequest)
-            db = request.db
+            with session_context(httprequest, self.session_store, self.session_lock, sid) as session:
+                request = self._build_request(httprequest)
+                db = request.db
 
-            if db:
-                updated = openerp.modules.registry.RegistryManager.check_registry_signaling(db)
-                if updated:
-                    with self.db_routers_lock:
-                        del self.db_routers[db]
+                if db:
+                    updated = openerp.modules.registry.RegistryManager.check_registry_signaling(db)
+                    if updated:
+                        with self.db_routers_lock:
+                            del self.db_routers[db]
 
-            with set_request(request):
-                self.find_handler()
-                result = request.dispatch()
+                with set_request(request):
+                    self.find_handler()
+                    result = request.dispatch()
 
-            if db:
-                openerp.modules.registry.RegistryManager.signal_caches_change(db)
+                if db:
+                    openerp.modules.registry.RegistryManager.signal_caches_change(db)
 
-            if isinstance(result, basestring):
-                headers=[('Content-Type', 'text/html; charset=utf-8'), ('Content-Length', len(result))]
-                response = werkzeug.wrappers.Response(result, headers=headers)
-            else:
-                response = result
+                if isinstance(result, basestring):
+                    headers=[('Content-Type', 'text/html; charset=utf-8'), ('Content-Length', len(result))]
+                    response = werkzeug.wrappers.Response(result, headers=headers)
+                else:
+                    response = result
 
-            if hasattr(response, 'set_cookie'):
-                response.set_cookie('sid', session.sid)
+                if hasattr(response, 'set_cookie'):
+                    response.set_cookie('sid', session.sid)
 
-            return response(environ, start_response)
+                return response(environ, start_response)
+        except werkzeug.exceptions.HTTPException, e:
+            return e(environ, start_response)
 
     def _build_request(self, httprequest):
         if httprequest.args.get('jsonp'):
