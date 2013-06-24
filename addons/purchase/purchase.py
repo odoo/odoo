@@ -485,6 +485,7 @@ class purchase_order(osv.osv):
             'uos_id': order_line.product_uom.id or False,
             'invoice_line_tax_id': [(6, 0, [x.id for x in order_line.taxes_id])],
             'account_analytic_id': order_line.account_analytic_id.id or False,
+            'purchase_line_id': order_line.id,
         }
 
     def action_cancel_draft(self, cr, uid, ids, context=None):
@@ -633,6 +634,7 @@ class purchase_order(osv.osv):
         }
 
     def _prepare_order_line_move(self, cr, uid, order, order_line, picking_id, context=None):
+        ''' prepare the stock move data from the PO line '''
         return {
             'name': order_line.name or '',
             'product_id': order_line.product_id.id,
@@ -869,7 +871,7 @@ class purchase_order_line(osv.osv):
         'invoice_lines': fields.many2many('account.invoice.line', 'purchase_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.boolean('Invoiced', readonly=True),
         'partner_id': fields.related('order_id','partner_id',string='Partner',readonly=True,type="many2one", relation="res.partner", store=True),
-        'date_order': fields.related('order_id','date_order',string='Order Date',readonly=True,type="date")
+        'date_order': fields.related('order_id','date_order',string='Order Date',readonly=True,type="date"),
 
     }
     _defaults = {
@@ -1246,5 +1248,13 @@ class account_invoice(osv.Model):
             purchase_order_obj.message_post(cr, uid, po_ids, body=_("Invoice paid"), context=context)
         return res
 
+class account_invoice_line(osv.Model):
+    """ Override account_invoice_line to add the link to the purchase order line it is related to"""
+    _inherit = 'account.invoice.line'
+    _columns = {
+        'purchase_line_id': fields.many2one('purchase.order.line',
+            'Purchase Order Line', ondelete='set null', select=True,
+            readonly=True),
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
