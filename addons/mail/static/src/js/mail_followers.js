@@ -195,7 +195,6 @@ openerp_mail_followers = function(session, mail) {
             // clean and display title
             var node_user_list = this.$('.oe_follower_list').empty();
             this.$('.oe_follower_title').html(this._format_followers(this.followers.length));
-
             // truncate number of displayed followers
             var truncated = this.followers.slice(0, this.displayed_nb);
             _(truncated).each(function (record) {
