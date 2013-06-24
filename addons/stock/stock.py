@@ -1868,6 +1868,7 @@ class stock_move(osv.osv):
         'scrapped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scrapped', readonly=True),
         'type': fields.related('picking_id', 'type', type='selection', selection=[('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], string='Shipping Type'),
         'reserved_quant_ids': fields.one2many('stock.quant', 'reservation_id', 'Reserved quants'), 
+        'remaining_qty': fields.float('Remaining Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), states={'done': [('readonly', True)]}),  # to be used in pick/pack new interface
     }
 
     def _check_location(self, cr, uid, ids, context=None):
@@ -3630,6 +3631,25 @@ class stock_pack_operation(osv.osv):
         'result_package_id': fields.many2one('stock.quant.package', 'Package Made', help="The resulf of the packaging.", required=False),
     }
 
-    def _get_barcode_and_return_todo_stuff(self, barcode_str):
-        return {'warnings': '', 'stock_move_to_update': [{}], 'package_to_update': [{}]}
+    _defaults = {
+    }
+
+    def action_done(self, cr, uid, ids, context=None):
+        pass
+        #return next_picking_id
+
+    def action_pack(self, cr, uid, ids, context=None):
+        pass
+        #return {'warnings': '', 'stock_move_to_update': [{}], 'package_to_update': [{}]}
+
+    def action_plus(self, cr, uid, ids, context=None):
+        pass
+        #return {'warnings': '', 'stock_move_to_update': [{}], 'package_to_update': [{}]}
+
+    def action_minus(self, cr, uid, ids, context=None):
+        pass
+        #return {'warnings': '', 'stock_move_to_update': [{}], 'package_to_update': [{}]}
+
+    def get_barcode_and_return_todo_stuff(self, barcode_str):
+        return {'warnings': 'You shall not pass!', 'stock_move_to_update': [{'id': 1, 'remaining_qty': 0}], 'package_to_update': [{}]}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
