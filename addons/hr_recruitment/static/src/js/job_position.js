@@ -40,7 +40,7 @@ openerp.hr_recruitment = function (openerp) {
                 if (!self.$el.find(".oe_justgage_edit").size()) {
                     var $svg = self.$el.find('svg');
                     $div = $('<div class="oe_justgage_edit" style="text-align: center; z-index: 1; position: absolute; width: ' + $svg.outerWidth() + 'px; top: ' + ($svg.outerHeight()/2+20) + 'px;"/>');
-                    $input = $('<input style="text-align: center; width: ' + ($svg.outerWidth()/2) + 'px; margin: auto;"/>').val(value);
+                    $input = $('<input style="text-align: center; width: ' + ($svg.outerWidth()/2) + 'px; margin: auto;"/>').val(parent.values.no_of_recruitment.value);
                     $div.append($input);
                     self.$el.prepend($div)
                     $input.focus()

@@ -485,6 +485,12 @@
         <field name="default" eval="False"/>
         <field name="description">Applicant refused</field>
     </record>
+    <record id="mt_job_applicant_stage" model="mail.message.subtype">
+        <field name="name">Application Stage Changed</field>
+        <field name="res_model">hr.job</field>
+        <field name="parent_id" eval="ref('mt_stage_changed')"/>
+        <field name="relation_field">job_id</field>
+    </record>
     <!-- Applicant Categories(Tag) -->
     <record id="tag_applicant_reserve" model="hr.applicant_category">
         <field name="name">Reserve</field>

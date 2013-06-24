@@ -156,7 +156,7 @@ class hr_job(osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('state') == 'recruit':
-            self.message_post(cr, uid, ids, body=_('job in <b>Recruitment</b> Stage'), subtype="hr.mt_job_recruit", context=context)
+            self.message_post(cr, uid, ids, body=_('job in <b>Recruitment</b> Stage'), context=context)
         return super(hr_job, self).write(cr, uid, ids, vals, context=context)
 
 class hr_employee(osv.osv):
