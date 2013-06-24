@@ -22,7 +22,7 @@
 import time
 
 from openerp.osv import osv, fields
-from openerp.osv.orm import browse_record
+from openerp.osv.orm import browse_record, browse_null
 from openerp.tools.misc import attrgetter
 
 # -------------------------------------------------------------------------
@@ -32,27 +32,10 @@ from openerp.tools.misc import attrgetter
 class ir_property(osv.osv):
     _name = 'ir.property'
 
-    def _models_field_get(self, cr, uid, field_key, field_value, context=None):
-        get = attrgetter(field_key, field_value)
-        obj = self.pool.get('ir.model.fields')
-        ids = obj.search(cr, uid, [], context=context)
-        res = set()
-        for o in obj.browse(cr, uid, ids, context=context):
-            res.add(get(o))
-        return list(res)
-
-    def _models_get(self, cr, uid, context=None):
-        return self._models_field_get(cr, uid, 'model', 'model_id.name', context)
-
-    def _models_get2(self, cr, uid, context=None):
-        return self._models_field_get(cr, uid, 'relation', 'relation', context)
-
-
     _columns = {
         'name': fields.char('Name', size=128, select=1),
 
-        'res_id': fields.reference('Resource', selection=_models_get, size=128,
-                                   help="If not set, acts as a default value for new resources", select=1),
+        'res_id': fields.char('Resource', size=128, help="If not set, acts as a default value for new resources", select=1),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'fields_id': fields.many2one('ir.model.fields', 'Field', ondelete='cascade', required=True, select=1),
 
@@ -60,7 +43,7 @@ class ir_property(osv.osv):
         'value_integer' : fields.integer('Value'),
         'value_text' : fields.text('Value'), # will contain (char, text)
         'value_binary' : fields.binary('Value'),
-        'value_reference': fields.reference('Value', selection=_models_get2, size=128),
+        'value_reference': fields.char('Value', size=128),
         'value_datetime' : fields.datetime('Value'),
 
         'type' : fields.selection([('char', 'Char'),
@@ -128,7 +111,6 @@ class ir_property(osv.osv):
         values[field] = value
         return values
 
-
     def write(self, cr, uid, ids, values, context=None):
         return super(ir_property, self).write(cr, uid, ids, self._update_values(cr, uid, ids, values), context=context)
 
@@ -147,7 +129,10 @@ class ir_property(osv.osv):
         elif record.type == 'binary':
             return record.value_binary
         elif record.type == 'many2one':
-            return record.value_reference
+            if not record.value_reference:
+                return browse_null()
+            model, resource_id = record.value_reference.split(',')
+            return self.pool.get(model).browse(cr, uid, int(resource_id), context=context)
         elif record.type == 'datetime':
             return record.value_datetime
         elif record.type == 'date':
