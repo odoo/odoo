@@ -55,6 +55,7 @@ class ir_property(osv.osv):
                                    ('many2one', 'Many2One'),
                                    ('date', 'Date'),
                                    ('datetime', 'DateTime'),
+                                   ('selection', 'Selection'),
                                   ],
                                   'Type',
                                   required=True,
@@ -89,6 +90,7 @@ class ir_property(osv.osv):
             'many2one': 'value_reference',
             'date' : 'value_datetime',
             'datetime' : 'value_datetime',
+            'selection': 'value_text',
         }
         field = type2field.get(type_)
         if not field:
@@ -118,7 +120,7 @@ class ir_property(osv.osv):
         return super(ir_property, self).create(cr, uid, self._update_values(cr, uid, None, values), context=context)
 
     def get_by_record(self, cr, uid, record, context=None):
-        if record.type in ('char', 'text'):
+        if record.type in ('char', 'text', 'selection'):
             return record.value_text
         elif record.type == 'float':
             return record.value_float
