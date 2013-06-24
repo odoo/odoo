@@ -86,9 +86,8 @@ TESTING = Template(u"""<!DOCTYPE html>
 """, default_filters=['h'])
 
 class TestRunnerController(http.Controller):
-    _cp_path = '/web/tests'
 
-    @http.httprequest
+    @http.route('/web/tests', type='http', auth="none")
     def index(self, req, mod=None, **kwargs):
         ms = module.get_modules()
         manifests = dict(
