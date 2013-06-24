@@ -574,6 +574,7 @@ class product_category(osv.osv):
 
     _inherit = 'product.category'
     _columns = {
+        'removal_strategy': fields.selection([('fifo', 'FIFO'), ('lifo', 'LIFO'), ('nearest', 'Nearest Location')], "Picking Strategy"),
         'property_stock_journal': fields.property(
             relation='account.journal',
             type='many2one',
