@@ -25,7 +25,6 @@ import dateutil
 import email
 import logging
 import pytz
-import re
 import time
 import xmlrpclib
 from email.message import Message
@@ -258,7 +257,6 @@ class mail_thread(osv.AbstractModel):
 
     def _search_is_follower(self, cr, uid, obj, name, args, context):
         """Search function for message_is_follower"""
-        fol_obj = self.pool.get('mail.followers')
         res = []
         for field, operator, value in args:
             assert field == name
@@ -462,9 +460,6 @@ class mail_thread(osv.AbstractModel):
             return [('message_unread', '=', True)]
         return []
 
-    # def _get_model(self, cr, uid, context=None):
-    #     return if self._name == 'mail.thread'
-
     def _garbage_collect_attachments(self, cr, uid, context=None):
         """ Garbage collect lost mail attachments. Those are attachments
             - linked to res_model 'mail.compose.message', the composer wizard
@@ -597,6 +592,118 @@ class mail_thread(osv.AbstractModel):
         s = ', '.join([decode(message.get(h)) for h in header_fields if message.get(h)])
         return filter(lambda x: x, self._find_partner_from_emails(cr, uid, None, tools.email_split(s), context=context))
 
+    def message_route_verify(self, cr, uid, message, message_dict, route, update_author=True, assert_model=True, create_fallback=True, context=None):
+        """ Verify route validity. Check and rules:
+            1 - if thread_id -> check that document effectively exists; otherwise
+                fallback on a message_new by resetting thread_id
+            2 - check that message_update exists if thread_id is set; or at least
+                that message_new exist
+            [ - find author_id if udpate_author is set]
+            3 - if there is an alias, check alias_contact:
+                'followers' and thread_id:
+                    check on target document that the author is in the followers
+                'followers' and alias_parent_thread_id:
+                    check on alias parent document that the author is in the
+                    followers
+                'partners': check that author_id id set
+        """
+
+        assert isinstance(route, (list, tuple)), 'A route should be a list or a tuple'
+        assert len(route) == 5, 'A route should contain 5 elements: model, thread_id, custom_values, uid, alias record'
+
+        message_id = message.get('Message-Id')
+        email_from = decode_header(message, 'From')
+        author_id = message_dict.get('author_id')
+        model, thread_id, alias = route[0], route[1], route[4]
+        model_pool = None
+
+        def _create_bounce_email():
+            mail_mail = self.pool.get('mail.mail')
+            mail_id = mail_mail.create(cr, uid, {
+                            'body_html': '<div><p>Hello,</p>'
+                                '<p>The following email sent to %s cannot be accepted because this is '
+                                'a private email address. Only allowed people can contact us at this address.</p></div>'
+                                '<blockquote>%s</blockquote>' % (message.get('to'), message_dict.get('body')),
+                            'subject': 'Re: %s' % message.get('subject'),
+                            'email_to': message.get('from'),
+                            'auto_delete': True,
+                        }, context=context)
+            mail_mail.send(cr, uid, [mail_id], context=context)
+
+        def _warn(message):
+            _logger.warning('Routing mail with Message-Id %s: route %s: %s',
+                                message_id, route, message)
+
+        # Wrong model
+        if model and not model in self.pool:
+            if assert_model:
+                assert model in self.pool, 'Routing: unknown target model %s' % model
+            _warn('unknown target model %s' % model)
+            return ()
+        elif model:
+            model_pool = self.pool[model]
+
+        # Private message: should not contain any thread_id
+        if not model and thread_id:
+            if assert_model:
+                assert thread_id == 0, 'Routing: posting a message without model should be with a null res_id (private message).'
+            _warn('posting a message without model should be with a null res_id (private message), resetting thread_id')
+            thread_id = 0
+
+        # Existing Document: check if exists; if not, fallback on create if allowed
+        if thread_id and not model_pool.exists(cr, uid, thread_id):
+            if create_fallback:
+                _warn('reply to missing document (%s,%s), fall back on new document creation' % (model, thread_id))
+                thread_id = None
+            elif assert_model:
+                assert model_pool.exists(cr, uid, thread_id), 'Routing: reply to missing document (%s,%s)' % (model, thread_id)
+            else:
+                _warn('reply to missing document (%s,%s), skipping' % (model, thread_id))
+                return ()
+
+        # Existing Document: check model accepts the mailgateway
+        if thread_id and not hasattr(model_pool, 'message_update'):
+            if create_fallback:
+                _warn('model %s does not accept document update, fall back on document creation' % model)
+                thread_id = None
+            elif assert_model:
+                assert hasattr(model_pool, 'message_update'), 'Routing: model %s does not accept document update, crashing' % model
+            else:
+                _warn('model %s does not accept document update, skipping' % model)
+                return ()
+
+        # New Document: check model accepts the mailgateway
+        if not thread_id and not hasattr(model_pool, 'message_new'):
+            if assert_model:
+                assert hasattr(model_pool, 'message_new'), 'Model %s does not accept document creation, crashing' % model
+            _warn('model %s does not accept document creation, skipping' % model)
+            return ()
+
+        # Update message author if asked
+        # We do it now because we need it for aliases (contact settings)
+        if not author_id and update_author:
+            author_ids = self._find_partner_from_emails(cr, uid, thread_id, [email_from], model=model, context=context)
+            if author_ids:
+                author_id = author_ids[0]
+                message_dict['author_id'] = author_id
+
+        # Alias: check alias_contact settings
+        if alias and alias.alias_contact == 'followers' and (thread_id or alias.alias_parent_thread_id):
+            if thread_id:
+                obj = self.pool[model].browse(cr, uid, thread_id, context=context)
+            else:
+                obj = self.pool[alias.alias_parent_model_id.model].browse(cr, uid, alias.alias_parent_thread_id, context=context)
+            if not author_id or not author_id in [fol.id for fol in obj.message_follower_ids]:
+                _warn('alias %s restricted to internal followers, skipping' % alias.alias_name)
+                _create_bounce_email()
+                return ()
+        elif alias and alias.alias_contact == 'partners' and not author_id:
+            _warn('alias %s does not accept unknown author, skipping' % alias.alias_name)
+            _create_bounce_email()
+            return ()
+
+        return (model, thread_id, route[2], route[3], route[4])
+
     def message_route(self, cr, uid, message, message_dict, model=None, thread_id=None,
                       custom_values=None, context=None):
         """Attempt to figure out the correct target model, thread_id,
@@ -616,8 +723,8 @@ class mail_thread(osv.AbstractModel):
                 provided.
              4. If all the above fails, raise an exception.
 
-           :param dict message_dict: dictionary holding message variables
            :param string message: an email.message instance
+           :param dict message_dict: dictionary holding message variables
            :param string model: the fallback model to use if the message
                does not match any of the currently configured mail aliases
                (may be None if a matching alias is supposed to be present)
@@ -628,12 +735,10 @@ class mail_thread(osv.AbstractModel):
            :param int thread_id: optional ID of the record/thread from ``model``
                to which this mail should be attached. Only used if the message
                does not reply to an existing thread and does not match any mail alias.
-           :return: list of [model, thread_id, custom_values, user_id]
+           :return: list of [model, thread_id, custom_values, user_id, alias]
         """
         assert isinstance(message, Message), 'message must be an email.message.Message at this point'
-        found_routes = []
         fallback_model = model
-        avoid_assert = False
 
         # Get email.message.Message variables for future processing
         message_id = message.get('Message-Id')
@@ -642,26 +747,6 @@ class mail_thread(osv.AbstractModel):
         references = decode_header(message, 'References')
         in_reply_to = decode_header(message, 'In-Reply-To')
         thread_references = references or in_reply_to
-        # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
-        # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
-        rcpt_tos = ','.join([decode_header(message, 'Delivered-To'),
-                                decode_header(message, 'To'),
-                                decode_header(message, 'Cc'),
-                                decode_header(message, 'Resent-To'),
-                                decode_header(message, 'Resent-Cc')])
-
-        def create_bounce_email():
-            mail_mail = self.pool.get('mail.mail')
-            mail_id = mail_mail.create(cr, uid, {
-                                'body_html': '<div><p>Hello,</p>'
-                                    '<p>The following email sent to %s cannot be accepted because this is '
-                                    'a private email address. Only allowed people can contact us at this address.</p></div>'
-                                    '<blockquote>%s</blockquote>' % (message.get('to'), message_dict.get('body')),
-                                'subject': 'Re: %s' % message.get('subject'),
-                                'email_to': message.get('from'),
-                                'auto_delete': True,
-                            }, context=context)
-            mail_mail.send(cr, uid, [mail_id], context=context)
 
         # 1. Reply to an existing thread
         ref_match = thread_references and tools.reference_re.search(thread_references)
@@ -673,10 +758,13 @@ class mail_thread(osv.AbstractModel):
                 if model_obj.exists(cr, uid, thread_id) and hasattr(model_obj, 'message_update'):
                     _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to model: %s, thread_id: %s, custom_values: %s, uid: %s',
                                     email_from, email_to, message_id, model, thread_id, custom_values, uid)
-                    found_routes = [(model, thread_id, custom_values, uid, None)]
+                    route = self.message_route_verify(cr, uid, message, message_dict,
+                                    (model, thread_id, custom_values, uid, None),
+                                    update_author=True, assert_model=True, create_fallback=True, context=context)
+                    return route and [route] or []
 
         # 2. Reply to a private message
-        if not found_routes and in_reply_to:
+        if in_reply_to:
             message_ids = self.pool.get('mail.message').search(cr, uid, [
                                 ('message_id', '=', in_reply_to),
                                 '!', ('message_id', 'ilike', 'reply_to')
@@ -685,96 +773,67 @@ class mail_thread(osv.AbstractModel):
                 message = self.pool.get('mail.message').browse(cr, uid, message_ids[0], context=context)
                 _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to a private message: %s, custom_values: %s, uid: %s',
                                 email_from, email_to, message_id, message.id, custom_values, uid)
-                found_routes = [(message.model, message.res_id, custom_values, uid, None)]
+                route = self.message_route_verify(cr, uid, message, message_dict,
+                                (message.model, message.res_id, custom_values, uid, None),
+                                update_author=True, assert_model=True, create_fallback=True, context=context)
+                return route and [route] or []
 
         # 3. Look for a matching mail.alias entry
+        # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
+        # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
+        rcpt_tos = ','.join([decode_header(message, 'Delivered-To'),
+                                decode_header(message, 'To'),
+                                decode_header(message, 'Cc'),
+                                decode_header(message, 'Resent-To'),
+                                decode_header(message, 'Resent-Cc')])
         local_parts = [e.split('@')[0] for e in tools.email_split(rcpt_tos)]
-        if not found_routes and local_parts:
+        if local_parts:
             mail_alias = self.pool.get('mail.alias')
             alias_ids = mail_alias.search(cr, uid, [('alias_name', 'in', local_parts)])
-            for alias in mail_alias.browse(cr, uid, alias_ids, context=context):
-                user_id = alias.alias_user_id.id
-                if not user_id:
-                    # TDE note: this could cause crashes, because no clue that the user
-                    # that send the email has the right to create or modify a new document
-                    # Fallback on user_id = uid
-                    # Note: recognized partners will be added as followers anyway
-                    # user_id = self._message_find_user_id(cr, uid, message, context=context)
-                    user_id = uid
-                    _logger.info('No matching user_id for the alias %s', alias.alias_name)
-                found_routes.append((alias.alias_model_id.model, alias.alias_force_thread_id, eval(alias.alias_defaults), user_id, alias))
-            if found_routes:
-                _logger.info('Routing mail from %s to %s with Message-Id %s: direct alias match: %r',
-                                email_from, email_to, message_id, found_routes)
+            if alias_ids:
+                routes = []
+                for alias in mail_alias.browse(cr, uid, alias_ids, context=context):
+                    user_id = alias.alias_user_id.id
+                    if not user_id:
+                        # TDE note: this could cause crashes, because no clue that the user
+                        # that send the email has the right to create or modify a new document
+                        # Fallback on user_id = uid
+                        # Note: recognized partners will be added as followers anyway
+                        # user_id = self._message_find_user_id(cr, uid, message, context=context)
+                        user_id = uid
+                        _logger.info('No matching user_id for the alias %s', alias.alias_name)
+                    route = (alias.alias_model_id.model, alias.alias_force_thread_id, eval(alias.alias_defaults), user_id, alias)
+                    _logger.info('Routing mail from %s to %s with Message-Id %s: direct alias match: %r',
+                                email_from, email_to, message_id, route)
+                    route = self.message_route_verify(cr, uid, message, message_dict, route,
+                                update_author=True, assert_model=True, create_fallback=True, context=context)
+                    if route:
+                        routes.append(route)
+                return routes
 
         # 4. Fallback to the provided parameters, if they work
-        if not found_routes:
-            if not thread_id:
-                # Legacy: fallback to matching [ID] in the Subject
-                match = tools.res_re.search(decode_header(message, 'Subject'))
-                thread_id = match and match.group(1)
-                # Convert into int (bug spotted in 7.0 because of str)
-                try:
-                    thread_id = int(thread_id)
-                except:
-                    thread_id = False
-            found_routes = [(fallback_model, thread_id, custom_values, uid, None)]
-            _logger.info('Routing mail from %s to %s with Message-Id %s: fallback to model:%s, thread_id:%s, custom_values:%s, uid:%s',
-                        email_from, email_to, message_id, fallback_model, thread_id, custom_values, uid)
-
-        # Post-process routes
-        valid_routes = []
-        author_id = False
-        for route in found_routes:
-            model, thread_id, alias = route[0], route[1], route[4]
-            model_pool = self.pool.get(model)
-
-            # check related document effectively exists
-            if thread_id and not model_pool.exists(cr, uid, thread_id):
-                _logger.warning('Routing mail with Message-Id %s: route %s: reply to missing document %s, ignoring and creating new document instead',
-                                    message_id, route, thread_id)
-                thread_id = None
-            # check model accepts the mailgateway
-            if not (thread_id and hasattr(model_pool, 'message_update')) and not (hasattr(model_pool, 'message_new')):
-                _logger.warning('Routing mail with Message-Id %s: route %s: model %s does not accept unknown emails, skipping',
-                                    message_id, route, model)
-                continue
-
-            # check for author
-            if not author_id:
-                author_ids = model_pool._find_partner_from_emails(cr, uid, thread_id, [email_from], context=context)
-                if author_ids:
-                    author_id = author_ids[0]
-                    message_dict['author_id'] = author_id
-
-            # route contact settings
-            if alias and alias.alias_contact == 'followers' and (thread_id or alias.alias_parent_thread_id):
-                if thread_id:
-                    obj = self.pool[model].browse(cr, uid, thread_id, context=context)
-                else:
-                    obj = self.pool[alias.alias_parent_model_id.model].browse(cr, uid, alias.alias_parent_thread_id, context=context)
-                if not author_id or not author_id in [fol.id for fol in obj.message_follower_ids]:
-                    _logger.warning('Routing mail with Message-Id %s: route %s: alias %s restricted to internal followers, skipping',
-                                        message_id, route, alias.alias_name)
-                    create_bounce_email()
-                    avoid_assert = True
-                    continue
-            elif alias and alias.alias_contact == 'partners' and not author_id:
-                _logger.warning('Routing mail with Message-Id %s: route %s: alias %s does not accept unknown sender, skipping',
-                                    message_id, route, alias.alias_name)
-                create_bounce_email()
-                avoid_assert = True
-                continue
-
-            # update route
-            valid_routes.append((model, thread_id, route[2], route[3]))
+        if not thread_id:
+            # Legacy: fallback to matching [ID] in the Subject
+            match = tools.res_re.search(decode_header(message, 'Subject'))
+            thread_id = match and match.group(1)
+            # Convert into int (bug spotted in 7.0 because of str)
+            try:
+                thread_id = int(thread_id)
+            except:
+                thread_id = False
+        _logger.info('Routing mail from %s to %s with Message-Id %s: fallback to model:%s, thread_id:%s, custom_values:%s, uid:%s',
+                    email_from, email_to, message_id, fallback_model, thread_id, custom_values, uid)
+        route = self.message_route_verify(cr, uid, message, message_dict,
+                        (fallback_model, thread_id, custom_values, uid, None),
+                        update_author=True, assert_model=True, context=context)
+        if route:
+            return [route]
 
         # AssertionError if no routes found and if no bounce occured
-        assert valid_routes or avoid_assert, \
+        assert False, \
             "Routing mail from %s to %s with Message-Id %s: no possible route found. " \
             "Create an appropriate mail.alias or force the destination model." % \
                 (email_from, email_to, message_id)
-        return valid_routes
 
     def message_process(self, cr, uid, model, message, custom_values=None,
                         save_original=False, strip_attachments=False,
@@ -840,9 +899,9 @@ class mail_thread(osv.AbstractModel):
                 return False
 
         # find possible routes for the message
-        thread_id = False
         routes = self.message_route(cr, uid, msg_txt, msg, model, thread_id, custom_values, context=context)
-        for model, thread_id, custom_values, user_id in routes:
+        thread_id = False
+        for model, thread_id, custom_values, user_id, alias in routes:
             if self._name == 'mail.thread':
                 context.update({'thread_model': model})
             if model:
@@ -1097,8 +1156,7 @@ class mail_thread(osv.AbstractModel):
                 self._message_add_suggested_recipient(cr, uid, result, obj, partner=obj.user_id.partner_id, reason=self._all_columns['user_id'].column.string, context=context)
         return result
 
-    def _find_partner_from_emails(self, cr, uid, id, emails, context=None,
-                                    check_followers=True, only_users=False, take_all=False, full_info=False):
+    def _find_partner_from_emails(self, cr, uid, id, emails, model=None, context=None, check_followers=True):
         """ Utility method to find partners
 
             :param boolean check_followers: TODO
@@ -1108,8 +1166,11 @@ class mail_thread(osv.AbstractModel):
         partner_obj = self.pool['res.partner']
         partner_ids = []
         obj = None
-        if id and self._name != 'mail.thread' and check_followers:
-            obj = self.browse(cr, uid, id, context=context)
+        if id and (model or self._name != 'mail.thread') and check_followers:
+            if model:
+                obj = self.pool[model].browse(cr, uid, id, context=context)
+            else:
+                obj = self.browse(cr, uid, id, context=context)
         for contact in emails:
             partner_id = False
             email_address = tools.email_split(contact)
@@ -1145,9 +1206,7 @@ class mail_thread(osv.AbstractModel):
             new_partner_ids. The return value is non conventional because
             it is meant to be used by the mail widget.
 
-            :return dict: partner_ids and new_partner_ids
-
-            TDE TODO: merge me with other partner finding methods in 8.0 """
+            :return dict: partner_ids and new_partner_ids """
         mail_message_obj = self.pool.get('mail.message')
         partner_ids = self._find_partner_from_emails(cr, uid, id, emails, context=context)
         result = list()
@@ -1325,21 +1384,6 @@ class mail_thread(osv.AbstractModel):
         if message.author_id and thread_id and type != 'notification' and not context.get('mail_create_nosubscribe'):
             self.message_subscribe(cr, uid, [thread_id], [message.author_id.id], context=context)
         return msg_id
-
-    #------------------------------------------------------
-    # Compatibility methods: do not use
-    # TDE TODO: remove me in 8.0
-    #------------------------------------------------------
-
-    def message_create_partners_from_emails(self, cr, uid, emails, context=None):
-        return {'partner_ids': [], 'new_partner_ids': []}
-
-    def message_post_user_api(self, cr, uid, thread_id, body='', parent_id=False,
-                                attachment_ids=None, content_subtype='plaintext',
-                                context=None, **kwargs):
-        return self.message_post(cr, uid, thread_id, body=body, parent_id=parent_id,
-                                    attachment_ids=attachment_ids, content_subtype=content_subtype,
-                                    context=context, **kwargs)
 
     #------------------------------------------------------
     # Followers API

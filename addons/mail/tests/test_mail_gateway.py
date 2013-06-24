@@ -189,6 +189,7 @@ class TestMailgateway(TestMailBase):
 
         # Data: set catchall domain
         self.registry('ir.config_parameter').set_param(cr, uid, 'mail.catchall.domain', alias_domain)
+        self.registry('ir.config_parameter').unlink(cr, uid, self.registry('ir.config_parameter').search(cr, uid, [('key', '=', 'mail.catchall.alias')]))
 
         # Update message
         self.mail_message.write(cr, user_raoul_id, [msg_id], {'email_from': False, 'reply_to': False})
@@ -220,87 +221,6 @@ class TestMailgateway(TestMailBase):
         self.assertEqual(mail.reply_to, msg.email_from,
                         'mail_mail: incorrect reply_to: should be message email_from')
 
-    def test_05_mail_message_mail_mail(self):
-        """ Tests designed for testing email values based on mail.message, aliases, ... """
-        cr, uid = self.cr, self.uid
-
-        # Data: clean catchall domain
-        param_ids = self.registry('ir.config_parameter').search(cr, uid, [('key', '=', 'mail.catchall.domain')])
-        self.registry('ir.config_parameter').unlink(cr, uid, param_ids)
-
-        # Do: create a mail_message with a reply_to, without message-id
-        msg_id = self.mail_message.create(cr, uid, {'subject': 'Subject', 'body': 'Body', 'reply_to': 'custom@example.com'})
-        msg = self.mail_message.browse(cr, uid, msg_id)
-        # Test: message content
-        self.assertIn('reply_to', msg.message_id,
-                        'mail_message: message_id should be specific to a mail_message with a given reply_to')
-        self.assertEqual('custom@example.com', msg.reply_to,
-                        'mail_message: incorrect reply_to')
-        # Do: create a mail_mail with the previous mail_message and specified reply_to
-        mail_id = self.mail_mail.create(cr, uid, {'mail_message_id': msg_id, 'reply_to': 'other@example.com', 'state': 'cancel'})
-        mail = self.mail_mail.browse(cr, uid, mail_id)
-        # Test: mail_mail content
-        self.assertEqual(mail.reply_to, 'other@example.com',
-                        'mail_mail: reply_to should be equal to the one coming from creation values')
-        # Do: create a mail_mail with the previous mail_message
-        self.mail_message.write(cr, uid, [msg_id], {'reply_to': 'custom@example.com'})
-        msg.refresh()
-        mail_id = self.mail_mail.create(cr, uid, {'mail_message_id': msg_id, 'state': 'cancel'})
-        mail = self.mail_mail.browse(cr, uid, mail_id)
-        # Test: mail_mail content
-        self.assertEqual(mail.reply_to, msg.reply_to,
-                        'mail_mail: reply_to should be equal to the one coming from the mail_message')
-
-        # Do: create a mail_message without a reply_to
-        msg_id = self.mail_message.create(cr, uid, {'subject': 'Subject', 'body': 'Body', 'model': 'mail.group', 'res_id': self.group_pigs_id, 'email_from': False})
-        msg = self.mail_message.browse(cr, uid, msg_id)
-        # Test: message content
-        self.assertIn('mail.group', msg.message_id,
-                        'mail_message: message_id should contain model')
-        self.assertIn('%s' % self.group_pigs_id, msg.message_id,
-                        'mail_message: message_id should contain res_id')
-        self.assertFalse(msg.reply_to,
-                        'mail_message: should not generate a reply_to address when not specified')
-        # Do: create a mail_mail based on the previous mail_message
-        mail_id = self.mail_mail.create(cr, uid, {'mail_message_id': msg_id, 'state': 'cancel'})
-        mail = self.mail_mail.browse(cr, uid, mail_id)
-        # Test: mail_mail content
-        self.assertFalse(mail.reply_to,
-                        'mail_mail: reply_to should not have been guessed')
-        # Update message
-        self.mail_message.write(cr, uid, [msg_id], {'email_from': 'someone@example.com'})
-        msg.refresh()
-        # Do: create a mail_mail based on the previous mail_message
-        mail_id = self.mail_mail.create(cr, uid, {'mail_message_id': msg_id, 'state': 'cancel'})
-        mail = self.mail_mail.browse(cr, uid, mail_id)
-        # Test: mail_mail content
-        self.assertEqual(email_split(mail.reply_to), email_split(msg.email_from),
-                        'mail_mail: reply_to should be equal to mail_message.email_from when having no document or default alias')
-
-        # Data: set catchall domain
-        self.registry('ir.config_parameter').set_param(cr, uid, 'mail.catchall.domain', 'schlouby.fr')
-        self.registry('ir.config_parameter').unlink(cr, uid, self.registry('ir.config_parameter').search(cr, uid, [('key', '=', 'mail.catchall.alias')]))
-
-        # Update message
-        self.mail_message.write(cr, uid, [msg_id], {'email_from': False, 'reply_to': False})
-        msg.refresh()
-        # Do: create a mail_mail based on the previous mail_message
-        mail_id = self.mail_mail.create(cr, uid, {'mail_message_id': msg_id, 'state': 'cancel'})
-        mail = self.mail_mail.browse(cr, uid, mail_id)
-        # Test: mail_mail content
-        self.assertEqual(mail.reply_to, '"Followers of Pigs" <group+pigs@schlouby.fr>',
-                        'mail_mail: reply_to should equal the mail.group alias')
-
-        # Update message
-        self.mail_message.write(cr, uid, [msg_id], {'res_id': False, 'email_from': 'someone@schlouby.fr', 'reply_to': False})
-        msg.refresh()
-        # Do: create a mail_mail based on the previous mail_message
-        mail_id = self.mail_mail.create(cr, uid, {'mail_message_id': msg_id, 'state': 'cancel'})
-        mail = self.mail_mail.browse(cr, uid, mail_id)
-        # Test: mail_mail content
-        self.assertEqual(mail.reply_to, msg.email_from,
-                        'mail_mail: reply_to should equal the mail_message email_from')
-
         # Data: set catchall alias
         self.registry('ir.config_parameter').set_param(self.cr, self.uid, 'mail.catchall.alias', 'gateway')
 
@@ -310,7 +230,7 @@ class TestMailgateway(TestMailBase):
         # Do: create a mail_mail based on the previous mail_message
         mail_id = self.mail_mail.create(cr, uid, {'mail_message_id': msg_id, 'state': 'cancel'})
         mail = self.mail_mail.browse(cr, uid, mail_id)
-        # Test: mail_mail content
+        # Test: mail_mail Content-Type
         self.assertEqual(mail.reply_to, 'gateway@schlouby.fr',
                         'mail_mail: reply_to should equal the catchall email alias')
 
@@ -395,7 +315,7 @@ class TestMailgateway(TestMailBase):
         # Data: unlink group
         frog_group.unlink()
 
-        # Do: incoming email from an unknown partner on an Authenticated only alias -> bounce
+        # Do: incoming email from an unknown partner on a Partners only alias -> bounce
         self._init_mock_build_email()
         self.mail_alias.write(cr, uid, [alias_id], {'alias_contact': 'partners'})
         frog_groups = format_and_process(MAIL_TEMPLATE, to='groups@example.com, other2@gmail.com')
@@ -410,25 +330,10 @@ class TestMailgateway(TestMailBase):
         self.assertIn('test.sylvie.lelitre@agrolait.com', sent_emails[0].get('email_to'),
                             'message_process: bounce email on Partners alias should have original email sender as recipient')
 
-        # Do: incoming email from an unknown partner on a Partners only alias -> bounce
-        self._init_mock_build_email()
-        self.mail_alias.write(cr, uid, [alias_id], {'alias_contact': 'partners'})
-        frog_groups = format_and_process(MAIL_TEMPLATE, to='groups@example.com, other3@gmail.com')
-        # Test: no group created
-        self.assertTrue(len(frog_groups) == 0)
-        # Test: email bounced
-        sent_emails = self._build_email_kwargs_list
-        self.assertEqual(len(sent_emails), 1,
-                            'message_process: incoming email on Partners alias should send a bounce email')
-        self.assertIn('Frogs', sent_emails[0].get('subject'),
-                            'message_process: bounce email on Followers alias should contain the original subject')
-        self.assertIn('test.sylvie.lelitre@agrolait.com', sent_emails[0].get('email_to'),
-                            'message_process: bounce email on Followers alias should have original email sender as recipient')
-
         # Do: incoming email from an unknown partner on a Followers only alias -> bounce
         self._init_mock_build_email()
         self.mail_alias.write(cr, uid, [alias_id], {'alias_contact': 'followers'})
-        frog_groups = format_and_process(MAIL_TEMPLATE, to='groups@example.com, other4@gmail.com')
+        frog_groups = format_and_process(MAIL_TEMPLATE, to='groups@example.com, other3@gmail.com')
         # Test: no group created
         self.assertTrue(len(frog_groups) == 0)
         # Test: email bounced
@@ -440,12 +345,12 @@ class TestMailgateway(TestMailBase):
         self.assertIn('test.sylvie.lelitre@agrolait.com', sent_emails[0].get('email_to'),
                             'message_process: bounce email on Followers alias should have original email sender as recipient')
 
-        # Do: incoming email from a known partner on an alias with known recipients, alias is owned by user that can create a group
+        # Do: incoming email from a known partner on a Partners alias -> ok (+ test on alias.user_id)
         self.mail_alias.write(cr, uid, [alias_id], {'alias_user_id': self.user_raoul_id, 'alias_contact': 'partners'})
         p1id = self.res_partner.create(cr, uid, {'name': 'Sylvie Lelitre', 'email': 'test.sylvie.lelitre@agrolait.com'})
-        p2id = self.res_partner.create(cr, uid, {'name': 'Other Poilvache', 'email': 'other@gmail.com'})
+        p2id = self.res_partner.create(cr, uid, {'name': 'Other Poilvache', 'email': 'other4@gmail.com'})
         self._init_mock_build_email()
-        frog_groups = format_and_process(MAIL_TEMPLATE, to='groups@example.com, other@gmail.com')
+        frog_groups = format_and_process(MAIL_TEMPLATE, to='groups@example.com, other4@gmail.com')
         sent_emails = self._build_email_kwargs_list
         # Test: one group created by Raoul
         self.assertEqual(len(frog_groups), 1, 'message_process: a new mail.group should have been created')
@@ -462,7 +367,7 @@ class TestMailgateway(TestMailBase):
                             'message_process: message on created group should have Sylvie as author_id')
         self.assertIn('Sylvie Lelitre <test.sylvie.lelitre@agrolait.com>', msg.email_from,
                             'message_process: message on created group should have have an email_from')
-        # Test: author (not recipient and not raoul (as alias owner)) added as follower
+        # Test: author (not recipient and not Raoul (as alias owner)) added as follower
         frog_follower_ids = set([p.id for p in frog_group.message_follower_ids])
         self.assertEqual(frog_follower_ids, set([p1id]),
                             'message_process: newly created group should have 1 follower (author, not creator, not recipients)')
@@ -473,9 +378,19 @@ class TestMailgateway(TestMailBase):
         # Data: unlink group
         frog_group.unlink()
 
-        # Do: incoming email from a not follower Partner on a Followers only alias -> ok
+        # Do: incoming email from a not follower Partner on a Followers only alias -> bounce
         self._init_mock_build_email()
-        self.mail_alias.write(cr, uid, [alias_id], {'alias_contact': 'followers'})
+        self.mail_alias.write(cr, uid, [alias_id], {'alias_user_id': False, 'alias_contact': 'followers'})
+        frog_groups = format_and_process(MAIL_TEMPLATE, to='groups@example.com, other5@gmail.com')
+        # Test: no group created
+        self.assertTrue(len(frog_groups) == 0)
+        # Test: email bounced
+        sent_emails = self._build_email_kwargs_list
+        self.assertEqual(len(sent_emails), 1,
+                            'message_process: incoming email on Partners alias should send a bounce email')
+
+        # Do: incoming email from a parent document follower on a Followers only alias -> ok
+        self._init_mock_build_email()
         self.mail_group.message_subscribe(cr, uid, [self.group_pigs_id], [p1id])
         frog_groups = format_and_process(MAIL_TEMPLATE, to='groups@example.com, other6@gmail.com')
         # Test: one group created by Raoul (or Sylvie maybe, if we implement it)
@@ -500,7 +415,7 @@ class TestMailgateway(TestMailBase):
         # Do: Pigs alias is restricted, should bounce
         self._init_mock_build_email()
         self.mail_group.write(cr, uid, [frog_group.id], {'alias_name': 'frogs', 'alias_contact': 'followers', 'alias_force_thread_id': frog_group.id})
-        frog_groups = format_and_process(MAIL_TEMPLATE, email_from='other@gmail.com',
+        frog_groups = format_and_process(MAIL_TEMPLATE, email_from='other4@gmail.com',
                                             msg_id='<1198923581.41972151344608186760.JavaMail.diff1@agrolait.com>',
                                             to='frogs@example.com>', subject='Re: news')
         # Test: no group 'Re: news' created, still only 1 Frogs group
@@ -520,8 +435,7 @@ class TestMailgateway(TestMailBase):
         # Do: Pigs alias is restricted, should accept Followers
         self._init_mock_build_email()
         self.mail_group.message_subscribe(cr, uid, [frog_group.id], [p2id])
-        self.mail_group.write(cr, uid, [frog_group.id], {'alias_name': 'frogs', 'alias_contact': 'followers'})
-        frog_groups = format_and_process(MAIL_TEMPLATE, email_from='other@gmail.com',
+        frog_groups = format_and_process(MAIL_TEMPLATE, email_from='other4@gmail.com',
                                             msg_id='<1198923581.41972151344608186799.JavaMail.diff1@agrolait.com>',
                                             to='frogs@example.com>', subject='Re: cats')
         # Test: no group 'Re: news' created, still only 1 Frogs group
@@ -546,7 +460,7 @@ class TestMailgateway(TestMailBase):
         # --------------------------------------------------
 
         # Do: even with a wrong destination, a reply should end up in the correct thread
-        frog_groups = format_and_process(MAIL_TEMPLATE, email_from='other@gmail.com',
+        frog_groups = format_and_process(MAIL_TEMPLATE, email_from='other4@gmail.com',
                                             msg_id='<1198923581.41972151344608186760.JavaMail.diff1@agrolait.com>',
                                             to='erroneous@example.com>', subject='Re: news',
                                             extra='In-Reply-To: <12321321-openerp-%d-mail.group@example.com>\n' % frog_group.id)
@@ -565,7 +479,7 @@ class TestMailgateway(TestMailBase):
                             'message_process: after reply, group should have 2 followers')
 
         # Do: due to some issue, same email goes back into the mailgateway
-        frog_groups = format_and_process(MAIL_TEMPLATE, email_from='other@gmail.com',
+        frog_groups = format_and_process(MAIL_TEMPLATE, email_from='other4@gmail.com',
                                             msg_id='<1198923581.41972151344608186760.JavaMail.diff1@agrolait.com>',
                                             subject='Re: news', extra='In-Reply-To: <12321321-openerp-%d-mail.group@example.com>\n' % frog_group.id)
         # Test: no group 'Re: news' created, still only 1 Frogs group
@@ -666,7 +580,7 @@ class TestMailgateway(TestMailBase):
         frog_group = self.mail_group.browse(cr, uid, frog_groups[0])
         msg = frog_group.message_ids[0]
         # Test: plain text content should be wrapped and stored as html
-        self.assertEqual(msg.body, '<pre>\nPlease call me as soon as possible this afternoon!\n\n--\nSylvie\n</pre>',
+        self.assertIn('<pre>\nPlease call me as soon as possible this afternoon!\n\n--\nSylvie\n</pre>', msg.body,
                             'message_process: plaintext incoming email incorrectly parsed')
 
     @mute_logger('openerp.addons.mail.mail_thread', 'openerp.osv.orm')
