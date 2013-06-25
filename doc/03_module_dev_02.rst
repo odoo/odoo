@@ -843,7 +843,6 @@ A property is a special field: fields.property.
                                 relation='product.pricelist',
                                 string="Sale Pricelist",
                         		method=True,
-                        		view_load=True,
                         		group_name="Pricelists Properties"),
             }
 

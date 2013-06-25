@@ -21,3 +21,5 @@ Changelog
   ``openerp.exceptions.RedirectWarning``.
 - Give a pair of new methods to ``res.config.settings`` and a helper to make
   them easier to use: ``get_config_warning()``.
+- Path to webkit report files (field ``report_file``) must be writen with the
+  Unix way (with ``/`` and not ``\``)

@@ -109,7 +109,6 @@ class _column(object):
         self._context = context
         self.write = False
         self.read = False
-        self.view_load = 0
         self.select = select
         self.manual = manual
         self.selectable = True
@@ -1383,8 +1382,10 @@ class property(function):
     def _get_by_id(self, obj, cr, uid, prop_name, ids, context=None):
         prop = obj.pool.get('ir.property')
         vids = [obj._name + ',' + str(oid) for oid in  ids]
-
-        domain = [('fields_id.model', '=', obj._name), ('fields_id.name', 'in', prop_name)]
+        def_id = self._field_get(cr, uid, obj._name, prop_name[0])
+        company = obj.pool.get('res.company')
+        cid = company._company_default_get(cr, uid, obj._name, def_id, context=context)
+        domain = [('fields_id.model', '=', obj._name), ('fields_id.name', 'in', prop_name), ('company_id', '=', cid)]
         #domain = prop._get_domain(cr, uid, prop_name, obj._name, context)
         if vids:
             domain = [('res_id', 'in', vids)] + domain
@@ -1477,11 +1478,13 @@ class property(function):
             self.field_id[cr.dbname] = res and res[0]
         return self.field_id[cr.dbname]
 
-    def __init__(self, obj_prop, **args):
-        # TODO remove obj_prop parameter (use many2one type)
+
+    def __init__(self, **args):
         self.field_id = {}
-        function.__init__(self, self._fnct_read, False, self._fnct_write,
-                          obj_prop, multi='properties', **args)
+        if 'view_load' in args:
+            _logger.warning("view_load attribute is deprecated on ir.fields. Args: %r", args)
+        obj = 'relation' in args and args['relation'] or ''
+        function.__init__(self, self._fnct_read, False, self._fnct_write, obj=obj, multi='properties', **args)
 
     def restart(self):
         self.field_id = {}
