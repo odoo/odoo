@@ -40,6 +40,10 @@ def valid_att_in_label(arch):
     return not arch.xpath('//label[not ((@for) or (@string))]')
 
 
+def valid_att_in_form(arch):
+    return True
+
+
 def valid_type_in_colspan(arch):
     """A `colspan` attribute must be an `integer` type."""
     for attrib in arch.xpath('//*/@colspan'):
@@ -62,7 +66,8 @@ def valid_type_in_col(arch):
 
 def valid_view(arch):
     if arch.tag == 'form':
-        for pred in [valid_page_in_book, valid_type_in_colspan, valid_type_in_col, valid_att_in_field, valid_att_in_label]:
+        for pred in [valid_page_in_book, valid_att_in_form, valid_type_in_colspan,
+                     valid_type_in_col, valid_att_in_field, valid_att_in_label]:
             if not pred(arch):
                 _logger.error('Invalid XML: %s', pred.__doc__)
                 return False

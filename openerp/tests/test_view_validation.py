@@ -4,7 +4,10 @@ from lxml import etree
 from StringIO import StringIO
 import unittest2
 
-from openerp.tools.view_validation import *
+from openerp.tools.view_validation import (valid_page_in_book, valid_att_in_form, valid_type_in_colspan,
+                                           valid_type_in_col, valid_att_in_field, valid_att_in_label,
+                                           valid_field_in_graph, valid_field_in_tree
+                                           )
 
 invalid_form = etree.parse(StringIO('''\
 <form>
@@ -79,7 +82,7 @@ invalid_tree = etree.parse(StringIO('''\
 </tree>
 ''')).getroot()
 
-valid_tree= etree.parse(StringIO('''\
+valid_tree = etree.parse(StringIO('''\
 <tree string="">
     <field name=""></field>
     <field name=""></field>
@@ -97,12 +100,12 @@ class test_view_validation(unittest2.TestCase):
         assert valid_page_in_book(valid_form)
 
     def test_all_field_validation(self):
-        assert not  valid_att_in_field(invalid_form)
-        assert  valid_att_in_field(valid_form)
+        assert not valid_att_in_field(invalid_form)
+        assert valid_att_in_field(valid_form)
 
     def test_all_label_validation(self):
-        assert not  valid_att_in_label(invalid_form)
-        assert  valid_att_in_label(valid_form)
+        assert not valid_att_in_label(invalid_form)
+        assert valid_att_in_label(valid_form)
 
     def test_form_string_validation(self):
         assert not valid_att_in_form(invalid_form)
