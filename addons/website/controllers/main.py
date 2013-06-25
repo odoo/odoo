@@ -22,7 +22,12 @@ module_template = Template("""
                     <img src="data:image/png;base64,{{ module.icon_image }}" onerror="this.src = '/base/static/src/img/icon.png'">
                 </div>
             </div>
-            <div class='oe_app_name'>{{ module.shortdesc }}</div>
+            <div
+                class='oe_app_name editable'
+                data-model='ir.module.module'
+                data-id='{{ module.id }}'
+                data-field='shortdesc'
+            >{{ module.shortdesc }}</div>
             <div
                 class='oe_app_descr editable'
                 data-model='ir.module.module'
