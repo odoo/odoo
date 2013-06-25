@@ -26,6 +26,8 @@ import random
 import jinja2
 from openerp.osv import osv, fields
 from openerp import tools
+import openerp.addons.web.http as http
+from openerp.addons.web.http import request
 
 env = jinja2.Environment(
     loader=jinja2.PackageLoader('openerp.addons.im_livechat', "."),
@@ -33,48 +35,38 @@ env = jinja2.Environment(
 )
 env.filters["json"] = json.dumps
 
-class LiveChatController(openerp.addons.web.http.Controller):
-    _cp_path = '/im_livechat'
+class LiveChatController(http.Controller):
 
-    @openerp.addons.web.http.httprequest
-    def loader(self, req, **kwargs):
+    @http.route('/im_livechat/loader')
+    def loader(self, **kwargs):
         p = json.loads(kwargs["p"])
         db = p["db"]
         channel = p["channel"]
         user_name = p.get("user_name", None)
-        req.session._db = db
-        req.session._uid = None
-        req.session._login = "anonymous"
-        req.session._password = "anonymous"
-        info = req.session.model('im_livechat.channel').get_info_for_chat_src(channel)
+        request.session.authenticate(db=db, login="anonymous", password="anonymous")
+        info = request.session.model('im_livechat.channel').get_info_for_chat_src(channel)
         info["db"] = db
         info["channel"] = channel
         info["userName"] = user_name
-        return req.make_response(env.get_template("loader.js").render(info),
+        return request.make_response(env.get_template("loader.js").render(info),
              headers=[('Content-Type', "text/javascript")])
 
-    @openerp.addons.web.http.httprequest
-    def web_page(self, req, **kwargs):
+    @http.route('/im_livechat/web_page')
+    def web_page(self, **kwargs):
         p = json.loads(kwargs["p"])
         db = p["db"]
         channel = p["channel"]
-        req.session._db = db
-        req.session._uid = None
-        req.session._login = "anonymous"
-        req.session._password = "anonymous"
-        script = req.session.model('im_livechat.channel').read(channel, ["script"])["script"]
-        info = req.session.model('im_livechat.channel').get_info_for_chat_src(channel)
+        request.session.authenticate(db=db, login="anonymous", password="anonymous")
+        script = request.session.model('im_livechat.channel').read(channel, ["script"])["script"]
+        info = request.session.model('im_livechat.channel').get_info_for_chat_src(channel)
         info["script"] = script
-        return req.make_response(env.get_template("web_page.html").render(info),
+        return request.make_response(env.get_template("web_page.html").render(info),
              headers=[('Content-Type', "text/html")])
 
-    @openerp.addons.web.http.jsonrequest
-    def available(self, req, db, channel):
-        req.session._db = db
-        req.session._uid = None
-        req.session._login = "anonymous"
-        req.session._password = "anonymous"
-        return req.session.model('im_livechat.channel').get_available_user(channel) > 0
+    @http.route('/im_livechat/available', type='json')
+    def available(self, db, channel):
+        request.session.authenticate(db=db, login="anonymous", password="anonymous")
+        return request.session.model('im_livechat.channel').get_available_user(channel) > 0
 
 class im_livechat_channel(osv.osv):
     _name = 'im_livechat.channel'
