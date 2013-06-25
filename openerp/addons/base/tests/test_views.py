@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 from lxml import etree as ET
-from lxml.builder import E, ElementMaker
+from lxml.builder import E
 
 from openerp.tests import common
 import unittest2
@@ -98,17 +98,48 @@ class TestNodeLocator(common.BaseCase):
         self.assertIsNone(node)
 
 class TestViewInheritance(common.TransactionCase):
-    def arch_for(self, name, view_type='form'):
-        return ET.tostring(ET.Element(view_type, string=name))
+    def arch_for(self, name, view_type='form', parent=None):
+        """ Generates a trivial view of the specified ``view_type``.
+
+        The generated view is empty but ``name`` is set as its root's ``@string``.
+
+        If ``parent`` is not falsy, generates an extension view (instead of
+        a root view) replacing the parent's ``@string`` by ``name``
+
+        :param str name: ``@string`` value for the view root
+        :param str view_type:
+        :param bool parent:
+        :return: generated arch
+        :rtype: str
+        """
+        if not parent:
+            element = E(view_type, string=name)
+        else:
+            element = E(view_type,
+                E.attribute(name, name='string'),
+                position='attributes'
+            )
+        return ET.tostring(element)
 
     def makeView(self, name, parent=None, arch=None):
-        v = {
+        """ Generates a basic ir.ui.view with the provided name, parent and arch.
+
+        If no parent is provided, the view is top-level.
+
+        If no arch is provided, generates one by calling :meth:`~.arch_for`.
+
+        :param str name:
+        :param int parent: id of the parent view, if any
+        :param str arch:
+        :returns: the created view's id.
+        :rtype: int
+        """
+        view_id = self.View.create(self.cr, self.uid, {
             'model': self.model,
             'name': name,
-            'arch': arch or self.arch_for(name),
+            'arch': arch or self.arch_for(name, parent=parent),
             'inherit_id': parent,
-        }
-        view_id = self.View.create(self.cr, self.uid, v)
+        })
         self.ids[name] = view_id
         return view_id
 
@@ -132,7 +163,7 @@ class TestViewInheritance(common.TransactionCase):
         self.makeView("A221", a22)
 
         b = self.makeView('B', arch=self.arch_for("B", 'tree'))
-        self.makeView('B1', b, arch=self.arch_for("B1", 'tree'))
+        self.makeView('B1', b, arch=self.arch_for("B1", 'tree', parent=b))
         c = self.makeView('C', arch=self.arch_for("C", 'tree'))
         self.View.write(self.cr, self.uid, c, {'priority': 1})
 
@@ -140,12 +171,11 @@ class TestViewInheritance(common.TransactionCase):
         self.View.pool._init = self._init
         super(TestViewInheritance, self).tearDown()
 
-    @unittest2.skip("Not tested")
     def test_get_inheriting_views_arch(self):
         self.assertEqual(self.View.get_inheriting_views_arch(
             self.cr, self.uid, self.ids['A'], self.model), [
-            (self.arch_for('A1'), self.ids['A1']),
-            (self.arch_for('A2'), self.ids['A2']),
+            (self.arch_for('A1', parent=True), self.ids['A1']),
+            (self.arch_for('A2', parent=True), self.ids['A2']),
         ])
 
         self.assertEqual(self.View.get_inheriting_views_arch(
@@ -154,23 +184,21 @@ class TestViewInheritance(common.TransactionCase):
 
         self.assertEqual(self.View.get_inheriting_views_arch(
             self.cr, self.uid, self.ids['A11'], self.model),
-            [(self.arch_for('A111'), self.ids['A111'])])
+            [(self.arch_for('A111', parent=True), self.ids['A111'])])
 
-    @unittest2.skip("Not tested")
     def test_iter(self):
         descendents = list(self.View.iter(self.cr, self.uid, self.ids['A1'], self.model))
         self.assertEqual(descendents, [
-            (self.ids[name], self.arch_for(name))
+            (self.ids[name], self.arch_for(name, parent=True))
             for name in ['A1', 'A11', 'A111', 'A12']
         ])
         descendents = list(self.View.iter(
             self.cr, self.uid, self.ids['A2'], self.model, exclude_base=True))
         self.assertEqual(descendents, [
-            (self.ids[name], self.arch_for(name))
+            (self.ids[name], self.arch_for(name, parent=True))
             for name in ['A21', 'A22', 'A221']
         ])
 
-    @unittest2.skip("Not tested")
     def test_root_ancestor(self):
         A_id = self.ids['A']
         root_id = self.View.root_ancestor(self.cr, self.uid, view_id=A_id)
@@ -189,12 +217,10 @@ class TestViewInheritance(common.TransactionCase):
             self.cr, self.uid, view_id=self.ids['B1'])
         self.assertEqual(root_id, self.ids['B'])
 
-    @unittest2.skip("Not tested")
     def test_no_root_ancestor(self):
         with self.assertRaises(self.View.NoViewError):
             self.View.root_ancestor(self.cr, self.uid, view_id=12345678)
 
-    @unittest2.skip("Not tested")
     def test_default_view(self):
         default = self.View.default_view(
             self.cr, self.uid, model=self.model, view_type='form')
@@ -204,7 +230,6 @@ class TestViewInheritance(common.TransactionCase):
             self.cr, self.uid, model=self.model, view_type='tree')
         self.assertEqual(default_tree, self.ids['C'])
 
-    @unittest2.skip("Not tested")
     def test_no_default_view(self):
         with self.assertRaises(self.View.NoDefaultError):
             self.View.default_view(
@@ -230,12 +255,11 @@ class TestViewCombined(common.TransactionCase):
     """
 
 class TestNoModel(common.TransactionCase):
-    @unittest2.skip("Not tested")
     def test_create_view_nomodel(self):
         View = self.registry('ir.ui.view')
         view_id = View.create(self.cr, self.uid, {
             'name': 'dummy',
-            'arch': '<form/>',
+            'arch': '<form string=""/>',
             'inherit_id': False
         })
         fields = ['name', 'arch', 'type', 'priority', 'inherit_id', 'model']
@@ -243,7 +267,7 @@ class TestNoModel(common.TransactionCase):
         self.assertEqual(view, {
             'id': view_id,
             'name': 'dummy',
-            'arch': '<form/>',
+            'arch': '<form string=""/>',
             'type': 'form',
             'priority': 16,
             'inherit_id': False,
@@ -287,7 +311,7 @@ class TestNoModel(common.TransactionCase):
             'value': u"Copyrighter, tous droits réservés",
         })
         sarch, fields = View._view__view_look_dom_arch(
-            self.cr, self.uid, None,self.arch, None, {'lang': 'fr_FR'})
+            self.cr, self.uid, None, self.arch, None, {'lang': 'fr_FR'})
         self.assertEqual(
             sarch,
             ET.tostring(self.arch, encoding='utf-8')
