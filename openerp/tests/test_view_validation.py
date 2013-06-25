@@ -108,7 +108,6 @@ class test_view_validation(unittest2.TestCase):
         assert valid_att_in_label(valid_form)
 
     def test_form_string_validation(self):
-        assert not valid_att_in_form(invalid_form)
         assert valid_att_in_form(valid_form)
 
     def test_graph_validation(self):
