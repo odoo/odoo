@@ -391,7 +391,6 @@ class project(osv.osv):
                                     'date':new_date_end,
                                     'parent_id':parent_id}, context=context)
             result.append(new_id)
-
             child_ids = self.search(cr, uid, [('parent_id','=', proj.analytic_account_id.id)], context=context)
             parent_id = self.read(cr, uid, new_id, ['analytic_account_id'])['analytic_account_id'][0]
             if child_ids:
