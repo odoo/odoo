@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    OpenERP, Open Source Business Applications
+#    Copyright (c) 2013-TODAY OpenERP S.A. <http://openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,21 +19,21 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
+from openerp.tests import common
 
-class event_event(osv.osv):
-    _description = 'Portal event'
-    _inherit = 'event.event'
 
-    """
-    ``visibility``: defines if the event appears on the portal's event page
-                    - 'public' means the event will appear for everyone (anonymous)
-                    - 'private' means the event won't appear
-    """
-    _columns = {
-        'visibility': fields.selection([('public', 'Public'),('private', 'Private')],
-            string='Visibility', help='Event\'s visibility in the portal\'s contact page'),
-    }
-    _defaults = {
-        'visibility': 'private',
-    }
+class TestIdeaBase(common.TransactionCase):
+
+    def setUp(self):
+        super(TestIdeaBase, self).setUp()
+        cr, uid = self.cr, self.uid
+
+        # Usefull models
+        self.idea_category = self.registry('idea.category')
+        self.idea_idea = self.registry('idea.idea')
+
+    def tearDown(self):
+        super(TestIdeaBase, self).tearDown()
+
+    def test_OO(self):
+        pass
