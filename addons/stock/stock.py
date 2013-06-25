@@ -3659,15 +3659,22 @@ class stock_pack_operation(osv.osv):
         existing_operation_ids = self.search(cr, uid, [('picking_id', '=', picking_id), key], context=context)
         if existing_operation_ids:
             #existing operation found for the given key and picking => increment its quantity
-            qty = self.browse(cr, uid, existing_operation_ids[0], context=context).product_qty
-            return self.write(cr, uid, existing_operation_ids[0], {'product_qty': qty + 1}, context=context)
-        #no existing operation found for the given key and picking => create a new one
-        var_name, dummy, value = key
-        return self.create(cr, uid, {
-            'picking_id': picking_id,
-            var_name: value,
-            'product_qty': 1,
-        }, context=context)
+            qty = self.browse(cr, uid, existing_operation_ids[0], context=context).product_qty + 1
+            self.write(cr, uid, existing_operation_ids[0], {'product_qty': qty}, context=context)
+        else:
+            #no existing operation found for the given key and picking => create a new one
+            var_name, dummy, value = key
+            qty = 1
+            self.create(cr, uid, {
+                'picking_id': picking_id,
+                var_name: value,
+                'product_qty': qty,
+            }, context=context)
+        return qty
+
+    def _search_and_decrement(self, cr, uid, picking_id, product_id, new_qty, context=None):
+        move_ids = self.pool.get('stock.move').search(cr, uid, [('picking_id', '=', picking_id), ('product_id', '=', product_id)], limit=1, context=context)
+        self.pool.get('stock.move').write(cr, uid, move_ids, {'product_qty': new_qty})
 
     def get_barcode_and_return_todo_stuff(self, cr, uid, picking_id, barcode_str, context=None):
         '''This function is called each time there barcode scanner reads an input'''
@@ -3676,11 +3683,14 @@ class stock_pack_operation(osv.osv):
         return sample_struct
         matching_quant_ids = self.pool.get('stock.quant').search(cr, uid, [('name', '=', barcode_str)], context=context)
         if matching_quant_ids:
-            self._search_and_increment(cr, uid, picking_id, ('quant_id', '=', matching_quant_ids[0]), context=context)
+            quant = self.pool.get('stock.quant').browse(cr, uid, matching_quant_ids[0], context=context)
+            new_qty = self._search_and_increment(cr, uid, picking_id, ('quant_id', '=', quant.id), context=context)
+            self._search_and_decrement(cr, uid, picking_id, quant.product, new_qty, context=context)
         matching_product_ids = self.pool.get('product.product').search(cr, uid, ['|', ('code', '=', barcode_str), ('ean', '=', barcode_str)], context=context)
         if matching_product_ids:
             if len(matching_product_ids) > 1:
                 error_msg = _('Wrong bar code detected: more than one product matching the given barcode')
-            self.search_and_increment(cr, uid, picking_id, ('product_id', '=', matching_product_ids[0]), context=context)
+            new_qty = self._search_and_increment(cr, uid, picking_id, ('product_id', '=', matching_product_ids[0]), context=context)
+            self._search_and_decrement(cr, uid, picking_id, matching_product_ids[0], new_qty, context=context)
         return {'warnings': error_msg, 'stock_move_to_update': [{}], 'package_to_update': [{}]}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
