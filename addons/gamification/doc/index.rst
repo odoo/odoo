@@ -18,5 +18,7 @@ A **Badge** is a symbolic token granted to a user as a sign of reward. It can be
 .. toctree::
    :maxdepth: 1
    
+   goal_type
+   goal
    gamification_plan_howto
    

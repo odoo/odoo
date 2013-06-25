@@ -35,3 +35,8 @@ Fields
  - ``sequence`` : to order list of goals in a challenger
  - ``action_id`` : the XML id to of an ir.actions.act_window to execute when the user clicks on a goal on the home page
  - ``res_id_field`` : the res_id used by the action, using user as for the domain (eg: user.company_id.id)
+
+Methods
++++++++
+
+Add new methods inheriting from this class to add goal type with python computation mode. Look at the example in ``gamification/goal_type_data.py``
