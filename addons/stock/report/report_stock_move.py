@@ -216,37 +216,68 @@ class report_stock_inventory(osv.osv):
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_stock_inventory')
         cr.execute("""
-CREATE OR REPLACE view report_stock_inventory AS (
-    
-    SELECT
-        m.id as id, m.date as date,
-        to_char(m.date, 'YYYY') as year,
-        to_char(m.date, 'MM') as month,
-        m.partner_id as partner_id, m.location_dest_id as location_id,
-        m.product_id as product_id, pt.categ_id as product_categ_id, l.usage as location_type, l.scrap_location as scrap_location,
-        m.company_id,
-        m.state as state, m.prodlot_id as prodlot_id,
-        coalesce(sum(m.price_unit * m.qty_remaining)::decimal, 0.0) as value,
-        coalesce(sum(m.qty_remaining * pu.factor / pu2.factor)::decimal, 0.0) as product_qty, 
-        p.name as ref,
-        l.usage as location_dest_type, 
-        l_other.usage as location_src_type
-    FROM
-        stock_move m
-            LEFT JOIN stock_picking p ON (m.picking_id=p.id)
-            LEFT JOIN product_product pp ON (m.product_id=pp.id)
-                LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
-                LEFT JOIN product_uom pu ON (pt.uom_id=pu.id)
-                LEFT JOIN product_uom pu2 ON (m.product_uom=pu2.id)
-            LEFT JOIN product_uom u ON (m.product_uom=u.id)
-            LEFT JOIN stock_location l ON (m.location_dest_id=l.id)
-            LEFT JOIN stock_location l_other ON (m.location_id=l_other.id)
-            WHERE m.state != 'cancel'
-    GROUP BY
-        m.id, m.product_id, m.product_uom, pt.categ_id, m.partner_id, m.location_id, m.location_dest_id,
-        m.prodlot_id, m.date, m.state, l.usage, l_other.usage, l.scrap_location, m.company_id, pt.uom_id, to_char(m.date, 'YYYY'), to_char(m.date, 'MM'), p.name
-);
+        CREATE OR REPLACE view report_stock_inventory AS (
+            SELECT
+                sq.id as id, sq.in_date as date,
+                to_char(sq.in_date, 'YYYY') as year,
+                to_char(sq.in_date, 'MM') as month,
+                m.partner_id as partner_id, sq.location_id as location_id,
+                sq.product_id as product_id, pt.categ_id as product_categ_id, location.usage as location_type, location.scrap_location as scrap_location,
+                sq.company_id, 
+                m.state as state, sq.prodlot_id as prodlot_id, 
+                sq.price_unit * sq.qty as value,
+                sq.qty as product_qty, 
+                p.name as ref,
+                location_dest.usage as location_dest_type, 
+                location.usage as location_src_type
+            FROM stock_quant sq
+                LEFT JOIN quant_move_rel qm ON (qm.quant_id = sq.id)
+                LEFT JOIN stock_move m ON (qm.move_id = m.id)
+                LEFT JOIN stock_picking p ON (m.picking_id=p.id)
+                LEFT JOIN stock_location location ON (m.location_id = location.id)
+                LEFT JOIN stock_location location_dest ON (m.location_dest_id = location_dest.id)
+                LEFT JOIN product_template pt ON (sq.product_id=pt.id)
+                WHERE location_dest.usage = 'internal' and location.usage <> 'internal'
+            GROUP BY
+                sq.id, sq.product_id, pt.categ_id, m.partner_id, m.location_id, m.location_dest_id,
+                sq.prodlot_id, sq.in_date, m.state, location.usage, location_dest.usage, location.scrap_location, sq.company_id, to_char(sq.in_date, 'YYYY'), to_char(sq.in_date, 'MM'), p.name
+            );
         """)
+
+
+
+# 
+# CREATE OR REPLACE view report_stock_inventory AS (
+#     
+#     SELECT
+#         m.id as id, m.date as date,
+#         to_char(m.date, 'YYYY') as year,
+#         to_char(m.date, 'MM') as month,
+#         m.partner_id as partner_id, m.location_dest_id as location_id,
+#         m.product_id as product_id, pt.categ_id as product_categ_id, l.usage as location_type, l.scrap_location as scrap_location,
+#         m.company_id,
+#         m.state as state, m.prodlot_id as prodlot_id,
+#         coalesce(sum(m.price_unit * m.qty_remaining)::decimal, 0.0) as value,
+#         coalesce(sum(m.qty_remaining * pu.factor / pu2.factor)::decimal, 0.0) as product_qty, 
+#         p.name as ref,
+#         l.usage as location_dest_type, 
+#         l_other.usage as location_src_type
+#     FROM
+#         stock_move m
+#             LEFT JOIN stock_picking p ON (m.picking_id=p.id)
+#             LEFT JOIN product_product pp ON (m.product_id=pp.id)
+#                 LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
+#                 LEFT JOIN product_uom pu ON (pt.uom_id=pu.id)
+#                 LEFT JOIN product_uom pu2 ON (m.product_uom=pu2.id)
+#             LEFT JOIN product_uom u ON (m.product_uom=u.id)
+#             LEFT JOIN stock_location l ON (m.location_dest_id=l.id)
+#             LEFT JOIN stock_location l_other ON (m.location_id=l_other.id)
+#             WHERE m.state != 'cancel'
+#     GROUP BY
+#         m.id, m.product_id, m.product_uom, pt.categ_id, m.partner_id, m.location_id, m.location_dest_id,
+#         m.prodlot_id, m.date, m.state, l.usage, l_other.usage, l.scrap_location, m.company_id, pt.uom_id, to_char(m.date, 'YYYY'), to_char(m.date, 'MM'), p.name
+# );
+
 
 
 

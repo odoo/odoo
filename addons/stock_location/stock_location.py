@@ -136,14 +136,12 @@ class product_product(osv.osv):
     }
 
 
-
-
 class product_category(osv.osv):
     _inherit = 'product.category'
     _columns = {
         #'route_ids': fields.many2many('stock.route', 'product_catg_id', 'route_id', 'Routes'), 
-        'removal_strategy_ids': fields.many2many('product.removal', 'product_catg_id', 'removal_strat_id' 'Removal Strategies'),
-        'putaway_strategy_ids': fields.many2many('product.putaway', 'product_catg_id', 'putaway_strat_id', 'Put Away Strategies'),
+        'removal_strategy_ids': fields.one2many('product.removal', 'product_categ_id', 'Removal Strategies'),
+        'putaway_strategy_ids': fields.one2many('product.putaway', 'product_categ_id', 'Put Away Strategies'),
     }
 
 
@@ -161,6 +159,26 @@ class stock_move(osv.osv):
         res = super(stock_move,self).action_cancel(cr,uid,ids,context)
         return res
 
+    def splitforputaway (self, cr, uid, ids, context=None):
+        '''
+        Splits this move in order to do the put away
+        '''
+        putaway_obj = self.pool.get("product.putaway")
+        location_obj = self.pool.get("stock.location")
+        print "SPLIT FOR PUTAWAY"
+        for move in self.browse(cr, uid, ids, context=context):
+            putaways = putaway_obj.search(cr, uid, [('product_categ_id','=', move.product_id.categ_id.id), ('location_id', '=', move.location_dest_id.id)], context=context)
+            print putaways
+            if putaways: 
+                #Search for locations for PutAway
+                locs = location_obj.search(cr, uid, [('id', 'child_of', move.location_dest_id.id), ('id', '!=', move.location_dest_id.id), ('quant_ids', '=', False), 
+                                                     ('destination_move_ids', '=', False)], context=context)
+                if locs:
+                    self.write(cr, uid, [move.id], {'location_dest_id': locs[0]}, context=context)
+        return True
+
+
+
     def _prepare_chained_picking(self, cr, uid, picking_name, picking, picking_type, moves_todo, context=None):
         res = super(stock_move, self)._prepare_chained_picking(cr, uid, picking_name, picking, picking_type, moves_todo, context=context)
         res.update({'invoice_state': moves_todo[0][1][6] or 'none'})
@@ -169,8 +187,8 @@ class stock_move(osv.osv):
 class stock_location(osv.osv):
     _inherit = 'stock.location'
     _columns = {
-        'removal_strategy_ids': fields.many2many('product.removal', 'location_id', 'removal_strat_id' 'Removal Strategies'),
-        'putaway_strategy_ids': fields.many2many('product.putaway', 'location_id', 'putaway_strat_id', 'Put Away Strategies'),
+        'removal_strategy_ids': fields.one2many('product.removal', 'location_id', 'Removal Strategies'),
+        'putaway_strategy_ids': fields.one2many('product.putaway', 'location_id', 'Put Away Strategies'),
         }
     
 
@@ -183,7 +201,7 @@ class stock_location(osv.osv):
         product = self.pool.get("product.product").browse(cr, uid, product_id, context=context)
         strats = self.pool.get('product.removal').search(cr, uid, [('location_id','=',id), ('product_categ_id','child_of', product.categ_id.id)], context=context) #Also child_of for location???
         if not strats: 
-            strat = product.categ_id.removal_strategy 
+            strat = product.categ_id.removal_strategy
         else: 
             strat = strats[0]
         return strat or product.categ_id.removal_strategy or 'fifo'

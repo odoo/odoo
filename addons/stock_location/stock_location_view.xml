@@ -97,5 +97,32 @@
                 </group>
             </field>
        </record>
+       
+
+        <record id="product_category_form_view_inherit" model="ir.ui.view">
+            <field name="name">product.category.form</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <group name="parent" position="after">
+                    <separator name="Strategy"/>
+                    <group name="Strategies">
+                        <field name = "putaway_strategy_ids">
+                            <tree string="Put Away strategies" editable="top">
+                                <field name="location_id"/>
+                                <field name="method"/>
+                            </tree>
+                        </field>
+                        <field name = "removal_strategy_ids" >
+                            <tree string="Removal strategies" editable="top">
+                                <field name="location_id"/>
+                                <field name="method"/>
+                            </tree>
+                        </field>
+                    </group>
+                </group>
+            </field>
+        </record>
+        
     </data>
 </openerp>

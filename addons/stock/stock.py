@@ -212,6 +212,8 @@ class stock_location(osv.osv):
                                                         "this account will be used to hold the value of products being moved out of this location "
                                                         "and into an internal location, instead of the generic Stock Output Account set on the product. "
                                                         "This has no effect for internal locations."),
+        'quant_ids': fields.one2many('stock.quant', 'location_id', 'Quants associated with this location'), 
+        'destination_move_ids': fields.one2many('stock.move', 'location_dest_id', 'Destination moves'), 
     }
     _defaults = {
         'active': True,
@@ -628,7 +630,7 @@ class stock_quant(osv.osv):
         product_uom_price = uom_obj._compute_price(cr, uid, move.product_uom.id, move.price_unit, move.product_id.uom_id.id)
         qty_to_go = product_uom_qty
         if neg_quants: 
-            recres = self.reconcile_negative_quants(cr, uid, neg_quants, move, qty_to_go, product_uom_price, context)
+            recres = self.reconcile_negative_quants(cr, uid, neg_quants, move, qty_to_go, product_uom_price, context=context)
             product_uom_qty = recres['amount']
             quants_rec += recres['refreshed_quants']
         if product_uom_qty > 0.0:
@@ -638,9 +640,10 @@ class stock_quant(osv.osv):
                     'price_unit': product_uom_price, 
                     'history_ids': [(4, move.id)], 
                     'in_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                    'prodlot_id': move.prodlot_id.id, 
+                    'company_id': move.company_id.id, 
                     }
             quant_id = self.pool.get("stock.quant").create(cr, uid, vals, context=context)
-        print "Negative quants, ", quants_rec,self.filter_quants_with_out_history(cr, uid, quants_rec, context=context)
         return self.filter_quants_with_out_history(cr, uid, quants_rec, context=context)
 
 
@@ -693,10 +696,12 @@ class stock_quant(osv.osv):
         :param location_id: child_of this location_id
         :param product_id: id of product
         :param qty in UoM of product
+        :TODOparam prodlot_id
         :returns: tuples of (quant_id, qty)
         """
         #TODO Normally, you should check the removal strategy now
         #But we will assume it is FIFO for the moment
+        #Will need to create search string beforehand
         if self.pool.get('stock.location').get_removal_strategy(cr, uid, location_id, product_id, context=context) == 'lifo':
             possible_quants = self.search(cr, uid, [('location_id', 'child_of', location_id), ('product_id','=',product_id), 
                                                     ('qty', '>', 0.0), ('reservation_id', '=', False)], order = 'in_date desc, id desc', context=context)
@@ -1063,7 +1068,7 @@ class stock_picking(osv.osv):
         @return: True
         """
         for picking in self.browse(cr, uid, ids, context=context):
-            self.pool.get('stock.move').action_assign(cr, uid, [move.id for move in picking.move_lines], context=context)
+            self.pool.get('stock.move').action_assign(cr, uid, [move.id for move in picking.move_lines])
         self.write(cr, uid, ids, {'state': 'assigned'})
         return True
 
@@ -2323,6 +2328,10 @@ class stock_move(osv.osv):
             new_moves += self.create_chained_picking(cr, uid, new_moves, context)
         return new_moves
 
+
+    def splitforputaway (self, cr, uid, ids, context=None):
+        return True
+
     def action_confirm(self, cr, uid, ids, context=None):
         """ Confirms stock move.
         @return: List of ids.
@@ -2381,6 +2390,7 @@ class stock_move(osv.osv):
         pickings = {}
         quant_obj = self.pool.get("stock.quant")
         uom_obj = self.pool.get("product.uom")
+        print "check assign ", ids
         if context is None:
             context = {}
         for move in self.browse(cr, uid, ids, context=context):
@@ -2389,13 +2399,17 @@ class stock_move(osv.osv):
                     done.append(move.id)
                 pickings[move.picking_id.id] = 1
                 continue
+            print "move state:", move.state
             if move.state in ('confirmed', 'waiting'):
                 # Important: we must pass lock=True to _product_reserve() to avoid race conditions and double reservations
                 # res = self.pool.get('stock.location')._product_reserve(cr, uid, [move.location_id.id], move.product_id.id, move.product_qty, {'uom': move.product_uom.id}, lock=True)
                 
                 #Convert UoM qty -> check rounding now in product_reserver
+                
+                #Split for source locations
                 qty = uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, move.product_id.uom_id.id)
                 res2 = quant_obj.choose_quants(cr, uid, move.location_id.id, move.product_id.id, qty, context=context)
+                print res2
                 #Should group quants by location:
                 quants = {}
                 qtys = {}
@@ -2428,7 +2442,10 @@ class stock_move(osv.osv):
                         r = res.pop(0)
                         move_id = self.copy(cr, uid, move.id, {'product_uos_qty': product_uos_qty, 'product_qty': r[0], 'location_id': r[1]})
                         done.append(move_id)
-                        
+                
+                self.splitforputaway(cr, uid, [move.id], context=context)
+            
+                
         if done:
             count += len(done)
             self.write(cr, uid, done, {'state': 'assigned'})
@@ -2646,7 +2663,6 @@ class stock_move(osv.osv):
         for move in self.browse(cr, uid, ids, context=context):
             #Split according to pack wizard if necessary
             res[move.id] = [x.id for x in move.reserved_quant_ids]
-            print "Get quants", move.reserved_quant_ids
         return res
 
 
@@ -2661,10 +2677,8 @@ class stock_move(osv.osv):
         uom_obj = self.pool.get("product.uom")
         for move in self.browse(cr, uid, ids, context=context):
             product_qty = 0.0
-            print "Reserved quants", move.reserved_quant_ids
             for quant in move.reserved_quant_ids:
                 product_qty += quant.qty
-                print "quantity to SUM, ", quant.qty, product_qty
             qty_from_move = uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, move.product_id.uom_id.id)
             #Check if the entire quantity has been transformed in to quants
             if qty_from_move > product_qty:
@@ -2675,10 +2689,8 @@ class stock_move(osv.osv):
                     product_qty = 0.0
                     for quant in move.reserved_quant_ids:
                         product_qty += quant.qty
-                    print "QTYFROMMOVE", qty_from_move, product_qty
                     if qty_from_move <= product_qty:
                         create_neg_quant = False
-                    print create_neg_quant
                 if create_neg_quant: 
                     #To solve this, we should create a negative quant at destination and a positive quant at the source
                     vals_neg = {
@@ -3058,7 +3070,6 @@ class stock_move(osv.osv):
             quants_dict = quant_obj.get_out_moves_from_quants(cr, uid, quants, context=context)
             for out_mov in self.browse(cr, uid, quants_dict.keys(), context=context):
                 quants_from_move = quant_obj.search(cr, uid, [('history_ids', 'in', out_mov.id), ('propagated_from_id', '=', False)], context=context)
-                print "Quants from move", quants_from_move
                 out_qty_converted =  uom_obj._compute_qty(cr, uid, out_mov.product_uom.id, out_mov.product_qty, move.product_uom.id, round=False)
                 amount = 0.0
                 total_price = 0.0
