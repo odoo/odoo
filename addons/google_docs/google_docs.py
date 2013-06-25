@@ -68,16 +68,16 @@ class config(osv.osv):
     
     def copy_doc(self, cr, uid, ids, res_id, tamplate_id, name_gdocs, res_model, context=None):
         ir_config = self.pool[ 'ir.config_parameter' ]
-        google_client_id = ir_config.get_param(cr, SUPERUSER_ID, 'google_client_id')
-        google_client_secret = ir_config.get_param(cr, SUPERUSER_ID, 'google_client_secret')
-        google_refresh_token = ir_config.get_param(cr, SUPERUSER_ID, 'google_refresh_token')
+        google_docs_client_id = ir_config.get_param(cr, SUPERUSER_ID, 'google_docs_client_id')
+        google_docs_client_secret = ir_config.get_param(cr, SUPERUSER_ID, 'google_docs_client_secret')
+        google_docs_refresh_token = ir_config.get_param(cr, SUPERUSER_ID, 'google_docs_refresh_token')
         google_web_base_url = ir_config.get_param(cr, SUPERUSER_ID, 'web.base.url')
         
         #For Getting New Access Token With help of old Refresh Token 
         headers = {"Content-type": "application/x-www-form-urlencoded"}
-        data = dict(client_id = google_client_id, 
-                    refresh_token = google_refresh_token, 
-                    client_secret = google_client_secret, 
+        data = dict(client_id = google_docs_client_id, 
+                    refresh_token = google_docs_refresh_token, 
+                    client_secret = google_docs_client_secret, 
                     grant_type = "refresh_token")
         data = urllib.urlencode(data) 
         resp, content = Http().request("https://accounts.google.com/o/oauth2/token", "POST", data, headers)
@@ -172,7 +172,7 @@ class config(osv.osv):
         result = {}
         for config_id in ids:
             config = self.pool['ir.config_parameter']
-            result[config_id] = config.get_param(cr, SUPERUSER_ID, 'google_client_id')
+            result[config_id] = config.get_param(cr, SUPERUSER_ID, 'google_docs_client_id')
         return result
 
     _columns = {
@@ -181,7 +181,7 @@ class config(osv.osv):
         'filter_id' : fields.many2one('ir.filters', 'Filter'),
         'gdocs_template_url': fields.char('Template URL', required=True, size=1024),
         'gdocs_resource_id' : fields.function(_resource_get, type="char" , string='Resource Id'),
-        'google_client_id' : fields.function(_client_id_get, type="char" , string='Google Client '),
+        'google_docs_client_id' : fields.function(_client_id_get, type="char" , string='Google Client '),
         'name_template': fields.char('Google Drive Name Pattern', size=64, help='Choose how the new google drive will be named, on google side. Eg. gdoc_%(field_name)s', required=True),
     }
 
@@ -209,36 +209,10 @@ class config(osv.osv):
 
 config()
 
+
 class base_config_settings(osv.osv):
     _inherit = "base.config.settings"
-    
-    def onchange_authorization_code(self, cr, uid, ids, authorization_code, context=None):
-        res = {}
-        if authorization_code:
-            ir_config = self.pool['ir.config_parameter']
-            google_client_id = ir_config.get_param(cr, SUPERUSER_ID, 'google_client_id')
-            google_client_secret = ir_config.get_param(cr, SUPERUSER_ID, 'google_client_secret')
-            google_redirect_uri = ir_config.get_param(cr, SUPERUSER_ID, 'google_redirect_uri')
-            
-            #Get the Refresh Token From Google And store it in ir.config_parameter 
-            headers = {"Content-type": "application/x-www-form-urlencoded"}
-            data = dict(code=authorization_code, client_id=google_client_id, client_secret=google_client_secret,redirect_uri=google_redirect_uri,grant_type="authorization_code")
-            data = urllib.urlencode(data) 
-            resp, content = Http().request("https://accounts.google.com/o/oauth2/token", "POST", data,headers)
-            content=json.loads(content)
-            if 'refresh_token' in content.keys():
-                ir_config.set_param(cr, uid, 'google_refresh_token', content['refresh_token'])
-        return res
-    
-    def get_default_authorization_code(self, cr, uid, ids, context=None):
-        authorization_code = self.pool.get("ir.config_parameter").get_param(cr, uid, "authorization_code", context=context)
-        return {'authorization_code': authorization_code}
 
-    def set_authorization_code(self, cr, uid, ids, context=None):
-        config_parameters = self.pool.get("ir.config_parameter")
-        for record in self.browse(cr, uid, ids, context=context):
-            config_parameters.set_param(cr, uid, "authorization_code", record.authorization_code or '', context=context)
-    
     _columns = {
-        'authorization_code': fields.char('Paste Generated "Authorization Code" from google to here', size=124),
+        'google_docs_authorization_code': fields.char('Paste Generated "Authorization Code" from google to here', size=124),
     }

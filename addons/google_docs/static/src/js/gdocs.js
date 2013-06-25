@@ -56,7 +56,7 @@ openerp.google_docs = function (instance, m) {
         on_google_doc: function (doc_item) {
             var self = this;
             self.config = doc_item;
-            var loaded = self.fetch('google.docs.config', ['gdocs_resource_id', 'google_client_id'], [['id', '=', doc_item.config_id]])
+            var loaded = self.fetch('google.docs.config', ['gdocs_resource_id', 'google_docs_client_id'], [['id', '=', doc_item.config_id]])
                 .then(function (configs) {
                 var ds = new instance.web.DataSet(self, 'google.docs.config');
                 ds.call('get_google_doc_name', [[doc_item.config_id], doc_item.res_id,configs[0].gdocs_resource_id]).done(function (r) {

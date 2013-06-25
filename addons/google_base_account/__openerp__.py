@@ -30,7 +30,7 @@ The module adds google user in res user.
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base'],
+    'depends': ['base_setup'],
     'data': [
         'google_base_account_view.xml',
         'wizard/google_login_view.xml',
