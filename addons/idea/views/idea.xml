@@ -23,11 +23,10 @@
                                 </div>
                                 <div class="oe_kanban_content">
                                     <h4><field name="name"/></h4>
-                                    <field name="category_ids"/>
-
                                     <div class="oe_kanban_bottom_right">
                                         <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar" t-if="record.user_id.value"/>
                                     </div>
+                                    <field name="category_ids"/>
                                 </div>
                                 <div class="oe_clear"></div>
                             </div>
