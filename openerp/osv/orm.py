@@ -603,22 +603,18 @@ class BaseModel(object):
         in argument or, if it inherits from another class, a class constructed
         by combining the two classes.
 
-        The ``attributes`` argument specifies which parent class attributes
-        have to be combined.
-
-        TODO: the creation of the combined class is repeated at each call of
-        this method. This is probably unnecessary.
-
         """
+
+        # IMPORTANT: the registry contains an instance for each model. The class
+        # of each model carries inferred metadata that is shared among the
+        # model's instances for this registry, but not among registries. Hence
+        # we cannot use that "registry class" for combining model classes by
+        # inheritance, since it confuses the metadata inference process.
+
         parent_names = getattr(cls, '_inherit', None)
         if parent_names:
             parent_names = parent_names if isinstance(parent_names, list) else [parent_names]
-            if len(parent_names) == 1:
-                name = cls._name or parent_names[0]
-            elif cls._name:
-                name = cls._name
-            else:
-                name = cls._name = cls.__name__
+            name = cls._name or (len(parent_names) == 1 and parent_names[0]) or cls.__name__
 
             for parent_name in parent_names:
                 if parent_name not in pool:
@@ -627,7 +623,10 @@ class BaseModel(object):
                 parent_model = pool[parent_name]
                 if not getattr(cls, '_original_module', None) and name == parent_model._name:
                     cls._original_module = parent_model._original_module
-                parent_class = parent_model.__class__
+
+                # do no use the class of parent_model, since that class contains
+                # inferred metadata; use its ancestor instead
+                parent_class = type(parent_model).__bases__[0]
 
                 # don't inherit custom fields, and duplicate inherited fields
                 # because some have a per-registry cache (like float)
@@ -657,6 +656,7 @@ class BaseModel(object):
                     getattr(parent_class, '_sql_constraints', [])
 
                 nattr = {
+                    '_name': name,
                     '_register': False,
                     '_columns': columns,
                     '_defaults': defaults,
@@ -668,21 +668,15 @@ class BaseModel(object):
                     '_local_constraints': cls.__dict__.get('_constraints', []),
                     '_local_sql_constraints': cls.__dict__.get('_sql_constraints', []),
                 }
-
                 cls = type(name, (cls, parent_class), nattr)
         else:
             if not cls._name:
                 cls._name = cls.__name__
+            cls._local_constraints = getattr(cls, '_constraints', [])
+            cls._local_sql_constraints = getattr(cls, '_sql_constraints', [])
 
-            # introduce a extra class inheritance to enable monkey-patching with
-            # _patch_method() on all instances of the model in this pool only
-            nattr = {
-                '_register': False,
-                '_columns': dict(getattr(cls, '_columns', {})),
-                '_local_constraints': cls.__dict__.get('_constraints', []),
-                '_local_sql_constraints': cls.__dict__.get('_sql_constraints', []),
-            }
-            cls = type(cls._name, (cls,), nattr)
+        # introduce the "registry class" of the model
+        cls = type(cls._name, (cls,), {'_register': False})
 
         # duplicate all new-style fields to avoid clashes with inheritance
         cls._fields = {}
