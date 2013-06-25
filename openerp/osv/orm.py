@@ -236,6 +236,10 @@ POSTGRES_CONFDELTYPES = {
 def intersect(la, lb):
     return filter(lambda x: x in lb, la)
 
+def same_name(f, g):
+    """ Test whether functions `f` and `g` are identical or have the same name """
+    return f == g or getattr(f, '__name__', 0) == getattr(g, '__name__', 1)
+
 def fix_import_export_id_paths(fieldname):
     """
     Fixes the id fields in import and exports, and splits field paths
@@ -654,25 +658,18 @@ class BaseModel(object):
         in argument or, if it inherits from another class, a class constructed
         by combining the two classes.
 
-        The ``attributes`` argument specifies which parent class attributes
-        have to be combined.
-
-        TODO: the creation of the combined class is repeated at each call of
-        this method. This is probably unnecessary.
-
         """
-        attributes = ['_columns', '_defaults', '_inherits', '_constraints',
-            '_sql_constraints']
+
+        # IMPORTANT: the registry contains an instance for each model. The class
+        # of each model carries inferred metadata that is shared among the
+        # model's instances for this registry, but not among registries. Hence
+        # we cannot use that "registry class" for combining model classes by
+        # inheritance, since it confuses the metadata inference process.
 
         parent_names = getattr(cls, '_inherit', None)
         if parent_names:
             parent_names = parent_names if isinstance(parent_names, list) else [parent_names]
-            if len(parent_names) == 1:
-                name = cls._name or parent_names[0]
-            elif cls._name:
-                name = cls._name
-            else:
-                name = cls._name = cls.__name__
+            name = cls._name or (len(parent_names) == 1 and parent_names[0]) or cls.__name__
 
             for parent_name in parent_names:
                 if parent_name not in pool:
@@ -681,62 +678,60 @@ class BaseModel(object):
                 parent_model = pool[parent_name]
                 if not getattr(cls, '_original_module', None) and name == parent_model._name:
                     cls._original_module = parent_model._original_module
-                parent_class = parent_model.__class__
-                nattr = {}
-                for s in attributes:
-                    new = copy.copy(getattr(parent_model, s, {}))
-                    if s == '_columns':
-                        # Don't _inherit custom fields.
-                        for c in new.keys():
-                            if new[c].manual:
-                                del new[c]
-                        # Duplicate float fields because they have a .digits
-                        # cache (which must be per-registry, not server-wide).
-                        for c in new.keys():
-                            if new[c]._type == 'float':
-                                new[c] = copy.copy(new[c])
-                    if hasattr(new, 'update'):
-                        new.update(cls.__dict__.get(s, {}))
-                    elif s=='_constraints':
-                        for c in cls.__dict__.get(s, []):
-                            exist = False
-                            for c2 in range(len(new)):
-                                #For _constraints, we should check field and methods as well
-                                if new[c2][2]==c[2] and (new[c2][0] == c[0] \
-                                        or getattr(new[c2][0],'__name__', True) == \
-                                            getattr(c[0],'__name__', False)):
-                                    # If new class defines a constraint with
-                                    # same function name, we let it override
-                                    # the old one.
 
-                                    new[c2] = c
-                                    exist = True
-                                    break
-                            if not exist:
-                                new.append(c)
-                    else:
-                        new.extend(cls.__dict__.get(s, []))
-                    nattr[s] = new
+                # do no use the class of parent_model, since that class contains
+                # inferred metadata; use its ancestor instead
+                parent_class = type(parent_model).__bases__[0]
 
-                # Keep links to non-inherited constraints, e.g. useful when exporting translations
-                nattr['_register'] = False
-                nattr['_local_constraints'] = cls.__dict__.get('_constraints', [])
-                nattr['_local_sql_constraints'] = cls.__dict__.get('_sql_constraints', [])
+                # don't inherit custom fields, and duplicate inherited fields
+                # because some have a per-registry cache (like float)
+                columns = dict(
+                    (key, copy.copy(val))
+                    for key, val in getattr(parent_class, '_columns', {}).iteritems()
+                    if not val.manual)
+                columns.update(getattr(cls, '_columns', {}))
 
+                defaults = dict(getattr(parent_class, '_defaults', {}))
+                defaults.update(getattr(cls, '_defaults', {}))
+
+                inherits = dict(getattr(parent_class, '_inherits', {}))
+                inherits.update(getattr(cls, '_inherits', {}))
+
+                old_constraints = getattr(parent_class, '_constraints', [])
+                new_constraints = getattr(cls, '_constraints', [])
+                # filter out from old_constraints the ones overridden by a
+                # constraint with the same function name in new_constraints
+                constraints = new_constraints + [oldc
+                    for oldc in old_constraints
+                    if not any(newc[2] == oldc[2] and same_name(newc[0], oldc[0])
+                               for newc in new_constraints)
+                ]
+
+                sql_constraints = getattr(cls, '_sql_constraints', []) + \
+                    getattr(parent_class, '_sql_constraints', [])
+
+                nattr = {
+                    '_name': name,
+                    '_register': False,
+                    '_columns': columns,
+                    '_defaults': defaults,
+                    '_inherits': inherits,
+                    '_constraints': constraints,
+                    '_sql_constraints': sql_constraints,
+                    # Keep links to non-inherited constraints; this is useful
+                    # for instance when exporting translations
+                    '_local_constraints': cls.__dict__.get('_constraints', []),
+                    '_local_sql_constraints': cls.__dict__.get('_sql_constraints', []),
+                }
                 cls = type(name, (cls, parent_class), nattr)
         else:
             if not cls._name:
                 cls._name = cls.__name__
+            cls._local_constraints = getattr(cls, '_constraints', [])
+            cls._local_sql_constraints = getattr(cls, '_sql_constraints', [])
 
-            # introduce a extra class inheritance to enable monkey-patching with
-            # _patch_method() on all instances of the model in this pool only
-            nattr = {
-                '_register': False,
-                '_columns': dict(getattr(cls, '_columns', {})),
-                '_local_constraints': cls.__dict__.get('_constraints', []),
-                '_local_sql_constraints': cls.__dict__.get('_sql_constraints', []),
-            }
-            cls = type(cls._name, (cls,), nattr)
+        # introduce the "registry class" of the model
+        cls = type(cls._name, (cls,), {'_register': False})
 
         # duplicate all new-style fields to avoid clashes with inheritance
         cls._fields = {}
@@ -780,67 +775,67 @@ class BaseModel(object):
         - give a chance to each field to initialize itself.
 
         """
-        pool.add(self._name, self)
-        self.pool = pool
+        # all the important stuff is stored directly on the model's class
+        cls = type(self)
 
-        if not self._name and not hasattr(self, '_inherit'):
-            name = type(self).__name__.split('.')[0]
-            msg = "The class %s has to have a _name attribute" % name
+        # insert self in the pool
+        pool.add(cls._name, self)
+        cls.pool = pool
 
-            _logger.error(msg)
-            raise except_orm('ValueError', msg)
-
-        if not self._description:
-            self._description = self.__doc__ or self._name
-        if not self._table:
-            self._table = self._name.replace('.', '_')
-
-        if not hasattr(self, '_log_access'):
+        # determine description, table and log_access
+        if not cls._description:
+            cls._description = cls.__doc__ or cls._name
+        if not cls._table:
+            cls._table = cls._name.replace('.', '_')
+        if not hasattr(cls, '_log_access'):
             # If _log_access is not specified, it is the same value as _auto.
-            self._log_access = getattr(self, "_auto", True)
+            cls._log_access = getattr(cls, "_auto", True)
 
-        for store_field in self._columns:
-            f = self._columns[store_field]
-            if hasattr(f, 'digits_change'):
-                f.digits_change(cr)
-            def not_this_field(stored_func):
-                x, y, z, e, f, l = stored_func
-                return x != self._name or y != store_field
-            self.pool._store_function[self._name] = filter(not_this_field, self.pool._store_function.get(self._name, []))
-            if not isinstance(f, fields.function):
+        # process store of low-level function fields
+        for fname, column in cls._columns.iteritems():
+            if hasattr(column, 'digits_change'):
+                column.digits_change(cr)
+            # filter out existing store about this field
+            pool._store_function[cls._name] = [
+                stored
+                for stored in pool._store_function.get(cls._name, [])
+                if (stored[0], stored[1]) != (cls._name, fname)
+            ]
+            if not(isinstance(column, fields.function) and column.store):
                 continue
-            if not f.store:
-                continue
-            sm = f.store
-            if sm is True:
-                sm = {self._name: (lambda self, cr, uid, ids, c={}: ids, None, 10, None)}
-            for object, aa in sm.items():
-                if len(aa) == 4:
-                    (fnct, fields2, order, length) = aa
-                elif len(aa) == 3:
-                    (fnct, fields2, order) = aa
+            # process store parameter
+            store = column.store
+            if store is True:
+                store = {cls._name: (lambda self, cr, uid, ids, c={}: ids, None, 10, None)}
+            for model, spec in store.iteritems():
+                if len(spec) == 4:
+                    (fnct, fields2, order, length) = spec
+                elif len(spec) == 3:
+                    (fnct, fields2, order) = spec
                     length = None
                 else:
                     raise except_orm('Error',
-                        ('Invalid function definition %s in object %s !\nYou must use the definition: store={object:(fnct, fields, priority, time length)}.' % (store_field, self._name)))
-                self.pool._store_function.setdefault(object, [])
-                self.pool._store_function[object].append((self._name, store_field, fnct, tuple(fields2) if fields2 else None, order, length))
-                self.pool._store_function[object].sort(lambda x, y: cmp(x[4], y[4]))
+                        ('Invalid function definition %s in object %s !\nYou must use the definition: store={object:(fnct, fields, priority, time length)}.' % (fname, cls._name)))
+                pool._store_function.setdefault(model, [])
+                pool._store_function[model].append(
+                    (cls._name, fname, fnct, tuple(fields2) if fields2 else None, order, length))
+                pool._store_function[model].sort(key=lambda x: x[4])
 
-        for (key, _, msg) in self._sql_constraints:
-            self.pool._sql_error[self._table+'_'+key] = msg
+        # store sql constraint error messages
+        for (key, _, msg) in cls._sql_constraints:
+            pool._sql_error[cls._table + '_' + key] = msg
 
         # Load manual fields
 
         # Check the query is already done for all modules of if we need to
         # do it ourselves.
-        if self.pool.fields_by_model is not None:
-            manual_fields = self.pool.fields_by_model.get(self._name, [])
+        if pool.fields_by_model is not None:
+            manual_fields = pool.fields_by_model.get(cls._name, [])
         else:
-            cr.execute('SELECT * FROM ir_model_fields WHERE model=%s AND state=%s', (self._name, 'manual'))
+            cr.execute('SELECT * FROM ir_model_fields WHERE model=%s AND state=%s', (cls._name, 'manual'))
             manual_fields = cr.dictfetchall()
         for field in manual_fields:
-            if field['name'] in self._columns:
+            if field['name'] in cls._columns:
                 continue
             attrs = {
                 'string': field['field_description'],
@@ -853,83 +848,64 @@ class BaseModel(object):
                 'manual': True,
                 #'select': int(field['select_level'])
             }
-
             if field['serialization_field_id']:
                 cr.execute('SELECT name FROM ir_model_fields WHERE id=%s', (field['serialization_field_id'],))
                 attrs.update({'serialization_field': cr.fetchone()[0], 'type': field['ttype']})
                 if field['ttype'] in ['many2one', 'one2many', 'many2many']:
                     attrs.update({'relation': field['relation']})
-                self._columns[field['name']] = fields.sparse(**attrs)
+                cls._columns[field['name']] = fields.sparse(**attrs)
             elif field['ttype'] == 'selection':
-                self._columns[field['name']] = fields.selection(eval(field['selection']), **attrs)
+                cls._columns[field['name']] = fields.selection(eval(field['selection']), **attrs)
             elif field['ttype'] == 'reference':
-                self._columns[field['name']] = fields.reference(selection=eval(field['selection']), **attrs)
+                cls._columns[field['name']] = fields.reference(selection=eval(field['selection']), **attrs)
             elif field['ttype'] == 'many2one':
-                self._columns[field['name']] = fields.many2one(field['relation'], **attrs)
+                cls._columns[field['name']] = fields.many2one(field['relation'], **attrs)
             elif field['ttype'] == 'one2many':
-                self._columns[field['name']] = fields.one2many(field['relation'], field['relation_field'], **attrs)
+                cls._columns[field['name']] = fields.one2many(field['relation'], field['relation_field'], **attrs)
             elif field['ttype'] == 'many2many':
                 _rel1 = field['relation'].replace('.', '_')
                 _rel2 = field['model'].replace('.', '_')
                 _rel_name = 'x_%s_%s_%s_rel' % (_rel1, _rel2, field['name'])
-                self._columns[field['name']] = fields.many2many(field['relation'], _rel_name, 'id1', 'id2', **attrs)
+                cls._columns[field['name']] = fields.many2many(field['relation'], _rel_name, 'id1', 'id2', **attrs)
             else:
-                self._columns[field['name']] = getattr(fields, field['ttype'])(**attrs)
+                cls._columns[field['name']] = getattr(fields, field['ttype'])(**attrs)
 
         self._inherits_check()
         self._inherits_reload()
-        if not self._sequence:
-            self._sequence = self._table + '_id_seq'
-        for k in self._defaults:
-            assert (k in self._columns) or (k in self._inherit_fields), 'Default function defined in %s but field %s does not exist !' % (self._name, k,)
-        for f in self._columns:
-            self._columns[f].restart()
+
+        if not cls._sequence:
+            cls._sequence = cls._table + '_id_seq'
+        for k in cls._defaults:
+            assert (k in cls._columns) or (k in cls._inherit_fields), \
+                'Default function defined in %s but field %s does not exist !' % (cls._name, k,)
+
+        # restart columns
+        for column in cls._columns.itervalues():
+            column.restart()
 
         # Transience
         if self.is_transient():
-            self._transient_check_count = 0
-            self._transient_max_count = config.get('osv_memory_count_limit')
-            self._transient_max_hours = config.get('osv_memory_age_limit')
-            assert self._log_access, "TransientModels must have log_access turned on, "\
+            cls._transient_check_count = 0
+            cls._transient_max_count = config.get('osv_memory_count_limit')
+            cls._transient_max_hours = config.get('osv_memory_age_limit')
+            assert cls._log_access, "TransientModels must have log_access turned on, "\
                                      "in order to implement their access rights policy"
 
         # Validate rec_name
-        if self._rec_name is not None:
-            assert self._rec_name in self._all_columns.keys() + ['id'], "Invalid rec_name %s for model %s" % (self._rec_name, self._name)
-        else:
-            self._rec_name = 'name'
+        if cls._rec_name is not None:
+            assert cls._rec_name in cls._all_columns.keys() + ['id'], \
+                "Invalid rec_name %s for model %s" % (cls._rec_name, cls._name)
+        elif 'name' in cls._all_columns:
+            cls._rec_name = 'name'
 
         # prepare ormcache, which must be shared by all instances of the model
-        self._ormcache = {}
-
-    # model attributes set on pool instance by method __init__
-    INIT_MODEL_ATTRIBUTES = [
-        '_all_columns',
-        '_columns',
-        '_description',
-        '_inherit_fields',
-        '_log_access',
-        '_ormcache',
-        '_rec_name',
-        '_sequence',
-        '_table',
-        '_transient_check_count',
-        '_transient_max_count',
-        '_transient_max_hours',
-        'pool',
-    ]
+        cls._ormcache = {}
 
     def _make_instance(self, **kwargs):
         """ create an instance of this model
             :params kwargs: attributes to set on the new instance
         """
-        # copy the fields determined by create_instance() and __init__()
         obj = object.__new__(self.__class__)
-        for name in self.INIT_MODEL_ATTRIBUTES:
-            if hasattr(self, name):
-                setattr(obj, name, getattr(self, name))
-
-        # add attributes
         for key, val in kwargs.iteritems():
             setattr(obj, key, val)
         return obj
@@ -3243,26 +3219,26 @@ class BaseModel(object):
         This will also call itself on each inherits'd child model.
 
         """
+        cls = type(self)
         res = {}
-        for table in self._inherits:
-            other = self.pool[table]
+        for table in cls._inherits:
+            other = cls.pool[table]
             for col in other._columns.keys():
-                res[col] = (table, self._inherits[table], other._columns[col], table)
+                res[col] = (table, cls._inherits[table], other._columns[col], table)
             for col in other._inherit_fields.keys():
-                res[col] = (table, self._inherits[table], other._inherit_fields[col][2], other._inherit_fields[col][3])
-        self._inherit_fields = res
-        self._all_columns = self._get_column_infos()
+                res[col] = (table, cls._inherits[table], other._inherit_fields[col][2], other._inherit_fields[col][3])
+        cls._inherit_fields = res
+        cls._all_columns = self._get_column_infos()
 
         # interface columns and inherited fields with new-style fields
         new_fields = {}
-        for parent_model, parent_field in self._inherits.iteritems():
-            for attr in self.pool[parent_model]._fields:
+        for parent_model, parent_field in cls._inherits.iteritems():
+            for attr in cls.pool[parent_model]._fields:
                 new_fields[attr] = Related(parent_field, attr, interface=True)
-        for attr, column in self._columns.iteritems():
+        for attr, column in cls._columns.iteritems():
             new_fields[attr] = Field.from_column(column)
 
         # update the model with the new fields
-        cls = self.__class__
         for attr, field in new_fields.iteritems():
             old_field = cls._fields.get(attr)
             if not old_field or old_field.interface:
