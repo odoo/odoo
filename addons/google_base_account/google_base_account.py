@@ -19,20 +19,12 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
+from openerp.osv import osv
 from openerp import SUPERUSER_ID
 
 from httplib2 import Http
 import urllib
 import simplejson
-
-
-class res_users(osv.osv):
-    _inherit = "res.users"
-    _columns = {
-        'gmail_user': fields.char('Username', size=64,),
-        'gmail_password': fields.char('Password', size=64),
-    }
 
 
 class base_config_settings(osv.osv):
@@ -56,13 +48,16 @@ class base_config_settings(osv.osv):
                 ir_config.set_param(cr, uid, 'google_%s_refresh_token' % service, content['refresh_token'])
         return res
 
-    # def get_default_google_authorization_code(self, cr, uid, ids, service, context=None):
-    #     authorization_code = self.pool.get("ir.config_parameter").get_param(cr, uid, "google_%s_authorization_code" % service, context=context)
-    #     return {'authorization_code': authorization_code}
-
-    # def set_google_authorization_code(self, cr, uid, ids, service, context=None):
-    #     config_parameters = self.pool.get("ir.config_parameter")
-    #     for record in self.read(cr, uid, ids, ['google_%s_authorization_code' % service], context=context):
-    #         config_parameters.set_param(cr, uid, "google_%s_authorization_code" % service, record['google_%s_authorization_code' % service] or '', context=context)
+    def _get_google_token_uri(self, cr, uid, service, context=None):
+        ir_config = self.pool['ir.config_parameter']
+        params = {
+            'scope': 'https://www.googleapis.com/auth/drive',
+            'redirect_uri': ir_config.get_param(cr, SUPERUSER_ID, 'google_redirect_uri'),
+            'client_id': ir_config.get_param(cr, SUPERUSER_ID, 'google_%s_client_id' % service),
+            'response_type': 'code',
+            'client_id': ir_config.get_param(cr, SUPERUSER_ID, 'google_%s_client_id' % service),
+        }
+        uri = 'https://accounts.google.com/o/oauth2/auth?%s' % urllib.urlencode(params)
+        return uri
 
 # vim:expandtab:smartindent:toabstop=4:softtabstop=4:shiftwidth=4:

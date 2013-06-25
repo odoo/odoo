@@ -215,4 +215,8 @@ class base_config_settings(osv.osv):
 
     _columns = {
         'google_docs_authorization_code': fields.char('Paste Generated "Authorization Code" from google to here', size=124),
+        'google_docs_uri': fields.char('URI', readonly=True, help="The URL to generate the authorization code from Google"),
+    }
+    _defaults = {
+        'google_docs_uri': lambda s, cr, uid, c: s._get_google_token_uri(cr, uid, 'docs', context=c),
     }
