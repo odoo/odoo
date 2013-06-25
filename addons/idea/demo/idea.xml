@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record model="idea.category" id="idea_cat_0">
+            <field name="name">Sales</field>
+        </record>
+        <record model="idea.category" id="idea_cat_1">
+            <field name="name">Organization</field>
+        </record>
+        <record model="idea.category" id="idea_cat_2">
+            <field name="name">Technical</field>
+        </record>
+
+        <record model="idea.idea" id="idea_idea_0">
+            <field name="name">Docking station along with tablet PC</field>
+            <field name="description">When you sell a tablet PC, maybe we could propose a docking station with it. I offer 20% on the docking stating (not the tablet).</field>
+            <field name="user_id" eval="ref('base.user_demo')"/>
+            <field name="category_ids" eval="[(6, 0, [ref('idea.idea_cat_0')])]"/>
+        </record>
+
+        <record model="idea.idea" id="idea_idea_1">
+            <field name="name">Communicate using emails</field>
+            <field name="description">I start communicating with prospects more by email than phonecalls. I send an email to create a sense of emergency, like "can I call you this week about our quote?" and I call only those that answer this email.</field>
+            <field name="user_id" eval="ref('base.user_demo')"/>
+            <field name="state">open</field>
+            <field name="category_ids" eval="[(6, 0, [ref('idea.idea_cat_0'), ref('idea.idea_cat_1')])]"/>
+        </record>
+        <workflow action="idea_set_high_priority" model="idea.idea" ref="idea_idea_1"/>
+
+        <record model="idea.idea" id="idea_idea_2">
+            <field name="name">Use a two-stages testing phase</field>
+            <field name="description">We should perform testing using two levels of validation.</field>
+            <field name="user_id" eval="ref('base.user_root')"/>
+            <field name="state">open</field>
+            <field name="category_ids" eval="[(6, 0, [ref('idea.idea_cat_1'), ref('idea.idea_cat_2')])]"/>
+        </record>
+        <workflow action="idea_set_high_priority" model="idea.idea" ref="idea_idea_2"/>
+
+        <record model="idea.idea" id="idea_idea_3">
+            <field name="name">Write some functional documentation about procurements</field>
+            <field name="description">We receive many questions about OpenChatter. Maybe some functional doc could save us some time.</field>
+            <field name="user_id" eval="ref('base.user_demo')"/>
+            <field name="state">open</field>
+            <field name="category_ids" eval="[(6, 0, [ref('idea.idea_cat_0'), ref('idea.idea_cat_1')])]"/>
+        </record>
+
+        <record model="idea.idea" id="idea_idea_4">
+            <field name="name">Better management of smtp errors</field>
+            <field name="description">There should be away to store the reason why some emails are not sent.</field>
+            <field name="user_id" eval="ref('base.user_root')"/>
+            <field name="state">close</field>
+            <field name="category_ids" eval="[(6, 0, [ref('idea.idea_cat_2')])]"/>
+        </record>
+        <workflow action="idea_set_low_priority" model="idea.idea" ref="idea_idea_4"/>
+
+        <record model="idea.idea" id="idea_idea_5">
+            <field name="name">Kitten mode enabled by default</field>
+            <field name="description">As this is the most loved feature, the kitten mode should be enabled by default. And maybe even impossible to remove.</field>
+            <field name="user_id" eval="ref('base.user_root')"/>
+            <field name="state">cancel</field>
+            <field name="category_ids" eval="[(6, 0, [ref('idea.idea_cat_2')])]"/>
+        </record>
+        <workflow action="idea_set_low_priority" model="idea.idea" ref="idea_idea_4"/>
+
+    </data>
+</openerp>
+
