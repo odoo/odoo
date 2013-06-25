@@ -163,7 +163,7 @@ class purchase_requisition(osv.osv):
 
 
     def open_rfq(self, cr, uid, ids, context=None):
-        """ This opens rfq view to view all quotations associated to the tender
+        """ This opens rfq view to view all quotations associated to the call for bids
             @return: the RFQ tree view
         """
         if context is None:
@@ -339,7 +339,7 @@ class purchase_requisition(osv.osv):
         for quotation in tender.purchase_ids:
             if quotation.state in ['draft', 'sent', 'bid']:
                 wf_service.trg_validate(uid, 'purchase.order', quotation.id, 'purchase_cancel', cr)
-                po.message_post(cr, uid, [quotation.id], body=_('Cancelled by the tender associated to this quotation.'), context=context)
+                po.message_post(cr, uid, [quotation.id], body=_('Cancelled by the call for bids associated to this request for quotation.'), context=context)
         return True
             
 
