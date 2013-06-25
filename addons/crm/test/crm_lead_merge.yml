@@ -2,13 +2,6 @@
 -
   During a mixed merge (involving leads and opps), data should be handled a certain way following their type (m2o, m2m, text, ...)  Start by creating two leads and an opp.
 -
-  !record {model: crm.lead, id: test_crm_opp_01}:
-    type: 'opportunity'
-    name: 'Test opportunity 1'
-    partner_id: base.res_partner_5
-    stage_id: stage_lead1
-    description: This is the description of the test opp 1.
--
   !record {model: crm.lead, id: test_crm_lead_01}:
     type: 'lead'
     name: 'Test lead 1'
@@ -23,8 +16,15 @@
     stage_id: stage_lead1
     description: This is the description of the test lead 2.
 -
+  !record {model: crm.lead, id: test_crm_opp_01}:
+    type: 'opportunity'
+    name: 'Test opportunity 1'
+    partner_id: base.res_partner_5
+    stage_id: stage_lead1
+    description: This is the description of the test opp 1.
+-
   !python {model: crm.lead}: |
-    lead_ids = [ref('test_crm_opp_01'),ref('test_crm_lead_01'), ref('test_crm_lead_02')]
+    lead_ids = [ref('test_crm_lead_01'), ref('test_crm_lead_02'),ref('test_crm_opp_01')]
     context.update({'active_model': 'crm.lead', 'active_ids': lead_ids, 'active_id': lead_ids[0]})
 -
   I create a merge wizard and merge the leads and opp together in the first item of the list.
