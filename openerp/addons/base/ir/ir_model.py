@@ -245,7 +245,6 @@ class ir_model_fields(osv.osv):
             "specified as a Python expression defining a list of triplets. "
             "For example: [('color','=','red')]"),
         'groups': fields.many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id', 'Groups'),
-        'view_load': fields.boolean('View Auto-Load'),
         'selectable': fields.boolean('Selectable'),
         'modules': fields.function(_in_modules, type='char', size=128, string='In Modules', help='List of modules in which the field is defined'),
         'serialization_field_id': fields.many2one('ir.model.fields', 'Serialization Field', domain = "[('ttype','=','serialized')]",
@@ -256,7 +255,6 @@ class ir_model_fields(osv.osv):
     }
     _rec_name='field_description'
     _defaults = {
-        'view_load': 0,
         'selection': "",
         'domain': "[]",
         'name': 'x_',
@@ -386,7 +384,6 @@ class ir_model_fields(osv.osv):
             ('size', 'size', int),
             ('on_delete', 'ondelete', str),
             ('translate', 'translate', bool),
-            ('view_load', 'view_load', bool),
             ('selectable', 'selectable', bool),
             ('select_level', 'select', int),
             ('selection', 'selection', eval),

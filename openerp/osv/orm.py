@@ -794,7 +794,6 @@ class BaseModel(object):
                 'field_description': f.string,
                 'ttype': f._type,
                 'relation': f._obj or '',
-                'view_load': (f.view_load and 1) or 0,
                 'select_level': tools.ustr(f.select or 0),
                 'readonly': (f.readonly and 1) or 0,
                 'required': (f.required and 1) or 0,
@@ -824,12 +823,12 @@ class BaseModel(object):
                 vals['id'] = id
                 cr.execute("""INSERT INTO ir_model_fields (
                     id, model_id, model, name, field_description, ttype,
-                    relation,view_load,state,select_level,relation_field, translate, serialization_field_id
+                    relation,state,select_level,relation_field, translate, serialization_field_id
                 ) VALUES (
-                    %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
+                    %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
                 )""", (
                     id, vals['model_id'], vals['model'], vals['name'], vals['field_description'], vals['ttype'],
-                     vals['relation'], bool(vals['view_load']), 'base',
+                     vals['relation'], 'base',
                     vals['select_level'], vals['relation_field'], bool(vals['translate']), vals['serialization_field_id']
                 ))
                 if 'module' in context:
@@ -847,11 +846,11 @@ class BaseModel(object):
                         cr.commit()
                         cr.execute("""UPDATE ir_model_fields SET
                             model_id=%s, field_description=%s, ttype=%s, relation=%s,
-                            view_load=%s, select_level=%s, readonly=%s ,required=%s, selectable=%s, relation_field=%s, translate=%s, serialization_field_id=%s
+                            select_level=%s, readonly=%s ,required=%s, selectable=%s, relation_field=%s, translate=%s, serialization_field_id=%s
                         WHERE
                             model=%s AND name=%s""", (
                                 vals['model_id'], vals['field_description'], vals['ttype'],
-                                vals['relation'], bool(vals['view_load']),
+                                vals['relation'],
                                 vals['select_level'], bool(vals['readonly']), bool(vals['required']), bool(vals['selectable']), vals['relation_field'], bool(vals['translate']), vals['serialization_field_id'], vals['model'], vals['name']
                             ))
                         break
@@ -4879,6 +4878,34 @@ class BaseModel(object):
 
     # for backward compatibility
     resolve_o2m_commands_to_record_dicts = resolve_2many_commands
+
+    def search_read(self, cr, uid, domain=None, fields=None, offset=0, limit=None, order=None, context=None):
+        """
+        Performs a ``search()`` followed by a ``read()``.
+
+        :param cr: database cursor
+        :param user: current user id
+        :param domain: Search domain, see ``args`` parameter in ``search()``. Defaults to an empty domain that will match all records.
+        :param fields: List of fields to read, see ``fields`` parameter in ``read()``. Defaults to all fields.
+        :param offset: Number of records to skip, see ``offset`` parameter in ``search()``. Defaults to 0.
+        :param limit: Maximum number of records to return, see ``limit`` parameter in ``search()``. Defaults to no limit.
+        :param order: Columns to sort result, see ``order`` parameter in ``search()``. Defaults to no sort.
+        :param context: context arguments.
+        :return: List of dictionaries containing the asked fields.
+        :rtype: List of dictionaries.
+
+        """
+        record_ids = self.search(cr, uid, domain or [], offset, limit or False, order or False, context or {})
+        if not record_ids:
+            return []
+        result = self.read(cr, uid, record_ids, fields or [], context or {})
+        # reorder read
+        if len(result) >= 1:
+            index = {}
+            for r in result:
+                index[r['id']] = r
+            result = [index[x] for x in record_ids if x in index]
+        return result
 
     def _register_hook(self, cr):
         """ stuff to do right after the registry is built """

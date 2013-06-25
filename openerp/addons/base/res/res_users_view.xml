@@ -160,16 +160,16 @@
                             </page>
                             <page string="Preferences">
                                 <group>
-                                    <group name="preferences">
+                                    <group string="Localization" name="preferences">
                                         <field name="lang"/>
                                         <field name="tz"/>
                                     </group>
-                                    <group groups="base.group_no_one">
+                                    <group string="Menus Customization" groups="base.group_no_one">
                                         <field name="action_id"/>
                                         <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
                                     </group>
                                 </group>
-                                <group string="Email preferences">
+                                <group string="Messaging and Social" name="messaging">
                                     <field name="signature"/>
                                 </group>
                             </page>
