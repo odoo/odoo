@@ -27,6 +27,7 @@ class IdeaCategory(osv.Model):
     """ Category of Idea """
     _name = "idea.category"
     _description = "Idea Category"
+
     _order = 'name asc'
 
     _columns = {

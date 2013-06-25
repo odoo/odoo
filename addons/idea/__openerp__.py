@@ -41,6 +41,7 @@ Once installed, check the menu 'Ideas' in the 'Tools' main menu.""",
         'security/ir.model.access.csv',
         'views/idea.xml',
         'views/category.xml',
+        'data/idea.xml',
         'data/idea_workflow.xml',
     ],
     'demo': [
