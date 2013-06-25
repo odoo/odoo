@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-    <!--Partner Activation -->
+        <!--Partner Activation -->
 
         <record model="ir.ui.view" id="res_partner_activation_form">
             <field name="name">openerp_custom.res.partner.activation.form</field>
@@ -33,145 +33,134 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="res_partner_activation_config_mi" parent="base.menu_config_address_book" action="res_partner_activation_act" groups="base.group_no_one"/>
+        <menuitem id="res_partner_activation_config_mi" parent="base.menu_config_address_book" action="res_partner_activation_act" groups="base.group_no_one" />
 
-    <!--Partner Grade -->
+        <!--Partner Grade -->
 
-
-    <record id="view_partner_grade_tree" model="ir.ui.view">
-        <field name="name">res.partner.grade.tree</field>
-        <field name="model">res.partner.grade</field>
-        <field name="arch" type="xml">
-            <tree string="Partner Grade">
-                <field name="sequence" invisible="1"/>
-                <field name="name"/>
-            </tree>
-        </field>
-    </record>
-    <record id="view_partner_grade_form" model="ir.ui.view">
-        <field name="name">res.partner.grade.form</field>
-        <field name="model">res.partner.grade</field>
-        <field name="arch" type="xml">
-            <form string="Partner Grade" version="7.0">
-                <group col="4">
-                    <field name="name"/>
-                    <field name="sequence"/>
-                    <field name="active"/>
-                </group>
-            </form>
-        </field>
-    </record>
-    <record id="res_partner_grade_action" model="ir.actions.act_window">
-        <field name="name">Partner Grade</field>
-        <field name="res_model">res.partner.grade</field>
-        <field name="view_type">form</field>
-    </record>
-    <menuitem action="res_partner_grade_action" id="menu_res_partner_grade_action"
-        groups="base.group_no_one"
-        parent="base.menu_crm_config_lead" />
-
-    <!-- Partner form -->
-    <record id="view_res_partner_filter_assign_tree" model="ir.ui.view">
-        <field name="name">res.partner.geo.inherit.tree</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_partner_tree"/>
-        <field name="arch" type="xml">
-            <field name="user_id" position="after">
-                <field name="date_review_next"/>
-                <field name="grade_id"/>
-                <field name="activation"/>
+        <record id="view_partner_grade_tree" model="ir.ui.view">
+            <field name="name">res.partner.grade.tree</field>
+            <field name="model">res.partner.grade</field>
+            <field name="arch" type="xml">
+                <tree string="Partner Grade">
+                    <field name="sequence" invisible="1" />
+                    <field name="name" />
+                </tree>
             </field>
-        </field>
-    </record>
-
-    <record id="view_res_partner_filter_assign" model="ir.ui.view">
-        <field name="name">res.partner.geo.inherit.search</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_res_partner_filter"/>
-        <field name="arch" type="xml">
-            <filter string="Salesperson" position="after">
-                <filter string="Activation" context="{'group_by' : 'activation'}" domain="[]" icon="terp-personal" />
-            </filter>
-            <field name="category_id" position="after">
-                <field name="grade_id"/>
-            </field>
-        </field>
-    </record>
-
-    <record id="view_crm_partner_geo_form" model="ir.ui.view">
-        <field name="name">res.partner.geo.inherit</field>
-        <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_partner_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//notebook[last()]" position="inside">
-                <page string="Geo Localization">
-                    <group>
+        </record>
+        <record id="view_partner_grade_form" model="ir.ui.view">
+            <field name="name">res.partner.grade.form</field>
+            <field name="model">res.partner.grade</field>
+            <field name="arch" type="xml">
+                <form string="Partner Grade" version="7.0">
+                    <group col="4">
                         <group>
-                            <separator string="Partner Activation" colspan="2"/>
-                            <field name="grade_id" widget="selection"/>
-                            <field name="activation" widget="selection"/>
-                            <field name="partner_weight"/>
+                            <field name="name" />
+                            <field name="partner_weight" />
+                            <div>
+                                <p class="oe_grey">
+                                    Define a weight to this grade. The weight will be used as default in the partner form to compute the chance for this partner to get leads. For instance, for business purpose, you can define a target revenue for each grade. To give the same chance to each partner to get leads, keep 1 in this field.
+                                </p>
+                            </div>
                         </group>
                         <group>
-                            <separator string="Partner Review" colspan="2"/>
-                            <field name="date_review"/>
-                            <field name="date_review_next"/>
-                            <field name="date_partnership"/>
+                            <field name="sequence" />
+                            <field name="active" />
                         </group>
                     </group>
-                    <group colspan="2" col="2">
-                        <separator string="Geo Localization" colspan="2"/>
-                        <button
-                            string="Geo Localize"
-                            name="geo_localize"
-                            colspan="2"
-                            icon="gtk-apply"
-                            type="object"/>
-                        <field name="partner_latitude"/>
-                        <field name="partner_longitude"/>
-                        <field name="date_localization"/>
-                    </group>
-                    <newline/>
+                </form>
+            </field>
+        </record>
+        <record id="res_partner_grade_action" model="ir.actions.act_window">
+            <field name="name">Partner Grade</field>
+            <field name="res_model">res.partner.grade</field>
+            <field name="view_type">form</field>
+        </record>
+        <menuitem action="res_partner_grade_action" id="menu_res_partner_grade_action" groups="base.group_no_one" parent="base.menu_crm_config_lead" />
 
-                    <field name="opportunity_assigned_ids" colspan="4" nolabel="1">
-                         <tree string="Assigned Opportunities"  colors="blue:state=='pending';gray:state=='cancel'">
-                             <field name="create_date"/>
-                             <field name="name"/>
-                             <field name="type"/>
-                             <field name="stage_id"/>
-                             <button name="stage_previous" string="Previous"
-                                    states="open,pending" type="object" icon="gtk-go-back" />
-                             <button name="stage_next" string="Next"
-                                    states="open,pending" type="object"
-                                    icon="gtk-go-forward" />
-                             <field name="section_id"
-                                    invisible="context.get('invisible_section', True)"
-                                    groups="base.group_multi_salesteams"/>
-                             <field name="user_id" />
-                             <field name="state" />
-                             <button name="case_cancel" string="Cancel"
-                                    states="draft,open,pending" type="object"
-                                    icon="gtk-cancel" />
-                             <button name="case_open" string="Open"
-                                    states="draft,pending" type="object"
-                                    icon="gtk-go-forward" />
-                             <button name="case_close" string="Close"
-                                    states="open,draft,pending" type="object"
-                                    icon="gtk-close" />
-                             <button string="Convert to Opportunity"
-                                    name="convert_opportunity"
-                                    states="draft,open,pending" icon="gtk-index"
-                                    type="object" attrs="{'invisible':[('type','=','opportunity')]}" />
-                             <button name="case_escalate" string="Escalate"
-                                    states="open,draft,pending" type="object"
-                                    icon="gtk-go-up" />
-                         </tree>
-                    </field>
-                </page>
-            </xpath>
-        </field>
-    </record>
+        <!-- Partner form -->
+        <record id="view_res_partner_filter_assign_tree" model="ir.ui.view">
+            <field name="name">res.partner.geo.inherit.tree</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree" />
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                    <field name="date_review_next" />
+                    <field name="grade_id" />
+                    <field name="activation" />
+                </field>
+            </field>
+        </record>
 
+        <record id="view_res_partner_filter_assign" model="ir.ui.view">
+            <field name="name">res.partner.geo.inherit.search</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter" />
+            <field name="arch" type="xml">
+                <filter string="Salesperson" position="after">
+                    <filter string="Activation" context="{'group_by' : 'activation'}" domain="[]" icon="terp-personal" />
+                </filter>
+                <field name="category_id" position="after">
+                    <field name="grade_id" />
+                </field>
+            </field>
+        </record>
+
+        <record id="view_crm_partner_geo_form" model="ir.ui.view">
+            <field name="name">res.partner.geo.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//notebook[last()]" position="inside">
+                    <page string="Forwarded Leads">
+                        <group>
+                            <group string="Partner Activation">
+                                <label for="partner_latitude" string="Geolocalisation" />
+                                <div class="oe_title oe_inline">
+                                    <h3 class="oe_inline">
+                                        <span class="oe_grey">( </span>
+                                        <field name="partner_latitude" nolabel="1" readonly="1" class="oe_inline" />
+                                        <span class="oe_grey oe_inline" attrs="{'invisible':[('partner_latitude','&lt;=',0)]}">N </span>
+                                        <span class="oe_grey oe_inline" attrs="{'invisible':[('partner_latitude','&gt;=',0)]}">S </span>
+                                        <field name="partner_longitude" class="oe_inline" readonly="1" nolabel="1" />
+                                        <span class="oe_grey oe_inline" attrs="{'invisible':[('partner_longitude','&lt;=',0)]}">E </span>
+                                        <span class="oe_grey oe_inline" attrs="{'invisible':[('partner_longitude','&gt;=',0)]}">W </span>
+                                        <span class="oe_grey">) </span>
+                                    </h3>
+                                    <button string="Geolocalize" name="geo_localize" class="oe_inline" type="object" />
+                                </div>
+                                <field name="grade_id" widget="selection" on_change="onchange_grade_id(grade_id)" />
+                                <field name="partner_weight" class="oe_inline" />
+                                <div colspan="2">
+                                    <p class="oe_grey">
+                                        Higher is the value, higher is the probability for this partner to get more leads.
+                                    </p>
+                                </div>
+                            </group>
+                            <group>
+                                <separator string="Partner Review" colspan="2" />
+                                <field name="date_review" />
+                                <field name="date_review_next" />
+                                <field name="date_partnership" />
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                        <newline />
+                        <separator string="Forwarded Leads" colspan="2" />
+                        <field name="opportunity_assigned_ids" colspan="4" nolabel="1">
+                            <tree string="Assigned Opportunities" colors="blue:state=='pending';gray:state=='cancel'">
+                                <field name="name" />
+                                <field name="contact_name" />
+                                <field name="email_from" />
+                                <field name="phone" />
+                                <field name="stage_id" />
+                                <field name="state" invisible="1" />
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
 
     </data>
 </openerp>

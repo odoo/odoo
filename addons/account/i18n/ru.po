@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-06-17 14:30+0000\n"
+"PO-Revision-Date: 2013-06-19 11:49+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-18 05:46+0000\n"
+"X-Launchpad-Export-Date: 2013-06-20 05:17+0000\n"
 "X-Generator: Launchpad (build 16673)\n"
 
 #. module: account
@@ -257,7 +257,8 @@ msgid ""
 "entries."
 msgstr ""
 "Тип счета используется в информационных целях, при создании официальных "
-"отчетов для конкретной страны, определении правил"
+"отчетов для конкретной страны, определении правил закрытия финансового года "
+"и проводок открытия."
 
 #. module: account
 #: field:account.config.settings,sale_refund_sequence_next:0
@@ -285,7 +286,7 @@ msgstr "Разрешить списание"
 #. module: account
 #: view:account.analytic.chart:0
 msgid "Select the Period for Analysis"
-msgstr "Выберите период для проведения анализа"
+msgstr "Выберите период для анализа"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree3
@@ -2033,6 +2034,12 @@ msgid ""
 "useful because it enables you to preview at any time the tax that you owe at "
 "the start and end of the month or quarter."
 msgstr ""
+"Это меню печати налоговой декларации на основе счетов и платежей. Выберите "
+"один или несколько периодов финансового года. Информация, необходимая для "
+"налоговой декларации генерируется автоматически OpenERP из счета (или "
+"платежей, в некоторых странах). Эти данные обновляются в режиме реального "
+"времени. Это очень полезно, потому что позволяет просматривать в любое время "
+"налоги, которые вы должны в начале и в конце месяца или квартала."
 
 #. module: account
 #: code:addons/account/account.py:409
@@ -2108,7 +2115,7 @@ msgstr ""
 "              </p><p>\n"
 "                Вы можете управлять счетом от поставщика в соответствии с\n"
 "                тем, что вы приобрели. OpenERP также может создавать\n"
-"                черновые счета автоматически из заказов на закупку.\n"
+"                черновые счета автоматически из заказов закупки.\n"
 "              </p>\n"
 "            "
 
@@ -2234,7 +2241,7 @@ msgstr "Счет - печать журнала"
 #. module: account
 #: model:ir.model,name:account.model_product_category
 msgid "Product Category"
-msgstr "Категория ТМЦ"
+msgstr "Категория продукции"
 
 #. module: account
 #: code:addons/account/account.py:656
@@ -2606,7 +2613,7 @@ msgstr "Учетный год"
 #: help:accounting.report,fiscalyear_id:0
 #: help:accounting.report,fiscalyear_id_cmp:0
 msgid "Keep empty for all open fiscal year"
-msgstr "Keep empty for all open fiscal year"
+msgstr "Оставьте пустым для всех открытых финансовых лет"
 
 #. module: account
 #: code:addons/account/account.py:653
@@ -2938,7 +2945,7 @@ msgstr "Метка"
 #. module: account
 #: view:res.partner.bank:0
 msgid "Accounting Information"
-msgstr "Бухгалтерская информация"
+msgstr "Учетная информация"
 
 #. module: account
 #: view:account.tax:0
@@ -3104,6 +3111,8 @@ msgid ""
 "Selected invoice(s) cannot be confirmed as they are not in 'Draft' or 'Pro-"
 "Forma' state."
 msgstr ""
+"Выбранные счета нельзя подтвердить, так как состояние не \"Черновик\" и не "
+"\"Проформа\""
 
 #. module: account
 #: code:addons/account/account.py:1071
@@ -4295,7 +4304,7 @@ msgstr "Открыть счет"
 #. module: account
 #: field:account.invoice.tax,factor_tax:0
 msgid "Multipication factor Tax code"
-msgstr ""
+msgstr "Коэффициент кода налога"
 
 #. module: account
 #: field:account.config.settings,complete_tax_set:0
@@ -4604,7 +4613,7 @@ msgstr ""
 #: field:account.account,shortcut:0
 #: field:account.account.template,shortcut:0
 msgid "Shortcut"
-msgstr "Горячая клвиша"
+msgstr "Закладка"
 
 #. module: account
 #: view:account.account:0
@@ -4678,6 +4687,8 @@ msgid ""
 "Error!\n"
 "The duration of the Period(s) is/are invalid."
 msgstr ""
+"Ошибка!\n"
+"Не допустимая продолжительность периода."
 
 #. module: account
 #: field:account.entries.report,month:0
@@ -4838,7 +4849,7 @@ msgstr "Документ из счета или платежа"
 msgid ""
 "There is currently no company without chart of account. The wizard will "
 "therefore not be executed."
-msgstr ""
+msgstr "Не ни одной компании без плана счетов. Мастер не будет запущен."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
@@ -5031,7 +5042,7 @@ msgstr "Контроль типа"
 #. module: account
 #: help:account.journal,default_credit_account_id:0
 msgid "It acts as a default account for credit amount"
-msgstr "Выступает в качестве счета по умолчанию для сумм по кредиту"
+msgstr "Используется как кредитовый счет по умолчанию"
 
 #. module: account
 #: view:cash.box.out:0
@@ -5048,7 +5059,7 @@ msgstr "Отменено"
 #. module: account
 #: help:account.config.settings,group_proforma_invoices:0
 msgid "Allows you to put invoices in pro-forma state."
-msgstr ""
+msgstr "Позволяет устанавливать статус \"Проформа\" для счетов."
 
 #. module: account
 #: view:account.journal:0
@@ -5062,6 +5073,7 @@ msgid ""
 "It adds the currency column on report if the currency differs from the "
 "company currency."
 msgstr ""
+"Добавляет колонку валюты в отчет, если валюта отлична от валюты компании."
 
 #. module: account
 #: code:addons/account/account.py:3394
@@ -5293,7 +5305,7 @@ msgstr "Проводки журнала для проверки"
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
 msgid "Round Globally"
-msgstr ""
+msgstr "Глобальное округление"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -5573,7 +5585,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice:0
 msgid "Pro Forma Invoice "
-msgstr "Предварительный счет "
+msgstr "Проформа счета "
 
 #. module: account
 #: selection:account.subscription,period_type:0
@@ -5985,7 +5997,7 @@ msgstr "Сумма в валюте"
 #. module: account
 #: selection:res.company,tax_calculation_rounding_method:0
 msgid "Round per Line"
-msgstr ""
+msgstr "Округление каждой позиции"
 
 #. module: account
 #: report:account.analytic.account.balance:0
@@ -6075,7 +6087,7 @@ msgstr "Открыть кассу"
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Automatic formatting"
-msgstr ""
+msgstr "Автоматическое форматирование"
 
 #. module: account
 #: view:account.move.line.reconcile:0
@@ -6748,7 +6760,7 @@ msgstr "Процент"
 #. module: account
 #: selection:account.config.settings,tax_calculation_rounding_method:0
 msgid "Round globally"
-msgstr ""
+msgstr "Глобальное округление"
 
 #. module: account
 #: selection:account.report.general.ledger,sortby:0
@@ -7732,7 +7744,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,group_proforma_invoices:0
 msgid "Allow pro-forma invoices"
-msgstr ""
+msgstr "Разрешить проформы счетов"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -7803,7 +7815,7 @@ msgstr "Журнал счета"
 #. module: account
 #: field:account.config.settings,tax_calculation_rounding_method:0
 msgid "Tax calculation rounding method"
-msgstr ""
+msgstr "Метод округления при расчете налога"
 
 #. module: account
 #: model:process.node,name:account.process_node_paidinvoice0
@@ -8064,6 +8076,8 @@ msgstr "Отмена выбранных счетов"
 msgid ""
 "This field is used to generate legal reports: profit and loss, balance sheet."
 msgstr ""
+"Это поле используется для генерации официальных отчетов: прибыль и убыток, "
+"баланс."
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -8317,7 +8331,7 @@ msgstr ""
 #. module: account
 #: field:res.company,tax_calculation_rounding_method:0
 msgid "Tax Calculation Rounding Method"
-msgstr ""
+msgstr "Метод округления при расчете налога"
 
 #. module: account
 #: field:account.entries.report,move_line_state:0
@@ -9753,6 +9767,7 @@ msgid ""
 "This field contains the information related to the numbering of the journal "
 "entries of this journal."
 msgstr ""
+"Это поле содержит информацию, связанную с нумерацией проводок этого журнала."
 
 #. module: account
 #: field:account.invoice,sent:0
@@ -10417,7 +10432,7 @@ msgstr "Всего"
 #: code:addons/account/wizard/account_invoice_refund.py:109
 #, python-format
 msgid "Cannot %s draft/proforma/cancel invoice."
-msgstr ""
+msgstr "Нельзя %s черновик/проформу/закрытый счет."
 
 #. module: account
 #: field:account.tax,account_analytic_paid_id:0
@@ -11118,7 +11133,7 @@ msgstr ""
 #. module: account
 #: selection:account.config.settings,tax_calculation_rounding_method:0
 msgid "Round per line"
-msgstr ""
+msgstr "Округление каждой позиции"
 
 #. module: account
 #: help:account.move.line,amount_residual_currency:0
