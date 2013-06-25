@@ -95,7 +95,7 @@
                             <button name="open_rfq" type="object" string="View RFQs/Bids" attrs="{'invisible': [('state', 'in', ('draft'))]}"/>
                         </div>
                         <separator string="Requests for Quotation"/>
-                        <field name="purchase_ids" readonly="1">
+                        <field name="purchase_ids">
                             <tree string="Purchase Order">
                                 <field name="name" string="Reference"/>
                                 <field name="date_order" string="Order Date"/>
@@ -177,11 +177,11 @@
           <p class="oe_view_nocontent_create">
             Click to start a new Call for Bids process. 
           </p><p>
-            A Call for Bids is the step before a request for quotation.
-            In a purchase requisition (or purchase tender), you can record the
-            products you need to buy and trigger the creation of RfQs to
-            suppliers. After the negotiation, once you have reviewed all the
-            supplier's offers, you can validate some and cancel others.
+            A Call for Bids is a procedure for generating competing offers from
+            different bidders. In the call for bids, you can record the
+            products you need to buy and generate the creation of RfQs to
+            suppliers. Once the bids have been registered, you can review and
+            compare them and you can validate some and cancel others.
           </p>
         </field>
     </record>
