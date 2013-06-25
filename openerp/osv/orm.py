@@ -582,11 +582,17 @@ class BaseModel(object):
 
     @classmethod
     def set_field_descriptor(cls, name, field):
+        """ Add the given `field` under the given `name` in the class """
         field.set_model_name(cls._name, name)
 
-        # add field as an attribute and in _fields (for reflection)
-        setattr(cls, name, field)
+        # add field in _fields (for reflection)
         cls._fields[name] = field
+
+        # add field as an attribute, unless another kind of value already exists
+        if isinstance(getattr(cls, name, field), Field):
+            setattr(cls, name, field)
+        else:
+            _logger.warning("In model %r, member %r is not a field", cls._name, name)
 
         if not field.interface:
             _logger.debug("Create column for field %s.%s", cls._name, name)
@@ -3243,14 +3249,7 @@ class BaseModel(object):
             old_field = cls._fields.get(attr)
             if not old_field or old_field.interface:
                 # replace old_field if it is an interface
-                field.set_model_name(cls._name, attr)
-                cls._fields[attr] = field
-                # add field as an attribute if possible
-                if getattr(cls, attr, None) is old_field:
-                    _logger.debug("Create field for column %s.%s", cls._name, attr)
-                    setattr(cls, attr, field)
-                else:
-                    _logger.warning("In model %r, member %r is not a field", cls._name, attr)
+                cls.set_field_descriptor(attr, field)
 
         self._inherits_reload_src()
 
