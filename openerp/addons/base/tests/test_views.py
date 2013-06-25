@@ -359,6 +359,36 @@ class TestApplyInheritanceSpecs(common.TransactionCase):
                     name="target"),
                 string="Title")))
 
+    def test_invalid_position(self):
+        spec = ET.tostring(
+            Field(
+                Field(name="whoops"),
+                name="target", position="serious_series"))
+
+        with self.assertRaises(AttributeError):
+            self.View.apply_inheritance_specs(self.cr, self.uid, 'test',
+                                              None, self.base_arch,
+                                              None, spec)
+
+    def test_incorrect_version(self):
+        # Version ignored on //field elements, so use something else
+        arch = E.form(E.element(foo="42"))
+        spec = ET.tostring(E.element(
+            Field(name="placeholder"),
+            foo="42", version="7.0"))
+
+        with self.assertRaises(AttributeError):
+            self.View.apply_inheritance_specs(self.cr, self.uid, 'test',
+                                              None, arch,
+                                              None, spec)
+
+    def test_target_not_found(self):
+        spec = ET.tostring(Field(name="targut"))
+
+        with self.assertRaises(AttributeError):
+            self.View.apply_inheritance_specs(self.cr, self.uid, 'test',
+                                              None, self.base_arch,
+                                              None, spec)
 
 class TestApplyInheritedArchs(common.TransactionCase):
     """ Applies a sequence of modificator archs to a base view
