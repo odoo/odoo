@@ -19,9 +19,3 @@
 -
   !assert {model: crm.lead, id: crm.crm_case_1, string: Escalate lead to parent team}:
     - section_id.name == "Marketing"
--
-  I find default stage.
--
-    !python {model: crm.case.section}: |
-      case_section = self.browse(cr, uid, ref('section_sales_department'))
-      stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False,[('probability','=',100.0)])
