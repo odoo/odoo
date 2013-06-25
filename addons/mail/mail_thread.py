@@ -746,9 +746,9 @@ class mail_thread(osv.AbstractModel):
         email_to = decode_header(message, 'To')
         references = decode_header(message, 'References')
         in_reply_to = decode_header(message, 'In-Reply-To')
-        thread_references = references or in_reply_to
 
-        # 1. Reply to an existing thread
+        # 1. Verify if this is a reply to an existing thread
+        thread_references = references or in_reply_to
         ref_match = thread_references and tools.reference_re.search(thread_references)
         if ref_match:
             thread_id = int(ref_match.group(1))
@@ -1157,11 +1157,15 @@ class mail_thread(osv.AbstractModel):
         return result
 
     def _find_partner_from_emails(self, cr, uid, id, emails, model=None, context=None, check_followers=True):
-        """ Utility method to find partners
+        """ Utility method to find partners from email addresses. The rules are :
+            1 - check in document (model | self, id) followers
+            2 - try to find a matching partner that is also an user
+            3 - try to find a matching partner
 
-            :param boolean check_followers: TODO
-            :param boolean only_users: TODO
-            :param boolean take_all: TODO
+            :param list emails: list of email addresses
+            :param string model: model to fetch related record; by default self
+                is used.
+            :param boolean check_followers: check in document followers
         """
         partner_obj = self.pool['res.partner']
         partner_ids = []
