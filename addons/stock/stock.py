@@ -1001,7 +1001,7 @@ class stock_picking(osv.osv):
         # TODO: Check locations to see if in the same location ?
         return True
 
-    def action_assign(self, cr, uid, ids, *args):
+    def check_assign(self, cr, uid, ids, *args):
         """ Changes state of picking to available if all moves are confirmed.
         @return: True
         """
@@ -1062,6 +1062,8 @@ class stock_picking(osv.osv):
         """ Changes picking state to assigned.
         @return: True
         """
+        for picking in self.browse(cr, uid, ids, context=context):
+            self.pool.get('stock.move').action_assign(cr, uid, [move.id for move in picking.move_lines], context=context)
         self.write(cr, uid, ids, {'state': 'assigned'})
         return True
 
