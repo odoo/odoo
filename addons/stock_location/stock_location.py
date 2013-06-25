@@ -165,7 +165,6 @@ class stock_move(osv.osv):
         '''
         putaway_obj = self.pool.get("product.putaway")
         location_obj = self.pool.get("stock.location")
-        print "SPLIT FOR PUTAWAY"
         for move in self.browse(cr, uid, ids, context=context):
             putaways = putaway_obj.search(cr, uid, [('product_categ_id','=', move.product_id.categ_id.id), ('location_id', '=', move.location_dest_id.id)], context=context)
             print putaways

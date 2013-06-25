@@ -2394,17 +2394,23 @@ class stock_move(osv.osv):
         if context is None:
             context = {}
         for move in self.browse(cr, uid, ids, context=context):
-            if move.product_id.type == 'consu' or move.location_id.usage == 'supplier':
+            if move.product_id.type == 'consu': #or move.location_id.usage == 'supplier':
                 if move.state in ('confirmed', 'waiting'):
                     done.append(move.id)
                 pickings[move.picking_id.id] = 1
                 continue
             print "move state:", move.state
             if move.state in ('confirmed', 'waiting'):
+                
+                # Split for putaway first
+                self.splitforputaway(cr, uid, [move.id], context=context)
+                
                 # Important: we must pass lock=True to _product_reserve() to avoid race conditions and double reservations
                 # res = self.pool.get('stock.location')._product_reserve(cr, uid, [move.location_id.id], move.product_id.id, move.product_qty, {'uom': move.product_uom.id}, lock=True)
                 
                 #Convert UoM qty -> check rounding now in product_reserver
+                
+                
                 
                 #Split for source locations
                 qty = uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, move.product_id.uom_id.id)
@@ -2443,7 +2449,7 @@ class stock_move(osv.osv):
                         move_id = self.copy(cr, uid, move.id, {'product_uos_qty': product_uos_qty, 'product_qty': r[0], 'location_id': r[1]})
                         done.append(move_id)
                 
-                self.splitforputaway(cr, uid, [move.id], context=context)
+                
             
                 
         if done:
@@ -2799,10 +2805,10 @@ class stock_move(osv.osv):
         # Consists of access rights 
         # TODO Check if amount_currency is not needed
         match_obj = self.pool.get("stock.move.matching")
-        if type == 'out' and move.product_id.cost_method in ['fifo', 'lifo']:
+        if type == 'out' and move.product_id.cost_method in ['real']:
             for match in match_obj.browse(cr, uid, matches, context=context):
                 move_list += [(match.qty, match.qty * match.price_unit_out)]
-        elif type == 'in' and move.product_id.cost_method in ['fifo', 'lifo']:
+        elif type == 'in' and move.product_id.cost_method in ['real']:
             move_list = [(move.product_qty, reference_amount)]
         else:
             move_list = [(move.product_qty, reference_amount)]
@@ -3066,7 +3072,7 @@ class stock_move(osv.osv):
             #Search out moves from quants
             
         quant_obj = self.pool.get("stock.quant")
-        if cost_method in ['fifo', 'lifo']:
+        if cost_method in ['real']:
             quants_dict = quant_obj.get_out_moves_from_quants(cr, uid, quants, context=context)
             for out_mov in self.browse(cr, uid, quants_dict.keys(), context=context):
                 quants_from_move = quant_obj.search(cr, uid, [('history_ids', 'in', out_mov.id), ('propagated_from_id', '=', False)], context=context)
@@ -3141,7 +3147,7 @@ class stock_move(osv.osv):
 #                     price_amount += match[1] * match[2]
 #                     amount += match[1]
                 #Write price on out move
-                if product_avail[product.id] >= product_uom_qty and product.cost_method in ['fifo', 'lifo']:
+                if product_avail[product.id] >= product_uom_qty and product.cost_method in ['real']:
                     if amount > 0:
                         self.write(cr, uid, move.id, {'price_unit': price_amount / move_qty}, context=context) #Should be converted
                         product_obj.write(cr, uid, product.id, {'standard_price': price_amount / amount}, context=ctx) 

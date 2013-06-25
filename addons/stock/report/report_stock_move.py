@@ -183,7 +183,7 @@ class report_stock_inventory(osv.osv):
             ctx = context.copy()
             ctx['force_company'] = line.company_id.id
             prod = product_obj.browse(cr, uid, line.product_id.id, context=ctx)
-            if prodbrow[(line.company_id.id, line.product_id.id)].cost_method in ('fifo', 'lifo'):
+            if prodbrow[(line.company_id.id, line.product_id.id)].cost_method in ('real'):
                 res[line.id] = line.value
             else:
                 res[line.id] = prodbrow[(line.company_id.id, line.product_id.id)].standard_price * line.product_qty
