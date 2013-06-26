@@ -3711,7 +3711,7 @@ class stock_package(osv.osv):
                 included_package_ids = self.search(cr, uid, [('parent_id', 'child_of', [operation.package_id.id])], context=context)
                 included_quant_ids = quant_obj.search(cr, uid, [('package_id', 'in', included_package_ids)], context=context)
                 todo_on_moves, todo_on_operations = self._deal_with_quants(cr, uid, operation.picking_id.id, included_quant_ids, context=context)
-        return {'warnings': '', 'stock_move_to_update': todo_on_moves, 'package_to_update': todo_on_operations}
+        return {'warnings': '', 'moves_to_update': todo_on_moves, 'operations_to_update': todo_on_operations}
 
     #def action_delete(self, cr, uid, ids, context=None):
     #    #no need, we use unlink of ids and with the ondelete = cascade it will work flawlessly
