@@ -50,7 +50,6 @@ import operator
 import pickle
 import re
 import simplejson
-import sys
 import time
 
 import psycopg2
@@ -627,34 +626,37 @@ class BaseModel(object):
             cls._set_field_descriptor('id', fields2.Id())
 
         log_access = getattr(cls, '_log_access', getattr(cls, '_auto', True))
-
-        @api.record
-        def compute_concurrency_field(self):
-            self[cls.CONCURRENCY_CHECK_FIELD] = str(datetime.datetime.utcnow())
+        compute_concurrency_field = "compute_concurrency_field"
 
         if log_access:
             # FIXME: what if these fields are already defined on the class?
             cls._set_field_descriptor(
-                'create_uid', fields2.Many2one('res.users', delete='set null'))
+                'create_uid', fields2.Many2one('res.users', ondelete='set null'))
             cls._set_field_descriptor('create_date', fields2.Datetime())
 
             cls._set_field_descriptor(
-                'write_uid', fields2.Many2one('res.users', delete='set null'))
+                'write_uid', fields2.Many2one('res.users', ondelete='set null'))
             cls._set_field_descriptor('write_date', fields2.Datetime())
 
-            @api.record
-            @api.depends('create_date', 'write_date')
-            def compute_concurrency_field(self):
-                self[cls.CONCURRENCY_CHECK_FIELD] = "%s%s%s" % (
-                    self.write_date,
-                    self.create_date,
-                    datetime.datetime.utcnow(),
-                )
+            compute_concurrency_field = 'compute_concurrency_field_with_access'
 
-        cls.compute_concurrency_field = compute_concurrency_field
         cls._set_field_descriptor(
             cls.CONCURRENCY_CHECK_FIELD,
-            fields2.Char(compute="compute_concurrency_field", store=False))
+            fields2.Char(compute=compute_concurrency_field, store=False))
+
+    @api.record
+    def compute_concurrency_field(self):
+        self[self.CONCURRENCY_CHECK_FIELD] = str(datetime.datetime.utcnow())
+
+    @api.record
+    @api.depends('create_date', 'write_date')
+    def compute_concurrency_field_with_access(self):
+        self[self.CONCURRENCY_CHECK_FIELD] = "%s%s%s" % (
+            self.write_date or '',
+            self.create_date or '',
+            datetime.datetime.utcnow(),
+        )
+
     #
     # Goal: try to apply inheritance at the instanciation level and
     #       put objects in the pool var
@@ -3987,9 +3989,11 @@ class BaseModel(object):
         recs = self.recordset(ids)
         recompute_spec = recs.recompute_spec(vals)
 
-        # No direct update of parent_left/right
-        vals.pop('parent_left', None)
-        vals.pop('parent_right', None)
+        # No user-driven update of these columns
+        # FIXME: filtering of these columns should not be custom impl detail of
+        #        create/write
+        for field in itertools.chain(MAGIC_COLUMNS, ('parent_left', 'parent_right')):
+            vals.pop(field, None)
 
         parents_changed = []
         parent_order = self._parent_order or self._order
@@ -4216,12 +4220,12 @@ class BaseModel(object):
         if self.is_transient():
             self._transient_vacuum(cr, user)
 
-        # FIXME: filtering of these columns should be done somewhere else
-        for field in MAGIC_COLUMNS: vals.pop(field, None)
-
         self.check_access_rights(cr, user, 'create')
 
         vals = self._add_missing_default_values(cr, user, vals, context)
+
+        # FIXME: filtering of these columns should be done somewhere else
+        for field in MAGIC_COLUMNS: vals.pop(field, None)
 
         tocreate = {}
         for v in self._inherits:
