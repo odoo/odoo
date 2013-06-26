@@ -11,11 +11,25 @@ function openerp_picking_widgets(instance){
             return this._header || 'Picking: INTERNAL/00112';
         },
         get_rows: function(){
-            return this._rows || [
-                { cols: { product:'abc', qty:1, rem: 4, uom: 5, loc: 'def', stat: 'available' },   },
-                { cols: { product:'dec', qty:2, rem: 3, uom: 5, loc: 'rcd', stat: 'available' },  classes: '' },
-                { cols: { product:'qcr', qty:4, rem: 4, uom: 5, loc: 'hre', stat: 'unavailable' }, },
-            ];
+            var model = this.getParent();
+            var rows = [];
+            console.log('Parent:', this.getParent());
+            
+            _.each( model.movelines, function(moveline){
+                console.log('Moveline:',moveline);
+                rows.push({
+                    cols: { product: moveline.product_id[1],
+                            qty: moveline.product_qty,
+                            rem: moveline.qty_remaining,
+                            uom: moveline.product_uom[1],
+                            loc: moveline.location_id[1],
+                            stat: moveline.state 
+                    },
+                    classes: (moveline.qty_remaining < 0 ? 'oe_invalid' : '')
+                });
+            });
+            
+            return rows;
         },
     });
 
@@ -51,35 +65,26 @@ function openerp_picking_widgets(instance){
         template: 'PickingMainWidget',
         init: function(parent,params){
             this._super(parent,params);
+            var self = this;
+
+            this.picking = null;
+            this.movelines = null;
+            
+            window.pickwidget = this;
             
             console.log('Action params:', params);
 
-            new instance.web.Model('stock.picking.in')
+            this.loaded = new instance.web.Model('stock.picking.in')
                 .query()
                 .all()
-                .then(function(results){
-                    console.log('Picking In:',results);
-                });
-
-            new instance.web.Model('stock.picking.out')
-                .query()
-                .all()
-                .then(function(results){
-                    console.log('Picking Out:',results);
-                });
-
-            new instance.web.Model('stock.quant.package')
-                .query(['name','packaging_id','quant_ids','parent_id','children_ids','location_id','pack_operation_id'])
-                .all()
-                .then(function(result){
-                    console.log('Packages: ',result);
-                 });
-
-            new instance.web.Model('stock.pack.operation')
-                .query(['picking_id','product_id','product_uom','product_qty','package_id','quant_id','result_package_id'])
-                .all()
-                .then(function(results){
-                    console.log('Pack Operations:',results);
+                .then(function(picking_in){
+                    self.picking = picking_in[0];
+                    console.log('Picking In:',picking_in);
+                    
+                    return new instance.web.Model('stock.move').call('read',[self.picking.move_lines, []]);
+                }).then(function(movelines){
+                    self.movelines = movelines;
+                    console.log('Move Lines:',movelines);
                 });
 
         },
@@ -87,16 +92,26 @@ function openerp_picking_widgets(instance){
             var self = this;
             instance.webclient.set_content_full_screen(true);
 
-            var picking_editor = new module.PickingEditorWidget(this);
-            picking_editor.replace(this.$('.oe_placeholder_picking_editor'));
+            $.when(this.loaded).done(function(){
+                var picking_editor = new module.PickingEditorWidget(self);
+                picking_editor.replace(self.$('.oe_placeholder_picking_editor'));
 
-            var package_editor = new module.PackageEditorWidget(this);
-            package_editor.replace(this.$('.oe_placeholder_package_editor'));
+                var package_editor = new module.PackageEditorWidget(self);
+                package_editor.replace(self.$('.oe_placeholder_package_editor'));
 
-            var package_selector = new module.PackageSelectorWidget(this);
-            package_selector.replace(this.$('.oe_placeholder_package_selector'));
+                var package_selector = new module.PackageSelectorWidget(self);
+                package_selector.replace(self.$('.oe_placeholder_package_selector'));
+            });
+
 
             return this._super();
+        },
+        scan: function(ean){
+            new instance.web.Model('stock.picking')
+                .call('get_barcode_and_return_todo_stuff', [this.picking.id, ean])
+                .then(function(results){
+                    console.log('STUFF TODO:', arguments);
+                });
         },
     });
 }
