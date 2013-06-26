@@ -3693,13 +3693,32 @@ class stock_package(osv.osv):
         (_check_location, 'All quant inside a package should share the same location', ['location_id']),
     ]
 
-    def action_plus(self, cr, uid, ids, context=None):
-        pass
-        #return {'warnings': '', 'stock_move_to_update': [{}], 'package_to_update': [{}]}
+    def action_copy(self, cr, uid, ids, context=None):
+        quant_obj = self.pool.get('stock.quant')
+        stock_operation_obj = self.pool.get('stock.pack.operation')
+        #put all the operations of the picking that aren't yet assigned to a package to this new one
+        operation_ids = stock_operation_obj.search(cr, uid, [('result_package_id', 'in', ids)], context=context)
+        #create a new empty stock.quant.package
+        package_id = self.create(cr, uid, {}, context=context)
+        new_ops = stock_operation_obj.copy(cr, uid, operation_ids, {'result_package_id': package_id}, context=context)
+        for operation in stock_operation_obj.browse(cr, uid, new_ops, context=context):
+            if operation.product_id:
+                todo_on_moves, todo_on_operations = stock_operation_obj._search_and_increment(cr, uid, operation.picking_id.id, ('product_id', '=', operation.product_id.id), context=context)
+            elif operation.quant_id:
+                todo_on_moves, todo_on_operations = self._deal_with_quants(cr, uid, operation.picking_id, [operation.quant_id.id], context=context)
+            elif operation.package_id:
+                included_package_ids = self.search(cr, uid, [('parent_id', 'child_of', [operation.package_id.id])], context=context)
+                included_quant_ids = quant_obj.search(cr, uid, [('package_id', 'in', included_package_ids)], context=context)
+                todo_on_moves, todo_on_operations = self._deal_with_quants(cr, uid, operation.picking_id.id, included_quant_ids, context=context)
+        return {'warnings': '', 'stock_move_to_update': todo_on_moves, 'package_to_update': todo_on_operations}
 
-    def action_minus(self, cr, uid, ids, context=None):
-        pass
-        #return {'warnings': '', 'stock_move_to_update': [{}], 'package_to_update': [{}]}
+    #def action_delete(self, cr, uid, ids, context=None):
+    #    #no need, we use unlink of ids and with the ondelete = cascade it will work flawlessly
+    #    stock_operation_obj = self.pool.get('stock.pack.operation')
+    #    #delete all the operations of the picking that are assigned to the given packages
+    #    operation_ids = stock_operation_obj.search(cr, uid, [('result_package_id', 'in', ids)], context=context)
+    #    pass
+    #    #return {'warnings': '', 'stock_move_to_update': [{}], 'package_to_update': [{}]}
 
 class stock_pack_operation(osv.osv):
     _name = "stock.pack.operation"
@@ -3711,7 +3730,7 @@ class stock_pack_operation(osv.osv):
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'package_id': fields.many2one('stock.quant.package', 'Package'),  # 2
         'quant_id': fields.many2one('stock.quant', 'Quant'),  # 3
-        'result_package_id': fields.many2one('stock.quant.package', 'Package Made', help="The resulf of the packaging.", required=False),
+        'result_package_id': fields.many2one('stock.quant.package', 'Package Made', help="The resulf of the packaging.", required=False, ondelete='cascade'),
     }
 
     def _search_and_increment(self, cr, uid, picking_id, key, context=None):
