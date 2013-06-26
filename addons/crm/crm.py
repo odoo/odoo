@@ -222,17 +222,13 @@ class crm_case_section(osv.osv):
         return res
 
     def create(self, cr, uid, vals, context=None):
-        mail_alias = self.pool.get('mail.alias')
-        if not vals.get('alias_id'):
-            alias_name = vals.pop('alias_name', None) or vals.get('name')  # prevent errors during copy()
-            alias_id = mail_alias.create_unique_alias(cr, uid,
-                    {'alias_name': alias_name},
-                    model_name="crm.lead",
-                    context=context)
-            vals['alias_id'] = alias_id
-        res = super(crm_case_section, self).create(cr, uid, vals, context)
-        mail_alias.write(cr, uid, [vals['alias_id']], {'alias_defaults': {'section_id': res, 'type': 'lead'}}, context)
-        return res
+        if context is None:
+            context = {}
+        create_context = dict(context, alias_model_name='crm.lead', alias_parent_model_name=self._name)
+        section_id = super(crm_case_section, self).create(cr, uid, vals, context=create_context)
+        section = self.browse(cr, uid, section_id, context=context)
+        self.pool.get('mail.alias').write(cr, uid, [section.alias_id.id], {'alias_parent_thread_id': section_id, 'alias_defaults': {'section_id': section_id, 'type': 'lead'}}, context=context)
+        return section_id
 
     def unlink(self, cr, uid, ids, context=None):
         # Cascade-delete mail aliases as well, as they should not exist without the sales team.
