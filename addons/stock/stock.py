@@ -1654,7 +1654,7 @@ class stock_picking(osv.osv):
             included_package_ids = package_obj.search(cr, uid, [('parent_id', 'child_of', matching_package_ids[0])], context=context)
             included_quant_ids = quant_obj.search(cr, uid, [('package_id', 'in', included_package_ids)], context=context)
             todo_on_moves, todo_on_operations = self._deal_with_quants(cr, uid, picking_id, included_quant_ids, context=context)
-        return {'warnings': error_msg, 'stock_move_to_update': todo_on_moves, 'package_to_update': todo_on_operations}
+        return {'warnings': error_msg, 'stock_move_to_update': todo_on_moves, 'operation_to_update': todo_on_operations}
 
 
 class stock_production_lot(osv.osv):
