@@ -132,8 +132,14 @@ function openerp_picking_widgets(instance){
 
     module.PickingMainWidget = instance.web.Widget.extend({
         template: 'PickingMainWidget',
-        init: function(){
+        init: function(parent,params){
+            this._super(parent,params);
+            console.log(params);
 
+            var packages = new instance.web.Model('stock.quant.package');
+            packages.query('name','packaging_id','quant_ids','parent_id','children_ids','location_id','pack_operation_id').all().then(function(result){
+                console.log(result);
+            });
         },
         start: function(){
             var self = this;
