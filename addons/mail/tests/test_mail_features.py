@@ -745,10 +745,10 @@ class test_mail(TestMailBase):
         # Data: alter mail_group model for testing purposes (test on classic, selection and many2one fields)
         self.mail_group._track = {
             'public': {
-                'mail.mt_private': lambda self, cr, uid, obj, ctx=None: obj['public'] == 'private',
+                'mail.mt_private': lambda self, cr, uid, obj, ctx=None: obj.public == 'private',
             },
             'name': {
-                'mail.mt_name_supername': lambda self, cr, uid, obj, ctx=None: obj['name'] == 'supername',
+                'mail.mt_name_supername': lambda self, cr, uid, obj, ctx=None: obj.name == 'supername',
             },
             'group_public_id': {
                 'mail.mt_group_public': lambda self, cr, uid, obj, ctx=None: True,
