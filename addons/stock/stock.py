@@ -3737,9 +3737,9 @@ class stock_pack_operation(osv.osv):
         quant_obj = self.pool.get('stock.quant')
         operation = self.browse(cr, uid, operation_id, context=context)
         if operation.product_id:
-            return operation.product_id.id
+            return [operation.product_id.id]
         elif operation.quant_id:
-            return operation.quant_id.product_id.id
+            return [operation.quant_id.product_id.id]
         elif operation.package_id:
             included_package_ids = self.pool.get('stock.quant.package').search(cr, uid, [('parent_id', 'child_of', [operation.package_id.id])], context=context)
             included_quant_ids = quant_obj.search(cr, uid, [('package_id', 'in', included_package_ids)], context=context)
