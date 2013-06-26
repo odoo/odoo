@@ -74,6 +74,7 @@ openerp_mail_followers = function(session, mail) {
             this.$el.on('click', '.oe_subtype_list input', self.do_update_subscription);
             // event: click on 'invite' button, that opens the invite wizard
             this.$('.oe_invite').on('click', self.on_invite_follower);
+            // event: click on 'edit_subtype(pencil)' button to edit subscription
             this.$el.on('click', '.oe_edit_subtype', self.on_edit_subtype);
             this.$el.on('click', '.oe_remove_follower', self.on_remove_follower);
             this.$el.on('click', '.oe_show_more', self.on_show_more_followers)
@@ -81,13 +82,14 @@ openerp_mail_followers = function(session, mail) {
 
         on_edit_subtype: function(event) {
             var self = this;
-            var user_pid = $(event.target).data('id');
+            var $currentTarget = $(event.currentTarget);
+            var user_pid = $currentTarget.data('id');
             $('div.oe_edit_actions').remove();
             self.$dialog = new session.web.dialog($('<div class="oe_edit_actions">'), {
                             modal: true,
                             width: 'auto',
                             height: 'auto',
-                            title: _t('Edit Subscription of ') + $(event.target).siblings('a').text(),
+                            title: _t('Edit Subscription of ') + $currentTarget.siblings('a').text(),
                             buttons: [
                                     { text: _t("Apply"), click: function() { 
                                         self.do_update_subscription(event, user_pid);
@@ -96,7 +98,7 @@ openerp_mail_followers = function(session, mail) {
                                     { text: _t("Cancel"), click: function() { $(this).dialog("close"); }}
                                 ],
                     });
-             return self.fetch_subtypes(user_pid);
+            return self.fetch_subtypes(user_pid);
         },
 
         on_invite_follower: function (event) {
