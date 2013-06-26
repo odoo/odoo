@@ -259,16 +259,12 @@ def dispatch_rpc(service_name, method, params):
         raise
     except openerp.exceptions.DeferredException, e:
         _logger.exception(tools.exception_to_unicode(e))
-        post_mortem(e.traceback)
+        tools.post_mortem(e.traceback)
         raise
     except Exception, e:
         _logger.exception(tools.exception_to_unicode(e))
-        post_mortem(sys.exc_info())
+        tools.post_mortem()
         raise
 
-def post_mortem(info):
-    if tools.config['debug_mode'] and isinstance(info[2], types.TracebackType):
-        import pdb
-        pdb.post_mortem(info[2])
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

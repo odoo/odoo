@@ -30,10 +30,12 @@ import cProfile
 import subprocess
 import logging
 import os
+import pdb
 import socket
 import sys
 import threading
 import time
+import types
 import zipfile
 from collections import defaultdict
 from datetime import datetime
@@ -1058,5 +1060,10 @@ class CountingStream(object):
             self.stopped = True
             raise StopIteration()
         return val
+
+def post_mortem(info=None):
+    if info is None: info = sys.exc_info()
+    if config['debug_mode'] and isinstance(info[2], types.TracebackType):
+        pdb.post_mortem(info[2])
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
