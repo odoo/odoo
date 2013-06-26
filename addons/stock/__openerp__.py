@@ -98,7 +98,15 @@ Dashboard / Reports for Warehouse Management will include:
     'installable': True,
     'application': True,
     'auto_install': False,
-    'css': [ 'static/src/css/stock.css' ],
+    'css': [ 
+        'static/src/css/picking.css',
+        'static/src/css/stock.css', 
+    ],
+    'js': [
+        'static/src/js/widgets.js',
+        'static/src/js/main.js',
+    ],
+    'qweb':['static/src/xml/picking.xml'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

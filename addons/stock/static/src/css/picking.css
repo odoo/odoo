@@ -1,0 +1,179 @@
+
+/* ----------------------- *
+ *  PICKING WIDGET LAYOUT  *
+ * ----------------------- */
+
+.oe_pick_widget {
+    position: absolute;
+    top: 0px; right: 0px; bottom: 0px; left: 0px;
+    color: #444444;
+    background: #686868;
+    text-shadow: none;
+    font-family: 'Lato';
+}
+.oe_pick_widget .oe_pick_layout {
+    width: 100%;
+    height: 100%;
+}
+
+.oe_pick_widget .oe_pick_header{
+    background: red;
+}
+.oe_pick_widget .oe_pick_body_cont{
+    background: blue;
+    height: 100%;
+}
+.oe_pick_widget .oe_pick_body{
+    width: 100%;
+    height: 100%;
+    background: green;
+    overflow: hidden;
+    overflow-y: auto;
+}
+.oe_pick_widget .oe_pick_app{
+    width: 600px;
+    background: yellow;
+    margin: 40px auto;
+}
+.oe_pick_widget .oe_pick_toolbar{
+    width: 600px;
+    background: purple;
+    margin: auto;
+    text-align: center;
+}
+.oe_pick_widget .oe_pick_button{
+    display: inline-block;
+    min-width: 120px;
+    padding: 15px;
+    margin: 10px;
+    text-align: center;
+    line-height: 30px;
+    background: white;
+}
+.oe_pick_widget .oe_pick_right_toolbar{
+    background: blue;
+    float: right;
+}
+.oe_pick_widget .oe_pick_col_small{  width: 50px; }
+.oe_pick_widget .oe_pick_col_medium{ width: 100px; }
+.oe_pick_widget .oe_pick_col_big{    width: 200px; }
+.oe_pick_widget .oe_pick_col_expand{  width: 100%; }
+.oe_pick_widget .oe_invalid{ 
+    background: red;
+    color: white;
+}
+
+/* ----------------------- *
+ *      PICKING TABLES     *
+ * ----------------------- */
+
+.oe_pick_widget .oe_pick_list{
+    background: red;
+    margin: 20px 0px;
+}
+
+.oe_pick_widget .oe_pick_list_header{
+    background: blue;
+}
+.oe_pick_widget .oe_pick_list_table{
+    width: 100%;
+    table-layout: fixed;
+    background: greenyellow;
+
+}
+
+
+
+/* ----------------------- *
+ *      TACTILE LIST       *
+ * ----------------------- */
+
+.openerp .oe_tactlist {
+    border-radius: 3px;
+    font-size: 18px;
+    background: black;
+    color: white;
+    margin-bottom: 20px;
+}
+.openerp .oe_tactlist .oe_tactlist_header{
+    padding: 5px;
+    font-size: 24px;
+    overflow: hidden;
+}
+.openerp .oe_tactlist .oe_vresizer{
+    cursor: ns-resize;
+    height: 15px;
+}
+.openerp .oe_tactlist .oe_hresizer{
+    display: inline-block;
+    float: right;
+    height: 15px;
+    width: 15px;
+    line-height: 15px;
+    text-align: center;
+    font-size: 9px;
+    color: rgba(255,255,255,0.3);
+    cursor: move;
+}
+.openerp .oe_tactlist .oe_scrolltable{
+    position: relative;
+    background: rgb(209,209,209);
+}
+.openerp .oe_tactlist td{
+    padding: 5px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+.openerp .oe_tactlist .oe_scrolltable_scroll{
+    height: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.openerp .oe_tactlist .oe_scrolltable_header_container{
+    position: absolute;
+    top: 0px;
+    overflow: hidden;
+}
+.openerp .oe_tactlist .oe_scrolltable_header{
+    background: black;
+    color: white;
+    width: 100%;
+    table-layout: fixed;
+}
+.openerp .oe_tactlist .oe_scrolltable_body{
+    table-layout: fixed;
+    margin-top: 32px;
+    background: #D6D6D6;
+    color: #444444;
+}
+.openerp .oe_tactlist .oe_invalid{
+    background: rgb(255, 192, 192);
+    color: rgb(201, 0, 0);
+}
+.openerp .oe_tactlist .oe_scrolltable_body tr:nth-child(even){
+    background: rgba(0,0,0,0.02);
+}
+.openerp .oe_tactlist td.oe_small,  .openerp .oe_tactlist col.oe_small{  width: 50px;  }
+.openerp .oe_tactlist td.oe_medium, .openerp .oe_tactlist col.oe_medium{ width: 100px; }
+.openerp .oe_tactlist td.oe_big,    .openerp .oe_tactlist col.oe_big{    width: 200px; }
+.openerp .oe_tactlist td.oe_expand, .openerp .oe_tactlist col.oe_expand{ width: 100%;  }
+
+.openerp .oe_tactlist ::-webkit-scrollbar{
+    width: 15px;
+    background-color: black;
+}
+.openerp .oe_tactlist ::-webkit-scrollbar-track{
+    background-color: black;
+}
+.openerp .oe_tactlist ::-webkit-scrollbar-thumb{
+    background-color: rgba(255,255,255,0.6);
+    border: solid 4px black;
+}
+.openerp .oe_tactlist ::-wekbit-scrollbar-button{
+    display: none;
+}
+    
+
+
+
+
