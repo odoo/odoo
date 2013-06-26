@@ -581,7 +581,7 @@ class BaseModel(object):
         cr.commit()
 
     @classmethod
-    def set_field_descriptor(cls, name, field):
+    def _set_field_descriptor(cls, name, field):
         """ Add the given `field` under the given `name` in the class """
         field.set_model_name(cls._name, name)
 
@@ -604,7 +604,7 @@ class BaseModel(object):
             field.depends = getattr(compute_method, '_depends', ())
 
     @classmethod
-    def set_log_access_fields(cls):
+    def _set_log_access_fields(cls):
         """ Sets log access field on the current class
 
         * create_uid, create_date, write_uid and write_date have become
@@ -630,13 +630,13 @@ class BaseModel(object):
 
         if log_access:
             # FIXME: what if these fields are already defined on the class?
-            cls.set_field_descriptor(
+            cls._set_field_descriptor(
                 'create_uid', fields2.Many2one('res.users', delete='set null'))
-            cls.set_field_descriptor('create_date', fields2.Datetime())
+            cls._set_field_descriptor('create_date', fields2.Datetime())
 
-            cls.set_field_descriptor(
+            cls._set_field_descriptor(
                 'write_uid', fields2.Many2one('res.users', delete='set null'))
-            cls.set_field_descriptor('write_date', fields2.Datetime())
+            cls._set_field_descriptor('write_date', fields2.Datetime())
 
             @api.record
             @api.depends('create_date', 'write_date')
@@ -648,7 +648,7 @@ class BaseModel(object):
                 )
 
         cls.compute_concurrency_field = compute_concurrency_field
-        cls.set_field_descriptor(
+        cls._set_field_descriptor(
             cls.CONCURRENCY_CHECK_FIELD,
             fields2.Char(compute="compute_concurrency_field", store=False))
     #
@@ -741,11 +741,11 @@ class BaseModel(object):
 
         # duplicate all new-style fields to avoid clashes with inheritance
         cls._fields = {}
-        cls.set_log_access_fields()
+        cls._set_log_access_fields()
         for attr in dir(cls):
             value = getattr(cls, attr)
             if isinstance(value, Field):
-                cls.set_field_descriptor(attr, value.copy())
+                cls._set_field_descriptor(attr, value.copy())
         # triggers to recompute stored function fields on other models
         #   cls._recompute = {trigger_field: [(model, field, path), ...], ...}
         #
@@ -3212,20 +3212,20 @@ class BaseModel(object):
     # Update objects that uses this one to update their _inherits fields
     #
 
-    def _inherits_reload_src(self):
+    @classmethod
+    def _inherits_reload_src(cls):
         """ Recompute the _inherit_fields mapping on each _inherits'd child model."""
-        for obj in self.pool.models.values():
-            if self._name in obj._inherits:
-                obj._inherits_reload()
+        for model in cls.pool.values():
+            if cls._name in model._inherits:
+                model._inherits_reload()
 
-
-    def _inherits_reload(self):
+    @classmethod
+    def _inherits_reload(cls):
         """ Recompute the _inherit_fields mapping.
 
         This will also call itself on each inherits'd child model.
 
         """
-        cls = type(self)
         res = {}
         for table in cls._inherits:
             other = cls.pool[table]
@@ -3234,7 +3234,7 @@ class BaseModel(object):
             for col in other._inherit_fields.keys():
                 res[col] = (table, cls._inherits[table], other._inherit_fields[col][2], other._inherit_fields[col][3])
         cls._inherit_fields = res
-        cls._all_columns = self._get_column_infos()
+        cls._all_columns = cls._get_column_infos()
 
         # interface columns and inherited fields with new-style fields
         new_fields = {}
@@ -3249,33 +3249,34 @@ class BaseModel(object):
             old_field = cls._fields.get(attr)
             if not old_field or old_field.interface:
                 # replace old_field if it is an interface
-                cls.set_field_descriptor(attr, field)
+                cls._set_field_descriptor(attr, field)
 
-        self._inherits_reload_src()
+        cls._inherits_reload_src()
 
-
-    def _get_column_infos(self):
+    @classmethod
+    def _get_column_infos(cls):
         """Returns a dict mapping all fields names (direct fields and
            inherited field via _inherits) to a ``column_info`` struct
            giving detailed columns """
         result = {}
         # do not inverse for loops, since local fields may hide inherited ones!
-        for k, (parent, m2o, col, original_parent) in self._inherit_fields.iteritems():
+        for k, (parent, m2o, col, original_parent) in cls._inherit_fields.iteritems():
             result[k] = fields.column_info(k, col, parent, m2o, original_parent)
-        for k, col in self._columns.iteritems():
+        for k, col in cls._columns.iteritems():
             result[k] = fields.column_info(k, col)
         return result
 
-    def _inherits_check(self):
-        for table, field_name in self._inherits.items():
-            if field_name not in self._columns:
-                _logger.info('Missing many2one field definition for _inherits reference "%s" in "%s", using default one.', field_name, self._name)
-                self._columns[field_name] = fields.many2one(table, string="Automatically created field to link to parent %s" % table,
+    @classmethod
+    def _inherits_check(cls):
+        for table, field_name in cls._inherits.items():
+            if field_name not in cls._columns:
+                _logger.info('Missing many2one field definition for _inherits reference "%s" in "%s", using default one.', field_name, cls._name)
+                cls._columns[field_name] = fields.many2one(table, string="Automatically created field to link to parent %s" % table,
                                                              required=True, ondelete="cascade")
-            elif not self._columns[field_name].required or self._columns[field_name].ondelete.lower() not in ("cascade", "restrict"):
-                _logger.warning('Field definition for _inherits reference "%s" in "%s" must be marked as "required" with ondelete="cascade" or "restrict", forcing it to required + cascade.', field_name, self._name)
-                self._columns[field_name].required = True
-                self._columns[field_name].ondelete = "cascade"
+            elif not cls._columns[field_name].required or cls._columns[field_name].ondelete.lower() not in ("cascade", "restrict"):
+                _logger.warning('Field definition for _inherits reference "%s" in "%s" must be marked as "required" with ondelete="cascade" or "restrict", forcing it to required + cascade.', field_name, cls._name)
+                cls._columns[field_name].required = True
+                cls._columns[field_name].ondelete = "cascade"
 
     def after_create_instance(self):
         """ method called on all models after their creation """
