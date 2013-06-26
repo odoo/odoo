@@ -1637,7 +1637,7 @@ class stock_picking(osv.osv):
         error_msg = ''
 
         #check if the barcode correspond to a product
-        matching_product_ids = product_obj.search(cr, uid, ['|', ('code', '=', barcode_str), ('ean', '=', barcode_str)], context=context)
+        matching_product_ids = product_obj.search(cr, uid, ['|', ('code', '=', barcode_str), ('ean13', '=', barcode_str)], context=context)
         if matching_product_ids:
             if len(matching_product_ids) > 1:
                 error_msg = _('Wrong bar code detected: more than one product matching the given barcode')
