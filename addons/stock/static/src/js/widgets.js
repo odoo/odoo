@@ -92,6 +92,8 @@ function openerp_picking_widgets(instance){
             var self = this;
             instance.webclient.set_content_full_screen(true);
 
+            this.$('.js_pick_quit').click(function(){ self.quit(); });
+
             $.when(this.loaded).done(function(){
                 var picking_editor = new module.PickingEditorWidget(self);
                 picking_editor.replace(self.$('.oe_placeholder_picking_editor'));
@@ -112,6 +114,11 @@ function openerp_picking_widgets(instance){
                 .then(function(results){
                     console.log('STUFF TODO:', arguments);
                 });
+        },
+        quit: function(){
+            console.log('Quit');
+            instance.webclient.set_content_full_screen(false);
+            window.location = '/'; // FIXME THIS IS SHIT NIV WILL KILL YOU (BY MULTIPLE FACE-STABBING) IF YOU MERGE THIS IN TRUNK
         },
     });
 }
