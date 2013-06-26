@@ -214,7 +214,7 @@ class base_config_settings(osv.osv):
     _inherit = "base.config.settings"
 
     _columns = {
-        'google_drive_authorization_code': fields.char('Paste Generated "Authorization Code" from google to here', size=124),
+        'google_drive_authorization_code': fields.char('Authorization Code', size=124),
         'google_drive_uri': fields.char('URI', readonly=True, help="The URL to generate the authorization code from Google"),
     }
     _defaults = {
