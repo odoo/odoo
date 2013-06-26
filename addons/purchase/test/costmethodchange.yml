@@ -79,7 +79,7 @@
 - 
   !python {model: product.product}: |
     assert self.browse(cr, uid, ref("product_variable_icecream")).standard_price == 75.0, 'After second reception, we should have an average price of 75.0 on the product'
-    self.write(cr, uid, [ref("product_variable_icecream")], {'cost_method': 'fifo'}, context=context)
+    self.write(cr, uid, [ref("product_variable_icecream")], {'cost_method': 'real'}, context=context)
 - 
   Create picking to send some goods
 - 
