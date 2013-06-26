@@ -26,6 +26,7 @@ from openerp.tools.translate import _
 import urllib
 import urllib2
 import json
+import re
 
 _logger = logging.getLogger(__name__)
 
@@ -130,14 +131,10 @@ class config(osv.osv):
     def _resource_get(self, cr, uid, ids, name, arg, context=None):
         result = {}
         for data in self.browse(cr, uid, ids, context):
-            template_url = data.google_drive_template_url
-            try:
-                if '/spreadsheet/' in template_url:
-                    key = template_url.split('key=')[1]
-                else:
-                    key = template_url.split('/d/')[1].split('/')[0]
-                result[data.id] = str(key)
-            except IndexError:
+            mo = re.search("(key=|/d/)([A-Za-z0-9-]+)", data.google_drive_template_url)
+            if mo:
+                result[data.id] = mo.group(2)
+            else:
                 raise osv.except_osv(_('Incorrect URL!'), _("Please enter a valid Google Document URL."))
         return result
 
