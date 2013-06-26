@@ -1,14 +1,5 @@
 -
-  I put task in pending due to specification is not clear.
--
-  !python {model: project.task}: |
-    self.do_pending(cr, uid, [ref("project_task_1")])
-    context.update({"active_id": ref("project_task_1")})
--
-  I check state  of task after put in pending.
--
-  !assert {model: project.task, id: project_task_1, severity: error, string: task should be in pending state}:
-    - state == "pending"
+  I open a delegation wizard.
 -
   !record {model: project.task.delegate, id: delegate_id}:
     user_id: base.user_demo

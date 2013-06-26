@@ -40,7 +40,6 @@
     ],
     'depends': [
         'base_setup',
-        'base_status',
         'product',
         'analytic',
         'board',
@@ -66,7 +65,6 @@ Dashboard / Reports for Project Management will include:
     'data': [
         'security/project_security.xml',
         'wizard/project_task_delegate_view.xml',
-        'wizard/project_task_reevaluate_view.xml',
         'security/ir.model.access.csv',
         'project_data.xml',
         'project_view.xml',

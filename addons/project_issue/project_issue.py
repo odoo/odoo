@@ -21,7 +21,6 @@
 
 from openerp import SUPERUSER_ID
 from openerp.addons.base_status.base_stage import base_stage
-from openerp.addons.project.project import _TASK_STATE
 from openerp.addons.crm import crm
 from datetime import datetime
 from openerp.osv import fields, osv, orm
@@ -247,13 +246,6 @@ class project_issue(base_stage, osv.osv):
         'partner_id': fields.many2one('res.partner', 'Contact', select=1),
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Private Note'),
-        'state': fields.related('stage_id', 'state', type="selection", store=True,
-                selection=_TASK_STATE, string="Status", readonly=True,
-                help='The status is set to \'Draft\', when a case is created.\
-                      If the case is in progress the status is set to \'Open\'.\
-                      When the case is over, the status is set to \'Done\'.\
-                      If the case needs to be reviewed then the status is \
-                      set to \'Pending\'.'),
         'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready for next stage')], 'Kanban State',
                                          track_visibility='onchange',
                                          help="A Issue's kanban state indicates special situations affecting it:\n"
