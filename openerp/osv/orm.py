@@ -1106,7 +1106,7 @@ class BaseModel(object):
 
         def _get_xml_id(self, cr, uid, r):
             model_data = self.pool.get('ir.model.data')
-            data_ids = model_data.search(cr, uid, [('model', '=', r._table_name), ('res_id', '=', r['id'])])
+            data_ids = model_data.search(cr, uid, [('model', '=', r._model._table), ('res_id', '=', r['id'])])
             if len(data_ids):
                 d = model_data.read(cr, uid, data_ids, ['name', 'module'])[0]
                 if d['module']:
@@ -1116,13 +1116,13 @@ class BaseModel(object):
             else:
                 postfix = 0
                 while True:
-                    n = self._table+'_'+str(r['id']) + (postfix and ('_'+str(postfix)) or '' )
+                    n = r._model._table+'_'+str(r['id']) + (postfix and ('_'+str(postfix)) or '' )
                     if not model_data.search(cr, uid, [('name', '=', n)]):
                         break
                     postfix += 1
                 model_data.create(cr, SUPERUSER_ID, {
                     'name': n,
-                    'model': self._name,
+                    'model': r._model._name,
                     'res_id': r['id'],
                     'module': '__export__',
                 })
