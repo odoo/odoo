@@ -135,4 +135,60 @@
             <field eval="'(False,)'" name="args" />
         </record>
     </data>
+    <data>
+        <!--Email template -->
+        <record id="email_template_meeting_invitation" model="email.template">
+            <field name="name">Meeting Invitation</field>
+            <field name="email_from">${object.user_id.email or ''}</field>
+            <field name="subject">Meeting Invitation</field>
+            <field name="email_to" >${object.email}</field>
+            <field name="model_id" ref="base_calendar.model_calendar_attendee"/>
+            
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[<html><head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+<title>%(name)s</title>
+<style> 
+</style>
+</head>
+<body>
+<table cellspacing="0" cellpadding="6" border="0" style = "margin: auto; display:block;  border:2px solid #8E0000;  background: #F8F8F8; border-radius: 2px;  width: 600px;  height: auto; ">
+         <tr>
+ <td  style = "display: block;  border: 2px solid #8E0000;  height: 45px; width: auto;  background : #8E0000; text-align: center; font-family: Arial, sans-serif; font-size: 20px;  color:#FFFFFF; ">  
+          <div style="text-align: center" > <b>%(name)s </b> </div> </td></tr>
+        <tr>
+        <td> <div style = " font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px" > <b>     Hello %(user)s, </b> <br/>
+     %(organizer)s invited you for the %(name)s meeting of %(company)s. </div></td></tr> 
+    <tr><td>
+          <table cellspacing="0" cellpadding="0" border="0"  style="margin-top: 15px; margin-left: 10px; background: #F8F8F8">
+           <tr valign="top">
+                <td><div style = "height: 25px; width: 120px;  background : # CCCCCC;font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px;"><b> When :</b></div></td>
+                <td colspan="1"> <div style = " font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 14px" >%(time)s <span style= " color:#A9A9A9; "> (%(tz)s) </span></div> 
+                 </td>  </tr>
+           <tr valign="top">
+                <td> <div  style = "height: 25px; width: 120px;  background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px;"><b>Where :</b></div> </td>
+                <td colspan="1"> <div style = " font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px" >%(location)s %(map)s </div></td> </tr>
+                     
+            <tr valign="top">
+                <td> <div  style = "height: 25px; width: 120px;  background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px;"><b>What :</b></div> </td>
+                 <td colspan="3"> <div style = " font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px" >%(description)s</div> </td> </tr>
+            <tr valign="top">
+                <td style = "height: 25px;width: 120px;  background : # CCCCCC; font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 14px;"> <div><b>Attendees:<b></div> </td>
+                <td colspan="3"><div style = " font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 10px" >  You, %(organizer)s <span style= "color:#A9A9A9; ont-size: 9px">- Organizer </br></span>%(attendees)s</div> </td> </tr>
+             </table></td></tr>
+           <tr >
+                <td><div style = " font-family: Lucica Grande', Ubuntu, Arial, Verdana, sans-serif;   font-size: 10px" ><span style= "margin-top: 50px; margin-left: 200px;" ><a href="%(url)s">Accept</a> | <a href="%(url)s">Decline</a></span></div> </td>
+             <tr>
+             <td><div >  -- </br>  Sent by %(responsible)s from %(company)s.View this meeting detail <a href="%(url)s">directly in OpenERP</a></div> </td> 
+            </tr>
+</table>
+
+</body>
+</html>
+            
+            
+            
+            ]]></field>
+        </record>
+    </data>
 </openerp>
