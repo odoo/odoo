@@ -22,6 +22,8 @@
 import openerp
 import openerp.tools.config
 import openerp.modules.registry
+import openerp.addons.web.http as http
+from openerp.addons.web.http import request
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 import datetime
 from openerp.osv import osv, fields
@@ -90,36 +92,38 @@ POLL_TIMER = 30
 DISCONNECTION_TIMER = POLL_TIMER + 5
 WATCHER_ERROR_DELAY = 10
 
-class LongPollingController(openerp.addons.web.http.Controller):
-    _cp_path = '/longpolling/im'
+class LongPollingController(http.Controller):
 
-    @openerp.addons.web.http.jsonrequest
-    def poll(self, req, last=None, users_watch=None, db=None, uid=None, password=None, uuid=None):
+    @http.route('/longpolling/im/poll', type="json", auth="none")
+    def poll(self, last=None, users_watch=None, db=None, uid=None, password=None, uuid=None):
         assert_uuid(uuid)
         if not openerp.evented:
             raise Exception("Not usable in a server not running gevent")
         from openerp.addons.im.watcher import ImWatcher
         if db is not None:
-            req.session._db = db
-            req.session._uid = uid
-            req.session._password = password
-        req.session.model('im.user').im_connect(uuid=uuid, context=req.context)
-        my_id = req.session.model('im.user').get_by_user_id(uuid or req.session._uid, req.context)["id"]
+            request.session.authenticate(db=db, uid=uid, password=password)
+        else:
+            request.session.authenticate(db=request.session._db, uid=request.session._uid, password=request.session._password)
+
+        with request.registry.cursor() as cr:
+            request.registry.get('im.user').im_connect(cr, request.uid, uuid=uuid, context=request.context)
+            my_id = request.registry.get('im.user').get_by_user_id(cr, request.uid, uuid or request.session._uid, request.context)["id"]
         num = 0
         while True:
-            res = req.session.model('im.message').get_messages(last, users_watch, uuid=uuid, context=req.context)
+            with request.registry.cursor() as cr:
+                res = request.registry.get('im.message').get_messages(cr, request.uid, last, users_watch, uuid=uuid, context=request.context)
             if num >= 1 or len(res["res"]) > 0:
                 return res
             last = res["last"]
             num += 1
             ImWatcher.get_watcher(res["dbname"]).stop(my_id, users_watch or [], POLL_TIMER)
 
-    @openerp.addons.web.http.jsonrequest
-    def activated(self, req):
+    @http.route('/longpolling/im/activated', type="json", auth="none")
+    def activated(self):
         return not not openerp.evented
 
-    @openerp.addons.web.http.jsonrequest
-    def gen_uuid(self, req):
+    @http.route('/longpolling/im/gen_uuid', type="json", auth="none")
+    def gen_uuid(self):
         import uuid
         return "%s" % uuid.uuid1()
 
