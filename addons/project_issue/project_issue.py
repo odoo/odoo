@@ -653,6 +653,14 @@ class project_project(osv.Model):
         elif vals.get('use_issues') and not vals.get('use_tasks'):
             vals['alias_model'] = 'project.issue'
 
+    def on_change_use_tasks_or_issues(self, cr, uid, ids, use_tasks, use_issues, context=None):
+        values = {}
+        if use_tasks and not use_issues:
+            values['alias_model'] = 'project.task'
+        elif not use_tasks and use_issues:
+            values['alias_model'] = 'project.issues'
+        return {'value': values}
+
     def create(self, cr, uid, vals, context=None):
         self._check_create_write_values(cr, uid, vals, context=context)
         return super(project_project, self).create(cr, uid, vals, context=context)
