@@ -604,9 +604,10 @@ class BaseModel(object):
             field.depends = getattr(compute_method, '_depends', ())
 
     @classmethod
-    def _set_log_access_fields(cls):
-        """ Sets log access field on the current class
+    def _set_magic_fields(cls):
+        """ Introduce magic fields on the current class
 
+        * id is a "normal" field (with a specific getter)
         * create_uid, create_date, write_uid and write_date have become
           "normal" fields
         * $CONCURRENCY_CHECK_FIELD is a computed field with its computing
@@ -622,6 +623,9 @@ class BaseModel(object):
               >>> str(datetime.datetime.utcnow())
               '2013-06-18 08:31:32.821177'
         """
+        if 'id' not in cls._columns and not hasattr(cls, 'id'):
+            cls._set_field_descriptor('id', fields2.Id())
+
         log_access = getattr(cls, '_log_access', getattr(cls, '_auto', True))
 
         @api.record
@@ -741,11 +745,14 @@ class BaseModel(object):
 
         # duplicate all new-style fields to avoid clashes with inheritance
         cls._fields = {}
-        cls._set_log_access_fields()
         for attr in dir(cls):
             value = getattr(cls, attr)
             if isinstance(value, Field):
                 cls._set_field_descriptor(attr, value.copy())
+
+        # introduce magic fields
+        cls._set_magic_fields()
+
         # triggers to recompute stored function fields on other models
         #   cls._recompute = {trigger_field: [(model, field, path), ...], ...}
         #
@@ -5376,7 +5383,7 @@ class BaseModel(object):
             If `self` is a recordset, test whether `item` is a record in `self`.
         """
         if self.is_record():
-            return item == 'id' or item in self._fields
+            return item in self._fields
         elif self.is_recordset():
             if isinstance(item, Record) and item._name == self._name:
                 return item in self._records
@@ -5416,9 +5423,6 @@ class BaseModel(object):
         """ read the field with the given `name` on a record instance """
         if not self.is_record():
             raise ValueError("Expected record: %s" % self)
-
-        if name == 'id':
-            return self._record_id
 
         if name in self._record_cache:
             return self._record_cache[name]
@@ -5586,9 +5590,6 @@ class BaseModel(object):
             assert signal_name
             return (lambda *args, **kwargs:
                     self.signal_workflow(*args, signal=signal_name, **kwargs))
-
-        if name == 'id':
-            return self._get_field('id')
 
         get = getattr(super(BaseModel, self), '__getattr__', None)
         if get is not None:

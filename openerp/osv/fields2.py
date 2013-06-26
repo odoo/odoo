@@ -618,6 +618,29 @@ class Related(Field):
         return self.related_field.convert_to_write
 
 
+class Id(Field):
+    """ Special case for field 'id'. """
+    interface = True            # that field is always created by the ORM
+    store = False
+    readonly = True
+
+    @classmethod
+    def _from_column(cls, column):
+        raise NotImplementedError()
+
+    def to_column(self):
+        raise NotImplementedError()
+
+    def __get__(self, instance, owner):
+        if instance is None:
+            return self         # the field is accessed through the class owner
+        assert instance.is_record()
+        return instance._record_id
+
+    def __set__(self, instance, value):
+        raise NotImplementedError()
+
+
 # imported here to avoid dependency cycle issues
 from openerp.osv import fields
 from openerp.osv.orm import Record, Recordset
