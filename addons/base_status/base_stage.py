@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
 
@@ -82,6 +81,7 @@ class base_stage(object):
                              'phone':  address and address.phone or False,
                              'mobile': address and address.mobile or False,
                              'fax': address and address.fax or False,
+                             'function': address and address.function or False,
                              'street': address and address.street or False,
                              'street2': address and address.street2 or False,
                              'city': address and address.city or False,

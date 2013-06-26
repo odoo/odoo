@@ -19,10 +19,17 @@
 #
 ##############################################################################
 
-from openerp.osv import fields,osv
 from openerp import tools
-from .. import crm
+from openerp.addons.crm import crm
+from openerp.osv import fields, osv
 
+AVAILABLE_STATES = [
+    ('draft', 'Draft'),
+    ('open', 'Todo'),
+    ('cancel', 'Cancelled'),
+    ('done', 'Held'),
+    ('pending', 'Pending')
+]
 
 class crm_phonecall_report(osv.osv):
     """ Phone calls by user and section """
@@ -30,13 +37,14 @@ class crm_phonecall_report(osv.osv):
     _name = "crm.phonecall.report"
     _description = "Phone calls by user and section"
     _auto = False
-    
+
     _columns = {
         'name': fields.char('Year', size=64, required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'nbr': fields.integer('# of Cases', readonly=True),
+        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
                                   ('03', 'March'), ('04', 'April'),\
                                   ('05', 'May'), ('06', 'June'), \

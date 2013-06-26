@@ -26,14 +26,6 @@ from openerp import tools
 from openerp.osv import fields
 from openerp.osv import osv
 
-AVAILABLE_STATES = [
-    ('draft', 'New'),
-    ('cancel', 'Cancelled'),
-    ('open', 'In Progress'),
-    ('pending', 'Pending'),
-    ('done', 'Closed')
-]
-
 AVAILABLE_PRIORITIES = [
     ('1', 'Highest'),
     ('2', 'High'),

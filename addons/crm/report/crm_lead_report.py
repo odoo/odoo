@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 from openerp import tools
-from .. import crm
+from openerp.addons.crm import crm
 
 MONTHS = [
     ('01', 'January'),
@@ -71,7 +71,6 @@ class crm_lead_report(osv.osv):
         'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
         'channel_id':fields.many2one('crm.case.channel', 'Channel', readonly=True),
         'type_id':fields.many2one('crm.case.resource.type', 'Campaign', readonly=True),
-        # 'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg"),
         'planned_revenue': fields.float('Planned Revenue',digits=(16,2),readonly=True),
@@ -86,10 +85,7 @@ class crm_lead_report(osv.osv):
             ('opportunity','Opportunity'),
         ],'Type', help="Type is used to separate Leads and Opportunities"),
     }
-    
-    
-    
-    
+
     def init(self, cr):
 
         """
@@ -128,7 +124,7 @@ class crm_lead_report(osv.osv):
                     c.planned_revenue*(c.probability/100) as probable_revenue,
                     1 as nbr,
                     date_trunc('day',c.create_date) as create_date,
-                    extract('epoch' from (c.write_date-c.create_date))/(3600*24) as  delay_close,
+                    extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
                     abs(extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24)) as  delay_expected,
                     extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open
                 FROM

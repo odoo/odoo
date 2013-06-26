@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-today OpenERP SA (<http://www.openerp.com>)
+#    Copyright (C) 2004-Today OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,18 +19,18 @@
 #
 ##############################################################################
 
-from openerp.addons.base_status.base_stage import base_stage
-import crm
 from datetime import datetime
 from operator import itemgetter
-from openerp.osv import fields, osv, orm
 import time
+
 from openerp import SUPERUSER_ID
 from openerp import tools
-from openerp.tools.translate import _
-from openerp.tools import html2plaintext
-
+from openerp.addons.crm import crm
+from openerp.addons.base_status.base_stage import base_stage
 from openerp.addons.base.res.res_partner import format_address
+from openerp.osv import fields, osv, orm
+from openerp.tools import html2plaintext
+from openerp.tools.translate import _
 
 CRM_LEAD_FIELDS_TO_MERGE = ['name',
     'partner_id',
@@ -74,8 +74,8 @@ class crm_lead(base_stage, format_address, osv.osv):
     _track = {
         'stage_id': {
             'crm.mt_lead_create': lambda self, cr, uid, obj, ctx=None: obj.probability == 0 and obj.stage_id and obj.stage_id.sequence == 1,
-            'crm.mt_lead_stage': lambda self, cr, uid, obj, ctx=None: obj.probability > 0 and obj.probability < 100,
-            'crm.mt_lead_won': lambda self, cr, uid, obj, ctx=None: obj.probability == 100,
+            'crm.mt_lead_stage': lambda self, cr, uid, obj, ctx=None: (obj.stage_id and obj.stage_id.sequence != 1) and obj.probability < 100,
+            'crm.mt_lead_won': lambda self, cr, uid, obj, ctx=None: obj.probability == 100 and obj.stage_id and obj.stage_id.on_change,
             'crm.mt_lead_lost': lambda self, cr, uid, obj, ctx=None: obj.probability == 0 and obj.stage_id and obj.stage_id.sequence != 1,
         }
     }
@@ -321,25 +321,6 @@ class crm_lead(base_stage, format_address, osv.osv):
             return {'value': {}}
         return {'value': {'probability': stage.probability}}
 
-    def on_change_partner(self, cr, uid, ids, partner_id, context=None):
-        result = {}
-        values = {}
-        if partner_id:
-            partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
-            values = {
-                'partner_name' : partner.name,
-                'street' : partner.street,
-                'street2' : partner.street2,
-                'city' : partner.city,
-                'state_id' : partner.state_id and partner.state_id.id or False,
-                'country_id' : partner.country_id and partner.country_id.id or False,
-                'email_from' : partner.email,
-                'phone' : partner.phone,
-                'mobile' : partner.mobile,
-                'fax' : partner.fax,
-            }
-        return {'value' : values}
-
     def on_change_user(self, cr, uid, ids, user_id, context=None):
         """ When changing the user, also set a section_id or restrict section id
             to the ones user_id is member of. """
@@ -353,12 +334,12 @@ class crm_lead(base_stage, format_address, osv.osv):
     def _check(self, cr, uid, ids=False, context=None):
         """ Override of the base.stage method.
             Function called by the scheduler to process cases for date actions
-            Only works on not won and lost cases.
+            Avoid won cases
         """
         cr.execute('select * from crm_case \
                 where (date_action_last<%s or date_action_last is null) \
                 and (date_action_next<=%s or date_action_next is null) \
-                and probability not in (0,100)',
+                and probability not in (100)',
                 (time.strftime("%Y-%m-%d %H:%M:%S"),
                     time.strftime('%Y-%m-%d %H:%M:%S')))
 
@@ -413,9 +394,10 @@ class crm_lead(base_stage, format_address, osv.osv):
             if stage_id:
                 self.case_set(cr, uid, [lead.id], new_stage_id=stage_id, context=context)
             else:
-                raise osv.except_osv(_('Warning!'), _('To relieve your sales pipe and group all Lost opportunities, configure one of your sales stage as follow:\n' 
-                'probability = 0 %, select "Change Probability Automatically".\n' 
-                'Create a specific stage or edit an existing one by editing columns of your opportunity pipe.'))
+                raise osv.except_osv(_('Warning!'),
+                    _('To relieve your sales pipe and group all Lost opportunities, configure one of your sales stage as follow:\n'
+                        'probability = 0 %, select "Change Probability Automatically".\n'
+                        'Create a specific stage or edit an existing one by editing columns of your opportunity pipe.'))
         return True
 
     def case_mark_won(self, cr, uid, ids, context=None):
@@ -425,25 +407,26 @@ class crm_lead(base_stage, format_address, osv.osv):
             if stage_id:
                 self.case_set(cr, uid, [lead.id], new_stage_id=stage_id, context=context)
             else:
-                raise osv.except_osv(_('Warning!'), _('To relieve your sales pipe and group all Won opportunities, configure one of your sales stage as follow:\n' 
-                'probability = 100 % and select "Change Probability Automatically".\n'
-                'Create a specific stage or edit an existing one by editing columns of your opportunity pipe.'))
+                raise osv.except_osv(_('Warning!'),
+                    _('To relieve your sales pipe and group all Won opportunities, configure one of your sales stage as follow:\n'
+                        'probability = 100 % and select "Change Probability Automatically".\n'
+                        'Create a specific stage or edit an existing one by editing columns of your opportunity pipe.'))
         return True
 
-    def set_priority(self, cr, uid, ids, priority):
+    def set_priority(self, cr, uid, ids, priority, context=None):
         """ Set lead priority
         """
-        return self.write(cr, uid, ids, {'priority': priority})
+        return self.write(cr, uid, ids, {'priority': priority}, context=context)
 
     def set_high_priority(self, cr, uid, ids, context=None):
         """ Set lead priority to high
         """
-        return self.set_priority(cr, uid, ids, '1')
+        return self.set_priority(cr, uid, ids, '1', context=context)
 
     def set_normal_priority(self, cr, uid, ids, context=None):
         """ Set lead priority to normal
         """
-        return self.set_priority(cr, uid, ids, '3')
+        return self.set_priority(cr, uid, ids, '3', context=context)
 
     def _merge_get_result_type(self, cr, uid, opps, context=None):
         """
@@ -619,7 +602,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         sequenced_opps = []
         for opportunity in opportunities:
             sequence = -1
-            if opportunity.stage_id and (opportunity.probability == 0 and opportunity.stage_id and opportunity.stage_id.sequence != 1):
+            if opportunity.probability == 0 and opportunity.stage_id and opportunity.stage_id.sequence != 1:
                 sequence = opportunity.stage_id.sequence
             sequenced_opps.append(((int(sequence != -1 and opportunity.type == 'opportunity'), sequence, -opportunity.id), opportunity))
 
@@ -751,10 +734,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         res_partner = self.pool.get('res.partner')
         if partner_id:
             res_partner.write(cr, uid, partner_id, {'section_id': lead.section_id and lead.section_id.id or False})
-            contact_id = res_partner.address_get(cr, uid, [partner_id])['default']
             res = lead.write({'partner_id': partner_id}, context=context)
-            message = _("<b>Partner</b> set to <em>%s</em>." % (lead.partner_id.name))
-            self.message_post(cr, uid, [lead.id], body=message, context=context)
         return res
 
     def handle_partner_assignation(self, cr, uid, ids, action='create', partner_id=False, context=None):
@@ -894,7 +874,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         res['context'] = {
             'default_opportunity_id': opportunity.id,
             'default_partner_id': opportunity.partner_id and opportunity.partner_id.id or False,
-            'default_partner_ids' : opportunity.partner_id and [opportunity.partner_id.id] or False,
+            'default_partner_ids': opportunity.partner_id and [opportunity.partner_id.id] or False,
             'default_user_id': uid,
             'default_section_id': opportunity.section_id and opportunity.section_id.id or False,
             'default_email_from': opportunity.email_from,
@@ -903,14 +883,11 @@ class crm_lead(base_stage, format_address, osv.osv):
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
-        stage_pool=self.pool.get('crm.case.stage')
         if vals.get('stage_id') and not vals.get('probability'):
             # change probability of lead(s) if required by stage
-            stage = stage_pool.browse(cr, uid, vals['stage_id'], context=context)
+            stage = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
             if stage.on_change:
                 vals['probability'] = stage.probability
-            if vals.get('probability') == 100:
-                vals['stage_id'] = stage_pool.search(cr, uid, [('probability','=',100.0)],order='sequence')[0]
         return super(crm_lead, self).write(cr, uid, ids, vals, context=context)
 
     def new_mail_send(self, cr, uid, ids, context=None):

@@ -116,7 +116,7 @@
                             <field name="partner_name" string="Company Name"/>
                             <!-- Preload all the partner's information -->
                             <field name="partner_id" string="Customer"
-                                on_change="on_change_partner(partner_id)"
+                                on_change="onchange_partner_id(partner_id)"
                                 options='{"create_name_field": "name"}'
                                 context="{'default_name': contact_name, 'default_street': street, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_function': function, 'default_phone': phone, 'default_mobile': mobile, 'default_fax': fax, 'default_email': email_from, 'default_user_id': user_id, 'default_section_id': section_id}"/>
                             <label for="street" string="Address"/>
@@ -169,19 +169,23 @@
                         <field name="description"/>
                     </page>
                     <page string="Extra Info">
-                        <group>
-                            <group string="Categorization" groups="base.group_multi_company,base.group_no_one" name="categorization">
-                                <field name="company_id"
-                                    groups="base.group_multi_company"
-                                    widget="selection" colspan="2"/>
-                            </group>
-                            <group string="Mailings">
-                                <field name="opt_out"/>
-                            </group>
-                            <group string="Misc">
+                        <group string="Categorization" groups="base.group_multi_company,base.group_no_one" name="categorization">
+                            <field name="company_id"
+                                groups="base.group_multi_company"
+                                widget="selection" colspan="2"/>
+                        </group>
+                        <group string="Mailings">
+                            <field name="opt_out"/>
+                        </group>
+                        <group string="Misc">
+                            <group>
                                 <field name="probability" groups="base.group_no_one"/>
                                 <field name="active"/>
                                 <field name="referred"/>
+                            </group>
+                            <group>
+                                <field name="date_open" groups="base.group_no_one"/>
+                                <field name="date_closed" groups="base.group_no_one"/>
                             </group>
                         </group>
                     </page>
@@ -326,15 +330,18 @@
                     <field name="create_date"/>
                     <field name="country_id" context="{'invisible_country': False}"/>
                     <separator/>
-                    <filter string="Open" name="open" domain="[('user_id', '!=', 'False'), ('probability', '!=', 100)]" help="Open and Assigned Leads"/>
-                    <filter string="Dead" name="dead" domain="[('probability', '=', '0'), ('stage_id.sequence', '!=', 1)]"/>
-                    <filter string="Unassigned" name="unassigned" domain="[('user_id','=', False)]" help="No salesperson"/>
+                    <filter string="Unassigned" name="unassigned"
+                            domain="[('user_id','=', False)]"
+                            help="No salesperson"/>
                     <filter string="Assigned to Me"
                             domain="[('user_id','=',uid)]" context="{'invisible_section': False}"
                             help="Leads that are assigned to me"/>
-                    <filter string="Assigned to My Team(s)"
+                    <filter string="Assigned to My Team(s)" groups="base.group_multi_salesteams"
                             domain="[('section_id.member_ids', 'in', [uid])]" context="{'invisible_section': False}"
-                            help="Leads that are assigned to any sales teams I am member of" groups="base.group_multi_salesteams"/>
+                            help="Leads that are assigned to any sales teams I am member of"/>
+                    <filter string="Dead" name="dead"
+                            domain="[('probability', '=', '0'), ('stage_id.sequence', '!=', 1)]"/>
+                    <separator />
                     <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]" help="Unread messages"/>
                     <separator />
                     <filter string="Available for mass mailing"
@@ -543,17 +550,23 @@
                     <field name="stage_id"/>
                     <field name="probability"/>
                     <separator/>
-                    <filter string="New" name="new" domain="[('probability', '=', 0), ('stage_id.sequence', '=', 1)]" help="New Opportunities"/>
-                    <filter string="Won" name="won" domain="[('probability', '=', 100)]"/>
-                    <filter string="Lost" name="lost" domain="[('probability', '=',0), ('stage_id.sequence, '!=', 1')]"/>
-                    <filter string="Unassigned" name="unassigned" domain="[('user_id','=', False)]" help="No salesperson"/>
-                    <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]" help="Unread messages"/>
+                    <filter string="New" name="new"
+                            domain="[('probability', '=', 0), ('stage_id.sequence', '=', 1)]"/>
+                    <filter string="Won" name="won"
+                            domain="[('probability', '=', 100), ('stage_id.on_change', '=', 1)]"/>
+                    <filter string="Lost" name="lost"
+                            domain="[('probability', '=', 0), ('stage_id.sequence', '!=', 1)]"/>
+                    <filter string="Unassigned" name="unassigned"
+                            domain="[('user_id','=', False)]" help="No salesperson"/>
                     <filter string="My Opportunities" name="assigned_to_me"
-                            domain="[('user_id','=',uid)]" context="{'invisible_section': False}"
+                            domain="[('user_id', '=', uid)]" context="{'invisible_section': False}"
                             help="Opportunities that are assigned to me"/>
                     <filter string="Assigned to My Team(s)"
                             domain="[('section_id.member_ids', 'in', [uid])]" context="{'invisible_section': False}"
                             help="Opportunities that are assigned to any sales teams I am member of"/>
+                    <separator/>
+                    <filter string="Unread Messages" name="message_unread"
+                            domain="[('message_unread', '=', True)]" help="Unread messages"/>
                     <separator/>
                     <group expand="0" string="Group By..." colspan="16">
                         <filter string="Salesperson" domain="[]" context="{'group_by':'user_id'}"/>
@@ -612,7 +625,6 @@
                 if context.get('active_model') == 'crm.lead' and context.get('active_ids'):
                     self.case_mark_lost(cr, uid, context['active_ids'], context=context)
             </field>
-            <field name="groups_id" eval="[(4,ref('base.group_sale_salesman'))]"/>
         </record>
 
         <record id="ir_mark_as_lost" model="ir.values">
