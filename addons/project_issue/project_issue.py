@@ -25,7 +25,6 @@ from openerp.addons.crm import crm
 from datetime import datetime
 from openerp.osv import fields, osv, orm
 from openerp.tools.translate import _
-import binascii
 import time
 from openerp import tools
 from openerp.tools import html2plaintext
@@ -48,16 +47,15 @@ class project_issue(base_stage, osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     _track = {
-        'state': {
-            'project_issue.mt_issue_new': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['new', 'draft'],
-            'project_issue.mt_issue_closed': lambda self, cr, uid, obj, ctx=None:  obj['state'] == 'done',
-            'project_issue.mt_issue_started': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'open',
-        },
         'stage_id': {
-            'project_issue.mt_issue_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['new', 'draft', 'done', 'open'],
+            'project_issue.mt_issue_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence == 1,
+            'project_issue.mt_issue_stage': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence != 1,
+        },
+        'user_id': {
+            'project_issue.mt_issue_assigned': lambda self, cr, uid, obj, ctx=None: obj.user_id,
         },
         'kanban_state': {
-            'project_issue.mt_issue_blocked': lambda self, cr, uid, obj, ctx=None: obj['kanban_state'] == 'blocked',
+            'project_issue.mt_issue_blocked': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'blocked',
         },
     }
 
@@ -80,7 +78,7 @@ class project_issue(base_stage, osv.osv):
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
         project_id = self._get_default_project_id(cr, uid, context=context)
-        return self.stage_find(cr, uid, [], project_id, [('state', '=', 'draft')], context=context)
+        return self.stage_find(cr, uid, [], project_id, [('sequence', '=', 1)], context=context)
 
     def _resolve_project_id_from_context(self, cr, uid, context=None):
         """ Returns ID of project based on the value of 'default_project_id'
@@ -353,7 +351,7 @@ class project_issue(base_stage, osv.osv):
             })
             vals = {
                 'task_id': new_task_id,
-                'stage_id': self.stage_find(cr, uid, [bug], bug.project_id.id, [('state', '=', 'pending')], context=context),
+                'stage_id': self.stage_find(cr, uid, [bug], bug.project_id.id, [('sequence', '=', 1)], context=context),
             }
             message = _("Project issue <b>converted</b> to task.")
             self.message_post(cr, uid, [bug.id], body=message, context=context)
@@ -382,18 +380,12 @@ class project_issue(base_stage, osv.osv):
                 context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-    
-        #Update last action date every time the user changes the stage
+        # stage change: update date_last_stage_update
         if 'stage_id' in vals:
-            vals['date_action_last'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
-            state = self.pool.get('project.task.type').browse(cr, uid, vals['stage_id'], context=context).state
-            for issue in self.browse(cr, uid, ids, context=context):
-                # Change from draft to not draft EXCEPT cancelled: The issue has been opened -> set the opening date
-                if issue.state == 'draft' and state not in ('draft', 'cancelled'):
-                    vals['date_open'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
-                # Change from not done to done: The issue has been closed -> set the closing date
-                if issue.state != 'done' and state == 'done':
-                    vals['date_closed'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            vals['date_action_last'] = fields.datetime.now()
+        # user_id change: update date_start
+        if vals.get('user_id'):
+            vals['date_start'] = fields.datetime.now()
 
         return super(project_issue, self).write(cr, uid, ids, vals, context)
 
@@ -402,13 +394,6 @@ class project_issue(base_stage, osv.osv):
             return {'value': {}}
         task = self.pool.get('project.task').browse(cr, uid, task_id, context=context)
         return {'value': {'user_id': task.user_id.id, }}
-
-    def case_reset(self, cr, uid, ids, context=None):
-        """Resets case as draft
-        """
-        res = super(project_issue, self).case_reset(cr, uid, ids, context)
-        self.write(cr, uid, ids, {'date_open': False, 'date_closed': False})
-        return res
 
     def get_empty_list_help(self, cr, uid, help, context=None):
         context['empty_list_help_model'] = 'project.project'
@@ -457,11 +442,6 @@ class project_issue(base_stage, osv.osv):
         if stage_ids:
             return stage_ids[0]
         return False
-
-    def case_cancel(self, cr, uid, ids, context=None):
-        """ Cancels case """
-        self.case_set(cr, uid, ids, 'cancelled', {'active': True}, context=context)
-        return True
 
     def case_escalate(self, cr, uid, ids, context=None):
         cases = self.browse(cr, uid, ids)
@@ -585,7 +565,8 @@ class project(osv.Model):
         res = dict.fromkeys(ids, 0)
         issue_ids = self.pool.get('project.issue').search(cr, uid, [('project_id', 'in', ids)])
         for issue in self.pool.get('project.issue').browse(cr, uid, issue_ids, context):
-            if issue.state not in ('done', 'cancelled'):
+            # TDE CHECK: if issue.state not in ('done', 'cancelled'):
+            if issue.stage_id and not issue.stage_id.fold:
                 res[issue.project_id.id] += 1
         return res
 

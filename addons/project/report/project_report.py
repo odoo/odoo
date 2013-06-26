@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-from openerp.tools.misc import MONTHS
 from openerp.osv import fields, osv
 from openerp import tools
 
@@ -38,7 +37,7 @@ class report_project_task_user(osv.osv):
         'date_end': fields.date('Ending Date', readonly=True),
         'date_deadline': fields.date('Deadline', readonly=True),
         'date_last_stage_update': fields.date('Last Stage Update', readonly=True),
-        'month_last_stage_update': fields.selection(MONTHS, 'Month of Last Stage Update', readonly=True),
+        'month_last_stage_update': fields.selection(fields.date.MONTHS, 'Month of Last Stage Update', readonly=True),
         'project_id': fields.many2one('project.project', 'Project', readonly=True),
         'hours_planned': fields.float('Planned Hours', readonly=True),
         'hours_effective': fields.float('Effective Hours', readonly=True),
@@ -54,7 +53,7 @@ class report_project_task_user(osv.osv):
         'nbr': fields.integer('# of tasks', readonly=True),
         'priority': fields.selection([('4', 'Very Low'), ('3', 'Low'), ('2', 'Medium'), ('1', 'Urgent'), ('0', 'Very urgent')],
             string='Priority', readonly=True),
-        'month':fields.selection(MONTHS, 'Month', readonly=True),
+        'month':fields.selection(fields.date.MONTHS, 'Month', readonly=True),
         'state': fields.selection([('draft', 'Draft'), ('open', 'In Progress'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')],'Status', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Contact', readonly=True),
