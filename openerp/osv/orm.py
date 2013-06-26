@@ -4234,7 +4234,6 @@ class BaseModel(object):
                 tocreate[v] = {}
             else:
                 tocreate[v] = {'id': vals[self._inherits[v]]}
-        (upd0, upd1, upd2) = ('', '', [])
         upd_todo = []
         unknown_fields = []
         for v in vals.keys():
@@ -4260,6 +4259,7 @@ class BaseModel(object):
                 _('You cannot perform this operation. New Record Creation is not allowed for this object as this object is for reporting purpose.'))
 
         id_new = cr.fetchone()[0]
+        (upd0, upd1, upd2) = (['id'], [str(id_new)], [])
         for table in tocreate:
             if self._inherits[table] in vals:
                 del vals[self._inherits[table]]
@@ -4276,8 +4276,8 @@ class BaseModel(object):
             else:
                 self.pool[table].write(cr, user, [record_id], tocreate[table], context=parent_context)
 
-            upd0 += ',' + self._inherits[table]
-            upd1 += ',%s'
+            upd0.append(self._inherits[table])
+            upd1.append('%s')
             upd2.append(record_id)
 
         #Start : Set bool fields to be False if they are not touched(to make search more powerful)
@@ -4316,8 +4316,8 @@ class BaseModel(object):
                     vals.pop(field)
         for field in vals:
             if self._columns[field]._classic_write:
-                upd0 = upd0 + ',"' + field + '"'
-                upd1 = upd1 + ',' + self._columns[field]._symbol_set[0]
+                upd0.append('"%s"' % field)
+                upd1.append(self._columns[field]._symbol_set[0])
                 upd2.append(self._columns[field]._symbol_set[1](vals[field]))
                 #for the function fields that receive a value, we set them directly in the database
                 #(they may be required), but we also need to trigger the _fct_inv()
@@ -4340,10 +4340,13 @@ class BaseModel(object):
                     and vals[field]:
                 self._check_selection_field_value(cr, user, field, vals[field], context=context)
         if self._log_access:
-            upd0 += ',create_uid,create_date,write_uid,write_date'
-            upd1 += ",%s,(now() at time zone 'UTC'),%s,(now() at time zone 'UTC')"
+            upd0.extend(('create_uid', 'create_date', 'write_uid', 'write_date'))
+            upd1.extend(("%s","(now() at time zone 'UTC')","%s","(now() at time zone 'UTC')"))
             upd2.extend((user, user))
-        cr.execute('insert into "'+self._table+'" (id'+upd0+") values ("+str(id_new)+upd1+')', tuple(upd2))
+        cr.execute('insert into "' +self._table + '" '
+                     '(' + ','.join(upd0) + ') '
+                     'values (' + ','.join(upd1) + ')',
+                   tuple(upd2))
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
 
         self.invalidate_cache(vals.keys(), [id_new])
