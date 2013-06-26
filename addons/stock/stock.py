@@ -1600,6 +1600,62 @@ class stock_picking(osv.osv):
             'stock', self._VIEW_LIST.get(type, 'view_picking_form'))            
         return res and res[1] or False
 
+    def action_done_from_packing_ui(self, cr, uid, picking_id, context=None):
+        #fill all the packages with assigned operations
+        #call action_done of picking
+        #return id of next picking to work on
+        pass
+
+    def action_pack(self, cr, uid, picking_id, context=None):
+        stock_operation_obj = self.pool.get('stock.pack.operation')
+        package_obj = self.pool.get('stock.quant.package')
+        #create a new empty stock.quant.package
+        package_id = package_obj.create(cr, uid, {}, context=context)
+        #put all the operations of the picking that aren't yet assigned to a package to this new one
+        operation_ids = stock_operation_obj.search(cr, uid, [('picking_id', '=', picking_id), ('result_package_id', '=', False)], context=context)
+        stock_operation_obj.write(cr, uid, operation_ids, {'result_package_id': package_id}, context=context)
+        pass
+        #return {'warnings': '', 'stock_move_to_update': [{}], 'package_to_update': [{}]}
+
+    def _deal_with_quants(self, cr, uid, picking_id, quant_ids, context=None):
+        stock_operation_obj = self.pool.get('stock.pack.operation')
+        todo_on_moves = []
+        todo_on_operations = []
+        for quant in self.pool.get('stock.quant').browse(cr, uid, quant_ids, context=context):
+            tmp_moves, tmp_operations = stock_operation_obj._search_and_increment(cr, uid, picking_id, ('quant_id', '=', quant.id), context=context)
+            todo_on_moves += tmp_moves
+            todo_on_operations += tmp_operations
+        return todo_on_moves, todo_on_operations
+
+    def get_barcode_and_return_todo_stuff(self, cr, uid, picking_id, barcode_str, context=None):
+        '''This function is called each time there barcode scanner reads an input'''
+        #TODO: better error messages handling => why not real raised errors
+        quant_obj = self.pool.get('stock.quant')
+        package_obj = self.pool.get('stock.quant.package')
+        product_obj = self.pool.get('product.product')
+        stock_operation_obj = self.pool.get('stock.pack.operation')
+        error_msg = ''
+
+        #check if the barcode correspond to a product
+        matching_product_ids = product_obj.search(cr, uid, ['|', ('code', '=', barcode_str), ('ean', '=', barcode_str)], context=context)
+        if matching_product_ids:
+            if len(matching_product_ids) > 1:
+                error_msg = _('Wrong bar code detected: more than one product matching the given barcode')
+            todo_on_moves, todo_on_operations = stock_operation_obj._search_and_increment(cr, uid, picking_id, ('product_id', '=', matching_product_ids[0]), context=context)
+
+        #check if the barcode correspond to a quant
+        matching_quant_ids = quant_obj.search(cr, uid, [('name', '=', barcode_str)], context=context)  # TODO need the location clause
+        if matching_quant_ids:
+            todo_on_moves, todo_on_operations = self._deal_with_quants(cr, uid, picking_id, [matching_quant_ids[0]], context=context)
+
+        #check if the barcode correspond to a package
+        matching_package_ids = package_obj.search(cr, uid, [('name', '=', barcode_str)], context=context)
+        if matching_package_ids:
+            included_package_ids = package_obj.search(cr, uid, [('parent_id', 'child_of', matching_package_ids[0])], context=context)
+            included_quant_ids = quant_obj.search(cr, uid, [('package_id', 'in', included_package_ids)], context=context)
+            todo_on_moves, todo_on_operations = self._deal_with_quants(cr, uid, picking_id, included_quant_ids, context=context)
+        return {'warnings': error_msg, 'stock_move_to_update': todo_on_moves, 'package_to_update': todo_on_operations}
+
 
 class stock_production_lot(osv.osv):
 
@@ -3637,6 +3693,14 @@ class stock_package(osv.osv):
         (_check_location, 'All quant inside a package should share the same location', ['location_id']),
     ]
 
+    def action_plus(self, cr, uid, ids, context=None):
+        pass
+        #return {'warnings': '', 'stock_move_to_update': [{}], 'package_to_update': [{}]}
+
+    def action_minus(self, cr, uid, ids, context=None):
+        pass
+        #return {'warnings': '', 'stock_move_to_update': [{}], 'package_to_update': [{}]}
+
 class stock_pack_operation(osv.osv):
     _name = "stock.pack.operation"
     _description = "Packing Operation"
@@ -3650,66 +3714,47 @@ class stock_pack_operation(osv.osv):
         'result_package_id': fields.many2one('stock.quant.package', 'Package Made', help="The resulf of the packaging.", required=False),
     }
 
-    _defaults = {
-    }
-
-    def action_done(self, cr, uid, ids, context=None):
-        pass
-        #return next_picking_id
-
-    def action_pack(self, cr, uid, ids, context=None):
-        pass
-        #return {'warnings': '', 'stock_move_to_update': [{}], 'package_to_update': [{}]}
-
-    def action_plus(self, cr, uid, ids, context=None):
-        pass
-        #return {'warnings': '', 'stock_move_to_update': [{}], 'package_to_update': [{}]}
-
-    def action_minus(self, cr, uid, ids, context=None):
-        pass
-        #return {'warnings': '', 'stock_move_to_update': [{}], 'package_to_update': [{}]}
-
     def _search_and_increment(self, cr, uid, picking_id, key, context=None):
         '''Search for an operation on an existing key in a picking, if it exists increment the qty (+1) otherwise create it
 
         :param key: tuple directly reusable in a domain
+        context can receive a key 'current_package_id' with the package to consider for this operation
+        returns the update to do in stock.move one2many field of picking (adapt remaining quantities) and to the list of package in the classic one2many syntax
+                 (0, 0,  { values })    link to a new record that needs to be created with the given values dictionary
+                 (1, ID, { values })    update the linked record with id = ID (write *values* on it)
+                 (2, ID)                remove and delete the linked record with id = ID (calls unlink on ID, that will delete the object completely, and the link to it as well)
         '''
+        stock_move_obj = self.pool.get('stock.move')
+        if context is None:
+            context = {}
 
-        existing_operation_ids = self.search(cr, uid, [('picking_id', '=', picking_id), key], context=context)
+        #if current_package_id is given in the context, we increase the number of items in this package
+        package_clause = []
+        if context.get('current_package_id'):
+            package_clause = [('result_package_id', '=', context.get('current_package_id'))]
+        existing_operation_ids = self.search(cr, uid, [('picking_id', '=', picking_id), key] + package_clause, context=context)
         if existing_operation_ids:
             #existing operation found for the given key and picking => increment its quantity
-            qty = self.browse(cr, uid, existing_operation_ids[0], context=context).product_qty + 1
-            self.write(cr, uid, existing_operation_ids[0], {'product_qty': qty}, context=context)
+            operation_id = existing_operation_ids[0]
+            qty = self.browse(cr, uid, operation_id, context=context).product_qty + 1
+            self.write(cr, uid, operation_id, {'product_qty': qty}, context=context)
+            todo_on_operations = [(1, operation_id, {'product_qty': qty})]
         else:
             #no existing operation found for the given key and picking => create a new one
             var_name, dummy, value = key
             qty = 1
-            self.create(cr, uid, {
+            values = {
                 'picking_id': picking_id,
                 var_name: value,
                 'product_qty': qty,
-            }, context=context)
-        return qty
+            }
+            operation_id = self.create(cr, uid, values, context=context)
+            values.update({'id': operation_id})
+            todo_on_operations = [(0, 0, values)]
+        product_id = self._find_product_id(cr, uid, operation_id, context=context)
+        corresponding_move_id = stock_move_obj.search(cr, uid, [('picking_id', '=', picking_id), ('product_id', '=', product_id)], context=context)[0]   # TODO: be safer
+        corresponding_move = stock_move_obj.browse(cr, uid, corresponding_move_id, context=context)
+        todo_on_moves = (1, corresponding_move.id, {'remaining_qty': corresponding_move.product_qty - qty})
+        return todo_on_moves, todo_on_operations
 
-    def _search_and_decrement(self, cr, uid, picking_id, product_id, new_qty, context=None):
-        move_ids = self.pool.get('stock.move').search(cr, uid, [('picking_id', '=', picking_id), ('product_id', '=', product_id)], limit=1, context=context)
-        self.pool.get('stock.move').write(cr, uid, move_ids, {'product_qty': new_qty})
-
-    def get_barcode_and_return_todo_stuff(self, cr, uid, picking_id, barcode_str, context=None):
-        '''This function is called each time there barcode scanner reads an input'''
-        error_msg = ''
-        sample_struct = {'warnings': 'You shall not pass!', 'stock_move_to_update': [{'id': 1, 'remaining_qty': 0}], 'package_to_update': [{}]}
-        return sample_struct
-        matching_quant_ids = self.pool.get('stock.quant').search(cr, uid, [('name', '=', barcode_str)], context=context)
-        if matching_quant_ids:
-            quant = self.pool.get('stock.quant').browse(cr, uid, matching_quant_ids[0], context=context)
-            new_qty = self._search_and_increment(cr, uid, picking_id, ('quant_id', '=', quant.id), context=context)
-            self._search_and_decrement(cr, uid, picking_id, quant.product, new_qty, context=context)
-        matching_product_ids = self.pool.get('product.product').search(cr, uid, ['|', ('code', '=', barcode_str), ('ean', '=', barcode_str)], context=context)
-        if matching_product_ids:
-            if len(matching_product_ids) > 1:
-                error_msg = _('Wrong bar code detected: more than one product matching the given barcode')
-            new_qty = self._search_and_increment(cr, uid, picking_id, ('product_id', '=', matching_product_ids[0]), context=context)
-            self._search_and_decrement(cr, uid, picking_id, matching_product_ids[0], new_qty, context=context)
-        return {'warnings': error_msg, 'stock_move_to_update': [{}], 'package_to_update': [{}]}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
