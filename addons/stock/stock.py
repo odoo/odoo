@@ -489,6 +489,7 @@ class stock_quant(osv.osv):
     _name = "stock.quant"
     _description = "Quants"
     _columns = {
+        'name': fields.char('Identifier', help='serial... '),  # TODO improve me
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'location_id': fields.many2one('stock.location', 'Location', required=True),
         'qty': fields.float('Quantity', required=True), #should be in units of the product UoM
@@ -1654,7 +1655,7 @@ class stock_picking(osv.osv):
             included_package_ids = package_obj.search(cr, uid, [('parent_id', 'child_of', matching_package_ids[0])], context=context)
             included_quant_ids = quant_obj.search(cr, uid, [('package_id', 'in', included_package_ids)], context=context)
             todo_on_moves, todo_on_operations = self._deal_with_quants(cr, uid, picking_id, included_quant_ids, context=context)
-        return {'warnings': error_msg, 'stock_move_to_update': todo_on_moves, 'operation_to_update': todo_on_operations}
+        return {'warnings': error_msg, 'moves_to_update': todo_on_moves, 'operations_to_update': todo_on_operations}
 
 
 class stock_production_lot(osv.osv):
