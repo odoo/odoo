@@ -2755,6 +2755,31 @@ class BaseModel(object):
         self._m2o_add_foreign_key_checked(source_field, dest_model, ondelete)
 
 
+    def set_default_value_on_column(self, cr, column_name, context=None):
+        # ideally should use add_default_value but fails
+        # due to ir.values not being ready
+
+        # get old-style default
+        default = self._defaults.get(column_name)
+        if callable(default):
+            default = default(self, cr, SUPERUSER_ID, context)
+        # get new_style default if no old-style
+        if default is None:
+            draft = self.draft()
+            field = self._fields[column_name]
+            field.compute_default(draft)
+            if draft[column_name] != field.null():
+                default = draft[column_name]
+        if default is not None:
+            _logger.debug("Table '%s': setting default value of new column %s",
+                          self._table, column_name)
+            ss = self._columns[column_name]._symbol_set
+            query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" is NULL' % (
+                self._table, column_name, ss[0], column_name)
+            cr.execute(query, (ss[1](default),))
+            # this is a disgrace
+            cr.commit()
+
     def _auto_init(self, cr, context=None):
         """
 
@@ -2899,29 +2924,8 @@ class BaseModel(object):
 
                             # if the field is required and hasn't got a NOT NULL constraint
                             if f.required and f_pg_notnull == 0:
-                                # ideally shoud use add_default_value but fails
-                                # due to ir.values not being ready
-                                default = None
-                                # get old-style default
-                                if k in self._defaults:
-                                    if callable(self._defaults[k]):
-                                        default = self._defaults[k](self, cr, SUPERUSER_ID, context)
-                                    else:
-                                        default = self._defaults[k]
-                                # get new_style default if no old-style
-                                if default is None:
-                                    draft = self.draft()
-                                    field = self._fields[k]
-                                    field.compute_default(draft)
-                                    if draft[k] != field.null():
-                                        default = draft[k]
-
-                                if default is not None:
-                                    ss = self._columns[k]._symbol_set
-                                    query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" is NULL' % (self._table, k, ss[0], k)
-                                    cr.execute(query, (ss[1](default),))
+                                self.set_default_value_on_column(cr, k, context=context)
                                 # add the NOT NULL constraint
-                                cr.commit()
                                 try:
                                     cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k), log_exceptions=False)
                                     cr.commit()
@@ -2973,17 +2977,8 @@ class BaseModel(object):
                                 self._table, k, get_pg_type(f)[1])
 
                             # initialize it
-                            if not create and k in self._defaults:
-                                if callable(self._defaults[k]):
-                                    default = self._defaults[k](self, cr, SUPERUSER_ID, context)
-                                else:
-                                    default = self._defaults[k]
-
-                                ss = self._columns[k]._symbol_set
-                                query = 'UPDATE "%s" SET "%s"=%s' % (self._table, k, ss[0])
-                                cr.execute(query, (ss[1](default),))
-                                cr.commit()
-                                _logger.debug("Table '%s': setting default value of new column %s", self._table, k)
+                            if not create:
+                                self.set_default_value_on_column(cr, k, context=context)
 
                             # remember the functions to call for the stored fields
                             if isinstance(f, fields.function):
@@ -3010,7 +3005,7 @@ class BaseModel(object):
                             if f.required:
                                 try:
                                     cr.commit()
-                                    cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k), log_exceptions=False)
+                                    cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k))
                                     _schema.debug("Table '%s': column '%s': added a NOT NULL constraint",
                                         self._table, k)
                                 except Exception:
@@ -3018,7 +3013,7 @@ class BaseModel(object):
                                         "Try to re-run: openerp-server --update=module\n"\
                                         "If it doesn't work, update records and execute manually:\n"\
                                         "ALTER TABLE %s ALTER COLUMN %s SET NOT NULL"
-                                    _logger.warning(msg, k, self._table, self._table, k)
+                                    _logger.warning(msg, k, self._table, self._table, k, exc_info=True)
                             cr.commit()
 
         else:
