@@ -172,6 +172,12 @@ class event_event(osv.osv):
                         continue
         return res
 
+    def _get_visibility_selection(self, cr, uid, context=None):
+        return [('public', 'All Users'),
+                ('employees', 'Employees Only')]
+    # Lambda indirection method to avoid passing a copy of the overridable method when declaring the field
+    _visibility_selection = lambda self, *args, **kwargs: self._get_visibility_selection(*args, **kwargs)
+
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True, readonly=False, states={'done': [('readonly', True)]}),
         'user_id': fields.many2one('res.users', 'Responsible User', readonly=False, states={'done': [('readonly', True)]}),
@@ -209,11 +215,14 @@ class event_event(osv.osv):
         'note': fields.text('Description', readonly=False, states={'done': [('readonly', True)]}),
         'company_id': fields.many2one('res.company', 'Company', required=False, change_default=True, readonly=False, states={'done': [('readonly', True)]}),
         'is_subscribed' : fields.function(_subscribe_fnc, type="boolean", string='Subscribed'),
+        'visibility': fields.selection(_visibility_selection, 'Privacy / Visibility',
+            select=True, required=True),
     }
     _defaults = {
         'state': 'draft',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'event.event', context=c),
         'user_id': lambda obj, cr, uid, context: uid,
+        'visibility': 'employees',
     }
 
     def subscribe_to_event(self, cr, uid, ids, context=None):
