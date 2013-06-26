@@ -125,16 +125,6 @@ CREATE TABLE ir_ui_view (
     primary key(id)
 );
 
-CREATE TABLE ir_ui_menu (
-    id serial NOT NULL,
-    parent_id int references ir_ui_menu on delete set null,
-    name varchar(64) DEFAULT ''::varchar NOT NULL,
-    icon varchar(64) DEFAULT ''::varchar,
-    primary key (id)
-);
-
-select setval('ir_ui_menu_id_seq', 2);
-
 ---------------------------------
 -- Res users
 ---------------------------------
@@ -171,7 +161,6 @@ CREATE TABLE res_groups_users_rel (
 
 create index res_groups_users_rel_uid_idx on res_groups_users_rel (uid);
 create index res_groups_users_rel_gid_idx on res_groups_users_rel (gid);
-
 
 ---------------------------------
 -- Workflows
