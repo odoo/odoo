@@ -827,8 +827,8 @@ class ir_model_data(osv.osv):
         'date_init': fields.datetime('Init Date')
     }
     _defaults = {
-        'date_init': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'date_update': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'date_init': fields.datetime.now,
+        'date_update': fields.datetime.now,
         'noupdate': False,
         'module': ''
     }
