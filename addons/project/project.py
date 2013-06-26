@@ -1301,7 +1301,7 @@ class project_task_history(osv.osv):
     def _get_date(self, cr, uid, ids, name, arg, context=None):
         result = {}
         for history in self.browse(cr, uid, ids, context=context):
-            if history.state in ('done','cancelled'):
+            if history.type_id and history.type_id.fold:
                 result[history.id] = history.date
                 continue
             cr.execute('''select
@@ -1335,14 +1335,13 @@ class project_task_history(osv.osv):
     _columns = {
         'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True, select=True),
         'type_id': fields.many2one('project.task.type', 'Stage'),
-        'state': fields.selection([('draft', 'New'), ('cancelled', 'Cancelled'),('open', 'In Progress'),('pending', 'Pending'), ('done', 'Done')], 'Status'),
-        'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready for next stage')], 'Kanban State', required=False),
+        'kanban_state': fields.selection([('normal', 'Normal'), ('blocked', 'Blocked'), ('done', 'Ready for next stage')], 'Kanban State', required=False),
         'date': fields.date('Date', select=True),
         'end_date': fields.function(_get_date, string='End Date', type="date", store={
             'project.task.history': (_get_related_date, None, 20)
         }),
-        'remaining_hours': fields.float('Remaining Time', digits=(16,2)),
-        'planned_hours': fields.float('Planned Time', digits=(16,2)),
+        'remaining_hours': fields.float('Remaining Time', digits=(16, 2)),
+        'planned_hours': fields.float('Planned Time', digits=(16, 2)),
         'user_id': fields.many2one('res.users', 'Responsible'),
     }
     _defaults = {
@@ -1372,7 +1371,7 @@ class project_task_history_cumulative(osv.osv):
                 SELECT
                     h.id AS history_id,
                     h.date+generate_series(0, CAST((coalesce(h.end_date, DATE 'tomorrow')::date - h.date) AS integer)-1) AS date,
-                    h.task_id, h.type_id, h.user_id, h.kanban_state, h.state,
+                    h.task_id, h.type_id, h.user_id, h.kanban_state,
                     greatest(h.remaining_hours, 1) AS remaining_hours, greatest(h.planned_hours, 1) AS planned_hours,
                     t.project_id
                 FROM
