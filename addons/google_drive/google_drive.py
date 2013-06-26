@@ -23,8 +23,8 @@ from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
+from httplib2 import Http
 import urllib
-import urllib2
 import json
 import re
 
@@ -41,7 +41,7 @@ class config(osv.osv):
         filter_name = config.filter_id and config.filter_id.name or False
         record = self.pool.get(model.model).read(cr, uid, res_id, [], context=context)
         record.update({'model': model.name, 'filter': filter_name})
-        name_gdocs = config.name_template or "%(name)s_%(model)s_%(filter)s_gdrive"
+        name_gdocs = config.name_template
         try:
             name_gdocs = name_gdocs % record
         except:
@@ -65,26 +65,28 @@ class config(osv.osv):
         google_web_base_url = ir_config.get_param(cr, SUPERUSER_ID, 'web.base.url')
 
         #For Getting New Access Token With help of old Refresh Token
+        headers = {"Content-type": "application/x-www-form-urlencoded"}
         data = dict(client_id=google_drive_client_id,
                     refresh_token=google_drive_refresh_token,
                     client_secret=google_drive_client_secret,
                     grant_type="refresh_token")
+
         data = urllib.urlencode(data)
-        content = urllib2.urlopen("https://accounts.google.com/o/oauth2/token", data).read()
+        resp, content = Http().request("https://accounts.google.com/o/oauth2/token", "POST", data, headers)
         content = json.loads(content)
 
         # Copy template in to drive with help of new access token
         if 'access_token' in content:
             request_url = "https://www.googleapis.com/drive/v2/files/%s?fields=parents/id&access_token=%s" % (template_id, content['access_token'])
-            parents = urllib2.urlopen(request_url).read()
+            resp, parents = Http().request(request_url, "GET")
             parents_dict = json.loads(parents)
 
             record_url = "Click on link to open Record in OpenERP\n %s/?db=%s#id=%s&model=%s" % (google_web_base_url, cr.dbname, res_id, res_model)
             data = {"title": name_gdocs, "description": record_url, "parents": parents_dict['parents']}
             request_url = "https://www.googleapis.com/drive/v2/files/%s/copy?access_token=%s" % (template_id, content['access_token'])
+            headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
             data_json = json.dumps(data)
-            req = urllib2.Request(request_url, data_json, {'Content-Type': 'application/json', 'Content-Length': len(data_json)})
-            content = urllib2.urlopen(req).read()
+            resp, content = Http().request(request_url, "POST", data_json, headers)
             content = json.loads(content)
             res = False
             if 'alternateLink' in content.keys():
@@ -166,7 +168,7 @@ class config(osv.osv):
         return res
 
     _defaults = {
-        'name_template': '%(name)s_%(model)s_%(filter)s_gdrive',
+        'name_template': 'Document %(name)s',
     }
 
     def _check_model_id(self, cr, uid, ids, context=None):
