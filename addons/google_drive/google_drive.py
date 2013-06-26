@@ -22,10 +22,9 @@ import logging
 from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-from urlparse import urlparse
 
-from httplib2 import Http
 import urllib
+import urllib2
 import json
 
 _logger = logging.getLogger(__name__)
@@ -35,37 +34,29 @@ class config(osv.osv):
     _name = 'google.drive.config'
     _description = "Google Drive templates config"
 
-    def get_google_doc_name(self, cr, uid, ids, res_id, tamplate_id, context=None):
-        pool_model = self.pool.get("ir.model")
-        res = {}
-        for config in self.browse(cr, SUPERUSER_ID, ids, context=context):
-            res_model = config.model_id
-            model_ids = pool_model.search(cr, uid, [('model', '=', res_model)])
-            if not model_ids:
-                continue
-            model = pool_model.browse(cr, uid, model_ids[0], context=context)
-            model_name = model.name
-            filter_name = config.filter_id and config.filter_id.name or False
-            record = self.pool.get(res_model).read(cr, uid, res_id, [], context=context)
-            record.update({'model': model_name, 'filter': filter_name})
-            name_gdocs = config.name_template or "%(name)s_%(model)s_%(filter)s_gdrive"
-            try:
-                name_gdocs = name_gdocs % record
-            except:
-                raise osv.except_osv(_('Key Error!'), _("Your Google Doc Name Pattern's key does not found in object."))
+    def get_google_drive_url(self, cr, uid, config_id, res_id, template_id, context=None):
+        config = self.browse(cr, SUPERUSER_ID, config_id, context=context)
+        model = config.model_id
+        filter_name = config.filter_id and config.filter_id.name or False
+        record = self.pool.get(model.model).read(cr, uid, res_id, [], context=context)
+        record.update({'model': model.name, 'filter': filter_name})
+        name_gdocs = config.name_template or "%(name)s_%(model)s_%(filter)s_gdrive"
+        try:
+            name_gdocs = name_gdocs % record
+        except:
+            raise osv.except_osv(_('Key Error!'), _("At least one key cannot be found in your Google Drive name pattern"))
 
-            attach_pool = self.pool.get("ir.attachment")
-            attach_ids = attach_pool.search(cr, uid, [('res_model', '=', res_model), ('name', '=', name_gdocs), ('res_id', '=', res_id)])
-            url = False
-            if attach_ids:
-                attachment = attach_pool.browse(cr, uid, attach_ids[0], context)
-                url = attachment.url
-            else:
-                url = self.copy_doc(cr, uid, ids, res_id, tamplate_id, name_gdocs, res_model, context)
-            res[config.id] = {'url': url}
-        return res
+        attach_pool = self.pool.get("ir.attachment")
+        attach_ids = attach_pool.search(cr, uid, [('res_model', '=', model.model), ('name', '=', name_gdocs), ('res_id', '=', res_id)])
+        url = False
+        if attach_ids:
+            attachment = attach_pool.browse(cr, uid, attach_ids[0], context)
+            url = attachment.url
+        else:
+            url = self.copy_doc(cr, uid, res_id, template_id, name_gdocs, model.model, context)
+        return url
 
-    def copy_doc(self, cr, uid, ids, res_id, tamplate_id, name_gdocs, res_model, context=None):
+    def copy_doc(self, cr, uid, res_id, template_id, name_gdocs, res_model, context=None):
         ir_config = self.pool['ir.config_parameter']
         google_drive_client_id = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_client_id')
         google_drive_client_secret = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_client_secret')
@@ -73,26 +64,26 @@ class config(osv.osv):
         google_web_base_url = ir_config.get_param(cr, SUPERUSER_ID, 'web.base.url')
 
         #For Getting New Access Token With help of old Refresh Token
-        headers = {"Content-type": "application/x-www-form-urlencoded"}
         data = dict(client_id=google_drive_client_id,
                     refresh_token=google_drive_refresh_token,
                     client_secret=google_drive_client_secret,
                     grant_type="refresh_token")
         data = urllib.urlencode(data)
-        resp, content = Http().request("https://accounts.google.com/o/oauth2/token", "POST", data, headers)
+        content = urllib2.urlopen("https://accounts.google.com/o/oauth2/token", data).read()
         content = json.loads(content)
 
         # Copy template in to drive with help of new access token
         if 'access_token' in content:
-            request_url = "https://www.googleapis.com/drive/v2/files/%s?fields=parents/id&access_token=%s" % (tamplate_id, content['access_token'])
-            resp, parents = Http().request(request_url, "GET")
+            request_url = "https://www.googleapis.com/drive/v2/files/%s?fields=parents/id&access_token=%s" % (template_id, content['access_token'])
+            parents = urllib2.urlopen(request_url).read()
             parents_dict = json.loads(parents)
 
-            headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
             record_url = "Click on link to open Record in OpenERP\n %s/?db=%s#id=%s&model=%s" % (google_web_base_url, cr.dbname, res_id, res_model)
             data = {"title": name_gdocs, "description": record_url, "parents": parents_dict['parents']}
-            request_url = "https://www.googleapis.com/drive/v2/files/%s/copy?access_token=%s" % (tamplate_id, content['access_token'])
-            resp, content = Http().request(request_url, "POST", json.dumps(data), headers)
+            request_url = "https://www.googleapis.com/drive/v2/files/%s/copy?access_token=%s" % (template_id, content['access_token'])
+            data_json = json.dumps(data)
+            req = urllib2.Request(request_url, data_json, {'Content-Type': 'application/json', 'Content-Length': len(data_json)})
+            content = urllib2.urlopen(req).read()
             content = json.loads(content)
             res = False
             if 'alternateLink' in content.keys():
@@ -121,61 +112,47 @@ class config(osv.osv):
         # check if a model is configured with a template
         config_ids = self.search(cr, uid, [('model_id', '=', res_model)], context=context)
         configs = []
-        for config in self.browse(cr, SUPERUSER_ID, config_ids, context=context):
+        for config in self.browse(cr, uid, config_ids, context=context):
             if config.filter_id:
                 if (config.filter_id.user_id and config.filter_id.user_id.id != uid):
                     #Private
                     continue
-                google_doc_configs = self._filter(cr, uid, config, config.filter_id, res_id, context=context)
+                domain = [('id', 'in', [res_id])] + eval(config.filter_id.domain)
+                local_context = context and context.copy() or {}
+                local_context.update(eval(config.filter_id.context))
+                google_doc_configs = self.pool.get(config.filter_id.model_id).search(cr, uid, domain, context=local_context)
                 if google_doc_configs:
                     configs.append({'id': config.id, 'name': config.name})
             else:
                 configs.append({'id': config.id, 'name': config.name})
         return configs
 
-    def _filter(self, cr, uid, action, action_filter, record_ids, context=None):
-        """ filter the list record_ids that satisfy the action filter """
-        if record_ids and action_filter:
-            if not action.model_id == action_filter.model_id:
-                raise osv.except_osv(_('Warning!'), _("Something went wrong with the configuration of attachments with google drive.Please contact your Administrator to fix the problem."))
-            model = self.pool.get(action_filter.model_id)
-            domain = [('id', 'in', [record_ids])] + eval(action_filter.domain)
-            ctx = dict(context or {})
-            ctx.update(eval(action_filter.context))
-            record_ids = model.search(cr, uid, domain, context=ctx)
-        return record_ids
-
-    def _list_all_models(self, cr, uid, context=None):
-        cr.execute("SELECT model, name from ir_model order by name")
-        return cr.fetchall()
-
     def _resource_get(self, cr, uid, ids, name, arg, context=None):
         result = {}
         for data in self.browse(cr, uid, ids, context):
             template_url = data.google_drive_template_url
             try:
-                url = urlparse(template_url)
-                res = url.path.split('/')
-                if res[1] == "spreadsheet":
-                    key = url.query.split('=')[1]
+                if '/spreadsheet/' in template_url:
+                    key = template_url.split('key=')[1]
                 else:
-                    key = res[3]
+                    key = template_url.split('/d/')[1].split('/')[0]
                 result[data.id] = str(key)
-            except:
-                raise osv.except_osv(_('Incorrect URL!'), _("Please enter a valid URL."))
+            except IndexError:
+                raise osv.except_osv(_('Incorrect URL!'), _("Please enter a valid Google Document URL."))
         return result
 
     def _client_id_get(self, cr, uid, ids, name, arg, context=None):
         result = {}
+        client_id = self.pool['ir.config_parameter'].get_param(cr, SUPERUSER_ID, 'google_drive_client_id')
         for config_id in ids:
-            config = self.pool['ir.config_parameter']
-            result[config_id] = config.get_param(cr, SUPERUSER_ID, 'google_drive_client_id')
+            result[config_id] = client_id
         return result
 
     _columns = {
         'name': fields.char('Template Name', required=True, size=1024),
-        'model_id': fields.selection(_list_all_models, 'Model', required=True),
-        'filter_id': fields.many2one('ir.filters', 'Filter'),
+        'model_id': fields.many2one('ir.model', 'Model', ondelete='set null', required=True),
+        'model': fields.related('model_id', 'model', type='char', string='Model', readonly=True),
+        'filter_id': fields.many2one('ir.filters', 'Filter', domain="[('model_id', '=', model)]"),
         'google_drive_template_url': fields.char('Template URL', required=True, size=1024),
         'google_drive_resource_id': fields.function(_resource_get, type="char", string='Resource Id'),
         'google_drive_client_id': fields.function(_client_id_get, type="char", string='Google Client '),
@@ -183,11 +160,12 @@ class config(osv.osv):
     }
 
     def onchange_model_id(self, cr, uid, ids, model_id, context=None):
-        res = {'domain': {'filter_id': []}}
+        res = {}
         if model_id:
-            res['domain'] = {'filter_id': [('model_id', '=', model_id)]}
+            model = self.pool['ir.model'].browse(cr, uid, model_id, context=context)
+            res['value'] = {'model': model.model}
         else:
-            res['value'] = {'filter_id': False}
+            res['value'] = {'filter_id': False, 'model': False}
         return res
 
     _defaults = {
@@ -196,7 +174,7 @@ class config(osv.osv):
 
     def _check_model_id(self, cr, uid, ids, context=None):
         config_id = self.browse(cr, uid, ids[0], context=context)
-        if config_id.filter_id.id and config_id.model_id != config_id.filter_id.model_id:
+        if config_id.filter_id and config_id.model_id.model != config_id.filter_id.model_id:
             return False
         return True
 

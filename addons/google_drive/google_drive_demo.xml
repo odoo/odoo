@@ -13,7 +13,7 @@
         <!-- template demo -->
         <record id="template_partner" model="google.drive.config">
             <field name="name">Customer Doc</field>
-            <field name="model_id">res.partner</field>
+            <field name="model_id" ref="base.model_res_partner"/>
             <field name="filter_id" ref="filter_partner"/>
             <field name="google_drive_template_url">https://docs.google.com/spreadsheet/ccc?key=0Ah2qnrLAoZmUdGRvdVdmS1VoSDctWk1kd18taGZ4ckE#gid=0</field>
             <field name="name_template">%(name)s_%(model)s_%(filter)s_gdrive</field>
