@@ -3766,6 +3766,7 @@ class stock_pack_operation(osv.osv):
                 'picking_id': picking_id,
                 var_name: value,
                 'product_qty': qty,
+                'product_uom': 1,  # FIXME
             }
             operation_id = self.create(cr, uid, values, context=context)
             values.update({'id': operation_id})
