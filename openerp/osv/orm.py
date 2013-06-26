@@ -1032,6 +1032,7 @@ class BaseModel(object):
                 'ondelete': field['on_delete'],
                 'translate': (field['translate']),
                 'manual': True,
+                '_prefetch': False,
                 #'select': int(field['select_level'])
             }
 
