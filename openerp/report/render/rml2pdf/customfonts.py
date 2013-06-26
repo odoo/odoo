@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 P. Christeas, Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010 OpenERP SA. (http://www.openerp.com)
+#    Copyright (C) 2010-2013 OpenERP SA. (http://www.openerp.com)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -56,7 +56,11 @@ CustomTTFonts = [ ('Helvetica',"DejaVu Sans", "DejaVuSans.ttf", 'normal'),
         ('Courier',"FreeMono", "FreeMono.ttf", 'normal'),
         ('Courier',"FreeMono Bold", "FreeMonoBold.ttf", 'bold'),
         ('Courier',"FreeMono Oblique", "FreeMonoOblique.ttf", 'italic'),
-        ('Courier',"FreeMono BoldOblique", "FreeMonoBoldOblique.ttf", 'bolditalic'),]
+        ('Courier',"FreeMono BoldOblique", "FreeMonoBoldOblique.ttf", 'bolditalic'),
+
+        # Sun-ExtA can be downloaded from http://okuc.net/SunWb/
+        ('Sun-ExtA',"Sun-ExtA", "Sun-ExtA.ttf", 'normal'),
+]
 
 
 TTFSearchPath_Linux = [

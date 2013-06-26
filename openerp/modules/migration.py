@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2013 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -22,31 +22,15 @@
 
 """ Modules migration handling. """
 
-import os, sys, imp
+import imp
+import logging
+import os
 from os.path import join as opj
-import itertools
-import zipimport
 
 import openerp
-
-import openerp.osv as osv
-import openerp.tools as tools
-import openerp.tools.osutil as osutil
-from openerp.tools.safe_eval import safe_eval as eval
-from openerp.tools.translate import _
-
-import zipfile
 import openerp.release as release
+import openerp.tools as tools
 
-import re
-import base64
-from zipfile import PyZipFile, ZIP_DEFLATED
-from cStringIO import StringIO
-
-import logging
-
-import openerp.modules.db
-import openerp.modules.graph
 
 _logger = logging.getLogger(__name__)
 
@@ -100,9 +84,10 @@ class MigrationManager(object):
 
     def migrate_module(self, pkg, stage):
         assert stage in ('pre', 'post')
-        stageformat = {'pre': '[>%s]',
-                       'post': '[%s>]',
-                      }
+        stageformat = {
+            'pre': '[>%s]',
+            'post': '[%s>]',
+        }
 
         if not (hasattr(pkg, 'update') or pkg.state == 'to upgrade'):
             return
@@ -129,9 +114,10 @@ class MigrationManager(object):
             m = self.migrations[pkg.name]
             lst = []
 
-            mapping = {'module': opj(pkg.name, 'migrations'),
-                       'maintenance': opj('base', 'maintenance', 'migrations', pkg.name),
-                      }
+            mapping = {
+                'module': opj(pkg.name, 'migrations'),
+                'maintenance': opj('base', 'maintenance', 'migrations', pkg.name),
+            }
 
             for x in mapping.keys():
                 if version in m[x]:
@@ -180,14 +166,14 @@ class MigrationManager(object):
                         try:
                             mod = imp.load_source(name, pyfile, fp2)
                             _logger.info('module %(addon)s: Running migration %(version)s %(name)s' % mergedict({'name': mod.__name__}, strfmt))
-                            mod.migrate(self.cr, pkg.installed_version)
+                            migrate = mod.migrate
                         except ImportError:
-                            _logger.error('module %(addon)s: Unable to load %(stage)s-migration file %(file)s' % mergedict({'file': pyfile}, strfmt))
+                            _logger.exception('module %(addon)s: Unable to load %(stage)s-migration file %(file)s' % mergedict({'file': pyfile}, strfmt))
                             raise
                         except AttributeError:
                             _logger.error('module %(addon)s: Each %(stage)s-migration file must have a "migrate(cr, installed_version)" function' % strfmt)
-                        except:
-                            raise
+                        else:
+                            migrate(self.cr, pkg.installed_version)
                     finally:
                         if fp:
                             fp.close()

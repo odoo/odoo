@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2013 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -37,7 +37,7 @@ import time
 import zipfile
 from collections import defaultdict
 from datetime import datetime
-from itertools import islice, izip
+from itertools import islice, izip, groupby
 from lxml import etree
 from which import which
 from threading import local
@@ -1058,5 +1058,23 @@ class CountingStream(object):
             self.stopped = True
             raise StopIteration()
         return val
+
+def stripped_sys_argv(*strip_args):
+    """Return sys.argv with some arguments stripped, suitable for reexecution or subprocesses"""
+    strip_args = sorted(set(strip_args) | set(['-s', '--save', '-d', '--database', '-u', '--update', '-i', '--init']))
+    assert all(config.parser.has_option(s) for s in strip_args)
+    takes_value = dict((s, config.parser.get_option(s).takes_value()) for s in strip_args)
+
+    longs, shorts = list(tuple(y) for _, y in groupby(strip_args, lambda x: x.startswith('--')))
+    longs_eq = tuple(l + '=' for l in longs if takes_value[l])
+
+    args = sys.argv[:]
+
+    def strip(args, i):
+        return args[i].startswith(shorts) \
+            or args[i].startswith(longs_eq) or (args[i] in longs) \
+            or (i >= 1 and (args[i - 1] in strip_args) and takes_value[args[i - 1]])
+
+    return [x for i, x in enumerate(args) if not strip(args, i)]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

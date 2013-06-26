@@ -76,6 +76,30 @@ class TestORM(common.TransactionCase):
         with self.assertRaises(Exception):
             self.partner.unlink(cr, uid2, [p1,p2])
 
+    @mute_logger('openerp.osv.orm')
+    def test_search_read(self):
+        # simple search_read
+        self.partner.create(self.cr, UID, {'name': 'MyPartner1'})
+        found = self.partner.search_read(self.cr, UID, [['name', '=', 'MyPartner1']], ['name'])
+        self.assertEqual(len(found), 1)
+        self.assertEqual(found[0]['name'], 'MyPartner1')
+        self.assertTrue('id' in found[0])
+
+        # search_read correct order
+        self.partner.create(self.cr, UID, {'name': 'MyPartner2'})
+        found = self.partner.search_read(self.cr, UID, [['name', 'like', 'MyPartner']], ['name'], order="name")
+        self.assertEqual(len(found), 2)
+        self.assertEqual(found[0]['name'], 'MyPartner1')
+        self.assertEqual(found[1]['name'], 'MyPartner2')
+        found = self.partner.search_read(self.cr, UID, [['name', 'like', 'MyPartner']], ['name'], order="name desc")
+        self.assertEqual(len(found), 2)
+        self.assertEqual(found[0]['name'], 'MyPartner2')
+        self.assertEqual(found[1]['name'], 'MyPartner1')
+
+        # search_read that finds nothing
+        found = self.partner.search_read(self.cr, UID, [['name', '=', 'Does not exists']], ['name'])
+        self.assertEqual(len(found), 0)
+
 
 class TestInherits(common.TransactionCase):
     """ test the behavior of the orm for models that use _inherits;

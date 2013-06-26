@@ -1,8 +1,11 @@
 """
 Install OpenERP on a new (by default) database.
 """
+import contextlib
+import errno
 import os
 import sys
+import time
 
 import common
 
@@ -11,7 +14,8 @@ def install_openerp(database_name, create_database_flag, module_names, install_d
     config = openerp.tools.config
 
     if create_database_flag:
-        create_database(database_name)
+        with lock_file('/tmp/global_openerp_create_database.lock'):
+            create_database(database_name)
 
     config['init'] = dict.fromkeys(module_names, 1)
 
@@ -22,6 +26,29 @@ def install_openerp(database_name, create_database_flag, module_names, install_d
         database_name, update_module=True, force_demo=install_demo_data)
 
     return registry
+
+# From http://code.activestate.com/recipes/576572/
+@contextlib.contextmanager
+def lock_file(path, wait_delay=.1, max_try=600):
+    attempt = 0
+    while True:
+        attempt += 1
+        if attempt > max_try:
+            raise IOError("Could not lock file %s." % path)
+        try:
+            fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_RDWR)
+        except OSError, e:
+            if e.errno != errno.EEXIST:
+                raise
+            time.sleep(wait_delay)
+            continue
+        else:
+            break
+    try:
+        yield fd
+    finally:
+        os.close(fd)
+        os.unlink(path)
 
 # TODO turn template1 in a parameter
 # This should be exposed from openerp (currently in

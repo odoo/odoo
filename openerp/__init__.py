@@ -19,9 +19,17 @@
 #
 ##############################################################################
 
-""" OpenERP core library.
+""" OpenERP core library..
 
 """
+
+import sys
+
+# Is the server running with gevent.
+evented = False
+if sys.modules.get("gevent") is not None:
+    evented = True
+
 
 # Make sure the OpenERP server runs in UTC. This is especially necessary
 # under Windows as under Linux it seems the real import of time is
@@ -61,8 +69,6 @@ wsgi.register_wsgi_handler = wsgi.wsgi_server.register_wsgi_handler
 # its own copy of the data structure and we don't need to care about
 # locks between threads.
 multi_process = False
-# Is the server running with gevent.
-evented = False
 
 def registry(database_name):
     """

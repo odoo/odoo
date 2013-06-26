@@ -137,7 +137,7 @@ class res_company(osv.osv):
         'street2': fields.function(_get_address_data, fnct_inv=_set_address_data, size=128, type='char', string="Street2", multi='address'),
         'zip': fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char', string="Zip", multi='address'),
         'city': fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char', string="City", multi='address'),
-        'state_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', domain="[('country_id', '=', country_id)]", relation='res.country.state', string="Fed. State", multi='address'),
+        'state_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', relation='res.country.state', string="Fed. State", multi='address'),
         'bank_ids': fields.one2many('res.partner.bank','company_id', 'Bank Accounts', help='Bank accounts related to this company'),
         'country_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', relation='res.country', string="Country", multi='address'),
         'email': fields.function(_get_address_data, fnct_inv=_set_address_data, size=64, type='char', string="Email", multi='address'),
@@ -174,12 +174,18 @@ class res_company(osv.osv):
             res += '\n%s: %s' % (title, ', '.join(name for id, name in account_names))
 
         return {'value': {'rml_footer': res, 'rml_footer_readonly': res}}
-
+    def onchange_state(self, cr, uid, ids, state_id, context=None):
+        if state_id:
+            return {'value':{'country_id': self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id }}
+        return {}
     def on_change_country(self, cr, uid, ids, country_id, context=None):
+        res = {'domain': {'state_id': []}}
         currency_id = self._get_euro(cr, uid, context=context)
         if country_id:
             currency_id = self.pool.get('res.country').browse(cr, uid, country_id, context=context).currency_id.id
-        return {'value': {'currency_id': currency_id}}
+            res['domain'] = {'state_id': [('country_id','=',country_id)]}
+        res['value'] = {'currency_id': currency_id}
+        return res
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False, access_rights_uid=None):
@@ -272,6 +278,10 @@ class res_company(osv.osv):
 <header>
 <pageTemplate>
     <frame id="first" x1="28.0" y1="28.0" width="%s" height="%s"/>
+    <stylesheet>
+       <!-- Set here the default font to use for all <para> tags -->
+       <paraStyle name='Normal' fontName="DejaVu Sans"/>
+    </stylesheet>
     <pageGraphics>
         <fill color="black"/>
         <stroke color="black"/>
@@ -281,6 +291,9 @@ class res_company(osv.osv):
         <drawCentredString x="%s" y="%s">[[ company.partner_id.name ]]</drawCentredString>
         <stroke color="#000000"/>
         <lines>%s</lines>
+        <!-- Set here the default font to use for all <drawString> tags -->
+        <!-- don't forget to change the 2 other occurence of <setFont> above if needed --> 
+        <setFont name="DejaVu Sans" size="8"/>
     </pageGraphics>
 </pageTemplate>
 </header>"""
@@ -304,13 +317,16 @@ class res_company(osv.osv):
     <pageTemplate>
         <frame id="first" x1="1.3cm" y1="3.0cm" height="%s" width="19.0cm"/>
          <stylesheet>
-            <paraStyle name="main_footer"  fontName="DejaVu Sans" fontSize="8.0" alignment="CENTER"/>
-            <paraStyle name="main_header"  fontName="DejaVu Sans" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+            <!-- Set here the default font to use for all <para> tags -->
+            <paraStyle name='Normal' fontName="DejaVu Sans"/>
+            <paraStyle name="main_footer" fontSize="8.0" alignment="CENTER"/>
+            <paraStyle name="main_header" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
          </stylesheet>
         <pageGraphics>
+            <!-- Set here the default font to use for all <drawString> tags -->
+            <setFont name="DejaVu Sans" size="8"/>
             <!-- You Logo - Change X,Y,Width and Height -->
             <image x="1.3cm" y="%s" height="40.0" >[[ company.logo or removeParentNode('image') ]]</image>
-            <setFont name="DejaVu Sans" size="8"/>
             <fill color="black"/>
             <stroke color="black"/>
 

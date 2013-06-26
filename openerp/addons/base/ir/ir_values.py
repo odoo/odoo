@@ -411,8 +411,8 @@ class ir_values(osv.osv):
                                        (tuple(groups), uid))
                             if not cr.fetchone():
                                 if action['name'] == 'Menuitem':
-                                    raise osv.except_osv('Error !',
-                                                         'You do not have the permission to perform this operation !!!')
+                                    raise osv.except_osv('Error!',
+                                                         'You do not have the permission to perform this operation!!!')
                                 continue
                 # keep only the first action registered for each action name
                 results[action['name']] = (action['id'], action['name'], action_def)
