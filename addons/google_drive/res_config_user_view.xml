@@ -2,11 +2,11 @@
 <openerp>
     <data>
 
-        <!-- add google docs config field in user form -->
+        <!-- add google drive config field in user form -->
 
-        <record model="ir.ui.view" id="view_google_docs_config_tree">
-            <field name="name">google_docs.config.tree</field>
-            <field name="model">google.docs.config</field>
+        <record model="ir.ui.view" id="view_google_drive_config_tree">
+            <field name="name">google_drive.config.tree</field>
+            <field name="model">google.drive.config</field>
             <field name="arch" type="xml">
                 <tree string="Google Drive Configuration">
                     <field name="name" />
@@ -15,9 +15,9 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_google_docs_config_form">
-            <field name="name">google_docs.config.form</field>
-            <field name="model">google.docs.config</field>
+        <record model="ir.ui.view" id="view_google_drive_config_form">
+            <field name="name">google_drive.config.form</field>
+            <field name="model">google.drive.config</field>
             <field name="arch" type="xml">
                 <form string="Google Drive Configuration" version="7.0">
                     <group>
@@ -35,8 +35,8 @@
                                 - If filter is not specified, link of google document will appear in "More" option for all users for all opportunities.
                             </p>
                         </div>
-                        <field name='gdocs_template_url' placeholder="https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit" required="1" />
-                        <field name='gdocs_resource_id' invisible="1" />
+                        <field name='google_drive_template_url' placeholder="https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit" required="1" />
+                        <field name='google_drive_resource_id' invisible="1" />
                         <label for='name_template' />
                         <div>
                             <field name='name_template' />
@@ -52,12 +52,12 @@
             </field>
         </record>
 
-        <record model='ir.actions.act_window' id='action_google_docs_users_config'>
+        <record model='ir.actions.act_window' id='action_google_drive_users_config'>
             <field name='name'>Google Drive Templates</field>
-            <field name='res_model'>google.docs.config</field>
+            <field name='res_model'>google.drive.config</field>
             <field name='type'>ir.actions.act_window</field>
             <field name='view_type'>form</field>
-            <field name='view_id' ref='view_google_docs_config_tree' />
+            <field name='view_id' ref='view_google_drive_config_tree' />
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                     Click to add a new template.
@@ -73,23 +73,23 @@
             <field name="model">base.config.settings</field>
             <field name="inherit_id" ref="base_setup.view_general_configuration" />
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='google_docs']" position="after">
-                    <div attrs="{'invisible': [('module_google_docs','=',False)]}">
+                <xpath expr="//div[@name='google_drive']" position="after">
+                    <div attrs="{'invisible': [('module_google_drive','=',False)]}">
                         <p class="oe_gray" >
                             <div class="oe_inline">
-                                Click here to <field name="google_docs_uri" widget="url" text="Generate Google Authorization Code" class="oe_inline oe_bold"/>
+                                Click here to <field name="google_drive_uri" widget="url" text="Generate Google Authorization Code" class="oe_inline oe_bold"/>
                             </div>
                             <group>
-                                <field  name="google_docs_authorization_code" on_change="onchange_google_authorization_code('docs', google_docs_authorization_code)"/>''
+                                <field  name="google_drive_authorization_code" on_change="onchange_google_authorization_code('drive', google_drive_authorization_code)"/>''
                             </group>
-                            Configure your templates and link your google document to OpenERP records <button type="action" name="%(google_docs.action_google_docs_users_config)d" string="Configure Template" class="oe_link" />
+                            Configure your templates and link your google document to OpenERP records <button type="action" name="%(google_drive.action_google_drive_users_config)d" string="Configure Template" class="oe_link" />
                         </p>
                     </div>
                 </xpath>
             </field>
         </record>
 
-        <menuitem name='Google Drive configuration' id='menu_gdocs_config' parent='base.menu_administration' />
-        <menuitem id='menu_gdocs_model_config' parent='menu_gdocs_config' action='action_google_docs_users_config' />
+        <menuitem name='Google Drive configuration' id='menu_google_drive_config' parent='base.menu_administration' />
+        <menuitem id='menu_google_drive_model_config' parent='menu_google_drive_config' action='action_google_drive_users_config' />
     </data>
 </openerp>

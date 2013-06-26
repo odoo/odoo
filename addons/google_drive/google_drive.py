@@ -33,7 +33,7 @@ import json
 _logger = logging.getLogger(__name__)
 
 class config(osv.osv):
-    _name = 'google.docs.config'
+    _name = 'google.drive.config'
     _description = "Google Drive templates config"
     
     def get_google_doc_name(self, cr, uid, ids, res_id, tamplate_id, context=None):
@@ -67,17 +67,17 @@ class config(osv.osv):
         return res
     
     def copy_doc(self, cr, uid, ids, res_id, tamplate_id, name_gdocs, res_model, context=None):
-        ir_config = self.pool[ 'ir.config_parameter' ]
-        google_docs_client_id = ir_config.get_param(cr, SUPERUSER_ID, 'google_docs_client_id')
-        google_docs_client_secret = ir_config.get_param(cr, SUPERUSER_ID, 'google_docs_client_secret')
-        google_docs_refresh_token = ir_config.get_param(cr, SUPERUSER_ID, 'google_docs_refresh_token')
+        ir_config = self.pool[ 'ir.config_parameter']
+        google_drive_client_id = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_client_id')
+        google_drive_client_secret = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_client_secret')
+        google_drive_refresh_token = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_refresh_token')
         google_web_base_url = ir_config.get_param(cr, SUPERUSER_ID, 'web.base.url')
         
         #For Getting New Access Token With help of old Refresh Token 
         headers = {"Content-type": "application/x-www-form-urlencoded"}
-        data = dict(client_id = google_docs_client_id, 
-                    refresh_token = google_docs_refresh_token, 
-                    client_secret = google_docs_client_secret, 
+        data = dict(client_id = google_drive_client_id, 
+                    refresh_token = google_drive_refresh_token, 
+                    client_secret = google_drive_client_secret, 
                     grant_type = "refresh_token")
         data = urllib.urlencode(data) 
         resp, content = Http().request("https://accounts.google.com/o/oauth2/token", "POST", data, headers)
@@ -105,7 +105,7 @@ class config(osv.osv):
             raise self.pool.get('res.config.settings').get_config_warning(cr, _("You haven't configured 'Authorization Code' generated from google, Please generate and configure it in %(menu:base_setup.menu_general_configuration)s."), context=context)
         return res
     
-    def get_google_docs_config(self, cr, uid, res_model, res_id, context=None):
+    def get_google_drive_config(self, cr, uid, res_model, res_id, context=None):
         '''
         Function called by the js, when no google doc are yet associated with a record, with the aim to create one. It
         will first seek for a google.docs.config associated with the model `res_model` to find out what's the template
@@ -154,7 +154,7 @@ class config(osv.osv):
     def _resource_get(self, cr, uid, ids, name, arg, context=None):
         result = {}
         for data in self.browse(cr, uid, ids, context):
-            template_url = data.gdocs_template_url
+            template_url = data.google_drive_template_url
             try:
                 url = urlparse(template_url)
                 res = url.path.split('/')
@@ -172,16 +172,16 @@ class config(osv.osv):
         result = {}
         for config_id in ids:
             config = self.pool['ir.config_parameter']
-            result[config_id] = config.get_param(cr, SUPERUSER_ID, 'google_docs_client_id')
+            result[config_id] = config.get_param(cr, SUPERUSER_ID, 'google_drive_client_id')
         return result
 
     _columns = {
         'name' : fields.char('Template Name', required=True, size=1024),
         'model_id': fields.selection(_list_all_models, 'Model', required=True),
         'filter_id' : fields.many2one('ir.filters', 'Filter'),
-        'gdocs_template_url': fields.char('Template URL', required=True, size=1024),
-        'gdocs_resource_id' : fields.function(_resource_get, type="char" , string='Resource Id'),
-        'google_docs_client_id' : fields.function(_client_id_get, type="char" , string='Google Client '),
+        'google_drive_template_url': fields.char('Template URL', required=True, size=1024),
+        'google_drive_resource_id' : fields.function(_resource_get, type="char" , string='Resource Id'),
+        'google_drive_client_id' : fields.function(_client_id_get, type="char" , string='Google Client '),
         'name_template': fields.char('Google Drive Name Pattern', size=64, help='Choose how the new google drive will be named, on google side. Eg. gdoc_%(field_name)s', required=True),
     }
 
@@ -214,9 +214,9 @@ class base_config_settings(osv.osv):
     _inherit = "base.config.settings"
 
     _columns = {
-        'google_docs_authorization_code': fields.char('Paste Generated "Authorization Code" from google to here', size=124),
-        'google_docs_uri': fields.char('URI', readonly=True, help="The URL to generate the authorization code from Google"),
+        'google_drive_authorization_code': fields.char('Paste Generated "Authorization Code" from google to here', size=124),
+        'google_drive_uri': fields.char('URI', readonly=True, help="The URL to generate the authorization code from Google"),
     }
     _defaults = {
-        'google_docs_uri': lambda s, cr, uid, c: s._get_google_token_uri(cr, uid, 'docs', context=c),
+        'google_drive_uri': lambda s, cr, uid, c: s._get_google_token_uri(cr, uid, 'drive', context=c),
     }

@@ -1,4 +1,4 @@
-openerp.google_docs = function (instance, m) {
+openerp.google_drive = function (instance, m) {
     var _t = instance.web._t,
         QWeb = instance.web.qweb;
 
@@ -25,8 +25,8 @@ openerp.google_docs = function (instance, m) {
             }
             if (res_id) {
                 view.sidebar_eval_context().done(function (context) {
-                    var ds = new instance.web.DataSet(this, 'google.docs.config', context);
-                    ds.call('get_google_docs_config', [view.dataset.model, res_id, context]).done(function (r) {
+                    var ds = new instance.web.DataSet(this, 'google.drive.config', context);
+                    ds.call('get_google_drive_config', [view.dataset.model, res_id, context]).done(function (r) {
                         if (!_.isEmpty(r)) {
                             _.each(r, function (res) {
                                 var g_item = _.indexOf(_.pluck(self.items.other, 'label'), res.name);
@@ -34,7 +34,7 @@ openerp.google_docs = function (instance, m) {
                                     self.items.other.splice(g_item, 1);
                                 }
                                 self.add_items('other', [{
-                                        label: res.name+ '<img style="position:absolute;right:5px;height:20px;width:20px;" title="Google Drive" src="google_docs/static/src/img/drive_icon.png"/>',
+                                        label: res.name+ '<img style="position:absolute;right:5px;height:20px;width:20px;" title="Google Drive" src="google_drive/static/src/img/drive_icon.png"/>',
                                         config_id: res.id,
                                         res_id: res_id,
                                         res_model: view.dataset.model,
@@ -56,10 +56,10 @@ openerp.google_docs = function (instance, m) {
         on_google_doc: function (doc_item) {
             var self = this;
             self.config = doc_item;
-            var loaded = self.fetch('google.docs.config', ['gdocs_resource_id', 'google_docs_client_id'], [['id', '=', doc_item.config_id]])
+            var loaded = self.fetch('google.drive.config', ['google_drive_resource_id', 'google_drive_client_id'], [['id', '=', doc_item.config_id]])
                 .then(function (configs) {
-                var ds = new instance.web.DataSet(self, 'google.docs.config');
-                ds.call('get_google_doc_name', [[doc_item.config_id], doc_item.res_id,configs[0].gdocs_resource_id]).done(function (r) {
+                var ds = new instance.web.DataSet(self, 'google.drive.config');
+                ds.call('get_google_doc_name', [[doc_item.config_id], doc_item.res_id,configs[0].google_drive_resource_id]).done(function (r) {
                     if (!_.isEmpty(r)) {
                         _.each(r, function (res) {
                             if(res.url)

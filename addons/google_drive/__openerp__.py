@@ -29,15 +29,15 @@
     'auto_install': False,
     'js': [
         'static/lib/gapi/client.js',
-        'static/src/js/gdocs.js',
+        'static/src/js/gdrive.js',
     ],
     'data': [
         'security/ir.model.access.csv',
         'res_config_user_view.xml',
-        'google_docs_data.xml'
+        'google_drive_data.xml'
     ],
     'demo': [
-        'google_docs_demo.xml'
+        'google_drive_demo.xml'
     ],
     'depends': ['base_setup', 'google_base_account'],
     'description': """
