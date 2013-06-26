@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-TODAY OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -30,11 +30,13 @@ This module adds event menu and features to your portal if event and portal are 
 ==========================================================================================
     """,
     'author': 'OpenERP SA',
-    'depends': ['event','portal'],
+    'depends': [
+        'event',
+        'portal',
+    ],
     'data': [
-        'event_view.xml',
-        'security/portal_security.xml',
         'portal_event_view.xml',
+        'security/portal_security.xml',
         'security/ir.model.access.csv',
     ],
     'installable': True,

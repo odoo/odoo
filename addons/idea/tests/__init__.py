@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    OpenERP, Open Source Business Applications
+#    Copyright (c) 2013-TODAY OpenERP S.A. <http://openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,23 +19,10 @@
 #
 ##############################################################################
 
-from openerp.osv import fields,osv
+from openerp.addons.idea.tests import test_idea
 
-class res_partner(osv.osv):
-    _inherit = 'res.partner'
-
-    _columns = {
-        'workitem_ids': fields.one2many('marketing.campaign.workitem',
-                                        'partner_id', 'Workitems',
-                                        readonly=True),
-    }
-    
-    def copy(self, cr, uid, id, default={}, context=None):
-        default.update({
-            'workitem_ids': [],
-        })
-        return super(res_partner, self).copy(cr, uid, id, default=default, context=context)
-    
+checks = [
+    test_idea,
+]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

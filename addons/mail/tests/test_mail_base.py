@@ -69,10 +69,11 @@ class TestMailBase(common.TransactionCase):
         self.group_employee_id = group_employee_ref and group_employee_ref[1] or False
 
         # Test users to use through the various tests
+        self.res_users.write(cr, uid, uid, {'name': 'Administrator'})
         self.user_raoul_id = self.res_users.create(cr, uid,
-            {'name': 'Raoul Grosbedon', 'signature': 'SignRaoul', 'email': 'raoul@raoul.fr', 'login': 'raoul', 'groups_id': [(6, 0, [self.group_employee_id])]})
+            {'name': 'Raoul Grosbedon', 'signature': 'SignRaoul', 'email': 'raoul@raoul.fr', 'login': 'raoul', 'alias_name': 'raoul', 'groups_id': [(6, 0, [self.group_employee_id])]})
         self.user_bert_id = self.res_users.create(cr, uid,
-            {'name': 'Bert Tartignole', 'signature': 'SignBert', 'email': 'bert@bert.fr', 'login': 'bert', 'groups_id': [(6, 0, [])]})
+            {'name': 'Bert Tartignole', 'signature': 'SignBert', 'email': 'bert@bert.fr', 'login': 'bert', 'alias_name': 'bert', 'groups_id': [(6, 0, [])]})
         self.user_raoul = self.res_users.browse(cr, uid, self.user_raoul_id)
         self.user_bert = self.res_users.browse(cr, uid, self.user_bert_id)
         self.user_admin = self.res_users.browse(cr, uid, uid)
@@ -82,7 +83,7 @@ class TestMailBase(common.TransactionCase):
 
         # Test 'pigs' group to use through the various tests
         self.group_pigs_id = self.mail_group.create(cr, uid,
-            {'name': 'Pigs', 'description': 'Fans of Pigs, unite !'},
+            {'name': 'Pigs', 'description': 'Fans of Pigs, unite !', 'alias_name': 'group+pigs'},
             {'mail_create_nolog': True})
         self.group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
 
