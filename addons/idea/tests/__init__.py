@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-TODAY OpenERP SA (<http://www.openerp.com>)
+#    OpenERP, Open Source Business Applications
+#    Copyright (c) 2013-TODAY OpenERP S.A. <http://openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,28 +19,10 @@
 #
 ##############################################################################
 
+from openerp.addons.idea.tests import test_idea
 
-{
-    'name': 'Portal Event',
-    'version': '0.1',
-    'category': 'Tools',
-    'complexity': 'easy',
-    'description': """
-This module adds event menu and features to your portal if event and portal are installed.
-==========================================================================================
-    """,
-    'author': 'OpenERP SA',
-    'depends': [
-        'event',
-        'portal',
-    ],
-    'data': [
-        'portal_event_view.xml',
-        'security/portal_security.xml',
-        'security/ir.model.access.csv',
-    ],
-    'installable': True,
-    'auto_install': True,
-    'category': 'Hidden',
-}
+checks = [
+    test_idea,
+]
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
