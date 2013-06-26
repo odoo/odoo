@@ -3726,12 +3726,24 @@ class stock_pack_operation(osv.osv):
     _columns = {
         'picking_id': fields.many2one('stock.picking', 'Stock Picking', help='The stock operation where the packing has been made'),
         'product_id': fields.many2one('product.product', 'Product'),  # 1
-        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
+        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure'),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'package_id': fields.many2one('stock.quant.package', 'Package'),  # 2
         'quant_id': fields.many2one('stock.quant', 'Quant'),  # 3
         'result_package_id': fields.many2one('stock.quant.package', 'Package Made', help="The resulf of the packaging.", required=False, ondelete='cascade'),
     }
+
+    def _find_product_ids(self, cr, uid, operation_id, context=None):
+        quant_obj = self.pool.get('stock.quant')
+        operation = self.browse(cr, uid, operation_id, context=context)
+        if operation.product_id:
+            return operation.product_id.id
+        elif operation.quant_id:
+            return operation.quant_id.product_id.id
+        elif operation.package_id:
+            included_package_ids = self.pool.get('stock.quant.package').search(cr, uid, [('parent_id', 'child_of', [operation.package_id.id])], context=context)
+            included_quant_ids = quant_obj.search(cr, uid, [('package_id', 'in', included_package_ids)], context=context)
+            return [quant.product_id.id for quant in quant_obj.browse(cr, uid, included_quant_ids, context=context)]
 
     def _search_and_increment(self, cr, uid, picking_id, key, context=None):
         '''Search for an operation on an existing key in a picking, if it exists increment the qty (+1) otherwise create it
@@ -3766,15 +3778,17 @@ class stock_pack_operation(osv.osv):
                 'picking_id': picking_id,
                 var_name: value,
                 'product_qty': qty,
-                'product_uom': 1,  # FIXME
+                #'product_uom': 1,  # FIXME
             }
             operation_id = self.create(cr, uid, values, context=context)
             values.update({'id': operation_id})
             todo_on_operations = [(0, 0, values)]
-        product_id = self._find_product_id(cr, uid, operation_id, context=context)
-        corresponding_move_id = stock_move_obj.search(cr, uid, [('picking_id', '=', picking_id), ('product_id', '=', product_id)], context=context)[0]   # TODO: be safer
-        corresponding_move = stock_move_obj.browse(cr, uid, corresponding_move_id, context=context)
-        todo_on_moves = (1, corresponding_move.id, {'remaining_qty': corresponding_move.product_qty - qty})
+        todo_on_moves = []
+        product_ids = self._find_product_ids(cr, uid, operation_id, context=context)
+        for product_id in product_ids:
+            corresponding_move_id = stock_move_obj.search(cr, uid, [('picking_id', '=', picking_id), ('product_id', '=', product_id)], context=context)[0]   # TODO: be safer
+            corresponding_move = stock_move_obj.browse(cr, uid, corresponding_move_id, context=context)
+            todo_on_moves += [(1, corresponding_move.id, {'remaining_qty': corresponding_move.product_qty - qty})]
         return todo_on_moves, todo_on_operations
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
