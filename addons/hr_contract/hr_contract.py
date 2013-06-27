@@ -89,12 +89,13 @@ class hr_contract(osv.osv):
     }
 
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
-        if employee_id:
-            emp_obj = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context)
-            if emp_obj.job_id:
-                return {'value': {'job_id': emp_obj.job_id.id}}
+        if not employee_id:
             return {'value': {'job_id': False}}
-        return False
+        emp_obj = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context)
+        job_id = False
+        if emp_obj.job_id:
+            job_id = emp_obj.job_id.id
+        return {'value': {'job_id': job_id}}
 
     def _check_dates(self, cr, uid, ids, context=None):
         for contract in self.read(cr, uid, ids, ['date_start', 'date_end'], context=context):
