@@ -62,7 +62,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         return super(Website, self).index(*args, **kw)
 
     @http.route('/page/<path:path>', type='http', auth="db")
-    def index(self, **kw):
+    def page(self, **kw):
         editable = bool(request.session._uid)
         try:
             request.session.check_security()
