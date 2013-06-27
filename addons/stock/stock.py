@@ -917,7 +917,7 @@ class stock_picking(osv.osv):
             select=True, required=True, readonly=True, track_visibility='onchange', states={'draft': [('readonly', False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'pack_operation_ids': fields.one2many('stock.pack.operation', 'picking_id', string='Related Packing Operations'),
-        'package_ids': fields.one2many('stock.quant.package', 'picking_id', string='Related Packing Operations'),
+        #'package_ids': fields.one2many('stock.quant.package', 'picking_id', string='Related Packing Operations'),
     }
     _defaults = {
         'name': lambda self, cr, uid, context: '/',
@@ -1675,6 +1675,12 @@ class stock_picking(osv.osv):
             included_package_ids = package_obj.search(cr, uid, [('parent_id', 'child_of', matching_package_ids[0])], context=context)
             included_quant_ids = quant_obj.search(cr, uid, [('package_id', 'in', included_package_ids)], context=context)
             todo_on_moves, todo_on_operations = self._deal_with_quants(cr, uid, picking_id, included_quant_ids, context=context)
+        #write remaining qty on stock.move, to ease the treatment server side
+        for todo in todo_on_moves:
+            if todo[0] == 1:
+                self.pool.get('stock.move').write(cr, uid, todo[1], todo[2], context=context)
+            elif todo[0] == 0:
+                self.pool.get('stock.move').create(cr, uid, todo[2], context=context)
         return {'warnings': error_msg, 'moves_to_update': todo_on_moves, 'operations_to_update': todo_on_operations}
 
 
@@ -3701,7 +3707,7 @@ class stock_package(osv.osv):
         'children_ids': fields.one2many('stock.quant.package', 'parent_id', 'Packaged Content'),
         'location_id': fields.related('quant_ids', 'location_id', type='many2one', relation='stock.location', string='Location', readonly=True),
         'pack_operation_id': fields.many2one('stock.pack.operation', string="Package Operation", help="The pack operation that built this package"),
-        'picking_id': fields.related('pack_operation_id', 'picking_id', type='many2one', relation="stock.picking", string='Related Picking'),
+    #    'picking_id': fields.related('pack_operation_id', 'picking_id', type='many2one', relation="stock.picking", string='Related Picking'),
     }
 
     def _check_location(self, cr, uid, ids, context=None):
