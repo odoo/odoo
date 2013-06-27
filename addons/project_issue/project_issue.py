@@ -257,6 +257,7 @@ class project_issue(base_stage, osv.osv):
         # Project Issue fields
         'date_closed': fields.datetime('Closed', readonly=True,select=True),
         'date': fields.datetime('Date'),
+        'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
         'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel."),
         'categ_ids': fields.many2many('project.category', string='Tags'),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
@@ -299,6 +300,7 @@ class project_issue(base_stage, osv.osv):
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': crm.AVAILABLE_PRIORITIES[2][0],
         'kanban_state': 'normal',
+        'date_last_stage_update': fields.datetime.now(),
     }
 
     _group_by_full = {
@@ -382,7 +384,7 @@ class project_issue(base_stage, osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
-            vals['date_action_last'] = fields.datetime.now()
+            vals['date_last_stage_update'] = fields.datetime.now()
         # user_id change: update date_start
         if vals.get('user_id'):
             vals['date_start'] = fields.datetime.now()
@@ -551,7 +553,7 @@ class project_issue(base_stage, osv.osv):
             context = {}
         res = super(project_issue, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)
         if thread_id:
-            self.write(cr, SUPERUSER_ID, thread_id, {'date_action_last': time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
+            self.write(cr, SUPERUSER_ID, thread_id, {'date_action_last': fields.datetime.now()}, context=context)
         return res
 
 
