@@ -1478,52 +1478,6 @@ class property(function):
         self.field_id = {}
 
 
-def field_to_dict(model, cr, user, field, context=None):
-    """ Return a dictionary representation of a field.
-
-    The string, help, and selection attributes (if any) are untranslated.  This
-    representation is the one returned by fields_get() (fields_get() will do
-    the translation).
-
-    """
-
-    res = {'type': field._type}
-    # some attributes for m2m/function field are added as debug info only
-    if isinstance(field, function):
-        res['function'] = field._fnct and field._fnct.func_name or False
-        res['store'] = field.store
-        if isinstance(field.store, dict):
-            res['store'] = str(field.store)
-        res['fnct_search'] = field._fnct_search and field._fnct_search.func_name or False
-        res['fnct_inv'] = field._fnct_inv and field._fnct_inv.func_name or False
-        res['fnct_inv_arg'] = field._fnct_inv_arg or False
-    if isinstance(field, many2many):
-        (table, col1, col2) = field._sql_names(model)
-        res['m2m_join_columns'] = [col1, col2]
-        res['m2m_join_table'] = table
-    for arg in ('string', 'readonly', 'states', 'size', 'group_operator', 'required',
-            'change_default', 'translate', 'help', 'select', 'selectable', 'groups',
-            'deprecated', 'digits', 'invisible', 'filters'):
-        if getattr(field, arg, None):
-            res[arg] = getattr(field, arg)
-
-    if hasattr(field, 'selection'):
-        if isinstance(field.selection, (tuple, list)):
-            res['selection'] = field.selection
-        else:
-            # call the 'dynamic selection' function
-            res['selection'] = field.selection(model, cr, user, context)
-    if res['type'] in ('one2many', 'many2many', 'many2one'):
-        res['relation'] = field._obj
-        res['domain'] = field._domain(model) if callable(field._domain) else field._domain
-        res['context'] = field._context
-
-    if isinstance(field, one2many):
-        res['relation_field'] = field._fields_id
-
-    return res
-
-
 class column_info(object):
     """ Struct containing details about an osv column, either one local to
         its model, or one inherited via _inherits.

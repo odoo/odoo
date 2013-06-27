@@ -29,6 +29,15 @@ from openerp.tools import float_round, ustr, html_sanitize, lazy_property
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
 
+def _invoke_model(func, model):
+    """ hack for invoking a callable with a model in both API styles """
+    try:
+        return func(model)
+    except TypeError:
+        cr, uid, context = scope
+        return func(model, cr, uid, context=context)
+
+
 class MetaField(type):
     """ Metaclass for field classes. """
     _class_by_type = {}
@@ -58,9 +67,14 @@ class Field(object):
     help = None                 # field tooltip
     readonly = False
     required = False
+    groups = False              # csv list of group xml ids
 
     # attributes passed when converting from/to a column
-    _attrs = ('string', 'help', 'readonly', 'required')
+    _attrs = ('string', 'help', 'readonly', 'required', 'groups')
+
+    # attributes exported by get_description()
+    _desc0 = ('type', 'store')
+    _desc1 = ('compute', 'depends', 'string', 'help', 'readonly', 'required', 'groups')
 
     def __init__(self, string=None, **kwargs):
         kwargs['string'] = string
@@ -82,6 +96,16 @@ class Field(object):
         self.name = name
         if not self.string:
             self.string = name.replace('_', ' ').capitalize()
+
+    def get_description(self):
+        """ Return a dictionary that describes the field `self`. """
+        desc = {}
+        for arg in self._desc0:
+            desc[arg] = getattr(self, arg)
+        for arg in self._desc1:
+            if getattr(self, arg, None):
+                desc[arg] = getattr(self, arg)
+        return desc
 
     @classmethod
     def from_column(cls, column):
@@ -195,7 +219,9 @@ class Float(Field):
     """ Float field. """
     type = 'float'
     digits = None                       # None, (precision, scale), or callable
+
     _attrs = Field._attrs + ('digits',)
+    _desc1 = Field._desc1 + ('digits',)
 
     @classmethod
     def _from_column(cls, column):
@@ -219,7 +245,9 @@ class Float(Field):
 class _String(Field):
     """ Abstract class for string fields. """
     translate = False
+
     _attrs = Field._attrs + ('translate',)
+    _desc1 = Field._desc1 + ('translate',)
 
     def convert_value(self, value):
         return bool(value) and ustr(value)
@@ -229,7 +257,9 @@ class Char(_String):
     """ Char field. """
     type = 'char'
     size = None
+
     _attrs = _String._attrs + ('size',)
+    _desc1 = _String._desc1 + ('size',)
 
     def convert_value(self, value):
         return bool(value) and ustr(value)[:self.size]
@@ -286,6 +316,7 @@ class Selection(Field):
     """ Selection field. """
     type = 'selection'
     selection = None        # [(value, string), ...], model method or method name
+
     _attrs = Field._attrs + ('selection',)
 
     def __init__(self, selection, string=None, **kwargs):
@@ -297,20 +328,29 @@ class Selection(Field):
         """
         super(Selection, self).__init__(selection=selection, string=string, **kwargs)
 
+    def get_description(self):
+        desc = super(Selection, self).get_description()
+        desc['selection'] = self.get_selection()
+        return desc
+
     def _to_column(self, column_type, kwargs):
         if isinstance(self.selection, basestring):
             method = self.selection
             kwargs['selection'] = lambda self, *args, **kwargs: getattr(self, method)(*args, **kwargs)
         return super(Selection, self)._to_column(column_type, kwargs)
 
-    def get_values(self):
-        """ return a list of the possible values """
+    def get_selection(self):
+        """ return the selection list (pairs (value, string)) """
         value = self.selection
         if isinstance(value, basestring):
             value = getattr(scope.model(self.model), value)()
         elif callable(value):
-            value = value(scope.model(self.model))
-        return [item[0] for item in value]
+            value = _invoke_model(value, scope.model(self.model))
+        return value
+
+    def get_values(self):
+        """ return a list of the possible values """
+        return [item[0] for item in self.get_selection()]
 
     def convert_value(self, value):
         if value is None or value is False:
@@ -324,6 +364,7 @@ class Reference(Selection):
     """ Reference field. """
     type = 'reference'
     size = 128
+
     _attrs = Selection._attrs + ('size',)
 
     def __init__(self, selection, string=None, **kwargs):
@@ -360,11 +401,14 @@ class Many2one(Field):
     type = 'many2one'
     relational = True
     comodel = None                      # model of values
+    ondelete = None                     # defaults to 'set null' in ORM
+    domain = None
+    context = None
+
     _attrs = Field._attrs + ('ondelete',)
 
-    def __init__(self, comodel, string=None, ondelete=None, domain=None, **kwargs):
-        super(Many2one, self).__init__(
-            comodel=comodel, string=string, ondelete=ondelete, domain=domain, **kwargs)
+    def __init__(self, comodel, string=None, **kwargs):
+        super(Many2one, self).__init__(comodel=comodel, string=string, **kwargs)
 
     @lazy_property
     def inverse(self):
@@ -381,6 +425,13 @@ class Many2one(Field):
         """ Whether `self` implements inheritance between model and comodel. """
         model = scope.model(self.model)
         return self.name in model._inherits.itervalues()
+
+    def get_description(self):
+        desc = super(Many2one, self).get_description()
+        desc['relation'] = self.comodel
+        desc['domain'] = self.domain(model) if callable(self.domain) else self.domain
+        desc['context'] = self.context
+        return desc
 
     @classmethod
     def _from_column(cls, column):
@@ -430,11 +481,20 @@ class One2many(Field):
     relational = True
     comodel = None                      # model of values
     inverse = None                      # name of inverse field
+    domain = None
+    context = None
 
-    def __init__(self, comodel, inverse=None, string=None, domain=None, **kwargs):
+    def __init__(self, comodel, inverse=None, string=None, **kwargs):
         super(One2many, self).__init__(
-            comodel=comodel, inverse=inverse, string=string, domain=domain,
-            **kwargs)
+            comodel=comodel, inverse=inverse, string=string, **kwargs)
+
+    def get_description(self):
+        desc = super(One2many, self).get_description()
+        desc['relation'] = self.comodel
+        desc['relation_field'] = self.inverse
+        desc['domain'] = self.domain(model) if callable(self.domain) else self.domain
+        desc['context'] = self.context
+        return desc
 
     @classmethod
     def _from_column(cls, column):
@@ -484,12 +544,13 @@ class Many2many(Field):
     relation = None                     # name of table
     column1 = None                      # column of table referring to model
     column2 = None                      # column of table referring to comodel
+    domain = None
+    context = None
 
     def __init__(self, comodel, relation=None, column1=None, column2=None,
-                string=None, domain=None, **kwargs):
+                string=None, **kwargs):
         super(Many2many, self).__init__(comodel=comodel, relation=relation,
-            column1=column1, column2=column2, string=string, domain=domain,
-            **kwargs)
+            column1=column1, column2=column2, string=string, **kwargs)
 
     @lazy_property
     def inverse(self):
@@ -502,6 +563,13 @@ class Many2many(Field):
                         (field.relation, field.column1, field.column2) == expected:
                     return field.name
         return None
+
+    def get_description(self):
+        desc = super(Many2many, self).get_description()
+        desc['relation'] = self.comodel
+        desc['domain'] = self.domain(model) if callable(self.domain) else self.domain
+        desc['context'] = self.context
+        return desc
 
     @classmethod
     def _from_column(cls, column):
@@ -568,6 +636,10 @@ class Related(Field):
     @lazy_property
     def type(self):
         return self.related_field.type
+
+    @lazy_property
+    def get_description(self):
+        return self.related_field.get_description
 
     def __getattr__(self, name):
         # delegate getattr on related field

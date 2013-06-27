@@ -3346,18 +3346,17 @@ class BaseModel(object):
         write_access = self.check_access_rights(cr, user, 'write', raise_exception=False) \
             or self.check_access_rights(cr, user, 'create', raise_exception=False)
 
+        translation_obj = self.pool.get('ir.translation')
+
         res = {}
 
-        translation_obj = self.pool.get('ir.translation')
-        for parent in self._inherits:
-            res.update(self.pool[parent].fields_get(cr, user, allfields, context))
-
-        for f, field in self._columns.iteritems():
-            if (allfields and f not in allfields) or \
-                (field.groups and not self.user_has_groups(cr, user, groups=field.groups, context=context)):
+        for f, field in self._fields.iteritems():
+            if allfields and f not in allfields:
+                continue
+            if field.groups and not self.user_has_groups(cr, user, field.groups, context=context):
                 continue
 
-            res[f] = fields.field_to_dict(self, cr, user, field, context=context)
+            res[f] = field.get_description()
 
             if not write_access:
                 res[f]['readonly'] = True
