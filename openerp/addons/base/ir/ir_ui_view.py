@@ -221,6 +221,47 @@ class view(osv.osv):
         :type fallback: mapping
         """
         if context is None: context = {}
+
+        def clean_anotations(arch, parent_info=None):
+            for child in arch:
+                if child.tag == 't' or child.tag == 'field':
+                    # can not anote t and field while cleaning
+                    continue
+
+                child_text = "".join([etree.tostring(x) for x in child])
+                if child.attrib.get('data-edit-model'):
+                    if child_text.find('data-edit-model') != -1 or child_text.find('<t ') != -1:
+                        # enclosed tag, move present tag to childs
+                        parent_info = {
+                            'model': child.attrib.get('data-edit-model'),
+                            'view_id': child.attrib.get('data-edit-view-id'),
+                            'xpath': child.attrib.get('data-edit-xpath')+'/'+child.tag,
+                        }
+                        child.attrib.pop('data-edit-model')
+                        child.attrib.pop('data-edit-view-id')
+                        child.attrib.pop('data-edit-xpath')
+                        child = clean_anotations(child, parent_info)
+                    else:
+                        # tagged node, no enclosed, can keep, don't care if had parent_info
+                        continue
+
+                else:
+                    if child_text.find('data-edit-model') != -1 or child_text.find('<t ') != -1:
+                        # has other nodes to clean
+                        if parent_info:
+                            # update xpath
+                            parent_info.update({'xpath': parent_info.get('xpath')+'/'+child.tag})
+                        child = clean_anotations(child, parent_info)
+                    elif parent_info:
+                        # put tag from parent, no enclose, higher
+                        child.attrib.update({
+                            'data-edit-model': parent_info.get('model'),
+                            'data-edit-view-id': parent_info.get('view_id'),
+                            'data-edit-xpath': parent_info.get('xpath'),
+                        })
+
+            return arch
+
         try:
             if not view_id:
                 view_id = self.default_view(cr, uid, model, view_type, context=context)
@@ -237,13 +278,13 @@ class view(osv.osv):
             arch_tree = etree.fromstring(
                 view['arch'].encode('utf-8') if isinstance(view['arch'], unicode)
                 else view['arch'])
+
             descendants = self.iter(
                 cr, uid, view['id'], model, exclude_base=True, context=context)
-
-
             arch = self.apply_inherited_archs(
                 cr, uid, arch_tree, descendants,
                 model, view['id'], context=context)
+            arch = self.add_root_tags(arch, model, view['id'])
 
         except self.NoViewError:
             # defaultdict is "empty" until first __getattr__
@@ -254,8 +295,7 @@ class view(osv.osv):
                 arch = etree.fromstring(
                     arch.encode('utf-8') if isinstance(arch, unicode) else arch)
 
-        # TODO: post-processing
-
+        arch = clean_anotations(arch)
         return dict(view, arch=etree.tostring(arch, encoding='utf-8'))
 
     def locate_node(self, arch, spec):
@@ -325,6 +365,18 @@ class view(osv.osv):
                 for view in self.browse(cr, 1, view_ids, context)
                 if not (view.groups_id and user_groups.isdisjoint(view.groups_id))]
 
+    def add_root_tags(self, arch_tree, model, view_id):
+        for child in arch_tree:
+            if child.tag == 'data' or child.tag == 'xpath':
+                child = self.add_root_tags(child, model, view_id)
+            else:
+                child.attrib.update({
+                    'data-edit-model': model or 'undefined',
+                    'data-edit-view-id': str(view_id),
+                    'data-edit-xpath': '/'
+                })
+        return arch_tree
+
     def iter(self, cr, uid, view_id, model, exclude_base=False, context=None):
         """ iterates on all of ``view_id``'s descendants tree depth-first.
 
@@ -339,13 +391,16 @@ class view(osv.osv):
                  descendants of ``view_id`` (including ``view_id`` itself if
                  ``exclude_base`` is ``False``, the default)
         """
+
         if not exclude_base:
             base = self.browse(cr, uid, view_id, context=context)
+            # should we do add_root_tags this one as well ?
             yield base.id, base.arch
 
         for arch, id in self.get_inheriting_views_arch(
                 cr, uid, view_id, model, context=context):
-            yield id, arch
+            arch = self.add_root_tags(etree.fromstring(arch), model, view_id)
+            yield id, etree.tostring(arch)
             for info in self.iter(
                     cr, uid, id, model, exclude_base=True, context=None):
                 yield info
