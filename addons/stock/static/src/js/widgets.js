@@ -69,13 +69,14 @@ function openerp_picking_widgets(instance){
         get_rows: function(){
             var model = this.getParent();
             var rows = [];
+            /*
             _.each( model.packages, function(pack){
                 rows.push({
                     cols:{ pack: pack.name},
                     id: pack.id
                 });
             });
-
+            */
             return rows;
         },
     });
@@ -89,6 +90,7 @@ function openerp_picking_widgets(instance){
             this.picking = null;
             this.movelines = null;
             this.operations = null;
+            this.packages = null;
             
             window.pickwidget = this;
             
@@ -120,7 +122,8 @@ function openerp_picking_widgets(instance){
                     self.operations = operations;
                     console.log('Operations:',self.operations);
 
-                    return new instance.web.Model('stock.quant.package').call('read',[self.picking.package_ids, []]);
+                    //return new instance.web.Model('stock.quant.package').call('read',[self.picking.package_ids, []]);
+                    return new instance.web.Model('stock.pack.operation').call('read_group',[ [['result_package_id','!=','False'],['picking_id','=',self.picking.id]],[],['result_package_id'] ]);
                 }).then(function(packages){
                     self.packages = packages;
                     console.log('Packages:', self.packages);
