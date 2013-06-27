@@ -130,7 +130,6 @@
                     <col class='oe_pick_col_expand'></col>
                     <col class='oe_pick_col_small'></col>
                     <col class='oe_pick_col_small'></col>
-                    <col class='oe_pick_col_small'></col>
                 </colgroup>
 
                 <thead>
@@ -141,9 +140,8 @@
 
                 <tbody>
                     <t t-foreach="widget.get_rows()" t-as="row">
-                        <tr t-att-class="row.classes">
+                        <tr t-att-class="row.classes" t-att-data-id="row.id">
                             <td> <t t-esc="row.cols.pack" /> </td>
-                            <td class='oe_centeralign'> <t t-esc="row.cols.qty" /> </td>
                             <td class='oe_centeralign'> <span class='oe_row_button js_pick_plus'>+</span> </td>
                             <td class='oe_centeralign'> <span class='oe_row_button js_pick_minus'>-</span> </td>
                         </tr>

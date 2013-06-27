@@ -14,10 +14,8 @@ function openerp_picking_widgets(instance){
         get_rows: function(){
             var model = this.getParent();
             var rows = [];
-            console.log('Parent:', this.getParent());
-            
+
             _.each( model.movelines, function(moveline){
-                console.log('Moveline:',moveline);
                 rows.push({
                     cols: { product: moveline.product_id[1],
                             qty: moveline.product_qty,
@@ -64,14 +62,19 @@ function openerp_picking_widgets(instance){
     module.PackageSelectorWidget = instance.web.Widget.extend({
         template: 'PackageSelectorWidget',
         get_header: function(){
-            return this._header || 'Package Selector';
+            return this._header || 'Packages:';
         },
         get_rows: function(){
-            return this._rows || [
-                { cols: { pack:'abc', qty:12  },   },
-                { cols: { pack:'def', qty:500 }, classes: ''   },
-                { cols: { pack:'ghi', qty:1   },   },
-            ];
+            var model = this.getParent();
+            var rows = [];
+            _.each( model.packages, function(pack){
+                rows.push({
+                    cols:{ pack: pack.name},
+                    id: pack.id
+                });
+            });
+
+            return rows;
         },
     });
 
@@ -107,6 +110,11 @@ function openerp_picking_widgets(instance){
                 }).then(function(operations){
                     self.operations = operations;
                     console.log('Operations:',self.operations);
+
+                    return new instance.web.Model('stock.quant.package').call('read',[self.picking.package_ids, []]);
+                }).then(function(packages){
+                    self.packages = packages;
+                    console.log('Packages:', self.packages);
                 });
 
         },
@@ -135,7 +143,7 @@ function openerp_picking_widgets(instance){
             var self = this;
             console.log('Scan: ',ean);
             new instance.web.Model('stock.picking')
-                .call('get_barcode_and_return_todo_stuff', [this.picking.id, ean])
+                .call('get_barcode_and_return_todo_stuff', [self.picking.id, ean])
                 .then(function(todo){
 
                     _.each(todo.moves_to_update, function(update){
@@ -164,15 +172,26 @@ function openerp_picking_widgets(instance){
                         }
                         
                     });
-                    
-                    self.picking_editor.renderElement();
 
-                    new instance.web.Model('stock.pack.operation').call('read',[self.picking.pack_operation_ids, []])
-                        .then(function(operations){
-                            self.operations = operations;
-                            self.package_editor.renderElement();
-                            console.log('Updated the operations list !');
-                        });
+                    return new instance.web.Model('stock.picking.in').call('read',[[self.picking.id],[]])
+                }).then(function(picking){
+                    self.picking = picking[0];
+                    console.log('New Picking: ',self.picking);
+
+                    return new instance.web.Model('stock.pack.operation').call('read',[self.picking.pack_operation_ids, []])
+                }).then(function(operations){
+                    console.log('New Operations: ',operations);
+                    self.operations = operations;
+
+                    return new instance.web.Model('stock.quant.package').call('read',[self.picking.package_ids, []]);
+                }).then(function(packages){
+                    console.log('New Packages: ',packages);
+                    self.packages = packages;
+
+                    self.picking_editor.renderElement();
+                    self.package_editor.renderElement();
+                    self.package_selector.renderElement();
+                    console.log('Updated the UI');
                 });
         },
         connect_barcode_scanner: function(){
