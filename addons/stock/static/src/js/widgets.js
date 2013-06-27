@@ -123,9 +123,9 @@ function openerp_picking_widgets(instance){
                     console.log('Operations:',self.operations);
 
                     //return new instance.web.Model('stock.quant.package').call('read',[self.picking.package_ids, []]);
-                    var params = [ 'read_group',[ [['result_package_id','!=','False'],['picking_id','=',self.picking.id]],[],['result_package_id'] ]];
+                    var params = [ 'read_group',[ [['result_package_id','!=', false],['picking_id','=',self.picking.id]],[],['result_package_id'] ]];
                     console.log('QUERY:',params);
-                    return new instance.web.Model('stock.pack.operation').call('read_group',[ [['result_package_id','!=','False'],['picking_id','=',self.picking.id]],[],['result_package_id'] ]);
+                    return new instance.web.Model('stock.pack.operation').call('read_group',[ [['result_package_id','!=', false],['picking_id','=',self.picking.id]],['id', 'result_package_id'],['result_package_id'] ]);
                 }).then(function(packages){
                     self.packages = packages;
                     console.log('RESPONSE:',arguments);
