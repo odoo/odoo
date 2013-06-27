@@ -36,14 +36,16 @@ function openerp_picking_widgets(instance){
         template: 'PackageEditorWidget',
         get_header: function(){
             var model = this.getParent();
-            return model.current_package_id ? 'Current Operations for package: ' + model.current_package_id[1] : 'Current Operations';
+            var current_package_id = instance.session.user_context.current_package_id;
+            return current_package_id ? 'Current Operations for package: ' + current_package_id[1] : 'Current Operations';
         },
         get_rows: function(){
+            var current_package_id = instance.session.user_context.current_package_id;
             var model = this.getParent();
             var rows = [];
             
             _.each( model.operations, function(op){
-                if(model.current_package_id && op.package_id !== model.current_package_id){
+                if(current_package_id && op.package_id !== current_package_id){
                     return;
                 }
                 rows.push({
@@ -67,13 +69,14 @@ function openerp_picking_widgets(instance){
         get_rows: function(){
             var model = this.getParent();
             var rows = [];
+            /*
             _.each( model.packages, function(pack){
                 rows.push({
                     cols:{ pack: pack.name},
                     id: pack.id
                 });
             });
-
+            */
             return rows;
         },
     });
@@ -87,20 +90,28 @@ function openerp_picking_widgets(instance){
             this.picking = null;
             this.movelines = null;
             this.operations = null;
-            this.current_package_id = instance.session.user_context.current_package_id;
+            this.packages = null;
             
             window.pickwidget = this;
             
             console.log('Action params:', params);
             console.log('Session:',instance.session);
 
-            this.loaded = new instance.web.Model('stock.picking.in')
-                .query()
-                .all()
-                .then(function(picking_in){
-                    self.picking = picking_in[0];
-                    console.log('Picking In:',picking_in);
-                    
+            this.loaded =  this.load();
+        },
+        load: function(picking_id){
+            var self = this;
+
+            if(picking_id){
+                var picking = new instance.web.Model('stock.picking.in').call('read',[[picking_id], []]);
+            }else{ 
+                var picking = new instance.web.Model('stock.picking.in').query().first();
+            }
+
+            var loaded = picking.then(function(picking){
+                    self.picking = picking instanceof Array ? picking[0] : picking;
+                    console.log('Picking:',self.picking);
+
                     return new instance.web.Model('stock.move').call('read',[self.picking.move_lines, []]);
                 }).then(function(movelines){
                     self.movelines = movelines;
@@ -111,12 +122,14 @@ function openerp_picking_widgets(instance){
                     self.operations = operations;
                     console.log('Operations:',self.operations);
 
-                    return new instance.web.Model('stock.quant.package').call('read',[self.picking.package_ids, []]);
+                    //return new instance.web.Model('stock.quant.package').call('read',[self.picking.package_ids, []]);
+                    return new instance.web.Model('stock.pack.operation').call('read_group',[ [['result_package_id','!=','False'],['picking_id','=',self.picking.id]],[],['result_package_id'] ]);
                 }).then(function(packages){
                     self.packages = packages;
                     console.log('Packages:', self.packages);
                 });
 
+            return loaded;
         },
         start: function(){
             var self = this;
@@ -125,6 +138,7 @@ function openerp_picking_widgets(instance){
 
             this.$('.js_pick_quit').click(function(){ self.quit(); });
             this.$('.js_pick_pack').click(function(){ self.pack(); });
+            this.$('.js_pick_done').click(function(){ self.done(); });
 
             $.when(this.loaded).done(function(){
                 self.picking_editor = new module.PickingEditorWidget(self);
@@ -140,89 +154,46 @@ function openerp_picking_widgets(instance){
 
             return this._super();
         },
+        // reloads the data from the provided picking and refresh the ui. 
+        // (if no picking_id is provided, gets the first picking in the db)
+        refresh_ui: function(picking_id){
+            var self = this;
+            return this.load(picking_id)
+                .then(function(){ 
+                    console.log('Refreshing UI');
+                    self.picking_editor.renderElement();
+                    self.package_editor.renderElement();
+                    self.package_selector.renderElement();
+                });
+        },
         scan: function(ean){
             var self = this;
             console.log('Scan: ',ean);
             new instance.web.Model('stock.picking')
                 .call('get_barcode_and_return_todo_stuff', [self.picking.id, ean])
-                .then(function(todo){
-
-                    _.each(todo.moves_to_update, function(update){
-                        if(update[0] === 0){ // create a new line
-                            console.log('New line:',update);
-                            self.movelines.push(update[2]);
-
-                        }else if(update[0] === 1){ // update a line
-                            console.log('Update line:',update);
-                            for(var i = 0; i < self.movelines.length; i++){
-                                if( self.movelines[i].id === update[1]){
-                                    for(field in update[2]){
-                                        self.movelines[i][field] = update[2][field];
-                                    }
-                                    break;
-                                }
-                            }
-                        }else if(update[0] === 2){ // remove a line
-                            console.log('Remove line:',update);
-                            for(var i = 0; i < self.movelines.length; i++){
-                                if( self.movelines[i].id === update[1] ){
-                                    self.movelines.splice(i,1);
-                                    break;
-                                }
-                            }
-                        }
-                        
-                    });
-
-                    return new instance.web.Model('stock.picking.in').call('read',[[self.picking.id],[]])
-                }).then(function(picking){
-                    self.picking = picking[0];
-                    console.log('New Picking: ',self.picking);
-
-                    return new instance.web.Model('stock.pack.operation').call('read',[self.picking.pack_operation_ids, []])
-                }).then(function(operations){
-                    console.log('New Operations: ',operations);
-                    self.operations = operations;
-
-                    return new instance.web.Model('stock.quant.package').call('read',[self.picking.package_ids, []]);
-                }).then(function(packages){
-                    console.log('New Packages: ',packages);
-                    self.packages = packages;
-
-                    self.picking_editor.renderElement();
-                    self.package_editor.renderElement();
-                    self.package_selector.renderElement();
-                    console.log('Updated the UI');
+                .then(function(){
+                    return self.refresh_ui(self.picking.id);
                 });
         },
         pack: function(){
             var self = this;
             console.log('Pack');
-            new instance.web.Model('stock.picking').call('action_pack',[[self.picking.id]])
+            new instance.web.Model('stock.picking')
+                .call('action_pack',[[self.picking.id]])
                 .then(function(){
                     instance.session.user_context.current_package_id = false;
-                    self.current_package_id = instance.session.user_context.current_package_id; 
                     console.log('Context Reset');
 
-                    return new instance.web.Model('stock.picking.in').call('read',[[self.picking.id],[]])
-                }).then(function(picking){
-                    self.picking = picking[0];
-                    console.log('New Picking: ',self.picking);
-
-                    return new instance.web.Model('stock.pack.operation').call('read',[self.picking.pack_operation_ids, []])
-                }).then(function(operations){
-                    console.log('New Operations: ',operations);
-                    self.operations = operations;
-
-                    return new instance.web.Model('stock.quant.package').call('read',[self.picking.package_ids, []]);
-                }).then(function(packages){
-                    console.log('New Packages: ',packages);
-                    self.packages = packages;
-
-                    self.picking_editor.renderElement();
-                    self.package_editor.renderElement();
-                    self.package_selector.renderElement();
-                    console.log('Updated the UI');
+                    return self.refresh_ui(self.picking.id);
+                });
+        },
+        done: function(){
+            var self = this;
+            console.log('Done');
+            new instance.web.Model('stock.picking')
+                .call('action_done_from_packing_ui',[[self.picking.id]])
+                .then(function(new_picking_id){
+                    console.log('New picking id:',new_picking_id);
                 });
         },
         connect_barcode_scanner: function(){
