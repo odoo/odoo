@@ -8,7 +8,8 @@ function openerp_picking_widgets(instance){
             this._super(parent,options);
         },
         get_header: function(){
-            return this._header || 'Picking: INTERNAL/00112';
+            var model = this.getParent();
+            return 'Picking: '+model.picking.name;
         },
         get_rows: function(){
             var model = this.getParent();
@@ -20,7 +21,7 @@ function openerp_picking_widgets(instance){
                 rows.push({
                     cols: { product: moveline.product_id[1],
                             qty: moveline.product_qty,
-                            rem: moveline.qty_remaining,
+                            rem: moveline.remaining_qty,
                             uom: moveline.product_uom[1],
                             loc: moveline.location_id[1],
                             stat: moveline.state 
@@ -39,11 +40,20 @@ function openerp_picking_widgets(instance){
             return this._header || 'Package: 032 ';
         },
         get_rows: function(){
-            return this._rows || [
-                { cols: { product:'abc', qty:1, uom: 5, },   },
-                { cols: { product:'dec', qty:2, uom: 5, },  classes: '' },
-                { cols: { product:'qcr', qty:4, uom: 5, }, },
-            ];
+            var model = this.getParent();
+            var rows = [];
+            
+            _.each( model.operations, function(op){
+                rows.push({
+                    cols: {
+                        product: op.product_id[1],
+                        uom: op.product_uom ? product_uom[1] : 'false',
+                        qty: op.product_qty,
+                    }
+                });
+            });
+
+            return rows;
         },
     });
 
@@ -69,6 +79,7 @@ function openerp_picking_widgets(instance){
 
             this.picking = null;
             this.movelines = null;
+            this.operations = null;
             
             window.pickwidget = this;
             
@@ -85,6 +96,11 @@ function openerp_picking_widgets(instance){
                 }).then(function(movelines){
                     self.movelines = movelines;
                     console.log('Move Lines:',movelines);
+
+                    return new instance.web.Model('stock.pack.operation').call('read',[self.picking.pack_operation_ids, []]);
+                }).then(function(operations){
+                    self.operations = operations;
+                    console.log('Operations:',self.operations);
                 });
 
         },
@@ -95,24 +111,60 @@ function openerp_picking_widgets(instance){
             this.$('.js_pick_quit').click(function(){ self.quit(); });
 
             $.when(this.loaded).done(function(){
-                var picking_editor = new module.PickingEditorWidget(self);
-                picking_editor.replace(self.$('.oe_placeholder_picking_editor'));
+                self.picking_editor = new module.PickingEditorWidget(self);
+                self.picking_editor.replace(self.$('.oe_placeholder_picking_editor'));
 
-                var package_editor = new module.PackageEditorWidget(self);
-                package_editor.replace(self.$('.oe_placeholder_package_editor'));
+                self.package_editor = new module.PackageEditorWidget(self);
+                self.package_editor.replace(self.$('.oe_placeholder_package_editor'));
 
-                var package_selector = new module.PackageSelectorWidget(self);
-                package_selector.replace(self.$('.oe_placeholder_package_selector'));
+                self.package_selector = new module.PackageSelectorWidget(self);
+                self.package_selector.replace(self.$('.oe_placeholder_package_selector'));
             });
 
 
             return this._super();
         },
         scan: function(ean){
+            var self = this;
             new instance.web.Model('stock.picking')
                 .call('get_barcode_and_return_todo_stuff', [this.picking.id, ean])
-                .then(function(results){
-                    console.log('STUFF TODO:', arguments);
+                .then(function(todo){
+
+                    _.each(todo.moves_to_update, function(update){
+                        if(update[0] === 0){ // create a new line
+                            console.log('New line:',update);
+                            self.movelines.push(update[2]);
+
+                        }else if(update[0] === 1){ // update a line
+                            console.log('Update line:',update);
+                            for(var i = 0; i < self.movelines.length; i++){
+                                if( self.movelines[i].id === update[1]){
+                                    for(field in update[2]){
+                                        self.movelines[i][field] = update[2][field];
+                                    }
+                                    break;
+                                }
+                            }
+                        }else if(update[0] === 2){ // remove a line
+                            console.log('Remove line:',update);
+                            for(var i = 0; i < self.movelines.length; i++){
+                                if( self.movelines[i].id === update[1] ){
+                                    self.movelines.splice(i,1);
+                                    break;
+                                }
+                            }
+                        }
+                        
+                    });
+                    
+                    self.picking_editor.renderElement();
+
+                    new instance.web.Model('stock.pack.operation').call('read',[self.picking.pack_operation_ids, []])
+                        .then(function(operations){
+                            self.operations = operations;
+                            self.package_editor.renderElement();
+                            console.log('Updated the operations list !');
+                        });
                 });
         },
         quit: function(){
