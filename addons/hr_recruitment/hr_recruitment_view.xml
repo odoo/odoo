@@ -68,11 +68,7 @@
         <field name="arch" type="xml">
           <form string="Jobs - Recruitment Form" version="7.0">
             <header>
-                <!-- <button name="case_close_with_emp" string="Hire &amp; Create Employee" type="object"
-                        class="oe_highlight"
-                        attrs="{'invisible':[('emp_id','!=',False)]}"/> -->
                 <field name="stage_id" widget="statusbar" clickable="True"/>
-                <field name="emp_id" invisible="1"/>
             </header>
             <sheet>
                 <div class="oe_right oe_button_box">
@@ -137,6 +133,13 @@
                             <field name="salary_proposed" class="oe_inline"/>
                             <span class="oe_inline" attrs="{'invisible':[('salary_proposed_extra','=',False)]}"> + </span>
                             <field name="salary_proposed_extra" class="oe_inline" placeholder="Extra advantages..."/>
+                        </div>
+                        <label for="emp_id"/>
+                        <div>
+                            <field name="emp_id" readonly="1"/>
+                            <button string="Create Employee" name="case_close_with_emp" type="object"
+                                    class="oe_link oe_inline"
+                                    attrs="{'invisible': [('emp_id', '!=', False)]}"/> 
                         </div>
                     </group>
                 </group>
