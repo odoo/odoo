@@ -722,7 +722,7 @@ class BaseModel(object):
                 sql_constraints = getattr(cls, '_sql_constraints', []) + \
                     getattr(parent_class, '_sql_constraints', [])
 
-                nattr = {
+                attrs = {
                     '_name': name,
                     '_register': False,
                     '_columns': columns,
@@ -735,15 +735,24 @@ class BaseModel(object):
                     '_local_constraints': cls.__dict__.get('_constraints', []),
                     '_local_sql_constraints': cls.__dict__.get('_sql_constraints', []),
                 }
-                cls = type(name, (cls, parent_class), nattr)
+                cls = type(name, (cls, parent_class), attrs)
         else:
             if not cls._name:
                 cls._name = cls.__name__
-            cls._local_constraints = getattr(cls, '_constraints', [])
-            cls._local_sql_constraints = getattr(cls, '_sql_constraints', [])
+            cls._local_constraints = cls.__dict__.get('_constraints', [])
+            cls._local_sql_constraints = cls.__dict__.get('_sql_constraints', [])
 
-        # introduce the "registry class" of the model
-        cls = type(cls._name, (cls,), {'_register': False})
+        # introduce the "registry class" of the model;
+        # duplicate some attributes so that the ORM can modify them
+        attrs = {
+            '_register': False,
+            '_columns': dict(cls._columns),
+            '_defaults': dict(cls._defaults),
+            '_inherits': dict(cls._inherits),
+            '_constraints': list(cls._constraints),
+            '_sql_constraints': list(cls._sql_constraints),
+        }
+        cls = type(cls._name, (cls,), attrs)
 
         # duplicate all new-style fields to avoid clashes with inheritance
         cls._fields = {}
