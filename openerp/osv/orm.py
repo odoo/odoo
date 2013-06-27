@@ -5265,13 +5265,8 @@ class BaseModel(object):
             return self.null()
 
         # arg is a record id; retrieve the corresponding record in the cache
-        model_cache = scope.cache[self._name]
-        record = model_cache.get(arg)
-        if record is None:
-            # the instance does not exist yet; create it and put it in cache
-            record = self._make_instance(_scope=scope, _record_id=arg, _record_cache={})
-            model_cache[arg] = record
-        return record
+        record_cache = scope.cache[self._name][arg]
+        return self._make_instance(_scope=scope, _record_id=arg, _record_cache=record_cache)
 
     def recordset(self, args=()):
         """ Return a recordset instance corresponding to `args` (collection of
@@ -5484,12 +5479,12 @@ class BaseModel(object):
 
             # make sure that self is in cache
             model_cache = self._scope.cache[self._name]
-            assert model_cache.get(self._record_id) is self
+            assert self._record_id in model_cache
 
             # fetch the record of this model without name in their cache
-            fetch_ids = set(rec._record_id
-                            for rec in model_cache.itervalues()
-                            if name not in rec._record_cache)
+            fetch_ids = set(record_id
+                            for record_id, record_cache in model_cache.iteritems()
+                            if name not in record_cache)
 
             # prefetch all classic and many2one fields if column is one of them
             # Note: do not prefetch fields when self.pool._init is True, because

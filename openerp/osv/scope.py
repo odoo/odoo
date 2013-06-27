@@ -209,9 +209,9 @@ class Scope(object):
 
     @property
     def user(self):
-        """ return the current user (as a record) """
+        """ return the current user (as an instance) """
         with proxy.SUDO():
-            return self.registry['res.users'].record(self.uid)
+            return self.registry['res.users'].browse(self.uid)
 
     @property
     def lang(self):
@@ -244,19 +244,22 @@ def drop_values(d, keys):
             d.pop(key, None)
 
 
+class ModelCache(defaultdict):
+    """ Cache for the records of a given model in a given scope. """
+    def __init__(self):
+        super(ModelCache, self).__init__(dict)
+
+
 class Cache(defaultdict):
-    """ Cache for records in a given scope. The cache is a dictionary mapping
-        each model name to a dictionary, which itself maps record ids to their
-        corresponding record. Every record holds a cache for its own fields.
+    """ Cache for records in a given scope. The cache is a set of nested
+        dictionaries indexed by model name, record id, and field name (in that
+        order)::
 
-            # access the record of a given model in cache (if present)
-            record = cache[model_name][record_id]
-
-            # access the value of a field of record (if present)
-            value = record._record_cache[field_name]
+            # access the value of a field of a given record
+            value = cache[model_name][record_id][field_name]
     """
     def __init__(self):
-        super(Cache, self).__init__(dict)
+        super(Cache, self).__init__(ModelCache)
 
     def invalidate(self, spec=None):
         """ Invalidate the cache.
@@ -281,29 +284,32 @@ class Cache(defaultdict):
         # record data has to be fetched again from the database!
         for model, fields, ids in spec:
             model_cache = self[model]
-            for record in get_values(model_cache, ids):
-                drop_values(record._record_cache, fields)
+            for record_cache in get_values(model_cache, ids):
+                drop_values(record_cache, fields)
 
     def check(self):
         """ self-check for validating the cache """
         assert proxy.cache is self
 
-        # take apart the caches of all records present in the cache, and replace
-        # them by empty ones
-        rec_cache = {}
-        for model_cache in self.values():
-            for rec in model_cache.values():
-                rec_cache[rec] = rec._record_cache
-                rec._record_cache = {}
+        # make a full copy of the cache, and invalidate it
+        cache_copy = dict(
+            (model_name, dict(
+                (record_id, dict(record_cache))
+                for record_id, record_cache in model_cache.iteritems()
+            ))
+            for model_name, model_cache in self.iteritems()
+        )
+        self.invalidate()
 
         # re-fetch the records, and compare with their former cache
         invalids = []
-        for model_cache in self.values():
-            for rec in model_cache.values():
-                for field, value in rec_cache[rec].iteritems():
-                    if rec[field] != value:
-                        invalids.append((rec, field, {'cached': value, 'fetched': rec[field]}))
-                        continue
+        for model_name, model_cache in cache_copy.iteritems():
+            model = proxy.model(model_name)
+            for record_id, record_cache in model_cache.iteritems():
+                record = model.browse(record_id)
+                for field, value in record_cache.iteritems():
+                    if record[field] != value:
+                        invalids.append((record, field, {'cached': value, 'fetched': record[field]}))
 
         if invalids:
             raise Exception('Invalid cache for records\n' + pformat(invalids))
