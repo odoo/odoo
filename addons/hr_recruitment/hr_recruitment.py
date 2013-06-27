@@ -81,13 +81,10 @@ class hr_applicant(osv.Model):
     _order = "id desc"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _track = {
-        # 'state': {
-        #     'hr_recruitment.mt_applicant_hired': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
-        #     'hr_recruitment.mt_applicant_refused': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'cancel',
-        # },
-        # 'stage_id': {
-        #     'hr_recruitment.mt_stage_changed': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['done', 'cancel'],
-        # },
+        'stage_id': {
+            'hr_recruitment.mt_applicant_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence == 1,
+            'hr_recruitment.mt_applicant_stage_changed': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence != 1,
+        },
     }
 
     def _get_default_department_id(self, cr, uid, context=None):
