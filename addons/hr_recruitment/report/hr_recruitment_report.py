@@ -18,19 +18,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from openerp import tools
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 from .. import hr_recruitment
 from openerp.addons.decimal_precision import decimal_precision as dp
 
-
-AVAILABLE_STATES = [
-    ('draft','New'),
-    ('open','Open'),
-    ('cancel', 'Refused'),
-    ('done', 'Hired'),
-    ('pending','Pending')
-]
 
 class hr_recruitment_report(osv.osv):
     _name = "hr.recruitment.report"
@@ -41,7 +34,7 @@ class hr_recruitment_report(osv.osv):
     _columns = {
         'user_id': fields.many2one('res.users', 'User', readonly=True),
         'nbr': fields.integer('# of Applications', readonly=True),
-        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
+        # TDE TODO: use MONTHS
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
                                   ('03', 'March'), ('04', 'April'),\
                                   ('05', 'May'), ('06', 'June'), \
@@ -79,7 +72,6 @@ class hr_recruitment_report(osv.osv):
                      to_char(s.create_date, 'YYYY') as year,
                      to_char(s.create_date, 'MM') as month,
                      to_char(s.create_date, 'YYYY-MM-DD') as day,
-                     s.state,
                      s.partner_id,
                      s.company_id,
                      s.user_id,
@@ -105,7 +97,6 @@ class hr_recruitment_report(osv.osv):
                      s.date_open,
                      s.create_date,
                      s.date_closed,
-                     s.state,
                      s.partner_id,
                      s.company_id,
                      s.user_id,
