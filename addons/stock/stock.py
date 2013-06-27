@@ -917,6 +917,7 @@ class stock_picking(osv.osv):
             select=True, required=True, readonly=True, track_visibility='onchange', states={'draft': [('readonly', False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'pack_operation_ids': fields.one2many('stock.pack.operation', 'picking_id', string='Related Packing Operations'),
+        'package_ids': fields.one2many('stock.quant.package', 'picking_id', string='Related Packing Operations'),
     }
     _defaults = {
         'name': lambda self, cr, uid, context: '/',
@@ -3694,6 +3695,7 @@ class stock_package(osv.osv):
         'children_ids': fields.one2many('stock.quant.package', 'parent_id', 'Packaged Content'),
         'location_id': fields.related('quant_ids', 'location_id', type='many2one', relation='stock.location', string='Location', readonly=True),
         'pack_operation_id': fields.many2one('stock.pack.operation', string="Package Operation", help="The pack operation that built this package"),
+        'picking_id': fields.related('pack_operation_id', 'picking_id', 'Related Picking'),
     }
 
     def _check_location(self, cr, uid, ids, context=None):
