@@ -43,9 +43,10 @@ function openerp_picking_widgets(instance){
             var current_package_id = instance.session.user_context.current_package_id;
             var model = this.getParent();
             var rows = [];
+		console.log('package id',current_package_id)
             
             _.each( model.operations, function(op){
-                if(current_package_id && op.package_id !== current_package_id){
+                if((typeof current_package_id !== 'undefined') && op.result_package_id !== current_package_id){
                     return;
                 }
                 rows.push({

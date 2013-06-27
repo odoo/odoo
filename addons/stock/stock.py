@@ -522,15 +522,8 @@ class stock_quant(osv.osv):
         
 
 
-    def split_and_assign_quants(self, cr, uid, quant_tuples, move, context=None):
-        """
-        This method will split off the quants with the specified quantity 
-        and assign the move to this new quant by using reserved_id
-        
-        Should be triggered when assigning the move
-        Should be executed on move only
-        :param quant_tuples: are the tuples from choose_quants (quant_id, qty)
-        """
+    def real_split_quants(self, cr, uid, quant_tuples, context=None):
+        #TODO quants_to_reserve could be moved out of this function... maybe
         quants_to_reserve = []
         for quant_tuple in quant_tuples:
 
@@ -543,6 +536,18 @@ class stock_quant(osv.osv):
                 new_qty = quant.qty - quant_tuple[1]
                 self.write(cr, uid, quant.id, {'qty': new_qty}, context=context)
                 quants_to_reserve.append(new_quant)
+        return quants_to_reserve
+
+    def split_and_assign_quants(self, cr, uid, quant_tuples, move, context=None):
+        """
+        This method will split off the quants with the specified quantity 
+        and assign the move to this new quant by using reserved_id
+        
+        Should be triggered when assigning the move
+        Should be executed on move only
+        :param quant_tuples: are the tuples from choose_quants (quant_id, qty)
+        """
+        quants_to_reserve = self.real_split_quants(cr, uid, quant_tuples, context=context)
         self.write(cr, uid, quants_to_reserve, {'reservation_id': move.id}, context=context)
         self.pool.get("stock.move").write(cr, uid, [move.id], {'reserved_quant_ids': [(4, x) for x in quants_to_reserve]}, context=context)
 
@@ -690,19 +695,7 @@ class stock_quant(osv.osv):
         return self.filter_quants_with_out_history(cr, uid, quants_rec, context=context)
 
 
-
-
-    
-    def choose_quants(self, cr, uid, location_id,  product_id, qty, prodlot_id=False, context=None):
-        """
-        Use the removal strategies of product to search for the correct quants
-        
-        :param location_id: child_of this location_id
-        :param product_id: id of product
-        :param qty in UoM of product
-        :TODOparam prodlot_id
-        :returns: tuples of (quant_id, qty)
-        """
+    def _get_possible_quants(self, cr, uid, location_id, product_id, prodlot_id=False, context=None):
         if self.pool.get('stock.location').get_removal_strategy(cr, uid, location_id, product_id, context=context) == 'lifo':
             if prodlot_id: 
                 possible_quants = self.search(cr, uid, [('location_id', 'child_of', location_id), ('product_id','=',product_id), 
@@ -719,6 +712,22 @@ class stock_quant(osv.osv):
             else:
                 possible_quants = self.search(cr, uid, [('location_id', 'child_of', location_id), ('product_id','=',product_id), 
                                                     ('qty', '>', 0.0), ('reservation_id', '=', False)], order = 'in_date, id', context=context)
+        return possible_quants
+    
+    def choose_quants(self, cr, uid, location_id,  product_id, qty, prodlot_id=False, context=None):
+        """
+        Use the removal strategies of product to search for the correct quants
+        
+        :param location_id: child_of this location_id
+        :param product_id: id of product
+        :param qty in UoM of product
+        :TODOparam prodlot_id
+        :returns: tuples of (quant_id, qty)
+        """
+        possible_quants = self._get_possible_quants(cr, uid, location_id, product_id, prodlot_id=prodlot_id, context=context)
+        return self._get_quant_tuples(cr, uid, possible_quants, qty, context=context)
+
+    def _get_quant_tuples(self, cr, uid, possible_quants, qty, context=None):
         qty_todo = qty
         res = []
         for quant in self.browse(cr, uid, possible_quants, context=context):
@@ -1519,20 +1528,29 @@ class stock_picking(osv.osv):
 
 
             for move in too_few:
+                #create a backorder stock move with the remaining quantity
                 product_qty = move_product_qty[move.id]
                 if not new_picking:
+                    #a backorder picking doesn't exist yet, create a new one
                     new_picking_name = pick.name
-                    self.write(cr, uid, [pick.id], 
-                               {'name': sequence_obj.get(cr, uid,
-                                            'stock.picking.%s'%(pick.type)),
-                               })
                     new_picking = self.copy(cr, uid, pick.id,
                             {
                                 'name': new_picking_name,
                                 'move_lines' : [],
                                 'state':'draft',
                             })
+                    #modify the existing picking (this trick is needed to keep the eventual workflows pointing on the first picking)
+                    unlink_operation_order = [(2, op.id) for op in pick.pack_operation_ids]
+                    self.write(cr, uid, [pick.id], 
+                               {'name': sequence_obj.get(cr, uid,
+                                            'stock.picking.%s'%(pick.type)),
+                                'pack_operation_ids': unlink_operation_order
+                               })
                 if product_qty != 0:
+                    #copy the stock move
+                    new_picking_record = self.browse(cr, uid, new_picking, context=context)
+                    possible_quants = move.reserved_quant_ids
+                    done_quant_ids
                     defaults = {
                             'product_qty' : product_qty,
                             'product_uos_qty': product_qty, #TODO: put correct uos_qty
@@ -1540,18 +1558,21 @@ class stock_picking(osv.osv):
                             'state': 'assigned',
                             'move_dest_id': False,
                             'price_unit': product_price,
-                            'product_uom': product_uoms[move.id]
+                            'product_uom': product_uoms[move.id],
+                            'reserved_quant_ids': done_quant_ids
                     }
                     prodlot_id = prodlot_ids[move.id]
                     if prodlot_id:
                         defaults.update(prodlot_id=prodlot_id)
                     move_obj.copy(cr, uid, move.id, defaults)
+                #modify the existing stock move    
                 move_obj.write(cr, uid, [move.id],
                         {
                             'product_qty': move.product_qty - partial_qty[move.id],
                             'product_uos_qty': move.product_qty - partial_qty[move.id], #TODO: put correct uos_qty
                             'prodlot_id': False,
                             'tracking_id': False,
+                            'reserved_quant_ids': quant_ids
                         })
 
             if new_picking:
@@ -1561,6 +1582,29 @@ class stock_picking(osv.osv):
                 if prodlot_ids.get(move.id):
                     defaults.update({'prodlot_id': prodlot_ids[move.id]})
                 move_obj.write(cr, uid, [move.id], defaults)
+
+
+                possible_quants = [x.id for x in move.reserved_quant_ids]
+                #TODO define find_packaing_op_from_product (returns all ops with a result_package_id that touch this product)
+                stock_operation_obj = self.pool.get('stock.pack.operation')
+                operation_ids = stock_operation_obj.find_packaging_op_from_product(cr, uid, move.product_id, picking_id, context=context)
+                quant_obj = self.pool.get('stock.quant')
+                for op in stock_operation_obj.browse(cr, uid, operation_ids, context=context):
+                    if op.product_id:
+                        quant_tuples = quant_obj._get_quant_tuples(cr, uid, possible_quants, op.product_qty, context=context)
+                        quant_obj.real_split_quants(cr, uid, quant_tuples, context=context)
+                        quant_obj.write(cr, uid, [qt[O] for qt in quant_tuples], {'package_id': op.result_package_id.id}, context=context)
+                    elif op.quant_id:
+                        quant_tuples = quant_obj._get_quant_tuples(cr, uid, [op.quant_id.id], op.product_qty, context=context)
+                        quant_obj.real_split_quants(cr, uid, quant_tuples, context=context)
+                        quant_obj.write(cr, uid, [qt[O] for qt in quant_tuples], {'package_id': op.result_package_id.id}, context=context)
+                    elif op.package_id:
+                        #pack existing packs
+                        self.pool.get('stock.quant.package').write(cr, uid, op.package_id.id, {'parent_id': op.result_package_id.id}, context=context)
+                        
+
+
+
             for move in too_many:
                 product_qty = move_product_qty[move.id]
                 defaults = {
@@ -1592,7 +1636,7 @@ class stock_picking(osv.osv):
                 delivered_pack_id = pick.id
 
             delivered_pack = self.browse(cr, uid, delivered_pack_id, context=context)
-            res[pick.id] = {'delivered_picking': delivered_pack.id or False}
+            res[pick.id] = {'delivered_picking': delivered_pack.id}
 
         return res
     
@@ -1616,22 +1660,72 @@ class stock_picking(osv.osv):
         return self.search(cr, uid, [('state', '=', 'assigned')], limit=1, context=context)[0]
 
     def action_done_from_packing_ui(self, cr, uid, picking_id, context=None):
-        #fill all the packages with assigned operations
-        for operation in self.browse(cr, uid, picking_id, context=context).pack_operation_ids:
-            if operation.result_package_id:
-                if operation.package_id:
-                    #pack existing packs
-                    self.pool.get('stock.quant.package').write(cr, uid, operation.package_id.id, {'parent_id': operation.result_package_id.id}, context=context)
-                elif operation.quant_id:
-                    if operation.quant_id.parent_id:
-                        # decide what to do
-                        pass
-                    #assign_pack may split the quant and write the package on it (above test should be in that method instead)
-                    self.pool.get('stock.quant').assign_pack(cr, uid, operation.quant_id.id, operation.product_qty, operation.result_package_id.id, context=context)
-                elif operation.product_id:
-                    pass 
-        #don't call action_done of picking because it will make all moves don, but make a partial delivery
-        #self.action_done(cr, uid, picking_id, context=context)
+        if context is None:
+            context = {}
+        #create partial picking wizard that handles the split of stock moves and the backorder if needed
+        ctx = context.copy()
+        ctx['active_ids'] = [picking_id]
+        ctx['active_model'] = 'stock.picking'
+        partial_picking_obj = self.pool.get('stock.partial.picking')
+        partial_wizard_id = partial_picking_obj.create(cr, uid, {}, context=ctx)
+        partial_wizard_result = partial_picking_obj.do_partial(cr, uid, [partial_wizard_id], context=context)
+
+        #todo_picking_id = picking_id if picking was total, it's the backorder if the picking was partial
+        #todo_picking_id = partial_wizard_result[picking_id]['delivered_picking']
+
+
+
+
+
+#all stuff below should be removed except the parent packaging /!\
+#        all_done_quants = []
+#        for move in self.browse(cr, uid, todo_picking_id, context=context).move_lines:
+#            all_done_quants += [quant.id for quant in move.reserved_quant_ids]
+#
+#        for operation in self.browse(cr, uid, todo_picking_id, context=context).pack_operation_ids:
+#            if operation.result_package_id:
+#                if operation.package_id:
+#                    if operation.package_id.parent_id:
+#                        # decide what to do ?
+#                        pass
+#                    #pack existing packs
+#                    self.pool.get('stock.quant.package').write(cr, uid, operation.package_id.id, {'parent_id': operation.result_package_id.id}, context=context)
+#                elif operation.product_id:
+#                    #self.split_and_assign_quants(
+#                    pass
+#
+#
+#
+#
+#                if self.pool.get('stock.pack.operation').search(cr, uid, [('picking_id', '=', todo_picking_id), ('result_package_id', '!=', False)]
+#                    pass
+#        #def split_and_assign_quants(self, cr, uid, quant_tuples, move, context=None):
+#        #fill all the packages with assigned operations
+#        for operation in self.browse(cr, uid, todo_picking_id, context=context).pack_operation_ids:
+#            if operation.result_package_id:
+#                if operation.package_id:
+#                    #pack existing packs
+#                    self.pool.get('stock.quant.package').write(cr, uid, operation.package_id.id, {'parent_id': operation.result_package_id.id}, context=context)
+#                elif operation.quant_id:
+#                    if operation.quant_id.parent_id:
+#                        # decide what to do
+#                        pass
+#                    #assign_pack may split the quant and write the package on it (above test should be in that method instead)
+#                    self.pool.get('stock.quant').assign_pack(cr, uid, operation.quant_id.id, operation.product_qty, operation.result_package_id.id, context=context)
+#                elif operation.product_id:
+#                    pass 
+#        #don't call action_done of picking because it will make all moves don, but make a partial delivery
+#        line_ids = []
+#        for move in self.browse(cr, uid, picking_id, context=context).move_lines:
+#            line += [{
+#                'product_id': move.product_id.id,
+#                'quantity': move.product_qty - move.remaining_qty,
+#                'product_uom': move.product_uom_id.id,
+#
+#            }]
+#
+#        #self.action_done(cr, uid, picking_id, context=context)
+
         #return id of next picking to work on
         return self._get_picking_for_packing_ui(cr, uid, context=context)
 
@@ -3781,6 +3875,21 @@ class stock_pack_operation(osv.osv):
             included_package_ids = self.pool.get('stock.quant.package').search(cr, uid, [('parent_id', 'child_of', [operation.package_id.id])], context=context)
             included_quant_ids = quant_obj.search(cr, uid, [('package_id', 'in', included_package_ids)], context=context)
             return [quant.product_id.id for quant in quant_obj.browse(cr, uid, included_quant_ids, context=context)]
+
+    def find_packaging_op_from_product(self, cr, uid, product_id, picking_id, context=None):
+        res = []
+        op_ids =  self.search(cr, uid, [('picking_id', '=', picking_id)], context=context)
+        for operation in self.browse(cr, uid, op_id, context=context):
+            if operation.product_id and operation.product_id.id == product_id:
+                res += [operation.id]
+            if operation.quant_id and operation.quant_id.product_id.id == product_id:
+                res += [operation.id]
+            if operation.package_id:
+                all_quants = self.pool.get('stock.quant.package').search(cr, uid, [('parent_id', 'child_of', [operation.package_id.id])], context=context)
+                if any([self.pool.get('stock.quant').browse(cr, uid, quant, context=context).product_id.id == product_id for quant in all_quants]):
+                    res += [operation.id]
+
+        return res
 
     def _search_and_increment(self, cr, uid, picking_id, key, context=None):
         '''Search for an operation on an existing key in a picking, if it exists increment the qty (+1) otherwise create it
