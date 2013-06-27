@@ -69,14 +69,12 @@ function openerp_picking_widgets(instance){
         get_rows: function(){
             var model = this.getParent();
             var rows = [];
-            /*
             _.each( model.packages, function(pack){
                 rows.push({
                     cols:{ pack: pack.name},
                     id: pack.id
                 });
             });
-            */
             return rows;
         },
     });
@@ -121,14 +119,19 @@ function openerp_picking_widgets(instance){
                 }).then(function(operations){
                     self.operations = operations;
                     console.log('Operations:',self.operations);
+                    
+                    var package_ids = [];
 
-                    //return new instance.web.Model('stock.quant.package').call('read',[self.picking.package_ids, []]);
-                    var params = [ 'read_group',[ [['result_package_id','!=','False'],['picking_id','=',self.picking.id]],[],['result_package_id'] ]];
-                    console.log('QUERY:',params);
-                    return new instance.web.Model('stock.pack.operation').call('read_group',[ [['result_package_id','!=','False'],['picking_id','=',self.picking.id]],[],['result_package_id'] ]);
+                    for(var i = 0; i < operations.length; i++){
+                        if(!_.contains(package_ids,operations[i].result_package_id[0])){
+                            package_ids.push(operations[i].result_package_id[0]);
+                        }
+                    }
+                    console.log('Package ids:',package_ids);
+
+                    return new instance.web.Model('stock.quant.package').call('read',[package_ids, []]);
                 }).then(function(packages){
                     self.packages = packages;
-                    console.log('RESPONSE:',arguments);
                     console.log('Packages:', self.packages);
                 });
 
