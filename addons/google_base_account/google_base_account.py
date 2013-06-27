@@ -21,16 +21,17 @@
 
 from openerp.osv import osv
 from openerp import SUPERUSER_ID
+from openerp.tools.translate import _
 
-from httplib2 import Http
 import urllib
+import urllib2
 import simplejson
 
 
-class base_config_settings(osv.osv):
-    _inherit = "base.config.settings"
+class google_service(osv.osv):
+    _name = 'google.service'
 
-    def onchange_google_authorization_code(self, cr, uid, ids, service, authorization_code, context=None):
+    def generate_refresh_token(self, cr, uid, service, authorization_code, context=None):
         if authorization_code:
             ir_config = self.pool['ir.config_parameter']
             client_id = ir_config.get_param(cr, SUPERUSER_ID, 'google_%s_client_id' % service)
@@ -41,11 +42,14 @@ class base_config_settings(osv.osv):
             headers = {"Content-type": "application/x-www-form-urlencoded"}
             data = dict(code=authorization_code, client_id=client_id, client_secret=client_secret, redirect_uri=redirect_uri, grant_type="authorization_code")
             data = urllib.urlencode(data)
-            resp, content = Http().request("https://accounts.google.com/o/oauth2/token", "POST", data, headers)
+            try:
+                req = urllib2.Request("https://accounts.google.com/o/oauth2/token", data, headers)
+                content = urllib2.urlopen(req).read()
+            except urllib2.HTTPError:
+                raise self.pool.get('res.config.settings').get_config_warning(cr, _("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired"), context=context)
+
             content = simplejson.loads(content)
-            if 'refresh_token' in content.keys():
-                ir_config.set_param(cr, uid, 'google_%s_refresh_token' % service, content['refresh_token'])
-        return {}
+        return content.get('refresh_token')
 
     def _get_google_token_uri(self, cr, uid, service, context=None):
         ir_config = self.pool['ir.config_parameter']

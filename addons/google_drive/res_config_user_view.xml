@@ -79,7 +79,7 @@
                         <div class="oe_inline">
                             <field name="google_drive_uri" widget="url" text="Generate Google Authorization Code" class="oe_inline oe_bold"/>
                             and paste it here
-                            <field name="google_drive_authorization_code" on_change="onchange_google_authorization_code('drive', google_drive_authorization_code)" class="oe_inline" />
+                            <field name="google_drive_authorization_code" class="oe_inline" />
                         </div>
                         <button type="action" name="%(google_drive.action_google_drive_users_config)d" string="Configure your templates" class="oe_link" />
                     </div>

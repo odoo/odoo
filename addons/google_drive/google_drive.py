@@ -23,8 +23,8 @@ from openerp import SUPERUSER_ID
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
-from httplib2 import Http
 import urllib
+import urllib2
 import json
 import re
 
@@ -59,26 +59,31 @@ class config(osv.osv):
 
     def copy_doc(self, cr, uid, res_id, template_id, name_gdocs, res_model, context=None):
         ir_config = self.pool['ir.config_parameter']
+        google_drive_refresh_token = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_refresh_token')
+        if not google_drive_refresh_token:
+            raise self.pool.get('res.config.settings').get_config_warning(cr, _("You haven't configured 'Authorization Code' generated from google, Please generate and configure it in %(menu:base_setup.menu_general_configuration)s."), context=context)
         google_drive_client_id = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_client_id')
         google_drive_client_secret = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_client_secret')
-        google_drive_refresh_token = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_refresh_token')
         google_web_base_url = ir_config.get_param(cr, SUPERUSER_ID, 'web.base.url')
 
         #For Getting New Access Token With help of old Refresh Token
-        headers = {"Content-type": "application/x-www-form-urlencoded"}
+        headers = {"Content-type": "application/x-www-form-urlencoded", "Accept-Encoding": "gzip, deflate"}
         data = dict(client_id=google_drive_client_id,
                     refresh_token=google_drive_refresh_token,
                     client_secret=google_drive_client_secret,
                     grant_type="refresh_token")
 
         data = urllib.urlencode(data)
-        resp, content = Http().request("https://accounts.google.com/o/oauth2/token", "POST", data, headers)
+        req = urllib2.Request('https://accounts.google.com/o/oauth2/token', data, headers)
+        content = urllib2.urlopen(req).read()
         content = json.loads(content)
 
         # Copy template in to drive with help of new access token
         if 'access_token' in content:
             request_url = "https://www.googleapis.com/drive/v2/files/%s?fields=parents/id&access_token=%s" % (template_id, content['access_token'])
-            resp, parents = Http().request(request_url, "GET")
+            req = urllib2.Request(request_url, None, headers)
+            # resp, parents = Http().request(request_url, "GET")
+            parents = urllib2.urlopen(req).read()
             parents_dict = json.loads(parents)
 
             record_url = "Click on link to open Record in OpenERP\n %s/?db=%s#id=%s&model=%s" % (google_web_base_url, cr.dbname, res_id, res_model)
@@ -86,7 +91,9 @@ class config(osv.osv):
             request_url = "https://www.googleapis.com/drive/v2/files/%s/copy?access_token=%s" % (template_id, content['access_token'])
             headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
             data_json = json.dumps(data)
-            resp, content = Http().request(request_url, "POST", data_json, headers)
+            # resp, content = Http().request(request_url, "POST", data_json, headers)
+            req = urllib2.Request(request_url, data_json, headers)
+            content = urllib2.urlopen(req).read()
             content = json.loads(content)
             res = False
             if 'alternateLink' in content.keys():
@@ -94,8 +101,6 @@ class config(osv.osv):
                 attach_vals = {'res_model': res_model, 'name': name_gdocs, 'res_id': res_id, 'type': 'url', 'url': content['alternateLink']}
                 attach_pool.create(cr, uid, attach_vals)
                 res = content['alternateLink']
-        else:
-            raise self.pool.get('res.config.settings').get_config_warning(cr, _("You haven't configured 'Authorization Code' generated from google, Please generate and configure it in %(menu:base_setup.menu_general_configuration)s."), context=context)
         return res
 
     def get_google_drive_config(self, cr, uid, res_model, res_id, context=None):
@@ -192,5 +197,10 @@ class base_config_settings(osv.osv):
         'google_drive_uri': fields.char('URI', readonly=True, help="The URL to generate the authorization code from Google"),
     }
     _defaults = {
-        'google_drive_uri': lambda s, cr, uid, c: s._get_google_token_uri(cr, uid, 'drive', context=c),
+        'google_drive_uri': lambda s, cr, uid, c: s.pool['google.service']._get_google_token_uri(cr, uid, 'drive', context=c),
     }
+
+    def set_google_authorization_code(self, cr, uid, ids, context=None):
+        config = self.browse(cr, uid, ids[0], context)
+        refresh_token = self.pool['google.service'].generate_refresh_token(cr, uid, 'drive', config.google_drive_authorization_code, context=context)
+        self.pool['ir.config_parameter'].set_param(cr, uid, 'google_drive_refresh_token', refresh_token)
