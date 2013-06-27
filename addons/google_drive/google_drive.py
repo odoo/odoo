@@ -74,16 +74,21 @@ class config(osv.osv):
                     grant_type="refresh_token")
 
         data = urllib.urlencode(data)
-        req = urllib2.Request('https://accounts.google.com/o/oauth2/token', data, headers)
-        content = urllib2.urlopen(req).read()
+        try:
+            req = urllib2.Request('https://accounts.google.com/o/oauth2/token', data, headers)
+            content = urllib2.urlopen(req).read()
+        except urllib2.HTTPError:
+            raise self.pool.get('res.config.settings').get_config_warning(cr, _("Something went wrong during the token generation. Please request again an authorization code in %(menu:base_setup.menu_general_configuration)s."), context=context)
         content = json.loads(content)
 
         # Copy template in to drive with help of new access token
         if 'access_token' in content:
             request_url = "https://www.googleapis.com/drive/v2/files/%s?fields=parents/id&access_token=%s" % (template_id, content['access_token'])
-            req = urllib2.Request(request_url, None, headers)
-            # resp, parents = Http().request(request_url, "GET")
-            parents = urllib2.urlopen(req).read()
+            try:
+                req = urllib2.Request(request_url, None, headers)
+                parents = urllib2.urlopen(req).read()
+            except urllib2.HTTPError:
+                raise self.pool.get('res.config.settings').get_config_warning(cr, _("The Google Template cannot be found. Maybe it has been deleted."), context=context)
             parents_dict = json.loads(parents)
 
             record_url = "Click on link to open Record in OpenERP\n %s/?db=%s#id=%s&model=%s" % (google_web_base_url, cr.dbname, res_id, res_model)
@@ -138,7 +143,7 @@ class config(osv.osv):
     def _resource_get(self, cr, uid, ids, name, arg, context=None):
         result = {}
         for data in self.browse(cr, uid, ids, context):
-            mo = re.search("(key=|/d/)([A-Za-z0-9-]+)", data.google_drive_template_url)
+            mo = re.search("(key=|/d/)([A-Za-z0-9-_]+)", data.google_drive_template_url)
             if mo:
                 result[data.id] = mo.group(2)
             else:
