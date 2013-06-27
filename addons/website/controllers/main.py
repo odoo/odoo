@@ -62,14 +62,15 @@ class Website(openerp.addons.web.controllers.main.Home):
         return super(Website, self).index(*args, **kw)
 
     @http.route('/page/<path:path>', type='http', auth="db")
-    def page(self, **kw):
+    def page(self, path):
         editable = bool(request.session._uid)
+        uid = request.session._uid or openerp.SUPERUSER_ID
         try:
             request.session.check_security()
         except http.SessionExpiredException:
             editable = False
-        path =  kw['path']
-        modules = request.registry.get("ir.ui.view").render(request.cr, 1, path, {})
+            uid = openerp.SUPERUSER_ID
+        html = request.registry.get("ir.ui.view").render(request.cr, uid, path, {})
         if editable:
             html = html.replace('<!--editable-->', get_html_head())
         return html
