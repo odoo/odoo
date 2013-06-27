@@ -3808,9 +3808,13 @@ class stock_pack_operation(osv.osv):
         todo_on_moves = []
         product_ids = self._find_product_ids(cr, uid, operation_id, context=context)
         for product_id in product_ids:
-            corresponding_move_id = stock_move_obj.search(cr, uid, [('picking_id', '=', picking_id), ('product_id', '=', product_id)], context=context)[0]   # TODO: be safer
-            corresponding_move = stock_move_obj.browse(cr, uid, corresponding_move_id, context=context)
-            todo_on_moves += [(1, corresponding_move.id, {'remaining_qty': corresponding_move.product_qty - qty})]
+            corresponding_move_ids = stock_move_obj.search(cr, uid, [('picking_id', '=', picking_id), ('product_id', '=', product_id)], context=context)
+            if corresponding_move_ids:
+                corresponding_move = stock_move_obj.browse(cr, uid, corresponding_move_ids[0], context=context)
+                todo_on_moves += [(1, corresponding_move.id, {'remaining_qty': corresponding_move.product_qty - qty})]
+            else:
+                #decide what to do
+                pass
         return todo_on_moves, todo_on_operations
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
