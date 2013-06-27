@@ -354,7 +354,6 @@
                     <field name="no_of_hired_employee"/>
                     <field name="manager_id"/>
                     <field name="survey_id"/>
-                    <field name="message_summary"/>
                     <field name="state"/>
                     <templates>
                         <t t-name="kanban-box">
@@ -385,12 +384,13 @@
                                         <div class="oe_job_alias oe_kanban_ellipsis" t-if=" record.alias_id.value">
                                             <span class="oe_e">%%</span><small><field name="alias_id"/></small>
                                         </div>
-                                        <div class="oe_job oe_kanban_ellipsis">
+                                        <div class="oe_job oe_department">
                                             <field name="department_id"/>
+                                            <span t-if="record.manager_id.value" class="oe_manager_name">
+                                                (<t t-esc="record.manager_id.value"/>)
+                                            </span>
                                         </div>
-                                        <div class="oe_job oe_manager_name oe_kanban_ellipsis">
-                                            <t t-esc="record.manager_id.value"/>
-                                        </div>
+                                        
                                     </div>
                                     <t t-if="record.state.raw_value == 'recruit'">
                                         <div class="oe_applications">
@@ -412,9 +412,6 @@
                                         <a t-if="record.survey_id.raw_value"> | </a>
                                         <a t-if="record.state.raw_value == 'open'" data-name="job_recruitment" data-type="object" class="oe_kanban_action">Launch Recruitment</a>
                                         <a t-if="record.state.raw_value == 'recruit'" data-name="job_open" data-type="object" class="oe_kanban_action">Recruitment Done</a>
-                                    </div>
-                                    <div class="oe_kanban_footer_left oe_job_messages">
-                                        <t t-raw="record.message_summary.raw_value"/>
                                     </div>
                                 </div>
                             </div>
