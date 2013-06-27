@@ -11,4 +11,7 @@ OpenERP Website CMS
     'author': 'OpenERP SA',
     'depends': ['base'],
     'installable': True,
+    'data': [
+        'views/test.xml'
+    ]
 }

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="template1" model="ir.ui.view">
+            <field name="name">template1</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <html>
+                    <body>
+                        <header>This is the header</header>
+                        <div class="main">This is the main content</div>
+                        <nav>
+                            <ul class="menu_list">
+                                <li>Home</li>
+                                <li>About us</li>
+                            </ul>
+                        </nav>
+                    </body>
+                </html>
+            </field>
+        </record>
+
+        <record id="template2" model="ir.ui.view">
+            <field name="name">template2</field>
+            <field name="inherit_id" ref="template1"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="(//ul/li)[last()]" position="after">
+                        <li>Event</li>
+                    </xpath>
+               </data>
+            </field>
+        </record>
+
+        <menuitem name="Test views"
+            id="base.menu_test_view"
+            parent="base.menu_config"
+            sequence="80"/>
+
+     </data>
+</openerp>
