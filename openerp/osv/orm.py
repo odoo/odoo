@@ -3470,16 +3470,15 @@ class BaseModel(object):
         select = self.browse(ids)
         result = select.to_recordset()._read_flat(list(old_fields), load=load)
 
-        # associate each result to its corresponding record
-        record_values = [(self.record(values['id']), values) for values in result]
-
         # update record caches
+        model_cache = scope_proxy.cache[self._name]
         for f in old_fields:
             convert = self._fields[f].convert_from_read
-            for record, values in record_values:
-                record._record_cache[f] = convert(values[f])
+            for values in result:
+                model_cache[values['id']][f] = convert(values[f])
 
         # read new-style fields with records
+        record_values = [(self.record(values['id']), values) for values in result]
         for f in new_fields:
             convert = self._fields[f].convert_to_read
             for record, values in record_values:
@@ -5240,14 +5239,13 @@ class BaseModel(object):
     INSTANCE_ATTRIBUTES = [
         '_scope',                   # instances are attached to a scope
         '_record_id',               # a record refers to its id
-        '_record_cache',            # a record holds a cache for its own fields
         '_records',                 # a recordset refers to its records
     ]
 
     def null(self):
         """ Return a null instance attached to the current scope. """
         scope = scope_proxy.current
-        return self._make_instance(_scope=scope, _record_id=False, _record_cache={})
+        return self._make_instance(_scope=scope, _record_id=False)
 
     def record(self, arg):
         """ Return a record instance corresponding to `arg` (record or record
@@ -5265,8 +5263,8 @@ class BaseModel(object):
             return self.null()
 
         # arg is a record id; retrieve the corresponding record in the cache
-        record_cache = scope.cache[self._name][arg]
-        return self._make_instance(_scope=scope, _record_id=arg, _record_cache=record_cache)
+        scope.cache[self._name][arg]
+        return self._make_instance(_scope=scope, _record_id=arg)
 
     def recordset(self, args=()):
         """ Return a recordset instance corresponding to `args` (collection of
@@ -5348,15 +5346,14 @@ class BaseModel(object):
     def draft(self):
         """ Return a draft record attached to the current scope. """
         #
-        # Draft records have two (disjoint) cache dictionaries:
-        #  * _record_cache, the normal cache, comes from the database only;
+        # Draft records have a specific cache dictionary:
         #  * _record_draft contains the draft values set on the record.
         #
         # Draft records are not stored into the scope cache.
         #
         scope = scope_proxy.current
         return self._make_instance(_scope=scope, _record_id=False,
-                                   _record_cache={}, _record_draft={})
+                                   _record_draft={})
 
     def is_draft(self):
         """ Test whether `self` is a draft record. """
@@ -5436,22 +5433,26 @@ class BaseModel(object):
         if not self.is_record():
             raise ValueError("Expected record: %s" % self)
 
-        if name in self._record_cache:
-            return self._record_cache[name]
-
-        with self._scope:
-            # handle high-level fields
-            field = self._fields[name]
-
-            if self.is_null():
+        if self.is_null():
+            with self._scope:
                 if self.is_draft():
                     if name not in self._record_draft:
                         self.add_default_value(name)
                     value = self._record_draft[name]
                     if value is not None:
                         return value
+                return self._fields[name].null()
 
-                return field.null()
+        id = self._record_id
+        model_cache = self._scope.cache[self._name]
+        record_cache = model_cache[id]
+
+        if name in record_cache:
+            return record_cache[name]
+
+        with self._scope:
+            # handle high-level fields
+            field = self._fields[name]
 
             if not field.store:
                 # a "pure" function field, simply evaluate it on self
@@ -5459,15 +5460,14 @@ class BaseModel(object):
                 getattr(self, field.compute)()
                 if self.is_draft():
                     return self._record_draft[name]
-                return self._record_cache[name]
+                return record_cache[name]
 
             recomputing = scope_proxy.recomputing(self._name)
-            if recomputing and field.compute and \
-                    self._record_id in recomputing.get(name, ()):
+            if recomputing and field.compute and id in recomputing.get(name, ()):
                 # field is stored and must be recomputed (in batch!)
                 recs = self.recordset(recomputing[name]).exists()
                 getattr(recs, field.compute)()
-                return self._record_cache[name]
+                return record_cache[name]
 
             # handle the case of low-level fields
             column = self._columns[name]
@@ -5476,10 +5476,6 @@ class BaseModel(object):
                 # a pure function field: simply evaluate it for self
                 value = self.read([name], load="_classic_write")[name]
                 return field.convert_from_read(value)
-
-            # make sure that self is in cache
-            model_cache = self._scope.cache[self._name]
-            assert self._record_id in model_cache
 
             # fetch the record of this model without name in their cache
             fetch_ids = set(record_id
@@ -5500,24 +5496,24 @@ class BaseModel(object):
             if recomputing:
                 for fname in list(fetch_fields):
                     recompute_ids = recomputing.get(fname, set())
-                    if self._record_id in recompute_ids:
+                    if id in recompute_ids:
                         fetch_fields.discard(fname)     # do not fetch that field at all
                     else:
                         fetch_ids -= recompute_ids      # do not fetch those records
 
             # fetch and check result
-            assert name in fetch_fields and self._record_id in fetch_ids
+            assert name in fetch_fields and id in fetch_ids
             fetch_recs = self.recordset(fetch_ids)
             fetched = fetch_recs._fetch_fields(list(fetch_fields))
             if self not in fetched:
                 raise except_orm("AccessError", "%s does not exist." % self)
 
-            if name not in self._record_cache:
+            if name not in record_cache:
                 # How did this happen? Could be a missing model due to custom fields used too soon.
                 _logger.warning("Unknown field %r in %s" % (name, self))
                 raise KeyError(name)
 
-            return self._record_cache[name]
+            return record_cache[name]
 
     @api.recordset
     def _fetch_fields(self, field_names):
@@ -5539,11 +5535,9 @@ class BaseModel(object):
         if self.is_draft():
             for model, field, path in self._recompute[name]:
                 assert model == self._name
-                self._record_cache.pop(field, None)
                 self._record_draft.pop(field, None)
             # store the value in the draft cache, and keep caches disjoint
             self._record_draft[name] = value
-            self._record_cache.pop(name, False)
             return
 
         if self.is_null():
@@ -5557,7 +5551,7 @@ class BaseModel(object):
                 self.write({name: field.convert_to_write(value)})
 
         # store value in cache (here because write() invalidates the cache!)
-        self._record_cache[name] = value
+        self._scope.cache[self._name][self._record_id][name] = value
 
     def __getitem__(self, key):
         """ If `self` is a record, return the value of the field named `key`.
@@ -5726,14 +5720,25 @@ class BaseModel(object):
 
     @api.model
     def onchange(self, id, changed, values):
-        record = self.draft()
-        record._record_cache = dict(
-            (k, v) for k, v in values.iteritems() if k != changed)
+        # convert values to the record level
+        values = dict(
+            (k, self._fields[k].convert_from_read(v))
+            for k, v in values.iteritems()
+        )
 
+        # create a draft with those values
+        record = self.draft()
+        record._record_draft.update(values)
+
+        # assign the changed field, in order to provoke some effect
         record[changed] = values[changed]
 
-        return dict((k, record[k]) for k, v in values.iteritems()
-                    if record[k] != v)
+        # check field values
+        res = {}
+        for k, v in values.iteritems():
+            if record[k] != v:
+                res[k] = self._fields[k].convert_to_write(record[k])
+        return res
 
 # for instance checking
 class Null(object):
