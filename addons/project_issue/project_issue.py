@@ -20,7 +20,6 @@
 ##############################################################################
 
 from openerp import SUPERUSER_ID
-from openerp.addons.base_status.base_stage import base_stage
 from openerp.addons.crm import crm
 from datetime import datetime
 from openerp.osv import fields, osv, orm
@@ -29,7 +28,7 @@ import time
 from openerp import tools
 from openerp.tools import html2plaintext
 
-class project_issue_version(osv.osv):
+class project_issue_version(osv.Model):
     _name = "project.issue.version"
     _order = "name desc"
     _columns = {
@@ -40,7 +39,7 @@ class project_issue_version(osv.osv):
         'active': 1,
     }
 
-class project_issue(base_stage, osv.osv):
+class project_issue(osv.Model):
     _name = "project.issue"
     _description = "Project Issue"
     _order = "priority, create_date desc"
@@ -51,9 +50,9 @@ class project_issue(base_stage, osv.osv):
             'project_issue.mt_issue_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence == 1,
             'project_issue.mt_issue_stage': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence != 1,
         },
-        'user_id': {
-            'project_issue.mt_issue_assigned': lambda self, cr, uid, obj, ctx=None: obj.user_id,
-        },
+        # 'user_id': {
+        #     'project_issue.mt_issue_assigned': lambda self, cr, uid, obj, ctx=None: obj.user_id and obj.user_id.id,
+        # },
         'kanban_state': {
             'project_issue.mt_issue_blocked': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'blocked',
         },
@@ -293,10 +292,7 @@ class project_issue(base_stage, osv.osv):
 
     _defaults = {
         'active': 1,
-        'partner_id': lambda s, cr, uid, c: s._get_default_partner(cr, uid, c),
-        'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c),
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
-        'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': crm.AVAILABLE_PRIORITIES[2][0],
         'kanban_state': 'normal',
@@ -552,7 +548,7 @@ class project_issue(base_stage, osv.osv):
         if context is None:
             context = {}
         res = super(project_issue, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)
-        if thread_id:
+        if thread_id and subtype:
             self.write(cr, SUPERUSER_ID, thread_id, {'date_action_last': fields.datetime.now()}, context=context)
         return res
 
