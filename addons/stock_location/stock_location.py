@@ -98,10 +98,9 @@ class product_putaway_strategy(osv.osv):
     _description = 'Put Away Strategy'
     _columns = {
         'product_ids':fields.function(_calc_product_ids, "Products"), 
-        'product_categ_id':fields.many2one('product.category', 'Product Category'),
-        'location_id': fields.many2one('stock.location','Parent Location', help="Parent Destination Location from which a child bin location needs to be chosen"), #domain=[('type', '=', 'parent')], 
-        'method': fields.selection([('nearest_empty','Nearest Empty Location'), ('add_or_nearest_empty', 'Try to add on another location, otherwise nearest empty'), ('L2R', 'left to right'), ('R2L', 'right to left'), 
-                                    ('high2low', 'high to low'), ('low2high', 'low to high'), ('fixed', 'Fixed Location')], "Method"),
+        'product_categ_id':fields.many2one('product.category', 'Product Category', required=True),
+        'location_id': fields.many2one('stock.location','Parent Location', help="Parent Destination Location from which a child bin location needs to be chosen", required=True), #domain=[('type', '=', 'parent')], 
+        'method': fields.selection([('empty', 'Empty'), ('fixed', 'Fixed Location')], "Method", required = True),
                 }
 
 
@@ -117,9 +116,9 @@ class product_removal_strategy(osv.osv):
     _description = 'Removal Strategy'
     _columns = {
         'product_ids':fields.function(_calc_product_ids, "Products"),
-        'product_categ_id':fields.many2one('product.category', 'Product Category'),
-        'location_id': fields.many2one('stock.location', 'Parent Location', help="Parent Source Location from which a child bin location needs to be chosen"), #, domain=[('type', '=', 'parent')]
-        'method': fields.selection([('fifo', 'FIFO'), ('lifo', 'LIFO'), ('nearest', 'Nearest location')], "Method"), 
+        'product_categ_id':fields.many2one('product.category', 'Product Category', required=True),
+        'location_id': fields.many2one('stock.location', 'Parent Location', help="Parent Source Location from which a child bin location needs to be chosen", required=True), #, domain=[('type', '=', 'parent')]
+        'method': fields.selection([('fifo', 'FIFO'), ('lifo', 'LIFO')], "Method", required=True), 
         }
 
 
@@ -197,13 +196,17 @@ class stock_location(osv.osv):
         return strats and strats[0] or 'nearest'
 
     def get_removal_strategy(self, cr, uid, id, product_id, context=None):
+        #TODO improve code
         product = self.pool.get("product.product").browse(cr, uid, product_id, context=context)
-        strats = self.pool.get('product.removal').search(cr, uid, [('location_id','=',id), ('product_categ_id','child_of', product.categ_id.id)], context=context) #Also child_of for location???
+        strats = self.pool.get('product.removal').search(cr, uid, [('location_id','=',id), ('product_categ_id','=', product.categ_id.id)], context=context) #Also child_of for location???
         if not strats: 
             strat = product.categ_id.removal_strategy
         else: 
             strat = strats[0]
         return strat or product.categ_id.removal_strategy or 'fifo'
+
+        return super(stock_location, self).get_removal_strategy(cr, uid, id, product_id, context=context)
+
     
     def chained_location_get(self, cr, uid, location, partner=None, product=None, context=None):
         if product:

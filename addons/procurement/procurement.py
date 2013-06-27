@@ -65,6 +65,7 @@ class StockMove(osv.osv):
     _inherit = 'stock.move'
     _columns= {
         'procurements': fields.one2many('procurement.order', 'move_id', 'Procurements'),
+        'group_id':fields.many2one('stock.move.group', 'Move Group'), 
     }
 
     def copy_data(self, cr, uid, id, default=None, context=None):
@@ -72,6 +73,28 @@ class StockMove(osv.osv):
             default = {}
         default['procurements'] = []
         return super(StockMove, self).copy_data(cr, uid, id, default, context=context)
+
+
+class move_group(osv.osv):
+    '''
+    The procurement requirement class is used to group procurement orders. 
+    The goal is that when you have one delivery order of several products
+    and the products are pulled from the same or several location(s), to keep having
+    the moves grouped into pickings.  
+    
+    As the pulled moves are created by the procurement orders who are created by moves/SO/..., 
+    the procurement requisition will bundle these procurement orders according to the same original picking
+    
+    Suppose you have 4 lines on a picking from Output where 2 lines will need to come from Input and 2 lines coming from Stock -> Output
+    As the four procurement orders will have the same group ids from the SO, the move from input will have a stock.picking with 2 grouped lines
+    and the move from stock will have 2 grouped lines also.  
+    '''
+    _name = 'stock.move.group'
+    _columns = {
+        'name': fields.char('Name'), 
+        'sequence_id': fields.many2one('ir.sequence', 'Group Sequence', help="Move group sequence"), 
+        }
+
 
 
 class procurement_order(osv.osv):
@@ -96,8 +119,8 @@ class procurement_order(osv.osv):
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True, states={'draft':[('readonly',False)]}, readonly=True),
         'product_uos_qty': fields.float('UoS Quantity', states={'draft':[('readonly',False)]}, readonly=True),
         'product_uos': fields.many2one('product.uom', 'Product UoS', states={'draft':[('readonly',False)]}, readonly=True),
-        'move_id': fields.many2one('stock.move', 'Reservation', ondelete='set null'),
         'close_move': fields.boolean('Close Move at end'),
+        'move_id': fields.many2one('stock.move', 'Reservation', ondelete='set null'),
         'location_id': fields.many2one('stock.location', 'Location', required=True, states={'draft':[('readonly',False)]}, readonly=True),
         'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procurement Method', states={'draft':[('readonly',False)], 'confirmed':[('readonly',False)]},
             readonly=True, required=True, help="If you encode manually a Procurement, you probably want to use" \
@@ -117,6 +140,7 @@ class procurement_order(osv.osv):
             \nAfter confirming the status is set to \'Running\'.\n If any exception arises in the order then the status is set to \'Exception\'.\n Once the exception is removed the status becomes \'Ready\'.\n It is in \'Waiting\'. status when the procurement is waiting for another one to finish.'),
         'note': fields.text('Note'),
         'company_id': fields.many2one('res.company','Company',required=True),
+        'group_id':fields.many2one('stock.move.group', 'Move Group'), 
     }
     _defaults = {
         'state': 'draft',
@@ -305,6 +329,8 @@ class procurement_order(osv.osv):
         @return: True
         """
         move_obj = self.pool.get('stock.move')
+        mod_obj = self.pool.get('ir.model.data')
+        location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', 'stock_location_customers')
         for procurement in self.browse(cr, uid, ids, context=context):
             if procurement.product_qty <= 0.00:
                 raise osv.except_osv(_('Data Insufficient!'),
@@ -312,7 +338,7 @@ class procurement_order(osv.osv):
             if procurement.product_id.type in ('product', 'consu'):
                 if not procurement.move_id:
                     source = procurement.location_id.id
-                    if procurement.procure_method == 'make_to_order':
+                    if procurement.procure_method == 'make_to_order':#and source != location_id: Last statement is not good
                         source = procurement.product_id.property_stock_procurement.id
                     id = move_obj.create(cr, uid, {
                         'name': procurement.name,
@@ -328,7 +354,23 @@ class procurement_order(osv.osv):
                     })
                     move_obj.action_confirm(cr, uid, [id], context=context)
                     self.write(cr, uid, [procurement.id], {'move_id': id, 'close_move': 1})
-        self.write(cr, uid, ids, {'state': 'confirmed', 'message': ''})
+                self.write(cr, uid, [procurement.id], {'state': 'confirmed', 'message': ''})
+                    #Now check if all the moves of group TODO
+
+#                 if procurement.group_id: 
+#                     procs = move_obj.search(cr, uid, [('group_id', '=', procurement.group_id.id), ('state', '=', 'draft')], context=context)
+#                     
+#                     #If can not find any => confirm pickings which have moves from this group
+#                     if not procs: 
+#                         print "CONFIRM REST"
+#                         # Find pickings from this group that need to be confirmed
+#                         moves = move_obj.search(cr, uid, [('group_id', '=', procurement.group_id.id), ('state', '=', 'draft')], context=context)
+#                         pickings = []
+#                         for move in move_obj.browse(cr, uid, moves, context=context): 
+#                             pickings.append(move.picking_id.id)
+#                         pickings = list(set(pickings))
+#                         if pickings:
+#                             self.pool.get('stock.picking').signal_button_confirm(cr, uid, pickings)
         return True
 
     def action_move_assigned(self, cr, uid, ids, context=None):
