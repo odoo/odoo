@@ -1610,6 +1610,9 @@ class stock_picking(osv.osv):
             #pack existing packs
             if operation.package_id and operation.result_package_id:
                 self.pool.get('stock.quant.package').write(cr, uid, operation.package_id.id, {'parent_id': operation.result_package_id.id}, context=context)
+            if operation.result_package_id:
+                if operation.package_id:
+                    pass
         #don't call action_done of picking because it will make all moves don, but make a partial delivery
         #self.action_done(cr, uid, picking_id, context=context)
         #return id of next picking to work on
@@ -1644,6 +1647,8 @@ class stock_picking(osv.osv):
         product_obj = self.pool.get('product.product')
         stock_operation_obj = self.pool.get('stock.pack.operation')
         error_msg = ''
+        todo_on_moves = []
+        todo_on_operations = []
 
         #check if the barcode correspond to a product
         matching_product_ids = product_obj.search(cr, uid, ['|', ('code', '=', barcode_str), ('ean13', '=', barcode_str)], context=context)
