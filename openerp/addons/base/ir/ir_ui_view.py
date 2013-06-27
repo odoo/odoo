@@ -137,7 +137,7 @@ class view(osv.osv):
             else:
                 values['type'] = etree.fromstring(values['arch'].encode('utf8')).tag
         if not values.get('name'):
-            values['name'] = "%s %s" % (values['model'], values[''])
+            values['name'] = "%s %s" % (values['model'], values['type'])
         return super(view, self).create(cr, uid, values, context)
 
     def _relaxng(self):
