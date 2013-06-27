@@ -1608,12 +1608,18 @@ class stock_picking(osv.osv):
     def action_done_from_packing_ui(self, cr, uid, picking_id, context=None):
         #fill all the packages with assigned operations
         for operation in self.browse(cr, uid, picking_id, context=context).pack_operation_ids:
-            #pack existing packs
-            if operation.package_id and operation.result_package_id:
-                self.pool.get('stock.quant.package').write(cr, uid, operation.package_id.id, {'parent_id': operation.result_package_id.id}, context=context)
             if operation.result_package_id:
                 if operation.package_id:
-                    pass
+                    #pack existing packs
+                    self.pool.get('stock.quant.package').write(cr, uid, operation.package_id.id, {'parent_id': operation.result_package_id.id}, context=context)
+                elif operation.quant_id:
+                    if operation.quant_id.parent_id:
+                        # decide what to do
+                        pass
+                    #assign_pack may split the quant and write the package on it (above test should be in that method instead)
+                    self.pool.get('stock.quant').assign_pack(cr, uid, operation.quant_id.id, operation.product_qty, operation.result_package_id.id, context=context)
+                elif operation.product_id:
+                    pass 
         #don't call action_done of picking because it will make all moves don, but make a partial delivery
         #self.action_done(cr, uid, picking_id, context=context)
         #return id of next picking to work on
@@ -3695,7 +3701,7 @@ class stock_package(osv.osv):
         'children_ids': fields.one2many('stock.quant.package', 'parent_id', 'Packaged Content'),
         'location_id': fields.related('quant_ids', 'location_id', type='many2one', relation='stock.location', string='Location', readonly=True),
         'pack_operation_id': fields.many2one('stock.pack.operation', string="Package Operation", help="The pack operation that built this package"),
-        'picking_id': fields.related('pack_operation_id', 'picking_id', 'Related Picking'),
+        'picking_id': fields.related('pack_operation_id', 'picking_id', type='many2one', relation="stock.picking", string='Related Picking'),
     }
 
     def _check_location(self, cr, uid, ids, context=None):
