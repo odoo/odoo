@@ -37,17 +37,21 @@ function openerp_picking_widgets(instance){
     module.PackageEditorWidget = instance.web.Widget.extend({
         template: 'PackageEditorWidget',
         get_header: function(){
-            return this._header || 'Package: 032 ';
+            var model = this.getParent();
+            return model.current_package_id ? 'Current Operations for package: ' + model.current_package_id[1] : 'Current Operations';
         },
         get_rows: function(){
             var model = this.getParent();
             var rows = [];
             
             _.each( model.operations, function(op){
+                if(model.current_package_id && op.package_id !== model.current_package_id){
+                    return;
+                }
                 rows.push({
                     cols: {
                         product: op.product_id[1],
-                        uom: op.product_uom ? product_uom[1] : 'false',
+                        uom: op.product_uom ? product_uom[1] : '',
                         qty: op.product_qty,
                     }
                 });
@@ -80,10 +84,12 @@ function openerp_picking_widgets(instance){
             this.picking = null;
             this.movelines = null;
             this.operations = null;
+            this.current_package_id = instance.session.user_context.current_package_id;
             
             window.pickwidget = this;
             
             console.log('Action params:', params);
+            console.log('Session:',instance.session);
 
             this.loaded = new instance.web.Model('stock.picking.in')
                 .query()
@@ -107,6 +113,7 @@ function openerp_picking_widgets(instance){
         start: function(){
             var self = this;
             instance.webclient.set_content_full_screen(true);
+            this.connect_barcode_scanner();
 
             this.$('.js_pick_quit').click(function(){ self.quit(); });
 
@@ -126,6 +133,7 @@ function openerp_picking_widgets(instance){
         },
         scan: function(ean){
             var self = this;
+            console.log('Scan: ',ean);
             new instance.web.Model('stock.picking')
                 .call('get_barcode_and_return_todo_stuff', [this.picking.id, ean])
                 .then(function(todo){
@@ -167,8 +175,32 @@ function openerp_picking_widgets(instance){
                         });
                 });
         },
+        connect_barcode_scanner: function(){
+            var self =this;
+            var code = [];
+            var timestamp = 0;
+            $('body').delegate('','keyup',function(e){
+                if (e.keyCode >= 48 && e.keyCode < 58){
+                    if(timestamp + 30 < new Date().getTime()){
+                        code = [];
+                    }
+                    timestamp = new Date().getTime();
+                    code.push(e.keyCode - 48);
+                    if(code.length === 13){
+                        self.scan(code.join(''));
+                        code = [];
+                    }
+                }else{
+                    code = [];
+                }
+            });
+        },
+        disconnect_barcode_scanner: function(){
+            $('body').undelegate('', 'keyup')
+        },
         quit: function(){
             console.log('Quit');
+            disconnect_barcode_scanner();
             instance.webclient.set_content_full_screen(false);
             window.location = '/'; // FIXME THIS IS SHIT NIV WILL KILL YOU (BY MULTIPLE FACE-STABBING) IF YOU MERGE THIS IN TRUNK
         },
