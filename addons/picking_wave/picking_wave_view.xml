@@ -1,0 +1,82 @@
+<openerp>
+    <data>
+        <record id="view_picking_wave_form" model="ir.ui.view">
+            <field name="name">picking.wave.form</field>
+            <field name="model">picking.wave</field>
+            <field name="arch" type="xml">
+                <form string="Stock Inventory Lines" version="7.0">
+                    <sheet>
+                        <div class="oe_right oe_button_box">
+                        <button name="confirm_picking" string="Confirm all pickings" type="object"/>
+                        <button name="cancel_picking" string="Cancel all pickings" type="object"/>
+                    </div>
+                        <group>
+                    <group>
+                        <field name="name"/>
+                        <field name="resp_id"/>
+                    </group>
+                    <group>
+                        <label for="capacity"/>
+                        <div>
+                            <field name="capacity" class="oe_inline"/>
+                            <field name="capacity_uom" class="oe_inline"/>
+                        </div>
+                        <field name="time" widget="float_time"/>
+                    </group>
+                </group>
+                <separator string="Pickings"/>
+                    <field name="picking_ids" widget="many2many">
+                        <tree>
+                            <field name="name"/>
+                            <field name="backorder_id"/>
+                            <field name="origin"/>
+                            <field name="date"/>
+                            <field name="min_date"/>
+                            <field name="invoice_state"/>
+                            <field name="stock_journal_id" widget="selection"/>
+                            <field name="state"/>
+                            <button name="wave_confirm_picking" string="Confirm picking" type="object" icon="gtk-apply" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}"/>
+                            <button name="wave_cancel_picking" string="Cancel picking" type="object" icon="gtk-cancel" attrs="{'invisible': [('state', 'in', ('done', 'cancel'))]}"/>
+                        </tree>
+                    </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="view_picking_wave_tree" model="ir.ui.view">
+            <field name="name">picking.wave.tree</field>
+            <field name="model">picking.wave</field>
+            <field name="arch" type="xml">
+                <tree string="Picking Waves">
+                    <field name="name"/>
+                    <field name="resp_id"/>
+                    <field name="capacity"/>
+                    <field name="capacity_uom"/>
+                    <field name="time" widget="float_time"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="action_picking_wave" model="ir.actions.act_window">
+            <field name="name">Picking Waves</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">picking.wave</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a Picking Wave. 
+              </p><p>
+                The Goal of the picking waves is to group operations that may 
+                (needs to) be done together in order to increase their efficiency.
+                It may also be useful to assign jobs (one person = one wave) or
+                help the timing management of operations (tasks to be done at 1pm).
+              </p>
+            </field>
+        </record>
+        <menuitem action="action_picking_wave" id="menu_action_picking_wave" parent="stock.menu_stock_warehouse_mgmt" sequence="30"/>
+    </data>
+</openerp>
