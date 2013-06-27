@@ -3,12 +3,14 @@
     // TODO: Webclient research : use iframe embedding mode
     //       Meanwhile, let's HACK !!!
     var $web = $('<div style="display: none;"/>').appendTo('body');
-    var s = new openerp.init(['web']);
+    var s = new openerp.init(['web', 'website']);
     s.web.WebClient.bind_hashchange = s.web.blockUI = s.web.unblockUI = function() {};
     s.web.WebClient.include({ do_push_state: function() {} });
     var wc = new s.web.WebClient();
     wc.appendTo($web);
     var instance = openerp.instances[wc.session.name];
+    // Another hack since we have no callback when webclient has loaded modules.
+    instance.web.qweb.add_template('/website/static/src/xml/website.xml');
 
     setTimeout(function () {
         // HACKY HACK YUCK YUCK !!
@@ -23,25 +25,8 @@
     }, 2000);
 
     $(function() {
-        $('.editable').css('outline', '1px dotted red').attr('contentEditable', 'true').click(function (e) {
-            e.stopPropagation();
-            e.preventDefault();
-        });
-        $('body').on("keypress", ".editable", function(e) {
-            if (e.which == 13) {
-                var $el = $(e.currentTarget);
-                var data = $el.data();
-                var update = {};
-                // TODO: Are we going to use a meta-data flag in order to know if the field shall be text or html ?
-                update[data.field] = $el.text();
-                (new instance.web.DataSet(this, data.model)).write(data.id, update).done(function() {
-                    $el.blur();
-                    instance.webclient.do_notify('Save', _.str.sprintf('%s#%d#%s saved', data.model, data.id, data.field));
-                }).fail(function () {
-                    console.error('fail');
-                });
-                e.preventDefault();
-            }
-        });
+        var editor = new instance.website.EditorBar(instance.webclient);
+        editor.prependTo($('body'));
+        $('body').css('padding-top', editor.$el.outerHeight());
     });
 })();

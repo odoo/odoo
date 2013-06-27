@@ -2,8 +2,7 @@
     'name': 'Website',
     'category': 'CMS',
     'version': '1.0',
-    'description':
-        """
+    'description': """
 OpenERP Website CMS
 ===================
 
@@ -13,5 +12,8 @@ OpenERP Website CMS
     'installable': True,
     'data': [
         'views/test.xml'
-    ]
+    ],
+    'js': ['static/src/js/website.js'],
+    'css': ['static/src/css/website.css'],
+    'qweb': ['static/src/xml/*.xml'],
 }

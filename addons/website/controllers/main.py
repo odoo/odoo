@@ -10,7 +10,7 @@ from openerp.addons.web.http import request
 def get_html_head():
     head = ['<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', db=request.db)]
     head += ['<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', db=request.db)]
-    head += ['<script type="text/javascript" src="/website/static/src/js/website_editor.js"></script>']
+    head += ['<script type="text/javascript" src="/website/static/src/js/website_bootstrap.js"></script>']
     return "\n        ".join(head)
 
 # WIIIP !!
@@ -23,13 +23,13 @@ module_template = Template("""
                 </div>
             </div>
             <div
-                class='oe_app_name editable'
+                class='oe_app_name oe_editable'
                 data-model='ir.module.module'
                 data-id='{{ module.id }}'
                 data-field='shortdesc'
             >{{ module.shortdesc }}</div>
             <div
-                class='oe_app_descr editable'
+                class='oe_app_descr oe_editable'
                 data-model='ir.module.module'
                 data-id='{{ module.id }}'
                 data-field='summary'
