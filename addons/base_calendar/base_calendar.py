@@ -404,25 +404,17 @@ property or property parameter."),
             attendee_add.value = 'MAILTO:' + (attendee.email or '')
         res = cal.serialize()
         return res
+
     def meeting_invitation(self, cr, uid, ids,context=None):
         partner_obj =  self.browse(cr,uid, ids,context=context)
-        for event_id in  self.browse(cr, uid, ids, context):
-            event_id = event_id.ref.id
+        action_id=self.pool.get('ir.actions.act_window').search(cr, uid, [('res_model','=','crm.meeting')], context=context)
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
         for partner in partner_obj:
-            if partner and partner.user_id:
-                related_user = partner.user_id
-                base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-                query = {'db': cr.dbname}
-                fragment = {
-                    'login': related_user.login,
-                    'model': "crm.meeting",
-                    'view_type' : "form",
-                    'res_id': event_id,
-                     }
-                url = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
+            if partner and partner.ref.user_id:
+                base_url += '/meeting/meeting_invitation?db=%s&debug=&token=%s&action=%s' % (cr.dbname, ids[0],action_id[0]);
             else :
-                url = "https://openerp.my.openerp.com/#"
-        return url
+                base_url += "/auth_signup"
+        return base_url
 
     def _send_mail(self, cr, uid, ids, mail_to, email_from=tools.config.get('email_from', False), context=None):
         """
@@ -532,15 +524,16 @@ property or property parameter."),
         """
         if context is None:
             context = {}
-
+        meeting_obj =  self.pool.get('crm.meeting')
         for vals in self.browse(cr, uid, ids, context=context):
             if vals.ref and vals.ref.user_id:
                 mod_obj = self.pool[vals.ref._name]
                 res=mod_obj.read(cr,uid,[vals.ref.id],['duration','class'],context)
                 defaults = {'user_id': vals.user_id.id, 'organizer_id': vals.ref.user_id.id,'duration':res[0]['duration'],'class':res[0]['class']}
-                mod_obj.copy(cr, uid, vals.ref.id, default=defaults, context=context)
+#                mod_obj.copy(cr, uid, vals.ref.id, default=defaults, context=context)
+            meeting_id = meeting_obj.search(cr, uid, [('attendee_ids','=',vals.id)],context = context)
+            meeting_obj.message_post(cr, uid, meeting_id, body=_(("%s has Accept the meeting") % (vals.cn)), context=context)
             self.write(cr, uid, vals.id, {'state': 'accepted'}, context)
-
         return True
 
     def do_decline(self, cr, uid, ids, context=None, *args):
@@ -555,6 +548,10 @@ property or property parameter."),
         """
         if context is None:
             context = {}
+        meeting_obj =  self.pool.get('crm.meeting')
+        vals=self.browse(cr, uid, ids, context=context)[0]
+        meeting_id = meeting_obj.search(cr, uid, [('attendee_ids','=',vals.id)],context = context)
+        meeting_obj.message_post(cr, uid, meeting_id, body=_(("%s has Reject the meeting") % (vals.cn)), context=context)
         return self.write(cr, uid, ids, {'state': 'declined'}, context)
 
     def create(self, cr, uid, vals, context=None):
