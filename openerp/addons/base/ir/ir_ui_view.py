@@ -19,12 +19,12 @@
 #
 ##############################################################################
 import copy
-
-import logging
 import itertools
-from lxml import etree
+import logging
 import os
 import time
+
+from lxml import etree
 
 from openerp import tools
 from openerp.modules import module
@@ -829,6 +829,13 @@ class view(osv.osv):
                 raise orm.except_orm('View error', msg)
         return arch, fields
 
+    def render(self, cr, uid, id_or_xml_id, values, context=None):
+        def loader(name):
+            xml = self.read_combined(self, cr, uid, id_or_xml_id, context=context)
+            return xml['arch']
+        engine = openerp.tools.qweb.QWebXml(loader)
+        return engine.render(id_or_xml_id, values)
+
 class view_sc(osv.osv):
     _name = 'ir.ui.view_sc'
     _columns = {
@@ -863,6 +870,7 @@ class view_sc(osv.osv):
     _sql_constraints = [
         ('shortcut_unique', 'unique(res_id, resource, user_id)', 'Shortcut for this menu already exists!'),
     ]
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
