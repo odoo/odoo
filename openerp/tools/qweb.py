@@ -1,5 +1,7 @@
-import xml
-import re
+import cgi
+import types
+
+import xml   # FIXME use lxml
 
 class QWebEval(object):
     def __init__(self,data):
@@ -87,16 +89,16 @@ class QWebXml(object):
         for n in dom.documentElement.childNodes:
             if n.nodeName=="t":
                 self._t[str(n.getAttribute("t-name"))]=n
-    def get_template(self,name):
+
+    def get_template(self, name):
         if name in self._t:
             return self._t[name]
         else:
-            xml = loader(name)
-            add_template(xml)
+            xml = self.loader(name)
+            self.add_template(xml)
             if name in self._t:
                 return self._t[name]
-        return 'qweb: template "%s" not found' % name
-
+        raise KeyError('qweb: template "%s" not found' % name)
 
     def eval_object(self,expr,v):
         return QWebEval(v).eval_object(expr)
