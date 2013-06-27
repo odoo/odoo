@@ -124,6 +124,7 @@ function openerp_picking_widgets(instance){
             this.connect_barcode_scanner();
 
             this.$('.js_pick_quit').click(function(){ self.quit(); });
+            this.$('.js_pick_pack').click(function(){ self.pack(); });
 
             $.when(this.loaded).done(function(){
                 self.picking_editor = new module.PickingEditorWidget(self);
@@ -177,6 +178,31 @@ function openerp_picking_widgets(instance){
                 }).then(function(picking){
                     self.picking = picking[0];
                     console.log('New Picking: ',self.picking);
+
+                    return new instance.web.Model('stock.pack.operation').call('read',[self.picking.pack_operation_ids, []])
+                }).then(function(operations){
+                    console.log('New Operations: ',operations);
+                    self.operations = operations;
+
+                    return new instance.web.Model('stock.quant.package').call('read',[self.picking.package_ids, []]);
+                }).then(function(packages){
+                    console.log('New Packages: ',packages);
+                    self.packages = packages;
+
+                    self.picking_editor.renderElement();
+                    self.package_editor.renderElement();
+                    self.package_selector.renderElement();
+                    console.log('Updated the UI');
+                });
+        },
+        pack: function(){
+            var self = this;
+            console.log('Pack');
+            new instance.web.Model('stock.picking').call('action_pack',[[self.picking.id]])
+                .then(function(){
+                    instance.session.user_context.current_package_id = false;
+                    self.current_package_id = instance.session.user_context.current_package_id; 
+                    console.log('Context Reset');
 
                     return new instance.web.Model('stock.pack.operation').call('read',[self.picking.pack_operation_ids, []])
                 }).then(function(operations){
