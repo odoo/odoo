@@ -131,11 +131,12 @@ class view(osv.osv):
     _relaxng_validator = None
 
     def create(self, cr, uid, values, context=None):
-        if not 'type' in values:
+        if 'type' not in values:
             if values.get('inherit_id'):
                 values['type'] = self.browse(cr, uid, values['inherit_id'], context).type
             else:
-                values['type'] = etree.fromstring(values['arch'].encode('utf8')).tag
+                values['type'] = etree.fromstring(values['arch']).tag
+
         if not values.get('name'):
             values['name'] = "%s %s" % (values['model'], values['type'])
         return super(view, self).create(cr, uid, values, context)
