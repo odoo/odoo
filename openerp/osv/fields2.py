@@ -127,25 +127,13 @@ class Field(object):
 
     def to_column(self):
         """ return a low-level field object corresponding to `self` """
-        kwargs = dict((attr, getattr(self, attr)) for attr in self._attrs)
-        if self.store:
-            column_type = getattr(fields, self.type)
-        else:
-            from . import api
-            column_type = fields.function
-            kwargs['store'] = False
-            kwargs['type'] = self.type
-            @api.recordset
-            def fnct(self, field_name, arg):
-                return dict((record.id, record[field_name])
-                            for record in self.exists())
-            kwargs['fnct'] = fnct
+        assert self.store
+        kwargs = self._to_column()
+        return getattr(fields, self.type)(**kwargs)
 
-        column_type, kwargs = self._to_column(column_type, kwargs)
-        return column_type(**kwargs)
-
-    def _to_column(self, column_type, kwargs):
-        return column_type, kwargs
+    def _to_column(self):
+        """ return a kwargs dictionary to pass to the column class """
+        return dict((attr, getattr(self, attr)) for attr in self._attrs)
 
     def __get__(self, instance, owner):
         """ read the value of field `self` for the record `instance` """
@@ -333,11 +321,12 @@ class Selection(Field):
         desc['selection'] = self.get_selection()
         return desc
 
-    def _to_column(self, column_type, kwargs):
+    def _to_column(self):
+        kwargs = super(Selection, self)._to_column()
         if isinstance(self.selection, basestring):
             method = self.selection
             kwargs['selection'] = lambda self, *args, **kwargs: getattr(self, method)(*args, **kwargs)
-        return super(Selection, self)._to_column(column_type, kwargs)
+        return kwargs
 
     def get_selection(self):
         """ return the selection list (pairs (value, string)) """
@@ -439,10 +428,11 @@ class Many2one(Field):
         kwargs['comodel'] = column._obj
         return cls(**kwargs)
 
-    def _to_column(self, column_type, kwargs):
+    def _to_column(self):
+        kwargs = super(Many2one, self)._to_column()
         kwargs['obj'] = self.comodel
         kwargs['domain'] = self.domain or []
-        return super(Many2one, self)._to_column(column_type, kwargs)
+        return kwargs
 
     def null(self):
         return scope.model(self.comodel).null()
@@ -504,11 +494,12 @@ class One2many(Field):
         kwargs['inverse'] = getattr(column, '_fields_id', None)
         return cls(**kwargs)
 
-    def _to_column(self, column_type, kwargs):
+    def _to_column(self):
+        kwargs = super(One2many, self)._to_column()
         kwargs['obj'] = self.comodel
         kwargs['fields_id'] = self.inverse
         kwargs['domain'] = self.domain or []
-        return super(One2many, self)._to_column(column_type, kwargs)
+        return kwargs
 
     def null(self):
         return scope.model(self.comodel).recordset()
@@ -581,13 +572,14 @@ class Many2many(Field):
         kwargs['column2'] = getattr(column, '_id2', None)
         return cls(**kwargs)
 
-    def _to_column(self, column_type, kwargs):
+    def _to_column(self):
+        kwargs = super(Many2many, self)._to_column()
         kwargs['obj'] = self.comodel
         kwargs['rel'] = self.relation
         kwargs['id1'] = self.column1
         kwargs['id2'] = self.column2
         kwargs['domain'] = self.domain or []
-        return super(Many2many, self)._to_column(column_type, kwargs)
+        return kwargs
 
     def null(self):
         return scope.model(self.comodel).recordset()
@@ -649,12 +641,6 @@ class Related(Field):
     def _from_column(cls, column):
         raise NotImplementedError()
 
-    def to_column(self):
-        if self.store:
-            raise NotImplementedError()
-
-        return super(Related, self).to_column()
-
     def __get__(self, instance, owner):
         if instance is None:
             return self
@@ -698,9 +684,6 @@ class Id(Field):
 
     @classmethod
     def _from_column(cls, column):
-        raise NotImplementedError()
-
-    def to_column(self):
         raise NotImplementedError()
 
     def __get__(self, instance, owner):

@@ -593,7 +593,7 @@ class BaseModel(object):
         else:
             _logger.warning("In model %r, member %r is not a field", cls._name, name)
 
-        if not field.interface:
+        if field.store and not field.interface:
             _logger.debug("Create column for field %s.%s", cls._name, name)
             cls._columns[name] = field.to_column()
 
@@ -3449,26 +3449,32 @@ class BaseModel(object):
         self.check_access_rights(cr, user, 'read')
         fields = self.check_field_access_rights(cr, user, 'read', fields)
 
-        fields = set(fields if fields is not None else self._columns)
+        # split up fields into old-style and pure new-style ones
+        if fields is None:
+            old_fields = set(self._columns)
+            new_fields = set(self._fields) - old_fields
+        else:
+            old_fields = set(fields) & set(self._columns)
+            new_fields = set(fields) - old_fields
 
         # read old-style fields with (low-level) method _read_flat
         select = self.browse(ids)
-        result = select.to_recordset()._read_flat(list(fields), load=load)
+        result = select.to_recordset()._read_flat(list(old_fields), load=load)
 
         # associate each result to its corresponding record
         record_values = [(self.record(values['id']), values) for values in result]
 
         # update record caches
-        for name in fields:
-            field = self._fields[name]
-            if field.store:
-                convert = field.convert_from_read
-                for record, values in record_values:
-                    record._record_cache[name] = convert(values[name])
-            else:
-                convert = self._fields[name].convert_to_read
-                for record, values in record_values:
-                    values[name] = convert(record[name])
+        for f in old_fields:
+            convert = self._fields[f].convert_from_read
+            for record, values in record_values:
+                record._record_cache[f] = convert(values[f])
+
+        # read new-style fields with records
+        for f in new_fields:
+            convert = self._fields[f].convert_to_read
+            for record, values in record_values:
+                values[f] = convert(record[f])
 
         return result if select.is_recordset() else (bool(result) and result[0])
 
