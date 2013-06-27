@@ -98,7 +98,7 @@ class view(osv.osv):
         'name': fields.char('View Name', required=True),
         'model': fields.char('Object', size=64, select=True),
         'priority': fields.integer('Sequence', required=True),
-        'type': fields.function(_type_field, type='selection', selection=[
+        'type': fields.selection([
             ('tree','Tree'),
             ('form','Form'),
             ('mdx','mdx'),
@@ -107,7 +107,8 @@ class view(osv.osv):
             ('diagram','Diagram'),
             ('gantt', 'Gantt'),
             ('kanban', 'Kanban'),
-            ('search','Search')], string='View Type', select=True, store=True),
+            ('search','Search'),
+            ('qweb', 'QWeb')], string='View Type'),
         'arch_file': fields.char("View path"),
         'arch_db': fields.text("Arch content", oldname='arch'),
         'arch': fields.function(_arch_get, fnct_inv=_arch_set, store=False, string="View Architecture", type='text', nodrop=True),
@@ -128,14 +129,13 @@ class view(osv.osv):
     _relaxng_validator = None
 
     def create(self, cr, uid, values, context=None):
-        if 'type' in values:
-            _logger.warning("Setting the `type` field is deprecated in the `ir.ui.view` model.")
-        if not values.get('name'):
+        if not 'type' in values:
             if values.get('inherit_id'):
-                inferred_type = self.browse(cr, uid, values['inherit_id'], context).type
+                values['type'] = self.browse(cr, uid, values['inherit_id'], context).type
             else:
-                inferred_type = etree.fromstring(values['arch'].encode('utf8')).tag
-            values['name'] = "%s %s" % (values['model'], inferred_type)
+                values['type'] = etree.fromstring(values['arch'].encode('utf8')).tag
+        if not values.get('name'):
+            values['name'] = "%s %s" % (values['model'], values[''])
         return super(view, self).create(cr, uid, values, context)
 
     def _relaxng(self):
@@ -832,7 +832,10 @@ class view(osv.osv):
     def render(self, cr, uid, id_or_xml_id, values, context=None):
         def loader(name):
             xml = self.read_combined(self, cr, uid, id_or_xml_id, context=context)
+            # parse arch
+            # on the root tag of arch add the attribute t-name="<name>"
             return xml['arch']
+
         engine = openerp.tools.qweb.QWebXml(loader)
         return engine.render(id_or_xml_id, values)
 
