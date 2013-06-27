@@ -420,9 +420,7 @@ class mail_thread(osv.AbstractModel):
                 if record_value == initial_value and getattr(self._all_columns[col_name].column, 'track_visibility', None) == 'always':
                     tracked_values[col_name] = dict(col_info=col_info['string'],
                                                         new_value=convert_for_display(record_value, col_info))
-                elif record_value != initial_value:
-                    if col_info['type'] == 'many2one' and not (record_value or initial_value):
-                        continue
+                elif record_value != initial_value and (record_value or initial_value):  # because browse null != False
                     if getattr(self._all_columns[col_name].column, 'track_visibility', None) in ['always', 'onchange']:
                         tracked_values[col_name] = dict(col_info=col_info['string'],
                                                             old_value=convert_for_display(initial_value, col_info),
