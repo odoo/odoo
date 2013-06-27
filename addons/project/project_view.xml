@@ -496,7 +496,6 @@
                                         <li><a name="set_remaining_time_2" type="object" class="oe_kanban_button">2</a></li>
                                         <li><a name="set_remaining_time_5" type="object" class="oe_kanban_button">5</a></li>
                                         <li><a name="set_remaining_time_10" type="object" class="oe_kanban_button">10</a></li>
-                                        <!-- <li><a name="do_open" states="draft" string="Validate planned time" type="object" class="oe_kanban_button oe_kanban_button_active">!</a></li> -->
                                       </ul>
                                     </li>
                                     <br/>
@@ -643,7 +642,7 @@
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph,kanban</field>
-            <field name="domain">[('date_deadline','&lt;',time.strftime('%Y-%m-%d')),('state','in',('draft','pending','open'))]</field>
+            <field name="domain">[('date_deadline','&lt;',time.strftime('%Y-%m-%d'))]</field>
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
@@ -748,7 +747,10 @@
         </record>
 
         <!-- User Form -->
-        <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" domain="[('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned Tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
+        <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}"
+                    domain="[('stage_id.fold', '!=', True)]"
+                    id="act_res_users_2_project_task_opened" name="Assigned Tasks"
+                    res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
 
         <!-- Tags -->
         <record model="ir.ui.view" id="project_category_search_view">
