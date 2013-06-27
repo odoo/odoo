@@ -316,18 +316,19 @@
                         attrs="{'invisible':[('survey_id','=',False)]}"/>
                 </div>
             </field>
-            <xpath expr="//div[@class='oe_title']//h1" position="after">
-                <div name="group_alias"
+            <xpath expr="//group[@name='job_data']" position="after">
+                <group name="group_alias"
                         attrs="{'invisible': [('alias_domain', '=', False)]}">
-                    <label for="alias_id" string="Email Alias"/>
-                    <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/>
-                    <span name="edit_alias" class="oe_edit_only">
-                        <field name="alias_name" class="oe_inline"
-                                attrs="{'required': [('alias_id', '!=', False)]}"/>
-                        @
-                        <field name="alias_domain" class="oe_inline" readonly="1"/>
-                    </span>
-                </div>
+                    <label for="alias_name" string="Email Alias"/>
+                    <div name="alias_def">
+                        <field name="alias_id" class="oe_read_only oe_inline"
+                                string="Email Alias" required="0"/>
+                        <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
+                            <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                        </div>
+                    </div>
+                    <field name="alias_contact" class="oe_inline" string="Accept Emails From"/>
+                </group>
             </xpath>
         </field>
     </record>
