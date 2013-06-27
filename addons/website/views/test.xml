@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <html>
                     <body>
-                        <header>This is the header</header>
+                        <header>This is the header  <t t-esc="1+1"/></header>
                         <div class="main">This is the main content</div>
                         <nav>
                             <ul class="menu_list">
@@ -32,11 +32,6 @@
                </data>
             </field>
         </record>
-
-        <menuitem name="Test views"
-            id="base.menu_test_view"
-            parent="base.menu_config"
-            sequence="80"/>
 
      </data>
 </openerp>
