@@ -19,9 +19,11 @@
 #
 ##############################################################################
 import copy
+from functools import partial
 import itertools
 import logging
 import os
+import sys
 import time
 
 from lxml import etree
@@ -33,7 +35,7 @@ from openerp.tools import graph, SKIPPED_ELEMENT_TYPES
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 from openerp.tools.view_validation import valid_view
-from openerp.tools import misc
+from openerp.tools import misc, qweb
 
 _logger = logging.getLogger(__name__)
 
@@ -829,14 +831,46 @@ class view(osv.osv):
                 raise orm.except_orm('View error', msg)
         return arch, fields
 
+    def _get_arch(self, cr, uid, id_, context=None):
+        from pprint import pprint as pp
+        pp(id_)
+        try:
+            id_ = int(id_)
+        except ValueError:
+            if '/' not in id_ and '.' not in id_:
+                raise ValueError('Invalid id: %r' % (id_,))
+            s = id_.find('/')
+            s = s if s >= 0 else sys.maxint
+            d = id_.find('.')
+            d = d if d >= 0 else sys.maxint
+
+            if d < s:
+                # xml id
+                IMD = self.pool['ir.model.data']
+                m, _, n = id_.partition('.')
+                _, id_ = IMD.get_object_reference(cr, uid, m, n)
+            else:
+                # path id => read directly on disk
+                # TODO apply inheritence
+                try:
+                    with misc.file_open(id_) as f:
+                        return f.read().decode('utf-8')
+                except Exception:
+                    raise ValueError('Invalid id: %r' % (id_,))
+
+        pp(id_)
+        r = self.read_combined(cr, uid, id_, fields=['arch'], view_type=None, model=None, context=context)
+        pp(r)
+        return r['arch']
+
     def render(self, cr, uid, id_or_xml_id, values, context=None):
         def loader(name):
-            xml = self.read_combined(self, cr, uid, id_or_xml_id, context=context)
+            arch = self._get_arch(cr, uid, name, context=context)
             # parse arch
             # on the root tag of arch add the attribute t-name="<name>"
-            return xml['arch']
-
-        engine = openerp.tools.qweb.QWebXml(loader)
+            arch = u'<?xml version="1.0" encoding="utf-8"?><tpl><t t-name="{0}">{1}</t></tpl>'.format(name, arch)
+            return arch
+        engine = qweb.QWebXml(loader)
         return engine.render(id_or_xml_id, values)
 
 class view_sc(osv.osv):
