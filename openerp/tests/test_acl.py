@@ -38,35 +38,31 @@ class TestACL(common.TransactionCase):
         rate_column = self.res_currency._columns['rate']
         rate_groups = rate_field.groups
 
-        try:
-            rate_field.groups = GROUP_TECHNICAL_FEATURES
-            rate_column.groups = GROUP_TECHNICAL_FEATURES
-
-            fields = self.res_currency.fields_get(self.cr, self.demo_uid, [])
-            form_view = self.res_currency.fields_view_get(self.cr, self.demo_uid, False, 'form')
-            view_arch = etree.fromstring(form_view.get('arch'))
-            self.assertFalse('rate' in fields, "'rate' field should be gone")
-            self.assertEquals(view_arch.xpath("//field[@name='rate']"), [],
-                                 "Field 'rate' must not be found in view definition")
-
-            # Make demo user a member of the restricted group and check that the field is back
-            self.tech_group.write({'users': [(4, self.demo_uid)]})
-            has_tech_feat = self.res_users.has_group(self.cr, self.demo_uid, GROUP_TECHNICAL_FEATURES)
-            fields = self.res_currency.fields_get(self.cr, self.demo_uid, [])
-            form_view = self.res_currency.fields_view_get(self.cr, self.demo_uid, False, 'form')
-            view_arch = etree.fromstring(form_view.get('arch'))
-            #import pprint; pprint.pprint(fields); pprint.pprint(form_view)
-            self.assertTrue(has_tech_feat, "`demo` user should now belong to the restricted group")
-            self.assertTrue('rate' in fields, "'rate' field must be properly visible again")
-            self.assertNotEquals(view_arch.xpath("//field[@name='rate']"), [],
-                                 "Field 'rate' must be found in view definition again")
-
-            #cleanup
-            self.tech_group.write({'users': [(3, self.demo_uid)]})
-
-        finally:
+        rate_field.groups = GROUP_TECHNICAL_FEATURES
+        rate_column.groups = GROUP_TECHNICAL_FEATURES
+        @self.addCleanup
+        def cleanup():
             rate_field.groups = rate_groups
             rate_column.groups = rate_groups
+
+        fields = self.res_currency.fields_get(self.cr, self.demo_uid, [])
+        form_view = self.res_currency.fields_view_get(self.cr, self.demo_uid, False, 'form')
+        view_arch = etree.fromstring(form_view.get('arch'))
+        self.assertFalse('rate' in fields, "'rate' field should be gone")
+        self.assertEquals(view_arch.xpath("//field[@name='rate']"), [],
+                             "Field 'rate' must not be found in view definition")
+
+        # Make demo user a member of the restricted group and check that the field is back
+        self.tech_group.write({'users': [(4, self.demo_uid)]})
+        has_tech_feat = self.res_users.has_group(self.cr, self.demo_uid, GROUP_TECHNICAL_FEATURES)
+        fields = self.res_currency.fields_get(self.cr, self.demo_uid, [])
+        form_view = self.res_currency.fields_view_get(self.cr, self.demo_uid, False, 'form')
+        view_arch = etree.fromstring(form_view.get('arch'))
+        #import pprint; pprint.pprint(fields); pprint.pprint(form_view)
+        self.assertTrue(has_tech_feat, "`demo` user should now belong to the restricted group")
+        self.assertTrue('rate' in fields, "'rate' field must be properly visible again")
+        self.assertNotEquals(view_arch.xpath("//field[@name='rate']"), [],
+                             "Field 'rate' must be found in view definition again")
 
     @mute_logger('openerp.osv.orm')
     def test_field_crud_restriction(self):
@@ -82,28 +78,24 @@ class TestACL(common.TransactionCase):
         bank_ids_column = self.res_partner._columns['bank_ids']
         bank_ids_groups = bank_ids_field.groups
 
-        try:
-            bank_ids_field.groups = GROUP_TECHNICAL_FEATURES
-            bank_ids_column.groups = GROUP_TECHNICAL_FEATURES
-
-            with self.assertRaises(openerp.osv.orm.except_orm):
-                self.res_partner.read(self.cr, self.demo_uid, [1], ['bank_ids'])
-            with self.assertRaises(openerp.osv.orm.except_orm):
-                self.res_partner.write(self.cr, self.demo_uid, [1], {'bank_ids': []})
-
-            # Add the restricted group, and check that it works again
-            self.tech_group.write({'users': [(4, self.demo_uid)]})
-            has_tech_feat = self.res_users.has_group(self.cr, self.demo_uid, GROUP_TECHNICAL_FEATURES)
-            self.assertTrue(has_tech_feat, "`demo` user should now belong to the restricted group")
-            self.assert_(self.res_partner.read(self.cr, self.demo_uid, [1], ['bank_ids']))
-            self.assert_(self.res_partner.write(self.cr, self.demo_uid, [1], {'bank_ids': []})) 
-            
-            #cleanup
-            self.tech_group.write({'users': [(3, self.demo_uid)]})
-
-        finally:
+        bank_ids_field.groups = GROUP_TECHNICAL_FEATURES
+        bank_ids_column.groups = GROUP_TECHNICAL_FEATURES
+        @self.addCleanup
+        def cleanup():
             bank_ids_field.groups = bank_ids_groups
             bank_ids_column.groups = bank_ids_groups
+
+        with self.assertRaises(openerp.osv.orm.except_orm):
+            self.res_partner.read(self.cr, self.demo_uid, [1], ['bank_ids'])
+        with self.assertRaises(openerp.osv.orm.except_orm):
+            self.res_partner.write(self.cr, self.demo_uid, [1], {'bank_ids': []})
+
+        # Add the restricted group, and check that it works again
+        self.tech_group.write({'users': [(4, self.demo_uid)]})
+        has_tech_feat = self.res_users.has_group(self.cr, self.demo_uid, GROUP_TECHNICAL_FEATURES)
+        self.assertTrue(has_tech_feat, "`demo` user should now belong to the restricted group")
+        self.assert_(self.res_partner.read(self.cr, self.demo_uid, [1], ['bank_ids']))
+        self.assert_(self.res_partner.write(self.cr, self.demo_uid, [1], {'bank_ids': []}))
 
 if __name__ == '__main__':
     unittest2.main()
