@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name': 'Picking Waves',
+    'name': 'Stock Picking Waves',
     'version': '1.0',
     'category': 'Stock Management',
     'description': """
@@ -31,7 +31,7 @@ This module adds the picking wave option in warehouse management.
     'website': 'http://www.openerp.com',
     'depends': ['stock'],
     'data': ['security/ir.model.access.csv',
-            'picking_wave_view.xml'],
+            'stock_picking_wave_view.xml'],
     'demo': [],
     'installable': True,
     'auto_install': True,

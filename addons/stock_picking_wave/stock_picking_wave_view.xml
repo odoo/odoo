@@ -2,9 +2,9 @@
     <data>
         <record id="view_picking_wave_form" model="ir.ui.view">
             <field name="name">picking.wave.form</field>
-            <field name="model">picking.wave</field>
+            <field name="model">stock.picking.wave</field>
             <field name="arch" type="xml">
-                <form string="Stock Inventory Lines" version="7.0">
+                <form string="Stock Picking Waves" version="7.0">
                     <sheet>
                         <div class="oe_right oe_button_box">
                         <button name="confirm_picking" string="Confirm all pickings" type="object"/>
@@ -47,9 +47,9 @@
 
         <record id="view_picking_wave_tree" model="ir.ui.view">
             <field name="name">picking.wave.tree</field>
-            <field name="model">picking.wave</field>
+            <field name="model">stock.picking.wave</field>
             <field name="arch" type="xml">
-                <tree string="Picking Waves">
+                <tree string="Stock Picking Waves">
                     <field name="name"/>
                     <field name="resp_id"/>
                     <field name="capacity"/>
@@ -63,7 +63,7 @@
         <record id="action_picking_wave" model="ir.actions.act_window">
             <field name="name">Picking Waves</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">picking.wave</field>
+            <field name="res_model">stock.picking.wave</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">

@@ -3,8 +3,8 @@ from openerp.tools.translate import _
 from openerp.osv import fields, osv
 from openerp import workflow
 
-class picking_wave(osv.osv):
-    _name = "picking.wave"
+class stock_picking_wave(osv.osv):
+    _name = "stock.picking.wave"
     _columns = {
         'name': fields.char('name', required=True, help='Name of the picking wave'),
         'resp_id': fields.many2one('res.partner', 'Responsible', help='Person responsible for this wave'),
