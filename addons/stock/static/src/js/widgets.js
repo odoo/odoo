@@ -37,17 +37,21 @@ function openerp_picking_widgets(instance){
     module.PackageEditorWidget = instance.web.Widget.extend({
         template: 'PackageEditorWidget',
         get_header: function(){
-            return this._header || 'Package: 032 ';
+            var model = this.getParent();
+            return model.current_package_id ? 'Current Operations for package: ' + model.current_package_id[1] : 'Current Operations';
         },
         get_rows: function(){
             var model = this.getParent();
             var rows = [];
             
             _.each( model.operations, function(op){
+                if(model.current_package_id && op.package_id !== model.current_package_id){
+                    return;
+                }
                 rows.push({
                     cols: {
                         product: op.product_id[1],
-                        uom: op.product_uom ? product_uom[1] : 'false',
+                        uom: op.product_uom ? product_uom[1] : '',
                         qty: op.product_qty,
                     }
                 });
@@ -80,10 +84,12 @@ function openerp_picking_widgets(instance){
             this.picking = null;
             this.movelines = null;
             this.operations = null;
+            this.current_package_id = instance.session.user_context.current_package_id;
             
             window.pickwidget = this;
             
             console.log('Action params:', params);
+            console.log('Session:',instance.session);
 
             this.loaded = new instance.web.Model('stock.picking.in')
                 .query()
