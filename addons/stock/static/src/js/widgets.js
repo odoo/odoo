@@ -113,6 +113,7 @@ function openerp_picking_widgets(instance){
         start: function(){
             var self = this;
             instance.webclient.set_content_full_screen(true);
+            this.connect_barcode_scanner();
 
             this.$('.js_pick_quit').click(function(){ self.quit(); });
 
@@ -132,6 +133,7 @@ function openerp_picking_widgets(instance){
         },
         scan: function(ean){
             var self = this;
+            console.log('Scan: ',ean);
             new instance.web.Model('stock.picking')
                 .call('get_barcode_and_return_todo_stuff', [this.picking.id, ean])
                 .then(function(todo){
@@ -173,8 +175,32 @@ function openerp_picking_widgets(instance){
                         });
                 });
         },
+        connect_barcode_scanner: function(){
+            var self =this;
+            var code = [];
+            var timestamp = 0;
+            $('body').delegate('','keyup',function(e){
+                if (e.keyCode >= 48 && e.keyCode < 58){
+                    if(timestamp + 30 < new Date().getTime()){
+                        code = [];
+                    }
+                    timestamp = new Date().getTime();
+                    code.push(e.keyCode - 48);
+                    if(code.length === 13){
+                        self.scan(code.join(''));
+                        code = [];
+                    }
+                }else{
+                    code = [];
+                }
+            });
+        },
+        disconnect_barcode_scanner: function(){
+            $('body').undelegate('', 'keyup')
+        },
         quit: function(){
             console.log('Quit');
+            disconnect_barcode_scanner();
             instance.webclient.set_content_full_screen(false);
             window.location = '/'; // FIXME THIS IS SHIT NIV WILL KILL YOU (BY MULTIPLE FACE-STABBING) IF YOU MERGE THIS IN TRUNK
         },
