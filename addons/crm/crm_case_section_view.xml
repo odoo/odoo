@@ -94,7 +94,7 @@
                                 <div class="oe_kanban_content">
                                     <h4 class="oe_center"><field name="name"/></h4>
                                     <div class="oe_kanban_alias oe_center" t-if="record.use_leads.raw_value and record.alias_id.value">
-                                        <small><span class="oe_e" style="float: none;">%%</span><t t-raw="record.alias_id.raw_value[1]"/></small>
+                                        <small><span class="oe_e oe_e_alias" style="float: none;">%%</span><t t-raw="record.alias_id.raw_value[1]"/></small>
                                     </div>
                                     <div class="oe_items_list">
                                         <div class="oe_salesteams_leads" t-if="record.use_leads.raw_value">
@@ -168,17 +168,6 @@
                             <h1>
                                 <field name="name" string="Salesteam"/>
                             </h1>
-                            <div name="group_alias"
-                                    attrs="{'invisible': [('alias_domain', '=', False)]}">
-                                <label for="alias_id" string="Email Alias"/>
-                                <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/>
-                                <span name="edit_alias" class="oe_edit_only">
-                                    <field name="alias_name" class="oe_inline"
-                                            attrs="{'required': [('use_leads', '=', True), ('alias_id', '!=', False)]}"/>
-                                    @
-                                    <field name="alias_domain" class="oe_inline" readonly="1"/>
-                                </span>
-                            </div>
                             <div name="options_active">
                                 <field name="use_leads" class="oe_inline"/><label for="use_leads"/>
                             </div>
@@ -187,11 +176,24 @@
                             <group>
                                 <field name="user_id"/>
                                 <field name="code"/>
-                            </group>
-                            <group>
                                 <field name="parent_id"/>
                                 <field name="change_responsible"/>
                                 <field name="active"/>
+                            </group>
+                            <group>
+                                <label for="alias_name" string="Email Alias"
+                                        attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                                <div name="alias_def"
+                                        attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                    <field name="alias_id" class="oe_read_only oe_inline"
+                                            string="Email Alias" required="0"/>
+                                    <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
+                                        <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                                    </div>
+                                </div>
+                                <field name="alias_contact" class="oe_inline"
+                                        string="Accept Emails From"
+                                        attrs="{'invisible': [('alias_domain', '=', False)]}"/>
                             </group>
                         </group>
                         <notebook colspan="4">
