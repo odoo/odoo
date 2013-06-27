@@ -181,10 +181,8 @@ class Field(object):
         if self.compute:
             getattr(record, self.compute)()
         else:
-            # Do not store the null value in record._record_draft, since it is
-            # not a "forced" null value. Instead, put it in the regular cache.
-            # The purpose is to not make it visible in record._record_draft.
-            record._record_cache[self.name] = self.null()
+            # None means "no value" in the case of draft records
+            record._set_field(self.name, None)
 
 
 class Boolean(Field):

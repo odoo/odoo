@@ -5368,8 +5368,9 @@ class BaseModel(object):
         """
         result = {}
         for name, value in self._record_draft.iteritems():
-            field = self._fields[name]
-            result[name] = field.convert_to_write(value)
+            if value is not None:
+                field = self._fields[name]
+                result[name] = field.convert_to_write(value)
         return result
 
     def __nonzero__(self):
@@ -5439,18 +5440,17 @@ class BaseModel(object):
             return self._record_cache[name]
 
         with self._scope:
-            if self.is_draft():
-                if name not in self._record_draft:
-                    self.add_default_value(name)
-                if name in self._record_draft:
-                    return self._record_draft[name]
-                else:
-                    return self._record_cache[name]
-
             # handle high-level fields
             field = self._fields[name]
 
             if self.is_null():
+                if self.is_draft():
+                    if name not in self._record_draft:
+                        self.add_default_value(name)
+                    value = self._record_draft[name]
+                    if value is not None:
+                        return value
+
                 return field.null()
 
             if not field.store:
