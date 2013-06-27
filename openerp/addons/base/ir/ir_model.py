@@ -205,7 +205,8 @@ class ir_model(osv.osv):
             _custom = True
         x_custom_model._name = model
         x_custom_model._module = False
-        a = x_custom_model.create_instance(self.pool, cr)
+        with scope(cr, SUPERUSER_ID, None):
+            a = x_custom_model.create_instance(self.pool, cr)
         if not a._columns:
             x_name = 'id'
         elif 'x_name' in a._columns.keys():
