@@ -347,7 +347,10 @@ class stock_location(osv.osv):
     
     def get_removal_strategy(self, cr, uid, id, product_id, context=None):
         product = self.pool.get("product.product").browse(cr, uid, product_id, context=context)
-        return product.categ_id.removal_strategy or 'fifo'
+        categ = product.categ_id
+        while (not categ.removal_strategy) and categ.parent_id:
+            categ = categ.parent_id
+        return categ.removal_strategy or None
 
     def _product_get(self, cr, uid, id, product_ids=False, context=None, states=None):
         """
@@ -690,7 +693,7 @@ class stock_quant(osv.osv):
 
 
     
-    def choose_quants(self, cr, uid, location_id,  product_id, qty, context=None):
+    def choose_quants(self, cr, uid, location_id,  product_id, qty, prodlot_id=False, context=None):
         """
         Use the removal strategies of product to search for the correct quants
         
@@ -700,14 +703,21 @@ class stock_quant(osv.osv):
         :TODOparam prodlot_id
         :returns: tuples of (quant_id, qty)
         """
-        #TODO Normally, you should check the removal strategy now
-        #But we will assume it is FIFO for the moment
-        #Will need to create search string beforehand
         if self.pool.get('stock.location').get_removal_strategy(cr, uid, location_id, product_id, context=context) == 'lifo':
-            possible_quants = self.search(cr, uid, [('location_id', 'child_of', location_id), ('product_id','=',product_id), 
+            if prodlot_id: 
+                possible_quants = self.search(cr, uid, [('location_id', 'child_of', location_id), ('product_id','=',product_id), 
+                                                    ('qty', '>', 0.0), ('reservation_id', '=', False), 
+                                                    ('prodlot_id', '=', prodlot_id)], order = 'in_date desc, id desc', context=context)
+            else:
+                possible_quants = self.search(cr, uid, [('location_id', 'child_of', location_id), ('product_id','=',product_id), 
                                                     ('qty', '>', 0.0), ('reservation_id', '=', False)], order = 'in_date desc, id desc', context=context)
         else:
-            possible_quants = self.search(cr, uid, [('location_id', 'child_of', location_id), ('product_id','=',product_id), 
+            if prodlot_id: 
+                possible_quants = self.search(cr, uid, [('location_id', 'child_of', location_id), ('product_id','=',product_id), 
+                                                    ('qty', '>', 0.0), ('reservation_id', '=', False), 
+                                                    ('prodlot_id', '=', prodlot_id)], order = 'in_date, id', context=context)
+            else:
+                possible_quants = self.search(cr, uid, [('location_id', 'child_of', location_id), ('product_id','=',product_id), 
                                                     ('qty', '>', 0.0), ('reservation_id', '=', False)], order = 'in_date, id', context=context)
         qty_todo = qty
         res = []
@@ -917,7 +927,7 @@ class stock_picking(osv.osv):
             select=True, required=True, readonly=True, track_visibility='onchange', states={'draft': [('readonly', False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'pack_operation_ids': fields.one2many('stock.pack.operation', 'picking_id', string='Related Packing Operations'),
-        'package_ids': fields.one2many('stock.quant.package', 'picking_id', string='Related Packing Operations'),
+        #'package_ids': fields.one2many('stock.quant.package', 'picking_id', string='Related Packing Operations'),
     }
     _defaults = {
         'name': lambda self, cr, uid, context: '/',
@@ -1675,6 +1685,12 @@ class stock_picking(osv.osv):
             included_package_ids = package_obj.search(cr, uid, [('parent_id', 'child_of', matching_package_ids[0])], context=context)
             included_quant_ids = quant_obj.search(cr, uid, [('package_id', 'in', included_package_ids)], context=context)
             todo_on_moves, todo_on_operations = self._deal_with_quants(cr, uid, picking_id, included_quant_ids, context=context)
+        #write remaining qty on stock.move, to ease the treatment server side
+        for todo in todo_on_moves:
+            if todo[0] == 1:
+                self.pool.get('stock.move').write(cr, uid, todo[1], todo[2], context=context)
+            elif todo[0] == 0:
+                self.pool.get('stock.move').create(cr, uid, todo[2], context=context)
         return {'warnings': error_msg, 'moves_to_update': todo_on_moves, 'operations_to_update': todo_on_operations}
 
 
@@ -2491,7 +2507,7 @@ class stock_move(osv.osv):
                 
                 #Split for source locations
                 qty = uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, move.product_id.uom_id.id)
-                res2 = quant_obj.choose_quants(cr, uid, move.location_id.id, move.product_id.id, qty, context=context)
+                res2 = quant_obj.choose_quants(cr, uid, move.location_id.id, move.product_id.id, qty, prodlot_id = move.prodlot_id.id, context=context)
                 print res2
                 #Should group quants by location:
                 quants = {}
@@ -2765,7 +2781,7 @@ class stock_move(osv.osv):
             qty_from_move = uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, move.product_id.uom_id.id)
             #Check if the entire quantity has been transformed in to quants
             if qty_from_move > product_qty:
-                quant_tuples = quant_obj.choose_quants(cr, uid, move.location_id.id, move.product_id.id, qty_from_move - product_qty, context=context)
+                quant_tuples = quant_obj.choose_quants(cr, uid, move.location_id.id, move.product_id.id, qty_from_move - product_qty, prodlot_id = move.prodlot_id.id, context=context)
                 create_neg_quant = True
                 if quant_tuples: 
                     quant_obj.split_and_assign_quants(cr, uid, quant_tuples, move, context=context)
@@ -2827,7 +2843,6 @@ class stock_move(osv.osv):
                 self.check_total_qty(cr, uid, ids, context=context)
                 reconciled_quants = self.pool.get("stock.quant").move_quants(cr, uid, quants[move.id], move, context=context)
                 quants[move.id] += reconciled_quants
-                #Generate negative quants if necessary
         
                 
         #Do price calculation on move -> Should pass Quants here -> is a dictionary 
@@ -3701,7 +3716,7 @@ class stock_package(osv.osv):
         'children_ids': fields.one2many('stock.quant.package', 'parent_id', 'Packaged Content'),
         'location_id': fields.related('quant_ids', 'location_id', type='many2one', relation='stock.location', string='Location', readonly=True),
         'pack_operation_id': fields.many2one('stock.pack.operation', string="Package Operation", help="The pack operation that built this package"),
-        'picking_id': fields.related('pack_operation_id', 'picking_id', type='many2one', relation="stock.picking", string='Related Picking'),
+    #    'picking_id': fields.related('pack_operation_id', 'picking_id', type='many2one', relation="stock.picking", string='Related Picking'),
     }
 
     def _check_location(self, cr, uid, ids, context=None):

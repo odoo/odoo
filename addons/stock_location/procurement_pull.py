@@ -18,11 +18,17 @@
 #
 ##############################################################################
 
-from openerp.osv import osv
+from openerp.osv import osv, fields
 from openerp.tools.translate import _
+
+
+
 
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
+    
+
+    
     def check_buy(self, cr, uid, ids, context=None):
         for procurement in self.browse(cr, uid, ids, context=context):
             for line in procurement.product_id.flow_pull_ids:
@@ -45,6 +51,7 @@ class procurement_order(osv.osv):
         return False
 
     def action_move_create(self, cr, uid, ids, context=None):
+        #Create moves from 
         proc_obj = self.pool.get('procurement.order')
         move_obj = self.pool.get('stock.move')
         picking_obj=self.pool.get('stock.picking')
@@ -55,17 +62,25 @@ class procurement_order(osv.osv):
                     break
             assert line, 'Line cannot be False if we are on this state of the workflow'
             origin = (proc.origin or proc.name or '').split(':')[0] +':'+line.name
-            picking_id = picking_obj.create(cr, uid, {
-                'origin': origin,
-                'company_id': line.company_id and line.company_id.id or False,
-                'type': line.picking_type,
-                'stock_journal_id': line.journal_id and line.journal_id.id or False,
-                'move_type': 'one',
-                'partner_id': line.partner_address_id.id,
-                'note': _('Picking for pulled procurement coming from original location %s, pull rule %s, via original Procurement %s (#%d)') % (proc.location_id.name, line.name, proc.name, proc.id),
-                'invoice_state': line.invoice_state,
-            })
             
+            #First do a search for moves which would not already have this picking:
+            moves = move_obj.search(cr, uid, [('group_id', '=', proc.group_id.id), ('location_id', '=', line.location_src_id.id), 
+                                              ('location_dest_id', '=', line.location_id.id), 
+                                              ], context=context)
+            print "moves, ", moves, proc.group_id.id
+            if moves and move_obj.browse(cr, uid, moves[0], context=context).picking_id:
+                picking_id = move_obj.browse(cr, uid, moves[0], context=context).picking_id.id
+            else:
+                picking_id = picking_obj.create(cr, uid, {
+                                                  'origin': origin,
+                                                  'company_id': line.company_id and line.company_id.id or False,
+                                                  'type': line.picking_type,
+                                                  'stock_journal_id': line.journal_id and line.journal_id.id or False,
+                                                  'move_type': 'one',
+                                                  'partner_id': line.partner_address_id.id,
+                                                  'note': _('Picking for pulled procurement coming from original location %s, pull rule %s, via original Procurement %s (#%d)') % (proc.location_id.name, line.name, proc.name, proc.id),
+                                                  'invoice_state': line.invoice_state,
+                                                          })
             move_id = move_obj.create(cr, uid, {
                 'name': line.name,
                 'picking_id': picking_id,
@@ -84,6 +99,7 @@ class procurement_order(osv.osv):
                 'move_dest_id': proc.move_id and proc.move_id.id or False, # to verif, about history ?
                 'tracking_id': False,
                 'cancel_cascade': line.cancel_cascade,
+                'group_id': proc.group_id.id, 
                 'state': 'confirmed',
                 'note': _('Move for pulled procurement coming from original location %s, pull rule %s, via original Procurement %s (#%d)') % (proc.location_id.name, line.name, proc.name, proc.id),
             })
@@ -106,9 +122,11 @@ class procurement_order(osv.osv):
                         or proc.product_uom.id,
                 'location_id': line.location_src_id.id,
                 'procure_method': line.procure_method,
-                'move_id': move_id,
+                'move_id': move_id, 
+                'group_id': proc.group_id.id, 
             })
             self.pool.get('stock.picking').signal_button_confirm(cr, uid, [picking_id])
+            
             self.signal_button_confirm(cr, uid, [proc_id])
             if proc.move_id:
                 move_obj.write(cr, uid, [proc.move_id.id],

@@ -237,7 +237,7 @@ class report_stock_inventory(osv.osv):
                 LEFT JOIN stock_location location ON (m.location_id = location.id)
                 LEFT JOIN stock_location location_dest ON (m.location_dest_id = location_dest.id)
                 LEFT JOIN product_template pt ON (sq.product_id=pt.id)
-                WHERE location_dest.usage = 'internal' and location.usage <> 'internal'
+                WHERE (location_dest.usage = 'internal' and location.usage <> 'internal') or (sq.qty < 0) or (sq.propagated_from_id IS NOT NULL)
             GROUP BY
                 sq.id, sq.product_id, pt.categ_id, m.partner_id, m.location_id, m.location_dest_id,
                 sq.prodlot_id, sq.in_date, m.state, location.usage, location_dest.usage, location.scrap_location, sq.company_id, to_char(sq.in_date, 'YYYY'), to_char(sq.in_date, 'MM'), p.name
