@@ -204,6 +204,11 @@ function openerp_picking_widgets(instance){
                     self.current_package_id = instance.session.user_context.current_package_id; 
                     console.log('Context Reset');
 
+                    return new instance.web.Model('stock.picking.in').call('read',[[self.picking.id],[]])
+                }).then(function(picking){
+                    self.picking = picking[0];
+                    console.log('New Picking: ',self.picking);
+
                     return new instance.web.Model('stock.pack.operation').call('read',[self.picking.pack_operation_ids, []])
                 }).then(function(operations){
                     console.log('New Operations: ',operations);
