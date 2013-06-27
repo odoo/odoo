@@ -109,13 +109,15 @@ function openerp_picking_widgets(instance){
             var loaded = picking.then(function(picking){
                     self.picking = picking instanceof Array ? picking[0] : picking;
                     console.log('Picking:',self.picking);
+                    console.log('User Context:', instance.session.user_context);
+                    console.log('Context:', new instance.web.CompoundContext().eval());
 
-                    return new instance.web.Model('stock.move').call('read',[self.picking.move_lines, []]);
+                    return new instance.web.Model('stock.move').call('read',[self.picking.move_lines, [], new instance.web.CompoundContext()]);
                 }).then(function(movelines){
                     self.movelines = movelines;
                     console.log('Move Lines:',movelines);
 
-                    return new instance.web.Model('stock.pack.operation').call('read',[self.picking.pack_operation_ids, []]);
+                    return new instance.web.Model('stock.pack.operation').call('read',[self.picking.pack_operation_ids, [], new instance.web.CompoundContext()]);
                 }).then(function(operations){
                     self.operations = operations;
                     console.log('Operations:',self.operations);
@@ -127,9 +129,10 @@ function openerp_picking_widgets(instance){
                             package_ids.push(operations[i].result_package_id[0]);
                         }
                     }
+
                     console.log('Package ids:',package_ids);
 
-                    return new instance.web.Model('stock.quant.package').call('read',[package_ids, []]);
+                    return new instance.web.Model('stock.quant.package').call('read',[package_ids, [], new instance.web.CompoundContext()]);
                 }).then(function(packages){
                     self.packages = packages;
                     console.log('Packages:', self.packages);
