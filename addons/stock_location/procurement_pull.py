@@ -65,7 +65,7 @@ class procurement_order(osv.osv):
             
             #First do a search for moves which would not already have this picking:
             moves = move_obj.search(cr, uid, [('group_id', '=', proc.group_id.id), ('location_id', '=', line.location_src_id.id), 
-                                              ('location_dest_id', '=', line.location_id.id), 
+                                              ('location_dest_id', '=', line.location_id.id), ('product_id', '=', proc.product_id.id), 
                                               ], context=context)
             print "moves, ", moves, proc.group_id.id
             if moves and move_obj.browse(cr, uid, moves[0], context=context).picking_id:
