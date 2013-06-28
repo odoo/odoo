@@ -45,7 +45,9 @@
             multi="True"
             key2="client_action_multi" name="Merge leads/opportunities"
             res_model="crm.merge.opportunity" src_model="crm.lead"
-            view_mode="form" target="new" view_type="form"/>
+            view_mode="form" target="new" view_type="form"
+            groups="base.group_sale_salesman"
+            />
 
     </data>
 </openerp>

@@ -39,6 +39,7 @@ def remove_accents(input_str):
     nkfd_form = unicodedata.normalize('NFKD', input_str)
     return u''.join([c for c in nkfd_form if not unicodedata.combining(c)])
 
+
 class mail_alias(osv.Model):
     """A Mail Alias is a mapping of an email address with a given OpenERP Document
        model. It is used by OpenERP's mail gateway when processing incoming emails
@@ -47,7 +48,7 @@ class mail_alias(osv.Model):
        of that alias. If the message is a reply it will be attached to the
        existing discussion on the corresponding record, otherwise a new
        record of the corresponding model will be created.
-       
+
        This is meant to be used in combination with a catch-all email configuration
        on the company's mail server, so that as soon as a new mail.alias is
        created, it becomes immediately usable and OpenERP will accept email for it.
@@ -63,9 +64,8 @@ class mail_alias(osv.Model):
         return dict.fromkeys(ids, domain or "")
 
     _columns = {
-        'alias_name': fields.char('Alias', required=True,
-                            help="The name of the email alias, e.g. 'jobs' "
-                                 "if you want to catch emails for <jobs@example.my.openerp.com>",),
+        'alias_name': fields.char('Alias',
+            help="The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.my.openerp.com>",),
         'alias_model_id': fields.many2one('ir.model', 'Aliased Model', required=True, ondelete="cascade",
                                           help="The model (OpenERP Document Kind) to which this alias "
                                                "corresponds. Any incoming email that does not reply to an "
@@ -87,13 +87,29 @@ class mail_alias(osv.Model):
                                            "messages will be attached, even if they did not reply to it. "
                                            "If set, this will disable the creation of new records completely."),
         'alias_domain': fields.function(_get_alias_domain, string="Alias domain", type='char', size=None),
+        'alias_parent_model_id': fields.many2one('ir.model', 'Parent Model',
+            help="Parent model holding the alias. The model holding the alias reference\n"
+                    "is not necessarily the model given by alias_model_id\n"
+                    "(example: project (parent_model) and task (model))"),
+        'alias_parent_thread_id': fields.integer('Parent Record Thread ID',
+            help="ID of the parent record holding the alias (example: project holding the task creation alias)"),
+        'alias_contact': fields.selection([
+                ('everyone', 'Everyone'),
+                ('partners', 'Authenticated Partners'),
+                ('followers', 'Followers only'),
+            ], string='Alias Contact Security', required=True,
+            help="Policy to post a message on the document using the mailgateway.\n"
+                    "- everyone: everyone can post\n"
+                    "- partners: only authenticated partners\n"
+                    "- followers: only followers of the related document\n"),
     }
 
     _defaults = {
         'alias_defaults': '{}',
-        'alias_user_id': lambda self,cr,uid,context: uid,
+        'alias_user_id': lambda self, cr, uid, context: uid,
         # looks better when creating new aliases - even if the field is informative only
-        'alias_domain': lambda self,cr,uid,context: self._get_alias_domain(cr, SUPERUSER_ID,[1],None,None)[1]
+        'alias_domain': lambda self, cr, uid, context: self._get_alias_domain(cr, SUPERUSER_ID, [1], None, None)[1],
+        'alias_contact': 'everyone',
     }
 
     _sql_constraints = [
@@ -139,13 +155,15 @@ class mail_alias(osv.Model):
         return new_name
 
     def migrate_to_alias(self, cr, child_model_name, child_table_name, child_model_auto_init_fct,
-        alias_id_column, alias_key, alias_prefix='', alias_force_key='', alias_defaults={}, context=None):
+        alias_model_name, alias_id_column, alias_key, alias_prefix='', alias_force_key='', alias_defaults={},
+        alias_generate_name=False, context=None):
         """ Installation hook to create aliases for all users and avoid constraint errors.
 
             :param child_model_name: model name of the child class (i.e. res.users)
             :param child_table_name: table name of the child class (i.e. res_users)
             :param child_model_auto_init_fct: pointer to the _auto_init function
                 (i.e. super(res_users,self)._auto_init(cr, context=context))
+            :param alias_model_name: name of the aliased model
             :param alias_id_column: alias_id column (i.e. self._columns['alias_id'])
             :param alias_key: name of the column used for the unique name (i.e. 'login')
             :param alias_prefix: prefix for the unique name (i.e. 'jobs' + ...)
@@ -153,6 +171,8 @@ class mail_alias(osv.Model):
                 if empty string, not taken into account
             :param alias_defaults: dict, keys = mail.alias columns, values = child
                 model column name used for default values (i.e. {'job_id': 'id'})
+            :param alias_generate_name: automatically generate alias name using prefix / alias key;
+                default alias_name value is False because since 8.0 it is not required anymore
         """
         if context is None:
             context = {}
@@ -170,13 +190,17 @@ class mail_alias(osv.Model):
         no_alias_ids = child_class_model.search(cr, SUPERUSER_ID, [('alias_id', '=', False)], context={'active_test': False})
         # Use read() not browse(), to avoid prefetching uninitialized inherited fields
         for obj_data in child_class_model.read(cr, SUPERUSER_ID, no_alias_ids, [alias_key]):
-            alias_vals = {'alias_name': '%s%s' % (alias_prefix, obj_data[alias_key])}
+            alias_vals = {'alias_name': False}
+            if alias_generate_name:
+                alias_vals['alias_name'] = '%s%s' % (alias_prefix, obj_data[alias_key])
             if alias_force_key:
                 alias_vals['alias_force_thread_id'] = obj_data[alias_force_key]
             alias_vals['alias_defaults'] = dict((k, obj_data[v]) for k, v in alias_defaults.iteritems())
-            alias_id = mail_alias.create_unique_alias(cr, SUPERUSER_ID, alias_vals, model_name=context.get('alias_model_name', child_model_name))
+            alias_vals['alias_parent_thread_id'] = obj_data['id']
+            alias_create_ctx = dict(context, alias_model_name=alias_model_name, alias_parent_model_name=child_model_name)
+            alias_id = mail_alias.create(cr, SUPERUSER_ID, alias_vals, context=alias_create_ctx)
             child_class_model.write(cr, SUPERUSER_ID, obj_data['id'], {'alias_id': alias_id})
-            _logger.info('Mail alias created for %s %s (uid %s)', child_model_name, obj_data[alias_key], obj_data['id'])
+            _logger.info('Mail alias created for %s %s (id %s)', child_model_name, obj_data[alias_key], obj_data['id'])
 
         # Finally attempt to reinstate the missing constraint
         try:
@@ -189,22 +213,53 @@ class mail_alias(osv.Model):
 
         # set back the unique alias_id constraint
         alias_id_column.required = True
-
         return res
 
-    def create_unique_alias(self, cr, uid, vals, model_name=None, context=None):
-        """Creates an email.alias record according to the values provided in ``vals``,
-        with 2 alterations: the ``alias_name`` value may be suffixed in order to
-        make it unique (and certain unsafe characters replaced), and 
-        he ``alias_model_id`` value will set to the model ID of the ``model_name``
-        value, if provided, 
+    def create(self, cr, uid, vals, context=None):
+        """ Creates an email.alias record according to the values provided in ``vals``,
+            with 2 alterations: the ``alias_name`` value may be suffixed in order to
+            make it unique (and certain unsafe characters replaced), and
+            he ``alias_model_id`` value will set to the model ID of the ``model_name``
+            context value, if provided.
         """
-        # when an alias name appears to already be an email, we keep the local part only
-        alias_name = remove_accents(vals['alias_name']).lower().split('@')[0]
-        alias_name = re.sub(r'[^\w+.]+', '-', alias_name)
-        alias_name = self._find_unique(cr, uid, alias_name, context=context)
-        vals['alias_name'] = alias_name
+        if context is None:
+            context = {}
+        model_name = context.get('alias_model_name')
+        parent_model_name = context.get('alias_parent_model_name')
+        if vals.get('alias_name'):
+            # when an alias name appears to already be an email, we keep the local part only
+            alias_name = remove_accents(vals['alias_name']).lower().split('@')[0]
+            alias_name = re.sub(r'[^\w+.]+', '-', alias_name)
+            alias_name = self._find_unique(cr, uid, alias_name, context=context)
+            vals['alias_name'] = alias_name
         if model_name:
             model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', model_name)], context=context)[0]
             vals['alias_model_id'] = model_id
-        return self.create(cr, uid, vals, context=context)
+        if parent_model_name:
+            model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', parent_model_name)], context=context)[0]
+            vals['alias_parent_model_id'] = model_id
+        return super(mail_alias, self).create(cr, uid, vals, context=context)
+
+    def open_document(self, cr, uid, ids, context=None):
+        alias = self.browse(cr, uid, ids, context=context)[0]
+        if not alias.alias_model_id or not alias.alias_force_thread_id:
+            return False
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': alias.alias_model_id.model,
+            'res_id': alias.alias_force_thread_id,
+            'type': 'ir.actions.act_window',
+        }
+
+    def open_parent_document(self, cr, uid, ids, context=None):
+        alias = self.browse(cr, uid, ids, context=context)[0]
+        if not alias.alias_parent_model_id or not alias.alias_parent_thread_id:
+            return False
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': alias.alias_parent_model_id.model,
+            'res_id': alias.alias_parent_thread_id,
+            'type': 'ir.actions.act_window',
+        }
