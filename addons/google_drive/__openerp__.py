@@ -19,23 +19,32 @@
 #
 ##############################################################################
 
-
 {
-    'name': 'Google Users',
-    'version': '1.0',
-    'category': 'Tools',
-    'description': """
-The module adds google user in res user.
-========================================
-""",
+    'name': 'Google Drive™ integration',
+    'version': '0.2',
     'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
-    'depends': ['base_setup'],
-    'data': [
-        'google_base_account_data.xml',
-    ],
-    'demo': [],
+    'website': 'http://openerp.com',
+    'category': 'Tools',
     'installable': True,
     'auto_install': False,
+    'js': [
+        'static/lib/gapi/client.js',
+        'static/src/js/gdrive.js',
+    ],
+    'data': [
+        'security/ir.model.access.csv',
+        'res_config_user_view.xml',
+        'google_drive_data.xml'
+    ],
+    'demo': [
+        'google_drive_demo.xml'
+    ],
+    'depends': ['base_setup', 'google_base_account'],
+    'description': """
+Integrate google document to OpenERP record.
+============================================
+
+This module allows you to integrate google documents to any of your OpenERP record quickly and easily using OAuth 2.0 for Installed Applications,
+You can configure your google Authorization Code from Settings > Configuration > General Settings by clicking on "Generate Google Authorization Code"
+"""
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
