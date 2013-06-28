@@ -3910,9 +3910,7 @@ class stock_pack_operation(osv.osv):
             context = {}
 
         #if current_package_id is given in the context, we increase the number of items in this package
-        package_clause = []
-        if context.get('current_package_id'):
-            package_clause = [('result_package_id', '=', context.get('current_package_id'))]
+        package_clause = [('result_package_id', '=', context.get('current_package_id', False))]
         existing_operation_ids = self.search(cr, uid, [('picking_id', '=', picking_id), key] + package_clause, context=context)
         if existing_operation_ids:
             #existing operation found for the given key and picking => increment its quantity
