@@ -227,6 +227,7 @@ function openerp_picking_widgets(instance){
                 });
         },
         copy_package: function(package_id){
+            var self = this;
             console.log('Copy Package:',package_id);
             new instance.web.Model('stock.quant.package')
                 .call('action_copy',[[package_id]])
@@ -235,6 +236,7 @@ function openerp_picking_widgets(instance){
                 });
         },
         delete_package: function(package_id){
+            var self = this;
             console.log('Delete Package:',package_id);
             new instance.web.Model('stock.quant.package')
                 .call('unlink',[[package_id]])
@@ -272,18 +274,20 @@ function openerp_picking_widgets(instance){
             var nocode_timeout_id = 0;
             var nocode_delay = 50;
             function nocode(){
-                console.log('NoCode:',numbers);
+                //console.log('NoCode:',numbers);
                 numbers = [];
             }
-            $('body').delegate('','keyup',function(e){
+            // it is important to catch the keypress event and not keyup/keydown as keypress normalizes the input codes :) 
+            $('body').delegate('','keypress',function(e){ 
+                //console.log('Key:',e);
                 if (e.keyCode >= 48 && e.keyCode < 58){
                     clearTimeout(nocode_timeout_id);
                     nocode_timeout_id = setTimeout(nocode,nocode_delay);
-                    numbers.push(e.keyCode - 48);
                     if(timestamp + 30 < new Date().getTime()){
                         clearTimeout(nocode_timeout_id);
                         nocode();
                     }
+                    numbers.push(e.keyCode - 48);
                     timestamp = new Date().getTime();
                     if(numbers.length === 13){
                         self.scan(numbers.join(''));
