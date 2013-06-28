@@ -42,15 +42,9 @@ function openerp_picking_widgets(instance){
         get_rows: function(){
             var model = this.getParent();
             var rows = [];
-            var current_package_id = instance.session.user_context.current_package_id;
-            _.each( model.operations, function(op){
-		if (!current_package_id){
-			if (op.result_package_id !== false){
-				return;
-			}
-		} else if(op.result_package_id[0] !== current_package_id){
-                    return;
-                }
+            var ops = model.get_current_operations();
+
+            _.each( ops, function(op){
                 rows.push({
                     cols: {
                         product: op.product_id[1],
@@ -124,6 +118,8 @@ function openerp_picking_widgets(instance){
         load: function(picking_id){
             var self = this;
 
+            console.log('LOADING DATA FROM SERVER');
+
             if(picking_id){
                 var picking = new instance.web.Model('stock.picking.in').call('read',[[picking_id], []]);
             }else{ 
@@ -193,7 +189,7 @@ function openerp_picking_widgets(instance){
             var self = this;
             return this.load(picking_id)
                 .then(function(){ 
-                    console.log('Refreshing UI');
+                    console.log('REFRESHING UI');
                     self.picking_editor.renderElement();
                     self.package_editor.renderElement();
                     self.package_selector.renderElement();
@@ -272,17 +268,49 @@ function openerp_picking_widgets(instance){
 
             return current_package;
         },
+        get_current_operations: function(){
+            var current_package_id = instance.session.user_context.current_package_id;
+            var ops = [];
+            _.each( this.operations, function(op){
+                if(!current_package_id){
+                    if(op.result_package_id !== false){
+                        return;
+                    }
+                }else if(op.result_package_id[0] !== current_package_id){
+                    return;
+                }
+                ops.push(op);
+            });
+            return ops;
+        },
         set_operation_quantity: function(quantity){
+            var self = this;
+            var ops = this.get_current_operations();
+            if( !ops || ops.length === 0){
+                return;
+            }
+            var op = ops[ops.length-1];
+
             if(quantity === '++'){
                 console.log('Increase quantity!');
+                quantity = op.product_qty + 1;
             }else if(quantity === '--'){
                 console.log('Decrease quantity :(');
-            }else if(typeof quantity === 'number'){
-                console.log('Set quantity: ',quantity);
+                quantity = op.product_qty - 1;
             }
+
+            if(typeof quantity === 'number' && quantity >= 0){
+                console.log('Set quantity: ',quantity);
+                new instance.web.Model('stock.pack.operation')
+                    .call('write',[[op.id],{'product_qty': quantity }])
+                    .then(function(){
+                        self.refresh_ui(self.picking.id);
+                    });
+            }
+
         },
         connect_barcode_scanner_and_numpad: function(){
-            var self =this;
+            var self = this;
             var numbers = [];
             var timestamp = 0;
             var numpad = [];
