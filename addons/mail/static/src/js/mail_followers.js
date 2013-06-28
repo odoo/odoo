@@ -36,6 +36,7 @@ openerp_mail_followers = function(session, mail) {
             this.followers = [];
             
             this.view_is_editable = this.__parentedParent.is_action_enabled('edit');
+            this.check_access = false;
         },
 
         start: function() {
@@ -45,6 +46,7 @@ openerp_mail_followers = function(session, mail) {
             this.reinit();
             this.bind_events();
             this._super();
+            this.check_group_tech_feature();
         },
 
         on_check_visibility_mode: function () {
@@ -188,33 +190,36 @@ openerp_mail_followers = function(session, mail) {
             this.$('.oe_follower_title').html(this._format_followers(this.value.length));
         },
 
+        check_group_tech_feature: function(){
+            var self = this;
+            self.ds_model.call('check_technical_rights', [self.session.uid]).then(function(result){
+                self.check_access = result;
+            });
+        },
+
         /** Display the followers */
         display_followers: function (records) {
             var self = this;
             this.followers = records || this.followers;
             this.message_is_follower = this.set_is_follower(this.followers);
-            this.check_access = false;
             // clean and display title
             var node_user_list = this.$('.oe_follower_list').empty();
             this.$('.oe_follower_title').html(this._format_followers(this.followers.length));
             // truncate number of displayed followers
             var truncated = this.followers.slice(0, this.displayed_nb);
             _(truncated).each(function (record) {
-                self.ds_model.call('check_technical_rights', [self.session.uid]).then(function(result){
-                    self.check_access = result;
-                    record.avatar_url = mail.ChatterUtils.get_image(self.session, 'res.partner', 'image_small', record.id);
-                    $(session.web.qweb.render('mail.followers.partner', {'record': record, 'widget': self})).appendTo(node_user_list);
-                    // On mouseenter it will show the edit_subtype penil
-                    if (self.check_access == true) {
-                        self.$el.on('mouseenter', 'div.oe_follower_list', function() {
-                            $("img.oe_edit_subtype").removeClass("hidden");
-                            $('div.oe_follower_list').find('.oe_partner').addClass('oe_partner_name');
+                record.avatar_url = mail.ChatterUtils.get_image(self.session, 'res.partner', 'image_small', record.id);
+                $(session.web.qweb.render('mail.followers.partner', {'record': record, 'widget': self})).appendTo(node_user_list);
+                // On mouseenter it will show the edit_subtype penil
+                if (self.check_access == true) {
+                    self.$el.on('mouseenter', 'div.oe_follower_list', function() {
+                        $("img.oe_edit_subtype").removeClass("hidden");
+                        $('div.oe_follower_list').find('.oe_partner').addClass('oe_partner_name');
                         }).on('mouseleave', 'div.oe_follower_list', function(){
                             $("img.oe_edit_subtype").addClass("hidden");
                             $('div.oe_follower_list').find('.oe_partner').removeClass('oe_partner_name');
                         });
                     }
-              })
             });
             // FVA note: be sure it is correctly translated
             if (truncated.length < this.followers.length) {
