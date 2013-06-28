@@ -1641,7 +1641,7 @@ class stock_picking(osv.osv):
                 #take care of packaging for completed moves
                 possible_quants = [x.id for x in move.reserved_quant_ids]
 
-                self.make_packaging(cr, uid, picking_id, move, possible_quants, context=context)
+                self.make_packaging(cr, uid, new_picking, move, possible_quants, context=context)
 
 
 
@@ -1660,7 +1660,7 @@ class stock_picking(osv.osv):
                 move_obj.write(cr, uid, [move.id], defaults)
 
                 possible_quants = [x.id for x in move.reserved_quant_ids]
-                self.make_packaging(cr, uid, picking_id, move, possible_quants, context=context)
+                self.make_packaging(cr, uid, new_picking, move, possible_quants, context=context)
             # At first we confirm the new picking (if necessary)
             if new_picking:
                 self.signal_button_confirm(cr, uid, [new_picking])
