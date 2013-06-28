@@ -230,29 +230,23 @@ def _make_wrapper(method, old_api, new_api):
     return wrapper
 
 
-def _split_context_args(nargs, args, kwargs):
+def _context_args_kwargs(method, args, kwargs):
     """ extract the context argument out of `args` and `kwargs`
-        :param nargs: expected number of arguments in `args`
-        :param args: arguments (tuple)
-        :param kwargs: named arguments (dictionary)
+        :param method: the method to call
+        :param args: positional arguments without `self` (tuple)
+        :param kwargs: keyword arguments (dictionary)
         :return: tuple `(context, args, kwargs)`
-                where both `args` and `kwargs` are free of context argument
+            where both `args` and `kwargs` are free of context argument
     """
     if 'context' in kwargs:
-        context = kwargs['context']
-        del kwargs['context']
+        context = kwargs.pop('context')
         return context, args, kwargs
-    elif len(args) + len(kwargs) > nargs:
+    elif len(args) + len(kwargs) > method.func_code.co_argcount - 1:
         # heuristics: context is given as an extra argument in args
         return args[-1], args[:-1], kwargs
     else:
         # context defaults to None
         return None, args, kwargs
-
-
-def _kwargs_context(kwargs, context):
-    """ add the `context` parameter in `kwargs` """
-    return dict(kwargs, context=context) if 'context' not in kwargs else kwargs
 
 
 def _get_one(value):
@@ -279,10 +273,9 @@ def model(method):
     """
     method._api = model
     convert = _returns_old(method)
-    nargs = method.func_code.co_argcount - 1
 
     def old_api(self, cr, uid, *args, **kwargs):
-        context, args, kwargs = _split_context_args(nargs, args, kwargs)
+        context, args, kwargs = _context_args_kwargs(method, args, kwargs)
         with Scope(cr, uid, context):
             value = method(self, *args, **kwargs)
             return convert(self, value)
@@ -310,10 +303,9 @@ def multi(method):
     """
     method._api = multi
     convert = _returns_old(method)
-    nargs = method.func_code.co_argcount - 1
 
     def old_api(self, cr, uid, ids, *args, **kwargs):
-        context, args, kwargs = _split_context_args(nargs, args, kwargs)
+        context, args, kwargs = _context_args_kwargs(method, args, kwargs)
         with Scope(cr, uid, context):
             value = new_api(self.browse(ids), *args, **kwargs)
             return convert(self, value)
@@ -346,10 +338,9 @@ def one(method):
     """
     method._api = one
     convert = _returns_old(method)
-    nargs = method.func_code.co_argcount - 1
 
     def old_api(self, cr, uid, ids, *args, **kwargs):
-        context, args, kwargs = _split_context_args(nargs, args, kwargs)
+        context, args, kwargs = _context_args_kwargs(method, args, kwargs)
         with Scope(cr, uid, context):
             value = new_api(self.browse(ids), *args, **kwargs)
             return convert(self, value)
@@ -396,7 +387,7 @@ def cr_context(method):
 
     def new_api(self, *args, **kwargs):
         cr, uid, context = scope
-        kwargs = _kwargs_context(kwargs, context)
+        kwargs = dict(kwargs, context=context)
         value = method(self, cr, *args, **kwargs)
         return convert(self, value)
 
@@ -437,7 +428,7 @@ def cr_uid_context(method):
 
     def new_api(self, *args, **kwargs):
         cr, uid, context = scope
-        kwargs = _kwargs_context(kwargs, context)
+        kwargs = dict(kwargs, context=context)
         value = method(self, cr, uid, *args, **kwargs)
         return convert(self, value)
 
@@ -493,7 +484,7 @@ def cr_uid_id_context(method):
 
     def new_api(self, *args, **kwargs):
         cr, uid, context = scope
-        kwargs = _kwargs_context(kwargs, context)
+        kwargs = dict(kwargs, context=context)
         if self.is_record():
             value = method(self, cr, uid, self.id, *args, **kwargs)
         else:
@@ -554,7 +545,7 @@ def cr_uid_ids_context(method):
 
     def new_api(self, *args, **kwargs):
         cr, uid, context = scope
-        kwargs = _kwargs_context(kwargs, context)
+        kwargs = dict(kwargs, context=context)
         if self.is_record():
             value = _get_one(method(self, cr, uid, [self.id], *args, **kwargs))
         else:
