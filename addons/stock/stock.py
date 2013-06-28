@@ -1699,7 +1699,8 @@ class stock_picking(osv.osv):
         return res and res[1] or False
 
     def _get_picking_for_packing_ui(self, cr, uid, context=None):
-        return self.search(cr, uid, [('state', '=', 'assigned')], limit=1, context=context)[0]
+        res = self.search(cr, uid, [('state', '=', 'assigned')], limit=1, context=context)
+        return res and res[0] or False  # TODO: what to do if nothing is left to do?
 
     def action_done_from_packing_ui(self, cr, uid, picking_id, context=None):
         if context is None:
