@@ -3806,7 +3806,9 @@ class stock_package(osv.osv):
         operation_ids = stock_operation_obj.search(cr, uid, [('result_package_id', 'in', ids)], context=context)
         #create a new empty stock.quant.package
         package_id = self.create(cr, uid, {}, context=context)
-        new_ops = stock_operation_obj.copy(cr, uid, operation_ids, {'result_package_id': package_id}, context=context)
+        new_ops = []
+        for op in operation_ids:
+            new_ops += [stock_operation_obj.copy(cr, uid, op, {'result_package_id': package_id}, context=context)]
         for operation in stock_operation_obj.browse(cr, uid, new_ops, context=context):
             if operation.product_id:
                 todo_on_moves, todo_on_operations = stock_operation_obj._search_and_increment(cr, uid, operation.picking_id.id, ('product_id', '=', operation.product_id.id), context=context)

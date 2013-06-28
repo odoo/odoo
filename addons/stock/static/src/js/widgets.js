@@ -43,7 +43,6 @@ function openerp_picking_widgets(instance){
             var model = this.getParent();
             var rows = [];
             var current_package_id = instance.session.user_context.current_package_id;
-            
             _.each( model.operations, function(op){
                 if((typeof current_package_id !== 'undefined') && op.result_package_id[0] !== current_package_id){
                     return;
@@ -292,7 +291,7 @@ function openerp_picking_widgets(instance){
                         clearTimeout(nocode_timeout_id);
                     }
                 }else{
-                    numbers = [];
+                    nocode();
                 }
             });
         },
