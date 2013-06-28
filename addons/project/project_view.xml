@@ -32,6 +32,7 @@
                     <separator/>
                     <filter string="Deadlines" context="{'deadline_visible': False}" domain="[('date_deadline','&lt;&gt;',False)]"
                         help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
+                    <field name="partner_id"/>
                     <field name="project_id"/>
                     <field name="user_id"/>
                     <group expand="0" string="Group By...">
@@ -89,17 +90,6 @@
                         <h1>
                             <field name="name" string="Project Name"/>
                         </h1>
-                        <div name="group_alias"
-                            attrs="{'invisible': [('alias_domain', '=', False)]}">
-                        <label for="alias_id" string="Email Alias"/>
-                        <field name="alias_id" class="oe_inline oe_read_only" required="0" nolabel="1"/>
-                        <span name="edit_alias" class="oe_edit_only">
-                            <field name="alias_name" class="oe_inline"
-                                    attrs="{'required': [('alias_id', '!=', False)]}"/>
-                            @
-                            <field name="alias_domain" class="oe_inline" readonly="1"/>
-                        </span>
-                    </div>
                         <div name="options_active">
                             <field name="use_tasks" class="oe_inline"/>
                             <label for="use_tasks"/>
@@ -112,16 +102,30 @@
                     </div>
                     <group>
                         <group>
-                            <field name="privacy_visibility"/>
                             <field name="user_id" string="Project Manager" 
-                                attrs="{'readonly':[('state','in',['close', 'cancelled'])]}" 
-                                context="{'default_groups_ref': ['base.group_user', 'project.group_project_manager']}"/>
-                        </group>
-                        <group>
+                                    attrs="{'readonly':[('state','in',['close', 'cancelled'])]}" 
+                                    context="{'default_groups_ref': ['base.group_user', 'project.group_project_manager']}"/>
                             <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
-                            <p colspan="2" attrs="{'invisible': [('analytic_account_id','=',False)]}">
-                                To invoice or setup invoicing and renewal options, go to the related contract: <field name="analytic_account_id" readonly="1" required="0" class="oe_inline"/>.
+                            <span></span>
+                            <p attrs="{'invisible': [('analytic_account_id','=',False)]}">
+                                To invoice or setup invoicing and renewal options, go to the related contract:
+                                <field name="analytic_account_id" readonly="1" required="0" class="oe_inline" nolabel="1"/>.
                             </p>
+                        </group>
+                        <group name="group_alias"
+                                attrs="{'invisible': [('alias_domain', '=', False)]}">
+                            <label for="alias_name" string="Email Alias"/>
+                            <div name="alias_def">
+                                <field name="alias_id" class="oe_read_only oe_inline"
+                                        string="Email Alias" required="0"/>
+                                <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
+                                    <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                                </div>
+                            </div>
+                            <label for="alias_model" string="Incoming Emails create"/>
+                            <field name="alias_model" class="oe_inline" nolabel="1"/>
+                            <field name="alias_contact" class="oe_inline"
+                                    string="Accept Emails From"/>
                         </group>
                     </group>
                     <notebook>
@@ -145,20 +149,22 @@
                             </field>
                         </page>
                         <page string="Other Info">
-                            <group>
-                                <group string="Administration" groups="project.group_time_work_estimation_tasks">
-                                    <field name="planned_hours" widget="float_time"/>
-                                    <field name="effective_hours" widget="float_time"/>
-                                    <field name="resource_calendar_id"/>
-                                </group>
-                                <group string="Miscellaneous" name="misc">
-                                    <field name="date_start"/>
-                                    <field name="date" string="End Date"/>
-                                    <field name="priority" groups="base.group_no_one"/>
-                                    <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
-                                    <field name="currency_id" groups="base.group_multi_currency" required="1"/>
-                                    <field name="parent_id" string="Parent" help="Append this project to another one using analytic accounts hierarchy" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}" />
-                                </group>
+                            <group string="Administration">
+                                <field name="privacy_visibility" widget="radio"/>
+                                <field name="planned_hours" widget="float_time"
+                                        groups="project.group_time_work_estimation_tasks"/>
+                                <field name="effective_hours" widget="float_time"
+                                        groups="project.group_time_work_estimation_tasks"/>
+                                <field name="resource_calendar_id"
+                                        groups="project.group_time_work_estimation_tasks"/>
+                            </group>
+                            <group string="Miscellaneous" name="misc">
+                                <field name="date_start"/>
+                                <field name="date" string="End Date"/>
+                                <field name="priority" groups="base.group_no_one"/>
+                                <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
+                                <field name="currency_id" groups="base.group_multi_currency" required="1"/>
+                                <field name="parent_id" string="Parent" help="Append this project to another one using analytic accounts hierarchy" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}" />
                             </group>
                         </page>
                         <page string="Project Stages" attrs="{'invisible': [('use_tasks', '=', False)]}" name="project_stages">
@@ -252,7 +258,7 @@
                                 <div class="oe_kanban_content">
                                     <h4><field name="name"/></h4>
                                     <div class="oe_kanban_alias" t-if="record.alias_id.value">
-                                        <span class="oe_e">%%</span><small><field name="alias_id"/></small>
+                                        <span class="oe_e oe_e_alias">%%</span><small><field name="alias_id"/></small>
                                     </div>
                                     <div class="oe_kanban_project_list">
                                         <a t-if="record.use_tasks.raw_value" name="%(act_project_project_2_project_task_all)d" type="action" style="margin-right: 10px"> 

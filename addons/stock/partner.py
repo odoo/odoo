@@ -25,19 +25,15 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
     _columns = {
         'property_stock_customer': fields.property(
-          'stock.location',
           type='many2one',
           relation='stock.location',
           string="Customer Location",
-          view_load=True,
           help="This stock location will be used, instead of the default one, as the destination location for goods you send to this partner"),
 
         'property_stock_supplier': fields.property(
-          'stock.location',
           type='many2one',
           relation='stock.location',
           string="Supplier Location",
-          view_load=True,
           help="This stock location will be used, instead of the default one, as the source location for goods you receive from the current partner"),
     }
 

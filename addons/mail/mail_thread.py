@@ -25,7 +25,6 @@ import dateutil
 import email
 import logging
 import pytz
-import re
 import time
 import xmlrpclib
 from email.message import Message
@@ -102,21 +101,22 @@ class mail_thread(osv.AbstractModel):
         if catchall_domain and model and res_id:  # specific res_id -> find its alias (i.e. section_id specified)
             object_id = self.pool.get(model).browse(cr, uid, res_id, context=context)
             # check that the alias effectively creates new records
-            if object_id.alias_id and object_id.alias_id.alias_model_id and \
+            if object_id.alias_id and object_id.alias_id.alias_name and \
+                    object_id.alias_id.alias_model_id and \
                     object_id.alias_id.alias_model_id.model == self._name and \
                     object_id.alias_id.alias_force_thread_id == 0:
                 alias = object_id.alias_id
         elif catchall_domain and model:  # no specific res_id given -> generic help message, take an example alias (i.e. alias of some section_id)
             model_id = self.pool.get('ir.model').search(cr, uid, [("model", "=", self._name)], context=context)[0]
             alias_obj = self.pool.get('mail.alias')
-            alias_ids = alias_obj.search(cr, uid, [("alias_model_id", "=", model_id), ('alias_force_thread_id', '=', 0)], context=context, order='id ASC')
+            alias_ids = alias_obj.search(cr, uid, [("alias_model_id", "=", model_id), ("alias_name", "!=", False), ('alias_force_thread_id', '=', 0)], context=context, order='id ASC')
             if alias_ids and len(alias_ids) == 1:  # if several aliases -> incoherent to propose one guessed from nowhere, therefore avoid if several aliases
                 alias = alias_obj.browse(cr, uid, alias_ids[0], context=context)
 
         if alias:
             alias_email = alias.name_get()[0][1]
             return _("""<p class='oe_view_nocontent_create'>
-                            Click here to add a new %(document)s or send an email to: <a href='mailto:%(email)s'>%(email)s</a>
+                            Click here to add new %(document)s or send an email to: <a href='mailto:%(email)s'>%(email)s</a>
                         </p>
                         %(static_help)s"""
                     ) % {
@@ -126,7 +126,7 @@ class mail_thread(osv.AbstractModel):
                     }
 
         if document_name != 'document' and help and help.find("oe_view_nocontent_create") == -1:
-            return _("<p class='oe_view_nocontent_create'>Click here to add a new %(document)s</p>%(static_help)s") % {
+            return _("<p class='oe_view_nocontent_create'>Click here to add new %(document)s</p>%(static_help)s") % {
                         'document': document_name,
                         'static_help': help or '',
                     }
@@ -240,21 +240,41 @@ class mail_thread(osv.AbstractModel):
             fol_obj.create(cr, SUPERUSER_ID, {'res_model': self._name, 'res_id': id, 'partner_id': partner_id})
 
     def _search_followers(self, cr, uid, obj, name, args, context):
+        """Search function for message_follower_ids
+
+        Do not use with operator 'not in'. Use instead message_is_followers
+        """
         fol_obj = self.pool.get('mail.followers')
         res = []
         for field, operator, value in args:
             assert field == name
+            # TOFIX make it work with not in
+            assert operator != "not in", "Do not search message_follower_ids with 'not in'"
             fol_ids = fol_obj.search(cr, SUPERUSER_ID, [('res_model', '=', self._name), ('partner_id', operator, value)])
             res_ids = [fol.res_id for fol in fol_obj.browse(cr, SUPERUSER_ID, fol_ids)]
             res.append(('id', 'in', res_ids))
         return res
 
+    def _search_is_follower(self, cr, uid, obj, name, args, context):
+        """Search function for message_is_follower"""
+        res = []
+        for field, operator, value in args:
+            assert field == name
+            partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+            if (operator == '=' and value) or (operator == '!=' and not value):  # is a follower
+                res_ids = self.search(cr, uid, [('message_follower_ids', 'in', [partner_id])], context=context)
+            else:  # is not a follower or unknown domain
+                mail_ids = self.search(cr, uid, [('message_follower_ids', 'in', [partner_id])], context=context)
+                res_ids = self.search(cr, uid, [('id', 'not in', mail_ids)], context=context)
+            res.append(('id', 'in', res_ids))
+        return res
+
     _columns = {
-        'message_is_follower': fields.function(_get_followers,
-            type='boolean', string='Is a Follower', multi='_get_followers,'),
+        'message_is_follower': fields.function(_get_followers, type='boolean',
+            fnct_search=_search_is_follower, string='Is a Follower', multi='_get_followers,'),
         'message_follower_ids': fields.function(_get_followers, fnct_inv=_set_followers,
-                fnct_search=_search_followers, type='many2many',
-                obj='res.partner', string='Followers', multi='_get_followers'),
+            fnct_search=_search_followers, type='many2many',
+            obj='res.partner', string='Followers', multi='_get_followers'),
         'message_ids': fields.one2many('mail.message', 'res_id',
             domain=lambda self: [('model', '=', self._name)],
             auto_join=True,
@@ -308,8 +328,8 @@ class mail_thread(osv.AbstractModel):
         # Track initial values of tracked fields
         tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=context)
         if tracked_fields:
-            initial = self.read(cr, uid, ids, tracked_fields.keys(), context=context)
-            initial_values = dict((item['id'], item) for item in initial)
+            records = self.browse(cr, uid, ids, context=context)
+            initial_values = dict((this.id, dict((key, getattr(this, key)) for key in tracked_fields.keys())) for this in records)
 
         # Perform write, update followers
         result = super(mail_thread, self).write(cr, uid, ids, values, context=context)
@@ -368,7 +388,7 @@ class mail_thread(osv.AbstractModel):
             if not value:
                 return ''
             if col_info['type'] == 'many2one':
-                return value[1]
+                return value.name_get()[0][1]
             if col_info['type'] == 'selection':
                 return dict(col_info['selection'])[value]
             return value
@@ -387,23 +407,26 @@ class mail_thread(osv.AbstractModel):
         if not tracked_fields:
             return True
 
-        for record in self.read(cr, uid, ids, tracked_fields.keys(), context=context):
-            initial = initial_values[record['id']]
-            changes = []
+        for browse_record in self.browse(cr, uid, ids, context=context):
+            initial = initial_values[browse_record.id]
+            changes = set()
             tracked_values = {}
 
             # generate tracked_values data structure: {'col_name': {col_info, new_value, old_value}}
             for col_name, col_info in tracked_fields.items():
-                if record[col_name] == initial[col_name] and getattr(self._all_columns[col_name].column, 'track_visibility', None) == 'always':
+                initial_value = initial[col_name]
+                record_value = getattr(browse_record, col_name)
+
+                if record_value == initial_value and getattr(self._all_columns[col_name].column, 'track_visibility', None) == 'always':
                     tracked_values[col_name] = dict(col_info=col_info['string'],
-                                                        new_value=convert_for_display(record[col_name], col_info))
-                elif record[col_name] != initial[col_name]:
+                                                        new_value=convert_for_display(record_value, col_info))
+                elif record_value != initial_value and (record_value or initial_value):  # because browse null != False
                     if getattr(self._all_columns[col_name].column, 'track_visibility', None) in ['always', 'onchange']:
                         tracked_values[col_name] = dict(col_info=col_info['string'],
-                                                            old_value=convert_for_display(initial[col_name], col_info),
-                                                            new_value=convert_for_display(record[col_name], col_info))
+                                                            old_value=convert_for_display(initial_value, col_info),
+                                                            new_value=convert_for_display(record_value, col_info))
                     if col_name in tracked_fields:
-                        changes.append(col_name)
+                        changes.add(col_name)
             if not changes:
                 continue
 
@@ -413,7 +436,7 @@ class mail_thread(osv.AbstractModel):
                 if field not in changes:
                     continue
                 for subtype, method in track_info.items():
-                    if method(self, cr, uid, record, context):
+                    if method(self, cr, uid, browse_record, context):
                         subtypes.append(subtype)
 
             posted = False
@@ -424,11 +447,11 @@ class mail_thread(osv.AbstractModel):
                     _logger.debug('subtype %s not found, giving error "%s"' % (subtype, e))
                     continue
                 message = format_message(subtype_rec.description if subtype_rec.description else subtype_rec.name, tracked_values)
-                self.message_post(cr, uid, record['id'], body=message, subtype=subtype, context=context)
+                self.message_post(cr, uid, browse_record.id, body=message, subtype=subtype, context=context)
                 posted = True
             if not posted:
                 message = format_message('', tracked_values)
-                self.message_post(cr, uid, record['id'], body=message, context=context)
+                self.message_post(cr, uid, browse_record.id, body=message, context=context)
         return True
 
     #------------------------------------------------------
@@ -543,6 +566,8 @@ class mail_thread(osv.AbstractModel):
     #------------------------------------------------------
 
     def message_get_reply_to(self, cr, uid, ids, context=None):
+        """ Returns the preferred reply-to email address that is basically
+            the alias of the document, if it exists. """
         if not self._inherits.get('mail.alias'):
             return [False for id in ids]
         return ["%s@%s" % (record['alias_name'], record['alias_domain'])
@@ -559,34 +584,130 @@ class mail_thread(osv.AbstractModel):
         ret_dict = {}
         for model_name in self.pool.obj_list():
             model = self.pool[model_name]
-            if 'mail.thread' in getattr(model, '_inherit', []):
+            if hasattr(model, "message_process") and hasattr(model, "message_post"):
                 ret_dict[model_name] = model._description
         return ret_dict
 
     def _message_find_partners(self, cr, uid, message, header_fields=['From'], context=None):
         """ Find partners related to some header fields of the message.
 
-            TDE TODO: merge me with other partner finding methods in 8.0 """
-        partner_obj = self.pool.get('res.partner')
-        partner_ids = []
+            :param string message: an email.message instance """
         s = ', '.join([decode(message.get(h)) for h in header_fields if message.get(h)])
-        for email_address in tools.email_split(s):
-            related_partners = partner_obj.search(cr, uid, [('email', 'ilike', email_address), ('user_ids', '!=', False)], limit=1, context=context)
-            if not related_partners:
-                related_partners = partner_obj.search(cr, uid, [('email', 'ilike', email_address)], limit=1, context=context)
-            partner_ids += related_partners
-        return partner_ids
+        return filter(lambda x: x, self._find_partner_from_emails(cr, uid, None, tools.email_split(s), context=context))
 
-    def _message_find_user_id(self, cr, uid, message, context=None):
-        """ TDE TODO: check and maybe merge me with other user finding methods in 8.0 """
-        from_local_part = tools.email_split(decode(message.get('From')))[0]
-        # FP Note: canonification required, the minimu: .lower()
-        user_ids = self.pool.get('res.users').search(cr, uid, ['|',
-            ('login', '=', from_local_part),
-            ('email', '=', from_local_part)], context=context)
-        return user_ids[0] if user_ids else uid
+    def message_route_verify(self, cr, uid, message, message_dict, route, update_author=True, assert_model=True, create_fallback=True, context=None):
+        """ Verify route validity. Check and rules:
+            1 - if thread_id -> check that document effectively exists; otherwise
+                fallback on a message_new by resetting thread_id
+            2 - check that message_update exists if thread_id is set; or at least
+                that message_new exist
+            [ - find author_id if udpate_author is set]
+            3 - if there is an alias, check alias_contact:
+                'followers' and thread_id:
+                    check on target document that the author is in the followers
+                'followers' and alias_parent_thread_id:
+                    check on alias parent document that the author is in the
+                    followers
+                'partners': check that author_id id set
+        """
 
-    def message_route(self, cr, uid, message, model=None, thread_id=None,
+        assert isinstance(route, (list, tuple)), 'A route should be a list or a tuple'
+        assert len(route) == 5, 'A route should contain 5 elements: model, thread_id, custom_values, uid, alias record'
+
+        message_id = message.get('Message-Id')
+        email_from = decode_header(message, 'From')
+        author_id = message_dict.get('author_id')
+        model, thread_id, alias = route[0], route[1], route[4]
+        model_pool = None
+
+        def _create_bounce_email():
+            mail_mail = self.pool.get('mail.mail')
+            mail_id = mail_mail.create(cr, uid, {
+                            'body_html': '<div><p>Hello,</p>'
+                                '<p>The following email sent to %s cannot be accepted because this is '
+                                'a private email address. Only allowed people can contact us at this address.</p></div>'
+                                '<blockquote>%s</blockquote>' % (message.get('to'), message_dict.get('body')),
+                            'subject': 'Re: %s' % message.get('subject'),
+                            'email_to': message.get('from'),
+                            'auto_delete': True,
+                        }, context=context)
+            mail_mail.send(cr, uid, [mail_id], context=context)
+
+        def _warn(message):
+            _logger.warning('Routing mail with Message-Id %s: route %s: %s',
+                                message_id, route, message)
+
+        # Wrong model
+        if model and not model in self.pool:
+            if assert_model:
+                assert model in self.pool, 'Routing: unknown target model %s' % model
+            _warn('unknown target model %s' % model)
+            return ()
+        elif model:
+            model_pool = self.pool[model]
+
+        # Private message: should not contain any thread_id
+        if not model and thread_id:
+            if assert_model:
+                assert thread_id == 0, 'Routing: posting a message without model should be with a null res_id (private message).'
+            _warn('posting a message without model should be with a null res_id (private message), resetting thread_id')
+            thread_id = 0
+
+        # Existing Document: check if exists; if not, fallback on create if allowed
+        if thread_id and not model_pool.exists(cr, uid, thread_id):
+            if create_fallback:
+                _warn('reply to missing document (%s,%s), fall back on new document creation' % (model, thread_id))
+                thread_id = None
+            elif assert_model:
+                assert model_pool.exists(cr, uid, thread_id), 'Routing: reply to missing document (%s,%s)' % (model, thread_id)
+            else:
+                _warn('reply to missing document (%s,%s), skipping' % (model, thread_id))
+                return ()
+
+        # Existing Document: check model accepts the mailgateway
+        if thread_id and not hasattr(model_pool, 'message_update'):
+            if create_fallback:
+                _warn('model %s does not accept document update, fall back on document creation' % model)
+                thread_id = None
+            elif assert_model:
+                assert hasattr(model_pool, 'message_update'), 'Routing: model %s does not accept document update, crashing' % model
+            else:
+                _warn('model %s does not accept document update, skipping' % model)
+                return ()
+
+        # New Document: check model accepts the mailgateway
+        if not thread_id and not hasattr(model_pool, 'message_new'):
+            if assert_model:
+                assert hasattr(model_pool, 'message_new'), 'Model %s does not accept document creation, crashing' % model
+            _warn('model %s does not accept document creation, skipping' % model)
+            return ()
+
+        # Update message author if asked
+        # We do it now because we need it for aliases (contact settings)
+        if not author_id and update_author:
+            author_ids = self._find_partner_from_emails(cr, uid, thread_id, [email_from], model=model, context=context)
+            if author_ids:
+                author_id = author_ids[0]
+                message_dict['author_id'] = author_id
+
+        # Alias: check alias_contact settings
+        if alias and alias.alias_contact == 'followers' and (thread_id or alias.alias_parent_thread_id):
+            if thread_id:
+                obj = self.pool[model].browse(cr, uid, thread_id, context=context)
+            else:
+                obj = self.pool[alias.alias_parent_model_id.model].browse(cr, uid, alias.alias_parent_thread_id, context=context)
+            if not author_id or not author_id in [fol.id for fol in obj.message_follower_ids]:
+                _warn('alias %s restricted to internal followers, skipping' % alias.alias_name)
+                _create_bounce_email()
+                return ()
+        elif alias and alias.alias_contact == 'partners' and not author_id:
+            _warn('alias %s does not accept unknown author, skipping' % alias.alias_name)
+            _create_bounce_email()
+            return ()
+
+        return (model, thread_id, route[2], route[3], route[4])
+
+    def message_route(self, cr, uid, message, message_dict, model=None, thread_id=None,
                       custom_values=None, context=None):
         """Attempt to figure out the correct target model, thread_id,
         custom_values and user_id to use for an incoming message.
@@ -606,6 +727,7 @@ class mail_thread(osv.AbstractModel):
              4. If all the above fails, raise an exception.
 
            :param string message: an email.message instance
+           :param dict message_dict: dictionary holding message variables
            :param string model: the fallback model to use if the message
                does not match any of the currently configured mail aliases
                (may be None if a matching alias is supposed to be present)
@@ -616,9 +738,12 @@ class mail_thread(osv.AbstractModel):
            :param int thread_id: optional ID of the record/thread from ``model``
                to which this mail should be attached. Only used if the message
                does not reply to an existing thread and does not match any mail alias.
-           :return: list of [model, thread_id, custom_values, user_id]
+           :return: list of [model, thread_id, custom_values, user_id, alias]
         """
         assert isinstance(message, Message), 'message must be an email.message.Message at this point'
+        fallback_model = model
+
+        # Get email.message.Message variables for future processing
         message_id = message.get('Message-Id')
         email_from = decode_header(message, 'From')
         email_to = decode_header(message, 'To')
@@ -628,18 +753,20 @@ class mail_thread(osv.AbstractModel):
         # 1. Verify if this is a reply to an existing thread
         thread_references = references or in_reply_to
         ref_match = thread_references and tools.reference_re.search(thread_references)
-
         if ref_match:
             thread_id = int(ref_match.group(1))
-            model = ref_match.group(2) or model
+            model = ref_match.group(2) or fallback_model
             if thread_id and model in self.pool:
                 model_obj = self.pool[model]
                 if model_obj.exists(cr, uid, thread_id) and hasattr(model_obj, 'message_update'):
                     _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to model: %s, thread_id: %s, custom_values: %s, uid: %s',
                                     email_from, email_to, message_id, model, thread_id, custom_values, uid)
-                    return [(model, thread_id, custom_values, uid)]
+                    route = self.message_route_verify(cr, uid, message, message_dict,
+                                    (model, thread_id, custom_values, uid, None),
+                                    update_author=True, assert_model=True, create_fallback=True, context=context)
+                    return route and [route] or []
 
-        # Verify whether this is a reply to a private message
+        # 2. Reply to a private message
         if in_reply_to:
             message_ids = self.pool.get('mail.message').search(cr, uid, [
                                 ('message_id', '=', in_reply_to),
@@ -649,9 +776,12 @@ class mail_thread(osv.AbstractModel):
                 message = self.pool.get('mail.message').browse(cr, uid, message_ids[0], context=context)
                 _logger.info('Routing mail from %s to %s with Message-Id %s: direct reply to a private message: %s, custom_values: %s, uid: %s',
                                 email_from, email_to, message_id, message.id, custom_values, uid)
-                return [(message.model, message.res_id, custom_values, uid)]
+                route = self.message_route_verify(cr, uid, message, message_dict,
+                                (message.model, message.res_id, custom_values, uid, None),
+                                update_author=True, assert_model=True, create_fallback=True, context=context)
+                return route and [route] or []
 
-        # 2. Look for a matching mail.alias entry
+        # 3. Look for a matching mail.alias entry
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
         # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
         rcpt_tos = \
@@ -676,14 +806,16 @@ class mail_thread(osv.AbstractModel):
                         # user_id = self._message_find_user_id(cr, uid, message, context=context)
                         user_id = uid
                         _logger.info('No matching user_id for the alias %s', alias.alias_name)
-                    routes.append((alias.alias_model_id.model, alias.alias_force_thread_id, \
-                                   eval(alias.alias_defaults), user_id))
-                _logger.info('Routing mail from %s to %s with Message-Id %s: direct alias match: %r',
-                                email_from, email_to, message_id, routes)
+                    route = (alias.alias_model_id.model, alias.alias_force_thread_id, eval(alias.alias_defaults), user_id, alias)
+                    _logger.info('Routing mail from %s to %s with Message-Id %s: direct alias match: %r',
+                                email_from, email_to, message_id, route)
+                    route = self.message_route_verify(cr, uid, message, message_dict, route,
+                                update_author=True, assert_model=True, create_fallback=True, context=context)
+                    if route:
+                        routes.append(route)
                 return routes
 
-        # 3. Fallback to the provided parameters, if they work
-        model_pool = self.pool.get(model)
+        # 4. Fallback to the provided parameters, if they work
         if not thread_id:
             # Legacy: fallback to matching [ID] in the Subject
             match = tools.res_re.search(decode_header(message, 'Subject'))
@@ -693,16 +825,18 @@ class mail_thread(osv.AbstractModel):
                 thread_id = int(thread_id)
             except:
                 thread_id = False
-        assert thread_id and hasattr(model_pool, 'message_update') or hasattr(model_pool, 'message_new'), \
+        _logger.info('Routing mail from %s to %s with Message-Id %s: fallback to model:%s, thread_id:%s, custom_values:%s, uid:%s',
+                    email_from, email_to, message_id, fallback_model, thread_id, custom_values, uid)
+        route = self.message_route_verify(cr, uid, message, message_dict,
+                        (fallback_model, thread_id, custom_values, uid, None),
+                        update_author=True, assert_model=True, context=context)
+        if route:
+            return [route]
+
+        # AssertionError if no routes found and if no bounce occured
+        assert False, \
             "No possible route found for incoming message from %s to %s (Message-Id %s:)." \
             "Create an appropriate mail.alias or force the destination model." % (email_from, email_to, message_id)
-        if thread_id and not model_pool.exists(cr, uid, thread_id):
-            _logger.warning('Received mail reply to missing document %s! Ignoring and creating new document instead for Message-Id %s',
-                                thread_id, message_id)
-            thread_id = None
-        _logger.info('Routing mail from %s to %s with Message-Id %s: fallback to model:%s, thread_id:%s, custom_values:%s, uid:%s',
-                        email_from, email_to, message_id, model, thread_id, custom_values, uid)
-        return [(model, thread_id, custom_values, uid)]
 
     def message_process(self, cr, uid, model, message, custom_values=None,
                         save_original=False, strip_attachments=False,
@@ -756,25 +890,21 @@ class mail_thread(osv.AbstractModel):
         msg = self.message_parse(cr, uid, msg_txt, save_original=save_original, context=context)
         if strip_attachments:
             msg.pop('attachments', None)
+        # postpone setting msg.partner_ids after message_post, to avoid double notifications
+        partner_ids = msg.pop('partner_ids', [])
         if msg.get('message_id'):   # should always be True as message_parse generate one if missing
             existing_msg_ids = self.pool.get('mail.message').search(cr, SUPERUSER_ID, [
                                                                 ('message_id', '=', msg.get('message_id')),
                                                                 ], context=context)
             if existing_msg_ids:
-                _logger.info('Ignored mail from %s to %s with Message-Id %s:: found duplicated Message-Id during processing',
+                _logger.info('Ignored mail from %s to %s with Message-Id %s: found duplicated Message-Id during processing',
                                 msg.get('from'), msg.get('to'), msg.get('message_id'))
                 return False
 
         # find possible routes for the message
-        routes = self.message_route(cr, uid, msg_txt, model,
-                                    thread_id, custom_values,
-                                    context=context)
-
-        # postpone setting msg.partner_ids after message_post, to avoid double notifications
-        partner_ids = msg.pop('partner_ids', [])
-
+        routes = self.message_route(cr, uid, msg_txt, msg, model, thread_id, custom_values, context=context)
         thread_id = False
-        for model, thread_id, custom_values, user_id in routes:
+        for model, thread_id, custom_values, user_id, alias in routes:
             if self._name == 'mail.thread':
                 context.update({'thread_model': model})
             if model:
@@ -785,15 +915,17 @@ class mail_thread(osv.AbstractModel):
 
                 # disabled subscriptions during message_new/update to avoid having the system user running the
                 # email gateway become a follower of all inbound messages
-                nosub_ctx = dict(context, mail_create_nosubscribe=True)
+                nosub_ctx = dict(context, mail_create_nosubscribe=True, mail_create_nolog=True)
                 if thread_id and hasattr(model_pool, 'message_update'):
                     model_pool.message_update(cr, user_id, [thread_id], msg, context=nosub_ctx)
                 else:
-                    nosub_ctx = dict(nosub_ctx, mail_create_nolog=True)
                     thread_id = model_pool.message_new(cr, user_id, msg, custom_values, context=nosub_ctx)
             else:
                 assert thread_id == 0, "Posting a message without model should be with a null res_id, to create a private message."
                 model_pool = self.pool.get('mail.thread')
+            if not hasattr(model_pool, 'message_post'):
+                context['thread_model'] = model
+                model_pool = self.pool['mail.thread']
             new_msg_id = model_pool.message_post(cr, uid, [thread_id], context=context, subtype='mail.mt_comment', **msg)
 
             if partner_ids:
@@ -923,7 +1055,6 @@ class mail_thread(osv.AbstractModel):
         """
         msg_dict = {
             'type': 'email',
-            'author_id': False,
         }
         if not isinstance(message, Message):
             if isinstance(message, unicode):
@@ -946,12 +1077,7 @@ class mail_thread(osv.AbstractModel):
         msg_dict['from'] = decode(message.get('from'))
         msg_dict['to'] = decode(message.get('to'))
         msg_dict['cc'] = decode(message.get('cc'))
-
-        if message.get('From'):
-            author_ids = self._message_find_partners(cr, uid, message, ['From'], context=context)
-            if author_ids:
-                msg_dict['author_id'] = author_ids[0]
-            msg_dict['email_from'] = decode(message.get('from'))
+        msg_dict['email_from'] = decode(message.get('from'))
         partner_ids = self._message_find_partners(cr, uid, message, ['To', 'Cc'], context=context)
         msg_dict['partner_ids'] = [(4, partner_id) for partner_id in partner_ids]
 
@@ -1005,7 +1131,7 @@ class mail_thread(osv.AbstractModel):
                 partner_id, partner_name<partner_email> or partner_name, reason """
         if email and not partner:
             # get partner info from email
-            partner_info = self.message_get_partner_info_from_emails(cr, uid, [email], context=context, res_id=obj.id)[0]
+            partner_info = self.message_partner_info_from_emails(cr, uid, obj.id, [email], context=context)[0]
             if partner_info.get('partner_id'):
                 partner = self.pool.get('res.partner').browse(cr, SUPERUSER_ID, [partner_info.get('partner_id')], context=context)[0]
         if email and email in [val[1] for val in result[obj.id]]:  # already existing email -> skip
@@ -1033,53 +1159,76 @@ class mail_thread(osv.AbstractModel):
                 self._message_add_suggested_recipient(cr, uid, result, obj, partner=obj.user_id.partner_id, reason=self._all_columns['user_id'].column.string, context=context)
         return result
 
-    def message_get_partner_info_from_emails(self, cr, uid, emails, link_mail=False, context=None, res_id=None):
-        """ Wrapper with weird order parameter because of 7.0 fix.
+    def _find_partner_from_emails(self, cr, uid, id, emails, model=None, context=None, check_followers=True):
+        """ Utility method to find partners from email addresses. The rules are :
+            1 - check in document (model | self, id) followers
+            2 - try to find a matching partner that is also an user
+            3 - try to find a matching partner
 
-            TDE TODO: remove me in 8.0 """
-        return self.message_find_partner_from_emails(cr, uid, res_id, emails, link_mail=link_mail, context=context)
-
-    def message_find_partner_from_emails(self, cr, uid, id, emails, link_mail=False, context=None):
-        """ Convert a list of emails into a list partner_ids and a list
-            new_partner_ids. The return value is non conventional because
-            it is meant to be used by the mail widget.
-
-            :return dict: partner_ids and new_partner_ids
-
-            TDE TODO: merge me with other partner finding methods in 8.0 """
-        mail_message_obj = self.pool.get('mail.message')
-        partner_obj = self.pool.get('res.partner')
-        result = list()
-        if id and self._name != 'mail.thread':
-            obj = self.browse(cr, SUPERUSER_ID, id, context=context)
-        else:
-            obj = None
-        for email in emails:
-            partner_info = {'full_name': email, 'partner_id': False}
-            m = re.search(r"((.+?)\s*<)?([^<>]+@[^<>]+)>?", email, re.IGNORECASE | re.DOTALL)
-            if not m:
+            :param list emails: list of email addresses
+            :param string model: model to fetch related record; by default self
+                is used.
+            :param boolean check_followers: check in document followers
+        """
+        partner_obj = self.pool['res.partner']
+        partner_ids = []
+        obj = None
+        if id and (model or self._name != 'mail.thread') and check_followers:
+            if model:
+                obj = self.pool[model].browse(cr, uid, id, context=context)
+            else:
+                obj = self.browse(cr, uid, id, context=context)
+        for contact in emails:
+            partner_id = False
+            email_address = tools.email_split(contact)
+            if not email_address:
+                partner_ids.append(partner_id)
                 continue
-            email_address = m.group(3)
+            email_address = email_address[0]
             # first try: check in document's followers
             if obj:
                 for follower in obj.message_follower_ids:
                     if follower.email == email_address:
-                        partner_info['partner_id'] = follower.id
-            # second try: check in partners
-            if not partner_info.get('partner_id'):
-                ids = partner_obj.search(cr, SUPERUSER_ID, [('email', 'ilike', email_address), ('user_ids', '!=', False)], limit=1, context=context)
-                if not ids:
-                    ids = partner_obj.search(cr, SUPERUSER_ID, [('email', 'ilike', email_address)], limit=1, context=context)
+                        partner_id = follower.id
+            # second try: check in partners that are also users
+            if not partner_id:
+                ids = partner_obj.search(cr, SUPERUSER_ID, [
+                                                ('email', 'ilike', email_address),
+                                                ('user_ids', '!=', False)
+                                            ], limit=1, context=context)
                 if ids:
-                    partner_info['partner_id'] = ids[0]
+                    partner_id = ids[0]
+            # third try: check in partners
+            if not partner_id:
+                ids = partner_obj.search(cr, SUPERUSER_ID, [
+                                                ('email', 'ilike', email_address)
+                                            ], limit=1, context=context)
+                if ids:
+                    partner_id = ids[0]
+            partner_ids.append(partner_id)
+        return partner_ids
+
+    def message_partner_info_from_emails(self, cr, uid, id, emails, link_mail=False, context=None):
+        """ Convert a list of emails into a list partner_ids and a list
+            new_partner_ids. The return value is non conventional because
+            it is meant to be used by the mail widget.
+
+            :return dict: partner_ids and new_partner_ids """
+        mail_message_obj = self.pool.get('mail.message')
+        partner_ids = self._find_partner_from_emails(cr, uid, id, emails, context=context)
+        result = list()
+        for idx in range(len(emails)):
+            email_address = emails[idx]
+            partner_id = partner_ids[idx]
+            partner_info = {'full_name': email_address, 'partner_id': partner_id}
             result.append(partner_info)
 
             # link mail with this from mail to the new partner id
             if link_mail and partner_info['partner_id']:
                 message_ids = mail_message_obj.search(cr, SUPERUSER_ID, [
                                     '|',
-                                    ('email_from', '=', email),
-                                    ('email_from', 'ilike', '<%s>' % email),
+                                    ('email_from', '=', email_address),
+                                    ('email_from', 'ilike', '<%s>' % email_address),
                                     ('author_id', '=', False)
                                 ], context=context)
                 if message_ids:
@@ -1128,22 +1277,11 @@ class mail_thread(osv.AbstractModel):
         model = False
         if thread_id:
             model = context.get('thread_model', self._name) if self._name == 'mail.thread' else self._name
-            if model != self._name:
+            if model != self._name and hasattr(self.pool[model], 'message_post'):
                 del context['thread_model']
                 return self.pool[model].message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)
 
-        # 0: Parse email-from, try to find a better author_id based on document's followers for incoming emails
-        email_from = kwargs.get('email_from')
-        if email_from and thread_id and type == 'email' and kwargs.get('author_id'):
-            email_list = tools.email_split(email_from)
-            doc = self.browse(cr, uid, thread_id, context=context)
-            if email_list and doc:
-                author_ids = self.pool.get('res.partner').search(cr, uid, [
-                                        ('email', 'ilike', email_list[0]),
-                                        ('id', 'in', [f.id for f in doc.message_follower_ids])
-                                    ], limit=1, context=context)
-                if author_ids:
-                    kwargs['author_id'] = author_ids[0]
+        #0: Find the message's author, because we need it for private discussion
         author_id = kwargs.get('author_id')
         if author_id is None:  # keep False values
             author_id = self.pool.get('mail.message')._get_default_author(cr, uid, context=context)
@@ -1255,21 +1393,6 @@ class mail_thread(osv.AbstractModel):
         return msg_id
 
     #------------------------------------------------------
-    # Compatibility methods: do not use
-    # TDE TODO: remove me in 8.0
-    #------------------------------------------------------
-
-    def message_create_partners_from_emails(self, cr, uid, emails, context=None):
-        return {'partner_ids': [], 'new_partner_ids': []}
-
-    def message_post_user_api(self, cr, uid, thread_id, body='', parent_id=False,
-                                attachment_ids=None, content_subtype='plaintext',
-                                context=None, **kwargs):
-        return self.message_post(cr, uid, thread_id, body=body, parent_id=parent_id,
-                                    attachment_ids=attachment_ids, content_subtype=content_subtype,
-                                    context=context, **kwargs)
-
-    #------------------------------------------------------
     # Followers API
     #------------------------------------------------------
 
@@ -1287,7 +1410,10 @@ class mail_thread(osv.AbstractModel):
 
     def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, context=None):
         """ Add partners to the records followers. """
-        user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+        mail_followers_obj = self.pool.get('mail.followers')
+        subtype_obj = self.pool.get('mail.message.subtype')
+
+        user_pid = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
         if set(partner_ids) == set([user_pid]):
             try:
                 self.check_access_rights(cr, uid, 'read')
@@ -1296,27 +1422,35 @@ class mail_thread(osv.AbstractModel):
         else:
             self.check_access_rights(cr, uid, 'write')
 
-        # subscribe partners
-        self.write(cr, SUPERUSER_ID, ids, {'message_follower_ids': [(4, pid) for pid in partner_ids]}, context=context)
+        for record in self.browse(cr, SUPERUSER_ID, ids, context=context):
+            existing_pids = set([f.id for f in record.message_follower_ids
+                                            if f.id in partner_ids])
+            new_pids = set(partner_ids) - existing_pids
 
-        # subtype specified: update the subscriptions
-        fol_obj = self.pool.get('mail.followers')
-        if subtype_ids is not None:
-            fol_ids = fol_obj.search(cr, SUPERUSER_ID, [('res_model', '=', self._name), ('res_id', 'in', ids), ('partner_id', 'in', partner_ids)], context=context)
-            fol_obj.write(cr, SUPERUSER_ID, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
-        # no subtypes: default ones for new subscription, do not update existing subscriptions
-        else:
-            # search new subscriptions: subtype_ids is False
-            fol_ids = fol_obj.search(cr, SUPERUSER_ID, [
-                            ('res_model', '=', self._name),
-                            ('res_id', 'in', ids),
-                            ('partner_id', 'in', partner_ids),
-                            ('subtype_ids', '=', False)
-                        ], context=context)
-            if fol_ids:
-                subtype_obj = self.pool.get('mail.message.subtype')
-                subtype_ids = subtype_obj.search(cr, uid, [('default', '=', True), '|', ('res_model', '=', self._name), ('res_model', '=', False)], context=context)
-                fol_obj.write(cr, SUPERUSER_ID, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
+            # subtype_ids specified: update already subscribed partners
+            if subtype_ids and existing_pids:
+                fol_ids = mail_followers_obj.search(cr, SUPERUSER_ID, [
+                                                        ('res_model', '=', self._name),
+                                                        ('res_id', '=', record.id),
+                                                        ('partner_id', 'in', list(existing_pids)),
+                                                    ], context=context)
+                mail_followers_obj.write(cr, SUPERUSER_ID, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
+            # subtype_ids not specified: do not update already subscribed partner, fetch default subtypes for new partners
+            else:
+                subtype_ids = subtype_obj.search(cr, uid, [
+                                                        ('default', '=', True),
+                                                        '|',
+                                                        ('res_model', '=', self._name),
+                                                        ('res_model', '=', False)
+                                                    ], context=context)
+            # subscribe new followers
+            for new_pid in new_pids:
+                mail_followers_obj.create(cr, SUPERUSER_ID, {
+                                                'res_model': self._name,
+                                                'res_id': record.id,
+                                                'partner_id': new_pid,
+                                                'subtype_ids': [(6, 0, subtype_ids)],
+                                            }, context=context)
 
         return True
 
@@ -1454,4 +1588,33 @@ class mail_thread(osv.AbstractModel):
         ''', (ids, self._name, partner_id))
         return True
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    #------------------------------------------------------
+    # Thread suggestion
+    #------------------------------------------------------
+
+    def get_suggested_thread(self, cr, uid, removed_suggested_threads=None, context=None):
+        """Return a list of suggested threads, sorted by the numbers of followers"""
+        if context is None:
+            context = {}
+
+        # TDE HACK: originally by MAT from portal/mail_mail.py but not working until the inheritance graph bug is not solved in trunk
+        # TDE FIXME: relocate in portal when it won't be necessary to reload the hr.employee model in an additional bridge module
+        if self.pool['res.groups']._all_columns.get('is_portal'):
+            user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
+            if any(group.is_portal for group in user.groups_id):
+                return []
+
+        threads = []
+        if removed_suggested_threads is None:
+            removed_suggested_threads = []
+
+        thread_ids = self.search(cr, uid, [('id', 'not in', removed_suggested_threads), ('message_is_follower', '=', False)], context=context)
+        for thread in self.browse(cr, uid, thread_ids, context=context):
+            data = {
+                'id': thread.id,
+                'popularity': len(thread.message_follower_ids),
+                'name': thread.name,
+                'image_small': thread.image_small
+            }
+            threads.append(data)
+        return sorted(threads, key=lambda x: (x['popularity'], x['id']), reverse=True)[:3]

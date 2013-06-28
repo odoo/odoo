@@ -27,13 +27,6 @@ from openerp.tools.translate import _
 import pytz
 from openerp import SUPERUSER_ID
 
-class sale_shop(osv.osv):
-    _inherit = "sale.shop"
-    _columns = {
-        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
-    }
-
-
 class sale_order(osv.osv):
     _inherit = "sale.order"
     
@@ -70,8 +63,15 @@ class sale_order(osv.osv):
                 vals.update({'invoice_quantity': 'order'})
             if vals['order_policy'] == 'picking':
                 vals.update({'invoice_quantity': 'procurement'})
-        order =  super(sale_order, self).create(cr, uid, vals, context=context)
+        order = super(sale_order, self).create(cr, uid, vals, context=context)
         return order
+
+    def _get_default_warehouse(self, cr, uid, context=None):
+        company_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
+        warehouse_ids = self.pool.get('stock.warehouse').search(cr, uid, [('company_id', '=', company_id)], context=context)
+        if not warehouse_ids:
+            raise osv.except_osv(_('Error!'), _('There is no warehouse defined for current company.'))
+        return warehouse_ids[0]
 
     # This is False
     def _picked_rate(self, cr, uid, ids, name, arg, context=None):
@@ -140,11 +140,13 @@ class sale_order(osv.osv):
         'picking_ids': fields.one2many('stock.picking.out', 'sale_id', 'Related Picking', readonly=True, help="This is a list of delivery orders that has been generated for this sales order."),
         'shipped': fields.boolean('Delivered', readonly=True, help="It indicates that the sales order has been delivered. This field is updated only after the scheduler(s) have been launched."),
         'picked_rate': fields.function(_picked_rate, string='Picked', type='float'),
+        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
         'invoice_quantity': fields.selection([('order', 'Ordered Quantities'), ('procurement', 'Shipped Quantities')], 'Invoice on', 
                                              help="The sales order will automatically create the invoice proposition (draft invoice).\
                                               You have to choose  if you want your invoice based on ordered ", required=True, readonly=True, states={'draft': [('readonly', False)]}),
     }
     _defaults = {
+             'warehouse_id': _get_default_warehouse,
              'picking_policy': 'direct',
              'order_policy': 'manual',
              'invoice_quantity': 'order',
@@ -161,6 +163,14 @@ class sale_order(osv.osv):
                 raise osv.except_osv(_('Invalid Action!'), _('In order to delete a confirmed sales order, you must cancel it.\nTo do so, you must first cancel related picking for delivery orders.'))
 
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
+
+    def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context=None):
+        val = {}
+        if warehouse_id:
+            warehouse = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id, context=context)
+            if warehouse.company_id:
+                val['company_id'] = warehouse.company_id.id
+        return {'value': val}
 
     def action_view_delivery(self, cr, uid, ids, context=None):
         '''
@@ -297,7 +307,7 @@ class sale_order(osv.osv):
                     or line.product_uom_qty,
             'product_uos': (line.product_uos and line.product_uos.id)\
                     or line.product_uom.id,
-            'location_id': order.shop_id.warehouse_id.lot_stock_id.id,
+            'location_id': order.warehouse_id.lot_stock_id.id,
             'procure_method': line.type,
             'move_id': move_id,
             'company_id': order.company_id.id,
@@ -305,8 +315,8 @@ class sale_order(osv.osv):
         }
 
     def _prepare_order_line_move(self, cr, uid, order, line, picking_id, date_planned, context=None):
-        location_id = order.shop_id.warehouse_id.lot_stock_id.id
-        output_id = order.shop_id.warehouse_id.lot_output_id.id
+        location_id = order.warehouse_id.lot_stock_id.id
+        output_id = order.warehouse_id.lot_output_id.id
         return {
             'name': line.name,
             'picking_id': picking_id,
@@ -587,9 +597,6 @@ class sale_order_line(osv.osv):
             return res
 
         #update of result obtained in super function
-        res_packing = self.product_packaging_change(cr, uid, ids, pricelist, product, qty, uom, partner_id, packaging, context=context)
-        res['value'].update(res_packing.get('value', {}))
-        warning_msgs = res_packing.get('warning') and res_packing['warning']['message'] or ''
         product_obj = product_obj.browse(cr, uid, product, context=context)
         res['value']['delay'] = (product_obj.sale_delay or 0.0)
         res['value']['type'] = product_obj.procure_method
@@ -602,6 +609,11 @@ class sale_order_line(osv.osv):
                 uom = False
         if not uom2:
             uom2 = product_obj.uom_id
+
+        # Calling product_packaging_change function after updating UoM
+        res_packing = self.product_packaging_change(cr, uid, ids, pricelist, product, qty, uom, partner_id, packaging, context=context)
+        res['value'].update(res_packing.get('value', {}))
+        warning_msgs = res_packing.get('warning') and res_packing['warning']['message'] or ''
         compare_qty = float_compare(product_obj.virtual_available * uom2.factor, qty * product_obj.uom_id.factor, precision_rounding=product_obj.uom_id.rounding)
         if (product_obj.type=='product') and int(compare_qty) == -1 \
           and (product_obj.procure_method=='make_to_stock'):

@@ -22,7 +22,7 @@
 from openerp.addons.mail.mail_mail import mail_mail
 from openerp.addons.mail.mail_thread import mail_thread
 from openerp.addons.mail.tests.test_mail_base import TestMailBase
-from openerp.tools import mute_logger
+from openerp.tools import mute_logger, email_split
 from openerp.tools.mail import html_sanitize
 
 
@@ -32,17 +32,17 @@ class test_mail(TestMailBase):
         """ Test basic mail.alias setup works, before trying to use them for routing """
         cr, uid = self.cr, self.uid
         self.user_valentin_id = self.res_users.create(cr, uid,
-            {'name': 'Valentin Cognito', 'email': 'valentin.cognito@gmail.com', 'login': 'valentin.cognito'})
+            {'name': 'Valentin Cognito', 'email': 'valentin.cognito@gmail.com', 'login': 'valentin.cognito', 'alias_name': 'valentin.cognito'})
         self.user_valentin = self.res_users.browse(cr, uid, self.user_valentin_id)
         self.assertEquals(self.user_valentin.alias_name, self.user_valentin.login, "Login should be used as alias")
 
         self.user_pagan_id = self.res_users.create(cr, uid,
-            {'name': 'Pagan Le Marchant', 'email': 'plmarchant@gmail.com', 'login': 'plmarchant@gmail.com'})
+            {'name': 'Pagan Le Marchant', 'email': 'plmarchant@gmail.com', 'login': 'plmarchant@gmail.com', 'alias_name': 'plmarchant@gmail.com'})
         self.user_pagan = self.res_users.browse(cr, uid, self.user_pagan_id)
         self.assertEquals(self.user_pagan.alias_name, 'plmarchant', "If login is an email, the alias should keep only the local part")
 
         self.user_barty_id = self.res_users.create(cr, uid,
-            {'name': 'Bartholomew Ironside', 'email': 'barty@gmail.com', 'login': 'b4r+_#_R3wl$$'})
+            {'name': 'Bartholomew Ironside', 'email': 'barty@gmail.com', 'login': 'b4r+_#_R3wl$$', 'alias_name': 'b4r+_#_R3wl$$'})
         self.user_barty = self.res_users.browse(cr, uid, self.user_barty_id)
         self.assertEquals(self.user_barty.alias_name, 'b4r+_-_r3wl-', 'Disallowed chars should be replaced by hyphens')
 
@@ -479,7 +479,7 @@ class test_mail(TestMailBase):
                             'message_post: notification email sent to more than one email address instead of a precise partner')
             self.assertIn(sent_email['email_to'][0], test_emailto,
                             'message_post: notification email email_to incorrect')
-            self.assertEqual(sent_email['reply_to'], 'r@r',  # was '"Followers of Pigs" <r@r>', but makes no sense
+            self.assertEqual(email_split(sent_email['reply_to']), ['r@r'],  # was '"Followers of Pigs" <r@r>', but makes no sense
                             'message_post: notification email reply_to incorrect: should have raoul email')
             self.assertEqual(_mail_subject, sent_email['subject'],
                             'message_post: notification email subject incorrect')
@@ -739,18 +739,21 @@ class test_mail(TestMailBase):
         self.ir_model_data.create(cr, uid, {'name': 'mt_private', 'model': 'mail.message.subtype', 'module': 'mail', 'res_id': mt_private_id})
         mt_name_supername_id = self.mail_message_subtype.create(cr, uid, {'name': 'name_supername', 'description': 'Supername name'})
         self.ir_model_data.create(cr, uid, {'name': 'mt_name_supername', 'model': 'mail.message.subtype', 'module': 'mail', 'res_id': mt_name_supername_id})
+        mt_group_public_set_id = self.mail_message_subtype.create(cr, uid, {'name': 'group_public_set', 'description': 'Group set'})
+        self.ir_model_data.create(cr, uid, {'name': 'mt_group_public_set', 'model': 'mail.message.subtype', 'module': 'mail', 'res_id': mt_group_public_set_id})
         mt_group_public_id = self.mail_message_subtype.create(cr, uid, {'name': 'group_public', 'description': 'Group changed'})
         self.ir_model_data.create(cr, uid, {'name': 'mt_group_public', 'model': 'mail.message.subtype', 'module': 'mail', 'res_id': mt_group_public_id})
 
         # Data: alter mail_group model for testing purposes (test on classic, selection and many2one fields)
         self.mail_group._track = {
             'public': {
-                'mail.mt_private': lambda self, cr, uid, obj, ctx=None: obj['public'] == 'private',
+                'mail.mt_private': lambda self, cr, uid, obj, ctx=None: obj.public == 'private',
             },
             'name': {
-                'mail.mt_name_supername': lambda self, cr, uid, obj, ctx=None: obj['name'] == 'supername',
+                'mail.mt_name_supername': lambda self, cr, uid, obj, ctx=None: obj.name == 'supername',
             },
             'group_public_id': {
+                'mail.mt_group_public_set': lambda self, cr, uid, obj, ctx=None: obj.group_public_id,
                 'mail.mt_group_public': lambda self, cr, uid, obj, ctx=None: True,
             },
         }
@@ -787,21 +790,37 @@ class test_mail(TestMailBase):
         self.assertIn(u'Public\u2192Private', _strip_string_spaces(last_msg.body), 'tracked: message body incorrect')
         self.assertIn(u'Pigs\u2192supername', _strip_string_spaces(last_msg.body), 'tracked feature: message body does not hold always tracked field')
 
-        # Test: change public as public, group_public_id -> 1 subtype, name always tracked
+        # Test: change public as public, group_public_id -> 2 subtypes, name always tracked
         self.mail_group.write(cr, self.user_raoul_id, [self.group_pigs_id], {'public': 'public', 'group_public_id': group_system_id})
         self.group_pigs.refresh()
-        self.assertEqual(len(self.group_pigs.message_ids), 4, 'tracked: one message should have been produced')
-        # Test: first produced message: mt_group_public_id, with name always tracked, public tracked on change
+        self.assertEqual(len(self.group_pigs.message_ids), 5, 'tracked: one message should have been produced')
+        # Test: first produced message: mt_group_public_set_id, with name always tracked, public tracked on change
         last_msg = self.group_pigs.message_ids[-4]
-        self.assertEqual(last_msg.subtype_id.id, mt_group_public_id, 'tracked: message should not be linked to any subtype')
+        self.assertEqual(last_msg.subtype_id.id, mt_group_public_set_id, 'tracked: message should be linked to mt_group_public_set_id')
+        self.assertIn('Group set', last_msg.body, 'tracked: message body does not hold the subtype description')
+        self.assertIn(u'Private\u2192Public', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold changed tracked field')
+        self.assertIn(u'HumanResources/Employee\u2192Administration/Settings', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold always tracked field')
+        # Test: second produced message: mt_group_public_id, with name always tracked, public tracked on change
+        last_msg = self.group_pigs.message_ids[-5]
+        self.assertEqual(last_msg.subtype_id.id, mt_group_public_id, 'tracked: message should be linked to mt_group_public_id')
         self.assertIn('Group changed', last_msg.body, 'tracked: message body does not hold the subtype description')
         self.assertIn(u'Private\u2192Public', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold changed tracked field')
         self.assertIn(u'HumanResources/Employee\u2192Administration/Settings', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold always tracked field')
 
+        # Test: change group_public_id to False -> 1 subtype, name always tracked
+        self.mail_group.write(cr, self.user_raoul_id, [self.group_pigs_id], {'group_public_id': False})
+        self.group_pigs.refresh()
+        self.assertEqual(len(self.group_pigs.message_ids), 6, 'tracked: one message should have been produced')
+        # Test: first produced message: mt_group_public_set_id, with name always tracked, public tracked on change
+        last_msg = self.group_pigs.message_ids[-6]
+        self.assertEqual(last_msg.subtype_id.id, mt_group_public_id, 'tracked: message should be linked to mt_group_public_id')
+        self.assertIn('Group changed', last_msg.body, 'tracked: message body does not hold the subtype description')
+        self.assertIn(u'Administration/Settings\u2192', _strip_string_spaces(last_msg.body), 'tracked: message body does not hold always tracked field')
+
         # Test: change not tracked field, no tracking message
         self.mail_group.write(cr, self.user_raoul_id, [self.group_pigs_id], {'description': 'Dummy'})
         self.group_pigs.refresh()
-        self.assertEqual(len(self.group_pigs.message_ids), 4, 'tracked: No message should have been produced')
+        self.assertEqual(len(self.group_pigs.message_ids), 6, 'tracked: No message should have been produced')
 
         # Data: removed changes
         public_col.track_visibility = None

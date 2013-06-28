@@ -8,26 +8,32 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//notebook/page[@string='Lead']" position="after">
-                        <page string="Assignation">
+                        <page string="Assigned Partner" groups="base.group_sale_manager">
                             <group name="partner_assign_group">
-                                <group string="Partner Assignation">
-                                    <field name="partner_assigned_id" on_change="onchange_assign_id(partner_assigned_id)" domain="[('grade_id','&lt;&gt;',False)]"/>
-                                    <label for="date_assign"/>
+                                <group string="Partner Assignation" col="3" colspan="1">
+                                    <label for="partner_latitude" string="Geolocation" />
+                                    <div class="oe_title">
+                                        <h3>
+                                            <span class="oe_grey">( </span>
+                                            <field name="partner_latitude" nolabel="1" readonly="1" class="oe_inline"/>
+                                            <span class="oe_grey oe_inline" attrs="{'invisible':[('partner_latitude','&lt;=',0)]}">N </span>
+                                            <span class="oe_grey oe_inline" attrs="{'invisible':[('partner_latitude','&gt;=',0)]}">S </span>
+                                            <field name="partner_longitude"  class="oe_inline" readonly="1" nolabel="1"/>
+                                            <span class="oe_grey oe_inline" attrs="{'invisible':[('partner_longitude','&lt;=',0)]}">E </span>
+                                            <span class="oe_grey oe_inline" attrs="{'invisible':[('partner_longitude','&gt;=',0)]}">W </span>
+                                            <span class="oe_grey">) </span>
+                                        </h3>
+                                    </div>
+                                    <button string="Automatic Assignation" name="action_assign_partner" type="object" colspan="1"
+                                        class="oe_inline"/>
+                                    <field name="partner_assigned_id" class="oe_inline" on_change="onchange_assign_id(partner_assigned_id)" domain="[('grade_id','&lt;&gt;',False)]"/>
                                     <div>
-                                        <field name="date_assign"/>
-                                        <button string="Forward"
+                                        <button string="Send Email"
                                             attrs="{'invisible':[('partner_assigned_id','=',False)]}"
                                             name="%(crm_lead_forward_to_partner_act)d"
-                                            icon="terp-mail-forward" type="action"
-                                            context="{'default_composition_mode': 'forward', 'default_partner_ids': [partner_assigned_id]}"/>
+                                            type="action"
+                                            context="{'default_composition_mode': 'forward','hide_forward_type': 1 , 'default_partner_ids': [partner_assigned_id]}"/>
                                     </div>
-                                </group>
-                                <group string="Geo Assignation">
-                                    <field name="partner_latitude"/>
-                                    <field name="partner_longitude"/>
-                                    <span/>
-                                    <button string="Geo Assign" name="action_assign_partner" type="object" colspan="1"
-                                        icon="gtk-apply"/>
                                 </group>
                             </group>
                         </page>
@@ -43,7 +49,7 @@
             <field name="arch" type="xml">
                 <field name="partner_id" position="after">
                     <field name="partner_assigned_id"/>
-                 </field>
+                </field>
             </field>
         </record>
 
@@ -55,40 +61,45 @@
                 <filter string="Team" position="after">
                     <filter string="Assigned Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
                 </filter>
-
                 <field name="partner_id" position="after">
                     <field name="partner_assigned_id"/>
                 </field>
             </field>
-         </record>
+        </record>
 
-         <record id="view_crm_lead_geo_assign_form" model="ir.ui.view">
+        <record id="view_crm_lead_geo_assign_form" model="ir.ui.view">
             <field name="name">crm.lead.lead.geo_assign.inherit</field>
             <field name="model">crm.lead</field>
             <field name="inherit_id" ref="crm.crm_case_form_view_leads"/>
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//notebook/page[@string='Extra Info']" position="after">
-                        <page string="Assignation">
+                        <page string="Assigned Partner" groups="base.group_sale_manager">
                             <group name="partner_assign_group">
-                                <group string="Partner Assignation">
-                                    <field name="partner_assigned_id" on_change="onchange_assign_id(partner_assigned_id)" domain="[('grade_id','&lt;&gt;',False)]"/>
-                                    <label for="date_assign"/>
+                                <group string="Partner Assignation" col="3">
+                                    <label for="partner_latitude" string="Geolocation" />
                                     <div>
-                                        <field name="date_assign"/>
-                                        <button string="Forward"
+                                        <h3>
+                                            <span class="oe_grey">( </span>
+                                            <field name="partner_latitude" nolabel="1" readonly="1" class="oe_inline"/>
+                                            <span class="oe_grey oe_inline" attrs="{'invisible':[('partner_latitude','&lt;=',0)]}">N </span>
+                                            <span class="oe_grey oe_inline" attrs="{'invisible':[('partner_latitude','&gt;=',0)]}">S </span>
+                                            <field name="partner_longitude"  class="oe_inline" readonly="1" nolabel="1"/>
+                                            <span class="oe_grey oe_inline" attrs="{'invisible':[('partner_longitude','&lt;=',0)]}">E </span>
+                                            <span class="oe_grey oe_inline" attrs="{'invisible':[('partner_longitude','&gt;=',0)]}">W </span>
+                                            <span class="oe_grey">) </span>
+                                        </h3>
+                                    </div>
+                                    <button string="Automatic Assignation" name="action_assign_partner" type="object" colspan="1"
+                                        class="oe_inline" />
+                                    <field name="partner_assigned_id" class="oe_inline" on_change="onchange_assign_id(partner_assigned_id)" domain="[('grade_id','&lt;&gt;',False)]"/>
+                                    <div>
+                                        <button string="Send Email"
                                             attrs="{'invisible':[('partner_assigned_id','=',False)]}"
                                             name="%(crm_lead_forward_to_partner_act)d"
-                                            icon="terp-mail-forward" type="action"
-                                            context="{'default_composition_mode': 'forward', 'default_partner_ids': [partner_assigned_id]}"/>
+                                            type="action"
+                                            context="{'default_composition_mode': 'forward','hide_forward_type': 1 , 'default_partner_ids': [partner_assigned_id]}"/>
                                     </div>
-                                </group>
-                                <group string="Geo Assignation">
-                                    <field name="partner_latitude"/>
-                                    <field name="partner_longitude"/>
-                                    <span/>
-                                    <button string="Geo Assign" name="action_assign_partner" type="object" colspan="1"
-                                        icon="gtk-apply"/>
                                 </group>
                             </group>
                         </page>
@@ -104,7 +115,7 @@
             <field name="arch" type="xml">
                 <field name="partner_id" position="after">
                     <field name="partner_assigned_id"/>
-                 </field>
+                </field>
             </field>
         </record>
 
@@ -116,12 +127,11 @@
                 <filter string="Team" position="after">
                     <filter string="Assigned Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_assigned_id'}"/>
                 </filter>
-
                 <field name="partner_id" position="after">
                     <field name="partner_assigned_id"/>
                 </field>
             </field>
-         </record>
+        </record>
 
     </data>
 </openerp>

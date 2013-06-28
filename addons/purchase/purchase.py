@@ -162,9 +162,9 @@ class purchase_order(osv.osv):
     ]
     _track = {
         'state': {
-            'purchase.mt_rfq_confirmed': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'confirmed',
-            'purchase.mt_rfq_approved': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'approved',
-            'purchase.mt_rfq_done': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
+            'purchase.mt_rfq_confirmed': lambda self, cr, uid, obj, ctx=None: obj.state == 'confirmed',
+            'purchase.mt_rfq_approved': lambda self, cr, uid, obj, ctx=None: obj.state == 'approved',
+            'purchase.mt_rfq_done': lambda self, cr, uid, obj, ctx=None: obj.state == 'done',
         },
     }
     _columns = {
@@ -186,7 +186,7 @@ class purchase_order(osv.osv):
         'warehouse_id': fields.many2one('stock.warehouse', 'Destination Warehouse'),
         'location_id': fields.many2one('stock.location', 'Destination', required=True, domain=[('usage','<>','view')], states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]} ),
         'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, help="The pricelist sets the currency used for this purchase order. It also computes the supplier price for the selected products/quantities."),
-        'currency_id': fields.related('pricelist_id', 'currency_id', type="many2one", relation="res.currency", string="Currency",readonly=True, required=True),
+        'currency_id': fields.many2one('res.currency','Currency', readonly=True, required=True,states={'draft': [('readonly', False)],'sent': [('readonly', False)]}),
         'state': fields.selection(STATE_SELECTION, 'Status', readonly=True, help="The status of the purchase order or the quotation request. A quotation is a purchase order in a 'Draft' status. Then the order has to be confirmed by the user, the status switch to 'Confirmed'. Then the supplier must confirm the order to change the status to 'Approved'. When the purchase order is paid and received, the status becomes 'Done'. If a cancel action occurs in the invoice or in the reception of goods, the status becomes in exception.", select=True),
         'order_line': fields.one2many('purchase.order.line', 'order_id', 'Order Lines', states={'approved':[('readonly',True)],'done':[('readonly',True)]}),
         'validator' : fields.many2one('res.users', 'Validated by', readonly=True),
@@ -237,6 +237,7 @@ class purchase_order(osv.osv):
         'pricelist_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').browse(cr, uid, context['partner_id']).property_product_pricelist_purchase.id,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.order', context=c),
         'journal_id': _get_journal,
+        'currency_id': lambda self, cr, uid, context: self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
     }
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Order Reference must be unique per Company!'),
@@ -467,6 +468,20 @@ class purchase_order(osv.osv):
             self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
         return True
 
+    def _choose_account_from_po_line(self, cr, uid, po_line, context=None):
+        fiscal_obj = self.pool.get('account.fiscal.position')
+        property_obj = self.pool.get('ir.property')
+        if po_line.product_id:
+            acc_id = po_line.product_id.property_account_expense.id
+            if not acc_id:
+                acc_id = po_line.product_id.categ_id.property_account_expense_categ.id
+            if not acc_id:
+                raise osv.except_osv(_('Error!'), _('Define expense account for this company: "%s" (id:%d).') % (po_line.product_id.name, po_line.product_id.id,))
+        else:
+            acc_id = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category').id
+        fpos = po_line.order_id.fiscal_position or False
+        return fiscal_obj.map_account(cr, uid, fpos, acc_id)
+
     def _prepare_inv_line(self, cr, uid, account_id, order_line, context=None):
         """Collects require data from purchase order line that is used to create invoice line
         for that purchase order line
@@ -484,6 +499,7 @@ class purchase_order(osv.osv):
             'uos_id': order_line.product_uom.id or False,
             'invoice_line_tax_id': [(6, 0, [x.id for x in order_line.taxes_id])],
             'account_analytic_id': order_line.account_analytic_id.id or False,
+            'purchase_line_id': order_line.id,
         }
 
     def action_cancel_draft(self, cr, uid, ids, context=None):
@@ -507,8 +523,6 @@ class purchase_order(osv.osv):
         journal_obj = self.pool.get('account.journal')
         inv_obj = self.pool.get('account.invoice')
         inv_line_obj = self.pool.get('account.invoice.line')
-        fiscal_obj = self.pool.get('account.fiscal.position')
-        property_obj = self.pool.get('ir.property')
 
         for order in self.browse(cr, uid, ids, context=context):
             pay_acc_id = order.partner_id.property_account_payable.id
@@ -520,17 +534,7 @@ class purchase_order(osv.osv):
             # generate invoice line correspond to PO line and link that to created invoice (inv_id) and PO line
             inv_lines = []
             for po_line in order.order_line:
-                if po_line.product_id:
-                    acc_id = po_line.product_id.property_account_expense.id
-                    if not acc_id:
-                        acc_id = po_line.product_id.categ_id.property_account_expense_categ.id
-                    if not acc_id:
-                        raise osv.except_osv(_('Error!'), _('Define expense account for this company: "%s" (id:%d).') % (po_line.product_id.name, po_line.product_id.id,))
-                else:
-                    acc_id = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category').id
-                fpos = order.fiscal_position or False
-                acc_id = fiscal_obj.map_account(cr, uid, fpos, acc_id)
-
+                acc_id = self._choose_account_from_po_line(cr, uid, po_line, context=context)
                 inv_line_data = self._prepare_inv_line(cr, uid, acc_id, po_line, context=context)
                 inv_line_id = inv_line_obj.create(cr, uid, inv_line_data, context=context)
                 inv_lines.append(inv_line_id)
@@ -544,7 +548,7 @@ class purchase_order(osv.osv):
                 'account_id': pay_acc_id,
                 'type': 'in_invoice',
                 'partner_id': order.partner_id.id,
-                'currency_id': order.pricelist_id.currency_id.id,
+                'currency_id': order.currency_id.id,
                 'journal_id': len(journal_ids) and journal_ids[0] or False,
                 'invoice_line': [(6, 0, inv_lines)],
                 'origin': order.name,
@@ -632,6 +636,7 @@ class purchase_order(osv.osv):
         }
 
     def _prepare_order_line_move(self, cr, uid, order, order_line, picking_id, context=None):
+        ''' prepare the stock move data from the PO line '''
         return {
             'name': order_line.name or '',
             'product_id': order_line.product_id.id,
@@ -868,7 +873,7 @@ class purchase_order_line(osv.osv):
         'invoice_lines': fields.many2many('account.invoice.line', 'purchase_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.boolean('Invoiced', readonly=True),
         'partner_id': fields.related('order_id','partner_id',string='Partner',readonly=True,type="many2one", relation="res.partner", store=True),
-        'date_order': fields.related('order_id','date_order',string='Order Date',readonly=True,type="date")
+        'date_order': fields.related('order_id','date_order',string='Order Date',readonly=True,type="date"),
 
     }
     _defaults = {
@@ -1245,5 +1250,13 @@ class account_invoice(osv.Model):
             purchase_order_obj.message_post(cr, uid, po_ids, body=_("Invoice paid"), context=context)
         return res
 
+class account_invoice_line(osv.Model):
+    """ Override account_invoice_line to add the link to the purchase order line it is related to"""
+    _inherit = 'account.invoice.line'
+    _columns = {
+        'purchase_line_id': fields.many2one('purchase.order.line',
+            'Purchase Order Line', ondelete='set null', select=True,
+            readonly=True),
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

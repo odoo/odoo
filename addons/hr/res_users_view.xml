@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- Update user form !-->
+        <record id="view_users_form_mail" model="ir.ui.view">
+            <field name="name">res.users.form.hr</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="mail.view_users_form_mail"/>
+            <field name="arch" type="xml">
+            <data>
+                <field name="display_groups_suggestions" position="after">
+                    <field name="display_employees_suggestions"/>
+                </field>
+            </data>
+            </field>
+        </record>
+
+    </data>
+</openerp>
