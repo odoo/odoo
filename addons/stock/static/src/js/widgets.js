@@ -42,15 +42,9 @@ function openerp_picking_widgets(instance){
         get_rows: function(){
             var model = this.getParent();
             var rows = [];
-            var current_package_id = instance.session.user_context.current_package_id;
-            _.each( model.operations, function(op){
-		if (!current_package_id){
-			if (op.result_package_id !== false){
-				return;
-			}
-		} else if(op.result_package_id[0] !== current_package_id){
-                    return;
-                }
+            var ops = model.get_current_operations();
+
+            _.each( ops, function(op){
                 rows.push({
                     cols: {
                         product: op.product_id[1],
@@ -112,6 +106,7 @@ function openerp_picking_widgets(instance){
             this.operations = null;
             this.packages = null;
             this.scan_timestamp = 0;
+            this.numpad_buffer  = [];
             
             window.pickwidget = this;
             
@@ -122,6 +117,8 @@ function openerp_picking_widgets(instance){
         },
         load: function(picking_id){
             var self = this;
+
+            console.log('LOADING DATA FROM SERVER');
 
             if(picking_id){
                 var picking = new instance.web.Model('stock.picking.in').call('read',[[picking_id], []]);
@@ -166,7 +163,7 @@ function openerp_picking_widgets(instance){
         start: function(){
             var self = this;
             instance.webclient.set_content_full_screen(true);
-            this.connect_barcode_scanner();
+            this.connect_barcode_scanner_and_numpad();
 
             this.$('.js_pick_quit').click(function(){ self.quit(); });
             this.$('.js_pick_pack').click(function(){ self.pack(); });
@@ -192,7 +189,7 @@ function openerp_picking_widgets(instance){
             var self = this;
             return this.load(picking_id)
                 .then(function(){ 
-                    console.log('Refreshing UI');
+                    console.log('REFRESHING UI');
                     self.picking_editor.renderElement();
                     self.package_editor.renderElement();
                     self.package_selector.renderElement();
@@ -271,44 +268,99 @@ function openerp_picking_widgets(instance){
 
             return current_package;
         },
-        connect_barcode_scanner: function(){
-            var self =this;
+        get_current_operations: function(){
+            var current_package_id = instance.session.user_context.current_package_id;
+            var ops = [];
+            _.each( this.operations, function(op){
+                if(!current_package_id){
+                    if(op.result_package_id !== false){
+                        return;
+                    }
+                }else if(op.result_package_id[0] !== current_package_id){
+                    return;
+                }
+                ops.push(op);
+            });
+            return ops;
+        },
+        set_operation_quantity: function(quantity){
+            var self = this;
+            var ops = this.get_current_operations();
+            if( !ops || ops.length === 0){
+                return;
+            }
+            var op = ops[ops.length-1];
+
+            if(quantity === '++'){
+                console.log('Increase quantity!');
+                quantity = op.product_qty + 1;
+            }else if(quantity === '--'){
+                console.log('Decrease quantity :(');
+                quantity = op.product_qty - 1;
+            }
+
+            if(typeof quantity === 'number' && quantity >= 0){
+                console.log('Set quantity: ',quantity);
+                new instance.web.Model('stock.pack.operation')
+                    .call('write',[[op.id],{'product_qty': quantity }])
+                    .then(function(){
+                        self.refresh_ui(self.picking.id);
+                    });
+            }
+
+        },
+        connect_barcode_scanner_and_numpad: function(){
+            var self = this;
             var numbers = [];
             var timestamp = 0;
-            var nocode_timeout_id = 0;
-            var nocode_delay = 50;
-            function nocode(){
-                //console.log('NoCode:',numbers);
-                numbers = [];
-            }
+            var numpad = [];
+            var numpad_timestamp;
             // it is important to catch the keypress event and not keyup/keydown as keypress normalizes the input codes :) 
-            $('body').delegate('','keypress',function(e){ 
-                //console.log('Key:',e);
+            $('body').delegate('','keyup',function(e){ 
+                //console.log('Key:',e.keyCode);
                 if (e.keyCode >= 48 && e.keyCode < 58){
-                    clearTimeout(nocode_timeout_id);
-                    nocode_timeout_id = setTimeout(nocode,nocode_delay);
                     if(timestamp + 30 < new Date().getTime()){
-                        clearTimeout(nocode_timeout_id);
-                        nocode();
+                        numbers = [];
                     }
                     numbers.push(e.keyCode - 48);
                     timestamp = new Date().getTime();
                     if(numbers.length === 13){
                         self.scan(numbers.join(''));
                         numbers = [];
-                        clearTimeout(nocode_timeout_id);
                     }
                 }else{
-                    nocode();
+                    numbers = [];
+                    if(numpad_timestamp + 1500 < new Date().getTime()){
+                        numpad = [];
+                    }
+                    if(e.keyCode === 27 || e.keyCode === 8){ // ESC or BACKSPACE
+                        numpad = [];
+                    }else if(e.keyCode >= 96 && e.keyCode <= 105){ // NUMPAD NUMBERS
+                        numpad.push(e.keyCode - 96);
+                    }else if(e.keyCode === 13){ // ENTER
+                        if(numpad.length > 0){
+                            self.set_operation_quantity(parseInt(numpad.join('')));
+                        }
+                        numpad = [];
+                    }else if(e.keyCode === 107){ // NUMPAD +
+                        self.set_operation_quantity('++');
+                        numpad = [];
+                    }else if(e.keyCode === 109){ // NUMPAD -
+                        self.set_operation_quantity('--');
+                        numpad = [];
+                    }else{
+                        numpad = [];
+                    }
+                    numpad_timestamp = new Date().getTime();
                 }
             });
         },
-        disconnect_barcode_scanner: function(){
+        disconnect_barcode_scanner_and_numpad: function(){
             $('body').undelegate('', 'keyup')
         },
         quit: function(){
             console.log('Quit');
-            disconnect_barcode_scanner();
+            this.disconnect_barcode_scanner_and_numpad();
             instance.webclient.set_content_full_screen(false);
             window.location = '/'; // FIXME THIS IS SHIT NIV WILL KILL YOU (BY MULTIPLE FACE-STABBING) IF YOU MERGE THIS IN TRUNK
         },
