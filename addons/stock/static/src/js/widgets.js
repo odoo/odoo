@@ -221,7 +221,7 @@ function openerp_picking_widgets(instance){
             var self = this;
             console.log('Done');
             new instance.web.Model('stock.picking')
-                .call('action_done_from_packing_ui',[[self.picking.id]])
+                .call('action_done_from_packing_ui',[self.picking.id])
                 .then(function(new_picking_id){
                     console.log('New picking id:',new_picking_id);
                     //return self.refresh_ui(new_picking_id);

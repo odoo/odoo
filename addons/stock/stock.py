@@ -1580,6 +1580,10 @@ class stock_picking(osv.osv):
                 if not new_picking:
                     #a backorder picking doesn't exist yet, create a new one
                     new_picking_name = pick.name
+                    self.write(cr, uid, [pick.id], 
+                               {'name': sequence_obj.get(cr, uid,
+                                            'stock.picking.%s'%(pick.type)),
+                               })
                     new_picking = self.copy(cr, uid, pick.id,
                             {
                                 'name': new_picking_name,
@@ -1589,10 +1593,10 @@ class stock_picking(osv.osv):
                     #modify the existing picking (this trick is needed to keep the eventual workflows pointing on the first picking)
                     unlink_operation_order = [(2, op.id) for op in pick.pack_operation_ids]
                     self.write(cr, uid, [pick.id], 
-                               {'name': sequence_obj.get(cr, uid,
-                                            'stock.picking.%s'%(pick.type)),
+                               {
                                 'pack_operation_ids': unlink_operation_order
                                })
+                done_reserved_quants = set()
                 if product_qty != 0:
                     #take care of partial picking in reserved quants
                     done_reserved_quants = self.get_done_reserved_quants(cr, uid, picking_id, move, context=context)
@@ -1615,6 +1619,7 @@ class stock_picking(osv.osv):
                     backorder_move_id = move_obj.copy(cr, uid, move.id, defaults)
                     self.make_packaging(cr, uid, picking_id, move_obj.browse(cr, uid, backorder_move_id, context=context), list(done_reserved_quants), context=context)
                 #modify the existing stock move    
+                possible_quants = [x.id for x in move.reserved_quant_ids]
                 move_obj.write(cr, uid, [move.id],
                         {
                             'product_qty': move.product_qty - partial_qty[move.id],
