@@ -28,7 +28,7 @@ class TestNewFields(common.TransactionCase):
         self.assertEqual(partner['children_count'], partner.children_count)
 
         # read field as a record item
-        values = partner.read(['children_count'])
+        values = partner.read(['children_count'])[0]
         self.assertIsInstance(values, dict)
         self.assertIsInstance(values['children_count'], (int, long))
         self.assertEqual(values['children_count'], partner.children_count)
@@ -157,7 +157,7 @@ class TestNewFields(common.TransactionCase):
     def test_23_relation(self):
         """ test relation fields """
         outer_scope = scope.current
-        demo = self.User.search([('login', '=', 'demo')]).to_record()
+        demo = self.User.search([('login', '=', 'demo')]).one()
 
         # retrieve two partners with children
         alpha, beta = self.Partner.search([('child_ids', '!=', False)], limit=2)
@@ -236,9 +236,9 @@ class TestNewFields(common.TransactionCase):
         company = alpha.computed_company
         companies = alpha.computed_companies
 
-        data = alpha.read(['name_size', 'computed_company', 'computed_companies'])
+        data = alpha.read(['name_size', 'computed_company', 'computed_companies'])[0]
         self.assertEqual(data['name_size'], name_size)
-        self.assertEqual(data['computed_company'], company.name_get())
+        self.assertEqual(data['computed_company'], company.name_get()[0])
         self.assertEqual(data['computed_companies'], companies.unbrowse())
 
     def test_40_draft(self):
@@ -278,8 +278,8 @@ class TestMagicalFields(common.TransactionCase):
         self.Model = self.registry('test_new_api.on_change')
 
     def test_write_date(self):
-        id = self.Model.create({'name': 'Booba'})
+        record = self.Model.create({'name': 'Booba'})
 
         self.assertEqual(
-            self.Model.browse(id).write_uid,
+            record.write_uid,
             self.registry('res.users').browse(self.uid))

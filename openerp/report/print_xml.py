@@ -205,7 +205,7 @@ class document(object):
                     if 'ids' in attrs:
                         ids = self.eval(browser, attrs['ids'])
                     else:
-                        ids = map(int, browser.to_recordset())
+                        ids = browse.unbrowse()
 
                     # call the method itself
                     newdatas = getattr(obj, attrs['name'])(self.cr, self.uid, ids, *args)

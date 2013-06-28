@@ -41,7 +41,7 @@
 
 import babel.dates
 import calendar
-from collections import defaultdict
+from collections import defaultdict, Iterable
 import copy
 import datetime
 import itertools
@@ -382,24 +382,11 @@ class BaseModel(object):
     instance is built from the Python classes that create and inherit from the
     corresponding model.
 
-    Other model instances are:
-
-    *   `record`: represents a record of the given model, typically returned by
-        :meth:`~.browse` or another record/recordset. One can read the fields of
-        a record as its attributes.
-
-    *   `recordset`: represents an ordered collection of records in the given
-        model, typically returned by :meth:`~.browse`, :meth:`~.search`, or
-        another record/recordset. One can iterate over it.
-
-    *   `null`: represents an absent record (null object pattern), typically
-        returned by :meth:`~.browse` or another record/recordset. One can read
-        its fields like a record, but they all are either ``False``, null, or
-        empty recordsets, depending on the field's type.
-
-    All those kinds can use model methods to perform some action related to the
-    model or some of its records. Of course, methods applying on specific
-    records or recordsets can only be invoked by these kinds of instances.
+    Every model instance is a "recordset", i.e., an ordered collection of
+    records of the model. Recordsets are returned by methods like
+    :meth:`~.browse`, :meth:`~.search`, or field accesses. Records have no
+    explicit representation: a record is represented as a recordset of one
+    record.
 
     To create a class that should not be instantiated, the _register class
     attribute may be set to False.
@@ -776,10 +763,10 @@ class BaseModel(object):
 
         if not getattr(cls, '_original_module', None):
             cls._original_module = cls._module
-        obj = object.__new__(cls)
-        obj.__init__(pool, cr)
 
-        return obj
+        instance = cls.browse()
+        instance.__init__(pool, cr)
+        return instance
 
     def __new__(cls):
         # In the past, this method was registering the model class in the server.
@@ -916,23 +903,14 @@ class BaseModel(object):
                                      "in order to implement their access rights policy"
 
         # Validate rec_name
-        if cls._rec_name is not None:
-            assert cls._rec_name in cls._all_columns.keys() + ['id'], \
+        if cls._rec_name:
+            assert cls._rec_name in cls._fields, \
                 "Invalid rec_name %s for model %s" % (cls._rec_name, cls._name)
-        elif 'name' in cls._all_columns:
+        elif 'name' in cls._fields:
             cls._rec_name = 'name'
 
         # prepare ormcache, which must be shared by all instances of the model
         cls._ormcache = {}
-
-    def _make_instance(self, **kwargs):
-        """ create an instance of this model
-            :params kwargs: attributes to set on the new instance
-        """
-        obj = object.__new__(self.__class__)
-        for key, val in kwargs.iteritems():
-            setattr(obj, key, val)
-        return obj
 
     def __export_row(self, cr, uid, row, fields, context=None):
         if context is None:
@@ -3468,7 +3446,7 @@ class BaseModel(object):
 
         # read old-style fields with (low-level) method _read_flat
         select = self.browse(ids)
-        result = select.to_recordset()._read_flat(list(old_fields), load=load)
+        result = select._read_flat(list(old_fields), load=load)
 
         # update record caches
         model_cache = scope_proxy.cache[self._name]
@@ -3478,13 +3456,13 @@ class BaseModel(object):
                 model_cache[values['id']][f] = convert(values[f])
 
         # read new-style fields with records
-        record_values = [(self.record(values['id']), values) for values in result]
+        record_values = [(self.browse(values['id']), values) for values in result]
         for f in new_fields:
             convert = self._fields[f].convert_to_read
             for record, values in record_values:
                 values[f] = convert(record[f])
 
-        return result if select.is_recordset() else (bool(result) and result[0])
+        return result if isinstance(ids, list) else (bool(result) and result[0])
 
     def _read_flat(self, cr, user, ids, fields_to_read, context=None, load='_classic_read'):
         if not context:
@@ -3845,7 +3823,7 @@ class BaseModel(object):
         result_store = self._store_get_values(cr, uid, ids, self._all_columns.keys(), context)
 
         # for recomputing new-style fields
-        recs = self.recordset(ids)
+        recs = self.browse(ids)
         recompute_spec = recs.recompute_spec(self._all_columns)
 
         self._check_concurrency(cr, ids, context)
@@ -3999,7 +3977,7 @@ class BaseModel(object):
         result = self._store_get_values(cr, user, ids, vals.keys(), context) or []
 
         # for recomputing new-style fields
-        recs = self.recordset(ids)
+        recs = self.browse(ids)
         recompute_spec = recs.recompute_spec(vals)
 
         # No user-driven update of these columns
@@ -4201,7 +4179,7 @@ class BaseModel(object):
     #
     # TODO: Should set perm to user.xxx
     #
-    @api.returns('self')
+    @api.returns('self', lambda self, value: value.id)
     def create(self, cr, user, vals, context=None):
         """
         Create a new record for the model.
@@ -4409,7 +4387,7 @@ class BaseModel(object):
                     done.append((model_name, ids, fields2))
 
             # recompute new-style fields
-            recs = self.recordset([id_new])
+            recs = self.browse(id_new)
             recs.recompute(recs.recompute_spec(vals))
 
         if self._log_create and not (context and context.get('no_store_function', False)):
@@ -4422,21 +4400,6 @@ class BaseModel(object):
         self.check_access_rule(cr, user, [id_new], 'create', context=context)
         self.create_workflow(cr, user, [id_new], context=context)
         return id_new
-
-    def browse(self, cr, uid, select, context=None):
-        """ return a record or recordset instance corresponding to the value of
-            parameter `select` (id or list of ids).
-
-            :param cr: database cursor
-            :param uid: current user id
-            :param select: id, list of ids, or ``False`` (null)
-            :param context: context arguments, like lang, time zone
-            :rtype: record or recordset requested
-        """
-        if isinstance(select, list):
-            return self.recordset(select)
-        else:
-            return self.record(select)
 
     def _store_get_values(self, cr, uid, ids, fields, context):
         """Returns an ordered list of fields.functions to call due to
@@ -4941,7 +4904,7 @@ class BaseModel(object):
             record['res_id'] = new_id
             trans_obj.create(cr, uid, record, context=context)
 
-    @api.returns('self')
+    @api.returns('self', lambda self, value: value.id)
     def copy(self, cr, uid, id, default=None, context=None):
         """
         Duplicate record with given id updating it with default values
@@ -5235,353 +5198,154 @@ class BaseModel(object):
         method = getattr(self.__class__, name)
         setattr(self.__class__, name, method.origin)
 
-    # specific attributes used by record, recordset and null instances
-    INSTANCE_ATTRIBUTES = [
-        '_scope',                   # instances are attached to a scope
-        '_record_id',               # a record refers to its id
-        '_records',                 # a recordset refers to its records
-    ]
+    #
+    # Instance creation
+    #
 
-    def null(self):
-        """ Return a null instance attached to the current scope. """
-        scope = scope_proxy.current
-        return self._make_instance(_scope=scope, _record_id=False)
-
-    def record(self, arg):
-        """ Return a record instance corresponding to `arg` (record or record
-            id) and attached to the current scope.
+    @classmethod
+    @api.model
+    def browse(cls, arg=None):
+        """ Return an instance corresponding to `arg` and attached to the
+            current scope. The parameter `arg` is either a record id, or a
+            collection of record ids.
         """
-        scope = scope_proxy.current
-        if isinstance(arg, BaseModel):
-            if arg._scope is scope:
-                # Important: self.record(arg) must be idempotent when applied in
-                # the same scope. This property is used to preserve the record's
-                # cache when converting between record and recordset.
-                return arg
-            arg = arg._record_id
-        if not arg:
-            return self.null()
+        if isinstance(arg, Iterable):
+            ids = tuple(arg)
+        elif arg:
+            ids = (arg,)
+        else:
+            ids = ()
+        assert all(isinstance(id, (int, long)) for id in ids)
 
-        # arg is a record id; retrieve the corresponding record in the cache
-        scope.cache[self._name][arg]
-        return self._make_instance(_scope=scope, _record_id=arg)
+        instance = object.__new__(cls)
+        instance._scope = scope_proxy.current
+        instance._ids = ids
+        return instance
 
-    def recordset(self, args=()):
-        """ Return a recordset instance corresponding to `args` (collection of
-            records or record ids) and attached to the current scope.
-        """
-        # Important: if args is a collection of record instances in the current
-        # scope, then the result only encapsulates those record instances. See
-        # method record() above.
-        records = tuple(map(self.record, args))
-        return self._make_instance(_scope=scope_proxy.current, _records=records)
-
-    def is_null(self):
-        """ Test whether self is a null instance. """
-        return not getattr(self, '_record_id', True)
-
-    def is_record(self):
-        """ Test whether `self` is a record instance (possibly null). """
-        return hasattr(self, '_record_id')
-
-    def is_recordset(self):
-        """ Test whether `self` is a recordset instance. """
-        return hasattr(self, '_records')
+    #
+    # Conversion methods
+    #
 
     def one(self):
-        """ Convert `self` into a single record attached to the same scope;
-            `self` must be a non-null record or a recordset with a single element.
-            Raise an exception if the conversion is not possible.
+        """ Return `self` if it is a singleton instance, otherwise raise an
+            exception.
         """
-        if self.is_record() and self:
+        if len(self) == 1:
             return self
-        elif self.is_recordset() and len(self) == 1:
-            return self[0]
         else:
             raise except_orm("ValueError", "Expected singleton: %s" % self)
 
-    def to_record(self):
-        """ Convert `self` into a record (possibly null) attached to the same
-            scope. If `self` is a nonempty recordset, return its first element.
-        """
-        if self.is_record():
-            return self
-        elif self:
-            return self[0]
-        else:
-            with self._scope:
-                return self.null()
-
-    def to_recordset(self):
-        """ Convert `self` into a recordset attached to the same scope;
-            raise an exception if the conversion is not possible.
-        """
-        if self.is_recordset():
-            return self
-        elif self.is_null():
-            with self._scope:
-                return self.recordset()
-        elif self.is_record():
-            with self._scope:
-                return self.recordset((self,))
-        else:
-            raise except_orm("ValueError", "Expected record or recordset: %s" % self)
-
     def scoped(self):
         """ Return an instance equivalent to `self` attached to the current scope. """
-        if self._scope is scope_proxy.current:
-            return self
-        if self.is_record():
-            return self.record(self._record_id)
-        else:
-            return self.recordset(self)
+        return self.browse(self._ids)
 
     def unbrowse(self):
-        """ Return the `id`/`ids` corresponding to a record/recordset/null instance. """
-        if self.is_record():
-            return self._record_id
-        else:
-            return map(int, self._records)
+        """ Return the list of record ids of this instance. """
+        return list(self._ids)
+
+    #
+    # Draft instances
+    #
 
     def draft(self):
-        """ Return a draft record attached to the current scope. """
+        """ Return a draft instance attached to the current scope. """
         #
-        # Draft records have a specific cache dictionary:
-        #  * _record_draft contains the draft values set on the record.
+        # Draft records have a specific cache dictionary that contains the draft
+        # values set on the record.
         #
-        # Draft records are not stored into the scope cache.
-        #
-        scope = scope_proxy.current
-        return self._make_instance(_scope=scope, _record_id=False,
-                                   _record_draft={})
+        instance = self.browse()
+        instance._draft = {}
+        return instance
 
     def is_draft(self):
         """ Test whether `self` is a draft record. """
-        return hasattr(self, '_record_draft')
+        return hasattr(self, '_draft')
 
     def get_draft_values(self):
         """ Return the draft values of `self` as a dictionary mapping field
             names to values in the format accepted by method :meth:`write`.
         """
         result = {}
-        for name, value in self._record_draft.iteritems():
+        for name, value in self._draft.iteritems():
             if value is not None:
                 field = self._fields[name]
                 result[name] = field.convert_to_write(value)
         return result
 
-    def __nonzero__(self):
-        """ Test whether `self` is nonempty and not null. """
-        return bool(self._records) if self.is_recordset() else not self.is_null()
+    #
+    # "Dunder" methods
+    #
 
-    def __iter__(self):
-        """ Return an iterator over `self` (must be a recordset). """
-        if not self.is_recordset():
-            raise except_orm("ValueError", "Expected recordset: %s" % self)
-        return iter(self._records)
+    def __nonzero__(self):
+        """ Test whether `self` is nonempty. """
+        return bool(self._ids)
 
     def __len__(self):
-        """ Return the size of `self` (must be a recordset). """
-        if self.is_recordset():
-            return len(self._records)
-        else:
-            raise except_orm("ValueError", "Expected recordset: %s" % self)
+        """ Return the size of `self`. """
+        return len(self._ids)
+
+    def __iter__(self):
+        """ Return an iterator over `self`. """
+        with self._scope:
+            return iter(map(self.browse, self._ids))
 
     def __contains__(self, item):
-        """ If `self` is a record, test whether `item` is a field name.
-            If `self` is a recordset, test whether `item` is a record in `self`.
-        """
-        if self.is_record():
-            return item in self._fields
-        elif self.is_recordset():
-            if isinstance(item, Record) and item._name == self._name:
-                return item in self._records
-            else:
-                _logger.warning("Unexpected: %s in %s" % (item, self))
-                return False
-        else:
-            raise except_orm("ValueError", "Expected record or recordset: %s" % self)
+        """ Test whether `item` is a record id in `self` or a field name. """
+        if isinstance(item, BaseModel):
+            if self._name != item._name:
+                raise except_orm("ValueError", "Mixing apples and oranges: %s in %s" % (item, self))
+            return set(item._ids) <= set(self._ids)
+        return (isinstance(item, basestring) and item in self._fields) or item in self._ids
 
     def __add__(self, other):
-        """ Return the concatenation of two recordsets as a recordset. """
-        if self._name != other._name:
-            raise except_orm("ValueError", "Mixing apples and oranges: %s, %s" % (self, other))
-        recs = tuple(self.to_recordset()) + tuple(other.to_recordset())
-        with self._scope:
-            return self.recordset(recs)
+        """ Return the concatenation of two instances. """
+        if not isinstance(other, BaseModel) or self._name != other._name:
+            raise except_orm("ValueError", "Mixing apples and oranges: %s + %s" % (self, other))
+        return self.browse(self._ids + other._ids)
 
     def __eq__(self, other):
-        """ Test equality between two records, two recordsets or two models. """
-        if self.is_record() and isinstance(other, Record):
-            # compare two records or nulls
-            return (self._name, self._record_id) == (other._name, other._record_id)
-        elif self.is_recordset() and isinstance(other, Recordset):
-            # compare two recordsets
-            return (self._name, self._records) == (other._name, other._records)
-        elif isinstance(other, BaseModel):
-            # compare two models
-            return self._name == other._name
-        else:
-            _logger.warning("Comparison of %s and %s" % (self, other))
+        """ Test whether two instances are equivalent (as sets). """
+        if not isinstance(other, BaseModel):
+            _logger.warning("Comparing apples and oranges: %s == %s", self, other)
             return False
+        return self._name == other._name and set(self._ids) == set(other._ids)
 
     def __ne__(self, other):
         return not self == other
 
-    def _get_field(self, name):
-        """ read the field with the given `name` on a record instance """
-        if not self.is_record():
-            raise ValueError("Expected record: %s" % self)
+    def __int__(self):
+        return (self._ids or (False,))[0]
 
-        if self.is_null():
-            with self._scope:
-                if self.is_draft():
-                    if name not in self._record_draft:
-                        self.add_default_value(name)
-                    value = self._record_draft[name]
-                    if value is not None:
-                        return value
-                return self._fields[name].null()
+    def __str__(self):
+        model_name = self._name.replace('.', '_')
+        return "%s%s" % (model_name, self._ids)
 
-        id = self._record_id
-        model_cache = self._scope.cache[self._name]
-        record_cache = model_cache[id]
+    def __unicode__(self):
+        return unicode(str(self))
 
-        if name in record_cache:
-            return record_cache[name]
+    __repr__ = __str__
 
-        with self._scope:
-            # handle high-level fields
-            field = self._fields[name]
-
-            if not field.store:
-                # a "pure" function field, simply evaluate it on self
-                assert field.compute
-                getattr(self, field.compute)()
-                if self.is_draft():
-                    return self._record_draft[name]
-                return record_cache[name]
-
-            recomputing = scope_proxy.recomputing(self._name)
-            if recomputing and field.compute and id in recomputing.get(name, ()):
-                # field is stored and must be recomputed (in batch!)
-                recs = self.recordset(recomputing[name]).exists()
-                getattr(recs, field.compute)()
-                return record_cache[name]
-
-            # handle the case of low-level fields
-            column = self._columns[name]
-
-            if isinstance(column, fields.function) and not column.store:
-                # a pure function field: simply evaluate it for self
-                value = self.read([name], load="_classic_write")[name]
-                return field.convert_from_read(value)
-
-            # fetch the record of this model without name in their cache
-            fetch_ids = set(record_id
-                            for record_id, record_cache in model_cache.iteritems()
-                            if name not in record_cache)
-
-            # prefetch all classic and many2one fields if column is one of them
-            # Note: do not prefetch fields when self.pool._init is True, because
-            # some columns may be missing from the database!
-            if column._prefetch and not self.pool._init:
-                fetch_fields = set(fname
-                    for fname, fcolumn in self._columns.iteritems()
-                    if fcolumn._classic_write)
-            else:
-                fetch_fields = set((name,))
-
-            # do not fetch the records/fields that have to be recomputed
-            if recomputing:
-                for fname in list(fetch_fields):
-                    recompute_ids = recomputing.get(fname, set())
-                    if id in recompute_ids:
-                        fetch_fields.discard(fname)     # do not fetch that field at all
-                    else:
-                        fetch_ids -= recompute_ids      # do not fetch those records
-
-            # fetch and check result
-            assert name in fetch_fields and id in fetch_ids
-            fetch_recs = self.recordset(fetch_ids)
-            fetched = fetch_recs._fetch_fields(list(fetch_fields))
-            if self not in fetched:
-                raise except_orm("AccessError", "%s does not exist." % self)
-
-            if name not in record_cache:
-                # How did this happen? Could be a missing model due to custom fields used too soon.
-                _logger.warning("Unknown field %r in %s" % (name, self))
-                raise KeyError(name)
-
-            return record_cache[name]
-
-    @api.multi
-    def _fetch_fields(self, field_names):
-        """ fetch the given fields of `self` in the record cache, and
-            return the records actually fetched
-        """
-        # read the (old-style only) fields
-        # the method read is supposed to fetch the cache with the results
-        result = self.read(field_names, load="_classic_write")
-
-        # return the fetched records
-        return self.recordset(self.record(data['id']) for data in result)
-
-    def _set_field(self, name, value):
-        """ Assign the field `name` of `self` to `value`.
-            The value is assigned in the records cache, and if the field is
-            stored, the value is also written to the database.
-        """
-        if self.is_draft():
-            for model, field, path in self._recompute[name]:
-                assert model == self._name
-                self._record_draft.pop(field, None)
-            # store the value in the draft cache, and keep caches disjoint
-            self._record_draft[name] = value
-            return
-
-        if self.is_null():
-            return
-
-        # FIXME: no fnct_inv
-        if self._fields[name].store:
-            # store value in database
-            with self._scope:
-                field = self._fields[name]
-                self.write({name: field.convert_to_write(value)})
-
-        # store value in cache (here because write() invalidates the cache!)
-        self._scope.cache[self._name][self._record_id][name] = value
+    def __hash__(self):
+        return hash((self._name, frozenset(self._ids)))
 
     def __getitem__(self, key):
-        """ If `self` is a record, return the value of the field named `key`.
-            If `self` is a recordset, return a record or a recordset from
-            `self`, depending on whether `key` is an integer or a slice.
+        """ If `key` is an integer or a slice, return the corresponding record
+            selection as an instance (attached to the same scope as `self`).
+            Otherwise read the field `key` of the first record in `self`.
 
             Examples::
 
-                r = records[3]              # fourth record in records
-                print r['name']             # print field 'name' of record
-
-                rs = model.search(dom)      # rs is a recordset
-                rs1 = rs[10:]               # same as rs with offset 10
-                rs2 = rs1[:10]              # same as rs with offset 10 and limit 10
-                assert list(rs2) == list(rs[10:20])
+                inst = model.search(dom)    # inst is a recordset
+                r4 = inst[3]                # fourth record in inst
+                rs = inst[10:20]            # subset of inst
+                nm = rs['name']             # name of first record in inst
         """
-        if self.is_record():
-            if key in self._fields:
-                # important: one must call the field's getter
-                return self._fields[key].__get__(self, self.__class__)
-            else:
-                return self._get_field(key)
-        elif self.is_recordset():
-            if isinstance(key, slice):
-                with self._scope:
-                    return self.recordset(self._records[key])
-            else:
-                return self._records[key]
+        if isinstance(key, (int, long, slice)):
+            with self._scope:
+                return self.browse(self._ids[key])
         else:
-            raise except_orm("ValueError", "Expected record or recordset: %s" % self)
+            # important: one must call the field's getter
+            return self._fields[key].__get__(self, type(self))
 
     def __setitem__(self, key, value):
         """ Assign the field `key` to `value` in record `self`. """
@@ -5602,35 +5366,134 @@ class BaseModel(object):
         else:
             raise AttributeError("%r object has no attribute %r" % (type(self).__name__, name))
 
-    def __int__(self):
-        if self.is_record():
-            return self._record_id
-        else:
-            raise except_orm("ValueError", "Expected record: %s" % self)
+    #
+    # Field access/assignment
+    #
 
-    def __str__(self):
-        model_name = self._name.replace('.', '_')
-        if self.is_null():
-            return "%s.null()" % model_name
-        elif self.is_record():
-            return "%s.record(%d)" % (model_name, self._record_id)
-        elif self.is_recordset():
-            return "%s.recordset(%s)" % (model_name, self.unbrowse())
-        else:
-            return model_name
+    def _get_field(self, name):
+        """ read the field with the given `name` on a record instance """
+        if not self._ids:
+            # null instances
+            with self._scope:
+                if self.is_draft():
+                    if name not in self._draft:
+                        self.add_default_value(name)
+                    value = self._draft[name]
+                    if value is not None:
+                        return value
+                return self._fields[name].null()
 
-    def __unicode__(self):
-        return unicode(str(self))
+        id = self._ids[0]
+        model_cache = self._scope.cache[self._name]
+        record_cache = model_cache[id]
 
-    __repr__ = __str__
+        if name in record_cache:
+            return record_cache[name]
 
-    def __hash__(self):
-        if self.is_record():
-            return hash((self._name, self._record_id))
-        elif self.is_recordset():
-            return hash((self._name, tuple(self.unbrowse())))
-        else:
-            return hash(self._name)
+        with self._scope:
+            field = self._fields[name]
+
+            # pure function fields: simply evaluate them on self
+            if not field.store:
+                assert field.compute
+                getattr(self, field.compute)()
+                if self.is_draft():
+                    return self._draft[name]
+                return record_cache[name]
+
+            recomputing = scope_proxy.recomputing(self._name)
+            if recomputing and field.compute and id in recomputing.get(name, ()):
+                # field is stored and must be recomputed (in batch!)
+                recs = self.browse(recomputing[name]).exists()
+                getattr(recs, field.compute)()
+                return record_cache[name]
+
+            # handle the case of low-level fields
+            column = self._columns[name]
+
+            # pure function fields: simply evaluate them on self
+            if isinstance(column, fields.function) and not column.store:
+                record = self.browse(id)
+                value = record.read([name], load='_classic_write')[0][name]
+                return field.convert_from_read(value)
+
+            # fetch the record of this model without name in their cache
+            fetch_ids = set(fid
+                for fid, fcache in model_cache.iteritems()
+                if name not in fcache)
+
+            # prefetch all classic and many2one fields if column is one of them
+            # Note: do not prefetch fields when self.pool._init is True, because
+            # some columns may be missing from the database!
+            if column._prefetch and not self.pool._init:
+                fetch_fields = set(fname
+                    for fname, fcolumn in self._columns.iteritems()
+                    if fcolumn._classic_write)
+            else:
+                fetch_fields = set((name,))
+
+            # do not fetch the records/fields that have to be recomputed
+            if recomputing:
+                for fname in list(fetch_fields):
+                    recompute_ids = recomputing.get(fname, set())
+                    if id in recompute_ids:
+                        fetch_fields.discard(fname)     # do not fetch that field at all
+                    else:
+                        fetch_ids -= recompute_ids      # do not fetch those records
+
+            # fetch and check result;
+            # method read is supposed to fetch the cache with the results
+            assert name in fetch_fields and id in fetch_ids
+            fetch_recs = self.browse(fetch_ids)
+            result = fetch_recs.read(list(fetch_fields), load='_classic_write')
+
+            if name not in record_cache:
+                # retrieve values for self in result
+                try:
+                    values = next(data for data in result if data['id'] == id)
+                except StopIteration:
+                    raise except_orm("AccessError", "%s does not exist." % self)
+
+                # retrieve the field's value in values
+                if name not in values:
+                    # Could be a missing model due to custom fields used too soon.
+                    _logger.warning("Unknown field %r in %s" % (name, self))
+                    raise KeyError(name)
+
+                # read hasn't done its job: put value in record_cache
+                record_cache[name] = field.convert_from_read(values[name])
+
+            return record_cache[name]
+
+    def _set_field(self, name, value):
+        """ Assign the field `name` of `self` to `value`.
+            The value is assigned in the records cache, and if the field is
+            stored, the value is also written to the database.
+        """
+        if self.is_draft():
+            for model, field, path in self._recompute[name]:
+                if model == self._name:
+                    self._draft.pop(field, None)
+            # store the value in the draft cache
+            self._draft[name] = value
+            return
+
+        if not self:
+            return
+
+        # FIXME: no fnct_inv
+        field = self._fields[name]
+        if field.store:
+            # store value in database
+            with self._scope:
+                self[0].write({name: field.convert_to_write(value)})
+
+        # store value in cache (here because write() invalidates the cache!)
+        self._scope.cache[self._name][self.id][name] = value
+
+    #
+    # Cache and recomputation management
+    #
 
     def refresh(self):
         """ Clear the records cache.
@@ -5708,15 +5571,15 @@ class BaseModel(object):
         with scope_proxy.recomputing_manager(spec):
             # simply evaluate the fields to recompute on their records;
             # the method _get_field() will do the job!
-            for m, fs, ids in spec:
-                model = self.pool[m]
+            for model_name, names, ids in spec:
+                model = self.pool[model_name]
                 # recompute stored fields only
-                fs = [f for f in fs if model._fields[f].store]
-                if fs:
+                names = [name for name in names if model._fields[name].store]
+                if names:
                     # filter out deleted records (this happens with unlink)
-                    for rec in model.recordset(ids).exists():
-                        for f in fs:
-                            rec[f]
+                    for rec in model.browse(ids).exists():
+                        for name in names:
+                            rec[name]
 
     @api.model
     def onchange(self, id, changed, values):
@@ -5728,7 +5591,7 @@ class BaseModel(object):
 
         # create a draft with those values
         record = self.draft()
-        record._record_draft.update(values)
+        record._draft.update(values)
 
         # assign the changed field, in order to provoke some effect
         record[changed] = values[changed]
@@ -5740,35 +5603,24 @@ class BaseModel(object):
                 res[k] = self._fields[k].convert_to_write(record[k])
         return res
 
+
 # for instance checking
-class Null(object):
-    """ Pseudo-class for testing null instances:
-        ``isinstance(x, Null)`` returns ``True`` if ``x`` is null.
-    """
-    class __metaclass__(type):
-        def __instancecheck__(self, inst):
-            return isinstance(inst, BaseModel) and inst.is_null()
+Recordset = BaseModel
 
 class Record(object):
-    """ Pseudo-class for testing record instances:
-        ``isinstance(x, Record)`` returns ``True`` if ``x`` is a record.
-    """
+    """ Pseudo-class for testing record instances """
     class __metaclass__(type):
         def __instancecheck__(self, inst):
-            return isinstance(inst, BaseModel) and inst.is_record()
+            return isinstance(inst, BaseModel) and len(inst) <= 1
 
-class Recordset(object):
-    """ Pseudo-class for testing recordset instances:
-        ``isinstance(x, Recordset)`` returns ``True`` if ``x`` is a recordset.
-    """
+class Null(object):
+    """ Pseudo-class for testing null instances """
     class __metaclass__(type):
         def __instancecheck__(self, inst):
-            return isinstance(inst, BaseModel) and inst.is_recordset()
+            return isinstance(inst, BaseModel) and not inst
 
 class Draft(object):
-    """ Pseudo-class for testing draft instances:
-        ``isinstance(x, Draft)`` returns ``True`` if ``x`` is a draft record.
-    """
+    """ Pseudo-class for testing draft instances """
     class __metaclass__(type):
         def __instancecheck__(self, inst):
             return isinstance(inst, BaseModel) and inst.is_draft()

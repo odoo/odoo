@@ -84,7 +84,7 @@ class res_partner(models.Model):
     @api.depends('company_id')
     def compute_relations(self):
         self.computed_company = self.company_id
-        self.computed_companies = self.company_id.to_recordset()
+        self.computed_companies = self.company_id
 
     company_name = fields.Related('company_id', 'name')
 

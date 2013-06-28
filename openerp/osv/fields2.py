@@ -373,14 +373,14 @@ class Reference(Selection):
     def convert_from_read(self, value):
         if value:
             res_model, res_id = value.split(',')
-            return scope.model(res_model).record(int(res_id))
+            return scope.model(res_model).browse(int(res_id))
         return False
 
     def convert_to_read(self, value):
-        return "%s,%s" % (value._name, value._record_id) if value else False
+        return "%s,%s" % (value._name, value.id) if value else False
 
     def convert_to_write(self, value):
-        return "%s,%s" % (value._name, value._record_id) if value else False
+        return "%s,%s" % (value._name, value.id) if value else False
 
 
 class Many2one(Field):
@@ -433,7 +433,7 @@ class Many2one(Field):
         return kwargs
 
     def null(self):
-        return scope.model(self.comodel).null()
+        return scope.model(self.comodel).browse()
 
     def convert_value(self, value):
         if value is None or value is False:
@@ -445,20 +445,20 @@ class Many2one(Field):
     def convert_from_read(self, value):
         if isinstance(value, tuple):
             value = value[0]
-        return scope.model(self.comodel).record(value)
+        return scope.model(self.comodel).browse(value)
 
     def convert_to_read(self, value):
-        return bool(value) and value.name_get()
+        return bool(value) and value.name_get()[0]
 
     def convert_to_write(self, value):
-        return value._record_id
+        return value.id
 
     def compute_default(self, record):
         super(Many2one, self).compute_default(record)
         if self.inherits:
             # special case: fields that implement inheritance between models
             value = record[self.name]
-            if value.is_null() and not value.is_draft():
+            if not value and not value.is_draft():
                 # put a draft record instead of the null record
                 record[self.name] = scope.model(self.comodel).draft()
 
@@ -500,7 +500,7 @@ class One2many(Field):
         return kwargs
 
     def null(self):
-        return scope.model(self.comodel).recordset()
+        return scope.model(self.comodel).browse()
 
     def convert_value(self, value):
         if value is None or value is False:
@@ -510,7 +510,7 @@ class One2many(Field):
         raise ValueError("Wrong value for %s.%s: %s" % (self.model, self.name, value))
 
     def convert_from_read(self, value):
-        return scope.model(self.comodel).recordset(value or ())
+        return scope.model(self.comodel).browse(value or ())
 
     def convert_to_read(self, value):
         return value.unbrowse()
@@ -521,7 +521,7 @@ class One2many(Field):
             if record.is_draft():
                 result.append((0, 0, record.get_draft_values()))
             else:
-                result.append((4, record._record_id))
+                result.append((4, record.id))
         return result
 
 
@@ -580,7 +580,7 @@ class Many2many(Field):
         return kwargs
 
     def null(self):
-        return scope.model(self.comodel).recordset()
+        return scope.model(self.comodel).browse()
 
     def convert_value(self, value):
         if value is None or value is False:
@@ -590,7 +590,7 @@ class Many2many(Field):
         raise ValueError("Wrong value for %s.%s: %s" % (self.model, self.name, value))
 
     def convert_from_read(self, value):
-        return scope.model(self.comodel).recordset(value or ())
+        return scope.model(self.comodel).browse(value or ())
 
     def convert_to_read(self, value):
         return value.unbrowse()
@@ -601,7 +601,7 @@ class Many2many(Field):
             if record.is_draft():
                 result.append((0, 0, record.get_draft_values()))
             else:
-                result.append((4, record._record_id))
+                result.append((4, record.id))
         return result
 
 
@@ -618,9 +618,9 @@ class Related(Field):
     @lazy_property
     def related_field(self):
         """ determine the related field corresponding to `self` """
-        rec = scope.model(self.model).null()
+        rec = scope.model(self.model)
         for name in self.related[:-1]:
-            rec = rec[name].null()
+            rec = rec[name]
         return rec._fields[self.related[-1]]
 
     @lazy_property
@@ -644,13 +644,13 @@ class Related(Field):
             return self
         # traverse the caches, and delegate to the last record
         for name in self.related[:-1]:
-            instance = instance[name].to_record()
+            instance = instance[name]
         return instance[self.related[-1]]
 
     def __set__(self, instance, value):
         # traverse the caches, and delegate to the last record
         for name in self.related[:-1]:
-            instance = instance[name].to_record()
+            instance = instance[name]
         instance[self.related[-1]] = value
 
     @lazy_property
@@ -687,8 +687,7 @@ class Id(Field):
     def __get__(self, instance, owner):
         if instance is None:
             return self         # the field is accessed through the class owner
-        assert instance.is_record()
-        return instance._record_id
+        return (instance._ids or (False,))[0]
 
     def __set__(self, instance, value):
         raise NotImplementedError()

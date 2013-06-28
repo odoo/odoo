@@ -10,8 +10,7 @@ class TestClassChanges(common.TransactionCase):
         self.Model = self.registry('test_new_api.defaults')
 
     def test_create_with_defaults(self):
-        id = self.Model.create({})
-        record = self.Model.browse(id)
+        record = self.Model.create({})
 
         self.assertEqual(record.name, u"Bob the Builder")
         self.assertEqual(record.description, u"This is a thing")

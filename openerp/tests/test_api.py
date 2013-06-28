@@ -164,8 +164,9 @@ class TestAPI(common.TransactionCase):
         # call method name_get on partner records, and check its effect
         for p in partners:
             res = p.name_get()
-            self.assertIsInstance(res, tuple)
-            self.assertEqual(res[0], p.id)
+            self.assertTrue(isinstance(res, list) and len(res) == 1)
+            self.assertTrue(isinstance(res[0], tuple) and len(res[0]) == 2)
+            self.assertEqual(res[0][0], p.id)
 
     @mute_logger('openerp.osv.orm')
     def test_30_new_old(self):
@@ -341,54 +342,27 @@ class TestAPI(common.TransactionCase):
         scope.check_cache()
 
     @mute_logger('openerp.osv.orm')
-    def test_70_record_recordset(self):
-        """ Check methods one(), to_record() and to_recordset(). """
+    def test_70_one(self):
+        """ Check method one(). """
         # check with many records
         ps = self.Partner.search([('name', 'ilike', 'a')])
         self.assertTrue(len(ps) > 1)
-
         with self.assertRaises(except_orm): ps.one()
-        self.assertEqual(ps.to_record(), ps[0])
-        self.assertEqual(ps.to_recordset(), ps)
 
-        # check with a single record and singleton recordset
-        p1, ps1 = ps[0], ps.recordset([ps[0]])
+        p1 = ps[0]
+        self.assertEqual(len(p1), 1)
         self.assertEqual(p1.one(), p1)
-        self.assertEqual(p1.to_record(), p1)
-        self.assertEqual(p1.to_recordset(), ps1)
 
-        self.assertEqual(ps1.one(), p1)
-        self.assertEqual(ps1.to_record(), p1)
-        self.assertEqual(ps1.to_recordset(), ps1)
-
-        # check with null record and empty recordset
-        p0, ps0 = ps.null(), ps.recordset()
+        p0 = self.Partner.browse()
+        self.assertEqual(len(p0), 0)
         with self.assertRaises(except_orm): p0.one()
-        self.assertEqual(p0.to_record(), p0)
-        self.assertEqual(p0.to_recordset(), ps0)
-
-        with self.assertRaises(except_orm): ps0.one()
-        self.assertEqual(ps0.to_record(), p0)
-        self.assertEqual(ps0.to_recordset(), ps0)
-
-        # conversion between record and recordset within the same scope must
-        # preserve record instances
-        self.assertIs(p1.one(), p1)
-        self.assertIs(p1.to_record(), p1)
-        self.assertIs(p1.to_recordset().to_record(), p1)
-
-        # the recordsets only encapsulate the records
-        qs = self.Partner.recordset(list(ps))
-        for p, q in zip(ps, qs):
-            self.assertIs(p, q)
 
     @mute_logger('openerp.osv.orm')
     def test_80_contains(self):
         """ Test membership on recordset. """
-        ps = self.Partner.search([('name', 'ilike', 'a')], limit=1)
-        p = ps.to_record()
+        p1 = self.Partner.search([('name', 'ilike', 'a')], limit=1).one()
         ps = self.Partner.search([('name', 'ilike', 'a')])
-        self.assertTrue(p in ps)
+        self.assertTrue(p1 in ps)
 
     @mute_logger('openerp.osv.orm')
     def test_80_concat(self):

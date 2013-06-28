@@ -100,7 +100,7 @@ class res_currency(osv.osv):
     @api.one
     @api.depends('rate_ids.name')
     def compute_date(self):
-        self.date = self.rate_ids.to_record().name
+        self.date = self.rate_ids.name
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
         if not args:

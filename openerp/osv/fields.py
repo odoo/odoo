@@ -1167,41 +1167,33 @@ class related(function):
     def _fnct_write(self, obj, cr, uid, ids, field_name, values, args, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
-        for record in obj.browse(cr, uid, ids, context=context):
+        for instance in obj.browse(cr, uid, ids, context=context):
             # traverse all fields except the last one
             for field in self.arg[:-1]:
-                record = record[field] or False
-                if not record:
-                    break
-                elif record.is_recordset():     # one2many or many2many field
-                    record = record[0]
-            if record:
-                # write on the last field
-                record.write({self.arg[-1]: values})
+                instance = instance[field]
+            if instance:
+                # write on the last field of the first record
+                instance[0].write({self.arg[-1]: values})
 
     def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
         res = {}
         for record in obj.browse(cr, SUPERUSER_ID, ids, context=context):
             value = record
             for field in self.arg:
-                if value.is_recordset():
-                    value = value[0]
-                value = value[field] or False
-                if not value:
-                    break
+                value = value[field]
             res[record.id] = value
 
         if self._type == 'many2one':
-            # res[id] is a Record or False; convert it to (id, name) or False.
+            # res[id] is a recordset; convert it to (id, name) or False.
             # Perform name_get as root, as seeing the name of a related object depends on
             # access right of source document, not target, so user may not have access.
             value_ids = list(set(value.id for value in res.itervalues() if value))
             value_name = dict(obj.pool[self._obj].name_get(cr, SUPERUSER_ID, value_ids, context=context))
-            res = dict((id, value and (value.id, value_name[value.id])) for id, value in res.iteritems())
+            res = dict((id, bool(value) and (value.id, value_name[value.id])) for id, value in res.iteritems())
 
         elif self._type in ('one2many', 'many2many'):
             # res[id] is a recordset; convert it to a list of ids
-            res = dict((id, value and map(int, value) or []) for id, value in res.iteritems())
+            res = dict((id, value.unbrowse()) for id, value in res.iteritems())
 
         return res
 
