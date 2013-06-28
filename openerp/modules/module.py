@@ -244,7 +244,7 @@ def get_module_resource(module, *args):
     return False
 
 def get_module_icon(module):
-    iconpath = ['static', 'src', 'img', 'icon.png']
+    iconpath = ['static', 'description', 'icon.png']
     if get_module_resource(module, *iconpath):
         return ('/' + module + '/') + '/'.join(iconpath)
     return '/base/'  + '/'.join(iconpath)
