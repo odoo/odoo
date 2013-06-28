@@ -103,6 +103,9 @@
 .oe_pick_widget .oe_pick_list_table tbody tr:nth-child(odd){
     background: rgb(250,250,250);
 }
+.oe_pick_widget .oe_pick_list_table tbody tr.oe_selected{
+    background: rgb(236, 236, 247);
+}
 .oe_pick_widget .oe_pick_list_table td,
 .oe_pick_widget .oe_pick_list_table th {
     padding: 5px;
@@ -129,6 +132,9 @@
     font-weight: bold;
     border-radius: 9px;
     border: solid 1px rgba(0, 0, 0, 0.09);
+    cursor: pointer;
+}
+.oe_pick_widget .js-pack{
     cursor: pointer;
 }
 

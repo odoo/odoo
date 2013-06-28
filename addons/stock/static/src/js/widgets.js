@@ -36,14 +36,13 @@ function openerp_picking_widgets(instance){
         template: 'PackageEditorWidget',
         get_header: function(){
             var model = this.getParent();
-            var current_package_id = instance.session.user_context.current_package_id;
-            return current_package_id ? 'Current Operations for package: ' + current_package_id[1] : 'Current Operations';
+            var current_package = model.get_selected_package();
+            return current_package ? 'Operations for Package: ' + current_package.name : 'Current Operations';
         },
         get_rows: function(){
-            var current_package_id = instance.session.user_context.current_package_id;
             var model = this.getParent();
             var rows = [];
-		console.log('package id',current_package_id)
+            var current_package_id = instance.session.user_context.current_package_id;
             
             _.each( model.operations, function(op){
                 if((typeof current_package_id !== 'undefined') && op.result_package_id !== current_package_id){
@@ -69,14 +68,23 @@ function openerp_picking_widgets(instance){
         },
         get_rows: function(){
             var model = this.getParent();
+            var current_package = model.get_selected_package();
             var rows = [];
             _.each( model.packages, function(pack){
                 rows.push({
                     cols:{ pack: pack.name},
-                    id: pack.id
+                    id: pack.id,
+                    classes: 'js-pack' + ( pack === current_package ? ' oe_selected' : '') ,
                 });
             });
             return rows;
+        },
+        renderElement: function(){
+            this._super();
+            var model = this.getParent();
+            this.$('.js-pack').click(function(){
+                model.select_package(parseInt($(this).attr('pack-id')));
+            });
         },
     });
 
@@ -205,6 +213,23 @@ function openerp_picking_widgets(instance){
                 .then(function(new_picking_id){
                     console.log('New picking id:',new_picking_id);
                 });
+        },
+        select_package: function(package_id){
+            console.log('Select Package:',package_id);
+            instance.session.user_context.current_package_id = package_id;
+            this.package_editor.renderElement();
+            this.package_selector.renderElement();
+        },
+        get_selected_package: function(){
+            var current_package;
+
+            _.each( this.packages, function(pack){
+                if(pack.id === instance.session.user_context.current_package_id){
+                    current_package = pack;
+                }
+            });
+
+            return current_package;
         },
         connect_barcode_scanner: function(){
             var self =this;
