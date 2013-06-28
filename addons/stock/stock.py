@@ -3813,6 +3813,10 @@ class stock_package(osv.osv):
     #    'picking_id': fields.related('pack_operation_id', 'picking_id', type='many2one', relation="stock.picking", string='Related Picking'),
     }
 
+    _defaults = {
+        'name': lambda self, cr, uid, context: self.pool.get('ir.sequence').get(cr, uid, 'stock.quant.package') or _('Unknown Pack')
+    }
+
     def _check_location(self, cr, uid, ids, context=None):
         '''Simply check that all quants in a package are stored in the same location'''
         for pack in self.browse(cr, uid, ids, context=context):
