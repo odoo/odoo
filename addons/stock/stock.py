@@ -3937,7 +3937,7 @@ class stock_pack_operation(osv.osv):
             corresponding_move_ids = stock_move_obj.search(cr, uid, [('picking_id', '=', picking_id), ('product_id', '=', product_id)], context=context)
             if corresponding_move_ids:
                 corresponding_move = stock_move_obj.browse(cr, uid, corresponding_move_ids[0], context=context)
-                todo_on_moves += [(1, corresponding_move.id, {'remaining_qty': corresponding_move.product_qty - qty})]
+                todo_on_moves += [(1, corresponding_move.id, {'remaining_qty': corresponding_move.remaining_qty - 1})]
             else:
                 #decide what to do
                 pass
