@@ -30,7 +30,7 @@ from openerp import SUPERUSER_ID
 from openerp import tools
 from openerp.osv import osv, fields
 from openerp.osv.scope import proxy as scope
-from openerp.osv.api import model, record, recordset, returns
+from openerp.osv.api import model, multi, one, returns
 from openerp.tools.translate import _
 from openerp.tools.yaml_import import is_comment
 
@@ -114,7 +114,7 @@ class res_partner_category(osv.Model):
         categories = self.search(args, limit=limit)
         return categories.name_get()
 
-    @recordset
+    @multi
     def _name_get_fnc(self, field_name, arg):
         return dict(self.name_get())
 
@@ -177,21 +177,21 @@ class res_partner(osv.Model, format_address):
             res[partner.id] = self._display_address(cr, uid, partner, context=context)
         return res
 
-    @recordset
+    @multi
     def _get_tz_offset(self, name, args):
         return dict(
             (p.id, datetime.datetime.now(pytz.timezone(p.tz or 'GMT')).strftime('%z'))
             for p in self)
 
-    @recordset
+    @multi
     def _get_image(self, name, args):
         return dict((p.id, tools.image_get_resized_images(p.image)) for p in self)
 
-    @record
+    @one
     def _set_image(self, name, value, args):
         return self.write({'image': tools.image_resize_image_big(value)})
 
-    @recordset
+    @multi
     def _has_image(self, name, args):
         return dict((p.id, bool(p.image)) for p in self)
 
@@ -348,12 +348,12 @@ class res_partner(osv.Model, format_address):
         (osv.osv._check_recursion, 'You cannot create recursive Partner hierarchies.', ['parent_id']),
     ]
 
-    @record
+    @one
     def copy(self, default=None):
         default = dict(default or {}, name=_('%s (copy)') % self.name)
         return super(res_partner, self).copy(default)
 
-    @recordset
+    @multi
     def onchange_type(self, is_company):
         value = {}
         value['title'] = False
@@ -384,7 +384,7 @@ class res_partner(osv.Model, format_address):
             result['value'] = {'use_parent_address': False}
         return result
 
-    @recordset
+    @multi
     def onchange_state(self, state_id):
         if state_id:
             state = scope.model('res.country.state').browse(state_id)
@@ -502,7 +502,7 @@ class res_partner(osv.Model, format_address):
             if not parent.is_company:
                 parent.write({'is_company': True})
 
-    @recordset
+    @multi
     def write(self, vals):
         result = super(res_partner, self).write(vals)
         for partner in self:

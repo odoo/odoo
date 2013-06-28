@@ -644,11 +644,11 @@ class BaseModel(object):
             cls.CONCURRENCY_CHECK_FIELD,
             fields2.Char(compute=compute_concurrency_field, store=False))
 
-    @api.record
+    @api.one
     def compute_concurrency_field(self):
         self[self.CONCURRENCY_CHECK_FIELD] = str(datetime.datetime.utcnow())
 
-    @api.record
+    @api.one
     @api.depends('create_date', 'write_date')
     def compute_concurrency_field_with_access(self):
         self[self.CONCURRENCY_CHECK_FIELD] = "%s%s%s" % (
@@ -5206,7 +5206,7 @@ class BaseModel(object):
 
             Example::
 
-                @api.recordset
+                @api.multi
                 def do_write(self, values):
                     # do stuff, and call the original method
                     return do_write.origin(self, values)
@@ -5515,7 +5515,7 @@ class BaseModel(object):
 
             return record_cache[name]
 
-    @api.recordset
+    @api.multi
     def _fetch_fields(self, field_names):
         """ fetch the given fields of `self` in the record cache, and
             return the records actually fetched
@@ -5661,7 +5661,7 @@ class BaseModel(object):
         # invalidate the spec
         scope_proxy.invalidate_cache(spec)
 
-    @api.recordset
+    @api.multi
     def recompute_spec(self, modified_fields, spec=None):
         """ Return a data structure that specifies which records and fields to
             recompute (for new-style fields only).

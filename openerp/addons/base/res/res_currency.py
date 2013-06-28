@@ -97,7 +97,7 @@ class res_currency(osv.osv):
 
     date = fields2.Date(compute='compute_date', store=True)
 
-    @api.record
+    @api.one
     @api.depends('rate_ids.name')
     def compute_date(self):
         self.date = self.rate_ids.to_record().name

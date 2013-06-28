@@ -53,7 +53,7 @@ class res_partner(models.Model):
     children_count = fields.Integer(compute='compute_children_count', store=True)
     has_sibling = fields.Integer(compute='compute_has_sibling', store=True)
 
-    @api.record
+    @api.one
     def default_number_of_employees(self):
         self.number_of_employees = 1
 
@@ -61,18 +61,18 @@ class res_partner(models.Model):
     def _references_models(self):
         return [('res.partner', 'Partner'), ('res.users', 'User')]
 
-    @api.record
+    @api.one
     @api.depends('name')
     def compute_name_size(self):
         self.name_size = len(self.name or '')
 
-    @api.record
+    @api.one
     @api.depends('child_ids')
     def compute_children_count(self):
         self.children_count = len(self.child_ids)
 
     # depends on function field => cascading recomputations
-    @api.record
+    @api.one
     @api.depends('parent_id.children_count')
     def compute_has_sibling(self):
         self.has_sibling = self.parent_id.children_count >= 2
@@ -80,7 +80,7 @@ class res_partner(models.Model):
     computed_company = fields.Many2one('res.company', compute='compute_relations', store=False)
     computed_companies = fields.Many2many('res.company', compute='compute_relations', store=False)
 
-    @api.record
+    @api.one
     @api.depends('company_id')
     def compute_relations(self):
         self.computed_company = self.company_id
@@ -99,18 +99,18 @@ class on_change_test(models.Model):
 
 
     @api.depends('name')
-    @api.record
+    @api.one
     def compute_name_size(self):
         self.name_size = len(self.name or '')
 
     @api.depends('name')
-    @api.record
+    @api.one
     def compute_utf8_size(self):
         name = self.name or u''
         self.name_utf8_size = len(name.encode('utf-8'))
 
     @api.depends('name', 'name_size', 'name_utf8_size')
-    @api.record
+    @api.one
     def compute_description(self):
         if self.name:
             self.description = "%s (%d:%d)" % (
@@ -118,7 +118,7 @@ class on_change_test(models.Model):
         else:
             self.description = False
 
-    @api.record
+    @api.one
     def whatever(self):
         self.trick = "wheeeeeld.null()eld.null"
 
@@ -128,6 +128,6 @@ class defaults(models.Model):
     name = fields.Char(required=True, compute='name_default')
     description = fields.Char()
 
-    @api.record
+    @api.one
     def name_default(self):
         self.name = u'Bob the Builder'

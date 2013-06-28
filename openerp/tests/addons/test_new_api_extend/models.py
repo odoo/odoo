@@ -6,6 +6,6 @@ class change_defaults(models.Model):
 
     description = fields.Char(required=True, compute="description_default")
 
-    @api.record
+    @api.one
     def description_default(self):
         self.description = u"This is a thing"

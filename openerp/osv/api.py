@@ -71,7 +71,7 @@
 
 __all__ = [
     'Meta', 'guess', 'noguess',
-    'model', 'record', 'recordset',
+    'model', 'multi', 'one',
     'cr', 'cr_context', 'cr_uid', 'cr_uid_context',
     'cr_uid_id', 'cr_uid_id_context', 'cr_uid_ids', 'cr_uid_ids_context',
     'depends', 'returns',
@@ -177,36 +177,35 @@ def returns(model):
     return decorate
 
 
-def _returns_old(method, func):
-    """ adapts `func` to the traditional-style returning convention of `method`;
-        `func` must follow the record-style returning convention
-    """
-    if _get_returns(method):
-        def wrapper(self, *args, **kwargs):
-            res = func(self, *args, **kwargs)
-            return res.unbrowse()
-        return wrapper
-    else:
-        return func
+# constant converters
+_CONVERT_ID = lambda self, value: value
+_CONVERT_BROWSE = lambda self, value: self.browse(value)
+_CONVERT_UNBROWSE = lambda self, value: value.unbrowse()
 
 
-def _returns_new(method, func):
-    """ adapts `func` to the record-style returning convention of `method`;
-        `func` must follow the traditional-style returning convention
+def _returns_new(method):
+    """ Return a function `convert(self, value)` that adapts `value` from
+        traditional-style to record-style returning convention of `method`.
     """
     model = _get_returns(method)
-    if model == 'self':
-        def wrapper(self, *args, **kwargs):
-            res = func(self, *args, **kwargs)
-            return self.browse(res)
-        return wrapper
-    elif model:
-        def wrapper(self, *args, **kwargs):
-            res = func(self, *args, **kwargs)
-            return scope.model(model).browse(res)
-        return wrapper
+    if model:
+        if model == 'self':
+            return _CONVERT_BROWSE
+        else:
+            return lambda self, value: self.pool[model].browse(value)
     else:
-        return func
+        return _CONVERT_ID
+
+
+def _returns_old(method):
+    """ Return a function `convert(self, value)` that adapts `value` from
+        traditional-style to record-style returning convention of `method`.
+    """
+    model = _get_returns(method)
+    if model:
+        return _CONVERT_UNBROWSE
+    else:
+        return _CONVERT_ID
 
 
 def _make_wrapper(method, old_api, new_api):
@@ -279,55 +278,23 @@ def model(method):
             model.method(cr, uid, args, context=context)
     """
     method._api = model
+    convert = _returns_old(method)
     nargs = method.func_code.co_argcount - 1
 
     def old_api(self, cr, uid, *args, **kwargs):
         context, args, kwargs = _split_context_args(nargs, args, kwargs)
         with Scope(cr, uid, context):
-            return method(self, *args, **kwargs)
+            value = method(self, *args, **kwargs)
+            return convert(self, value)
 
-    return _make_wrapper(method, _returns_old(method, old_api), method)
-
-
-def record(method):
-    """ Decorate a record-style method where `self` is a single record. The
-        resulting method follows the :ref:`record-map-convention`.
-        Such a method::
-
-            @api.record
-            def method(self, args):
-                return self.name
-
-        may be called in both record and traditional styles, like::
-
-            rec = model.record(id)
-
-            # the following calls are equivalent
-            rec.method(args)
-            model.method(cr, uid, rec.id, args, context=context)
-    """
-    method._api = record
-    nargs = method.func_code.co_argcount - 1
-
-    def old_api(self, cr, uid, ids, *args, **kwargs):
-        context, args, kwargs = _split_context_args(nargs, args, kwargs)
-        with Scope(cr, uid, context):
-            return new_api(self.browse(ids), *args, **kwargs)
-
-    def new_api(self, *args, **kwargs):
-        if self.is_record():
-            return method(self, *args, **kwargs)
-        else:
-            return [method(rec, *args, **kwargs) for rec in self]
-
-    return _make_wrapper(method, _returns_old(method, old_api), new_api)
+    return _make_wrapper(method, old_api, method)
 
 
-def recordset(method):
+def multi(method):
     """ Decorate a record-style method where `self` is a recordset. Such a
         method::
 
-            @api.recordset
+            @api.multi
             def method(self, args):
                 ...
 
@@ -341,13 +308,15 @@ def recordset(method):
 
         This decorator supports the :ref:`record-map-convention`.
     """
-    method._api = recordset
+    method._api = multi
+    convert = _returns_old(method)
     nargs = method.func_code.co_argcount - 1
 
     def old_api(self, cr, uid, ids, *args, **kwargs):
         context, args, kwargs = _split_context_args(nargs, args, kwargs)
         with Scope(cr, uid, context):
-            return new_api(self.browse(ids), *args, **kwargs)
+            value = new_api(self.browse(ids), *args, **kwargs)
+            return convert(self, value)
 
     def new_api(self, *args, **kwargs):
         if self.is_record():
@@ -355,7 +324,43 @@ def recordset(method):
         else:
             return method(self, *args, **kwargs)
 
-    return _make_wrapper(method, _returns_old(method, old_api), new_api)
+    return _make_wrapper(method, old_api, new_api)
+
+
+def one(method):
+    """ Decorate a record-style method where `self` is a single record. The
+        resulting method follows the :ref:`record-map-convention`.
+        Such a method::
+
+            @api.one
+            def method(self, args):
+                return self.name
+
+        may be called in both record and traditional styles, like::
+
+            rec = model.record(id)
+
+            # the following calls are equivalent
+            rec.method(args)
+            model.method(cr, uid, rec.id, args, context=context)
+    """
+    method._api = one
+    convert = _returns_old(method)
+    nargs = method.func_code.co_argcount - 1
+
+    def old_api(self, cr, uid, ids, *args, **kwargs):
+        context, args, kwargs = _split_context_args(nargs, args, kwargs)
+        with Scope(cr, uid, context):
+            value = new_api(self.browse(ids), *args, **kwargs)
+            return convert(self, value)
+
+    def new_api(self, *args, **kwargs):
+        if self.is_record():
+            return method(self, *args, **kwargs)
+        else:
+            return [method(rec, *args, **kwargs) for rec in self]
+
+    return _make_wrapper(method, old_api, new_api)
 
 
 def cr(method):
@@ -366,6 +371,7 @@ def cr(method):
             obj.method(cr, args)        # traditional style
     """
     method._api = cr
+    convert = _returns_new(method)
 
     def old_api(self, cr, *args, **kwargs):
         with Scope(cr, SUPERUSER_ID, None):
@@ -373,14 +379,16 @@ def cr(method):
 
     def new_api(self, *args, **kwargs):
         cr, uid, context = scope
-        return method(self, cr, *args, **kwargs)
+        value = method(self, cr, *args, **kwargs)
+        return convert(self, value)
 
-    return _make_wrapper(method, old_api, _returns_new(method, new_api))
+    return _make_wrapper(method, old_api, new_api)
 
 
 def cr_context(method):
     """ Decorate a traditional-style method that takes `cr`, `context` as parameters. """
     method._api = cr_context
+    convert = _returns_new(method)
 
     def old_api(self, cr, *args, **kwargs):
         with Scope(cr, SUPERUSER_ID, kwargs.get('context')):
@@ -389,14 +397,16 @@ def cr_context(method):
     def new_api(self, *args, **kwargs):
         cr, uid, context = scope
         kwargs = _kwargs_context(kwargs, context)
-        return method(self, cr, *args, **kwargs)
+        value = method(self, cr, *args, **kwargs)
+        return convert(self, value)
 
-    return _make_wrapper(method, old_api, _returns_new(method, new_api))
+    return _make_wrapper(method, old_api, new_api)
 
 
 def cr_uid(method):
     """ Decorate a traditional-style method that takes `cr`, `uid` as parameters. """
     method._api = cr_uid
+    convert = _returns_new(method)
 
     def old_api(self, cr, uid, *args, **kwargs):
         with Scope(cr, uid, None):
@@ -404,9 +414,10 @@ def cr_uid(method):
 
     def new_api(self, *args, **kwargs):
         cr, uid, context = scope
-        return method(self, cr, uid, *args, **kwargs)
+        value = method(self, cr, uid, *args, **kwargs)
+        return convert(self, value)
 
-    return _make_wrapper(method, old_api, _returns_new(method, new_api))
+    return _make_wrapper(method, old_api, new_api)
 
 
 def cr_uid_context(method):
@@ -418,6 +429,7 @@ def cr_uid_context(method):
             obj.method(cr, uid, args, context=context)
     """
     method._api = cr_uid_context
+    convert = _returns_new(method)
 
     def old_api(self, cr, uid, *args, **kwargs):
         with Scope(cr, uid, kwargs.get('context')):
@@ -426,9 +438,10 @@ def cr_uid_context(method):
     def new_api(self, *args, **kwargs):
         cr, uid, context = scope
         kwargs = _kwargs_context(kwargs, context)
-        return method(self, cr, uid, *args, **kwargs)
+        value = method(self, cr, uid, *args, **kwargs)
+        return convert(self, value)
 
-    return _make_wrapper(method, old_api, _returns_new(method, new_api))
+    return _make_wrapper(method, old_api, new_api)
 
 
 def cr_uid_id(method):
@@ -437,6 +450,7 @@ def cr_uid_id(method):
         styles. The resulting method follows the :ref:`record-map-convention`.
     """
     method._api = cr_uid_id
+    convert = _returns_new(method)
 
     def old_api(self, cr, uid, id, *args, **kwargs):
         with Scope(cr, uid, None):
@@ -445,11 +459,12 @@ def cr_uid_id(method):
     def new_api(self, *args, **kwargs):
         cr, uid, context = scope
         if self.is_record():
-            return method(self, cr, uid, self.id, *args, **kwargs)
+            value = method(self, cr, uid, self.id, *args, **kwargs)
         else:
-            return [method(self, cr, uid, rec.id, *args, **kwargs) for rec in self]
+            value = [method(self, cr, uid, rec.id, *args, **kwargs) for rec in self]
+        return convert(self, value)
 
-    return _make_wrapper(method, old_api, _returns_new(method, new_api))
+    return _make_wrapper(method, old_api, new_api)
 
 
 def cr_uid_id_context(method):
@@ -470,6 +485,7 @@ def cr_uid_id_context(method):
             model.method(cr, uid, id, args, context=context)
     """
     method._api = cr_uid_id_context
+    convert = _returns_new(method)
 
     def old_api(self, cr, uid, id, *args, **kwargs):
         with Scope(cr, uid, kwargs.get('context')):
@@ -479,11 +495,12 @@ def cr_uid_id_context(method):
         cr, uid, context = scope
         kwargs = _kwargs_context(kwargs, context)
         if self.is_record():
-            return method(self, cr, uid, self.id, *args, **kwargs)
+            value = method(self, cr, uid, self.id, *args, **kwargs)
         else:
-            return [method(self, cr, uid, rec.id, *args, **kwargs) for rec in self]
+            value = [method(self, cr, uid, rec.id, *args, **kwargs) for rec in self]
+        return convert(self, value)
 
-    return _make_wrapper(method, old_api, _returns_new(method, new_api))
+    return _make_wrapper(method, old_api, new_api)
 
 
 def cr_uid_ids(method):
@@ -492,6 +509,7 @@ def cr_uid_ids(method):
         styles. This decorator supports the :ref:`record-map-convention`.
     """
     method._api = cr_uid_ids
+    convert = _returns_new(method)
 
     def old_api(self, cr, uid, ids, *args, **kwargs):
         with Scope(cr, uid, None):
@@ -500,11 +518,12 @@ def cr_uid_ids(method):
     def new_api(self, *args, **kwargs):
         cr, uid, context = scope
         if self.is_record():
-            return _get_one(method(self, cr, uid, [self.id], *args, **kwargs))
+            value = _get_one(method(self, cr, uid, [self.id], *args, **kwargs))
         else:
-            return method(self, cr, uid, map(int, self), *args, **kwargs)
+            value = method(self, cr, uid, map(int, self), *args, **kwargs)
+        return convert(self, value)
 
-    return _make_wrapper(method, old_api, _returns_new(method, new_api))
+    return _make_wrapper(method, old_api, new_api)
 
 
 def cr_uid_ids_context(method):
@@ -527,6 +546,7 @@ def cr_uid_ids_context(method):
         It is generally not necessary, see :func:`guess`.
     """
     method._api = cr_uid_ids_context
+    convert = _returns_new(method)
 
     def old_api(self, cr, uid, ids, *args, **kwargs):
         with Scope(cr, uid, kwargs.get('context')):
@@ -536,11 +556,12 @@ def cr_uid_ids_context(method):
         cr, uid, context = scope
         kwargs = _kwargs_context(kwargs, context)
         if self.is_record():
-            return _get_one(method(self, cr, uid, [self.id], *args, **kwargs))
+            value = _get_one(method(self, cr, uid, [self.id], *args, **kwargs))
         else:
-            return method(self, cr, uid, map(int, self), *args, **kwargs)
+            value = method(self, cr, uid, map(int, self), *args, **kwargs)
+        return convert(self, value)
 
-    return _make_wrapper(method, old_api, _returns_new(method, new_api))
+    return _make_wrapper(method, old_api, new_api)
 
 
 def noguess(method):
