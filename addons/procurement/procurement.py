@@ -355,22 +355,7 @@ class procurement_order(osv.osv):
                     move_obj.action_confirm(cr, uid, [id], context=context)
                     self.write(cr, uid, [procurement.id], {'move_id': id, 'close_move': 1})
                 self.write(cr, uid, [procurement.id], {'state': 'confirmed', 'message': ''})
-                    #Now check if all the moves of group TODO
 
-#                 if procurement.group_id: 
-#                     procs = move_obj.search(cr, uid, [('group_id', '=', procurement.group_id.id), ('state', '=', 'draft')], context=context)
-#                     
-#                     #If can not find any => confirm pickings which have moves from this group
-#                     if not procs: 
-#                         print "CONFIRM REST"
-#                         # Find pickings from this group that need to be confirmed
-#                         moves = move_obj.search(cr, uid, [('group_id', '=', procurement.group_id.id), ('state', '=', 'draft')], context=context)
-#                         pickings = []
-#                         for move in move_obj.browse(cr, uid, moves, context=context): 
-#                             pickings.append(move.picking_id.id)
-#                         pickings = list(set(pickings))
-#                         if pickings:
-#                             self.pool.get('stock.picking').signal_button_confirm(cr, uid, pickings)
         return True
 
     def action_move_assigned(self, cr, uid, ids, context=None):

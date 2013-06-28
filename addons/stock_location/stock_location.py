@@ -161,9 +161,12 @@ class stock_move(osv.osv):
     def splitforputaway (self, cr, uid, ids, context=None):
         '''
         Splits this move in order to do the put away
+        
+        Happens at move getting done
         '''
         putaway_obj = self.pool.get("product.putaway")
         location_obj = self.pool.get("stock.location")
+        quant_obj = self.pool.get("stock.quant")
         for move in self.browse(cr, uid, ids, context=context):
             putaways = putaway_obj.search(cr, uid, [('product_categ_id','=', move.product_id.categ_id.id), ('location_id', '=', move.location_dest_id.id)], context=context)
             print putaways
@@ -172,7 +175,8 @@ class stock_move(osv.osv):
                 locs = location_obj.search(cr, uid, [('id', 'child_of', move.location_dest_id.id), ('id', '!=', move.location_dest_id.id), ('quant_ids', '=', False), 
                                                      ('destination_move_ids', '=', False)], context=context)
                 if locs:
-                    self.write(cr, uid, [move.id], {'location_dest_id': locs[0]}, context=context)
+                    quants = quant_obj.search(cr, uid, [('history_ids', 'in', move.id)])
+                    quant_obj.write(cr, uid, quants, {'location_id': locs[0]}, context=context)
         return True
 
 

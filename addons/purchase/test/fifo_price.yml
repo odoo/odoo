@@ -115,7 +115,7 @@
   I assign this outgoing shipment 
 - 
   !python {model: stock.picking}: |
-    self.action_assign(cr, uid, [ref("outgoing_fifo_shipment")])
+    self.action_assign_wkf(cr, uid, [ref("outgoing_fifo_shipment")])
 - 
   Process the delivery of the outgoing shipment
 - 
@@ -149,7 +149,7 @@
   I assign this outgoing shipment 
 - 
   !python {model: stock.picking}: |
-    self.action_assign(cr, uid, [ref("outgoing_fifo_shipment_uom")])
+    self.action_assign_wkf(cr, uid, [ref("outgoing_fifo_shipment_uom")])
 -
   Process the delivery of the outgoing shipment
 - 
@@ -236,7 +236,7 @@
   I assign this outgoing shipment 
 - 
   !python {model: stock.picking}: |
-    self.action_assign(cr, uid, [ref("outgoing_fifo_shipment_cur")])
+    self.action_assign_wkf(cr, uid, [ref("outgoing_fifo_shipment_cur")])
 - 
   Process the delivery of the outgoing shipment
 - 
@@ -270,7 +270,7 @@
   I assign this outgoing shipment 
 - 
   !python {model: stock.picking}: |
-    self.action_assign(cr, uid, [ref("outgoing_fifo_shipment_ret")])
+    self.action_assign_wkf(cr, uid, [ref("outgoing_fifo_shipment_ret")])
 - 
   Process the delivery of the outgoing shipment
 - 
