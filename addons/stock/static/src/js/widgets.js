@@ -123,7 +123,12 @@ function openerp_picking_widgets(instance){
             if(picking_id){
                 var picking = new instance.web.Model('stock.picking.in').call('read',[[picking_id], []]);
             }else{ 
-                var picking = new instance.web.Model('stock.picking.in').query().first();
+                var picking = new instance.web.Model('stock.picking.in')
+                    .call('_get_picking_for_packing_ui')
+                    .then(function(picking_id){
+                        console.log('Provided Picking Id:',picking_id);
+                        return new instance.web.Model('stock.picking.in').call('read',[[picking_id],[]]);
+                    });
             }
 
             var loaded = picking.then(function(picking){
