@@ -1599,7 +1599,7 @@ class stock_picking(osv.osv):
                 done_reserved_quants = set()
                 if product_qty != 0:
                     #take care of partial picking in reserved quants
-                    done_reserved_quants = self.get_done_reserved_quants(cr, uid, picking_id, move, context=context)
+                    done_reserved_quants = self.get_done_reserved_quants(cr, uid, pick.id, move, context=context)
                     #copy the stock move
                     new_picking_record = self.browse(cr, uid, new_picking, context=context)
 
@@ -1611,13 +1611,13 @@ class stock_picking(osv.osv):
                             'move_dest_id': False,
                             'price_unit': product_price,
                             'product_uom': product_uoms[move.id],
-                            'reserved_quant_ids': [] #free the reserved_quant_ids that moved
+                            'reserved_quant_ids': list(done_reserved_quants)
                     }
                     prodlot_id = prodlot_ids[move.id]
                     if prodlot_id:
                         defaults.update(prodlot_id=prodlot_id)
                     backorder_move_id = move_obj.copy(cr, uid, move.id, defaults)
-                    self.make_packaging(cr, uid, picking_id, move_obj.browse(cr, uid, backorder_move_id, context=context), list(done_reserved_quants), context=context)
+                    self.make_packaging(cr, uid, pick.id, move_obj.browse(cr, uid, backorder_move_id, context=context), list(done_reserved_quants), context=context)
                 #modify the existing stock move    
                 possible_quants = [x.id for x in move.reserved_quant_ids]
                 move_obj.write(cr, uid, [move.id],
@@ -2647,7 +2647,6 @@ class stock_move(osv.osv):
                     quants = quant_obj.search(cr, uid, [('history_ids', 'in', move_from), ('location_id', '=', move.location_id.id), ('reservation_id', '=', False)], context=context)
                     if quants: 
                         quant_obj.write(cr, uid, quants, {'reservation_id':move.id}, context=context)
-                    else: 
                     done.append(move.id)
                     pickings[move.picking_id.id] = 1
                 else:
