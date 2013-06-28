@@ -698,13 +698,11 @@
                     <h1>
                         <field name="name"/>
                     </h1>
-                    <h2>
-                        Period from 
-                        <field name="date_start"/> 
-                        to 
-                        <field name="date_end"/>
-                    </h2>
                     <group col="4">
+                        <label for="date_start" string="Period"/>
+                         <div>
+                               <field name="date_start" class="oe_inline"/> - <field name="date_end" class="oe_inline"/>
+                         </div>
                         <field name="credit_note"/>
                     </group>
                     <separator string="Payslips"/>
