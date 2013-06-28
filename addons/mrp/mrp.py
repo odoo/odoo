@@ -268,7 +268,7 @@ class mrp_bom(osv.osv):
         """
         if product_id:
             prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            return {'value': {'name': prod.name, 'product_uom': prod.uom_id.id}}
+            return {'value': {'name': prod.name, 'product_uom': prod.uom_id.id, 'product_uos_qty': prod.uos_coeff, 'product_uos': prod.uos_id.id}}
         return {}
 
     def onchange_uom(self, cr, uid, ids, product_id, product_uom, context=None):
