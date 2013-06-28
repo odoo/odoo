@@ -45,7 +45,7 @@ function openerp_picking_widgets(instance){
             var current_package_id = instance.session.user_context.current_package_id;
             
             _.each( model.operations, function(op){
-                if((typeof current_package_id !== 'undefined') && op.result_package_id !== current_package_id){
+                if((typeof current_package_id !== 'undefined') && op.result_package_id[0] !== current_package_id){
                     return;
                 }
                 rows.push({
@@ -85,9 +85,15 @@ function openerp_picking_widgets(instance){
             this.$('.js_pack_row').each(function(){
                 var pack_id = parseInt($(this).attr('pack-id'));
 
-                $('.js_pack_select', this).click(function(){ model.select_package(pack_id); });
                 $('.js_pack_plus', this).click(function(){ model.copy_package(pack_id); });
                 $('.js_pack_minus', this).click(function(){ model.delete_package(pack_id); });
+                $('.js_pack_select', this).click(function(){ 
+                    if(model.get_selected_package() && model.get_selected_package().id === pack_id){
+                        model.deselect_package();
+                    }else{
+                        model.select_package(pack_id); 
+                    }
+                });
             });
         },
     });
@@ -102,6 +108,7 @@ function openerp_picking_widgets(instance){
             this.movelines = null;
             this.operations = null;
             this.packages = null;
+            this.scan_timestamp = 0;
             
             window.pickwidget = this;
             
@@ -196,6 +203,7 @@ function openerp_picking_widgets(instance){
                 .then(function(){
                     return self.refresh_ui(self.picking.id);
                 });
+            this.scan_timestamp = new Date().getTime();
         },
         pack: function(){
             var self = this;
@@ -230,10 +238,16 @@ function openerp_picking_widgets(instance){
         delete_package: function(package_id){
             console.log('Delete Package:',package_id);
             new instance.web.Model('stock.quant.package')
-                .call('action_copy',[[package_id]])
+                .call('unlink',[[package_id]])
                 .then(function(){
                     return self.refresh_ui(self.picking.id);
                 });
+        },
+        deselect_package: function(){
+            console.log('Deselect Package');
+            instance.session.user_context.current_package_id = false;
+            this.package_editor.renderElement();
+            this.package_selector.renderElement();
         },
         select_package: function(package_id){
             console.log('Select Package:',package_id);
@@ -254,21 +268,31 @@ function openerp_picking_widgets(instance){
         },
         connect_barcode_scanner: function(){
             var self =this;
-            var code = [];
+            var numbers = [];
             var timestamp = 0;
+            var nocode_timeout_id = 0;
+            var nocode_delay = 50;
+            function nocode(){
+                console.log('NoCode:',numbers);
+                numbers = [];
+            }
             $('body').delegate('','keyup',function(e){
                 if (e.keyCode >= 48 && e.keyCode < 58){
+                    clearTimeout(nocode_timeout_id);
+                    nocode_timeout_id = setTimeout(nocode,nocode_delay);
+                    numbers.push(e.keyCode - 48);
                     if(timestamp + 30 < new Date().getTime()){
-                        code = [];
+                        clearTimeout(nocode_timeout_id);
+                        nocode();
                     }
                     timestamp = new Date().getTime();
-                    code.push(e.keyCode - 48);
-                    if(code.length === 13){
-                        self.scan(code.join(''));
-                        code = [];
+                    if(numbers.length === 13){
+                        self.scan(numbers.join(''));
+                        numbers = [];
+                        clearTimeout(nocode_timeout_id);
                     }
                 }else{
-                    code = [];
+                    numbers = [];
                 }
             });
         },
