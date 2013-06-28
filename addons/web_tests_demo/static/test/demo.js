@@ -85,18 +85,18 @@ openerp.testing.section('basic section', function (test) {
         });
     });
 
-    test('actual RPC', {rpc: 'rpc', asserts: 4}, function (instance) {
-        var Model = new instance.web.Model('web_tests_demo.model');
-        return Model.call('create', [{name: "Bob"}])
-            .then(function (id) {
-                return Model.call('read', [[id]]);
-            }).then(function (records) {
-                strictEqual(records.length, 1);
-                var record = records[0];
-                strictEqual(record.name, "Bob");
-                strictEqual(record.thing, false);
-                // default value
-                strictEqual(record.other, 'bob');
-            });
-    });
+//    test('actual RPC', {rpc: 'rpc', asserts: 4}, function (instance) {
+//        var Model = new instance.web.Model('web_tests_demo.model');
+//        return Model.call('create', [{name: "Bob"}])
+//            .then(function (id) {
+//                return Model.call('read', [[id]]);
+//            }).then(function (records) {
+//                strictEqual(records.length, 1);
+//                var record = records[0];
+//                strictEqual(record.name, "Bob");
+//                strictEqual(record.thing, false);
+//                // default value
+//                strictEqual(record.other, 'bob');
+//            });
+//    });
 });
