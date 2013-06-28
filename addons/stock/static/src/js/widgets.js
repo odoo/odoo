@@ -43,9 +43,8 @@ function openerp_picking_widgets(instance){
             var model = this.getParent();
             var rows = [];
             var current_package_id = instance.session.user_context.current_package_id;
-            
             _.each( model.operations, function(op){
-                if((typeof current_package_id !== 'undefined') && op.result_package_id !== current_package_id){
+                if((typeof current_package_id !== 'undefined') && op.result_package_id[0] !== current_package_id){
                     return;
                 }
                 rows.push({
@@ -230,7 +229,7 @@ function openerp_picking_widgets(instance){
         delete_package: function(package_id){
             console.log('Delete Package:',package_id);
             new instance.web.Model('stock.quant.package')
-                .call('action_copy',[[package_id]])
+                .call('unlink',[[package_id]])
                 .then(function(){
                     return self.refresh_ui(self.picking.id);
                 });
