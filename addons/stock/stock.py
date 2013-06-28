@@ -1027,7 +1027,7 @@ class stock_picking(osv.osv):
         # TODO: Check locations to see if in the same location ?
         return True
 
-    def check_assign(self, cr, uid, ids, *args):
+    def action_assign(self, cr, uid, ids, *args):
         """ Changes state of picking to available if all moves are confirmed.
         @return: True
         """
@@ -1088,8 +1088,6 @@ class stock_picking(osv.osv):
         """ Changes picking state to assigned.
         @return: True
         """
-        for picking in self.browse(cr, uid, ids, context=context):
-            self.pool.get('stock.move').action_assign(cr, uid, [move.id for move in picking.move_lines])
         self.write(cr, uid, ids, {'state': 'assigned'})
         return True
 
@@ -1600,6 +1598,7 @@ class stock_picking(osv.osv):
                     done_reserved_quants = self.get_done_reserved_quants(cr, uid, picking_id, move, context=context)
                     #copy the stock move
                     new_picking_record = self.browse(cr, uid, new_picking, context=context)
+
                     defaults = {
                             'product_qty' : product_qty,
                             'product_uos_qty': product_qty, #TODO: put correct uos_qty
@@ -1636,6 +1635,7 @@ class stock_picking(osv.osv):
 
                 #take care of packaging for completed moves
                 possible_quants = [x.id for x in move.reserved_quant_ids]
+
                 self.make_packaging(cr, uid, picking_id, move, possible_quants, context=context)
 
 
@@ -2633,13 +2633,26 @@ class stock_move(osv.osv):
                 #Convert UoM qty -> check rounding now in product_reserver
                 #Split for source locations
                 qty = uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, move.product_id.uom_id.id)
-                res2 = quant_obj.choose_quants(cr, uid, move.location_id.id, move.product_id.id, qty, prodlot_id = move.prodlot_id.id, context=context)
-                print "Choose quants:", res2
-                if res2:
-                    quant_obj.split_and_assign_quants(cr, uid, res2, move, context=context)
-                    #self.write(cr, uid, [move.id], {'state':'assigned'})
+                
+                # Check if this move has not been chained from another move
+                moves_from = self.search(cr, uid, [('move_dest_id', '=', move.id)], context=context)
+                if moves_from and len(moves_from) == 1:
+                    move_from = moves_from[0]
+                    quants = quant_obj.search(cr, uid, [('history_ids', 'in', move_from), ('location_id', '=', move.location_id.id), ('reservation_id', '=', False)], context=context)
+                    if quants: 
+                        quant_obj.write(cr, uid, quants, {'reservation_id':move.id}, context=context)
+                    else: 
                     done.append(move.id)
                     pickings[move.picking_id.id] = 1
+                else:
+                
+                    res2 = quant_obj.choose_quants(cr, uid, move.location_id.id, move.product_id.id, qty, prodlot_id = move.prodlot_id.id, context=context)
+                    print "Choose quants:", res2
+                    if res2:
+                        quant_obj.split_and_assign_quants(cr, uid, res2, move, context=context)
+                        #self.write(cr, uid, [move.id], {'state':'assigned'})
+                        done.append(move.id)
+                        pickings[move.picking_id.id] = 1
             print "Reserved quants:", move.reserved_quant_ids
         if done:
             count += len(done)
@@ -2883,10 +2896,13 @@ class stock_move(osv.osv):
             #Check if the entire quantity has been transformed in to quants
             if qty_from_move > product_qty:
                 quant_tuples = quant_obj.choose_quants(cr, uid, move.location_id.id, move.product_id.id, qty_from_move - product_qty, prodlot_id = move.prodlot_id.id, context=context)
+                print quant_tuples
                 create_neg_quant = True
                 if quant_tuples: 
                     quant_obj.split_and_assign_quants(cr, uid, quant_tuples, move, context=context)
                     product_qty = 0.0
+                    #Reread move:
+                    move = self.browse(cr, uid, move.id, context=context)
                     for quant in move.reserved_quant_ids:
                         product_qty += quant.qty
                     if qty_from_move <= product_qty:
@@ -2931,6 +2947,7 @@ class stock_move(osv.osv):
             todo = []
 
         uom_obj = self.pool.get("product.uom")
+        quant_obj = self.pool.get("stock.quant")
         #Do price calc on move
         quants = {}
         for move in self.browse(cr, uid, ids, context=context):
@@ -2942,11 +2959,12 @@ class stock_move(osv.osv):
             else:
                 #move quants should resolve negative quants in destination
                 self.check_total_qty(cr, uid, ids, context=context)
+                move = self.browse(cr, uid, move.id, context=context)
                 reconciled_quants = self.pool.get("stock.quant").move_quants(cr, uid, [x.id for x in move.reserved_quant_ids], move, context=context)
                 quants[move.id] += reconciled_quants
             self.splitforputaway(cr, uid, ids, context=context)
                 
-        #Do price calculation on move -> Should pass Quants here -> is a dictionary 
+        #Do price calculation on move -> Should pass reconciled Quants -> is a dictionary 
         matchresults = self.price_calculation(cr, uid, ids, quants, context=context)
         
         for move in self.browse(cr, uid, ids, context=context):
@@ -2964,6 +2982,12 @@ class stock_move(osv.osv):
                     self.write(cr, uid, [move.id], {'move_history_ids': [(4, move.move_dest_id.id)]})
                     if move.move_dest_id.state in ('waiting', 'confirmed'):
                         self.force_assign(cr, uid, [move.move_dest_id.id], context=context)
+                        #We can take over used quants in this move to be propagated to next move
+                        #TODO should take into account split quantities?
+                        quants = quant_obj.search(cr, uid, [('history_ids', 'in', move.id), ('location_id', '=', move.location_dest_id.id), ('reservation_id', '=', False)], context=context)
+                        if quants: 
+                            print "PROPAGATE QUANTS: ", quants
+                            quant_obj.write(cr, uid, quants, {'reservation_id':move.move_dest_id.id}, context=context)
                         if move.move_dest_id.picking_id:
                             wf_service.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
                         if move.move_dest_id.auto_validate:
@@ -3906,7 +3930,7 @@ class stock_pack_operation(osv.osv):
         #TOCHECK: don't we need to take only the ops with a result_package_id != False ?
         res = []
         op_ids =  self.search(cr, uid, [('picking_id', '=', picking_id)], context=context)
-        for operation in self.browse(cr, uid, op_id, context=context):
+        for operation in self.browse(cr, uid, op_ids, context=context):
             if operation.product_id and operation.product_id.id == product_id:
                 res += [operation.id]
             if operation.quant_id and operation.quant_id.product_id.id == product_id:
