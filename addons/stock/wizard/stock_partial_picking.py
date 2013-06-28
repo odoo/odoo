@@ -145,13 +145,13 @@ class stock_partial_picking(osv.osv_memory):
 
     def _partial_move_for(self, cr, uid, move):
         partial_move = {
-            'product_id' : move.product_id.id,
-            'quantity' : move.product_qty if move.state == 'assigned' else 0,
-            'product_uom' : move.product_uom.id,
-            'prodlot_id' : move.prodlot_id.id,
-            'move_id' : move.id,
-            'location_id' : move.location_id.id,
-            'location_dest_id' : move.location_dest_id.id,
+            'product_id': move.product_id.id,
+            'quantity': move.product_qty - move.remaining_qty if move.state == 'assigned' else 0,
+            'product_uom': move.product_uom.id,
+            'prodlot_id': move.prodlot_id.id,
+            'move_id': move.id,
+            'location_id': move.location_id.id,
+            'location_dest_id': move.location_dest_id.id,
         }
         if move.picking_id.type == 'in' and move.product_id.cost_method != 'standard':
             partial_move.update(update_cost=True, **self._product_cost_for_average_update(cr, uid, move))

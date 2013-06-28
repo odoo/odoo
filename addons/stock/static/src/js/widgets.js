@@ -41,11 +41,11 @@ function openerp_picking_widgets(instance){
         },
         get_rows: function(){
             var model = this.getParent();
-            var current_package = model.get_selected_package();
             var rows = [];
+            var current_package_id = instance.session.user_context.current_package_id;
             
             _.each( model.operations, function(op){
-                if(current_package && op.package_id !== current_package.id){
+                if((typeof current_package_id !== 'undefined') && op.result_package_id !== current_package_id){
                     return;
                 }
                 rows.push({
