@@ -38,6 +38,8 @@ import openerp
 from openerp import SUPERUSER_ID
 from openerp.modules.registry import RegistryManager
 from openerp.addons.web.controllers.main import login_and_redirect, set_cookie_and_redirect
+import openerp.addons.web.http as http
+from openerp.addons.web.http import request
 
 from .. import utils
 
@@ -88,20 +90,19 @@ class GoogleAppsAwareConsumer(consumer.GenericConsumer):
         return super(GoogleAppsAwareConsumer, self).complete(message, endpoint, return_to)
 
 
-class OpenIDController(openerp.addons.web.http.Controller):
-    _cp_path = '/auth_openid/login'
+class OpenIDController(http.Controller):
 
     _store = filestore.FileOpenIDStore(_storedir)
 
     _REQUIRED_ATTRIBUTES = ['email']
     _OPTIONAL_ATTRIBUTES = 'nickname fullname postcode country language timezone'.split()
 
-    def _add_extensions(self, request):
-        """Add extensions to the request"""
+    def _add_extensions(self, oidrequest):
+        """Add extensions to the oidrequest"""
 
         sreg_request = sreg.SRegRequest(required=self._REQUIRED_ATTRIBUTES,
                                         optional=self._OPTIONAL_ATTRIBUTES)
-        request.addExtension(sreg_request)
+        oidrequest.addExtension(sreg_request)
 
         ax_request = ax.FetchRequest()
         for alias in self._REQUIRED_ATTRIBUTES:
@@ -111,7 +112,7 @@ class OpenIDController(openerp.addons.web.http.Controller):
             uri = utils.SREG2AX[alias]
             ax_request.add(ax.AttrInfo(uri, required=False, alias=alias))
 
-        request.addExtension(ax_request)
+        oidrequest.addExtension(ax_request)
 
     def _get_attributes_from_success_response(self, success_response):
         attrs = {}
@@ -133,58 +134,58 @@ class OpenIDController(openerp.addons.web.http.Controller):
                     attrs[attr] = value
         return attrs
 
-    def _get_realm(self, req):
-        return req.httprequest.host_url
+    def _get_realm(self):
+        return request.httprequest.host_url
 
-    @openerp.addons.web.http.httprequest
-    def verify_direct(self, req, db, url):
-        result = self._verify(req, db, url)
+    @http.route('/auth_openid/login/verify_direct', type='http', auth='none')
+    def verify_direct(self, db, url):
+        result = self._verify(db, url)
         if 'error' in result:
             return werkzeug.exceptions.BadRequest(result['error'])
         if result['action'] == 'redirect':
             return werkzeug.utils.redirect(result['value'])
         return result['value']
 
-    @openerp.addons.web.http.jsonrequest
-    def verify(self, req, db, url):
-        return self._verify(req, db, url)
+    @http.route('/auth_openid/login/verify', type='json', auth='none')
+    def verify(self, db, url):
+        return self._verify(db, url)
 
-    def _verify(self, req, db, url):
-        redirect_to = werkzeug.urls.Href(req.httprequest.host_url + 'auth_openid/login/process')(session_id=req.session_id)
-        realm = self._get_realm(req)
+    def _verify(self, db, url):
+        redirect_to = werkzeug.urls.Href(request.httprequest.host_url + 'auth_openid/login/process')(session_id=request.session_id)
+        realm = self._get_realm()
 
         session = dict(dbname=db, openid_url=url)       # TODO add origin page ?
         oidconsumer = consumer.Consumer(session, self._store)
 
         try:
-            request = oidconsumer.begin(url)
+            oidrequest = oidconsumer.begin(url)
         except consumer.DiscoveryFailure, exc:
             fetch_error_string = 'Error in discovery: %s' % (str(exc[0]),)
             return {'error': fetch_error_string, 'title': 'OpenID Error'}
 
-        if request is None:
+        if oidrequest is None:
             return {'error': 'No OpenID services found', 'title': 'OpenID Error'}
 
-        req.session.openid_session = session
-        self._add_extensions(request)
+        request.session.openid_session = session
+        self._add_extensions(oidrequest)
 
-        if request.shouldSendRedirect():
-            redirect_url = request.redirectURL(realm, redirect_to)
-            return {'action': 'redirect', 'value': redirect_url, 'session_id': req.session_id}
+        if oidrequest.shouldSendRedirect():
+            redirect_url = oidrequest.redirectURL(realm, redirect_to)
+            return {'action': 'redirect', 'value': redirect_url, 'session_id': request.session_id}
         else:
-            form_html = request.htmlMarkup(realm, redirect_to)
-            return {'action': 'post', 'value': form_html, 'session_id': req.session_id}
+            form_html = oidrequest.htmlMarkup(realm, redirect_to)
+            return {'action': 'post', 'value': form_html, 'session_id': request.session_id}
 
-    @openerp.addons.web.http.httprequest
-    def process(self, req, **kw):
-        session = getattr(req.session, 'openid_session', None)
+    @http.route('/auth_openid/login/process', type='http', auth='none')
+    def process(self, **kw):
+        session = getattr(request.session, 'openid_session', None)
         if not session:
-            return set_cookie_and_redirect(req, '/')
+            return set_cookie_and_redirect('/')
 
         oidconsumer = consumer.Consumer(session, self._store, consumer_class=GoogleAppsAwareConsumer)
 
-        query = req.httprequest.args
-        info = oidconsumer.complete(query, req.httprequest.base_url)
+        query = request.httprequest.args
+        info = oidconsumer.complete(query, request.httprequest.base_url)
         display_identifier = info.getDisplayIdentifier()
 
         session['status'] = info.status
@@ -225,7 +226,7 @@ class OpenIDController(openerp.addons.web.http.Controller):
                         # TODO fill empty fields with the ones from sreg/ax
                         cr.commit()
 
-                        return login_and_redirect(req, dbname, login, key)
+                        return login_and_redirect(dbname, login, key)
 
             session['message'] = 'This OpenID identifier is not associated to any active users'
 
@@ -241,11 +242,11 @@ class OpenIDController(openerp.addons.web.http.Controller):
             # information in a log.
             session['message'] = 'Verification failed.'
 
-        return set_cookie_and_redirect(req, '/#action=login&loginerror=1')
+        return set_cookie_and_redirect('/#action=login&loginerror=1')
 
-    @openerp.addons.web.http.jsonrequest
-    def status(self, req):
-        session = getattr(req.session, 'openid_session', {})
+    @http.route('/auth_openid/login/status', type='json', auth='none')
+    def status(self):
+        session = getattr(request.session, 'openid_session', {})
         return {'status': session.get('status'), 'message': session.get('message')}
 
 
