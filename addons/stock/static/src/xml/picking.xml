@@ -140,7 +140,7 @@
 
                 <tbody>
                     <t t-foreach="widget.get_rows()" t-as="row">
-                        <tr t-att-class="row.classes" t-att-data-id="row.id">
+                        <tr t-att-class="row.classes" t-att-pack-id="row.id">
                             <td> <t t-esc="row.cols.pack" /> </td>
                             <td class='oe_centeralign'> <span class='oe_row_button js_pick_plus'>+</span> </td>
                             <td class='oe_centeralign'> <span class='oe_row_button js_pick_minus'>-</span> </td>
