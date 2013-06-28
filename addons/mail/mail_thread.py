@@ -328,8 +328,8 @@ class mail_thread(osv.AbstractModel):
         # Track initial values of tracked fields
         tracked_fields = self._get_tracked_fields(cr, uid, values.keys(), context=context)
         if tracked_fields:
-            initial = self.read(cr, uid, ids, tracked_fields.keys(), context=context)
-            initial_values = dict((item['id'], item) for item in initial)
+            records = self.browse(cr, uid, ids, context=context)
+            initial_values = dict((this.id, dict((key, getattr(this, key)) for key in tracked_fields.keys())) for this in records)
 
         # Perform write, update followers
         result = super(mail_thread, self).write(cr, uid, ids, values, context=context)
@@ -388,7 +388,7 @@ class mail_thread(osv.AbstractModel):
             if not value:
                 return ''
             if col_info['type'] == 'many2one':
-                return value[1]
+                return value.name_get()[0][1]
             if col_info['type'] == 'selection':
                 return dict(col_info['selection'])[value]
             return value
@@ -407,23 +407,26 @@ class mail_thread(osv.AbstractModel):
         if not tracked_fields:
             return True
 
-        for record in self.read(cr, uid, ids, tracked_fields.keys(), context=context):
-            initial = initial_values[record['id']]
-            changes = []
+        for browse_record in self.browse(cr, uid, ids, context=context):
+            initial = initial_values[browse_record.id]
+            changes = set()
             tracked_values = {}
 
             # generate tracked_values data structure: {'col_name': {col_info, new_value, old_value}}
             for col_name, col_info in tracked_fields.items():
-                if record[col_name] == initial[col_name] and getattr(self._all_columns[col_name].column, 'track_visibility', None) == 'always':
+                initial_value = initial[col_name]
+                record_value = getattr(browse_record, col_name)
+
+                if record_value == initial_value and getattr(self._all_columns[col_name].column, 'track_visibility', None) == 'always':
                     tracked_values[col_name] = dict(col_info=col_info['string'],
-                                                        new_value=convert_for_display(record[col_name], col_info))
-                elif record[col_name] != initial[col_name]:
+                                                        new_value=convert_for_display(record_value, col_info))
+                elif record_value != initial_value and (record_value or initial_value):  # because browse null != False
                     if getattr(self._all_columns[col_name].column, 'track_visibility', None) in ['always', 'onchange']:
                         tracked_values[col_name] = dict(col_info=col_info['string'],
-                                                            old_value=convert_for_display(initial[col_name], col_info),
-                                                            new_value=convert_for_display(record[col_name], col_info))
+                                                            old_value=convert_for_display(initial_value, col_info),
+                                                            new_value=convert_for_display(record_value, col_info))
                     if col_name in tracked_fields:
-                        changes.append(col_name)
+                        changes.add(col_name)
             if not changes:
                 continue
 
@@ -433,7 +436,7 @@ class mail_thread(osv.AbstractModel):
                 if field not in changes:
                     continue
                 for subtype, method in track_info.items():
-                    if method(self, cr, uid, record, context):
+                    if method(self, cr, uid, browse_record, context):
                         subtypes.append(subtype)
 
             posted = False
@@ -444,11 +447,11 @@ class mail_thread(osv.AbstractModel):
                     _logger.debug('subtype %s not found, giving error "%s"' % (subtype, e))
                     continue
                 message = format_message(subtype_rec.description if subtype_rec.description else subtype_rec.name, tracked_values)
-                self.message_post(cr, uid, record['id'], body=message, subtype=subtype, context=context)
+                self.message_post(cr, uid, browse_record.id, body=message, subtype=subtype, context=context)
                 posted = True
             if not posted:
                 message = format_message('', tracked_values)
-                self.message_post(cr, uid, record['id'], body=message, context=context)
+                self.message_post(cr, uid, browse_record.id, body=message, context=context)
         return True
 
     #------------------------------------------------------
