@@ -50,15 +50,15 @@ class project_issue(base_stage, osv.osv):
 
     _track = {
         'state': {
-            'project_issue.mt_issue_new': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['new', 'draft'],
-            'project_issue.mt_issue_closed': lambda self, cr, uid, obj, ctx=None:  obj['state'] == 'done',
-            'project_issue.mt_issue_started': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'open',
+            'project_issue.mt_issue_new': lambda self, cr, uid, obj, ctx=None: obj.state in ['new', 'draft'],
+            'project_issue.mt_issue_closed': lambda self, cr, uid, obj, ctx=None:  obj.state == 'done',
+            'project_issue.mt_issue_started': lambda self, cr, uid, obj, ctx=None: obj.state == 'open',
         },
         'stage_id': {
-            'project_issue.mt_issue_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['new', 'draft', 'done', 'open'],
+            'project_issue.mt_issue_stage': lambda self, cr, uid, obj, ctx=None: obj.state not in ['new', 'draft', 'done', 'open'],
         },
         'kanban_state': {
-            'project_issue.mt_issue_blocked': lambda self, cr, uid, obj, ctx=None: obj['kanban_state'] == 'blocked',
+            'project_issue.mt_issue_blocked': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'blocked',
         },
     }
 
@@ -578,7 +578,7 @@ class project_issue(base_stage, osv.osv):
         if context is None:
             context = {}
         res = super(project_issue, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)
-        if thread_id:
+        if thread_id and subtype:
             self.write(cr, SUPERUSER_ID, thread_id, {'date_action_last': time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
         return res
 
