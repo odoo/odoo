@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Product container --> 
+
+        <record id="product_container" model="ir.ui.view">
+            <field name="name">ecommerce_product_container</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <html>
+    <h2 class="oe_slogan">Want to use E-Commerce on OpenERP?</h2>
+    <h3 class="oe_slogan">Contact a local partner</h3>
+    <div class="oe_row">
+        <div class="placeholder_category"/>
+        <div class="placeholder_product"/>
+    </div>
+                </html>
+            </field>
+        </record>
+
+        <!-- Product list --> 
+
+        <record id="product_list" model="ir.ui.view">
+            <field name="name">ecommerce_product_list</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <html>
+        <div class='oe_span9 oe_partners'>
+            <t t-foreach="products">
+            <div class='oe_span9 oe_partner oe_clearfix'>
+                <div class='oe_partner_logo'><img t-att-src="'data:image/png;base64,' + image_medium"/></div>
+                <div class='oe_content'>
+                    <a class='oe_name' t-att-href='url'><t t-esc="name"/></a>
+                    <div t-if="description_sale" class="oe_partner_listing_descr"><t t-esc="description_sale"/></div>
+                    <div class="oe_price"><t t-esc="list_price"/></div>
+                </div>
+            </div>
+            </t>
+        </div>
+                </html>
+            </field>
+        </record>
+
+        <!-- Product detail --> 
+
+        <record id="product" model="ir.ui.view">
+            <field name="name">ecommerce_product</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <html>
+        <div class='oe_span9'>
+            <h3 class='oe_slogan'><t t-esc="name"/></h3>
+            <div class='oe_span9 oe_partner oe_clearfix'>
+                <div class='oe_partner_logo'><img t-att-src="'data:image/png;base64,' + image"/></div>
+                <div class='oe_content'>
+                    <div t-if="description_sale" class="oe_partner_listing_descr"><t t-esc="description_sale"/></div>
+                    <div class="oe_price"><t t-esc="list_price"/></div>
+                </div>
+            </div>
+        </div>
+                </html>
+            </field>
+        </record>
+
+        <!-- List of categories --> 
+
+        <record id="categories" model="ir.ui.view">
+            <field name="name">ecommerce_categories</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <html>
+        <div class='oe_span3 oe_left oe_categories'>
+            <h4>Product categories</h4>
+            <ul>
+                <t t-foreach="categories">
+                <li t-att-class="selected and 'oe_selected' or ''"><a t-att-href="url"><t t-esc="name"/></a></li>
+                <ul t-id="child_ids">
+                    <t t-foreach="child_ids">
+                    <li t-att-class="selected and 'oe_selected' or ''"><a t-att-href="url"><t t-esc="name"/></a></li>
+                    <ul t-id="child_ids">
+                        <t t-foreach="child_ids">
+                        <li t-att-class="selected and 'oe_selected' or ''"><a t-att-href="url"><t t-esc="name"/></a></li>
+                        </t>
+                    </ul>
+                    </t>
+                </ul>
+                </t>
+            </ul>
+        </div>
+                </html>
+            </field>
+        </record>
+
+     </data>
+</openerp>
