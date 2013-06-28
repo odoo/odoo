@@ -140,10 +140,10 @@
 
                 <tbody>
                     <t t-foreach="widget.get_rows()" t-as="row">
-                        <tr t-att-class="row.classes" t-att-pack-id="row.id">
-                            <td> <t t-esc="row.cols.pack" /> </td>
-                            <td class='oe_centeralign'> <span class='oe_row_button js_pick_plus'>+</span> </td>
-                            <td class='oe_centeralign'> <span class='oe_row_button js_pick_minus'>-</span> </td>
+                        <tr t-att-class="'js_pack_row' + row.classes" t-att-pack-id="row.id">
+                            <td class='js_pack_select'> <t t-esc="row.cols.pack" /> </td>
+                            <td class='oe_centeralign'> <span class='oe_row_button js_pack_plus'>+</span> </td>
+                            <td class='oe_centeralign'> <span class='oe_row_button js_pack_minus'>-</span> </td>
                         </tr>
                     </t>
                 </tbody>

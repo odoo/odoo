@@ -74,7 +74,7 @@ function openerp_picking_widgets(instance){
                 rows.push({
                     cols:{ pack: pack.name},
                     id: pack.id,
-                    classes: 'js-pack' + ( pack === current_package ? ' oe_selected' : '') ,
+                    classes: pack === current_package ? ' oe_selected' : '' ,
                 });
             });
             return rows;
@@ -82,8 +82,12 @@ function openerp_picking_widgets(instance){
         renderElement: function(){
             this._super();
             var model = this.getParent();
-            this.$('.js-pack').click(function(){
-                model.select_package(parseInt($(this).attr('pack-id')));
+            this.$('.js_pack_row').each(function(){
+                var pack_id = parseInt($(this).attr('pack-id'));
+
+                $('.js_pack_select', this).click(function(){ model.select_package(pack_id); });
+                $('.js_pack_plus', this).click(function(){ model.copy_package(pack_id); });
+                $('.js_pack_minus', this).click(function(){ model.delete_package(pack_id); });
             });
         },
     });
@@ -212,6 +216,23 @@ function openerp_picking_widgets(instance){
                 .call('action_done_from_packing_ui',[[self.picking.id]])
                 .then(function(new_picking_id){
                     console.log('New picking id:',new_picking_id);
+                    //return self.refresh_ui(new_picking_id);
+                });
+        },
+        copy_package: function(package_id){
+            console.log('Copy Package:',package_id);
+            new instance.web.Model('stock.quant.package')
+                .call('action_copy',[[package_id]])
+                .then(function(){
+                    return self.refresh_ui(self.picking.id);
+                });
+        },
+        delete_package: function(package_id){
+            console.log('Delete Package:',package_id);
+            new instance.web.Model('stock.quant.package')
+                .call('action_copy',[[package_id]])
+                .then(function(){
+                    return self.refresh_ui(self.picking.id);
                 });
         },
         select_package: function(package_id){
