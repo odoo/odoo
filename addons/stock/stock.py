@@ -1482,7 +1482,6 @@ class stock_picking(osv.osv):
     def get_done_reserved_quants(self, cr, uid, picking_id, move, context=None):
         stock_operation_obj = self.pool.get('stock.pack.operation')
         quant_obj = self.pool.get('stock.quant')
-        possible_quants = [x.id for x in move.reserved_quant_ids]
         operation_ids = stock_operation_obj.find_packaging_op_from_product(cr, uid, move.product_id, picking_id, context=context)
         todo_later = []
         possible_quants = [quant.id for quant in move.reserved_quant_ids]
@@ -1495,17 +1494,17 @@ class stock_picking(osv.osv):
                 #split for partial and take care of reserved quants
                 quant_tuples = quant_obj._get_quant_tuples(cr, uid, [op.quant_id.id], op.product_qty, context=context)
                 quant_obj.real_split_quants(cr, uid, quant_tuples, context=context)
-                done_reserved_quants = done_reserved_quants.union(set([qt[O] for qt in quant_tuples]))
+                done_reserved_quants = done_reserved_quants.union(set([qt[0] for qt in quant_tuples]))
             elif op.package_id:
                 #moving a package never splits quants but we need to take care of the reserved_quant_ids
                 all_children_quants = self.pool.get('stock.quant.package').find_all_quants(cr, uid, op.package_id, context=context)
-                done_reserved_quants = done_reserved_quants.union(set(all_chilren_quants))
+                done_reserved_quants = done_reserved_quants.union(set(all_children_quants))
 
         #finish the partial split by operation that leaves the choice of quant to move
         for op in stock_operation_obj.browse(cr, uid, todo_later, context=context):
             quant_tuples = quant_obj._get_quant_tuples(cr, uid, possible_quants, op.product_qty, context=context)
             quant_obj.real_split_quants(cr, uid, quant_tuples, context=context)
-            done_reserved_quants = done_reserved_quants.union(set([qt[O] for qt in quant_tuples]))
+            done_reserved_quants = done_reserved_quants.union(set([qt[0] for qt in quant_tuples]))
 
         return done_reserved_quants
 

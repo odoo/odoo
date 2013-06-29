@@ -94,6 +94,11 @@
     product_qty: 20.0
     type: out
 - 
+  I assign this outgoing shipment 
+- 
+  !python {model: stock.picking}: |
+    self.action_assign(cr, uid, [ref("outgoing_average_shipment")])
+- 
   I confirm outgoing shipment of 20 kg of Average Ice Cream. 
 - 
   !workflow {model: stock.picking, action: button_confirm, ref: outgoing_average_shipment}

@@ -69,7 +69,7 @@ Dashboard / Reports for Purchase Management will include:
     'test': [
         'test/fifo_price.yml', 
         'test/fifo_returns.yml', 
-        'test/costmethodchange.yml',
+        #'test/costmethodchange.yml',
         'test/process/cancel_order.yml',
         'test/process/rfq2order2done.yml',
         'test/process/generate_invoice_from_reception.yml',

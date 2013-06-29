@@ -199,15 +199,25 @@ class stock_location(osv.osv):
         strats = self.pool.get('product.removal').search(cr, uid, [('location_id','=',id), ('product_categ_id','child_of', product.categ_id.id)], context=context) #Also child_of for location??? 
         return strats and strats[0] or 'nearest'
 
+    def search_removals(self, cr, uid, id, product_categ_id, context=None):
+        return self.pool.get('product.removal').search(cr, uid, [('location_id','=',id), ('product_categ_id','=', product_categ_id)], context=context)
+    
+
     def get_removal_strategy(self, cr, uid, id, product_id, context=None):
         #TODO improve code
         product = self.pool.get("product.product").browse(cr, uid, product_id, context=context)
-        strats = self.pool.get('product.removal').search(cr, uid, [('location_id','=',id), ('product_categ_id','=', product.categ_id.id)], context=context) #Also child_of for location???
-        if not strats: 
-            strat = product.categ_id.removal_strategy
-        else: 
-            strat = strats[0]
-        return strat or product.categ_id.removal_strategy or 'fifo'
+        strats = self.search_removals(cr, uid, id, product.categ_id.id, context=context)
+        location = self.browse(cr, uid, id, context=context)
+        categ = product.categ_id
+        while not strats and categ.parent_id:
+            while not strats and location.parent_id:
+                location = location.parent_id
+                strats = self.search_removals(cr, uid, location.id, categ.id, context=context)
+            categ = categ.parent_id
+        return strats and strats[0] or super(stock_location, self).get_removal_strategy(cr, uid, id, product_id, context=context)
+
+        
+
 
         return super(stock_location, self).get_removal_strategy(cr, uid, id, product_id, context=context)
 
