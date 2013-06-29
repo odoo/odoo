@@ -177,10 +177,9 @@ class product_uom(osv.osv):
                 return qty
         amount = qty / from_unit.factor
         if to_unit:
+            amount = amount * to_unit.factor
             if round:
-                amount = rounding(amount * to_unit.factor, to_unit.rounding)
-            else:
-                amount = amount * to_unit.factor
+                amount = rounding(amount, to_unit.rounding)
         return amount
 
     def _compute_price(self, cr, uid, from_uom_id, price, to_uom_id=False):

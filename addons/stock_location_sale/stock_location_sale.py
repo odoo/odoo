@@ -65,7 +65,7 @@ class sale_order(osv.osv):
         proc_ids = []
 
         #Create group
-        group_id = self.pool.get("stock.move.group").create(cr, uid, {'name': order.name}, context=context)
+        group_id = self.pool.get("procurement.group").create(cr, uid, {'name': order.name}, context=context)
 
         for line in order_lines:
             if line.state == 'done':

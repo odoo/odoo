@@ -125,10 +125,9 @@ class stock_partial_picking(osv.osv_memory):
     _inherit = 'stock.partial.picking'
 
     # Overridden to inject the purchase price as true 'cost price' when processing
-    # incoming pickings.
+    # incoming pickings. The price is always stored in the company currency.
     def _product_cost_for_average_update(self, cr, uid, move):
         if move.picking_id.purchase_id:
-            #always write the cost price of products in the company currency, for easiness in further computation
             currency_obj = self.pool.get("res.currency")
             new_price = currency_obj.compute(cr, uid, move.picking_id.purchase_id.pricelist_id.currency_id.id, move.company_id.currency_id.id, 
                                                  move.purchase_line_id.price_unit, round=False)

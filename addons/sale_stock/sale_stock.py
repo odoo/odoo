@@ -27,16 +27,6 @@ from openerp.tools.translate import _
 import pytz
 from openerp import SUPERUSER_ID
 
-
-#COULD BE INTERESTING WHEN PROCUREMENT TO CUSTOMER AND PULL RULE
-class procurement_order(osv.osv):
-    _inherit = 'procurement.order'
-    _columns = {
-        'sale_line_id': fields.many2one('sale.order.line', 'Sale order line'), 
-        }
-
-
-
 class sale_order(osv.osv):
     _inherit = "sale.order"
     
@@ -308,7 +298,6 @@ class sale_order(osv.osv):
     def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, group_id = False, context=None):
         mod_obj = self.pool.get('ir.model.data')
         location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', 'stock_location_customers')
-        output_id = order.warehouse_id.lot_output_id.id
         return {
             'name': line.name,
             'origin': order.name,
@@ -320,87 +309,19 @@ class sale_order(osv.osv):
                     or line.product_uom_qty,
             'product_uos': (line.product_uos and line.product_uos.id)\
                     or line.product_uom.id,
-            'location_id': order.warehouse_id.lot_stock_id.id, #TODO Procurement should be generated towards customers instead
+            'location_id': location_id,
             'procure_method': line.type,
             'move_id': move_id,
             'company_id': order.company_id.id,
             'note': line.name,
             'group_id': group_id, 
         }
- 
-    def _prepare_order_line_move(self, cr, uid, order, line, picking_id, date_planned, group_id = False, context=None):
-        location_id = order.warehouse_id.lot_stock_id.id
-        output_id = order.warehouse_id.lot_output_id.id
-        #mod_obj = self.pool.get('ir.model.data')
-        #location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', 'stock_location_customers')
-        return {
-            'name': line.name,
-            'picking_id': picking_id,
-            'product_id': line.product_id.id,
-            'date': date_planned,
-            'date_expected': date_planned,
-            'product_qty': line.product_uom_qty,
-            'product_uom': line.product_uom.id,
-            'product_uos_qty': (line.product_uos and line.product_uos_qty) or line.product_uom_qty,
-            'product_uos': (line.product_uos and line.product_uos.id)\
-                    or line.product_uom.id,
-            'product_packaging': line.product_packaging.id,
-            'partner_id': line.address_allotment_id.id or order.partner_shipping_id.id,
-            'location_id': location_id,
-            'location_dest_id': output_id, 
-            'sale_line_id': line.id,
-            'tracking_id': False,
-            'state': 'draft',
-            #'state': 'waiting',
-            'company_id': order.company_id.id,
-            'price_unit': line.product_id.standard_price or 0.0, 
-            'group_id': group_id, 
-        }
- 
-    def _prepare_order_picking(self, cr, uid, order, context=None):
-        pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.out')
-        return {
-            'name': pick_name,
-            'origin': order.name,
-            'date': self.date_to_datetime(cr, uid, order.date_order, context),
-            'type': 'out',
-            'state': 'auto',
-            'move_type': order.picking_policy,
-            'sale_id': order.id,
-            'partner_id': order.partner_shipping_id.id,
-            'note': order.note,
-            'invoice_state': (order.order_policy=='picking' and '2binvoiced') or 'none',
-            'company_id': order.company_id.id,
-        }
-
-    def ship_recreate(self, cr, uid, order, line, move_id, proc_id):
-        # FIXME: deals with potentially cancelled shipments, seems broken (specially if shipment has production lot)
-        """
-        Define ship_recreate for process after shipping exception
-        param order: sales order to which the order lines belong
-        param line: sales order line records to procure
-        param move_id: the ID of stock move
-        param proc_id: the ID of procurement
-        """
-        move_obj = self.pool.get('stock.move')
-        if order.state == 'shipping_except':
-            for pick in order.picking_ids:
-                for move in pick.move_lines:
-                    if move.state == 'cancel':
-                        mov_ids = move_obj.search(cr, uid, [('state', '=', 'cancel'),('sale_line_id', '=', line.id),('picking_id', '=', pick.id)])
-                        if mov_ids:
-                            for mov in move_obj.browse(cr, uid, mov_ids):
-                                # FIXME: the following seems broken: what if move_id doesn't exist? What if there are several mov_ids? Shouldn't that be a sum?
-                                move_obj.write(cr, uid, [move_id], {'product_qty': mov.product_qty, 'product_uos_qty': mov.product_uos_qty})
-                                self.pool.get('procurement.order').write(cr, uid, [proc_id], {'product_qty': mov.product_qty, 'product_uos_qty': mov.product_uos_qty})
-        return True
 
     def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
         start_date = self.date_to_datetime(cr, uid, start_date, context)
         date_planned = datetime.strptime(start_date, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(days=line.delay or 0.0)
         date_planned = (date_planned - timedelta(days=order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         return date_planned
-
 
     def _create_pickings_and_procurements(self, cr, uid, order, order_lines, picking_id=False, context=None):
         """Create the required procurements to supply sales order lines, also connecting
@@ -421,14 +342,12 @@ class sale_order(osv.osv):
                                will be added. A new picking will be created if ommitted.
         :return: True
         """
-        print "CREATE OLD PICKINGS AND PROCUREMENTS"
         move_obj = self.pool.get('stock.move')
         picking_obj = self.pool.get('stock.picking')
         procurement_obj = self.pool.get('procurement.order')
         proc_ids = []
 
-        #Create group
-        group_id = self.pool.get("stock.move.group").create(cr, uid, {'name': order.name}, context=context)
+        group_id = self.pool.get("procurement.group").create(cr, uid, {'name': order.name}, context=context)
 
         for line in order_lines:
             if line.state == 'done':
@@ -437,23 +356,10 @@ class sale_order(osv.osv):
             date_planned = self._get_date_planned(cr, uid, order, line, order.date_order, context=context)
 
             if line.product_id:
-                if line.product_id.type in ('product', 'consu'):
-                    if not picking_id:
-                        picking_id = picking_obj.create(cr, uid, self._prepare_order_picking(cr, uid, order, context=context))
-                    move_id = move_obj.create(cr, uid, self._prepare_order_line_move(cr, uid, order, line, picking_id, date_planned, group_id=group_id, context=context))
-                else:
-                    # a service has no stock move
-                    move_id = False
-
-            #TODO Need to do something instead of warehouse
-            if line.product_id:
                 proc_id = procurement_obj.create(cr, uid, self._prepare_order_line_procurement(cr, uid, order, line, move_id, date_planned, group_id = group_id, context=context))
                 proc_ids.append(proc_id)
                 line.write({'procurement_id': proc_id})
-                self.ship_recreate(cr, uid, order, line, move_id, proc_id)
 
-        if picking_id:
-            picking_obj.signal_button_confirm(cr, uid, [picking_id])
         procurement_obj.signal_button_confirm(cr, uid, proc_ids)
 
         val = {}
