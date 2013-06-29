@@ -350,7 +350,7 @@ class stock_location(osv.osv):
         categ = product.categ_id
         while (not categ.removal_strategy) and categ.parent_id:
             categ = categ.parent_id
-        return categ.removal_strategy or None
+        return categ.removal_strategy or 'fifo'
 
     def _product_get(self, cr, uid, id, product_ids=False, context=None, states=None):
         """
@@ -1610,7 +1610,7 @@ class stock_picking(osv.osv):
                             'move_dest_id': False,
                             'price_unit': product_price,
                             'product_uom': product_uoms[move.id],
-                            'reserved_quant_ids': list(done_reserved_quants)
+                            'reserved_quant_ids': [(4,x) for x in list(done_reserved_quants)]
                     }
                     prodlot_id = prodlot_ids[move.id]
                     if prodlot_id:
@@ -1625,7 +1625,7 @@ class stock_picking(osv.osv):
                             'product_uos_qty': move.product_qty - partial_qty[move.id], #TODO: put correct uos_qty
                             'prodlot_id': False,
                             'tracking_id': False,
-                            'reserved_quant_ids': list(set(possible_quants) - done_reserved_quants),
+                            'reserved_quant_ids': [(4,x) for x in list(set(possible_quants) - done_reserved_quants)],
                         })
 
             if new_picking:
