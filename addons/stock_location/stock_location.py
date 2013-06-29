@@ -210,8 +210,8 @@ class stock_location(osv.osv):
         location = self.browse(cr, uid, id, context=context)
         categ = product.categ_id
         while not strats and categ.parent_id:
-            while not strats and location.parent_id:
-                location = location.parent_id
+            while not strats and location.location_id:
+                location = location.location_id
                 strats = self.search_removals(cr, uid, location.id, categ.id, context=context)
             categ = categ.parent_id
         return strats and strats[0] or super(stock_location, self).get_removal_strategy(cr, uid, id, product_id, context=context)
