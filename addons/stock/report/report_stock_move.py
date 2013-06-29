@@ -231,7 +231,7 @@ class report_stock_inventory(osv.osv):
                 location_dest.usage as location_dest_type, 
                 location.usage as location_src_type
             FROM stock_quant sq
-                LEFT JOIN quant_move_rel qm ON (qm.quant_id = sq.id)
+                LEFT JOIN stock_quant_move_rel qm ON (qm.quant_id = sq.id)
                 LEFT JOIN stock_move m ON (qm.move_id = m.id)
                 LEFT JOIN stock_picking p ON (m.picking_id=p.id)
                 LEFT JOIN stock_location location ON (m.location_id = location.id)

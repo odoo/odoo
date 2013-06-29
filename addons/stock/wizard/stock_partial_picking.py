@@ -127,9 +127,9 @@ class stock_partial_picking(osv.osv_memory):
     def _product_cost_for_average_update(self, cr, uid, move):
         """Returns product cost and currency ID for the given move, suited for re-computing
            the average product cost.
- 
+
            :return: map of the form::
- 
+
                 {'cost': 123.34,
                  'currency': 42}
         """

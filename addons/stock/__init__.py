@@ -22,7 +22,7 @@
 from stock import *
 import partner
 import product
-import stock_fifo_lifo
+#import stock_fifo_lifo
 import report
 import wizard
 import res_config

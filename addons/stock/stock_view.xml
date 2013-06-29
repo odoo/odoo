@@ -303,35 +303,6 @@
                 </search>
             </field>
         </record>
-
-        <record id="view_production_lot_revision_form" model="ir.ui.view">
-            <field name="name">stock.production.lot.revision.form</field>
-            <field name="model">stock.production.lot.revision</field>
-            <field name="arch" type="xml">
-                <form string="Serial Number Revisions" version="7.0">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="indice"/>
-                        <field name="date"/>
-                        <field name="author_id"/>
-                    </group>
-                    <separator string="Description"/>
-                    <field name="description"/>
-                </form>
-            </field>
-        </record>
-        <record id="view_production_lot_revision_tree" model="ir.ui.view">
-            <field name="name">stock.production.lot.revision.tree</field>
-            <field name="model">stock.production.lot.revision</field>
-            <field name="arch" type="xml">
-                <tree string="Serial Number Revisions">
-                    <field name="indice"/>
-                    <field name="author_id"/>
-                    <field name="date"/>
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
         <record id="view_production_lot_form" model="ir.ui.view">
             <field name="name">stock.production.lot.form</field>
             <field name="model">stock.production.lot</field>
@@ -350,32 +321,17 @@
                     <group>
                         <group>
                             <field name="product_id"/>
-                            <field name="prefix"/>
                             <field name="ref"/>
-                        </group>
-                        <group>
-                            <field name="date"/>
-                            <field name="stock_available"/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Revisions">
-                            <field name="revisions"/>
-                        </page>
-                        <page string="Stock Moves">
-                            <field name="move_ids">
-                                <tree  string="Stock Moves">
-                                    <field name="picking_id" string="Reference"/>
-                                    <field name="origin"/>
+                        <page string="Products">
+                            <field name="quant_ids">
+                                <tree string="Stock Moves">
+                                    <field name="name"/>
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
-                                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
-                                    <field name="tracking_id" groups="stock.group_tracking_lot"/>
-                                    <field name="date"/>
-                                    <field name="prodlot_id"/>
                                     <field name="location_id" groups="stock.group_locations"/>
-                                    <field name="location_dest_id" groups="stock.group_locations"/>
-                                    <field name="state"/>
                                 </tree>
                              </field>
                         </page>
@@ -388,12 +344,10 @@
             <field name="model">stock.production.lot</field>
             <field name="arch" type="xml">
                 <tree string="Serial Number">
-                    <field name="prefix"/>
                     <field name="name"/>
                     <field name="ref"/>
                     <field name="product_id"/>
-                    <field name="stock_available"/>
-                    <field name="date"/>
+                    <field name="create_date"/>
                 </tree>
             </field>
         </record>
@@ -403,7 +357,7 @@
             <field name="model">stock.production.lot</field>
             <field name="arch" type="xml">
                 <search string="Product Lots Filter">
-                    <field name="name" string="Product Lots" filter_domain="['|','|',('name','ilike',self),('prefix','ilike',self),('ref','ilike',self)]"/>
+                    <field name="name" string="Product Lots" filter_domain="['|','|',('name','ilike',self),('ref','ilike',self)]"/>
                     <field name="date"/>
                     <filter icon="terp-check" name="available" string="Available" domain="[('stock_available', '&gt;', 0)]" help="Available Product Lots"/>
                     <field name="product_id"/>
@@ -446,7 +400,6 @@
         <record id="stock_move_tree" model="ir.ui.view">
             <field name="name">Stock Moves</field>
             <field name="model">stock.move</field>
-            <field name="field_parent">move_history_ids</field>
             <field name="arch" type="xml">
                 <tree colors="grey:state == 'cancel'" string="Moves" create="false">
                     <field name="product_id"/>
@@ -469,7 +422,6 @@
         <record id="stock_move_tree2" model="ir.ui.view">
             <field name="name">Stock Moves</field>
             <field name="model">stock.move</field>
-            <field name="field_parent">move_history_ids2</field>
             <field name="arch" type="xml">
                 <tree colors="grey:state == 'cancel'" string="Moves" create="false">
                     <field name="product_id"/>
@@ -535,7 +487,6 @@
                             <field name="usage"/>
                             <field name="partner_id"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                            <field name="icon"/>
                             <field name="scrap_location"/>
                             <field name="active"/>
                         </group>
@@ -628,7 +579,7 @@
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree toolbar="1" string="Locations" >
-                    <field icon="icon" name="name"/>
+                    <field name="name"/>
                 </tree>
             </field>
         </record>
@@ -773,7 +724,7 @@
                     </h1>
                     <group>
                         <group>
-                            <field name="partner_id" on_change="onchange_partner_in(partner_id)"/>
+                            <field name="partner_id"/>
                             <field name="backorder_id" readonly="1" attrs="{'invisible': [('backorder_id','=',False)]}"/>
                             <field name="invoice_state" string="Invoice Control" groups="account.group_account_invoice" attrs="{'invisible':[('invoice_state', '=', 'none')]}"/>
                             <field name="stock_journal_id" widget="selection" groups="account.group_account_user"/>
@@ -917,9 +868,6 @@
                 <xpath expr="/form/header//field[@name='state']" position="replace">
                     <field name="state" nolabel="1" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
                 </xpath>
-                <xpath expr="//field[@name='partner_id']" position="replace">
-                    <field name="partner_id" on_change="onchange_partner_in(partner_id)"  string="Customer"/>
-                </xpath>
                 <xpath expr="//field[@name='move_lines']" position="replace">
                     <field name="move_lines" context="{'address_out_id': partner_id, 'picking_type': 'out', 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree'}"/>
                 </xpath>
@@ -1043,9 +991,6 @@
                 </xpath>
                 <xpath expr="//button[@name='action_process']" position="replace">
                     <button name="action_process" states="assigned" string="Receive" type="object" class="oe_highlight"/>
-                </xpath>
-                <xpath expr="//field[@name='partner_id']" position="replace">
-                    <field name="partner_id" on_change="onchange_partner_in(partner_id)"  string="Supplier"/>
                 </xpath>
                 <xpath expr="//field[@name='move_lines']" position="replace">
                     <field name="move_lines" context="{'address_in_id': partner_id, 'picking_type': 'in', 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree'}"/>

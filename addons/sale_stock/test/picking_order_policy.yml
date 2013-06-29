@@ -97,7 +97,6 @@
   !python {model: sale.order}: |
     order = self.pool.get('sale.order').browse(cr, uid, ref("sale.sale_order_6"))
     assert order.shipped == True, "Sale order is not Delivered."
-    assert order.picked_rate == 100, "Shipment progress is not 100%."
     #assert order.state == 'progress', 'Order should be in inprogress.'
     assert len(order.invoice_ids) == False, "Invoice should not created on dispatch delivery order."
 -

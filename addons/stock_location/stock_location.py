@@ -21,14 +21,32 @@
 
 from openerp.osv import fields,osv
 
+class stock_location_route(osv.osv):
+    _name = 'stock.location.route'
+    _description = "Inventory Routes"
+    _order = 'sequence'
+    _columns = {
+        'name': fields.char('Route Name', required=True),
+        'sequence': fields.integer('Sequence'),
+        'pull_ids': fields.one2many('stock.location.pull', 'route_id', 'Pull Rules'),
+        'push_ids': fields.one2many('stock.location.path', 'route_id', 'Push Rules'),
+
+        'journal_id': fields.many2one('stock.journal','Journal'),
+    }
+    _defaults = {
+        'sequence': lambda self,cr,uid,ctx: 0,
+    }
+
 class stock_location_path(osv.osv):
     _name = "stock.location.path"
     _description = "Pushed Flows"
     _columns = {
         'name': fields.char('Operation', size=64),
         'company_id': fields.many2one('res.company', 'Company'),
+        'route_id': fields.many2one('stock.location.route', 'Route'),
+
         'product_id' : fields.many2one('product.product', 'Products', ondelete='cascade', select=1),
-        'journal_id': fields.many2one('stock.journal','Journal'),
+
         'location_from_id' : fields.many2one('stock.location', 'Source Location', ondelete='cascade', select=1, required=True),
         'location_dest_id' : fields.many2one('stock.location', 'Destination Location', ondelete='cascade', select=1, required=True),
         'delay': fields.integer('Delay (days)', help="Number of days to do this transition"),
@@ -46,7 +64,7 @@ class stock_location_path(osv.osv):
                 "The 'Automatic Move' value will create a stock move after the current one that will be "\
                 "validated automatically. With 'Manual Operation', the stock move has to be validated "\
                 "by a worker. With 'Automatic No Step Added', the location is replaced in the original move."
-            ),
+        ),
     }
     _defaults = {
         'auto': 'auto',
@@ -54,6 +72,35 @@ class stock_location_path(osv.osv):
         'invoice_state': 'none',
         'picking_type': 'internal',
     }
+    def _apply(self, cr, uid, rule, move, context=None):
+        move_obj = self.pool.get('stock.move')
+        newdate = (datetime.strptime(move.date, '%Y-%m-%d %H:%M:%S') + relativedelta(days=rule.delay or 0)).strftime('%Y-%m-%d')
+        if rule.auto=='transparent':
+            self.write(cr, uid, [move.id], {
+                'date': newdate,
+                'location_dest_id': rule.location_dest_id.id
+            })
+            vals = {}
+            if route.journal_id:
+                vals['stock_journal_id'] = route.journal_id.id
+            vals['type'] = rule.picking_type
+            if rule.location_dest_id.id<>move.location_dest_id.id:
+                move_obj._push_apply(self, cr, uid, move.id, context):
+            return move.id
+        else:
+            move_id = move_obj.copy(cr, uid, move.id, {
+                'location_id': move.location_dest_id.id,
+                'location_dest_id': rule.location_dest_id.id,
+                'date': time.strftime('%Y-%m-%d'),
+                'company_id': rule.company_id.id,
+                'date_expected': newdate,
+            )
+            move_obj.write(cr, uid, [move.id], {
+                'move_dest_id': move_id,
+            })
+            move_obj.action_confirm(self, cr, uid, [move_id], context=None)
+            return move_id
+
 
 class product_pulled_flow(osv.osv):
     _name = 'product.pulled.flow'
@@ -61,15 +108,15 @@ class product_pulled_flow(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, help="This field will fill the packing Origin and the name of its moves"),
         'cancel_cascade': fields.boolean('Cancel Cascade', help="Allow you to cancel moves related to the product pull flow"),
+        'route_id': fields.many2one('stock.location.route', 'Route'),
+        'delay': fields.integer('Number of Hours'),
         'location_id': fields.many2one('stock.location','Destination Location', required=True, help="Is the destination location that needs supplying"),
         'location_src_id': fields.many2one('stock.location','Source Location', help="Location used by Destination Location to supply"),
-        'journal_id': fields.many2one('stock.journal','Journal'),
         'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procure Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
         'type_proc': fields.selection([('produce','Produce'),('buy','Buy'),('move','Move')], 'Type of Procurement', required=True),
         'company_id': fields.many2one('res.company', 'Company', help="Is used to know to which company the pickings and moves belong."),
         'partner_address_id': fields.many2one('res.partner', 'Partner Address'),
         'picking_type': fields.selection([('out','Sending Goods'),('in','Getting Goods'),('internal','Internal')], 'Shipping Type', required=True, select=True, help="Depending on the company, choose whatever you want to receive or send products"),
-        'product_id':fields.many2one('product.product','Product'),
         'invoice_state': fields.selection([
             ("invoiced", "Invoiced"),
             ("2binvoiced", "To Be Invoiced"),
@@ -84,138 +131,151 @@ class product_pulled_flow(osv.osv):
         'invoice_state': 'none',
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'product.pulled.flow', context=c),
     }
+    # FP Note: implement this
+    def _apply(self, cr, uid, rule, move, context=None):
+        newdate = (datetime.strptime(move.date, '%Y-%m-%d %H:%M:%S') - relativedelta(days=rule.delay or 0)).strftime('%Y-%m-%d %H:%M:%S')
 
+        proc_obj = self.pool.get('procurement.order')
+        proc_id = proc_obj.create(cr, uid, {
+            'name': move.name,
+            'origin': move.origin,
+
+            'company_id':  move.company_id and move.company_id.id or False,
+            'date_planned': newdate,
+
+            'product_id': move.product_id.id,
+            'product_qty': move.product_qty,
+            'product_uom': move.product_uom.id,
+            'product_uos_qty': (move.product_uos and move.product_uos_qty)\
+                    or move.product_qty,
+            'product_uos': (move.product_uos and move.product_uos.id)\
+                    or move.product_uom.id,
+            'location_id': move.location_id.id,
+            'procure_method': rule.procure_method,
+        })
+        proc_obj.signal_button_confirm(cr, uid, [proc_id])
+        msg = _('Pulled from another location.')
+        self.message_post(cr, uid, [proc.id], body=msg, context=context)
+        return True
 
 class product_putaway_strategy(osv.osv):
-    
-    def _calc_product_ids(self, cr, uid, ids, field, arg, context=None):
-        '''
-        This function should check on which products (including if the products are in a product category) this putaway strategy is used
-        '''
-        pass
-    
     _name = 'product.putaway'
     _description = 'Put Away Strategy'
     _columns = {
-        'product_ids':fields.function(_calc_product_ids, "Products"), 
         'product_categ_id':fields.many2one('product.category', 'Product Category', required=True),
         'location_id': fields.many2one('stock.location','Parent Location', help="Parent Destination Location from which a child bin location needs to be chosen", required=True), #domain=[('type', '=', 'parent')], 
         'method': fields.selection([('empty', 'Empty'), ('fixed', 'Fixed Location')], "Method", required = True),
-                }
+    }
 
+# TODO: move this on stock module
 
 class product_removal_strategy(osv.osv):
-
-    def _calc_product_ids(self, cr, uid, ids, field, arg, context=None):
-        '''
-        This function should check on which products (including if the products are in a product category) this removal strategy is used
-        '''
-        pass
-    
-    _name = 'product.removal'
-    _description = 'Removal Strategy'
+    _inherit = 'product.removal'
+    _order = 'sequence'
     _columns = {
-        'product_ids':fields.function(_calc_product_ids, "Products"),
-        'product_categ_id':fields.many2one('product.category', 'Product Category', required=True),
-        'location_id': fields.many2one('stock.location', 'Parent Location', help="Parent Source Location from which a child bin location needs to be chosen", required=True), #, domain=[('type', '=', 'parent')]
-        'method': fields.selection([('fifo', 'FIFO'), ('lifo', 'LIFO')], "Method", required=True), 
-        }
-
-
-
+        'sequence': fields.integer('Sequence'),
+        'location_id': fields.many2one('stock.location', 'Locations'),
+    }
 
 class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {
-        'flow_pull_ids': fields.one2many('product.pulled.flow', 'product_id', 'Pulled Flows'),
-        'path_ids': fields.one2many('stock.location.path', 'product_id',
-            'Pushed Flow',
-            help="These rules set the right path of the product in the "\
-            "whole location tree.")
+        'route_ids': fields.many2many('stock.location.path', 'Routes'),
     }
-
 
 class product_category(osv.osv):
     _inherit = 'product.category'
     _columns = {
-        #'route_ids': fields.many2many('stock.route', 'product_catg_id', 'route_id', 'Routes'), 
         'removal_strategy_ids': fields.one2many('product.removal', 'product_categ_id', 'Removal Strategies'),
         'putaway_strategy_ids': fields.one2many('product.putaway', 'product_categ_id', 'Put Away Strategies'),
     }
 
 
-
+class stock_move(osv.osv):
+    _name = 'stock.move.putaway'
+    _description = 'Proposed Destination'
+    _columns = {
+        'move_id': fields.many2one('stock.move', required=True),
+        'location_id': fields.many2one('stock.location', 'Location', required=True),
+        'lot_id': fields.many2one('stock.production.lot', 'Lot'),
+        'quantity': fields.float('Quantity', required=True),
+    }
 
 class stock_move(osv.osv):
     _inherit = 'stock.move'
     _columns = {
-        'cancel_cascade': fields.boolean('Cancel Cascade', help='If checked, when this move is cancelled, cancel the linked move too')
+        'cancel_cascade': fields.boolean('Cancel Cascade', help='If checked, when this move is cancelled, cancel the linked move too'),
+        'putaway_ids': fields.one2many('stock.move.putaway', 'move_id', 'Put Away Suggestions')
     }
-    def action_cancel(self, cr, uid, ids, context=None):
-        for m in self.browse(cr, uid, ids, context=context):
-            if m.cancel_cascade and m.move_dest_id:
-                self.action_cancel(cr, uid, [m.move_dest_id.id], context=context)
-        res = super(stock_move,self).action_cancel(cr,uid,ids,context)
-        return res
-
-    def splitforputaway (self, cr, uid, ids, context=None):
-        '''
-        Splits this move in order to do the put away
-        
-        Happens at move getting done
-        '''
-        putaway_obj = self.pool.get("product.putaway")
-        location_obj = self.pool.get("stock.location")
-        quant_obj = self.pool.get("stock.quant")
-        for move in self.browse(cr, uid, ids, context=context):
-            putaways = putaway_obj.search(cr, uid, [('product_categ_id','=', move.product_id.categ_id.id), ('location_id', '=', move.location_dest_id.id)], context=context)
-            print putaways
-            if putaways: 
-                #Search for locations for PutAway
-                locs = location_obj.search(cr, uid, [('id', 'child_of', move.location_dest_id.id), ('id', '!=', move.location_dest_id.id), ('quant_ids', '=', False), 
-                                                     ('destination_move_ids', '=', False)], context=context)
-                if locs:
-                    quants = quant_obj.search(cr, uid, [('history_ids', 'in', move.id)])
-                    quant_obj.write(cr, uid, quants, {'location_id': locs[0]}, context=context)
+    def _pull_apply(self, cr, uid, moves, context):
+        for move in moves:
+            for route in move.product_id.route_ids:
+                found = False
+                for rule in route.pull_ids:
+                    if rule.location_id.id == move.location_id.id:
+                        self.pool.get('stock.location.pull')._apply(cr, uid, rule, move, context=context)
+                        found = True
+                        break
+                if found: break
         return True
 
+    def _push_apply(self, cr, uid, moves, context):
+        for move in moves:
+            for route in move.product_id.route_ids:
+                found = False
+                for rule in route.push_ids:
+                    if rule.location_from_id.id == move.location_dest_id.id:
+                        self.pool.get('stock.location.path')._apply(cr, uid, rule, move, context=context)
+                        found = True
+                        break
+                if found: break
+        return True
 
+    # Create the stock.move.putaway records
+    def _putaway_apply(self,cr, uid, ids, context=None):
+        for move in self.browse(cr, uid, ids, context=context):
+            res = self.pool.get('stock.location').get_putaway_strategy(cr, uid, move.location_dest_id.id, move.product_id.id, context=context)
+            if res:
+                raise 'put away strategies not implemented yet!'
+        return True
 
-    def _prepare_chained_picking(self, cr, uid, picking_name, picking, picking_type, moves_todo, context=None):
-        res = super(stock_move, self)._prepare_chained_picking(cr, uid, picking_name, picking, picking_type, moves_todo, context=context)
-        res.update({'invoice_state': moves_todo[0][1][6] or 'none'})
-        return res
+    def action_assign(self, cr, uid, ids, context=None):
+       result = super(stock_move, self).action_assign(cr, uid, ids, context=context)
+       self._putaway_apply(cr, uid, ids, context=context)
+       return result
+
+    def action_confirm(self, cr, uid, ids, context=None):
+        result = super(stock_move, self).action_confirm(cr, uid, ids, context)
+        moves = self.browse(cr, uid, ids, context=context)
+        self._pull_apply(cr, uid, ids, context=context)
+        self._push_apply(cr, uid, ids, context=context)
+        return result
 
 class stock_location(osv.osv):
     _inherit = 'stock.location'
     _columns = {
         'removal_strategy_ids': fields.one2many('product.removal', 'location_id', 'Removal Strategies'),
         'putaway_strategy_ids': fields.one2many('product.putaway', 'location_id', 'Put Away Strategies'),
-        }
-    
-
+    }
     def get_putaway_strategy(self, cr, uid, id, product_id, context=None):
         product = self.pool.get("product.product").browse(cr, uid, product_id, context=context)
-        strats = self.pool.get('product.removal').search(cr, uid, [('location_id','=',id), ('product_categ_id','child_of', product.categ_id.id)], context=context) #Also child_of for location??? 
-        return strats and strats[0] or 'nearest'
+        strats = self.pool.get('product.removal').search(cr, uid, [('location_id','=',id), ('product_categ_id','child_of', product.categ_id.id)], context=context)
+        return strats and strats[0] or None
 
     def get_removal_strategy(self, cr, uid, id, product_id, context=None):
-        #TODO improve code
+        pr = self.pool.get('product.removal')
         product = self.pool.get("product.product").browse(cr, uid, product_id, context=context)
-        strats = self.pool.get('product.removal').search(cr, uid, [('location_id','=',id), ('product_categ_id','=', product.categ_id.id)], context=context) #Also child_of for location???
-        if not strats: 
-            strat = product.categ_id.removal_strategy
-        else: 
-            strat = strats[0]
-        return strat or product.categ_id.removal_strategy or 'fifo'
+        categ = product.categ_id
+        categs = [categ.id, False]
+        while categ.parent_id:
+            categ = categ.parent_id
+            categs.append(categ.id)
 
+        result = pr.search(cr,uid, [
+            ('location_id', '=', id),
+            ('category_ids', 'in', categs)
+        ], context=context)
+        if result:
+            return pr.browse(cr, uid, result[0], context=context)
         return super(stock_location, self).get_removal_strategy(cr, uid, id, product_id, context=context)
 
-    
-    def chained_location_get(self, cr, uid, location, partner=None, product=None, context=None):
-        if product:
-            for path in product.path_ids:
-                if path.location_from_id.id == location.id:
-                    return path.location_dest_id, path.auto, path.delay, path.journal_id and path.journal_id.id or False, path.company_id and path.company_id.id or False, path.picking_type, path.invoice_state
-        return super(stock_location, self).chained_location_get(cr, uid, location, partner, product, context)
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

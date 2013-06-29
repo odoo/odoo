@@ -202,36 +202,29 @@ class product_product(osv.osv):
         It will return all stock locations when no parameters are given
         Possible parameters are shop, warehouse, location, force_company, compute_child
         '''
-        if context is None:
-            context = {}
+        context = context or {}
+
         location_obj = self.pool.get('stock.location')
         warehouse_obj = self.pool.get('stock.warehouse')
-        shop_obj = self.pool.get('sale.shop')
-        if context.get('shop', False):
-            warehouse_id = shop_obj.read(cr, uid, int(context['shop']), ['warehouse_id'])['warehouse_id'][0]
-            if warehouse_id:
-                context['warehouse'] = warehouse_id
 
-        if context.get('warehouse', False):
-            lot_id = warehouse_obj.read(cr, uid, int(context['warehouse']), ['lot_stock_id'])['lot_stock_id'][0]
-            if lot_id:
-                context['location'] = lot_id
-
+        location_ids = []
         if context.get('location', False):
             if type(context['location']) == type(1):
                 location_ids = [context['location']]
             elif type(context['location']) in (type(''), type(u'')):
+                domain = [('name','ilike',context['location'])]
                 if context.get('force_company', False):
-                    location_ids = location_obj.search(cr, uid, [('name','ilike',context['location']), ('company_id', '=', context['force_company'])], context=context)
-                else:
-                    location_ids = location_obj.search(cr, uid, [('name','ilike',context['location'])], context=context)
+                    domain += [('company_id', '=', context['force_company'])]
+                location_ids = location_obj.search(cr, uid, domain, context=context)
             else:
                 location_ids = context['location']
         else:
-            location_ids = []
-            wids = warehouse_obj.search(cr, uid, [], context=context)
-            if not wids:
-                return False
+            if context.get('warehouse', False):
+                wh = warehouse_obj.browse(cr, uid, [context['warehouse']], context=context)
+            else:
+                wids = warehouse_obj.search(cr, uid, [], context=context)
+                wh = warehouse_obj.browse(cr, uid, wids, context=context)
+
             for w in warehouse_obj.browse(cr, uid, wids, context=context):
                 if not context.get('force_company', False) or w.lot_stock_id.company_id.id == context['force_company']:
                     location_ids.append(w.lot_stock_id.id)
@@ -245,7 +238,6 @@ class product_product(osv.osv):
             location_ids = child_location_ids or location_ids
         return location_ids
 
-
     def _get_date_query(self, cr, uid, ids, context):
         '''
             Parses the context and returns the dates query string needed to be processed in _get_product_available
@@ -255,7 +247,6 @@ class product_product(osv.osv):
         to_date = context.get('to_date',False)
         date_str = False
         whereadd = []
-        
         if from_date and to_date:
             date_str = "date>=%s and date<=%s"
             whereadd.append(tuple([from_date]))
@@ -267,9 +258,6 @@ class product_product(osv.osv):
             date_str = "date<=%s"
             whereadd.append(tuple([to_date]))
         return (whereadd, date_str)
-
-
-
 
     def get_product_available(self, cr, uid, ids, context=None):
         """ Finds the quantity available of product(s) depending on parameters in the context
@@ -570,11 +558,21 @@ class product_template(osv.osv):
         'sale_delay': 7,
     }
 
-class product_category(osv.osv):
 
+# TODO: move this on stock module
+
+class product_removal_strategy(osv.osv):
+    _name = 'product.removal'
+    _description = 'Removal Strategy'
+    _columns = {
+        'categ_ids':fields.one2many('product.category','removal_strategy_id', 'Product Categories', required=True),
+        'method': fields.selection([('fifo', 'FIFO'), ('lifo', 'LIFO')], "Method", required=True), 
+    }
+
+class product_category(osv.osv):
     _inherit = 'product.category'
     _columns = {
-        'removal_strategy': fields.selection([('fifo', 'FIFO'), ('lifo', 'LIFO'), ('nearest', 'Nearest Location')], "Standard Removal Strategy"),
+        'removal_strategy_id': fields.many2one('product.removal', 'Removal Strategy'),
         'property_stock_journal': fields.property(
             relation='account.journal',
             type='many2one',

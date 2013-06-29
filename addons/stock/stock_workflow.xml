@@ -69,7 +69,7 @@
         <record id="trans_assigned_move" model="workflow.transition">
             <field name="act_from" ref="act_assigned"/>
             <field name="act_to" ref="act_move"/>
-            <field name="condition">auto_picking and test_auto_picking()</field>
+            <field name="condition">auto_picking</field>
         </record>
         <record id="trans_assigned_move2" model="workflow.transition">
             <field name="act_from" ref="act_assigned"/>
@@ -89,7 +89,7 @@
         <record id="trans_assigned_cancel" model="workflow.transition">
             <field name="act_from" ref="act_assigned"/>
             <field name="act_to" ref="act_cancel"/>
-             <field name="condition">allow_cancel()</field>
+             <field name="condition">True</field>
             <field name="signal">button_cancel</field>
         </record>
         <record id="trans_confirmed_cancel" model="workflow.transition">

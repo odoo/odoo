@@ -22,18 +22,6 @@
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 
-class stock_move(osv.osv):
-    _inherit = 'stock.move'
-    _columns = {
-        'sale_line_id': fields.many2one('sale.order.line', 'Sales Order Line', ondelete='set null', select=True, readonly=True),
-    }
-
-    def _prepare_chained_picking(self, cr, uid, picking_name, picking, picking_type, moves_todo, context=None):
-        values = super(stock_move, self)._prepare_chained_picking(cr, uid, picking_name, picking, picking_type, moves_todo, context=context)
-        if picking.sale_id:
-            values['sale_id'] = picking.sale_id.id
-        return values
-
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
     _columns = {
