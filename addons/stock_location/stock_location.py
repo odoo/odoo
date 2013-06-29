@@ -168,8 +168,7 @@ class stock_move(osv.osv):
         location_obj = self.pool.get("stock.location")
         quant_obj = self.pool.get("stock.quant")
         for move in self.browse(cr, uid, ids, context=context):
-            putaways = putaway_obj.search(cr, uid, [('product_categ_id','=', move.product_id.categ_id.id), ('location_id', '=', move.location_dest_id.id)], context=context)
-            print putaways
+            putaways = location_obj.get_putaway_strategy(cr, uid, move.location_dest_id.id, context=context)#putaway_obj.search(cr, uid, [('product_categ_id','=', move.product_id.categ_id.id), ('location_id', '=', move.location_dest_id.id)], context=context)
             if putaways: 
                 #Search for locations for PutAway
                 locs = location_obj.search(cr, uid, [('id', 'child_of', move.location_dest_id.id), ('id', '!=', move.location_dest_id.id), ('quant_ids', '=', False), 
@@ -193,11 +192,22 @@ class stock_location(osv.osv):
         'putaway_strategy_ids': fields.one2many('product.putaway', 'location_id', 'Put Away Strategies'),
         }
     
+    
+    def search_putaways(self, cr, uid, id, product_categ_id, context=None):
+        return self.pool.get('product.putaway').search(cr, uid, [('location_id','=',id), ('product_categ_id','=', product_categ_id)], context=context)
+    
 
     def get_putaway_strategy(self, cr, uid, id, product_id, context=None):
         product = self.pool.get("product.product").browse(cr, uid, product_id, context=context)
-        strats = self.pool.get('product.removal').search(cr, uid, [('location_id','=',id), ('product_categ_id','child_of', product.categ_id.id)], context=context) #Also child_of for location??? 
-        return strats and strats[0] or 'nearest'
+        strats = self.search_putaways(cr, uid, id, product.categ_id.id, context=context)
+        location = self.browse(cr, uid, id, context=context)
+        categ = product.categ_id
+        while not strats and categ.parent_id:
+            while not strats and location.location_id:
+                location = location.location_id
+                strats = self.search_putaways(cr, uid, location.id, categ.id, context=context)
+            categ = categ.parent_id
+        return strats and strats[0] or False
 
     def search_removals(self, cr, uid, id, product_categ_id, context=None):
         return self.pool.get('product.removal').search(cr, uid, [('location_id','=',id), ('product_categ_id','=', product_categ_id)], context=context)
