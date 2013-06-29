@@ -241,7 +241,7 @@ class view(osv.osv):
                 if not (view.groups_id and user_groups.isdisjoint(view.groups_id))]
 
     def raise_view_error(self, cr, uid, view_id, message, context=None):
-        view = self.browse(cr, uid, [view_id], context)
+        view = self.browse(cr, uid, [view_id], context)[0]
         message = "Inherit error: %s view_id: %s, xml_id: %s, model: %s, parent_view: %s" % (message, view_id, view.xml_id, view.model, view.inherit_id)
         raise AttributeError(message)
 
@@ -257,7 +257,6 @@ class view(osv.osv):
         :param arch: a parent architecture to modify
         :param spec: a modifying node in an inheriting view
         :return: a node in the source matching the spec
-
         """
         if spec.tag == 'xpath':
             nodes = arch.xpath(spec.get('expr'))
@@ -282,7 +281,20 @@ class view(osv.osv):
                 return node
         return None
 
-    def apply_inheritance_specs(self, cr, uid, source, specs_arch, inherit_id, context=None):
+    def inherit_branding(self, specs_tree, view_id, xpath="/"):
+        for node in specs_tree:
+            if node.tag == 'data' or node.tag == 'xpath':
+                node = self.inherit_branding(node, view_id, xpath + node.tag + '/')
+            else:
+                node.attrib.update({
+                    'data-oe-model': 'ir.ui.view',
+                    'data-oe-field': 'arch',
+                    'data-oe-view-id': str(view_id),
+                    'data-oe-xpath': xpath
+                })
+        return specs_tree
+
+    def apply_inheritance_specs(self, cr, uid, source, specs_tree, inherit_id, context=None):
         """ Apply an inheriting view (a descendant of the base view)
 
         Apply to a source architecture all the spec nodes (i.e. nodes
@@ -290,14 +302,11 @@ class view(osv.osv):
         architecture) given by an inheriting view.
 
         :param Element source: a parent architecture to modify
-        :param descendant_id: the database id of the descendant
-        :param specs_arch: a modifying architecture in an inheriting view
+        :param Elepect specs_tree: a modifying architecture in an inheriting view
+        :param inherit_id: the database id of specs_arch
         :return: a modified source where the specs are applied
         :rtype: Element
         """
-        if isinstance(specs_arch, unicode):
-            specs_arch = specs_arch.encode('utf-8')
-        specs_tree = etree.fromstring(specs_arch)
         # Queue of specification nodes (i.e. nodes describing where and
         # changes to apply to some parent architecture).
         specs = [specs_tree]
@@ -352,28 +361,20 @@ class view(osv.osv):
 
         return source
 
-    def add_root_tags(self, arch_tree, model, view_id):
-        for child in arch_tree:
-            if child.tag == 'data' or child.tag == 'xpath':
-                child = self.add_root_tags(child, model, view_id)
-            else:
-                child.attrib.update({
-                    'data-edit-model': model or 'undefined',
-                    'data-edit-view-id': str(view_id),
-                    'data-edit-xpath': '/'
-                })
-        return arch_tree
-
-    def apply_view_inheritance(self, cr, uid, source, inherit_id, context=None):
+    def apply_view_inheritance(self, cr, uid, source, source_id, context=None):
         """ Apply all the (directly and indirectly) inheriting views.
 
         :param source: a parent architecture to modify (with parent modifications already applied)
-        :param inherit_id: the database view_id of the parent view
+        :param source_id: the database view_id of the parent view
         :return: a modified source where all the modifying architecture are applied
         """
-        sql_inherit = self.pool.get('ir.ui.view').get_inheriting_views_arch(cr, uid, inherit_id)
-        for (view_arch, view_id) in sql_inherit:
-            source = self.apply_inheritance_specs(cr, uid, source, view_arch, view_id, context=context)
+        if context is None: context = {}
+        sql_inherit = self.pool.get('ir.ui.view').get_inheriting_views_arch(cr, uid, source_id)
+        for (specs, view_id) in sql_inherit:
+            specs_tree = etree.fromstring(specs.encode('utf-8'))
+            if context.get('inherit_branding'):
+                self.inherit_branding(specs_tree, view_id)
+            source = self.apply_inheritance_specs(cr, uid, source, specs_tree, view_id, context=context)
             source = self.apply_view_inheritance(cr, uid, source, view_id, context=context)
         return source
 
@@ -401,7 +402,14 @@ class view(osv.osv):
 
         # read the view arch 
         [view] = self.read(cr, uid, [root_id], fields=fields, context=context)
-        arch_tree = etree.fromstring( view['arch'].encode('utf-8') if isinstance(view['arch'], unicode) else view['arch'])
+        arch_tree = etree.fromstring(view['arch'].encode('utf-8'))
+
+        if context.get('inherit_branding'):
+            arch_tree.attrib.update({
+                'data-oe-model': 'ir.ui.view',
+                'data-oe-field': 'arch',
+                'data-oe-view-id': str(root_id),
+            })
 
         # and apply inheritance
         arch = self.apply_view_inheritance(cr, uid, arch_tree, root_id, context=context)
@@ -715,8 +723,9 @@ class view(osv.osv):
         return arch
 
     def read_template(self, cr, uid, id_, context=None):
-        from pprint import pprint as pp
-        pp(id_)
+        import pprint
+        pprint.pprint(id_)
+        pprint.pprint(context)
         try:
             id_ = int(id_)
         except ValueError:
@@ -741,9 +750,8 @@ class view(osv.osv):
                 except Exception:
                     raise ValueError('Invalid id: %r' % (id_,))
 
-        pp(id_)
-        r = self.read_combined(cr, uid, id_, fields=['arch'], view_type=None, model=None, context=context)
-        pp(r)
+        r = self.read_combined(cr, uid, id_, fields=['arch'], context=context)
+        pprint.pprint(r)
         return r['arch']
 
     def render(self, cr, uid, id_or_xml_id, values, context=None):
