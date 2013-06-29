@@ -634,27 +634,6 @@ class MetaModel(type):
         if not self._custom:
             self.module_to_models.setdefault(self._module, []).append(self)
 
-class FallbackViewMapping(collections.defaultdict):
-    def __init__(self, cr, uid, model, context=None):
-        super(FallbackViewMapping, self).__init__()
-        self.cr = cr
-        self.uid = uid
-        self.model = model
-        self.context = context
-
-    def __missing__(self, view_type):
-        try:
-            arch = getattr(self.model, '_get_default_%s_view' % view_type)(
-                self.cr, self.uid, self.context)
-        except AttributeError:
-            raise except_orm(_('Invalid Architecture!'), _("There is no view of type '%s' defined for the structure!") % view_type)
-        return {
-            'id': 0,
-            'type': view_type,
-            'name': 'default',
-            'field_parent': False,
-            'arch': arch,
-        }
 
 # Definition of log access columns, automatically added to models if
 # self._log_access is True
@@ -1796,15 +1775,12 @@ class BaseModel(object):
 
         return view
 
-    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         """
         Get the detailed composition of the requested view like fields, model, view architecture
 
-        :param cr: database cursor
-        :param user: current user id
         :param view_id: id of the view or None
         :param view_type: type of the view to return if view_id is None ('form', tree', ...)
-        :param context: context arguments, like lang, time zone
         :param toolbar: true to include contextual actions
         :param submenu: deprecated
         :return: dictionary describing the composition of the requested view (including inherited views and extensions)
@@ -1812,69 +1788,72 @@ class BaseModel(object):
                             * if the inherited view has unknown position to work with other than 'before', 'after', 'inside', 'replace'
                             * if some tag other than 'position' is found in parent view
         :raise Invalid ArchitectureError: if there is view type other than form, tree, calendar, search etc defined on the structure
-
         """
         if context is None:
             context = {}
         View = self.pool['ir.ui.view']
 
-        view_ref = context.get(view_type + '_view_ref')
-
-        if view_ref and not view_id and '.' in view_ref:
-            module, view_ref = view_ref.split('.', 1)
-            cr.execute("SELECT res_id FROM ir_model_data WHERE model='ir.ui.view' AND module=%s AND name=%s", (module, view_ref))
-            view_ref_res = cr.fetchone()
-            if view_ref_res:
-                view_id = view_ref_res[0]
-
-        root_view = View.read_combined(
-            cr, user, view_id, view_type, self._name, fields=[
-                'id', 'name', 'field_parent', 'type', 'model', 'arch'
-            ], fallback=FallbackViewMapping(cr, user, self, context=context),
-            context=context)
-
         result = {
             'model': self._name,
-            'arch': root_view['arch'],
-            'type': root_view['type'],
-            'view_id': root_view['id'],
-            'name': root_view['name'],
-            'field_parent': root_view['field_parent'] or False
+            'field_parent': False,
         }
 
+        # try to find a view_id if none provided
+        if not view_id:
+            # <view_type>_view_ref in context can be used to overrride the default view
+            view_ref = context.get(view_type + '_view_ref')
+            if view_ref and '.' in view_ref:
+                module, view_ref = view_ref.split('.', 1)
+                cr.execute("SELECT res_id FROM ir_model_data WHERE model='ir.ui.view' AND module=%s AND name=%s", (module, view_ref))
+                view_ref_res = cr.fetchone()
+                if view_ref_res:
+                    view_id = view_ref_res[0]
+            else:
+                # otherwise try to find the lowest priority matching ir.ui.view
+                view_id = View.default_view(cr, uid, self._name, view_type, context=context)
+
+        if view_id:
+            # read the view with inherited views applied
+            root_view = View.read_combined(cr, uid, view_id, fields=['id', 'name', 'field_parent', 'type', 'model', 'arch'], context=context)
+            result['arch'] = root_view['arch']
+            result['name'] = root_view['name']
+            result['type'] = root_view['type']
+            result['view_id'] = root_view['id']
+            result['field_parent'] = root_view['field_parent']
+        else:
+            # fallback on default views methods if no ir.ui.view could be found
+            try:
+                get_func = getattr(self, '_get_default_%s_view' % view_type)
+                arch_etree = get_func(self.cr, self.uid, self.context)
+                result['arch'] = etree.tostring(arch_etree, encoding='utf-8')
+                result['type'] = view_type
+                result['name'] = 'default'
+            except AttributeError:
+                raise except_orm(_('Invalid Architecture!'), _("No default view of type '%s' could be found !") % view_type)
+
+        # Apply post processing, groups and modifiers etc...
         ctx = context
         if root_view.get('model') != self._name:
             ctx = dict(context, base_model_name=root_view.get('model'))
-        xarch, xfields = View._view__view_look_dom_arch(
-            cr, user, self._name, etree.fromstring(result['arch']),
-            result['view_id'], context=ctx)
+        xarch, xfields = View.postprocess_and_fields( cr, uid, self._name, etree.fromstring(result['arch']), result['view_id'], context=ctx)
         result['arch'] = xarch
         result['fields'] = xfields
 
+        # Add related action information if aksed
         if toolbar:
+            toclean = ('report_sxw_content', 'report_rml_content', 'report_sxw', 'report_rml', 'report_sxw_content_data', 'report_rml_content_data')
             def clean(x):
                 x = x[2]
-                for key in ('report_sxw_content', 'report_rml_content',
-                        'report_sxw', 'report_rml',
-                        'report_sxw_content_data', 'report_rml_content_data'):
+                for key in toclean:
                     if key in x:
                         del x[key]
                 return x
             ir_values_obj = self.pool.get('ir.values')
-            resprint = ir_values_obj.get(cr, user, 'action',
-                    'client_print_multi', [(self._name, False)], False,
-                    context)
-            resaction = ir_values_obj.get(cr, user, 'action',
-                    'client_action_multi', [(self._name, False)], False,
-                    context)
-
-            resrelate = ir_values_obj.get(cr, user, 'action',
-                    'client_action_relate', [(self._name, False)], False,
-                    context)
-            resaction = [clean(action) for action in resaction
-                         if view_type == 'tree' or not action[2].get('multi')]
-            resprint = [clean(print_) for print_ in resprint
-                        if view_type == 'tree' or not print_[2].get('multi')]
+            resprint = ir_values_obj.get(cr, uid, 'action', 'client_print_multi', [(self._name, False)], False, context)
+            resaction = ir_values_obj.get(cr, uid, 'action', 'client_action_multi', [(self._name, False)], False, context)
+            resrelate = ir_values_obj.get(cr, uid, 'action', 'client_action_relate', [(self._name, False)], False, context)
+            resaction = [clean(action) for action in resaction if view_type == 'tree' or not action[2].get('multi')]
+            resprint = [clean(print_) for print_ in resprint if view_type == 'tree' or not print_[2].get('multi')]
             #When multi="True" set it will display only in More of the list view
             resrelate = [clean(action) for action in resrelate
                          if (action[2].get('multi') and view_type == 'tree') or (not action[2].get('multi') and view_type == 'form')]
@@ -1890,7 +1869,7 @@ class BaseModel(object):
         return result
 
     def _view_look_dom_arch(self, cr, uid, node, view_id, context=None):
-        return self['ir.ui.view']._view__view_look_dom_arch(
+        return self['ir.ui.view'].postprocess_and_fields(
             cr, uid, self._name, node, view_id, context=context)
 
     def search_count(self, cr, user, args, context=None):
@@ -3044,31 +3023,6 @@ class BaseModel(object):
                 _logger.warning('Field definition for _inherits reference "%s" in "%s" must be marked as "required" with ondelete="cascade" or "restrict", forcing it to required + cascade.', field_name, self._name)
                 self._columns[field_name].required = True
                 self._columns[field_name].ondelete = "cascade"
-
-    #def __getattr__(self, name):
-    #    """
-    #    Proxies attribute accesses to the `inherits` parent so we can call methods defined on the inherited parent
-    #    (though inherits doesn't use Python inheritance).
-    #    Handles translating between local ids and remote ids.
-    #    Known issue: doesn't work correctly when using python's own super(), don't involve inherit-based inheritance
-    #                 when you have inherits.
-    #    """
-    #    for model, field in self._inherits.iteritems():
-    #        proxy = self.pool.get(model)
-    #        if hasattr(proxy, name):
-    #            attribute = getattr(proxy, name)
-    #            if not hasattr(attribute, '__call__'):
-    #                return attribute
-    #            break
-    #    else:
-    #        return super(orm, self).__getattr__(name)
-
-    #    def _proxy(cr, uid, ids, *args, **kwargs):
-    #        objects = self.browse(cr, uid, ids, kwargs.get('context', None))
-    #        lst = [obj[field].id for obj in objects if obj[field]]
-    #        return getattr(proxy, name)(cr, uid, lst, *args, **kwargs)
-
-    #    return _proxy
 
 
     def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
@@ -4911,6 +4865,32 @@ class BaseModel(object):
         """ stuff to do right after the registry is built """
         pass
 
+
+    #def __getattr__(self, name):
+    #    """
+    #    Proxies attribute accesses to the `inherits` parent so we can call methods defined on the inherited parent
+    #    (though inherits doesn't use Python inheritance).
+    #    Handles translating between local ids and remote ids.
+    #    Known issue: doesn't work correctly when using python's own super(), don't involve inherit-based inheritance
+    #                 when you have inherits.
+    #    """
+    #    for model, field in self._inherits.iteritems():
+    #        proxy = self.pool.get(model)
+    #        if hasattr(proxy, name):
+    #            attribute = getattr(proxy, name)
+    #            if not hasattr(attribute, '__call__'):
+    #                return attribute
+    #            break
+    #    else:
+    #        return super(orm, self).__getattr__(name)
+
+    #    def _proxy(cr, uid, ids, *args, **kwargs):
+    #        objects = self.browse(cr, uid, ids, kwargs.get('context', None))
+    #        lst = [obj[field].id for obj in objects if obj[field]]
+    #        return getattr(proxy, name)(cr, uid, lst, *args, **kwargs)
+
+    #    return _proxy
+
     def __getattr__(self, name):
         if name.startswith('signal_'):
             signal_name = name[len('signal_'):]
@@ -4976,11 +4956,11 @@ def itemgetter_tuple(items):
     if len(items) == 1:
         return lambda gettable: (gettable[items[0]],)
     return operator.itemgetter(*items)
+
 class ImportWarning(Warning):
     """ Used to send warnings upwards the stack during the import process
     """
     pass
-
 
 def convert_pgerror_23502(model, fields, info, e):
     m = re.match(r'^null value in column "(?P<field>\w+)" violates '
@@ -4997,6 +4977,7 @@ def convert_pgerror_23502(model, fields, info, e):
         'message': message,
         'field': field_name,
     }
+
 def convert_pgerror_23505(model, fields, info, e):
     m = re.match(r'^duplicate key (?P<field>\w+) violates unique constraint',
                  str(e))

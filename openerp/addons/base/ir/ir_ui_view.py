@@ -57,19 +57,6 @@ class view_custom(osv.osv):
 class view(osv.osv):
     _name = 'ir.ui.view'
 
-    class NoViewError(Exception): pass
-    class NoDefaultError(NoViewError): pass
-
-    def _type_field(self, cr, uid, ids, name, args, context=None):
-        result = {}
-        for record in self.browse(cr, uid, ids, context):
-            # Get the type from the inherited view if any.
-            if record.inherit_id:
-                result[record.id] = record.inherit_id.type
-            else:
-                result[record.id] = etree.fromstring(record.arch.encode('utf8')).tag
-        return result
-
     def _arch_get(self, cr, uid, ids, name, arg, context=None):
         """
         For each id being read, return arch_db or the content of arch_file
@@ -130,17 +117,6 @@ class view(osv.osv):
     # Holds the RNG schema
     _relaxng_validator = None
 
-    def create(self, cr, uid, values, context=None):
-        if 'type' not in values:
-            if values.get('inherit_id'):
-                values['type'] = self.browse(cr, uid, values['inherit_id'], context).type
-            else:
-                values['type'] = etree.fromstring(values['arch']).tag
-
-        if not values.get('name'):
-            values['name'] = "%s %s" % (values['model'], values['type'])
-        return super(view, self).create(cr, uid, values, context)
-
     def _relaxng(self):
         if not self._relaxng_validator:
             frng = tools.file_open(os.path.join('base','rng','view.rng'))
@@ -157,7 +133,7 @@ class view(osv.osv):
         for view in self.browse(cr, uid, ids, context):
             # Sanity check: the view should not break anything upon rendering!
             try:
-                fvg = self.read_combined(cr, uid, view.id, view.type, view.model, context=context)
+                fvg = self.read_combined(cr, uid, view.id, None, context=context)
                 view_arch_utf8 = fvg['arch']
             except Exception, e:
                 _logger.exception(e)
@@ -179,15 +155,8 @@ class view(osv.osv):
                     return False
         return True
 
-    def _check_model(self, cr, uid, ids, context=None):
-        for view in self.browse(cr, uid, ids, context):
-            if view.model and view.model not in self.pool:
-                return False
-        return True
-
     _constraints = [
         (_check_xml, 'Invalid XML for View Architecture!', ['arch'])
-        #(_check_model, 'The model name does not exist.', ['model']),
     ]
 
     def _auto_init(self, cr, context=None):
@@ -196,107 +165,85 @@ class view(osv.osv):
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_ui_view_model_type_inherit_id ON ir_ui_view (model, inherit_id)')
 
-    def read_combined(self, cr, uid, view_id, view_type, model,
-                      fields=None, fallback=None, context=None):
+    def create(self, cr, uid, values, context=None):
+        if 'type' not in values:
+            if values.get('inherit_id'):
+                values['type'] = self.browse(cr, uid, values['inherit_id'], context).type
+            else:
+                values['type'] = etree.fromstring(values['arch']).tag
+
+        if not values.get('name'):
+            values['name'] = "%s %s" % (values['model'], values['type'])
+        return super(view, self).create(cr, uid, values, context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if not isinstance(ids, (list, tuple)):
+            ids = [ids]
+
+        # drop the corresponding view customizations (used for dashboards for example), otherwise
+        # not all users would see the updated views
+        custom_view_ids = self.pool.get('ir.ui.view.custom').search(cr, uid, [('ref_id','in',ids)])
+        if custom_view_ids:
+            self.pool.get('ir.ui.view.custom').unlink(cr, uid, custom_view_ids)
+
+        return super(view, self).write(cr, uid, ids, vals, context)
+
+    # default view selection
+
+    def default_view(self, cr, uid, model, view_type, context=None):
+        """ Fetches the default view for the provided (model, view_type) pair:
+         view with no parent (inherit_id=Fase) with the lowest priority.
+
+        :param str model:
+        :param int view_type:
+        :return: id of the default view of False if none found
+        :rtype: int
         """
-        Utility function stringing together all method calls necessary to get
-        a full, final view:
+        ids = self.search(cr, uid, [
+            ['model', '=', model],
+            ['type', '=', view_type],
+            ['inherit_id', '=', False],
+        ], limit=1, order='priority', context=context)
+        if not ids:
+            return False
+        return ids[0] 
 
-        * Gets the default view if no view_id is provided
-        * Gets the top of the view tree if a sub-view is requested
-        * Applies all inherited archs on the root view
-        * Applies post-processing
-        * Returns the view with all requested fields
+    # inheritance
 
-          .. note:: ``arch`` is always added to the fields list even if not
-                    requested (similar to ``id``)
+    def get_inheriting_views_arch(self, cr, uid, view_id, context=None):
+        """Retrieves the architecture of views that inherit from the given view, from the sets of
+           views that should currently be used in the system. During the module upgrade phase it
+           may happen that a view is present in the database but the fields it relies on are not
+           fully loaded yet. This method only considers views that belong to modules whose code
+           is already loaded. Custom views defined directly in the database are loaded only
+           after the module initialization phase is completely finished.
 
-        If no view is available (no view_id or invalid view_id provided, or
-        no view stored for (model, view_type)) a view record will be fetched
-        from the ``defaults`` mapping?
-
-        :param fallback: a mapping of {view_type: view_dict}, if no view can
-                         be found (read) will be used to provide a default
-                         before post-processing
-        :type fallback: mapping
+           :param int view_id: id of the view whose inheriting views should be retrieved
+           :param str model: model identifier of the view's related model (for double-checking)
+           :rtype: list of tuples
+           :return: [(view_arch,view_id), ...]
         """
-        if context is None: context = {}
+        user_groups = frozenset(self.pool.get('res.users').browse(cr, 1, uid, context).groups_id)
 
-        def clean_anotations(arch, parent_info=None):
-            for child in arch:
-                if child.tag == 't' or child.tag == 'field':
-                    # can not anote t and field while cleaning
-                    continue
+        conditions = [['inherit_id', '=', view_id]]
+        if self.pool._init:
+            # Module init currently in progress, only consider views from
+            # modules whose code is already loaded
+            conditions.extend([
+                ['model_ids.model', '=', 'ir.ui.view'],
+                ['model_ids.module', 'in', tuple(self.pool._init_modules)],
+            ])
+        view_ids = self.search(cr, uid, conditions, context=context)
 
-                child_text = "".join([etree.tostring(x) for x in child])
-                if child.attrib.get('data-edit-model'):
-                    if child_text.find('data-edit-model') != -1 or child_text.find('<t ') != -1:
-                        # enclosed tag, move present tag to childs
-                        parent_info = {
-                            'model': child.attrib.get('data-edit-model'),
-                            'view_id': child.attrib.get('data-edit-view-id'),
-                            'xpath': child.attrib.get('data-edit-xpath')+'/'+child.tag,
-                        }
-                        child.attrib.pop('data-edit-model')
-                        child.attrib.pop('data-edit-view-id')
-                        child.attrib.pop('data-edit-xpath')
-                        child = clean_anotations(child, parent_info)
-                    else:
-                        # tagged node, no enclosed, can keep, don't care if had parent_info
-                        continue
+        # filter views based on user groups
+        return [(view.arch, view.id)
+                for view in self.browse(cr, 1, view_ids, context)
+                if not (view.groups_id and user_groups.isdisjoint(view.groups_id))]
 
-                else:
-                    if child_text.find('data-edit-model') != -1 or child_text.find('<t ') != -1:
-                        # has other nodes to clean
-                        if parent_info:
-                            # update xpath
-                            parent_info.update({'xpath': parent_info.get('xpath')+'/'+child.tag})
-                        child = clean_anotations(child, parent_info)
-                    elif parent_info:
-                        # put tag from parent, no enclose, higher
-                        child.attrib.update({
-                            'data-edit-model': parent_info.get('model'),
-                            'data-edit-view-id': parent_info.get('view_id'),
-                            'data-edit-xpath': parent_info.get('xpath'),
-                        })
-
-            return arch
-
-        try:
-            if not view_id:
-                view_id = self.default_view(cr, uid, model, view_type, context=context)
-            root_id = self.root_ancestor(cr, uid, view_id, context=context)
-
-            if fields:
-                needed_fields = ['arch', 'model']
-                fields = list(itertools.chain(
-                    [field for field in needed_fields if field not in fields],
-                    fields))
-
-            [view] = self.read(cr, uid, [root_id], fields=fields, context=context)
-
-            arch_tree = etree.fromstring(
-                view['arch'].encode('utf-8') if isinstance(view['arch'], unicode)
-                else view['arch'])
-
-            descendants = self.iter(
-                cr, uid, view['id'], model, exclude_base=True, context=context)
-            arch = self.apply_inherited_archs(
-                cr, uid, arch_tree, descendants,
-                model, view['id'], context=context)
-            arch = self.add_root_tags(arch, model, view['id'])
-
-        except self.NoViewError:
-            # defaultdict is "empty" until first __getattr__
-            if fallback is None: raise
-            view = fallback[view_type]
-            arch = view['arch']
-            if isinstance(arch, basestring):
-                arch = etree.fromstring(
-                    arch.encode('utf-8') if isinstance(arch, unicode) else arch)
-
-        arch = clean_anotations(arch)
-        return dict(view, arch=etree.tostring(arch, encoding='utf-8'))
+    def raise_view_error(self, cr, uid, view_id, message, context=None):
+        view = self.browse(cr, uid, [view_id], context)
+        message = "Inherit error: %s view_id: %s, xml_id: %s, model: %s, parent_view: %s" % (message, view_id, view.xml_id, view.model, view.inherit_id)
+        raise AttributeError(message)
 
     def locate_node(self, arch, spec):
         """ Locate a node in a source (parent) architecture.
@@ -335,144 +282,7 @@ class view(osv.osv):
                 return node
         return None
 
-    def get_inheriting_views_arch(self, cr, uid, view_id, model, context=None):
-        """Retrieves the architecture of views that inherit from the given view, from the sets of
-           views that should currently be used in the system. During the module upgrade phase it
-           may happen that a view is present in the database but the fields it relies on are not
-           fully loaded yet. This method only considers views that belong to modules whose code
-           is already loaded. Custom views defined directly in the database are loaded only
-           after the module initialization phase is completely finished.
-
-           :param int view_id: id of the view whose inheriting views should be retrieved
-           :param str model: model identifier of the view's related model (for double-checking)
-           :rtype: list of tuples
-           :return: [(view_arch,view_id), ...]
-        """
-        user_groups = frozenset(self.pool.get('res.users').browse(cr, 1, uid, context).groups_id)
-
-        conditions = [['inherit_id', '=', view_id], ['model', '=', model]]
-        if self.pool._init:
-            # Module init currently in progress, only consider views from
-            # modules whose code is already loaded
-            conditions.extend([
-                ['model_ids.model', '=', 'ir.ui.view'],
-                ['model_ids.module', 'in', tuple(self.pool._init_modules)],
-            ])
-        view_ids = self.search(cr, uid, conditions, context=context)
-
-        # filter views based on user groups
-        return [(view.arch, view.id)
-                for view in self.browse(cr, 1, view_ids, context)
-                if not (view.groups_id and user_groups.isdisjoint(view.groups_id))]
-
-    def add_root_tags(self, arch_tree, model, view_id):
-        for child in arch_tree:
-            if child.tag == 'data' or child.tag == 'xpath':
-                child = self.add_root_tags(child, model, view_id)
-            else:
-                child.attrib.update({
-                    'data-edit-model': model or 'undefined',
-                    'data-edit-view-id': str(view_id),
-                    'data-edit-xpath': '/'
-                })
-        return arch_tree
-
-    def iter(self, cr, uid, view_id, model, exclude_base=False, context=None):
-        """ iterates on all of ``view_id``'s descendants tree depth-first.
-
-        If ``exclude_base`` is ``False``, also yields ``view_id`` itself. It is
-        ``False`` by default to match the behavior of etree's Element.iter.
-
-        :param int view_id: database id of the root view
-        :param str model: name of the view's related model (for filtering)
-        :param bool exclude_base: whether ``view_id`` should be excluded
-                                  from the iteration
-        :return: iterator of (database_id, arch_string) pairs for all
-                 descendants of ``view_id`` (including ``view_id`` itself if
-                 ``exclude_base`` is ``False``, the default)
-        """
-
-        if not exclude_base:
-            base = self.browse(cr, uid, view_id, context=context)
-            # should we do add_root_tags this one as well ?
-            yield base.id, base.arch
-
-        for arch, id in self.get_inheriting_views_arch(
-                cr, uid, view_id, model, context=context):
-            arch = self.add_root_tags(etree.fromstring(arch), model, view_id)
-            yield id, etree.tostring(arch)
-            for info in self.iter(
-                    cr, uid, id, model, exclude_base=True, context=None):
-                yield info
-
-    def default_view(self, cr, uid, model, view_type, context=None):
-        """ Fetches the default view for the provided (model, view_type) pair:
-         view with no parent (inherit_id=Fase) with the lowest priority.
-
-        :param str model:
-        :param int view_type:
-        :return: id of the default view for the (model, view_type) pair
-        :rtype: int
-        """
-        ids = self.search(cr, uid, [
-            ['model', '=', model],
-            ['type', '=', view_type],
-            ['inherit_id', '=', False],
-        ], limit=1, order='priority', context=context)
-        if not ids:
-            raise self.NoDefaultError(
-                _("No default view of type %s for model %s") % (
-                    view_type, model))
-        return ids[0]
-
-    def root_ancestor(self, cr, uid, view_id, context=None):
-        """
-        Fetches the id of the root of the view tree of which view_id is part
-
-        If view_id is specified, view_type and model aren't needed (and the
-        other way around)
-
-        :param view_id: id of view to search the root ancestor of
-        :return: id of the root view for the tree
-        """
-        view = self.browse(cr, uid, view_id, context=context)
-        if not view.exists():
-            raise self.NoViewError(
-                _("No view for id %s, root ancestor not available") % view_id)
-
-        # Search for a root (i.e. without any parent) view.
-        while view.inherit_id:
-            view = view.inherit_id
-
-        return view.id
-
-    def apply_inherited_archs(self, cr, uid, source, descendants,
-                              model, source_view_id, context=None):
-        """ Applies descendants to the ``source`` view, returns the result of
-        the application.
-
-        :param Element source: source arch to apply descendant on
-        :param descendants: iterable of (id, arch_string) pairs of all
-                            descendants in the view tree, depth-first,
-                            excluding the base view
-        :type descendants: iter((int, str))
-        :return: new architecture etree produced by applying all descendants
-                 on ``source``
-        :rtype: Element
-        """
-        return reduce(
-            lambda current_arch, descendant: self.apply_inheritance_specs(
-                cr, uid, model, source_view_id, current_arch,
-                *descendant, context=context),
-            descendants, source)
-
-    def raise_view_error(self, cr, uid, model, error_msg, view_id, child_view_id, context=None):
-        view, child_view = self.browse(cr, uid, [view_id, child_view_id], context)
-        error_msg = error_msg % {'parent_xml_id': view.xml_id}
-        raise AttributeError("View definition error for inherited view '%s' on model '%s': %s"
-                             %  (child_view.xml_id, model, error_msg))
-
-    def apply_inheritance_specs(self, cr, uid, model, root_view_id, source, descendant_id, specs_arch, context=None):
+    def apply_inheritance_specs(self, cr, uid, source, specs_arch, inherit_id, context=None):
         """ Apply an inheriting view (a descendant of the base view)
 
         Apply to a source architecture all the spec nodes (i.e. nodes
@@ -530,7 +340,7 @@ class view(osv.osv):
                         elif pos == 'before':
                             node.addprevious(child)
                         else:
-                            self.raise_view_error(cr, uid, model, "Invalid position value: '%s'" % pos, root_view_id, descendant_id, context=context)
+                            self.raise_view_error(cr, uid, "Invalid position value: '%s'" % pos, inherit_id, context=context)
             else:
                 attrs = ''.join([
                     ' %s="%s"' % (attr, spec.get(attr))
@@ -538,94 +348,69 @@ class view(osv.osv):
                     if attr != 'position'
                 ])
                 tag = "<%s%s>" % (spec.tag, attrs)
-                if spec.get('version') and spec.get('version') != source.get('version'):
-                    self.raise_view_error(cr, uid, model, "Mismatching view API version for element '%s': %r vs %r in parent view '%%(parent_xml_id)s'" % \
-                                        (tag, spec.get('version'), source.get('version')), root_view_id, descendant_id, context=context)
-                self.raise_view_error(cr, uid, model, "Element '%s' not found in parent view '%%(parent_xml_id)s'" % tag, root_view_id, descendant_id, context=context)
+                self.raise_view_error(cr, uid, "Element '%s' not found in parent view " % tag, inherit_id, context=context)
 
         return source
 
-    def write(self, cr, uid, ids, vals, context=None):
-        if not isinstance(ids, (list, tuple)):
-            ids = [ids]
-
-        # drop the corresponding view customizations (used for dashboards for example), otherwise
-        # not all users would see the updated views
-        custom_view_ids = self.pool.get('ir.ui.view.custom').search(cr, uid, [('ref_id','in',ids)])
-        if custom_view_ids:
-            self.pool.get('ir.ui.view.custom').unlink(cr, uid, custom_view_ids)
-
-        return super(view, self).write(cr, uid, ids, vals, context)
-
-    def graph_get(self, cr, uid, id, model, node_obj, conn_obj, src_node, des_node, label, scale, context=None):
-        nodes=[]
-        nodes_name=[]
-        transitions=[]
-        start=[]
-        tres={}
-        labels={}
-        no_ancester=[]
-        blank_nodes = []
-
-        _Model_Obj = self.pool[model]
-        _Node_Obj = self.pool[node_obj]
-        _Arrow_Obj = self.pool[conn_obj]
-
-        for model_key,model_value in _Model_Obj._columns.items():
-                if model_value._type=='one2many':
-                    if model_value._obj==node_obj:
-                        _Node_Field=model_key
-                        _Model_Field=model_value._fields_id
-                    flag=False
-                    for node_key,node_value in _Node_Obj._columns.items():
-                        if node_value._type=='one2many':
-                             if node_value._obj==conn_obj:
-                                 if src_node in _Arrow_Obj._columns and flag:
-                                    _Source_Field=node_key
-                                 if des_node in _Arrow_Obj._columns and not flag:
-                                    _Destination_Field=node_key
-                                    flag = True
-
-        datas = _Model_Obj.read(cr, uid, id, [],context)
-        for a in _Node_Obj.read(cr,uid,datas[_Node_Field],[]):
-            if a[_Source_Field] or a[_Destination_Field]:
-                nodes_name.append((a['id'],a['name']))
-                nodes.append(a['id'])
+    def add_root_tags(self, arch_tree, model, view_id):
+        for child in arch_tree:
+            if child.tag == 'data' or child.tag == 'xpath':
+                child = self.add_root_tags(child, model, view_id)
             else:
-                blank_nodes.append({'id': a['id'],'name':a['name']})
+                child.attrib.update({
+                    'data-edit-model': model or 'undefined',
+                    'data-edit-view-id': str(view_id),
+                    'data-edit-xpath': '/'
+                })
+        return arch_tree
 
-            if a.has_key('flow_start') and a['flow_start']:
-                start.append(a['id'])
-            else:
-                if not a[_Source_Field]:
-                    no_ancester.append(a['id'])
-            for t in _Arrow_Obj.read(cr,uid, a[_Destination_Field],[]):
-                transitions.append((a['id'], t[des_node][0]))
-                tres[str(t['id'])] = (a['id'],t[des_node][0])
-                label_string = ""
-                if label:
-                    for lbl in eval(label):
-                        if t.has_key(tools.ustr(lbl)) and tools.ustr(t[lbl])=='False':
-                            label_string += ' '
-                        else:
-                            label_string = label_string + " " + tools.ustr(t[lbl])
-                labels[str(t['id'])] = (a['id'],label_string)
-        g  = graph(nodes, transitions, no_ancester)
-        g.process(start)
-        g.scale(*scale)
-        result = g.result_get()
-        results = {}
-        for node in nodes_name:
-            results[str(node[0])] = result[node[0]]
-            results[str(node[0])]['name'] = node[1]
-        return {'nodes': results,
-                'transitions': tres,
-                'label' : labels,
-                'blank_nodes': blank_nodes,
-                'node_parent_field': _Model_Field,}
+    def apply_view_inheritance(self, cr, uid, source, inherit_id, context=None):
+        """ Apply all the (directly and indirectly) inheriting views.
 
-    # this really needs to be refixtored
-    def __view_look_dom(self, cr, user, model, node, view_id, in_tree_view, model_fields, context=None):
+        :param source: a parent architecture to modify (with parent modifications already applied)
+        :param inherit_id: the database view_id of the parent view
+        :return: a modified source where all the modifying architecture are applied
+        """
+        sql_inherit = self.pool.get('ir.ui.view').get_inheriting_views_arch(cr, uid, inherit_id)
+        for (view_arch, view_id) in sql_inherit:
+            source = self.apply_inheritance_specs(cr, uid, source, view_arch, view_id, context=context)
+            source = self.apply_view_inheritance(cr, uid, source, view_id, context=context)
+        return source
+
+    def read_combined(self, cr, uid, view_id, fields=None, context=None):
+        """
+        Utility function to get a view combined with its inherited views.
+
+        * Gets the top of the view tree if a sub-view is requested
+        * Applies all inherited archs on the root view
+        * Returns the view with all requested fields
+          .. note:: ``arch`` is always added to the fields list even if not
+                    requested (similar to ``id``)
+        """
+        if context is None: context = {}
+
+        # if view_id is not a root view, climb back to the top.
+        v = self.browse(cr, uid, view_id, context=context)
+        while v.inherit_id:
+            v = v.inherit_id
+        root_id = v.id
+
+        # arch and model fields are always returned
+        if fields:
+            fields = list(set(fields) | set(['arch', 'model']))
+
+        # read the view arch 
+        [view] = self.read(cr, uid, [root_id], fields=fields, context=context)
+        arch_tree = etree.fromstring( view['arch'].encode('utf-8') if isinstance(view['arch'], unicode) else view['arch'])
+
+        # and apply inheritance
+        arch = self.apply_view_inheritance(cr, uid, arch_tree, root_id, context=context)
+
+        return dict(view, arch=etree.tostring(arch, encoding='utf-8'))
+
+    # post processing
+
+    def postprocess(self, cr, user, model, node, view_id, in_tree_view, model_fields, context=None):
         """Return the description of the fields in the node.
 
         In a normal call to this method, node is a complete view architecture
@@ -692,7 +477,7 @@ class view(osv.osv):
                 new_xml = etree.fromstring(encode(xml))
                 ctx = context.copy()
                 ctx['base_model_name'] = model
-                xarch, xfields = self.__view_look_dom_arch(cr, user, node.get('object'), new_xml, view_id, ctx)
+                xarch, xfields = self.postprocess_and_fields(cr, user, node.get('object'), new_xml, view_id, ctx)
                 views['form'] = {
                     'arch': xarch,
                     'fields': xfields
@@ -719,7 +504,7 @@ class view(osv.osv):
                             node.remove(f)
                             ctx = context.copy()
                             ctx['base_model_name'] = Model
-                            xarch, xfields = self.__view_look_dom_arch(cr, user, column._obj or None, f, view_id, ctx)
+                            xarch, xfields = self.postprocess_and_fields(cr, user, column._obj or None, f, view_id, ctx)
                             views[str(f.tag)] = {
                                 'arch': xarch,
                                 'fields': xfields
@@ -803,7 +588,7 @@ class view(osv.osv):
 
         for f in node:
             if children or (node.tag == 'field' and f.tag in ('filter','separator')):
-                fields.update(self.__view_look_dom(cr, user, model, f, view_id, in_tree_view, model_fields, context))
+                fields.update(self.postprocess(cr, user, model, f, view_id, in_tree_view, model_fields, context))
 
         orm.transfer_modifiers_to_node(modifiers, node)
         return fields
@@ -833,11 +618,11 @@ class view(osv.osv):
             button.set('readonly', str(int(not can_click)))
         return node
 
-    def __view_look_dom_arch(self, cr, user, model, node, view_id, context=None):
+    def postprocess_and_fields(self, cr, user, model, node, view_id, context=None):
         """ Return an architecture and a description of all the fields.
 
         The field description combines the result of fields_get() and
-        __view_look_dom().
+        postprocess().
 
         :param node: the architecture as as an etree
         :return: a tuple (arch, fields) where arch is the given node as a
@@ -860,7 +645,7 @@ class view(osv.osv):
         elif Model:
             fields = Model.fields_get(cr, user, None, context)
 
-        fields_def = self.__view_look_dom(cr, user, model, node, view_id, False, fields, context=context)
+        fields_def = self.postprocess(cr, user, model, node, view_id, False, fields, context=context)
         node = self._disable_workflow_buttons(cr, user, model, node)
         if node.tag in ('kanban', 'tree', 'form', 'gantt'):
             for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
@@ -887,7 +672,49 @@ class view(osv.osv):
                 raise orm.except_orm('View error', msg)
         return arch, fields
 
-    def _get_arch(self, cr, uid, id_, context=None):
+    # view used as templates
+
+    def clean_anotations(arch, parent_info=None):
+        for child in arch:
+            if child.tag == 't' or child.tag == 'field':
+                # can not anote t and field while cleaning
+                continue
+
+            child_text = "".join([etree.tostring(x) for x in child])
+            if child.attrib.get('data-edit-model'):
+                if child_text.find('data-edit-model') != -1 or child_text.find('<t ') != -1:
+                    # enclosed tag, move present tag to childs
+                    parent_info = {
+                        'model': child.attrib.get('data-edit-model'),
+                        'view_id': child.attrib.get('data-edit-view-id'),
+                        'xpath': child.attrib.get('data-edit-xpath')+'/'+child.tag,
+                    }
+                    child.attrib.pop('data-edit-model')
+                    child.attrib.pop('data-edit-view-id')
+                    child.attrib.pop('data-edit-xpath')
+                    child = clean_anotations(child, parent_info)
+                else:
+                    # tagged node, no enclosed, can keep, don't care if had parent_info
+                    continue
+
+            else:
+                if child_text.find('data-edit-model') != -1 or child_text.find('<t ') != -1:
+                    # has other nodes to clean
+                    if parent_info:
+                        # update xpath
+                        parent_info.update({'xpath': parent_info.get('xpath')+'/'+child.tag})
+                    child = clean_anotations(child, parent_info)
+                elif parent_info:
+                    # put tag from parent, no enclose, higher
+                    child.attrib.update({
+                        'data-edit-model': parent_info.get('model'),
+                        'data-edit-view-id': parent_info.get('view_id'),
+                        'data-edit-xpath': parent_info.get('xpath'),
+                    })
+
+        return arch
+
+    def read_template(self, cr, uid, id_, context=None):
         from pprint import pprint as pp
         pp(id_)
         try:
@@ -921,13 +748,82 @@ class view(osv.osv):
 
     def render(self, cr, uid, id_or_xml_id, values, context=None):
         def loader(name):
-            arch = self._get_arch(cr, uid, name, context=context)
+            arch = self.read_template(cr, uid, name, context=context)
             # parse arch
             # on the root tag of arch add the attribute t-name="<name>"
             arch = u'<?xml version="1.0" encoding="utf-8"?><tpl><t t-name="{0}">{1}</t></tpl>'.format(name, arch)
             return arch
         engine = qweb.QWebXml(loader)
         return engine.render(id_or_xml_id, values)
+
+    # maybe used to print the workflow ?
+
+    def graph_get(self, cr, uid, id, model, node_obj, conn_obj, src_node, des_node, label, scale, context=None):
+        nodes=[]
+        nodes_name=[]
+        transitions=[]
+        start=[]
+        tres={}
+        labels={}
+        no_ancester=[]
+        blank_nodes = []
+
+        _Model_Obj = self.pool[model]
+        _Node_Obj = self.pool[node_obj]
+        _Arrow_Obj = self.pool[conn_obj]
+
+        for model_key,model_value in _Model_Obj._columns.items():
+                if model_value._type=='one2many':
+                    if model_value._obj==node_obj:
+                        _Node_Field=model_key
+                        _Model_Field=model_value._fields_id
+                    flag=False
+                    for node_key,node_value in _Node_Obj._columns.items():
+                        if node_value._type=='one2many':
+                             if node_value._obj==conn_obj:
+                                 if src_node in _Arrow_Obj._columns and flag:
+                                    _Source_Field=node_key
+                                 if des_node in _Arrow_Obj._columns and not flag:
+                                    _Destination_Field=node_key
+                                    flag = True
+
+        datas = _Model_Obj.read(cr, uid, id, [],context)
+        for a in _Node_Obj.read(cr,uid,datas[_Node_Field],[]):
+            if a[_Source_Field] or a[_Destination_Field]:
+                nodes_name.append((a['id'],a['name']))
+                nodes.append(a['id'])
+            else:
+                blank_nodes.append({'id': a['id'],'name':a['name']})
+
+            if a.has_key('flow_start') and a['flow_start']:
+                start.append(a['id'])
+            else:
+                if not a[_Source_Field]:
+                    no_ancester.append(a['id'])
+            for t in _Arrow_Obj.read(cr,uid, a[_Destination_Field],[]):
+                transitions.append((a['id'], t[des_node][0]))
+                tres[str(t['id'])] = (a['id'],t[des_node][0])
+                label_string = ""
+                if label:
+                    for lbl in eval(label):
+                        if t.has_key(tools.ustr(lbl)) and tools.ustr(t[lbl])=='False':
+                            label_string += ' '
+                        else:
+                            label_string = label_string + " " + tools.ustr(t[lbl])
+                labels[str(t['id'])] = (a['id'],label_string)
+        g  = graph(nodes, transitions, no_ancester)
+        g.process(start)
+        g.scale(*scale)
+        result = g.result_get()
+        results = {}
+        for node in nodes_name:
+            results[str(node[0])] = result[node[0]]
+            results[str(node[0])]['name'] = node[1]
+        return {'nodes': results,
+                'transitions': tres,
+                'label' : labels,
+                'blank_nodes': blank_nodes,
+                'node_parent_field': _Model_Field,}
 
 class view_sc(osv.osv):
     _name = 'ir.ui.view_sc'
