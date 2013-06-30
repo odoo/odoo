@@ -231,10 +231,11 @@ class product_product(osv.osv):
 
         operator = context.get('compute_child',True) and 'child_of' or 'in'
         domain = context.get('force_company', False) and ['&', ('company_id', '=', context['force_company'])] or []
+        domain += [('product_id', 'in', ids)]
         return (
             domain + [('location_id', operator, location_ids)],
-            domain + ['&', ('location_src_id', operator, location_ids), '!', ('location_dest_id', operator, location_ids)],
-            domain + ['&', ('location_dest_id', operator, location_ids), '!', ('location_src_id', operator, location_ids)]
+            domain + ['&', ('location_dest_id', operator, location_ids), '!', ('location_id', operator, location_ids)],
+            domain + ['&', ('location_id', operator, location_ids), '!', ('location_dest_id', operator, location_ids)]
         )
 
     def _get_domain_dates(self, cr, uid, ids, context):
@@ -251,9 +252,9 @@ class product_product(osv.osv):
         context = context or {}
         field_names = field_names or []
 
-        domain_quant, domain_move_in, domain_move_out = self._get_domain_locations(cr, uid, ids, key='location_id', context=context)
-        domain_move_in += self._get_domain_dates(cr, uid, ids, context=context)
-        domain_move_out += self._get_domain_dates(cr, uid, ids, context=context)
+        domain_quant, domain_move_in, domain_move_out = self._get_domain_locations(cr, uid, ids, context=context)
+        domain_move_in += self._get_domain_dates(cr, uid, ids, context=context) + [('state','not in',('done','cancel'))]
+        domain_move_out += self._get_domain_dates(cr, uid, ids, context=context) + [('state','not in',('done','cancel'))]
 
         if context.get('lot_id', False):
             domain_quants.append(('lot_id','=',context['lot_id']))
@@ -265,9 +266,9 @@ class product_product(osv.osv):
 
         quants = self.pool.get('stock.quant').read_group(cr, uid, domain_quant, ['product_id', 'qty'], ['product_id'], context=context)
 
-        quants = dict(map(lambda x: (x['product_id'], x['qty']), quants))
-        moves_in = dict(map(lambda x: (x['product_id'], x['product_qty']), moves_in))
-        moves_out = dict(map(lambda x: (x['product_id'], x['product_qty']), moves_out))
+        quants = dict(map(lambda x: (x['product_id'][0], x['qty']), quants))
+        moves_in = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_in))
+        moves_out = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_out))
 
         res = {}
         for id in ids:

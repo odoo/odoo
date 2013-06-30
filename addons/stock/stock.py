@@ -176,7 +176,6 @@ class stock_quant(osv.osv):
 
         # Used for negative quants to reconcile after compensated by a new positive one
         'propagated_from_id': fields.many2one('stock.quant', 'Linked Quant', help = 'The negative quant this is coming from'), 
-        'propagated_to_ids': fields.one2many('stock.quant', 'propagated_from_id', 'Linked Quants', help = 'The negative quant this is coming from'), 
     }
 
     def quants_reserve(self, cr, uid, quants, move, context=None):
@@ -208,7 +207,8 @@ class stock_quant(osv.osv):
             self._account_entry_move(cr, uid, quant, location_from, location_to, move, context=context)
 
     # FP Note: TODO: implement domain preference that tries to retrieve first with this domain
-    def quants_get(self, cr, uid, location, product, qty, domain=[('qty','>',0.0)], domain_preference=[], context=None):
+    # This will be used for putaway strategies
+    def quants_get(self, cr, uid, location, product, qty, domain=None, domain_preference=[], context=None):
         """
         Use the removal strategies of product to search for the correct quants
 
@@ -217,6 +217,7 @@ class stock_quant(osv.osv):
         :qty in UoM of product
         :lot_id NOT USED YET !
         """
+        domain = domain or [('qty','>',0.0)]
         removal_strategy = self.pool.get('stock.location').get_removal_strategy(cr, uid, location, product, context=context) or 'fifo'
         if removal_strategy=='fifo':
             result = self._quants_get_fifo(cr, uid, location, product, qty, domain, context=context)
@@ -245,6 +246,7 @@ class stock_quant(osv.osv):
         if move.location_id.usage == 'internal':
             vals['location_id'] = move.location_id.id
             vals['qty'] = -qty
+            vals['cost'] = 0.0
             new_quant_id = self.create(cr, uid, vals, context=context)
             self.write(cr, uid, [quant_id], {'propagated_from_id': new_quant_id}, context=context)
         obj = self.browse(cr, uid, quant_id, context=context)
@@ -256,7 +258,7 @@ class stock_quant(osv.osv):
         self._price_update(cr, uid, obj, price_unit, context=context)
         return obj
 
-    def _quand_split(self, cr, uid, quant, qty, context=None):
+    def _quant_split(self, cr, uid, quant, qty, context=None):
         context=context or {}
         if quant.qty<=qty:
             return False
@@ -265,31 +267,37 @@ class stock_quant(osv.osv):
         quant.refresh()
         return new_quant
 
+    """
+        When new quant arrive in a location, try to reconcile it with
+        negative quants. If it's possible, apply the cost of the new
+        quant to the conter-part of the negative quant.
+    """
     def _quant_reconcile_negative(self, cr, uid, quant, context=None):
-        '''
-        This function will reconcile the negative quants with the amount provided and give them this price
-        :param ids : Negative quants to reconcile with
-        :param move
-        :param qty: in product uom as incoming quantity or as quantity from the quant to be reconciled
-        :param price: in product uom as price to be put on propagated quants 
-        :param history_moves_to_transfer: when moving, we need to pass the history_ids of the quant that will be cancelled with the negative quant (list of browse records)
-        :return: amount that stays open + propagated quants from the reconciled quants which get a price, ... now
-        '''
-        if quant.location_id <> 'internal': return False
-        quants = self.quants_get(cr, uid, quant.location_id, quant.product_id.id, quant.qty, [('qty','<','0')], context=context)
-        for quant, qty in quants:
-            if not quant: continue
+        if quant.location_id.usage <> 'internal': return False
+        quants = self.quants_get(cr, uid, quant.location_id, quant.product_id, quant.qty, [('qty','<','0')], context=context)
+        result = False
+        for quant_neg, qty in quants:
+            if not quant_neg: continue
+            result=True
 
-            # FP Note: to implement
-            #self.split(...)
-            #self.write(cr, uid, quant.id, {
-            #    'propagated_from_id': False,
-            #    'history_ids': [(4, x.id) for x in history_moves_to_transfer]}, context=context)
-            #self.unlink(cr, uid, [quant.id], context=context)
-            #self._price_update(cr, uid, quant.id, quant.price)
-            #     ''cost': price,
+            self._quant_split(cr, uid, quant_neg, qty, context=context)
+            self._quant_split(cr, uid, quant, qty, context=context)
 
-        return res
+            cost = quant.id
+
+            self.write(cr, uid, [quant.id, quant_neg.id], {
+                'cost': 0.0,
+            }, context=context)
+
+            quants2 = self.quants_get(cr, uid, False, quant.product_id, quant_neg.qty, [('propagated_from_id','=',quant_neg.id)], context=context)
+            for qu2, qt2 in quants2:
+                if not qu2: raise 'Error: negative stock linked to nothing'
+                self._quant_split(cr, uid, qu2, qt2, context=context)
+                self.write(cr, uid, [qu2.id], {
+                    'propagated_from_id': False
+                }, context=context)
+                self._price_update(cr, uid, qu2, cost, context=context)
+        return result
 
     # FP Note: this is where we should post accounting entries for adjustment
     def _price_update(self, cr, uid, quant, newprice, context=None):
@@ -299,8 +307,8 @@ class stock_quant(osv.osv):
     # Implementation of removal strategies
     #
     def _quants_get_order(self, cr, uid, location, product, quantity, domain=[], orderby='in_date', context=None):
-        domain = [('location_id', 'child_of', location.id), ('product_id','=',product.id), 
-                  ('reservation_id', '=', False)] + domain
+        domain += location and [('location_id', 'child_of', location.id)] or []
+        domain += [('product_id','=',product.id), ('reservation_id', '=', False)] + domain
         res = []
         offset = 0
         while quantity > 0:
@@ -315,6 +323,7 @@ class stock_quant(osv.osv):
                 else:
                     res += [(quant, quantity)]
                     quantity = 0
+                    break
             offset += 10
         return res
 
@@ -1578,7 +1587,7 @@ class stock_move(osv.osv):
         uom_obj = self.pool.get('product.uom')
         res = {}
         for m in self.browse(cr, uid, ids, context=context):
-            res[m.id] = uom_obj._compute_qty_obj(cr, uid, m.product_uom, product_qty, m.product_id.uom_id)
+            res[m.id] = uom_obj._compute_qty_obj(cr, uid, m.product_uom, m.product_uom_qty, m.product_id.uom_id)
         return res
 
     _columns = {
@@ -1846,8 +1855,8 @@ class stock_move(osv.osv):
         @return: Dictionary of values
         """
         result = {
-                  'product_qty': 0.00
-          }
+            'product_uom_qty': 0.00
+        }
         warning = {}
 
         if (not product_id) or (product_uos_qty <=0.0):
@@ -1868,9 +1877,9 @@ class stock_move(osv.osv):
                 break
 
         if product_uos and product_uom and (product_uom != product_uos):
-            result['product_qty'] = product_uos_qty / uos_coeff['uos_coeff']
+            result['product_uom_qty'] = product_uos_qty / uos_coeff['uos_coeff']
         else:
-            result['product_qty'] = product_uos_qty
+            result['product_uom_qty'] = product_uos_qty
         return {'value': result, 'warning': warning}
 
     def onchange_product_id(self, cr, uid, ids, prod_id=False, loc_id=False,
@@ -1896,7 +1905,7 @@ class stock_move(osv.osv):
         result = {
             'product_uom': product.uom_id.id,
             'product_uos': uos_id,
-            'product_qty': 1.00,
+            'product_uom_qty': 1.00,
             'product_uos_qty' : self.pool.get('stock.move').onchange_quantity(cr, uid, ids, prod_id, 1.00, product.uom_id.id, uos_id)['value']['product_uos_qty'],
         }
         if not ids:
@@ -2052,7 +2061,7 @@ class stock_move(osv.osv):
         if todo:
             self.action_confirm(cr, uid, todo, context=context)
 
-        qty = uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, move.product_id.uom_id.id)
+        qty = move.product_qty
         quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, context=context)
         quant_obj.quants_move(cr, uid, quants, move, context=context)
 
@@ -2423,10 +2432,13 @@ class stock_inventory(osv.osv):
             move_ids = []
             for line in inv.inventory_line_id:
                 pid = line.product_id.id
-                product_context.update(uom=line.product_uom.id, to_date=inv.date, date=inv.date, lot_id=line.prod_lot_id.id)
-                # FP Note: TODO check if it does not take recursive values
-                # FP Note: TODO implement lot matching
-                amount = line.product_id.qty_available
+                product_context.update(
+                    location=line.location_id.id,
+                    lot_id=line.prod_lot_id and line.prod_lot_id.id or False
+                )
+
+                qty = self.pool.get('product.product').browse(cr, uid, line.product_id.id, context=product_context).qty_available
+                amount = self.pool.get('product.uom')._compute_qty_obj(cr, uid, line.product_id.uom_id, qty, line.product_uom, context=context)
                 change = line.product_qty - amount
                 lot_id = line.prod_lot_id.id
                 if change:
@@ -2441,13 +2453,13 @@ class stock_inventory(osv.osv):
 
                     if change > 0:
                         value.update( {
-                            'product_qty': change,
+                            'product_uom_qty': change,
                             'location_id': location_id,
                             'location_dest_id': line.location_id.id,
                         })
                     else:
                         value.update( {
-                            'product_qty': -change,
+                            'product_uom_qty': -change,
                             'location_id': line.location_id.id,
                             'location_dest_id': location_id,
                         })
