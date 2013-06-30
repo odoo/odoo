@@ -45,7 +45,7 @@ class stock_partial_picking_line(osv.TransientModel):
         'product_id' : fields.many2one('product.product', string="Product", required=True, ondelete='CASCADE'),
         'quantity' : fields.float("Quantity", digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True, ondelete='CASCADE'),
-        'prodlot_id' : fields.many2one('stock.production.lot', 'Serial Number', ondelete='CASCADE'),
+        'lot_id' : fields.many2one('stock.production.lot', 'Serial Number', ondelete='CASCADE'),
         'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete='CASCADE', domain = [('usage','<>','view')]),
         'location_dest_id': fields.many2one('stock.location', 'Dest. Location', required=True, ondelete='CASCADE',domain = [('usage','<>','view')]),
         'move_id' : fields.many2one('stock.move', "Move", ondelete='CASCADE'),
@@ -148,7 +148,7 @@ class stock_partial_picking(osv.osv_memory):
             'product_id': move.product_id.id,
             'quantity': move.product_qty - move.remaining_qty if move.state == 'assigned' else 0,
             'product_uom': move.product_uom.id,
-            'prodlot_id': move.prodlot_id.id,
+            'lot_id': move.lot_id.id,
             'move_id': move.id,
             'location_id': move.location_id.id,
             'location_dest_id': move.location_dest_id.id,
@@ -199,7 +199,7 @@ class stock_partial_picking(osv.osv_memory):
                                                     'product_id': wizard_line.product_id.id,
                                                     'product_qty': wizard_line.quantity,
                                                     'product_uom': wizard_line.product_uom.id,
-                                                    'prodlot_id': wizard_line.prodlot_id.id,
+                                                    'lot_id': wizard_line.lot_id.id,
                                                     'location_id' : wizard_line.location_id.id,
                                                     'location_dest_id' : wizard_line.location_dest_id.id,
                                                     'picking_id': partial.picking_id.id,
@@ -210,7 +210,7 @@ class stock_partial_picking(osv.osv_memory):
                 'product_id': wizard_line.product_id.id,
                 'product_qty': wizard_line.quantity,
                 'product_uom': wizard_line.product_uom.id,
-                'prodlot_id': wizard_line.prodlot_id.id,
+                'lot_id': wizard_line.lot_id.id,
             }
             if (picking_type == 'in') and (wizard_line.product_id.cost_method != 'standard'):
                 partial_data['move%s' % (wizard_line.move_id.id)].update(product_price=wizard_line.cost,)

@@ -34,7 +34,7 @@ class stock_return_picking_memory(osv.osv_memory):
         'quantity' : fields.float("Quantity", digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'wizard_id' : fields.many2one('stock.return.picking', string="Wizard"),
         'move_id' : fields.many2one('stock.move', "Move"),
-        'prodlot_id': fields.related('move_id', 'prodlot_id', type='many2one', relation='stock.production.lot', string='Serial Number', readonly=True),
+        'lot_id': fields.related('move_id', 'lot_id', type='many2one', relation='stock.production.lot', string='Serial Number', readonly=True),
 
     }
 
@@ -75,7 +75,7 @@ class stock_return_picking(osv.osv_memory):
             for line in pick.move_lines:
                 qty = line.product_qty - return_history.get(line.id, 0)
                 if qty > 0:
-                    result1.append({'product_id': line.product_id.id, 'quantity': qty,'move_id':line.id, 'prodlot_id': line.prodlot_id and line.prodlot_id.id or False})
+                    result1.append({'product_id': line.product_id.id, 'quantity': qty,'move_id':line.id, 'lot_id': line.lot_id and line.lot_id.id or False})
             if 'product_return_moves' in fields:
                 res.update({'product_return_moves': result1})
         return res

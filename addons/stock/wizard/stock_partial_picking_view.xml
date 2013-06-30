@@ -23,7 +23,7 @@
                             <field name="quantity" />
                             <field name="product_uom" groups="product.group_uom"/>
                             <field name="tracking" invisible="1"/>
-                            <field name="prodlot_id" domain="[('product_id', '=', product_id)]" invisible="context.get('hide_tracking',False)" attrs="{'required':[('tracking','=',True), ('quantity', '!=', 0)]}" groups="stock.group_production_lot" context="{'default_product_id':product_id}"/>
+                            <field name="lot_id" domain="[('product_id', '=', product_id)]" invisible="context.get('hide_tracking',False)" attrs="{'required':[('tracking','=',True), ('quantity', '!=', 0)]}" groups="stock.group_production_lot" context="{'default_product_id':product_id}"/>
                             <!-- Removed as this feature is not logic: price must be updated upon reception of invoice -->
                             <field name="update_cost" invisible="1"/>
                             <field name="cost"  invisible="1"/>
@@ -48,7 +48,7 @@
                     <field name="quantity" />
                     <field name="product_uom" />
                     <field name="tracking" invisible="1"/>
-                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" attrs="{'required':[('tracking','=',True)]}"/>
+                    <field name="lot_id" domain="[('product_id', '=', product_id)]" attrs="{'required':[('tracking','=',True)]}"/>
                     <!-- Removed as this feature is not logic: price must be updated upon reception of invoice -->
                     <field name="update_cost" invisible="1"/>
                     <field name="cost" invisible="1"/>
@@ -68,7 +68,7 @@
                         <field name="location_id" />
                         <field name="location_dest_id" />
                         <field name="tracking" invisible="1"/>
-                        <field name="prodlot_id" domain="[('product_id', '=', product_id)]" attrs="{'required':[('tracking','=',True)]}"/>
+                        <field name="lot_id" domain="[('product_id', '=', product_id)]" attrs="{'required':[('tracking','=',True)]}"/>
                         <field name="update_cost" invisible="1"/>
                         <field name="cost" attrs="{'invisible': [('update_cost','=', False)]}"/>
                         <field name="currency" attrs="{'invisible': [('update_cost','=', False)]}" groups="base.group_multi_currency"/>

@@ -313,11 +313,11 @@ class product_product(osv.osv):
             where += where_add
 
 
-        prodlot_id = context.get('prodlot_id', False)
+        lot_id = context.get('lot_id', False)
         prodlot_clause = ''
-        if prodlot_id:
-            prodlot_clause = ' and prodlot_id = %s '
-            where += [prodlot_id]
+        if lot_id:
+            prodlot_clause = ' and lot_id = %s '
+            where += [lot_id]
 
         # TODO: perhaps merge in one query.
         if 'in' in what:

@@ -75,7 +75,7 @@ class stock_partial_move(osv.osv_memory):
                 'product_id': move.product_id.id,
                 'product_qty': move.quantity,
                 'product_uom': move.product_uom.id,
-                'prodlot_id': move.prodlot_id.id,
+                'lot_id': move.lot_id.id,
             }
             moves_ids.append(move_id)
             if (move.move_id.picking_id.type == 'in') and (move.product_id.cost_method != 'standard'):

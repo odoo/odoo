@@ -147,10 +147,10 @@
     lot = self.pool.get('stock.move.split').browse(cr, uid, ref('split_lot_incomming'), context=context)
     lot_ids = self.pool.get('stock.production.lot').search(cr, uid, [('name','in',[x.name for x in lot.line_ids])])
     assert len(lot_ids) == 4, 'lots of incomming shipment are not correspond.'
-    move_ids = self.search(cr, uid, [('location_dest_id','=',ref('location_refrigerator')),('prodlot_id','in',lot_ids)])
+    move_ids = self.search(cr, uid, [('location_dest_id','=',ref('location_refrigerator')),('lot_id','in',lot_ids)])
     assert len(move_ids) == 4, 'move lines are not correspond per prodcution lot after splited.'
     for move in self.browse(cr, uid, move_ids, context=context):
-        assert move.prodlot_id.name in ['incoming_lot0', 'incoming_lot1', 'incoming_lot2', 'incoming_lot3'], "lot does not correspond." 
+        assert move.lot_id.name in ['incoming_lot0', 'incoming_lot1', 'incoming_lot2', 'incoming_lot3'], "lot does not correspond." 
         assert move.product_qty == 10, "qty does not correspond per production lot."
     context.update({'active_model':'stock.move', 'active_id':move_ids[0],'active_ids': move_ids})
 -

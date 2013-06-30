@@ -41,7 +41,7 @@
                     <field name="product_uom" groups="product.group_uom"/>
                     <field name="location_id" />
                     <field name="location_dest_id" />
-                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" groups="stock.group_production_lot"/>
+                    <field name="lot_id" domain="[('product_id', '=', product_id)]" groups="stock.group_production_lot"/>
                     <field name="update_cost" invisible="1"/>
                     <field name="cost" attrs="{'invisible': [('update_cost','=', False)]}"/>
                     <field name="currency" attrs="{'invisible': [('update_cost','=', False)]}" groups="base.group_multi_currency"/>
@@ -60,7 +60,7 @@
                         <field name="product_uom" />
                         <field name="location_id" />
                         <field name="location_dest_id" />
-                        <field name="prodlot_id" domain="[('product_id', '=', product_id)]"/>
+                        <field name="lot_id" domain="[('product_id', '=', product_id)]"/>
                         <field name="update_cost" invisible="1"/>
                         <field name="cost" attrs="{'invisible': [('update_cost','=', False)]}"/>
                         <field name="currency" attrs="{'invisible': [('update_cost','=', False)]}" groups="base.group_multi_currency"/>

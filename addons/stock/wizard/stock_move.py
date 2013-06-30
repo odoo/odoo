@@ -233,16 +233,16 @@ class split_in_production_lot(osv.osv_memory):
 
                     if quantity_rest == 0:
                         current_move = move.id
-                    prodlot_id = False
+                    lot_id = False
                     if data.use_exist:
-                        prodlot_id = line.prodlot_id.id
-                    if not prodlot_id:
-                        prodlot_id = prodlot_obj.create(cr, uid, {
+                        lot_id = line.lot_id.id
+                    if not lot_id:
+                        lot_id = prodlot_obj.create(cr, uid, {
                             'name': line.name,
                             'product_id': move.product_id.id},
                         context=context)
 
-                    move_obj.write(cr, uid, [current_move], {'prodlot_id': prodlot_id, 'state':move.state})
+                    move_obj.write(cr, uid, [current_move], {'lot_id': lot_id, 'state':move.state})
 
                     update_val = {}
                     if quantity_rest > 0:
@@ -262,15 +262,15 @@ class stock_move_split_lines_exist(osv.osv_memory):
         'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
         'wizard_id': fields.many2one('stock.move.split', 'Parent Wizard'),
         'wizard_exist_id': fields.many2one('stock.move.split', 'Parent Wizard (for existing lines)'),
-        'prodlot_id': fields.many2one('stock.production.lot', 'Serial Number'),
+        'lot_id': fields.many2one('stock.production.lot', 'Serial Number'),
     }
     _defaults = {
         'quantity': 1.0,
     }
 
-    def onchange_lot_id(self, cr, uid, ids, prodlot_id=False, product_qty=False,
+    def onchange_lot_id(self, cr, uid, ids, lot_id=False, product_qty=False,
                         loc_id=False, product_id=False, uom_id=False,context=None):
-        return self.pool.get('stock.move').onchange_lot_id(cr, uid, [], prodlot_id, product_qty,
+        return self.pool.get('stock.move').onchange_lot_id(cr, uid, [], lot_id, product_qty,
                         loc_id, product_id, uom_id, context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

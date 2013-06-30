@@ -163,7 +163,7 @@ class stock_quant(osv.osv):
         'qty': fields.float('Quantity', required=True, help="Quantity of products in this quant, in the default unit of measure of the product"),
         'package_id': fields.many2one('stock.quant.package', help="The package containing this quant"), 
         'reservation_id': fields.many2one('stock.move', 'Reserved for Move', help="Is this quant reserved for a stock.move?"), 
-        'prodlot_id': fields.many2one('stock.production.lot', 'Lot'), 
+        'lot_id': fields.many2one('stock.production.lot', 'Lot'), 
         'cost': fields.float('Unit Cost'), 
 
         'create_date': fields.datetime('Creation Date'), 
@@ -177,7 +177,7 @@ class stock_quant(osv.osv):
         'propagated_to_ids': fields.one2many('stock.quant', 'propagated_from_id', 'Linked Quants', help = 'The negative quant this is coming from'), 
     }
 
-    def quants_reserve(self, cr, uid, quants, move_id, context=None):
+    def quants_reserve(self, cr, uid, quants, move, context=None):
         toreserve = []
         for quant,qty in quants:
             if not quant: continue
@@ -185,18 +185,25 @@ class stock_quant(osv.osv):
             toreserve.append(quant.id)
         return self.write(cr, uid, toreserve, {'reservation_id': move.id}, context=context)
 
-    def quants_move(self, cr, uid, quants, move_id, context=None):
+    def quants_move(self, cr, uid, quants, move, context=None):
         for quant,qty in quants:
+            location_from = quant and quant.location_id
             if not quant:
-                quant = self._quant_create(cr, uid, qty, move_id, context=context)
+                quant = self._quant_create(cr, uid, qty, move, context=context)
             else:
                 self._quant_split(cr, uid, quant, qty, context=context)
             self._quant_reconcile_negative(cr, uid, quant, context=context)
+
+            # FP Note: improve this using preferred locations
+            location_to = move.location_dest_id
+
             self.write(cr, uid, [quant.id], {
-                'location_id': move.location_dest_id.id,
+                'location_id': location_to.id,
                 'reservation_id': move.move_dest_id and move.move_dest_id.id or False, 
                 'history_ids': [(4, move.id)]
             })
+
+            self._account_entry_move(cr, uid, quant, location_from, location_to, move, context=context)
 
     # FP Note: TODO: implement domain preference that tries to retrieve first with this domain
     def quants_get(self, cr, uid, location_id, product_id, qty, domain=[('qty','>',0.0)], domain_preference=[], context=None):
@@ -206,7 +213,7 @@ class stock_quant(osv.osv):
         :location_id: child_of this location_id
         :product_id: id of product
         :qty in UoM of product
-        :prodlot_id NOT USED YET !
+        :lot_id NOT USED YET !
         """
         removal_strategy = self.pool.get('stock.location').get_removal_strategy(cr, uid, location_id, product_id, context=context) or 'fifo'
         if removal_strategy=='fifo':
@@ -230,7 +237,7 @@ class stock_quant(osv.osv):
             'qty': product_uom_qty, 
             'history_ids': [(4, move.id)], 
             'in_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            'prodlot_id': move.prodlot_id.id, 
+            'lot_id': move.lot_id.id, 
             'company_id': move.company_id.id, 
         }
         quant_id = self.create(cr, uid, vals, context=context)
@@ -312,6 +319,243 @@ class stock_quant(osv.osv):
     def _quants_get_lifo(self, cr, uid, location_id, product_id, quantity, domain=[], context=None):
         return self._quants_get_order(cr, uid, location_id, product_id, quantity,
             domain, 'in_date desc', context=context)
+
+    """
+    Accounting Valuation Entries
+
+    location_from: can be None if it's a new quant
+    """
+    def _account_entry_move(cr, uid, quant, location_from, location_to, move, context=None):
+        pass
+
+    def _account_entry_price_adjusment(cr, uid, quant, newprice, context=None):
+        pass
+
+
+    # Return the company owning the location if any
+    def _location_owner(cr, uid, quant, location, context=context):
+        return location and (location.usage == 'internal') and location.company_id or False
+
+    def _account_entry_move(cr, uid, quant, location_from, location_to, move, context=None):
+        if quant.product_id.valuation <> 'realtime':
+            return False
+        company_from = self._location_owner(cr, uid, quant, location_from, context=context)
+        company_to = self._location_owner(cr, uid, quant, location_to, context=context)
+        if company_from == company_to:
+            return False
+
+        # Products arriving in the company
+        if company_to:
+            pass
+
+
+        # Products leaving the company
+        if company_from:
+            pass
+
+
+    # FP Note: all accounting valuation stuff must be on the quant
+    #def _get_accounting_data_for_valuation(self, cr, uid, move, context=None):
+    #    """
+    #    Return the accounts and journal to use to post Journal Entries for the real-time
+    #    valuation of the move.
+
+    #    :param context: context dictionary that can explicitly mention the company to consider via the 'force_company' key
+    #    :raise: osv.except_osv() is any mandatory account or journal is not defined.
+    #    """
+    #    product_obj=self.pool.get('product.product')
+    #    accounts = product_obj.get_product_accounts(cr, uid, move.product_id.id, context)
+    #    if move.location_id.valuation_out_account_id:
+    #        acc_src = move.location_id.valuation_out_account_id.id
+    #    else:
+    #        acc_src = accounts['stock_account_input']
+
+    #    if move.location_dest_id.valuation_in_account_id:
+    #        acc_dest = move.location_dest_id.valuation_in_account_id.id
+    #    else:
+    #        acc_dest = accounts['stock_account_output']
+
+    #    acc_valuation = accounts.get('property_stock_valuation_account_id', False)
+    #    journal_id = accounts['stock_journal']
+
+    #    if acc_dest == acc_valuation:
+    #        raise osv.except_osv(_('Error!'),  _('Cannot create Journal Entry, Output Account of this product and Valuation account on category of this product are same.'))
+
+    #    if acc_src == acc_valuation:
+    #        raise osv.except_osv(_('Error!'),  _('Cannot create Journal Entry, Input Account of this product and Valuation account on category of this product are same.'))
+
+    #    if not acc_src:
+    #        raise osv.except_osv(_('Error!'),  _('Please define stock input account for this product or its category: "%s" (id: %d)') % \
+    #                                (move.product_id.name, move.product_id.id,))
+    #    if not acc_dest:
+    #        raise osv.except_osv(_('Error!'),  _('Please define stock output account for this product or its category: "%s" (id: %d)') % \
+    #                                (move.product_id.name, move.product_id.id,))
+    #    if not journal_id:
+    #        raise osv.except_osv(_('Error!'), _('Please define journal on the product category: "%s" (id: %d)') % \
+    #                                (move.product_id.categ_id.name, move.product_id.categ_id.id,))
+    #    if not acc_valuation:
+    #        raise osv.except_osv(_('Error!'), _('Please define inventory valuation account on the product category: "%s" (id: %d)') % \
+    #                                (move.product_id.categ_id.name, move.product_id.categ_id.id,))
+    #    return journal_id, acc_src, acc_dest, acc_valuation
+
+
+    ##We can use a preliminary type
+    #def get_reference_amount(self, cr, uid, move, qty, context=None):
+    #    # if product is set to average price and a specific value was entered in the picking wizard,
+    #    # we use it
+
+    #    # by default the reference currency is that of the move's company
+    #    reference_currency_id = move.company_id.currency_id.id
+    #    
+    #    #I use 
+    #    if move.product_id.cost_method != 'standard' and move.price_unit:
+    #        reference_amount = move.product_qty * move.price_unit #Using move.price_qty instead of qty to have correct amount
+    #        reference_currency_id = move.price_currency_id.id or reference_currency_id
+
+    #    # Otherwise we default to the company's valuation price type, considering that the values of the
+    #    # valuation field are expressed in the default currency of the move's company.
+    #    else:
+    #        if context is None:
+    #            context = {}
+    #        currency_ctx = dict(context, currency_id = move.company_id.currency_id.id)
+    #        amount_unit = move.product_id.price_get('standard_price', context=currency_ctx)[move.product_id.id]
+    #        reference_amount = amount_unit * qty
+    #    
+    #    return reference_amount, reference_currency_id
+
+
+    #def _get_reference_accounting_values_for_valuation(self, cr, uid, move, context=None):
+    #    """
+    #    Return the reference amount and reference currency representing the inventory valuation for this move.
+    #    These reference values should possibly be converted before being posted in Journals to adapt to the primary
+    #    and secondary currencies of the relevant accounts.
+    #    """
+    #    product_uom_obj = self.pool.get('product.uom')
+
+    #    default_uom = move.product_id.uom_id.id
+    #    qty = product_uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, default_uom)
+    #    
+    #    reference_amount, reference_currency_id = self.get_reference_amount(cr, uid, move, qty, context=context)
+    #    return reference_amount, reference_currency_id
+
+
+    #    
+
+
+    #def _create_product_valuation_moves(self, cr, uid, move, matches, context=None):
+    #    """
+    #    Generate the appropriate accounting moves if the product being moved is subject
+    #    to real_time valuation tracking, and the source or the destination location is internal (not both)
+    #    This means an in or out move. 
+    #    
+    #    Depending on the matches it will create the necessary moves
+    #    """
+    #    ctx = context.copy()
+    #    ctx['force_company'] = move.company_id.id
+    #    valuation = self.pool.get("product.product").browse(cr, uid, move.product_id.id, context=ctx).valuation
+    #    move_obj = self.pool.get('account.move')
+    #    if valuation == 'real_time':
+    #        if context is None:
+    #            context = {}
+    #        company_ctx = dict(context,force_company=move.company_id.id)
+    #        journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(cr, uid, move, context=company_ctx)
+    #        reference_amount, reference_currency_id = self._get_reference_accounting_values_for_valuation(cr, uid, move, context=company_ctx)
+    #        account_moves = []
+    #        # Outgoing moves (or cross-company output part)
+    #        if move.location_id.company_id \
+    #            and (move.location_id.usage == 'internal' and move.location_dest_id.usage != 'internal'):
+    #            #returning goods to supplier
+    #            if move.location_dest_id.usage == 'supplier':
+    #                account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, matches, acc_valuation, acc_src, reference_amount, reference_currency_id, 'out', context=company_ctx))]
+    #            else:
+    #                account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, matches, acc_valuation, acc_dest, reference_amount, reference_currency_id, 'out', context=company_ctx))]
+
+    #        # Incoming moves (or cross-company input part)
+    #        if move.location_dest_id.company_id \
+    #            and (move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal'):
+    #            #goods return from customer
+    #            if move.location_id.usage == 'customer':
+    #                account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, matches, acc_dest, acc_valuation, reference_amount, reference_currency_id, 'in', context=company_ctx))]
+    #            else:
+    #                account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, matches, acc_src, acc_valuation, reference_amount, reference_currency_id, 'in', context=company_ctx))]
+    #            if matches and move.product_id.cost_method in ('fifo', 'lifo'):
+    #                outs = {}
+    #                match_obj = self.pool.get("stock.move.matching")
+    #                for match in match_obj.browse(cr, uid, matches, context=context):
+    #                    if match.move_out_id.id in outs:
+    #                        outs[match.move_out_id.id] += [match.id]
+    #                    else:
+    #                        outs[match.move_out_id.id] = [match.id]
+    #                #When in stock was negative, you will get matches for the in also:
+    #                account_moves_neg = []
+    #                for out_mov in self.browse(cr, uid, outs.keys(), context=context):
+    #                    journal_id_out, acc_src_out, acc_dest_out, acc_valuation_out = self._get_accounting_data_for_valuation(cr, uid, out_mov, context=company_ctx)
+    #                    reference_amount_out, reference_currency_id_out = self._get_reference_accounting_values_for_valuation(cr, uid, out_mov, context=company_ctx)
+    #                    if out_mov.location_dest_id.usage == 'supplier':
+    #                        # Is not the way it should be with acc_valuation
+    #                        account_moves_neg += [(journal_id_out, self._create_account_move_line(cr, uid, out_mov, outs[out_mov.id], acc_valuation_out, acc_src_out, reference_amount_out, reference_currency_id_out, 'out', context=company_ctx))]
+    #                    else:
+    #                        account_moves_neg += [(journal_id_out, self._create_account_move_line(cr, uid, out_mov, outs[out_mov.id], acc_valuation_out, acc_dest_out, reference_amount_out, reference_currency_id_out, 'out', context=company_ctx))]
+    #                #Create account moves for outs which made stock go negative
+    #                for j_id, move_lines in account_moves_neg:
+    #                    move_obj.create(cr, uid,
+    #                                    {'journal_id': j_id, 
+    #                                     'line_id': move_lines, 
+    #                                     'ref': out_mov.picking_id and out_mov.picking_id.name,
+    #                                     })
+    #        for j_id, move_lines in account_moves:
+    #            move_obj.create(cr, uid,
+    #                    {
+    #                     'journal_id': j_id,
+    #                     'line_id': move_lines,
+    #                     'ref': move.picking_id and move.picking_id.name})
+
+    #def _create_account_move_line(self, cr, uid, quant, src_account_id, dest_account_id, context=None):
+    #    """
+    #    Generate the account.move.line values to post to track the stock valuation difference due to the
+    #    processing of the given stock move.
+    #    """
+    #    move_list = []
+    #    # Consists of access rights 
+    #    # TODO Check if amount_currency is not needed
+    #    match_obj = self.pool.get("stock.move.matching")
+    #    if type == 'out' and move.product_id.cost_method in ['real']:
+    #        for match in match_obj.browse(cr, uid, matches, context=context):
+    #            move_list += [(match.qty, match.qty * match.price_unit_out)]
+    #    elif type == 'in' and move.product_id.cost_method in ['real']:
+    #        move_list = [(move.product_qty, reference_amount)]
+    #    else:
+    #        move_list = [(move.product_qty, reference_amount)]
+
+    #    res = []
+    #    for item in move_list:
+    #        # prepare default values considering that the destination accounts have the reference_currency_id as their main currency
+    #        partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
+    #        debit_line_vals = {
+    #                    'name': move.name,
+    #                    'product_id': move.product_id and move.product_id.id or False,
+    #                    'quantity': item[0],
+    #                    'product_uom_id': move.product_uom.id, 
+    #                    'ref': move.picking_id and move.picking_id.name or False,
+    #                    'date': time.strftime('%Y-%m-%d'),
+    #                    'partner_id': partner_id,
+    #                    'debit': item[1],
+    #                    'account_id': dest_account_id,
+    #        }
+    #        credit_line_vals = {
+    #                    'name': move.name,
+    #                    'product_id': move.product_id and move.product_id.id or False,
+    #                    'quantity': item[0],
+    #                    'product_uom_id': move.product_uom.id, 
+    #                    'ref': move.picking_id and move.picking_id.name or False,
+    #                    'date': time.strftime('%Y-%m-%d'),
+    #                    'partner_id': partner_id,
+    #                    'credit': item[1],
+    #                    'account_id': src_account_id,
+    #        }
+    #        res += [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
+    #    return res
+
 
 
 #----------------------------------------------------------
@@ -969,7 +1213,7 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids, context=context):
             new_picking = None
             complete, too_many, too_few = [], [], []
-            move_product_qty, prodlot_ids, partial_qty, product_uoms = {}, {}, {}, {}
+            move_product_qty, lot_ids, partial_qty, product_uoms = {}, {}, {}, {}
 
             
             for move in pick.move_lines:
@@ -980,8 +1224,8 @@ class stock_picking(osv.osv):
                 move_product_qty[move.id] = product_qty
                 product_uom = partial_data.get('product_uom',False)
                 product_price = partial_data.get('product_price',0.0)
-                prodlot_id = partial_data.get('prodlot_id')
-                prodlot_ids[move.id] = prodlot_id
+                lot_id = partial_data.get('lot_id')
+                lot_ids[move.id] = lot_id
                 product_uoms[move.id] = product_uom
                 partial_qty[move.id] = uom_obj._compute_qty(cr, uid, product_uoms[move.id], product_qty, move.product_uom.id)
                 if move.product_qty == partial_qty[move.id]:
@@ -1031,9 +1275,9 @@ class stock_picking(osv.osv):
                             'product_uom': product_uoms[move.id],
                             'reserved_quant_ids': list(done_reserved_quants)
                     }
-                    prodlot_id = prodlot_ids[move.id]
-                    if prodlot_id:
-                        defaults.update(prodlot_id=prodlot_id)
+                    lot_id = lot_ids[move.id]
+                    if lot_id:
+                        defaults.update(lot_id=lot_id)
                     backorder_move_id = move_obj.copy(cr, uid, move.id, defaults)
                     self.make_packaging(cr, uid, pick.id, move_obj.browse(cr, uid, backorder_move_id, context=context), list(done_reserved_quants), context=context)
                 #modify the existing stock move    
@@ -1042,7 +1286,7 @@ class stock_picking(osv.osv):
                         {
                             'product_qty': move.product_qty - partial_qty[move.id],
                             'product_uos_qty': move.product_qty - partial_qty[move.id], #TODO: put correct uos_qty
-                            'prodlot_id': False,
+                            'lot_id': False,
                             'tracking_id': False,
                             'reserved_quant_ids': list(set(possible_quants) - done_reserved_quants),
                         })
@@ -1051,8 +1295,8 @@ class stock_picking(osv.osv):
                 move_obj.write(cr, uid, [c.id for c in complete], {'picking_id': new_picking})
             for move in complete:
                 defaults = {'product_uom': product_uoms[move.id], 'product_qty': move_product_qty[move.id]}
-                if prodlot_ids.get(move.id):
-                    defaults.update({'prodlot_id': prodlot_ids[move.id]})
+                if lot_ids.get(move.id):
+                    defaults.update({'lot_id': lot_ids[move.id]})
                 move_obj.write(cr, uid, [move.id], defaults)
 
 
@@ -1070,9 +1314,9 @@ class stock_picking(osv.osv):
                     'product_uos_qty': product_qty, #TODO: put correct uos_qty
                     'product_uom': product_uoms[move.id]
                 }
-                prodlot_id = prodlot_ids.get(move.id)
-                if prodlot_ids.get(move.id):
-                    defaults.update(prodlot_id=prodlot_id)
+                lot_id = lot_ids.get(move.id)
+                if lot_ids.get(move.id):
+                    defaults.update(lot_id=lot_id)
                 if new_picking:
                     defaults.update(picking_id=new_picking)
                 move_obj.write(cr, uid, [move.id], defaults)
@@ -1257,6 +1501,7 @@ class stock_production_lot(osv.osv):
         'ref': fields.char('Internal Reference', size=256, help="Internal reference number in case it differs from the manufacturer's serial number"),
         'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type', '<>', 'service')]),
         'quant_ids': fields.one2many('stock.quant', 'lot_id', 'Quants'),
+        'create_date': fields.datetime('Creation Date'),
     }
     _defaults = {
         'name': lambda x, y, z, c: x.pool.get('ir.sequence').get(y, z, 'stock.lot.serial'),
@@ -1325,7 +1570,7 @@ class stock_move(osv.osv):
     #     @return: True or False
     #     """
     #     for move in self.browse(cr, uid, ids, context=context):
-    #         if not move.prodlot_id and \
+    #         if not move.lot_id and \
     #            (move.state == 'done' and \
     #            ( \
     #                (move.product_id.track_production and move.location_id.usage == 'production') or \
@@ -1334,15 +1579,6 @@ class stock_move(osv.osv):
     #                (move.product_id.track_outgoing and move.location_dest_id.usage == 'customer') or \
     #                (move.product_id.track_incoming and move.location_id.usage == 'inventory') \
     #            )):
-    #             return False
-    #     return True
-    #
-    # def _check_product_lot(self, cr, uid, ids, context=None):
-    #     """ Checks whether move is done or not and production lot is assigned to that move.
-    #     @return: True or False
-    #     """
-    #     for move in self.browse(cr, uid, ids, context=context):
-    #         if move.prodlot_id and move.state == 'done' and (move.prodlot_id.product_id.id != move.product_id.id):
     #             return False
     #     return True
 
@@ -1658,7 +1894,7 @@ class stock_move(osv.osv):
             'product_uos': uos_id,
             'product_qty': 1.00,
             'product_uos_qty' : self.pool.get('stock.move').onchange_quantity(cr, uid, ids, prod_id, 1.00, product.uom_id.id, uos_id)['value']['product_uos_qty'],
-            'prodlot_id' : False,
+            'lot_id' : False,
         }
         if not ids:
             result['name'] = product.partner_ref
@@ -1765,7 +2001,7 @@ class stock_move(osv.osv):
                         for q in m2.quant_ids:
                             dp.append(q.id)
                 quants = quant_obj.quants_get(cr, uid, move.location_id.id, move.product_id.id, qty, domain_preference=dp and [('id', 'in', dp)], context=context)
-                quant_obj.quants_reserve(cr, uid, quants, move.id, context=context)
+                quant_obj.quants_reserve(cr, uid, quants, move, context=context)
         self.write(cr, uid, done, {'state': 'assigned'})
 
     # FP Note: remove this line
@@ -1788,162 +2024,6 @@ class stock_move(osv.osv):
                     self.write(cr, uid, [move.move_dest_id.id], {'state': 'confirmed'})
         return self.write(cr, uid, ids, {'state': 'cancel', 'move_dest_id': False})
 
-    # FP Note: all accounting valuation stuff must be on the quant
-    def _get_accounting_data_for_valuation(self, cr, uid, move, context=None):
-        """
-        Return the accounts and journal to use to post Journal Entries for the real-time
-        valuation of the move.
-
-        :param context: context dictionary that can explicitly mention the company to consider via the 'force_company' key
-        :raise: osv.except_osv() is any mandatory account or journal is not defined.
-        """
-        product_obj=self.pool.get('product.product')
-        accounts = product_obj.get_product_accounts(cr, uid, move.product_id.id, context)
-        if move.location_id.valuation_out_account_id:
-            acc_src = move.location_id.valuation_out_account_id.id
-        else:
-            acc_src = accounts['stock_account_input']
-
-        if move.location_dest_id.valuation_in_account_id:
-            acc_dest = move.location_dest_id.valuation_in_account_id.id
-        else:
-            acc_dest = accounts['stock_account_output']
-
-        acc_valuation = accounts.get('property_stock_valuation_account_id', False)
-        journal_id = accounts['stock_journal']
-
-        if acc_dest == acc_valuation:
-            raise osv.except_osv(_('Error!'),  _('Cannot create Journal Entry, Output Account of this product and Valuation account on category of this product are same.'))
-
-        if acc_src == acc_valuation:
-            raise osv.except_osv(_('Error!'),  _('Cannot create Journal Entry, Input Account of this product and Valuation account on category of this product are same.'))
-
-        if not acc_src:
-            raise osv.except_osv(_('Error!'),  _('Please define stock input account for this product or its category: "%s" (id: %d)') % \
-                                    (move.product_id.name, move.product_id.id,))
-        if not acc_dest:
-            raise osv.except_osv(_('Error!'),  _('Please define stock output account for this product or its category: "%s" (id: %d)') % \
-                                    (move.product_id.name, move.product_id.id,))
-        if not journal_id:
-            raise osv.except_osv(_('Error!'), _('Please define journal on the product category: "%s" (id: %d)') % \
-                                    (move.product_id.categ_id.name, move.product_id.categ_id.id,))
-        if not acc_valuation:
-            raise osv.except_osv(_('Error!'), _('Please define inventory valuation account on the product category: "%s" (id: %d)') % \
-                                    (move.product_id.categ_id.name, move.product_id.categ_id.id,))
-        return journal_id, acc_src, acc_dest, acc_valuation
-
-
-    #We can use a preliminary type
-    def get_reference_amount(self, cr, uid, move, qty, context=None):
-        # if product is set to average price and a specific value was entered in the picking wizard,
-        # we use it
-
-        # by default the reference currency is that of the move's company
-        reference_currency_id = move.company_id.currency_id.id
-        
-        #I use 
-        if move.product_id.cost_method != 'standard' and move.price_unit:
-            reference_amount = move.product_qty * move.price_unit #Using move.price_qty instead of qty to have correct amount
-            reference_currency_id = move.price_currency_id.id or reference_currency_id
-
-        # Otherwise we default to the company's valuation price type, considering that the values of the
-        # valuation field are expressed in the default currency of the move's company.
-        else:
-            if context is None:
-                context = {}
-            currency_ctx = dict(context, currency_id = move.company_id.currency_id.id)
-            amount_unit = move.product_id.price_get('standard_price', context=currency_ctx)[move.product_id.id]
-            reference_amount = amount_unit * qty
-        
-        return reference_amount, reference_currency_id
-
-
-    def _get_reference_accounting_values_for_valuation(self, cr, uid, move, context=None):
-        """
-        Return the reference amount and reference currency representing the inventory valuation for this move.
-        These reference values should possibly be converted before being posted in Journals to adapt to the primary
-        and secondary currencies of the relevant accounts.
-        """
-        product_uom_obj = self.pool.get('product.uom')
-
-        default_uom = move.product_id.uom_id.id
-        qty = product_uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, default_uom)
-        
-        reference_amount, reference_currency_id = self.get_reference_amount(cr, uid, move, qty, context=context)
-        return reference_amount, reference_currency_id
-
-
-        
-
-
-    def _create_product_valuation_moves(self, cr, uid, move, matches, context=None):
-        """
-        Generate the appropriate accounting moves if the product being moved is subject
-        to real_time valuation tracking, and the source or the destination location is internal (not both)
-        This means an in or out move. 
-        
-        Depending on the matches it will create the necessary moves
-        """
-        ctx = context.copy()
-        ctx['force_company'] = move.company_id.id
-        valuation = self.pool.get("product.product").browse(cr, uid, move.product_id.id, context=ctx).valuation
-        move_obj = self.pool.get('account.move')
-        if valuation == 'real_time':
-            if context is None:
-                context = {}
-            company_ctx = dict(context,force_company=move.company_id.id)
-            journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(cr, uid, move, context=company_ctx)
-            reference_amount, reference_currency_id = self._get_reference_accounting_values_for_valuation(cr, uid, move, context=company_ctx)
-            account_moves = []
-            # Outgoing moves (or cross-company output part)
-            if move.location_id.company_id \
-                and (move.location_id.usage == 'internal' and move.location_dest_id.usage != 'internal'):
-                #returning goods to supplier
-                if move.location_dest_id.usage == 'supplier':
-                    account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, matches, acc_valuation, acc_src, reference_amount, reference_currency_id, 'out', context=company_ctx))]
-                else:
-                    account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, matches, acc_valuation, acc_dest, reference_amount, reference_currency_id, 'out', context=company_ctx))]
-
-            # Incoming moves (or cross-company input part)
-            if move.location_dest_id.company_id \
-                and (move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal'):
-                #goods return from customer
-                if move.location_id.usage == 'customer':
-                    account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, matches, acc_dest, acc_valuation, reference_amount, reference_currency_id, 'in', context=company_ctx))]
-                else:
-                    account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, matches, acc_src, acc_valuation, reference_amount, reference_currency_id, 'in', context=company_ctx))]
-                if matches and move.product_id.cost_method in ('fifo', 'lifo'):
-                    outs = {}
-                    match_obj = self.pool.get("stock.move.matching")
-                    for match in match_obj.browse(cr, uid, matches, context=context):
-                        if match.move_out_id.id in outs:
-                            outs[match.move_out_id.id] += [match.id]
-                        else:
-                            outs[match.move_out_id.id] = [match.id]
-                    #When in stock was negative, you will get matches for the in also:
-                    account_moves_neg = []
-                    for out_mov in self.browse(cr, uid, outs.keys(), context=context):
-                        journal_id_out, acc_src_out, acc_dest_out, acc_valuation_out = self._get_accounting_data_for_valuation(cr, uid, out_mov, context=company_ctx)
-                        reference_amount_out, reference_currency_id_out = self._get_reference_accounting_values_for_valuation(cr, uid, out_mov, context=company_ctx)
-                        if out_mov.location_dest_id.usage == 'supplier':
-                            # Is not the way it should be with acc_valuation
-                            account_moves_neg += [(journal_id_out, self._create_account_move_line(cr, uid, out_mov, outs[out_mov.id], acc_valuation_out, acc_src_out, reference_amount_out, reference_currency_id_out, 'out', context=company_ctx))]
-                        else:
-                            account_moves_neg += [(journal_id_out, self._create_account_move_line(cr, uid, out_mov, outs[out_mov.id], acc_valuation_out, acc_dest_out, reference_amount_out, reference_currency_id_out, 'out', context=company_ctx))]
-                    #Create account moves for outs which made stock go negative
-                    for j_id, move_lines in account_moves_neg:
-                        move_obj.create(cr, uid,
-                                        {'journal_id': j_id, 
-                                         'line_id': move_lines, 
-                                         'ref': out_mov.picking_id and out_mov.picking_id.name,
-                                         })
-            for j_id, move_lines in account_moves:
-                move_obj.create(cr, uid,
-                        {
-                         'journal_id': j_id,
-                         'line_id': move_lines,
-                         'ref': move.picking_id and move.picking_id.name})
-
     def _get_quants_from_pack(self, cr, uid, ids, context=None):
         """
         Suppose for the moment we don't have any packaging
@@ -1954,65 +2034,15 @@ class stock_move(osv.osv):
             res[move.id] = [x.id for x in move.reserved_quant_ids]
         return res
 
-
-    def check_total_qty(self, cr, uid, ids, context=None):
-        """
-        This will check if the necessary quants for the moves have been reserved. 
-        If not, it will retry to find the quants. 
-        If it can not find it, it will have to create a negative quant
-        
-        """
-        quant_obj = self.pool.get("stock.quant")
-        uom_obj = self.pool.get("product.uom")
-        for move in self.browse(cr, uid, ids, context=context):
-            product_qty = 0.0
-            for quant in move.reserved_quant_ids:
-                product_qty += quant.qty
-            qty_from_move = uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, move.product_id.uom_id.id)
-            #Check if the entire quantity has been transformed in to quants
-            if qty_from_move > product_qty:
-                quant_tuples = quant_obj.quants_get(cr, uid, move.location_id.id, move.product_id.id, qty_from_move - product_qty, prodlot_id = move.prodlot_id.id, context=context)
-                print quant_tuples
-                create_neg_quant = True
-                if quant_tuples: 
-                    quant_obj.split_and_assign_quants(cr, uid, quant_tuples, move, context=context)
-                    product_qty = 0.0
-                    #Reread move:
-                    move = self.browse(cr, uid, move.id, context=context)
-                    for quant in move.reserved_quant_ids:
-                        product_qty += quant.qty
-                    if qty_from_move <= product_qty:
-                        create_neg_quant = False
-                if create_neg_quant: 
-                    #To solve this, we should create a negative quant at destination and a positive quant at the source
-                    vals_neg = {
-                        'product_id': move.product_id.id, 
-                        'location_id': move.location_id.id, 
-                        'qty': -(qty_from_move - product_qty),
-                        'in_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                            }
-                    quant_id_neg = quant_obj.create(cr, uid, vals_neg, context=context)
-                    vals_pos = {
-                        'product_id': move.product_id.id, 
-                        'location_id': move.location_dest_id.id, 
-                        'qty': qty_from_move - product_qty,
-                        'history_ids': [(4, move.id)], 
-                        'propagated_from_id': quant_id_neg, 
-                        'in_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-                            }
-                    quant_id_pos = quant_obj.create(cr, uid, vals_pos, context=context)
-
-        return True
-
     def action_done(self, cr, uid, ids, context=None):
         """ Makes the move done and if all moves are done, it will finish the picking.
         @return:
         """
-        picking_ids = []
-        move_ids = []
+        context = context or {}
+        quant_obj = self.pool.get("stock.quant")
+        uom_obj = self.pool.get("product.uom")
+
         wf_service = netsvc.LocalService("workflow")
-        if context is None:
-            context = {}
 
         todo = []
         for move in self.browse(cr, uid, ids, context=context):
@@ -2020,119 +2050,20 @@ class stock_move(osv.osv):
                 todo.append(move.id)
         if todo:
             self.action_confirm(cr, uid, todo, context=context)
-            todo = []
 
-        uom_obj = self.pool.get("product.uom")
-        quant_obj = self.pool.get("stock.quant")
-        #Do price calc on move
-        quants = {}
-        for move in self.browse(cr, uid, ids, context=context):
-            quants[move.id] = []
-            if (move.location_id.usage in ['supplier', 'inventory']):
-                #Create quants
-                reconciled_quants = self.pool.get("stock.quant").create_quants(cr, uid, move, context=context)
-                quants[move.id] += reconciled_quants
-            else:
-                #move quants should resolve negative quants in destination
-                self.check_total_qty(cr, uid, ids, context=context)
-                move = self.browse(cr, uid, move.id, context=context)
-                reconciled_quants = self.pool.get("stock.quant").move_quants(cr, uid, [x.id for x in move.reserved_quant_ids], move, context=context)
-                quants[move.id] += reconciled_quants
-                
-        #Do price calculation on move -> Should pass reconciled Quants -> is a dictionary 
-        matchresults = self.price_calculation(cr, uid, ids, quants, context=context)
-        
-        for move in self.browse(cr, uid, ids, context=context):
-            if move.state in ['done','cancel']:
-                continue
-            move_ids.append(move.id)
-
-            if move.picking_id:
-                picking_ids.append(move.picking_id.id)
-            if move.move_dest_id.id and (move.state != 'done'):
-                # Downstream move should only be triggered if this move is the last pending upstream move
-                other_upstream_move_ids = self.search(cr, uid, [('id','!=',move.id),('state','not in',['done','cancel']),
-                                            ('move_dest_id','=',move.move_dest_id.id)], context=context)
-                if not other_upstream_move_ids:
-                    if move.move_dest_id.state in ('waiting', 'confirmed'):
-                        self.force_assign(cr, uid, [move.move_dest_id.id], context=context)
-                        #We can take over used quants in this move to be propagated to next move
-                        #TODO should take into account split quantities?
-                        quants = quant_obj.search(cr, uid, [('history_ids', 'in', move.id), ('location_id', '=', move.location_dest_id.id), ('reservation_id', '=', False)], context=context)
-                        if quants: 
-                            print "PROPAGATE QUANTS: ", quants
-                            quant_obj.write(cr, uid, quants, {'reservation_id':move.move_dest_id.id}, context=context)
-                        if move.move_dest_id.picking_id:
-                            wf_service.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
-                        if move.move_dest_id.auto_validate:
-                            self.action_done(cr, uid, [move.move_dest_id.id], context=context)
-
-            self._create_product_valuation_moves(cr, uid, move, move.id in matchresults and matchresults[move.id] or [], context=context)
-            if move.state not in ('confirmed','done','assigned'):
-                todo.append(move.id)
-
-        if todo:
-            self.action_confirm(cr, uid, todo, context=context)
+        qty = uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, move.product_id.uom_id.id)
+        quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, context=context)
+        quant_obj.quants_move(cr, uid, quants, move, context=context)
 
         self.write(cr, uid, move_ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
+        # Not sure we need this? If yes, put it in the write method of stock.move
         for id in move_ids:
              wf_service.trg_trigger(uid, 'stock.move', id, cr)
 
-        for pick_id in picking_ids:
-            wf_service.trg_write(uid, 'stock.picking', pick_id, cr)
-
-        ids = self.pool.get("stock.quant").search(cr, uid, [])
-        for x in  self.pool.get("stock.quant").browse(cr, uid, ids):
-            print (x.id, x.product_id.id, x.qty, x.price_unit, x.location_id.name, x.in_date)
-            print "     ", [(y.id, y.product_qty, y.price_unit) for y in x.history_ids]
+        # Done automatically by write
+        #for pick_id in picking_ids:
+        #    wf_service.trg_write(uid, 'stock.picking', pick_id, cr)
         return True
-
-    def _create_account_move_line(self, cr, uid, move, matches, src_account_id, dest_account_id, reference_amount, reference_currency_id, type='', context=None):
-        """
-        Generate the account.move.line values to post to track the stock valuation difference due to the
-        processing of the given stock move.
-        """
-        move_list = []
-        # Consists of access rights 
-        # TODO Check if amount_currency is not needed
-        match_obj = self.pool.get("stock.move.matching")
-        if type == 'out' and move.product_id.cost_method in ['real']:
-            for match in match_obj.browse(cr, uid, matches, context=context):
-                move_list += [(match.qty, match.qty * match.price_unit_out)]
-        elif type == 'in' and move.product_id.cost_method in ['real']:
-            move_list = [(move.product_qty, reference_amount)]
-        else:
-            move_list = [(move.product_qty, reference_amount)]
-
-        res = []
-        for item in move_list:
-            # prepare default values considering that the destination accounts have the reference_currency_id as their main currency
-            partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
-            debit_line_vals = {
-                        'name': move.name,
-                        'product_id': move.product_id and move.product_id.id or False,
-                        'quantity': item[0],
-                        'product_uom_id': move.product_uom.id, 
-                        'ref': move.picking_id and move.picking_id.name or False,
-                        'date': time.strftime('%Y-%m-%d'),
-                        'partner_id': partner_id,
-                        'debit': item[1],
-                        'account_id': dest_account_id,
-            }
-            credit_line_vals = {
-                        'name': move.name,
-                        'product_id': move.product_id and move.product_id.id or False,
-                        'quantity': item[0],
-                        'product_uom_id': move.product_uom.id, 
-                        'ref': move.picking_id and move.picking_id.name or False,
-                        'date': time.strftime('%Y-%m-%d'),
-                        'partner_id': partner_id,
-                        'credit': item[1],
-                        'account_id': src_account_id,
-            }
-            res += [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
-        return res
-
 
     def unlink(self, cr, uid, ids, context=None):
         if context is None:
@@ -2143,15 +2074,6 @@ class stock_move(osv.osv):
                 raise osv.except_osv(_('User Error!'), _('You can only delete draft moves.'))
         return super(stock_move, self).unlink(
             cr, uid, ids, context=ctx)
-
-    # _create_lot function is not used anywhere
-    def _create_lot(self, cr, uid, ids, product_id):
-        """ Creates production lot
-        @return: Production lot id
-        """
-        prodlot_obj = self.pool.get('stock.production.lot')
-        prodlot_id = prodlot_obj.create(cr, uid, {'product_id': product_id})
-        return prodlot_id
 
     def action_scrap(self, cr, uid, ids, quantity, location_id, context=None):
         """ Move the scrap/damaged product into scrap location
@@ -2184,7 +2106,7 @@ class stock_move(osv.osv):
                 'scrapped': True,
                 'location_dest_id': location_id,
                 'tracking_id': move.tracking_id.id,
-                'prodlot_id': move.prodlot_id.id,
+                'lot_id': move.lot_id.id,
             }
             new_move = self.copy(cr, uid, move.id, default_val)
 
@@ -2197,69 +2119,6 @@ class stock_move(osv.osv):
                     move.picking_id.message_post(body=message)
 
         self.action_done(cr, uid, res, context=context)
-        return res
-
-    # action_split function is not used anywhere
-    # FIXME: deprecate this method
-    def action_split(self, cr, uid, ids, quantity, split_by_qty=1, with_lot=True, context=None):
-        """ Split Stock Move lines into production lot which specified split by quantity.
-        @param cr: the database cursor
-        @param uid: the user id
-        @param ids: ids of stock move object to be splited
-        @param split_by_qty : specify split by qty
-        @param with_lot : if true, prodcution lot will assign for split line otherwise not.
-        @param context: context arguments
-        @return: Splited move lines
-        """
-
-        if context is None:
-            context = {}
-        if quantity <= 0:
-            raise osv.except_osv(_('Warning!'), _('Please provide proper quantity.'))
-
-        res = []
-
-        for move in self.browse(cr, uid, ids, context=context):
-            if split_by_qty <= 0 or quantity == 0:
-                return res
-
-            uos_qty = split_by_qty / move.product_qty * move.product_uos_qty
-
-            quantity_rest = quantity % split_by_qty
-            uos_qty_rest = split_by_qty / move.product_qty * move.product_uos_qty
-
-            update_val = {
-                'product_qty': split_by_qty,
-                'product_uos_qty': uos_qty,
-            }
-            for idx in range(int(quantity//split_by_qty)):
-                if not idx and move.product_qty<=quantity:
-                    current_move = move.id
-                else:
-                    current_move = self.copy(cr, uid, move.id, {'state': move.state})
-                res.append(current_move)
-                if with_lot:
-                    update_val['prodlot_id'] = self._create_lot(cr, uid, [current_move], move.product_id.id)
-
-                self.write(cr, uid, [current_move], update_val)
-
-
-            if quantity_rest > 0:
-                idx = int(quantity//split_by_qty)
-                update_val['product_qty'] = quantity_rest
-                update_val['product_uos_qty'] = uos_qty_rest
-                if not idx and move.product_qty<=quantity:
-                    current_move = move.id
-                else:
-                    current_move = self.copy(cr, uid, move.id, {'state': move.state})
-
-                res.append(current_move)
-
-
-                if with_lot:
-                    update_val['prodlot_id'] = self._create_lot(cr, uid, [current_move], move.product_id.id)
-
-                self.write(cr, uid, [current_move], update_val)
         return res
 
     def action_consume(self, cr, uid, ids, quantity, location_id=False, context=None):
@@ -2317,65 +2176,6 @@ class stock_move(osv.osv):
                 self.write(cr, uid, [move.id], update_val)
 
         self.action_done(cr, uid, res, context=context)
-
-        return res
-
-
-    def _generate_negative_stock_matchings(self, cr, uid, ids, product, quants, context=None):
-        """
-        This method generates the stock move matches for out moves of product with qty remaining
-        according to the in move
-        force_company should be in context already
-        | ids : id of in move
-        | product: browse record of product
-        Returns: 
-        | List of matches
-        """
-        assert len(ids) == 1, _("Only generate negative stock matchings one by one")
-        move = self.browse(cr, uid, ids, context=context)[0]
-        cost_method = product.cost_method
-        matching_obj = self.pool.get("stock.move.matching")
-        product_obj = self.pool.get("product.product")
-        uom_obj = self.pool.get("product.uom")
-        res = []
-#         
-#         #Search for the most recent out moves
-#         moves = self.search(cr, uid, [('company_id', '=', move.company_id.id), ('state','=', 'done'), ('location_id.usage','=','internal'), ('location_dest_id.usage', '!=', 'internal'), 
-#                                           ('product_id', '=', move.product_id.id), ('qty_remaining', '>', 0.0)], order='date, id', context=context)
-#         qty_to_go = move.product_qty
-#         for out_mov in self.browse(cr, uid, moves, context=context):
-#             if qty_to_go <= 0.0:
-#                 break
-#             out_qty_converted =  uom_obj._compute_qty(cr, uid, out_mov.product_uom.id, out_mov.qty_remaining, move.product_uom.id, round=False)
-#             qty = 0.0
-#             if out_qty_converted <= qty_to_go:
-#                 qty = out_qty_converted
-#             elif qty_to_go > 0.0: 
-#                 qty = qty_to_go
-#             revert_qty = (qty / out_qty_converted) * out_mov.qty_remaining
-#             matchvals = {'move_in_id': move.id, 'qty': revert_qty, 
-#                          'move_out_id': out_mov.id}
-#             match_id = matching_obj.create(cr, uid, matchvals, context=context)
-#             res.append(match_id)
-#             qty_to_go -= qty
-            #Need to re-calculate total price of every out_move if FIFO/LIFO
-            #Search out moves from quants
-            
-        quant_obj = self.pool.get("stock.quant")
-        if cost_method in ['real']:
-            quants_dict = quant_obj.get_out_moves_from_quants(cr, uid, quants, context=context)
-            for out_mov in self.browse(cr, uid, quants_dict.keys(), context=context):
-                quants_from_move = quant_obj.search(cr, uid, [('history_ids', 'in', out_mov.id), ('propagated_from_id', '=', False)], context=context)
-                out_qty_converted =  uom_obj._compute_qty(cr, uid, out_mov.product_uom.id, out_mov.product_qty, move.product_uom.id, round=False)
-                amount = 0.0
-                total_price = 0.0
-                for qua in quant_obj.browse(cr, uid, quants_from_move, context=context):
-                    amount += qua.qty
-                    total_price += qua.qty * qua.price_unit
-                if amount > 0.0:
-                    self.write(cr, uid, [out_mov.id], {'price_unit': total_price / amount}, context=context)
-                    if amount >= out_qty_converted:
-                        product_obj.write(cr, uid, [product.id], {'standard_price': total_price / amount}, context=context)
         return res
 
     def price_calculation(self, cr, uid, ids, quants, context=None):
@@ -2493,7 +2293,7 @@ class stock_move(osv.osv):
             context = {}
 
         complete, too_many, too_few = [], [], []
-        move_product_qty, prodlot_ids, partial_qty, product_uoms = {}, {}, {}, {}
+        move_product_qty, lot_ids, partial_qty, product_uoms = {}, {}, {}, {}
         
 
         for move in self.browse(cr, uid, ids, context=context):
@@ -2505,8 +2305,8 @@ class stock_move(osv.osv):
             product_uom = partial_data.get('product_uom',False)
             product_price = partial_data.get('product_price',0.0)
             product_currency = partial_data.get('product_currency',False)
-            prodlot_id = partial_data.get('prodlot_id')
-            prodlot_ids[move.id] = prodlot_id
+            lot_id = partial_data.get('lot_id')
+            lot_ids[move.id] = lot_id
             product_uoms[move.id] = product_uom
             partial_qty[move.id] = uom_obj._compute_qty(cr, uid, product_uoms[move.id], product_qty, move.product_uom.id)
             if move.product_qty == partial_qty[move.id]:
@@ -2527,16 +2327,16 @@ class stock_move(osv.osv):
                             'move_dest_id': False,
                             'price_unit': product_price,
                             }
-                prodlot_id = prodlot_ids[move.id]
-                if prodlot_id:
-                    defaults.update(prodlot_id=prodlot_id)
+                lot_id = lot_ids[move.id]
+                if lot_id:
+                    defaults.update(lot_id=lot_id)
                 new_move = self.copy(cr, uid, move.id, defaults)
                 complete.append(self.browse(cr, uid, new_move))
             self.write(cr, uid, [move.id],
                     {
                         'product_qty': move.product_qty - product_qty,
                         'product_uos_qty': move.product_qty - product_qty,
-                        'prodlot_id': False,
+                        'lot_id': False,
                         'tracking_id': False,
                     })
 
@@ -2550,8 +2350,8 @@ class stock_move(osv.osv):
             complete.append(move)
 
         for move in complete:
-            if prodlot_ids.get(move.id):
-                self.write(cr, uid, [move.id],{'prodlot_id': prodlot_ids.get(move.id)})
+            if lot_ids.get(move.id):
+                self.write(cr, uid, [move.id],{'lot_id': lot_ids.get(move.id)})
             self.action_done(cr, uid, [move.id], context=context)
             if  move.picking_id.id :
                 # TOCHECK : Done picking if all moves are done
@@ -2629,8 +2429,9 @@ class stock_inventory(osv.osv):
             move_ids = []
             for line in inv.inventory_line_id:
                 pid = line.product_id.id
-                product_context.update(uom=line.product_uom.id, to_date=inv.date, date=inv.date, prodlot_id=line.prod_lot_id.id)
-                amount = location_obj._product_get(cr, uid, line.location_id.id, [pid], product_context)[pid]
+                product_context.update(uom=line.product_uom.id, to_date=inv.date, date=inv.date, lot_id=line.prod_lot_id.id)
+                # FP Note: TODO check if it does not take recursive values
+                amount = line.product_id.qty_available
                 change = line.product_qty - amount
                 lot_id = line.prod_lot_id.id
                 if change:
@@ -2639,7 +2440,7 @@ class stock_inventory(osv.osv):
                         'name': _('INV:') + (line.inventory_id.name or ''),
                         'product_id': line.product_id.id,
                         'product_uom': line.product_uom.id,
-                        'prodlot_id': lot_id,
+                        'lot_id': lot_id,
                         'date': inv.date,
                         'company_id': line.location_id.company_id.id
                     }
@@ -2725,7 +2526,8 @@ class stock_inventory_line(osv.osv):
             return {'value': {'product_qty': 0.0, 'product_uom': False, 'prod_lot_id': False}}
         obj_product = self.pool.get('product.product').browse(cr, uid, product)
         uom = uom or obj_product.uom_id.id
-        amount = self.pool.get('stock.location')._product_get(cr, uid, location_id, [product], {'uom': uom, 'to_date': to_date, 'compute_child': False})[product]
+        # FP Note: read quantity on product
+        amount = 0
         result = {'product_qty': amount, 'product_uom': uom, 'prod_lot_id': False}
         return {'value': result}
 

@@ -246,7 +246,7 @@
             <para style="terp_default_9"><font face="Helvetica" size="9.0">[[ get_product_desc(move_lines) ]] </font></para>
           </td>
           <td>
-            <para style="terp_default_Centre_9">[[ (move_lines.prodlot_id and move_lines.prodlot_id.name) or '' ]]</para>
+            <para style="terp_default_Centre_9">[[ (move_lines.lot_id and move_lines.lot_id.name) or '' ]]</para>
           </td>
           <td>
             <para style="terp_default_9">Waiting Availability[[ move_lines.state == 'confirmed' and ' ' or removeParentNode('para') ]]</para>
@@ -276,7 +276,7 @@
             <para style="terp_default_9"><font face="Helvetica" size="9.0">[[ get_product_desc(move_lines) ]] </font></para>
           </td>
           <td>
-            <para style="terp_default_Centre_9">[[ (move_lines.prodlot_id and move_lines.prodlot_id.name) or '' ]]</para>
+            <para style="terp_default_Centre_9">[[ (move_lines.lot_id and move_lines.lot_id.name) or '' ]]</para>
           </td>
           <td>
             <para style="terp_default_9">[[ (picking.type == 'in' or removeParentNode('para')) ]][[ move_lines.state == 'done' and 'Received' or move_lines.state]]</para>
