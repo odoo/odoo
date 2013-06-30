@@ -2045,6 +2045,20 @@ class stock_move(osv.osv):
                 return False
         return True
 
+    def _get_remaining_qty(self, cr, uid, ids, field_name, args, context=None):
+        #TODO: this function assumes that there aren't several stock move in the same picking with the same product. what should we do in that case?
+        #TODO take care of the quant on stock moves too
+        res = dict.fromkeys(ids, False)
+        for move in self.browse(cr, uid, ids, context=context):
+            res[move.id] = move.product_qty
+            for op in move.picking_id.pack_operation_ids:
+                if op.product_id == move.product_id or (op.quant_id and op.quant_id.product_id == move.product_id):
+                    res[move.id] -= op.product_qty
+                if op.package_id:
+                    #find the product qty recursively
+                    res[move.id] -= self.pool.get('stock.quant.package')._get_product_total_qty(cr, uid, op.package_id, move.product_id.id, context=context)
+        return res
+
     _columns = {
         'name': fields.char('Description', required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
@@ -2105,7 +2119,7 @@ class stock_move(osv.osv):
         'scrapped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scrapped', readonly=True),
         'type': fields.related('picking_id', 'type', type='selection', selection=[('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], string='Shipping Type'),
         'reserved_quant_ids': fields.one2many('stock.quant', 'reservation_id', 'Reserved quants'), 
-        'remaining_qty': fields.float('Remaining Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), states={'done': [('readonly', True)]}),  # to be used in pick/pack new interface  # TODO change this in a functional field to ease the handling
+        'remaining_qty': fields.function(_get_remaining_qty, type='float', string='Remaining Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), states={'done': [('readonly', True)]}),  # to be used in pick/pack new interface  # TODO change this in a functional field to ease the handling
     }
 
     def _check_location(self, cr, uid, ids, context=None):
@@ -3895,6 +3909,16 @@ class stock_package(osv.osv):
             res += self.find_all_quants(cr, uid, child, context=context)
         res += [qt.id for qt in package_record.quant_ids]
         return res
+
+    def _get_product_total_qty(self, cr, uid, package_record, product_id, context=None):
+        ''' find the total of given product 'product_id' inside the given package 'package_id'''
+        quant_obj = self.pool.get('stock.quant')
+        all_quant_ids = self.find_all_quants(cr, uid, package_record, context=context)
+        total = 0
+        for quant in quant_obj.browse(cr, uid, all_quant_ids, context=context):
+            if quant.product_id.id == product_id:
+                total += quant.product_qty
+        return total
 
     #def action_delete(self, cr, uid, ids, context=None):
     #    #no need, we use unlink of ids and with the ondelete = cascade it will work flawlessly
