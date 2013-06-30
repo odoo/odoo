@@ -2840,4 +2840,130 @@ class stock_pack_operation(osv.osv):
                 pass
         return todo_on_moves, todo_on_operations
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+class stock_warehouse_orderpoint(osv.osv):
+    """
+    Defines Minimum stock rules.
+    """
+    _name = "stock.warehouse.orderpoint"
+    _description = "Minimum Inventory Rule"
+
+    def _get_draft_procurements(self, cr, uid, ids, field_name, arg, context=None):
+        if context is None:
+            context = {}
+        result = {}
+        procurement_obj = self.pool.get('procurement.order')
+        for orderpoint in self.browse(cr, uid, ids, context=context):
+            procurement_ids = procurement_obj.search(cr, uid , [('state', '=', 'draft'), ('product_id', '=', orderpoint.product_id.id), ('location_id', '=', orderpoint.location_id.id)])
+            result[orderpoint.id] = procurement_ids
+        return result
+
+    def _check_product_uom(self, cr, uid, ids, context=None):
+        '''
+        Check if the UoM has the same category as the product standard UoM
+        '''
+        if not context:
+            context = {}
+            
+        for rule in self.browse(cr, uid, ids, context=context):
+            if rule.product_id.uom_id.category_id.id != rule.product_uom.category_id.id:
+                return False
+            
+        return True
+
+    _columns = {
+        'name': fields.char('Name', size=32, required=True),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the orderpoint without removing it."),
+        'logic': fields.selection([('max','Order to Max'),('price','Best price (not yet active!)')], 'Reordering Mode', required=True),
+        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True, ondelete="cascade"),
+        'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete="cascade"),
+        'product_id': fields.many2one('product.product', 'Product', required=True, ondelete='cascade', domain=[('type','!=','service')]),
+        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
+        'product_min_qty': fields.float('Minimum Quantity', required=True,
+            help="When the virtual stock goes below the Min Quantity specified for this field, OpenERP generates "\
+            "a procurement to bring the forecasted quantity to the Max Quantity."),
+        'product_max_qty': fields.float('Maximum Quantity', required=True,
+            help="When the virtual stock goes below the Min Quantity, OpenERP generates "\
+            "a procurement to bring the forecasted quantity to the Quantity specified as Max Quantity."),
+        'qty_multiple': fields.integer('Qty Multiple', required=True,
+            help="The procurement quantity will be rounded up to this multiple."),
+        'procurement_id': fields.many2one('procurement.order', 'Latest procurement', ondelete="set null"),
+        'company_id': fields.many2one('res.company','Company',required=True),
+        'procurement_draft_ids': fields.function(_get_draft_procurements, type='many2many', relation="procurement.order", \
+                                string="Related Procurement Orders",help="Draft procurement of the product and location of that orderpoint"),
+    }
+    _defaults = {
+        'active': lambda *a: 1,
+        'logic': lambda *a: 'max',
+        'qty_multiple': lambda *a: 1,
+        'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'stock.orderpoint') or '',
+        'product_uom': lambda sel, cr, uid, context: context.get('product_uom', False),
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.warehouse.orderpoint', context=c)
+    }
+    _sql_constraints = [
+        ('qty_multiple_check', 'CHECK( qty_multiple > 0 )', 'Qty Multiple must be greater than zero.'),
+    ]
+    _constraints = [
+        (_check_product_uom, 'You have to select a product unit of measure in the same category than the default unit of measure of the product', ['product_id', 'product_uom']),
+    ]
+
+    def default_get(self, cr, uid, fields, context=None):
+        res = super(stock_warehouse_orderpoint, self).default_get(cr, uid, fields, context)
+        # default 'warehouse_id' and 'location_id'
+        if 'warehouse_id' not in res:
+            warehouse = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'warehouse0', context)
+            res['warehouse_id'] = warehouse.id
+        if 'location_id' not in res:
+            warehouse = self.pool.get('stock.warehouse').browse(cr, uid, res['warehouse_id'], context)
+            res['location_id'] = warehouse.lot_stock_id.id
+        return res
+
+    def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context=None):
+        """ Finds location id for changed warehouse.
+        @param warehouse_id: Changed id of warehouse.
+        @return: Dictionary of values.
+        """
+        if warehouse_id:
+            w = self.pool.get('stock.warehouse').browse(cr, uid, warehouse_id, context=context)
+            v = {'location_id': w.lot_stock_id.id}
+            return {'value': v}
+        return {}
+
+    def onchange_product_id(self, cr, uid, ids, product_id, context=None):
+        """ Finds UoM for changed product.
+        @param product_id: Changed id of product.
+        @return: Dictionary of values.
+        """
+        if product_id:
+            prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            d = {'product_uom': [('category_id', '=', prod.uom_id.category_id.id)]}
+            v = {'product_uom': prod.uom_id.id}
+            return {'value': v, 'domain': d}
+        return {'domain': {'product_uom': []}}
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default = {}
+        default.update({
+            'name': self.pool.get('ir.sequence').get(cr, uid, 'stock.orderpoint') or '',
+        })
+        return super(stock_warehouse_orderpoint, self).copy(cr, uid, id, default, context=context)
+
+class product_template(osv.osv):
+    _inherit="product.template"
+    _columns = {
+        'type': fields.selection([('product','Stockable Product'),('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Consumable: Will not imply stock management for this product. \nStockable product: Will imply stock management for this product."),
+        'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procurement Method', required=True, help="Make to Stock: When needed, the product is taken from the stock or we wait for replenishment. \nMake to Order: When needed, the product is purchased or produced."),
+        'supply_method': fields.selection([('produce','Manufacture'),('buy','Buy')], 'Supply Method', required=True, help="Manufacture: When procuring the product, a manufacturing order or a task will be generated, depending on the product type. \nBuy: When procuring the product, a purchase order will be generated."),
+    }
+    _defaults = {
+        'procure_method': 'make_to_stock',
+        'supply_method': 'buy',
+    }
+
+class product_product(osv.osv):
+    _inherit="product.product"
+    _columns = {
+        'orderpoint_ids': fields.one2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rules'),
+    }
+
