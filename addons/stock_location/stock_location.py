@@ -262,9 +262,8 @@ class stock_location(osv.osv):
         strats = self.pool.get('product.removal').search(cr, uid, [('location_id','=',id), ('product_categ_id','child_of', product.categ_id.id)], context=context)
         return strats and strats[0] or None
 
-    def get_removal_strategy(self, cr, uid, id, product_id, context=None):
+    def get_removal_strategy(self, cr, uid, location, product, context=None):
         pr = self.pool.get('product.removal')
-        product = self.pool.get("product.product").browse(cr, uid, product_id, context=context)
         categ = product.categ_id
         categs = [categ.id, False]
         while categ.parent_id:
@@ -272,7 +271,7 @@ class stock_location(osv.osv):
             categs.append(categ.id)
 
         result = pr.search(cr,uid, [
-            ('location_id', '=', id),
+            ('location_id', '=', location.id),
             ('category_ids', 'in', categs)
         ], context=context)
         if result:

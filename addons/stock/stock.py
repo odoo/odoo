@@ -143,12 +143,13 @@ class stock_location(osv.osv):
         'posz': 0,
         'scrap_location': False,
     }
-    def get_removal_strategy(self, cr, uid, id, product_id, context=None):
-        product = self.pool.get("product.product").browse(cr, uid, product_id, context=context)
+    def get_removal_strategy(self, cr, uid, location, product, context=None):
         categ = product.categ_id
+        print product and product.name or 'no prod'
+        print categ and categ.name or 'NO'
         while (not categ.removal_strategy_id) and categ.parent_id:
             categ = categ.parent_id
-        return categ.removal_strategy_id or None
+        return categ and categ.removal_strategy_id or None
 
 class stock_quant(osv.osv):
     """
@@ -206,7 +207,7 @@ class stock_quant(osv.osv):
             self._account_entry_move(cr, uid, quant, location_from, location_to, move, context=context)
 
     # FP Note: TODO: implement domain preference that tries to retrieve first with this domain
-    def quants_get(self, cr, uid, location_id, product_id, qty, domain=[('qty','>',0.0)], domain_preference=[], context=None):
+    def quants_get(self, cr, uid, location, product, qty, domain=[('qty','>',0.0)], domain_preference=[], context=None):
         """
         Use the removal strategies of product to search for the correct quants
 
@@ -215,11 +216,11 @@ class stock_quant(osv.osv):
         :qty in UoM of product
         :lot_id NOT USED YET !
         """
-        removal_strategy = self.pool.get('stock.location').get_removal_strategy(cr, uid, location_id, product_id, context=context) or 'fifo'
+        removal_strategy = self.pool.get('stock.location').get_removal_strategy(cr, uid, location, product, context=context) or 'fifo'
         if removal_strategy=='fifo':
-            result = self._quants_get_fifo(cr, uid, location_id, product_id, qty, domain, context=context)
+            result = self._quants_get_fifo(cr, uid, location, product, qty, domain, context=context)
         elif removal_strategy=='lifo':
-            result = self._quants_get_lifo(cr, uid, location_id, product_id, qty, domain, context=context)
+            result = self._quants_get_lifo(cr, uid, location, product, qty, domain, context=context)
         else:
             raise osv.except_osv(_('Error!'),_('Removal strategy %s not implemented.' % (removal_strategy,)))
         return result
@@ -234,20 +235,24 @@ class stock_quant(osv.osv):
         vals = {
             'product_id': move.product_id.id, 
             'location_id': move.location_dest_id.id, 
-            'qty': product_uom_qty, 
+            'qty': qty, 
             'history_ids': [(4, move.id)], 
             'in_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            'lot_id': move.lot_id.id, 
             'company_id': move.company_id.id, 
         }
         quant_id = self.create(cr, uid, vals, context=context)
-        if move.location_id.type == 'internal':
+        if move.location_id.usage == 'internal':
             vals['location_id'] = move.location_id.id
-            vals['qty'] = -product_uom_qty
+            vals['qty'] = -qty
             new_quant_id = self.create(cr, uid, vals, context=context)
             self.write(cr, uid, [quant_id], {'propagated_from_id': new_quant_id}, context=context)
         obj = self.browse(cr, uid, quant_id, context=context)
-        self._price_update(cr, uid, obj, product_uom_price, context=context)
+
+        # FP Note: TODO: compute the right price according to the move, with currency convert
+        # QTY is normally already converted to main product's UoM
+        price_unit = move.price_unit
+
+        self._price_update(cr, uid, obj, price_unit, context=context)
         return obj
 
     def _quand_split(self, cr, uid, quant, qty, context=None):
@@ -285,15 +290,15 @@ class stock_quant(osv.osv):
 
         return res
 
-    # FP Note: this is where we should post accounting entries
-    def _price_update(cr, uid, quant, newprice, context=None):
-        self.write(cr, uid, [quant.id], {'price': newprice}, context=context)
+    # FP Note: this is where we should post accounting entries for adjustment
+    def _price_update(self, cr, uid, quant, newprice, context=None):
+        self.write(cr, uid, [quant.id], {'cost': newprice}, context=context)
 
     #
     # Implementation of removal strategies
     #
-    def _quants_get_order(self, cr, uid, location_id, product_id, quantity, domain=[], orderby='in_date', context=None):
-        domain = [('location_id', 'child_of', location_id), ('product_id','=',product_id), 
+    def _quants_get_order(self, cr, uid, location, product, quantity, domain=[], orderby='in_date', context=None):
+        domain = [('location_id', 'child_of', location.id), ('product_id','=',product.id), 
                   ('reservation_id', '=', False)] + domain
         res = []
         offset = 0
@@ -312,12 +317,12 @@ class stock_quant(osv.osv):
             offset += 10
         return res
 
-    def _quants_get_fifo(self, cr, uid, location_id, product_id, quantity, domain=[], context=None):
-        return self._quants_get_order(cr, uid, location_id, product_id, quantity,
+    def _quants_get_fifo(self, cr, uid, location, product, quantity, domain=[], context=None):
+        return self._quants_get_order(cr, uid, location, product, quantity,
             domain, 'in_date', context=context)
 
-    def _quants_get_lifo(self, cr, uid, location_id, product_id, quantity, domain=[], context=None):
-        return self._quants_get_order(cr, uid, location_id, product_id, quantity,
+    def _quants_get_lifo(self, cr, uid, location, product, quantity, domain=[], context=None):
+        return self._quants_get_order(cr, uid, location, product, quantity,
             domain, 'in_date desc', context=context)
 
     """
@@ -325,18 +330,7 @@ class stock_quant(osv.osv):
 
     location_from: can be None if it's a new quant
     """
-    def _account_entry_move(cr, uid, quant, location_from, location_to, move, context=None):
-        pass
-
-    def _account_entry_price_adjusment(cr, uid, quant, newprice, context=None):
-        pass
-
-
-    # Return the company owning the location if any
-    def _location_owner(cr, uid, quant, location, context=context):
-        return location and (location.usage == 'internal') and location.company_id or False
-
-    def _account_entry_move(cr, uid, quant, location_from, location_to, move, context=None):
+    def _account_entry_move(self, cr, uid, quant, location_from, location_to, move, context=None):
         if quant.product_id.valuation <> 'realtime':
             return False
         company_from = self._location_owner(cr, uid, quant, location_from, context=context)
@@ -344,14 +338,19 @@ class stock_quant(osv.osv):
         if company_from == company_to:
             return False
 
-        # Products arriving in the company
+        # Create Journal Entry for products arriving in the company
         if company_to:
             pass
 
-
-        # Products leaving the company
+        # Create Journal Entry for products leaving the company
         if company_from:
             pass
+
+
+    # Return the company owning the location if any
+    def _location_owner(self, cr, uid, quant, location, context=None):
+        return location and (location.usage == 'internal') and location.company_id or False
+
 
 
     # FP Note: all accounting valuation stuff must be on the quant
@@ -724,11 +723,9 @@ class stock_picking(osv.osv):
         """ Changes state of picking to available if moves are confirmed or waiting.
         @return: True
         """
-        wf_service = netsvc.LocalService("workflow")
         for pick in self.browse(cr, uid, ids):
             move_ids = [x.id for x in pick.move_lines if x.state in ['confirmed','waiting']]
             self.pool.get('stock.move').force_assign(cr, uid, move_ids)
-            wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
         return True
 
     def draft_force_assign(self, cr, uid, ids, *args):
@@ -741,7 +738,6 @@ class stock_picking(osv.osv):
         """ Validates picking directly from draft state.
         @return: True
         """
-        wf_service = netsvc.LocalService("workflow")
         self.draft_force_assign(cr, uid, ids)
         return self.action_process(cr, uid, ids, context=context)
 
@@ -749,11 +745,9 @@ class stock_picking(osv.osv):
         """ Cancels picking and moves.
         @return: True
         """
-        wf_service = netsvc.LocalService("workflow")
         for pick in self.browse(cr, uid, ids):
             move_ids = [x.id for x in pick.move_lines]
             self.pool.get('stock.move').cancel_assign(cr, uid, move_ids)
-            wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
         return True
 
     def action_assign_wkf(self, cr, uid, ids, context=None):
@@ -1209,7 +1203,6 @@ class stock_picking(osv.osv):
         currency_obj = self.pool.get('res.currency')
         uom_obj = self.pool.get('product.uom')
         sequence_obj = self.pool.get('ir.sequence')
-        wf_service = netsvc.LocalService("workflow")
         for pick in self.browse(cr, uid, ids, context=context):
             new_picking = None
             complete, too_many, too_few = [], [], []
@@ -1330,7 +1323,6 @@ class stock_picking(osv.osv):
                 self.write(cr, uid, [pick.id], {'backorder_id': new_picking})
                 self.action_move(cr, uid, [new_picking], context=context)
                 self.signal_button_done(cr, uid, [new_picking])
-                wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
                 delivered_pack_id = new_picking
                 back_order_name = self.browse(cr, uid, delivered_pack_id, context=context).name
                 self.message_post(cr, uid, ids, body=_("Back order <em>%s</em> has been <b>created</b>.") % (back_order_name), context=context)
@@ -1781,6 +1773,8 @@ class stock_move(osv.osv):
                 if move.picking_id and (move.picking_id.id not in done):
                     wf_service.trg_write(uid, 'stock.picking', move.picking_id.id, cr)
                     done[move.picking_id.id] = True
+            for id in ids:
+                 wf_service.trg_trigger(uid, 'stock.move', id, cr)
         return True
 
     def _auto_init(self, cursor, context=None):
@@ -2000,7 +1994,7 @@ class stock_move(osv.osv):
                     for m2 in move.move_orig_ids:
                         for q in m2.quant_ids:
                             dp.append(q.id)
-                quants = quant_obj.quants_get(cr, uid, move.location_id.id, move.product_id.id, qty, domain_preference=dp and [('id', 'in', dp)], context=context)
+                quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, domain_preference=dp and [('id', 'in', dp)], context=context)
                 quant_obj.quants_reserve(cr, uid, quants, move, context=context)
         self.write(cr, uid, done, {'state': 'assigned'})
 
@@ -2042,8 +2036,6 @@ class stock_move(osv.osv):
         quant_obj = self.pool.get("stock.quant")
         uom_obj = self.pool.get("product.uom")
 
-        wf_service = netsvc.LocalService("workflow")
-
         todo = []
         for move in self.browse(cr, uid, ids, context=context):
             if move.state=="draft":
@@ -2055,14 +2047,7 @@ class stock_move(osv.osv):
         quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, context=context)
         quant_obj.quants_move(cr, uid, quants, move, context=context)
 
-        self.write(cr, uid, move_ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
-        # Not sure we need this? If yes, put it in the write method of stock.move
-        for id in move_ids:
-             wf_service.trg_trigger(uid, 'stock.move', id, cr)
-
-        # Done automatically by write
-        #for pick_id in picking_ids:
-        #    wf_service.trg_write(uid, 'stock.picking', pick_id, cr)
+        self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
         return True
 
     def unlink(self, cr, uid, ids, context=None):
@@ -2431,6 +2416,7 @@ class stock_inventory(osv.osv):
                 pid = line.product_id.id
                 product_context.update(uom=line.product_uom.id, to_date=inv.date, date=inv.date, lot_id=line.prod_lot_id.id)
                 # FP Note: TODO check if it does not take recursive values
+                # FP Note: TODO implement lot matching
                 amount = line.product_id.qty_available
                 change = line.product_qty - amount
                 lot_id = line.prod_lot_id.id
@@ -2440,7 +2426,6 @@ class stock_inventory(osv.osv):
                         'name': _('INV:') + (line.inventory_id.name or ''),
                         'product_id': line.product_id.id,
                         'product_uom': line.product_uom.id,
-                        'lot_id': lot_id,
                         'date': inv.date,
                         'company_id': line.location_id.company_id.id
                     }
