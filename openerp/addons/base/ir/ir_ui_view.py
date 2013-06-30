@@ -19,13 +19,14 @@
 #
 ##############################################################################
 import copy
-from functools import partial
 import itertools
 import logging
 import os
 import sys
+import re
 import time
 
+from functools import partial
 from lxml import etree
 
 from openerp import tools
@@ -288,9 +289,9 @@ class view(osv.osv):
             else:
                 node.attrib.update({
                     'data-oe-model': 'ir.ui.view',
+                    'data-oe-id': str(view_id),
                     'data-oe-field': 'arch',
-                    'data-oe-view-id': str(view_id),
-                    'data-oe-xpath': xpath
+                    'data-oe-xpath': xpath + node.tag + '/'
                 })
         return specs_tree
 
@@ -407,8 +408,8 @@ class view(osv.osv):
         if context.get('inherit_branding'):
             arch_tree.attrib.update({
                 'data-oe-model': 'ir.ui.view',
+                'data-oe-id': str(root_id),
                 'data-oe-field': 'arch',
-                'data-oe-view-id': str(root_id),
             })
 
         # and apply inheritance
@@ -416,7 +417,7 @@ class view(osv.osv):
 
         return dict(view, arch=etree.tostring(arch, encoding='utf-8'))
 
-    # post processing
+    # postprocessing: groups, modifiers, ...
 
     def postprocess(self, cr, user, model, node, view_id, in_tree_view, model_fields, context=None):
         """Return the description of the fields in the node.
@@ -682,50 +683,8 @@ class view(osv.osv):
 
     # view used as templates
 
-    def clean_anotations(arch, parent_info=None):
-        for child in arch:
-            if child.tag == 't' or child.tag == 'field':
-                # can not anote t and field while cleaning
-                continue
-
-            child_text = "".join([etree.tostring(x) for x in child])
-            if child.attrib.get('data-edit-model'):
-                if child_text.find('data-edit-model') != -1 or child_text.find('<t ') != -1:
-                    # enclosed tag, move present tag to childs
-                    parent_info = {
-                        'model': child.attrib.get('data-edit-model'),
-                        'view_id': child.attrib.get('data-edit-view-id'),
-                        'xpath': child.attrib.get('data-edit-xpath')+'/'+child.tag,
-                    }
-                    child.attrib.pop('data-edit-model')
-                    child.attrib.pop('data-edit-view-id')
-                    child.attrib.pop('data-edit-xpath')
-                    child = clean_anotations(child, parent_info)
-                else:
-                    # tagged node, no enclosed, can keep, don't care if had parent_info
-                    continue
-
-            else:
-                if child_text.find('data-edit-model') != -1 or child_text.find('<t ') != -1:
-                    # has other nodes to clean
-                    if parent_info:
-                        # update xpath
-                        parent_info.update({'xpath': parent_info.get('xpath')+'/'+child.tag})
-                    child = clean_anotations(child, parent_info)
-                elif parent_info:
-                    # put tag from parent, no enclose, higher
-                    child.attrib.update({
-                        'data-edit-model': parent_info.get('model'),
-                        'data-edit-view-id': parent_info.get('view_id'),
-                        'data-edit-xpath': parent_info.get('xpath'),
-                    })
-
-        return arch
-
     def read_template(self, cr, uid, id_, context=None):
         import pprint
-        pprint.pprint(id_)
-        pprint.pprint(context)
         try:
             id_ = int(id_)
         except ValueError:
@@ -751,15 +710,39 @@ class view(osv.osv):
                     raise ValueError('Invalid id: %r' % (id_,))
 
         r = self.read_combined(cr, uid, id_, fields=['arch'], context=context)
-        pprint.pprint(r)
         return r['arch']
+
+    def distribute_branding(self, e, branding=None, xpath=None):
+        branding_copy = ['data-oe-model','data-oe-id','data-oe-field','data-oe-xpath']
+        branding_dist = {}
+        if e.tag == 't' or e.tag == 'field':
+            # can not anotate t and field
+            return True
+        xpath = (xpath or '') + '/' + e.tag
+        if branding and not e.attrib.get('data-oe-model'):
+            e.attrib.update(branding)
+            e.attrib['data-oe-xpath'] = xpath
+        if e.attrib.get('data-oe-model'):
+            # if a branded tag containg branded tag distribute to the childs
+            child_text = "".join([etree.tostring(x, encoding='utf-8') for x in e])
+            if re.search('(data-oe-model=|t-esc=|t-raw=)',child_text):
+                for i in branding_copy:
+                    if e.attrib.get(i):
+                        branding_dist[i] = e.attrib.get(i)
+                        e.attrib.pop(i)
+                for child in e:
+                    self.distribute_branding(child, branding_dist, xpath)
 
     def render(self, cr, uid, id_or_xml_id, values, context=None):
         def loader(name):
             arch = self.read_template(cr, uid, name, context=context)
-            # parse arch
-            # on the root tag of arch add the attribute t-name="<name>"
+
+            arch_tree = etree.fromstring(arch.encode('utf-8'))
+            self.distribute_branding(arch_tree)
+            arch = etree.tostring(arch_tree, encoding='utf-8')
+
             arch = u'<?xml version="1.0" encoding="utf-8"?><tpl><t t-name="{0}">{1}</t></tpl>'.format(name, arch)
+
             return arch
         engine = qweb.QWebXml(loader)
         return engine.render(id_or_xml_id, values)
