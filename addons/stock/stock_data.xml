@@ -111,6 +111,25 @@ watch your stock valuation, and track production lots upstream and downstream (b
         </record>
 
         <!--
+             Procurement rules
+        -->
+
+        <record id="procurement_rule_customer" model="procurement.rule">
+            <field name="name">Output > Customer</field>
+            <field name="action">move</field>
+            <field name="location_id" ref="stock_location_customers"/>
+            <field name="location_src_id" ref="stock_location_output"/>
+        </record>
+
+        <record id="procurement_rule_customer" model="procurement.rule">
+            <field name="name">Stock > Output</field>
+            <field name="action">move</field>
+            <field name="location_id" ref="stock_location_output"/>
+            <field name="location_src_id" ref="stock_location_stock"/>
+        </record>
+
+
+        <!--
     Properties
     -->
         <record forcecreate="True" id="property_stock_supplier" model="ir.property">

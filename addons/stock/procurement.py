@@ -38,20 +38,22 @@ class procurement_rule(osv.osv):
     def _get_action(self, cr, uid, context=context):
         result = super(procurement_rule, self)._get_action(cr, uid, context=context)
         return result + [('move','Move From Another Location')]
-
-class procurement_order(osv.osv):
-    _inherit = "procurement.order"
     _columns = {
-        'location_id': fields.many2one('stock.location', 'Source Location')
-        'move_id': fields.many2one('stock.move', 'Move')
-        'move_dest_id': fields.many2one('stock.move', 'Destination Move')
+        'location_id': fields.many2one('stock.location', 'Destination Location')
         'location_src_id': fields.many2one('stock.location', 'Source Location',
             help="Source location is action=move")
     }
 
+class procurement_order(osv.osv):
+    _inherit = "procurement.order"
+    _columns = {
+        'move_id': fields.many2one('stock.move', 'Move')
+        'move_dest_id': fields.many2one('stock.move', 'Destination Move')
+    }
+
     def _run(self, cr, uid, procurement, context=None):
         if procurement.rule_id and procurement.rule_id.action == 'move':
-            if not procurement.location_src_id:
+            if not procurement.rule_id.location_src_id:
                 self.message_post(cr, uid, [procurement.id], body=_('No source location defined!'), context=context)
                 return False
             move_obj = self.pool.get('stock.move')
@@ -68,8 +70,8 @@ class procurement_order(osv.osv):
                         or procurement.product_uom.id,
                 'partner_id': procurement.group_id and procurement.group_id.partner_id and \
                         procurement.group_id.partner_id.id or False,
-                'location_id': procurement.location_src_id.id,
-                'location_dest_id': procurement.location_id.id,
+                'location_id': procurement.rule_id.location_src_id.id,
+                'location_dest_id': procurement.rule_id.location_id.id,
                 'move_dest_id': procurement.move_dest_id and procurement.move_dest_id.id or False,
                 'cancel_cascade': procurement.rule_id and procurement.rule_id.cancel_cascade or False,
                 'group_id': procurement.group_id and procurement.group_id.id or False, 
