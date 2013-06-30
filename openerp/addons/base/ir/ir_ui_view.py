@@ -712,13 +712,13 @@ class view(osv.osv):
         r = self.read_combined(cr, uid, id_, fields=['arch'], context=context)
         return r['arch']
 
-    def distribute_branding(self, e, branding=None, xpath=None):
+    def distribute_branding(self, e, branding=None, xpath=None, count=None):
         branding_copy = ['data-oe-model','data-oe-id','data-oe-field','data-oe-xpath']
         branding_dist = {}
         if e.tag == 't' or e.tag == 'field':
             # can not anotate t and field
             return True
-        xpath = (xpath or '') + '/' + e.tag
+        xpath = "%s/%s[%s]" % (xpath or '', e.tag, (count and count.get(e.tag)) or 0)
         if branding and not e.attrib.get('data-oe-model'):
             e.attrib.update(branding)
             e.attrib['data-oe-xpath'] = xpath
@@ -730,8 +730,10 @@ class view(osv.osv):
                     if e.attrib.get(i):
                         branding_dist[i] = e.attrib.get(i)
                         e.attrib.pop(i)
+                count = {}
                 for child in e:
-                    self.distribute_branding(child, branding_dist, xpath)
+                    count[child.tag] = count.get(child.tag,-1) + 1
+                    self.distribute_branding(child, branding_dist, xpath, count)
 
     def render(self, cr, uid, id_or_xml_id, values, context=None):
         def loader(name):
