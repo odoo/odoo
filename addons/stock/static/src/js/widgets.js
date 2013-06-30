@@ -18,7 +18,7 @@ function openerp_picking_widgets(instance){
             _.each( model.movelines, function(moveline){
                 rows.push({
                     cols: { product: moveline.product_id[1],
-                            qty: moveline.product_qty,
+                            qty: moveline.product_uom_qty,
                             rem: moveline.remaining_qty,
                             uom: moveline.product_uom[1],
                             loc: moveline.location_id[1],
@@ -49,7 +49,7 @@ function openerp_picking_widgets(instance){
                     cols: {
                         product: op.product_id[1],
                         uom: op.product_uom ? product_uom[1] : '',
-                        qty: op.product_qty,
+                        qty: op.product_uom_qty,
                     }
                 });
             });

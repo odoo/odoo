@@ -44,31 +44,31 @@ class stock_split_into(osv.osv_memory):
         inventory_obj = self.pool.get('stock.inventory')
         quantity = self.browse(cr, uid, data[0], context=context).quantity or 0.0
         for move in move_obj.browse(cr, uid, rec_id, context=context):
-            quantity_rest = move.product_qty - quantity
+            quantity_rest = move.product_uom_qty - quantity
             #if move.tracking_id :
             #    raise osv.except_osv(_('Error!'),  _('The current move line is already assigned to a pack, please remove it first if you really want to change it ' \
             #                        'for this product: "%s" (id: %d)') % \
             #                        (move.product_id.name, move.product_id.id,))
-            if quantity > move.product_qty:
+            if quantity > move.product_uom_qty:
                 raise osv.except_osv(_('Error!'),  _('Total quantity after split exceeds the quantity to split ' \
                                     'for this product: "%s" (id: %d).') % \
                                     (move.product_id.name, move.product_id.id,))
             if quantity > 0:
                 move_obj.setlast_tracking(cr, uid, [move.id], context=context)
                 move_obj.write(cr, uid, [move.id], {
-                    'product_qty': quantity,
+                    'product_uom_qty': quantity,
                     'product_uos_qty': quantity,
                     'product_uos': move.product_uom.id,
                 })
 
             if quantity_rest>0:
-                quantity_rest = move.product_qty - quantity
+                quantity_rest = move.product_uom_qty - quantity
                 tracking_id = track_obj.create(cr, uid, {}, context=context)
                 if quantity == 0.0:
                     move_obj.write(cr, uid, [move.id], {'tracking_id': tracking_id}, context=context)
                 else:
                     default_val = {
-                        'product_qty': quantity_rest,
+                        'product_uom_qty': quantity_rest,
                         'product_uos_qty': quantity_rest,
                         'tracking_id': tracking_id,
                         'state': move.state,

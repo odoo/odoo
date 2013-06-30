@@ -42,7 +42,7 @@
             <field name="arch" type="xml">
                 <tree string="Stock Inventory Lines">
                     <field name="product_id"/>
-                    <field name="product_qty"/>
+                    <field name="product_uom_qty"/>
                     <field name="product_uom" groups="product.group_uom"/>
                     <field name="location_id" groups="stock.group_locations"/>
                 </tree>
@@ -55,7 +55,7 @@
                 <form string="Stock Inventory Lines" version="7.0">
                     <group col="4">
                         <field context="{'location':location_id, 'uom':product_uom, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom,parent.date)" domain="[('type','&lt;&gt;','service')]"/>
-                        <field name="product_qty"/>
+                        <field name="product_uom_qty"/>
                         <field name="product_uom" groups="product.group_uom"/>
                         <field domain="[('usage','=','internal')]" name="location_id"/>
                         <button name="%(stock.action_view_stock_inventory_line_split)d"
@@ -125,7 +125,7 @@
                         <field name="inventory_line_id">
                             <tree string="Products" editable="bottom">
                                 <field domain="[('usage','=','internal')]" name="location_id" groups="stock.group_locations"/>
-                                <field context="{'location':location_id, 'uom':product_uom, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom,parent.date)"  domain="[('type','&lt;&gt;','service')]"/>
+                                <field context="{'location':location_id, 'uom':product_uom, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom,parent.date)"  domain="[('type','=','product')]"/>
                                 <field name="product_qty"/>
                                 <field name="product_uom" groups="product.group_uom"/>
                                 <field name="state" invisible="True"/>
@@ -151,7 +151,7 @@
                          <field name="move_ids" context="{'inventory_id':active_id}" >
                             <tree string="Stock Moves">
                                 <field name="product_id"/>
-                                <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
+                                <field name="product_uom_qty" on_change="onchange_quantity(product_id, product_uom_qty, product_uom, product_uos)"/>
                                 <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                                 <field name="quant_ids"/>
                                 <field name="location_id" groups="stock.group_locations"/>
@@ -297,7 +297,7 @@
             <field name="arch" type="xml">
                 <tree colors="grey:state == 'cancel'" string="Moves" create="false">
                     <field name="product_id"/>
-                    <field name="product_qty"/>
+                    <field name="product_uom_qty"/>
                     <field name="product_uom"  string="Unit of Measure" groups="product.group_uom"/>
                     <field name="product_packaging" domain="[('product_id','=',product_id)]" groups="product.group_stock_packaging"/>
                     <field name="picking_id"/>
@@ -317,7 +317,7 @@
             <field name="arch" type="xml">
                 <tree colors="grey:state == 'cancel'" string="Moves" create="false">
                     <field name="product_id"/>
-                    <field name="product_qty"/>
+                    <field name="product_uom_qty"/>
                     <field name="product_uom"  string="Unit of Measure" groups="product.group_uom"/>
                     <field name="product_packaging" domain="[('product_id','=',product_id)]" groups="product.group_stock_packaging"/>
                     <field name="picking_id"/>
@@ -962,7 +962,7 @@
                     <field name="type" on_change="onchange_move_type(type)"/>
                     <field name="create_date" invisible="1" groups="base.group_no_one"/>
                     <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, False)"/>
-                    <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
+                    <field name="product_uom_qty" on_change="onchange_quantity(product_id, product_uom_qty, product_uom, product_uos)"/>
                     <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="product_uos" groups="product.group_uos"/>
                     <button name="%(stock.move_scrap)d"
@@ -986,7 +986,7 @@
             <field name="arch" type="xml">
                 <tree colors="grey:scrapped == True" string="Stock Moves">
                     <field name="product_id"/>
-                    <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
+                    <field name="product_uom_qty" on_change="onchange_quantity(product_id, product_uom_qty, product_uom, product_uos)"/>
                     <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="product_uos" groups="product.group_uos"/>
                     <field name="location_id" groups="stock.group_locations" invisible="1"/>
@@ -1023,10 +1023,10 @@
                     <group>
                         <group name="main_grp" string="Details">
                             <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, False)"/>
-                            <label for="product_qty"/>
+                            <label for="product_uom_qty"/>
                             <div>
-                                <field name="product_qty"
-                                    on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"
+                                <field name="product_uom_qty"
+                                    on_change="onchange_quantity(product_id, product_uom_qty, product_uom, product_uos)"
                                     class="oe_inline"/>
                                 <field name="product_uom" groups="product.group_uom" class="oe_inline"/>
                                 <button name="%(stock.move_scrap)d"
@@ -1081,9 +1081,9 @@
                         <field name="name" invisible="1"/>
                         <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.partner_id)"/>
                         <field name="type" invisible="1"/>
-                        <label for="product_qty"/>
+                        <label for="product_uom_qty"/>
                         <div>
-                            <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" class="oe_inline"/>
+                            <field name="product_uom_qty" on_change="onchange_quantity(product_id, product_uom_qty, product_uom, product_uos)" class="oe_inline"/>
                             <field name="product_uom" string="Unit Of Measure" groups="product.group_uom" class="oe_inline"/>
                             <button name="%(stock.move_scrap)d"
                                 string="Scrap" type="action"
@@ -1094,7 +1094,7 @@
                             <label for="product_uos_qty" groups="product.group_uos"/>
                             <div groups="product.group_uos">
                                 <field name="product_uos_qty" on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)" class="oe_inline"/>
-                                <field name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" class="oe_inline"/>
+                                <field name="product_uos" on_change="onchange_quantity(product_id, product_uom_qty, product_uom, product_uos)" class="oe_inline"/>
                             </div>
                             <field name="product_packaging" groups="product.group_stock_packaging" domain="[('product_id','=',product_id)]"/>
                             <field name="partner_id"/>
@@ -1195,7 +1195,7 @@
                     <field name="origin"/>
                     <field name="partner_id" string="Supplier"/>
                     <field name="product_id"/>
-                    <field name="product_qty"/>
+                    <field name="product_uom_qty"/>
                     <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="location_id" invisible="1"/>
                     <field name="location_dest_id" invisible="1"/>
@@ -1225,7 +1225,7 @@
                 <tree string="Moves">
                     <field name="picking_id" string="Reference"/>
                     <field name="product_id"/>
-                    <field name="product_qty"/>
+                    <field name="product_uom_qty"/>
                     <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="date" groups="base.group_no_one"/>
                 </tree>

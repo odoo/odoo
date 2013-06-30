@@ -73,6 +73,7 @@ class product_product(osv.osv):
             'property_stock_valuation_account_id': account_valuation
         }
 
+    # FP Note:;too complex, not good, should be implemented at quant level TODO
     def do_change_standard_price(self, cr, uid, ids, datas, context=None):
         """ Changes the Standard Price of Product and creates an account move accordingly.
         @param datas : dict. contain default datas like new_price, stock_output_account, stock_input_account, stock_journal
@@ -196,7 +197,7 @@ class product_product(osv.osv):
             return _('Products: ')+self.pool.get('stock.location').browse(cr, user, context['active_id'], context).name
         return res
 
-    def _get_locations_from_context(self, cr, uid, ids, context=None):
+    def _get_domain_locations(self, cr, uid, ids, context=None):
         '''
         Parses the context and returns a list of location_ids based on it.
         It will return all stock locations when no parameters are given
@@ -226,174 +227,56 @@ class product_product(osv.osv):
                 wh = warehouse_obj.browse(cr, uid, wids, context=context)
 
             for w in warehouse_obj.browse(cr, uid, wids, context=context):
-                if not context.get('force_company', False) or w.lot_stock_id.company_id.id == context['force_company']:
-                    location_ids.append(w.lot_stock_id.id)
+                location_ids.append(w.lot_stock_id.id)
 
-        # build the list of ids of children of the location given by id
-        if context.get('compute_child',True):
-            if context.get('force_company', False):
-                child_location_ids = location_obj.search(cr, uid, [('location_id', 'child_of', location_ids), ('company_id', '=', context['force_company'])])
-            else:
-                child_location_ids = location_obj.search(cr, uid, [('location_id', 'child_of', location_ids)])
-            location_ids = child_location_ids or location_ids
-        return location_ids
+        operator = context.get('compute_child',True) and 'child_of' or 'in'
+        domain = context.get('force_company', False) and ['&', ('company_id', '=', context['force_company'])] or []
+        return (
+            domain + [('location_id', operator, location_ids)],
+            domain + ['&', ('location_src_id', operator, location_ids), '!', ('location_dest_id', operator, location_ids)],
+            domain + ['&', ('location_dest_id', operator, location_ids), '!', ('location_src_id', operator, location_ids)]
+        )
 
-    def _get_date_query(self, cr, uid, ids, context):
-        '''
-            Parses the context and returns the dates query string needed to be processed in _get_product_available
-            It searches for a from_date and to_date
-        '''
+    def _get_domain_dates(self, cr, uid, ids, context):
         from_date = context.get('from_date',False)
         to_date = context.get('to_date',False)
-        date_str = False
-        whereadd = []
-        if from_date and to_date:
-            date_str = "date>=%s and date<=%s"
-            whereadd.append(tuple([from_date]))
-            whereadd.append(tuple([to_date]))
-        elif from_date:
-            date_str = "date>=%s"
-            whereadd.append(tuple([from_date]))
-        elif to_date:
-            date_str = "date<=%s"
-            whereadd.append(tuple([to_date]))
-        return (whereadd, date_str)
-
-    def get_product_available(self, cr, uid, ids, context=None):
-        """ Finds the quantity available of product(s) depending on parameters in the context
-        for what, states, locations (company, warehouse, ), date, lot, 
-        states: state of the move
-        what: in (dest in locations) or out (source in locations) moves
-        LOCATIONS:
-        shop: warehouse of the shop
-        warehouse: stock location of the warehouse
-        location: name (ilike) or id  of the location
-        force_company: if not warehouse or shop given: will only take from this company
-        compute_child (True if not specified): will also include child locations of locations above 
-            (when force_company only from that company)
-        
-        from_date and to_date: dates from or to for the date of the stock move to include (=scheduled of effective date)
-        prodlot: lot of the move
-        
-        @return: Dictionary of values for every product id
-        """
-        if context is None:
-            context = {}
-        
-        states = context.get('states',[])
-        what = context.get('what',())
-        if not ids:
-            ids = self.search(cr, uid, [])
-        res = {}.fromkeys(ids, 0.0)
-        if not ids:
-            return res
-        #set_context: refactor code here
-        location_ids = self._get_locations_from_context(cr, uid, ids, context=context)
-        if not location_ids: #in case of no locations, query will be empty anyways
-            return res
-        
-        # this will be a dictionary of the product UoM by product id
-        product2uom = {}
-        uom_ids = []
-        for product in self.read(cr, uid, ids, ['uom_id'], context=context):
-            product2uom[product['id']] = product['uom_id'][0]
-            uom_ids.append(product['uom_id'][0])
-        # this will be a dictionary of the UoM resources we need for conversion purposes, by UoM id
-        uoms_o = {}
-        for uom in self.pool.get('product.uom').browse(cr, uid, uom_ids, context=context):
-            uoms_o[uom.id] = uom
-
-        results = []
-        results2 = []
-
-        where = [tuple(location_ids),tuple(location_ids),tuple(ids),tuple(states)]
-
-        where_add, date_str = self._get_date_query(cr, uid, ids, context=context)
-        if where_add:
-            where += where_add
-
-
-        lot_id = context.get('lot_id', False)
-        prodlot_clause = ''
-        if lot_id:
-            prodlot_clause = ' and lot_id = %s '
-            where += [lot_id]
-
-        # TODO: perhaps merge in one query.
-        if 'in' in what:
-            # all moves from a location out of the set to a location in the set
-            cr.execute(
-                'select sum(product_qty), product_id, product_uom '\
-                'from stock_move '\
-                'where location_id NOT IN %s '\
-                'and location_dest_id IN %s '\
-                'and product_id IN %s '\
-                'and state IN %s ' + (date_str and 'and '+date_str+' ' or '') +' '\
-                + prodlot_clause + 
-                'group by product_id,product_uom',tuple(where))
-            results = cr.fetchall()
-        if 'out' in what:
-            # all moves from a location in the set to a location out of the set
-            cr.execute(
-                'select sum(product_qty), product_id, product_uom '\
-                'from stock_move '\
-                'where location_id IN %s '\
-                'and location_dest_id NOT IN %s '\
-                'and product_id  IN %s '\
-                'and state in %s ' + (date_str and 'and '+date_str+' ' or '') + ' '\
-                + prodlot_clause + 
-                'group by product_id,product_uom',tuple(where))
-            results2 = cr.fetchall()
-            
-        # Get the missing UoM resources
-        uom_obj = self.pool.get('product.uom')
-        uoms = map(lambda x: x[2], results) + map(lambda x: x[2], results2)
-        if context.get('uom', False):
-            uoms += [context['uom']]
-        uoms = filter(lambda x: x not in uoms_o.keys(), uoms)
-        if uoms:
-            uoms = uom_obj.browse(cr, uid, list(set(uoms)), context=context)
-            for o in uoms:
-                uoms_o[o.id] = o
-                
-        #TOCHECK: before change uom of product, stock move line are in old uom.
-        context.update({'raise-exception': False})
-        # Count the incoming quantities
-        for amount, prod_id, prod_uom in results:
-            amount = uom_obj._compute_qty_obj(cr, uid, uoms_o[prod_uom], amount,
-                     uoms_o[context.get('uom', False) or product2uom[prod_id]], context=context)
-            res[prod_id] += amount
-        # Count the outgoing quantities
-        for amount, prod_id, prod_uom in results2:
-            amount = uom_obj._compute_qty_obj(cr, uid, uoms_o[prod_uom], amount,
-                    uoms_o[context.get('uom', False) or product2uom[prod_id]], context=context)
-            res[prod_id] -= amount
-        return res
+        domain = []
+        if from_date:
+            domain.append(('date','>=',from_date))
+        if to_date:
+            domain.append(('date','<=',to_date))
+        return domain
 
     def _product_available(self, cr, uid, ids, field_names=None, arg=False, context=None):
-        """ Finds the incoming and outgoing quantity of product.
-        @return: Dictionary of values
-        """
-        if not field_names:
-            field_names = []
-        if context is None:
-            context = {}
+        context = context or {}
+        field_names = field_names or []
+
+        domain_quant, domain_move_in, domain_move_out = self._get_domain_locations(cr, uid, ids, key='location_id', context=context)
+        domain_move_in += self._get_domain_dates(cr, uid, ids, context=context)
+        domain_move_out += self._get_domain_dates(cr, uid, ids, context=context)
+
+        if context.get('lot_id', False):
+            domain_quants.append(('lot_id','=',context['lot_id']))
+            moves_in  = []
+            moves_out = []
+        else:
+            moves_in  = self.pool.get('stock.move').read_group(cr, uid, domain_move_in, ['product_id', 'product_qty'], ['product_id'], context=context)
+            moves_out = self.pool.get('stock.move').read_group(cr, uid, domain_move_out, ['product_id', 'product_qty'], ['product_id'], context=context)
+
+        quants = self.pool.get('stock.quant').read_group(cr, uid, domain_quant, ['product_id', 'qty'], ['product_id'], context=context)
+
+        quants = dict(map(lambda x: (x['product_id'], x['qty']), quants))
+        moves_in = dict(map(lambda x: (x['product_id'], x['product_qty']), moves_in))
+        moves_out = dict(map(lambda x: (x['product_id'], x['product_qty']), moves_out))
+
         res = {}
         for id in ids:
-            res[id] = {}.fromkeys(field_names, 0.0)
-        for f in field_names:
-            c = context.copy()
-            if f == 'qty_available':
-                c.update({ 'states': ('done',), 'what': ('in', 'out') })
-            if f == 'virtual_available':
-                c.update({ 'states': ('confirmed','waiting','assigned','done'), 'what': ('in', 'out') })
-            if f == 'incoming_qty':
-                c.update({ 'states': ('confirmed','waiting','assigned'), 'what': ('in',) })
-            if f == 'outgoing_qty':
-                c.update({ 'states': ('confirmed','waiting','assigned'), 'what': ('out',) })
-            stock = self.get_product_available(cr, uid, ids, context=c)
-            for id in ids:
-                res[id][f] = stock.get(id, 0.0)
+            res[id] = {
+                'qty_available': quants.get(id, 0.0),
+                'incoming_qty': moves_in.get(id, 0.0),
+                'outgoing_qty': moves_out.get(id, 0.0),
+                'virtual_available': quants.get(id, 0.0) + moves_in.get(id, 0.0) - moves_out.get(id, 0.0),
+            }
         return res
 
     _columns = {

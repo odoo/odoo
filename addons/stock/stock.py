@@ -351,9 +351,8 @@ class stock_quant(osv.osv):
     def _location_owner(self, cr, uid, quant, location, context=None):
         return location and (location.usage == 'internal') and location.company_id or False
 
-
-
-    # FP Note: all accounting valuation stuff must be on the quant
+    # TODO: move this code on the _account_entry_move method above. Should be simpler
+    #
     #def _get_accounting_data_for_valuation(self, cr, uid, move, context=None):
     #    """
     #    Return the accounts and journal to use to post Journal Entries for the real-time
@@ -1574,6 +1573,13 @@ class stock_move(osv.osv):
     #             return False
     #     return True
 
+    def _quantity_normalize(self, cr, uid, ids, name, args, context=None):
+        uom_obj = self.pool.get('product.uom')
+        res = {}
+        for m in self.browse(cr, uid, ids, context=context):
+            res[m.id] = uom_obj._compute_qty_obj(cr, uid, m.product_uom, product_qty, m.product_id.uom_id)
+        return res
+
     _columns = {
         'name': fields.char('Description', required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
@@ -1581,7 +1587,9 @@ class stock_move(osv.osv):
         'date': fields.datetime('Date', required=True, select=True, help="Move date: scheduled date until move is done, then date of actual move processing", states={'done': [('readonly', True)]}),
         'date_expected': fields.datetime('Scheduled Date', states={'done': [('readonly', True)]},required=True, select=True, help="Scheduled date for the processing of this move"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type','<>','service')],states={'done': [('readonly', True)]}),
-        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'),
+        'product_qty': fields.function(_quantity_normalize, type='float', store=True, string='Quantity',
+            digits_compute=dp.get_precision('Product Unit of Measure'), 'Quantity in the default UoM of the product'),
+        'product_uom_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'),
             required=True,states={'done': [('readonly', True)]},
             help="This is the quantity of products from an inventory "
                 "point of view. For moves in the state 'done', this is the "
@@ -1888,7 +1896,6 @@ class stock_move(osv.osv):
             'product_uos': uos_id,
             'product_qty': 1.00,
             'product_uos_qty' : self.pool.get('stock.move').onchange_quantity(cr, uid, ids, prod_id, 1.00, product.uom_id.id, uos_id)['value']['product_uos_qty'],
-            'lot_id' : False,
         }
         if not ids:
             result['name'] = product.partner_ref
@@ -2508,12 +2515,12 @@ class stock_inventory_line(osv.osv):
         @return:  Dictionary of changed values
         """
         if not product:
-            return {'value': {'product_qty': 0.0, 'product_uom': False, 'prod_lot_id': False}}
+            return {'value': {'product_qty': 0.0, 'product_uom': False}}
         obj_product = self.pool.get('product.product').browse(cr, uid, product)
         uom = uom or obj_product.uom_id.id
         # FP Note: read quantity on product
         amount = 0
-        result = {'product_qty': amount, 'product_uom': uom, 'prod_lot_id': False}
+        result = {'product_qty': amount, 'product_uom': uom}
         return {'value': result}
 
 

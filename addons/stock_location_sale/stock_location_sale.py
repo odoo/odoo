@@ -25,12 +25,7 @@ from openerp.tools.translate import _
 
 
 class sale_order(osv.osv):
-    
     _inherit = "sale.order"
-    
-    
-    
-    
     
     def action_ship_create(self, cr, uid, ids, context=None):
         print "acitonshipcreate"
