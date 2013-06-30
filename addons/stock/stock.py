@@ -105,9 +105,8 @@ class stock_location(osv.osv):
                        \n* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products
                       """, select = True),
 
-        'complete_name': fields.function(_complete_name, type='char', size=256, string="Location Name",
+        'complete_name': fields.function(_complete_name, type='char', string="Location Name",
                             store={'stock.location': (_get_sublocations, ['name', 'location_id'], 10)}),
-
         'location_id': fields.many2one('stock.location', 'Parent Location', select=True, ondelete='cascade'),
         'child_ids': fields.one2many('stock.location', 'location_id', 'Contains'),
 
@@ -145,11 +144,13 @@ class stock_location(osv.osv):
     }
     def get_removal_strategy(self, cr, uid, location, product, context=None):
         categ = product.categ_id
-        print product and product.name or 'no prod'
-        print categ and categ.name or 'NO'
         while (not categ.removal_strategy_id) and categ.parent_id:
             categ = categ.parent_id
         return categ and categ.removal_strategy_id or None
+
+#----------------------------------------------------------
+# Quants
+#----------------------------------------------------------
 
 class stock_quant(osv.osv):
     """
@@ -158,7 +159,7 @@ class stock_quant(osv.osv):
     _name = "stock.quant"
     _description = "Quants"
     _columns = {
-        'name': fields.char('Identifier', help='serial... '),  # TODO improve me
+        'name': fields.char('Identifier'),
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'location_id': fields.many2one('stock.location', 'Location', required=True),
         'qty': fields.float('Quantity', required=True, help="Quantity of products in this quant, in the default unit of measure of the product"),
@@ -555,10 +556,10 @@ class stock_quant(osv.osv):
     #    return res
 
 
-
 #----------------------------------------------------------
 # Stock Picking
 #----------------------------------------------------------
+
 class stock_picking(osv.osv):
     _name = "stock.picking"
     _inherit = ['mail.thread']
@@ -1588,7 +1589,8 @@ class stock_move(osv.osv):
         'date_expected': fields.datetime('Scheduled Date', states={'done': [('readonly', True)]},required=True, select=True, help="Scheduled date for the processing of this move"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type','<>','service')],states={'done': [('readonly', True)]}),
         'product_qty': fields.function(_quantity_normalize, type='float', store=True, string='Quantity',
-            digits_compute=dp.get_precision('Product Unit of Measure'), 'Quantity in the default UoM of the product'),
+            digits_compute=dp.get_precision('Product Unit of Measure'),
+            help='Quantity in the default UoM of the product'),
         'product_uom_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'),
             required=True,states={'done': [('readonly', True)]},
             help="This is the quantity of products from an inventory "
@@ -2507,19 +2509,20 @@ class stock_inventory_line(osv.osv):
         'location_id': _default_stock_location
     }
 
-    def on_change_product_id(self, cr, uid, ids, location_id, product, uom=False, to_date=False):
+    def on_change_product_id(self, cr, uid, ids, location_id, product, uom=False, to_date=False, context=None):
         """ Changes UoM and name if product_id changes.
         @param location_id: Location id
         @param product: Changed product_id
         @param uom: UoM product
         @return:  Dictionary of changed values
         """
+        context=context or {}
         if not product:
             return {'value': {'product_qty': 0.0, 'product_uom': False}}
-        obj_product = self.pool.get('product.product').browse(cr, uid, product)
+        context['location'] = location_id
+        obj_product = self.pool.get('product.product').browse(cr, uid, product, context=context)
         uom = uom or obj_product.uom_id.id
-        # FP Note: read quantity on product
-        amount = 0
+        amount = obj_product.qty_available
         result = {'product_qty': amount, 'product_uom': uom}
         return {'value': result}
 
