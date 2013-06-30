@@ -1820,24 +1820,24 @@ class BaseModel(object):
             result['type'] = root_view['type']
             result['view_id'] = root_view['id']
             result['field_parent'] = root_view['field_parent']
+            # Apply post processing, groups and modifiers etc...
+            ctx = context
+            if root_view.get('model') != self._name:
+                ctx = dict(context, base_model_name=root_view.get('model'))
+            xarch, xfields = View.postprocess_and_fields( cr, uid, self._name, etree.fromstring(result['arch']), result['view_id'], context=ctx)
+            result['arch'] = xarch
+            result['fields'] = xfields
         else:
             # fallback on default views methods if no ir.ui.view could be found
             try:
                 get_func = getattr(self, '_get_default_%s_view' % view_type)
-                arch_etree = get_func(self.cr, self.uid, self.context)
+                arch_etree = get_func(cr, uid, context)
                 result['arch'] = etree.tostring(arch_etree, encoding='utf-8')
                 result['type'] = view_type
                 result['name'] = 'default'
             except AttributeError:
                 raise except_orm(_('Invalid Architecture!'), _("No default view of type '%s' could be found !") % view_type)
 
-        # Apply post processing, groups and modifiers etc...
-        ctx = context
-        if root_view.get('model') != self._name:
-            ctx = dict(context, base_model_name=root_view.get('model'))
-        xarch, xfields = View.postprocess_and_fields( cr, uid, self._name, etree.fromstring(result['arch']), result['view_id'], context=ctx)
-        result['arch'] = xarch
-        result['fields'] = xfields
 
         # Add related action information if aksed
         if toolbar:

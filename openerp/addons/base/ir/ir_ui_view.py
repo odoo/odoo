@@ -139,21 +139,21 @@ class view(osv.osv):
             except Exception, e:
                 _logger.exception(e)
                 return False
-
-            # RNG-based validation is not possible anymore with 7.0 forms
-            # TODO 7.0: provide alternative assertion-based validation of view_arch_utf8
-            view_docs = [etree.fromstring(view_arch_utf8)]
-            if view_docs[0].tag == 'data':
-                # A <data> element is a wrapper for multiple root nodes
-                view_docs = view_docs[0]
-            validator = self._relaxng()
-            for view_arch in view_docs:
-                if (view_arch.get('version') < '7.0') and validator and not validator.validate(view_arch):
-                    for error in validator.error_log:
-                        _logger.error(tools.ustr(error))
-                    return False
-                if not valid_view(view_arch):
-                    return False
+            if view.type != 'qweb':
+                # RNG-based validation is not possible anymore with 7.0 forms
+                # TODO 7.0: provide alternative assertion-based validation of view_arch_utf8
+                view_docs = [etree.fromstring(view_arch_utf8)]
+                if view_docs[0].tag == 'data':
+                    # A <data> element is a wrapper for multiple root nodes
+                    view_docs = view_docs[0]
+                validator = self._relaxng()
+                for view_arch in view_docs:
+                    if (view_arch.get('version') < '7.0') and validator and not validator.validate(view_arch):
+                        for error in validator.error_log:
+                            _logger.error(tools.ustr(error))
+                        return False
+                    if not valid_view(view_arch):
+                        return False
         return True
 
     _constraints = [
@@ -200,14 +200,15 @@ class view(osv.osv):
         :return: id of the default view of False if none found
         :rtype: int
         """
-        ids = self.search(cr, uid, [
+        domain = [
             ['model', '=', model],
             ['type', '=', view_type],
             ['inherit_id', '=', False],
-        ], limit=1, order='priority', context=context)
+        ]
+        ids = self.search(cr, uid, domain, limit=1, order='priority', context=context)
         if not ids:
             return False
-        return ids[0] 
+        return ids[0]
 
     # inheritance
 
@@ -739,11 +740,11 @@ class view(osv.osv):
         def loader(name):
             arch = self.read_template(cr, uid, name, context=context)
 
-            arch_tree = etree.fromstring(arch.encode('utf-8'))
+            arch_tree = etree.fromstring(arch)
             self.distribute_branding(arch_tree)
             arch = etree.tostring(arch_tree, encoding='utf-8')
 
-            arch = u'<?xml version="1.0" encoding="utf-8"?><tpl><t t-name="{0}">{1}</t></tpl>'.format(name, arch)
+            arch = '<?xml version="1.0" encoding="utf-8"?><tpl><t t-name="%s">%s</t></tpl>' % (name.encode('utf-8'), arch)
 
             return arch
         engine = qweb.QWebXml(loader)

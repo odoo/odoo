@@ -34,7 +34,7 @@ class QWebEval(object):
 
     def eval_str(self, expr):
         if expr == "0":
-            return self.data[0]
+            return self.data.get(0, '')
         if isinstance(self[expr], unicode):
             return self[expr].encode("utf8")
         return str(self[expr])
@@ -122,7 +122,9 @@ class QWebXml(object):
     def eval_bool(self, expr, v):
         return QWebEval(v).eval_bool(expr)
 
-    def render(self, tname, v={}, out=None):
+    def render(self, tname, v=None, out=None):
+        if v is None:
+            v = {}
         return self.render_node(self.get_template(tname), v)
 
     def render_node(self, e, v):
@@ -130,7 +132,6 @@ class QWebXml(object):
         if e.nodeType == self.node.TEXT_NODE or e.nodeType == self.node.CDATA_SECTION_NODE:
             r = e.data.encode("utf8")
         elif e.nodeType == self.node.ELEMENT_NODE:
-            pre = ""
             g_att = ""
             t_render = None
             t_att = {}
@@ -155,15 +156,24 @@ class QWebXml(object):
                 if t_render in self._render_tag:
                     r = self._render_tag[t_render](self, e, t_att, g_att, v)
             else:
-                r = self.render_element(e, g_att, v, pre, t_att.get("trim", 0))
+                r = self.render_element(e, t_att, g_att, v)
         return r
 
-    def render_element(self, e, g_att, v, pre="", trim=0):
-        g_inner = []
-        for n in e.childNodes:
-            g_inner.append(self.render_node(n, v))
+    def render_element(self, e, t_att, g_att, v, inner=None):
+        # e: element
+        # t_att: t-* attributes
+        # g_att: generated attributes
+        # v: values
+        # inner: optional innerXml
+        if inner:
+            g_inner = inner
+        else:
+            g_inner = []
+            for n in e.childNodes:
+                g_inner.append(self.render_node(n, v))
         name = str(e.nodeName)
         inner = "".join(g_inner)
+        trim = t_att.get("trim", 0)
         if trim == 0:
             pass
         elif trim == 'left':
@@ -174,8 +184,9 @@ class QWebXml(object):
             inner = inner.strip()
         if name == "t":
             return inner
-        elif len(inner):
-            return "<%s%s>%s%s</%s>" % (name, g_att, pre, inner, name)
+        elif len(inner) or name in ['script','i']:
+            # script should be rendered as <script></script>
+            return "<%s%s>%s</%s>" % (name, g_att, inner, name)
         else:
             return "<%s%s/>" % (name, g_att)
 
@@ -191,16 +202,20 @@ class QWebXml(object):
 
     # Tags
     def render_tag_raw(self, e, t_att, g_att, v):
-        return self.eval_str(t_att["raw"], v)
+        inner = self.eval_str(t_att["raw"], v)
+        return self.render_element(e, t_att,  g_att, v, inner)
 
     def render_tag_rawf(self, e, t_att, g_att, v):
-        return self.eval_format(t_att["rawf"], v)
+        inner = self.eval_format(t_att["rawf"], v)
+        return self.render_element(e, t_att,  g_att, v, inner)
 
     def render_tag_esc(self, e, t_att, g_att, v):
-        return cgi.escape(self.eval_str(t_att["esc"], v))
+        inner = cgi.escape(self.eval_str(t_att["esc"], v))
+        return self.render_element(e, t_att,  g_att, v, inner)
 
     def render_tag_escf(self, e, t_att, g_att, v):
-        return cgi.escape(self.eval_format(t_att["escf"], v))
+        inner = cgi.escape(self.eval_format(t_att["escf"], v))
+        return self.render_element(e, t_att,  g_att, v, inner)
 
     def render_tag_foreach(self, e, t_att, g_att, v):
         expr = t_att["foreach"]
@@ -234,7 +249,7 @@ class QWebXml(object):
                     d.update(i)
                 else:
                     d[var] = i
-                ru.append(self.render_element(e, g_att, d))
+                ru.append(self.render_element(e, t_att, g_att, d))
                 index += 1
             return "".join(ru)
         else:
@@ -242,7 +257,7 @@ class QWebXml(object):
 
     def render_tag_if(self, e, t_att, g_att, v):
         if self.eval_bool(t_att["if"], v):
-            return self.render_element(e, g_att, v)
+            return self.render_element(e, t_att, g_att, v)
         else:
             return ""
 
@@ -252,12 +267,14 @@ class QWebXml(object):
             d = v
         else:
             d = v.copy()
-        d[0] = self.render_element(e, g_att, d)
+        d[0] = self.render_element(e, t_att, g_att, d)
         return self.render(t_att["call"], d)
 
     def render_tag_set(self, e, t_att, g_att, v):
         if "eval" in t_att:
             v[t_att["set"]] = self.eval_object(t_att["eval"], v)
         else:
-            v[t_att["set"]] = self.render_element(e, g_att, v)
+            v[t_att["set"]] = self.render_element(e, t_att, g_att, v)
         return ""
+
+# leave this, al.
