@@ -93,17 +93,16 @@ class mail_group(osv.Model):
         'public': 'groups',
         'group_public_id': _get_default_employee_group,
         'image': _get_default_image,
-        'alias_domain': False,  # always hide alias during creation
     }
 
     def _generate_header_description(self, cr, uid, group, context=None):
         header = ''
         if group.description:
             header = '%s' % group.description
-        if group.alias_id and group.alias_id.alias_name and group.alias_id.alias_domain:
+        if group.alias_id and group.alias_name and group.alias_domain:
             if header:
                 header = '%s<br/>' % header
-            return '%sGroup email gateway: %s@%s' % (header, group.alias_id.alias_name, group.alias_id.alias_domain)
+            return '%sGroup email gateway: %s@%s' % (header, group.alias_name, group.alias_domain)
         return header
 
     def _subscribe_users(self, cr, uid, ids, context=None):
@@ -114,15 +113,8 @@ class mail_group(osv.Model):
             self.message_subscribe(cr, uid, ids, partner_ids, context=context)
 
     def create(self, cr, uid, vals, context=None):
-        mail_alias = self.pool.get('mail.alias')
-        if not vals.get('alias_id'):
-            vals.pop('alias_name', None)  # prevent errors during copy()
-            alias_id = mail_alias.create_unique_alias(cr, uid,
-                          # Using '+' allows using subaddressing for those who don't
-                          # have a catchall domain setup.
-                          {'alias_name': "group+" + vals['name']},
-                          model_name=self._name, context=context)
-            vals['alias_id'] = alias_id
+        if context is None:
+            context = {}
 
         # get parent menu
         menu_parent = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'mail_group_root')
@@ -134,8 +126,10 @@ class mail_group(osv.Model):
         vals['menu_id'] = menu_id
 
         # Create group and alias
-        mail_group_id = super(mail_group, self).create(cr, uid, vals, context=context)
-        mail_alias.write(cr, uid, [vals['alias_id']], {"alias_force_thread_id": mail_group_id}, context)
+        create_context = dict(context, alias_model_name=self._name, alias_parent_model_name=self._name)
+        mail_group_id = super(mail_group, self).create(cr, uid, vals, context=create_context)
+        group = self.browse(cr, uid, mail_group_id, context=context)
+        self.pool.get('mail.alias').write(cr, uid, [group.alias_id.id], {"alias_force_thread_id": mail_group_id, 'alias_parent_thread_id': mail_group_id}, context)
         group = self.browse(cr, uid, mail_group_id, context=context)
 
         # Create client action for this group and link the menu to it
