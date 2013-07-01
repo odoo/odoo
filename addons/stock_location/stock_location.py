@@ -31,7 +31,6 @@ class stock_location_route(osv.osv):
         'sequence': fields.integer('Sequence'),
         'pull_ids': fields.one2many('procurement.rule', 'route_id', 'Pull Rules'),
         'push_ids': fields.one2many('stock.location.path', 'route_id', 'Push Rules'),
-        'journal_id': fields.many2one('stock.journal','Journal'),
     }
     _defaults = {
         'sequence': lambda self,cr,uid,ctx: 0,
@@ -85,7 +84,7 @@ class stock_location_path(osv.osv):
                 vals['stock_journal_id'] = route.journal_id.id
             vals['type'] = rule.picking_type
             if rule.location_dest_id.id<>move.location_dest_id.id:
-                move_obj._push_apply(self, cr, uid, move.id, context):
+                move_obj._push_apply(self, cr, uid, move.id, context)
             return move.id
         else:
             move_id = move_obj.copy(cr, uid, move.id, {
@@ -94,7 +93,7 @@ class stock_location_path(osv.osv):
                 'date': time.strftime('%Y-%m-%d'),
                 'company_id': rule.company_id.id,
                 'date_expected': newdate,
-            )
+            })
             move_obj.write(cr, uid, [move.id], {
                 'move_dest_id': move_id,
             })
@@ -102,13 +101,12 @@ class stock_location_path(osv.osv):
             return move_id
 
 
-class procurement.rule(osv.osv):
+class procurement_rule(osv.osv):
     _inherit = 'procurement.rule'
     _columns = {
         'route_id': fields.many2one('stock.location.route', 'Route',
             help="If route_id is False, the route is global"),
         'delay': fields.integer('Number of Hours'),
-        'route_id': fields.many2one('stock.location.route', 'Route'),
         'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procure Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
         'type_proc': fields.selection([('produce','Produce'),('buy','Buy'),('move','Move')], 'Type of Procurement', required=True),
         'partner_address_id': fields.many2one('res.partner', 'Partner Address'),
@@ -126,12 +124,14 @@ class procurement.rule(osv.osv):
 
 
 class procurement_order(osv.osv):
+    _inherit = 'procurement.order'
+    
     def _run_move_create(self, cr, uid, procurement, move, context=None):
         d = super(procurement_order, self)._run_move_create(cr, uid, procurement, move, context=context)
         newdate = (datetime.strptime(move.date, '%Y-%m-%d %H:%M:%S') - relativedelta(days=rule.delay or 0)).strftime('%Y-%m-%d %H:%M:%S')
         d.update({
             'date_planned': newdate,
-            'procure_method': rule.procure_method,
+            'procure_method': procurement.rule_id.procure_method,
         })
         return d
 
@@ -159,11 +159,13 @@ class product_putaway_strategy(osv.osv):
 # TODO: move this on stock module
 
 class product_removal_strategy(osv.osv):
-    _inherit = 'product.removal'
+    _name = 'product.removal'
+    _description = 'Removal Strategy'
     _order = 'sequence'
     _columns = {
+        'product_categ_id': fields.many2one('product.removal', 'Category', required=True), 
         'sequence': fields.integer('Sequence'),
-        'location_id': fields.many2one('stock.location', 'Locations'),
+        'location_id': fields.many2one('stock.location', 'Locations', required=True),
     }
 
 class product_product(osv.osv):

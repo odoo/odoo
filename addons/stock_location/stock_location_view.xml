@@ -45,7 +45,6 @@
                                 <field name="name"/>
                                 <field name="location_id" attrs="{'required': [('type_proc', '=', 'move')]}"/>
                                 <field name="type_proc"/>
-                                <field name="journal_id"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </tree>
                             <form string="Pulled Paths">
@@ -66,7 +65,6 @@
                                     <field name="procure_method"/>
                                     <field name="cancel_cascade"/>
                                     <field name="invoice_state"/>
-                                    <field name="journal_id"/>
                                 </group>
                             </form>
                         </field>
@@ -87,7 +85,6 @@
                                 <field name="location_dest_id"/>
                                 <field name="auto"/>
                                 <field name="delay"/>
-                                <field name="journal_id"/>
                                 <field name="picking_type"/>
                                 <field name="invoice_state"/>
                                 <field name="company_id" groups="base.group_multi_company"/>

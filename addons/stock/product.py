@@ -443,20 +443,10 @@ class product_template(osv.osv):
     }
 
 
-# TODO: move this on stock module
-
-class product_removal_strategy(osv.osv):
-    _name = 'product.removal'
-    _description = 'Removal Strategy'
-    _columns = {
-        'categ_ids':fields.one2many('product.category','removal_strategy_id', 'Product Categories', required=True),
-        'method': fields.selection([('fifo', 'FIFO'), ('lifo', 'LIFO')], "Method", required=True), 
-    }
 
 class product_category(osv.osv):
     _inherit = 'product.category'
     _columns = {
-        'removal_strategy_id': fields.many2one('product.removal', 'Removal Strategy'),
         'property_stock_journal': fields.property(
             relation='account.journal',
             type='many2one',

@@ -143,10 +143,11 @@ class stock_location(osv.osv):
         'scrap_location': False,
     }
     def get_removal_strategy(self, cr, uid, location, product, context=None):
-        categ = product.categ_id
-        while (not categ.removal_strategy_id) and categ.parent_id:
-            categ = categ.parent_id
-        return categ and categ.removal_strategy_id or None
+        return None
+#         categ = product.categ_id
+#         while (not categ.removal_strategy_id) and categ.parent_id:
+#             categ = categ.parent_id
+#         return categ and categ.removal_strategy_id or None
 
 #----------------------------------------------------------
 # Quants
@@ -2022,10 +2023,14 @@ class stock_move(osv.osv):
                             dp.append(q.id)
                 quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, domain_preference=dp and [('id', 'in', dp)], context=context)
                 quant_obj.quants_reserve(cr, uid, quants, move, context=context)
+                #TODO Should have a check to really check it passed
+                sum_of_qua = 0
+                for qua in quants:
+                    sum_of_qua += qua[1]
+                if qua >= move.product_uom_qty:
+                    done.append(move.id)
         self.write(cr, uid, done, {'state': 'assigned'})
 
-    # FP Note: remove this line
-    check_assign = action_assign
 
     #
     # Cancel move => cancel others move and pickings

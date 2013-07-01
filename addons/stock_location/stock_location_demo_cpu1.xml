@@ -14,7 +14,6 @@
                 <field name="usage">internal</field>
                 <field name="chained_location_type">none</field>
                 <field name="name">Quality Control</field>
-                <field name="chained_auto_packing">manual</field>
         </record>
         <record id="stock_location_path_4" model="stock.location.path">
             <field model="stock.location" name="location_from_id" search="[('name', '=', u'Input')]"/>
@@ -32,14 +31,13 @@
             <field name="product_id" ref="product.product_product_10"/>
             <field name="auto">manual</field>
             <field name="invoice_state">none</field>
-            <field name="journal_id" ref="stock_journal_quality"/>
             <field name="name">Store in Shelf</field>
             <field eval="5" name="delay"/>
             <field name="location_dest_id" ref="stock.stock_location_14"/>
             <field name="picking_type">internal</field>
         </record>
 
-        <record id="product_pulled_flow_l0" model="product.pulled.flow">
+        <record id="product_pulled_flow_l0" model="procurement.rule">
             <field name="product_id" ref="product.product_product_9"/>
             <field name="location_src_id" ref="stock.stock_location_intermediatelocation0"/>
             <field name="location_id" ref="stock.stock_location_shop0"/>
@@ -51,8 +49,9 @@
             <field name="procure_method">make_to_order</field>
             <field name="picking_type">in</field>
             <field name="name">Receive from Warehouse</field>
+            <field name="action">move</field>
         </record>
-        <record id="product_pulled_flow_l1" model="product.pulled.flow">
+        <record id="product_pulled_flow_l1" model="procurement.rule">
             <field name="product_id" ref="product.product_product_9"/>
             <field name="location_id" ref="stock.stock_location_intermediatelocation0"/>
             <field name="location_src_id" ref="stock.stock_location_stock"/>
@@ -64,6 +63,7 @@
             <field name="procure_method">make_to_stock</field>
             <field name="picking_type">out</field>
             <field name="name">Deliver Shop</field>
+            <field name="action">move</field>
         </record>
         <record id="stock_warehouse_orderpoint_shop1_cpu1" model="stock.warehouse.orderpoint">
             <field name="product_max_qty">20.0</field>
@@ -73,6 +73,7 @@
             <field name="warehouse_id" ref="stock.stock_warehouse_shop0"/>
             <field name="location_id" ref="stock.stock_location_shop0"/>
             <field name="product_id" ref="product.product_product_9"/>
+            <field name="action">move</field>
         </record>
 
     </data>

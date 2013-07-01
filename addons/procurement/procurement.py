@@ -26,6 +26,7 @@ from dateutil.relativedelta import relativedelta
 
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
+import openerp
 
 class procurement_group(osv.osv):
     '''
@@ -70,7 +71,7 @@ class procurement_rule(osv.osv):
         'name': fields.char('Name', required=True,
             help="This field will fill the packing origin and the name of its moves"),
         'group_id': fields.many2one('procurement.group', 'Procurement Group'),
-        'action': fields.selection(selection=lambda s, c, u, ctx: s._get_action(c, u, context=ctx),
+        'action': fields.selection(selection=lambda s, c, u, context: s._get_action(c, u, context),
             string='Action', required=True)
     }
     def _get_action(self, cr, uid, context=None):

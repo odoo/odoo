@@ -22,6 +22,7 @@
 from stock import *
 import partner
 import product
+import procurement
 #import stock_fifo_lifo
 import report
 import wizard

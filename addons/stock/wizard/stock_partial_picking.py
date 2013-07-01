@@ -148,7 +148,6 @@ class stock_partial_picking(osv.osv_memory):
             'product_id': move.product_id.id,
             'quantity': move.product_qty - move.remaining_qty if move.state == 'assigned' else 0,
             'product_uom': move.product_uom.id,
-            'lot_id': move.lot_id.id,
             'move_id': move.id,
             'location_id': move.location_id.id,
             'location_dest_id': move.location_dest_id.id,

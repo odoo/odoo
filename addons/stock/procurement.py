@@ -35,11 +35,11 @@ class procurement_group(osv.osv):
 
 class procurement_rule(osv.osv):
     _inherit = 'procurement.rule'
-    def _get_action(self, cr, uid, context=context):
+    def _get_action(self, cr, uid, context=None):
         result = super(procurement_rule, self)._get_action(cr, uid, context=context)
         return result + [('move','Move From Another Location')]
     _columns = {
-        'location_id': fields.many2one('stock.location', 'Destination Location')
+        'location_id': fields.many2one('stock.location', 'Destination Location'), 
         'location_src_id': fields.many2one('stock.location', 'Source Location',
             help="Source location is action=move")
     }
@@ -47,8 +47,8 @@ class procurement_rule(osv.osv):
 class procurement_order(osv.osv):
     _inherit = "procurement.order"
     _columns = {
-        'location_id': fields.many2one('stock.location', 'Destination Location')
-        'move_id': fields.many2one('stock.move', 'Move')
+        'location_id': fields.many2one('stock.location', 'Destination Location'), 
+        'move_id': fields.many2one('stock.move', 'Move'), 
         'move_dest_id': fields.many2one('stock.move', 'Destination Move')
     }
     def _assign(self, cr, uid, procurement, context=None):
@@ -58,7 +58,7 @@ class procurement_order(osv.osv):
             return super(procurement_order, self)._assign(cr, uid, procurement, context=context)
         return rule_obj.browse(cr, uid, res[0], context=context)
 
-    def _run_move_create(self, cr, uid, procurement, context=None)
+    def _run_move_create(self, cr, uid, procurement, context=None): 
         return {
             'name': procurement.name,
             'company_id':  procurement.company_id.id,

@@ -95,7 +95,7 @@ You can use the demo data as follow:
     """,
     'author': 'OpenERP SA',
     'images': ['images/pulled_flow.jpeg','images/pushed_flow.jpeg'],
-    'depends': ['procurement','stock','sale'],
+    'depends': ['procurement','stock'],
     'data': ['stock_location_view.xml', 'security/stock_location_security.xml', 'security/ir.model.access.csv'],
     'demo': [
         'stock_location_demo_cpu1.xml',
