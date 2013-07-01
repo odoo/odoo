@@ -124,7 +124,8 @@ class Ecommerce(http.Controller):
             order_line = order_line_obj.read(cr, uid, order_line_ids, [], context=context)[0]
             quantity = order_line['product_uom_qty'] + (remove and -1 or 1)
             if quantity < 0:
-                quantity = 0
+                order_line_obj.unlink(cr, uid, order_line_ids, context=context)
+                return "0"
         else:
             fields = [k for k, v in order_line_obj._columns.items()]
             values = order_line_obj.default_get(cr, uid, fields, context=context)
@@ -146,7 +147,7 @@ class Ecommerce(http.Controller):
 
     @http.route(['/shop/remove_cart'], type='http', auth="db")
     def remove_cart(self, product_id=0):
-        return self.add_cart(product_id=0, remove=True)
+        return self.add_cart(product_id=product_id, remove=True)
 
     @http.route(['/shop/confirm_cart'], type='http', auth="db")
     def confirm_cart(self):
