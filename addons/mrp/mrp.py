@@ -551,7 +551,9 @@ class mrp_production(osv.osv):
             return {'value': {
                 'product_uom': False,
                 'bom_id': False,
-                'routing_id': False
+                'routing_id': False,
+                'product_uos_qty': False, 
+                'product_uos': False
             }}
         bom_obj = self.pool.get('mrp.bom')
         product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
@@ -566,6 +568,8 @@ class mrp_production(osv.osv):
             'product_uom': product_uom_id,
             'bom_id': bom_id,
             'routing_id': routing_id,
+            'product_uos_qty': product.uos_coeff, 
+            'product_uos': product.uos_id.id
         }
         return {'value': result}
 
