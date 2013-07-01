@@ -276,4 +276,20 @@ class QWebXml(object):
             v[t_att["set"]] = self.render_element(e, t_att, g_att, v)
         return ""
 
+    def render_tag_field(self, e, t_att, g_att, v):
+        """ eg: <span t-record="browse_record(res.partner, 1)" t-field="phone">+1 555 555 8069</span>"""
+        record = v[t_att["record"]]
+
+        if record._model._columns.get(t_att["field"])._type == 'many2one':
+            inner = cgi.escape(str(getattr(record, t_att["field"]).name_get()[0][1]))
+        else:
+            inner = cgi.escape(str(getattr(record, t_att["field"])))
+
+        if e.tagName != 't':
+            # <t/> are escaped
+            g_att += ' %s="%s"' % ('data-oe-model', record._model._name)
+            g_att += ' %s="%s"' % ('data-oe-id', str(record.id))
+            g_att += ' %s="%s"' % ('data-oe-field', t_att["field"])
+        return self.render_element(e, t_att,  g_att, v, inner)
+
 # leave this, al.
