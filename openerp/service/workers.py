@@ -437,6 +437,7 @@ class WorkerCron(Worker):
             self.db_index = 0
 
     def start(self):
+        os.nice(10)     # mommy always told me to be nice with others...
         Worker.start(self)
         self.multi.socket.close()
         openerp.service.start_internal()
