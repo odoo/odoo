@@ -1812,6 +1812,8 @@ class BaseModel(object):
                 # otherwise try to find the lowest priority matching ir.ui.view
                 view_id = View.default_view(cr, uid, self._name, view_type, context=context)
 
+        # context for postproscessing might be overriden
+        ctx = context
         if view_id:
             # read the view with inherited views applied
             root_view = View.read_combined(cr, uid, view_id, fields=['id', 'name', 'field_parent', 'type', 'model', 'arch'], context=context)
@@ -1820,13 +1822,9 @@ class BaseModel(object):
             result['type'] = root_view['type']
             result['view_id'] = root_view['id']
             result['field_parent'] = root_view['field_parent']
-            # Apply post processing, groups and modifiers etc...
-            ctx = context
+            # override context fro postprocessing
             if root_view.get('model') != self._name:
                 ctx = dict(context, base_model_name=root_view.get('model'))
-            xarch, xfields = View.postprocess_and_fields( cr, uid, self._name, etree.fromstring(result['arch']), result['view_id'], context=ctx)
-            result['arch'] = xarch
-            result['fields'] = xfields
         else:
             # fallback on default views methods if no ir.ui.view could be found
             try:
@@ -1838,6 +1836,10 @@ class BaseModel(object):
             except AttributeError:
                 raise except_orm(_('Invalid Architecture!'), _("No default view of type '%s' could be found !") % view_type)
 
+        # Apply post processing, groups and modifiers etc...
+        xarch, xfields = View.postprocess_and_fields( cr, uid, self._name, etree.fromstring(result['arch']), result['view_id'], context=ctx)
+        result['arch'] = xarch
+        result['fields'] = xfields
 
         # Add related action information if aksed
         if toolbar:
