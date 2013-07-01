@@ -129,6 +129,21 @@
             </field>
         </record>
 
+        <record id="layout-event" model="ir.ui.view">
+            <field name="name">event</field>
+            <field name="inherit_id" ref="layout"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//ul[@class='oe_website_nav span8 nav nav-pills']" position="inside">
+                        <li>Event</li>
+                    </xpath>
+                    <xpath expr="//footer[@class='oe_website_footer']" position="inside">
+                        <div>Our last events</div>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
 <!--
 # WIIIP !!
 module_template = Template("""
