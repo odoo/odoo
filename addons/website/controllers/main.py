@@ -1,61 +1,14 @@
 # -*- coding: utf-8 -*-
-
-from jinja2 import Template # WIP !
-
 import openerp
 from openerp.addons.web import http
 from openerp.addons.web.controllers.main import manifest_list
 from openerp.addons.web.http import request
 
-def get_html_head():
-    head = ['<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', db=request.db)]
-    head += ['<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', db=request.db)]
-    head += ['<script type="text/javascript" src="/website/static/src/js/website_bootstrap.js"></script>']
-    return "\n        ".join(head)
-
-# WIIIP !!
-module_template = Template("""
-    {%- for module in modules %}
-        <a href='#' title='{{ module.shortdesc }}' class='oe_app ab_app_descr'>
-            <div class='ab_app_descr'>
-                <div class='oe_app_icon'>
-                    <img src="data:image/png;base64,{{ module.icon_image }}" onerror="this.src = '/base/static/src/img/icon.png'">
-                </div>
-            </div>
-            <div
-                class='oe_app_name oe_editable'
-                data-model='ir.module.module'
-                data-id='{{ module.id }}'
-                data-field='shortdesc'
-            >{{ module.shortdesc }}</div>
-            <div
-                class='oe_app_descr oe_editable'
-                data-model='ir.module.module'
-                data-id='{{ module.id }}'
-                data-field='summary'
-            >{{ module.summary }}</div>
-        </a>
-    {%- endfor %}
-""")
-
-
 class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route('/', type='http', auth="db")
     def index(self, **kw):
-        editable = bool(request.session._uid)
-        try:
-            request.session.check_security()
-        except http.SessionExpiredException:
-            editable = False
-        # WIIIIIIIP !!!
-        html = open(openerp.addons.get_module_resource('website', 'views', 'homepage.html'), 'rb').read().decode('utf8')
-        modules = request.registry.get("ir.module.module").search_read(request.cr, openerp.SUPERUSER_ID, fields=['id', 'shortdesc', 'summary', 'icon_image'], limit=50)
-        modules_html = module_template.render(modules=modules)
-        html = html.replace(u'<!--modules-->', modules_html)
-        if editable:
-            html = html.replace('<!--editable-->', get_html_head())
-        return html
+        return self.page("website.homepage")
 
     @http.route('/admin', type='http', auth="none")
     def admin(self, *args, **kw):
@@ -63,17 +16,30 @@ class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route('/page/<path:path>', type='http', auth="db")
     def page(self, path):
-        editable = bool(request.session._uid)
-        uid = request.session._uid or openerp.SUPERUSER_ID
+        #def get_html_head():
+        #    head = ['<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', db=request.db)]
+        #    head += ['<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', db=request.db)]
+        #    head += ['<script type="text/javascript" src="/website/static/src/js/website_bootstrap.js"></script>']
+        #modules = request.registry.get("ir.module.module").search_read(request.cr, openerp.SUPERUSER_ID, fields=['id', 'shortdesc', 'summary', 'icon_image'], limit=50)
         try:
             request.session.check_security()
+            editable = True
+            uid = request.session._uid
         except http.SessionExpiredException:
             editable = False
             uid = openerp.SUPERUSER_ID
-        html = request.registry.get("ir.ui.view").render(request.cr, uid, path, {})
-        if editable:
-            html = html.replace('<!--editable-->', get_html_head())
+        context = {
+            'inherit_branding': editable
+        }
+        values = {
+            'editable': editable,
+            'request': request,
+            'registry': request.registry,
+            'cr': request.cr,
+            'uid': uid,
+            'res_company': request.registry['res.company'].browse(request.cr, uid, 1, context=context),
+        }
+        html = request.registry.get("ir.ui.view").render(request.cr, uid, path, values, context)
         return html
-
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

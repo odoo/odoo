@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="layout" model="ir.ui.view">
+            <field name="name">layout</field>
+            <field name="type">qweb</field>
+            <!-- <!DOCTYPE html> -->
+            <field name="arch" type="xml">
+                <html>
+                    <head>
+                        <title t-raw="title"><t t-esc="res_company.name"/></title>
+                        <link rel="stylesheet" href="/web/webclient/css?db=trunk2"/>
+                        <link rel='stylesheet' href='https://www.openerp.com/saas_master/static/site_new/fonts/lato/stylesheet.css'/>
+                        <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,600,700'/>
+                        <!--
+                        <link rel="stylesheet" href="https://www.openerp.com/saas_master/static/site_new/css/website.css"/>
+                        -->
+                        <script type="text/javascript" src="/web/webclient/js?db=trunk2"></script>
+                        <t t-if="editable"><script type="text/javascript" src="/website/static/src/js/website_bootstrap.js"></script></t>
+                    </head>
+                    <body class="oe_website">
+                        <header class="oe_website_header">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="oe_website_logo span4">
+                                        <a href='/page/website.homepage'><img t-att-alt="res_company.name" src='/web/binary/company_logo'/></a>
+                                    </div>
+                                    <ul class="oe_website_nav span8 nav nav-pills">
+                                        <li class="pull-right"><a href="/admin">Sign in</a></li>
+                                        <li class="pull-right"><a href="/page/website.contactus">About</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </header>
+                        <div class="oe_website_body" t-raw="0">
+                            <div class="container">
+                                <div class="row">
+                                    <h1>I'm an empty page, please edit me...</h1>
+                                </div>
+                            </div>
+                        </div>
+                        <footer class="oe_website_footer">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="span4">
+                                        <h5>Product and services</h5>
+                                        <ul>
+                                            <li><a href="https://www.openerp.com/start?download">Download</a></li>
+                                            <li><a href="https://launchpad.net/openobject">Launchpad</a></li>
+                                            <li><a href="http://runbot.openerp.com">Automated Tests</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="span4">
+                                        <h5>Social</h5>
+                                        <ul>
+                                            <li><a href="http://twitter.com/openerp"><i class="icon-twitter-sign"></i>Twitter</a></li>
+                                            <li><a href="http://www.facebook.com/OpenERP"><i class="icon-facebook-sign"></i>Facebook</a></li>
+                                            <li><a href="https://plus.google.com/+openerp/posts"><i class="icon-google-plus-sign"></i>Google+</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="span4">
+                                        <h5 t-esc="res_company.name">Company name</h5>
+                                        <ul>
+                                            <li><a href="/page/website.contactus">Contact us</a></li>
+                                            <li><a href="/page/website.news">News</a></li>
+                                            <li><a href="/page/website.contactus">About us</a></li>
+                                            <li>&amp;#x2706; <t t-esc="res_company.phone"/></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="oe_website_copy text-center">&amp;copy; <t t-esc="res_company.name">Company name</t>.</p>
+                        </footer>
+                    </body>
+                </html>
+            </field>
+        </record>
+
+        <record id="homepage" model="ir.ui.view">
+            <field name="name">homepage</field>
+            <field name="type">qweb</field>
+            <field name="arch" type="xml">
+                <t t-call="website.layout">
+
+                    <div style="background: linear-gradient(to bottom, rgba(136,191,232,1) 0%%,rgba(112,176,224,1) 100%%); height: 200px; ">
+                        <div class="container">
+                            <div class="row">
+                                <h1>Banner title</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="span12">
+                                Description
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </field>
+        </record>
+
+        <record id="contactus" model="ir.ui.view">
+            <field name="name">contactus</field>
+            <field name="type">qweb</field>
+            <field name="arch" type="xml">
+                <t t-call="website.layout">
+                    <t t-set="title">Contact us - <t t-esc="res_company.name"/></t>
+                    <div class="container">
+                        <div class="row">
+                            <div class="span8">
+                                <h1>Contact us</h1>
+                            </div>
+                            <div class="span4">
+                                <address>
+                                    <strong t-esc="res_company.name">Name</strong><br/>
+                                    <t t-esc="res_company.street"/><br/>
+                                    <t t-esc="res_company.city"/>, <t t-esc="res_company.zip"/><br/>
+                                    Belgium<br/>
+                                    <br/>
+                                    &amp;#x2706; <t t-esc="res_company.phone"/><br/>
+                                    <i class="icon-envelope"></i> <t t-esc="res_company.email"/>
+                                </address>
+                                <a href="/"><img src="http://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&amp;zoom=13&amp;size=298x298&amp;sensor=false"/></a>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </field>
+        </record>
+
+<!--
+# WIIIP !!
+module_template = Template("""
+    {%- for module in modules %}
+        <a href='#' title='{{ module.shortdesc }}' class='oe_app ab_app_descr'>
+            <div class='ab_app_descr'>
+                <div class='oe_app_icon'>
+                    <img src="data:image/png;base64,{{ module.icon_image }}" onerror="this.src = '/base/static/src/img/icon.png'">
+                </div>
+            </div>
+            <div
+                class='oe_app_name oe_editable'
+                data-model='ir.module.module'
+                data-id='{{ module.id }}'
+                data-field='shortdesc'
+            >{{ module.shortdesc }}</div>
+            <div
+                class='oe_app_descr oe_editable'
+                data-model='ir.module.module'
+                data-id='{{ module.id }}'
+                data-field='summary'
+            >{{ module.summary }}</div>
+        </a>
+    {%- endfor %}
+""")
+-->
+
+     </data>
+</openerp>

@@ -11,7 +11,7 @@ OpenERP Website CMS
     'depends': ['base'],
     'installable': True,
     'data': [
-        'views/test.xml'
+        'views/views.xml'
     ],
     'js': ['static/src/js/website.js'],
     'css': ['static/src/css/website.css'],

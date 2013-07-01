@@ -2,6 +2,23 @@
 <openerp>
     <data>
 
+        <!-- Layout add nav and footer -->
+
+        <record id="layout_ecommerce" model="ir.ui.view">
+            <field name="name">layout_ecommerce</field>
+            <field name="inherit_id" ref="website.layout"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="(//header//li)[last()]" position="after">
+                        <li class="pull-right"><a href="/shop/">Shop</a></li>
+                    </xpath>
+                    <xpath expr="//footer/div/div/div[3]" position="inside">
+                        SHOP Footer
+                    </xpath>
+               </data>
+            </field>
+        </record>
+
         <!-- Product container --> 
 
         <record id="product_container" model="ir.ui.view">
@@ -69,6 +86,7 @@
             <field name="name">ecommerce_categories</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
+                
                 <html>
         <div class='oe_span3 oe_left oe_categories'>
             <h4>Product categories</h4>

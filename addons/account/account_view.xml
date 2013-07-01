@@ -1204,6 +1204,7 @@
         <record id="view_move_line_tree_reconcile" model="ir.ui.view">
             <field name="model">account.move.line</field>
             <field eval="24" name="priority"/>
+            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree_account_reconciliation colors="red:state == 'draft';black:state == 'valid'" string="Journal Items to Reconcile" create="false" version="7.0">
                     <field name="date"/>
