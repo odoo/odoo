@@ -1837,7 +1837,7 @@ class BaseModel(object):
                 raise except_orm(_('Invalid Architecture!'), _("No default view of type '%s' could be found !") % view_type)
 
         # Apply post processing, groups and modifiers etc...
-        xarch, xfields = View.postprocess_and_fields( cr, uid, self._name, etree.fromstring(result['arch']), result['view_id'], context=ctx)
+        xarch, xfields = View.postprocess_and_fields( cr, uid, self._name, etree.fromstring(result['arch']), view_id, context=ctx)
         result['arch'] = xarch
         result['fields'] = xfields
 
