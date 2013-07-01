@@ -32,6 +32,7 @@ import urllib
 import urllib2
 import zipfile
 import zipimport
+import lxml.html
 
 try:
     from cStringIO import StringIO
@@ -152,9 +153,19 @@ class module(osv.osv):
     def _get_desc(self, cr, uid, ids, field_name=None, arg=None, context=None):
         res = dict.fromkeys(ids, '')
         for module in self.browse(cr, uid, ids, context=context):
-            overrides = dict(embed_stylesheet=False, doctitle_xform=False, output_encoding='unicode')
-            output = publish_string(source=module.description, settings_overrides=overrides, writer=MyWriter())
-            res[module.id] = output
+            path = addons.get_module_resource(module.name, 'static/description/index.html')
+            if path:
+                with tools.file_open(path, 'rb') as desc_file:
+                    doc = desc_file.read()
+                    html = lxml.html.document_fromstring(doc)
+                    for element, attribute, link, pos in html.iterlinks():
+                        if element.get('src') and not '//' in element.get('src') and not 'static/' in element.get('src'):
+                            element.set('src', "/%s/static/description/%s" % (module.name, element.get('src')))
+                    res[module.id] = lxml.html.tostring(html)
+            else:
+                overrides = dict(embed_stylesheet=False, doctitle_xform=False, output_encoding='unicode')
+                output = publish_string(source=module.description, settings_overrides=overrides, writer=MyWriter())
+                res[module.id] = output
         return res
 
     def _get_latest_version(self, cr, uid, ids, field_name=None, arg=None, context=None):
@@ -232,7 +243,7 @@ class module(osv.osv):
     def _get_icon_image(self, cr, uid, ids, field_name=None, arg=None, context=None):
         res = dict.fromkeys(ids, '')
         for module in self.browse(cr, uid, ids, context=context):
-            path = addons.get_module_resource(module.name, 'static', 'src', 'img', 'icon.png')
+            path = addons.get_module_resource(module.name, 'static', 'description', 'icon.png')
             if path:
                 image_file = tools.file_open(path, 'rb')
                 try:
@@ -472,7 +483,6 @@ class module(osv.osv):
         function(cr, uid, ids, context=context)
 
         cr.commit()
-        openerp.modules.registry.RegistryManager.signal_registry_change(cr.dbname)
         registry = openerp.modules.registry.RegistryManager.new(cr.dbname, update_module=True)
 
         config = registry['res.config'].next(cr, uid, [], context=context) or {}

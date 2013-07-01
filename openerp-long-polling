@@ -1,0 +1,11 @@
+#!/usr/bin/env python
+
+import gevent.monkey
+gevent.monkey.patch_all()
+import gevent_psycopg2
+gevent_psycopg2.monkey_patch()
+
+import openerp
+
+if __name__ == "__main__":
+    openerp.cli.main()

@@ -94,7 +94,7 @@ class wkf_activity(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         if context is None: context = {}
         if not context.get('_force_unlink') and self.pool.get('workflow.workitem').search(cr, uid, [('act_id', 'in', ids)]):
-            raise osv.except_osv(_('Operation forbidden'),
+            raise osv.except_osv(_('Operation Forbidden'),
                                  _('Please make sure no workitems refer to an activity before deleting it!'))
         super(wkf_activity, self).unlink(cr, uid, ids, context=context)
 

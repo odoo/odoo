@@ -657,7 +657,7 @@ class actions_server(osv.osv):
 
             if action.state=='client_action':
                 if not action.action_id:
-                    raise osv.except_osv(_('Error'), _("Please specify an action to launch !"))
+                    raise osv.except_osv(_('Error'), _("Please specify an action to launch!"))
                 return self.pool[action.action_id.type].read(cr, uid, action.action_id.id, context=context)
 
             if action.state=='code':

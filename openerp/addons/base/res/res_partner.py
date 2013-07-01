@@ -76,6 +76,12 @@ class format_address(object):
         return arch
 
 
+@model
+def _tz_get(self):
+    # put POSIX 'Etc/*' entries at the end to avoid confusing users - see bug 1086728
+    return [(tz,tz) for tz in sorted(pytz.all_timezones, key=lambda tz: tz if not tz.startswith('Etc/') else '_')]
+
+
 class res_partner_category(osv.Model):
 
     def name_get(self, cr, uid, ids, context=None):
@@ -118,7 +124,7 @@ class res_partner_category(osv.Model):
     def _name_get_fnc(self, field_name, arg):
         return dict(self.name_get())
 
-    _description = 'Partner Categories'
+    _description = 'Partner Tags'
     _name = 'res.partner.category'
     _columns = {
         'name': fields.char('Category Name', required=True, size=64, translate=True),
@@ -158,10 +164,6 @@ class res_partner_title(osv.osv):
 def _lang_get(self):
     languages = scope.model('res.lang').search([])
     return [(language.code, language.name) for language in languages]
-
-@model
-def _tz_get(self):
-    return [(x, x) for x in pytz.all_timezones]
 
 # fields copy if 'use_parent_address' is checked
 ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
@@ -260,8 +262,8 @@ class res_partner(osv.Model, format_address):
         'street2': fields.char('Street2', size=128),
         'zip': fields.char('Zip', change_default=True, size=24),
         'city': fields.char('City', size=128),
-        'state_id': fields.many2one("res.country.state", 'State'),
-        'country_id': fields.many2one('res.country', 'Country'),
+        'state_id': fields.many2one("res.country.state", 'State', ondelete='restrict'),
+        'country_id': fields.many2one('res.country', 'Country', ondelete='restrict'),
         'country': fields.related('country_id', type='many2one', relation='res.country', string='Country',
                                   deprecated="This field will be removed as of OpenERP 7.1, use country_id instead"),
         'email': fields.char('Email', size=240),
@@ -466,7 +468,7 @@ class res_partner(osv.Model, format_address):
         """ Sync commercial fields and address fields from company and to children after create/update,
         just as if those were all modeled as fields.related to the parent """
         # 1. From UPSTREAM: sync from parent
-        if update_values.get('parent_id') or update_values.get('use_company_address'):
+        if update_values.get('parent_id') or update_values.get('use_parent_address'):
             # 1a. Commercial fields: sync if parent changed
             if update_values.get('parent_id'):
                 self._commercial_sync_from_company(cr, uid, partner, context=context)
@@ -578,7 +580,7 @@ class res_partner(osv.Model, format_address):
             context = {}
         name, email = self._parse_partner_name(name, context=context)
         if context.get('force_email') and not email:
-            raise osv.except_osv(_('Warning'), _("Couldn't create contact without email address !"))
+            raise osv.except_osv(_('Warning'), _("Couldn't create contact without email address!"))
         if not name and email:
             name = email
         rec_id = self.create(cr, uid, {self._rec_name: name or email, 'email': email or False}, context=context)
@@ -610,9 +612,8 @@ class res_partner(osv.Model, format_address):
                 query_args['limit'] = limit
             cr.execute('''SELECT partner.id FROM res_partner partner
                           LEFT JOIN res_partner company ON partner.parent_id = company.id
-                          WHERE partner.email ''' + operator +''' %(name)s
-                             OR partner.name || ' (' || COALESCE(company.name,'') || ')'
-                          ''' + operator + ' %(name)s ' + limit_str, query_args)
+                          WHERE partner.email ''' + operator +''' %(name)s OR
+                                partner.display_name ''' + operator + ' %(name)s ' + limit_str, query_args)
             ids = map(lambda x: x[0], cr.fetchall())
             ids = self.search(cr, uid, [('id', 'in', ids)] + args, limit=limit, context=context)
             if ids:

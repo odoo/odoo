@@ -53,7 +53,13 @@
             <field name="res_model">res.bank</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help">Manage bank records you want to be used in the system.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new bank.
+              </p><p>
+                Manage bank records you want to be used in the system.
+              </p>
+            </field>
         </record>
         <menuitem action="action_res_bank_form" id="menu_action_res_bank_form" parent="base.menu_config_address_book" sequence="11" groups="base.group_no_one"/>
 
@@ -152,7 +158,17 @@
             <field name="res_model">res.partner.bank</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help">Configure your company's bank accounts and select those that must appear on the report footer. You can reorder bank accounts from the list view. If you use the accounting application of OpenERP, journals and accounts will be created automatically based on these data.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a bank account.
+              </p><p>
+                Configure your company's bank accounts and select those that must appear on the report footer.
+                You can reorder bank accounts from the list view.
+              </p>
+              <p>
+                If you use the accounting application of OpenERP, journals and accounts will be created automatically based on these data.
+              </p>  
+            </field>
         </record>
         <menuitem action="action_res_partner_bank_account_form"
             id="menu_action_res_partner_bank_form"

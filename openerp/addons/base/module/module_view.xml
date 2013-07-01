@@ -37,15 +37,15 @@
                 <search string="Search modules">
                     <field name="name" filter_domain="['|', '|', ('summary', 'ilike', self), ('shortdesc', 'ilike', self), ('name',
                         'ilike', self)]" string="Module"/>
-                    <filter name="app" icon="terp-check" string="Apps" domain="[('application', '=', 1)]"/>
-                    <filter name="extra" icon="terp-check" string="Extra" domain="[('application', '=', 0)]"/>
+                    <filter name="app" string="Apps" domain="[('application', '=', 1)]"/>
+                    <filter name="extra" string="Extra" domain="[('application', '=', 0)]"/>
                     <separator/>
-                    <filter name="installed" icon="terp-check" string="Installed" domain="[('state', 'in', ['installed', 'to upgrade', 'to remove'])]"/>
-                    <filter icon="terp-dialog-close" string="Not Installed" domain="[('state', 'in', ['uninstalled', 'uninstallable', 'to install'])]"/>
+                    <filter name="installed" string="Installed" domain="[('state', 'in', ['installed', 'to upgrade', 'to remove'])]"/>
+                    <filter string="Not Installed" domain="[('state', 'in', ['uninstalled', 'uninstallable', 'to install'])]"/>
                     <field name="category_id"/>
                     <group expand="0" string="Group By...">
-                        <filter string="Author" icon="terp-personal" domain="[]" context="{'group_by':'author'}"/>
-                        <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'category_id'}"/>
+                        <filter string="Author" domain="[]" context="{'group_by':'author'}"/>
+                        <filter string="Category" domain="[]" context="{'group_by':'category_id'}"/>
                     </group>
                </search>
             </field>
@@ -70,37 +70,41 @@
             <field name="name">ir.module.module.form</field>
             <field name="model">ir.module.module</field>
             <field name="arch" type="xml">
-                <form create="0" edit="0" string="Module" version="7.0">
-                <sheet>
+                <form create="0" edit="0" string="Module" version="7.0" class='oe_styling_v8'>
+                    <sheet>
                     <field name="icon_image" widget="image" class="oe_avatar oe_left"/>
                     <div class="oe_title">
                         <h1><field name="shortdesc"/></h1>
-                        <h2 class="oe_fade"><field name="summary"/></h2>
-                        <button name="button_immediate_install" states="uninstalled" string="Install" type="object" class="oe_highlight"/>
-                        <button name="button_immediate_upgrade" states="installed" string="Upgrade" type="object" class="oe_highlight"/>
-                        <button name="button_immediate_uninstall" states="installed" string="Uninstall" type="object"
-                            confirm="Do you confirm the uninstallation of this module? This will permanently erase all data currently stored by the module!"/>
-                        <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" type="object"/>
-                        <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" type="object"/>
-                        <button name="button_install_cancel" states="to install" string="Cancel Install" type="object"/>
+                        <h3 class="oe_fade">
+                            By <field name="author" class="oe_inline"/>
+                        </h3>
+                        <div>
+                            <button name="button_immediate_install" states="uninstalled" string="Install" type="object" class="oe_highlight"/>
+                            <button name="button_immediate_upgrade" states="installed" string="Upgrade" type="object" class="oe_highlight"/>
+                            <button name="button_immediate_uninstall" states="installed" string="Uninstall" type="object"
+                                confirm="Do you confirm the uninstallation of this module? This will permanently erase all data currently stored by the module!"/>
+                            <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" type="object"/>
+                            <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" type="object"/>
+                            <button name="button_install_cancel" states="to install" string="Cancel Install" type="object"/>
+                        </div>
                     </div>
-                    <group>
-                        <group>
-                            <field name="author"/>
-                            <field name="website" widget="url" attrs="{'invisible':[('website','=',False)]}"/>
-                            <field name="category_id" widget="selection"/>
-                        </group>
-                        <group>
-                            <field name="name"/>
-                            <field name="license"/>
-                            <field name="installed_version"/>
-                        </group>
-                    </group>
-                    <notebook>
-                        <page string="Description">
-                            <field name="description_html"/>
+                    <div class="oe_clear"/>
+                    <notebook groups="base.group_no_one">
+                        <page string="Information">
+                            <group>
+                                <group>
+                                    <field name="website" widget="url" attrs="{'invisible':[('website','=',False)]}"/>
+                                    <field name="category_id" widget="selection"/>
+                                    <field name="summary"/>
+                                </group>
+                                <group>
+                                    <field name="name"/>
+                                    <field name="license"/>
+                                    <field name="installed_version"/>
+                                </group>
+                            </group>
                         </page>
-                        <page string="Technical Data" groups="base.group_no_one">
+                        <page string="Technical Data">
                             <group col="4">
                                 <field name="demo"/>
                                 <field name="application"/>
@@ -116,7 +120,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Features" attrs="{'invisible':[('state','!=','installed')]}">
+                        <page string="Installed Features" attrs="{'invisible':[('state','!=','installed')]}">
                             <label for="menus_by_module" string="Created Menus"/>
                             <field name="menus_by_module"/>
                             <label for="reports_by_module" string="Defined Reports"/>
@@ -124,6 +128,8 @@
                         </page>
                     </notebook>
                     </sheet>
+                    <field name="description_html" class='oe_app_description oe_styling_v8'/>
+                    <button name="button_immediate_install" states="uninstalled" string="Install" type="object" class="oe_highlight oe_center"/>
                 </form>
             </field>
         </record>
