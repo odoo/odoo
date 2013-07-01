@@ -600,7 +600,7 @@ class sale_order_line(osv.osv):
         #check if product is available, and if not: raise an error
         uom2 = False
         if uom:
-            uom2 = product_uom_obj.browse(cr, uid, uom)
+            uom2 = product_uom_obj.browse(cr, uid, uom, context=context)
             if product_obj.uom_id.category_id.id != uom2.category_id.id:
                 uom = False
         if not uom2:
