@@ -254,39 +254,37 @@ class TestApplyInheritanceSpecs(common.TransactionCase):
             string="Title")
 
     def test_replace(self):
-        spec = ET.tostring(
-            Field(
+        spec = Field(
                 Field(name="replacement"),
-                name="target", position="replace"))
+                name="target", position="replace")
 
-        self.View.apply_inheritance_specs(self.cr, self.uid, 'test',
-                                          None, self.base_arch,
-                                          None, spec)
+        self.View.apply_inheritance_specs(self.cr, self.uid,
+                                          self.base_arch,
+                                          spec, None)
 
         self.assertEqual(
             ET.tostring(self.base_arch),
             ET.tostring(E.form(Field(name="replacement"), string="Title")))
 
     def test_delete(self):
-        spec = ET.tostring(Field(name="target", position="replace"))
+        spec = Field(name="target", position="replace")
 
-        self.View.apply_inheritance_specs(self.cr, self.uid, 'test',
-                                          None, self.base_arch,
-                                          None, spec)
+        self.View.apply_inheritance_specs(self.cr, self.uid,
+                                          self.base_arch,
+                                          spec, None)
 
         self.assertEqual(
             ET.tostring(self.base_arch),
             ET.tostring(E.form(string="Title")))
 
     def test_insert_after(self):
-        spec = ET.tostring(
-            Field(
+        spec = Field(
                 Field(name="inserted"),
-                name="target", position="after"))
+                name="target", position="after")
 
-        self.View.apply_inheritance_specs(self.cr, self.uid, 'test',
-                                          None, self.base_arch,
-                                          None, spec)
+        self.View.apply_inheritance_specs(self.cr, self.uid,
+                                          self.base_arch,
+                                          spec, None)
 
         self.assertEqual(
             ET.tostring(self.base_arch),
@@ -297,14 +295,13 @@ class TestApplyInheritanceSpecs(common.TransactionCase):
             )))
 
     def test_insert_before(self):
-        spec = ET.tostring(
-            Field(
+        spec = Field(
                 Field(name="inserted"),
-                name="target", position="before"))
+                name="target", position="before")
 
-        self.View.apply_inheritance_specs(self.cr, self.uid, 'test',
-                                          None, self.base_arch,
-                                          None, spec)
+        self.View.apply_inheritance_specs(self.cr, self.uid,
+                                          self.base_arch,
+                                          spec, None)
 
         self.assertEqual(
             ET.tostring(self.base_arch),
@@ -314,17 +311,15 @@ class TestApplyInheritanceSpecs(common.TransactionCase):
                 string="Title")))
 
     def test_insert_inside(self):
-        default = ET.tostring(
-            Field(Field(name="inserted"), name="target"))
-        spec = ET.tostring(
-            Field(Field(name="inserted 2"), name="target", position='inside'))
+        default = Field(Field(name="inserted"), name="target")
+        spec = Field(Field(name="inserted 2"), name="target", position='inside')
 
-        self.View.apply_inheritance_specs(self.cr, self.uid, 'test',
-                                          None, self.base_arch,
-                                          None, default)
-        self.View.apply_inheritance_specs(self.cr, self.uid, 'test',
-                                          None, self.base_arch,
-                                          None, spec)
+        self.View.apply_inheritance_specs(self.cr, self.uid,
+                                          self.base_arch,
+                                          default, None)
+        self.View.apply_inheritance_specs(self.cr, self.uid,
+                                          self.base_arch,
+                                          spec, None)
 
         self.assertEqual(
             ET.tostring(self.base_arch),
@@ -336,17 +331,16 @@ class TestApplyInheritanceSpecs(common.TransactionCase):
                 string="Title")))
 
     def test_unpack_data(self):
-        spec = ET.tostring(
-            E.data(
+        spec = E.data(
                 Field(Field(name="inserted 0"), name="target"),
                 Field(Field(name="inserted 1"), name="target"),
                 Field(Field(name="inserted 2"), name="target"),
                 Field(Field(name="inserted 3"), name="target"),
-            ))
+            )
 
-        self.View.apply_inheritance_specs(self.cr, self.uid, 'test',
-                                          None, self.base_arch,
-                                          None, spec)
+        self.View.apply_inheritance_specs(self.cr, self.uid,
+                                          self.base_arch,
+                                          spec, None)
 
         self.assertEqual(
             ET.tostring(self.base_arch),
@@ -360,35 +354,34 @@ class TestApplyInheritanceSpecs(common.TransactionCase):
                 string="Title")))
 
     def test_invalid_position(self):
-        spec = ET.tostring(
-            Field(
+        spec = Field(
                 Field(name="whoops"),
-                name="target", position="serious_series"))
+                name="target", position="serious_series")
 
         with self.assertRaises(AttributeError):
-            self.View.apply_inheritance_specs(self.cr, self.uid, 'test',
-                                              None, self.base_arch,
-                                              None, spec)
+            self.View.apply_inheritance_specs(self.cr, self.uid,
+                                              self.base_arch,
+                                              spec, None)
 
     def test_incorrect_version(self):
         # Version ignored on //field elements, so use something else
         arch = E.form(E.element(foo="42"))
-        spec = ET.tostring(E.element(
+        spec = E.element(
             Field(name="placeholder"),
-            foo="42", version="7.0"))
+            foo="42", version="7.0")
 
         with self.assertRaises(AttributeError):
-            self.View.apply_inheritance_specs(self.cr, self.uid, 'test',
-                                              None, arch,
-                                              None, spec)
+            self.View.apply_inheritance_specs(self.cr, self.uid,
+                                              arch,
+                                              spec, None)
 
     def test_target_not_found(self):
-        spec = ET.tostring(Field(name="targut"))
+        spec = Field(name="targut")
 
         with self.assertRaises(AttributeError):
-            self.View.apply_inheritance_specs(self.cr, self.uid, 'test',
-                                              None, self.base_arch,
-                                              None, spec)
+            self.View.apply_inheritance_specs(self.cr, self.uid,
+                                              self.base_arch,
+                                              spec, None)
 
 class TestApplyInheritedArchs(common.TransactionCase):
     """ Applies a sequence of modificator archs to a base view
