@@ -28,7 +28,7 @@ class stock_picking_wave(osv.osv):
 class stock_picking(osv.osv):
     _inherit = "stock.picking"
     _columns = {
-        'wave_id': fields.many2one('picking.wave', 'Picking Wave', help='Picking wave associated to this picking'),
+        'wave_id': fields.many2one('stock.picking.wave', 'Picking Wave', help='Picking wave associated to this picking'),
     }
 
     def wave_confirm_picking(self, cr, uid, ids, context=None):
@@ -50,3 +50,15 @@ class stock_picking(osv.osv):
         for id in ids:
             workflow.trg_validate(uid, 'stock.picking', id, 'button_cancel', cr)
         return True
+
+class stock_picking_in(osv.osv):
+    _inherit = "stock.picking.in"
+    _columns = {
+        'wave_id': fields.many2one('stock.picking.wave', 'Picking Wave', help='Picking wave associated to this picking'),
+    }
+
+class stock_picking_out(osv.osv):
+    _inherit = "stock.picking.out"
+    _columns = {
+        'wave_id': fields.many2one('stock.picking.wave', 'Picking Wave', help='Picking wave associated to this picking'),
+    }
