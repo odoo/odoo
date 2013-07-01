@@ -36,7 +36,7 @@ class mail_group(osv.Model):
     _inherits = {'mail.alias': 'alias_id'}
 
     def _get_image(self, cr, uid, ids, name, args, context=None):
-        result = dict.fromkeys(ids, False)
+        result = {}
         for obj in self.browse(cr, uid, ids, context=context):
             result[obj.id] = tools.image_get_resized_images(obj.image)
         return result
