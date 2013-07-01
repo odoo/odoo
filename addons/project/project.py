@@ -182,10 +182,10 @@ class project(osv.osv):
                                      _('You cannot delete a project containing tasks. You can either delete all the project\'s tasks and then delete the project or simply deactivate the project.'))
             elif proj.alias_id:
                 alias_ids.append(proj.alias_id.id)
-        res =  super(project, self).unlink(cr, uid, ids, context=context)
+        res = super(project, self).unlink(cr, uid, ids, context=context)
         mail_alias.unlink(cr, uid, alias_ids, context=context)
         return res
-    
+
     def _get_attached_docs(self, cr, uid, ids, field_name, arg, context):
         res = {}
         attachment = self.pool.get('ir.attachment')
@@ -196,7 +196,7 @@ class project(osv.osv):
             task_attachments = attachment.search(cr, uid, [('res_model', '=', 'project.task'), ('res_id', 'in', task_ids)], context=context, count=True)
             res[id] = (project_attachments or 0) + (task_attachments or 0)
         return res
-        
+
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
         if context is None:
             context = {}
@@ -209,22 +209,21 @@ class project(osv.osv):
         return res
 
     def _get_alias_models(self, cr, uid, context=None):
-        """Overriden in project_issue to offer more options"""
+        """ Overriden in project_issue to offer more options """
         return [('project.task', "Tasks")]
 
     def _get_visibility_selection(self, cr, uid, context=None):
         """ Overriden in portal_project to offer more options """
-        return [('public', 'Public'),
-                ('employees', 'Employees Only'),
-                ('followers', 'Followers Only')]
+        return [('public', 'Public project'),
+                ('employees', 'Internal project: all employees can access'),
+                ('followers', 'Private project: followers Only')]
 
     def attachment_tree_view(self, cr, uid, ids, context):
         task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)])
         domain = [
-             '|', 
+             '|',
              '&', ('res_model', '=', 'project.project'), ('res_id', 'in', ids),
-             '&', ('res_model', '=', 'project.task'), ('res_id', 'in', task_ids)
-		]
+             '&', ('res_model', '=', 'project.task'), ('res_id', 'in', task_ids)]
         res_id = ids and ids[0] or False
         return {
             'name': _('Attachments'),
@@ -237,6 +236,7 @@ class project(osv.osv):
             'limit': 80,
             'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
         }
+
     # Lambda indirection method to avoid passing a copy of the overridable method when declaring the field
     _alias_models = lambda self, *args, **kwargs: self._get_alias_models(*args, **kwargs)
     _visibility_selection = lambda self, *args, **kwargs: self._get_visibility_selection(*args, **kwargs)
@@ -370,13 +370,11 @@ class project(osv.osv):
         default['state'] = 'open'
         default['line_ids'] = []
         default['tasks'] = []
-        default.pop('alias_name', None)
-        default.pop('alias_id', None)
         proj = self.browse(cr, uid, id, context=context)
         if not default.get('name', False):
             default.update(name=_("%s (copy)") % (proj.name))
         res = super(project, self).copy(cr, uid, id, default, context)
-        self.map_tasks(cr,uid,id,res,context)
+        self.map_tasks(cr, uid, id, res, context=context)
         return res
 
     def duplicate_template(self, cr, uid, ids, context=None):
@@ -527,7 +525,7 @@ def Project():
         for project in projects:
             project_gantt = getattr(projects_gantt, 'Project_%d' % (project.id,))
             for task in project.tasks:
-                if task.state in ('done','cancelled'):
+                if task.state in ('done', 'cancelled'):
                     continue
 
                 p = getattr(project_gantt, 'Task_%d' % (task.id,))
@@ -547,23 +545,18 @@ def Project():
     # ------------------------------------------------
 
     def create(self, cr, uid, vals, context=None):
-        if context is None: context = {}
-        # Prevent double project creation when 'use_tasks' is checked!
-        context = dict(context, project_creation_in_progress=True)
-        mail_alias = self.pool.get('mail.alias')
-        if not vals.get('alias_id') and vals.get('name', False):
-            alias_name = vals.pop('alias_name', None) # prevent errors during copy()
-            alias_id = mail_alias.create_unique_alias(cr, uid,
-                          # Using '+' allows using subaddressing for those who don't
-                          # have a catchall domain setup.
-                          {'alias_name': alias_name or "project+"+short_name(vals['name'])},
-                          model_name=vals.get('alias_model', 'project.task'),
-                          context=context)
-            vals['alias_id'] = alias_id
-        if vals.get('type', False) not in ('template','contract'):
+        if context is None:
+            context = {}
+        # Prevent double project creation when 'use_tasks' is checked + alias management
+        create_context = dict(context, project_creation_in_progress=True,
+                                alias_model_name=vals.get('alias_model', 'project.task'), alias_parent_model_name=self._name)
+
+        if vals.get('type', False) not in ('template', 'contract'):
             vals['type'] = 'contract'
-        project_id = super(project, self).create(cr, uid, vals, context)
-        mail_alias.write(cr, uid, [vals['alias_id']], {'alias_defaults': {'project_id': project_id} }, context)
+
+        project_id = super(project, self).create(cr, uid, vals, context=create_context)
+        project_rec = self.browse(cr, uid, project_id, context=context)
+        self.pool.get('mail.alias').write(cr, uid, [project_rec.alias_id.id], {'alias_parent_thread_id': project_id, 'alias_defaults': {'project_id': project_id}}, context)
         return project_id
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -581,15 +574,15 @@ class task(base_stage, osv.osv):
 
     _track = {
         'state': {
-            'project.mt_task_new': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['new', 'draft'],
-            'project.mt_task_started': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'open',
-            'project.mt_task_closed': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
+            'project.mt_task_new': lambda self, cr, uid, obj, ctx=None: obj.state in ['new', 'draft'],
+            'project.mt_task_started': lambda self, cr, uid, obj, ctx=None: obj.state == 'open',
+            'project.mt_task_closed': lambda self, cr, uid, obj, ctx=None: obj.state == 'done',
         },
         'stage_id': {
-            'project.mt_task_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['new', 'draft', 'done', 'open'],
+            'project.mt_task_stage': lambda self, cr, uid, obj, ctx=None: obj.state not in ['new', 'draft', 'done', 'open'],
         },
         'kanban_state': {  # kanban state: tracked, but only block subtype
-            'project.mt_task_blocked': lambda self, cr, uid, obj, ctx=None: obj['kanban_state'] == 'blocked',
+            'project.mt_task_blocked': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'blocked',
         },
     }
 
