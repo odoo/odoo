@@ -173,17 +173,17 @@ class TestViewInheritance(common.TransactionCase):
 
     def test_get_inheriting_views_arch(self):
         self.assertEqual(self.View.get_inheriting_views_arch(
-            self.cr, self.uid, self.ids['A']), [
+            self.cr, self.uid, self.ids['A'], self.model), [
             (self.arch_for('A1', parent=True), self.ids['A1']),
             (self.arch_for('A2', parent=True), self.ids['A2']),
         ])
 
         self.assertEqual(self.View.get_inheriting_views_arch(
-            self.cr, self.uid, self.ids['A21']),
+            self.cr, self.uid, self.ids['A21'], self.model),
             [])
 
         self.assertEqual(self.View.get_inheriting_views_arch(
-            self.cr, self.uid, self.ids['A11']),
+            self.cr, self.uid, self.ids['A11'], self.model),
             [(self.arch_for('A111', parent=True), self.ids['A111'])])
 
     def test_default_view(self):

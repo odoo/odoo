@@ -229,7 +229,7 @@ class view(osv.osv):
 
     # inheritance
 
-    def get_inheriting_views_arch(self, cr, uid, view_id, context=None):
+    def get_inheriting_views_arch(self, cr, uid, view_id, model, context=None):
         """Retrieves the architecture of views that inherit from the given view, from the sets of
            views that should currently be used in the system. During the module upgrade phase it
            may happen that a view is present in the database but the fields it relies on are not
@@ -238,13 +238,13 @@ class view(osv.osv):
            after the module initialization phase is completely finished.
 
            :param int view_id: id of the view whose inheriting views should be retrieved
-           :param str model: model identifier of the view's related model (for double-checking)
+           :param str model: model identifier of the inheriting views.
            :rtype: list of tuples
            :return: [(view_arch,view_id), ...]
         """
         user_groups = frozenset(self.pool.get('res.users').browse(cr, 1, uid, context).groups_id)
 
-        conditions = [['inherit_id', '=', view_id]]
+        conditions = [['inherit_id', '=', view_id], ['model', '=', model]]
         if self.pool._init:
             # Module init currently in progress, only consider views from
             # modules whose code is already loaded
@@ -388,21 +388,24 @@ class view(osv.osv):
 
         return source
 
-    def apply_view_inheritance(self, cr, uid, source, source_id, context=None):
+    def apply_view_inheritance(self, cr, uid, source, source_id, model, context=None):
         """ Apply all the (directly and indirectly) inheriting views.
 
         :param source: a parent architecture to modify (with parent modifications already applied)
         :param source_id: the database view_id of the parent view
+        :param model: the original model for which we create a view (not
+            necessarily the same as the source's model); only the inheriting
+            views with that specific model will be applied.
         :return: a modified source where all the modifying architecture are applied
         """
         if context is None: context = {}
-        sql_inherit = self.pool.get('ir.ui.view').get_inheriting_views_arch(cr, uid, source_id)
+        sql_inherit = self.pool.get('ir.ui.view').get_inheriting_views_arch(cr, uid, source_id, model)
         for (specs, view_id) in sql_inherit:
             specs_tree = etree.fromstring(specs.encode('utf-8'))
             if context.get('inherit_branding'):
                 self.inherit_branding(specs_tree, view_id)
             source = self.apply_inheritance_specs(cr, uid, source, specs_tree, view_id, context=context)
-            source = self.apply_view_inheritance(cr, uid, source, view_id, context=context)
+            source = self.apply_view_inheritance(cr, uid, source, view_id, model, context=context)
         return source
 
     def read_combined(self, cr, uid, view_id, fields=None, context=None):
@@ -439,7 +442,7 @@ class view(osv.osv):
             })
 
         # and apply inheritance
-        arch = self.apply_view_inheritance(cr, uid, arch_tree, root_id, context=context)
+        arch = self.apply_view_inheritance(cr, uid, arch_tree, root_id, v.model, context=context)
 
         return dict(view, arch=etree.tostring(arch, encoding='utf-8'))
 
