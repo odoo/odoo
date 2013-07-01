@@ -196,16 +196,20 @@ class stock_move(osv.osv):
         'cancel_cascade': fields.boolean('Cancel Cascade', help='If checked, when this move is cancelled, cancel the linked move too'),
         'putaway_ids': fields.one2many('stock.move.putaway', 'move_id', 'Put Away Suggestions')
     }
+    # TODO: reimplement this
     def _pull_apply(self, cr, uid, moves, context):
-        for move in moves:
-            for route in move.product_id.route_ids:
-                found = False
-                for rule in route.pull_ids:
-                    if rule.location_id.id == move.location_id.id:
-                        self.pool.get('procurement.rule')._apply(cr, uid, rule, move, context=context)
-                        found = True
-                        break
-                if found: break
+        # Create a procurement is MTO on stock.move
+        # Call _assign on procurement
+
+        #for move in moves:
+        #    for route in move.product_id.route_ids:
+        #        found = False
+        #        for rule in route.pull_ids:
+        #            if rule.location_id.id == move.location_id.id:
+        #                self.pool.get('procurement.rule')._apply(cr, uid, rule, move, context=context)
+        #                found = True
+        #                break
+        #        if found: break
         return True
 
     def _push_apply(self, cr, uid, moves, context):

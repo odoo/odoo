@@ -186,6 +186,7 @@ class stock_quant(osv.osv):
             toreserve.append(quant.id)
         return self.write(cr, uid, toreserve, {'reservation_id': move.id}, context=context)
 
+    # add location_dest_id in parameters (False=use the desitnation of the move)
     def quants_move(self, cr, uid, quants, move, context=None):
         for quant,qty in quants:
             location_from = quant and quant.location_id
@@ -207,22 +208,27 @@ class stock_quant(osv.osv):
             self._account_entry_move(cr, uid, quant, location_from, location_to, move, context=context)
 
     # FP Note: TODO: implement domain preference that tries to retrieve first with this domain
-    # This will be used for putaway strategies
+    # This will be used for reservation
     def quants_get(self, cr, uid, location, product, qty, domain=None, domain_preference=[], context=None):
         """
         Use the removal strategies of product to search for the correct quants
+        If you inherit, put the super at the end of your method.
 
         :location_id: child_of this location_id
         :product_id: id of product
         :qty in UoM of product
         :lot_id NOT USED YET !
         """
+        result= []
+        # for domain2 in domain_preference:
+        # result = self._quants_get(cr, uid, location, product, qty, domain+domain2, context=context)
+        # qty = remaining quants qty - sum(result)
         domain = domain or [('qty','>',0.0)]
         removal_strategy = self.pool.get('stock.location').get_removal_strategy(cr, uid, location, product, context=context) or 'fifo'
         if removal_strategy=='fifo':
-            result = self._quants_get_fifo(cr, uid, location, product, qty, domain, context=context)
+            result += self._quants_get_fifo(cr, uid, location, product, qty, domain, context=context)
         elif removal_strategy=='lifo':
-            result = self._quants_get_lifo(cr, uid, location, product, qty, domain, context=context)
+            result += self._quants_get_lifo(cr, uid, location, product, qty, domain, context=context)
         else:
             raise osv.except_osv(_('Error!'),_('Removal strategy %s not implemented.' % (removal_strategy,)))
         return result
@@ -302,6 +308,7 @@ class stock_quant(osv.osv):
     # FP Note: this is where we should post accounting entries for adjustment
     def _price_update(self, cr, uid, quant, newprice, context=None):
         self.write(cr, uid, [quant.id], {'cost': newprice}, context=context)
+        # TODO: generate accounting entries
 
     #
     # Implementation of removal strategies
@@ -1597,6 +1604,7 @@ class stock_move(osv.osv):
         'date': fields.datetime('Date', required=True, select=True, help="Move date: scheduled date until move is done, then date of actual move processing", states={'done': [('readonly', True)]}),
         'date_expected': fields.datetime('Scheduled Date', states={'done': [('readonly', True)]},required=True, select=True, help="Scheduled date for the processing of this move"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type','<>','service')],states={'done': [('readonly', True)]}),
+        # TODO: improve store to add dependency on product UoM
         'product_qty': fields.function(_quantity_normalize, type='float', store=True, string='Quantity',
             digits_compute=dp.get_precision('Product Unit of Measure'),
             help='Quantity in the default UoM of the product'),
@@ -2062,6 +2070,10 @@ class stock_move(osv.osv):
             self.action_confirm(cr, uid, todo, context=context)
 
         qty = move.product_qty
+        # for qty, location_id in move_id.prefered_location_ids:
+        #    quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, context=context)
+        #    quant_obj.quants_move(cr, uid, quants, move, location_dest_id, context=context)
+        # should replace the above 2 lines
         quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, context=context)
         quant_obj.quants_move(cr, uid, quants, move, context=context)
 

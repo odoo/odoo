@@ -99,7 +99,7 @@ class procurement_order(osv.osv):
         'date_planned': fields.datetime('Scheduled date', required=True, select=True),
 
         'group_id':fields.many2one('procurement.group', 'Procurement Requisition'), 
-        'rule_id': fields.many2one('procurement.rule', 'Rule'),
+        'rule_id' :fields.many2one('procurement.rule', 'Rule'),
 
         'product_id': fields.many2one('product.product', 'Product', required=True, states={'draft':[('readonly',False)]}, readonly=True),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, states={'draft':[('readonly',False)]}, readonly=True),
@@ -151,8 +151,10 @@ class procurement_order(osv.osv):
                     self.write(cr, uid, [procurement.id], {'rule_id', rule.id}, context=context)
                     procurement.refresh()
                     self._run(cr, uid, procurement, context=context or {})
+                    result = True
                 else:
                     self.message_post(cr, uid, [procurement.id], body=_('No rule matching this procurement'), context=context)
+                    result = False
             else:
                 result = True
             if result:
