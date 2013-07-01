@@ -9,7 +9,8 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="(//header//li)[last()]" position="after">
-                        <li class="pull-right"><a href="/shop/">Shop</a></li>
+                        <li class="pull-right"><a href="/shop/my_cart">My cart</a></li>
+                        <li class="pull-right"><a href="/shop">Shop</a></li>
                     </xpath>
                     <xpath expr="//footer/div/div/div[3]" position="inside">
                         SHOP Footer
@@ -20,8 +21,8 @@
 
         <!-- Product list --> 
 
-        <record id="category_product" model="ir.ui.view">
-            <field name="name">ecommerce_product</field>
+        <record id="categories_product" model="ir.ui.view">
+            <field name="name">categories_product</field>
             <field name="type">qweb</field>
             <field name="arch" type="xml">
                 <div class="media">
@@ -29,6 +30,13 @@
                         <img style="max-width:64px; max-height:64px; margin:auto;" class="media-object" t-att-src="'data:image/png;base64,' + product.image"/>
                     </div>
                     <div class="media-body">
+                        <div class="oe_button_cart">
+                            <button t-if="my_cart" t-att-class="'btn btn-inverse %%s' %% (product.id not in cart and 'oe_hidden' or '')" t-att-data-id="product.id">Remove one</button>
+                            <button t-att-class="'btn %%s' %% (product.id in cart and 'btn-success' or 'btn-primary')" t-att-data-id="product.id">
+                                <span class="oe_txt_empty">Add to cart</span>
+                                <span class="oe_txt">Add one (<span class="oe_quantity"><t t-esc="product.id in cart and cart[product.id]['quantity']"/></span> in my cart)</span>
+                            </button>
+                        </div>
                         <a t-att-href="'/shop/product/%%s' %% product.id"><h4 class="media-heading"><t t-esc="product.name"/></h4></a>
                         <t t-esc="product.description_sale"/>
                         <div><t t-esc="product.list_price"/> €</div>
@@ -59,8 +67,9 @@
             <field name="type">qweb</field>
             <field name="arch" type="xml">
                 <t t-call="website.layout">
-                    <t t-set="title">Shop - Categories</t>
-                    <div class="container">
+                    <t t-set="title">Shop - <t t-if="not my_cart">Categories</t><t t-if="my_cart">My cart</t>
+                    </t>
+                    <div class="container oe_ecommerce">
                         <div class="row">
                             <div class="span4">
                                 <ul class="nav nav-list">
@@ -71,8 +80,14 @@
                             </div>
                             <div class="span8">
                                 <t t-foreach="products" t-as="product">
-                                    <t t-call="ecommerce.category_product"/>
+                                    <t t-call="ecommerce.categories_product"/>
                                 </t>
+                                <div t-if="my_cart" class="media well">
+                                    <h1>
+                                        <a href="/shop/confirm_cart"><button class="btn btn-success">Confirm my order</button></a>
+                                        Total: <span class="oe_total"><t t-esc="total_price"/> €</span>
+                                    </h1>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -80,13 +95,15 @@
             </field>
         </record>
 
+        <!-- product --> 
+
         <record id="product" model="ir.ui.view">
             <field name="name">product</field>
             <field name="type">qweb</field>
             <field name="arch" type="xml">
                 <t t-call="website.layout">
                     <t t-set="title">Shop - Categories</t>
-                    <div class="container">
+                    <div class="container oe_ecommerce">
                         <div class="row">
                             <div class="span4">
                                 <ul class="nav nav-list">

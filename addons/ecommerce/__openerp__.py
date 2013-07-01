@@ -13,4 +13,6 @@ OpenERP E-Commerce
     'data': [
         'views/ecommerce.xml'
     ],
+    'js': ['static/src/js/ecommerce.js'],
+    'css': ['static/src/css/ecommerce.css'],
 }
