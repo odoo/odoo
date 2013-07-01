@@ -146,7 +146,13 @@ class procurement_order(osv.osv):
     def run(self, cr, uid, ids, context=None):
         for procurement in self.browse(cr, uid, ids, context=context or {}):
             if procurement.procure_method=='make_to_order':
-                result = self._run(cr, uid, procurement.id, context=context or {})
+                rule = self._assign(cr, uid, procurement, context=context)
+                if rule:
+                    self.write(cr, uid, [procurement.id], {'rule_id', rule.id}, context=context)
+                    procurement.refresh()
+                    self._run(cr, uid, procurement, context=context or {})
+                else:
+                    self.message_post(cr, uid, [procurement.id], body=_('No rule matching this procurement'), context=context)
             else:
                 result = True
             if result:
@@ -167,6 +173,9 @@ class procurement_order(osv.osv):
     #
     # Method to overwrite in different procurement modules
     #
+    def _assign(self, cr, uid, procurement, context=None):
+        return False
+
     def _run(self, cr, uid, procurement, context=None):
         return True
 

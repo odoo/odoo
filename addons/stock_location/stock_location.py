@@ -21,6 +21,7 @@
 
 from openerp.osv import fields,osv
 
+
 class stock_location_route(osv.osv):
     _name = 'stock.location.route'
     _description = "Inventory Routes"
@@ -28,9 +29,8 @@ class stock_location_route(osv.osv):
     _columns = {
         'name': fields.char('Route Name', required=True),
         'sequence': fields.integer('Sequence'),
-        'pull_ids': fields.one2many('stock.location.pull', 'route_id', 'Pull Rules'),
+        'pull_ids': fields.one2many('procurement.rule', 'route_id', 'Pull Rules'),
         'push_ids': fields.one2many('stock.location.path', 'route_id', 'Push Rules'),
-
         'journal_id': fields.many2one('stock.journal','Journal'),
     }
     _defaults = {
@@ -102,12 +102,13 @@ class stock_location_path(osv.osv):
             return move_id
 
 
-class product_pulled_flow(osv.osv):
-    _inherit = 'product.pulled.flow'
+class procurement.rule(osv.osv):
+    _inherit = 'procurement.rule'
     _columns = {
-        'route_id': fields.many2one('stock.location.route', 'Route'),
+        'route_id': fields.many2one('stock.location.route', 'Route',
+            help="If route_id is False, the route is global"),
         'delay': fields.integer('Number of Hours'),
-        'location_id': fields.many2one('stock.location','Destination Location', required=True, help="Is the destination location that needs supplying"),
+        'route_id': fields.many2one('stock.location.route', 'Route'),
         'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procure Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
         'type_proc': fields.selection([('produce','Produce'),('buy','Buy'),('move','Move')], 'Type of Procurement', required=True),
         'partner_address_id': fields.many2one('res.partner', 'Partner Address'),
@@ -122,32 +123,29 @@ class product_pulled_flow(osv.osv):
         'type_proc': 'move',
         'invoice_state': 'none',
     }
-    # FP Note: implement this
-    def _apply(self, cr, uid, rule, move, context=None):
+
+
+class procurement_order(osv.osv):
+    def _run_move_create(self, cr, uid, procurement, move, context=None):
+        d = super(procurement_order, self)._run_move_create(cr, uid, procurement, move, context=context)
         newdate = (datetime.strptime(move.date, '%Y-%m-%d %H:%M:%S') - relativedelta(days=rule.delay or 0)).strftime('%Y-%m-%d %H:%M:%S')
-
-        proc_obj = self.pool.get('procurement.order')
-        proc_id = proc_obj.create(cr, uid, {
-            'name': move.name,
-            'origin': move.origin,
-
-            'company_id':  move.company_id and move.company_id.id or False,
+        d.update({
             'date_planned': newdate,
-
-            'product_id': move.product_id.id,
-            'product_qty': move.product_qty,
-            'product_uom': move.product_uom.id,
-            'product_uos_qty': (move.product_uos and move.product_uos_qty)\
-                    or move.product_qty,
-            'product_uos': (move.product_uos and move.product_uos.id)\
-                    or move.product_uom.id,
-            'location_id': move.location_id.id,
             'procure_method': rule.procure_method,
         })
-        proc_obj.signal_button_confirm(cr, uid, [proc_id])
-        msg = _('Pulled from another location.')
-        self.message_post(cr, uid, [proc.id], body=msg, context=context)
-        return True
+        return d
+
+    # TODO: implement using routes on products
+    def _assign(self, cr, uid, procurement, context=None):
+        if procurement.location_id:
+            rule_obj = self.pool.get('procurement.rule')
+            route_ids =[False] + [x.id for x in procurement.product_id.route_ids]
+            res = rule_obj.search(cr, uid, [('location_id','=',procurement.location_id.id),('route_id', 'in', route_ids)], context=context)
+            if not res:
+                return False
+            return res[1]
+        return super(procurement_order, self)._assign(cr, uid, procurement, context=context)
+
 
 class product_putaway_strategy(osv.osv):
     _name = 'product.putaway'
@@ -204,7 +202,7 @@ class stock_move(osv.osv):
                 found = False
                 for rule in route.pull_ids:
                     if rule.location_id.id == move.location_id.id:
-                        self.pool.get('stock.location.pull')._apply(cr, uid, rule, move, context=context)
+                        self.pool.get('procurement.rule')._apply(cr, uid, rule, move, context=context)
                         found = True
                         break
                 if found: break

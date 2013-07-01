@@ -1970,7 +1970,7 @@ class stock_move(osv.osv):
             states[state].append(move.id)
 
         if not move.picking_id:
-            # TODO: Put the move in the right picking according to groups
+            # TODO: Put the move in the right picking according to group_id
             pass
 
         for state, write_ids in states.items():
