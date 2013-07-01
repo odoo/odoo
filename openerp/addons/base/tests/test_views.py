@@ -431,7 +431,7 @@ class TestNoModel(common.TransactionCase):
         """
         View = self.registry('ir.ui.view')
 
-        sarch, fields = View._view__view_look_dom_arch(
+        sarch, fields = View.postprocess_and_fields(
             self.cr, self.uid, None, self.arch, None)
 
         self.assertEqual(sarch, ET.tostring(self.arch, encoding='utf-8'))
@@ -450,7 +450,7 @@ class TestNoModel(common.TransactionCase):
             'src': 'Copyright copyrighter',
             'value': u"Copyrighter, tous droits réservés",
         })
-        sarch, fields = View._view__view_look_dom_arch(
+        sarch, fields = View.postprocess_and_fields(
             self.cr, self.uid, None, self.arch, None, {'lang': 'fr_FR'})
         self.assertEqual(
             sarch,
