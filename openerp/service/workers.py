@@ -196,7 +196,7 @@ class Multicorn(object):
 
     def stop(self, graceful=True):
         if self.long_polling_pid is not None:
-            self.worker_kill(self.long_polling_pid, signal.SIGTERM)
+            self.worker_kill(self.long_polling_pid, signal.SIGKILL)     # FIXME make longpolling process handle SIGTERM correctly
             self.long_polling_pid = None
         if graceful:
             _logger.info("Stopping gracefully")
