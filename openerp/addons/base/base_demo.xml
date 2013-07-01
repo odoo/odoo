@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
+
         <record id="partner_demo" model="res.partner">
             <field name="name">Demo User</field>
             <field name="company_id" ref="main_company"/>
@@ -9,6 +10,13 @@
         </record>
 
         <record id="main_partner" model="res.partner">
+            <field name="name">Dunder Mufflin</field>
+            <field name="street">1725 Slough Ave.</field>
+            <field name="city">Scranton</field>
+            <field name="zip">18540</field>
+            <field name="phone">+1 555 123 8069</field>
+            <field name="email">info@example.com</field>
+            <field name="website">www.example.com</field>
             <field name="image">iVBORw0KGgoAAAANSUhEUgAAALQAAAAuCAYAAACBMDMXAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A
 /wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9sDCAo7GWN31l0AAA1fSURBVHja
 7Zx5dFXFHcc/eQk7KBiUTVGRRezA8ahYamgRFbWAcmyPe+uGSrW1FrFqF9u61bZWm1Kx1lgVpHVp
@@ -74,6 +82,11 @@ Hqc0IXSCnZbQRzqf68k9lp0gQasT+iiPQ7g1uSUJ8kFZK+nn/ph9Fo2Y1PZKmv96UYIEOeE/+J4k
 BZrmED0AAAAASUVORK5CYII=
 </field>
         </record>
+
+        <record id="main_company" model="res.company">
+            <field name="name">Dunder Mufflin</field>
+        </record>
+
 
         <record id="user_demo" model="res.users">
             <field name="partner_id" ref="base.partner_demo"/>

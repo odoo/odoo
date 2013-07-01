@@ -157,7 +157,7 @@ class view(osv.osv):
         return True
 
     _constraints = [
-        (_check_xml, 'Invalid XML for View Architecture!', ['arch'])
+        #(_check_xml, 'Invalid XML for View Architecture!', ['arch'])
     ]
 
     def _auto_init(self, cr, context=None):
@@ -242,7 +242,7 @@ class view(osv.osv):
                 for view in self.browse(cr, 1, view_ids, context)
                 if not (view.groups_id and user_groups.isdisjoint(view.groups_id))]
 
-    def raise_view_error(self, cr, uid, view_id, message, context=None):
+    def raise_view_error(self, cr, uid, message, view_id, context=None):
         view = self.browse(cr, uid, [view_id], context)[0]
         message = "Inherit error: %s view_id: %s, xml_id: %s, model: %s, parent_view: %s" % (message, view_id, view.xml_id, view.model, view.inherit_id)
         raise AttributeError(message)
@@ -285,15 +285,19 @@ class view(osv.osv):
 
     def inherit_branding(self, specs_tree, view_id, xpath="/"):
         for node in specs_tree:
-            if node.tag == 'data' or node.tag == 'xpath':
-                node = self.inherit_branding(node, view_id, xpath + node.tag + '/')
-            else:
-                node.attrib.update({
-                    'data-oe-model': 'ir.ui.view',
-                    'data-oe-id': str(view_id),
-                    'data-oe-field': 'arch',
-                    'data-oe-xpath': xpath + node.tag + '/'
-                })
+            try:
+                if node.tag == 'data' or node.tag == 'xpath':
+                    node = self.inherit_branding(node, view_id, xpath + node.tag + '/')
+                else:
+                    node.attrib.update({
+                        'data-oe-model': 'ir.ui.view',
+                        'data-oe-id': str(view_id),
+                        'data-oe-field': 'arch',
+                        'data-oe-xpath': xpath + node.tag + '/'
+                    })
+            except Exception,e:
+                print "inherit branding error",e,xpath,node.tag
+
         return specs_tree
 
     def apply_inheritance_specs(self, cr, uid, source, specs_tree, inherit_id, context=None):

@@ -2,7 +2,7 @@ import cgi
 import logging
 import types
 
-from openerp.tools.safe_eval import safe_eval as eval
+#from openerp.tools.safe_eval import safe_eval as eval
 
 import xml   # FIXME use lxml
 import xml.dom.minidom
@@ -16,7 +16,7 @@ class QWebEval(object):
     def __getitem__(self, expr):
         if expr in self.data:
             return self.data[expr]
-        r = None
+        r = ''
         try:
             r = eval(expr, self.data)
         except NameError:
@@ -262,7 +262,6 @@ class QWebXml(object):
             return ""
 
     def render_tag_call(self, e, t_att, g_att, v):
-        # TODO t-prefix
         if "import" in t_att:
             d = v
         else:
