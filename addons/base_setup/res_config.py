@@ -36,6 +36,8 @@ class base_config_settings(osv.osv_memory):
             help="""Enable the public part of openerp, openerp becomes a public website."""),
         'module_auth_oauth': fields.boolean('Use external authentication providers, sign in with google, facebook, ...'),
         'module_base_import': fields.boolean("Allow users to import data from CSV files"),
+        'module_google_drive': fields.boolean('Attach Google documents to any record',
+                                              help="""This installs the module google_docs."""),
     }
 
     def open_company(self, cr, uid, ids, context=None):
