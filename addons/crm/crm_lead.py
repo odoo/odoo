@@ -560,11 +560,11 @@ class crm_lead(base_stage, format_address, osv.osv):
                 value = dict(key).get(lead[field_name], lead[field_name])
             elif field._type == 'many2one':
                 if lead[field_name]:
-                    value = lead[field_name].name_get()[1]
+                    value = lead[field_name].name_get()[0][1]
             elif field._type == 'many2many':
                 if lead[field_name]:
                     for val in lead[field_name]:
-                        field_value = val.name_get()[1]
+                        field_value = val.name_get()[0][1]
                         value += field_value + ","
             else:
                 value = lead[field_name]
@@ -979,7 +979,7 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     def message_get_reply_to(self, cr, uid, ids, context=None):
         """ Override to get the reply_to of the parent project. """
-        return [lead.section_id.message_get_reply_to() if lead.section_id else False
+        return [lead.section_id.message_get_reply_to()[0] if lead.section_id else False
                     for lead in self.browse(cr, uid, ids, context=context)]
 
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):

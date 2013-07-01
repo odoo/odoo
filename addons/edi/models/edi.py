@@ -66,7 +66,7 @@ def last_update_for(record):
        if available, otherwise False
     """
     if record._log_access:
-        record_log = record.perm_read()
+        record_log = record.perm_read()[0]
         return record_log.get('write_date') or record_log.get('create_date') or False
     return False
 
@@ -421,7 +421,7 @@ class EDIMixin(object):
             if not report.attachment or not eval(report.attachment, eval_context):
                 # no auto-saving of report as attachment, need to do it manually
                 result = base64.b64encode(result)
-                file_name = record.name_get()[1]
+                file_name = record.name_get()[0][1]
                 file_name = re.sub(r'[^a-zA-Z0-9_-]', '_', file_name)
                 file_name += ".pdf"
                 self.pool.get('ir.attachment').create(cr, uid,

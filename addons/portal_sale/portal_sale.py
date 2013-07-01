@@ -113,8 +113,8 @@ class account_invoice(osv.Model):
             self.message_subscribe(cr, uid, ids, [partner.id], context=context)
             mail_values = {
                 'recipient_ids': [(4, partner.id)],
-                'subject': 'Invitation to follow %s' % document.name_get()[1],
-                'body_html': 'You have been invited to follow %s' % document.name_get()[1],
+                'subject': 'Invitation to follow %s' % document.name_get()[0][1],
+                'body_html': 'You have been invited to follow %s' % document.name_get()[0][1],
                 'auto_delete': True,
                 'type': 'email',
             }
