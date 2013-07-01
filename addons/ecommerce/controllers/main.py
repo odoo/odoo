@@ -123,7 +123,7 @@ class Ecommerce(http.Controller):
         if order_line_ids:
             order_line = order_line_obj.read(cr, uid, order_line_ids, [], context=context)[0]
             quantity = order_line['product_uom_qty'] + (remove and -1 or 1)
-            if quantity < 0:
+            if quantity <= 0:
                 order_line_obj.unlink(cr, uid, order_line_ids, context=context)
                 return "0"
         else:
