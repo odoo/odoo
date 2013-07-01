@@ -10,6 +10,7 @@
   I send delivery in two shipments, so I am doing a partial delivery order.
 -
   !python {model: stock.picking}: |
+    context={}
     delivery_orders = self.search(cr, uid, [('sale_id','=',ref("sale.sale_order_8"))])
     first_picking = self.browse(cr, uid, delivery_orders[-1], context=context)
     if first_picking.force_assign(cr, uid, first_picking):
