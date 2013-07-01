@@ -67,8 +67,8 @@ class crm_meeting(base_state, osv.Model):
     }
     
     def search(self, cr, uid, args, offset=0, limit=0, order=None, context=None, count=False):
-        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context).partner_id.id
         if context.get('mymeetings',False):
+            partner_id = self.pool.get('res.users').browse(cr, uid, uid, context).partner_id.id
             args.append('|')
             args.append(['partner_ids', 'in', partner_id])
             args.append(['user_id', '=', uid])
