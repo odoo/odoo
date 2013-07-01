@@ -50,6 +50,7 @@ class base_action_rule(osv.osv):
 
     _name = 'base.action.rule'
     _description = 'Action Rules'
+    _order = 'sequence'
 
     _columns = {
         'name':  fields.char('Rule Name', size=64, required=True),
@@ -61,7 +62,11 @@ class base_action_rule(osv.osv):
             help="When unchecked, the rule is hidden and will not be executed."),
         'sequence': fields.integer('Sequence',
             help="Gives the sequence order when displaying a list of rules."),
+        'kind': fields.selection(
+            [('on_create', 'On Creation'), ('on_write', 'On Update'), ('on_time', 'Based on Timed Condition')],
+            string='When to Run'),
         'trg_date_id': fields.many2one('ir.model.fields', string='Trigger Date',
+            help="When should the condition be triggered. If present, will be checked by the scheduler. If empty, will be checked at creation and update.",
             domain="[('model_id', '=', model_id), ('ttype', 'in', ('date', 'datetime'))]"),
         'trg_date_range': fields.integer('Delay after trigger date',
             help="Delay after the trigger date." \
@@ -78,10 +83,10 @@ class base_action_rule(osv.osv):
             ondelete='restrict',
             domain="[('model_id', '=', model_id.model)]",
             help="If present, this condition must be satisfied before the update of the record."),
-        'filter_id': fields.many2one('ir.filters', string='After Update Filter',
+        'filter_id': fields.many2one('ir.filters', string='Filter',
             ondelete='restrict',
             domain="[('model_id', '=', model_id.model)]",
-            help="If present, this condition must be satisfied after the update of the record."),
+            help="If present, this condition must be satisfied before executing the action rule."),
         'last_run': fields.datetime('Last Run', readonly=1),
     }
 
@@ -90,7 +95,15 @@ class base_action_rule(osv.osv):
         'trg_date_range_type': 'day',
     }
 
-    _order = 'sequence'
+    def onchange_kind(self, cr, uid, ids, kind, context=None):
+        clear_fields = []
+        if kind == 'on_create':
+            clear_fields = ['filter_pre_id', 'trg_date_id', 'trg_date_range', 'trg_date_range_type']
+        elif kind == 'on_write':
+            clear_fields = ['trg_date_id', 'trg_date_range', 'trg_date_range_type']
+        elif kind == 'on_time':
+            clear_fields = ['filter_pre_id']
+        return {'value': dict.fromkeys(clear_fields, False)}
 
     def _filter(self, cr, uid, action, action_filter, record_ids, context=None):
         """ filter the list record_ids that satisfy the action filter """
@@ -105,14 +118,7 @@ class base_action_rule(osv.osv):
 
     def _process(self, cr, uid, action, record_ids, context=None):
         """ process the given action on the records """
-        # execute server actions
         model = self.pool[action.model_id.model]
-        if action.server_action_ids:
-            server_action_ids = map(int, action.server_action_ids)
-            for record in model.browse(cr, uid, record_ids, context):
-                action_server_obj = self.pool.get('ir.actions.server')
-                ctx = dict(context, active_model=model._name, active_ids=[record.id], active_id=record.id)
-                action_server_obj.run(cr, uid, server_action_ids, context=ctx)
 
         # modify records
         values = {}
@@ -126,6 +132,14 @@ class base_action_rule(osv.osv):
         if action.act_followers and hasattr(model, 'message_subscribe'):
             follower_ids = map(int, action.act_followers)
             model.message_subscribe(cr, uid, record_ids, follower_ids, context=context)
+
+        # execute server actions
+        if action.server_action_ids:
+            server_action_ids = map(int, action.server_action_ids)
+            for record in model.browse(cr, uid, record_ids, context):
+                action_server_obj = self.pool.get('ir.actions.server')
+                ctx = dict(context, active_model=model._name, active_ids=[record.id], active_id=record.id)
+                action_server_obj.run(cr, uid, server_action_ids, context=ctx)
 
         return True
 
@@ -152,7 +166,7 @@ class base_action_rule(osv.osv):
 
                     # as it is a new record, we do not consider the actions that have a prefilter
                     action_model = self.pool.get('base.action.rule')
-                    action_dom = [('model', '=', self._name), ('trg_date_id', '=', False), ('filter_pre_id', '=', False)]
+                    action_dom = [('model', '=', self._name), ('kind', '=', 'on_create')]
                     action_ids = action_model.search(cr, uid, action_dom, context=context)
 
                     # check postconditions, and execute actions on the records that satisfy them
@@ -172,7 +186,7 @@ class base_action_rule(osv.osv):
 
                     # retrieve the action rules to possibly execute
                     action_model = self.pool.get('base.action.rule')
-                    action_dom = [('model', '=', self._name), ('trg_date_id', '=', False)]
+                    action_dom = [('model', '=', self._name), ('kind', '=', 'on_write')]
                     action_ids = action_model.search(cr, uid, action_dom, context=context)
                     actions = action_model.browse(cr, uid, action_ids, context=context)
 
@@ -219,8 +233,8 @@ class base_action_rule(osv.osv):
     def _check(self, cr, uid, automatic=False, use_new_cursor=False, context=None):
         """ This Function is called by scheduler. """
         context = context or {}
-        # retrieve all the action rules that have a trg_date_id and no precondition
-        action_dom = [('trg_date_id', '!=', False), ('filter_pre_id', '=', False)]
+        # retrieve all the action rules to run based on a timed condition
+        action_dom = [('kind', '=', 'on_time')]
         action_ids = self.search(cr, uid, action_dom, context=context)
         for action in self.browse(cr, uid, action_ids, context=context):
             now = datetime.now()

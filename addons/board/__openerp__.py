@@ -31,7 +31,7 @@ Lets the user create a custom dashboard.
 Allows users to create custom dashboard.
     """,
     'author': 'OpenERP SA',
-    'depends': ['base'],
+    'depends': ['base', 'web'],
     'data': [
         'security/ir.model.access.csv',
         'board_view.xml',

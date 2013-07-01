@@ -25,7 +25,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #
 ##############################################################################
 
@@ -37,10 +37,10 @@ from webkit_report import WebKitParser
 class ir_actions_report_xml(orm.Model):
     _inherit = 'ir.actions.report.xml'
     _columns = {
-        'webkit_header': fields.property('ir.header_webkit',
+        'webkit_header': fields.property(
             type='many2one', relation='ir.header_webkit',
             string='Webkit Header', help="The header linked to the report",
-            view_load=True, required=True),
+            required=True),
         'webkit_debug': fields.boolean('Webkit debug',
             help="Enable the webkit engine debugger"),
         'report_webkit_data': fields.text('Webkit Template',

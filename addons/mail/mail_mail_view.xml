@@ -6,6 +6,11 @@
             <field name="model">mail.mail</field>
             <field name="arch" type="xml">
                 <form string="Email message" version="7.0">
+                    <header>
+                        <button name="send" string="Send Now" type="object" states='outgoing' class="oe_highlight"/>
+                        <button name="mark_outgoing" string="Retry" type="object" states='exception,cancel'/>
+                        <button name="cancel" string="Cancel" type="object" states='outgoing'/>
+                    </header>
                     <sheet>
                         <label for="subject" class="oe_edit_only"/>
                         <h2><field name="subject"/></h2>
@@ -110,7 +115,7 @@
             <field name="res_model">mail.mail</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_outgoing': 1, 'search_default_type_email': 1}</field>
+            <field name="context">{'search_default_outgoing': 1}</field>
             <field name="search_view_id" ref="view_mail_search"/>
         </record>
 
