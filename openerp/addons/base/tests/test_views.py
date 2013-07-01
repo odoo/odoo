@@ -186,28 +186,6 @@ class TestViewInheritance(common.TransactionCase):
             self.cr, self.uid, self.ids['A11']),
             [(self.arch_for('A111', parent=True), self.ids['A111'])])
 
-    def test_root_ancestor(self):
-        A_id = self.ids['A']
-        root_id = self.View.root_ancestor(self.cr, self.uid, view_id=A_id)
-        self.assertEqual(root_id, A_id,
-             "when given a root view, operation should be id")
-
-        root_id = self.View.root_ancestor(
-            self.cr, self.uid, view_id=self.ids['A11'])
-        self.assertEqual(root_id, A_id)
-
-        root_id = self.View.root_ancestor(
-            self.cr, self.uid, view_id=self.ids['A221'])
-        self.assertEqual(root_id, A_id)
-
-        root_id = self.View.root_ancestor(
-            self.cr, self.uid, view_id=self.ids['B1'])
-        self.assertEqual(root_id, self.ids['B'])
-
-    def test_no_root_ancestor(self):
-        with self.assertRaises(self.View.NoViewError):
-            self.View.root_ancestor(self.cr, self.uid, view_id=12345678)
-
     def test_default_view(self):
         default = self.View.default_view(
             self.cr, self.uid, model=self.model, view_type='form')
@@ -218,13 +196,13 @@ class TestViewInheritance(common.TransactionCase):
         self.assertEqual(default_tree, self.ids['C'])
 
     def test_no_default_view(self):
-        with self.assertRaises(self.View.NoDefaultError):
+        self.assertFalse(
             self.View.default_view(
-                self.cr, self.uid, model='does.not.exist', view_type='form')
+                self.cr, self.uid, model='does.not.exist', view_type='form'))
 
-        with self.assertRaises(self.View.NoDefaultError):
+        self.assertFalse(
             self.View.default_view(
-                self.cr, self.uid, model=self.model, view_type='graph')
+                self.cr, self.uid, model=self.model, view_type='graph'))
 
 class TestApplyInheritanceSpecs(common.TransactionCase):
     """ Applies a sequence of inheritance specification nodes to a base
