@@ -12,7 +12,7 @@ instance.website.EditorBar = instance.web.Widget.extend({
         var r = this._super.apply(this, arguments);
         this.$container = $(this.container);
         this.$container.addClass('oe_website_editor_container');
-        this.$container.find('.oe_editable').attr('contentEditable', 'true');
+        this.$container.find('[data-oe-model]').attr('contentEditable', 'true').addClass('oe_editable');
         this.$('button').prop('disabled', true);
         // .click(function (e) {
         //     e.stopPropagation();
