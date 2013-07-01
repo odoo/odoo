@@ -189,6 +189,23 @@ class view(osv.osv):
 
         return super(view, self).write(cr, uid, ids, vals, context)
 
+    def save(self, cr, uid, model, res_id, field, value, xpath=None, context=None):
+        """ Update the content of a field
+
+        :param str model:
+        :param int res_id:
+        :param str xpath: valid xpath to the tag to replace
+        """
+        model_obj = self.pool.get(model)
+        origin = model_obj.read(cr, uid, [res_id], [field], context=context)
+        if xpath:
+            origin_tree = etree.fromstring(origin.encode('utf-8'))
+            zone = origin_tree.xpath(xpath)[0]
+            zone.getparent().replace(zone, etree.fromstring(value))
+            value = etree.tostring(origin_tree, encoding='utf-8')
+
+        model_obj.write(cr, uid, res_id, {field: value}, context=context)
+
     # default view selection
 
     def default_view(self, cr, uid, model, view_type, context=None):
@@ -288,8 +305,8 @@ class view(osv.osv):
             count = {}
         for node in specs_tree:
             try:
-                count[node.tag] = count.get(node.tag, -1) + 1
-                xpath = "%s/%s[%s]" % (base_xpath or '', node.tag, (count and count.get(node.tag)) or 0)
+                count[node.tag] = count.get(node.tag, 0) + 1
+                xpath = "%s/%s[%s]" % (base_xpath or '', node.tag, count.get(node.tag))
                 if node.tag == 'data' or node.tag == 'xpath':
                     node = self.inherit_branding(node, view_id, xpath, count)
                 else:
@@ -727,7 +744,7 @@ class view(osv.osv):
         if e.tag == 't' or e.tag == 'field':
             # can not anotate t and field
             return True
-        xpath = "%s/%s[%s]" % (xpath or '', e.tag, (count and count.get(e.tag)) or 0)
+        xpath = "%s/%s[%s]" % (xpath or '', e.tag, (count and count.get(e.tag)) or 1)
         if branding and not e.attrib.get('data-oe-model'):
             e.attrib.update(branding)
             e.attrib['data-oe-xpath'] = xpath
@@ -741,7 +758,7 @@ class view(osv.osv):
                         e.attrib.pop(i)
                 count = {}
                 for child in e:
-                    count[child.tag] = count.get(child.tag,-1) + 1
+                    count[child.tag] = count.get(child.tag, 0) + 1
                     self.distribute_branding(child, branding_dist, xpath, count)
 
     def render(self, cr, uid, id_or_xml_id, values, context=None):
