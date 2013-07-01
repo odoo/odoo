@@ -283,17 +283,21 @@ class view(osv.osv):
                 return node
         return None
 
-    def inherit_branding(self, specs_tree, view_id, xpath="/"):
+    def inherit_branding(self, specs_tree, view_id, base_xpath=None, count=None):
+        if not count:
+            count = {}
         for node in specs_tree:
             try:
+                count[node.tag] = count.get(node.tag, -1) + 1
+                xpath = "%s/%s[%s]" % (base_xpath or '', node.tag, (count and count.get(node.tag)) or 0)
                 if node.tag == 'data' or node.tag == 'xpath':
-                    node = self.inherit_branding(node, view_id, xpath + node.tag + '/')
+                    node = self.inherit_branding(node, view_id, xpath, count)
                 else:
                     node.attrib.update({
                         'data-oe-model': 'ir.ui.view',
                         'data-oe-id': str(view_id),
                         'data-oe-field': 'arch',
-                        'data-oe-xpath': xpath + node.tag + '/'
+                        'data-oe-xpath': xpath
                     })
             except Exception,e:
                 print "inherit branding error",e,xpath,node.tag
@@ -406,7 +410,7 @@ class view(osv.osv):
         if fields:
             fields = list(set(fields) | set(['arch', 'model']))
 
-        # read the view arch 
+        # read the view arch
         [view] = self.read(cr, uid, [root_id], fields=fields, context=context)
         arch_tree = etree.fromstring(view['arch'].encode('utf-8'))
 
