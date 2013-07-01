@@ -51,7 +51,7 @@ class pos_config(osv.osv):
         'journal_ids' : fields.many2many('account.journal', 'pos_config_journal_rel', 
              'pos_config_id', 'journal_id', 'Available Payment Methods',
              domain="[('journal_user', '=', True ), ('type', 'in', ['bank', 'cash'])]",),
-        'shop_id' : fields.many2one('sale.shop', 'Shop',
+        'warehouse_id' : fields.many2one('stock.warehouse', 'Warehouse',
              required=True),
         'journal_id' : fields.many2one('account.journal', 'Sale Journal',
              domain=[('type', '=', 'sale')],
@@ -70,6 +70,7 @@ class pos_config(osv.osv):
                 "to customize the reference numbers of your orders."),
         'session_ids': fields.one2many('pos.session', 'config_id', 'Sessions'),
         'group_by' : fields.boolean('Group Journal Items', help="Check this if you want to group the Journal Items by Product while closing a Session"),
+        'pricelist_id': fields.many2one('product.pricelist','Pricelist', required=True)
     }
 
     def _check_cash_control(self, cr, uid, ids, context=None):
@@ -112,15 +113,21 @@ class pos_config(osv.osv):
         res = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale')], limit=1)
         return res and res[0] or False
 
-    def _default_shop(self, cr, uid, context=None):
-        res = self.pool.get('sale.shop').search(cr, uid, [])
+    def _default_warehouse(self, cr, uid, context=None):
+        user = self.pool.get('res.users').browse(cr, uid, uid, context)
+        res = self.pool.get('stock.warehouse').search(cr, uid, [('company_id', '=', user.company_id.id)], limit=1, context=context)
+        return res and res[0] or False
+
+    def _default_pricelist(self, cr, uid, context=None):
+        res = self.pool.get('product.pricelist').search(cr, uid, [('type', '=', 'sale')], limit=1, context=context)
         return res and res[0] or False
 
     _defaults = {
         'state' : POS_CONFIG_STATE[0][0],
-        'shop_id': _default_shop,
+        'warehouse_id': _default_warehouse,
         'journal_id': _default_sale_journal,
         'group_by' : True,
+        'pricelist_id': _default_pricelist
     }
 
     def set_active(self, cr, uid, ids, context=None):
@@ -306,7 +313,7 @@ class pos_session(osv.osv):
         # the .xml files as the CoA is not yet installed.
         jobj = self.pool.get('pos.config')
         pos_config = jobj.browse(cr, uid, config_id, context=context)
-        context.update({'company_id': pos_config.shop_id.company_id.id})
+        context.update({'company_id': pos_config.warehouse_id.company_id.id})
         if not pos_config.journal_id:
             jid = jobj.default_get(cr, uid, ['journal_id'], context=context)['journal_id']
             if jid:
@@ -333,7 +340,7 @@ class pos_session(osv.osv):
             bank_values = {
                 'journal_id' : journal.id,
                 'user_id' : uid,
-                'company_id' : pos_config.shop_id.company_id.id
+                'company_id' : pos_config.warehouse_id.company_id.id
             }
             statement_id = self.pool.get('account.bank.statement').create(cr, uid, bank_values, context=context)
             bank_statement_ids.append(statement_id)
@@ -594,7 +601,7 @@ class pos_order(osv.osv):
     _columns = {
         'name': fields.char('Order Ref', size=64, required=True, readonly=True),
         'company_id':fields.many2one('res.company', 'Company', required=True, readonly=True),
-        'shop_id': fields.related('session_id', 'config_id', 'shop_id', relation='sale.shop', type='many2one', string='Shop', store=True, readonly=True),
+        'warehouse_id': fields.related('session_id', 'config_id', 'warehouse_id', relation='stock.warehouse', type='many2one', string='Warehouse', store=True, readonly=True),
         'date_order': fields.datetime('Order Date', readonly=True, select=True),
         'user_id': fields.many2one('res.users', 'Salesman', help="Person who uses the the cash register. It can be a reliever, a student or an interim employee."),
         'amount_tax': fields.function(_amount_all, string='Taxes', digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
@@ -638,8 +645,7 @@ class pos_order(osv.osv):
         session_ids = self._default_session(cr, uid, context) 
         if session_ids:
             session_record = self.pool.get('pos.session').browse(cr, uid, session_ids, context=context)
-            shop = self.pool.get('sale.shop').browse(cr, uid, session_record.config_id.shop_id.id, context=context)
-            return shop.pricelist_id and shop.pricelist_id.id or False
+            return session_record.config_id.pricelist_id and session_record.config_id.pricelist_id.id or False
         return False
 
     _defaults = {
@@ -690,8 +696,8 @@ class pos_order(osv.osv):
                 'auto_picking': True,
             }, context=context)
             self.write(cr, uid, [order.id], {'picking_id': picking_id}, context=context)
-            location_id = order.shop_id.warehouse_id.lot_stock_id.id
-            output_id = order.shop_id.warehouse_id.lot_output_id.id
+            location_id = order.warehouse_id.lot_stock_id.id
+            output_id = order.warehouse_id.lot_output_id.id
 
             for line in order.lines:
                 if line.product_id and line.product_id.type == 'service':

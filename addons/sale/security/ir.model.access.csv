@@ -1,5 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_sale_shop,sale.shop,model_sale_shop,base.group_user,1,0,0,0
 access_sale_order,sale.order,model_sale_order,base.group_sale_salesman,1,1,1,0
 access_sale_order_line,sale.order.line,model_sale_order_line,base.group_sale_salesman,1,1,1,1
 access_sale_order_line_accountant,sale.order.line accountant,model_sale_order_line,account.group_account_user,1,1,0,0
@@ -19,7 +18,6 @@ access_res_partner_sale_user,res.partner.sale.user,base.model_res_partner,base.g
 access_res_partner_sale_manager,res.partner.sale.manager,base.model_res_partner,base.group_sale_manager,1,1,1,0
 access_product_template_sale_user,product.template sale use,product.model_product_template,base.group_sale_salesman,1,0,0,0
 access_product_product_sale_user,product.product sale use,product.model_product_product,base.group_sale_salesman,1,0,0,0
-access_sale_shop_manager,account.journal sale order.user,model_sale_shop,base.group_sale_manager,1,1,1,1
 access_account_fiscalyear_user,account.fiscalyear.user,account.model_account_fiscalyear,base.group_sale_salesman,1,0,0,0
 access_account_tax_user,account.tax.user,account.model_account_tax,base.group_sale_salesman,1,0,0,0
 access_ir_attachment_sales,ir.attachment.sales,base.model_ir_attachment,base.group_sale_salesman,1,1,1,0
@@ -29,8 +27,6 @@ access_res_partner_bank_type_field_user,res.partner.bank.type.field.user,base.mo
 access_product_uom_user,product.uom.user,product.model_product_uom,base.group_sale_salesman,1,0,0,0
 access_product_pricelist_sale_user,product.pricelist.sale.user,product.model_product_pricelist,base.group_sale_salesman,1,0,0,0
 access_account_account_salesman,account_account salesman,account.model_account_account,base.group_sale_salesman,1,0,0,0
-access_sale_shop_sale_user,sale.shop.sale.user,model_sale_shop,base.group_sale_salesman,1,0,0,0
-access_sale_shop_sale_manager,sale.shop.sale.manager,model_sale_shop,base.group_sale_manager,1,1,1,1
 access_product_uom_categ_sale_manager,product.uom.categ salemanager,product.model_product_uom_categ,base.group_sale_manager,1,1,1,1
 access_product_uom_sale_manager,product.uom salemanager,product.model_product_uom,base.group_sale_manager,1,1,1,1
 access_product_ul_sale_manager,product.ul salemanager,product.model_product_ul,base.group_sale_manager,1,1,1,1
