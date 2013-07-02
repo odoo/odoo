@@ -26,9 +26,9 @@ import sys
 import re
 import time
 
-from functools import partial
+import lxml.html
 from lxml import etree
-from lxml.html import tostring, fromstring
+from functools import partial
 
 from openerp import tools
 from openerp.modules import module
@@ -200,10 +200,11 @@ class view(osv.osv):
         model_obj = self.pool.get(model)
         if xpath:
             origin = model_obj.read(cr, uid, [res_id], [field], context=context)[0][field]
-            origin_tree = fromstring(origin.encode('utf-8'))
+            origin_tree = etree.fromstring(origin.encode('utf-8'))
             zone = origin_tree.xpath(xpath)[0]
-            zone.getparent().replace(zone, fromstring(value))
-            value = tostring(origin_tree, encoding='utf-8')
+            print "zone", zone, "value", value
+            zone.getparent().replace(zone, lxml.html.fromstring(value))
+            value = etree.tostring(origin_tree, encoding='utf-8')
 
         model_obj.write(cr, uid, res_id, {field: value}, context=context)
 
