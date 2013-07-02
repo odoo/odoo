@@ -192,8 +192,8 @@ class gamification_goal_plan(osv.Model):
     _defaults = {
         'period': 'once',
         'state': 'draft',
-        'visibility_mode' : 'progressbar',
-        'report_message_frequency' : 'onchange',
+        'visibility_mode': 'progressbar',
+        'report_message_frequency': 'never',
         'last_report_date': fields.date.today,
         'start_date': fields.date.today,
         'manager_id': lambda s, cr, uid, c: uid,
