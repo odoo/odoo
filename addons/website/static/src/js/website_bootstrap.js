@@ -3,6 +3,7 @@ Aloha.ready(function() {
     // TODO: Webclient research : use iframe embedding mode
     //       Meanwhile, let's HACK !!!
     var $web = $('<div style="display: none;"/>').appendTo('body');
+    var $web = $('<div style="display: none;"/>').appendTo($web);
     var s = new openerp.init(['web', 'website']);
     s.web.WebClient.bind_hashchange = s.web.blockUI = s.web.unblockUI = function() {};
     s.web.WebClient.include({ do_push_state: function() {} });
