@@ -44,7 +44,7 @@ instance.website.EditorBar = instance.web.Widget.extend({
     },
     saveElement: function ($el) {
         var data = $el.data();
-        return (new instance.web.DataSet(this, 'ir.ui.view')).call('save', [data.oeModel, data.oeId, data.oeField, $el.html()/*, data.oeXpath*/]);
+        return (new instance.web.DataSet(this, 'ir.ui.view')).call('save', [data.oeModel, data.oeId, data.oeField, $el.html(), data.oeXpath]);
     },
     cancel: function () {
         $('.oe_dirty').each(function () {
