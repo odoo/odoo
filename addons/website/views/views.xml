@@ -15,15 +15,21 @@
                         <t t-raw="script"/>
                         <t t-if="editable">
                             <script type="text/javascript" src="/website/static/src/js/website_bootstrap.js"></script>
+                            <link href="http://cdn.aloha-editor.org/latest/css/aloha.css" rel="stylesheet" type="text/css" />
+                            <script>
+                                openerp.$ = jQuery;
+                                delete window.jQuery;
+                                delete window.$;
+                            </script>
                             <script type="text/javascript" src="http://cdn.aloha-editor.org/latest/lib/require.js"></script>
                             <script type="text/javascript" src="http://cdn.aloha-editor.org/latest/lib/vendor/jquery-1.7.2.js"></script>
                             <script src="http://cdn.aloha-editor.org/latest/lib/aloha.js" data-aloha-plugins="common/ui, common/format, common/list, common/link, common/highlighteditables"></script>
-                            <link href="http://cdn.aloha-editor.org/latest/css/aloha.css" rel="stylesheet" type="text/css" />
-                            <script type="text/javascript">
-                            Aloha.ready( function() {
-                            var $ = Aloha.jQuery;
-                            $('.editable').aloha();
-                            });
+                            <script>
+                                Aloha.ready(function() {
+                                    window.$ = openerp.$;
+                                    window.jQuery = openerp.$;
+                                    Aloha.jQuery('.editable').aloha();
+                                });
                             </script>
                         </t>
                     </head>
