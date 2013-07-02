@@ -1,2 +1,2 @@
 sass:
-	sass -t expanded --compass --unix-newlines website.sass  > website.css
+	sass -t expanded --unix-newlines website.sass  > website.css
