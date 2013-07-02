@@ -12,13 +12,38 @@
                         <link rel="stylesheet" href="/web/webclient/css"/>
                         <link rel='stylesheet' href='https://www.openerp.com/saas_master/static/site_new/fonts/lato/stylesheet.css'/>
                         <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,600,700'/>
-                        <!--
-                        <link rel="stylesheet" href="https://www.openerp.com/saas_master/static/site_new/css/website.css"/>
-                        -->
                         <script type="text/javascript" src="/web/webclient/js"></script>
-                        <t t-if="editable"><script type="text/javascript" src="/website/static/src/js/website_bootstrap.js"></script></t>
+                        <t t-if="editable">
+                            <script type="text/javascript" src="/website/static/src/js/website_bootstrap.js"></script>
+                            <script type="text/javascript" src="http://cdn.aloha-editor.org/latest/lib/require.js"></script>
+                            <script type="text/javascript" src="http://cdn.aloha-editor.org/latest/lib/vendor/jquery-1.7.2.js"></script>
+                            <script src="http://cdn.aloha-editor.org/latest/lib/aloha.js" data-aloha-plugins="common/ui, common/format, common/list, common/link, common/highlighteditables"></script>
+                            <link href="http://cdn.aloha-editor.org/latest/css/aloha.css" rel="stylesheet" type="text/css" />
+                            <script type="text/javascript">
+                            Aloha.ready( function() {
+                            var $ = Aloha.jQuery;
+                            $('.editable').aloha();
+                            });
+                            </script>
+                        </t>
                     </head>
                     <body class="oe_website">
+                        <div class="editable">
+                        TEST editable TEST editable TEST editable TEST editable TEST editable TEST editable
+                        TEST editable
+                        TEST editable
+                        TEST editable
+                        TEST editable
+                        TEST editable
+                        TEST editable
+                        TEST editable
+                        TEST editable
+                        TEST editable
+                        TEST editable
+                        TEST editable
+                        TEST editable
+                        TEST editable
+                        </div>
                         <header class="oe_website_header">
                             <div class="container">
                                 <div class="row">
@@ -65,7 +90,6 @@
                                             <li><a href="/page/website.news">News</a></li>
                                             <li><a href="/page/website.contactus">About us</a></li>
                                             <li>&amp;#x2706; <t t-esc="res_company.phone"/></li>
-                                            <li><span>Pay us in</span> <span t-record="res_company" t-field="currency_id">none</span></li>
                                         </ul>
                                     </div>
                                 </div>

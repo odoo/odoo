@@ -18,19 +18,19 @@ instance.website.EditorBar = instance.web.Widget.extend({
         //     e.stopPropagation();
         //     e.preventDefault();
         // });
-        $('body').on("keypress.oe_webeditor", ".oe_editable", function(e) {
-            var $e = $(e.currentTarget);
-            if (!$e.is('.oe_dirty')) {
-                $e.addClass('oe_dirty');
-                self.$('button').prop('disabled', false);
-                // TODO: Are we going to use a meta-data flag in order to know if the field shall be text or html ?
-                $e.data('original', $e.text());
-            }
-            if (e.which == 13) {
-                $e.blur();
-                e.preventDefault();
-            }
-        });
+        //$('body').on("keypress.oe_webeditor", ".oe_editable", function(e) {
+        //    var $e = $(e.currentTarget);
+        //    if (!$e.is('.oe_dirty')) {
+        //        $e.addClass('oe_dirty');
+        //        self.$('button').prop('disabled', false);
+        //        // TODO: Are we going to use a meta-data flag in order to know if the field shall be text or html ?
+        //        $e.data('original', $e.text());
+        //    }
+        //    if (e.which == 13) {
+        //        $e.blur();
+        //        e.preventDefault();
+        //    }
+        //});
         return r;
     },
     save: function () {
