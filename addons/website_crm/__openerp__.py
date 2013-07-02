@@ -1,10 +1,10 @@
 {
-    'name': 'E-Commerce',
-    'category': 'Sale',
+    'name': 'Contact Form',
+    'category': 'CRM',
     'version': '1.0',
     'description': """
-OpenERP E-Commerce
-==================
+OpenERP Contact Form
+====================
 
         """,
     'author': 'OpenERP SA',
