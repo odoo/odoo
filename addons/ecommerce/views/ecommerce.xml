@@ -127,6 +127,7 @@
                             <t t-call="ecommerce.products"/>
                         </t>
                         <t t-call="ecommerce.total"/>
+                        <a t-if="order.order_line" href="/shop/customer"><button class="btn btn-success">Next stage</button></a>
                     </t>
                 </t>
             </field>
@@ -139,20 +140,18 @@
             <field name="type">qweb</field>
             <field name="arch" type="xml">
                 <div class="oe_total">
-                    <div class="media well" t-if="order.order_line">
-                        <a href="/shop/confirm_cart"><button class="btn btn-success">Next stage</button></a>
-                        <table>
+                    <div class="media well">
+                        <table t-if="order.order_line">
                             <tr><td>Untaxed Amount</td><td><t t-esc="order.amount_untaxed"/> €</td></tr>
                             <tr><td>Taxes</td><td><t t-esc="order.amount_tax"/> €</td></tr>
                             <tr><td>Total</td><td><h3><t t-esc="order.amount_total"/> €</h3></td></tr>
                         </table>
-                    </div>
-                    <div class="media well" t-if="not order.order_line">
-                        Your cart is empty
+                        <span t-if="not order.order_line">Your cart is empty</span>
                     </div>
                 </div>
             </field>
         </record>
+
         <!-- Page confirm my cart -->
 
         <record id="customer" model="ir.ui.view">
@@ -160,7 +159,7 @@
             <field name="type">qweb</field>
             <field name="arch" type="xml">
                 <t t-call="ecommerce.page">
-                    <t t-set="title">Your information</t>
+                    <t t-set="title">Your informations</t>
                     <t t-set="shop_content">
                         <form action="/shop/confirm_cart" method="post" enctype="x-www-form-urlencoded">
                             <div>Please enter your informations</div>
@@ -173,11 +172,63 @@
                                 <input name="street2" placeholder="Street..." t-att-value="partner and partner.street2 or ''"/><br/>
                                 <input name="zip" required="True" placeholder="Zip-code..." t-att-value="partner and partner.zip or ''"/>
                                 <input name="city" required="True" placeholder="City..." t-att-value="partner and partner.city or ''"/><br/>
-                                <input name="country_id" required="True" placeholder="Country..." t-att-value="partner and partner.country_id and partner.country_id.name_get()[1] or ''"/>
-                                <input name="state" required="True" placeholder="State..." t-att-value="partner and partner.state_id and partner.state_id.name_get()[1] or ''"/>
+                                <input name="country" required="True" placeholder="Country..." t-att-value="partner and partner.country_id and partner.country_id.name_get()[0][1] or ''"/>
+                                <input name="state" placeholder="State..." t-att-value="partner and partner.state_id and partner.state_id.name_get()[0][1] or ''"/>
                             </address>
+                            <button class="btn btn-success">Next stage</button>
                             <t t-call="ecommerce.total"/>
                         </form>
+                    </t>
+                </t>
+            </field>
+        </record>
+        <record id="order" model="ir.ui.view">
+            <field name="name">order</field>
+            <field name="type">qweb</field>
+            <field name="arch" type="xml">
+                <t t-call="ecommerce.page">
+                    <t t-set="title">Order</t>
+                    <t t-set="shop_content">
+                        <t t-foreach="order.order_line or []" t-as="line">
+                            <t t-set="product" t-value="line.product_id"/>
+                            <t t-set="quantity" t-value="int(line.product_uom_qty)"/>
+                            <div class="media oe_product">
+                                <div class="pull-left" style="width:64px; height:64px;">
+                                    <img style="max-width:64px; max-height:64px; margin:auto;" class="media-object" t-att-src="'data:image/png;base64,' + product.image"/>
+                                </div>
+                                <div class="media-body">
+                                    <a t-att-href="'/shop/product/%%s' %% product.id"><h4 class="media-heading"><t t-esc="product.name"/></h4></a>
+                                    <t t-esc="product.description_sale"/>
+                                    <div><t t-esc="product.list_price"/> €</div>
+                                </div>
+                            </div>
+                        </t>
+                        <div class="media well">
+                            <t t-esc="partner.name"/><br/>
+                            <t t-esc="partner.phone"/><br/>
+                            <t t-esc="partner.email"/><br/>
+                            <address>
+                                <t t-esc="partner.street"/><br/>
+                                <t t-esc="partner.zip"/>, 
+                                <t t-esc="partner.city"/><br/>
+                                <t t-esc="partner.country_id and partner.country_id.name_get()[0][1] or ''"/>, 
+                                <t t-esc="partner.state_id and partner.state_id.name_get()[0][1] or ''"/><br/>
+                            </address>
+                        </div>
+                        <t t-call="ecommerce.total"/>
+                        <a t-if="order.order_line" href="/shop/confirm_order"><button class="btn btn-success">Confirm order</button></a>
+                    </t>
+                </t>
+            </field>
+        </record>
+        <record id="thanks" model="ir.ui.view">
+            <field name="name">thanks</field>
+            <field name="type">qweb</field>
+            <field name="arch" type="xml">
+                <t t-call="ecommerce.page">
+                    <t t-set="title">Order</t>
+                    <t t-set="shop_content">
+                        Thanks for your sale order
                     </t>
                 </t>
             </field>

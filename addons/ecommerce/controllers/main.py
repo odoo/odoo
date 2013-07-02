@@ -6,23 +6,19 @@ from openerp.addons.web import http
 from openerp.addons.web.http import request
 from werkzeug.exceptions import NotFound
 import urllib
+from openerp.addons.website.controllers.main import template_values
 
 
 class Ecommerce(http.Controller):
 
     def get_cr_uid(self):
         cr = request.cr
-        try:
-            request.session.check_security()
-            uid = request.session._uid
-        except http.SessionExpiredException:
-            uid = openerp.SUPERUSER_ID
-
-        partner_id = request.session.variables.get('ecommerce_partner_id', False)
-        if not partner_id and uid != 1:
+        uid = request.session._uid or openerp.SUPERUSER_ID
+        partner_id = request.httprequest.session.get('ecommerce_partner_id', False)
+        if not partner_id:
             partner_id = request.registry.get('res.users').browse(cr, uid, uid).partner_id.id
-            request.session.variables['ecommerce_partner_id'] = partner_id
-
+            if uid != 1:
+                request.httprequest.session['ecommerce_partner_id'] = partner_id
         return (cr, uid, partner_id)
 
     def get_values(self):
@@ -31,7 +27,7 @@ class Ecommerce(http.Controller):
         category_obj = request.registry.get('pos.category')
         context = {}
 
-        order_id = request.session.variables.get('ecommerce')
+        order_id = request.httprequest.session.get('ecommerce_order')
         # check if order allready exists
         try:
             order_obj.browse(cr, uid, order_id).pricelist_id
@@ -44,19 +40,17 @@ class Ecommerce(http.Controller):
             order_value['partner_id'] = partner_id or request.registry.get('res.users').browse(cr, uid, uid).partner_id.id
             order_value.update(order_obj.onchange_partner_id(cr, uid, [], uid, context=context)['value'])
             order_id = order_obj.create(cr, uid, order_value, context=context)
-            request.session.variables['ecommerce'] = order_id
+            request.httprequest.session['ecommerce_order'] = order_id
 
         category_ids = category_obj.search(cr, uid, [('parent_id', '=', False)])
 
-        values = {
+        values = template_values()
+        values.update({
             'temp': 0,
-            'request': request,
-            'registry': request.registry,
-            'cr': cr,
-            'uid': uid,
+            'res_company': request.registry['res.company'].browse(request.cr, uid, 1, context=context),
             'order': order_obj.browse(cr, uid, order_id),
             'categories': category_obj.browse(cr, uid, category_ids),
-        }
+        })
         return values
 
     @http.route(['/shop', '/shop/category/<cat_id>'], type='http', auth="db")
@@ -146,18 +140,51 @@ class Ecommerce(http.Controller):
     def remove_cart(self, product_id=0):
         return self.add_cart(product_id=product_id, remove=True)
 
+    @http.route(['/shop/customer'], type='http', auth="db")
+    def customer(self, *arg, **post):
+        cr, uid, partner_id = self.get_cr_uid()
+        values = self.get_values()
+        partner_obj = request.registry.get('res.partner')
+
+        values['partner'] = False
+        partner_id = request.httprequest.session.get('ecommerce_partner_id')
+        if partner_id:
+            values['partner'] = partner_obj.browse(cr, uid, partner_id)
+
+        html = request.registry.get("ir.ui.view").render(cr, uid, "ecommerce.customer", values)
+        return html
+
     @http.route(['/shop/confirm_cart'], type='http', auth="db")
     def confirm_cart(self, *arg, **post):
         cr, uid, partner_id = self.get_cr_uid()
         values = self.get_values()
+        partner_obj = request.registry.get('res.partner')
+
+        values['partner'] = False
+        partner_id = request.httprequest.session.get('ecommerce_partner_id')
         if post:
-            print post
+            post['country_id'] = (request.registry.get('res.country').search(cr, uid, [('name', 'ilike', post.pop('country'))]) + [None])[0]
+            post['state_id'] = (request.registry.get('res.country.state').search(cr, uid, [('name', 'ilike', post.pop('state'))]) + [None])[0]
 
-        {'city': u'regfs', 'name': u'Demo User', 'zip': u'5432534', 'street2': u'', 'country_id': u'gfgfdg', 'phone': u'4523545', 'state': u'fgdgsfgdf', 'street': u'fdsfdsffdsfqsdf 54', 'email': u'demo@example.com'}
+            if partner_id:
+                partner_obj.write(cr, uid, [partner_id], post)
+            else:
+                partner_id = partner_obj.create(cr, uid, post)
+                values['order'].write({'partner_id': partner_id})
+                request.httprequest.session['ecommerce_partner_id'] = partner_id
 
-        values['partner'] = partner_id and request.registry.get('res.users').browse(cr, uid, partner_id) or False
+        values['partner'] = partner_obj.browse(cr, uid, partner_id)
+        html = request.registry.get("ir.ui.view").render(cr, uid, "ecommerce.order", values)
+        return html
 
-        html = request.registry.get("ir.ui.view").render(cr, uid, "ecommerce.customer", values)
+    @http.route(['/shop/confirm_order'], type='http', auth="db")
+    def confirm_order(self, *arg, **post):
+        cr, uid, partner_id = self.get_cr_uid()
+        values = self.get_values()
+        values['order'].write({'state': 'progress'})
+        values['partner'] = request.registry.get('res.partner').browse(cr, uid, partner_id)
+        html = request.registry.get("ir.ui.view").render(cr, uid, "ecommerce.thanks", values)
+        request.httprequest.session['ecommerce_order'] = None
         return html
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
