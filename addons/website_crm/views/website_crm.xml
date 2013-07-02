@@ -7,13 +7,13 @@
             <field name="inherit_id" ref="website.contactus"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@class='span8']" position="inside">
-                    <form action="/crm/contactus" method="post">
-                        <input name="contact_name" required="True" placeholder="Name..."/><br/>
-                        <input name="phone" type="tel" required="True" placeholder="Phone number..."/><br/>
-                        <input name="email_from" type="email" required="True" placeholder="Email..."/>
-                        <input name="name" required="True" placeholder="Subject..."/><br/>
-                        <textarea name="description" placeholder="Enter your comment..."> </textarea>
-                        <button>Send message</button>
+                    <form action="/crm/contactus" method="post" class="navbar-form pull-left">
+                        <input class="span4" type="text" name="contact_name" required="True" placeholder="Name..."/><br/>
+                        <input class="span4" type="text" name="phone" required="True" placeholder="Phone number..."/><br/>
+                        <input class="span4" type="text" name="email_from" required="True" placeholder="Email..."/>
+                        <input class="span8" style="margin-top: 15px;" type="text" name="name" required="True" placeholder="Subject..."/><br/>
+                        <textarea class="span8" style="margin-top:5px; height: 140px;" name="description" placeholder="Enter your comment..."> </textarea><br/>
+                        <button class="btn">Send message</button>
                     </form>
                 </xpath>
             </field>
