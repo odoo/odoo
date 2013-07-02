@@ -69,11 +69,8 @@ class crm_meeting(base_state, osv.Model):
     def search(self, cr, uid, args, offset=0, limit=0, order=None, context=None, count=False):
         if context.get('mymeetings',False):
             partner_id = self.pool.get('res.users').browse(cr, uid, uid, context).partner_id.id
-            args.append('|')
-            args.append(['partner_ids', 'in', partner_id])
-            args.append(['user_id', '=', uid])
-        ids = super(crm_meeting, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
-        return ids
+            args += ['|', ('partner_ids', 'in', [partner_id]), ('user_id', '=', uid)]
+        return super(crm_meeting, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
     def message_get_subscription_data(self, cr, uid, ids, context=None):
         res = {}
