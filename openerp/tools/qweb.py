@@ -282,7 +282,7 @@ class QWebXml(object):
 
         inner = ""
         try:
-            if record._model._columns.get(t_att["field"])._type == 'many2one':
+            if record._model._all_columns.get(t_att["field"]).column._type == 'many2one':
                 field = getattr(record, t_att["field"])
                 if field:
                     inner = cgi.escape(str(field.name_get()[0][1]))
