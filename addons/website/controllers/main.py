@@ -34,29 +34,34 @@ class Website(openerp.addons.web.controllers.main.Home):
     def admin(self, *args, **kw):
         return super(Website, self).index(*args, **kw)
 
-    @http.route('/<any(page,pagenew):operation>/<path:path>', type='http', auth="db")
-    def page(self, operation, path, new=False):
+    @http.route('/pagenew/<path:path>', type='http', auth="db")
+    def pagenew(self, path):
+        values = template_values()
+        uid = values['uid']
+        imd = request.registry['ir.model.data']
+        view_model, view_id = imd.get_object_reference(request.cr, uid, 'website', 'default_page')
+        newview_id = request.registry['ir.ui.view'].copy(request.cr, uid, view_id)
+        if '.' in path:
+            module, idname = path.split('.')
+        else:
+            module = False
+            idname = path
+        imd.create(request.cr, uid, {
+            'name': idname,
+            'module': module,
+            'model': 'ir.ui.view',
+            'res_id': newview_id,
+        })
+        # TODO: replace by a redirect
+        return self.page(path)
+
+    @http.route('/page/<path:path>', type='http', auth="db")
+    def page(self, path):
         #def get_html_head():
         #    head += ['<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', db=request.db)]
         #modules = request.registry.get("ir.module.module").search_read(request.cr, openerp.SUPERUSER_ID, fields=['id', 'shortdesc', 'summary', 'icon_image'], limit=50)
         values = template_values()
         uid = values['uid']
-        if operation=='pagenew':
-            imd = request.registry['ir.model.data']
-            view_model, view_id = imd.get_object_reference(request.cr, uid, 'website', 'default_page')
-            newview_id = request.registry['ir.ui.view'].copy(request.cr, uid, view_id)
-            if '.' in path:
-                module, idname = path.split('.')
-            else:
-                module = False
-                idname = path
-            imd.create(request.cr, uid, {
-                'name': idname,
-                'module': module,
-                'model': 'ir.ui.view',
-                'res_id': newview_id,
-            })
-
         context = {
             'inherit_branding': values['editable'],
         }
