@@ -395,10 +395,16 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         });
     },
     get_range_domain: function() {
-        var format = instance.web.date_to_str,
-            domain = this.last_search[0].slice(0);
-        domain.unshift([this.date_start, '>=', format(this.range_start.clone().addDays(-6))]);
-        domain.unshift([this.date_start, '<=', format(this.range_stop.clone().addDays(6))]);
+        var format = instance.web.date_to_str;
+        var A = format(this.range_start.clone().addDays(-6));
+        var B = format(this.range_stop.clone().addDays(6));
+        var domain = [
+            '|', '|',
+            '&', [this.date_start, '>=', A], [this.date_start, '<=', B],
+            '&', [this.date_stop, '>=', A], [this.date_stop, '<=', B],
+            '&', [this.date_start, '<', A], [this.date_stop, '>', B]
+        ];
+        domain.concat(this.last_search[0].slice(0))
         return domain;
     },
     do_show: function () {

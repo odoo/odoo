@@ -704,6 +704,73 @@ openerp.testing.section('eval.contexts', {
         }]);
         deepEqual(result, {type: 'out_invoice'});
     });
+    test('return-input-value', function (instance) {
+        var result = instance.web.pyeval.eval('contexts', [{
+            __ref: 'compound_context',
+            __contexts: ["{'line_id': line_id , 'journal_id': journal_id }"],
+            __eval_context: {
+                __ref: 'compound_context',
+                __contexts: [{
+                    __ref: 'compound_context',
+                    __contexts: [
+                        {lang: 'en_US', tz: 'Europe/Paris', uid: 1},
+                        {lang: 'en_US', tz: 'Europe/Paris', uid: 1},
+                        {}
+                    ],
+                    __eval_context: null,
+                }, {
+                    active_id: false,
+                    active_ids: [],
+                    active_model: 'account.move',
+                    amount: 0,
+                    company_id: 1,
+                    date: '2013-06-21',
+                    id: false,
+                    journal_id: 14,
+                    line_id: [
+                        [0, false, {
+                            account_id: 55,
+                            amount_currency: 0,
+                            analytic_account_id: false,
+                            credit: 0,
+                            currency_id: false,
+                            date_maturity: false,
+                            debit: 0,
+                            name: "dscsd",
+                            partner_id: false,
+                            tax_amount: 0,
+                            tax_code_id: false,
+                        }]
+                    ],
+                    name: '/',
+                    narration: false,
+                    parent: {},
+                    partner_id: false,
+                    period_id: 6,
+                    ref: false,
+                    state: 'draft',
+                    to_check: false,
+                }],
+                __eval_context: null,
+            },
+        }]);
+        deepEqual(result, {
+            journal_id: 14,
+            line_id: [[0, false, {
+                account_id: 55,
+                amount_currency: 0,
+                analytic_account_id: false,
+                credit: 0,
+                currency_id: false,
+                date_maturity: false,
+                debit: 0,
+                name: "dscsd",
+                partner_id: false,
+                tax_amount: 0,
+                tax_code_id: false,
+            }]],
+        });
+    });
 });
 openerp.testing.section('eval.domains', {
     dependencies: ['web.coresetup', 'web.dates']
