@@ -10,6 +10,8 @@ instance.website.EditorBar = instance.web.Widget.extend({
     container: 'body',
     start: function() {
         var self = this;
+        self.$('button[data-action]').prop('disabled', true);
+        self.$('button[data-action=edit]').prop('disabled', false);
         return this._super.apply(this, arguments);
     },
     edit: function () {
@@ -17,11 +19,11 @@ instance.website.EditorBar = instance.web.Widget.extend({
         Aloha.ready(function() {
             Aloha.jQuery('[data-oe-model]').aloha(); //.attr('contentEditable', 'true').addClass('oe_editable');
             self.$('button').prop('disabled', true);
+            self.$('button[data-action=save],button[data-action=cancel]').prop('disabled', false);
             Aloha.bind('aloha-editable-activated', function (ev, args) {
                 var $e = args.editable.obj;
                 if (!$e.is('.oe_dirty')) {
                     $e.addClass('oe_dirty');
-                    self.$('button').prop('disabled', false);
                     // TODO: Are we going to use a meta-data flag in order to know if the field shall be text or html ?
                     $e.data('original', $e.html());
                 }
@@ -42,7 +44,7 @@ instance.website.EditorBar = instance.web.Widget.extend({
             defs.push(def);
         });
         return $.when.apply(null, defs).then(function () {
-            self.$('button').prop('disabled', true);
+            window.location.reload();
         });
     },
     saveElement: function ($el) {
@@ -58,10 +60,7 @@ instance.website.EditorBar = instance.web.Widget.extend({
         return (new instance.web.DataSet(this, 'ir.ui.view')).call('save', [data.oeModel, data.oeId, data.oeField, html, xpath]);
     },
     cancel: function () {
-        $('.oe_dirty').each(function () {
-            $(this).removeClass('oe_dirty').html($(this).data('original'));
-        });
-        this.$('button').prop('disabled', true);
+        window.location.reload();
     }
 });
 
