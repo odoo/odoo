@@ -1,0 +1,19 @@
+{
+    'name': 'E-Commerce',
+    'category': 'Sale',
+    'version': '1.0',
+    'description': """
+OpenERP E-Commerce
+==================
+
+        """,
+    'author': 'OpenERP SA',
+    'depends': ['website', 'crm'],
+    'installable': True,
+    'auto_install': True,
+    'data': [
+        'views/website_crm.xml'
+    ],
+    'js': ['static/src/js/ecommerce.js'],
+    'css': ['static/src/css/ecommerce.css'],
+}

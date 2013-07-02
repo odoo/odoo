@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="contactus" model="ir.ui.view">
+            <field name="name">contactus</field>
+            <field name="type">qweb</field>
+            <field name="inherit_id" ref="website.contactus"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='span8']" position="inside">
+                    <form action="/crm/contactus" method="post">
+                        <input name="name" required="True" placeholder="Name..."/><br/>
+                        <input name="phone" type="tel" required="True" placeholder="Phone number..."/><br/>
+                        <input name="email" type="email" required="True" placeholder="Email..."/>
+                        <textarea name="description" placeholder="Enter your comment..."> </textarea>
+                        <button>Send message</button>
+                    </form>
+                </xpath>
+            </field>
+        </record>
+     </data>
+</openerp>
