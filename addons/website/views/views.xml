@@ -256,17 +256,32 @@
                     <div class="container">
                         <div class="row">
                             <div class="span12">
-                                <h1>Page not found: <span t-esc="path"/>!</h1>
-                                <p>Do you want to create one?</p>
+                                <h1>404: Page not found!</h1>
+                                <p>
+                                    The page you were looking for could not be
+                                    found; it is possible you have typed the
+                                    address incorrectly, but it has most
+                                    probably been removed due to the recent
+                                    website reorganisation.
+                                </p><p>
+                                    Maybe you were looking for one of these
+                                    popular pages ?
+                                </p>
+                                <ul>
+                                    <li><a href="/">Homepage</a></li>
+                                    <li><a href="/">Contact Us</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span12">
                                 <a class="oe_button oe_big oe_tacky" t-att-href="'/pagenew/'+path" t-if="editable">Create Page</a>
                             </div>
                         </div>
-
                     </div>
                 </t>
             </field>
         </record>
-
 
         <record id="contactus" model="ir.ui.view">
             <field name="name">contactus</field>
