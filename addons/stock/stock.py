@@ -562,12 +562,11 @@ class stock_picking(osv.osv):
             ids = [ids]
         for pick in self.browse(cr, uid, ids, context=context):
             sql_str = """update stock_move set
-                    date='%s'
+                    date_expected='%s'
                 where
                     picking_id=%d """ % (value, pick.id)
-
             if pick.max_date:
-                sql_str += " and (date='" + pick.max_date + "' or date>'" + value + "')"
+                sql_str += " and (date_expected='" + pick.max_date + "')"
             cr.execute(sql_str)
         return True
 
@@ -584,11 +583,11 @@ class stock_picking(osv.osv):
             ids = [ids]
         for pick in self.browse(cr, uid, ids, context=context):
             sql_str = """update stock_move set
-                    date='%s'
+                    date_expected='%s'
                 where
                     picking_id=%s """ % (value, pick.id)
             if pick.min_date:
-                sql_str += " and (date='" + pick.min_date + "' or date<'" + value + "')"
+                sql_str += " and (date_expected='" + pick.min_date + "')"
             cr.execute(sql_str)
         return True
 
