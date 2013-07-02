@@ -95,6 +95,9 @@ def db_list(req, force=False):
     return dbs
 
 def db_monodb_redirect(req):
+    return db_redirect(req, not config['list_db'])
+
+def db_redirect(req, match_first_only_if_unique):
     db = False
     redirect = False
 
@@ -111,7 +114,7 @@ def db_monodb_redirect(req):
         db = cookie_db
 
     # 3 use the first db if user can list databases
-    if dbs and not db and (config['list_db'] or len(dbs) == 1):
+    if dbs and not db and (not match_first_only_if_unique or len(dbs) == 1):
         db = dbs[0]
 
     # redirect to the chosen db if multiple are available
@@ -123,7 +126,7 @@ def db_monodb_redirect(req):
 
 def db_monodb(req):
     # if only one db exists, return it else return False
-    return db_monodb_redirect(req)[0]
+    return db_redirect(req, True)[0]
 
 def redirect_with_hash(req, url, code=303):
     if req.httprequest.user_agent.browser == 'msie':
