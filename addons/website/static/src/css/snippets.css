@@ -1,3 +1,4 @@
+/*
 .oe_snippet_demo .oe_page{
     margin-top: 50px;
     margin-bottom: 300px;
@@ -25,7 +26,7 @@
     z-index: 800;
     pointer-events :none;
     color: white;
-    text-shadow: none; /* 0px 1px 3px black; */
+    text-shadow: none;
     font-size: 14px;
     line-height: 20px;
     text-align: center;
@@ -49,6 +50,8 @@
     overflow-y: hidden;
     overflow-x: scroll;
 }
+*/
+
 .oe_snippet_list{
     width: auto;
     white-space: nowrap;
@@ -74,8 +77,11 @@
     user-select: none;
     white-space: normal;
 }
+
+
+
 .oe_snippet_editor .oe_snippet:after{
-    content: attr(name); /*attr('name');*/
+    content: attr(name);
     position: absolute;
     bottom: 0px;
     left: 0px;

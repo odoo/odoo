@@ -71,12 +71,24 @@ instance.website.EditorBar = instance.web.Widget.extend({
             $snippet = $(ev.currentTarget);
             $snippet.addClass('oe_selected');
             $snippet.draggable();
-            debugger;
+            selector = $snippet.data("selector");
+            zone = $(".oe_website_body " + selector);
+            var droppable = '<div class="oe_snippet_drop" style="border:1px solid red;">.<br/>.<br/>.<br/>.<br/>.<br/></div>';
+            zone.before(droppable);
+            zone.after(droppable);
+            $(".oe_snippet_drop").droppable({
+                drop: function( event, ui ) {
+                    console.log(event, ui, "DROP");
+                    target = $(event.target);
+                    target.before($snippet.html());
+                    $('.oe_selected').remove();
+                    $('.oe_snippet_drop').remove();
+                }
+            });
         });
 
     },
     snippet: function (ev) {
-        console.log(ev);
         $('.oe_snippet_editor').show();
     },
 });
