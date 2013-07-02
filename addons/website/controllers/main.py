@@ -26,7 +26,6 @@ def template_values():
     return values
 
 class Website(openerp.addons.web.controllers.main.Home):
-
     @http.route('/', type='http', auth="db")
     def index(self, **kw):
         return self.page("website.homepage")
@@ -35,23 +34,43 @@ class Website(openerp.addons.web.controllers.main.Home):
     def admin(self, *args, **kw):
         return super(Website, self).index(*args, **kw)
 
-    @http.route('/page/<path:path>', type='http', auth="db")
-    def page(self, path):
+    @http.route('/<any(page,pagenew):operation>/<path:path>', type='http', auth="db")
+    def page(self, operation, path, new=False):
         #def get_html_head():
         #    head += ['<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', db=request.db)]
         #modules = request.registry.get("ir.module.module").search_read(request.cr, openerp.SUPERUSER_ID, fields=['id', 'shortdesc', 'summary', 'icon_image'], limit=50)
         values = template_values()
         uid = values['uid']
+        if operation=='pagenew':
+            imd = request.registry['ir.model.data']
+            view_model, view_id = imd.get_object_reference(request.cr, uid, 'website', 'default_page')
+            newview_id = request.registry['ir.ui.view'].copy(request.cr, uid, view_id)
+            if '.' in path:
+                module, idname = path.split('.')
+            else:
+                module = False
+                idname = path
+            imd.create(request.cr, uid, {
+                'name': idname,
+                'module': module,
+                'model': 'ir.ui.view',
+                'res_id': newview_id,
+            })
+
         context = {
             'inherit_branding': values['editable'],
         }
         company = request.registry['res.company'].browse(request.cr, uid, 1, context=context)
         values.update({
             'res_company': company,
+            'path': path
         })
         values['google_map_url'] = "http://maps.googleapis.com/maps/api/staticmap?center=%s&sensor=false&zoom=8&size=298x298" \
                 % quote_plus('%s, %s %s, %s' % (company.street, company.city, company.zip, company.country_id and company.country_id.name_get()[0][1] or ''))
-        html = request.registry.get("ir.ui.view").render(request.cr, uid, path, values, context)
+        try:
+            html = request.registry.get("ir.ui.view").render(request.cr, uid, path, values, context)
+        except ValueError, e:
+            html = request.registry.get("ir.ui.view").render(request.cr, uid, 'website.404', values, context)
         return html
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

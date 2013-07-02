@@ -260,6 +260,46 @@
             </field>
         </record>
 
+
+        <record id="default_page" model="ir.ui.view">
+            <field name="name">New Page</field>
+            <field name="type">qweb</field>
+            <field name="arch" type="xml">
+                <t t-call="website.layout">
+                    <div class="container">
+                        <div class="row">
+                            <div class="span12">
+                                <h1>New Page</h1>
+                                <p>Write your text here...</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </field>
+        </record>
+
+
+        <record id="404" model="ir.ui.view">
+            <field name="name">Page not found</field>
+            <field name="type">qweb</field>
+            <field name="arch" type="xml">
+                <t t-call="website.layout">
+                    <div class="container">
+                        <div class="row">
+                            <div class="span12">
+                                <h1>Page not found: <span t-esc="path"/>!</h1>
+                                <p>Do you want to create one?</p>
+                                <a t-att-href="'/pagenew/'+path">Create One</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </field>
+        </record>
+
+
         <record id="contactus" model="ir.ui.view">
             <field name="name">contactus</field>
             <field name="type">qweb</field>
