@@ -11,9 +11,14 @@ instance.website.EditorBar = instance.web.Widget.extend({
         var self = this;
         var r = this._super.apply(this, arguments);
         this.$container = $(this.container);
-        this.$container.addClass('oe_website_editor_container');
-        this.$container.find('[data-oe-model]').attr('contentEditable', 'true').addClass('oe_editable');
-        this.$('button').prop('disabled', true);
+        // this.$container.addClass('oe_website_editor_container');
+        Aloha.ready(function() {
+            self.$container.find('[data-oe-model]').aloha(); //.attr('contentEditable', 'true').addClass('oe_editable');
+            self.$('button').prop('disabled', true);
+            Aloha.bind('aloha-editable-activated', function (ev, args) {
+                debugger
+            });
+        });
         // .click(function (e) {
         //     e.stopPropagation();
         //     e.preventDefault();
