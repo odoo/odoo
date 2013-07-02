@@ -3,13 +3,17 @@ openerp.website = function(instance) {
 instance.website.EditorBar = instance.web.Widget.extend({
     template: 'Website.EditorBar',
     events: {
+        'click button[data-action=edit]': 'edit',
         'click button[data-action=save]': 'save',
         'click button[data-action=cancel]': 'cancel',
     },
     container: 'body',
     start: function() {
         var self = this;
-        var r = this._super.apply(this, arguments);
+        return this._super.apply(this, arguments);
+    },
+    edit: function () {
+        var self = this;
         Aloha.ready(function() {
             Aloha.jQuery('[data-oe-model]').aloha(); //.attr('contentEditable', 'true').addClass('oe_editable');
             self.$('button').prop('disabled', true);
@@ -23,7 +27,6 @@ instance.website.EditorBar = instance.web.Widget.extend({
                 }
             });
         });
-        return r;
     },
     save: function () {
         var self = this;

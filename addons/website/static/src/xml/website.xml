@@ -3,10 +3,45 @@
 -->
 <templates id="template" xml:space="preserve">
 <t t-name="Website.EditorBar">
+
+    OK
+<div class="navbar">
+    <div class="navbar-inner">
+        <a class="brand" href="#">Title</a>
+        <ul class="nav">
+        <li class="active"><a href="#">Home</a></li>
+        <li><a href="#">Link</a></li>
+        <li><a href="#">Link</a></li>
+        </ul>
+    </div>
+</div>
+
+    <div class="navbar navbar-inverse">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="./index.html">Bootstrap</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class=""><a href="./index.html">Home</a> </li>
+              <li class=""> <a href="./getting-started.html">Get started</a> </li>
+              <li class=""> <a href="./customize.html">Customize</a> </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <ul class="oe_website_editorbar openerp">
-        <li><strong>OpenERP Website Editor</strong></li>
+        <li><strong> YESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS OpenERP Website Editor</strong></li>
         <li class="oe_right"><button data-action="save">Save</button></li>
         <li class="oe_right"><button data-action="cancel">Cancel</button></li>
+        <li class="oe_right"><button data-action="edit">Edit</button></li>
     </ul>
 </t>
 </templates>
