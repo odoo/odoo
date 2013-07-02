@@ -270,8 +270,8 @@ class QWebXml(object):
         return self.render(t_att["call"], d)
 
     def render_tag_set(self, e, t_att, g_att, v):
-        if "eval" in t_att:
-            v[t_att["set"]] = self.eval_object(t_att["eval"], v)
+        if "value" in t_att:
+            v[t_att["set"]] = self.eval_object(t_att["value"], v)
         else:
             v[t_att["set"]] = self.render_element(e, t_att, g_att, v)
         return ""
