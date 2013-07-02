@@ -24,24 +24,10 @@
             <field name="type">qweb</field>
             <field name="arch" type="xml">
                 <t t-call="website.layout">
-                    <t t-set="title">Contact us - <t t-esc="res_company.name"/></t>
+                    <t t-set="title">Thank You!</t>
                     <div class="container">
-                        <div class="row">
-                            <div class="span8">
-                                <h1>Thanks for your message</h1>
-                            </div>
-                            <div class="span4">
-                                <address>
-                                    <strong t-esc="res_company.name">Name</strong><br/>
-                                    <t t-esc="res_company.street"/><br/>
-                                    <t t-esc="res_company.city"/>, <t t-esc="res_company.zip"/><br/>
-                                    <t t-esc="res_company.country_id and res_company.country_id.name_get()[0][1]"/><br/>
-                                    <br/>
-                                    &amp;#x2706; <t t-esc="res_company.phone"/><br/>
-                                    <i class="icon-envelope"></i> <t t-esc="res_company.email"/>
-                                </address>
-                                <img t-att-src="google_map_url"/>
-                            </div>
+                        <div class="oe_row">
+                                <h2 class="oe_slogan">Thanks for your message.</h2>
                         </div>
                     </div>
                 </t>
