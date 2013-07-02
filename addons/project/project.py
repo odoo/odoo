@@ -574,15 +574,15 @@ class task(base_stage, osv.osv):
 
     _track = {
         'state': {
-            'project.mt_task_new': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['new', 'draft'],
-            'project.mt_task_started': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'open',
-            'project.mt_task_closed': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
+            'project.mt_task_new': lambda self, cr, uid, obj, ctx=None: obj.state in ['new', 'draft'],
+            'project.mt_task_started': lambda self, cr, uid, obj, ctx=None: obj.state == 'open',
+            'project.mt_task_closed': lambda self, cr, uid, obj, ctx=None: obj.state == 'done',
         },
         'stage_id': {
-            'project.mt_task_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['new', 'draft', 'done', 'open'],
+            'project.mt_task_stage': lambda self, cr, uid, obj, ctx=None: obj.state not in ['new', 'draft', 'done', 'open'],
         },
         'kanban_state': {  # kanban state: tracked, but only block subtype
-            'project.mt_task_blocked': lambda self, cr, uid, obj, ctx=None: obj['kanban_state'] == 'blocked',
+            'project.mt_task_blocked': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'blocked',
         },
     }
 
