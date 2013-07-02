@@ -1,4 +1,4 @@
-(function() {
+Aloha.ready(function() {
     // Init headless webclient
     // TODO: Webclient research : use iframe embedding mode
     //       Meanwhile, let's HACK !!!
@@ -29,4 +29,4 @@
         editor.prependTo($('body'));
         $('body').css('padding-top', editor.$el.outerHeight());
     });
-})();
+});

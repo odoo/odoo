@@ -14,7 +14,6 @@
                         <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,600,700'/>
                         <t t-raw="script"/>
                         <t t-if="editable">
-                            <script type="text/javascript" src="/website/static/src/js/website_bootstrap.js"></script>
                             <link href="http://cdn.aloha-editor.org/latest/css/aloha.css" rel="stylesheet" type="text/css" />
                             <script>
                                 openerp.$ = jQuery;
@@ -31,6 +30,7 @@
                                     Aloha.jQuery('.editable').aloha();
                                 });
                             </script>
+                            <script type="text/javascript" src="/website/static/src/js/website_bootstrap.js"></script>
                         </t>
                     </head>
                     <body class="oe_website">
