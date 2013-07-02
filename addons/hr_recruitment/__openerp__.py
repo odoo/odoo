@@ -37,7 +37,7 @@ You can define the different phases of interviews and easily rate the applicant 
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'images': ['images/hr_recruitment_analysis.jpeg','images/hr_recruitment_applicants.jpeg'],
+    'images': ['images/hr_recruitment_analysis.jpeg','images/hr_recruitment_applicants.jpeg','static/src/img/down1.png'],
     'depends': [
         'base_status',
         'decimal_precision',
