@@ -846,6 +846,15 @@ class view(osv.osv):
                 'blank_nodes': blank_nodes,
                 'node_parent_field': _Model_Field,}
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default = {}
+        default.update({
+            'model_ids': [],
+        })
+        return super(view, self).copy(cr, uid, id, default, context=context)
+
+
 class view_sc(osv.osv):
     _name = 'ir.ui.view_sc'
     _columns = {
