@@ -286,7 +286,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
 
         // iOS devices doesn't allow iframe use the way we do it,
         // opening a new window seems the best way to workaround
-        if (navigator.userAgent.match(/(iPod|iPhone|iPad)/) || true) {
+        if (navigator.userAgent.match(/(iPod|iPhone|iPad)/)) {
             var params = _.extend({}, options.data || {}, {token: token});
             var url = this.url(options.url, params);
             instance.web.unblockUI();
