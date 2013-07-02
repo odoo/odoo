@@ -8,7 +8,7 @@ OpenERP E-Commerce
 
         """,
     'author': 'OpenERP SA',
-    'depends': ['website', 'sale_stock', 'point_of_sale'],
+    'depends': ['website', 'sale', 'point_of_sale'],
     'installable': True,
     'data': [
         'views/ecommerce.xml'

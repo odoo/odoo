@@ -32,7 +32,7 @@
                             <div class="span4">
                                 <ul class="nav nav-list">
                                 <t t-foreach="categories" t-as="category">
-                                    <t t-call="ecommerce.categories_recursive"/>
+                                    <t t-call="website_sale.categories_recursive"/>
                                 </t>
                                 </ul>
                             </div>
@@ -40,7 +40,7 @@
                                 <t t-raw="shop_content">
                                     <t t-foreach="products" t-as="product">
                                         <t t-set="quantity" t-value="([int(line.product_uom_qty) for line in (order.order_line or []) if line.product_id.id == product.id] + [0])[0]"/>
-                                        <t t-call="ecommerce.products"/>
+                                        <t t-call="website_sale.products"/>
                                     </t>
                                 </t>
                             </div>
@@ -60,7 +60,7 @@
                     <a t-att-href="'/shop/category/%%s' %% category.id"><t t-esc="category.name"/></a>
                     <ul t-if="category.child_id" class="nav nav-list">
                         <t t-foreach="category.child_id" t-as="category">
-                            <t t-call="ecommerce.categories_recursive"/>
+                            <t t-call="website_sale.categories_recursive"/>
                         </t>
                     </ul>
                 </li>
@@ -97,7 +97,7 @@
             <field name="name">product</field>
             <field name="type">qweb</field>
             <field name="arch" type="xml">
-                <t t-call="ecommerce.page">
+                <t t-call="website_sale.page">
                     <t t-set="title">Product</t>
                     <t t-set="shop_content">
                         <h1><t t-esc="product.name"/></h1>
@@ -116,15 +116,15 @@
             <field name="name">my_cart</field>
             <field name="type">qweb</field>
             <field name="arch" type="xml">
-                <t t-call="ecommerce.page">
+                <t t-call="website_sale.page">
                     <t t-set="title">My cart</t>
                     <t t-set="shop_content">
                         <t t-foreach="order.order_line or []" t-as="line">
                             <t t-set="product" t-value="line.product_id"/>
                             <t t-set="quantity" t-value="int(line.product_uom_qty)"/>
-                            <t t-call="ecommerce.products"/>
+                            <t t-call="website_sale.products"/>
                         </t>
-                        <t t-call="ecommerce.total"/>
+                        <t t-call="website_sale.total"/>
                         <a t-if="order.order_line" href="/shop/customer"><button class="btn btn-success">Next stage</button></a>
                     </t>
                 </t>
@@ -156,7 +156,7 @@
             <field name="name">customer</field>
             <field name="type">qweb</field>
             <field name="arch" type="xml">
-                <t t-call="ecommerce.page">
+                <t t-call="website_sale.page">
                     <t t-set="title">Your informations</t>
                     <t t-set="shop_content">
                         <form action="/shop/confirm_cart" method="post" enctype="x-www-form-urlencoded">
@@ -174,7 +174,7 @@
                                 <input name="state" placeholder="State..." t-att-value="partner and partner.state_id and partner.state_id.name_get()[0][1] or ''"/>
                             </address>
                             <button class="btn btn-success">Next stage</button>
-                            <t t-call="ecommerce.total"/>
+                            <t t-call="website_sale.total"/>
                         </form>
                     </t>
                 </t>
@@ -184,7 +184,7 @@
             <field name="name">order</field>
             <field name="type">qweb</field>
             <field name="arch" type="xml">
-                <t t-call="ecommerce.page">
+                <t t-call="website_sale.page">
                     <t t-set="title">Order</t>
                     <t t-set="shop_content">
                         <t t-foreach="order.order_line or []" t-as="line">
@@ -213,7 +213,7 @@
                                 <t t-esc="partner.state_id and partner.state_id.name_get()[0][1] or ''"/><br/>
                             </address>
                         </div>
-                        <t t-call="ecommerce.total"/>
+                        <t t-call="website_sale.total"/>
                         <a t-if="order.order_line" href="/shop/confirm_order"><button class="btn btn-success">Confirm order</button></a>
                     </t>
                 </t>
@@ -223,7 +223,7 @@
             <field name="name">thanks</field>
             <field name="type">qweb</field>
             <field name="arch" type="xml">
-                <t t-call="ecommerce.page">
+                <t t-call="website_sale.page">
                     <t t-set="title">Order</t>
                     <t t-set="shop_content">
                         Thanks for your sale order

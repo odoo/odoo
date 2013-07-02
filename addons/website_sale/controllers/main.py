@@ -15,6 +15,8 @@ class Ecommerce(http.Controller):
         cr = request.cr
         uid = request.session._uid or openerp.SUPERUSER_ID
         partner_id = request.httprequest.session.get('ecommerce_partner_id', False)
+        if partner_id and not request.registry.get('res.partner').search(cr, uid, [('id', '=', partner_id)]):
+            partner_id = None
         if not partner_id:
             partner_id = request.registry.get('res.users').browse(cr, uid, uid).partner_id.id
             if uid != 1:
@@ -37,7 +39,7 @@ class Ecommerce(http.Controller):
         if not order_id:
             fields = [k for k, v in order_obj._columns.items()]
             order_value = order_obj.default_get(cr, uid, fields, context=context)
-            order_value['partner_id'] = partner_id or request.registry.get('res.users').browse(cr, uid, uid).partner_id.id
+            order_value['partner_id'] = partner_id
             order_value.update(order_obj.onchange_partner_id(cr, uid, [], uid, context=context)['value'])
             order_id = order_obj.create(cr, uid, order_value, context=context)
             request.httprequest.session['ecommerce_order'] = order_id
@@ -69,7 +71,7 @@ class Ecommerce(http.Controller):
             'categories': category_obj.browse(cr, uid, category_ids),
             'products': product_obj.browse(cr, uid, product_ids),
         })
-        html = request.registry.get("ir.ui.view").render(cr, uid, "ecommerce.page", values)
+        html = request.registry.get("ir.ui.view").render(cr, uid, "website_sale.page", values)
         return html
 
     @http.route(['/shop/product/<product_id>'], type='http', auth="db")
@@ -83,13 +85,13 @@ class Ecommerce(http.Controller):
         values.update({
             'product': product_obj.browse(cr, uid, product_id),
         })
-        html = request.registry.get("ir.ui.view").render(cr, uid, "ecommerce.product", values)
+        html = request.registry.get("ir.ui.view").render(cr, uid, "website_sale.product", values)
         return html
 
     @http.route(['/shop/my_cart'], type='http', auth="db")
     def my_cart(self, offset=0):
         cr, uid, partner_id = self.get_cr_uid()
-        html = request.registry.get("ir.ui.view").render(cr, uid, "ecommerce.my_cart", self.get_values())
+        html = request.registry.get("ir.ui.view").render(cr, uid, "website_sale.my_cart", self.get_values())
         return html
 
     @http.route(['/shop/add_cart'], type='http', auth="db")
@@ -132,7 +134,7 @@ class Ecommerce(http.Controller):
                 order_line_id = order_line_obj.create(cr, uid, values, context=context)
                 order.write({'order_line': [(4, order_line_id)]}, context=context)
 
-        html = request.registry.get("ir.ui.view").render(cr, uid, "ecommerce.total", self.get_values())
+        html = request.registry.get("ir.ui.view").render(cr, uid, "website_sale.total", self.get_values())
 
         return simplejson.dumps({"quantity": quantity, "totalHTML": html})
 
@@ -151,7 +153,7 @@ class Ecommerce(http.Controller):
         if partner_id:
             values['partner'] = partner_obj.browse(cr, uid, partner_id)
 
-        html = request.registry.get("ir.ui.view").render(cr, uid, "ecommerce.customer", values)
+        html = request.registry.get("ir.ui.view").render(cr, uid, "website_sale.customer", values)
         return html
 
     @http.route(['/shop/confirm_cart'], type='http', auth="db")
@@ -174,7 +176,7 @@ class Ecommerce(http.Controller):
                 request.httprequest.session['ecommerce_partner_id'] = partner_id
 
         values['partner'] = partner_obj.browse(cr, uid, partner_id)
-        html = request.registry.get("ir.ui.view").render(cr, uid, "ecommerce.order", values)
+        html = request.registry.get("ir.ui.view").render(cr, uid, "website_sale.order", values)
         return html
 
     @http.route(['/shop/confirm_order'], type='http', auth="db")
@@ -183,7 +185,7 @@ class Ecommerce(http.Controller):
         values = self.get_values()
         values['order'].write({'state': 'progress'})
         values['partner'] = request.registry.get('res.partner').browse(cr, uid, partner_id)
-        html = request.registry.get("ir.ui.view").render(cr, uid, "ecommerce.thanks", values)
+        html = request.registry.get("ir.ui.view").render(cr, uid, "website_sale.thanks", values)
         request.httprequest.session['ecommerce_order'] = None
         return html
 
