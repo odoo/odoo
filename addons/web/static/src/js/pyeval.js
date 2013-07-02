@@ -671,6 +671,7 @@ openerp.web.pyeval = function (instance) {
             if (!context.hasOwnProperty(k)) { continue; }
             var val = context[k];
 
+            if (val === null) { continue; }
             if (val.constructor === Array) {
                 context[k] = wrapping_list.fromJSON(val);
             } else if (val.constructor === Object
