@@ -197,8 +197,8 @@ class view(osv.osv):
         :param str xpath: valid xpath to the tag to replace
         """
         model_obj = self.pool.get(model)
-        origin = model_obj.read(cr, uid, [res_id], [field], context=context)
         if xpath:
+            origin = model_obj.read(cr, uid, [res_id], [field], context=context)[0][field]
             origin_tree = etree.fromstring(origin.encode('utf-8'))
             zone = origin_tree.xpath(xpath)[0]
             zone.getparent().replace(zone, etree.fromstring(value))
