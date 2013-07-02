@@ -2,6 +2,7 @@
 import openerp
 from openerp.addons.web import http
 from openerp.addons.web.controllers.main import manifest_list
+from urllib import quote_plus
 from openerp.addons.web.http import request
 
 def template_values():
@@ -41,11 +42,14 @@ class Website(openerp.addons.web.controllers.main.Home):
             'inherit_branding': editable
         }
         values = template_values()
+        company = request.registry['res.company'].browse(request.cr, uid, 1, context=context)
         values.update({
             'uid': uid,
             'editable': editable,
-            'res_company': request.registry['res.company'].browse(request.cr, uid, 1, context=context),
+            'res_company': company,
         })
+        values['google_map_url'] = "http://maps.googleapis.com/maps/api/staticmap?center=%s&sensor=false&zoom=8&size=298x298" \
+                % quote_plus('%s, %s %s, %s' % (company.street, company.city, company.zip, company.country_id and company.country_id.name_get()[0][1] or ''))
         html = request.registry.get("ir.ui.view").render(request.cr, uid, path, values, context)
         return html
 

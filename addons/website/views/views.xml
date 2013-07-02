@@ -122,12 +122,12 @@
                                     <strong t-esc="res_company.name">Name</strong><br/>
                                     <t t-esc="res_company.street"/><br/>
                                     <t t-esc="res_company.city"/>, <t t-esc="res_company.zip"/><br/>
-                                    Belgium<br/>
+                                    <t t-esc="res_company.country_id and res_company.country_id.name_get()[0][1]"/><br/>
                                     <br/>
                                     &amp;#x2706; <t t-esc="res_company.phone"/><br/>
                                     <i class="icon-envelope"></i> <t t-esc="res_company.email"/>
                                 </address>
-                                <a href="/"><img src="http://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&amp;zoom=13&amp;size=298x298&amp;sensor=false"/></a>
+                                <img t-att-src="google_map_url"/>
                             </div>
                         </div>
                     </div>

@@ -4,8 +4,6 @@ import openerp
 import simplejson
 from openerp.addons.web import http
 from openerp.addons.web.http import request
-from werkzeug.exceptions import NotFound
-import urllib
 from openerp.addons.website.controllers.main import template_values
 
 

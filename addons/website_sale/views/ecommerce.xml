@@ -159,7 +159,7 @@
                 <t t-call="website_sale.page">
                     <t t-set="title">Your informations</t>
                     <t t-set="shop_content">
-                        <form action="/shop/confirm_cart" method="post" enctype="x-www-form-urlencoded">
+                        <form action="/shop/confirm_cart" method="post">
                             <div>Please enter your informations</div>
                             <input name="name" required="True" placeholder="Name..." t-att-value="partner and partner.name or ''"/><br/>
                             <input name="phone" type="tel" required="True" placeholder="Phone number..." t-att-value="partner and partner.phone or ''"/>
