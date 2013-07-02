@@ -746,11 +746,8 @@ class view(osv.osv):
     def distribute_branding(self, e, branding=None, xpath=None, count=None):
         branding_copy = ['data-oe-model','data-oe-id','data-oe-field','data-oe-xpath']
         branding_dist = {}
-        if e.tag == 't' or e.tag == 'field':
-            # can not anotate t and field
-            return True
         xpath = "%s/%s[%s]" % (xpath or '', e.tag, (count and count.get(e.tag)) or 1)
-        if branding and not e.attrib.get('data-oe-model'):
+        if branding and not (e.attrib.get('data-oe-model') or e.attrib.get('t-field')):
             e.attrib.update(branding)
             e.attrib['data-oe-xpath'] = xpath
         if e.attrib.get('data-oe-model'):
