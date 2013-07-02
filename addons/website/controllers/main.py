@@ -17,9 +17,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     @http.route('/page/<path:path>', type='http', auth="db")
     def page(self, path):
         #def get_html_head():
-        #    head = ['<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', db=request.db)]
         #    head += ['<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', db=request.db)]
-        #    head += ['<script type="text/javascript" src="/website/static/src/js/website_bootstrap.js"></script>']
         #modules = request.registry.get("ir.module.module").search_read(request.cr, openerp.SUPERUSER_ID, fields=['id', 'shortdesc', 'summary', 'icon_image'], limit=50)
         try:
             request.session.check_security()
@@ -31,7 +29,9 @@ class Website(openerp.addons.web.controllers.main.Home):
         context = {
             'inherit_branding': editable
         }
+        script = "\n".join(['<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', db=request.db)])
         values = {
+            'script' : script,
             'editable': editable,
             'request': request,
             'registry': request.registry,
