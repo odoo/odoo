@@ -758,10 +758,11 @@ class view(osv.osv):
                     if e.attrib.get(i):
                         branding_dist[i] = e.attrib.get(i)
                         e.attrib.pop(i)
-                count = {}
-                for child in e:
-                    count[child.tag] = count.get(child.tag, 0) + 1
-                    self.distribute_branding(child, branding_dist, xpath, count)
+                if not re.search('(t-esc=|t-raw=|t-field=|t-call=)',child_text) or e.tag == "t":
+                    count = {}
+                    for child in e:
+                        count[child.tag] = count.get(child.tag, 0) + 1
+                        self.distribute_branding(child, branding_dist, xpath, count)
 
     def render(self, cr, uid, id_or_xml_id, values, context=None):
         def loader(name):
@@ -770,7 +771,6 @@ class view(osv.osv):
             arch_tree = etree.fromstring(arch)
             self.distribute_branding(arch_tree)
             arch = etree.tostring(arch_tree, encoding='utf-8')
-
             arch = '<?xml version="1.0" encoding="utf-8"?><tpl><t t-name="%s">%s</t></tpl>' % (name.encode('utf-8'), arch)
 
             return arch
