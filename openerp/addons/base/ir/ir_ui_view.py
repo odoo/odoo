@@ -753,7 +753,7 @@ class view(osv.osv):
         if e.attrib.get('data-oe-model'):
             # if a branded tag containg branded tag distribute to the childs
             child_text = "".join([etree.tostring(x, encoding='utf-8') for x in e])
-            if re.search('(data-oe-model=|t-esc=|t-raw=|t-field=)',child_text):
+            if re.search('(data-oe-model=|t-esc=|t-raw=|t-field=|t-call=)',child_text) or e.tag == "t":
                 for i in branding_copy:
                     if e.attrib.get(i):
                         branding_dist[i] = e.attrib.get(i)
