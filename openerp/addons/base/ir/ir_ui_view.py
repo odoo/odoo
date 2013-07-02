@@ -744,6 +744,9 @@ class view(osv.osv):
         return r['arch']
 
     def distribute_branding(self, e, branding=None, xpath=None, count=None):
+        def has_qweb_attr(node):
+            return node.tag == 't' or any(a.startswith('t-') for a in node.attrib)
+
         branding_copy = ['data-oe-model','data-oe-id','data-oe-field','data-oe-xpath']
         branding_dist = {}
         xpath = "%s/%s[%s]" % (xpath or '', e.tag, (count and count.get(e.tag)) or 1)
@@ -758,7 +761,7 @@ class view(osv.osv):
                     if e.attrib.get(i):
                         branding_dist[i] = e.attrib.get(i)
                         e.attrib.pop(i)
-                if not re.search('(t-esc=|t-raw=|t-field=|t-call=)',child_text) or e.tag == "t":
+                if not has_qweb_attr(e):
                     count = {}
                     for child in e:
                         count[child.tag] = count.get(child.tag, 0) + 1
