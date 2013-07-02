@@ -1,17 +1,30 @@
 @import "compass/css3"
 
 .oe_ecommerce
+  input
+    border: 1px solid #ddd
+    font-size: 13px
+    +border-radius(3px)
+    padding: 5px
+    padding-left: 7px
+    margin-bottom: 10px
+  .oe_total
+    margin-top: 10px
+    td
+      padding: 10px
   font-family: "Lato"
   font-size: 13px
   .oe_product
     .oe_hidden
       visibility: hidden
     .oe_ecommerce_price
-      +text-shadow(0px 1px 1px rgba(255, 255, 255, 0.44))
+      +text-shadow(0px 1px 3px rgba(255, 255, 255, 0.7))
       text-align: center
       font-size: 25px
       margin: 10px
       span
+        color: #9e9a99
+        font-weight: bold
         padding: 10px 15px
         margin: 5px
         background: rgba(0,0,0,.2)
@@ -21,11 +34,12 @@
     h4
       height: 50px
       text-align: center
-      +text-shadow(0px 1px 1px rgba(0, 0, 0, 0.2))
+      +text-shadow(0px 1px 1px rgba(200, 200, 200,.2))
     img
       max-height: 128px
       margin: 0 auto 
       padding-bottom: 20px
+    +box-shadow(0 0 3px 1px rgba(0,0,0,.1))
     text-align: center 
     vertical-align: top 
     position: relative
@@ -39,7 +53,7 @@
     +border-radius(5px)
     border: 1px solid rgba(0,0,0,.1)
     .oe_button_cart
-      left: 19px
+      width: 230px
       font-size: 11px
       position: absolute
       bottom: 5px

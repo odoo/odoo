@@ -75,7 +75,7 @@
             <field name="arch" type="xml">
                 <div class="media oe_product">
                    <a t-att-href="'/shop/product/%%s' %% product.id"><h4 class="media-heading"><t t-esc="product.name"/></h4></a>
-                    <img class="media-object" t-att-src="'data:image/png;base64,' + product.image"/>
+                    <a t-att-href="'/shop/product/%%s' %% product.id"><img class="media-object" t-att-src="'data:image/png;base64,' + product.image"/></a>
                     <div class="oe_ecommerce_description"><t t-esc="product.description_sale"/></div>
                     <div class="oe_ecommerce_price"><span><t t-esc="product.list_price"/>€</span></div>
                     <div class="media-body">
@@ -100,11 +100,12 @@
                 <t t-call="website_sale.page">
                     <t t-set="title">Product</t>
                     <t t-set="shop_content">
-                        <h1><t t-esc="product.name"/></h1>
-                        <img style="max-width:128px; max-height:128px;" t-att-src="'data:image/png;base64,' + product.image"/>
-                        <t t-esc="product.description_sale"/>
-                        <div><t t-esc="product.list_price"/> €</div>
-                        <h1>Giga poulet !</h1>
+                        <div clas="oe_commerce_product_display">
+                          <h1><t t-esc="product.name"/></h1>
+                          <img att-src="'data:image/png;base64,' + product.image"/>
+                          <t t-esc="product.description_sale"/>
+                          <div class="oe_ecommerce_price"><t t-esc="product.list_price"/> €</div>
+                        </div>
                     </t>
                 </t>
             </field>

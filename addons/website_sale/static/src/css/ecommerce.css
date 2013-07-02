@@ -2,7 +2,30 @@
   font-family: "Lato";
   font-size: 13px;
 }
+.oe_ecommerce input {
+  border: 1px solid #dddddd;
+  font-size: 13px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -khtml-border-radius: 3px;
+  border-radius: 3px;
+  padding: 5px;
+  padding-left: 7px;
+  margin-bottom: 10px;
+}
+.oe_ecommerce .oe_total {
+  margin-top: 10px;
+}
+.oe_ecommerce .oe_total td {
+  padding: 10px;
+}
 .oe_ecommerce .oe_product {
+  -moz-box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
+  -webkit-box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
+  -o-box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
   text-align: center;
   vertical-align: top;
   position: relative;
@@ -25,12 +48,14 @@
   visibility: hidden;
 }
 .oe_ecommerce .oe_product .oe_ecommerce_price {
-  text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.44);
+  text-shadow: 0px 1px 3px rgba(255, 255, 255, 0.7);
   text-align: center;
   font-size: 25px;
   margin: 10px;
 }
 .oe_ecommerce .oe_product .oe_ecommerce_price span {
+  color: #9e9a99;
+  font-weight: bold;
   padding: 10px 15px;
   margin: 5px;
   background: rgba(0, 0, 0, 0.2);
@@ -47,7 +72,7 @@
 .oe_ecommerce .oe_product h4 {
   height: 50px;
   text-align: center;
-  text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
+  text-shadow: 0px 1px 1px rgba(200, 200, 200, 0.2);
 }
 .oe_ecommerce .oe_product img {
   max-height: 128px;
@@ -55,7 +80,7 @@
   padding-bottom: 20px;
 }
 .oe_ecommerce .oe_product .oe_button_cart {
-  left: 19px;
+  width: 230px;
   font-size: 11px;
   position: absolute;
   bottom: 5px;
