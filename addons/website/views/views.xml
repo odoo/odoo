@@ -43,7 +43,7 @@
                                     </div>
                                     <ul class="oe_website_nav span8 nav nav-pills">
                                         <li class="pull-right"><a href="/admin">Sign in</a></li>
-                                        <li class="pull-right"><a href="/page/website.contactus">About</a></li>
+                                        <li class="pull-right"><a href="/page/website.contactus">Contact us</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -214,13 +214,48 @@
             <field name="type">qweb</field>
             <field name="arch" type="xml">
                 <t t-call="website.layout">
-                    <div class="container">
-                        <div class="row">
-                            <div class="span12">
-                                <h1>I'm you home page, please edit me...</h1>
+                <section class="oe_container">
+                    <div class="oe_row oe_spaced oe_dark">
+                        <div class="oe_span12">
+                            <h2 class="oe_slogan">I'm your home page, please edit me...</h2>
+                            <h3 class="oe_slogan">I'm a motto please edit me...</h3>
+                        </div>
+                        <div class="oe_span6">
+                            <div class="oe_demo oe_picture oe_screenshot">
+                                <a href="#">
+                                    <img src="https://www.openerp.com/apps/point_of_sale/pos_sc_02.jpg"/>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="oe_span6">
+                            <p class='oe_mt32'>
+                                Here you can describoe you company...
+                                OpenERP's Point of Sale introduces a super
+                                clean interface with no installation required
+                                that runs online and offline on modern
+                                hardwares.
+                            </p>
+                            <p>
+                                It's full integration with the company
+                                inventory and accounting, gives you real time
+                                statistics and consolidations amongst all shops
+                                without the hassle of integrating several
+                                applications.
+                            </p>
+                            <div class="oe_centeralign oe_websiteonly">
+                                <a href="http://www.openerp.com/start" class="oe_button oe_big oe_tacky">Start your <span class="oe_emph">free</span> trial</a>
                             </div>
                         </div>
                     </div>
+                </section>
+
+                <div class="container">
+                    <div class="row">
+                        <div class="span12">
+                            <h1></h1>
+                        </div>
+                    </div>
+                </div>
                 </t>
             </field>
         </record>
@@ -235,6 +270,7 @@
                         <div class="row">
                             <div class="span8">
                                 <h1>Contact us</h1>
+                                Description of your company.
                             </div>
                             <div class="span4">
                                 <address>
