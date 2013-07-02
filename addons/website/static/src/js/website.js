@@ -82,7 +82,7 @@ $(function(){
         make_editable();
         event.preventDefault();
     }
-    $('.oe_snippet').click(snippet_click);
+    //$('.oe_snippet').click(snippet_click);
 
     var hover_element = null;
 

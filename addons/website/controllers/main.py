@@ -12,7 +12,7 @@ def template_values():
         loggued = True
         uid = request.session._uid
     except http.SessionExpiredException:
-        loggued = True
+        loggued = False
         uid = openerp.SUPERUSER_ID
     values = {
         'loggued': loggued,
