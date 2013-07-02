@@ -1,12 +1,91 @@
-.oe_website_body .oe_ecommerce .btn.btn-success .oe_txt_empty,
-.oe_website_body .oe_ecommerce .btn.btn-primary .oe_txt,
-.oe_website_body .oe_ecommerce .btn.oe_hidden {
-    display: none;
+.oe_ecommerce {
+  font-family: "Lato";
+  font-size: 13px;
 }
-.oe_website_body .oe_ecommerce .oe_button_cart,
-.oe_website_body .oe_ecommerce .well.media a {
-    float: right;
-},
-.oe_website_body .oe_ecommerce .well.media {
-    margin-top: 30px;
+.oe_ecommerce .oe_product {
+  text-align: center;
+  vertical-align: top;
+  position: relative;
+  display: inline-block;
+  padding: 5px;
+  width: 230px;
+  height: 300px;
+  margin-top: 0;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -khtml-border-radius: 5px;
+  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+.oe_ecommerce .oe_product .oe_ecommerce_price {
+  text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.44);
+  text-align: center;
+  font-size: 25px;
+  margin: 10px;
+}
+.oe_ecommerce .oe_product .oe_ecommerce_price span {
+  padding: 10px 15px;
+  margin: 5px;
+  background: rgba(0, 0, 0, 0.2);
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -khtml-border-radius: 3px;
+  border-radius: 3px;
+}
+.oe_ecommerce .oe_product .oe_ecommerce_description {
+  display: none;
+}
+.oe_ecommerce .oe_product h4 {
+  height: 50px;
+  text-align: center;
+  text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.2);
+}
+.oe_ecommerce .oe_product img {
+  max-height: 128px;
+  margin: 0 auto;
+  padding-bottom: 20px;
+}
+.oe_ecommerce .oe_product .oe_button_cart {
+  left: 19px;
+  font-size: 11px;
+  position: absolute;
+  bottom: 5px;
+}
+.oe_ecommerce .oe_product .oe_button_cart button {
+  text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.44);
+  overflow: hidden;
+  text-align: center;
+  font-size: 12px;
+  margin: 0 auto;
+  margin-bottom: 5px;
+}
+.oe_ecommerce .oe_product .oe_button_cart button:first-child {
+  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #aaaaaa), color-stop(100%, #999999));
+  background: -webkit-linear-gradient(#aaaaaa, #999999);
+  background: -moz-linear-gradient(#aaaaaa, #999999);
+  background: -o-linear-gradient(#aaaaaa, #999999);
+  background: -ms-linear-gradient(#aaaaaa, #999999);
+  background: linear-gradient(#aaaaaa, #999999);
+}
+.oe_ecommerce .oe_product .oe_button_cart button:last-child {
+  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #0088cc), color-stop(100%, #0076b1));
+  background: -webkit-linear-gradient(#0088cc, #0076b1);
+  background: -moz-linear-gradient(#0088cc, #0076b1);
+  background: -o-linear-gradient(#0088cc, #0076b1);
+  background: -ms-linear-gradient(#0088cc, #0076b1);
+  background: linear-gradient(#0088cc, #0076b1);
+}
+.oe_ecommerce .oe_product .oe_button_cart button:last-child.btn-success {
+  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #51a351), color-stop(100%, #418541));
+  background: -webkit-linear-gradient(#51a351, #418541);
+  background: -moz-linear-gradient(#51a351, #418541);
+  background: -o-linear-gradient(#51a351, #418541);
+  background: -ms-linear-gradient(#51a351, #418541);
+  background: linear-gradient(#51a351, #418541);
 }

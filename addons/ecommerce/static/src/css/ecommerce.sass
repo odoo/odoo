@@ -1,0 +1,56 @@
+@import "compass/css3"
+
+.oe_ecommerce
+  font-family: "Lato"
+  font-size: 13px
+  .oe_product
+    .oe_ecommerce_price
+      +text-shadow(0px 1px 1px rgba(255, 255, 255, 0.44))
+      text-align: center
+      font-size: 25px
+      margin: 10px
+      span
+        padding: 10px 15px
+        margin: 5px
+        background: rgba(0,0,0,.2)
+        +border-radius(3px)
+    .oe_ecommerce_description
+      display: none
+    h4
+      height: 50px
+      text-align: center
+      +text-shadow(0px 1px 1px rgba(0, 0, 0, 0.2))
+    img
+      max-height: 128px
+      margin: 0 auto 
+      padding-bottom: 20px
+    text-align: center 
+    vertical-align: top 
+    position: relative
+    display: inline-block
+    padding: 5px
+    width: 230px
+    height: 300px
+    margin-top: 0
+    margin-bottom: 10px
+    margin-right: 10px
+    +border-radius(5px)
+    border: 1px solid rgba(0,0,0,.1)
+    .oe_button_cart
+      left: 19px
+      font-size: 11px
+      position: absolute
+      bottom: 5px
+      button
+        +text-shadow(0px 1px 1px rgba(0, 0, 0, 0.44))
+        overflow: hidden
+        text-align: center
+        font-size: 12px
+        margin: 0 auto
+        margin-bottom: 5px
+        &:first-child
+          @include background(linear-gradient(#aaaaaa,#999999))
+        &:last-child
+          @include background(linear-gradient(#0088cc,#0076b1))
+          &.btn-success
+            @include background(linear-gradient(#51a351, #418541))

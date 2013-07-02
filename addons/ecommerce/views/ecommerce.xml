@@ -74,20 +74,18 @@
             <field name="type">qweb</field>
             <field name="arch" type="xml">
                 <div class="media oe_product">
-                    <div class="pull-left" style="width:64px; height:64px;">
-                        <img style="max-width:64px; max-height:64px; margin:auto;" class="media-object" t-att-src="'data:image/png;base64,' + product.image"/>
-                    </div>
+                   <a t-att-href="'/shop/product/%%s' %% product.id"><h4 class="media-heading"><t t-esc="product.name"/></h4></a>
+                    <img class="media-object" t-att-src="'data:image/png;base64,' + product.image"/>
+                    <div class="oe_ecommerce_description"><t t-esc="product.description_sale"/></div>
+                    <div class="oe_ecommerce_price"><span><t t-esc="product.list_price"/>€</span></div>
                     <div class="media-body">
                         <div class="oe_button_cart">
                             <button t-att-class="'btn btn-inverse %%s' %% (not quantity and 'oe_hidden' or '')" t-att-data-id="product.id">Remove one</button>
                             <button t-att-class="'btn %%s' %% (quantity and 'btn-success' or 'btn-primary')" t-att-data-id="product.id">
                                 <span class="oe_txt_empty">Add to cart</span>
-                                <span class="oe_txt">Add one (<span class="oe_quantity"><t t-esc="quantity"/></span> in my cart)</span>
+                                <span class="oe_txt">(<span class="oe_quantity"><t t-esc="quantity"/></span>)</span>
                             </button>
                         </div>
-                        <a t-att-href="'/shop/product/%%s' %% product.id"><h4 class="media-heading"><t t-esc="product.name"/></h4></a>
-                        <t t-esc="product.description_sale"/>
-                        <div><t t-esc="product.list_price"/> €</div>
                     </div>
                 </div>
             </field>
