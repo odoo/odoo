@@ -77,12 +77,12 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     _track = {
         'state': {
-            'crm.mt_lead_create': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['new', 'draft'],
-            'crm.mt_lead_won': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
-            'crm.mt_lead_lost': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'cancel',
+            'crm.mt_lead_create': lambda self, cr, uid, obj, ctx=None: obj.state in ['new', 'draft'],
+            'crm.mt_lead_won': lambda self, cr, uid, obj, ctx=None: obj.state == 'done',
+            'crm.mt_lead_lost': lambda self, cr, uid, obj, ctx=None: obj.state == 'cancel',
         },
         'stage_id': {
-            'crm.mt_lead_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['new', 'draft', 'cancel', 'done'],
+            'crm.mt_lead_stage': lambda self, cr, uid, obj, ctx=None: obj.state not in ['new', 'draft', 'cancel', 'done'],
         },
     }
 
