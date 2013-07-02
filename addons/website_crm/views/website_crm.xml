@@ -8,13 +8,43 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@class='span8']" position="inside">
                     <form action="/crm/contactus" method="post">
-                        <input name="name" required="True" placeholder="Name..."/><br/>
+                        <input name="contact_name" required="True" placeholder="Name..."/><br/>
                         <input name="phone" type="tel" required="True" placeholder="Phone number..."/><br/>
-                        <input name="email" type="email" required="True" placeholder="Email..."/>
+                        <input name="email_from" type="email" required="True" placeholder="Email..."/>
+                        <input name="name" required="True" placeholder="Subject..."/><br/>
                         <textarea name="description" placeholder="Enter your comment..."> </textarea>
                         <button>Send message</button>
                     </form>
                 </xpath>
+            </field>
+        </record>
+
+        <record id="thanks" model="ir.ui.view">
+            <field name="name">thanks</field>
+            <field name="type">qweb</field>
+            <field name="arch" type="xml">
+                <t t-call="website.layout">
+                    <t t-set="title">Contact us - <t t-esc="res_company.name"/></t>
+                    <div class="container">
+                        <div class="row">
+                            <div class="span8">
+                                <h1>Thanks for your message</h1>
+                            </div>
+                            <div class="span4">
+                                <address>
+                                    <strong t-esc="res_company.name">Name</strong><br/>
+                                    <t t-esc="res_company.street"/><br/>
+                                    <t t-esc="res_company.city"/>, <t t-esc="res_company.zip"/><br/>
+                                    <t t-esc="res_company.country_id and res_company.country_id.name_get()[0][1]"/><br/>
+                                    <br/>
+                                    &amp;#x2706; <t t-esc="res_company.phone"/><br/>
+                                    <i class="icon-envelope"></i> <t t-esc="res_company.email"/>
+                                </address>
+                                <img t-att-src="google_map_url"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
             </field>
         </record>
      </data>
