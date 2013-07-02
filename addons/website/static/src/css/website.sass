@@ -2,6 +2,136 @@
 
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:fdl=0
 
+// Mixins {{{
+@font-face
+    font-family: 'mnmliconsRegular'
+    src: url('/web/static/src/font/mnmliconsv21-webfont.eot') format('eot')
+    src: url('/web/static/src/font/mnmliconsv21-webfont.woff') format('woff')
+    src: url('/web/static/src/font/mnmliconsv21-webfont.ttf') format('truetype')
+    src: url('/web/static/src/font/mnmliconsv21-webfont.svg') format('svg') active
+    font-weight: normal
+    font-style: normal
+
+@font-face
+    font-family: 'EntypoRegular'
+    src: url('/web/static/src/font/entypo-webfont.eot') format('eot')
+    src: url('/web/static/src/font/entypo-webfont.eot?#iefix') format('embedded-opentype')
+    src: url('/web/static/src/font/entypo-webfont.woff') format('woff')
+    src: url('/web/static/src/font/entypo-webfont.ttf') format('truetype')
+    src: url('/web/static/src/font/entypo-webfont.svg') format('svg') active
+    font-weight: normal
+    font-style: normal
+
+@mixin reset()
+    border: none
+    padding: 0
+    margin: 0
+    background: none
+    @include radius(0)
+    @include box-shadow(none)
+
+@mixin vertical-gradient($startColor: #555, $endColor: #333)
+    background-color: mix($startColor, $endColor)
+    background-image: -webkit-gradient(linear, left top, left bottom, from($startColor), to($endColor)) /* Saf4+, Chrome */
+    background-image: -webkit-linear-gradient(top, $startColor, $endColor) /* Chrome 10+, Saf5.1+, iOS 5+ */
+    background-image:    -moz-linear-gradient(top, $startColor, $endColor) /* FF3.6 */
+    background-image:     -ms-linear-gradient(top, $startColor, $endColor) /* IE10 */
+    background-image:      -o-linear-gradient(top, $startColor, $endColor) /* Opera 11.10+ */
+    background-image:         linear-gradient(to bottom, $startColor, $endColor)
+
+@mixin radial-gradient($gradient)
+    background-position: center center
+    background-image: -webkit-radial-gradient(circle, $gradient)
+    background-image: -moz-radial-gradient($gradient)
+    background-image: -ms-radial-gradient($gradient)
+    background-image: radial-gradient($gradient)
+
+@mixin radius($radius: 5px)
+    -moz-border-radius: $radius
+    -webkit-border-radius: $radius
+    border-radius: $radius
+
+@mixin box-shadow($bsval: 0px 1px 4px #777)
+    -moz-box-shadow: $bsval
+    -webkit-box-shadow: $bsval
+    box-shadow: $bsval
+
+@mixin transition($transval: (border linear 0.2s, box-shadow linear 0.2s))
+    -webkit-transition: $transval
+    -moz-transition: $transval
+    -ms-transition: $transval
+    -o-transition: $transval
+    transition: $transval
+
+@mixin opacity($opacity: .5)
+    filter: alpha(opacity=$opacity * 100)
+    opacity: $opacity
+
+@mixin background-clip($clip: padding-box)
+    -webkit-background-clip: $clip
+    -moz-background-clip: $clip
+    background-clip: $clip
+
+@mixin box-sizing($type: content)
+    // type = border || content || padding
+    -webkit-box-sizing: #{$type}-box
+    -moz-box-sizing: #{$type}-box
+    -ms-box-sizing: #{$type}-box
+    box-sizing: #{$type}-box
+
+@mixin skew-gradient($startColor: #555, $endColor: #333)
+    background-color: $endColor
+    background: -moz-linear-gradient(135deg, $endColor, $startColor)
+    background: -o-linear-gradient(135deg, $startColor, $endColor)
+    background: -webkit-gradient(linear, left top, right bottom, from($startColor), to($endColor))
+    background: -ms-linear-gradient(top, $startColor, $endColor) /* IE10 */
+
+@mixin transform($transform)
+    -webkit-transform: $transform
+    -moz-transform: $transform
+    -ms-transform: $transform
+    -o-transform: $transform
+    transform: $transform
+
+@mixin keyframes($name)
+    @-webkit-keyframes #{$name}
+        @content
+    @-moz-keyframes #{$name}
+        @content
+    @-ms-keyframes #{$name}
+        @content
+    @-o-keyframes #{$name}
+        @content
+    @keyframes #{$name}
+        @content
+
+
+// Transforms the (readable) text of an inline element into an mmlicons icon,
+// allows for actual readable text in-code (and in readers?) with iconic looks
+@mixin text-to-icon($icon-name, $color: #404040)
+    font-size: 1px
+    letter-spacing: -1px
+    color: transparent
+    text-shadow: none
+    font-weight: normal
+    &:before
+        font: 21px "mnmliconsRegular"
+        content: $icon-name
+        color: $color
+
+@mixin text-to-entypo-icon($icon-name, $color: #404040, $size: 21px)
+    font-size: 1px
+    letter-spacing: -1px
+    color: transparent
+    text-shadow: none
+    font-weight: normal
+    &:before
+        font: $size "entypoRegular"
+        content: $icon-name
+        color: $color
+
+// }}}
+
 .oe_website
     background: #e9e9e9
     color: #646464
@@ -70,12 +200,20 @@
     width: 100%
     padding: 10px
     margin: 0px
-    background: #e9e9e9
+    background-color: #414141
+    @include vertical-gradient(#646060, #262626)
     box-sizing: border-box
-
     li
         display: inline
-/* }}} */
+        color: #eee
+        &:hover
+            background: rgba(0,0,0,0.2)
+            text-shadow: black 0px 0px 3px
+            color: white
 
+
+
+
+/* }}} */
 
 

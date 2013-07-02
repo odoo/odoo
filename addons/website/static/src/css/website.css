@@ -1,4 +1,25 @@
 @charset "utf-8";
+@font-face {
+  font-family: "mnmliconsRegular";
+  src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
+  src: url("/web/static/src/font/mnmliconsv21-webfont.woff") format("woff");
+  src: url("/web/static/src/font/mnmliconsv21-webfont.ttf") format("truetype");
+  src: url("/web/static/src/font/mnmliconsv21-webfont.svg") format("svg") active;
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "EntypoRegular";
+  src: url("/web/static/src/font/entypo-webfont.eot") format("eot");
+  src: url("/web/static/src/font/entypo-webfont.eot?#iefix") format("embedded-opentype");
+  src: url("/web/static/src/font/entypo-webfont.woff") format("woff");
+  src: url("/web/static/src/font/entypo-webfont.ttf") format("truetype");
+  src: url("/web/static/src/font/entypo-webfont.svg") format("svg") active;
+  font-weight: normal;
+  font-style: normal;
+}
+
 .oe_website {
   background: #e9e9e9;
   color: #646464;
@@ -78,11 +99,27 @@
   width: 100%;
   padding: 10px;
   margin: 0px;
-  background: #e9e9e9;
+  background-color: #414141;
+  background-color: #454343;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#646060), to(#262626));
+  background-image: -webkit-linear-gradient(top, #646060, #262626);
+  background-image: -moz-linear-gradient(top, #646060, #262626);
+  background-image: -ms-linear-gradient(top, #646060, #262626);
+  background-image: -o-linear-gradient(top, #646060, #262626);
+  background-image: linear-gradient(to bottom, #646060, #262626);
   box-sizing: border-box;
 }
 .oe_website_editorbar li {
   display: inline;
+  color: #eeeeee;
+}
+.oe_website_editorbar li:hover {
+  background: rgba(0, 0, 0, 0.2);
+  text-shadow: black 0px 0px 3px;
+  color: white;
 }
 
 /* }}} */
+ *
+ *
+ * // Top Menu {{{ */
