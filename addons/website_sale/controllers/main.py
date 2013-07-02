@@ -69,7 +69,7 @@ class Ecommerce(http.Controller):
             'categories': category_obj.browse(cr, uid, category_ids),
             'products': product_obj.browse(cr, uid, product_ids),
         })
-        html = request.registry.get("ir.ui.view").render(cr, uid, "website_sale.page", values)
+        html = request.registry.get("ir.ui.view").render(cr, uid, "website_sale.products", values)
         return html
 
     @http.route(['/shop/product/<product_id>'], type='http', auth="db")
