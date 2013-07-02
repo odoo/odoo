@@ -35,6 +35,7 @@ import urllib2
 
 import openerp
 import openerp.service.security as security
+from openerp.tools import config
 
 import inspect
 import functools
@@ -1121,21 +1122,18 @@ def db_monodb():
     if db_url:
         return db_url
 
-    try:
-        dbs = db_list()
-    except Exception:
-        # ignore access denied
-        dbs = []
+    dbs = db_list(True)    
 
     # 2 use the database from the cookie if it's listable and still listed
     cookie_db = request.httprequest.cookies.get('last_used_database')
     if cookie_db in dbs:
         db = cookie_db
 
-    # 3 use the first db
-    if dbs and not db:
+    # 3 use the first db if user can list databases
+    if dbs and not db and (config['list_db'] or len(dbs) == 1):
         db = dbs[0]
-    return db.lower() if db else db
+
+    return db
 
 
 class JsonRpcController(Controller):
