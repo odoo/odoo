@@ -39,7 +39,7 @@
                             <div class="span8">
                                 <t t-raw="shop_content">
                                     <t t-foreach="products" t-as="product">
-                                        <t t-set="quantity" t-value="product.id in cart and cart[product.id]['quantity'] or 0"/>
+                                        <t t-set="quantity" t-value="([int(line.product_uom_qty) for line in (order.order_line or []) if line.product_id.id == product.id] + [0])[0]"/>
                                         <t t-call="ecommerce.products"/>
                                     </t>
                                 </t>
@@ -73,13 +73,13 @@
             <field name="name">products</field>
             <field name="type">qweb</field>
             <field name="arch" type="xml">
-                <div class="media">
+                <div class="media oe_product">
                     <div class="pull-left" style="width:64px; height:64px;">
                         <img style="max-width:64px; max-height:64px; margin:auto;" class="media-object" t-att-src="'data:image/png;base64,' + product.image"/>
                     </div>
                     <div class="media-body">
                         <div class="oe_button_cart">
-                            <button t-if="my_cart" t-att-class="'btn btn-inverse %%s' %% (not quantity and 'oe_hidden' or '')" t-att-data-id="product.id">Remove one</button>
+                            <button t-att-class="'btn btn-inverse %%s' %% (not quantity and 'oe_hidden' or '')" t-att-data-id="product.id">Remove one</button>
                             <button t-att-class="'btn %%s' %% (quantity and 'btn-success' or 'btn-primary')" t-att-data-id="product.id">
                                 <span class="oe_txt_empty">Add to cart</span>
                                 <span class="oe_txt">Add one (<span class="oe_quantity"><t t-esc="quantity"/></span> in my cart)</span>
@@ -121,22 +121,38 @@
                 <t t-call="ecommerce.page">
                     <t t-set="title">My cart</t>
                     <t t-set="shop_content">
-                        <t t-foreach="order.order_line" t-as="line">
+                        <t t-foreach="order.order_line or []" t-as="line">
                             <t t-set="product" t-value="line.product_id"/>
                             <t t-set="quantity" t-value="int(line.product_uom_qty)"/>
                             <t t-call="ecommerce.products"/>
                         </t>
-                        <div class="media well">
-                            <h1>
-                                <a href="/shop/customer"><button class="btn btn-success">Confirm my order</button></a>
-                                Total: <span class="oe_total"><t t-esc="order.amount_total"/> €</span>
-                            </h1>
-                        </div>
+                        <t t-call="ecommerce.total"/>
                     </t>
                 </t>
             </field>
         </record>
 
+        <!-- Total Shop my cart --> 
+
+        <record id="total" model="ir.ui.view">
+            <field name="name">total</field>
+            <field name="type">qweb</field>
+            <field name="arch" type="xml">
+                <div class="oe_total">
+                    <div class="media well" t-if="order.order_line">
+                        <a href="/shop/confirm_cart"><button class="btn btn-success">Next stage</button></a>
+                        <table>
+                            <tr><td>Untaxed Amount</td><td><t t-esc="order.amount_untaxed"/> €</td></tr>
+                            <tr><td>Taxes</td><td><t t-esc="order.amount_tax"/> €</td></tr>
+                            <tr><td>Total</td><td><h3><t t-esc="order.amount_total"/> €</h3></td></tr>
+                        </table>
+                    </div>
+                    <div class="media well" t-if="not order.order_line">
+                        Your cart is empty
+                    </div>
+                </div>
+            </field>
+        </record>
         <!-- Page confirm my cart -->
 
         <record id="customer" model="ir.ui.view">
@@ -146,10 +162,21 @@
                 <t t-call="ecommerce.page">
                     <t t-set="title">Your information</t>
                     <t t-set="shop_content">
-                        <form action="/shop/confirm_cart">
-                            <input name="name"/>
-                            <input name="firstname"/>
-                            <button class="btn btn-success">Next</button>
+                        <form action="/shop/confirm_cart" method="post" enctype="x-www-form-urlencoded">
+                            <div>Please enter your informations</div>
+                            <input name="name" required="True" placeholder="Name..." t-att-value="partner and partner.name or ''"/><br/>
+                            <input name="phone" type="tel" required="True" placeholder="Phone number..." t-att-value="partner and partner.phone or ''"/>
+                            <input name="email" type="email" required="True" placeholder="Email..." t-att-value="partner and partner.email or ''"/>
+                            <div>Please enter your address</div>
+                            <address>
+                                <input name="street" required="True" placeholder="Street..." t-att-value="partner and partner.street or ''"/><br/>
+                                <input name="street2" placeholder="Street..." t-att-value="partner and partner.street2 or ''"/><br/>
+                                <input name="zip" required="True" placeholder="Zip-code..." t-att-value="partner and partner.zip or ''"/>
+                                <input name="city" required="True" placeholder="City..." t-att-value="partner and partner.city or ''"/><br/>
+                                <input name="country_id" required="True" placeholder="Country..." t-att-value="partner and partner.country_id and partner.country_id.name_get()[1] or ''"/>
+                                <input name="state" required="True" placeholder="State..." t-att-value="partner and partner.state_id and partner.state_id.name_get()[1] or ''"/>
+                            </address>
+                            <t t-call="ecommerce.total"/>
                         </form>
                     </t>
                 </t>
