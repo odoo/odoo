@@ -7,11 +7,20 @@ from openerp.addons.web.http import request
 
 def template_values():
     script = "\n".join(['<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', db=request.db)])
+    try:
+        request.session.check_security()
+        loggued = True
+        uid = request.session._uid
+    except http.SessionExpiredException:
+        loggued = True
+        uid = openerp.SUPERUSER_ID
     values = {
+        'loggued': loggued,
+        'editable': loggued,
         'request': request,
         'registry': request.registry,
         'cr': request.cr,
-        'uid': request.session._uid,
+        'uid': uid,
         'script' : script,
     }
     return values
@@ -31,21 +40,13 @@ class Website(openerp.addons.web.controllers.main.Home):
         #def get_html_head():
         #    head += ['<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', db=request.db)]
         #modules = request.registry.get("ir.module.module").search_read(request.cr, openerp.SUPERUSER_ID, fields=['id', 'shortdesc', 'summary', 'icon_image'], limit=50)
-        try:
-            request.session.check_security()
-            editable = True
-            uid = request.session._uid
-        except http.SessionExpiredException:
-            editable = False
-            uid = openerp.SUPERUSER_ID
-        context = {
-            'inherit_branding': editable
-        }
         values = template_values()
+        uid = values['uid']
+        context = {
+            'inherit_branding': values['editable'],
+        }
         company = request.registry['res.company'].browse(request.cr, uid, 1, context=context)
         values.update({
-            'uid': uid,
-            'editable': editable,
             'res_company': company,
         })
         values['google_map_url'] = "http://maps.googleapis.com/maps/api/staticmap?center=%s&sensor=false&zoom=8&size=298x298" \

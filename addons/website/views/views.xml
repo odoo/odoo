@@ -78,12 +78,12 @@
                                             <li><a href="/page/website.contactus">Contact us</a></li>
                                             <li><a href="/page/website.news">News</a></li>
                                             <li><a href="/page/website.contactus">About us</a></li>
-                                            <li>&amp;#x2706; <t t-esc="res_company.phone"/></li>
+                                            <li>&amp;#x2706; <span t-record="res_company" t-field="phone"/></li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
-                            <p class="oe_website_copy text-center">&amp;copy; <t t-esc="res_company.name">Company name</t>.</p>
+                            <p class="oe_website_copy text-center">&amp;copy; <span t-record="res_company" t-field="name">Company name</span>.</p>
                         </footer>
                     </body>
                 </html>
@@ -119,10 +119,10 @@
                             </div>
                             <div class="span4">
                                 <address>
-                                    <strong t-esc="res_company.name">Name</strong><br/>
-                                    <t t-esc="res_company.street"/><br/>
-                                    <t t-esc="res_company.city"/>, <t t-esc="res_company.zip"/><br/>
-                                    <t t-esc="res_company.country_id and res_company.country_id.name_get()[0][1]"/><br/>
+                                    <strong t-record="res_company" t-field="name">Name</strong><br/>
+                                    <span t-record="res_company" t-field="street"/><br/>
+                                    <span t-record="res_company" t-field="city"/>, <span t-record="res_company" t-field="zip"/><br/>
+                                    <span t-record="res_company" t-field="country_id"/><br/>
                                     <br/>
                                     &amp;#x2706; <t t-esc="res_company.phone"/><br/>
                                     <i class="icon-envelope"></i> <t t-esc="res_company.email"/>
