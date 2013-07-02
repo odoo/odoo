@@ -12,8 +12,12 @@ OpenERP Website CMS
     'installable': True,
     'data': [
         'views/views.xml'
+     ],
+    'js': [
+        'static/src/js/website.js',
     ],
-    'js': ['static/src/js/website.js'],
-    'css': ['static/src/css/website.css'],
+    'css': [
+        'static/src/css/*.css',
+    ],
     'qweb': ['static/src/xml/*.xml'],
 }

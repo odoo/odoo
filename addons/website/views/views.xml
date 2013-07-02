@@ -11,7 +11,8 @@
                         <title t-raw="title"><t t-esc="res_company.name"/></title>
                         <link rel="stylesheet" href="/web/webclient/css"/>
                         <link rel='stylesheet' href='https://www.openerp.com/saas_master/static/site_new/fonts/lato/stylesheet.css'/>
-                        <link rel='stylesheet' href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,600,700'/>
+                        <link href='//fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'/>
+                        <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,600,700' rel='stylesheet' type='text/css'/>
                         <t t-raw="script"/>
                         <t t-if="editable">
                             <link href="http://cdn.aloha-editor.org/latest/css/aloha.css" rel="stylesheet" type="text/css" />
@@ -32,7 +33,8 @@
                             <script type="text/javascript" src="/website/static/src/js/website_bootstrap.js"></script>
                         </t>
                     </head>
-                    <body class="oe_website">
+                    <body class="oe_website oe_styling_v8">
+                    
                         <header class="oe_website_header">
                             <div class="container">
                                 <div class="row">
@@ -85,6 +87,123 @@
                             </div>
                             <p class="oe_website_copy text-center">&amp;copy; <span t-record="res_company" t-field="name">Company name</span>.</p>
                         </footer>
+
+<!--
+        <div class='oe_snippet_editor'>
+            <div class='oe_snippet_list'>
+            <div class='oe_snippet' name='Screenshot' selafter='.oe_span6' selinside='.oe_row'>
+                <div class="oe_span6">
+                    <div class="oe_demo oe_picture oe_screenshot">
+                        <a href="#">
+                            <img src="https://www.openerp.com/apps/point_of_sale/pos_sc_02.jpg"/>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class='oe_snippet' name='Introduction' selafter='.oe_container'> 
+                <section class="oe_container">
+                    <div class="oe_row oe_spaced">
+                        <div class="oe_span12">
+                            <h2 class="oe_slogan">A very friendly Point of Sale</h2>
+                            <h3 class="oe_slogan">Set up in a minute, Sell in seconds</h3>
+                        </div>
+                        <div class="oe_span6">
+                            <div class="oe_demo oe_picture oe_screenshot">
+                                <a href="#">
+                                    <img src="https://www.openerp.com/apps/point_of_sale/pos_sc_02.jpg"/>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="oe_span6">
+                            <p class='oe_mt32'>
+                                OpenERP's Point of Sale introduces a super clean interface with no installation required
+                                that runs online and offline on modern hardwares.
+                            </p>
+                            <p>
+                                It's full integration with the company inventory and accounting, gives you real time statistics and
+                                consolidations amongst all shops without the hassle of integrating several applications.
+                            </p>
+                            <div class="oe_centeralign oe_websiteonly">
+                                <a href="http://www.openerp.com/start" class="oe_button oe_big oe_tacky">Start your <span class="oe_emph">free</span> trial</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class='oe_snippet' name='Call To Action' selafter='p,h1,h2,h3,h4,h5,ul,ol' selinside='.oe_span6'>
+                    <div class="oe_centeralign oe_websiteonly">
+                        <a href="http://www.openerp.com/start" class="oe_button oe_big oe_tacky">Start your <span class="oe_emph">free</span> trial</a>
+                    </div>
+            </div>
+            <div class='oe_snippet' name='Alternate Paragraph' selafter='.oe_container'> 
+                <section class="oe_container oe_dark">
+                    <div class="oe_row oe_spaced">
+                        <div class="oe_span12">
+                            <h2 class="oe_slogan">A very friendly Point of Sale</h2>
+                            <h3 class="oe_slogan">Set up in a minute, Sell in seconds</h3>
+                        </div>
+                        <div class="oe_span6">
+                            <p class='oe_mt32'>
+                                OpenERP's Point of Sale introduces a super clean interface with no installation required
+                                that runs online and offline on modern hardwares.
+                            </p>
+                            <p>
+                                It's full integration with the company inventory and accounting, gives you real time statistics and
+                                consolidations amongst all shops without the hassle of integrating several applications.
+                            </p>
+                            <div class="oe_centeralign oe_websiteonly">
+                                <a href="http://www.openerp.com/start" class="oe_button oe_big oe_tacky">Start your <span class="oe_emph">free</span> trial</a>
+                            </div>
+                        </div>
+                        <div class="oe_span6">
+                            <div class="oe_demo oe_picture oe_screenshot">
+                                <a href="#">
+                                    <img src="https://www.openerp.com/apps/point_of_sale/pos_sc_02.jpg"/>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class='oe_snippet oe_new' name='New Snippet'> 
+            </div>
+        </div>
+        </div>
+        <div class='oe_page' contenteditable="true">
+            <section class="oe_container">
+                <div class="oe_row oe_spaced">
+                    <div class="oe_span12">
+                        <h2 class="oe_slogan">A very friendly Point of Sale</h2>
+                        <h3 class="oe_slogan">Set up in a minute, Sell in seconds</h3>
+                    </div>
+                    <div class="oe_span6">
+                        <div class="oe_demo oe_picture oe_screenshot">
+                            <a href="#">
+                                <img src="https://www.openerp.com/apps/point_of_sale/pos_sc_02.jpg"/>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="oe_span6">
+                        <p class='oe_mt32'>
+                            OpenERP's Point of Sale introduces a super clean interface with no installation required
+                            that runs online and offline on modern hardwares.
+                        </p>
+                        <p>
+                            It's full integration with the company inventory and accounting, gives you real time statistics and
+                            consolidations amongst all shops without the hassle of integrating several applications.
+                        </p>
+                        <div class="oe_centeralign oe_websiteonly">
+                            <a href="http://www.openerp.com/start" class="oe_button oe_big oe_tacky">Start your <span class="oe_emph">free</span> trial</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        -->
+
+
+
+
                     </body>
                 </html>
             </field>
@@ -134,33 +253,6 @@
                 </t>
             </field>
         </record>
-
-<!--
-# WIIIP !!
-module_template = Template("""
-    {%- for module in modules %}
-        <a href='#' title='{{ module.shortdesc }}' class='oe_app ab_app_descr'>
-            <div class='ab_app_descr'>
-                <div class='oe_app_icon'>
-                    <img src="data:image/png;base64,{{ module.icon_image }}" onerror="this.src = '/base/static/src/img/icon.png'">
-                </div>
-            </div>
-            <div
-                class='oe_app_name oe_editable'
-                data-model='ir.module.module'
-                data-id='{{ module.id }}'
-                data-field='shortdesc'
-            >{{ module.shortdesc }}</div>
-            <div
-                class='oe_app_descr oe_editable'
-                data-model='ir.module.module'
-                data-id='{{ module.id }}'
-                data-field='summary'
-            >{{ module.summary }}</div>
-        </a>
-    {%- endfor %}
-""")
--->
 
      </data>
 </openerp>
