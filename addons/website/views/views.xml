@@ -23,7 +23,10 @@
                             </script>
                             <script type="text/javascript" src="http://cdn.aloha-editor.org/latest/lib/require.js"></script>
                             <script type="text/javascript" src="http://cdn.aloha-editor.org/latest/lib/vendor/jquery-1.7.2.js"></script>
+                            <!--
                             <script src="http://cdn.aloha-editor.org/latest/lib/aloha.js" data-aloha-plugins="common/ui, common/format, common/list, common/link, common/highlighteditables"></script>
+                            -->
+                            <script src="http://cdn.aloha-editor.org/latest/lib/aloha.js" data-aloha-plugins="common/ui, common/format, common/list, common/link"></script>
                             <script>
                                 Aloha.ready(function() {
                                     window.$ = openerp.$;
@@ -90,6 +93,7 @@
 
                         <div class='oe_snippet_editor' style="display: none;">
                             <div class='oe_snippet_list'>
+
                             <div class='oe_snippet' name='Screenshot' selafter='.oe_span6' selinside='.oe_row'>
                                 <div class="oe_span6">
                                     <div class="oe_demo oe_picture oe_screenshot">
@@ -99,7 +103,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class='oe_snippet' name='Introduction' selafter='.oe_container'> 
+                            <div class='oe_snippet' name='Introduction' data-selector=".oe_container"> 
                                 <section class="oe_container">
                                     <div class="oe_row oe_spaced">
                                         <div class="oe_span12">

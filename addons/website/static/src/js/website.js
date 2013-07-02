@@ -6,12 +6,14 @@ instance.website.EditorBar = instance.web.Widget.extend({
         'click button[data-action=edit]': 'edit',
         'click button[data-action=save]': 'save',
         'click button[data-action=cancel]': 'cancel',
+        'click button[data-action=snippet]': 'snippet',
     },
     container: 'body',
     start: function() {
         var self = this;
         self.$('button[data-action]').prop('disabled', true);
-        self.$('button[data-action=edit]').prop('disabled', false);
+        self.$('button[data-action=edit],button[data-action=snippet]').prop('disabled', false);
+        self.snippet_start();
         return this._super.apply(this, arguments);
     },
     edit: function () {
@@ -19,7 +21,7 @@ instance.website.EditorBar = instance.web.Widget.extend({
         Aloha.ready(function() {
             Aloha.jQuery('[data-oe-model]').aloha(); //.attr('contentEditable', 'true').addClass('oe_editable');
             self.$('button').prop('disabled', true);
-            self.$('button[data-action=save],button[data-action=cancel]').prop('disabled', false);
+            self.$('button[data-action=save],button[data-action=cancel],button[data-action=snippet]').prop('disabled', false);
             Aloha.bind('aloha-editable-activated', function (ev, args) {
                 var $e = args.editable.obj;
                 if (!$e.is('.oe_dirty')) {
@@ -61,10 +63,32 @@ instance.website.EditorBar = instance.web.Widget.extend({
     },
     cancel: function () {
         window.location.reload();
-    }
+    },
+    snippet_start: function () {
+        var self = this;
+        $('.oe_snippet').click(function(ev) {
+            $('.oe_selected').removeClass('oe_selected');
+            $snippet = $(ev.currentTarget);
+            $snippet.addClass('oe_selected');
+            $snippet.draggable();
+            debugger;
+        });
+
+    },
+    snippet: function (ev) {
+        console.log(ev);
+        $('.oe_snippet_editor').show();
+    },
 });
 
 $(function(){
+
+    function make_static(){
+        $('.oe_snippet_demo').removeClass('oe_new');
+        $('.oe_page *').off('mouseover');
+        $('.oe_page *').off('mouseleave');
+        $('.oe_page .oe_selected').removeClass('oe_selected');
+    }
 
     var selected_snippet = null;
     function snippet_click(event){
@@ -114,12 +138,6 @@ $(function(){
         });
     }
 
-    function make_static(){
-        $('.oe_snippet_demo').removeClass('oe_new');
-        $('.oe_page *').off('mouseover');
-        $('.oe_page *').off('mouseleave');
-        $('.oe_page .oe_selected').removeClass('oe_selected');
-    }
         
 
     function append_snippet(event){
