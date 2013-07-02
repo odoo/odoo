@@ -267,8 +267,11 @@ class mrp_bom(osv.osv):
         @return:  Dictionary of changed values
         """
         if product_id:
+            uos_coeff = False 
             prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            return {'value': {'name': prod.name, 'product_uom': prod.uom_id.id, 'product_uos_qty': prod.uos_coeff, 'product_uos': prod.uos_id.id}}
+            if prod.uos_id.id:
+                uos_coeff = prod.uos_coeff
+            return {'value': {'name': prod.name, 'product_uom': prod.uom_id.id, 'product_uos_qty': uos_coeff, 'product_uos': prod.uos_id.id}}
         return {}
 
     def onchange_uom(self, cr, uid, ids, product_id, product_uom, context=None):
@@ -564,12 +567,16 @@ class mrp_production(osv.osv):
             routing_id = bom_point.routing_id.id or False
 
         product_uom_id = product.uom_id and product.uom_id.id or False
+        uos_coeff = False
+        product_uos_id = product.uos_id and product.uos_id.id or False
+        if product_uos_id:
+            uos_coeff = product.uos_coeff
         result = {
             'product_uom': product_uom_id,
             'bom_id': bom_id,
             'routing_id': routing_id,
-            'product_uos_qty': product.uos_coeff, 
-            'product_uos': product.uos_id.id
+            'product_uos_qty': uos_coeff, 
+            'product_uos': product_uos_id
         }
         return {'value': result}
 
