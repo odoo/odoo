@@ -6,7 +6,7 @@
             <field name="type">qweb</field>
             <field name="inherit_id" ref="website.contactus"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@class='span8']" position="inside">
+                <xpath expr="//div[@name='mail_button']" position="replace">
                     <form action="/crm/contactus" method="post" class="navbar-form pull-left">
                         <input class="span4" type="text" name="contact_name" required="True" placeholder="Name..."/><br/>
                         <input class="span4" type="text" name="phone" required="True" placeholder="Phone number..."/><br/>

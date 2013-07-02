@@ -256,14 +256,14 @@
                     <div class="container">
                         <div class="row">
                             <div class="span12">
-                                <h1>404: Page not found!</h1>
-                                <p>
+                                <h1 class="oe_slogan">404: Page not found!</h1>
+                                <p class="oe_grey">
                                     The page you were looking for could not be
                                     found; it is possible you have typed the
                                     address incorrectly, but it has most
                                     probably been removed due to the recent
                                     website reorganisation.
-                                </p><p>
+                                </p><p class="oe_grey">
                                     Maybe you were looking for one of these
                                     popular pages ?
                                 </p>
@@ -290,10 +290,19 @@
                 <t t-call="website.layout">
                     <t t-set="title">Contact us - <t t-esc="res_company.name"/></t>
                     <div class="container">
+                        <div class="oe_row">
+                            <h2 class="oe_slogan">Contact us</h2>
+                        </div>
                         <div class="row">
                             <div class="span8">
-                                <h1>Contact us</h1>
-                                Description of your company.
+                                <p>
+                                    Contact us about anything related to our company or services.
+                                </p><p>
+                                    We'll do our best to get back to you as soon as possible.
+                                </p>
+                                <div class="oe_centeralign oe_mt32" name="mail_button">
+                                    <a t-att-href="'mailto:'+res_company.email" class="oe_button oe_big oe_tacky">Send us an email</a>
+                                </div>
                             </div>
                             <div class="span4">
                                 <address>
@@ -305,7 +314,7 @@
                                     &amp;#x2706; <t t-esc="res_company.phone"/><br/>
                                     <i class="icon-envelope"></i> <t t-esc="res_company.email"/>
                                 </address>
-                                <img t-att-src="google_map_url"/>
+                                <img class="oe_screenshot" t-att-src="google_map_url"/>
                             </div>
                         </div>
                     </div>
