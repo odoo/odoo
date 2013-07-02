@@ -4,6 +4,17 @@ from openerp.addons.web import http
 from openerp.addons.web.controllers.main import manifest_list
 from openerp.addons.web.http import request
 
+def template_values():
+    script = "\n".join(['<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', db=request.db)])
+    values = {
+        'request': request,
+        'registry': request.registry,
+        'cr': request.cr,
+        'uid': request.session._uid,
+        'script' : script,
+    }
+    return values
+
 class Website(openerp.addons.web.controllers.main.Home):
 
     @http.route('/', type='http', auth="db")
@@ -29,16 +40,12 @@ class Website(openerp.addons.web.controllers.main.Home):
         context = {
             'inherit_branding': editable
         }
-        script = "\n".join(['<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', db=request.db)])
-        values = {
-            'script' : script,
-            'editable': editable,
-            'request': request,
-            'registry': request.registry,
-            'cr': request.cr,
+        values = template_values()
+        values.update({
             'uid': uid,
+            'editable': editable,
             'res_company': request.registry['res.company'].browse(request.cr, uid, 1, context=context),
-        }
+        })
         html = request.registry.get("ir.ui.view").render(request.cr, uid, path, values, context)
         return html
 
