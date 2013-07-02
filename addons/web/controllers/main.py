@@ -89,19 +89,7 @@ def rjsmin(script):
 db_list = http.db_list
 
 def db_monodb_redirect():
-    db = db_monodb()
-
-    if request.params.get('db'):
-        return (db, False)
-
-    dbs = db_list(True)
-    # redirect to the chosen db if multiple are available
-    redirect = False
-    if db and len(dbs) > 1:
-        query = dict(urlparse.parse_qsl(request.httprequest.query_string, keep_blank_values=True))
-        query.update({ 'db': db })
-        redirect = request.httprequest.path + '?' + urllib.urlencode(query)
-    return (db, redirect)
+    return http.db_redirect(not config['list_db'])
 
 db_monodb = http.db_monodb
 
@@ -737,7 +725,7 @@ class Database(http.Controller):
         try:
             return db_list()
         except openerp.exceptions.AccessDenied:
-            monodb = db_monodb(req)
+            monodb = db_monodb()
             if monodb:
                 return [monodb]
             raise

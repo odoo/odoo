@@ -31,6 +31,7 @@ import werkzeug.utils
 import werkzeug.wrappers
 import werkzeug.wsgi
 import werkzeug.routing as routing
+import urllib
 import urllib2
 
 import openerp
@@ -1114,26 +1115,37 @@ def db_list(force=False):
     dbs = [i for i in dbs if re.match(r, i)]
     return dbs
 
-def db_monodb():
-    db = None
+def db_redirect(match_first_only_if_unique):
+    req = request
+    db = False
+    redirect = False
 
     # 1 try the db in the url
-    db_url = request.params.get('db')
+    db_url = req.params.get('db')
     if db_url:
-        return db_url
+        return (db_url, False)
 
-    dbs = db_list(True)    
+    dbs = db_list(True)
 
     # 2 use the database from the cookie if it's listable and still listed
-    cookie_db = request.httprequest.cookies.get('last_used_database')
+    cookie_db = req.httprequest.cookies.get('last_used_database')
     if cookie_db in dbs:
         db = cookie_db
 
     # 3 use the first db if user can list databases
-    if dbs and not db and (config['list_db'] or len(dbs) == 1):
+    if dbs and not db and (not match_first_only_if_unique or len(dbs) == 1):
         db = dbs[0]
 
-    return db
+    # redirect to the chosen db if multiple are available
+    if db and len(dbs) > 1:
+        query = dict(urlparse.parse_qsl(req.httprequest.query_string, keep_blank_values=True))
+        query.update({'db': db})
+        redirect = req.httprequest.path + '?' + urllib.urlencode(query)
+    return (db, redirect)
+
+def db_monodb():
+    # if only one db exists, return it else return False
+    return db_redirect(True)[0]
 
 
 class JsonRpcController(Controller):
