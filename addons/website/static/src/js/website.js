@@ -47,7 +47,15 @@ instance.website.EditorBar = instance.web.Widget.extend({
     },
     saveElement: function ($el) {
         var data = $el.data();
-        return (new instance.web.DataSet(this, 'ir.ui.view')).call('save', [data.oeModel, data.oeId, data.oeField, $el.html(), data.oeXpath]);
+        var html = $el.html();
+        var xpath = data.oeXpath;
+        if (xpath) {
+            var $w = $el.clone();
+            $w.removeClass('aloha-editable aloha-editable-highlight oe_dirty');
+            _.each(['model', 'id', 'field', 'xpath'], function(d) {$w.removeAttr('data-oe-' + d);});
+            html = $w.wrap('<div>').parent().html();
+        }
+        return (new instance.web.DataSet(this, 'ir.ui.view')).call('save', [data.oeModel, data.oeId, data.oeField, html, xpath]);
     },
     cancel: function () {
         $('.oe_dirty').each(function () {
