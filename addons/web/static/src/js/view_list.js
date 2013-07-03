@@ -1280,7 +1280,8 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
         }
     },
     close: function () {
-        this.$row.children().last().empty();
+        this.$row.children().last().find('button').remove();
+        this.$row.children().last().find('span').remove();
         this.records.reset();
     },
     /**
