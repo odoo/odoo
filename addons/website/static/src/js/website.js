@@ -11,6 +11,7 @@ instance.website.EditorBar = instance.web.Widget.extend({
     container: 'body',
     start: function() {
         var self = this;
+        this.saving_mutex = new $.Mutex();
         self.$('button[data-action]').prop('disabled', true);
         self.$('button[data-action=edit],button[data-action=snippet]').prop('disabled', false);
         self.snippet_start();
@@ -33,16 +34,13 @@ instance.website.EditorBar = instance.web.Widget.extend({
         });
     },
     save: function () {
-        var sleep = function (timeout) {
-              deferred = new $.Deferred();
-              setTimeout(deferred.resolve, timeout);
-              return deferred.promise();
-        }
         var self = this;
         var defs = [];
         $('.oe_dirty').each(function (i, v) {
             var $el = $(this);
-            var def = sleep(i*100).then(function () {
+            // TODO: Add a queue with concurrency limit in webclient
+            // https://github.com/medikoo/deferred/blob/master/lib/ext/function/gate.js
+            var def = self.saving_mutex.exec(function () {
                 return self.saveElement($el).then(function () {
                     $el.removeClass('oe_dirty');
                 }).fail(function () {
@@ -50,7 +48,6 @@ instance.website.EditorBar = instance.web.Widget.extend({
                     console.error(_.str.sprintf('Could not save %s#%d#%s', data.oeModel, data.oeId, data.oeField));
                 });
             });
-
             defs.push(def);
         });
         return $.when.apply(null, defs).then(function () {
