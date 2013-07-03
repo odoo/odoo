@@ -25,11 +25,9 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
     _columns = {
         'property_delivery_carrier': fields.property(
-          'delivery.carrier',
           type='many2one',
           relation='delivery.carrier',
           string="Delivery Method",
-          view_load=True,
           help="This delivery method will be used when invoicing from picking."),
     }
 

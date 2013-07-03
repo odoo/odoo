@@ -94,11 +94,11 @@ class hr_applicant(base_stage, osv.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _track = {
         'state': {
-            'hr_recruitment.mt_applicant_hired': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
-            'hr_recruitment.mt_applicant_refused': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'cancel',
+            'hr_recruitment.mt_applicant_hired': lambda self, cr, uid, obj, ctx=None: obj.state == 'done',
+            'hr_recruitment.mt_applicant_refused': lambda self, cr, uid, obj, ctx=None: obj.state == 'cancel',
         },
         'stage_id': {
-            'hr_recruitment.mt_stage_changed': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['done', 'cancel'],
+            'hr_recruitment.mt_stage_changed': lambda self, cr, uid, obj, ctx=None: obj.state not in ['done', 'cancel'],
         },
     }
 
@@ -240,7 +240,7 @@ class hr_applicant(base_stage, osv.Model):
 
     _defaults = {
         'active': lambda *a: 1,
-        'user_id':  lambda s, cr, uid, c: uid,
+        'user_id': lambda s, cr, uid, c: uid,
         'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c),
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
         'department_id': lambda s, cr, uid, c: s._get_default_department_id(cr, uid, c),
@@ -253,13 +253,11 @@ class hr_applicant(base_stage, osv.Model):
     }
 
     def onchange_job(self, cr, uid, ids, job, context=None):
-        result = {}
-
         if job:
-            job_obj = self.pool.get('hr.job')
-            result['department_id'] = job_obj.browse(cr, uid, job, context=context).department_id.id
-            return {'value': result}
-        return {'value': {'department_id': False}}
+            job_record = self.pool.get('hr.job').browse(cr, uid, job, context=context)
+            if job_record and job_record.department_id:
+                return {'value': {'department_id': job_record.department_id.id}}
+        return {}
 
     def onchange_department_id(self, cr, uid, ids, department_id=False, context=None):
         obj_recru_stage = self.pool.get('hr.recruitment.stage')
@@ -403,6 +401,11 @@ class hr_applicant(base_stage, osv.Model):
         return super(hr_applicant, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
     def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        if vals.get('department_id') and not context.get('default_department_id'):
+            context['default_department_id'] = vals.get('department_id')
+
         obj_id = super(hr_applicant, self).create(cr, uid, vals, context=context)
         applicant = self.browse(cr, uid, obj_id, context=context)
         if applicant.job_id:
@@ -506,33 +509,18 @@ class hr_job(osv.osv):
                                     help="Email alias for this job position. New emails will automatically "
                                          "create new applicants for this job position."),
     }
-    _defaults = {
-        'alias_domain': False, # always hide alias during creation
-    }
 
     def _auto_init(self, cr, context=None):
         """Installation hook to create aliases for all jobs and avoid constraint errors."""
-        if context is None:
-            context = {}
-        alias_context = dict(context, alias_model_name='hr.applicant')
-        res = self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(hr_job, self)._auto_init,
-            self._columns['alias_id'], 'name', alias_prefix='job+', alias_defaults={'job_id': 'id'}, context=alias_context)
-        return res
+        return self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(hr_job, self)._auto_init,
+            'hr.applicant', self._columns['alias_id'], 'name', alias_prefix='job+', alias_defaults={'job_id': 'id'}, context=context)
 
     def create(self, cr, uid, vals, context=None):
-        mail_alias = self.pool.get('mail.alias')
-        if not vals.get('alias_id'):
-            vals.pop('alias_name', None) # prevent errors during copy()
-            alias_id = mail_alias.create_unique_alias(cr, uid,
-                          # Using '+' allows using subaddressing for those who don't
-                          # have a catchall domain setup.
-                          {'alias_name': 'jobs+'+vals['name']},
-                          model_name="hr.applicant",
-                          context=context)
-            vals['alias_id'] = alias_id
-        res = super(hr_job, self).create(cr, uid, vals, context)
-        mail_alias.write(cr, uid, [vals['alias_id']], {"alias_defaults": {'job_id': res}}, context)
-        return res
+        alias_context = dict(context, alias_model_name='hr.applicant', alias_parent_model_name=self._name)
+        job_id = super(hr_job, self).create(cr, uid, vals, context=alias_context)
+        job = self.browse(cr, uid, job_id, context=context)
+        self.pool.get('mail.alias').write(cr, uid, [job.alias_id.id], {'alias_parent_thread_id': job_id, "alias_defaults": {'job_id': job_id}}, context)
+        return job_id
 
     def unlink(self, cr, uid, ids, context=None):
         # Cascade-delete mail aliases as well, as they should not exist without the job position.
@@ -550,14 +538,15 @@ class hr_job(osv.osv):
         if record.survey_id:
             datas['ids'] = [record.survey_id.id]
         datas['model'] = 'survey.print'
-        context.update({'response_id': [0], 'response_no': 0,})
+        context.update({'response_id': [0], 'response_no': 0})
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'survey.form',
             'datas': datas,
-            'context' : context,
-            'nodestroy':True,
+            'context': context,
+            'nodestroy': True,
         }
+
 
 class applicant_category(osv.osv):
     """ Category of applicant """

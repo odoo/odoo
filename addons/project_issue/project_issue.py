@@ -50,29 +50,36 @@ class project_issue(base_stage, osv.osv):
 
     _track = {
         'state': {
-            'project_issue.mt_issue_new': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['new', 'draft'],
-            'project_issue.mt_issue_closed': lambda self, cr, uid, obj, ctx=None:  obj['state'] == 'done',
-            'project_issue.mt_issue_started': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'open',
+            'project_issue.mt_issue_new': lambda self, cr, uid, obj, ctx=None: obj.state in ['new', 'draft'],
+            'project_issue.mt_issue_closed': lambda self, cr, uid, obj, ctx=None:  obj.state == 'done',
+            'project_issue.mt_issue_started': lambda self, cr, uid, obj, ctx=None: obj.state == 'open',
         },
         'stage_id': {
-            'project_issue.mt_issue_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['new', 'draft', 'done', 'open'],
+            'project_issue.mt_issue_stage': lambda self, cr, uid, obj, ctx=None: obj.state not in ['new', 'draft', 'done', 'open'],
         },
         'kanban_state': {
-            'project_issue.mt_issue_blocked': lambda self, cr, uid, obj, ctx=None: obj['kanban_state'] == 'blocked',
+            'project_issue.mt_issue_blocked': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'blocked',
         },
     }
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
-        if not vals.get('stage_id'):
-            ctx = context.copy()
-            if vals.get('project_id'):
-                ctx['default_project_id'] = vals['project_id']
-            vals['stage_id'] = self._get_default_stage_id(cr, uid, context=ctx)
+        if vals.get('project_id') and not context.get('default_project_id'):
+            context['default_project_id'] = vals.get('project_id')
+
         # context: no_log, because subtype already handle this
         create_context = dict(context, mail_create_nolog=True)
         return super(project_issue, self).create(cr, uid, vals, context=create_context)
+
+    def _get_default_partner(self, cr, uid, context=None):
+        """ Override of base_stage to add project specific behavior """
+        project_id = self._get_default_project_id(cr, uid, context)
+        if project_id:
+            project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
+            if project and project.partner_id:
+                return project.partner_id.id
+        return super(project_issue, self)._get_default_partner(cr, uid, context=context)
 
     def _get_default_project_id(self, cr, uid, context=None):
         """ Gives default project by checking if present in the context """
@@ -215,6 +222,10 @@ class project_issue(base_stage, osv.osv):
         return res
 
     def on_change_project(self, cr, uid, ids, project_id, context=None):
+        if project_id:
+            project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
+            if project and project.partner_id:
+                return {'value': {'partner_id': project.partner_id.id}}
         return {}
 
     def _get_issue_task(self, cr, uid, ids, context=None):
@@ -309,6 +320,7 @@ class project_issue(base_stage, osv.osv):
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': crm.AVAILABLE_PRIORITIES[2][0],
         'kanban_state': 'normal',
+        'user_id': lambda obj, cr, uid, context: uid,
     }
 
     _group_by_full = {
@@ -578,7 +590,7 @@ class project_issue(base_stage, osv.osv):
         if context is None:
             context = {}
         res = super(project_issue, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, content_subtype=content_subtype, **kwargs)
-        if thread_id:
+        if thread_id and subtype:
             self.write(cr, SUPERUSER_ID, thread_id, {'date_action_last': time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
         return res
 
@@ -652,6 +664,14 @@ class project_project(osv.Model):
             vals['alias_model'] = 'project.task'
         elif vals.get('use_issues') and not vals.get('use_tasks'):
             vals['alias_model'] = 'project.issue'
+
+    def on_change_use_tasks_or_issues(self, cr, uid, ids, use_tasks, use_issues, context=None):
+        values = {}
+        if use_tasks and not use_issues:
+            values['alias_model'] = 'project.task'
+        elif not use_tasks and use_issues:
+            values['alias_model'] = 'project.issues'
+        return {'value': values}
 
     def create(self, cr, uid, vals, context=None):
         self._check_create_write_values(cr, uid, vals, context=context)

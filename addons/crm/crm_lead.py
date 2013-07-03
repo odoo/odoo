@@ -77,12 +77,12 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     _track = {
         'state': {
-            'crm.mt_lead_create': lambda self, cr, uid, obj, ctx=None: obj['state'] in ['new', 'draft'],
-            'crm.mt_lead_won': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'done',
-            'crm.mt_lead_lost': lambda self, cr, uid, obj, ctx=None: obj['state'] == 'cancel',
+            'crm.mt_lead_create': lambda self, cr, uid, obj, ctx=None: obj.state in ['new', 'draft'],
+            'crm.mt_lead_won': lambda self, cr, uid, obj, ctx=None: obj.state == 'done',
+            'crm.mt_lead_lost': lambda self, cr, uid, obj, ctx=None: obj.state == 'cancel',
         },
         'stage_id': {
-            'crm.mt_lead_stage': lambda self, cr, uid, obj, ctx=None: obj['state'] not in ['new', 'draft', 'cancel', 'done'],
+            'crm.mt_lead_stage': lambda self, cr, uid, obj, ctx=None: obj.state not in ['new', 'draft', 'cancel', 'done'],
         },
     }
 
@@ -96,13 +96,11 @@ class crm_lead(base_stage, format_address, osv.osv):
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
-        if not vals.get('stage_id'):
-            ctx = context.copy()
-            if vals.get('section_id'):
-                ctx['default_section_id'] = vals['section_id']
-            if vals.get('type'):
-                ctx['default_type'] = vals['type']
-            vals['stage_id'] = self._get_default_stage_id(cr, uid, context=ctx)
+        if vals.get('type') and not context.get('default_type'):
+            context['default_type'] = vals.get('type')
+        if vals.get('section_id') and not context.get('default_section_id'):
+            context['default_section_id'] = vals.get('section_id')
+
         # context: no_log, because subtype already handle this
         create_context = dict(context, mail_create_nolog=True)
         return super(crm_lead, self).create(cr, uid, vals, context=create_context)
@@ -719,7 +717,6 @@ class crm_lead(base_stage, format_address, osv.osv):
                 continue
             vals = self._convert_opportunity_data(cr, uid, lead, customer, section_id, context=context)
             self.write(cr, uid, [lead.id], vals, context=context)
-        self.message_post(cr, uid, ids, body=_("Lead <b>converted into an Opportunity</b>"), subtype="crm.mt_lead_convert_to_opportunity", context=context)
 
         if user_ids or section_id:
             self.allocate_salesman(cr, uid, ids, user_ids, section_id, context=context)
