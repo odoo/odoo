@@ -98,10 +98,10 @@ class gamification_badge(osv.Model):
         result = dict.fromkeys(ids, False)
         for badge in self.browse(cr, uid, ids, context=context):
             if self._can_grant_badge(cr, uid, uid, badge.id, context) != 1:
-                #if the user cannot grant this badge at all, result is 0
+                # if the user cannot grant this badge at all, result is 0
                 result[badge.id] = 0
             elif not badge.rule_max:
-                #if there is no limitation, -1 is returned which mean 'infinite'
+                # if there is no limitation, -1 is returned which means 'infinite'
                 result[badge.id] = -1
             else:
                 result[badge.id] = badge.rule_max_number - badge.stat_my_monthly_sending
