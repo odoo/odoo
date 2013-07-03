@@ -405,15 +405,12 @@ property or property parameter."),
         res = cal.serialize()
         return res
 
-    def meeting_invitation(self, cr, uid, ids,context=None):
-        partner_obj =  self.browse(cr,uid, ids,context=context)
-        action_id=self.pool.get('ir.actions.act_window').search(cr, uid, [('res_model','=','crm.meeting')], context=context)
+    def meeting_invitation(self, cr, uid, ids, context=None):
+        attende_obj = self.browse(cr, uid, ids, context=context)
+        action_id = self.pool.get('ir.actions.act_window').search(cr, uid, [('res_model','=','crm.meeting')], context=context)
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
-        for partner in partner_obj:
-            if partner and partner.ref.user_id:
-                base_url += '/meeting/meeting_invitation?db=%s&debug=&token=%s&action=%s' % (cr.dbname, ids[0],action_id[0]);
-            else :
-                base_url += "/auth_signup"
+        for attende in attende_obj:
+            base_url += '/meeting/meeting_invitation?db=%s&debug=&token=%s&action=%s' % (cr.dbname, ids[0],action_id[0]);
         return base_url
 
     def _send_mail(self, cr, uid, ids, mail_to, email_from=tools.config.get('email_from', False), context=None):
