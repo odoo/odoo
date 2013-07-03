@@ -24,4 +24,5 @@ class contactus(http.Controller):
         html = request.registry.get("ir.ui.view").render(cr, uid, "website_crm.thanks", values)
         return html
 
+
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

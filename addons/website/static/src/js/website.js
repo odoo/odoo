@@ -33,16 +33,24 @@ instance.website.EditorBar = instance.web.Widget.extend({
         });
     },
     save: function () {
+        var sleep = function (timeout) {
+              deferred = new $.Deferred();
+              setTimeout(deferred.resolve, timeout);
+              return deferred.promise();
+        }
         var self = this;
         var defs = [];
-        $('.oe_dirty').each(function () {
+        $('.oe_dirty').each(function (i, v) {
             var $el = $(this);
-            var def = self.saveElement($el).then(function () {
-                $el.removeClass('oe_dirty');
-            }).fail(function () {
-                var data = $el.data();
-                console.error(_.str.sprintf('Could not save %s#%d#%s', data.oeModel, data.oeId, data.oeField));
+            var def = sleep(i*100).then(function () {
+                return self.saveElement($el).then(function () {
+                    $el.removeClass('oe_dirty');
+                }).fail(function () {
+                    var data = $el.data();
+                    console.error(_.str.sprintf('Could not save %s#%d#%s', data.oeModel, data.oeId, data.oeField));
+                });
             });
+
             defs.push(def);
         });
         return $.when.apply(null, defs).then(function () {
@@ -57,6 +65,7 @@ instance.website.EditorBar = instance.web.Widget.extend({
             var $w = $el.clone();
             $w.removeClass('aloha-editable aloha-editable-highlight oe_dirty');
             _.each(['model', 'id', 'field', 'xpath'], function(d) {$w.removeAttr('data-oe-' + d);});
+            _.each(['contenteditable'], function(d) {$w.removeAttr(d);});
             html = $w.wrap('<div>').parent().html();
         }
         return (new instance.web.DataSet(this, 'ir.ui.view')).call('save', [data.oeModel, data.oeId, data.oeField, html, xpath]);
