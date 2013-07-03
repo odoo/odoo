@@ -240,7 +240,7 @@ class hr_applicant(base_stage, osv.Model):
 
     _defaults = {
         'active': lambda *a: 1,
-        'user_id':  lambda s, cr, uid, c: uid,
+        'user_id': lambda s, cr, uid, c: uid,
         'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c),
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
         'department_id': lambda s, cr, uid, c: s._get_default_department_id(cr, uid, c),
@@ -253,13 +253,11 @@ class hr_applicant(base_stage, osv.Model):
     }
 
     def onchange_job(self, cr, uid, ids, job, context=None):
-        result = {}
-
         if job:
-            job_obj = self.pool.get('hr.job')
-            result['department_id'] = job_obj.browse(cr, uid, job, context=context).department_id.id
-            return {'value': result}
-        return {'value': {'department_id': False}}
+            job_record = self.pool.get('hr.job').browse(cr, uid, job, context=context)
+            if job_record and job_record.department_id:
+                return {'value': {'department_id': job_record.department_id.id}}
+        return {}
 
     def onchange_department_id(self, cr, uid, ids, department_id=False, context=None):
         obj_recru_stage = self.pool.get('hr.recruitment.stage')
@@ -403,6 +401,11 @@ class hr_applicant(base_stage, osv.Model):
         return super(hr_applicant, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
     def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        if vals.get('department_id') and not context.get('default_department_id'):
+            context['default_department_id'] = vals.get('department_id')
+
         obj_id = super(hr_applicant, self).create(cr, uid, vals, context=context)
         applicant = self.browse(cr, uid, obj_id, context=context)
         if applicant.job_id:
