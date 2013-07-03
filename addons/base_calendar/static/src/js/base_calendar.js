@@ -4,12 +4,13 @@ instance.base_calendar = {}
 
     instance.base_calendar.DoAccept = instance.web.Widget.extend({
 
-        init: function(parent,db,token,action,status) {
+        init: function(parent,db,token,action,view_type,status) {
             this._super();
             this.db = db;
             this.token = token;
             this.status = status;
             this.action = action;
+            this.view_type = view_type;
             this.ds_attendee = new instance.web.DataSetSearch(this, 'calendar.attendee');
         },
         start: function() {
@@ -48,7 +49,7 @@ instance.base_calendar = {}
             var self = this;
             if(self.status === 'accepted'){att_status = "do_accept";}
             return this.ds_attendee.call(att_status,[[parseInt(this.token)]]).done(function(res){
-                location.replace(_.str.sprintf('/?db=%s&debug=#view_type=calendar&model=crm.meeting&action=%s',self.db,self.action));
+                location.replace(_.str.sprintf('/?db=%s&debug=#view_type=%s&model=crm.meeting&action=%s&active_id=%s',self.db,self.view_type,self.action,self.token));
             });
         },
     });
@@ -60,9 +61,9 @@ instance.base_calendar = {}
             });
         }
     });
-    instance.base_calendar.do_accept = function (db, token, action, status) {
+    instance.base_calendar.do_accept = function (db, token, action, view_type, status) {
         instance.session.session_bind(instance.session.origin).done(function () {
-            new instance.base_calendar.DoAccept(null,db,token,action,status).appendTo($("body").addClass('openerp'));
+            new instance.base_calendar.DoAccept(null,db,token,action,view_type,status).appendTo($("body").addClass('openerp'));
         });
     }
 };
