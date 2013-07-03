@@ -527,7 +527,7 @@ property or property parameter."),
                 mod_obj = self.pool[vals.ref._name]
                 res=mod_obj.read(cr,uid,[vals.ref.id],['duration','class'],context)
                 defaults = {'user_id': vals.user_id.id, 'organizer_id': vals.ref.user_id.id,'duration':res[0]['duration'],'class':res[0]['class']}
-#                mod_obj.copy(cr, uid, vals.ref.id, default=defaults, context=context)
+                mod_obj.copy(cr, uid, vals.ref.id, default=defaults, context=context)
             meeting_id = meeting_obj.search(cr, uid, [('attendee_ids','=',vals.id)],context = context)
             meeting_obj.message_post(cr, uid, meeting_id, body=_(("%s has Accept the meeting") % (vals.cn)), context=context)
             self.write(cr, uid, vals.id, {'state': 'accepted'}, context)
