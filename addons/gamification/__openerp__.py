@@ -56,7 +56,8 @@ Both goals and badges are flexibles and can be adapted to a large range of modul
     'css': ['static/src/css/gamification.css'],
     'js': [
         'static/src/js/gamification.js',
-        'static/lib/justgage/justgage.js',
+        # conficting with justgage from sale_crm
+        # 'static/lib/justgage/justgage.js',
     ],
     'qweb': ['static/src/xml/gamification.xml'],
 }
