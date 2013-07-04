@@ -769,7 +769,8 @@
             <form class="oe-binary-form" t-attf-target="#{element_id}_iframe"
                 method="post" enctype="multipart/form-data" t-att-action='_s + "/web/binary/upload_attachment"'>
                 <input type="hidden" name="session_id" t-att-value="session.session_id"/>
-                <input type="hidden" name="callback" t-attf-value="#{element_id}_iframe"/>
+                <input type="hidden" name="callback" t-attf-value="#{element_id}_iframe_callback"
+                       t-attf-id="#{element_id}_iframe_callback"/>
                 <input type="hidden" name="model" t-att-value="view.dataset.model"/>
                 <input type="hidden" name="id" t-att-value="view.datarecord.id"/>
                 <button class="oe_button" type="button">
@@ -1158,7 +1159,8 @@
                             <form class="oe-binary-form" t-att-target="widget.iframe"
                                 method="post" enctype="multipart/form-data" t-att-action='_s + "/web/binary/upload"'>
                                 <input type="hidden" name="session_id" value=""/>
-                                <input type="hidden" name="callback" t-att-value="widget.iframe"/>
+                                <input type="hidden" name="callback" t-att-value="widget.iframe"
+                                       t-att-id='widget.iframe + "_callback"'/>
                                 <button class="oe_button" type="button" title="Set Image">
                                     <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
                                 </button>
@@ -1201,7 +1203,8 @@
                         <form class="oe-binary-form" t-att-target="widget.iframe"
                             method="post" enctype="multipart/form-data" t-att-action='_s + "/web/binary/upload"'>
                             <input type="hidden" name="session_id" value=""/>
-                            <input type="hidden" name="callback" t-att-value="widget.iframe"/>
+                            <input type="hidden" name="callback" t-att-value="widget.iframe"
+                                   t-att-id='widget.iframe + "_callback"'/>
                             <button class="oe_button oe_field_button" type="button" title="Set Image">
                                 <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
                                 <span>Select</span>
