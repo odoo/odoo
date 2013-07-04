@@ -333,12 +333,12 @@
                         </div>
                     </div>
                     <field name="alias_contact" class="oe_inline" string="Accept Emails From"/>
-                    <div name="buttons" position="inside">
-                        <button string="Applications" name="%(action_hr_job_applications)d" type="action"/>
-                        <button string="Interview" name="action_print_survey" type="object" attrs="{'invisible':[('survey_id','=',False)]}"/>
-                    </div>
                 </group>
             </xpath>
+            <div name="buttons" position="inside">
+                <button string="Applications" name="%(action_hr_job_applications)d" type="action"/>
+                <button string="Interview" name="action_print_survey" type="object" attrs="{'invisible':[('survey_id','=',False)]}"/>
+            </div>
         </field>
     </record>
 
