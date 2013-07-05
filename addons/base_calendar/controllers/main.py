@@ -15,7 +15,7 @@ class crm_meetting_importstatus(http.Controller):
             'js': js,
             'css': css,
             'modules': simplejson.dumps(webmain.module_boot(db)),
-            'init': 's.base_calendar.do_accept("%s", "%s", "%s", "%s", "%s");'% (db, token, action, view_type, status),
+            'init': 's.base_calendar.event("%s", "%s", "%s", "%s", "%s");'% (db, token, action, view_type, status),
         }
 
 

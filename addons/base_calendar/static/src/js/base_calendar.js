@@ -2,7 +2,7 @@ openerp.base_calendar = function(instance) {
 var _t = instance.web._t;
 instance.base_calendar = {}
 
-    instance.base_calendar.DoAccept = instance.web.Widget.extend({
+    instance.base_calendar.invite = instance.web.Widget.extend({
 
         init: function(parent,db,token,action,view_type,status) {
             this._super();
@@ -61,9 +61,9 @@ instance.base_calendar = {}
             });
         }
     });
-    instance.base_calendar.do_accept = function (db, token, action, view_type, status) {
+    instance.base_calendar.event = function (db, token, action, view_type, status) {
         instance.session.session_bind(instance.session.origin).done(function () {
-            new instance.base_calendar.DoAccept(null,db,token,action,view_type,status).appendTo($("body").addClass('openerp'));
+            new instance.base_calendar.invite(null,db,token,action,view_type,status).appendTo($("body").addClass('openerp'));
         });
     }
 };
