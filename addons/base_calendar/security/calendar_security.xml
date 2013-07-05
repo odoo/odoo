@@ -5,5 +5,11 @@
             <field name="name">Survey / User</field>
             <field name="users" eval="[(4, ref('base.user_root'))]"/>
        </record>
+        <record id="meeting_invitation_personal" model="ir.rule">
+            <field name="name">Show Only Personal Invitation</field>
+            <field ref="model_calendar_attendee" name="model_id"/>
+            <field eval="1" name="personal"/>
+            <field name="domain_force">[('user_id','=',user.id)]</field>
+        </record>
    </data>
 </openerp>

@@ -409,8 +409,8 @@ property or property parameter."),
         attende_obj = self.browse(cr, uid, ids, context=context)
         action_id = self.pool.get('ir.actions.act_window').search(cr, uid, [('res_model','=','crm.meeting')], context=context)
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
-        for attende in attende_obj:
-            base_url += '/meeting/meeting_invitation?db=%s&debug=&token=%s&action=%s' % (cr.dbname, ids[0],action_id[0]);
+        if action_id:
+            base_url += '/meeting/meeting_invitation?db=%s&debug=&token=%s&action=%s' % (cr.dbname, ids,action_id[0]);
         return base_url
 
     def _send_mail(self, cr, uid, ids, mail_to, email_from=tools.config.get('email_from', False), context=None):
@@ -420,8 +420,9 @@ property or property parameter."),
         @return: True
         """
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.name
-        for att in self.browse(cr, uid, ids, context=context):
-            res_obj = att.ref
+        mail_id = []
+        for attendee in self.browse(cr, uid, ids, context=context):
+            res_obj = attendee.ref
             if res_obj:
                 att = {}
                 att_info = []
@@ -430,8 +431,6 @@ property or property parameter."),
 
                 for att2 in self.browse(cr, uid, other_invitation_ids):
                     att_info.append(att2.user_id and att2.user_id.name or att2.partner_id and att2.partner_id.name or att2.email)
-                    att[att2.user_id and att2.user_id.name or att2.partner_id and att2.partner_id.name or att2.email] = att2.email
-                
                 tz = context.get('tz', pytz.timezone('UTC'))
                 allday = False
                 date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(res_obj.date, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
@@ -444,42 +443,39 @@ property or property parameter."),
                     time =  date.strftime('%B-%d-%Y')  + " at (" + date.strftime('%H-%M') + " To " + duration.strftime('%H-%M') + ")"
                 else :
                     time =  date.strftime('%B-%d-%Y')  + " at " + date.strftime('%H-%M') + " To \n" +  date_deadline.strftime('%B-%d-%Y') + " at " + date_deadline.strftime('%H-%M')
-                footer = self.meeting_invitation(cr, uid, ids, context=context)
-                map = ''
+                footer = self.meeting_invitation(cr, uid, attendee.id, context=context)
+                map_url = ''
                 if res_obj.location:
-                    map_url = "http://maps.google.com/maps?oi=map&q=" + '+'  + str(res_obj.location),
-                    map = """<span style= "color:#A9A9A9; "> (<a href="%s">View Map</a>)</span>""" % map_url
-                for user in att:
-                    body_vals = {'user': user,
-                                 'name': res_obj.name,
-                                 'responsible': res_obj.user_id and res_obj.user_id.name or 'OpenERP User',
-                                 'company': company,
-                                 'description': res_obj.description or '-',
-                                 'attendees':  ', ' .join(att_info),
-                                 'time': time,
-                                 'tz': tz,
-                                 'location': res_obj.location or '-',
-                                 'map' : map or '',
-                                 'organizer': res_obj.organizer,
-                                 'url' : footer,
-                        }
-                    body_id = self.pool.get('email.template').search(cr, uid, [('subject', '=', 'Meeting Invitation')], context=context)
-                    body = self.pool.get('email.template').browse(cr, uid, body_id[0], context=context).body_html % body_vals
-                    if att[user] and email_from:
-                        ics_file = self.get_ics_file(cr, uid, res_obj, context=context)
-                        vals = {'email_from': email_from,
-                                'email_to': att[user],
-                                'state': 'outgoing',
-                                'subject': sub,
-                                'body_html': body,
-                                'auto_delete': True}
+                    map_url = """<span style= "color:#A9A9A9; "> (<a href="http://maps.google.com/maps?oi=map&q=%s">View Map</a>)</span>""" % res_obj.location
+                body_vals = {'user':attendee.user_id and attendee.user_id.name,
+                             'name': res_obj.name,
+                             'responsible': res_obj.user_id and res_obj.user_id.name or 'OpenERP User',
+                             'company': company,
+                             'description': res_obj.description or '-',
+                             'attendees':  ', ' .join(att_info),
+                             'time': time,
+                             'tz': tz,
+                             'location': res_obj.location or '-',
+                             'map' : map_url or '',
+                             'organizer': res_obj.organizer,
+                             'url' : footer}
+                body_id = self.pool.get('email.template').search(cr, uid, [('subject', '=', 'Meeting Invitation')], context=context)
+                body = self.pool.get('email.template').browse(cr, uid, body_id[0], context=context).body_html % body_vals
+                if attendee.email and email_from:
+                    ics_file = self.get_ics_file(cr, uid, res_obj, context=context)
+                    vals = {'email_from': email_from,
+                            'email_to': attendee.email,
+                            'state': 'outgoing',
+                            'subject': sub,
+                            'body_html': body,
+                            'auto_delete': True}
                     if ics_file:
                         vals['attachment_ids'] = [(0,0,{'name': 'invitation.ics',
-                                                        'datas_fname': 'invitation.ics',
-                                                        'datas': str(ics_file).encode('base64')})]
-                    mail_id= self.pool.get('mail.mail').create(cr, uid, vals, context=context)
-                    self.pool.get('mail.mail').send(cr, uid, [mail_id], context=context)
-            return True
+                                                    'datas_fname': 'invitation.ics',
+                                                    'datas': str(ics_file).encode('base64')})]
+                    mail_id.append(self.pool.get('mail.mail').create(cr, uid, vals, context=context))
+        self.pool.get('mail.mail').send(cr, uid, mail_id, context=context)
+        return True
 
     def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
         """
@@ -523,14 +519,9 @@ property or property parameter."),
             context = {}
         meeting_obj =  self.pool.get('crm.meeting')
         for vals in self.browse(cr, uid, ids, context=context):
-            if vals.ref and vals.ref.user_id:
-                mod_obj = self.pool[vals.ref._name]
-                res=mod_obj.read(cr,uid,[vals.ref.id],['duration','class'],context)
-                defaults = {'user_id': vals.user_id.id, 'organizer_id': vals.ref.user_id.id,'duration':res[0]['duration'],'class':res[0]['class']}
-                mod_obj.copy(cr, uid, vals.ref.id, default=defaults, context=context)
             meeting_id = meeting_obj.search(cr, uid, [('attendee_ids','=',vals.id)],context = context)
             if meeting_id:
-                meeting_obj.message_post(cr, uid, meeting_id, body=_(("%s has Accept the meeting") % (vals.cn)), context=context)
+                meeting_obj.message_post(cr, uid, meeting_id, body=_(("%s Accept Invitation") % (vals.cn)), context=context)
             self.write(cr, uid, vals.id, {'state': 'accepted'}, context)
         return True
 
@@ -546,11 +537,13 @@ property or property parameter."),
         """
         if context is None:
             context = {}
-        meeting_obj =  self.pool.get('crm.meeting')
-        vals=self.browse(cr, uid, ids, context=context)[0]
-        meeting_id = meeting_obj.search(cr, uid, [('attendee_ids','=',vals.id)],context = context)
-        meeting_obj.message_post(cr, uid, meeting_id, body=_(("%s has Reject the meeting") % (vals.cn)), context=context)
-        return self.write(cr, uid, ids, {'state': 'declined'}, context)
+        meeting_obj = self.pool.get('crm.meeting')
+        for vals in self.browse(cr, uid, ids, context=context):
+            meeting_id = meeting_obj.search(cr, uid, [('attendee_ids','=',vals.id)],context = context)
+            if meeting_id:
+                meeting_obj.message_post(cr, uid, meeting_id, body=_(("%s Reject Invitation") % (vals.cn)), context=context)
+            self.write(cr, uid, vals.id, {'state': 'declined'}, context)
+        return True
 
     def create(self, cr, uid, vals, context=None):
         """
