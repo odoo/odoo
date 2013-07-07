@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-06-07 15:46+0000\n"
-"Last-Translator: Joshua Jan(SHINEIT) <popkar77@gmail.com>\n"
+"PO-Revision-Date: 2013-07-06 04:11+0000\n"
+"Last-Translator: 盈通 ccdos <ccdos@163.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-08 07:47+0000\n"
-"X-Generator: Launchpad (build 16667)\n"
+"X-Launchpad-Export-Date: 2013-07-07 05:54+0000\n"
+"X-Generator: Launchpad (build 16696)\n"
 
 #. module: stock
 #: field:stock.inventory.line.split,line_exist_ids:0
@@ -257,7 +257,7 @@ msgstr "安排送货单"
 #: code:addons/stock/wizard/stock_change_standard_price.py:107
 #, python-format
 msgid "Active ID is not set in Context."
-msgstr ""
+msgstr "Contex中没有 Active ID"
 
 #. module: stock
 #: selection:stock.picking,invoice_state:0
@@ -479,7 +479,7 @@ msgstr "准备发运"
 msgid ""
 "Forbidden operation: it is not allowed to scrap products from a virtual "
 "location."
-msgstr ""
+msgstr "禁止操作: 从虚拟库位到边角料 是不允许的。"
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -585,7 +585,7 @@ msgstr "实物盘点表草稿"
 msgid ""
 "Quantities, Units of Measure, Products and Locations cannot be modified on "
 "stock moves that have already been processed (except by the Administrator)."
-msgstr ""
+msgstr "已经被处理过的移库单中，数量，计量单位，产品和库位不能修改（除非是 管理员）"
 
 #. module: stock
 #: help:report.stock.move,type:0
@@ -842,6 +842,8 @@ msgid ""
 "                For instance, you can sell pieces of meat that you invoice "
 "based on their weight."
 msgstr ""
+"允许产品的销售和开票的单位不一致.\n"
+"               例如你可以按块卖，但发票按重量开."
 
 #. module: stock
 #: field:product.template,property_stock_procurement:0
@@ -851,7 +853,7 @@ msgstr "需求库位"
 #. module: stock
 #: view:stock.picking:0
 msgid "e.g. PO0032"
-msgstr ""
+msgstr "例如：PO0032"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_tree
@@ -882,7 +884,7 @@ msgstr "在进行实时库存核算时，库存调拨处理将自动登入这账
 msgid ""
 "Please define stock output account for this product or its category: \"%s\" "
 "(id: %d)"
-msgstr ""
+msgstr "请为这个产品或者它的类别定义一个出库科目: \"%s\" (id: %d)"
 
 #. module: stock
 #: field:stock.picking,message_summary:0
@@ -957,7 +959,7 @@ msgstr "入库库位"
 msgid ""
 "This field is for internal purpose. It is used to decide if the column "
 "production lot has to be shown on the moves or not."
-msgstr ""
+msgstr "这 字段是内部用途。用来决定 生产批号这一列 是否显示在移库单上面"
 
 #. module: stock
 #: selection:product.product,valuation:0
@@ -991,7 +993,7 @@ msgstr "公司间转移的中途库位"
 msgid ""
 "You cannot cancel the picking as some moves have been done. You should "
 "cancel the picking lines."
-msgstr ""
+msgstr "您不能取消已经有部分移库完成的分拣单。您应该取消 分拣单行"
 
 #. module: stock
 #: field:stock.config.settings,decimal_precision:0
@@ -1027,7 +1029,7 @@ msgstr "入库"
 #: help:stock.picking.in,date:0
 #: help:stock.picking.out,date:0
 msgid "Creation date, usually the time of the order."
-msgstr ""
+msgstr "创建日期，通常是订货的时间"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -1043,13 +1045,13 @@ msgstr "盘点库位"
 #. module: stock
 #: constraint:stock.move:0
 msgid "You must assign a serial number for this product."
-msgstr ""
+msgstr "你需要为该产品指定一个系列号"
 
 #. module: stock
 #: code:addons/stock/stock.py:2255
 #, python-format
 msgid "Please define journal on the product category: \"%s\" (id: %d)"
-msgstr ""
+msgstr "请为这个产品类型定义一个分类账: \"%s\" (id: %d)"
 
 #. module: stock
 #: view:stock.move:0
@@ -1059,7 +1061,7 @@ msgstr "详情"
 #. module: stock
 #: selection:stock.picking,state:0
 msgid "Ready to Transfer"
-msgstr ""
+msgstr "准备转移"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -1144,12 +1146,12 @@ msgstr "产品批次"
 #. module: stock
 #: view:stock.picking:0
 msgid "Reverse Transfer"
-msgstr ""
+msgstr "反向转移"
 
 #. module: stock
 #: field:stock.config.settings,group_uos:0
 msgid "Invoice products in a different unit of measure than the sales order"
-msgstr ""
+msgstr "开票产品的计量单位和销售订单不一致。"
 
 #. module: stock
 #: help:stock.location,active:0
@@ -1287,7 +1289,7 @@ msgstr ""
 #. module: stock
 #: view:stock.inventory.line:0
 msgid "Split Inventory Line"
-msgstr ""
+msgstr "拆分存货清单行"
 
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
@@ -1319,7 +1321,7 @@ msgstr "为取消这个盘存，你必须要先取消相关的分录。"
 #: code:addons/stock/product.py:113
 #, python-format
 msgid "Please specify company in Location."
-msgstr ""
+msgstr "请在库位里 指定公司"
 
 #. module: stock
 #: view:stock.move:0
@@ -1513,12 +1515,12 @@ msgstr "您只能删除草稿状态的调拨。"
 #: code:addons/stock/stock.py:1665
 #, python-format
 msgid "You cannot move product %s to a location of type view %s."
-msgstr ""
+msgstr "您不能移动产品%s到视图类型的库位%s。"
 
 #. module: stock
 #: view:stock.inventory:0
 msgid "Split in serial numbers"
-msgstr ""
+msgstr "拆分系列号"
 
 #. module: stock
 #: view:stock.move:0
@@ -1794,7 +1796,7 @@ msgstr "单位成本的币别"
 #: selection:stock.picking.in,move_type:0
 #: selection:stock.picking.out,move_type:0
 msgid "Partial"
-msgstr ""
+msgstr "部分"
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
@@ -1805,7 +1807,7 @@ msgstr "9月"
 #. module: stock
 #: view:product.product:0
 msgid "days"
-msgstr ""
+msgstr "天"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_inventory
@@ -1886,7 +1888,7 @@ msgstr "取消可用"
 #: code:addons/stock/wizard/stock_location_product.py:49
 #, python-format
 msgid "Current Inventory"
-msgstr ""
+msgstr "当前库存清单"
 
 #. module: stock
 #: help:product.template,property_stock_production:0
@@ -1919,7 +1921,7 @@ msgstr "货架 2"
 #: code:addons/stock/stock.py:528
 #, python-format
 msgid "You cannot remove a lot line."
-msgstr ""
+msgstr "您不能移除一个批号"
 
 #. module: stock
 #: help:stock.location,posx:0
