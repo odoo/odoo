@@ -20,7 +20,7 @@
 ##############################################################################
 
 from openerp.osv import fields,osv
-
+from datetime import *
 
 class stock_location_route(osv.osv):
     _name = 'stock.location.route'
@@ -73,15 +73,16 @@ class stock_location_path(osv.osv):
     }
     def _apply(self, cr, uid, rule, move, context=None):
         move_obj = self.pool.get('stock.move')
-        newdate = (datetime.strptime(move.date, '%Y-%m-%d %H:%M:%S') + relativedelta(days=rule.delay or 0)).strftime('%Y-%m-%d')
+        newdate = (datetime.strptime(move.date, '%Y-%m-%d %H:%M:%S') + datetime.relativedelta(days=rule.delay or 0)).strftime('%Y-%m-%d')
         if rule.auto=='transparent':
             self.write(cr, uid, [move.id], {
                 'date': newdate,
                 'location_dest_id': rule.location_dest_id.id
             })
             vals = {}
-            if route.journal_id:
-                vals['stock_journal_id'] = route.journal_id.id
+# TODO journal_id was to be removed?
+#             if route.journal_id:
+#                 vals['stock_journal_id'] = route.journal_id.id
             vals['type'] = rule.picking_type
             if rule.location_dest_id.id<>move.location_dest_id.id:
                 move_obj._push_apply(self, cr, uid, move.id, context)
@@ -128,7 +129,7 @@ class procurement_order(osv.osv):
     
     def _run_move_create(self, cr, uid, procurement, move, context=None):
         d = super(procurement_order, self)._run_move_create(cr, uid, procurement, move, context=context)
-        newdate = (datetime.strptime(move.date, '%Y-%m-%d %H:%M:%S') - relativedelta(days=rule.delay or 0)).strftime('%Y-%m-%d %H:%M:%S')
+        newdate = (datetime.strptime(move.date, '%Y-%m-%d %H:%M:%S') - datetime.relativedelta(days=procurement.rule_id.delay or 0)).strftime('%Y-%m-%d %H:%M:%S')
         d.update({
             'date_planned': newdate,
             'procure_method': procurement.rule_id.procure_method,
@@ -183,7 +184,7 @@ class product_category(osv.osv):
     }
 
 
-class stock_move(osv.osv):
+class stock_move_putaway(osv.osv):
     _name = 'stock.move.putaway'
     _description = 'Proposed Destination'
     _columns = {
@@ -242,7 +243,7 @@ class stock_move(osv.osv):
 
     def action_confirm(self, cr, uid, ids, context=None):
         result = super(stock_move, self).action_confirm(cr, uid, ids, context)
-        moves = self.browse(cr, uid, ids, context=context)
+        #moves = self.browse(cr, uid, ids, context=context)
         self._pull_apply(cr, uid, ids, context=context)
         self._push_apply(cr, uid, ids, context=context)
         return result
@@ -272,5 +273,5 @@ class stock_location(osv.osv):
         ], context=context)
         if result:
             return pr.browse(cr, uid, result[0], context=context)
-        return super(stock_location, self).get_removal_strategy(cr, uid, id, product_id, context=context)
+        return super(stock_location, self).get_removal_strategy(cr, uid, id, product, context=context)
 
