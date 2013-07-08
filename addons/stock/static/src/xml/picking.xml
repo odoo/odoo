@@ -130,11 +130,12 @@
                     <col class='oe_pick_col_expand'></col>
                     <col class='oe_pick_col_small'></col>
                     <col class='oe_pick_col_small'></col>
+                    <col class='oe_pick_col_small'></col>
                 </colgroup>
 
                 <thead>
                     <tr>
-                        <th>Package</th> <th></th> <th></th> 
+                        <th>Package</th> <th></th> <th></th> <th></th>
                     </tr>
                 </thead>
 
@@ -142,8 +143,9 @@
                     <t t-foreach="widget.get_rows()" t-as="row">
                         <tr t-att-class="'js_pack_row' + row.classes" t-att-pack-id="row.id">
                             <td class='js_pack_select'> <t t-esc="row.cols.pack" /> </td>
-                            <td class='oe_centeralign'> <span class='oe_row_button js_pack_plus'>copy</span> </td>
-                            <td class='oe_centeralign'> <span class='oe_row_button js_pack_minus'>delete</span> </td>
+                            <td class='oe_centeralign'> <span class='oe_row_button js_pack_print'>Print</span> </td>
+                            <td class='oe_centeralign'> <span class='oe_row_button js_pack_plus'>Copy</span> </td>
+                            <td class='oe_centeralign'> <span class='oe_row_button js_pack_minus'>Delete</span> </td>
                         </tr>
                     </t>
                 </tbody>

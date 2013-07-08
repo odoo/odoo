@@ -3847,6 +3847,10 @@ class stock_picking_out(osv.osv):
 # -------------------------
 # Packaging related stuff
 # -------------------------
+
+from openerp.report import report_sxw
+report_sxw.report_sxw('report.stock.quant.package.barcode', 'stock.quant.package', 'addons/stock/report/picking_barcode.rml')
+
 class stock_package(osv.osv):
     """
     These are the packages, it replaces the stock.tracking and are applied on quants instead of on moves
@@ -3878,6 +3882,20 @@ class stock_package(osv.osv):
     _constraints = [
         (_check_location, 'All quant inside a package should share the same location', ['location_id']),
     ]
+
+    def action_print(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        datas = {
+            'ids': context.get('active_id') and [context.get('active_id')] or ids,
+            'model': 'stock.quant.package',
+            'form': self.read(cr, uid, ids)[0]
+        }
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'report.stock.quant.package.barcode',
+            'datas': datas
+        }
 
     def action_copy(self, cr, uid, ids, context=None):
         quant_obj = self.pool.get('stock.quant')
