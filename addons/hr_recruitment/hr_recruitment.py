@@ -230,17 +230,16 @@ class hr_applicant(osv.Model):
         'stage_id': _read_group_stage_ids
     }
 
-    def onchange_job(self, cr, uid, ids, job, context=None):
-        if job:
-            job_record = self.pool.get('hr.job').browse(cr, uid, job, context=context)
+    def onchange_job(self, cr, uid, ids, job_id=False, context=None):
+        if job_id:
+            job_record = self.pool.get('hr.job').browse(cr, uid, job_id, context=context)
             if job_record and job_record.department_id:
                 return {'value': {'department_id': job_record.department_id.id}}
         return {}
 
-    def onchange_department_id(self, cr, uid, ids, department_id=False, context=None):
-        obj_recru_stage = self.pool.get('hr.recruitment.stage')
-        stage_ids = obj_recru_stage.search(cr, uid, ['|',('department_id','=',department_id),('department_id','=',False)], context=context)
-        stage_id = stage_ids and stage_ids[0] or False
+    def onchange_department_id(self, cr, uid, ids, department_id=False, stage_id=False, context=None):
+        if not stage_id:
+            stage_id = self.stage_find(cr, uid, [], department_id, [('sequence', '=', '1')], context=context)
         return {'value': {'stage_id': stage_id}}
 
     def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
