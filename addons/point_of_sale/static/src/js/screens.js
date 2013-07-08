@@ -821,7 +821,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     click: function() { self.finishOrder(); },
                 });
 
-            window.print();
+            this.print();
         },
         print: function() {
             window.print();
