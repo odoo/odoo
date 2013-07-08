@@ -743,6 +743,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 }
             });
             this.$('.button.reset_weight').click(function(){
+                self.$('input.weight').val('');
                 self.pos.proxy.debug_reset_weight();
             });
             this.$('.button.custom_ean').click(function(){
