@@ -185,10 +185,9 @@ class hr_applicant(osv.Model):
         'categ_ids': fields.many2many('hr.applicant_category', string='Tags'),
         'company_id': fields.many2one('res.company', 'Company'),
         'user_id': fields.many2one('res.users', 'Responsible', track_visibility='onchange'),
-        # Applicant Columns
         'date_closed': fields.datetime('Closed', readonly=True, select=True),
-        'date_open': fields.datetime('Opened', readonly=True, select=True),
-        'date': fields.datetime('Date'),
+        'date_open': fields.datetime('Assigned', readonly=True, select=True),
+        'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
         'date_action': fields.date('Next Action Date'),
         'title_action': fields.char('Next Action', size=64),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Appreciation'),
@@ -224,6 +223,7 @@ class hr_applicant(osv.Model):
         'department_id': lambda s, cr, uid, c: s._get_default_department_id(cr, uid, c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'hr.applicant', context=c),
         'color': 0,
+        'date_last_stage_update': fields.datetime.now(),
     }
 
     _group_by_full = {
@@ -390,7 +390,20 @@ class hr_applicant(osv.Model):
             self.pool.get('hr.job').message_post(cr, uid, [applicant.job_id.id], body=_('Applicant <b>created</b>'), subtype="hr_recruitment.mt_job_new_applicant", context=context)
         return obj_id
 
-    def case_close_with_emp(self, cr, uid, ids, context=None):
+    def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        # stage change: update date_last_stage_update
+        if 'stage_id' in vals:
+            vals['date_last_stage_update'] = fields.datetime.now()
+        # user_id change: update date_start
+        if vals.get('user_id'):
+            vals['date_start'] = fields.datetime.now()
+
+        return super(hr_applicant, self).write(cr, uid, ids, vals, context=context)
+
+    def create_employee_from_applicant(self, cr, uid, ids, context=None):
+        """ Create an hr.employee from the hr.applicants """
         if context is None:
             context = {}
         hr_employee = self.pool.get('hr.employee')

@@ -25,11 +25,12 @@ from .. import hr_recruitment
 from openerp.addons.decimal_precision import decimal_precision as dp
 
 
-class hr_recruitment_report(osv.osv):
+class hr_recruitment_report(osv.Model):
     _name = "hr.recruitment.report"
     _description = "Recruitments Statistics"
     _auto = False
-    _rec_name = 'date'
+    _rec_name = 'date_create'
+    _order = 'date_create desc'
 
     _columns = {
         'user_id': fields.many2one('res.users', 'User', readonly=True),
@@ -44,7 +45,8 @@ class hr_recruitment_report(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
-        'date': fields.date('Date', readonly=True),
+        'date_create': fields.date('Create Date', readonly=True),
+        'date_last_stage_update': fields.datetime('Last Stage Update', readonly=True),
         'date_closed': fields.date('Closed', readonly=True),
         'job_id': fields.many2one('hr.job', 'Applied Job',readonly=True),
         'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage'),
@@ -60,15 +62,16 @@ class hr_recruitment_report(osv.osv):
         'delay_close': fields.float('Avg. Delay to Close', digits=(16,2), readonly=True, group_operator="avg",
                                        help="Number of Days to close the project issue"),
     }
-    _order = 'date desc'
+    
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'hr_recruitment_report')
         cr.execute("""
             create or replace view hr_recruitment_report as (
                  select
                      min(s.id) as id,
-                     date_trunc('day',s.create_date) as date,
+                     date_trunc('day',s.create_date) as date_create,
                      date_trunc('day',s.date_closed) as date_closed,
+                     date_trunc('day',s.date_last_stage_update) as date_last_stage_update,
                      to_char(s.create_date, 'YYYY') as year,
                      to_char(s.create_date, 'MM') as month,
                      to_char(s.create_date, 'YYYY-MM-DD') as day,
@@ -85,7 +88,7 @@ class hr_recruitment_report(osv.osv):
                      (sum(salary_proposed)/count(*)) as salary_prop_avg,
                      sum(salary_expected) as salary_exp,
                      (sum(salary_expected)/count(*)) as salary_exp_avg,
-                     extract('epoch' from (s.date_closed-s.create_date))/(3600*24) as  delay_close,
+                     extract('epoch' from (s.date_closed-s.create_date))/(3600*24) as delay_close,
                      count(*) as nbr
                  from hr_applicant s
                  group by
@@ -97,6 +100,7 @@ class hr_recruitment_report(osv.osv):
                      s.date_open,
                      s.create_date,
                      s.date_closed,
+                     s.date_last_stage_update,
                      s.partner_id,
                      s.company_id,
                      s.user_id,

@@ -86,9 +86,12 @@
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
                     <label for="partner_name" class="oe_edit_only"/>
-                    <h2>
+                    <h2 style="display: inline-block;">
                         <field name="partner_name" class="oe_inline"/>
                     </h2>
+                    <button string="Create Employee" name="create_employee_from_applicant" type="object"
+                                    class="oe_link oe_inline" style="margin-left: 8px;"
+                                    attrs="{'invisible': [('emp_id', '!=', False)]}"/> 
                 </div>
                 <group>
                     <group>
@@ -134,13 +137,7 @@
                             <span class="oe_inline" attrs="{'invisible':[('salary_proposed_extra','=',False)]}"> + </span>
                             <field name="salary_proposed_extra" class="oe_inline" placeholder="Extra advantages..."/>
                         </div>
-                        <label for="emp_id"/>
-                        <div>
-                            <field name="emp_id" readonly="1"/>
-                            <button string="Create Employee" name="case_close_with_emp" type="object"
-                                    class="oe_link oe_inline"
-                                    attrs="{'invisible': [('emp_id', '!=', False)]}"/> 
-                        </div>
+                        <field name="emp_id" readonly="1"/>
                     </group>
                 </group>
                 <group>
@@ -173,7 +170,7 @@
         <field name="name">Jobs - Recruitment Search</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <search string="Search Jobs">
+            <search string="Search Applicants">
                 <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
                 <filter string="Unassigned" domain="[('user_id', '=', False)]"/>
                 <filter string="My" domain="[('user_id', '=', uid)]"/>
