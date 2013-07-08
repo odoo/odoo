@@ -42,6 +42,7 @@
             <tree string="Applicants" fonts="bold:message_unread==True">
                 <field name="message_unread" invisible="1"/>
                 <field name="create_date"/>
+                <field name="date_last_stage_update" invisible="1"/>
                 <field name="name" string="Subject"/>
                 <field name="partner_name"/>
                 <field name="email_from"/>
@@ -182,8 +183,10 @@
                 <field name="job_id"/>
                 <field name="department_id"/>
                 <field name="user_id"/>
+                <field name="stage_id" domain="[]"/>
                 <separator/>
                 <field name="categ_ids"/>
+                <separator/>
                 <group expand="0" string="Group By...">
                     <filter string="Responsible" domain="[]"  context="{'group_by':'user_id'}"/>
                     <filter string="Department" domain="[]" context="{'group_by':'department_id'}"/>
@@ -194,6 +197,7 @@
                     <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
                     <filter string="Source" domain="[]" context="{'group_by':'source_id'}"/>
                     <filter string="Creation Date" domain="[]" context="{'group_by':'create_date'}"/>
+                    <filter string="Last Stage Update" context="{'group_by':'date_last_stage_update'}"/>
                 </group>
            </search>
         </field>
