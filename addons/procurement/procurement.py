@@ -27,7 +27,7 @@ from dateutil.relativedelta import relativedelta
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
-import openerp.registry as openerp_registry
+import openerp
 
 class procurement_group(osv.osv):
     '''
@@ -207,7 +207,7 @@ class procurement_order(osv.osv):
             context = {}
         try:
             if use_new_cursor:
-                cr = openerp_registry(use_new_cursor).db.cursor()
+                cr = openerp.registry(use_new_cursor).db.cursor()
 
             company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
             maxdate = (datetime.today() + relativedelta(days=company.schedule_range)).strftime('%Y-%m-%d %H:%M:%S')
