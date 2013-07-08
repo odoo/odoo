@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-from openerp.addons.base_status.base_stage import base_stage
 import crm
 from datetime import datetime
 from operator import itemgetter
@@ -68,7 +67,7 @@ CRM_LEAD_PENDING_STATES = (
     crm.AVAILABLE_STATES[4][0], # Pending
 )
 
-class crm_lead(base_stage, format_address, osv.osv):
+class crm_lead(format_address, osv.osv):
     """ CRM Lead Case """
     _name = "crm.lead"
     _description = "Lead/Opportunity"
@@ -93,18 +92,6 @@ class crm_lead(base_stage, format_address, osv.osv):
         context['empty_list_help_document_name'] = _("leads")
         return super(crm_lead, self).get_empty_list_help(cr, uid, help, context=context)
 
-    def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
-        if vals.get('type') and not context.get('default_type'):
-            context['default_type'] = vals.get('type')
-        if vals.get('section_id') and not context.get('default_section_id'):
-            context['default_section_id'] = vals.get('section_id')
-
-        # context: no_log, because subtype already handle this
-        create_context = dict(context, mail_create_nolog=True)
-        return super(crm_lead, self).create(cr, uid, vals, context=create_context)
-
     def _get_default_section_id(self, cr, uid, context=None):
         """ Gives default section by checking if present in the context """
         return self._resolve_section_id_from_context(cr, uid, context=context) or False
@@ -124,8 +111,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         if type(context.get('default_section_id')) in (int, long):
             return context.get('default_section_id')
         if isinstance(context.get('default_section_id'), basestring):
-            section_name = context['default_section_id']
-            section_ids = self.pool.get('crm.case.section').name_search(cr, uid, name=section_name, context=context)
+            section_ids = self.pool.get('crm.case.section').name_search(cr, uid, name=context['default_section_id'], context=context)
             if len(section_ids) == 1:
                 return int(section_ids[0][0])
         return None
@@ -324,8 +310,7 @@ class crm_lead(base_stage, format_address, osv.osv):
     _defaults = {
         'active': 1,
         'type': 'lead',
-        'user_id': lambda s, cr, uid, c: s._get_default_user(cr, uid, c),
-        'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c),
+        'user_id': lambda s, cr, uid, c: uid,
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
         'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
@@ -339,30 +324,29 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     def onchange_stage_id(self, cr, uid, ids, stage_id, context=None):
         if not stage_id:
-            return {'value':{}}
+            return {'value': {}}
         stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context)
         if not stage.on_change:
-            return {'value':{}}
-        return {'value':{'probability': stage.probability}}
+            return {'value': {}}
+        return {'value': {'probability': stage.probability}}
 
-    def on_change_partner(self, cr, uid, ids, partner_id, context=None):
-        result = {}
+    def on_change_partner_id(self, cr, uid, ids, partner_id, context=None):
         values = {}
         if partner_id:
             partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
             values = {
-                'partner_name' : partner.name,
-                'street' : partner.street,
-                'street2' : partner.street2,
-                'city' : partner.city,
-                'state_id' : partner.state_id and partner.state_id.id or False,
-                'country_id' : partner.country_id and partner.country_id.id or False,
-                'email_from' : partner.email,
-                'phone' : partner.phone,
-                'mobile' : partner.mobile,
-                'fax' : partner.fax,
+                'partner_name': partner.name,
+                'street': partner.street,
+                'street2': partner.street2,
+                'city': partner.city,
+                'state_id': partner.state_id and partner.state_id.id or False,
+                'country_id': partner.country_id and partner.country_id.id or False,
+                'email_from': partner.email,
+                'phone': partner.phone,
+                'mobile': partner.mobile,
+                'fax': partner.fax,
             }
-        return {'value' : values}
+        return {'value': values}
 
     def on_change_user(self, cr, uid, ids, user_id, context=None):
         """ When changing the user, also set a section_id or restrict section id
@@ -403,7 +387,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         # collect all section_ids
         section_ids = []
         types = ['both']
-        if not cases :
+        if not cases:
             type = context.get('default_type')
             types += [type]
         if section_id:
@@ -431,24 +415,18 @@ class crm_lead(base_stage, format_address, osv.osv):
             return stage_ids[0]
         return False
 
-    def case_cancel(self, cr, uid, ids, context=None):
-        """ Overrides case_cancel from base_stage to set probability """
-        res = super(crm_lead, self).case_cancel(cr, uid, ids, context=context)
-        self.write(cr, uid, ids, {'probability' : 0.0}, context=context)
-        return res
-
-    def case_reset(self, cr, uid, ids, context=None):
-        """ Overrides case_reset from base_stage to set probability """
-        res = super(crm_lead, self).case_reset(cr, uid, ids, context=context)
-        self.write(cr, uid, ids, {'probability': 0.0}, context=context)
-        return res
+    def stage_set(self, cr, uid, ids, stage_id, context=None):
+        """ Set the new stage. Now just writes the stage.
+            TDE TODO: remove me when removing state
+        """
+        return self.write(cr, uid, ids, {'stage_id': stage_id}, context=context)
 
     def case_mark_lost(self, cr, uid, ids, context=None):
         """ Mark the case as lost: state=cancel and probability=0 """
         for lead in self.browse(cr, uid, ids):
             stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 0.0),('on_change','=',True)], context=context)
             if stage_id:
-                self.case_set(cr, uid, [lead.id], values_to_update={'probability': 0.0}, new_stage_id=stage_id, context=context)
+                self.stage_set(cr, uid, [lead.id], stage_id, context=context)
         return True
 
     def case_mark_won(self, cr, uid, ids, context=None):
@@ -456,7 +434,21 @@ class crm_lead(base_stage, format_address, osv.osv):
         for lead in self.browse(cr, uid, ids):
             stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 100.0),('on_change','=',True)], context=context)
             if stage_id:
-                self.case_set(cr, uid, [lead.id], values_to_update={'probability': 100.0}, new_stage_id=stage_id, context=context)
+                self.stage_set(cr, uid, [lead.id], stage_id, context=context)
+        return True
+
+    def case_escalate(self, cr, uid, ids, context=None):
+        """ Escalates case to parent level """
+        for case in self.browse(cr, uid, ids, context=context):
+            data = {'active': True}
+            if case.section_id.parent_id:
+                data['section_id'] = case.section_id.parent_id.id
+                if case.section_id.parent_id.change_responsible:
+                    if case.section_id.parent_id.user_id:
+                        data['user_id'] = case.section_id.parent_id.user_id.id
+            else:
+                raise osv.except_osv(_('Error!'), _("You are already at the top level of your sales-team category.\nTherefore you cannot escalate furthermore."))
+            self.write(cr, uid, [case.id], data, context=context)
         return True
 
     def set_priority(self, cr, uid, ids, priority):
@@ -930,12 +922,22 @@ class crm_lead(base_stage, format_address, osv.osv):
         }
         return res
 
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        if vals.get('type') and not context.get('default_type'):
+            context['default_type'] = vals.get('type')
+        if vals.get('section_id') and not context.get('default_section_id'):
+            context['default_section_id'] = vals.get('section_id')
+
+        # context: no_log, because subtype already handle this
+        create_context = dict(context, mail_create_nolog=True)
+        return super(crm_lead, self).create(cr, uid, vals, context=create_context)
+
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('stage_id') and not vals.get('probability'):
-            # change probability of lead(s) if required by stage
-            stage = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
-            if stage.on_change:
-                vals['probability'] = stage.probability
+            onchange_stage_values = self.onchange_stage_id(cr, uid, ids, vals.get('stage_id'), context=context)['value']
+            vals.update(onchange_stage_values)
         return super(crm_lead, self).write(cr, uid, ids, vals, context=context)
 
     def new_mail_send(self, cr, uid, ids, context=None):
@@ -1022,7 +1024,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             'user_id': False,
         }
         if msg.get('author_id'):
-            defaults.update(self.on_change_partner(cr, uid, None, msg.get('author_id'), context=context)['value'])
+            defaults.update(self.on_change_partner_id(cr, uid, None, msg.get('author_id'), context=context)['value'])
         if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
             defaults['priority'] = msg.get('priority')
         defaults.update(custom_values)
