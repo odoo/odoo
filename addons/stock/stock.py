@@ -3893,7 +3893,7 @@ class stock_package(osv.osv):
         }
         return {
             'type': 'ir.actions.report.xml',
-            'report_name': 'report.stock.quant.package.barcode',
+            'report_name': 'stock.quant.package.barcode',
             'datas': datas
         }
 
