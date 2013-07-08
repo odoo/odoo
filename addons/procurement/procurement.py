@@ -26,7 +26,8 @@ from dateutil.relativedelta import relativedelta
 
 from openerp.osv import fields, osv
 import openerp.addons.decimal_precision as dp
-import openerp
+from openerp.tools.translate import _
+import openerp.registry as openerp_registry
 
 class procurement_group(osv.osv):
     '''
@@ -67,15 +68,17 @@ class procurement_rule(osv.osv):
     '''
     _name = 'procurement.rule'
     _description = "Procurement Rule"
+
+    def _get_action(self, cr, uid, context=None):
+        return [('move', 'Move')]
+
     _columns = {
         'name': fields.char('Name', required=True,
             help="This field will fill the packing origin and the name of its moves"),
         'group_id': fields.many2one('procurement.group', 'Procurement Group'),
-        'action': fields.selection(selection=lambda s, c, u, context: s._get_action(c, u, context),
+        'action': fields.selection(selection=lambda s, cr, uid, context=None: s._get_action(cr, uid, context=context),
             string='Action', required=True)
     }
-    def _get_action(self, cr, uid, context=None):
-        return []
 
 
 class procurement_order(osv.osv):
@@ -204,7 +207,7 @@ class procurement_order(osv.osv):
             context = {}
         try:
             if use_new_cursor:
-                cr = openerp.registry(use_new_cursor).db.cursor()
+                cr = openerp_registry(use_new_cursor).db.cursor()
 
             company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
             maxdate = (datetime.today() + relativedelta(days=company.schedule_range)).strftime('%Y-%m-%d %H:%M:%S')
