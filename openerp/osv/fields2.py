@@ -176,6 +176,10 @@ class Field(object):
         """
         return value
 
+    def convert_to_export(self, value):
+        """ convert `value` from the cache to a valid value for export. """
+        return bool(value) and ustr(value)
+
     def compute_default(self, record):
         """ assign the default value of field `self` to `record` """
         if self.compute:
@@ -191,6 +195,9 @@ class Boolean(Field):
 
     def convert_value(self, value):
         return bool(value)
+
+    def convert_to_export(self, value):
+        return ustr(value)
 
 
 class Integer(Field):
@@ -234,9 +241,6 @@ class _String(Field):
 
     _attrs = Field._attrs + ('translate',)
     _desc1 = Field._desc1 + ('translate',)
-
-    def convert_value(self, value):
-        return bool(value) and ustr(value)
 
 
 class Char(_String):
@@ -346,6 +350,15 @@ class Selection(Field):
             return value
         raise ValueError("Wrong value for %s.%s: %r" % (self.model, self.name, value))
 
+    def convert_to_export(self, value):
+        if not isinstance(self.selection, list):
+            # FIXME: this reproduces an existing buggy behavior!
+            return value
+        for item in self.get_selection():
+            if item[0] == value:
+                return item[1]
+        return False
+
 
 class Reference(Selection):
     """ Reference field. """
@@ -381,6 +394,9 @@ class Reference(Selection):
 
     def convert_to_write(self, value):
         return "%s,%s" % (value._name, value.id) if value else False
+
+    def convert_to_export(self, value):
+        return bool(value) and value.name_get()[0][1]
 
 
 class Many2one(Field):
@@ -453,6 +469,9 @@ class Many2one(Field):
     def convert_to_write(self, value):
         return value.id
 
+    def convert_to_export(self, value):
+        return bool(value) and value.name_get()[0][1]
+
     def compute_default(self, record):
         super(Many2one, self).compute_default(record)
         if self.inherits:
@@ -523,6 +542,9 @@ class One2many(Field):
             else:
                 result.append((4, record.id))
         return result
+
+    def convert_to_export(self, value):
+        return bool(value) and ','.join(rec.name_get()[0][1] for rec in value)
 
 
 class Many2many(Field):
@@ -603,6 +625,9 @@ class Many2many(Field):
             else:
                 result.append((4, record.id))
         return result
+
+    def convert_to_export(self, value):
+        return bool(value) and ','.join(rec.name_get()[0][1] for rec in value)
 
 
 class Related(Field):

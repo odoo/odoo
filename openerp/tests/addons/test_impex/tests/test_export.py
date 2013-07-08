@@ -16,15 +16,14 @@ class CreatorCase(common.TransactionCase):
     def setUp(self):
         super(CreatorCase, self).setUp()
         self.model = self.registry(self.model_name)
+
     def make(self, value):
         id = self.model.create(self.cr, openerp.SUPERUSER_ID, {'value': value})
         return self.model.browse(self.cr, openerp.SUPERUSER_ID, [id])[0]
+
     def export(self, value, fields=('value',), context=None):
         record = self.make(value)
-        return self.model._BaseModel__export_row(
-            self.cr, openerp.SUPERUSER_ID, record,
-            [f.split('/') for f in fields],
-            context=context)
+        return record._BaseModel__export_rows([f.split('/') for f in fields])
 
 class test_boolean_field(CreatorCase):
     model_name = 'export.boolean'
@@ -310,7 +309,7 @@ class test_m2o(CreatorCase):
         integer_id = self.registry('export.integer').create(
             self.cr, openerp.SUPERUSER_ID, {'value': 42})
         # __export__.$class.$id
-        external_id = u'__export__.export_many2one_%d' % integer_id
+        external_id = u'__export__.export_integer_%d' % integer_id
         self.assertEqual(
             self.export(integer_id, fields=['value/id']),
             [[external_id]])
@@ -432,12 +431,10 @@ class test_o2m_multiple(CreatorCase):
         if value is not None: values['value'] = value
         id = self.model.create(self.cr, openerp.SUPERUSER_ID, values)
         return self.model.browse(self.cr, openerp.SUPERUSER_ID, [id])[0]
+
     def export(self, value=None, fields=('child1', 'child2',), context=None, **values):
         record = self.make(value, **values)
-        return self.model._BaseModel__export_row(
-            self.cr, openerp.SUPERUSER_ID, record,
-            [f.split('/') for f in fields],
-            context=context)
+        return record._BaseModel__export_rows([f.split('/') for f in fields])
 
     def test_empty(self):
         self.assertEqual(

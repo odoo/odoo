@@ -911,152 +911,108 @@ class BaseModel(object):
         # prepare ormcache, which must be shared by all instances of the model
         cls._ormcache = {}
 
-    def __export_row(self, cr, uid, row, fields, context=None):
-        if context is None:
-            context = {}
-
-        def check_type(field_type):
-            if field_type == 'float':
-                return 0.0
-            elif field_type == 'integer':
-                return 0
-            elif field_type == 'boolean':
-                return 'False'
-            return ''
-
-        def selection_field(in_field):
-            col_obj = self.pool[in_field.keys()[0]]
-            if f[i] in col_obj._columns.keys():
-                return  col_obj._columns[f[i]]
-            elif f[i] in col_obj._inherits.keys():
-                selection_field(col_obj._inherits)
-            else:
-                return False
-
-        def _get_xml_id(self, cr, uid, r):
-            model_data = self.pool.get('ir.model.data')
-            data_ids = model_data.search(cr, uid, [('model', '=', r._name), ('res_id', '=', r['id'])])
-            if len(data_ids):
-                d = model_data.read(cr, uid, data_ids, ['name', 'module'])[0]
-                if d['module']:
-                    r = '%s.%s' % (d['module'], d['name'])
+    def __export_xml_id(self):
+        """ Return a valid xml_id for the record `self`. """
+        ir_model_data = self.pool['ir.model.data']
+        with scope_proxy.SUDO():
+            data = ir_model_data.search([('model', '=', self._name), ('res_id', '=', self.id)])
+            if data:
+                if data.module:
+                    return '%s.%s' % (data.module, data.name)
                 else:
-                    r = d['name']
+                    return data.name
             else:
                 postfix = 0
-                while True:
-                    n = self._table+'_'+str(r['id']) + (postfix and ('_'+str(postfix)) or '' )
-                    if not model_data.search(cr, uid, [('name', '=', n)]):
-                        break
+                name = '%s_%s' % (self._table, self.id)
+                while ir_model_data.search([('module', '=', '__export__'), ('name', '=', name)]):
                     postfix += 1
-                model_data.create(cr, SUPERUSER_ID, {
-                    'name': n,
+                    name = '%s_%s_%s' % (self._table, self.id, postfix)
+                ir_model_data.create({
                     'model': self._name,
-                    'res_id': r['id'],
+                    'res_id': self.id,
                     'module': '__export__',
+                    'name': name,
                 })
-                r = '__export__.'+n
-            return r
+                return '__export__.' + name
 
+    @api.multi
+    def __export_rows(self, fields):
+        """ Export fields of the records in `self`.
+
+            :param fields: list of lists of fields to traverse
+            :return: list of lists of corresponding values
+        """
         lines = []
-        data = map(lambda x: '', range(len(fields)))
-        done = []
-        for fpos in range(len(fields)):
-            f = fields[fpos]
-            if f:
-                r = row
-                i = 0
-                while i < len(f):
-                    cols = False
-                    if f[i] == '.id':
-                        r = r['id']
-                    elif f[i] == 'id':
-                        r = _get_xml_id(self, cr, uid, r)
+        for record in self:
+            # main line of record, initially empty
+            current = [''] * len(fields)
+            lines.append(current)
+
+            # list of primary fields followed by secondary field(s)
+            primary_done = []
+
+            # process column by column
+            for i, path in enumerate(fields):
+                if not path:
+                    continue
+
+                name = path[0]
+                if name in primary_done:
+                    continue
+
+                if name == '.id':
+                    current[i] = str(record.id)
+                elif name == 'id':
+                    current[i] = record.__export_xml_id()
+                else:
+                    field = record._fields[name]
+                    value = record[name]
+
+                    # this part could be simpler, but it has to be done this way
+                    # in order to reproduce the former behavior
+                    if not isinstance(value, BaseModel):
+                        current[i] = field.convert_to_export(value)
                     else:
-                        r = r[f[i]]
-                        # To display external name of selection field when its exported
-                        if f[i] in self._columns.keys():
-                            cols = self._columns[f[i]]
-                        elif f[i] in self._inherit_fields.keys():
-                            cols = selection_field(self._inherits)
-                        if cols and cols._type == 'selection':
-                            sel_list = cols.selection
-                            if r and type(sel_list) == type([]):
-                                r = [x[1] for x in sel_list if r==x[0]]
-                                r = r and r[0] or False
-                    if not r:
-                        if f[i] in self._columns:
-                            r = check_type(self._columns[f[i]]._type)
-                        elif f[i] in self._inherit_fields:
-                            r = check_type(self._inherit_fields[f[i]][2]._type)
-                        data[fpos] = r or False
-                        break
-                    if isinstance(r, Recordset):
-                        first = True
-                        fields2 = map(lambda x: (x[:i+1]==f[:i+1] and x[i+1:]) \
-                                or [], fields)
-                        if fields2 in done:
-                            if [x for x in fields2 if x]:
-                                break
-                        done.append(fields2)
-                        if cols and cols._type=='many2many' and len(fields[fpos])>(i+1) and (fields[fpos][i+1]=='id'):
-                            data[fpos] = ','.join([_get_xml_id(self, cr, uid, x) for x in r])
-                            break
+                        primary_done.append(name)
 
-                        for row2 in r:
-                            lines2 = row2.__export_row(cr, uid, row2, fields2, context)
-                            if first:
-                                for fpos2 in range(len(fields)):
-                                    if lines2 and lines2[0][fpos2]:
-                                        data[fpos2] = lines2[0][fpos2]
-                                if not data[fpos]:
-                                    dt = ''
-                                    for rr in r:
-                                        name_relation = rr._rec_name
-                                        if isinstance(rr[name_relation], Record):
-                                            rr = rr[name_relation]
-                                        rr_name = rr.name_get(cr, uid, [rr.id], context=context)
-                                        rr_name = rr_name and rr_name[0] and rr_name[0][1] or ''
-                                        dt += tools.ustr(rr_name or '') + ','
-                                    data[fpos] = dt[:-1]
-                                    break
-                                lines += lines2[1:]
-                                first = False
+                        # This is a special case, its strange behavior is intended!
+                        if field.type == 'many2many' and len(path) > 1 and path[1] == 'id':
+                            xml_ids = [r.__export_xml_id() for r in value]
+                            current[i] = ','.join(xml_ids) or False
+                            continue
+
+                        # recursively export the fields that follow name
+                        fields2 = [(p[1:] if p and p[0] == name else []) for p in fields]
+                        lines2 = value.__export_rows(fields2)
+                        if lines2:
+                            # merge first line with record's main line
+                            for j, val in enumerate(lines2[0]):
+                                if val:
+                                    current[j] = val
+                            # check value of current field
+                            if not current[i]:
+                                # assign xml_ids, and forget about remaining lines
+                                xml_ids = [item[1] for item in value.name_get()]
+                                current[i] = ','.join(xml_ids)
                             else:
-                                lines += lines2
-                        break
-                    i += 1
-                if i == len(f):
-                    if isinstance(r, Record):
-                        r = r.name_get(cr, uid, [r.id], context=context)
-                        r = r and r[0] and r[0][1] or ''
-                    data[fpos] = tools.ustr(r or '')
-        return [data] + lines
+                                # append the other lines at the end
+                                lines += lines2[1:]
+                        else:
+                            current[i] = False
 
-    def export_data(self, cr, uid, ids, fields_to_export, context=None):
+        return lines
+
+    @api.multi
+    def export_data(self, fields_to_export):
+        """ Export fields for selected objects
+
+            :param fields_to_export: list of fields
+            :rtype: dictionary with a *datas* matrix
+
+            This method is used when exporting data via client menu
         """
-        Export fields for selected objects
-
-        :param cr: database cursor
-        :param uid: current user id
-        :param ids: list of ids
-        :param fields_to_export: list of fields
-        :param context: context arguments, like lang, time zone
-        :rtype: dictionary with a *datas* matrix
-
-        This method is used when exporting data via client menu
-
-        """
-        if context is None:
-            context = {}
-        cols = self._columns.copy()
-        for f in self._inherit_fields:
-            cols.update({f: self._inherit_fields[f][2]})
         fields_to_export = map(fix_import_export_id_paths, fields_to_export)
-        datas = []
-        for row in self.browse(cr, uid, ids, context):
-            datas += self.__export_row(cr, uid, row, fields_to_export, context)
-        return {'datas': datas}
+        return {'datas': self.__export_rows(fields_to_export)}
 
     def import_data(self, cr, uid, fields, datas, mode='init', current_module='', noupdate=False, context=None, filename=None):
         """
