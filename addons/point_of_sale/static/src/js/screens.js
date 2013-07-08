@@ -527,6 +527,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
         order_product: function(){
             var weight = this.pos.proxy.weighting_read_kg();
+            console.log('weighting_end');
+            this.pos.proxy.weighting_end('true');
             this.pos.get('selectedOrder').addProduct(this.get_product(),{ quantity:weight });
         },
         get_product_name: function(){

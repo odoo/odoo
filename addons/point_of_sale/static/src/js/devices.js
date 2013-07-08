@@ -118,8 +118,8 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         },
 
         // the client has finished weighting products
-        weighting_end: function(){
-            if(!this.bypass_proxy){
+        weighting_end: function(force){
+            if(!this.bypass_proxy || force){
                 this.weight = 0;
                 this.weighting = false;
                 this.message('weighting_end');
