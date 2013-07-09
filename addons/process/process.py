@@ -211,7 +211,7 @@ class process_process(osv.osv):
 
                         elif f.get('relation') == node['model']:
                             rel = refobj[n]
-                            if rel and isinstance(rel, (orm.Recordset, list)):
+                            if rel and isinstance(rel, (orm.BaseModel, list)) :
                                 rel = rel[0]
                             try: # XXX: rel has been reported as string (check it)
                                 _id = (rel or False) and rel.id
