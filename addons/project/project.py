@@ -575,6 +575,15 @@ class task(osv.osv):
         },
     }
 
+    def _get_default_partner(self, cr, uid, context=None):
+        """ Override of base_stage to add project specific behavior """
+        project_id = self._get_default_project_id(cr, uid, context)
+        if project_id:
+            project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
+            if project and project.partner_id:
+                return project.partner_id.id
+        return super(task, self)._get_default_partner(cr, uid, context=context)
+
     def _get_default_project_id(self, cr, uid, context=None):
         """ Gives default section by checking if present in the context """
         return (self._resolve_project_id_from_context(cr, uid, context=context) or False)
@@ -672,13 +681,11 @@ class task(osv.osv):
     def onchange_planned(self, cr, uid, ids, planned=0.0, effective=0.0):
         return {'value':{'remaining_hours': planned - effective}}
 
-    def onchange_project(self, cr, uid, id, project_id):
-        if not project_id:
-            return {}
-        data = self.pool.get('project.project').browse(cr, uid, [project_id])
-        partner_id=data and data[0].partner_id
-        if partner_id:
-            return {'value':{'partner_id':partner_id.id}}
+    def onchange_project(self, cr, uid, id, project_id, context=None):
+        if project_id:
+            project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
+            if project and project.partner_id:
+                return {'value': {'partner_id': project.partner_id.id}}
         return {}
 
     def onchange_user_id(self, cr, uid, ids, user_id, context=None):
@@ -805,8 +812,9 @@ class task(osv.osv):
         'progress': 0,
         'sequence': 10,
         'active': True,
-        'user_id': lambda obj, cr, uid, context: uid,
-        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=c),
+        'user_id': lambda obj, cr, uid, ctx=None: uid,
+        'company_id': lambda self, cr, uid, ctx=None: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=ctx),
+        'partner_id': lambda self, cr, uid, ctx=None: self._get_default_partner(cr, uid, context=ctx),
     }
     _order = "priority, sequence, date_start, name, id"
 
@@ -1037,6 +1045,10 @@ class task(osv.osv):
     def create(self, cr, uid, vals, context=None):
         if context is None:
             context = {}
+
+        # for default stage
+        if vals.get('project_id') and not context.get('default_project_id'):
+            context['default_project_id'] = vals.get('project_id')
         # user_id change: update date_start
         if vals.get('user_id'):
             vals['date_start'] = fields.datetime.now()
@@ -1056,6 +1068,7 @@ class task(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
+
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             vals['date_last_stage_update'] = fields.datetime.now()

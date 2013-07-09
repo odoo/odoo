@@ -263,13 +263,6 @@ Andrew</field>
             <field eval="1" name="active"/>
         </record>
 
-        <!-- Call Function to Cancel the leads (set as Dead) -->
-        <function model="crm.lead" name="case_cancel"
-            eval="[ ref('crm_case_12'), ref('crm_case_7'),
-                    ref('crm_case_3'), ref('crm_case_8')],
-                  {'install_mode': True}"
-        />
-
         <!-- Call Function to set the leads as Unread -->
         <function model="crm.lead" name="message_mark_as_unread"
             eval="[ ref('crm_case_1'), ref('crm_case_2'),
@@ -708,6 +701,7 @@ Andrew</field>
         <function model="mail.message" name="set_message_starred"
             eval="[ ref('msg_case18_1'), ref('msg_case18_2')], True, {}"
         />
+
 
     </data>
 </openerp>
