@@ -856,6 +856,7 @@ class BaseModel(object):
                 'ondelete': field['on_delete'],
                 'translate': (field['translate']),
                 'manual': True,
+                '_prefetch': False,
                 #'select': int(field['select_level'])
             }
             if field['serialization_field_id']:
@@ -5413,7 +5414,7 @@ class BaseModel(object):
             if column._prefetch and not self.pool._init:
                 fetch_fields = set(fname
                     for fname, fcolumn in self._columns.iteritems()
-                    if fcolumn._classic_write)
+                    if fcolumn._classic_write and fcolumn._prefetch)
             else:
                 fetch_fields = set((name,))
 
