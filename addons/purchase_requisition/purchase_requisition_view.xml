@@ -180,7 +180,7 @@
     <record model="ir.ui.view" id="product_normal_form_view_inherit">
         <field name="name">product.form.inherit</field>
         <field name="model">product.product</field>
-        <field name="inherit_id" ref="procurement.product_form_view_procurement_button"/>
+        <field name="inherit_id" ref="stock.product_form_view_procurement_button"/>
         <field name="arch" type="xml">
             <field name="supply_method" position="after">
                 <field name="purchase_requisition"/>
@@ -188,6 +188,7 @@
         </field>
     </record>
 
+    <!-- CRASH FOR UNKNOW REASON, reason is : invalid model
     <record model="ir.ui.view" id="procurement_normal_form_view_inherit">
         <field name="name">procurement.form.inherit</field>
         <field name="model">procurement.order</field>
@@ -197,7 +198,7 @@
                 <field name="requisition_id"/>
             </xpath>
         </field>
-    </record>
+    </record>-->
     <act_window
             domain="[('requisition_id', '=', active_id)]"
             context="{'default_requisition_id': active_id}"

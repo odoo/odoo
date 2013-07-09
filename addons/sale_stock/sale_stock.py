@@ -34,7 +34,6 @@ class sale_order(osv.osv):
             default = {}
         default.update({
             'shipped': False,
-            'picking_ids': [],
         })
         return super(sale_order, self).copy(cr, uid, id, default, context=context)
 
@@ -318,6 +317,12 @@ class sale_order(osv.osv):
                     return True
         return False
 
+class stock_move(osv.osv):
+    _inherit = 'stock.move'
+    _columns = {
+        'sale_line_id': fields.many2one('sale.order.line', 'Sale Line'),
+    }
+
 
 class sale_order_line(osv.osv):
 
@@ -334,7 +339,7 @@ class sale_order_line(osv.osv):
     _columns = { 
         'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation and the shipping of the products to the customer", readonly=True, states={'draft': [('readonly', False)]}),
         'procurement_id': fields.many2one('procurement.order', 'Procurement'),
-        'property_ids': fields.many2many('mrp.property', 'sale_order_line_property_rel', 'order_id', 'property_id', 'Properties', readonly=True, states={'draft': [('readonly', False)]}),
+        #'property_ids': fields.many2many('mrp.property', 'sale_order_line_property_rel', 'order_id', 'property_id', 'Properties', readonly=True, states={'draft': [('readonly', False)]}),
         'product_packaging': fields.many2one('product.packaging', 'Packaging'),
         'move_ids': fields.one2many('stock.move', 'sale_line_id', 'Inventory Moves', readonly=True),
         'number_packages': fields.function(_number_packages, type='integer', string='Number Packages'),

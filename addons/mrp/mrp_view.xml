@@ -672,7 +672,8 @@
                                             <field name="product_id"/>
                                             <field name="product_qty"  string="Quantity"/>
                                             <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
-                                            <field name="prodlot_id" groups="stock.group_production_lot" context="{'product_id': product_id}"/>
+                                            <!-- TODO field prodlot_id is now on the quant object
+                                                <field name="prodlot_id" groups="stock.group_production_lot" context="{'product_id': product_id}"/>-->
                                             <field name="state" invisible="1"/>
                                             <button name="%(stock.move_consume)d"
                                                 string="Consume Products" type="action"
@@ -697,7 +698,7 @@
                                            <field name="product_id" readonly="1"/>
                                            <field name="product_qty" readonly="1"/>
                                            <field name="product_uom" readonly="1" string="Unit of Measure" groups="product.group_uom"/>
-                                           <field name="prodlot_id" context="{'product_id': product_id}" groups="stock.group_production_lot"/>
+                                           <!--<field name="prodlot_id" context="{'product_id': product_id}" groups="stock.group_production_lot"/>-->
                                            <field name="state" invisible="1"/>
                                            <field name="scrapped" invisible="1"/>
                                        </tree>
@@ -728,7 +729,7 @@
                                             <field name="product_qty" readonly="1"/>
                                             <field name="product_uom" readonly="1" string="Unit of Measure" groups="product.group_uom"/>
                                             <field name="location_dest_id"  readonly="1" string="Destination Loc." widget="selection" groups="stock.group_locations"/>
-                                            <field name="prodlot_id" context="{'product_id': product_id}" groups="stock.group_production_lot"/>
+                                            <!--<field name="prodlot_id" context="{'product_id': product_id}" groups="stock.group_production_lot"/>-->
                                             <field name="scrapped" invisible="1"/>
                                             <field name="state" invisible="1"/>
                                             <button name="%(stock.track_line)d"
@@ -934,6 +935,7 @@
             Procurements
         -->
 
+        <!-- CRASH FOR UNKNOW REASON, reason is : invalid model
         <record id="view_procurement_form_inherit" model="ir.ui.view">
             <field name="name">procurement.order.form.inherit</field>
             <field name="model">procurement.order</field>
@@ -951,11 +953,11 @@
                 </xpath>
                </data>
             </field>
-        </record>
+        </record>-->
         <record id="product_product_normal_form_supply_view" model="ir.ui.view">
             <field name="name">product.normal.form.mrp.inherit</field>
             <field name="model">product.product</field>
-            <field name="inherit_id" ref="procurement.product_form_view_procurement_button"/>
+            <field name="inherit_id" ref="stock.product_form_view_procurement_button"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='supply_method']" position="attributes">
                     <attribute name="invisible">False</attribute>

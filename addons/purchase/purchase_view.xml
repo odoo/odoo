@@ -529,6 +529,7 @@
 
         <!-- Procurements -->
 
+        <!-- CRASH FOR UNKNOW REASON, reason is : invalid model
         <record id="view_procurement_form_inherit" model="ir.ui.view">
             <field name="name">procurement.order.form.inherit</field>
             <field name="model">procurement.order</field>
@@ -538,7 +539,7 @@
                     <field name="purchase_id"/>
                 </xpath>
             </field>
-        </record>
+        </record>-->
         
         <!-- Product Suppliers-->
         
@@ -561,7 +562,7 @@
         <record id="product_product_normal_form_procurement_help_view" model="ir.ui.view">
             <field name="name">product.normal.form.procurement.help.inherit</field>
             <field name="model">product.product</field>
-            <field name="inherit_id" ref="procurement.product_form_view_procurement_button"/>
+            <field name="inherit_id" ref="stock.product_form_view_procurement_button"/>
             <field name="arch" type="xml">
                 <group name="procurement_help" position="inside">
                     <p attrs="{'invisible': ['|','|',('type','&lt;&gt;','service'),('procure_method','&lt;&gt;','make_to_order'),('supply_method','&lt;&gt;','buy')]}">
