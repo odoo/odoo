@@ -1657,6 +1657,7 @@ class stock_move(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
         'backorder_id': fields.related('picking_id','backorder_id',type='many2one', relation="stock.picking", string="Back Order of", select=True),
         'origin': fields.related('picking_id','origin',type='char', size=64, relation="stock.picking", string="Source", store=True),
+        'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procurement Method', required=True, help="Make to Stock: When needed, the product is taken from the stock or we wait for replenishment. \nMake to Order: When needed, the product is purchased or produced."),
 
         # used for colors in tree views:
         'scrapped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scrapped', readonly=True),
@@ -2525,9 +2526,9 @@ class stock_inventory_line(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure')),
-        'company_id': fields.related('inventory_id','company_id',type='many2one',relation='res.company',string='Company',store=True, select=True, readonly=True),
+        'company_id': fields.related('inventory_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, select=True, readonly=True),
         'prod_lot_id': fields.many2one('stock.production.lot', 'Serial Number', domain="[('product_id','=',product_id)]"),
-        'state': fields.related('inventory_id','state',type='char',string='Status',readonly=True),
+        'state': fields.related('inventory_id', 'state', type='char', string='Status', readonly=True),
     }
 
     def _default_stock_location(self, cr, uid, context=None):
@@ -2545,7 +2546,7 @@ class stock_inventory_line(osv.osv):
         @param uom: UoM product
         @return:  Dictionary of changed values
         """
-        context=context or {}
+        context = context or {}
         if not product:
             return {'value': {'product_qty': 0.0, 'product_uom': False}}
         context['location'] = location_id
@@ -2566,9 +2567,9 @@ class stock_warehouse(osv.osv):
         'name': fields.char('Name', size=128, required=True, select=True),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
         'partner_id': fields.many2one('res.partner', 'Owner Address'),
-        'lot_input_id': fields.many2one('stock.location', 'Location Input', required=True, domain=[('usage','<>','view')]),
-        'lot_stock_id': fields.many2one('stock.location', 'Location Stock', required=True, domain=[('usage','=','internal')]),
-        'lot_output_id': fields.many2one('stock.location', 'Location Output', required=True, domain=[('usage','<>','view')]),
+        'lot_input_id': fields.many2one('stock.location', 'Location Input', required=True, domain=[('usage', '<>', 'view')]),
+        'lot_stock_id': fields.many2one('stock.location', 'Location Stock', required=True, domain=[('usage', '=', 'internal')]),
+        'lot_output_id': fields.many2one('stock.location', 'Location Output', required=True, domain=[('usage', '<>', 'view')]),
     }
 
     def _default_lot_input_stock_id(self, cr, uid, context=None):
@@ -2592,7 +2593,6 @@ class stock_warehouse(osv.osv):
 #   in order to offer a different usability with different views, labels, available reports/wizards...
 #----------------------------------------------------------
 
-# FP Note: do we need all those over rides?
 class stock_picking_in(osv.osv):
     _name = "stock.picking.in"
     _inherit = "stock.picking"
@@ -2634,14 +2634,14 @@ class stock_picking_in(osv.osv):
         return self.pool.get('stock.picking').signal_workflow(cr, uid, ids, signal, context=context)
 
     _columns = {
-        'backorder_id': fields.many2one('stock.picking.in', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
+        'backorder_id': fields.many2one('stock.picking.in', 'Back Order of', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
         'state': fields.selection(
             [('draft', 'Draft'),
             ('auto', 'Waiting Another Operation'),
             ('confirmed', 'Waiting Availability'),
             ('assigned', 'Ready to Receive'),
             ('done', 'Received'),
-            ('cancel', 'Cancelled'),],
+            ('cancel', 'Cancelled')],
             'Status', readonly=True, select=True,
             help="""* Draft: not confirmed yet and will not be scheduled until confirmed\n
                  * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n
@@ -2695,14 +2695,14 @@ class stock_picking_out(osv.osv):
         return self.pool.get('stock.picking').signal_workflow(cr, uid, ids, signal, context=context)
 
     _columns = {
-        'backorder_id': fields.many2one('stock.picking.out', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
+        'backorder_id': fields.many2one('stock.picking.out', 'Back Order of', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
         'state': fields.selection(
             [('draft', 'Draft'),
             ('auto', 'Waiting Another Operation'),
             ('confirmed', 'Waiting Availability'),
             ('assigned', 'Ready to Deliver'),
             ('done', 'Delivered'),
-            ('cancel', 'Cancelled'),],
+            ('cancel', 'Cancelled')],
             'Status', readonly=True, select=True,
             help="""* Draft: not confirmed yet and will not be scheduled until confirmed\n
                  * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n
@@ -2797,7 +2797,7 @@ class stock_pack_operation(osv.osv):
         #returns all ops that touches this product
         #TOCHECK: don't we need to take only the ops with a result_package_id != False ?
         res = []
-        op_ids =  self.search(cr, uid, [('picking_id', '=', picking_id)], context=context)
+        op_ids = self.search(cr, uid, [('picking_id', '=', picking_id)], context=context)
         for operation in self.browse(cr, uid, op_ids, context=context):
             if operation.product_id and operation.product_id.id == product_id:
                 res += [operation.id]
@@ -2871,7 +2871,7 @@ class stock_warehouse_orderpoint(osv.osv):
         result = {}
         procurement_obj = self.pool.get('procurement.order')
         for orderpoint in self.browse(cr, uid, ids, context=context):
-            procurement_ids = procurement_obj.search(cr, uid , [('state', '=', 'draft'), ('product_id', '=', orderpoint.product_id.id), ('location_id', '=', orderpoint.location_id.id)])
+            procurement_ids = procurement_obj.search(cr, uid, [('state', '=', 'draft'), ('product_id', '=', orderpoint.product_id.id), ('location_id', '=', orderpoint.location_id.id)])
             result[orderpoint.id] = procurement_ids
         return result
 
@@ -2881,20 +2881,20 @@ class stock_warehouse_orderpoint(osv.osv):
         '''
         if not context:
             context = {}
-            
+
         for rule in self.browse(cr, uid, ids, context=context):
             if rule.product_id.uom_id.category_id.id != rule.product_uom.category_id.id:
                 return False
-            
+
         return True
 
     _columns = {
         'name': fields.char('Name', size=32, required=True),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the orderpoint without removing it."),
-        'logic': fields.selection([('max','Order to Max'),('price','Best price (not yet active!)')], 'Reordering Mode', required=True),
+        'logic': fields.selection([('max', 'Order to Max'), ('price', 'Best price (not yet active!)')], 'Reordering Mode', required=True),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True, ondelete="cascade"),
         'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete="cascade"),
-        'product_id': fields.many2one('product.product', 'Product', required=True, ondelete='cascade', domain=[('type','!=','service')]),
+        'product_id': fields.many2one('product.product', 'Product', required=True, ondelete='cascade', domain=[('type', '!=', 'service')]),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'product_min_qty': fields.float('Minimum Quantity', required=True,
             help="When the virtual stock goes below the Min Quantity specified for this field, OpenERP generates "\
@@ -2905,17 +2905,17 @@ class stock_warehouse_orderpoint(osv.osv):
         'qty_multiple': fields.integer('Qty Multiple', required=True,
             help="The procurement quantity will be rounded up to this multiple."),
         'procurement_id': fields.many2one('procurement.order', 'Latest procurement', ondelete="set null"),
-        'company_id': fields.many2one('res.company','Company',required=True),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
         'procurement_draft_ids': fields.function(_get_draft_procurements, type='many2many', relation="procurement.order", \
-                                string="Related Procurement Orders",help="Draft procurement of the product and location of that orderpoint"),
+                                string="Related Procurement Orders", help="Draft procurement of the product and location of that orderpoint"),
     }
     _defaults = {
         'active': lambda *a: 1,
         'logic': lambda *a: 'max',
         'qty_multiple': lambda *a: 1,
-        'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'stock.orderpoint') or '',
-        'product_uom': lambda sel, cr, uid, context: context.get('product_uom', False),
-        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.warehouse.orderpoint', context=c)
+        'name': lambda self, cr, uid, context: self.pool.get('ir.sequence').get(cr, uid, 'stock.orderpoint') or '',
+        'product_uom': lambda self, cr, uid, context: context.get('product_uom', False),
+        'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.warehouse.orderpoint', context=context)
     }
     _sql_constraints = [
         ('qty_multiple_check', 'CHECK( qty_multiple > 0 )', 'Qty Multiple must be greater than zero.'),
@@ -2967,11 +2967,10 @@ class stock_warehouse_orderpoint(osv.osv):
         return super(stock_warehouse_orderpoint, self).copy(cr, uid, id, default, context=context)
 
 class product_template(osv.osv):
-    _inherit="product.template"
+    _inherit = "product.template"
     _columns = {
-        'type': fields.selection([('product','Stockable Product'),('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Consumable: Will not imply stock management for this product. \nStockable product: Will imply stock management for this product."),
-        'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procurement Method', required=True, help="Make to Stock: When needed, the product is taken from the stock or we wait for replenishment. \nMake to Order: When needed, the product is purchased or produced."),
-        'supply_method': fields.selection([('produce','Manufacture'),('buy','Buy')], 'Supply Method', required=True, help="Manufacture: When procuring the product, a manufacturing order or a task will be generated, depending on the product type. \nBuy: When procuring the product, a purchase order will be generated."),
+        'type': fields.selection([('product', 'Stockable Product'), ('consu', 'Consumable'), ('service', 'Service')], 'Product Type', required=True, help="Consumable: Will not imply stock management for this product. \nStockable product: Will imply stock management for this product."),
+        'supply_method': fields.selection([('produce', 'Manufacture'), ('buy', 'Buy')], 'Supply Method', required=True, help="Manufacture: When procuring the product, a manufacturing order or a task will be generated, depending on the product type. \nBuy: When procuring the product, a purchase order will be generated."),
     }
     _defaults = {
         'procure_method': 'make_to_stock',
@@ -2979,8 +2978,9 @@ class product_template(osv.osv):
     }
 
 class product_product(osv.osv):
-    _inherit="product.product"
+    _inherit = "product.product"
     _columns = {
         'orderpoint_ids': fields.one2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rules'),
     }
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
