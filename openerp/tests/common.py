@@ -9,7 +9,7 @@ import unittest2
 import xmlrpclib
 
 import openerp
-from openerp.osv.api import Scope
+from openerp import scope
 
 # The openerp library is supposed already configured.
 ADDONS_PATH = openerp.tools.config['addons_path']
@@ -94,7 +94,7 @@ class TransactionCase(BaseCase):
         # and still access them
         TransactionCase.cr = cr = self.cursor()
         TransactionCase.uid = uid = openerp.SUPERUSER_ID
-        TransactionCase.scope = Scope(cr, uid, None).__enter__()
+        TransactionCase.scope = scope(cr, uid, None).__enter__()
 
     def tearDown(self):
         self.scope.__exit__(None, None, None)
@@ -112,7 +112,7 @@ class SingleTransactionCase(BaseCase):
     def setUpClass(cls):
         cls.cr = cls.cursor()
         cls.uid = openerp.SUPERUSER_ID
-        cls.scope = Scope(cls.cr, cls.uid, None).__enter__()
+        cls.scope = scope(cls.cr, cls.uid, None).__enter__()
 
     @classmethod
     def tearDownClass(cls):

@@ -1,7 +1,6 @@
 
-from openerp import SUPERUSER_ID
+from openerp import SUPERUSER_ID, scope
 from openerp.tools import mute_logger
-from openerp.osv.api import scope
 from openerp.osv.orm import Record, Recordset, Null, except_orm
 import common
 
