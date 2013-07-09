@@ -5,8 +5,8 @@ HR Recruitment DevDoc
 Hr Recruitment module documentation
 ===================================
 
-Hr Recruitment documentation topics
-'''''''''''''''''''''''''''''''''''
+Documentation topics
+''''''''''''''''''''
 
 .. toctree::
    :maxdepth: 1
