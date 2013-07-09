@@ -56,10 +56,10 @@ class procurement_group(osv.osv):
     _description = 'Procurement Requisition'
     _order = "id desc"
     _columns = {
-        'name': fields.char('Reference'), 
+        'name': fields.char('Reference'),
     }
     _defaults = {
-        'name': lambda self,cr,uid,c: self.pool.get('ir.sequence').get(cr,uid,'procurement.group') or ''
+        'name': lambda self, cr, uid, c: self.pool.get('ir.sequence').get(cr, uid, 'procurement.group') or ''
     }
 
 class procurement_rule(osv.osv):
@@ -96,33 +96,28 @@ class procurement_order(osv.osv):
         'origin': fields.char('Source Document', size=64,
             help="Reference of the document that created this Procurement.\n"
             "This is automatically completed by OpenERP."),
-        'company_id': fields.many2one('res.company','Company',required=True),
+        'company_id': fields.many2one('res.company', 'Company', required=True),
 
         # These two fields are used for shceduling
-        'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority', required=True, select=True),
+        'priority': fields.selection([('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')], 'Priority', required=True, select=True),
         'date_planned': fields.datetime('Scheduled date', required=True, select=True),
 
-        'group_id':fields.many2one('procurement.group', 'Procurement Requisition'), 
-        'rule_id' :fields.many2one('procurement.rule', 'Rule'),
+        'group_id': fields.many2one('procurement.group', 'Procurement Requisition'),
+        'rule_id': fields.many2one('procurement.rule', 'Rule'),
 
-        'product_id': fields.many2one('product.product', 'Product', required=True, states={'draft':[('readonly',False)]}, readonly=True),
-        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, states={'draft':[('readonly',False)]}, readonly=True),
-        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True, states={'draft':[('readonly',False)]}, readonly=True),
+        'product_id': fields.many2one('product.product', 'Product', required=True, states={'draft': [('readonly', False)]}, readonly=True),
+        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, states={'draft': [('readonly', False)]}, readonly=True),
+        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True, states={'draft': [('readonly', False)]}, readonly=True),
 
-        'product_uos_qty': fields.float('UoS Quantity', states={'draft':[('readonly',False)]}, readonly=True),
-        'product_uos': fields.many2one('product.uom', 'Product UoS', states={'draft':[('readonly',False)]}, readonly=True),
-
-        'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')],
-            'Procurement Method', states={'draft':[('readonly',False)], 'confirmed':[('readonly',False)]},
-            readonly=True, required=True, help="If you encode manually a Procurement, you probably want to use" \
-            " a make to order method."),
+        'product_uos_qty': fields.float('UoS Quantity', states={'draft': [('readonly', False)]}, readonly=True),
+        'product_uos': fields.many2one('product.uom', 'Product UoS', states={'draft': [('readonly', False)]}, readonly=True),
 
         'state': fields.selection([
-            ('cancel','Cancelled'),
-            ('confirmed','Confirmed'),
-            ('exception','Exception'),
-            ('running','Running'),
-            ('done','Done')
+            ('cancel', 'Cancelled'),
+            ('confirmed', 'Confirmed'),
+            ('exception', 'Exception'),
+            ('running', 'Running'),
+            ('done', 'Done')
         ], 'Status', required=True, track_visibility='onchange'),
 
     }
@@ -130,7 +125,6 @@ class procurement_order(osv.osv):
         'state': 'confirmed',
         'priority': '1',
         'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'procure_method': 'make_to_order',
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'procurement.order', context=c)
     }
     def onchange_product_id(self, cr, uid, ids, product_id, context=None):
@@ -149,21 +143,14 @@ class procurement_order(osv.osv):
 
     def run(self, cr, uid, ids, context=None):
         for procurement in self.browse(cr, uid, ids, context=context or {}):
-            if procurement.procure_method=='make_to_order':
-                rule = self.pool.get("procurement.rule").browse(cr, uid, self._assign(cr, uid, procurement, context=context), context=context)
-                if rule:
-                    self.write(cr, uid, [procurement.id], {'rule_id': rule.id}, context=context)
-                    procurement.refresh()
-                    self._run(cr, uid, procurement, context=context or {})
-                    result = True
-                else:
-                    self.message_post(cr, uid, [procurement.id], body=_('No rule matching this procurement'), context=context)
-                    result = False
-            else:
-                result = True
-            if result:
+            rule = self.pool.get("procurement.rule").browse(cr, uid, self._assign(cr, uid, procurement, context=context), context=context)
+            if rule:
+                self.write(cr, uid, [procurement.id], {'rule_id': rule.id}, context=context)
+                procurement.refresh()
+                self._run(cr, uid, procurement, context=context or {})
                 self.write(cr, uid, [procurement.id], {'state': 'running'}, context=context)
             else:
+                self.message_post(cr, uid, [procurement.id], body=_('No rule matching this procurement'), context=context)
                 self.write(cr, uid, [procurement.id], {'state': 'exception'}, context=context)
         return True
 
@@ -214,8 +201,9 @@ class procurement_order(osv.osv):
 
             # Run confirmed procurements
             while True:
-                ids = self.search(cr, uid, [('state', '=', 'confirmed'),('date_planned','<=', maxdate)], context=context)
-                if not ids: break
+                ids = self.search(cr, uid, [('state', '=', 'confirmed'), ('date_planned', '<=', maxdate)], context=context)
+                if not ids:
+                    break
                 self.run(cr, uid, ids, context=context)
                 if use_new_cursor:
                     cr.commit()
@@ -223,8 +211,9 @@ class procurement_order(osv.osv):
             # Check if running procurements are done
             offset = 0
             while True:
-                ids = self.search(cr, uid, [('state', '=', 'running'),('date_planned','<=', maxdate)], offset=offset, context=context)
-                if not ids: break
+                ids = self.search(cr, uid, [('state', '=', 'running'), ('date_planned', '<=', maxdate)], offset=offset, context=context)
+                if not ids:
+                    break
                 done = self.check(cr, uid, ids, context=context)
                 offset += len(ids) - len(done)
                 if use_new_cursor and len(done):
@@ -237,4 +226,4 @@ class procurement_order(osv.osv):
                 except Exception:
                     pass
         return {}
-
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
