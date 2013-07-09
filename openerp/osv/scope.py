@@ -185,8 +185,8 @@ class Scope(object):
                 context = arg
             elif isinstance(arg, (int, long)):
                 uid = arg
-            elif isinstance(arg, Record) and arg._name == 'res.users':
-                uid = int(arg)
+            elif isinstance(arg, BaseModel) and arg._name == 'res.users':
+                uid = arg.id
             elif isinstance(arg, Cursor):
                 cr = arg
             else:
@@ -317,6 +317,6 @@ class Cache(defaultdict):
 
 # keep those imports here in order to handle cyclic dependencies correctly
 from openerp import SUPERUSER_ID
-from openerp.osv.orm import Record
+from openerp.osv.orm import BaseModel
 from openerp.sql_db import Cursor
 from openerp.modules.registry import RegistryManager

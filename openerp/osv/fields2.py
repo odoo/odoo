@@ -379,7 +379,7 @@ class Reference(Selection):
     def convert_value(self, value):
         if value is None or value is False:
             return False
-        if isinstance(value, Record) and value._name in self.get_values():
+        if isinstance(value, BaseModel) and value._name in self.get_values() and len(value) == 1:
             return value.scoped()
         raise ValueError("Wrong value for %s.%s: %r" % (self.model, self.name, value))
 
@@ -454,7 +454,7 @@ class Many2one(Field):
     def convert_value(self, value):
         if value is None or value is False:
             return self.null()
-        if isinstance(value, Record) and value._name == self.comodel:
+        if isinstance(value, BaseModel) and value._name == self.comodel and len(value) <= 1:
             return value.scoped()
         raise ValueError("Wrong value for %s.%s: %r" % (self.model, self.name, value))
 
@@ -524,7 +524,7 @@ class One2many(Field):
     def convert_value(self, value):
         if value is None or value is False:
             return self.null()
-        if isinstance(value, Recordset) and value._name == self.comodel:
+        if isinstance(value, BaseModel) and value._name == self.comodel:
             return value.scoped()
         raise ValueError("Wrong value for %s.%s: %s" % (self.model, self.name, value))
 
@@ -607,7 +607,7 @@ class Many2many(Field):
     def convert_value(self, value):
         if value is None or value is False:
             return self.null()
-        if isinstance(value, Recordset) and value._name == self.comodel:
+        if isinstance(value, BaseModel) and value._name == self.comodel:
             return value.scoped()
         raise ValueError("Wrong value for %s.%s: %s" % (self.model, self.name, value))
 
@@ -720,5 +720,5 @@ class Id(Field):
 
 # imported here to avoid dependency cycle issues
 from openerp.osv import fields
-from openerp.osv.orm import Record, Recordset
+from openerp.osv.orm import BaseModel
 from openerp.osv.scope import proxy as scope

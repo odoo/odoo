@@ -30,7 +30,7 @@ import render
 from interface import report_int
 import common
 from openerp.osv.osv import except_osv
-from openerp.osv.orm import browse_null, Recordset
+from openerp.osv.orm import BaseModel
 from pychart import *
 import misc
 import cStringIO
@@ -83,7 +83,7 @@ class report_custom(report_int):
                     if row_canvas[i]:
                         row_canvas[i]=False
                 elif len(fields[i])==1:
-                    if not isinstance(obj, browse_null):
+                    if obj:
                         row.append(str(eval('obj.'+fields[i][0],{'obj': obj})))
                     else:
                         row.append(None)
@@ -105,7 +105,7 @@ class report_custom(report_int):
                     key = levels.keys()
                 for l in key:
                     objs = eval('obj.'+l,{'obj': obj})
-                    if not isinstance(objs, (Recordset, list)):
+                    if not isinstance(objs, (BaseModel, list)):
                         objs = [objs]
                     field_new = []
                     cond_new = []
@@ -190,8 +190,8 @@ class report_custom(report_int):
                 new_obj = eval('obj.'+report['field_parent'][1],{'obj': obj})
                 if not isinstance(new_obj, list) :
                     new_obj = [new_obj]
-                for o in  new_obj:
-                    if not isinstance(o, browse_null):
+                for o in new_obj:
+                    if o:
                         res += build_tree(o, level, depth+1)
                 return res
 

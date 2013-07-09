@@ -1,7 +1,8 @@
 
+from openerp import BaseModel
 from openerp import SUPERUSER_ID, scope
 from openerp.tools import mute_logger
-from openerp.osv.orm import Record, Recordset, Null, except_orm
+from openerp.osv.orm import except_orm
 import common
 
 
@@ -13,10 +14,17 @@ class TestAPI(common.TransactionCase):
         self.Partner = self.registry('res.partner')
         self.Users = self.registry('res.users')
 
-    def assertIsKind(self, value, kind, model):
-        """ check for isinstance(value, kind) and value._name == model """
-        self.assertIsInstance(value, kind)
+    def assertIsRecordset(self, value, model):
+        self.assertIsInstance(value, BaseModel)
         self.assertEqual(value._name, model)
+
+    def assertIsRecord(self, value, model):
+        self.assertIsRecordset(value, model)
+        self.assertTrue(len(value) <= 1)
+
+    def assertIsNull(self, value, model):
+        self.assertIsRecordset(value, model)
+        self.assertFalse(value)
 
     @mute_logger('openerp.osv.orm')
     def test_00_query(self):
@@ -30,10 +38,10 @@ class TestAPI(common.TransactionCase):
         self.assertTrue(partners)
 
         # partners and its contents are instance of the model, and share its ormcache
-        self.assertIsKind(partners, Recordset, 'res.partner')
+        self.assertIsRecordset(partners, 'res.partner')
         self.assertIs(partners._ormcache, self.Partner._ormcache)
         for p in partners:
-            self.assertIsKind(p, Record, 'res.partner')
+            self.assertIsRecord(p, 'res.partner')
             self.assertIs(p._ormcache, self.Partner._ormcache)
 
         self.assertEqual([p.id for p in partners], ids)
@@ -44,8 +52,8 @@ class TestAPI(common.TransactionCase):
         """ Build a recordset with offset, and check equivalence. """
         partners1 = self.Partner.search([], offset=10)
         partners2 = self.Partner.search([])[10:]
-        self.assertIsKind(partners1, Recordset, 'res.partner')
-        self.assertIsKind(partners2, Recordset, 'res.partner')
+        self.assertIsRecordset(partners1, 'res.partner')
+        self.assertIsRecordset(partners2, 'res.partner')
         self.assertEqual(list(partners1), list(partners2))
 
     @mute_logger('openerp.osv.orm')
@@ -53,8 +61,8 @@ class TestAPI(common.TransactionCase):
         """ Build a recordset with offset, and check equivalence. """
         partners1 = self.Partner.search([], limit=10)
         partners2 = self.Partner.search([])[:10]
-        self.assertIsKind(partners1, Recordset, 'res.partner')
-        self.assertIsKind(partners2, Recordset, 'res.partner')
+        self.assertIsRecordset(partners1, 'res.partner')
+        self.assertIsRecordset(partners2, 'res.partner')
         self.assertEqual(list(partners1), list(partners2))
 
     @mute_logger('openerp.osv.orm')
@@ -62,8 +70,8 @@ class TestAPI(common.TransactionCase):
         """ Build a recordset with offset and limit, and check equivalence. """
         partners1 = self.Partner.search([], offset=3, limit=7)
         partners2 = self.Partner.search([])[3:10]
-        self.assertIsKind(partners1, Recordset, 'res.partner')
-        self.assertIsKind(partners2, Recordset, 'res.partner')
+        self.assertIsRecordset(partners1, 'res.partner')
+        self.assertIsRecordset(partners2, 'res.partner')
         self.assertEqual(list(partners1), list(partners2))
 
     @mute_logger('openerp.osv.orm')
@@ -86,27 +94,22 @@ class TestAPI(common.TransactionCase):
     def test_06_fields(self):
         """ Check that relation fields return records, recordsets or nulls. """
         user = self.Users.browse(self.cr, self.uid, self.uid)
-        self.assertIsKind(user, Record, 'res.users')
-        # Check for a programming bug: accessing 'partner_id' should read all
-        # prefetched fields in the record cache, and many2many fields should not
-        # be prefetched.  When rewriting the record access, I observed that
-        # many2many fields may be anyway read, and put in the cache as a list of
-        # ids instead of a recordset.
-        self.assertIsKind(user.partner_id, Record, 'res.partner')
-        self.assertIsKind(user.groups_id, Recordset, 'res.groups')
+        self.assertIsRecord(user, 'res.users')
+        self.assertIsRecord(user.partner_id, 'res.partner')
+        self.assertIsRecordset(user.groups_id, 'res.groups')
 
         partners = self.Partner.search([])
         for name, cinfo in partners._all_columns.iteritems():
             if cinfo.column._type == 'many2one':
                 for p in partners:
-                    self.assertIsKind(p[name], Record, cinfo.column._obj)
+                    self.assertIsRecord(p[name], cinfo.column._obj)
             elif cinfo.column._type == 'reference':
                 for p in partners:
                     if p[name]:
-                        self.assertIsKind(p[name], Record, cinfo.column._obj)
+                        self.assertIsRecord(p[name], cinfo.column._obj)
             elif cinfo.column._type in ('one2many', 'many2many'):
                 for p in partners:
-                    self.assertIsKind(p[name], Recordset, cinfo.column._obj)
+                    self.assertIsRecordset(p[name], cinfo.column._obj)
 
     @mute_logger('openerp.osv.orm')
     def test_07_null(self):
@@ -116,20 +119,20 @@ class TestAPI(common.TransactionCase):
 
         # check partner and related null instances
         self.assertTrue(partner)
-        self.assertIsKind(partner, Record, 'res.partner')
+        self.assertIsRecord(partner, 'res.partner')
 
         self.assertFalse(partner.parent_id)
-        self.assertIsKind(partner.parent_id, Null, 'res.partner')
+        self.assertIsNull(partner.parent_id, 'res.partner')
 
         self.assertIs(partner.parent_id.id, False)
 
         self.assertFalse(partner.parent_id.user_id)
-        self.assertIsKind(partner.parent_id.user_id, Null, 'res.users')
+        self.assertIsNull(partner.parent_id.user_id, 'res.users')
 
         self.assertIs(partner.parent_id.user_id.name, False)
 
         self.assertFalse(partner.parent_id.user_id.groups_id)
-        self.assertIsKind(partner.parent_id.user_id.groups_id, Recordset, 'res.groups')
+        self.assertIsRecordset(partner.parent_id.user_id.groups_id, 'res.groups')
 
     @mute_logger('openerp.osv.orm')
     def test_10_old_old(self):

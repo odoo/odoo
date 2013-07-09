@@ -24,7 +24,7 @@ import openerp
 import openerp.tools as tools
 from openerp.tools.safe_eval import safe_eval
 import print_fnc
-from openerp.osv.orm import browse_null, Record, Recordset
+from openerp.osv.orm import BaseModel
 
 class InheritDict(dict):
     # Might be usefull when we're doing name lookup for call or eval.
@@ -74,26 +74,18 @@ class document(object):
         value = browser
 
         for f in fields:
-            if isinstance(value, (Recordset, list)):
-                if len(value) == 0:
+            if isinstance(value, (BaseModel, list)):
+                if not value:
                     return ''
                 value = value[0]
-            if isinstance(value, browse_null):
-                return ''
-            else:
-                value = value[f]
+            value = value[f]
 
-        if isinstance(value, browse_null) or (value is False):
-            return ''
-        else:
-            return value
+        return value or ''
 
     def get_value2(self, browser, field_path):
         value = self.get_value(browser, field_path)
-        if isinstance(value, Record):
+        if isinstance(value, BaseModel):
             return value.id
-        elif isinstance(value, browse_null):
-            return False
         else:
             return value
 
@@ -223,7 +215,7 @@ class document(object):
                             else:
                                 for el_cld in node:
                                     parse_result_tree(el_cld, el, datas)
-                    if not isinstance(newdatas, (Recordset, list)):
+                    if not isinstance(newdatas, (BaseModel, list)):
                         newdatas = [newdatas]
                     for newdata in newdatas:
                         parse_result_tree(node, parent, newdata)
@@ -231,7 +223,7 @@ class document(object):
                 elif attrs['type']=='zoom':
                     value = self.get_value(browser, attrs['name'])
                     if value:
-                        if not isinstance(value, (Recordset, list)):
+                        if not isinstance(value, (BaseModel, list)):
                             v_list = [value]
                         else:
                             v_list = value

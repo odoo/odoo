@@ -25,11 +25,10 @@ from lxml import etree
 from lxml.builder import E
 
 import openerp
-from openerp import SUPERUSER_ID
+from openerp import SUPERUSER_ID, BaseModel
 from openerp import tools
 import openerp.exceptions
 from openerp.osv import fields, osv, api
-from openerp.osv.orm import Record
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -353,8 +352,8 @@ class res_users(osv.osv):
             else:
                 context_key = False
             if context_key:
-                res = getattr(user,k) or False
-                if isinstance(res, Record):
+                res = getattr(user, k) or False
+                if isinstance(res, BaseModel):
                     res = res.id
                 result[context_key] = res or False
         return result

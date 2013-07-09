@@ -5590,16 +5590,16 @@ class BaseModel(object):
         return res
 
 
-# for instance checking
-Recordset = BaseModel
+# extra definitions for backward compatibility
+browse_record_list = BaseModel
 
-class Record(object):
+class browse_record(object):
     """ Pseudo-class for testing record instances """
     class __metaclass__(type):
         def __instancecheck__(self, inst):
             return isinstance(inst, BaseModel) and len(inst) <= 1
 
-class Null(object):
+class browse_null(object):
     """ Pseudo-class for testing null instances """
     class __metaclass__(type):
         def __instancecheck__(self, inst):
@@ -5610,11 +5610,6 @@ class Draft(object):
     class __metaclass__(type):
         def __instancecheck__(self, inst):
             return isinstance(inst, BaseModel) and inst.is_draft()
-
-# extra definitions for backward compatibility
-browse_null = Null
-browse_record = Record
-browse_record_list = Recordset
 
 
 class Model(BaseModel):

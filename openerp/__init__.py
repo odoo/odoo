@@ -62,7 +62,6 @@ import workflow
 
 # model classes
 from openerp.osv.orm import BaseModel, AbstractModel, Model, TransientModel
-from openerp.osv.orm import Record, Recordset, Null
 
 # field classes
 from openerp.osv import fields2 as fields
