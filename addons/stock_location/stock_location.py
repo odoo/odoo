@@ -21,6 +21,8 @@
 
 from openerp.osv import fields,osv
 from datetime import *
+from dateutil.relativedelta import relativedelta
+from openerp.tools.translate import _
 
 class stock_location_route(osv.osv):
     _name = 'stock.location.route'
@@ -73,7 +75,7 @@ class stock_location_path(osv.osv):
     }
     def _apply(self, cr, uid, rule, move, context=None):
         move_obj = self.pool.get('stock.move')
-        newdate = (datetime.strptime(move.date, '%Y-%m-%d %H:%M:%S') + datetime.relativedelta(days=rule.delay or 0)).strftime('%Y-%m-%d')
+        newdate = (datetime.strptime(move.date, '%Y-%m-%d %H:%M:%S') + relativedelta(days=rule.delay or 0)).strftime('%Y-%m-%d')
         if rule.auto=='transparent':
             self.write(cr, uid, [move.id], {
                 'date': newdate,
@@ -122,14 +124,69 @@ class procurement_rule(osv.osv):
         'type_proc': 'move',
         'invoice_state': 'none',
     }
+    
+    def _apply(self, cr, uid, rule, move, context=None):
+        """
+            This will create a procurement order
+        """
+        print "Will need to create procurement here"
+        #Do not forget to do super
+        #TODO Create procurement order
+        proc_obj = self.pool.get("procurement.order")
+        #move_obj = self.pool.get("stock.move")
+        procs = proc_obj.search(cr, uid, [('move_dest_id','=', move.id)], context=context)
+        if procs and procs[0]:
+            proc = procs[0]
+            origin = (proc.origin or proc.name or '').split(':')[0] +':'+rule.name
+            proc_id = proc_obj.create(cr, uid, {
+                    'name': rule.name,
+                    'origin': origin,
+                    'note': _('Pulled procurement coming from original location %s, pull rule %s, via original Procurement %s (#%d)') % (proc.location_id.name, rule.name, proc.name, proc.id),
+                    'company_id':  rule.company_id and rule.company_id.id or False,
+                    'date_planned': proc.date_planned,
+                    'product_id': proc.product_id.id,
+                    'product_qty': proc.product_qty,
+                    'product_uom': proc.product_uom.id,
+                    'product_uos_qty': (proc.product_uos and proc.product_uos_qty)\
+                            or proc.product_qty,
+                    'product_uos': (proc.product_uos and proc.product_uos.id)\
+                            or proc.product_uom.id,
+                    'location_id': rule.location_src_id.id,
+                    'procure_method': rule.procure_method,
+                    'move_id': move.id,
+                })
+        else:
+            proc_id = proc_obj.create(cr, uid, {
+                    'name': rule.name,
+                    'origin': 'From stock move',
+                    'note': _('Pulled procurement coming from original location %s, pull rule %s, via rule %s (#%d)') % (rule.location_id.name, rule.name, rule.name, rule.id),
+                    'company_id':  move.company_id and move.company_id.id or False,
+                    'date_planned': move.date,
+                    'product_id': move.product_id.id,
+                    'product_qty': move.product_qty,
+                    'product_uom': move.product_uom.id,
+                    'product_uos_qty': (move.product_uos and move.product_uos_qty)\
+                            or move.product_qty,
+                    'product_uos': (move.product_uos and move.product_uos.id)\
+                            or move.product_uom.id,
+                    'location_id': rule.location_src_id.id,
+                    'procure_method': rule.procure_method,
+                    'move_id': move.id,
+                })
+        proc_obj._assign(cr, uid, proc_obj.browse(cr, uid, proc_id, context=context), context=context)
+
 
 
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
     
-    def _run_move_create(self, cr, uid, procurement, move, context=None):
-        d = super(procurement_order, self)._run_move_create(cr, uid, procurement, move, context=context)
-        newdate = (datetime.strptime(move.date, '%Y-%m-%d %H:%M:%S') - datetime.relativedelta(days=procurement.rule_id.delay or 0)).strftime('%Y-%m-%d %H:%M:%S')
+    def _run_move_create(self, cr, uid, procurement, context=None):
+        d = super(procurement_order, self)._run_move_create(cr, uid, procurement, context=context)
+        if procurement.move_dest_id:
+            date = procurement.move_dest_id.date
+        else:
+            date = procurement.date_planned
+        newdate = (datetime.strptime(date, '%Y-%m-%d %H:%M:%S') - relativedelta(days=procurement.rule_id.delay or 0)).strftime('%Y-%m-%d %H:%M:%S')
         d.update({
             'date_planned': newdate,
             'procure_method': procurement.rule_id.procure_method,
@@ -144,9 +201,8 @@ class procurement_order(osv.osv):
             res = rule_obj.search(cr, uid, [('location_id','=',procurement.location_id.id),('route_id', 'in', route_ids)], context=context)
             if not res:
                 return False
-            return res[1]
+            return res[0]
         return super(procurement_order, self)._assign(cr, uid, procurement, context=context)
-
 
 class product_putaway_strategy(osv.osv):
     _name = 'product.putaway'
@@ -198,22 +254,25 @@ class stock_move(osv.osv):
     _inherit = 'stock.move'
     _columns = {
         'cancel_cascade': fields.boolean('Cancel Cascade', help='If checked, when this move is cancelled, cancel the linked move too'),
-        'putaway_ids': fields.one2many('stock.move.putaway', 'move_id', 'Put Away Suggestions')
+        'putaway_ids': fields.one2many('stock.move.putaway', 'move_id', 'Put Away Suggestions'), 
+        'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 
+                                           'Procure Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
     }
     # TODO: reimplement this
     def _pull_apply(self, cr, uid, moves, context):
         # Create a procurement is MTO on stock.move
         # Call _assign on procurement
-
-        #for move in moves:
-        #    for route in move.product_id.route_ids:
-        #        found = False
-        #        for rule in route.pull_ids:
-        #            if rule.location_id.id == move.location_id.id:
-        #                self.pool.get('procurement.rule')._apply(cr, uid, rule, move, context=context)
-        #                found = True
-        #                break
-        #        if found: break
+        for move in moves:
+            #If move is MTO, then you should create a procurement
+            #Search for original procurement
+            for route in move.product_id.route_ids:
+                found = False
+                for rule in route.pull_ids:
+                    if rule.location_id.id == move.location_id.id and rule.procure_method == "make_to_order":
+                        self.pool.get('procurement.rule')._apply(cr, uid, rule, move, context=context)
+                        found = True
+                        break
+                if found: break
         return True
 
     def _push_apply(self, cr, uid, moves, context):
@@ -243,9 +302,9 @@ class stock_move(osv.osv):
 
     def action_confirm(self, cr, uid, ids, context=None):
         result = super(stock_move, self).action_confirm(cr, uid, ids, context)
-        #moves = self.browse(cr, uid, ids, context=context)
-        self._pull_apply(cr, uid, ids, context=context)
-        self._push_apply(cr, uid, ids, context=context)
+        moves = self.browse(cr, uid, ids, context=context)
+        self._pull_apply(cr, uid, moves, context=context)
+        self._push_apply(cr, uid, moves, context=context)
         return result
 
 class stock_location(osv.osv):
@@ -269,7 +328,7 @@ class stock_location(osv.osv):
 
         result = pr.search(cr,uid, [
             ('location_id', '=', location.id),
-            ('category_ids', 'in', categs)
+            ('product_categ_id', 'in', categs)
         ], context=context)
         if result:
             return pr.browse(cr, uid, result[0], context=context)

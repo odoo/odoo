@@ -66,6 +66,7 @@ class procurement_order(osv.osv):
             'date': procurement.date_planned,
             'product_qty': procurement.product_qty,
             'product_uom': procurement.product_uom.id,
+            'product_uom_qty': procurement.product_qty, 
             'product_uos_qty': (procurement.product_uos and procurement.product_uos_qty)\
                     or procurement.product_qty,
             'product_uos': (procurement.product_uos and procurement.product_uos.id)\
@@ -75,7 +76,7 @@ class procurement_order(osv.osv):
             'location_id': procurement.rule_id.location_src_id.id,
             'location_dest_id': procurement.rule_id.location_id.id,
             'move_dest_id': procurement.move_dest_id and procurement.move_dest_id.id or False,
-            'cancel_cascade': procurement.rule_id and procurement.rule_id.cancel_cascade or False,
+            #'cancel_cascade': procurement.rule_id and procurement.rule_id.cancel_cascade or False,
             'group_id': procurement.group_id and procurement.group_id.id or False, 
         }
 
@@ -88,7 +89,7 @@ class procurement_order(osv.osv):
             move_obj = self.pool.get('stock.move')
             move_dict = self._run_move_create(cr, uid, procurement, context=context)
             move_id = move_obj.create(cr, uid, move_dict, context=context)
-            move_obj.button_confirm(cr,uid, [move_id], context=context)
+            move_obj.action_confirm(cr,uid, [move_id], context=context)
             self.write(cr, uid, [procurement.id], {'move_id': move_id}, context=context)
             return move_id
         return super(procurement_order, self)._run(cr, uid, procurement, context)

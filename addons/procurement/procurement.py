@@ -150,9 +150,9 @@ class procurement_order(osv.osv):
     def run(self, cr, uid, ids, context=None):
         for procurement in self.browse(cr, uid, ids, context=context or {}):
             if procurement.procure_method=='make_to_order':
-                rule = self._assign(cr, uid, procurement, context=context)
+                rule = self.pool.get("procurement.rule").browse(cr, uid, self._assign(cr, uid, procurement, context=context), context=context)
                 if rule:
-                    self.write(cr, uid, [procurement.id], {'rule_id', rule.id}, context=context)
+                    self.write(cr, uid, [procurement.id], {'rule_id': rule.id}, context=context)
                     procurement.refresh()
                     self._run(cr, uid, procurement, context=context or {})
                     result = True
@@ -170,7 +170,7 @@ class procurement_order(osv.osv):
     def check(self, cr, uid, ids, context=None):
         done = []
         for procurement in self.browse(cr, uid, ids, context=context or {}):
-            result = self._check(cr, uid, procurement.id, context=context or {})
+            result = self._check(cr, uid, procurement, context=context or {})
             if result:
                 self.write(cr, uid, [procurement.id], {'state': 'done'}, context=context)
                 done.append(procurement.id)
