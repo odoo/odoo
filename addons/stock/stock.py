@@ -1774,6 +1774,7 @@ class stock_move(osv.osv):
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.move', context=c),
         'date_expected': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'procure_method': 'make_to_order', #TODO: Might need to be changed or supplied
     }
 
     def _create_procurement(self, cr, uid, move, context=None):
@@ -1792,8 +1793,7 @@ class stock_move(osv.osv):
                 'product_uom': move.product_uom.id,
                 'product_uos_qty': (move.product_uos and move.product_uos_qty) or move.product_qty,
                 'product_uos': (move.product_uos and move.product_uos.id) or move.product_uom.id,
-                'location_id': move.location_src_id.id,
-                'procure_method': move.procure_method,
+                'location_id': move.location_id.id,
                 'move_id': move.id,
             })
 
@@ -2998,7 +2998,6 @@ class product_template(osv.osv):
         'supply_method': fields.selection([('produce', 'Manufacture'), ('buy', 'Buy')], 'Supply Method', required=True, help="Manufacture: When procuring the product, a manufacturing order or a task will be generated, depending on the product type. \nBuy: When procuring the product, a purchase order will be generated."),
     }
     _defaults = {
-        'procure_method': 'make_to_stock',
         'supply_method': 'buy',
     }
 

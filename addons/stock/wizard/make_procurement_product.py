@@ -74,7 +74,6 @@ class make_procurement(osv.osv_memory):
                 'product_qty': proc.qty,
                 'product_uom': proc.uom_id.id,
                 'location_id': wh.lot_stock_id.id,
-                'procure_method':'make_to_order',
                 'company_id': wh.company_id.id,
             })
             procurement_obj.signal_button_confirm(cr, uid, [procure_id])

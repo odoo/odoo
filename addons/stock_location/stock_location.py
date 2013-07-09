@@ -108,7 +108,7 @@ class procurement_rule(osv.osv):
     _inherit = 'procurement.rule'
     _columns = {
         'route_id': fields.many2one('stock.location.route', 'Route',
-            help="If route_id is False, the route is global"),
+            help="If route_id is False, the rule is global"),
         'delay': fields.integer('Number of Hours'),
         'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procure Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
         'type_proc': fields.selection([('produce','Produce'),('buy','Buy'),('move','Move')], 'Type of Procurement', required=True),
@@ -141,7 +141,6 @@ class procurement_order(osv.osv):
         newdate = (datetime.strptime(date, '%Y-%m-%d %H:%M:%S') - relativedelta(days=procurement.rule_id.delay or 0)).strftime('%Y-%m-%d %H:%M:%S')
         d.update({
             'date_planned': newdate,
-            'procure_method': procurement.rule_id.procure_method,
         })
         return d
 
@@ -207,8 +206,6 @@ class stock_move(osv.osv):
     _columns = {
         'cancel_cascade': fields.boolean('Cancel Cascade', help='If checked, when this move is cancelled, cancel the linked move too'),
         'putaway_ids': fields.one2many('stock.move.putaway', 'move_id', 'Put Away Suggestions'), 
-        'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 
-                                           'Procure Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
     }
     
         

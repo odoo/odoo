@@ -68,10 +68,13 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
+                
                 <xpath expr="//div[@name='buttons']" position="inside">
                    <button string="Inventory" name="%(action_product_location_tree)d" type="action"  attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_locations"/>
                    <button string="Moves" name= "%(act_product_stock_move_open)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}" groups="stock.group_stock_user"/>
                 </xpath>
+                
+               
                 <group name="procurement_uom" position="before">
                     <group name="delay" string="Delays">
                         <label for="produce_delay" attrs="{'invisible':[('type','=','service')]}"/>
@@ -87,6 +90,7 @@
                             <field name="sale_delay" class="oe_inline"/> days
                         </div>
                 </xpath>
+                
                 <group name="status" position="before" version="7.0">
                     <group string="Stock and Expected Variations" attrs="{'invisible': [('type', '=', 'service')]}" groups="base.group_user">
                         <label for="qty_available"/>
@@ -123,6 +127,7 @@
                          <field name="property_stock_inventory"  attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','inventory')]"/>
                      </group>
                 </group>
+                
             </field>
         </record>
 
@@ -244,30 +249,11 @@
                     <button string="Orderpoints" name="%(product_open_orderpoint)d" type="action" attrs="{'invisible':[('type', '=', 'service')]}"/>
                 </xpath>
                 <xpath expr="//field[@name='cost_method']" position="before">
-                    <field name="procure_method" groups="base.group_user"/>
                     <field name="supply_method" groups="base.group_user"/>
                 </xpath>
                 <xpath expr="//group[@name='general']" position="after" >
                    <group name="procurement_help" class="oe_grey" col="1" groups="base.group_user">
-                       <p attrs="{'invisible': ['|','|',('type','&lt;&gt;','service'),('procure_method','&lt;&gt;','make_to_stock')]}">
-                           When you sell this service, nothing special will be triggered
-                           to deliver the customer, as you set the procurement method as
-                           'Make to Stock'.
-                       </p>
-                       <p attrs="{'invisible': ['|','|',('type','&lt;&gt;','product'),('procure_method','&lt;&gt;','make_to_stock')]}">
-                           When you sell this product, OpenERP will <b>use the available
-                           inventory</b> for the delivery order.
-                           <br/><br/>
-                           If there are not enough quantities available, the delivery order
-                           will wait for new products. To fulfill the inventory, you should
-                           create others rules like orderpoints.
-                       </p>
-                       <p attrs="{'invisible': ['|','|',('type','&lt;&gt;','consu'),('procure_method','&lt;&gt;','make_to_stock')]}">
-                           When you sell this product, a delivery order will be created.
-                           OpenERP will consider that the <b>required quantities are always
-                           available</b> as it's a consumable (as a result of this, the quantity
-                           on hand may become negative).
-                       </p>
+                       <!--TODO: Should write explanation for different routes-->
                    </group>
                 </xpath>
             </field>
