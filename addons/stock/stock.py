@@ -1776,6 +1776,27 @@ class stock_move(osv.osv):
         'date_expected': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
 
+    def _create_procurement(self, cr, uid, move, context=None):
+        """
+            This will create a procurement order
+        """
+        proc_obj = self.pool.get("procurement.order")
+        origin = _('Procurement created by stock move %s') % move.id
+        return proc_obj.create(cr, uid, {
+                'name': _('MTO procurement'),
+                'origin': origin,
+                'company_id': move.company_id and move.company_id.id or False,
+                'date_planned': move.date,
+                'product_id': move.product_id.id,
+                'product_qty': move.product_qty,
+                'product_uom': move.product_uom.id,
+                'product_uos_qty': (move.product_uos and move.product_uos_qty) or move.product_qty,
+                'product_uos': (move.product_uos and move.product_uos.id) or move.product_uom.id,
+                'location_id': move.location_src_id.id,
+                'procure_method': move.procure_method,
+                'move_id': move.id,
+            })
+
     # Check that we do not modify a stock.move which is done
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
@@ -1986,6 +2007,10 @@ class stock_move(osv.osv):
         for state, write_ids in states.items():
             if len(write_ids):
                 self.write(cr, uid, write_ids, {'state': state})
+                if state == 'confirmed':
+                    for move in self.browse(cr, uid, write_ids, context=context):
+                        if move.procure_method == 'make_to_order':
+                            self._create_procurement(cr, uid, move, context=context)
         return True
 
     def force_assign(self, cr, uid, ids, context=None):

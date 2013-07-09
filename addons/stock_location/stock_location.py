@@ -211,53 +211,6 @@ class stock_move(osv.osv):
                                            'Procure Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
     }
     
-#     def _create_procurement(self, cr, uid, rule, move, context=None):
-#         """
-#             This will create a procurement order
-#         """
-#         #TODO Create procurement order
-#         proc_obj = self.pool.get("procurement.order")
-#         #move_obj = self.pool.get("stock.move")
-#         procs = proc_obj.search(cr, uid, [('move_dest_id','=', move.id)], context=context)
-#         if procs and procs[0]:
-#             proc = procs[0]
-#             origin = (proc.origin or proc.name or '').split(':')[0] +':'+rule.name
-#             proc_id = proc_obj.create(cr, uid, {
-#                     'name': rule.name,
-#                     'origin': origin,
-#                     'note': _('Pulled procurement coming from original location %s, pull rule %s, via original Procurement %s (#%d)') % (proc.location_id.name, rule.name, proc.name, proc.id),
-#                     'company_id':  rule.company_id and rule.company_id.id or False,
-#                     'date_planned': move.date,
-#                     'product_id': move.product_id.id,
-#                     'product_qty': move.product_qty,
-#                     'product_uom': move.product_uom.id,
-#                     'product_uos_qty': (move.product_uos and move.product_uos_qty)\
-#                             or move.product_qty,
-#                     'product_uos': (move.product_uos and move.product_uos.id)\
-#                             or move.product_uom.id,
-#                     'location_id': move.location_src_id.id,
-#                     'procure_method': move.procure_method,
-#                     'move_id': move.id,
-#                 })
-#         else:
-#             proc_id = proc_obj.create(cr, uid, {
-#                     'name': rule.name,
-#                     'origin': 'From stock move',
-#                     'note': _('Pulled procurement coming from original location %s, pull rule %s, via rule %s (#%d)') % (move.location_id.name, rule.name, rule.name, rule.id),
-#                     'company_id':  move.company_id and move.company_id.id or False,
-#                     'date_planned': move.date,
-#                     'product_id': move.product_id.id,
-#                     'product_qty': move.product_qty,
-#                     'product_uom': move.product_uom.id,
-#                     'product_uos_qty': (move.product_uos and move.product_uos_qty)\
-#                             or move.product_qty,
-#                     'product_uos': (move.product_uos and move.product_uos.id)\
-#                             or move.product_uom.id,
-#                     'location_id': move.location_src_id.id,
-#                     'procure_method': move.procure_method,
-#                     'move_id': move.id,
-#                 })
-#         proc_obj._assign(cr, uid, proc_obj.browse(cr, uid, proc_id, context=context), context=context)
         
         
     # TODO: reimplement this
