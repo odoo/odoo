@@ -40,9 +40,10 @@ class res_partner(osv.Model):
     }
 
 
-from openerp import api, scope, models, fields
+from openerp import Model, fields
+from openerp import depends, model, multi, one, scope
 
-class res_partner(models.Model):
+class res_partner(Model):
     _inherit = 'res.partner'
 
     number_of_employees = fields.Integer(compute='default_number_of_employees')
@@ -53,42 +54,42 @@ class res_partner(models.Model):
     children_count = fields.Integer(compute='compute_children_count', store=True)
     has_sibling = fields.Integer(compute='compute_has_sibling', store=True)
 
-    @api.one
+    @one
     def default_number_of_employees(self):
         self.number_of_employees = 1
 
-    @api.model
+    @model
     def _references_models(self):
         return [('res.partner', 'Partner'), ('res.users', 'User')]
 
-    @api.one
-    @api.depends('name')
+    @one
+    @depends('name')
     def compute_name_size(self):
         self.name_size = len(self.name or '')
 
-    @api.one
-    @api.depends('child_ids')
+    @one
+    @depends('child_ids')
     def compute_children_count(self):
         self.children_count = len(self.child_ids)
 
     # depends on function field => cascading recomputations
-    @api.one
-    @api.depends('parent_id.children_count')
+    @one
+    @depends('parent_id.children_count')
     def compute_has_sibling(self):
         self.has_sibling = self.parent_id.children_count >= 2
 
     computed_company = fields.Many2one('res.company', compute='compute_relations', store=False)
     computed_companies = fields.Many2many('res.company', compute='compute_relations', store=False)
 
-    @api.one
-    @api.depends('company_id')
+    @one
+    @depends('company_id')
     def compute_relations(self):
         self.computed_company = self.company_id
         self.computed_companies = self.company_id
 
     company_name = fields.Related('company_id', 'name')
 
-class on_change_test(models.Model):
+class on_change_test(Model):
     _name = 'test_new_api.on_change'
 
     name = fields.Char()
@@ -98,19 +99,19 @@ class on_change_test(models.Model):
     trick = fields.Char(compute='whatever', store=False)
 
 
-    @api.depends('name')
-    @api.one
+    @one
+    @depends('name')
     def compute_name_size(self):
         self.name_size = len(self.name or '')
 
-    @api.depends('name')
-    @api.one
+    @one
+    @depends('name')
     def compute_utf8_size(self):
         name = self.name or u''
         self.name_utf8_size = len(name.encode('utf-8'))
 
-    @api.depends('name', 'name_size', 'name_utf8_size')
-    @api.one
+    @one
+    @depends('name', 'name_size', 'name_utf8_size')
     def compute_description(self):
         if self.name:
             self.description = "%s (%d:%d)" % (
@@ -118,16 +119,16 @@ class on_change_test(models.Model):
         else:
             self.description = False
 
-    @api.one
+    @one
     def whatever(self):
         self.trick = "wheeeeeld.null()eld.null"
 
-class defaults(models.Model):
+class defaults(Model):
     _name = 'test_new_api.defaults'
 
     name = fields.Char(required=True, compute='name_default')
     description = fields.Char()
 
-    @api.one
+    @one
     def name_default(self):
         self.name = u'Bob the Builder'

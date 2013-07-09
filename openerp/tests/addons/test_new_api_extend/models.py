@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-from openerp import api, models, fields
+from openerp import Model, fields
+from openerp import one
 
-class change_defaults(models.Model):
+class change_defaults(Model):
     _inherit = 'test_new_api.defaults'
 
     description = fields.Char(required=True, compute="description_default")
 
-    @api.one
+    @one
     def description_default(self):
         self.description = u"This is a thing"

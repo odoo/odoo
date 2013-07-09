@@ -60,25 +60,19 @@ import sql_db
 import tools
 import workflow
 
-from openerp.osv import api, fields2 as fields
+# model classes
+from openerp.osv.orm import BaseModel, AbstractModel, Model, TransientModel
+from openerp.osv.orm import Record, Recordset, Null
+
+# field classes
+from openerp.osv import fields2 as fields
+
+# api module and decorators
+from openerp.osv import api
+from openerp.osv.api import model, multi, one, returns, depends
+
+# scope proxy
 from openerp.osv.scope import proxy as scope
-
-class ModelProxy(object):
-    Abstract    = osv.orm.AbstractModel
-    Model       = osv.orm.Model
-    Transient   = osv.orm.TransientModel
-
-    Record      = osv.orm.Record
-    Recordset   = osv.orm.Recordset
-    Null        = osv.orm.Null
-
-    def __getitem__(self, model_name):
-        return scope.model(model_name)
-
-    def __getattr__(self, model_name):
-        return scope.model(model_name)
-
-models = ModelProxy()
 
 
 # backward compatilbility
