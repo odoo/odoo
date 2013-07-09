@@ -48,9 +48,10 @@ class procurement_order(osv.osv):
     _inherit = "procurement.order"
     _columns = {
         'location_id': fields.many2one('stock.location', 'Destination Location'), 
-        'move_id': fields.many2one('stock.move', 'Move'), 
-        'move_dest_id': fields.many2one('stock.move', 'Destination Move')
+        'move_id': fields.many2one('stock.move', 'Move', help="Move created by the procurement"), 
+        'move_dest_id': fields.many2one('stock.move', 'Destination Move', help="Move which caused (created) the procurement")
     }
+
     def _assign(self, cr, uid, procurement, context=None):
         rule_obj = self.pool.get('procurement.rule')
         res = rule_obj.search(cr, uid, [('location_id','=',procurement.location_id.id)], context=context)
