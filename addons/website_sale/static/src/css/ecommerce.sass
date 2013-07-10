@@ -14,45 +14,65 @@
       padding: 10px
   font-family: "Lato"
   font-size: 13px
+  .oe_products
+    .oe_product
+      .oe_hidden
+        visibility: hidden
+      .pull-left
+        margin: 0
+        float: none
+      .oe_ecommerce_description
+        display: none
+      h4
+        text-align: center
+        +text-shadow(0px 1px 1px rgba(200, 200, 200,.2))
+        margin-bottom: 16px
+      img
+        max-height: 110px
+        max-width: 130px
+        margin: 0 auto 
+        padding-bottom: 14px
+      text-align: center 
+      display: inline-block
+      padding: 5px
+      width: 170px
+      height: 220px
+      margin-right: 15px
+      .oe_ecommerce_price
+        width: 100%
+        position: absolute
+        bottom: 44px
+        +text-shadow(0px 1px 3px rgba(255, 255, 255, 0.7))
+        text-align: center
+        font-size: 25px
+        span
+          font-weight: bold
+      .oe_button_cart
+        bottom: 5px
+        left: 0
+  .oe_mycart
+    .oe_product
+      padding: 3px 5px 6px 10px
+      img
+        max-width: 64
+        max-height: 64
+        margin: 0 5px 0px 12px
+      .oe_button_cart
+        right: 6px
+        top: 6px
+        text-align: right
   .oe_product
-    .oe_hidden
-      visibility: hidden
-    .oe_ecommerce_price
-      +text-shadow(0px 1px 3px rgba(255, 255, 255, 0.7))
-      text-align: center
-      font-size: 25px
-      margin: 10px
-      span
-        font-weight: bold
-        margin: 5px
-    .oe_ecommerce_description
-      display: none
-    h4
-      height: 50px
-      text-align: center
-      +text-shadow(0px 1px 1px rgba(200, 200, 200,.2))
-    img
-      max-height: 128px
-      margin: 0 auto 
-      padding-bottom: 20px
-    +box-shadow(0 0 3px 1px rgba(0,0,0,.1))
-    text-align: center 
     vertical-align: top 
     position: relative
-    display: inline-block
-    padding: 5px
-    width: 230px
-    height: 300px
     margin-top: 0
-    margin-bottom: 10px
-    margin-right: 10px
+    margin-bottom: 15px
     +border-radius(5px)
     border: 1px solid rgba(0,0,0,.1)
+    +box-shadow(0 0 3px 1px rgba(0,0,0,.1))
     .oe_button_cart
-      width: 230px
+      width: 100%
       font-size: 11px
       position: absolute
-      bottom: 5px
       button
         +text-shadow(0px 1px 1px rgba(0, 0, 0, 0.44))
         overflow: hidden
@@ -60,8 +80,20 @@
         font-size: 12px
         margin: 0 auto
         margin-bottom: 5px
+        padding: 2px
+        width: 50px
+        height: 22px
+        position: relative
         &:first-child
           @include background(linear-gradient(#aaaaaa,#999999))
+          span
+            opacity: 0.8
+            filter: alpha(opacity=80)
+            color: rgb(235, 18, 18)
+            position: absolute
+            left: +18px
+            top: 3px
+            font-size: 20px
         &:last-child
           @include background(linear-gradient(#0088cc,#0076b1))
           &.btn-success
