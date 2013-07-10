@@ -196,7 +196,7 @@ class procurement_order(osv.osv):
             :param procurement: browse record
             :rtype: boolean
         '''
-        return True
+        return False
 
     #
     # Scheduler
