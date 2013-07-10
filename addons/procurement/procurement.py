@@ -70,7 +70,7 @@ class procurement_rule(osv.osv):
     _description = "Procurement Rule"
 
     def _get_action(self, cr, uid, context=None):
-        return [('move', 'Move')]
+        return []
 
     _columns = {
         'name': fields.char('Name', required=True,

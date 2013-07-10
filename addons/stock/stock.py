@@ -653,6 +653,9 @@ class stock_picking(osv.osv):
 
         # Used to search a product on pickings
         'product_id': fields.related('move_lines', 'product_id', type='many2one', relation='product.product', string='Product'),
+        'location_id': fields.related('move_lines', 'location_id', type='many2one', relation='stock.location', string='Location'),
+        'location_dest_id': fields.related('move_lines', 'location_dest_id', type='many2one', relation='stock.location', string='Destination Location'),
+        'group_id': fields.related('move_lines', 'group_id', type='many2one', relation='procurement.group', string='Procurement Group'), 
     }
     _defaults = {
         'name': lambda self, cr, uid, context: '/',
@@ -1668,6 +1671,7 @@ class stock_move(osv.osv):
 
         # FP Note: this should be a function field
         'remaining_qty': fields.float('Remaining Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), states={'done': [('readonly', True)]}),  # to be used in pick/pack new interface  # TODO change this in a functional field to ease the handling
+        'group_id': fields.many2one('procurement.group', 'Procurement Group'), 
     }
 
     def _check_location(self, cr, uid, ids, context=None):
@@ -2000,9 +2004,24 @@ class stock_move(osv.osv):
                     state = 'waiting'
             states[state].append(move.id)
 
-        if not move.picking_id:
-            # TODO: Put the move in the right picking according to group_id
-            pass
+            if not move.picking_id:
+                # TODO: Put the move in the right picking according to group_id -> should be more elaborated (draft is nok) and picking should be confirmed
+                pick_obj = self.pool.get("stock.picking")
+                picks = pick_obj.search(cr, uid, [('group_id', '=', move.group_id.id), ('location_id', '=', move.location_id.id), 
+                                          ('location_dest_id', '=', move.location_dest_id.id), ('state', 'in', ['confirmed', 'waiting', 'draft'])], context=context)
+                if picks:
+                    pick=picks[0]
+                else:
+                    # Create new picking
+                    pick = pick_obj.create(cr, uid, {'origin': move.origin,
+                                              'company_id': move.company_id and move.company_id.id or False,
+                                              'type': 'internal',
+                                              'move_type': 'one',
+                                              'partner_id': move.partner_id and move.partner_id.id or False,
+                                              #'invoice_state': move.invoice_state
+                                              'group_id': move.group_id and move.group_id.id or False, 
+                                              }, context=context)
+                move.write({'picking_id': pick})
 
         for state, write_ids in states.items():
             if len(write_ids):

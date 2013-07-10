@@ -148,10 +148,10 @@ class procurement_order(osv.osv):
     def _assign(self, cr, uid, procurement, context=None):
         if procurement.location_id:
             rule_obj = self.pool.get('procurement.rule')
-            route_ids =[False] + [x.id for x in procurement.product_id.route_ids]
-            res = rule_obj.search(cr, uid, [('location_id','=',procurement.location_id.id),('route_id', 'in', route_ids)], context=context)
+            route_ids = [x.id for x in procurement.product_id.route_ids]
+            res = rule_obj.search(cr, uid, [('location_id','=',procurement.location_id.id),('route_id', 'in', route_ids),], context=context)
             if not res:
-                return False
+                return super(procurement_order, self)._assign(cr, uid, procurement, context=context)
             return res[0]
         return super(procurement_order, self)._assign(cr, uid, procurement, context=context)
 
@@ -207,7 +207,6 @@ class stock_move(osv.osv):
         'cancel_cascade': fields.boolean('Cancel Cascade', help='If checked, when this move is cancelled, cancel the linked move too'),
         'putaway_ids': fields.one2many('stock.move.putaway', 'move_id', 'Put Away Suggestions'), 
     }
-    
         
         
     # TODO: reimplement this
