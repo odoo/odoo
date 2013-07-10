@@ -1021,6 +1021,12 @@ class purchase_order_line(osv.osv):
         self.write(cr, uid, ids, {'state': 'confirmed'}, context=context)
         return True
 
+class procurement_rule(osv.osv):
+    _inherit = 'procurement.rule'
+
+    def _get_action(self, cr, uid, context=None):
+        return [('buy', 'Buy')] + super(procurement_rule, self)._get_action(cr, uid, context=context)
+
 
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
@@ -1028,16 +1034,30 @@ class procurement_order(osv.osv):
         'purchase_id': fields.many2one('purchase.order', 'Purchase Order'),
     }
 
-    def check_buy(self, cr, uid, ids, context=None):
-        ''' return True if the supply method of the mto product is 'buy'
-        '''
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        for procurement in self.browse(cr, uid, ids, context=context):
-            if procurement.product_id.supply_method <> 'buy':
-                return False
-        return True
+    def _assign(self, cr, uid, procurement, context=None):
+        rule = super(procurement_order, self)._assign(cr, uid, procurement, context=context)
+        if not rule:
+            #if there isn't any specific procurement.rule defined for the product, we try to directly supply it from a supplier
+            if procurement.product_id.supply_method == 'buy' and self._check_supplier_info(cr, uid, [procurement.id], context=context):
+                rule = self.pool.get('procurement.rule').search(cr, uid, [('action', '=', 'buy'), ('location_id', '=', procurement.location_id.id)], context=context)
+                rule = rule and rule[0] or False
+        return rule
 
-    def check_supplier_info(self, cr, uid, ids, context=None):
+    def _run(self, cr, uid, procurement, context=None):
+        if procurement.rule_id and procurement.rule_id.action == 'buy':
+            #make a purchase order for the procurement
+            return self.make_po(cr, uid, [procurement.id], context=context)
+        return super(procurement_order, self)._run(cr, uid, procurement, context=context)
+
+    def _check(self, cr, uid, procurement, context=None):
+        if procurement.purchase_id and procurement.purchase_id.shipped:  # TOCHECK: does it work for several deliveries?
+            return True
+        return super(procurement_order, self)._check(cr, uid, procurement, context=context)
+
+    def _check_supplier_info(self, cr, uid, ids, context=None):
+        ''' Check the supplier info field of a product and write an error message on the procurement if needed.
+        Returns True if all needed information is there, False if some configuration mistake is detected.
+        '''
         partner_obj = self.pool.get('res.partner')
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         for procurement in self.browse(cr, uid, ids, context=context):
@@ -1065,14 +1085,13 @@ class procurement_order(osv.osv):
                 return False
         return True
 
-
-    def action_po_assign(self, cr, uid, ids, context=None):
-        """ This is action which call from workflow to assign purchase order to procurements
-        @return: True
-        """
-        res = self.make_po(cr, uid, ids, context=context)
-        res = res.values()
-        return len(res) and res[0] or 0 #TO CHECK: why workflow is generated error if return not integer value
+    #def action_po_assign(self, cr, uid, ids, context=None):
+    #    """ This is action which call from workflow to assign purchase order to procurements
+    #    @return: True
+    #    """
+    #    res = self.make_po(cr, uid, ids, context=context)
+    #    res = res.values()
+    #    return len(res) and res[0] or 0 #TO CHECK: why workflow is generated error if return not integer value
 
     def create_procurement_purchase_order(self, cr, uid, procurement, po_vals, line_vals, context=None):
         """Create the purchase order from the procurement, using

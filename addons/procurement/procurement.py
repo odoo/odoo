@@ -156,8 +156,8 @@ class procurement_order(osv.osv):
 
     def check(self, cr, uid, ids, context=None):
         done = []
-        for procurement in self.browse(cr, uid, ids, context=context or {}):
-            result = self._check(cr, uid, procurement, context=context or {})
+        for procurement in self.browse(cr, uid, ids, context=context):
+            result = self._check(cr, uid, procurement, context=context)
             if result:
                 self.write(cr, uid, [procurement.id], {'state': 'done'}, context=context)
                 done.append(procurement.id)
@@ -167,12 +167,24 @@ class procurement_order(osv.osv):
     # Method to overwrite in different procurement modules
     #
     def _assign(self, cr, uid, procurement, context=None):
+        '''This method returns a procurement.rule that depicts what to go with the given procurement
+        in order to complete its needs. It returns False if no suiting rule is found.
+            :param procurement: browse record
+            :rtype: int or False
+        '''
         return False
 
     def _run(self, cr, uid, procurement, context=None):
+        '''This method implements the resolution of the given procurement
+            :param procurement: browse record
+        '''
         return True
 
     def _check(self, cr, uid, procurement, context=None):
+        '''Returns True if the given procurement is fulfilled, False otherwise
+            :param procurement: browse record
+            :rtype: boolean
+        '''
         return True
 
     #

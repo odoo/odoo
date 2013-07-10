@@ -1770,11 +1770,11 @@ class stock_move(osv.osv):
         'state': 'draft',
         'priority': '1',
         'product_qty': 1.0,
-        'scrapped' :  False,
+        'scrapped': False,
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.move', context=c),
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.move', context=c),
         'date_expected': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'procure_method': 'make_to_order', #TODO: Might need to be changed or supplied
+        'procure_method': 'make_to_stock',
     }
 
     def _create_procurement(self, cr, uid, move, context=None):
