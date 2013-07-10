@@ -188,17 +188,16 @@
         </field>
     </record>
 
-    <!-- CRASH FOR UNKNOW REASON, reason is : invalid model
     <record model="ir.ui.view" id="procurement_normal_form_view_inherit">
         <field name="name">procurement.form.inherit</field>
         <field name="model">procurement.order</field>
         <field name="inherit_id" ref="procurement.procurement_form_view"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='close_move']" position="after">
+            <xpath expr="//field[@name='origin']" position="after">
                 <field name="requisition_id"/>
             </xpath>
         </field>
-    </record>-->
+    </record>
     <act_window
             domain="[('requisition_id', '=', active_id)]"
             context="{'default_requisition_id': active_id}"
