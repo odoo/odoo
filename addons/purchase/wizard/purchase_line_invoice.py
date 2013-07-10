@@ -48,12 +48,11 @@ class purchase_line_invoice(osv.osv_memory):
         if record_ids:
             res = False
             invoices = {}
-            invoice_obj=self.pool.get('account.invoice')
-            purchase_line_obj=self.pool.get('purchase.order.line')
-            property_obj=self.pool.get('ir.property')
-            account_fiscal_obj=self.pool.get('account.fiscal.position')
-            invoice_line_obj=self.pool.get('account.invoice.line')
-            account_jrnl_obj=self.pool.get('account.journal')
+            invoice_obj = self.pool.get('account.invoice')
+            purchase_obj = self.pool.get('purchase.order')
+            purchase_line_obj = self.pool.get('purchase.order.line')
+            invoice_line_obj = self.pool.get('account.invoice.line')
+            account_jrnl_obj = self.pool.get('account.journal')
 
             def multiple_order_invoice_notes(orders):
                 notes = ""
@@ -93,35 +92,14 @@ class purchase_line_invoice(osv.osv_memory):
                     order.write({'invoice_ids': [(4, inv_id)]})
                 return inv_id
 
-            for line in purchase_line_obj.browse(cr,uid,record_ids):
-                if (not line.invoiced) and (line.state not in ('draft','cancel')):
+            for line in purchase_line_obj.browse(cr, uid, record_ids, context=context):
+                if (not line.invoiced) and (line.state not in ('draft', 'cancel')):
                     if not line.partner_id.id in invoices:
                         invoices[line.partner_id.id] = []
-                    if line.product_id:
-                        a = line.product_id.property_account_expense.id
-                        if not a:
-                            a = line.product_id.categ_id.property_account_expense_categ.id
-                        if not a:
-                            raise osv.except_osv(_('Error!'),
-                                    _('Define expense account for this product: "%s" (id:%d).') % \
-                                            (line.product_id.name, line.product_id.id,))
-                    else:
-                        a = property_obj.get(cr, uid,
-                                'property_account_expense_categ', 'product.category',
-                                context=context).id
-                    fpos = line.order_id.fiscal_position or False
-                    a = account_fiscal_obj.map_account(cr, uid, fpos, a)
-                    inv_id = invoice_line_obj.create(cr, uid, {
-                        'name': line.name,
-                        'origin': line.order_id.name,
-                        'account_id': a,
-                        'price_unit': line.price_unit,
-                        'quantity': line.product_qty,
-                        'uos_id': line.product_uom.id,
-                        'product_id': line.product_id.id or False,
-                        'invoice_line_tax_id': [(6, 0, [x.id for x in line.taxes_id])],
-                        'account_analytic_id': line.account_analytic_id and line.account_analytic_id.id or False,
-                    })
+                    acc_id = purchase_obj._choose_account_from_po_line(cr, uid, line, context=context)
+                    inv_line_data = purchase_obj._prepare_inv_line(cr, uid, acc_id, line, context=context)
+                    inv_line_data.update({'origin': line.order_id.name})
+                    inv_id = invoice_line_obj.create(cr, uid, inv_line_data, context=context)
                     purchase_line_obj.write(cr, uid, [line.id], {'invoiced': True, 'invoice_lines': [(4, inv_id)]})
                     invoices[line.partner_id.id].append((line,inv_id))
 
