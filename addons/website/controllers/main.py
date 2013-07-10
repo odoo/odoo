@@ -26,7 +26,7 @@ def template_values():
     return values
 
 class Website(openerp.addons.web.controllers.main.Home):
-    @http.route('/', type='http', auth="db")
+    @http.route('/', type='http', auth="admin")
     def index(self, **kw):
         return self.page("website.homepage")
 
@@ -34,7 +34,7 @@ class Website(openerp.addons.web.controllers.main.Home):
     def admin(self, *args, **kw):
         return super(Website, self).index(*args, **kw)
 
-    @http.route('/pagenew/<path:path>', type='http', auth="db")
+    @http.route('/pagenew/<path:path>', type='http', auth="admin")
     def pagenew(self, path):
         values = template_values()
         uid = values['uid']
@@ -55,7 +55,7 @@ class Website(openerp.addons.web.controllers.main.Home):
         # TODO: replace by a redirect
         return self.page(path)
 
-    @http.route('/page/<path:path>', type='http', auth="db")
+    @http.route('/page/<path:path>', type='http', auth="admin")
     def page(self, path):
         #def get_html_head():
         #    head += ['<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', db=request.db)]
