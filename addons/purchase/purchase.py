@@ -640,7 +640,7 @@ class purchase_order(osv.osv):
         return {
             'name': order_line.name or '',
             'product_id': order_line.product_id.id,
-            'product_qty': order_line.product_qty,
+            'product_uom_qty': order_line.product_qty,
             'product_uos_qty': order_line.product_qty,
             'product_uom': order_line.product_uom.id,
             'product_uos': order_line.product_uom.id,
