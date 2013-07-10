@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 from datetime import *
 from dateutil.relativedelta import relativedelta
 from openerp.tools.translate import _
@@ -144,15 +144,13 @@ class procurement_order(osv.osv):
         return d
 
     # TODO: implement using routes on products
-    def _assign(self, cr, uid, procurement, context=None):
+    def _find_suitable_rule(self, cr, uid, procurement, context=None):
+        res = False
         if procurement.location_id:
             rule_obj = self.pool.get('procurement.rule')
             route_ids = [x.id for x in procurement.product_id.route_ids]
-            res = rule_obj.search(cr, uid, [('location_id','=',procurement.location_id.id),('route_id', 'in', route_ids),], context=context)
-            if not res:
-                return super(procurement_order, self)._assign(cr, uid, procurement, context=context)
-            return res[0]
-        return super(procurement_order, self)._assign(cr, uid, procurement, context=context)
+            res = rule_obj.search(cr, uid, [('location_id', '=', procurement.location_id.id), ('route_id', 'in', route_ids), ], context=context)
+        return res and res[0] or super(procurement_order, self)._find_suitable_rule(cr, uid, procurement, context=context)
 
 class product_putaway_strategy(osv.osv):
     _name = 'product.putaway'
@@ -284,3 +282,4 @@ class stock_location(osv.osv):
             return pr.browse(cr, uid, result[0], context=context)
         return super(stock_location, self).get_removal_strategy(cr, uid, id, product, context=context)
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
