@@ -105,12 +105,12 @@ class procurement_order(osv.osv):
         'group_id': fields.many2one('procurement.group', 'Procurement Requisition'),
         'rule_id': fields.many2one('procurement.rule', 'Rule'),
 
-        'product_id': fields.many2one('product.product', 'Product', required=True, states={'draft': [('readonly', False)]}, readonly=True),
-        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, states={'draft': [('readonly', False)]}, readonly=True),
-        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True, states={'draft': [('readonly', False)]}, readonly=True),
+        'product_id': fields.many2one('product.product', 'Product', required=True, states={'confirmed': [('readonly', False)]}, readonly=True),
+        'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, states={'confirmed': [('readonly', False)]}, readonly=True),
+        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True, states={'confirmed': [('readonly', False)]}, readonly=True),
 
-        'product_uos_qty': fields.float('UoS Quantity', states={'draft': [('readonly', False)]}, readonly=True),
-        'product_uos': fields.many2one('product.uom', 'Product UoS', states={'draft': [('readonly', False)]}, readonly=True),
+        'product_uos_qty': fields.float('UoS Quantity', states={'confirmed': [('readonly', False)]}, readonly=True),
+        'product_uos': fields.many2one('product.uom', 'Product UoS', states={'confirmed': [('readonly', False)]}, readonly=True),
 
         'state': fields.selection([
             ('cancel', 'Cancelled'),

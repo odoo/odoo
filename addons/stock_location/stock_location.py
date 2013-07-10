@@ -140,7 +140,7 @@ class procurement_order(osv.osv):
             date = procurement.date_planned
         newdate = (datetime.strptime(date, '%Y-%m-%d %H:%M:%S') - relativedelta(days=procurement.rule_id.delay or 0)).strftime('%Y-%m-%d %H:%M:%S')
         d.update({
-            'date_planned': newdate,
+            'date': newdate,
         })
         return d
 

@@ -77,6 +77,7 @@ class procurement_order(osv.osv):
             'location_id': procurement.rule_id.location_src_id.id,
             'location_dest_id': procurement.rule_id.location_id.id,
             'move_dest_id': procurement.move_dest_id and procurement.move_dest_id.id or False,
+            'procure_method': procurement.rule_id and procurement.rule_id.procure_method or 'make_to_stock', 
             #'cancel_cascade': procurement.rule_id and procurement.rule_id.cancel_cascade or False,
             'group_id': procurement.group_id and procurement.group_id.id or False, 
         }

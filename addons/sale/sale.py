@@ -624,6 +624,78 @@ class sale_order(osv.osv):
 
 
 
+
+    def _prepare_order_line_procurement(self, cr, uid, order, line, group_id = False, context=None):
+        mod_obj = self.pool.get('ir.model.data')
+        location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', 'stock_location_customers')
+        date_planned = self._get_date_planned(cr, uid, order, line, order.date_order, context=context)
+        return {
+            'name': line.name,
+            'origin': order.name,
+            'date_planned': date_planned,
+            'product_id': line.product_id.id,
+            'product_qty': line.product_uom_qty,
+            'product_uom': line.product_uom.id,
+            'product_uos_qty': (line.product_uos and line.product_uos_qty)\
+                    or line.product_uom_qty,
+            'product_uos': (line.product_uos and line.product_uos.id)\
+                    or line.product_uom.id,
+            'location_id': location_id,
+            'company_id': order.company_id.id,
+            'note': line.name,
+            'group_id': group_id, 
+        }
+
+    def _get_date_planned(self, cr, uid, order, line, start_date, context=None):
+        start_date = self.date_to_datetime(cr, uid, start_date, context)
+        date_planned = datetime.strptime(start_date, DEFAULT_SERVER_DATETIME_FORMAT) + relativedelta(days=line.delay or 0.0)
+        date_planned = (date_planned - timedelta(days=order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        return date_planned
+
+    def action_ship_create(self, cr, uid, ids, context=None):
+        """Create the required procurements to supply sales order lines, also connecting
+        the procurements to appropriate stock moves in order to bring the goods to the
+        sales order's requested location.
+
+        :param browse_record order: sales order to which the order lines belong
+        :param list(browse_record) order_lines: sales order line records to procure
+        :param int picking_id: optional ID of a stock picking to which the created stock moves
+                               will be added. A new picking will be created if omitted.
+        :return: True
+        """
+        procurement_obj = self.pool.get('procurement.order')
+        for order in self.browse(cr, uid, ids, context=context):
+            proc_ids = []
+            group_id = self.pool.get("procurement.group").create(cr, uid, {'name': order.name}, context=context)
+            for line in order.order_line:
+                if (line.state == 'done') or not line.product_id:
+                    continue
+
+                proc_id = procurement_obj.create(cr, uid, self._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context))
+                proc_ids.append(proc_id)
+                line.write({'procurement_id': proc_id})
+
+            procurement_obj.signal_button_confirm(cr, uid, proc_ids)
+
+            # FP NOTE: do we need this? isn't it the workflow that should set this
+            val = {}
+            if order.state == 'shipping_except':
+                val['state'] = 'progress'
+                val['shipped'] = False
+
+                if (order.order_policy == 'manual'):
+                    for line in order.order_line:
+                        if (not line.invoiced) and (line.state not in ('cancel', 'draft')):
+                            val['state'] = 'manual'
+                            break
+            order.write(val)
+        return True
+
+
+
+
+
+
 # TODO add a field price_unit_uos
 # - update it on change product and unit price
 # - use it in report if there is a uos
@@ -664,6 +736,15 @@ class sale_order_line(osv.osv):
                                     WHERE rel.invoice_id = ANY(%s)""", (list(ids),))
         return [i[0] for i in cr.fetchall()]
 
+    def _number_packages(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for line in self.browse(cr, uid, ids, context=context):
+            try:
+                res[line.id] = int((line.product_uom_qty+line.product_packaging.qty-0.0001) / line.product_packaging.qty)
+            except:
+                res[line.id] = 1
+        return res
+
     _name = 'sale.order.line'
     _description = 'Sales Order Line'
     _columns = {
@@ -697,6 +778,12 @@ class sale_order_line(osv.osv):
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', store=True, string='Customer'),
         'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', store=True, string='Salesperson'),
         'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
+        'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation and the shipping of the products to the customer", readonly=True, states={'draft': [('readonly', False)]}),
+        'procurement_id': fields.many2one('procurement.order', 'Procurement'),
+        #'property_ids': fields.many2many('mrp.property', 'sale_order_line_property_rel', 'order_id', 'property_id', 'Properties', readonly=True, states={'draft': [('readonly', False)]}),
+        'product_packaging': fields.many2one('product.packaging', 'Packaging'),
+        'number_packages': fields.function(_number_packages, type='integer', string='Number Packages'),
+        
     }
     _order = 'order_id desc, sequence, id'
     _defaults = {
@@ -708,6 +795,8 @@ class sale_order_line(osv.osv):
         'state': 'draft',
         'type': 'make_to_stock',
         'price_unit': 0.0,
+        'delay': 0.0,
+        'product_packaging': False,
     }
 
     def _get_line_qty(self, cr, uid, line, context=None):
@@ -775,6 +864,111 @@ class sale_order_line(osv.osv):
             }
 
         return res
+
+
+    
+    def product_packaging_change(self, cr, uid, ids, pricelist, product, qty=0, uom=False,
+                                   partner_id=False, packaging=False, flag=False, context=None):
+        if not product:
+            return {'value': {'product_packaging': False}}
+        product_obj = self.pool.get('product.product')
+        product_uom_obj = self.pool.get('product.uom')
+        pack_obj = self.pool.get('product.packaging')
+        warning = {}
+        result = {}
+        warning_msgs = ''
+        if flag:
+            res = self.product_id_change(cr, uid, ids, pricelist=pricelist,
+                    product=product, qty=qty, uom=uom, partner_id=partner_id,
+                    packaging=packaging, flag=False, context=context)
+            warning_msgs = res.get('warning') and res['warning']['message']
+
+        products = product_obj.browse(cr, uid, product, context=context)
+        if not products.packaging:
+            packaging = result['product_packaging'] = False
+        elif not packaging and products.packaging and not flag:
+            packaging = products.packaging[0].id
+            result['product_packaging'] = packaging
+
+        if packaging:
+            default_uom = products.uom_id and products.uom_id.id
+            pack = pack_obj.browse(cr, uid, packaging, context=context)
+            q = product_uom_obj._compute_qty(cr, uid, uom, pack.qty, default_uom)
+#            qty = qty - qty % q + q
+            if qty and (q and not (qty % q) == 0):
+                ean = pack.ean or _('(n/a)')
+                qty_pack = pack.qty
+                type_ul = pack.ul
+                if not warning_msgs:
+                    warn_msg = _("You selected a quantity of %d Units.\n"
+                                "But it's not compatible with the selected packaging.\n"
+                                "Here is a proposition of quantities according to the packaging:\n"
+                                "EAN: %s Quantity: %s Type of ul: %s") % \
+                                    (qty, ean, qty_pack, type_ul.name)
+                    warning_msgs += _("Picking Information ! : ") + warn_msg + "\n\n"
+                warning = {
+                       'title': _('Configuration Error!'),
+                       'message': warning_msgs
+                }
+            result['product_uom_qty'] = qty
+
+        return {'value': result, 'warning': warning}
+
+    def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
+            uom=False, qty_uos=0, uos=False, name='', partner_id=False,
+            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
+        context = context or {}
+        product_uom_obj = self.pool.get('product.uom')
+        partner_obj = self.pool.get('res.partner')
+        product_obj = self.pool.get('product.product')
+        warning = {}
+        res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty,
+            uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
+            lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
+
+        if not product:
+            res['value'].update({'product_packaging': False})
+            return res
+
+        #update of result obtained in super function
+        product_obj = product_obj.browse(cr, uid, product, context=context)
+        res['value']['delay'] = (product_obj.sale_delay or 0.0)
+        #res['value']['type'] = product_obj.procure_method
+
+        #check if product is available, and if not: raise an error
+        uom2 = False
+        if uom:
+            uom2 = product_uom_obj.browse(cr, uid, uom)
+            if product_obj.uom_id.category_id.id != uom2.category_id.id:
+                uom = False
+        if not uom2:
+            uom2 = product_obj.uom_id
+
+        # Calling product_packaging_change function after updating UoM
+        res_packing = self.product_packaging_change(cr, uid, ids, pricelist, product, qty, uom, partner_id, packaging, context=context)
+        res['value'].update(res_packing.get('value', {}))
+        warning_msgs = res_packing.get('warning') and res_packing['warning']['message'] or ''
+        compare_qty = float_compare(product_obj.virtual_available * uom2.factor, qty * product_obj.uom_id.factor, precision_rounding=product_obj.uom_id.rounding)
+        if (product_obj.type=='product') and int(compare_qty) == -1:
+          #and (product_obj.procure_method=='make_to_stock'): --> need to find alternative for procure_method
+            warn_msg = _('You plan to sell %.2f %s but you only have %.2f %s available !\nThe real stock is %.2f %s. (without reservations)') % \
+                    (qty, uom2 and uom2.name or product_obj.uom_id.name,
+                     max(0,product_obj.virtual_available), product_obj.uom_id.name,
+                     max(0,product_obj.qty_available), product_obj.uom_id.name)
+            warning_msgs += _("Not enough stock ! : ") + warn_msg + "\n\n"
+
+        #update of warning messages
+        if warning_msgs:
+            warning = {
+                       'title': _('Configuration Error!'),
+                       'message' : warning_msgs
+                    }
+        res.update({'warning': warning})
+        return res
+
+
+
+
 
     def invoice_line_create(self, cr, uid, ids, context=None):
         if context is None:

@@ -83,7 +83,7 @@
                     <field name="date_planned"/>
                     <filter icon="terp-emblem-important" string="Exceptions" name="exceptions" domain="[('state','=','exception')]" help="Procurement Exceptions"/>
                     <separator/>
-                    <filter icon="terp-gnome-cpu-frequency-applet+" string="Late" domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed'))]" help="Procurement started late" />
+                    <filter icon="terp-gnome-cpu-frequency-applet+" string="Late" domain="['&amp;', ('date_planned','&lt;', current_date), ('state', '=', 'confirmed')]" help="Procurement started late" />
                     <field name="product_id" />
                     <field name="state" />
                     <group expand="0" string="Group By">
