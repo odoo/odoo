@@ -946,6 +946,8 @@ class account_voucher(osv.osv):
         move_pool = self.pool.get('account.move')
 
         for voucher in self.browse(cr, uid, ids, context=context):
+            # refresh to make sure you don't unlink an already removed move
+            voucher.refresh()
             recs = []
             for line in voucher.move_ids:
                 if line.reconcile_id:
