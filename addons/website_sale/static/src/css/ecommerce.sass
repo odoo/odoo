@@ -35,9 +35,12 @@
       text-align: center 
       display: inline-block
       padding: 5px
-      width: 170px
+      width: 180px
       height: 220px
       margin-right: 15px
+      margin-left: 3px
+      &:nth-child(3n)
+        margin-right: 0
       .oe_ecommerce_price
         width: 100%
         position: absolute
@@ -100,3 +103,8 @@
             @include background(linear-gradient(#51a351, #418541))
   form.oe_signup
     display: none
+  .oe_search
+    form
+      width: 100%
+      margin: 24px
+      text-align: center

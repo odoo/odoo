@@ -12,6 +12,7 @@ class Ecommerce(http.Controller):
     def get_cr_uid(self):
         cr = request.cr
         uid = request.session._uid or openerp.SUPERUSER_ID
+        # todo => admin => request.uid and login => request.session.uid ; auth="admin"
         if uid != 1:
             request.httprequest.session['ecommerce_partner_id'] = False
             partner_id = None
@@ -57,20 +58,27 @@ class Ecommerce(http.Controller):
         return values
 
     @http.route(['/shop', '/shop/category/<cat_id>'], type='http', auth="db")
-    def category(self, cat_id=0, offset=0):
+    def category(self, cat_id=0, offset=0, **post):
         values = self.get_values()
         cr, uid, partner_id = self.get_cr_uid()
 
-        cat_id = cat_id and int(cat_id) or 0
+        domain = []
+        if post.get("search"):
+            domain += ['|', '|', ('name', 'ilike', "%%%s%%" % post.get("search")), ('description', 'ilike', "%%%s%%" % post.get("search")), ('pos_categ_id.name', 'ilike', "%%%s%%" % post.get("search"))]
+        if cat_id:
+            cat_id = cat_id and int(cat_id) or 0
+            domain = [('pos_categ_id.id', 'child_of', cat_id)] + domain
+
         category_obj = request.registry.get('pos.category')
         product_obj = request.registry.get('product.product')
         category_ids = category_obj.search(cr, openerp.SUPERUSER_ID, [('parent_id', '=', False)])
-        product_ids = product_obj.search(cr, openerp.SUPERUSER_ID, cat_id and [('pos_categ_id.id', 'child_of', cat_id)] or [(1, '=', 1)], limit=20, offset=offset)
+        product_ids = product_obj.search(cr, openerp.SUPERUSER_ID, domain or [(1, '=', 1)], limit=20, offset=offset)
 
         values.update({
             'current_category': cat_id,
             'categories': category_obj.browse(cr, openerp.SUPERUSER_ID, category_ids),
             'products': product_obj.browse(cr, openerp.SUPERUSER_ID, product_ids),
+            'search': post.get("search"),
         })
         html = request.registry.get("ir.ui.view").render(cr, uid, "website_sale.products", values)
         return html

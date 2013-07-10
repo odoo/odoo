@@ -72,6 +72,12 @@
                 <t t-call="website_sale.page">
                     <t t-set="title">Product</t>
                     <t t-set="shop_content">
+                        <div class="oe_search">
+                            <form action="/shop" method="get" class="navbar-search">
+                                <input type="text" name="search" class="search-query span4" placeholder="Search" t-att-value="search or ''"/>
+                                <button type="submit" class="btn">Submit</button>
+                            </form>
+                        </div>
                         <span class="oe_products">
                             <t t-foreach="products" t-as="product">
                                 <t t-set="quantity" t-value="([int(line.product_uom_qty) for line in (order.order_line or []) if line.product_id.id == product.id] + [0])[0]"/>                            

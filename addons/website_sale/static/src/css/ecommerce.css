@@ -24,9 +24,10 @@
   text-align: center;
   display: inline-block;
   padding: 5px;
-  width: 170px;
+  width: 180px;
   height: 220px;
   margin-right: 15px;
+  margin-left: 3px;
 }
 .oe_ecommerce .oe_products .oe_product .oe_hidden {
   visibility: hidden;
@@ -48,6 +49,9 @@
   max-width: 130px;
   margin: 0 auto;
   padding-bottom: 14px;
+}
+.oe_ecommerce .oe_products .oe_product:nth-child(3n) {
+  margin-right: 0;
 }
 .oe_ecommerce .oe_products .oe_product .oe_ecommerce_price {
   width: 100%;
@@ -141,4 +145,9 @@
 }
 .oe_ecommerce form.oe_signup {
   display: none;
+}
+.oe_ecommerce .oe_search form {
+  width: 100%;
+  margin: 24px;
+  text-align: center;
 }
