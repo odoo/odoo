@@ -156,11 +156,11 @@ class WebRequest(object):
         if self.auth_method == "none":
             self.db = None
             self.uid = None
-        elif self.auth_method == "db":
+        elif self.auth_method == "admin":
             self.db = self.session._db or db_monodb()
             if not self.db:
                 raise SessionExpiredException("No valid database for request %s" % self.httprequest)
-            self.uid = None
+            self.uid = openerp.SUPERUSER_ID
         else: # auth
             try:
                 self.session.check_security()
@@ -235,7 +235,7 @@ def route(route, type="http", auth="user"):
         authentication modules.
     """
     assert type in ["http", "json"]
-    assert auth in ["user", "db", "none"]
+    assert auth in ["user", "admin", "none"]
     def decorator(f):
         if isinstance(route, list):
             f.routes = route

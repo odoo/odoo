@@ -134,18 +134,25 @@ argument of every model method in OpenERP.
 Authorization Levels
 --------------------
 
-By default, all methods can only be used by users logged into OpenERP (OpenERP uses cookies to track logged users).
-There are some cases when you need to enable not-logged in users to access some methods. To do so, add the ``'db'``
-value to the ``auth`` parameter of ``http.route()``:
+By default, all access to the models will use the rights of the currently logged in user (OpenERP uses cookies to track
+logged users). It is also impossible to reach an URL without being logged (the user's browser will receive an HTTP
+error).
+
+There are some cases when the current user is not relevant, and we just want to give access to anyone to an URL. A
+typical example is be the generation of a home page for a website. The home page should be visible by anyone, whether
+they have an account or not. To do so, add the ``'admin'`` value to the ``auth`` parameter of ``http.route()``:
 
 ::
 
-    @http.route('/hello', type="http", auth="db")
+    @http.route('/hello', type="http", auth="admin")
     def hello(self):
         return "<div>Hello unknown user!</div>"
 
-Please note the ``request.uid`` user id will be ``None`` inside this method call. This is due to the fact no user was
-authenticated.
+When using the ``admin`` authentication the access to the OpenERP models will be performed with the ``Administrator``
+user and ``request.uid`` will be equal to ``openerp.SUPERUSER_ID`` (the id of the administrator).
+
+It is important to note that when using the ``Administrator`` user all security is bypassed. So the programmers
+implementing such methods should take great care of not creating security issues in the application.
 
 Overriding Controllers
 ----------------------
