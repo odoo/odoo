@@ -935,25 +935,24 @@
             Procurements
         -->
 
-        <!-- CRASH FOR UNKNOW REASON, reason is : invalid model
         <record id="view_procurement_form_inherit" model="ir.ui.view">
             <field name="name">procurement.order.form.inherit</field>
             <field name="model">procurement.order</field>
             <field name="inherit_id" ref="procurement.procurement_form_view"/>
             <field name="arch" type="xml">
             <data>
-                <xpath expr="//field[@name='move_id']" position="before">
+                <xpath expr="//field[@name='origin']" position="before">
                     <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]"/>
                     <field name="production_id" attrs="{'invisible': [('production_id','=',False)]}"/>
                 </xpath>
-                <xpath expr="//field[@name='close_move']" position="after">
+                <xpath expr="//field[@name='origin']" position="after">
                     <group colspan="4"  groups="product.group_mrp_properties">
                         <field colspan="4" name="property_ids" widget="many2many_tags"/>
                     </group>
                 </xpath>
                </data>
             </field>
-        </record>-->
+        </record>
         <record id="product_product_normal_form_supply_view" model="ir.ui.view">
             <field name="name">product.normal.form.mrp.inherit</field>
             <field name="model">product.product</field>
