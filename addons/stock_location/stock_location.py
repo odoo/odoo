@@ -111,7 +111,7 @@ class procurement_rule(osv.osv):
             help="If route_id is False, the rule is global"),
         'delay': fields.integer('Number of Hours'),
         'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procure Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
-        'type_proc': fields.selection([('produce','Produce'),('buy','Buy'),('move','Move')], 'Type of Procurement', required=True),
+        #'type_proc': fields.selection([('produce','Produce'),('buy','Buy'),('move','Move')], 'Type of Procurement', required=True),
         'partner_address_id': fields.many2one('res.partner', 'Partner Address'),
         'invoice_state': fields.selection([
             ("invoiced", "Invoiced"),
@@ -121,7 +121,6 @@ class procurement_rule(osv.osv):
     }
     _defaults = {
         'procure_method': 'make_to_stock',
-        'type_proc': 'move',
         'invoice_state': 'none',
     }
 
