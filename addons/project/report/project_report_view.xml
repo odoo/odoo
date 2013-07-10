@@ -19,7 +19,6 @@
                     <field name="date_start" invisible="1"/>
                     <field name="date_end" invisible="1"/>
                     <field name="date_last_stage_update" invisible="1"/>
-                    <field name="month_last_stage_update" invisible="1"/>
                     <field name="company_id" invisible="1" groups="base.group_multi_company"/>
                     <field name="partner_id" invisible="1"/>
                     <field name="day" invisible="1"/>
@@ -82,7 +81,7 @@
                         <filter string="Day" context="{'group_by':'day'}" help="Creation Date"/>
                         <filter string="Month" context="{'group_by':'month'}" help="Creation Date"/>
                         <filter string="Year" context="{'group_by':'year'}" help="Creation Date"/>
-                        <filter string="Last Stage Update" context="{'group_by':'month_last_stage_update'}" help="Month of Last Stage Update"/>
+                        <filter string="Last Stage Update" context="{'group_by':'date_last_stage_update'}" help="Last Stage Update"/>
                     </group>
                 </search>
             </field>
