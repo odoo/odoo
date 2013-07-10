@@ -21,6 +21,56 @@
 
 from openerp.osv import fields, osv
 from openerp import netsvc
+from openerp.tools.translate import _
+
+class procurement_order(osv.osv):
+    _name = "procurement.order"
+    _inherit = "procurement.order"
+    _columns = {
+        'task_id': fields.many2one('project.task', 'Task'),
+        'sale_line_id': fields.many2one('sale.order.line', 'Sales order line')
+    }
+
+    def _is_procurement_task(self, cr, uid, procurement, context=None):
+        return procurement.product_id.type == 'service' and procurement.product_it.auto_create_task or False
+
+    def _assign(self, cr, uid, procurement, context=None):
+        res = super(procurement_order, self)._assign(cr, uid, procurement, context=context)
+        if not res:
+            #if there isn't any specific procurement.rule defined for the product, we may want to create a task
+            if self._is_procurement_task(cr, uid, procurement, context=context):
+                return True
+        return res
+
+    def _run(self, cr, uid, procurement, context=None):
+        if self._is_procurement_task(cr, uid, procurement, context=context) and not procurement.task_id:
+            #create a task for the procurement
+            return self._create_service_task(cr, uid, procurement, context=context)
+        return super(procurement_order, self)._run(cr, uid, procurement, context=context)
+
+    def _check(self, cr, uid, procurement, context=None):
+        if self._is_procurement_task(cr, uid, procurement, context=context) and procurement.task_id and procurement.task_id.state == 'done':
+            return True
+        return super(procurement_order, self)._check(cr, uid, procurement, context=context)
+
+    def _convert_qty_company_hours(self, cr, uid, procurement, context=None):
+        product_uom = self.pool.get('product.uom')
+        company_time_uom_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id
+        if procurement.product_uom.id != company_time_uom_id.id and procurement.product_uom.category_id.id == company_time_uom_id.category_id.id:
+            planned_hours = product_uom._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, company_time_uom_id.id)
+        else:
+            planned_hours = procurement.product_qty
+        return planned_hours
+
+    def _get_project(self, cr, uid, procurement, context=None):
+        project_project = self.pool.get('project.project')
+        project = procurement.product_id.project_id
+        if not project and procurement.sale_line_id:
+            # find the project corresponding to the analytic account of the sales order
+            account = procurement.sale_line_id.order_id.project_id
+            project_ids = project_project.search(cr, uid, [('analytic_account_id', '=', account.id)])
+            projects = project_project.browse(cr, uid, project_ids, context=context)
+
 
 class project_task(osv.osv):
     _name = "project.task"
@@ -30,30 +80,21 @@ class project_task(osv.osv):
         'sale_line_id': fields.related('procurement_id', 'sale_line_id', type='many2one', relation='sale.order.line', store=True, string='Sales Order Line'),
     }
 
-    def _validate_subflows(self, cr, uid, ids):
-        wf_service = netsvc.LocalService("workflow")
-        for task in self.browse(cr, uid, ids):
-            if task.procurement_id:
-                wf_service.trg_write(uid, 'procurement.order', task.procurement_id.id, cr)
-
-    def do_close(self, cr, uid, ids, *args, **kwargs):
-        res = super(project_task, self).do_close(cr, uid, ids, *args, **kwargs)
-        self._validate_subflows(cr, uid, ids)
-        return res
-
-    def do_cancel(self, cr, uid, ids, *args, **kwargs):
-        res = super(project_task, self).do_cancel(cr, uid, ids, *args, **kwargs)
-        self._validate_subflows(cr, uid, ids)
-        return res
+    #TODO handle the task cancellation
+    #def do_cancel(self, cr, uid, ids, *args, **kwargs):
+    #    res = super(project_task, self).do_cancel(cr, uid, ids, *args, **kwargs)
+    #    self._validate_subflows(cr, uid, ids)
+    #    return res
 
 class product_product(osv.osv):
     _inherit = "product.product"
     _columns = {
-        'project_id': fields.many2one('project.project', 'Project', ondelete='set null',)
+        'project_id': fields.many2one('project.project', 'Project', ondelete='set null',),
+        'auto_create_task': fields.boolean('Create Task Automatically', help="Thick this option if you want to create a task automatically each time this product is sold"),
     }
 
 class sale_order(osv.osv):
-    _inherit ='sale.order'
+    _inherit = 'sale.order'
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, context=None):
         proc_data = super(sale_order, self)._prepare_order_line_procurement(cr,

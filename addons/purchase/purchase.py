@@ -1034,14 +1034,14 @@ class procurement_order(osv.osv):
         'purchase_id': fields.many2one('purchase.order', 'Purchase Order'),
     }
 
-    def _assign(self, cr, uid, procurement, context=None):
-        rule = super(procurement_order, self)._assign(cr, uid, procurement, context=context)
-        if not rule:
+    def _find_suitable_rule(self, cr, uid, procurement, context=None):
+        rule_id = super(procurement_order, self)._find_suitable_rule(cr, uid, procurement, context=context)
+        if not rule_id:
             #if there isn't any specific procurement.rule defined for the product, we try to directly supply it from a supplier
             if procurement.product_id.supply_method == 'buy' and self._check_supplier_info(cr, uid, [procurement.id], context=context):
-                rule = self.pool.get('procurement.rule').search(cr, uid, [('action', '=', 'buy'), ('location_id', '=', procurement.location_id.id)], context=context)
-                rule = rule and rule[0] or False
-        return rule
+                rule_id = self.pool.get('procurement.rule').search(cr, uid, [('action', '=', 'buy'), ('location_id', '=', procurement.location_id.id)], context=context)
+                rule_id = rule_id and rule_id[0] or False
+        return rule_id
 
     def _run(self, cr, uid, procurement, context=None):
         if procurement.rule_id and procurement.rule_id.action == 'buy':

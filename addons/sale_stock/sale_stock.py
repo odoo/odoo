@@ -55,7 +55,7 @@ class sale_order(osv.osv):
             ('shipping_except', 'Shipping Exception'),
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Done'),
-            ], 'Status', readonly=True,help="Gives the status of the quotation or sales order.\
+            ], 'Status', readonly=True, help="Gives the status of the quotation or sales order.\
               \nThe exception status is automatically set when a cancel operation occurs \
               in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
                but waiting for the scheduler to run on the order date.", select=True),
@@ -494,3 +494,4 @@ class sale_advance_payment_inv(osv.osv_memory):
             }
             sale_line_obj.create(cr, uid, vals, context=context)
         return result
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

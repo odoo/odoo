@@ -142,10 +142,8 @@ class procurement_order(osv.osv):
         return {}
 
     def run(self, cr, uid, ids, context=None):
-        for procurement in self.browse(cr, uid, ids, context=context or {}):
-            rule = self.pool.get("procurement.rule").browse(cr, uid, self._assign(cr, uid, procurement, context=context), context=context)
-            if rule:
-                self.write(cr, uid, [procurement.id], {'rule_id': rule.id}, context=context)
+        for procurement in self.browse(cr, uid, ids, context=context):
+            if self._assign(cr, uid, procurement, context=context):
                 procurement.refresh()
                 self._run(cr, uid, procurement, context=context or {})
                 self.write(cr, uid, [procurement.id], {'state': 'running'}, context=context)
@@ -166,12 +164,25 @@ class procurement_order(osv.osv):
     #
     # Method to overwrite in different procurement modules
     #
-    def _assign(self, cr, uid, procurement, context=None):
-        '''This method returns a procurement.rule that depicts what to go with the given procurement
+    def _find_suitable_rule(self, cr, uid, procurement, context=None):
+        '''This method returns a procurement.rule that depicts what to do with the given procurement
         in order to complete its needs. It returns False if no suiting rule is found.
             :param procurement: browse record
             :rtype: int or False
         '''
+        return False
+
+    def _assign(self, cr, uid, procurement, context=None):
+        '''This method check what to do with the given procurement in order to complete its needs.
+        It returns False if no solution is found, otherwise it stores the matching rule (if any) and
+        returns True.
+            :param procurement: browse record
+            :rtype: boolean
+        '''
+        rule_id = self._find_suitable_rule(cr, uid, procurement, context=context)
+        if rule_id:
+            self.write(cr, uid, [procurement.id], {'rule_id': rule_id}, context=context)
+            return True
         return False
 
     def _run(self, cr, uid, procurement, context=None):
