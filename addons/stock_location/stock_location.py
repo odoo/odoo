@@ -168,7 +168,7 @@ class stock_move(osv.osv):
         location_obj = self.pool.get("stock.location")
         quant_obj = self.pool.get("stock.quant")
         for move in self.browse(cr, uid, ids, context=context):
-            putaways = location_obj.get_putaway_strategy(cr, uid, move.location_dest_id.id, context=context)#putaway_obj.search(cr, uid, [('product_categ_id','=', move.product_id.categ_id.id), ('location_id', '=', move.location_dest_id.id)], context=context)
+            putaways = location_obj.get_putaway_strategy(cr, uid, move.location_dest_id.id, move.product_id.id, context=context)#putaway_obj.search(cr, uid, [('product_categ_id','=', move.product_id.categ_id.id), ('location_id', '=', move.location_dest_id.id)], context=context)
             if putaways: 
                 #Search for locations for PutAway
                 locs = location_obj.search(cr, uid, [('id', 'child_of', move.location_dest_id.id), ('id', '!=', move.location_dest_id.id), ('quant_ids', '=', False), 
@@ -225,10 +225,6 @@ class stock_location(osv.osv):
                 strats = self.search_removals(cr, uid, location.id, categ.id, context=context)
             categ = categ.parent_id
         return strats and strats[0] or super(stock_location, self).get_removal_strategy(cr, uid, id, product_id, context=context)
-
-        
-
-
         return super(stock_location, self).get_removal_strategy(cr, uid, id, product_id, context=context)
 
     
