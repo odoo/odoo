@@ -137,9 +137,11 @@ class procurement_order(osv.osv):
             date = procurement.move_dest_id.date
         else:
             date = procurement.date_planned
+        procure_method = procurement.rule_id and procurement.rule_id.procure_method or 'make_to_stock',
         newdate = (datetime.strptime(date, '%Y-%m-%d %H:%M:%S') - relativedelta(days=procurement.rule_id.delay or 0)).strftime('%Y-%m-%d %H:%M:%S')
         d.update({
             'date': newdate,
+            'procure_method': procure_method, 
         })
         return d
 
