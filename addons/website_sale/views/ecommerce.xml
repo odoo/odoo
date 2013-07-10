@@ -154,7 +154,7 @@
             <field name="type">qweb</field>
             <field name="arch" type="xml">
                 <div class="oe_total">
-                    <div class="media well">
+                    <div class="media well well-small">
                         <table t-if="order.order_line">
                             <tr><td>Untaxed Amount</td><td><t t-esc="order.amount_untaxed"/> €</td></tr>
                             <tr><td>Taxes</td><td><t t-esc="order.amount_tax"/> €</td></tr>
@@ -175,23 +175,32 @@
                 <t t-call="website_sale.page">
                     <t t-set="title">Your informations</t>
                     <t t-set="shop_content">
-                        <form action="/shop/confirm_cart" method="post">
-                            <div>Please enter your informations</div>
-                            <input name="name" required="True" placeholder="Name..." t-att-value="partner and partner.name or ''"/><br/>
-                            <input name="phone" type="tel" required="True" placeholder="Phone number..." t-att-value="partner and partner.phone or ''"/>
-                            <input name="email" type="email" required="True" placeholder="Email..." t-att-value="partner and partner.email or ''"/>
-                            <div>Please enter your address</div>
-                            <address>
-                                <input name="street" required="True" placeholder="Street..." t-att-value="partner and partner.street or ''"/><br/>
-                                <input name="street2" placeholder="Street..." t-att-value="partner and partner.street2 or ''"/><br/>
-                                <input name="zip" required="True" placeholder="Zip-code..." t-att-value="partner and partner.zip or ''"/>
-                                <input name="city" required="True" placeholder="City..." t-att-value="partner and partner.city or ''"/><br/>
-                                <input name="country" required="True" placeholder="Country..." t-att-value="partner and partner.country_id and partner.country_id.name_get()[0][1] or ''"/>
-                                <input name="state" placeholder="State..." t-att-value="partner and partner.state_id and partner.state_id.name_get()[0][1] or ''"/>
-                            </address>
-                            <button class="btn btn-success">Next stage</button>
-                            <t t-call="website_sale.total"/>
+                        <form action="/shop/customer" class="oe_signin" method="post" t-if="not partner">
+                            <h5>Please Sign in or enter your informations</h5>
+                            <input name="login" type="text" placeholder="Login..."/><br/>
+                            <input name="password" type="password" placeholder="Password..."/><br/>
+                            <button type="submit" class="btn btn-success">Next stage</button> or <button type="reset" class="btn btn-primary oe_toggleform">Complete your address</button>
                         </form>
+                        <form action="/shop/confirm_cart" class="oe_signup" method="post" t-att-style="partner and 'display:block' or ''">
+                            <h5 t-if="partner">Please confirm your informations</h5>
+                            <h5 t-if="not partner">Please enter your informations</h5>
+                            <input name="name" type="text" required="True" placeholder="Name..." t-att-value="partner and partner.name or ''"/><br/>
+                            <input name="phone" type="tel"
+                                required="True" placeholder="Phone number..." t-att-value="partner and partner.phone or ''"/>
+                            <input name="email" type="email" required="True" placeholder="Email..." t-att-value="partner and partner.email or ''"/>
+                            <h5 t-if="partner">Please confirm your address</h5>
+                            <h5 t-if="not partner">Please enter your address</h5>
+                            <address>
+                                <input name="street" type="text" required="True" placeholder="Street..." t-att-value="partner and partner.street or ''"/><br/>
+                                <input name="street2" type="text" placeholder="Street..." t-att-value="partner and partner.street2 or ''"/><br/>
+                                <input name="zip" type="text" required="True" placeholder="Zip-code..." t-att-value="partner and partner.zip or ''"/>
+                                <input name="city" type="text" required="True" placeholder="City..." t-att-value="partner and partner.city or ''"/><br/>
+                                <input name="country" type="text" required="True" placeholder="Country..." t-att-value="partner and partner.country_id and partner.country_id.name_get()[0][1] or ''"/>
+                                <input name="state" type="text" placeholder="State..." t-att-value="partner and partner.state_id and partner.state_id.name_get()[0][1] or ''"/>
+                            </address>
+                            <button type="submit" class="btn btn-success">Next stage</button><t t-if="not partner"> or <button type="reset" class="btn btn-primary oe_toggleform">Sign in</button></t>
+                        </form>
+                        <t t-call="website_sale.total"/>
                     </t>
                 </t>
             </field>

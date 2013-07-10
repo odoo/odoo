@@ -12,13 +12,16 @@ class Ecommerce(http.Controller):
     def get_cr_uid(self):
         cr = request.cr
         uid = request.session._uid or openerp.SUPERUSER_ID
-        partner_id = request.httprequest.session.get('ecommerce_partner_id', False)
+        if uid != 1:
+            request.httprequest.session['ecommerce_partner_id'] = False
+            partner_id = None
+        else:
+            partner_id = request.httprequest.session.get('ecommerce_partner_id', False)
+
         if partner_id and not request.registry.get('res.partner').search(cr, uid, [('id', '=', partner_id)]):
             partner_id = None
         if not partner_id:
             partner_id = request.registry.get('res.users').browse(cr, uid, uid).partner_id.id
-            if uid != 1:
-                request.httprequest.session['ecommerce_partner_id'] = partner_id
         return (cr, uid, partner_id)
 
     def get_values(self):
@@ -42,14 +45,14 @@ class Ecommerce(http.Controller):
             order_id = order_obj.create(cr, uid, order_value, context=context)
             request.httprequest.session['ecommerce_order'] = order_id
 
-        category_ids = category_obj.search(cr, uid, [('parent_id', '=', False)])
+        category_ids = category_obj.search(cr, openerp.SUPERUSER_ID, [('parent_id', '=', False)])
 
         values = template_values()
         values.update({
             'temp': 0,
             'res_company': request.registry['res.company'].browse(request.cr, uid, 1, context=context),
             'order': order_obj.browse(cr, uid, order_id),
-            'categories': category_obj.browse(cr, uid, category_ids),
+            'categories': category_obj.browse(cr, openerp.SUPERUSER_ID, category_ids),
         })
         return values
 
@@ -61,13 +64,13 @@ class Ecommerce(http.Controller):
         cat_id = cat_id and int(cat_id) or 0
         category_obj = request.registry.get('pos.category')
         product_obj = request.registry.get('product.product')
-        category_ids = category_obj.search(cr, uid, [('parent_id', '=', False)])
-        product_ids = product_obj.search(cr, uid, cat_id and [('pos_categ_id.id', 'child_of', cat_id)] or [(1, '=', 1)], limit=20, offset=offset)
+        category_ids = category_obj.search(cr, openerp.SUPERUSER_ID, [('parent_id', '=', False)])
+        product_ids = product_obj.search(cr, openerp.SUPERUSER_ID, cat_id and [('pos_categ_id.id', 'child_of', cat_id)] or [(1, '=', 1)], limit=20, offset=offset)
 
         values.update({
             'current_category': cat_id,
-            'categories': category_obj.browse(cr, uid, category_ids),
-            'products': product_obj.browse(cr, uid, product_ids),
+            'categories': category_obj.browse(cr, openerp.SUPERUSER_ID, category_ids),
+            'products': product_obj.browse(cr, openerp.SUPERUSER_ID, product_ids),
         })
         html = request.registry.get("ir.ui.view").render(cr, uid, "website_sale.products", values)
         return html
@@ -81,7 +84,7 @@ class Ecommerce(http.Controller):
         product_obj = request.registry.get('product.product')
 
         values.update({
-            'product': product_obj.browse(cr, uid, product_id),
+            'product': product_obj.browse(cr, openerp.SUPERUSER_ID, product_id),
         })
         html = request.registry.get("ir.ui.view").render(cr, uid, "website_sale.product", values)
         return html
@@ -145,14 +148,20 @@ class Ecommerce(http.Controller):
         cr, uid, partner_id = self.get_cr_uid()
         values = self.get_values()
         partner_obj = request.registry.get('res.partner')
+        user_obj = request.registry.get('res.users')
 
         values['partner'] = False
-        partner_id = request.httprequest.session.get('ecommerce_partner_id')
+        partner_id = uid != 1 and partner_id or request.httprequest.session.get('ecommerce_partner_id')
+
+        if post.get("login"):
+            user_id = user_obj.login(cr, post.get("login"), post.get("password"))
+            partner_id = user_obj.browse(cr, uid, user_id).partner_id.id
+            request.httprequest.session['ecommerce_partner_id'] = partner_id
+
         if partner_id:
             values['partner'] = partner_obj.browse(cr, uid, partner_id)
 
-        html = request.registry.get("ir.ui.view").render(cr, uid, "website_sale.customer", values)
-        return html
+        return request.registry.get("ir.ui.view").render(cr, uid, "website_sale.customer", values)
 
     @http.route(['/shop/confirm_cart'], type='http', auth="db")
     def confirm_cart(self, *arg, **post):
@@ -161,9 +170,9 @@ class Ecommerce(http.Controller):
         partner_obj = request.registry.get('res.partner')
 
         values['partner'] = False
-        partner_id = request.httprequest.session.get('ecommerce_partner_id')
+        partner_id = uid != 1 and partner_id or request.httprequest.session.get('ecommerce_partner_id')
         if post:
-            post['country_id'] = (request.registry.get('res.country').search(cr, uid, [('name', 'ilike', post.pop('country'))]) + [None])[0]
+            post['country_id'] = (request.registry.get('res.country').search(cr, openerp.SUPERUSER_ID, [('name', 'ilike', post.pop('country'))]) + [None])[0]
             post['state_id'] = (request.registry.get('res.country.state').search(cr, uid, [('name', 'ilike', post.pop('state'))]) + [None])[0]
 
             if partner_id:
@@ -174,12 +183,13 @@ class Ecommerce(http.Controller):
                 request.httprequest.session['ecommerce_partner_id'] = partner_id
 
         values['partner'] = partner_obj.browse(cr, uid, partner_id)
-        html = request.registry.get("ir.ui.view").render(cr, uid, "website_sale.order", values)
-        return html
+        return request.registry.get("ir.ui.view").render(cr, uid, "website_sale.order", values)
 
     @http.route(['/shop/confirm_order'], type='http', auth="db")
     def confirm_order(self, *arg, **post):
         cr, uid, partner_id = self.get_cr_uid()
+        if uid == 1:
+            return customer()
         values = self.get_values()
         values['order'].write({'state': 'progress'})
         values['partner'] = request.registry.get('res.partner').browse(cr, uid, partner_id)

@@ -18,4 +18,8 @@ $(document).ready(function (){
             $('.oe_ecommerce .oe_total').replaceWith(''+result.totalHTML);
         });
     });
+    $('.oe_ecommerce form').on('click', '.oe_toggleform', function (ev) {
+        ev.preventDefault();
+        $('.oe_ecommerce form').toggle();
+    });
 });
