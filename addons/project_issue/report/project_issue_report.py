@@ -31,12 +31,7 @@ class project_issue_report(osv.osv):
     _columns = {
         'name': fields.char('Year', size=64, required=False, readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Sale Team', readonly=True),
-        'month':fields.selection([('01', 'January'), ('02', 'February'), \
-                                  ('03', 'March'), ('04', 'April'),\
-                                  ('05', 'May'), ('06', 'June'), \
-                                  ('07', 'July'), ('08', 'August'),\
-                                  ('09', 'September'), ('10', 'October'),\
-                                  ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
+        'month':fields.selection(fields.date.MONTHS, 'Month', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'opening_date': fields.date('Date of Opening', readonly=True),

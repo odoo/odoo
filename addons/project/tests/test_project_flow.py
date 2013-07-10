@@ -146,6 +146,7 @@ class TestProjectFlow(TestProjectBase):
         # Test: task content
         self.assertEqual(task.name, 'Frogs', 'project_task: name should be the email subject')
         self.assertEqual(task.project_id.id, self.project_pigs_id, 'project_task: incorrect project')
+        self.assertEqual(task.stage_id.sequence, 1, 'project_task: should have a stage with sequence=1')
 
         # Open the delegation wizard
         delegate_id = self.project_task_delegate.create(cr, user_projectuser_id, {

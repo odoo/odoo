@@ -13,4 +13,4 @@ Changelog
     modification. Updated reports.
   - ``project.task.type``: removed ``state`` field.
 
-- Removed ``hired.employee`` wizard.
+- Removed ``project.task.reevaluate`` wizard.

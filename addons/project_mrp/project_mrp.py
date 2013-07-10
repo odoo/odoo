@@ -56,11 +56,12 @@ class project_task(osv.osv):
 
     def write(self, cr, uid, ids, values, context=None):
         """ When closing tasks, validate subflows. """
+        res = super(project_task, self).write(cr, uid, ids, values, context=context)
         if values.get('stage_id'):
             stage = self.pool.get('project.task.type').browse(cr, uid, values.get('stage_id'), context=context)
             if stage.closed:
                 self._validate_subflows(cr, uid, ids, context=context)
-        return super(project_task, self).write(cr, uid, ids, values, context=context)
+        return res
 
 
 class product_product(osv.osv):

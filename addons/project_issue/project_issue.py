@@ -19,14 +19,14 @@
 #
 ##############################################################################
 
-from openerp import SUPERUSER_ID
-from openerp.addons.crm import crm
 from datetime import datetime
-from openerp.osv import fields, osv, orm
-from openerp.tools.translate import _
-import time
+
+from openerp import SUPERUSER_ID
 from openerp import tools
+from openerp.addons.crm import crm
+from openerp.osv import fields, osv, orm
 from openerp.tools import html2plaintext
+from openerp.tools.translate import _
 
 class project_issue_version(osv.Model):
     _name = "project.issue.version"
@@ -50,23 +50,13 @@ class project_issue(osv.Model):
             'project_issue.mt_issue_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence == 1,
             'project_issue.mt_issue_stage': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence != 1,
         },
-        # 'user_id': {
-        #     'project_issue.mt_issue_assigned': lambda self, cr, uid, obj, ctx=None: obj.user_id and obj.user_id.id,
-        # },
+        'user_id': {
+            'project_issue.mt_issue_assigned': lambda self, cr, uid, obj, ctx=None: obj.user_id and obj.user_id.id,
+        },
         'kanban_state': {
             'project_issue.mt_issue_blocked': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'blocked',
         },
     }
-
-    def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
-        if vals.get('project_id') and not context.get('default_project_id'):
-            context['default_project_id'] = vals.get('project_id')
-
-        # context: no_log, because subtype already handle this
-        create_context = dict(context, mail_create_nolog=True)
-        return super(project_issue, self).create(cr, uid, vals, context=create_context)
 
     def _get_default_partner(self, cr, uid, context=None):
         """ Override of base_stage to add project specific behavior """
@@ -389,6 +379,16 @@ class project_issue(osv.Model):
         return super(project_issue, self).copy(cr, uid, id, default=default,
                 context=context)
 
+    def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
+        if vals.get('project_id') and not context.get('default_project_id'):
+            context['default_project_id'] = vals.get('project_id')
+
+        # context: no_log, because subtype already handle this
+        create_context = dict(context, mail_create_nolog=True)
+        return super(project_issue, self).create(cr, uid, vals, context=create_context)
+
     def write(self, cr, uid, ids, vals, context=None):
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
@@ -575,7 +575,6 @@ class project(osv.Model):
         res = dict.fromkeys(ids, 0)
         issue_ids = self.pool.get('project.issue').search(cr, uid, [('project_id', 'in', ids)])
         for issue in self.pool.get('project.issue').browse(cr, uid, issue_ids, context):
-            # TDE CHECK: if issue.state not in ('done', 'cancelled'):
             if issue.stage_id and not issue.stage_id.fold:
                 res[issue.project_id.id] += 1
         return res

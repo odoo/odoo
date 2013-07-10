@@ -141,15 +141,15 @@
                 <search string="Issue Tracker Search">
                     <field name="name" string="Issue" filter_domain="['|', '|', '|', ('partner_id','child_of',self), ('description','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
                     <field name="id"/>
-                    <field name="user_id"/>
-                    <field name="project_id"/>
-                    <field name="categ_ids"/>
                     <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
                     <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
                     <filter string="New" name="draft" domain="[('stage_id.sequence', '=', 1)]"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
+                    <field name="user_id"/>
+                    <field name="project_id"/>
+                    <field name="categ_ids"/>
                     <group expand="0" string="Group By..." >
                         <filter string="Responsible" name="group_user_id" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Contact" name="group_partner_id" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>

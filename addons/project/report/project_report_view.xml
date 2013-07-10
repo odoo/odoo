@@ -11,18 +11,6 @@
             <field name="model">report.project.task.user</field>
             <field name="arch" type="xml">
                 <tree string="Tasks Analysis" create="false">
-                    <field name="nbr" sum='# of tasks'/>
-                    <field name="no_of_days" sum="# of Days"/>
-                    <field name="total_hours" sum='Total Hours'/>
-                    <field name="hours_planned" sum='Planned Hours'/>
-                    <field name="remaining_hours" sum='Remaining Hours'/>
-                    <field name="hours_effective" sum='Effective Hours'/>
-                    <field name="hours_delay" sum='Avg. Plan.-Eff.'/>
-                    <field name="opening_days" sum='Days to Open'/>
-                    <field name="closing_days" sum='Days to Close'/>
-                    <field name="delay_endings_days" sum='OverPass delay'/>
-                    <field name="progress" sum='Progress' widget='progressbar'/>
-
                     <field name="name" invisible="1"/>
                     <field name="project_id" invisible="1"/>
                     <field name="stage_id" invisible="1"/>
@@ -37,6 +25,17 @@
                     <field name="day" invisible="1"/>
                     <field name="month" invisible="1"/>
                     <field name="year" invisible="1"/>
+                    <field name="nbr" sum='# of tasks'/>
+                    <field name="no_of_days" sum="# of Days"/>
+                    <field name="total_hours" sum='Total Hours'/>
+                    <field name="hours_planned" sum='Planned Hours'/>
+                    <field name="remaining_hours" sum='Remaining Hours'/>
+                    <field name="hours_effective" sum='Effective Hours'/>
+                    <field name="hours_delay" sum='Avg. Plan.-Eff.'/>
+                    <field name="opening_days" sum='Days to Open'/>
+                    <field name="closing_days" sum='Days to Close'/>
+                    <field name="delay_endings_days" sum='OverPass delay'/>
+                    <field name="progress" sum='Progress' widget='progressbar'/>
                 </tree>
             </field>
         </record>
@@ -68,10 +67,6 @@
                     <field name="stage_id"/>
                     <filter string="Unassigned" name="unassigned" domain="[('user_id','=',False)]"/>
                     <filter string="New" name="new" domain="[('stage_id.sequence', '=', 1)]"/>
-                    <filter string="Done" name="done" domain="[('stage_id.fold', '=', True)]"
-                            help="Tasks beloging to a folded stage"/>
-                    <separator/>
-                    <filter string="My Projects" domain="[('project_id.user_id','=',uid)]"/>
                     <separator/>
                     <filter string="My Task" domain="[('user_id','=',uid)]" />
                     <group expand="0" string="Extended Filters...">

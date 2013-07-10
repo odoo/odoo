@@ -66,6 +66,13 @@ class TestProjectBase(TestMailBase):
             'email': 'bastien.projectmanager@example.com',
             'groups_id': [(6, 0, [self.group_employee_id, self.group_project_manager_id])]
         })
+        self.user_none_id = self.res_users.create(cr, uid, {
+            'name': 'Charlie Avotbonkeur',
+            'login': 'charlie',
+            'alias_name': 'charlie',
+            'email': 'charlie.noone@example.com',
+            'groups_id': [(6, 0, [])]
+        })
         self.user_projectuser = self.res_users.browse(cr, uid, self.user_projectuser_id)
         self.user_projectmanager = self.res_users.browse(cr, uid, self.user_projectmanager_id)
         self.partner_projectuser_id = self.user_projectuser.partner_id.id

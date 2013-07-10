@@ -25,10 +25,9 @@ import time
 
 from openerp import SUPERUSER_ID
 from openerp import tools
+from openerp.addons.resource.faces import task as Task
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
-
-from openerp.addons.resource.faces import task as Task
 
 
 class project_task_type(osv.osv):
@@ -319,8 +318,7 @@ class project(osv.osv):
     ]
 
     def set_template(self, cr, uid, ids, context=None):
-        res = self.setActive(cr, uid, ids, value=False, context=context)
-        return res
+        return self.setActive(cr, uid, ids, value=False, context=context)
 
     def set_done(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'close'}, context=context)
@@ -449,7 +447,6 @@ class project(osv.osv):
             if project.user_id and (project.user_id.id not in u_ids):
                 u_ids.append(project.user_id.id)
             for task in project.tasks:
-                # TDE: be sure about this, was if task.state in ('done','cancelled')
                 if task.stage_id and task.stage_id.fold:
                     continue
                 if task.user_id and (task.user_id.id not in u_ids):
@@ -516,7 +513,6 @@ def Project():
         for project in projects:
             project_gantt = getattr(projects_gantt, 'Project_%d' % (project.id,))
             for task in project.tasks:
-                # TDE CHECK: was if task.state in ('done', 'cancelled')
                 if task.stage_id and task.stage_id.fold:
                     continue
 
@@ -531,10 +527,6 @@ def Project():
                         'user_id': int(p.booked_resource[0].name[5:]),
                     }, context=context)
         return True
-
-    # ------------------------------------------------
-    # OpenChatter methods and notifications
-    # ------------------------------------------------
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
@@ -569,6 +561,9 @@ class task(osv.osv):
         'stage_id': {
             'project.mt_task_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence == 1,
             'project.mt_task_stage': lambda self, cr, uid, obj, ctx=None: obj.stage_id.sequence != 1,
+        },
+        'user_id': {
+            'project.mt_task_assigned': lambda self, cr, uid, obj, ctx=None: obj.user_id and obj.user_id.id,
         },
         'kanban_state': {  # kanban state: tracked, but only block subtype
             'project.mt_task_blocked': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'blocked',
@@ -675,11 +670,11 @@ class task(osv.osv):
 
     def onchange_remaining(self, cr, uid, ids, remaining=0.0, planned=0.0):
         if remaining and not planned:
-            return {'value':{'planned_hours': remaining}}
+            return {'value': {'planned_hours': remaining}}
         return {}
 
     def onchange_planned(self, cr, uid, ids, planned=0.0, effective=0.0):
-        return {'value':{'remaining_hours': planned - effective}}
+        return {'value': {'remaining_hours': planned - effective}}
 
     def onchange_project(self, cr, uid, id, project_id, context=None):
         if project_id:
@@ -691,7 +686,7 @@ class task(osv.osv):
     def onchange_user_id(self, cr, uid, ids, user_id, context=None):
         vals = {}
         if user_id:
-            vals['date_start'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            vals['date_start'] = fields.datetime.now()
             vals['date_end'] = False
         return {'value': vals}
 
@@ -748,9 +743,7 @@ class task(osv.osv):
         'active': fields.function(_is_template, store=True, string='Not a Template Task', type='boolean', help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked."),
         'name': fields.char('Task Summary', size=128, required=True, select=True),
         'description': fields.text('Description'),
-        'priority': fields.selection([('4', 'Very Low'), ('3', 'Low'), ('2', 'Medium'),
-                                        ('1', 'Important'), ('0', 'Very important')],
-            string='Priority', select=True),
+        'priority': fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Important'), ('0','Very important')], 'Priority', select=True),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of tasks."),
         'stage_id': fields.many2one('project.task.type', 'Stage', track_visibility='onchange',
                         domain="[('project_ids', '=', project_id)]"),
@@ -937,8 +930,7 @@ class task(osv.osv):
             search_domain = [('|')] * (len(section_ids) - 1)
             for section_id in section_ids:
                 search_domain.append(('project_ids', '=', section_id))
-        if domain:
-            search_domain += list(domain)
+        search_domain += list(domain)
         # perform search, return the first found
         stage_ids = self.pool.get('project.task.type').search(cr, uid, search_domain, order=order, context=context)
         if stage_ids:
@@ -952,7 +944,6 @@ class task(osv.osv):
         for task in tasks:
             if task.child_ids:
                 for child in task.child_ids:
-                    # TDE CHECK: was 'if child.state in ['draft', 'open', 'pending']''
                     if child.stage_id and not child.stage_id.fold:
                         raise osv.except_osv(_("Warning!"), _("Child task still open.\nPlease cancel or complete child task first."))
         return True
@@ -977,7 +968,7 @@ class task(osv.osv):
             delegated_task_id = self.copy(cr, uid, task.id, {
                 'name': delegate_data['name'],
                 'project_id': delegate_data['project_id'] and delegate_data['project_id'][0] or False,
-                'stage_id': delegate_data.get('stage_id', [False])[0],
+                'stage_id': delegate_data.get('stage_id') and delegate_data.get('stage_id')[0] or False,
                 'user_id': delegate_data['user_id'] and delegate_data['user_id'][0] or False,
                 'planned_hours': delegate_data['planned_hours'] or 0.0,
                 'parent_ids': [(6, 0, [task.id])],
@@ -997,7 +988,6 @@ class task(osv.osv):
 
     def set_remaining_time(self, cr, uid, ids, remaining_time=1.0, context=None):
         for task in self.browse(cr, uid, ids, context=context):
-            # TDE CHECK: was (task.state=='draft')
             if (task.stage_id and task.stage_id.sequence == 1) or (task.planned_hours == 0.0):
                 self.write(cr, uid, [task.id], {'planned_hours': remaining_time}, context=context)
         self.write(cr, uid, ids, {'remaining_hours': remaining_time}, context=context)
@@ -1052,12 +1042,6 @@ class task(osv.osv):
         # user_id change: update date_start
         if vals.get('user_id'):
             vals['date_start'] = fields.datetime.now()
-        # generate a default stage based on context / given project value
-        if not vals.get('stage_id'):
-            ctx = context.copy()
-            if vals.get('project_id'):
-                ctx['default_project_id'] = vals['project_id']
-            vals['stage_id'] = self._get_default_stage_id(cr, uid, context=ctx)
 
         # context: no_log, because subtype already handle this
         create_context = dict(context, mail_create_nolog=True)
@@ -1104,7 +1088,6 @@ class task(osv.osv):
         result = ""
         ident = ' '*ident
         for task in tasks:
-            # TDE CHECK: if task.state in ('done','cancelled'):
             if task.stage_id and task.stage_id.fold:
                 continue
             result += '''
@@ -1175,24 +1158,9 @@ class task(osv.osv):
                         update_vals[field] = float(res.group(2).lower())
                     except (ValueError, TypeError):
                         pass
-                # elif match.lower() == 'state' \
-                #         and res.group(2).lower() in ['cancel','close','draft','open','pending']:
-                #     act = 'do_%s' % res.group(2).lower()
         if act:
             getattr(self,act)(cr, uid, ids, context=context)
         return super(task,self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
-
-    # TDE NOTE: FIXME
-    def project_task_reevaluate(self, cr, uid, ids, context=None):
-        if self.pool.get('res.users').has_group(cr, uid, 'project.group_time_work_estimation_tasks'):
-            return {
-                'view_type': 'form',
-                "view_mode": 'form',
-                'res_model': 'project.task.reevaluate',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-            }
-        return self.do_reopen(cr, uid, ids, context=context)
 
 class project_work(osv.osv):
     _name = "project.task.work"
