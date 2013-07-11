@@ -110,37 +110,17 @@ class WebRequest(object):
         self._cr_cm = None
         self._cr = None
         self.func_request_type = None
-
-    def init(self, params):
-        self.params = dict(params)
-
+        self.debug = self.httprequest.args.get('debug', False) is not False
         with set_request(self):
             self.db = self.session._db or db_monodb()
-
-        # TODO: remove this
         # set db/uid trackers - they're cleaned up at the WSGI
         # dispatching phase in openerp.service.wsgi_server.application
         if self.db:
             threading.current_thread().dbname = self.session._db
         if self.session._uid:
             threading.current_thread().uid = self.session._uid
-
-        self.context = self.params.pop('context', {})
-        self.debug = self.params.pop('debug', False) is not False
-        # Determine self.lang
-        lang = self.params.get('lang', None)
-        if lang is None:
-            lang = self.context.get('lang')
-        if lang is None:
-            lang = self.httprequest.cookies.get('lang')
-        if lang is None:
-            lang = self.httprequest.accept_languages.best
-        if not lang:
-            lang = 'en_US'
-        # tranform 2 letters lang like 'en' into 5 letters like 'en_US'
-        lang = babel.core.LOCALE_ALIASES.get(lang, lang)
-        # we use _ as seprator where RFC2616 uses '-'
-        self.lang = lang.replace('-', '_')
+        self.context = self.session.context
+        self.lang = self.context["lang"]
 
     def _authenticate(self):
         if self.auth_method == "none":
@@ -313,7 +293,8 @@ class JsonRequest(WebRequest):
 
         # Read POST content or POST Form Data named "request"
         self.jsonrequest = simplejson.loads(request, object_hook=reject_nonliteral)
-        self.init(self.jsonrequest.get("params", {}))
+        self.params = dict(self.jsonrequest.get("params", {}))
+        self.context = self.params.pop('context', self.session.context)
 
     def dispatch(self):
         """ Calls the method asked for by the JSON-RPC2 or JSONP request
@@ -420,11 +401,13 @@ class HttpRequest(WebRequest):
     def __init__(self, *args):
         super(HttpRequest, self).__init__(*args)
         params = dict(self.httprequest.args)
-        if "session_id" in params:
-            params.pop("session_id")
+        ex = set(["session_id", "debug", "db"])
+        for k in params.keys():
+            if k in ex:
+                del params[k]
         params.update(self.httprequest.form)
         params.update(self.httprequest.files)
-        self.init(params)
+        self.params = params
 
     def dispatch(self):
         akw = {}
@@ -630,9 +613,9 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         self.setdefault("_uid", False)
         self.setdefault("_login", False)
         self.setdefault("_password", False)
-        self.setdefault("context", {})
+        self.setdefault("context", {'tz': "UTC", "uid": None})
         self.setdefault("jsonp_requests", {})
-        self.setdefault("modified", False)
+        self.modified = False
 
     def __getattr__(self, attr):
         return self.get(attr, None)
@@ -895,6 +878,11 @@ class Root(object):
             else:
                 httprequest.session = self.session_store.get(sid)
 
+            if not "lang" in httprequest.session.context:
+                lang = httprequest.accept_languages.best or "en_US"
+                lang = babel.core.LOCALE_ALIASES.get(lang, lang).replace('-', '_')
+                httprequest.session.context["lang"] = lang
+
             request = self._build_request(httprequest)
             db = request.db
 
@@ -1053,19 +1041,18 @@ def db_list(force=False):
     return dbs
 
 def db_redirect(match_first_only_if_unique):
-    req = request
     db = False
     redirect = False
 
     # 1 try the db in the url
-    db_url = req.params.get('db')
+    db_url = request.httprequest.args.get('db')
     if db_url:
         return (db_url, False)
 
     dbs = db_list(True)
 
     # 2 use the database from the cookie if it's listable and still listed
-    cookie_db = req.httprequest.cookies.get('last_used_database')
+    cookie_db = request.httprequest.cookies.get('last_used_database')
     if cookie_db in dbs:
         db = cookie_db
 
@@ -1075,9 +1062,9 @@ def db_redirect(match_first_only_if_unique):
 
     # redirect to the chosen db if multiple are available
     if db and len(dbs) > 1:
-        query = dict(urlparse.parse_qsl(req.httprequest.query_string, keep_blank_values=True))
+        query = dict(urlparse.parse_qsl(request.httprequest.query_string, keep_blank_values=True))
         query.update({'db': db})
-        redirect = req.httprequest.path + '?' + urllib.urlencode(query)
+        redirect = request.httprequest.path + '?' + urllib.urlencode(query)
     return (db, redirect)
 
 def db_monodb():

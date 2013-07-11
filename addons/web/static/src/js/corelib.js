@@ -1000,8 +1000,6 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
             context: this.user_context || {}
         });
         // Construct a JSON-RPC2 request, method is currently unused
-        if (this.debug)
-            params.debug = 1;
         var payload = {
             jsonrpc: '2.0',
             method: 'call',
@@ -1011,7 +1009,8 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
         var deferred = $.Deferred();
         if (! options.shadow)
             this.trigger('request', url, payload);
-
+        payload.debug = this.debug ? true : false;
+        
         this.rpc_function(url, payload).then(
             function (response, textStatus, jqXHR) {
                 if (! options.shadow)
