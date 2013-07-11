@@ -113,7 +113,7 @@ class stock_location(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Owner',help="Owner of the location if not internal"),
 
         'comment': fields.text('Additional Information'),
-        'posx': fields.integer('Corridor (X)',help="Optional localization details, for information purpose only"),
+        'posx': fields.integer('Corridor (X)', help="Optional localization details, for information purpose only"),
         'posy': fields.integer('Shelves (Y)', help="Optional localization details, for information purpose only"),
         'posz': fields.integer('Height (Z)', help="Optional localization details, for information purpose only"),
 
@@ -122,16 +122,6 @@ class stock_location(osv.osv):
 
         'company_id': fields.many2one('res.company', 'Company', select=1, help='Let this field empty if this location is shared between all companies'),
         'scrap_location': fields.boolean('Scrap Location', help='Check this box to allow using this location to put scrapped/damaged goods.'),
-        'valuation_in_account_id': fields.many2one('account.account', 'Stock Valuation Account (Incoming)', domain = [('type','=','other')],
-                                                   help="Used for real-time inventory valuation. When set on a virtual location (non internal type), "
-                                                        "this account will be used to hold the value of products being moved from an internal location "
-                                                        "into this location, instead of the generic Stock Output Account set on the product. "
-                                                        "This has no effect for internal locations."),
-        'valuation_out_account_id': fields.many2one('account.account', 'Stock Valuation Account (Outgoing)', domain = [('type','=','other')],
-                                                   help="Used for real-time inventory valuation. When set on a virtual location (non internal type), "
-                                                        "this account will be used to hold the value of products being moved out of this location "
-                                                        "and into an internal location, instead of the generic Stock Output Account set on the product. "
-                                                        "This has no effect for internal locations."),
     }
     _defaults = {
         'active': True,
@@ -190,24 +180,26 @@ class stock_quant(osv.osv):
 
     # add location_dest_id in parameters (False=use the desitnation of the move)
     def quants_move(self, cr, uid, quants, move, context=None):
-        for quant,qty in quants:
-            location_from = quant and quant.location_id
-            if not quant:
-                quant = self._quant_create(cr, uid, qty, move, context=context)
-            else:
-                self._quant_split(cr, uid, quant, qty, context=context)
-            self._quant_reconcile_negative(cr, uid, quant, context=context)
+        for quant, qty in quants:
+            self.move_single_quant(cr, uid, quant, qty, move, context=context)
 
-            # FP Note: improve this using preferred locations
-            location_to = move.location_dest_id
+    def move_single_quant(self, cr, uid, quant, qty, move, context=None):
+        location_from = quant and quant.location_id
+        if not quant:
+            quant = self._quant_create(cr, uid, qty, move, context=context)
+        else:
+            self._quant_split(cr, uid, quant, qty, context=context)
+        self._quant_reconcile_negative(cr, uid, quant, context=context)
 
-            self.write(cr, uid, [quant.id], {
-                'location_id': location_to.id,
-                'reservation_id': move.move_dest_id and move.move_dest_id.id or False, 
-                'history_ids': [(4, move.id)]
-            })
+        # FP Note: improve this using preferred locations
+        location_to = move.location_dest_id
 
-            self._account_entry_move(cr, uid, quant, location_from, location_to, move, context=context)
+        self.write(cr, uid, [quant.id], {
+            'location_id': location_to.id,
+            'reservation_id': move.move_dest_id and move.move_dest_id.id or False, 
+            'history_ids': [(4, move.id)]
+        })
+
 
     # FP Note: TODO: implement domain preference that tries to retrieve first with this domain
     # This will be used for reservation
@@ -312,10 +304,8 @@ class stock_quant(osv.osv):
                 self._price_update(cr, uid, qu2, cost, context=context)
         return result
 
-    # FP Note: this is where we should post accounting entries for adjustment
     def _price_update(self, cr, uid, quant, newprice, context=None):
         self.write(cr, uid, [quant.id], {'cost': newprice}, context=context)
-        # TODO: generate accounting entries
 
     #
     # Implementation of removal strategies
@@ -351,234 +341,9 @@ class stock_quant(osv.osv):
         return self._quants_get_order(cr, uid, location, product, quantity,
             domain, 'in_date desc', context=context)
 
-    """
-    Accounting Valuation Entries
-
-    location_from: can be None if it's a new quant
-    """
-    def _account_entry_move(self, cr, uid, quant, location_from, location_to, move, context=None):
-        if quant.product_id.valuation <> 'realtime':
-            return False
-        company_from = self._location_owner(cr, uid, quant, location_from, context=context)
-        company_to = self._location_owner(cr, uid, quant, location_to, context=context)
-        if company_from == company_to:
-            return False
-
-        # Create Journal Entry for products arriving in the company
-        if company_to:
-            pass
-
-        # Create Journal Entry for products leaving the company
-        if company_from:
-            pass
-
-
     # Return the company owning the location if any
     def _location_owner(self, cr, uid, quant, location, context=None):
         return location and (location.usage == 'internal') and location.company_id or False
-
-    # TODO: move this code on the _account_entry_move method above. Should be simpler
-    #
-    #def _get_accounting_data_for_valuation(self, cr, uid, move, context=None):
-    #    """
-    #    Return the accounts and journal to use to post Journal Entries for the real-time
-    #    valuation of the move.
-
-    #    :param context: context dictionary that can explicitly mention the company to consider via the 'force_company' key
-    #    :raise: osv.except_osv() is any mandatory account or journal is not defined.
-    #    """
-    #    product_obj=self.pool.get('product.product')
-    #    accounts = product_obj.get_product_accounts(cr, uid, move.product_id.id, context)
-    #    if move.location_id.valuation_out_account_id:
-    #        acc_src = move.location_id.valuation_out_account_id.id
-    #    else:
-    #        acc_src = accounts['stock_account_input']
-
-    #    if move.location_dest_id.valuation_in_account_id:
-    #        acc_dest = move.location_dest_id.valuation_in_account_id.id
-    #    else:
-    #        acc_dest = accounts['stock_account_output']
-
-    #    acc_valuation = accounts.get('property_stock_valuation_account_id', False)
-    #    journal_id = accounts['stock_journal']
-
-    #    if acc_dest == acc_valuation:
-    #        raise osv.except_osv(_('Error!'),  _('Cannot create Journal Entry, Output Account of this product and Valuation account on category of this product are same.'))
-
-    #    if acc_src == acc_valuation:
-    #        raise osv.except_osv(_('Error!'),  _('Cannot create Journal Entry, Input Account of this product and Valuation account on category of this product are same.'))
-
-    #    if not acc_src:
-    #        raise osv.except_osv(_('Error!'),  _('Please define stock input account for this product or its category: "%s" (id: %d)') % \
-    #                                (move.product_id.name, move.product_id.id,))
-    #    if not acc_dest:
-    #        raise osv.except_osv(_('Error!'),  _('Please define stock output account for this product or its category: "%s" (id: %d)') % \
-    #                                (move.product_id.name, move.product_id.id,))
-    #    if not journal_id:
-    #        raise osv.except_osv(_('Error!'), _('Please define journal on the product category: "%s" (id: %d)') % \
-    #                                (move.product_id.categ_id.name, move.product_id.categ_id.id,))
-    #    if not acc_valuation:
-    #        raise osv.except_osv(_('Error!'), _('Please define inventory valuation account on the product category: "%s" (id: %d)') % \
-    #                                (move.product_id.categ_id.name, move.product_id.categ_id.id,))
-    #    return journal_id, acc_src, acc_dest, acc_valuation
-
-
-    ##We can use a preliminary type
-    #def get_reference_amount(self, cr, uid, move, qty, context=None):
-    #    # if product is set to average price and a specific value was entered in the picking wizard,
-    #    # we use it
-
-    #    # by default the reference currency is that of the move's company
-    #    reference_currency_id = move.company_id.currency_id.id
-    #    
-    #    #I use 
-    #    if move.product_id.cost_method != 'standard' and move.price_unit:
-    #        reference_amount = move.product_qty * move.price_unit #Using move.price_qty instead of qty to have correct amount
-    #        reference_currency_id = move.price_currency_id.id or reference_currency_id
-
-    #    # Otherwise we default to the company's valuation price type, considering that the values of the
-    #    # valuation field are expressed in the default currency of the move's company.
-    #    else:
-    #        if context is None:
-    #            context = {}
-    #        currency_ctx = dict(context, currency_id = move.company_id.currency_id.id)
-    #        amount_unit = move.product_id.price_get('standard_price', context=currency_ctx)[move.product_id.id]
-    #        reference_amount = amount_unit * qty
-    #    
-    #    return reference_amount, reference_currency_id
-
-
-    #def _get_reference_accounting_values_for_valuation(self, cr, uid, move, context=None):
-    #    """
-    #    Return the reference amount and reference currency representing the inventory valuation for this move.
-    #    These reference values should possibly be converted before being posted in Journals to adapt to the primary
-    #    and secondary currencies of the relevant accounts.
-    #    """
-    #    product_uom_obj = self.pool.get('product.uom')
-
-    #    default_uom = move.product_id.uom_id.id
-    #    qty = product_uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, default_uom)
-    #    
-    #    reference_amount, reference_currency_id = self.get_reference_amount(cr, uid, move, qty, context=context)
-    #    return reference_amount, reference_currency_id
-
-
-    #    
-
-
-    #def _create_product_valuation_moves(self, cr, uid, move, matches, context=None):
-    #    """
-    #    Generate the appropriate accounting moves if the product being moved is subject
-    #    to real_time valuation tracking, and the source or the destination location is internal (not both)
-    #    This means an in or out move. 
-    #    
-    #    Depending on the matches it will create the necessary moves
-    #    """
-    #    ctx = context.copy()
-    #    ctx['force_company'] = move.company_id.id
-    #    valuation = self.pool.get("product.product").browse(cr, uid, move.product_id.id, context=ctx).valuation
-    #    move_obj = self.pool.get('account.move')
-    #    if valuation == 'real_time':
-    #        if context is None:
-    #            context = {}
-    #        company_ctx = dict(context,force_company=move.company_id.id)
-    #        journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(cr, uid, move, context=company_ctx)
-    #        reference_amount, reference_currency_id = self._get_reference_accounting_values_for_valuation(cr, uid, move, context=company_ctx)
-    #        account_moves = []
-    #        # Outgoing moves (or cross-company output part)
-    #        if move.location_id.company_id \
-    #            and (move.location_id.usage == 'internal' and move.location_dest_id.usage != 'internal'):
-    #            #returning goods to supplier
-    #            if move.location_dest_id.usage == 'supplier':
-    #                account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, matches, acc_valuation, acc_src, reference_amount, reference_currency_id, 'out', context=company_ctx))]
-    #            else:
-    #                account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, matches, acc_valuation, acc_dest, reference_amount, reference_currency_id, 'out', context=company_ctx))]
-
-    #        # Incoming moves (or cross-company input part)
-    #        if move.location_dest_id.company_id \
-    #            and (move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal'):
-    #            #goods return from customer
-    #            if move.location_id.usage == 'customer':
-    #                account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, matches, acc_dest, acc_valuation, reference_amount, reference_currency_id, 'in', context=company_ctx))]
-    #            else:
-    #                account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, matches, acc_src, acc_valuation, reference_amount, reference_currency_id, 'in', context=company_ctx))]
-    #            if matches and move.product_id.cost_method in ('fifo', 'lifo'):
-    #                outs = {}
-    #                match_obj = self.pool.get("stock.move.matching")
-    #                for match in match_obj.browse(cr, uid, matches, context=context):
-    #                    if match.move_out_id.id in outs:
-    #                        outs[match.move_out_id.id] += [match.id]
-    #                    else:
-    #                        outs[match.move_out_id.id] = [match.id]
-    #                #When in stock was negative, you will get matches for the in also:
-    #                account_moves_neg = []
-    #                for out_mov in self.browse(cr, uid, outs.keys(), context=context):
-    #                    journal_id_out, acc_src_out, acc_dest_out, acc_valuation_out = self._get_accounting_data_for_valuation(cr, uid, out_mov, context=company_ctx)
-    #                    reference_amount_out, reference_currency_id_out = self._get_reference_accounting_values_for_valuation(cr, uid, out_mov, context=company_ctx)
-    #                    if out_mov.location_dest_id.usage == 'supplier':
-    #                        # Is not the way it should be with acc_valuation
-    #                        account_moves_neg += [(journal_id_out, self._create_account_move_line(cr, uid, out_mov, outs[out_mov.id], acc_valuation_out, acc_src_out, reference_amount_out, reference_currency_id_out, 'out', context=company_ctx))]
-    #                    else:
-    #                        account_moves_neg += [(journal_id_out, self._create_account_move_line(cr, uid, out_mov, outs[out_mov.id], acc_valuation_out, acc_dest_out, reference_amount_out, reference_currency_id_out, 'out', context=company_ctx))]
-    #                #Create account moves for outs which made stock go negative
-    #                for j_id, move_lines in account_moves_neg:
-    #                    move_obj.create(cr, uid,
-    #                                    {'journal_id': j_id, 
-    #                                     'line_id': move_lines, 
-    #                                     'ref': out_mov.picking_id and out_mov.picking_id.name,
-    #                                     })
-    #        for j_id, move_lines in account_moves:
-    #            move_obj.create(cr, uid,
-    #                    {
-    #                     'journal_id': j_id,
-    #                     'line_id': move_lines,
-    #                     'ref': move.picking_id and move.picking_id.name})
-
-    #def _create_account_move_line(self, cr, uid, quant, src_account_id, dest_account_id, context=None):
-    #    """
-    #    Generate the account.move.line values to post to track the stock valuation difference due to the
-    #    processing of the given stock move.
-    #    """
-    #    move_list = []
-    #    # Consists of access rights 
-    #    # TODO Check if amount_currency is not needed
-    #    match_obj = self.pool.get("stock.move.matching")
-    #    if type == 'out' and move.product_id.cost_method in ['real']:
-    #        for match in match_obj.browse(cr, uid, matches, context=context):
-    #            move_list += [(match.qty, match.qty * match.price_unit_out)]
-    #    elif type == 'in' and move.product_id.cost_method in ['real']:
-    #        move_list = [(move.product_qty, reference_amount)]
-    #    else:
-    #        move_list = [(move.product_qty, reference_amount)]
-
-    #    res = []
-    #    for item in move_list:
-    #        # prepare default values considering that the destination accounts have the reference_currency_id as their main currency
-    #        partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
-    #        debit_line_vals = {
-    #                    'name': move.name,
-    #                    'product_id': move.product_id and move.product_id.id or False,
-    #                    'quantity': item[0],
-    #                    'product_uom_id': move.product_uom.id, 
-    #                    'ref': move.picking_id and move.picking_id.name or False,
-    #                    'date': time.strftime('%Y-%m-%d'),
-    #                    'partner_id': partner_id,
-    #                    'debit': item[1],
-    #                    'account_id': dest_account_id,
-    #        }
-    #        credit_line_vals = {
-    #                    'name': move.name,
-    #                    'product_id': move.product_id and move.product_id.id or False,
-    #                    'quantity': item[0],
-    #                    'product_uom_id': move.product_uom.id, 
-    #                    'ref': move.picking_id and move.picking_id.name or False,
-    #                    'date': time.strftime('%Y-%m-%d'),
-    #                    'partner_id': partner_id,
-    #                    'credit': item[1],
-    #                    'account_id': src_account_id,
-    #        }
-    #        res += [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
-    #    return res
 
 
 #----------------------------------------------------------
@@ -651,11 +416,6 @@ class stock_picking(osv.osv):
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Internal Moves', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
         'auto_picking': fields.boolean('Auto-Picking', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'partner_id': fields.many2one('res.partner', 'Partner', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
-        'invoice_state': fields.selection([
-            ("invoiced", "Invoiced"),
-            ("2binvoiced", "To Be Invoiced"),
-            ("none", "Not Applicable")], "Invoice Control",
-            select=True, required=True, readonly=True, track_visibility='onchange', states={'draft': [('readonly', False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'pack_operation_ids': fields.one2many('stock.pack.operation', 'picking_id', string='Related Packing Operations'),
 
@@ -670,7 +430,6 @@ class stock_picking(osv.osv):
         'state': 'draft',
         'move_type': 'direct',
         'type': 'internal',
-        'invoice_state': 'none',
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c)
     }
@@ -706,8 +465,6 @@ class stock_picking(osv.osv):
             default['name'] = '/'
             default['origin'] = ''
             default['backorder_id'] = False
-        if 'invoice_state' not in default and picking_obj.invoice_state == 'invoiced':
-            default['invoice_state'] = '2binvoiced'
         return super(stock_picking, self).copy(cr, uid, id, default, context)
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
@@ -865,262 +622,6 @@ class stock_picking(osv.osv):
                 self.pool.get('stock.move').action_done(cr, uid, todo, context=context)
         return True
 
-    def get_currency_id(self, cr, uid, picking):
-        return False
-
-    def _get_partner_to_invoice(self, cr, uid, picking, context=None):
-        """ Gets the partner that will be invoiced
-            Note that this function is inherited in the sale and purchase modules
-            @param picking: object of the picking for which we are selecting the partner to invoice
-            @return: object of the partner to invoice
-        """
-        return picking.partner_id and picking.partner_id.id
-
-    def _get_comment_invoice(self, cr, uid, picking):
-        """
-        @return: comment string for invoice
-        """
-        return picking.note or ''
-
-    def _get_price_unit_invoice(self, cr, uid, move_line, type, context=None):
-        """ Gets price unit for invoice
-        @param move_line: Stock move lines
-        @param type: Type of invoice
-        @return: The price unit for the move line
-        """
-        if context is None:
-            context = {}
-
-        if type in ('in_invoice', 'in_refund'):
-            # Take the user company and pricetype
-            context['currency_id'] = move_line.company_id.currency_id.id
-            amount_unit = move_line.product_id.price_get('standard_price', context=context)[move_line.product_id.id]
-            return amount_unit
-        else:
-            return move_line.product_id.list_price
-
-    def _get_discount_invoice(self, cr, uid, move_line):
-        '''Return the discount for the move line'''
-        return 0.0
-
-    def _get_taxes_invoice(self, cr, uid, move_line, type):
-        """ Gets taxes on invoice
-        @param move_line: Stock move lines
-        @param type: Type of invoice
-        @return: Taxes Ids for the move line
-        """
-        if type in ('in_invoice', 'in_refund'):
-            taxes = move_line.product_id.supplier_taxes_id
-        else:
-            taxes = move_line.product_id.taxes_id
-
-        if move_line.picking_id and move_line.picking_id.partner_id and move_line.picking_id.partner_id.id:
-            return self.pool.get('account.fiscal.position').map_tax(
-                cr,
-                uid,
-                move_line.picking_id.partner_id.property_account_position,
-                taxes
-            )
-        else:
-            return map(lambda x: x.id, taxes)
-
-    def _get_account_analytic_invoice(self, cr, uid, picking, move_line):
-        return False
-
-    def _invoice_line_hook(self, cr, uid, move_line, invoice_line_id):
-        '''Call after the creation of the invoice line'''
-        return
-
-    def _invoice_hook(self, cr, uid, picking, invoice_id):
-        '''Call after the creation of the invoice'''
-        return
-
-    def _get_invoice_type(self, pick):
-        src_usage = dest_usage = None
-        inv_type = None
-        if pick.invoice_state == '2binvoiced':
-            if pick.move_lines:
-                src_usage = pick.move_lines[0].location_id.usage
-                dest_usage = pick.move_lines[0].location_dest_id.usage
-            if pick.type == 'out' and dest_usage == 'supplier':
-                inv_type = 'in_refund'
-            elif pick.type == 'out' and dest_usage == 'customer':
-                inv_type = 'out_invoice'
-            elif pick.type == 'in' and src_usage == 'supplier':
-                inv_type = 'in_invoice'
-            elif pick.type == 'in' and src_usage == 'customer':
-                inv_type = 'out_refund'
-            else:
-                inv_type = 'out_invoice'
-        return inv_type
-
-    def _prepare_invoice_group(self, cr, uid, picking, partner, invoice, context=None):
-        """ Builds the dict for grouped invoices
-            @param picking: picking object
-            @param partner: object of the partner to invoice (not used here, but may be usefull if this function is inherited)
-            @param invoice: object of the invoice that we are updating
-            @return: dict that will be used to update the invoice
-        """
-        comment = self._get_comment_invoice(cr, uid, picking)
-        return {
-            'name': (invoice.name or '') + ', ' + (picking.name or ''),
-            'origin': (invoice.origin or '') + ', ' + (picking.name or '') + (picking.origin and (':' + picking.origin) or ''),
-            'comment': (comment and (invoice.comment and invoice.comment + "\n" + comment or comment)) or (invoice.comment and invoice.comment or ''),
-            'date_invoice': context.get('date_inv', False),
-            'user_id': uid,
-        }
-
-    def _prepare_invoice(self, cr, uid, picking, partner, inv_type, journal_id, context=None):
-        """ Builds the dict containing the values for the invoice
-            @param picking: picking object
-            @param partner: object of the partner to invoice
-            @param inv_type: type of the invoice ('out_invoice', 'in_invoice', ...)
-            @param journal_id: ID of the accounting journal
-            @return: dict that will be used to create the invoice object
-        """
-        if isinstance(partner, int):
-            partner = self.pool.get('res.partner').browse(cr, uid, partner, context=context)
-        if inv_type in ('out_invoice', 'out_refund'):
-            account_id = partner.property_account_receivable.id
-            payment_term = partner.property_payment_term.id or False
-        else:
-            account_id = partner.property_account_payable.id
-            payment_term = partner.property_supplier_payment_term.id or False
-        comment = self._get_comment_invoice(cr, uid, picking)
-        invoice_vals = {
-            'name': picking.name,
-            'origin': (picking.name or '') + (picking.origin and (':' + picking.origin) or ''),
-            'type': inv_type,
-            'account_id': account_id,
-            'partner_id': partner.id,
-            'comment': comment,
-            'payment_term': payment_term,
-            'fiscal_position': partner.property_account_position.id,
-            'date_invoice': context.get('date_inv', False),
-            'company_id': picking.company_id.id,
-            'user_id': uid,
-        }
-        cur_id = self.get_currency_id(cr, uid, picking)
-        if cur_id:
-            invoice_vals['currency_id'] = cur_id
-        if journal_id:
-            invoice_vals['journal_id'] = journal_id
-        return invoice_vals
-
-    def _prepare_invoice_line(self, cr, uid, group, picking, move_line, invoice_id,
-        invoice_vals, context=None):
-        """ Builds the dict containing the values for the invoice line
-            @param group: True or False
-            @param picking: picking object
-            @param: move_line: move_line object
-            @param: invoice_id: ID of the related invoice
-            @param: invoice_vals: dict used to created the invoice
-            @return: dict that will be used to create the invoice line
-        """
-        if group:
-            name = (picking.name or '') + '-' + move_line.name
-        else:
-            name = move_line.name
-        origin = move_line.picking_id.name or ''
-        if move_line.picking_id.origin:
-            origin += ':' + move_line.picking_id.origin
-
-        if invoice_vals['type'] in ('out_invoice', 'out_refund'):
-            account_id = move_line.product_id.property_account_income.id
-            if not account_id:
-                account_id = move_line.product_id.categ_id.\
-                        property_account_income_categ.id
-        else:
-            account_id = move_line.product_id.property_account_expense.id
-            if not account_id:
-                account_id = move_line.product_id.categ_id.\
-                        property_account_expense_categ.id
-        if invoice_vals['fiscal_position']:
-            fp_obj = self.pool.get('account.fiscal.position')
-            fiscal_position = fp_obj.browse(cr, uid, invoice_vals['fiscal_position'], context=context)
-            account_id = fp_obj.map_account(cr, uid, fiscal_position, account_id)
-        # set UoS if it's a sale and the picking doesn't have one
-        uos_id = move_line.product_uos and move_line.product_uos.id or False
-        if not uos_id and invoice_vals['type'] in ('out_invoice', 'out_refund'):
-            uos_id = move_line.product_uom.id
-
-        return {
-            'name': name,
-            'origin': origin,
-            'invoice_id': invoice_id,
-            'uos_id': uos_id,
-            'product_id': move_line.product_id.id,
-            'account_id': account_id,
-            'price_unit': self._get_price_unit_invoice(cr, uid, move_line, invoice_vals['type']),
-            'discount': self._get_discount_invoice(cr, uid, move_line),
-            'quantity': move_line.product_uos_qty or move_line.product_qty,
-            'invoice_line_tax_id': [(6, 0, self._get_taxes_invoice(cr, uid, move_line, invoice_vals['type']))],
-            'account_analytic_id': self._get_account_analytic_invoice(cr, uid, picking, move_line),
-        }
-
-    def action_invoice_create(self, cr, uid, ids, journal_id=False,
-            group=False, type='out_invoice', context=None):
-        """ Creates invoice based on the invoice state selected for picking.
-        @param journal_id: Id of journal
-        @param group: Whether to create a group invoice or not
-        @param type: Type invoice to be created
-        @return: Ids of created invoices for the pickings
-        """
-        if context is None:
-            context = {}
-
-        invoice_obj = self.pool.get('account.invoice')
-        invoice_line_obj = self.pool.get('account.invoice.line')
-        partner_obj = self.pool.get('res.partner')
-        invoices_group = {}
-        res = {}
-        inv_type = type
-        for picking in self.browse(cr, uid, ids, context=context):
-            if picking.invoice_state != '2binvoiced':
-                continue
-            partner = self._get_partner_to_invoice(cr, uid, picking, context=context)
-            if isinstance(partner, int):
-                partner = partner_obj.browse(cr, uid, [partner], context=context)[0]
-            if not partner:
-                raise osv.except_osv(_('Error, no partner!'),
-                    _('Please put a partner on the picking list if you want to generate invoice.'))
-
-            if not inv_type:
-                inv_type = self._get_invoice_type(picking)
-
-            if group and partner.id in invoices_group:
-                invoice_id = invoices_group[partner.id]
-                invoice = invoice_obj.browse(cr, uid, invoice_id)
-                invoice_vals_group = self._prepare_invoice_group(cr, uid, picking, partner, invoice, context=context)
-                invoice_obj.write(cr, uid, [invoice_id], invoice_vals_group, context=context)
-            else:
-                invoice_vals = self._prepare_invoice(cr, uid, picking, partner, inv_type, journal_id, context=context)
-                invoice_id = invoice_obj.create(cr, uid, invoice_vals, context=context)
-                invoices_group[partner.id] = invoice_id
-            res[picking.id] = invoice_id
-            for move_line in picking.move_lines:
-                if move_line.state == 'cancel':
-                    continue
-                if move_line.scrapped:
-                    # do no invoice scrapped products
-                    continue
-                vals = self._prepare_invoice_line(cr, uid, group, picking, move_line,
-                                invoice_id, invoice_vals, context=context)
-                if vals:
-                    invoice_line_id = invoice_line_obj.create(cr, uid, vals, context=context)
-                    self._invoice_line_hook(cr, uid, move_line, invoice_line_id)
-
-            invoice_obj.button_compute(cr, uid, [invoice_id], context=context,
-                    set_total=(inv_type in ('in_invoice', 'in_refund')))
-            self.write(cr, uid, [picking.id], {
-                'invoice_state': 'invoiced',
-                }, context=context)
-            self._invoice_hook(cr, uid, picking, invoice_id)
-        self.write(cr, uid, res.keys(), {
-            'invoice_state': 'invoiced',
-            }, context=context)
-        return res
-
     def test_done(self, cr, uid, ids, context=None):
         """ Test whether the move lines are done or not.
         @return: True or False
@@ -1164,9 +665,6 @@ class stock_picking(osv.osv):
                 move_obj.unlink(cr, uid, ids2, ctx)
 
         return super(stock_picking, self).unlink(cr, uid, ids, context=context)
-
-
-
 
     # FP Note: review all methods aboce this line for stock.picking
 
@@ -2558,24 +2056,26 @@ class stock_inventory(osv.osv):
         return True
 
     def action_cancel_inventory(self, cr, uid, ids, context=None):
-        """ Cancels both stock move and inventory
-        @return: True
-        """
-        move_obj = self.pool.get('stock.move')
-        account_move_obj = self.pool.get('account.move')
-        for inv in self.browse(cr, uid, ids, context=context):
-            move_obj.action_cancel(cr, uid, [x.id for x in inv.move_ids], context=context)
-            for move in inv.move_ids:
-                 account_move_ids = account_move_obj.search(cr, uid, [('name', '=', move.name)])
-                 if account_move_ids:
-                     account_move_data_l = account_move_obj.read(cr, uid, account_move_ids, ['state'], context=context)
-                     for account_move in account_move_data_l:
-                         if account_move['state'] == 'posted':
-                             raise osv.except_osv(_('User Error!'),
-                                                  _('In order to cancel this inventory, you must first unpost related journal entries.'))
-                         account_move_obj.unlink(cr, uid, [account_move['id']], context=context)
-            self.write(cr, uid, [inv.id], {'state': 'cancel'}, context=context)
-        return True
+        #TODO test
+        self.action_cancel_draft(cr, uid, ids, context=context)
+        #""" Cancels both stock move and inventory
+        #@return: True
+        #"""
+        #move_obj = self.pool.get('stock.move')
+        #account_move_obj = self.pool.get('account.move')
+        #for inv in self.browse(cr, uid, ids, context=context):
+        #    move_obj.action_cancel(cr, uid, [x.id for x in inv.move_ids], context=context)
+        #    for move in inv.move_ids:
+        #         account_move_ids = account_move_obj.search(cr, uid, [('name', '=', move.name)])
+        #         if account_move_ids:
+        #             account_move_data_l = account_move_obj.read(cr, uid, account_move_ids, ['state'], context=context)
+        #             for account_move in account_move_data_l:
+        #                 if account_move['state'] == 'posted':
+        #                     raise osv.except_osv(_('User Error!'),
+        #                                          _('In order to cancel this inventory, you must first unpost related journal entries.'))
+        #                 account_move_obj.unlink(cr, uid, [account_move['id']], context=context)
+        #    self.write(cr, uid, [inv.id], {'state': 'cancel'}, context=context)
+        #return True
 
 
 class stock_inventory_line(osv.osv):
