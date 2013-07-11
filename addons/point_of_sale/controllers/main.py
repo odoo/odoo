@@ -14,9 +14,7 @@ class PointOfSaleController(openerp.addons.web.http.Controller):
         js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list(req, None, 'js'))
         css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list(req, None, 'css'))
 
-        cookie = req.httprequest.cookies.get("instance0|session_id")
-        session_id = cookie.replace("%22","")
-        template = html_template.replace('<html','<html manifest="/pos/manifest?session_id=%s"'%session_id)
+        template = html_template.replace('<html','<html manifest="/pos/manifest?session_id=%s"' % req.session_id)
         r = template % {
             'js': js,
             'css': css,
