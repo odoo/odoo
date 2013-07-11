@@ -810,16 +810,16 @@ class Session(http.Controller):
         request.session.ensure_valid()
         return {
             "session_id": request.session_id,
-            "uid": request.session._uid,
-            "user_context": request.session.get_context() if request.session._uid else {},
-            "db": request.session._db,
-            "username": request.session._login,
+            "uid": request.session.uid,
+            "user_context": request.session.get_context() if request.session.uid else {},
+            "db": request.session.db,
+            "username": request.session.login,
         }
 
     @http.route('/web/session/get_session_info', type='json', auth="none")
     def get_session_info(self):
-        request.uid = request.session._uid
-        request.db = request.session._db
+        request.uid = request.session.uid
+        request.db = request.session.db
         return self.session_info()
 
     @http.route('/web/session/authenticate', type='json', auth="none")
@@ -853,7 +853,7 @@ class Session(http.Controller):
     @http.route('/web/session/sc_list', type='json', auth="user")
     def sc_list(self):
         return request.session.model('ir.ui.view_sc').get_sc(
-            request.session._uid, "ir.ui.menu", request.context)
+            request.session.uid, "ir.ui.menu", request.context)
 
     @http.route('/web/session/get_lang_list', type='json', auth="none")
     def get_lang_list(self):
@@ -928,7 +928,7 @@ class Menu(http.Controller):
         s = request.session
         Menus = s.model('ir.ui.menu')
         # If a menu action is defined use its domain to get the root menu items
-        user_menu_id = s.model('res.users').read([s._uid], ['menu_id'],
+        user_menu_id = s.model('res.users').read([s.uid], ['menu_id'],
                                                  request.context)[0]['menu_id']
 
         menu_domain = [('parent_id', '=', False)]
@@ -1125,7 +1125,7 @@ class View(http.Controller):
     def add_custom(self, view_id, arch):
         CustomView = request.session.model('ir.ui.view.custom')
         CustomView.create({
-            'user_id': request.session._uid,
+            'user_id': request.session.uid,
             'ref_id': view_id,
             'arch': arch
         }, request.context)
@@ -1134,7 +1134,7 @@ class View(http.Controller):
     @http.route('/web/view/undo_custom', type='json', auth="user")
     def undo_custom(self, view_id, reset=False):
         CustomView = request.session.model('ir.ui.view.custom')
-        vcustom = CustomView.search([('user_id', '=', request.session._uid), ('ref_id' ,'=', view_id)],
+        vcustom = CustomView.search([('user_id', '=', request.session.uid), ('ref_id' ,'=', view_id)],
                                     0, False, False, request.context)
         if vcustom:
             if reset:
@@ -1317,9 +1317,9 @@ class Binary(http.Controller):
     def company_logo(self, dbname=None):
         # TODO add etag, refactor to use /image code for etag
         uid = None
-        if request.session._db:
-            dbname = request.session._db
-            uid = request.session._uid
+        if request.session.db:
+            dbname = request.session.db
+            uid = request.session.uid
         elif dbname is None:
             dbname = db_monodb()
 
@@ -1685,14 +1685,14 @@ class Reports(http.Controller):
             raise ValueError("action['datas']['ids'] and context['active_ids'] are undefined")
 
         report_id = report_srv.report(
-            request.session._db, request.session._uid, request.session._password,
+            request.session.db, request.session.uid, request.session.password,
             action["report_name"], report_ids,
             report_data, context)
 
         report_struct = None
         while True:
             report_struct = report_srv.report_get(
-                request.session._db, request.session._uid, request.session._password, report_id)
+                request.session.db, request.session.uid, request.session.password, report_id)
             if report_struct["state"]:
                 break
 
