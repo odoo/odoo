@@ -61,8 +61,9 @@ class WebRequest(object):
 
     .. attribute:: httpsession
 
-        a :class:`~collections.Mapping` holding the HTTP session data for the
-        current http session
+        .. deprecated:: 8.0
+
+        Use ``self.session`` instead.
 
     .. attribute:: params
 
@@ -77,7 +78,8 @@ class WebRequest(object):
 
     .. attribute:: session
 
-        :class:`~session.OpenERPSession` instance for the current request
+        a :class:`OpenERPSession` holding the HTTP session data for the
+        current http session
 
     .. attribute:: context
 
@@ -95,7 +97,7 @@ class WebRequest(object):
     .. attribute:: uid
 
         ``int``, the id of the user related to the current request. Can be ``None``
-        if the current request uses the ``none`` or the ``db`` authenticatoin.
+        if the current request uses the ``none`` authenticatoin.
     """
     def __init__(self, httprequest):
         self.httprequest = httprequest
@@ -123,6 +125,12 @@ class WebRequest(object):
         self.lang = self.context["lang"]
 
     def _authenticate(self):
+        if self.session.uid:
+            try:
+                self.session.check_security()
+            except SessionExpiredException, e:
+                self.session.logout()
+                raise SessionExpiredException("Session expired for request %s" % self.httprequest)
         if self.auth_method == "none":
             self.db = None
             self.uid = None
@@ -132,10 +140,6 @@ class WebRequest(object):
                 raise SessionExpiredException("No valid database for request %s" % self.httprequest)
             self.uid = openerp.SUPERUSER_ID
         else: # auth
-            try:
-                self.session.check_security()
-            except SessionExpiredException, e:
-                raise SessionExpiredException("Session expired for request %s" % self.httprequest)
             self.db = self.session.db
             self.uid = self.session.uid
 
@@ -608,10 +612,10 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         self.modified = False
         super(OpenERPSession, self).__init__(*args, **kwargs)
         self.inited = True
-        self.setdefault("db", False)
-        self.setdefault("uid", False)
-        self.setdefault("login", False)
-        self.setdefault("password", False)
+        self.setdefault("db", None)
+        self.setdefault("uid", None)
+        self.setdefault("login", None)
+        self.setdefault("password", None)
         self.setdefault("context", {'tz': "UTC", "uid": None})
         self.setdefault("jsonp_requests", {})
         self.modified = False
