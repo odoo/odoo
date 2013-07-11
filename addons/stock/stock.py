@@ -2022,7 +2022,6 @@ class stock_move(osv.osv):
             if not move.picking_id:
                 # TODO: Put the move in the right picking according to group_id -> should be more elaborated (draft is nok) and picking should be confirmed
                 pick_obj = self.pool.get("stock.picking")
-                print "Group ID", move.group_id.id
                 picks = pick_obj.search(cr, uid, [('group_id', '=', move.group_id.id), ('location_id', '=', move.location_id.id), 
                                           ('location_dest_id', '=', move.location_dest_id.id), ('state', 'in', ['confirmed', 'waiting', 'draft'])], context=context)
                 if picks:
@@ -2035,9 +2034,11 @@ class stock_move(osv.osv):
                                               'move_type': 'one',
                                               'partner_id': move.partner_id and move.partner_id.id or False,
                                               #'invoice_state': move.invoice_state
+                                              'state' : 'confirmed', 
                                               'group_id': move.group_id and move.group_id.id or False, 
                                               }, context=context)
                 move.write({'picking_id': pick})
+
 
         for state, write_ids in states.items():
             if len(write_ids):
