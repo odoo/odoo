@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-12-21 17:04+0000\n"
-"PO-Revision-Date: 2013-06-27 03:25+0000\n"
+"PO-Revision-Date: 2013-07-08 14:09+0000\n"
 "Last-Translator: Alan <shuchuan.wu@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-28 05:42+0000\n"
-"X-Generator: Launchpad (build 16681)\n"
+"X-Launchpad-Export-Date: 2013-07-09 05:16+0000\n"
+"X-Generator: Launchpad (build 16696)\n"
 
 #. module: project
 #: view:project.project:0
@@ -38,7 +38,7 @@ msgstr "进度"
 #. module: project
 #: model:process.node,name:project.process_node_taskbydelegate0
 msgid "Task by delegate"
-msgstr "委派任务"
+msgstr "委派的任务"
 
 #. module: project
 #: view:project.project:0
@@ -58,18 +58,18 @@ msgstr "阶段名称"
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_openpendingtask0
 msgid "Set pending"
-msgstr "设为未决"
+msgstr "设置为等待状态"
 
 #. module: project
 #: view:project.project:0
 msgid "New Project Based on Template"
-msgstr "新的基于模板的项目"
+msgstr "基于该模板新建项目"
 
 #. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,day:0
 msgid "Day"
-msgstr "天数"
+msgstr "天"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_merge
@@ -91,7 +91,7 @@ msgstr "警告！"
 #: help:project.project,message_unread:0
 #: help:project.task,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "如果要求你关注新消息，勾选此项"
+msgstr "如果选中此项，你需要注意新的消息。"
 
 #. module: project
 #: model:process.node,name:project.process_node_donetask0
@@ -101,12 +101,12 @@ msgstr "完成任务"
 #. module: project
 #: model:process.node,note:project.process_node_donetask0
 msgid "Task is Completed"
-msgstr "任务完成"
+msgstr "任务已经完成"
 
 #. module: project
 #: view:res.partner:0
 msgid "False"
-msgstr "否"
+msgstr "错误的"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_testing
@@ -121,7 +121,7 @@ msgstr "辅助核算科目"
 #. module: project
 #: field:project.config.settings,group_time_work_estimation_tasks:0
 msgid "Manage time estimation on tasks"
-msgstr "估计管理任务的时间"
+msgstr "管理任务的估计时间"
 
 #. module: project
 #: help:project.project,message_summary:0
@@ -129,7 +129,7 @@ msgstr "估计管理任务的时间"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr "保存复杂的摘要(消息数量,……等)。为了插入到看板视图，这一摘要直接是是HTML格式。"
+msgstr "保存对话概要信息，这些概要信息将为直接以HTML格式插入到看板视图。"
 
 #. module: project
 #: code:addons/project/project.py:444
@@ -163,12 +163,12 @@ msgstr "重设项目"
 #. module: project
 #: view:report.project.task.user:0
 msgid "In progress tasks"
-msgstr "进行中任务"
+msgstr "进行中的任务"
 
 #. module: project
 #: help:project.project,progress_rate:0
 msgid "Percent of tasks closed according to the total of tasks todo."
-msgstr "结束任务和全部要做任务的百分比"
+msgstr "已结束任务和未结束任务的百分比。"
 
 #. module: project
 #: model:ir.actions.client,name:project.action_client_project_menu
@@ -224,7 +224,7 @@ msgstr "分配给"
 #: model:mail.message.subtype,name:project.mt_project_task_closed
 #: model:mail.message.subtype,name:project.mt_task_closed
 msgid "Task Done"
-msgstr ""
+msgstr "已完成的任务"
 
 #. module: project
 #: view:project.project:0
@@ -265,7 +265,7 @@ msgstr "任务分派"
 #: model:mail.message.subtype,name:project.mt_project_task_started
 #: model:mail.message.subtype,name:project.mt_task_started
 msgid "Task Started"
-msgstr ""
+msgstr "已开始的任务"
 
 #. module: project
 #: view:project.task:0
