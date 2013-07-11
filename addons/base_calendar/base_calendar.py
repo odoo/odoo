@@ -450,7 +450,7 @@ property or property parameter."),
                              'responsible': res_obj.user_id and res_obj.user_id.name or 'OpenERP User',
                              'company': company,
                              'description': res_obj.description or '-',
-                             'attendees':  ', ' .join(att_info),
+                             'attendees':  ',\n' .join(att_info),
                              'time': time,
                              'tz': tz,
                              'location': res_obj.location or '-',
@@ -518,8 +518,8 @@ property or property parameter."),
         meeting_obj =  self.pool.get('crm.meeting')
         for vals in self.browse(cr, uid, ids, context=context):
             meeting_id = meeting_obj.search(cr, uid, [('attendee_ids','=',vals.id)],context = context)
-            if meeting_id:
-                meeting_obj.message_post(cr, uid, meeting_id, body=_(("%s Accept Invitation") % (vals.cn)), context=context)
+            if meeting_id and vals.state != 'accepted':
+                meeting_obj.message_post(cr, uid, meeting_id, body=_(("%s has Accept Invitation") % (vals.cn)), context=context)
             self.write(cr, uid, vals.id, {'state': 'accepted'}, context)
         return True
 
@@ -538,8 +538,8 @@ property or property parameter."),
         meeting_obj = self.pool.get('crm.meeting')
         for vals in self.browse(cr, uid, ids, context=context):
             meeting_id = meeting_obj.search(cr, uid, [('attendee_ids','=',vals.id)],context = context)
-            if meeting_id:
-                meeting_obj.message_post(cr, uid, meeting_id, body=_(("%s Reject Invitation") % (vals.cn)), context=context)
+            if meeting_id and vals.state != 'declined':
+                meeting_obj.message_post(cr, uid, meeting_id, body=_(("%s has Declined Invitation") % (vals.cn)), context=context)
             self.write(cr, uid, vals.id, {'state': 'declined'}, context)
         return True
 

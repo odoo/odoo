@@ -50,6 +50,10 @@ If you need to manage your meetings, you should install the CRM module.
     'js': [
         'static/src/js/*.js'
     ],
+    'qweb': ['static/src/xml/*.xml'],
+    'css': [
+        'static/src/css/base_calender.css'
+    ],
     'test' : ['test/base_calendar_test.yml'],
     'installable': True,
     'application': True,

@@ -43,7 +43,7 @@
                         </h1>
                         <label for="partner_ids" class="oe_edit_only"/>
                         <h2>
-                            <field name="partner_ids" widget="many2many_tags"
+                            <field name="partner_ids" widget="Many2Many_invite"
                                 context="{'force_email':True}"
                                 on_change="onchange_partner_ids(partner_ids)"/>
                         </h2>
