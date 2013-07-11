@@ -23,7 +23,6 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         this.qweb_mutex = new $.Mutex();
     },
     rpc: function(url, params, options) {
-        params.session_id = this.session_id;
         return this._super(url, params, options);
     },
     /**
@@ -107,14 +106,10 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
                 return $.Deferred().reject();
             }
             _.extend(self, result);
-            if (!_volatile) {
-                self.set_cookie('session_id', self.session_id);
-            }
             return self.load_modules();
         });
     },
     session_logout: function() {
-        this.set_cookie('session_id', '');
         $.bbq.removeState();
         return this.rpc("/web/session/destroy", {});
     },
