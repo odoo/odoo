@@ -117,6 +117,7 @@ class procurement_order(osv.osv):
         @param context: A standard dictionary for contextual values
         @return:  Dictionary of values
         '''
+
         super(procurement_order, self).run_scheduler(cr, uid, use_new_cursor=use_new_cursor, context=context)
         if context is None:
             context = {}
