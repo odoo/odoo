@@ -56,6 +56,35 @@ class sale_order(osv.osv):
             raise osv.except_osv(_('Error!'), _('There is no warehouse defined for current company.'))
         return warehouse_ids[0]
 
+    def _get_picking_ids(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        if not ids: return res
+        for id in ids:
+            res.setdefault(id, [])
+        '''SQL request that does exactly the same as the code below'''
+        cr.execute('''SELECT sol.order_id, sm.picking_id from sale_order_line as sol \
+                   LEFT JOIN procurement_order as po on (po.id = sol.procurement_id) \
+                   LEFT JOIN stock_move as sm on (sm.id = po.move_id) \
+                   LEFT JOIN stock_picking as sp on (sp.id = sm.picking_id) \
+                   WHERE sol.order_id in %s and sp.type = 'out'\
+                   GROUP BY sol.order_id, sm.picking_id ORDER BY sol.order_id''',(tuple(ids),))
+        result = cr.fetchall()
+        for r in result:
+           res[r[0]].append(r[1])
+        return res
+
+        '''for element in self.browse(cr, uid, ids, context=context):
+            procu_ids = []
+            for line in element.order_line:
+                if line.procurement_id:
+                    procu_ids.append(line.procurement_id.id)
+            picking_ids = []
+            for procurement in self.pool.get('procurement.order').browse(cr, uid, list(set(procu_ids)), context=context):
+                if procurement.move_id and procurement.move_id.picking_id and procurement.move_id.picking_id.type == 'out':
+                    picking_ids.append(procurement.move_id.picking_id.id)
+            res[element.id] = list(set(picking_ids))
+        return res'''
+
     _columns = {
           'state': fields.selection([
             ('draft', 'Draft Quotation'),
@@ -83,6 +112,7 @@ class sale_order(osv.osv):
             help="""On demand: A draft invoice can be created from the sales order when needed. \nOn delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \nBefore delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."""),
         'shipped': fields.boolean('Delivered', readonly=True, help="It indicates that the sales order has been delivered. This field is updated only after the scheduler(s) have been launched."),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
+        'picking_ids': fields.function(_get_picking_ids, method=True, type='one2many', relation='stock.picking', string='Picking associated to this sale'),
     }
     _defaults = {
         'warehouse_id': _get_default_warehouse,
