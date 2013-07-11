@@ -20,20 +20,14 @@
 ##############################################################################
 
 from openerp.addons.base_status.base_state import base_state
-from openerp.addons.base_status.base_stage import base_stage
 from openerp.addons.crm import crm
 from openerp.osv import fields, osv
 from openerp import tools
 from openerp.tools.translate import _
 from openerp.tools import html2plaintext
 
-CRM_HELPDESK_STATES = (
-    crm.AVAILABLE_STATES[2][0], # Cancelled
-    crm.AVAILABLE_STATES[3][0], # Done
-    crm.AVAILABLE_STATES[4][0], # Pending
-)
 
-class crm_helpdesk(base_state, base_stage, osv.osv):
+class crm_helpdesk(base_state, osv.osv):
     """ Helpdesk Cases """
 
     _name = "crm.helpdesk"
@@ -80,9 +74,7 @@ class crm_helpdesk(base_state, base_stage, osv.osv):
 
     _defaults = {
         'active': lambda *a: 1,
-        'user_id': lambda s, cr, uid, c: s._get_default_user(cr, uid, c),
-        'partner_id': lambda s, cr, uid, c: s._get_default_partner(cr, uid, c),
-        'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c),
+        'user_id': lambda s, cr, uid, c: uid,
         'state': lambda *a: 'draft',
         'date': lambda *a: fields.datetime.now(),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),

@@ -147,7 +147,9 @@
           <para style="terp_default_Centre_8">[[ data['form']['period_length'] ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ get_partners(data) ]]</para>
+          <para style="terp_default_Centre_8">Receivable Accounts[[ data['form']['result_selection'] == 'customer' or removeParentNode('para') ]]</para>
+          <para style="terp_default_Centre_8">Payable Accounts[[ data['form']['result_selection'] == 'supplier' or removeParentNode('para') ]]</para>
+          <para style="terp_default_Centre_8">Receivable and Payable Accounts[[ data['form']['result_selection'] == 'customer_supplier' or removeParentNode('para') ]]</para>
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ data['form']['direction_selection'] ]]</para>
@@ -166,7 +168,8 @@
           <para style="terp_tblheader_Details">Partners</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ data['form']['direction_selection'] == 'future' and 'Due' or 'Not due' ]]</para>
+          <para style="terp_tblheader_Details_Right">Due[[ data['form']['direction_selection'] == 'future' and ' ' or removeParentNode('para') ]]</para>
+          <para style="terp_tblheader_Details_Right">Not due[[ data['form']['direction_selection'] != 'future' and ' ' or removeParentNode('para') ]]</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">[[ data['form']['4']['name'] ]]</para>

@@ -26,9 +26,9 @@
             <field name="model">project.task</field>
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
-                <field name="state" position="after">
+                <xpath expr="//page[@string='Extra Info']//field[@name='state']" position="after">
                     <field name="sale_line_id" string="Order Line"/>
-                </field>
+                </xpath>
             </field>
         </record>
         <record id="product_product_normal_form_supply_view" model="ir.ui.view">
