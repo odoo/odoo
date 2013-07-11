@@ -1599,7 +1599,7 @@ instance.web.EmbeddedClient = instance.web.Client.extend({
         if (s.session_is_valid() && s.db === this.dbname && s.login === this.login) {
             return $.when();
         }
-        return instance.session.session_authenticate(this.dbname, this.login, this.key, true);
+        return instance.session.session_authenticate(this.dbname, this.login, this.key);
     },
 
     bind_credentials: function(dbname, login, key) {

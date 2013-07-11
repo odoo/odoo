@@ -58,7 +58,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
     session_init: function () {
         var self = this;
         // TODO: session store in cookie should be optional
-        this.session_id = this.get_cookie('session_id');
+        this.session_id = this.get_cookie('sid');
         return this.session_reload().then(function(result) {
             var modules = instance._modules.join(',');
             var deferred = self.rpc('/web/webclient/qweblist', {mods: modules}).then(self.load_qweb.bind(self));
@@ -107,14 +107,10 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
                 return $.Deferred().reject();
             }
             _.extend(self, result);
-            if (!_volatile) {
-                self.set_cookie('session_id', self.session_id);
-            }
             return self.load_modules();
         });
     },
     session_logout: function() {
-        this.set_cookie('session_id', '');
         $.bbq.removeState();
         return this.rpc("/web/session/destroy", {});
     },

@@ -101,6 +101,8 @@ class WebRequest(object):
         self.httprequest = httprequest
         self.httpresponse = None
         self.httpsession = httprequest.session
+        self.session = httprequest.session
+        self.session_id = httprequest.session.sid
         self.db = None
         self.uid = None
         self.func = None
@@ -111,18 +113,10 @@ class WebRequest(object):
 
     def init(self, params):
         self.params = dict(params)
-        # OpenERP session setup
-        self.session_id = self.params.pop("session_id", None)
-        if not self.session_id:
-            i0 = self.httprequest.cookies.get("instance0|session_id", None)
-            if i0:
-                self.session_id = simplejson.loads(urllib2.unquote(i0))
-            else:
-                self.session_id = uuid.uuid4().hex
-        self.session = self.httpsession.get(self.session_id)
-        if not self.session:
-            self.session = OpenERPSession()
-            self.httpsession[self.session_id] = self.session
+
+        #remove now useless session id
+        if "session_id" in self.params:
+            del self.params["session_id"]
 
         with set_request(self):
             self.db = self.session._db or db_monodb()
@@ -130,7 +124,7 @@ class WebRequest(object):
         # TODO: remove this
         # set db/uid trackers - they're cleaned up at the WSGI
         # dispatching phase in openerp.service.wsgi_server.application
-        if self.session._db:
+        if self.db:
             threading.current_thread().dbname = self.session._db
         if self.session._uid:
             threading.current_thread().uid = self.session._uid
@@ -334,6 +328,7 @@ class JsonRequest(WebRequest):
             return self.jsonp_handler()
         response = {"jsonrpc": "2.0" }
         error = None
+
         try:
             #if _logger.isEnabledFor(logging.DEBUG):
             #    _logger.debug("--> %s.%s\n%s", func.im_class.__name__, func.__name__, pprint.pformat(self.jsonrequest))
@@ -626,32 +621,30 @@ class Model(object):
             return result
         return proxy
 
-class OpenERPSession(object):
-    """
-    An OpenERP RPC session, a given user can own multiple such sessions
-    in a web session.
+class OpenERPSession(werkzeug.contrib.sessions.Session):
+    def __init__(self, *args, **kwargs):
+        self.inited = False
+        self.modified = False
+        super(OpenERPSession, self).__init__(*args, **kwargs)
+        self.inited = True
+        self.setdefault("_creation_time", time.time())
+        self.setdefault("_db", False)
+        self.setdefault("_uid", False)
+        self.setdefault("_login", False)
+        self.setdefault("_password", False)
+        self.setdefault("context", {})
+        self.setdefault("jsonp_requests", {})
+        self.setdefault("modified", False)
 
-    .. attribute:: context
-
-        The session context, a ``dict``. Can be reloaded by calling
-        :meth:`openerpweb.openerpweb.OpenERPSession.get_context`
-
-    .. attribute:: domains_store
-
-        A ``dict`` matching domain keys to evaluable (but non-literal) domains.
-
-        Used to store references to non-literal domains which need to be
-        round-tripped to the client browser.
-    """
-    def __init__(self):
-        self._creation_time = time.time()
-        self._db = False
-        self._uid = False
-        self._login = False
-        self._password = False
-        self._suicide = False
-        self.context = {}
-        self.jsonp_requests = {}     # FIXME use a LRU
+    def __getattr__(self, attr):
+        return self.get(attr, None)
+    def __setattr__(self, k, v):
+        if getattr(self, "inited", False):
+            try:
+                object.__getattribute__(self, k)
+            except:
+                return self.__setitem__(k, v)
+        object.__setattr__(self, k, v)
 
     def authenticate(self, db, login=None, password=None, env=None, uid=None):
         """
@@ -660,6 +653,7 @@ class OpenERPSession(object):
 
         :param uid: If not None, that user id will be used instead the login to authenticate the user.
         """
+
         if uid is None:
             uid = openerp.netsvc.dispatch_rpc('common', 'authenticate', [db, login, password, env])
         else:
@@ -683,6 +677,10 @@ class OpenERPSession(object):
         if not self._db or not self._uid:
             raise SessionExpiredException("Session expired")
         security.check(self._db, self._uid, self._password)
+
+    def logout(self):
+        for k in self.keys():
+            del self[k]
 
     def get_context(self):
         """
@@ -791,69 +789,6 @@ class OpenERPSession(object):
 
         return Model(self, model)
 
-#----------------------------------------------------------
-# Session context manager
-#----------------------------------------------------------
-@contextlib.contextmanager
-def session_context(httprequest, session_store, session_lock, sid):
-    with session_lock:
-        if sid:
-            httprequest.session = session_store.get(sid)
-        else:
-            httprequest.session = session_store.new()
-    try:
-        yield httprequest.session
-    finally:
-        # Remove all OpenERPSession instances with no uid, they're generated
-        # either by login process or by HTTP requests without an OpenERP
-        # session id, and are generally noise
-        removed_sessions = set()
-        for key, value in httprequest.session.items():
-            if not isinstance(value, OpenERPSession):
-                continue
-            if getattr(value, '_suicide', False) or (
-                        not value._uid
-                    and not value.jsonp_requests
-                    # FIXME do not use a fixed value
-                    and value._creation_time + (60*5) < time.time()):
-                _logger.debug('remove session %s', key)
-                removed_sessions.add(key)
-                del httprequest.session[key]
-
-        with session_lock:
-            if sid:
-                # Re-load sessions from storage and merge non-literal
-                # contexts and domains (they're indexed by hash of the
-                # content so conflicts should auto-resolve), otherwise if
-                # two requests alter those concurrently the last to finish
-                # will overwrite the previous one, leading to loss of data
-                # (a non-literal is lost even though it was sent to the
-                # client and client errors)
-                #
-                # note that domains_store and contexts_store are append-only (we
-                # only ever add items to them), so we can just update one with the
-                # other to get the right result, if we want to merge the
-                # ``context`` dict we'll need something smarter
-                in_store = session_store.get(sid)
-                for k, v in httprequest.session.iteritems():
-                    stored = in_store.get(k)
-                    if stored and isinstance(v, OpenERPSession):
-                        if hasattr(v, 'contexts_store'):
-                            del v.contexts_store
-                        if hasattr(v, 'domains_store'):
-                            del v.domains_store
-                        if not hasattr(v, 'jsonp_requests'):
-                            v.jsonp_requests = {}
-                        v.jsonp_requests.update(getattr(
-                            stored, 'jsonp_requests', {}))
-
-                # add missing keys
-                for k, v in in_store.iteritems():
-                    if k not in httprequest.session and k not in removed_sessions:
-                        httprequest.session[k] = v
-
-            session_store.save(httprequest.session)
-
 def session_gc(session_store):
     if random.random() < 0.001:
         # we keep session one week
@@ -931,8 +866,7 @@ class Root(object):
 
         # Setup http sessions
         path = session_path()
-        self.session_store = werkzeug.contrib.sessions.FilesystemSessionStore(path)
-        self.session_lock = threading.Lock()
+        self.session_store = werkzeug.contrib.sessions.FilesystemSessionStore(path, session_class=OpenERPSession)
         _logger.debug('HTTP sessions stored in: %s', path)
 
 
@@ -953,39 +887,44 @@ class Root(object):
             httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableDict
             httprequest.app = self
 
+            session_gc(self.session_store)
+
             sid = httprequest.cookies.get('sid')
             if not sid:
                 sid = httprequest.args.get('sid')
+            if sid is None:
+                httprequest.session = self.session_store.new()
+            else:
+                httprequest.session = self.session_store.get(sid)
 
-            session_gc(self.session_store)
+            request = self._build_request(httprequest)
+            db = request.db
 
-            with session_context(httprequest, self.session_store, self.session_lock, sid) as session:
-                request = self._build_request(httprequest)
-                db = request.db
+            if db:
+                updated = openerp.modules.registry.RegistryManager.check_registry_signaling(db)
+                if updated:
+                    with self.db_routers_lock:
+                        del self.db_routers[db]
 
-                if db:
-                    updated = openerp.modules.registry.RegistryManager.check_registry_signaling(db)
-                    if updated:
-                        with self.db_routers_lock:
-                            del self.db_routers[db]
+            with set_request(request):
+                self.find_handler()
+                result = request.dispatch()
 
-                with set_request(request):
-                    self.find_handler()
-                    result = request.dispatch()
+            if db:
+                openerp.modules.registry.RegistryManager.signal_caches_change(db)
 
-                if db:
-                    openerp.modules.registry.RegistryManager.signal_caches_change(db)
+            if isinstance(result, basestring):
+                headers=[('Content-Type', 'text/html; charset=utf-8'), ('Content-Length', len(result))]
+                response = werkzeug.wrappers.Response(result, headers=headers)
+            else:
+                response = result
 
-                if isinstance(result, basestring):
-                    headers=[('Content-Type', 'text/html; charset=utf-8'), ('Content-Length', len(result))]
-                    response = werkzeug.wrappers.Response(result, headers=headers)
-                else:
-                    response = result
+            if httprequest.session.should_save:
+                self.session_store.save(httprequest.session)
+            if hasattr(response, 'set_cookie'):
+                response.set_cookie('sid', httprequest.session.sid)
 
-                if hasattr(response, 'set_cookie'):
-                    response.set_cookie('sid', session.sid)
-
-                return response(environ, start_response)
+            return response(environ, start_response)
         except werkzeug.exceptions.HTTPException, e:
             return e(environ, start_response)
 

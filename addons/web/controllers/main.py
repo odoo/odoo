@@ -916,7 +916,7 @@ class Session(http.Controller):
 
     @http.route('/web/session/destroy', type='json', auth="user")
     def destroy(self):
-        request.session._suicide = True
+        request.session.logout()
 
 class Menu(http.Controller):
 
