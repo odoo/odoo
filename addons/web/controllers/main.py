@@ -362,8 +362,6 @@ def login_and_redirect(db, login, key, redirect_url='/'):
 def set_cookie_and_redirect(redirect_url):
     redirect = werkzeug.utils.redirect(redirect_url, 303)
     redirect.autocorrect_location_header = False
-    cookie_val = urllib2.quote(simplejson.dumps(request.session_id))
-    redirect.set_cookie('instance0|session_id', cookie_val)
     return redirect
 
 def load_actions_from_ir_values(key, key2, models, meta):

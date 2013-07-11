@@ -114,10 +114,6 @@ class WebRequest(object):
     def init(self, params):
         self.params = dict(params)
 
-        #remove now useless session id
-        if "session_id" in self.params:
-            del self.params["session_id"]
-
         with set_request(self):
             self.db = self.session._db or db_monodb()
 
@@ -360,7 +356,7 @@ class JsonRequest(WebRequest):
             # If we use jsonp, that's mean we are called from another host
             # Some browser (IE and Safari) do no allow third party cookies
             # We need then to manage http sessions manually.
-            response['httpsessionid'] = self.httpsession.sid
+            response['session_id'] = self.session_id
             mime = 'application/javascript'
             body = "%s(%s);" % (self.jsonp, simplejson.dumps(response),)
         else:
@@ -424,6 +420,8 @@ class HttpRequest(WebRequest):
     def __init__(self, *args):
         super(HttpRequest, self).__init__(*args)
         params = dict(self.httprequest.args)
+        if "session_id" in params:
+            params.pop("session_id")
         params.update(self.httprequest.form)
         params.update(self.httprequest.files)
         self.init(params)
@@ -889,9 +887,9 @@ class Root(object):
 
             session_gc(self.session_store)
 
-            sid = httprequest.cookies.get('sid')
+            sid = httprequest.args.get('session_id')
             if not sid:
-                sid = httprequest.args.get('sid')
+                sid = httprequest.cookies.get('session_id')
             if sid is None:
                 httprequest.session = self.session_store.new()
             else:
@@ -922,7 +920,7 @@ class Root(object):
             if httprequest.session.should_save:
                 self.session_store.save(httprequest.session)
             if hasattr(response, 'set_cookie'):
-                response.set_cookie('sid', httprequest.session.sid)
+                response.set_cookie('session_id', httprequest.session.sid)
 
             return response(environ, start_response)
         except werkzeug.exceptions.HTTPException, e:

@@ -23,7 +23,6 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         this.qweb_mutex = new $.Mutex();
     },
     rpc: function(url, params, options) {
-        params.session_id = this.session_id;
         return this._super(url, params, options);
     },
     /**
@@ -58,7 +57,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
     session_init: function () {
         var self = this;
         // TODO: session store in cookie should be optional
-        this.session_id = this.get_cookie('sid');
+        this.session_id = this.get_cookie('session_id');
         return this.session_reload().then(function(result) {
             var modules = instance._modules.join(',');
             var deferred = self.rpc('/web/webclient/qweblist', {mods: modules}).then(self.load_qweb.bind(self));
