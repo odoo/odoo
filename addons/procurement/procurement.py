@@ -119,6 +119,8 @@ class procurement_order(osv.osv):
             ('running', 'Running'),
             ('done', 'Done')
         ], 'Status', required=True, track_visibility='onchange'),
+        'message': fields.text('Latest error', help="Exception occurred while computing procurement orders."),
+
 
     }
     _defaults = {

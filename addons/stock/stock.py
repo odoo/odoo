@@ -225,13 +225,15 @@ class stock_quant(osv.osv):
         # result = self._quants_get(cr, uid, location, product, qty, domain+domain2, context=context)
         # qty = remaining quants qty - sum(result)
         domain = domain or [('qty','>',0.0)]
-        removal_strategy = self.pool.get('stock.location').get_removal_strategy(cr, uid, location, product, context=context) or 'fifo'
-        if removal_strategy=='fifo':
-            result += self._quants_get_fifo(cr, uid, location, product, qty, domain, context=context)
-        elif removal_strategy=='lifo':
-            result += self._quants_get_lifo(cr, uid, location, product, qty, domain, context=context)
-        else:
-            raise osv.except_osv(_('Error!'),_('Removal strategy %s not implemented.' % (removal_strategy,)))
+        if location:
+            removal_strategy = self.pool.get('stock.location').get_removal_strategy(cr, uid, location, product, context=context) or 'fifo'
+            if removal_strategy=='fifo':
+                result += self._quants_get_fifo(cr, uid, location, product, qty, domain, context=context)
+            elif removal_strategy=='lifo':
+                result += self._quants_get_lifo(cr, uid, location, product, qty, domain, context=context)
+            else:
+                raise osv.except_osv(_('Error!'),_('Removal strategy %s not implemented.' % (removal_strategy,)))
+
         return result
 
 
@@ -296,8 +298,11 @@ class stock_quant(osv.osv):
                 'cost': 0.0,
             }, context=context)
 
-            quants2 = self.quants_get(cr, uid, False, quant.product_id, quant_neg.qty, [('propagated_from_id','=',quant_neg.id)], context=context)
+            
+            #TODO: In case of negative quants no removal strategy is applied -> actually removal strategy should be reversed? OR just by in_date?
+            quants2 = self._quants_get_order(cr, uid, False, quant.product_id, -quant_neg.qty, domain=[('propagated_from_id','=',quant_neg.id)], orderby='in_date', context=None)
             for qu2, qt2 in quants2:
+                #TODO  history ids on quant!
                 if not qu2: raise 'Error: negative stock linked to nothing'
                 self._quant_split(cr, uid, qu2, qt2, context=context)
                 self.write(cr, uid, [qu2.id], {
@@ -334,6 +339,8 @@ class stock_quant(osv.osv):
                     break
             offset += 10
         return res
+
+
 
     def _quants_get_fifo(self, cr, uid, location, product, quantity, domain=[], context=None):
         return self._quants_get_order(cr, uid, location, product, quantity,
@@ -715,13 +722,20 @@ class stock_picking(osv.osv):
         """ Confirms picking.
         @return: True
         """
+        proc_group = self.pool.get("procurement.group")
         self.write(cr, uid, ids, {'state': 'confirmed'})
         pickings = self.browse(cr, uid, ids, context=context)
         todo = []
         for picking in pickings:
+            #If no procurement group, create one
+            new_proc = False
+            if not picking.group_id:
+                new_proc = proc_group.create(cr, uid, {'name': picking.name}, context=context)
             for r in picking.move_lines:
                 if r.state == 'draft':
                     todo.append(r.id)
+                if not r.group_id and new_proc:
+                    self.pool.get("stock.move").write(cr, uid, [r.id], {'group_id': new_proc}, context=context)
         if len(todo):
             self.pool.get('stock.move').action_confirm(cr, uid, todo, context=context)
         return True
@@ -1799,6 +1813,7 @@ class stock_move(osv.osv):
                 'product_uos': (move.product_uos and move.product_uos.id) or move.product_uom.id,
                 'location_id': move.location_id.id,
                 'move_id': move.id,
+                'group_id': move.group_id and move.group_id.id or False, 
             })
 
     # Check that we do not modify a stock.move which is done
@@ -2007,6 +2022,7 @@ class stock_move(osv.osv):
             if not move.picking_id:
                 # TODO: Put the move in the right picking according to group_id -> should be more elaborated (draft is nok) and picking should be confirmed
                 pick_obj = self.pool.get("stock.picking")
+                print "Group ID", move.group_id.id
                 picks = pick_obj.search(cr, uid, [('group_id', '=', move.group_id.id), ('location_id', '=', move.location_id.id), 
                                           ('location_dest_id', '=', move.location_dest_id.id), ('state', 'in', ['confirmed', 'waiting', 'draft'])], context=context)
                 if picks:

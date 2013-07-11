@@ -28,7 +28,6 @@ class report_stock_inventory(osv.osv):
     _name = "report.stock.inventory"
     _description = "Stock Statistics"
     _auto = False
-    _order = 'date desc'
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
         res = super(report_stock_inventory, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
         product_obj = self.pool.get("product.product")

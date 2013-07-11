@@ -21,6 +21,7 @@
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
+import openerp
 
 class procurement_group(osv.osv):
     _inherit = 'procurement.group'
@@ -86,7 +87,6 @@ class procurement_order(osv.osv):
                 return False
             move_obj = self.pool.get('stock.move')
             move_dict = self._run_move_create(cr, uid, procurement, context=context)
-
             move_id = move_obj.create(cr, uid, move_dict, context=context)
             move_obj.action_confirm(cr, uid, [move_id], context=context)
             self.write(cr, uid, [procurement.id], {'move_id': move_id}, context=context)
@@ -97,5 +97,45 @@ class procurement_order(osv.osv):
         if procurement.rule_id and procurement.rule_id.action == 'move':
             return procurement.move_id.state == 'done'
         return super(procurement_order, self)._check(cr, uid, procurement, context)
+
+
+
+    #
+    # Scheduler
+    # When stock is installed, it should also check for the different 
+    #
+    #
+    def run_scheduler(self, cr, uid, use_new_cursor=False, context=None):
+        '''
+        Call the scheduler in order to 
+
+        @param self: The object pointer
+        @param cr: The current row, from the database cursor,
+        @param uid: The current user ID for security checks
+        @param ids: List of selected IDs
+        @param use_new_cursor: False or the dbname
+        @param context: A standard dictionary for contextual values
+        @return:  Dictionary of values
+        '''
+        super(procurement_order, self).run_scheduler(cr, uid, use_new_cursor=use_new_cursor, context=context)
+        if context is None:
+            context = {}
+        try:
+            if use_new_cursor:
+                cr = openerp.registry(use_new_cursor).db.cursor()
+
+            company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
+            move_obj = self.pool.get('stock.move')
+            #Search all confirmed stock_moves and try to assign them
+            confirmed_ids = move_obj.search(cr, uid, [('state', '=', 'confirmed'), ('company_id','=', company.id)], context=context)
+            move_obj.action_assign(cr, uid, confirmed_ids, context=context)
+        finally:
+            if use_new_cursor:
+                try:
+                    cr.close()
+                except Exception:
+                    pass
+        return {}
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

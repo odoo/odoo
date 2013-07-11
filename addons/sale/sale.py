@@ -684,7 +684,7 @@ class sale_order(osv.osv):
                 val['shipped'] = False
 
                 if (order.order_policy == 'manual'):
-                    for line in order.order_line:
+                    for line in order.order_line: 
                         if (not line.invoiced) and (line.state not in ('cancel', 'draft')):
                             val['state'] = 'manual'
                             break

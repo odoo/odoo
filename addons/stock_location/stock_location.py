@@ -137,7 +137,7 @@ class procurement_order(osv.osv):
             date = procurement.move_dest_id.date
         else:
             date = procurement.date_planned
-        procure_method = procurement.rule_id and procurement.rule_id.procure_method or 'make_to_stock',
+        procure_method = procurement.rule_id and procurement.rule_id.procure_method or 'make_to_stock'
         newdate = (datetime.strptime(date, '%Y-%m-%d %H:%M:%S') - relativedelta(days=procurement.rule_id.delay or 0)).strftime('%Y-%m-%d %H:%M:%S')
         d.update({
             'date': newdate,
@@ -282,6 +282,6 @@ class stock_location(osv.osv):
         ], context=context)
         if result:
             return pr.browse(cr, uid, result[0], context=context)
-        return super(stock_location, self).get_removal_strategy(cr, uid, id, product, context=context)
+        return super(stock_location, self).get_removal_strategy(cr, uid, location, product, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
