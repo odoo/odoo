@@ -394,7 +394,7 @@ class HttpRequest(WebRequest):
     def __init__(self, *args):
         super(HttpRequest, self).__init__(*args)
         params = dict(self.httprequest.args)
-        ex = set(["session_id", "debug", "db"])
+        ex = set(["session_id", "debug"])
         for k in params.keys():
             if k in ex:
                 del params[k]
