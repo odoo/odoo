@@ -192,21 +192,18 @@ def route(route, type="http", auth="user"):
     Decorator marking the decorated method as being a handler for requests. The method must be part of a subclass
     of ``Controller``.
 
-    Decorator to put on a controller method to inform it does not require a user to be logged. When this decorator
-    is used, ``request.uid`` will be ``None``. The request will still try to detect the database and an exception
-    will be launched if there is no way to guess it.
-
     :param route: string or array. The route part that will determine which http requests will match the decorated
     method. Can be a single string or an array of strings. See werkzeug's routing documentation for the format of
     route expression ( http://werkzeug.pocoo.org/docs/routing/ ).
     :param type: The type of request, can be ``'http'`` or ``'json'``.
     :param auth: The type of authentication method, can on of the following:
 
-        * ``auth``: The user must be authenticated.
-        * ``db``: There is no need for the user to be authenticated but there must be a way to find the current
-        database.
+        * ``user``: The user must be authenticated and the current request will perform using the rights of the
+        user.
+        * ``admin``: The user may not be authenticated and the current request will perform using the admin user.
         * ``none``: The method is always active, even if there is no database. Mainly used by the framework and
-        authentication modules.
+        authentication modules. There request code will not have any facilities to access the database nor have any
+        configuration indicating the current database nor the current user.
     """
     assert type in ["http", "json"]
     assert auth in ["user", "admin", "none"]
@@ -234,8 +231,7 @@ class JsonRequest(WebRequest):
 
       --> {"jsonrpc": "2.0",
            "method": "call",
-           "params": {"session_id": "SID",
-                      "context": {},
+           "params": {"context": {},
                       "arg1": "val1" },
            "id": null}
 
@@ -247,8 +243,7 @@ class JsonRequest(WebRequest):
 
       --> {"jsonrpc": "2.0",
            "method": "call",
-           "params": {"session_id": "SID",
-                      "context": {},
+           "params": {"context": {},
                       "arg1": "val1" },
            "id": null}
 
@@ -302,8 +297,6 @@ class JsonRequest(WebRequest):
 
     def dispatch(self):
         """ Calls the method asked for by the JSON-RPC2 or JSONP request
-
-        :returns: an utf8 encoded JSON-RPC2 or JSONP reply
         """
         if self.jsonp_handler:
             return self.jsonp_handler()
@@ -382,14 +375,10 @@ def to_jsonable(o):
     return u"%s" % o
 
 def jsonrequest(f):
-    """ Decorator marking the decorated method as being a handler for a
-    JSON-RPC request (the exact request path is specified via the
-    ``$(Controller._cp_path)/$methodname`` combination.
+    """ 
+        .. deprecated:: 8.0
 
-    If the method is called, it will be provided with a :class:`JsonRequest`
-    instance and all ``params`` sent during the JSON-RPC request, apart from
-    the ``session_id``, ``context`` and ``debug`` keys (which are stripped out
-    beforehand)
+        Use the ``route()`` decorator instead.
     """
     f.combine = True
     base = f.__name__
@@ -469,14 +458,10 @@ class HttpRequest(WebRequest):
         return werkzeug.exceptions.NotFound(description)
 
 def httprequest(f):
-    """ Decorator marking the decorated method as being a handler for a
-    normal HTTP request (the exact request path is specified via the
-    ``$(Controller._cp_path)/$methodname`` combination.
+    """ 
+        .. deprecated:: 8.0
 
-    If the method is called, it will be provided with a :class:`HttpRequest`
-    instance and all ``params`` sent during the request (``GET`` and ``POST``
-    merged in the same dictionary), apart from the ``session_id``, ``context``
-    and ``debug`` keys (which are stripped out beforehand)
+        Use the ``route()`` decorator instead.
     """
     f.combine = True
     base = f.__name__
@@ -797,7 +782,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         :type model: str
         :rtype: a model object
         """
-        if self.db == False:
+        if not self.db:
             raise SessionExpiredException("Session expired")
 
         return Model(self, model)
@@ -890,10 +875,7 @@ class Root(object):
 
     def dispatch(self, environ, start_response):
         """
-        Performs the actual WSGI dispatching for the application, may be
-        wrapped during the initialization of the object.
-
-        Call the object directly.
+        Performs the actual WSGI dispatching for the application.
         """
         try:
             httprequest = werkzeug.wrappers.Request(environ)
@@ -1042,12 +1024,7 @@ class Root(object):
 
     def find_handler(self):
         """
-        Tries to discover the controller handling the request for the path
-        specified by the provided parameters
-
-        :param path: path to match
-        :returns: a callable matching the path sections
-        :rtype: ``Controller | None``
+        Tries to discover the controller handling the request for the path specified in the request.
         """
         path = request.httprequest.path
         urls = self.get_db_router(request.db).bind("")
@@ -1073,13 +1050,13 @@ def db_list(force=False):
     return dbs
 
 def db_redirect(match_first_only_if_unique):
-    db = False
-    redirect = False
+    db = None
+    redirect = None
 
     # 1 try the db in the url
     db_url = request.httprequest.args.get('db')
     if db_url:
-        return (db_url, False)
+        return (db_url, None)
 
     dbs = db_list(True)
 
@@ -1100,7 +1077,16 @@ def db_redirect(match_first_only_if_unique):
     return (db, redirect)
 
 def db_monodb():
-    # if only one db exists, return it else return False
+    """
+        Magic function to find the current database.
+
+        Implementation details:
+
+        * Magic
+        * More magic
+
+        Return ``None`` if the magic is not magic enough.
+    """
     return db_redirect(True)[0]
 
 
