@@ -9,10 +9,11 @@ OpenERP E-Commerce
         """,
     'author': 'OpenERP SA',
     'depends': ['website', 'sale', 'point_of_sale'],
-    'installable': True,
     'data': [
         'views/ecommerce.xml'
     ],
     'js': ['static/src/js/ecommerce.js'],
     'css': ['static/src/css/ecommerce.css'],
+    'installable': True,
+    'auto_install': True,
 }

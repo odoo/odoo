@@ -67,6 +67,9 @@
         right: 6px
         top: 6px
         text-align: right
+    form
+      input
+        margin-bottom: 0
   .oe_product
     vertical-align: top 
     position: relative
@@ -75,35 +78,35 @@
     +border-radius(5px)
     border: 1px solid rgba(0,0,0,.1)
     +box-shadow(0 0 3px 1px rgba(0,0,0,.1))
-    .oe_button_cart
-      width: 100%
-      font-size: 11px
-      position: absolute
-      button
-        +text-shadow(0px 1px 1px rgba(0, 0, 0, 0.44))
-        overflow: hidden
-        text-align: center
-        font-size: 12px
-        margin: 0 auto
-        margin-bottom: 5px
-        padding: 2px
-        width: 50px
-        height: 22px
-        position: relative
-        &:first-child
-          @include background(linear-gradient(#aaaaaa,#999999))
-          span
-            opacity: 0.8
-            filter: alpha(opacity=80)
-            color: rgb(235, 18, 18)
-            position: absolute
-            left: +18px
-            top: 3px
-            font-size: 20px
-        &:last-child
-          @include background(linear-gradient(#0088cc,#0076b1))
-          &.btn-success
-            @include background(linear-gradient(#51a351, #418541))
+  .oe_button_cart
+    width: 100%
+    font-size: 11px
+    position: absolute
+    button
+      +text-shadow(0px 1px 1px rgba(0, 0, 0, 0.44))
+      overflow: hidden
+      text-align: center
+      font-size: 12px
+      margin: 0 auto
+      margin-bottom: 5px
+      padding: 2px
+      width: 50px
+      height: 22px
+      position: relative
+      &:first-child
+        @include background(linear-gradient(#aaaaaa,#999999))
+        span
+          opacity: 0.8
+          filter: alpha(opacity=80)
+          color: rgb(235, 18, 18)
+          position: absolute
+          left: +18px
+          top: 3px
+          font-size: 20px
+      &:last-child
+        @include background(linear-gradient(#0088cc,#0076b1))
+        &.btn-success
+          @include background(linear-gradient(#51a351, #418541))
   form.oe_signup
     display: none
   .oe_search
@@ -111,3 +114,13 @@
       width: 100%
       margin: 24px
       text-align: center
+  .oe_product_detail
+    .oe_button_cart
+      position: relative
+      text-align: right
+  .oe_recommended
+    a
+      margin: 0 3px
+    img
+      max-width: 64px
+      max-height: 64px

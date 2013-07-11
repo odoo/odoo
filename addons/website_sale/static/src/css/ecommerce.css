@@ -85,6 +85,9 @@
   top: 6px;
   text-align: right;
 }
+.oe_ecommerce .oe_mycart form input {
+  margin-bottom: 0;
+}
 .oe_ecommerce .oe_product {
   vertical-align: top;
   position: relative;
@@ -100,12 +103,12 @@
   -moz-box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
   box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
 }
-.oe_ecommerce .oe_product .oe_button_cart {
+.oe_ecommerce .oe_button_cart {
   width: 100%;
   font-size: 11px;
   position: absolute;
 }
-.oe_ecommerce .oe_product .oe_button_cart button {
+.oe_ecommerce .oe_button_cart button {
   text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.44);
   overflow: hidden;
   text-align: center;
@@ -117,14 +120,14 @@
   height: 22px;
   position: relative;
 }
-.oe_ecommerce .oe_product .oe_button_cart button:first-child {
+.oe_ecommerce .oe_button_cart button:first-child {
   background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #aaaaaa), color-stop(100%, #999999));
   background: -webkit-linear-gradient(#aaaaaa, #999999);
   background: -moz-linear-gradient(#aaaaaa, #999999);
   background: -o-linear-gradient(#aaaaaa, #999999);
   background: linear-gradient(#aaaaaa, #999999);
 }
-.oe_ecommerce .oe_product .oe_button_cart button:first-child span {
+.oe_ecommerce .oe_button_cart button:first-child span {
   opacity: 0.8;
   filter: alpha(opacity=80);
   color: #eb1212;
@@ -133,14 +136,14 @@
   top: 3px;
   font-size: 20px;
 }
-.oe_ecommerce .oe_product .oe_button_cart button:last-child {
+.oe_ecommerce .oe_button_cart button:last-child {
   background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #0088cc), color-stop(100%, #0076b1));
   background: -webkit-linear-gradient(#0088cc, #0076b1);
   background: -moz-linear-gradient(#0088cc, #0076b1);
   background: -o-linear-gradient(#0088cc, #0076b1);
   background: linear-gradient(#0088cc, #0076b1);
 }
-.oe_ecommerce .oe_product .oe_button_cart button:last-child.btn-success {
+.oe_ecommerce .oe_button_cart button:last-child.btn-success {
   background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #51a351), color-stop(100%, #418541));
   background: -webkit-linear-gradient(#51a351, #418541);
   background: -moz-linear-gradient(#51a351, #418541);
@@ -154,4 +157,15 @@
   width: 100%;
   margin: 24px;
   text-align: center;
+}
+.oe_ecommerce .oe_product_detail .oe_button_cart {
+  position: relative;
+  text-align: right;
+}
+.oe_ecommerce .oe_recommended a {
+  margin: 0 3px;
+}
+.oe_ecommerce .oe_recommended img {
+  max-width: 64px;
+  max-height: 64px;
 }

@@ -110,6 +110,20 @@
                 </div>
             </field>
         </record>
+
+        <record id="product_recommended" model="ir.ui.view">
+            <field name="name">product_recommended</field>
+            <field name="type">qweb</field>
+            <field name="arch" type="xml">
+                <div class="oe_recommended media well well-small">
+                    <h6>Other customers have also take this products:</h6>
+                    <t t-foreach="recommended_products or []" t-as="product">
+                        <a t-att-href="'/shop/product/%%s' %% product.id"><img t-att-src="'data:image/png;base64,' + product.image"/></a>
+                    </t>
+                </div>
+            </field>
+        </record>
+
         <!-- product --> 
 
         <record id="product" model="ir.ui.view">
@@ -119,11 +133,18 @@
                 <t t-call="website_sale.page">
                     <t t-set="title">Product</t>
                     <t t-set="shop_content">
-                        <div clas="oe_commerce_product_display">
-                          <h1><span t-record="product" t-field="name"><t t-esc="product.name"/></span></h1>
-                          <img class="media-object" t-att-src="'data:image/png;base64,' + product.image"/>
-                          <div t-record="product" t-field="description_sale"><t t-esc="product.description_sale"/></div>
-                          <div class="oe_ecommerce_price" t-record="product" t-field="list_price"><t t-esc="product.list_price"/> €</div>
+                        <div class="oe_product_detail">
+                            <h1><span t-record="product" t-field="name"><t t-esc="product.name"/></span></h1>
+                            <div class="oe_button_cart">
+                                <button t-att-class="'btn btn-inverse %%s' %% (not quantity and 'oe_hidden' or '')" t-att-data-id="product.id"><span>X</span><i class="icon-shopping-cart icon-large"></i> </button>
+                                <button t-att-class="'btn %%s' %% (quantity and 'btn-success' or 'btn-primary')" t-att-data-id="product.id">
+                                    <i class="icon-shopping-cart icon-large"></i>
+                                    <span class="oe_txt">(<span class="oe_quantity"><t t-esc="quantity"/></span>)</span>
+                                </button>
+                            </div>
+                            <img class="media-object" t-att-src="'data:image/png;base64,' + product.image"/>
+                            <div t-record="product" t-field="description_sale"><t t-esc="product.description_sale"/></div>
+                            <div class="oe_ecommerce_price" t-record="product" t-field="list_price"><t t-esc="product.list_price"/> €</div>
                         </div>
                     </t>
                 </t>
@@ -145,6 +166,13 @@
                                 <t t-set="quantity" t-value="int(line.product_uom_qty)"/>
                                 <t t-call="website_sale.product_card"/>
                             </t>
+                            <div class="media well well-small">
+                                <form class="navbar-form">
+                                    <input name="code" type="text" placeholder="Reduction Code..."/>
+                                    <button class="btn">Submit your Reduction Code</button>
+                                </form>
+                            </div>
+                            <t t-call="website_sale.product_recommended"/>
                             <t t-call="website_sale.total"/>
                             <a t-if="order.order_line" href="/shop/customer"><button class="btn btn-success">Next stage</button></a>
                         </span>

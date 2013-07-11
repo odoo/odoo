@@ -14,7 +14,7 @@ class Ecommerce(http.Controller):
 
         if request.session._uid:
             request.httprequest.session['ecommerce_partner_id'] = False
-            partner_id = request.registry.get('res.users').browse(cr, uid, uid).partner_id.id
+            partner_id = request.registry.get('res.users').browse(cr, uid, request.session._uid).partner_id.id
         else:
             partner_id = request.httprequest.session.get('ecommerce_partner_id', False)
             if partner_id and not request.registry.get('res.partner').search(cr, uid, [('id', '=', partner_id)]):
@@ -37,7 +37,7 @@ class Ecommerce(http.Controller):
         if not order_id:
             fields = [k for k, v in order_obj._columns.items()]
             order_value = order_obj.default_get(cr, uid, fields, context=context)
-            order_value['partner_id'] = partner_id
+            order_value['partner_id'] = partner_id or request.registry.get('res.users').browse(cr, uid, uid).partner_id.id
             order_value.update(order_obj.onchange_partner_id(cr, uid, [], uid, context=context)['value'])
             order_id = order_obj.create(cr, uid, order_value, context=context)
             request.httprequest.session['ecommerce_order'] = order_id
@@ -87,8 +87,12 @@ class Ecommerce(http.Controller):
         product_id = product_id and int(product_id) or 0
         product_obj = request.registry.get('product.product')
 
+        line = [line for line in values['order'].order_line if line.product_id.id == product_id]
+        quantity = line and int(line[0].product_uom_qty) or 0
+
         values.update({
             'product': product_obj.browse(cr, uid, product_id),
+            'quantity': quantity,
         })
         html = request.registry.get("ir.ui.view").render(cr, uid, "website_sale.product", values)
         return html
@@ -96,7 +100,29 @@ class Ecommerce(http.Controller):
     @http.route(['/shop/my_cart'], type='http', auth="admin")
     def my_cart(self, offset=0):
         cr, uid, partner_id = self.get_cr_uid()
-        html = request.registry.get("ir.ui.view").render(cr, uid, "website_sale.my_cart", self.get_values())
+        values = self.get_values()
+
+        my_pids = ",".join([str(line.product_id.id) for line in values['order'].order_line])
+
+        product_ids = []
+        query = """
+            SELECT      sol.product_id
+            FROM        sale_order_line as my
+            LEFT JOIN   sale_order_line as sol
+            ON          sol.order_id = my.order_id
+            WHERE       my.product_id in (%s)
+            AND         sol.product_id not in (%s)
+            GROUP BY    sol.product_id
+            ORDER BY    COUNT(sol.order_id) DESC
+            LIMIT 8
+        """ % (my_pids, my_pids)
+        cr.execute(query)
+        for p in cr.fetchall():
+            product_ids.append(p[0])
+
+        values["recommended_products"] = request.registry.get('product.product').browse(cr, uid, product_ids)
+
+        html = request.registry.get("ir.ui.view").render(cr, uid, "website_sale.my_cart", values)
         return html
 
     @http.route(['/shop/add_cart'], type='http', auth="admin")
@@ -132,7 +158,9 @@ class Ecommerce(http.Controller):
         # change and record value
         if quantity:
             pricelist_id = order.pricelist_id and order.pricelist_id.id or False
-            values.update(order_line_obj.product_id_change(cr, uid, [], pricelist_id, product_id, partner_id=partner_id, context=context)['value'])
+            values.update(order_line_obj.product_id_change(cr, uid, [], pricelist_id, product_id,
+                partner_id=partner_id or request.registry.get('res.users').browse(cr, uid, uid).partner_id.id,
+                context=context)['value'])
             if order_line_ids:
                 order_line_obj.write(cr, uid, order_line_ids, values, context=context)
             else:

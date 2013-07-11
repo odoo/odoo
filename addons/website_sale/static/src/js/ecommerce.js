@@ -1,5 +1,5 @@
 $(document).ready(function (){
-    $('.oe_ecommerce').on('click', '.oe_product .btn-success,.oe_product .btn-primary,.btn-inverse', function (e) {
+    $('.oe_ecommerce').on('click', '.oe_product .btn-success,.oe_product .btn-primary, .oe_product .btn-inverse, .oe_product_detail .btn-success,.oe_product_detail .btn-primary, .oe_product_detail .btn-inverse', function (e) {
         var mycart = !!$('.oe_ecommerce .oe_mycart').size();
         var $button = $(e.currentTarget);
         var link = $button.hasClass('btn-inverse') ? '/shop/remove_cart' : '/shop/add_cart';
