@@ -112,13 +112,13 @@ class WebRequest(object):
         self.func_request_type = None
         self.debug = self.httprequest.args.get('debug', False) is not False
         with set_request(self):
-            self.db = self.session._db or db_monodb()
+            self.db = self.session.db or db_monodb()
         # set db/uid trackers - they're cleaned up at the WSGI
         # dispatching phase in openerp.service.wsgi_server.application
         if self.db:
-            threading.current_thread().dbname = self.session._db
-        if self.session._uid:
-            threading.current_thread().uid = self.session._uid
+            threading.current_thread().dbname = self.session.db
+        if self.session.uid:
+            threading.current_thread().uid = self.session.uid
         self.context = self.session.context
         self.lang = self.context["lang"]
 
@@ -127,7 +127,7 @@ class WebRequest(object):
             self.db = None
             self.uid = None
         elif self.auth_method == "admin":
-            self.db = self.session._db or db_monodb()
+            self.db = self.session.db or db_monodb()
             if not self.db:
                 raise SessionExpiredException("No valid database for request %s" % self.httprequest)
             self.uid = openerp.SUPERUSER_ID
@@ -136,8 +136,8 @@ class WebRequest(object):
                 self.session.check_security()
             except SessionExpiredException, e:
                 raise SessionExpiredException("Session expired for request %s" % self.httprequest)
-            self.db = self.session._db
-            self.uid = self.session._uid
+            self.db = self.session.db
+            self.uid = self.session.uid
 
     @property
     def registry(self):
@@ -584,8 +584,8 @@ class Model(object):
         def proxy(*args, **kw):
             # Can't provide any retro-compatibility for this case, so we check it and raise an Exception
             # to tell the programmer to adapt his code
-            if not request.db or not request.uid or self.session._db != request.db \
-                or self.session._uid != request.uid:
+            if not request.db or not request.uid or self.session.db != request.db \
+                or self.session.uid != request.uid:
                 raise Exception("Trying to use Model with badly configured database or user.")
                 
             mod = request.registry.get(self.model)
@@ -608,11 +608,10 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         self.modified = False
         super(OpenERPSession, self).__init__(*args, **kwargs)
         self.inited = True
-        self.setdefault("_creation_time", time.time())
-        self.setdefault("_db", False)
-        self.setdefault("_uid", False)
-        self.setdefault("_login", False)
-        self.setdefault("_password", False)
+        self.setdefault("db", False)
+        self.setdefault("uid", False)
+        self.setdefault("login", False)
+        self.setdefault("password", False)
         self.setdefault("context", {'tz': "UTC", "uid": None})
         self.setdefault("jsonp_requests", {})
         self.modified = False
@@ -639,10 +638,10 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
             uid = openerp.netsvc.dispatch_rpc('common', 'authenticate', [db, login, password, env])
         else:
             security.check(db, uid, password)
-        self._db = db
-        self._uid = uid
-        self._login = login
-        self._password = password
+        self.db = db
+        self.uid = uid
+        self.login = login
+        self.password = password
         request.db = db
         request.uid = uid
 
@@ -655,9 +654,9 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         should be called at each request. If the authentication fails, a ``SessionExpiredException``
         is raised.
         """
-        if not self._db or not self._uid:
+        if not self.db or not self.uid:
             raise SessionExpiredException("Session expired")
-        security.check(self._db, self._uid, self._password)
+        security.check(self.db, self.uid, self.password)
 
     def logout(self):
         for k in self.keys():
@@ -671,9 +670,9 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
 
         :returns: the new context
         """
-        assert self._uid, "The user needs to be logged-in to initialize his context"
+        assert self.uid, "The user needs to be logged-in to initialize his context"
         self.context = request.registry.get('res.users').context_get(request.cr, request.uid) or {}
-        self.context['uid'] = self._uid
+        self.context['uid'] = self.uid
         self._fix_lang(self.context)
         return self.context
 
@@ -697,6 +696,35 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
 
         context['lang'] = lang or 'en_US'
 
+    """
+        Damn properties for retro-compatibility. All of that is deprecated, all
+        of that.
+    """
+    @property
+    def _db(self):
+        return self.db
+    @_db.setter
+    def _db(self, value):
+        self.db = value
+    @property
+    def _uid(self):
+        return self.uid
+    @_uid.setter
+    def _uid(self, value):
+        self.uid = value
+    @property
+    def _login(self):
+        return self.login
+    @_login.setter
+    def _login(self, value):
+        self.login = value
+    @property
+    def _password(self):
+        return self.password
+    @_password.setter
+    def _password(self, value):
+        self.password = value
+
     def send(self, service_name, method, *args):
         """
         .. deprecated:: 8.0
@@ -718,11 +746,11 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
 
         Ensures this session is valid (logged into the openerp server)
         """
-        if self._uid and not force:
+        if self.uid and not force:
             return
         # TODO use authenticate instead of login
-        self._uid = self.proxy("common").login(self._db, self._login, self._password)
-        if not self._uid:
+        self.uid = self.proxy("common").login(self.db, self.login, self.password)
+        if not self.uid:
             raise AuthenticationError("Authentication failure")
 
     def ensure_valid(self):
@@ -730,11 +758,11 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         .. deprecated:: 8.0
         Use ``check_security()`` instead.
         """
-        if self._uid:
+        if self.uid:
             try:
                 self.assert_valid(True)
             except Exception:
-                self._uid = None
+                self.uid = None
 
     def execute(self, model, func, *l, **d):
         """
@@ -751,7 +779,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         Use the resistry and cursor in ``openerp.addons.web.http.request`` instead.
         """
         self.assert_valid()
-        r = self.proxy('object').exec_workflow(self._db, self._uid, self._password, model, signal, id)
+        r = self.proxy('object').exec_workflow(self.db, self.uid, self.password, model, signal, id)
         return r
 
     def model(self, model):
@@ -765,7 +793,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         :type model: str
         :rtype: a model object
         """
-        if self._db == False:
+        if self.db == False:
             raise SessionExpiredException("Session expired")
 
         return Model(self, model)
