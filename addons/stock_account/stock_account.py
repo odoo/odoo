@@ -315,6 +315,17 @@ class stock_picking(osv.osv):
         'invoice_state': 'none',
     }
 
+    #TODO: we don't need to change invoice_state on cancelation, do we?
+    #def action_cancel(self, cr, uid, ids, context=None):
+    #    """ Changes picking state to cancel.
+    #    @return: True
+    #    """
+    #    for pick in self.browse(cr, uid, ids, context=context):
+    #        ids2 = [move.id for move in pick.move_lines]
+    #        self.pool.get('stock.move').action_cancel(cr, uid, ids2, context)
+    #    self.write(cr, uid, ids, {'state': 'cancel', 'invoice_state': 'none'})
+    #    return True
+
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}

@@ -586,7 +586,7 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids, context=context):
             ids2 = [move.id for move in pick.move_lines]
             self.pool.get('stock.move').action_cancel(cr, uid, ids2, context)
-        self.write(cr, uid, ids, {'state': 'cancel', 'invoice_state': 'none'})
+        self.write(cr, uid, ids, {'state': 'cancel'})
         return True
 
     #
@@ -2058,24 +2058,6 @@ class stock_inventory(osv.osv):
     def action_cancel_inventory(self, cr, uid, ids, context=None):
         #TODO test
         self.action_cancel_draft(cr, uid, ids, context=context)
-        #""" Cancels both stock move and inventory
-        #@return: True
-        #"""
-        #move_obj = self.pool.get('stock.move')
-        #account_move_obj = self.pool.get('account.move')
-        #for inv in self.browse(cr, uid, ids, context=context):
-        #    move_obj.action_cancel(cr, uid, [x.id for x in inv.move_ids], context=context)
-        #    for move in inv.move_ids:
-        #         account_move_ids = account_move_obj.search(cr, uid, [('name', '=', move.name)])
-        #         if account_move_ids:
-        #             account_move_data_l = account_move_obj.read(cr, uid, account_move_ids, ['state'], context=context)
-        #             for account_move in account_move_data_l:
-        #                 if account_move['state'] == 'posted':
-        #                     raise osv.except_osv(_('User Error!'),
-        #                                          _('In order to cancel this inventory, you must first unpost related journal entries.'))
-        #                 account_move_obj.unlink(cr, uid, [account_move['id']], context=context)
-        #    self.write(cr, uid, [inv.id], {'state': 'cancel'}, context=context)
-        #return True
 
 
 class stock_inventory_line(osv.osv):
