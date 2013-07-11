@@ -115,7 +115,7 @@
             <field name="name">product_recommended</field>
             <field name="type">qweb</field>
             <field name="arch" type="xml">
-                <div class="oe_recommended media well well-small">
+                <div class="oe_recommended media well well-small" t-if="recommended_products">
                     <h6>Other customers have also take this products:</h6>
                     <t t-foreach="recommended_products or []" t-as="product">
                         <a t-att-href="'/shop/product/%%s' %% product.id"><img t-att-src="'data:image/png;base64,' + product.image"/></a>
@@ -145,6 +145,7 @@
                             <img class="media-object" t-att-src="'data:image/png;base64,' + product.image"/>
                             <div t-record="product" t-field="description_sale"><t t-esc="product.description_sale"/></div>
                             <div class="oe_ecommerce_price" t-record="product" t-field="list_price"><t t-esc="product.list_price"/> €</div>
+                            <t t-call="website_sale.product_recommended"/>
                         </div>
                     </t>
                 </t>

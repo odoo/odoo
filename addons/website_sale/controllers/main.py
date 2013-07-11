@@ -93,17 +93,16 @@ class Ecommerce(http.Controller):
         values.update({
             'product': product_obj.browse(cr, uid, product_id),
             'quantity': quantity,
+            'recommended_products': self.recommended_product([product_id]),
         })
         html = request.registry.get("ir.ui.view").render(cr, uid, "website_sale.product", values)
         return html
 
-    @http.route(['/shop/my_cart'], type='http', auth="admin")
-    def my_cart(self, offset=0):
+    def recommended_product(self, my_pids):
+        if not my_pids:
+            return []
         cr, uid, partner_id = self.get_cr_uid()
-        values = self.get_values()
-
-        my_pids = ",".join([str(line.product_id.id) for line in values['order'].order_line])
-
+        my_pids = str(my_pids)[1:-1]
         product_ids = []
         query = """
             SELECT      sol.product_id
@@ -119,8 +118,15 @@ class Ecommerce(http.Controller):
         cr.execute(query)
         for p in cr.fetchall():
             product_ids.append(p[0])
+        return request.registry.get('product.product').browse(cr, uid, product_ids)
 
-        values["recommended_products"] = request.registry.get('product.product').browse(cr, uid, product_ids)
+    @http.route(['/shop/my_cart'], type='http', auth="admin")
+    def my_cart(self, offset=0):
+        cr, uid, partner_id = self.get_cr_uid()
+        values = self.get_values()
+
+        my_pids = [line.product_id.id for line in values['order'].order_line]
+        values["recommended_products"] = self.recommended_product(my_pids)
 
         html = request.registry.get("ir.ui.view").render(cr, uid, "website_sale.my_cart", values)
         return html
