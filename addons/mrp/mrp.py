@@ -929,36 +929,36 @@ class mrp_production(osv.osv):
                         'company_id': production.company_id.id,
                 })
 
-    def _make_production_internal_shipment(self, cr, uid, production, context=None):
-        ir_sequence = self.pool.get('ir.sequence')
-        stock_picking = self.pool.get('stock.picking')
-        routing_loc = None
-        pick_type = 'internal'
-        partner_id = False
-
-        # Take routing address as a Shipment Address.
-        # If usage of routing location is a internal, make outgoing shipment otherwise internal shipment
-        if production.bom_id.routing_id and production.bom_id.routing_id.location_id:
-            routing_loc = production.bom_id.routing_id.location_id
-            if routing_loc.usage != 'internal':
-                pick_type = 'out'
-            partner_id = routing_loc.partner_id and routing_loc.partner_id.id or False
-
-        # Take next Sequence number of shipment base on type
-        pick_name = ir_sequence.get(cr, uid, 'stock.picking.' + pick_type)
-
-        picking_id = stock_picking.create(cr, uid, {
-            'name': pick_name,
-            'origin': (production.origin or '').split(':')[0] + ':' + production.name,
-            'type': pick_type,
-            'move_type': 'one',
-            'state': 'auto',
-            'partner_id': partner_id,
-            'auto_picking': self._get_auto_picking(cr, uid, production),
-            'company_id': production.company_id.id,
-        })
-        production.write({'picking_id': picking_id}, context=context)
-        return picking_id
+#     def _make_production_internal_shipment(self, cr, uid, production, context=None):
+#         ir_sequence = self.pool.get('ir.sequence')
+#         stock_picking = self.pool.get('stock.picking')
+#         routing_loc = None
+#         pick_type = 'internal'
+#         partner_id = False
+# 
+#         # Take routing address as a Shipment Address.
+#         # If usage of routing location is a internal, make outgoing shipment otherwise internal shipment
+#         if production.bom_id.routing_id and production.bom_id.routing_id.location_id:
+#             routing_loc = production.bom_id.routing_id.location_id
+#             if routing_loc.usage != 'internal':
+#                 pick_type = 'out'
+#             partner_id = routing_loc.partner_id and routing_loc.partner_id.id or False
+# 
+#         # Take next Sequence number of shipment base on type
+#         pick_name = ir_sequence.get(cr, uid, 'stock.picking.' + pick_type)
+# 
+#         picking_id = stock_picking.create(cr, uid, {
+#             'name': pick_name,
+#             'origin': (production.origin or '').split(':')[0] + ':' + production.name,
+#             'type': pick_type,
+#             'move_type': 'one',
+#             'state': 'auto',
+#             'partner_id': partner_id,
+#             'auto_picking': self._get_auto_picking(cr, uid, production),
+#             'company_id': production.company_id.id,
+#         })
+#         production.write({'picking_id': picking_id}, context=context)
+#         return picking_id
 
     def _make_production_produce_line(self, cr, uid, production, context=None):
         stock_move = self.pool.get('stock.move')
@@ -1018,7 +1018,7 @@ class mrp_production(osv.osv):
         uncompute_ids = filter(lambda x:x, [not x.product_lines and x.id or False for x in self.browse(cr, uid, ids, context=context)])
         self.action_compute(cr, uid, uncompute_ids, context=context)
         for production in self.browse(cr, uid, ids, context=context):
-            shipment_id = self._make_production_internal_shipment(cr, uid, production, context=context)
+            #shipment_id = self._make_production_internal_shipment(cr, uid, production, context=context)
             produce_move_id = self._make_production_produce_line(cr, uid, production, context=context)
 
             # Take routing location as a Source Location.
@@ -1031,8 +1031,6 @@ class mrp_production(osv.osv):
                 shipment_move_id = self._make_production_internal_shipment_line(cr, uid, line, shipment_id, consume_move_id,\
                                  destination_location_id=source_location_id, context=context)
                 self._make_production_line_procurement(cr, uid, line, shipment_move_id, context=context)
-
-            self.pool.get('stock.picking').signal_button_confirm(cr, uid, [shipment_id])
             production.write({'state':'confirmed'}, context=context)
         return shipment_id
 
