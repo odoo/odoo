@@ -539,8 +539,7 @@ class pos_order(osv.osv):
             if to_invoice:
                 self.action_invoice(cr, uid, [order_id], context)
                 order_obj = self.browse(cr, uid, order_id, context)
-                wf_service = netsvc.LocalService('workflow')
-                wf_service.trg_validate(uid,'account.invoice', order_obj.invoice_id.id,'invoice_open',cr)
+                self.pool['account.invoice'].signal_invoice_open(cr, uid, [order_obj.invoice_id.id])
 
         return order_ids
 
