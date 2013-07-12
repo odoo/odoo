@@ -902,7 +902,7 @@ class mrp_production(osv.osv):
         self.signal_button_confirm(cr, uid, [procurement_id])
         return procurement_id
 
-    def _make_production_internal_shipment_line(self, cr, uid, production_line, shipment_id, parent_move_id, destination_location_id=False, context=None):
+    def _make_production_internal_shipment_line(self, cr, uid, production_line, group_id, parent_move_id, destination_location_id=False, context=None):
         stock_move = self.pool.get('stock.move')
         production = production_line.production_id
         date_planned = production.date_planned
@@ -914,7 +914,7 @@ class mrp_production(osv.osv):
             destination_location_id = source_location_id
         return stock_move.create(cr, uid, {
                         'name': production.name,
-                        'picking_id': shipment_id,
+                        'group_id': group_id, 
                         'product_id': production_line.product_id.id,
                         'product_qty': production_line.product_qty,
                         'product_uom': production_line.product_uom.id,
@@ -1014,10 +1014,10 @@ class mrp_production(osv.osv):
         """ Confirms production order.
         @return: Newly generated Shipment Id.
         """
-        shipment_id = False
         uncompute_ids = filter(lambda x:x, [not x.product_lines and x.id or False for x in self.browse(cr, uid, ids, context=context)])
         self.action_compute(cr, uid, uncompute_ids, context=context)
         for production in self.browse(cr, uid, ids, context=context):
+            group_id = self.pool.get("procurement.group").create(cr, uid, {'name': production.name}, context=context)
             #shipment_id = self._make_production_internal_shipment(cr, uid, production, context=context)
             produce_move_id = self._make_production_produce_line(cr, uid, production, context=context)
 
@@ -1028,11 +1028,11 @@ class mrp_production(osv.osv):
 
             for line in production.product_lines:
                 consume_move_id = self._make_production_consume_line(cr, uid, line, produce_move_id, source_location_id=source_location_id, context=context)
-                shipment_move_id = self._make_production_internal_shipment_line(cr, uid, line, shipment_id, consume_move_id,\
+                shipment_move_id = self._make_production_internal_shipment_line(cr, uid, line, group_id, consume_move_id,\
                                  destination_location_id=source_location_id, context=context)
                 self._make_production_line_procurement(cr, uid, line, shipment_move_id, context=context)
             production.write({'state':'confirmed'}, context=context)
-        return shipment_id
+        return group_id
 
     def force_production(self, cr, uid, ids, *args):
         """ Assigns products.

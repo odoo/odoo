@@ -46,7 +46,7 @@ class procurement_order(osv.osv):
         rule_id = super(procurement_order, self)._find_suitable_rule(cr, uid, procurement, context=context)
         if not rule_id:
             #if there isn't any specific procurement.rule defined for the product, we try to directly supply it from a supplier
-            if procurement.product_id.supply_method == 'manufacture' and procurement.product_id.bom_id: #Actually not needed anymore? 
+            if procurement.product_id.supply_method == 'manufacture' and self.check_bom_exists(cr, uid, [procurement.id], context=context):
                 domain = [('action', '=', 'manufacture'), ('location_id', '=', procurement.location_id.id)] + self._get_route_domain(cr, uid, procurement, context=context)
                 rule_id = self.pool.get('procurement.rule').search(cr, uid, domain, context=context)
                 rule_id = rule_id and rule_id[0] or False
