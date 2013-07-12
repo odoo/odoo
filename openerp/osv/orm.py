@@ -5523,21 +5523,33 @@ class BaseModel(object):
                 `record_ids`) to recompute
             :return: spec
         """
+        # simple class to represent a universal set
+        class Universe(object):
+            def update(self, elems): pass
+
         # target = {model_name: {field_name: set(ids), ...}, ...}
         target = defaultdict(lambda: defaultdict(set))
         for m, f, ids in (spec or []):
-            target[m][f].update(ids)
+            if ids is None:
+                target[m][f] = Universe()
+            else:
+                target[m][f].update(ids)
 
         # add targets
-        for field in modified_fields:
-            for model_name, field_name, path in self._recompute[field]:
-                # find which records in model have to be recomputed
-                recs = self.pool[model_name].search([(path, 'in', self.unbrowse())])
-                if recs:
+        for modified_field in modified_fields:
+            for model_name, field_name, path in self._recompute[modified_field]:
+                model = self.pool[model_name]
+                field = model._fields[field_name]
+                if field.store:
+                    # search which records in model have to be recomputed
+                    recs = model.search([(path, 'in', self.unbrowse())])
                     target[model_name][field_name].update(recs.unbrowse())
+                else:
+                    # simply invalidate all records in cache
+                    target[model_name][field_name] = Universe()
 
         # return spec
-        return [(m, f, list(ids))
+        return [(m, f, None if isinstance(ids, Universe) else list(ids))
             for m, field_ids in target.iteritems()
                 for f, ids in field_ids.iteritems()
         ]
@@ -5546,8 +5558,8 @@ class BaseModel(object):
         """ Recompute fields given by `spec`.
 
             :param spec: list of triples (`model`, `field`, `ids`), where
-                `model` is a model name, `field` is a field name, and `ids` is a
-                list of record ids.
+                `model` is a model name, `field` is a field name, and
+                `ids` is a list of record ids or ``None``.
         """
         if not spec:
             return
@@ -5559,11 +5571,10 @@ class BaseModel(object):
             # simply evaluate the fields to recompute on their records;
             # the method _get_field() will do the job!
             for model_name, field_name, ids in spec:
-                model = self.pool[model_name]
-                # recompute stored fields only
-                if model._fields[field_name].store:
-                    # filter out deleted records (this happens with unlink)
-                    for rec in model.browse(ids).exists():
+                if ids is not None:
+                    # beware of deleted records: do not evaluate them!
+                    recs = self.pool[model_name].browse(ids)
+                    for rec in recs.exists():
                         rec[field_name]
 
     @api.model

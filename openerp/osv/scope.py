@@ -94,8 +94,8 @@ class ScopeProxy(object):
         # recomputing = {model_name: {field_name: set(ids), ...}, ...}
         recomputing = defaultdict(lambda: defaultdict(set))
         for m, f, ids in spec:
-            assert ids is not None
-            recomputing[m][f].update(ids)
+            if ids is not None:
+                recomputing[m][f].update(ids)
 
         try:
             old = getattr(_local, 'recomputing', None)
