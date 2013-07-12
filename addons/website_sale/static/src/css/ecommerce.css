@@ -23,7 +23,7 @@
 .oe_ecommerce .oe_products .oe_product {
   text-align: center;
   display: inline-block;
-  padding: 5px;
+  padding: 4px;
   width: 180px;
   height: 220px;
   margin-right: 15px;
@@ -67,6 +67,9 @@
 .oe_ecommerce .oe_products .oe_product .oe_button_cart {
   bottom: 5px;
   left: 0;
+}
+.oe_ecommerce .oe_products .oe_product .oe_button_cart .btn-inverse {
+  display: none;
 }
 .oe_ecommerce .oe_mycart .oe_product {
   padding: 3px 5px 6px 10px;
@@ -116,34 +119,24 @@
   margin: 0 auto;
   margin-bottom: 5px;
   padding: 2px;
-  width: 50px;
   height: 22px;
   position: relative;
 }
-.oe_ecommerce .oe_button_cart button:first-child {
+.oe_ecommerce .oe_button_cart button.btn-inverse {
   background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #aaaaaa), color-stop(100%, #999999));
   background: -webkit-linear-gradient(#aaaaaa, #999999);
   background: -moz-linear-gradient(#aaaaaa, #999999);
   background: -o-linear-gradient(#aaaaaa, #999999);
   background: linear-gradient(#aaaaaa, #999999);
 }
-.oe_ecommerce .oe_button_cart button:first-child span {
-  opacity: 0.8;
-  filter: alpha(opacity=80);
-  color: #eb1212;
-  position: absolute;
-  left: 18px;
-  top: 3px;
-  font-size: 20px;
-}
-.oe_ecommerce .oe_button_cart button:last-child {
+.oe_ecommerce .oe_button_cart button.btn-primary {
   background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #0088cc), color-stop(100%, #0076b1));
   background: -webkit-linear-gradient(#0088cc, #0076b1);
   background: -moz-linear-gradient(#0088cc, #0076b1);
   background: -o-linear-gradient(#0088cc, #0076b1);
   background: linear-gradient(#0088cc, #0076b1);
 }
-.oe_ecommerce .oe_button_cart button:last-child.btn-success {
+.oe_ecommerce .oe_button_cart button.btn-success {
   background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #51a351), color-stop(100%, #418541));
   background: -webkit-linear-gradient(#51a351, #418541);
   background: -moz-linear-gradient(#51a351, #418541);

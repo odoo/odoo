@@ -34,7 +34,7 @@
         padding-bottom: 14px
       text-align: center 
       display: inline-block
-      padding: 5px
+      padding: 4px
       width: 180px
       height: 220px
       margin-right: 15px
@@ -53,6 +53,8 @@
       .oe_button_cart
         bottom: 5px
         left: 0
+        .btn-inverse
+          display: none
   .oe_mycart
     .oe_product
       padding: 3px 5px 6px 10px
@@ -90,23 +92,14 @@
       margin: 0 auto
       margin-bottom: 5px
       padding: 2px
-      width: 50px
       height: 22px
       position: relative
-      &:first-child
+      &.btn-inverse
         @include background(linear-gradient(#aaaaaa,#999999))
-        span
-          opacity: 0.8
-          filter: alpha(opacity=80)
-          color: rgb(235, 18, 18)
-          position: absolute
-          left: +18px
-          top: 3px
-          font-size: 20px
-      &:last-child
+      &.btn-primary
         @include background(linear-gradient(#0088cc,#0076b1))
-        &.btn-success
-          @include background(linear-gradient(#51a351, #418541))
+      &.btn-success
+        @include background(linear-gradient(#51a351, #418541))
   form.oe_signup
     display: none
   .oe_search

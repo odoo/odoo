@@ -80,7 +80,7 @@ class Ecommerce(http.Controller):
         return html
 
     @http.route(['/shop/product/<product_id>'], type='http', auth="admin")
-    def product(self, cat_id=0, product_id=0, offset=0):
+    def product(self, cat_id=0, product_id=0):
         values = self.get_values()
         cr, uid, partner_id = self.get_cr_uid()
 
@@ -120,15 +120,22 @@ class Ecommerce(http.Controller):
             product_ids.append(p[0])
         return request.registry.get('product.product').browse(cr, uid, product_ids)
 
-    @http.route(['/shop/my_cart'], type='http', auth="admin")
-    def my_cart(self, offset=0):
+    @http.route(['/shop/mycart'], type='http', auth="admin")
+    def mycart(self, **post):
         cr, uid, partner_id = self.get_cr_uid()
         values = self.get_values()
+
+        if post.get('code'):
+            pricelist_obj = request.registry.get('product.pricelist')
+            order_obj = request.registry.get('sale.order')
+            pricelist_ids = pricelist_obj.search(cr, uid, [('code', '=', post.get('code'))])
+            if pricelist_ids:
+                values["order"].write({'pricelist_id': pricelist_ids[0]})
 
         my_pids = [line.product_id.id for line in values['order'].order_line]
         values["recommended_products"] = self.recommended_product(my_pids)
 
-        html = request.registry.get("ir.ui.view").render(cr, uid, "website_sale.my_cart", values)
+        html = request.registry.get("ir.ui.view").render(cr, uid, "website_sale.mycart", values)
         return html
 
     @http.route(['/shop/add_cart'], type='http', auth="admin")

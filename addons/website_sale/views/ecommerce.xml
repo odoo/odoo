@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="(//header//li)[last()]" position="after">
-                        <li class="pull-right"><a href="/shop/my_cart"><i class="icon-shopping-cart icon-large"></i> My cart</a></li>
+                        <li class="pull-right"><a href="/shop/mycart"><i class="icon-shopping-cart icon-large"></i> My cart</a></li>
                         <li class="pull-right"><a href="/shop">Shop</a></li>
                     </xpath>
                     <xpath expr="//footer/div/div/div[3]" position="inside">
@@ -100,9 +100,8 @@
                         <div class="oe_ecommerce_description" t-record="product" t-field="description_sale"><t t-esc="product.description_sale"/></div>
                         <div class="oe_ecommerce_price"><span><span t-record="product" t-field="list_price"><t t-esc="product.list_price"/></span>€</span></div>
                         <div class="oe_button_cart">
-                            <button t-att-class="'btn btn-inverse %%s' %% (not quantity and 'oe_hidden' or '')" t-att-data-id="product.id"><span>X</span><i class="icon-shopping-cart icon-large"></i> </button>
-                            <button t-att-class="'btn %%s' %% (quantity and 'btn-success' or 'btn-primary')" t-att-data-id="product.id">
-                                <i class="icon-shopping-cart icon-large"></i>
+                            <button t-att-class="'btn btn-inverse %%s' %% (not quantity and 'oe_hidden' or '')" t-att-data-id="product.id">Remove one</button>
+                            <button t-att-class="'btn %%s' %% (quantity and 'btn-success' or 'btn-primary')" t-att-data-id="product.id">Add to cart
                                 <span class="oe_txt">(<span class="oe_quantity"><t t-esc="quantity"/></span>)</span>
                             </button>
                         </div>
@@ -136,9 +135,8 @@
                         <div class="oe_product_detail">
                             <h1><span t-record="product" t-field="name"><t t-esc="product.name"/></span></h1>
                             <div class="oe_button_cart">
-                                <button t-att-class="'btn btn-inverse %%s' %% (not quantity and 'oe_hidden' or '')" t-att-data-id="product.id"><span>X</span><i class="icon-shopping-cart icon-large"></i> </button>
-                                <button t-att-class="'btn %%s' %% (quantity and 'btn-success' or 'btn-primary')" t-att-data-id="product.id">
-                                    <i class="icon-shopping-cart icon-large"></i>
+                                <button t-att-class="'btn btn-inverse %%s' %% (not quantity and 'oe_hidden' or '')" t-att-data-id="product.id">Remove one</button>
+                                <button t-att-class="'btn %%s' %% (quantity and 'btn-success' or 'btn-primary')" t-att-data-id="product.id">Add to cart
                                     <span class="oe_txt">(<span class="oe_quantity"><t t-esc="quantity"/></span>)</span>
                                 </button>
                             </div>
@@ -154,8 +152,8 @@
 
         <!-- Page Shop my cart --> 
 
-        <record id="my_cart" model="ir.ui.view">
-            <field name="name">my_cart</field>
+        <record id="mycart" model="ir.ui.view">
+            <field name="name">mycart</field>
             <field name="type">qweb</field>
             <field name="arch" type="xml">
                 <t t-call="website_sale.page">
@@ -168,7 +166,7 @@
                                 <t t-call="website_sale.product_card"/>
                             </t>
                             <div class="media well well-small">
-                                <form class="navbar-form">
+                                <form action="/shop/mycart" class="navbar-form">
                                     <input name="code" type="text" placeholder="Reduction Code..."/>
                                     <button class="btn">Submit your Reduction Code</button>
                                 </form>
