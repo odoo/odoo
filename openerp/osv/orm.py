@@ -2982,7 +2982,8 @@ class BaseModel(object):
             def func(cr):
                 _logger.info("Storing computed values of %s fields %s", self._name, ', '.join(stored_fields))
                 ids = self.search(cr, SUPERUSER_ID, [], context={'active_test': False})
-                self.recompute([(self._name, stored_fields, ids)])
+                spec = [(self._name, f, ids) for f in stored_fields]
+                self.recompute(spec)
 
             todo_end.append((1000, func, ()))
 
@@ -5495,17 +5496,18 @@ class BaseModel(object):
             :param fnames: the list of modified fields, or ``None`` for all fields
             :param ids: the list of modified record ids, or ``None`` for all
         """
-        if fnames is None and ids is None:
-            return scope_proxy.invalidate_cache()
+        if fnames is None:
+            if ids is None:
+                return scope_proxy.invalidate_cache()
+            fnames = self._fields.keys()
 
-        # base spec for cache invalidation
-        spec = [(self._name, fnames, ids)]
-
-        # augment spec to invalidate inverse fields
-        for fname in (self._fields if fnames is None else fnames):
+        # make spec to invalidate inverse fields, too
+        spec = []
+        for fname in fnames:
+            spec.append((self._name, fname, ids))
             field = self._fields[fname]
             if field.relational and field.inverse:
-                spec.append((field.comodel, [field.inverse], None))
+                spec.append((field.comodel, field.inverse, None))
 
         # invalidate the spec
         scope_proxy.invalidate_cache(spec)
@@ -5517,15 +5519,14 @@ class BaseModel(object):
 
             :param modified_fields: iterable of field names that have been
                 modified in records `self`
-            :param spec: optional list of triples (`model_name`, `field_names`,
+            :param spec: optional list of triples (`model_name`, `field_name`,
                 `record_ids`) to recompute
             :return: spec
         """
         # target = {model_name: {field_name: set(ids), ...}, ...}
         target = defaultdict(lambda: defaultdict(set))
-        for m, fs, ids in (spec or []):
-            for f in fs:
-                target[m][f].update(ids)
+        for m, f, ids in (spec or []):
+            target[m][f].update(ids)
 
         # add targets
         for field in modified_fields:
@@ -5536,7 +5537,7 @@ class BaseModel(object):
                     target[model_name][field_name].update(recs.unbrowse())
 
         # return spec
-        return [(m, [f], list(ids))
+        return [(m, f, list(ids))
             for m, field_ids in target.iteritems()
                 for f, ids in field_ids.iteritems()
         ]
@@ -5544,9 +5545,9 @@ class BaseModel(object):
     def recompute(self, spec):
         """ Recompute fields given by `spec`.
 
-            :param spec: list of triples (`model`, `fields`, `ids`), where
-                `model` is a model name, `fields` is a list of field names, and
-                `ids` is a list of record ids.
+            :param spec: list of triples (`model`, `field`, `ids`), where
+                `model` is a model name, `field` is a field name, and `ids` is a
+                list of record ids.
         """
         if not spec:
             return
@@ -5557,15 +5558,13 @@ class BaseModel(object):
         with scope_proxy.recomputing_manager(spec):
             # simply evaluate the fields to recompute on their records;
             # the method _get_field() will do the job!
-            for model_name, names, ids in spec:
+            for model_name, field_name, ids in spec:
                 model = self.pool[model_name]
                 # recompute stored fields only
-                names = [name for name in names if model._fields[name].store]
-                if names:
+                if model._fields[field_name].store:
                     # filter out deleted records (this happens with unlink)
                     for rec in model.browse(ids).exists():
-                        for name in names:
-                            rec[name]
+                        rec[field_name]
 
     @api.model
     def onchange(self, id, changed, values):

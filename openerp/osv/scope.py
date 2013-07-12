@@ -93,10 +93,9 @@ class ScopeProxy(object):
         """
         # recomputing = {model_name: {field_name: set(ids), ...}, ...}
         recomputing = defaultdict(lambda: defaultdict(set))
-        for m, fs, ids in spec:
+        for m, f, ids in spec:
             assert ids is not None
-            for f in fs:
-                recomputing[m][f].update(ids)
+            recomputing[m][f].update(ids)
 
         try:
             old = getattr(_local, 'recomputing', None)
@@ -224,6 +223,7 @@ class Scope(object):
 #
 # Records cache
 #
+
 def get_values(d, keys):
     """ return the values of dictionary `d` corresponding to `keys`, or all
         values of `d` if `keys` is ``None``
@@ -232,16 +232,6 @@ def get_values(d, keys):
         return d.itervalues()
     else:
         return (d[key] for key in keys if key in d)
-
-def drop_values(d, keys):
-    """ discard the items of `d` corresponding to `keys`, or all items if `keys`
-        is ``None``
-    """
-    if keys is None:
-        d.clear()
-    else:
-        for key in keys:
-            d.pop(key, None)
 
 
 class ModelCache(defaultdict):
@@ -266,26 +256,18 @@ class Cache(defaultdict):
 
             :param spec: describes what to invalidate;
                 either ``None`` (invalidate everything), or
-                a list of triples (`model`, `fields`, `ids`), where
-                `model` is a model name,
-                `fields` is a list of field names or ``None`` for all fields,
+                a list of triples (`model`, `field`, `ids`), where
+                `model` is a model name, `field` is a field name,
                 and `ids` is a list of record ids or ``None`` for all records.
         """
         if spec is None:
-            spec = [(model, None, None) for model in self]
+            self.clear()
+            return
 
-        # The invalidation drops data from the records' own cache. However, it
-        # never removes records from the cache itself, even if those records
-        # have been deleted from the database. Removing records would cause a
-        # subtle issue in the cache prefetching: the record instances that are
-        # fetched are the ones in the cache, but not necessarily the ones that
-        # the program uses to read the records. As a consequence, when using a
-        # record out of the cache, its already-fetched data is lost, and the
-        # record data has to be fetched again from the database!
-        for model, fields, ids in spec:
+        for model, field, ids in spec:
             model_cache = self[model]
             for record_cache in get_values(model_cache, ids):
-                drop_values(record_cache, fields)
+                record_cache.pop(field, None)
 
     def check(self):
         """ self-check for validating the cache """
