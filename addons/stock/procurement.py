@@ -55,11 +55,11 @@ class procurement_order(osv.osv):
         return self.pool.get('procurement.rule').search(cr, uid, domain, context=context)
 
     def _find_suitable_rule(self, cr, uid, procurement, context=None):
-        res = super(procurement_order, self)._find_suitable_rule(cr, uid, procurement, context=context)
+        rule_id = super(procurement_order, self)._find_suitable_rule(cr, uid, procurement, context=context)
         if not res:
-            res = self._search_suitable_rule(cr, uid, procurement, [('action', '=', 'move'), ('location_id', '=', procurement.location_id.id)], context=context)
-            res = res and res[0] or False
-        return res
+            rule_id = self._search_suitable_rule(cr, uid, procurement, [('action', '=', 'move'), ('location_id', '=', procurement.location_id.id)], context=context)
+            rule_id = rule_id and rule_id[0] or False
+        return rule_id
 
     def _run_move_create(self, cr, uid, procurement, context=None):
         return {

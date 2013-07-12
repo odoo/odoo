@@ -77,7 +77,7 @@ class procurement_rule(osv.osv):
             help="This field will fill the packing origin and the name of its moves"),
         'group_id': fields.many2one('procurement.group', 'Procurement Group'),
         'action': fields.selection(selection=lambda s, cr, uid, context=None: s._get_action(cr, uid, context=context),
-            string='Action', required=True)
+            string='Action', required=True),
     }
 
 
