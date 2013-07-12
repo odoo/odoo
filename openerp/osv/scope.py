@@ -180,7 +180,9 @@ class Scope(object):
         """
         cr, uid, context = self
         for arg in args:
-            if isinstance(arg, dict):
+            if arg is None:
+                context = {}
+            elif isinstance(arg, dict):
                 context = arg
             elif isinstance(arg, (int, long)):
                 uid = arg
