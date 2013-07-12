@@ -66,8 +66,8 @@
 			<field name="model">stock.location.route</field>
 			<field name="arch" type="xml">
 				<tree string="Routes">
-					<field name="name" />
-					<field name="sequence" />
+                    <field name="sequence" widget="handle" />
+					<field name="name"/>
 				</tree>
 			</field>
 		</record>
@@ -79,7 +79,7 @@
 			<field name="arch" type="xml">
 				<form string="Route">
 					<field name="name" />
-					<field name="sequence" />
+					<field name="sequence" groups="base.group_no_one"/>
 					<group string="Push Rules" colspan="4" >
 						<field name="push_ids" colspan="4" nolabel="1"/>
                     </group>

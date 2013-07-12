@@ -72,12 +72,13 @@ class stock_location_path(osv.osv):
         'delay': 1,
         'invoice_state': 'none',
         'picking_type': 'internal',
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'procurement.order', context=c)
     }
     def _apply(self, cr, uid, rule, move, context=None):
         move_obj = self.pool.get('stock.move')
         newdate = (datetime.strptime(move.date, '%Y-%m-%d %H:%M:%S') + relativedelta(days=rule.delay or 0)).strftime('%Y-%m-%d')
         if rule.auto=='transparent':
-            self.write(cr, uid, [move.id], {
+            move_obj.write(cr, uid, [move.id], {
                 'date': newdate,
                 'location_dest_id': rule.location_dest_id.id
             })
@@ -93,14 +94,16 @@ class stock_location_path(osv.osv):
             move_id = move_obj.copy(cr, uid, move.id, {
                 'location_id': move.location_dest_id.id,
                 'location_dest_id': rule.location_dest_id.id,
-                'date': time.strftime('%Y-%m-%d'),
-                'company_id': rule.company_id.id,
+                'date': datetime.now().strftime('%Y-%m-%d'),
+                'company_id': rule.company_id and rule.company_id.id or False,
                 'date_expected': newdate,
+                'picking_id': False,
+                'picking_type': move_obj.get_type_from_usage(cr, uid, move.location_id, move.location_dest_id, context=context)
             })
             move_obj.write(cr, uid, [move.id], {
                 'move_dest_id': move_id,
             })
-            move_obj.action_confirm(self, cr, uid, [move_id], context=None)
+            move_obj.action_confirm(cr, uid, [move_id], context=None)
             return move_id
 
 
@@ -206,25 +209,6 @@ class stock_move(osv.osv):
         'cancel_cascade': fields.boolean('Cancel Cascade', help='If checked, when this move is cancelled, cancel the linked move too'),
         'putaway_ids': fields.one2many('stock.move.putaway', 'move_id', 'Put Away Suggestions'), 
     }
-        
-        
-    # TODO: reimplement this
-#     def _pull_apply(self, cr, uid, moves, context):
-#         # Create a procurement is MTO on stock.move
-#         # Call _assign on procurement
-#         for move in moves:
-#             #If move is MTO, then you should create a procurement
-#             #Search for original rule
-#             #Then change procurement to stock
-#             for route in move.product_id.route_ids:
-#                 found = False
-#                 for rule in route.pull_ids:
-#                     if rule.location_id.id == move.location_dest_id.id and move.procure_method == "make_to_order":
-#                         self._create_procurement(cr, uid, rule, move, context=context)
-#                         found = True
-#                         break
-#                 if found: break
-#         return True
 
     def _push_apply(self, cr, uid, moves, context):
         for move in moves:
@@ -241,10 +225,9 @@ class stock_move(osv.osv):
     # Create the stock.move.putaway records
     def _putaway_apply(self,cr, uid, ids, context=None):
         for move in self.browse(cr, uid, ids, context=context):
-            res = self.pool.get('stock.location').get_putaway_strategy(cr, uid, move.location_dest_id.id, move.product_id.id, context=context)
+            res = self.pool.get('stock.location').get_putaway_strategy(cr, uid, move.location_dest_id, move.product_id, context=context)
             if res:
                 raise 'put away strategies not implemented yet!'
-
         return True
 
     def action_assign(self, cr, uid, ids, context=None):
@@ -266,7 +249,7 @@ class stock_location(osv.osv):
     }
 
 
-    def get_putaway_strategy(self, cr, uid, id, location, product, context=None):
+    def get_putaway_strategy(self, cr, uid, location, product, context=None):
         pa = self.pool.get('product.putaway')
         categ = product.categ_id
         categs = [categ.id, False]
@@ -280,7 +263,7 @@ class stock_location(osv.osv):
         ], context=context)
         if result:
             return pa.browse(cr, uid, result[0], context=context)
-        return super(stock_location, self).get_putaway_strategy(cr, uid, location, product, context=context)
+        #return super(stock_location, self).get_putaway_strategy(cr, uid, location, product, context=context)
 
     def get_removal_strategy(self, cr, uid, location, product, context=None):
         pr = self.pool.get('product.removal')

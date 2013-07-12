@@ -81,6 +81,7 @@ class procurement_order(osv.osv):
             'move_dest_id': procurement.move_dest_id and procurement.move_dest_id.id or False,
             #'cancel_cascade': procurement.rule_id and procurement.rule_id.cancel_cascade or False,
             'group_id': procurement.group_id and procurement.group_id.id or False,
+            'picking_type': self.pool.get('stock.move').get_type_from_usage(cr, uid, procurement.rule_id.location_src_id, procurement.rule_id.location_id, context=context)
         }
 
     def _run(self, cr, uid, procurement, context=None):
