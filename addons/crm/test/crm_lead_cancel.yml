@@ -4,37 +4,6 @@
   !python {model: crm.lead}: |
     section_id = self.pool.get('crm.case.section').create(cr, uid, {'name': "Phone Marketing", 'parent_id': ref("crm.crm_case_section_2")})
     self.write(cr, uid, [ref("crm_case_1")], {'section_id': section_id})
-    self.case_cancel(cr, uid, [ref("crm_case_1")])
--
-  I check cancelled lead.
--
-  !python {model: crm.lead}: |
-    lead = self.browse(cr, uid, ref('crm_case_1'))
-    assert lead.stage_id.id == ref('crm.stage_lead7'), "Stage should be 'Dead' and is %s." % (lead.stage_id.name)
-    assert lead.state == 'cancel', "Opportunity is not in 'cancel' state."
-    assert lead.probability == 0.0, 'Opportunity is probably wrong and should be 0.0.'
--
-  I reset cancelled lead into unqualified lead.
--
-  !python {model: crm.lead}: |
-    self.case_reset(cr, uid, [ref("crm_case_1")])
--
-  I check unqualified lead after reset.
--
-  !assert {model: crm.lead, id: crm.crm_case_1, string: Lead is in draft state}:
-    - state == "draft"
--
-  I re-open the lead
--
-  !python {model: crm.lead}: |
-    self.case_open(cr, uid, [ref("crm_case_1")])
--
- I check stage and state of the re-opened lead
--
-  !python {model: crm.lead}: |
-    lead = self.browse(cr, uid, ref('crm.crm_case_1'))
-    assert lead.stage_id.id == ref('crm.stage_lead2'), "Opportunity stage should be 'Qualification'."
-    assert lead.state == 'open', "Opportunity should be in 'open' state."
 -
   I escalate the lead to parent team.
 -
