@@ -104,7 +104,7 @@ class PointOfSaleController(http.Controller):
     @http.route('/pos/weighting_read_kg', type='json', auth='admin')
     def weighting_read_kg(self):
         print "weighting_read_kg"
-        return 0.0
+        return 3.14
 
     @http.route('/pos/weighting_end', type='json', auth='admin')
     def weighting_end(self):
@@ -159,7 +159,7 @@ class PointOfSaleController(http.Controller):
         print 'print_receipt' + str(receipt)
         return
 
-    @http.route('/pos/print_receipt', type='json', auth='admin')
+    @http.route('/pos/print_pdf_invoice', type='json', auth='admin')
     def print_pdf_invoice(self, pdfinvoice):
         print 'print_pdf_invoice' + str(pdfinvoice)
         return

@@ -460,7 +460,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     clearInterval(this.intervalID);
                     self.pos_widget.screen_selector.set_current_screen(self.next_screen);
                 }
-            },500);
+            },100);
 
             this.add_action_button({
                     label: _t('Back'),
@@ -515,7 +515,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     self.weight = weight;
                     self.renderElement();
                 }
-            },200);
+            },100);
         },
         renderElement: function(){
             var self = this;
