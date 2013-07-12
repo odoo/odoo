@@ -423,7 +423,9 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ get_partners() ]]</para>
+          <para style="terp_default_Centre_8">Receivable Accounts[[ data['form'].get('result_selection', 'customer') == 'customer' or removeParentNode('para') ]]</para>
+          <para style="terp_default_Centre_8">Payable Accounts[[ data['form'].get('result_selection', 'customer') == 'supplier' or removeParentNode('para') ]]</para>
+          <para style="terp_default_Centre_8">Receivable and Payable Accounts[[ data['form'].get('result_selection', 'customer') == 'customer_supplier' or removeParentNode('para') ]]</para>
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ get_target_move(data) ]]</para>
