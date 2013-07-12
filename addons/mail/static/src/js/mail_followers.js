@@ -29,7 +29,6 @@ openerp_mail_followers = function(session, mail) {
             this.displayed_limit = this.node.attrs.displayed_nb || 10;
             this.displayed_nb = this.displayed_limit;
             this.ds_model = new session.web.DataSetSearch(this, this.view.model);
-            this.ds_follow = new session.web.DataSetSearch(this, this.field.relation);
             this.ds_users = new session.web.DataSetSearch(this, 'res.users');
 
             this.value = [];
@@ -37,6 +36,7 @@ openerp_mail_followers = function(session, mail) {
             
             this.view_is_editable = this.__parentedParent.is_action_enabled('edit');
             this.check_access = false;
+            this.is_follower = false;
         },
 
         start: function() {
@@ -46,7 +46,6 @@ openerp_mail_followers = function(session, mail) {
             this.reinit();
             this.bind_events();
             this._super();
-            this.check_group_tech_feature();
         },
 
         on_check_visibility_mode: function () {
@@ -154,11 +153,14 @@ openerp_mail_followers = function(session, mail) {
         },
 
         fetch_followers: function (value_) {
+            var self = this;
             this.value = value_ || {};
-            return this.ds_follow.call('read', [this.value, ['name', 'user_ids']])
-                .then(this.proxy('display_followers'), this.proxy('fetch_generic'))
-                .then(this.proxy('display_buttons'))
-                .then(this.proxy('fetch_subtypes'));
+            return this.ds_model.call('read_followers_data', [this.value]).then(function(result) {
+                self.result = result;
+                self.display_followers(result), self.proxy('fetch_generic');
+                self.display_buttons();
+                self.fetch_subtypes();
+            });
         },
 
         /** Read on res.partner failed: fall back on a generic case
@@ -190,18 +192,16 @@ openerp_mail_followers = function(session, mail) {
             this.$('.oe_follower_title').html(this._format_followers(this.value.length));
         },
 
-        check_group_tech_feature: function(){
-            var self = this;
-            self.ds_model.call('check_technical_rights', [self.session.uid]).then(function(result){
-                self.check_access = result;
-            });
-        },
-
         /** Display the followers */
         display_followers: function (records) {
             var self = this;
             this.followers = records || this.followers;
-            this.message_is_follower = this.set_is_follower(this.followers);
+            _.each(this.result, function (record) {
+                if (self.session.uid == record.user_ids[0]) {
+                    if (record.is_editable == true) { self.check_access = true; }
+                }
+            });
+            this.message_is_follower = this.set_is_follower(this.followers); // self.is_follower
             // clean and display title
             var node_user_list = this.$('.oe_follower_list').empty();
             this.$('.oe_follower_title').html(this._format_followers(this.followers.length));
@@ -210,7 +210,7 @@ openerp_mail_followers = function(session, mail) {
             _(truncated).each(function (record) {
                 record.avatar_url = mail.ChatterUtils.get_image(self.session, 'res.partner', 'image_small', record.id);
                 $(session.web.qweb.render('mail.followers.partner', {'record': record, 'widget': self})).appendTo(node_user_list);
-                // On mouseenter it will show the edit_subtype penil
+                // On mouse-enter it will show the edit_subtype pencil.
                 if (self.check_access == true) {
                     self.$el.on('mouseenter', 'div.oe_follower_list', function() {
                         $("img.oe_edit_subtype").removeClass("hidden");

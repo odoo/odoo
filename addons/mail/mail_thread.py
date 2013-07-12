@@ -156,12 +156,21 @@ class mail_thread(osv.AbstractModel):
                 res[id]['message_summary'] = "<span class='oe_kanban_mail_new' title='%s'><span class='oe_e'>9</span> %d %s</span>" % (title, res[id].pop('message_unread_count'), _("New"))
         return res
 
-    def check_technical_rights(self, cr, uid, ids, context=None):
-        grp_id =  self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_no_one')
-        user_pid = self.pool.get('res.groups').read(cr, uid, grp_id[1], ['users'], context=context)['users']
-        if uid in user_pid:
-            return True
-        return False
+    def read_followers_data(self, cr, uid, ids, context=None):
+        data = self.pool.get('res.partner').read(cr, uid, ids, ['name', 'user_ids'], context=context)
+
+        grp_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_no_one')
+        tech_user = self.pool.get('res.groups').read(cr, uid, grp_id[1], ['users'], context=context)['users']
+        user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+
+        if uid in tech_user:
+            for dict in data:
+                if dict['id'] in [user_pid]:
+                    dict.update({'is_editable': True})
+                if uid in dict['user_ids']:
+                    dict.update({'is_uid': True})
+
+        return data
 
     def _get_subscription_data(self, cr, uid, ids, name, args, user_pid=None, context=None):
         """ Computes:
