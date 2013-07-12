@@ -885,8 +885,12 @@ class Root(object):
             session_gc(self.session_store)
 
             sid = httprequest.args.get('session_id')
+            explicit_session = True
+            if not sid:
+                sid =  httprequest.headers.get("X-Openerp-Session-Id")
             if not sid:
                 sid = httprequest.cookies.get('session_id')
+                explicit_session = False
             if sid is None:
                 httprequest.session = self.session_store.new()
             else:
@@ -921,7 +925,7 @@ class Root(object):
 
             if httprequest.session.should_save:
                 self.session_store.save(httprequest.session)
-            if hasattr(response, 'set_cookie'):
+            if not explicit_session and hasattr(response, 'set_cookie'):
                 response.set_cookie('session_id', httprequest.session.sid)
 
             return response(environ, start_response)
@@ -1040,6 +1044,8 @@ class Root(object):
         request.auth_method = getattr(original, "auth", "user")
         request.func_request_type = original.exposed
 
+root = None
+
 def db_list(force=False):
     proxy = request.session.proxy("db")
     dbs = proxy.list(force)
@@ -1090,14 +1096,21 @@ def db_monodb():
     return db_redirect(True)[0]
 
 
-class JsonRpcController(Controller):
+class CommonController(Controller):
 
     @route('/jsonrpc', type='json', auth="none")
     def jsonrpc(self, service, method, args):
         """ Method used by client APIs to contact OpenERP. """
         return openerp.netsvc.dispatch_rpc(service, method, args)
 
+    @route('/gen_session_id', type='json', auth="none")
+    def gen_session_id(self):
+        nsession = root.session_store.new()
+        return nsession.sid
+
 def wsgi_postload():
-    openerp.wsgi.register_wsgi_handler(Root())
+    global root
+    root = Root()
+    openerp.wsgi.register_wsgi_handler(root)
 
 # vim:et:ts=4:sw=4:
