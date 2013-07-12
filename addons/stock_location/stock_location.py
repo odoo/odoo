@@ -145,14 +145,19 @@ class procurement_order(osv.osv):
         })
         return d
 
-    # TODO: implement using routes on products
-    def _find_suitable_rule(self, cr, uid, procurement, context=None):
-        res = False
-        if procurement.location_id:
-            rule_obj = self.pool.get('procurement.rule')
-            route_ids = [x.id for x in procurement.product_id.route_ids]
-            res = rule_obj.search(cr, uid, [('location_id', '=', procurement.location_id.id), ('route_id', 'in', route_ids), ], context=context)
-        return res and res[0] or super(procurement_order, self)._find_suitable_rule(cr, uid, procurement, context=context)
+#     # TODO: implement using routes on products
+#     def _find_suitable_rule(self, cr, uid, procurement, context=None):
+#         res = False
+#         if procurement.location_id:
+#             rule_obj = self.pool.get('procurement.rule')
+#             route_ids = [x.id for x in procurement.product_id.route_ids]
+#             res = rule_obj.search(cr, uid, [('location_id', '=', procurement.location_id.id), ('route_id', 'in', route_ids), ], context=context)
+#         return res and res[0] or super(procurement_order, self)._find_suitable_rule(cr, uid, procurement, context=context)
+
+
+    def _get_route_domain(self, cr, uid, procurement, context=None):
+        route_ids = [x.id for x in procurement.product_id.route_ids]
+        return [('route_id', 'in', route_ids)]
 
 class product_putaway_strategy(osv.osv):
     _name = 'product.putaway'

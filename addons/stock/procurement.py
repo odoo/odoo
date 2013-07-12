@@ -54,7 +54,8 @@ class procurement_order(osv.osv):
         res = super(procurement_order, self)._find_suitable_rule(cr, uid, procurement, context=context)
         if not res:
             rule_obj = self.pool.get('procurement.rule')
-            res = rule_obj.search(cr, uid, [('location_id', '=', procurement.location_id.id)], context=context)
+            domain = [('location_id', '=', procurement.location_id.id)] + self._get_route_domain(cr, uid, procurement, context=context) 
+            res = rule_obj.search(cr, uid, domain, context=context)
             res = res and res[0] or False
         return res
 

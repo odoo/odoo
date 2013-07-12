@@ -1039,7 +1039,8 @@ class procurement_order(osv.osv):
         if not rule_id:
             #if there isn't any specific procurement.rule defined for the product, we try to directly supply it from a supplier
             if procurement.product_id.supply_method == 'buy' and self._check_supplier_info(cr, uid, [procurement.id], context=context):
-                rule_id = self.pool.get('procurement.rule').search(cr, uid, [('action', '=', 'buy'), ('location_id', '=', procurement.location_id.id)], context=context)
+                domain = [('action', '=', 'buy'), ('location_id', '=', procurement.location_id.id)] + self._get_route_domain(cr, uid, procurement, context=context)
+                rule_id = self.pool.get('procurement.rule').search(cr, uid, domain, context=context)
                 rule_id = rule_id and rule_id[0] or False
         return rule_id
 
