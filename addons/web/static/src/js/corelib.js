@@ -967,6 +967,8 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
         instance.web.PropertiesMixin.init.call(this);
         this.server = null;
         this.debug = ($.deparam($.param.querystring()).debug != undefined);
+        this.override_session = false;
+        this.session_id = undefined;
     },
     setup: function(origin) {
         var window_origin = location.protocol+"//"+location.host, self=this;
@@ -1009,7 +1011,6 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
         var deferred = $.Deferred();
         if (! options.shadow)
             this.trigger('request', url, payload);
-        payload.debug = this.debug ? true : false;
         
         this.rpc_function(url, payload).then(
             function (response, textStatus, jqXHR) {
@@ -1055,7 +1056,10 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
             dataType: 'json',
             contentType: 'application/json',
             data: JSON.stringify(payload),
-            processData: false
+            processData: false,
+            headers: {
+                "X-Openerp-Session-Id": this.override_session ? this.session_id : undefined,
+            },
         }, url);
         if (this.synch)
             ajax.async = false;
@@ -1134,11 +1138,10 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
     },
 
     url: function(path, params) {
-        var qs = '';
-        if (!_.isNull(params)) {
-            params = _.extend(params || {}, {session_id: this.session_id});
-            qs = '?' + $.param(params);
-        }
+        params = _.extend(params || {});
+        if (this.override_session)
+            params.session_id = this.session_id;
+        var qs = '?' + $.param(params);
         var prefix = _.any(['http://', 'https://', '//'], _.bind(_.str.startsWith, null, path)) ? '' : this.prefix; 
         return prefix + path + qs;
     },
