@@ -419,6 +419,14 @@ property or property parameter."),
         """
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.name
         mail_id = []
+        color = {
+                 'needs-action' : 'grey',
+                 'accepted' :'green',
+                 'tentative' :'#FFFF00',
+                 'declined':'red',
+                 'delegated':'grey'
+                 }
+        image_cricle = "<div style='display:inline-block; border-radius: 50% %; width:10px; height:10px; background:%s;'> </div>"
         for attendee in self.browse(cr, uid, ids, context=context):
             res_obj = attendee.ref
             if res_obj:
@@ -428,7 +436,9 @@ property or property parameter."),
                 other_invitation_ids = self.search(cr, uid, [('ref', '=', res_obj._name + ',' + str(res_obj.id))])
 
                 for att2 in self.browse(cr, uid, other_invitation_ids):
-                    att_info.append(att2.user_id and att2.user_id.name or att2.partner_id and att2.partner_id.name or att2.email)
+                    name = att2.user_id and att2.user_id.name or att2.partner_id and att2.partner_id.name or att2.email
+                    att_info.append((image_cricle  % color.get(att2.state)) + name)
+                    
                 tz = context.get('tz', pytz.timezone('UTC'))
                 allday = False
                 date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(res_obj.date, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
