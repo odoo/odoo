@@ -183,6 +183,12 @@ class product_template(osv.osv):
     _name = 'product.template'
     _inherit = 'product.template'
     _columns = {
+        'cost_method': fields.property(type='selection', selection=[('standard', 'Standard Price'), ('average', 'Average Price'), ('real', 'Real Price')],
+            help="""Standard Price: The cost price is manually updated at the end of a specific period (usually every year)
+                    Average Price: The cost price is recomputed at each incoming shipment
+                    FIFO Price: The cost price is recomputed at each outgoing shipment FIFO
+                    LIFO Price: The cost price is recomputed at each outgoing shipment LIFO""",
+            string="Costing Method", required=True),
         'property_stock_account_input': fields.property(
             type='many2one',
             relation='account.account',
@@ -195,6 +201,10 @@ class product_template(osv.osv):
             string='Stock Output Account',
             help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
                  "there is a specific valuation account set on the destination location. When not set on the product, the one from the product category is used."),
+    }
+
+    _defaults = {
+        'cost_method': 'standard',
     }
 
 

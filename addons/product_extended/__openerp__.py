@@ -22,7 +22,7 @@
     "name" : "Product extension to track sales and purchases",
     "version" : "1.0",
     "author" : "OpenERP S.A.",
-    "depends" : ["product", "purchase", "sale", "mrp"],
+    "depends" : ["product", "purchase", "sale", "mrp", "stock_account"],
     "category" : "Generic Modules/Inventory Control",
     "description": """
 Product extension. This module adds:

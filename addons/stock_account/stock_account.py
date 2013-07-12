@@ -80,63 +80,65 @@ class stock_quant(osv.osv):
         if company_from == company_to:
             return False
 
+        journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_fir_valuation(cr, uid, move, context=context)
+        account_moves = []
         # Create Journal Entry for products arriving in the company
         if company_to:
-            pass
+            if location_from.usage == 'customer':
+                #goods returned from customer
+                account_moves += self._create_account_move_line(cr, uid, quant, acc_dest, acc_valuation, context=context)
+            else:
+                account_moves += self._create_account_move_line(cr, uid, quant, acc_src, acc_valuation, context=context)
 
         # Create Journal Entry for products leaving the company
         if company_from:
-            pass
+            if location_to.usage == 'supplier':
+                #goods returned to supplier
+                account_moves += self._create_account_move_line(cr, uid, quant, acc_valuation, acc_src, context=context)
+            else:
+                account_moves += self._create_account_move_line(cr, uid, quant, acc_valuation, acc_dest, context=context)
 
     def move_single_quant(self, cr, uid, quant, qty, move, context=None):
+        location_from = quant.location_id
         super(stock_quant, self).move_single_quant(cr, uid, quant, qty, move, context=context)
-        self._account_entry_move(cr, uid, quant, location_from, location_to, move, context=context)
+        quant.refresh()
+        self._account_entry_move(cr, uid, quant, location_from, quant.location_id, move, context=context)
 
 
     # TODO: move this code on the _account_entry_move method above. Should be simpler
-    #
-    #def _get_accounting_data_for_valuation(self, cr, uid, move, context=None):
-    #    """
-    #    Return the accounts and journal to use to post Journal Entries for the real-time
-    #    valuation of the move.
+    
+    def _get_accounting_data_for_valuation(self, cr, uid, move, context=None):
+        """
+        Return the accounts and journal to use to post Journal Entries for the real-time
+        valuation of the quant.
 
-    #    :param context: context dictionary that can explicitly mention the company to consider via the 'force_company' key
-    #    :raise: osv.except_osv() is any mandatory account or journal is not defined.
-    #    """
-    #    product_obj=self.pool.get('product.product')
-    #    accounts = product_obj.get_product_accounts(cr, uid, move.product_id.id, context)
-    #    if move.location_id.valuation_out_account_id:
-    #        acc_src = move.location_id.valuation_out_account_id.id
-    #    else:
-    #        acc_src = accounts['stock_account_input']
+        :param context: context dictionary that can explicitly mention the company to consider via the 'force_company' key
+        :returns: journal_id, source account, destination account, valuation account
+        :raise: osv.except_osv() is any mandatory account or journal is not defined.
+        """
+        product_obj=self.pool.get('product.product')
+        accounts = product_obj.get_product_accounts(cr, uid, move.product_id.id, context)
+        if move.location_id.valuation_out_account_id:
+            acc_src = move.location_id.valuation_out_account_id.id
+        else:
+            acc_src = accounts['stock_account_input']
 
-    #    if move.location_dest_id.valuation_in_account_id:
-    #        acc_dest = move.location_dest_id.valuation_in_account_id.id
-    #    else:
-    #        acc_dest = accounts['stock_account_output']
+        if move.location_dest_id.valuation_in_account_id:
+            acc_dest = move.location_dest_id.valuation_in_account_id.id
+        else:
+            acc_dest = accounts['stock_account_output']
 
-    #    acc_valuation = accounts.get('property_stock_valuation_account_id', False)
-    #    journal_id = accounts['stock_journal']
+        acc_valuation = accounts.get('property_stock_valuation_account_id', False)
+        journal_id = accounts['stock_journal']
 
-    #    if acc_dest == acc_valuation:
-    #        raise osv.except_osv(_('Error!'),  _('Cannot create Journal Entry, Output Account of this product and Valuation account on category of this product are same.'))
-
-    #    if acc_src == acc_valuation:
-    #        raise osv.except_osv(_('Error!'),  _('Cannot create Journal Entry, Input Account of this product and Valuation account on category of this product are same.'))
-
-    #    if not acc_src:
-    #        raise osv.except_osv(_('Error!'),  _('Please define stock input account for this product or its category: "%s" (id: %d)') % \
-    #                                (move.product_id.name, move.product_id.id,))
-    #    if not acc_dest:
-    #        raise osv.except_osv(_('Error!'),  _('Please define stock output account for this product or its category: "%s" (id: %d)') % \
-    #                                (move.product_id.name, move.product_id.id,))
-    #    if not journal_id:
-    #        raise osv.except_osv(_('Error!'), _('Please define journal on the product category: "%s" (id: %d)') % \
-    #                                (move.product_id.categ_id.name, move.product_id.categ_id.id,))
-    #    if not acc_valuation:
-    #        raise osv.except_osv(_('Error!'), _('Please define inventory valuation account on the product category: "%s" (id: %d)') % \
-    #                                (move.product_id.categ_id.name, move.product_id.categ_id.id,))
-    #    return journal_id, acc_src, acc_dest, acc_valuation
+        if not all([acc_src, acc_dest, acc_valuation, journal_id]):
+            raise osv.except_osv(_('Error!'),  _('''One of the following information is missing on the product or product category and prevents the accounting valuation entries to be created:
+    Stock Input Account: %s
+    Stock Output Account: %s
+    Stock Valuation Account: %s
+    Stock Journal: %s
+    ''') % (acc_src, acc_dest, acc_valuation, journal_id))
+        return journal_id, acc_src, acc_dest, acc_valuation
 
 
     ##We can use a preliminary type
@@ -250,51 +252,37 @@ class stock_quant(osv.osv):
     #                     'line_id': move_lines,
     #                     'ref': move.picking_id and move.picking_id.name})
 
-    #def _create_account_move_line(self, cr, uid, quant, src_account_id, dest_account_id, context=None):
-    #    """
-    #    Generate the account.move.line values to post to track the stock valuation difference due to the
-    #    processing of the given stock move.
-    #    """
-    #    move_list = []
-    #    # Consists of access rights 
-    #    # TODO Check if amount_currency is not needed
-    #    match_obj = self.pool.get("stock.move.matching")
-    #    if type == 'out' and move.product_id.cost_method in ['real']:
-    #        for match in match_obj.browse(cr, uid, matches, context=context):
-    #            move_list += [(match.qty, match.qty * match.price_unit_out)]
-    #    elif type == 'in' and move.product_id.cost_method in ['real']:
-    #        move_list = [(move.product_qty, reference_amount)]
-    #    else:
-    #        move_list = [(move.product_qty, reference_amount)]
-
-    #    res = []
-    #    for item in move_list:
-    #        # prepare default values considering that the destination accounts have the reference_currency_id as their main currency
-    #        partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
-    #        debit_line_vals = {
-    #                    'name': move.name,
-    #                    'product_id': move.product_id and move.product_id.id or False,
-    #                    'quantity': item[0],
-    #                    'product_uom_id': move.product_uom.id, 
-    #                    'ref': move.picking_id and move.picking_id.name or False,
-    #                    'date': time.strftime('%Y-%m-%d'),
-    #                    'partner_id': partner_id,
-    #                    'debit': item[1],
-    #                    'account_id': dest_account_id,
-    #        }
-    #        credit_line_vals = {
-    #                    'name': move.name,
-    #                    'product_id': move.product_id and move.product_id.id or False,
-    #                    'quantity': item[0],
-    #                    'product_uom_id': move.product_uom.id, 
-    #                    'ref': move.picking_id and move.picking_id.name or False,
-    #                    'date': time.strftime('%Y-%m-%d'),
-    #                    'partner_id': partner_id,
-    #                    'credit': item[1],
-    #                    'account_id': src_account_id,
-    #        }
-    #        res += [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
-    #    return res
+    def _create_account_move_line(self, cr, uid, quant, move, credit_account_id, debit_account_id, context=None):
+        """
+        Generate the account.move.line values to post to track the stock valuation difference due to the
+        processing of the given quant.
+        """
+        valuation_amount = quant.product_id.cost_method == 'real' and quant.cost or quant.product_id.standard_price
+        partner_id = (move.picking_id.partner_id and self.pool.get('res.partner')._find_accounting_partner(move.picking_id.partner_id).id) or False
+        debit_line_vals = {
+                    'name': move.name,
+                    'product_id': quant.product_id.id,
+                    'quantity': quant.product_qty,
+                    'product_uom_id': quant.product_id.product_uom.id, 
+                    'ref': move.picking_id and move.picking_id.name or False,
+                    'date': time.strftime('%Y-%m-%d'),
+                    'partner_id': partner_id,
+                    'debit': valuation_amount,
+                    'account_id': debit_account_id,
+        }
+        credit_line_vals = {
+                    'name': move.name,
+                    'product_id': quant.product_id.id,
+                    'quantity': quant.product_qty,
+                    'product_uom_id': quant.product_id.product_uom.id, 
+                    'ref': move.picking_id and move.picking_id.name or False,
+                    'date': time.strftime('%Y-%m-%d'),
+                    'partner_id': partner_id,
+                    'credit': valuation_amount,
+                    'account_id': credit_account_id,
+        }
+        res += [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
+        return res
 
 
 #----------------------------------------------------------
@@ -314,6 +302,8 @@ class stock_picking(osv.osv):
     _defaults = {
         'invoice_state': 'none',
     }
+
+    #TODO update standard price on product after do_partial()
 
     #TODO: we don't need to change invoice_state on cancelation, do we?
     #def action_cancel(self, cr, uid, ids, context=None):
@@ -640,6 +630,12 @@ class stock_move(osv.osv):
 #        return True
 
 
+class report_stock_inventory(osv.osv):
+    _inherit = "report.stock.inventory"
 
+    def _get_inventory_value(self, cr, uid, line, prodbrow, context=None):
+        if prodbrow[(line.company_id.id, line.product_id.id)].cost_method in ('real'):
+            return line.value
+        return super(report_stock_inventory, self)._get_inventory_value(cr, uid, line, prodbrow, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
