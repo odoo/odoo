@@ -9,7 +9,6 @@ from openerp.addons.web.http import request
 from openerp.addons.web.controllers.main import manifest_list, module_boot, html_template
 
 class PointOfSaleController(http.Controller):
-    #_cp_path = '/pos'
 
     @http.route('/pos/app', type='http', auth='admin')
     def app(self):
@@ -18,7 +17,8 @@ class PointOfSaleController(http.Controller):
 
         cookie = request.httprequest.cookies.get("instance0|session_id")
         session_id = cookie.replace("%22","")
-        template = html_template.replace('<html','<html manifest="/pos/manifest?session_id=%s"'%session_id)
+        template = html_template.replace('<html','<html manifest="/pos/manifest?session_id=%s"' % request.session_id)
+
         r = template % {
             'js': js,
             'css': css,
