@@ -124,24 +124,24 @@ class stock_partial_picking(osv.osv_memory):
             res.update(date=time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
         return res
 
-    def _product_cost_for_average_update(self, cr, uid, move):
-        """Returns product cost and currency ID for the given move, suited for re-computing
-           the average product cost.
+    #def _product_cost_for_average_update(self, cr, uid, move):
+    #    """Returns product cost and currency ID for the given move, suited for re-computing
+    #       the average product cost.
 
-           :return: map of the form::
+    #       :return: map of the form::
 
-                {'cost': 123.34,
-                 'currency': 42}
-        """
-        # Currently, the cost on the product form is supposed to be expressed in the currency
-        # of the company owning the product. If not set, we fall back to the picking's company,
-        # which should work in simple cases.
-        
-        # need to take the standard_price from the correct company
-        move2 = self.pool.get("stock.move").browse(cr, uid, move.id, context={'force_company': move.company_id.id}) 
-        
-        return {'cost': move2.product_id.standard_price, 
-                'currency':  False}
+    #            {'cost': 123.34,
+    #             'currency': 42}
+    #    """
+    #    # Currently, the cost on the product form is supposed to be expressed in the currency
+    #    # of the company owning the product. If not set, we fall back to the picking's company,
+    #    # which should work in simple cases.
+    #    
+    #    # need to take the standard_price from the correct company
+    #    move2 = self.pool.get("stock.move").browse(cr, uid, move.id, context={'force_company': move.company_id.id}) 
+    #    
+    #    return {'cost': move2.product_id.standard_price, 
+    #            'currency':  False}
 
     def _partial_move_for(self, cr, uid, move):
         partial_move = {
@@ -151,9 +151,10 @@ class stock_partial_picking(osv.osv_memory):
             'move_id': move.id,
             'location_id': move.location_id.id,
             'location_dest_id': move.location_dest_id.id,
+            'cost': move.product_id.standard_price,
         }
-        if move.picking_id.type == 'in' and move.product_id.cost_method != 'standard':
-            partial_move.update(update_cost=True, **self._product_cost_for_average_update(cr, uid, move))
+    #    if move.picking_id.type == 'in' and move.product_id.cost_method != 'standard':
+    #        partial_move.update(update_cost=True, **self._product_cost_for_average_update(cr, uid, move))
         return partial_move
 
     def do_partial(self, cr, uid, ids, context=None):
@@ -211,8 +212,8 @@ class stock_partial_picking(osv.osv_memory):
                 'product_uom': wizard_line.product_uom.id,
                 'lot_id': wizard_line.lot_id.id,
             }
-            if (picking_type == 'in') and (wizard_line.product_id.cost_method != 'standard'):
-                partial_data['move%s' % (wizard_line.move_id.id)].update(product_price=wizard_line.cost,)
+            #if (picking_type == 'in') and (wizard_line.product_id.cost_method != 'standard'):
+            #    partial_data['move%s' % (wizard_line.move_id.id)].update(product_price=wizard_line.cost,)
         stock_picking.do_partial(cr, uid, [partial.picking_id.id], partial_data, context=context)
         return {'type': 'ir.actions.act_window_close'}
 

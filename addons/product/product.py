@@ -313,12 +313,6 @@ class product_template(osv.osv):
         'volume': fields.float('Volume', help="The volume in m3."),
         'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The gross weight in Kg."),
         'weight_net': fields.float('Net Weight', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
-        'cost_method': fields.property(type='selection', selection = [('standard','Standard Price'), ('average','Average Price'), ('real', 'Real Price')],
-            help="""Standard Price: The cost price is manually updated at the end of a specific period (usually every year)
-                    Average Price: The cost price is recomputed at each incoming shipment
-                    FIFO Price: The cost price is recomputed at each outgoing shipment FIFO
-                    LIFO Price: The cost price is recomputed at each outgoing shipment LIFO""", 
-            string="Costing Method", required=True),
         'warranty': fields.float('Warranty'),
         'sale_ok': fields.boolean('Can be Sold', help="Specify if the product can be selected in a sales order line."),
         'state': fields.selection([('',''),
@@ -373,14 +367,13 @@ class product_template(osv.osv):
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'product.template', context=c),
         'list_price': 1,
-        'cost_method': 'standard',
         'standard_price': 0.0,
         'sale_ok': 1,
         'produce_delay': 1,
         'uom_id': _get_uom_id,
         'uom_po_id': _get_uom_id,
-        'uos_coeff' : 1.0,
-        'mes_type' : 'fixed',
+        'uos_coeff': 1.0,
+        'mes_type': 'fixed',
         'categ_id' : _default_category,
         'type' : 'consu',
     }

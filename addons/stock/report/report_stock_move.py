@@ -63,11 +63,12 @@ class report_stock_inventory(osv.osv):
             ctx = context.copy()
             ctx['force_company'] = line.company_id.id
             prod = product_obj.browse(cr, uid, line.product_id.id, context=ctx)
-            if prodbrow[(line.company_id.id, line.product_id.id)].cost_method in ('real'):
-                res[line.id] = line.value
-            else:
-                res[line.id] = prodbrow[(line.company_id.id, line.product_id.id)].standard_price * line.product_qty
+            res[line.id] = self._get_inventory_value(cr, uid, line, prodbrow, context=ctx)
         return res
+
+    def _get_inventory_value(self, cr, uid, line, prodbrow, context=None):
+        return prodbrow[(line.company_id.id, line.product_id.id)].standard_price * line.product_qty
+
     _columns = {
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'product_categ_id':fields.many2one('product.category', 'Product Category', readonly=True),
@@ -102,3 +103,4 @@ class report_stock_inventory(osv.osv):
             );
         """)
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
