@@ -50,12 +50,14 @@ class procurement_order(osv.osv):
         'move_dest_id': fields.many2one('stock.move', 'Destination Move', help="Move which caused (created) the procurement")
     }
 
+    def _search_suitable_rule(self, cr, uid, procurement, domain, context=None):
+        '''method overwritten in stock_location that is used to search the best suitable rule'''
+        return self.pool.get('procurement.rule').search(cr, uid, domain, context=context)
+
     def _find_suitable_rule(self, cr, uid, procurement, context=None):
         res = super(procurement_order, self)._find_suitable_rule(cr, uid, procurement, context=context)
         if not res:
-            rule_obj = self.pool.get('procurement.rule')
-            domain = [('location_id', '=', procurement.location_id.id)] + self._get_route_domain(cr, uid, procurement, context=context) 
-            res = rule_obj.search(cr, uid, domain, context=context)
+            res = self._search_suitable_rule(cr, uid, procurement, [('action', '=', 'move'), ('location_id', '=', procurement.location_id.id)], context=context)
             res = res and res[0] or False
         return res
 

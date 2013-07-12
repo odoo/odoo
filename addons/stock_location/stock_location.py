@@ -145,10 +145,14 @@ class procurement_order(osv.osv):
         })
         return d
 
-
-    def _get_route_domain(self, cr, uid, procurement, context=None):
+    def _search_suitable_rule(self, cr, uid, procurement, domain, context=None):
+        '''we try to first find a rule among the ones defined on the procurement order and if none is find, we fallback on the default behavior'''
         route_ids = [x.id for x in procurement.product_id.route_ids]
-        return [('route_id', 'in', route_ids)]
+        res = super(procurement_order, self)._search_suitable_rule(cr, uid, procurement, domain + [('route_id', 'in', route_ids)], context=context)
+        if not res:
+            return super(procurement_order, self)._search_suitable_rule(cr, uid, procurement, domain, context=context)
+        return res
+
 
 class product_putaway_strategy(osv.osv):
     _name = 'product.putaway'

@@ -80,7 +80,7 @@ class stock_quant(osv.osv):
         if company_from == company_to:
             return False
 
-        journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_fir_valuation(cr, uid, move, context=context)
+        journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(cr, uid, move, context=context)
         account_moves = []
         # Create Journal Entry for products arriving in the company
         if company_to:

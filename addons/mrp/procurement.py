@@ -40,15 +40,12 @@ class procurement_order(osv.osv):
         'production_id': fields.many2one('mrp.production', 'Manufacturing Order'),
     }
 
-
-
     def _find_suitable_rule(self, cr, uid, procurement, context=None):
         rule_id = super(procurement_order, self)._find_suitable_rule(cr, uid, procurement, context=context)
         if not rule_id:
             #if there isn't any specific procurement.rule defined for the product, we try to directly supply it from a supplier
             if procurement.product_id.supply_method == 'manufacture' and self.check_bom_exists(cr, uid, [procurement.id], context=context):
-                domain = [('action', '=', 'manufacture'), ('location_id', '=', procurement.location_id.id)] + self._get_route_domain(cr, uid, procurement, context=context)
-                rule_id = self.pool.get('procurement.rule').search(cr, uid, domain, context=context)
+                rule_id = self._search_suitable_rule(cr, uid, procurement, [('action', '=', 'manufacture'), ('location_id', '=', procurement.location_id.id)], context=context)
                 rule_id = rule_id and rule_id[0] or False
         return rule_id
 
@@ -62,8 +59,6 @@ class procurement_order(osv.osv):
         if procurement.production_id and procurement.production_id.state == 'done':  # TOCHECK: no better method? 
             return True
         return super(procurement_order, self)._check(cr, uid, procurement, context=context)
-
-
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, context=None):
         result = super(procurement_order, self)._prepare_order_line_procurement(cr, uid, order, line, move_id, date_planned, context)
