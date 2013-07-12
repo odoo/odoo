@@ -23,7 +23,6 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         this.qweb_mutex = new $.Mutex();
     },
     rpc: function(url, params, options) {
-        params.session_id = this.session_id;
         return this._super(url, params, options);
     },
     /**
@@ -39,11 +38,10 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         var self = this;
         this.setup(origin);
         instance.web.qweb.default_dict['_s'] = this.origin;
-        this.session_id = false;
-        this.uid = false;
-        this.username = false;
+        this.uid = null;
+        this.username = null;
         this.user_context= {};
-        this.db = false;
+        this.db = null;
         this.module_list = instance._modules.slice();
         this.module_loaded = {};
         _(this.module_list).each(function (mod) {
@@ -57,8 +55,6 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
      */
     session_init: function () {
         var self = this;
-        // TODO: session store in cookie should be optional
-        this.session_id = this.get_cookie('session_id');
         return this.session_reload().then(function(result) {
             var modules = instance._modules.join(',');
             var deferred = self.rpc('/web/webclient/qweblist', {mods: modules}).then(self.load_qweb.bind(self));
@@ -81,7 +77,19 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
      */
     session_reload: function () {
         var self = this;
-        return this.rpc("/web/session/get_session_info", {}).done(function(result) {
+        var def = $.when();
+        if (this.override_session) {
+            if (! this.session_id) {
+                def = this.rpc("/gen_session_id", {}).then(function(result) {
+                    self.session_id = result;
+                });
+            }
+        } else {
+            this.session_id = this.get_cookie('session_id');
+        }
+        return def.then(function() {
+            return self.rpc("/web/session/get_session_info", {})
+        }).then(function(result) {
             // If immediately follows a login (triggered by trying to restore
             // an invalid session or no session at all), refresh session data
             // (should not change, but just in case...)
@@ -107,14 +115,10 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
                 return $.Deferred().reject();
             }
             _.extend(self, result);
-            if (!_volatile) {
-                self.set_cookie('session_id', self.session_id);
-            }
             return self.load_modules();
         });
     },
     session_logout: function() {
-        this.set_cookie('session_id', '');
         $.bbq.removeState();
         return this.rpc("/web/session/destroy", {});
     },
@@ -331,7 +335,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         }
 
         _(_.extend({}, options.data || {},
-                   {session_id: this.session_id, token: token}))
+                   {session_id: this.override_session ? this.session_id : undefined, token: token}))
             .each(function (value, key) {
                 var $input = $form.find('[name=' + key +']');
                 if (!$input.length) {

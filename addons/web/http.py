@@ -61,8 +61,9 @@ class WebRequest(object):
 
     .. attribute:: httpsession
 
-        a :class:`~collections.Mapping` holding the HTTP session data for the
-        current http session
+        .. deprecated:: 8.0
+
+        Use ``self.session`` instead.
 
     .. attribute:: params
 
@@ -77,7 +78,8 @@ class WebRequest(object):
 
     .. attribute:: session
 
-        :class:`~session.OpenERPSession` instance for the current request
+        a :class:`OpenERPSession` holding the HTTP session data for the
+        current http session
 
     .. attribute:: context
 
@@ -95,12 +97,14 @@ class WebRequest(object):
     .. attribute:: uid
 
         ``int``, the id of the user related to the current request. Can be ``None``
-        if the current request uses the ``none`` or the ``db`` authenticatoin.
+        if the current request uses the ``none`` authenticatoin.
     """
     def __init__(self, httprequest):
         self.httprequest = httprequest
         self.httpresponse = None
         self.httpsession = httprequest.session
+        self.session = httprequest.session
+        self.session_id = httprequest.session.sid
         self.db = None
         self.uid = None
         self.func = None
@@ -108,66 +112,36 @@ class WebRequest(object):
         self._cr_cm = None
         self._cr = None
         self.func_request_type = None
-
-    def init(self, params):
-        self.params = dict(params)
-        # OpenERP session setup
-        self.session_id = self.params.pop("session_id", None)
-        if not self.session_id:
-            i0 = self.httprequest.cookies.get("instance0|session_id", None)
-            if i0:
-                self.session_id = simplejson.loads(urllib2.unquote(i0))
-            else:
-                self.session_id = uuid.uuid4().hex
-        self.session = self.httpsession.get(self.session_id)
-        if not self.session:
-            self.session = OpenERPSession()
-            self.httpsession[self.session_id] = self.session
-
+        self.debug = self.httprequest.args.get('debug', False) is not False
         with set_request(self):
-            self.db = self.session._db or db_monodb()
-
-        # TODO: remove this
+            self.db = self.session.db or db_monodb()
         # set db/uid trackers - they're cleaned up at the WSGI
         # dispatching phase in openerp.service.wsgi_server.application
-        if self.session._db:
-            threading.current_thread().dbname = self.session._db
-        if self.session._uid:
-            threading.current_thread().uid = self.session._uid
-
-        self.context = self.params.pop('context', {})
-        self.debug = self.params.pop('debug', False) is not False
-        # Determine self.lang
-        lang = self.params.get('lang', None)
-        if lang is None:
-            lang = self.context.get('lang')
-        if lang is None:
-            lang = self.httprequest.cookies.get('lang')
-        if lang is None:
-            lang = self.httprequest.accept_languages.best
-        if not lang:
-            lang = 'en_US'
-        # tranform 2 letters lang like 'en' into 5 letters like 'en_US'
-        lang = babel.core.LOCALE_ALIASES.get(lang, lang)
-        # we use _ as seprator where RFC2616 uses '-'
-        self.lang = lang.replace('-', '_')
+        if self.db:
+            threading.current_thread().dbname = self.session.db
+        if self.session.uid:
+            threading.current_thread().uid = self.session.uid
+        self.context = self.session.context
+        self.lang = self.context["lang"]
 
     def _authenticate(self):
+        if self.session.uid:
+            try:
+                self.session.check_security()
+            except SessionExpiredException, e:
+                self.session.logout()
+                raise SessionExpiredException("Session expired for request %s" % self.httprequest)
         if self.auth_method == "none":
             self.db = None
             self.uid = None
         elif self.auth_method == "admin":
-            self.db = self.session._db or db_monodb()
+            self.db = self.session.db or db_monodb()
             if not self.db:
                 raise SessionExpiredException("No valid database for request %s" % self.httprequest)
             self.uid = openerp.SUPERUSER_ID
         else: # auth
-            try:
-                self.session.check_security()
-            except SessionExpiredException, e:
-                raise SessionExpiredException("Session expired for request %s" % self.httprequest)
-            self.db = self.session._db
-            self.uid = self.session._uid
+            self.db = self.session.db
+            self.uid = self.session.uid
 
     @property
     def registry(self):
@@ -218,21 +192,18 @@ def route(route, type="http", auth="user"):
     Decorator marking the decorated method as being a handler for requests. The method must be part of a subclass
     of ``Controller``.
 
-    Decorator to put on a controller method to inform it does not require a user to be logged. When this decorator
-    is used, ``request.uid`` will be ``None``. The request will still try to detect the database and an exception
-    will be launched if there is no way to guess it.
-
     :param route: string or array. The route part that will determine which http requests will match the decorated
     method. Can be a single string or an array of strings. See werkzeug's routing documentation for the format of
     route expression ( http://werkzeug.pocoo.org/docs/routing/ ).
     :param type: The type of request, can be ``'http'`` or ``'json'``.
     :param auth: The type of authentication method, can on of the following:
 
-        * ``auth``: The user must be authenticated.
-        * ``db``: There is no need for the user to be authenticated but there must be a way to find the current
-        database.
+        * ``user``: The user must be authenticated and the current request will perform using the rights of the
+        user.
+        * ``admin``: The user may not be authenticated and the current request will perform using the admin user.
         * ``none``: The method is always active, even if there is no database. Mainly used by the framework and
-        authentication modules.
+        authentication modules. There request code will not have any facilities to access the database nor have any
+        configuration indicating the current database nor the current user.
     """
     assert type in ["http", "json"]
     assert auth in ["user", "admin", "none"]
@@ -260,8 +231,7 @@ class JsonRequest(WebRequest):
 
       --> {"jsonrpc": "2.0",
            "method": "call",
-           "params": {"session_id": "SID",
-                      "context": {},
+           "params": {"context": {},
                       "arg1": "val1" },
            "id": null}
 
@@ -273,8 +243,7 @@ class JsonRequest(WebRequest):
 
       --> {"jsonrpc": "2.0",
            "method": "call",
-           "params": {"session_id": "SID",
-                      "context": {},
+           "params": {"context": {},
                       "arg1": "val1" },
            "id": null}
 
@@ -323,17 +292,17 @@ class JsonRequest(WebRequest):
 
         # Read POST content or POST Form Data named "request"
         self.jsonrequest = simplejson.loads(request, object_hook=reject_nonliteral)
-        self.init(self.jsonrequest.get("params", {}))
+        self.params = dict(self.jsonrequest.get("params", {}))
+        self.context = self.params.pop('context', self.session.context)
 
     def dispatch(self):
         """ Calls the method asked for by the JSON-RPC2 or JSONP request
-
-        :returns: an utf8 encoded JSON-RPC2 or JSONP reply
         """
         if self.jsonp_handler:
             return self.jsonp_handler()
         response = {"jsonrpc": "2.0" }
         error = None
+
         try:
             #if _logger.isEnabledFor(logging.DEBUG):
             #    _logger.debug("--> %s.%s\n%s", func.im_class.__name__, func.__name__, pprint.pformat(self.jsonrequest))
@@ -365,7 +334,7 @@ class JsonRequest(WebRequest):
             # If we use jsonp, that's mean we are called from another host
             # Some browser (IE and Safari) do no allow third party cookies
             # We need then to manage http sessions manually.
-            response['httpsessionid'] = self.httpsession.sid
+            response['session_id'] = self.session_id
             mime = 'application/javascript'
             body = "%s(%s);" % (self.jsonp, simplejson.dumps(response),)
         else:
@@ -406,14 +375,10 @@ def to_jsonable(o):
     return u"%s" % o
 
 def jsonrequest(f):
-    """ Decorator marking the decorated method as being a handler for a
-    JSON-RPC request (the exact request path is specified via the
-    ``$(Controller._cp_path)/$methodname`` combination.
+    """ 
+        .. deprecated:: 8.0
 
-    If the method is called, it will be provided with a :class:`JsonRequest`
-    instance and all ``params`` sent during the JSON-RPC request, apart from
-    the ``session_id``, ``context`` and ``debug`` keys (which are stripped out
-    beforehand)
+        Use the ``route()`` decorator instead.
     """
     f.combine = True
     base = f.__name__
@@ -429,9 +394,13 @@ class HttpRequest(WebRequest):
     def __init__(self, *args):
         super(HttpRequest, self).__init__(*args)
         params = dict(self.httprequest.args)
+        ex = set(["session_id", "debug"])
+        for k in params.keys():
+            if k in ex:
+                del params[k]
         params.update(self.httprequest.form)
         params.update(self.httprequest.files)
-        self.init(params)
+        self.params = params
 
     def dispatch(self):
         akw = {}
@@ -489,14 +458,10 @@ class HttpRequest(WebRequest):
         return werkzeug.exceptions.NotFound(description)
 
 def httprequest(f):
-    """ Decorator marking the decorated method as being a handler for a
-    normal HTTP request (the exact request path is specified via the
-    ``$(Controller._cp_path)/$methodname`` combination.
+    """ 
+        .. deprecated:: 8.0
 
-    If the method is called, it will be provided with a :class:`HttpRequest`
-    instance and all ``params`` sent during the request (``GET`` and ``POST``
-    merged in the same dictionary), apart from the ``session_id``, ``context``
-    and ``debug`` keys (which are stripped out beforehand)
+        Use the ``route()`` decorator instead.
     """
     f.combine = True
     base = f.__name__
@@ -608,8 +573,8 @@ class Model(object):
         def proxy(*args, **kw):
             # Can't provide any retro-compatibility for this case, so we check it and raise an Exception
             # to tell the programmer to adapt his code
-            if not request.db or not request.uid or self.session._db != request.db \
-                or self.session._uid != request.uid:
+            if not request.db or not request.uid or self.session.db != request.db \
+                or self.session.uid != request.uid:
                 raise Exception("Trying to use Model with badly configured database or user.")
                 
             mod = request.registry.get(self.model)
@@ -626,32 +591,29 @@ class Model(object):
             return result
         return proxy
 
-class OpenERPSession(object):
-    """
-    An OpenERP RPC session, a given user can own multiple such sessions
-    in a web session.
+class OpenERPSession(werkzeug.contrib.sessions.Session):
+    def __init__(self, *args, **kwargs):
+        self.inited = False
+        self.modified = False
+        super(OpenERPSession, self).__init__(*args, **kwargs)
+        self.inited = True
+        self.setdefault("db", None)
+        self.setdefault("uid", None)
+        self.setdefault("login", None)
+        self.setdefault("password", None)
+        self.setdefault("context", {'tz': "UTC", "uid": None})
+        self.setdefault("jsonp_requests", {})
+        self.modified = False
 
-    .. attribute:: context
-
-        The session context, a ``dict``. Can be reloaded by calling
-        :meth:`openerpweb.openerpweb.OpenERPSession.get_context`
-
-    .. attribute:: domains_store
-
-        A ``dict`` matching domain keys to evaluable (but non-literal) domains.
-
-        Used to store references to non-literal domains which need to be
-        round-tripped to the client browser.
-    """
-    def __init__(self):
-        self._creation_time = time.time()
-        self._db = False
-        self._uid = False
-        self._login = False
-        self._password = False
-        self._suicide = False
-        self.context = {}
-        self.jsonp_requests = {}     # FIXME use a LRU
+    def __getattr__(self, attr):
+        return self.get(attr, None)
+    def __setattr__(self, k, v):
+        if getattr(self, "inited", False):
+            try:
+                object.__getattribute__(self, k)
+            except:
+                return self.__setitem__(k, v)
+        object.__setattr__(self, k, v)
 
     def authenticate(self, db, login=None, password=None, env=None, uid=None):
         """
@@ -660,14 +622,15 @@ class OpenERPSession(object):
 
         :param uid: If not None, that user id will be used instead the login to authenticate the user.
         """
+
         if uid is None:
             uid = openerp.netsvc.dispatch_rpc('common', 'authenticate', [db, login, password, env])
         else:
             security.check(db, uid, password)
-        self._db = db
-        self._uid = uid
-        self._login = login
-        self._password = password
+        self.db = db
+        self.uid = uid
+        self.login = login
+        self.password = password
         request.db = db
         request.uid = uid
 
@@ -680,9 +643,13 @@ class OpenERPSession(object):
         should be called at each request. If the authentication fails, a ``SessionExpiredException``
         is raised.
         """
-        if not self._db or not self._uid:
+        if not self.db or not self.uid:
             raise SessionExpiredException("Session expired")
-        security.check(self._db, self._uid, self._password)
+        security.check(self.db, self.uid, self.password)
+
+    def logout(self):
+        for k in self.keys():
+            del self[k]
 
     def get_context(self):
         """
@@ -692,9 +659,9 @@ class OpenERPSession(object):
 
         :returns: the new context
         """
-        assert self._uid, "The user needs to be logged-in to initialize his context"
+        assert self.uid, "The user needs to be logged-in to initialize his context"
         self.context = request.registry.get('res.users').context_get(request.cr, request.uid) or {}
-        self.context['uid'] = self._uid
+        self.context['uid'] = self.uid
         self._fix_lang(self.context)
         return self.context
 
@@ -718,6 +685,35 @@ class OpenERPSession(object):
 
         context['lang'] = lang or 'en_US'
 
+    """
+        Damn properties for retro-compatibility. All of that is deprecated, all
+        of that.
+    """
+    @property
+    def _db(self):
+        return self.db
+    @_db.setter
+    def _db(self, value):
+        self.db = value
+    @property
+    def _uid(self):
+        return self.uid
+    @_uid.setter
+    def _uid(self, value):
+        self.uid = value
+    @property
+    def _login(self):
+        return self.login
+    @_login.setter
+    def _login(self, value):
+        self.login = value
+    @property
+    def _password(self):
+        return self.password
+    @_password.setter
+    def _password(self, value):
+        self.password = value
+
     def send(self, service_name, method, *args):
         """
         .. deprecated:: 8.0
@@ -739,11 +735,11 @@ class OpenERPSession(object):
 
         Ensures this session is valid (logged into the openerp server)
         """
-        if self._uid and not force:
+        if self.uid and not force:
             return
         # TODO use authenticate instead of login
-        self._uid = self.proxy("common").login(self._db, self._login, self._password)
-        if not self._uid:
+        self.uid = self.proxy("common").login(self.db, self.login, self.password)
+        if not self.uid:
             raise AuthenticationError("Authentication failure")
 
     def ensure_valid(self):
@@ -751,11 +747,11 @@ class OpenERPSession(object):
         .. deprecated:: 8.0
         Use ``check_security()`` instead.
         """
-        if self._uid:
+        if self.uid:
             try:
                 self.assert_valid(True)
             except Exception:
-                self._uid = None
+                self.uid = None
 
     def execute(self, model, func, *l, **d):
         """
@@ -772,7 +768,7 @@ class OpenERPSession(object):
         Use the resistry and cursor in ``openerp.addons.web.http.request`` instead.
         """
         self.assert_valid()
-        r = self.proxy('object').exec_workflow(self._db, self._uid, self._password, model, signal, id)
+        r = self.proxy('object').exec_workflow(self.db, self.uid, self.password, model, signal, id)
         return r
 
     def model(self, model):
@@ -786,73 +782,10 @@ class OpenERPSession(object):
         :type model: str
         :rtype: a model object
         """
-        if self._db == False:
+        if not self.db:
             raise SessionExpiredException("Session expired")
 
         return Model(self, model)
-
-#----------------------------------------------------------
-# Session context manager
-#----------------------------------------------------------
-@contextlib.contextmanager
-def session_context(httprequest, session_store, session_lock, sid):
-    with session_lock:
-        if sid:
-            httprequest.session = session_store.get(sid)
-        else:
-            httprequest.session = session_store.new()
-    try:
-        yield httprequest.session
-    finally:
-        # Remove all OpenERPSession instances with no uid, they're generated
-        # either by login process or by HTTP requests without an OpenERP
-        # session id, and are generally noise
-        removed_sessions = set()
-        for key, value in httprequest.session.items():
-            if not isinstance(value, OpenERPSession):
-                continue
-            if getattr(value, '_suicide', False) or (
-                        not value._uid
-                    and not value.jsonp_requests
-                    # FIXME do not use a fixed value
-                    and value._creation_time + (60*5) < time.time()):
-                _logger.debug('remove session %s', key)
-                removed_sessions.add(key)
-                del httprequest.session[key]
-
-        with session_lock:
-            if sid:
-                # Re-load sessions from storage and merge non-literal
-                # contexts and domains (they're indexed by hash of the
-                # content so conflicts should auto-resolve), otherwise if
-                # two requests alter those concurrently the last to finish
-                # will overwrite the previous one, leading to loss of data
-                # (a non-literal is lost even though it was sent to the
-                # client and client errors)
-                #
-                # note that domains_store and contexts_store are append-only (we
-                # only ever add items to them), so we can just update one with the
-                # other to get the right result, if we want to merge the
-                # ``context`` dict we'll need something smarter
-                in_store = session_store.get(sid)
-                for k, v in httprequest.session.iteritems():
-                    stored = in_store.get(k)
-                    if stored and isinstance(v, OpenERPSession):
-                        if hasattr(v, 'contexts_store'):
-                            del v.contexts_store
-                        if hasattr(v, 'domains_store'):
-                            del v.domains_store
-                        if not hasattr(v, 'jsonp_requests'):
-                            v.jsonp_requests = {}
-                        v.jsonp_requests.update(getattr(
-                            stored, 'jsonp_requests', {}))
-
-                # add missing keys
-                for k, v in in_store.iteritems():
-                    if k not in httprequest.session and k not in removed_sessions:
-                        httprequest.session[k] = v
-
-            session_store.save(httprequest.session)
 
 def session_gc(session_store):
     if random.random() < 0.001:
@@ -931,8 +864,7 @@ class Root(object):
 
         # Setup http sessions
         path = session_path()
-        self.session_store = werkzeug.contrib.sessions.FilesystemSessionStore(path)
-        self.session_lock = threading.Lock()
+        self.session_store = werkzeug.contrib.sessions.FilesystemSessionStore(path, session_class=OpenERPSession)
         _logger.debug('HTTP sessions stored in: %s', path)
 
 
@@ -943,49 +875,60 @@ class Root(object):
 
     def dispatch(self, environ, start_response):
         """
-        Performs the actual WSGI dispatching for the application, may be
-        wrapped during the initialization of the object.
-
-        Call the object directly.
+        Performs the actual WSGI dispatching for the application.
         """
         try:
             httprequest = werkzeug.wrappers.Request(environ)
             httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableDict
             httprequest.app = self
 
-            sid = httprequest.cookies.get('sid')
-            if not sid:
-                sid = httprequest.args.get('sid')
-
             session_gc(self.session_store)
 
-            with session_context(httprequest, self.session_store, self.session_lock, sid) as session:
-                request = self._build_request(httprequest)
-                db = request.db
+            sid = httprequest.args.get('session_id')
+            explicit_session = True
+            if not sid:
+                sid =  httprequest.headers.get("X-Openerp-Session-Id")
+            if not sid:
+                sid = httprequest.cookies.get('session_id')
+                explicit_session = False
+            if sid is None:
+                httprequest.session = self.session_store.new()
+            else:
+                httprequest.session = self.session_store.get(sid)
 
-                if db:
-                    updated = openerp.modules.registry.RegistryManager.check_registry_signaling(db)
-                    if updated:
-                        with self.db_routers_lock:
-                            del self.db_routers[db]
+            if not "lang" in httprequest.session.context:
+                lang = httprequest.accept_languages.best or "en_US"
+                lang = babel.core.LOCALE_ALIASES.get(lang, lang).replace('-', '_')
+                httprequest.session.context["lang"] = lang
 
-                with set_request(request):
-                    self.find_handler()
-                    result = request.dispatch()
+            request = self._build_request(httprequest)
+            db = request.db
 
-                if db:
-                    openerp.modules.registry.RegistryManager.signal_caches_change(db)
+            if db:
+                updated = openerp.modules.registry.RegistryManager.check_registry_signaling(db)
+                if updated:
+                    with self.db_routers_lock:
+                        del self.db_routers[db]
 
-                if isinstance(result, basestring):
-                    headers=[('Content-Type', 'text/html; charset=utf-8'), ('Content-Length', len(result))]
-                    response = werkzeug.wrappers.Response(result, headers=headers)
-                else:
-                    response = result
+            with set_request(request):
+                self.find_handler()
+                result = request.dispatch()
 
-                if hasattr(response, 'set_cookie'):
-                    response.set_cookie('sid', session.sid)
+            if db:
+                openerp.modules.registry.RegistryManager.signal_caches_change(db)
 
-                return response(environ, start_response)
+            if isinstance(result, basestring):
+                headers=[('Content-Type', 'text/html; charset=utf-8'), ('Content-Length', len(result))]
+                response = werkzeug.wrappers.Response(result, headers=headers)
+            else:
+                response = result
+
+            if httprequest.session.should_save:
+                self.session_store.save(httprequest.session)
+            if not explicit_session and hasattr(response, 'set_cookie'):
+                response.set_cookie('session_id', httprequest.session.sid)
+
+            return response(environ, start_response)
         except werkzeug.exceptions.HTTPException, e:
             return e(environ, start_response)
 
@@ -1085,12 +1028,7 @@ class Root(object):
 
     def find_handler(self):
         """
-        Tries to discover the controller handling the request for the path
-        specified by the provided parameters
-
-        :param path: path to match
-        :returns: a callable matching the path sections
-        :rtype: ``Controller | None``
+        Tries to discover the controller handling the request for the path specified in the request.
         """
         path = request.httprequest.path
         urls = self.get_db_router(request.db).bind("")
@@ -1106,6 +1044,8 @@ class Root(object):
         request.auth_method = getattr(original, "auth", "user")
         request.func_request_type = original.exposed
 
+root = None
+
 def db_list(force=False):
     proxy = request.session.proxy("db")
     dbs = proxy.list(force)
@@ -1116,19 +1056,18 @@ def db_list(force=False):
     return dbs
 
 def db_redirect(match_first_only_if_unique):
-    req = request
-    db = False
-    redirect = False
+    db = None
+    redirect = None
 
     # 1 try the db in the url
-    db_url = req.params.get('db')
+    db_url = request.httprequest.args.get('db')
     if db_url:
-        return (db_url, False)
+        return (db_url, None)
 
     dbs = db_list(True)
 
     # 2 use the database from the cookie if it's listable and still listed
-    cookie_db = req.httprequest.cookies.get('last_used_database')
+    cookie_db = request.httprequest.cookies.get('last_used_database')
     if cookie_db in dbs:
         db = cookie_db
 
@@ -1138,24 +1077,40 @@ def db_redirect(match_first_only_if_unique):
 
     # redirect to the chosen db if multiple are available
     if db and len(dbs) > 1:
-        query = dict(urlparse.parse_qsl(req.httprequest.query_string, keep_blank_values=True))
+        query = dict(urlparse.parse_qsl(request.httprequest.query_string, keep_blank_values=True))
         query.update({'db': db})
-        redirect = req.httprequest.path + '?' + urllib.urlencode(query)
+        redirect = request.httprequest.path + '?' + urllib.urlencode(query)
     return (db, redirect)
 
 def db_monodb():
-    # if only one db exists, return it else return False
+    """
+        Magic function to find the current database.
+
+        Implementation details:
+
+        * Magic
+        * More magic
+
+        Return ``None`` if the magic is not magic enough.
+    """
     return db_redirect(True)[0]
 
 
-class JsonRpcController(Controller):
+class CommonController(Controller):
 
     @route('/jsonrpc', type='json', auth="none")
     def jsonrpc(self, service, method, args):
         """ Method used by client APIs to contact OpenERP. """
         return openerp.netsvc.dispatch_rpc(service, method, args)
 
+    @route('/gen_session_id', type='json', auth="none")
+    def gen_session_id(self):
+        nsession = root.session_store.new()
+        return nsession.sid
+
 def wsgi_postload():
-    openerp.wsgi.register_wsgi_handler(Root())
+    global root
+    root = Root()
+    openerp.wsgi.register_wsgi_handler(root)
 
 # vim:et:ts=4:sw=4:

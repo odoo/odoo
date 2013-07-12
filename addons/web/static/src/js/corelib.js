@@ -967,6 +967,8 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
         instance.web.PropertiesMixin.init.call(this);
         this.server = null;
         this.debug = ($.deparam($.param.querystring()).debug != undefined);
+        this.override_session = false;
+        this.session_id = undefined;
     },
     setup: function(origin) {
         var window_origin = location.protocol+"//"+location.host, self=this;
@@ -1000,8 +1002,6 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
             context: this.user_context || {}
         });
         // Construct a JSON-RPC2 request, method is currently unused
-        if (this.debug)
-            params.debug = 1;
         var payload = {
             jsonrpc: '2.0',
             method: 'call',
@@ -1059,7 +1059,10 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
             dataType: 'json',
             contentType: 'application/json',
             data: JSON.stringify(payload),
-            processData: false
+            processData: false,
+            headers: {
+                "X-Openerp-Session-Id": this.override_session ? this.session_id : undefined,
+            },
         }, url);
         if (this.synch)
             ajax.async = false;
@@ -1071,13 +1074,12 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
         var data = {
             session_id: this.session_id,
             id: payload.id,
-            sid: this.httpsessionid,
         };
 
         var set_sid = function (response, textStatus, jqXHR) {
             // If response give us the http session id, we store it for next requests...
-            if (response.httpsessionid) {
-                self.httpsessionid = response.httpsessionid;
+            if (response.session_id) {
+                self.session_id = response.session_id;
             }
         };
 
@@ -1093,7 +1095,7 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
             ajax.async = false;
         var payload_str = JSON.stringify(payload);
         var payload_url = $.param({r:payload_str});
-        if(payload_url.length < 2000) {
+        if (payload_url.length < 2000) {
             // Direct jsonp request
             ajax.data.r = payload_str;
             return $.ajax(ajax).done(set_sid);
@@ -1139,14 +1141,10 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
     },
 
     url: function(path, params) {
-        var qs = '';
-        if (!_.isNull(params)) {
-            params = _.extend(params || {}, {session_id: this.session_id});
-            if (this.httpsessionid) {
-                params.sid = this.httpsessionid;
-            }
-            qs = '?' + $.param(params);
-        }
+        params = _.extend(params || {});
+        if (this.override_session)
+            params.session_id = this.session_id;
+        var qs = '?' + $.param(params);
         var prefix = _.any(['http://', 'https://', '//'], _.bind(_.str.startsWith, null, path)) ? '' : this.prefix; 
         return prefix + path + qs;
     },
