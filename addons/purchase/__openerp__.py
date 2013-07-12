@@ -46,7 +46,7 @@ Dashboard / Reports for Purchase Management will include:
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images' : ['images/purchase_order.jpeg', 'images/purchase_analysis.jpeg', 'images/request_for_quotation.jpeg'],
-    'depends': ['stock', 'process', 'procurement'],
+    'depends': ['stock', 'process'],
     'data': [
         'security/purchase_security.xml',
         'security/ir.model.access.csv',
@@ -69,7 +69,7 @@ Dashboard / Reports for Purchase Management will include:
     'test': [
         'test/fifo_price.yml', 
         'test/fifo_returns.yml', 
-        'test/costmethodchange.yml',
+        #'test/costmethodchange.yml',
         'test/process/cancel_order.yml',
         'test/process/rfq2order2done.yml',
         'test/process/generate_invoice_from_reception.yml',

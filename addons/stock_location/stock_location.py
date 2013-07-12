@@ -145,15 +145,6 @@ class procurement_order(osv.osv):
         })
         return d
 
-#     # TODO: implement using routes on products
-#     def _find_suitable_rule(self, cr, uid, procurement, context=None):
-#         res = False
-#         if procurement.location_id:
-#             rule_obj = self.pool.get('procurement.rule')
-#             route_ids = [x.id for x in procurement.product_id.route_ids]
-#             res = rule_obj.search(cr, uid, [('location_id', '=', procurement.location_id.id), ('route_id', 'in', route_ids), ], context=context)
-#         return res and res[0] or super(procurement_order, self)._find_suitable_rule(cr, uid, procurement, context=context)
-
 
     def _get_route_domain(self, cr, uid, procurement, context=None):
         route_ids = [x.id for x in procurement.product_id.route_ids]
@@ -249,6 +240,7 @@ class stock_move(osv.osv):
             res = self.pool.get('stock.location').get_putaway_strategy(cr, uid, move.location_dest_id.id, move.product_id.id, context=context)
             if res:
                 raise 'put away strategies not implemented yet!'
+
         return True
 
     def action_assign(self, cr, uid, ids, context=None):
@@ -268,10 +260,23 @@ class stock_location(osv.osv):
         'removal_strategy_ids': fields.one2many('product.removal', 'location_id', 'Removal Strategies'),
         'putaway_strategy_ids': fields.one2many('product.putaway', 'location_id', 'Put Away Strategies'),
     }
-    def get_putaway_strategy(self, cr, uid, id, product_id, context=None):
-        product = self.pool.get("product.product").browse(cr, uid, product_id, context=context)
-        strats = self.pool.get('product.removal').search(cr, uid, [('location_id','=',id), ('product_categ_id','child_of', product.categ_id.id)], context=context)
-        return strats and strats[0] or None
+
+
+    def get_putaway_strategy(self, cr, uid, id, location, product, context=None):
+        pa = self.pool.get('product.putaway')
+        categ = product.categ_id
+        categs = [categ.id, False]
+        while categ.parent_id:
+            categ = categ.parent_id
+            categs.append(categ.id)
+
+        result = pa.search(cr,uid, [
+            ('location_id', '=', location.id),
+            ('product_categ_id', 'in', categs)
+        ], context=context)
+        if result:
+            return pa.browse(cr, uid, result[0], context=context)
+        return super(stock_location, self).get_putaway_strategy(cr, uid, location, product, context=context)
 
     def get_removal_strategy(self, cr, uid, location, product, context=None):
         pr = self.pool.get('product.removal')
@@ -288,5 +293,6 @@ class stock_location(osv.osv):
         if result:
             return pr.browse(cr, uid, result[0], context=context)
         return super(stock_location, self).get_removal_strategy(cr, uid, location, product, context=context)
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
