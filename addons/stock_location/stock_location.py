@@ -149,7 +149,8 @@ class procurement_order(osv.osv):
         return d
 
     def _search_suitable_rule(self, cr, uid, procurement, domain, context=None):
-        '''we try to first find a rule among the ones defined on the procurement order and if none is find, we fallback on the default behavior'''
+        '''we try to first find a rule among the ones defined on the procurement order group and if none is found, we try on the routes defined for the product, and finally we fallback on the default behavior'''
+        #TODO check first on procurement order group
         route_ids = [x.id for x in procurement.product_id.route_ids]
         res = super(procurement_order, self)._search_suitable_rule(cr, uid, procurement, domain + [('route_id', 'in', route_ids)], context=context)
         if not res:
