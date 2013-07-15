@@ -6,6 +6,7 @@ Changelog
 `trunk`
 -------
 
+- Cleaned and slightly refactored ``ir.actions.server``
 - Almost removed ``LocalService()``. For reports,
   ``openerp.osv.orm.Model.print_report()`` can be used. For workflows, see
   :ref:`orm-workflows`.
