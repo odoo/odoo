@@ -12,7 +12,6 @@ instance.base_calendar = {}
             this.status = status;
             this.action = action;
             this.view_type = view_type;
-            this.ds_attendee = new instance.web.DataSetSearch(this, 'calendar.attendee');
         },
         start: function() {
             var self = this;
@@ -48,9 +47,17 @@ instance.base_calendar = {}
             var db = this.db;
             var att_status = "do_decline";
             var self = this;
+            var reload_page = function(){
+                return location.replace(_.str.sprintf('/?db=%s#view_type=%s&model=crm.meeting&action=%s&id=%s',self.db,self.view_type,self.action,self.token));
+            }
             if(self.status === 'accepted'){att_status = "do_accept";}
-            return this.ds_attendee.call(att_status,[[parseInt(this.token)]]).done(function(res){
-                location.replace(_.str.sprintf('/?db=%s#view_type=%s&model=crm.meeting&action=%s&id=%s',self.db,self.view_type,self.action,self.token));
+            var calender_attendee = new instance.web.Model('calendar.attendee')
+            var check = calender_attendee.query(["state"]).filter([["id", "=", parseInt(this.token)]]).first();
+            return check.done(function(res){
+                if(res['state'] === "needs-action"){
+                    return calender_attendee.call(att_status,[[parseInt(self.token)]]).done(reload_page);
+                }
+                reload_page();
             });
         },
     });
