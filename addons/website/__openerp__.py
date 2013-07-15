@@ -14,9 +14,11 @@ OpenERP Website CMS
         'views/views.xml'
      ],
     'js': [
+        'static/lib/bootstrap/js/bootstrap.js',
         'static/src/js/website.js',
     ],
     'css': [
+        'static/lib/bootstrap/css/bootstrap.css',
         'static/src/css/*.css',
     ],
     'qweb': ['static/src/xml/*.xml'],
