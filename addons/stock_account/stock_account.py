@@ -73,7 +73,7 @@ class stock_quant(osv.osv):
     location_from: can be None if it's a new quant
     """
     def _account_entry_move(self, cr, uid, quant, location_from, location_to, move, context=None):
-        if quant.product_id.valuation <> 'realtime':
+        if quant.product_id.valuation <> 'real_time':
             return False
         company_from = self._location_owner(cr, uid, quant, location_from, context=context)
         company_to = self._location_owner(cr, uid, quant, location_to, context=context)
@@ -84,24 +84,24 @@ class stock_quant(osv.osv):
         account_moves = []
         # Create Journal Entry for products arriving in the company
         if company_to:
-            if location_from.usage == 'customer':
+            if location_from and location_from.usage == 'customer':
                 #goods returned from customer
-                account_moves += self._create_account_move_line(cr, uid, quant, acc_dest, acc_valuation, context=context)
+                account_moves += self._create_account_move_line(cr, uid, quant, move, acc_dest, acc_valuation, context=context)
             else:
-                account_moves += self._create_account_move_line(cr, uid, quant, acc_src, acc_valuation, context=context)
+                account_moves += self._create_account_move_line(cr, uid, quant, move, acc_src, acc_valuation, context=context)
 
         # Create Journal Entry for products leaving the company
         if company_from:
-            if location_to.usage == 'supplier':
+            if location_to and location_to.usage == 'supplier':
                 #goods returned to supplier
-                account_moves += self._create_account_move_line(cr, uid, quant, acc_valuation, acc_src, context=context)
+                account_moves += self._create_account_move_line(cr, uid, quant, move, acc_valuation, acc_src, context=context)
             else:
-                account_moves += self._create_account_move_line(cr, uid, quant, acc_valuation, acc_dest, context=context)
+                account_moves += self._create_account_move_line(cr, uid, quant, move, acc_valuation, acc_dest, context=context)
 
     def move_single_quant(self, cr, uid, quant, qty, move, context=None):
+        location_from = quant and quant.location_id or False
         quant = super(stock_quant, self).move_single_quant(cr, uid, quant, qty, move, context=context)
         quant.refresh()
-        location_from = quant.location_id
         self._account_entry_move(cr, uid, quant, location_from, quant.location_id, move, context=context)
         return quant
 
@@ -263,8 +263,8 @@ class stock_quant(osv.osv):
         debit_line_vals = {
                     'name': move.name,
                     'product_id': quant.product_id.id,
-                    'quantity': quant.product_qty,
-                    'product_uom_id': quant.product_id.product_uom.id, 
+                    'quantity': quant.qty,
+                    'product_uom_id': quant.product_id.uom_id.id, 
                     'ref': move.picking_id and move.picking_id.name or False,
                     'date': time.strftime('%Y-%m-%d'),
                     'partner_id': partner_id,
@@ -274,8 +274,8 @@ class stock_quant(osv.osv):
         credit_line_vals = {
                     'name': move.name,
                     'product_id': quant.product_id.id,
-                    'quantity': quant.product_qty,
-                    'product_uom_id': quant.product_id.product_uom.id, 
+                    'quantity': quant.qty,
+                    'product_uom_id': quant.product_id.uom_id.id, 
                     'ref': move.picking_id and move.picking_id.name or False,
                     'date': time.strftime('%Y-%m-%d'),
                     'partner_id': partner_id,

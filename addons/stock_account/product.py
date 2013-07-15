@@ -186,7 +186,7 @@ class product_template(osv.osv):
         'cost_method': fields.property(type='selection', selection=[('standard', 'Standard Price'), ('average', 'Average Price'), ('real', 'Real Price')],
             help="""Standard Price: The cost price is manually updated at the end of a specific period (usually every year)
                     Average Price: The cost price is recomputed at each incoming shipment
-                    Real Price: The cost price is calculated as the real price of the last outgoing shipment""",
+                    Real Price: The cost price is calculated as the real price of each outgoing product""",
             string="Costing Method", required=True),
         'property_stock_account_input': fields.property(
             type='many2one',

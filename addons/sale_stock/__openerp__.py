@@ -45,7 +45,7 @@ You can choose flexible invoicing methods:
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/deliveries_to_invoice.jpeg'],
-    'depends': ['sale', 'stock', 'procurement'],
+    'depends': ['sale', 'stock_account', 'procurement'],
     'init_xml': [],
     'update_xml': ['security/sale_stock_security.xml',
                    'security/ir.model.access.csv',
