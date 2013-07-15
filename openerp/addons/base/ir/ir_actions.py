@@ -816,7 +816,6 @@ class actions_server(osv.osv):
         # TDE FIXME: loops are not considered here ^^
         res = []
         for act in action.child_ids:
-            # context['active_id'] = context['active_ids'][0]
             result = self.run(cr, uid, [act.id], context)
             if result:
                 res.append(result)
@@ -896,32 +895,38 @@ class actions_server(osv.osv):
             context = {}
         res = False
         user = self.pool.get('res.users').browse(cr, uid, uid)
+        active_ids = context.get('active_ids', [context.get('active_id'), None])
         for action in self.browse(cr, uid, ids, context):
             obj = None
             obj_pool = self.pool[action.model_id.model]
-            if context.get('active_model') == action.model_id.model and context.get('active_id'):
-                obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
-            cxt = {
-                'self': obj_pool,
-                'object': obj,
-                'obj': obj,
-                'pool': self.pool,
-                'time': time,
-                'cr': cr,
-                'context': dict(context),  # copy context to prevent side-effects of eval
-                'uid': uid,
-                'user': user
-            }
-            # evaluate the condition, with the specific case that a void (aka False) condition is considered as True
-            condition = action.condition
-            if action.condition is False:
-                condition = True
-            expr = eval(str(condition), cxt)
-            if not expr:
-                continue
-            # call the method related to the action: run_action_<STATE>
-            if hasattr(self, 'run_action_%s' % action.state):
-                res = getattr(self, 'run_action_%s' % action.state)(cr, uid, action, eval_context=cxt, context=context)
+            for active_id in active_ids:
+                if context.get('active_model') == action.model_id.model and active_id:
+                    obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
+                # evaluation context for python strings to evaluate
+                eval_context = {
+                    'self': obj_pool,
+                    'object': obj,
+                    'obj': obj,
+                    'pool': self.pool,
+                    'time': time,
+                    'cr': cr,
+                    'context': dict(context),  # copy context to prevent side-effects of eval
+                    'uid': uid,
+                    'user': user
+                }
+                # run context dedicated to a particular active_id
+                run_context = dict(context, active_id=active_id)
+
+                # evaluate the condition, with the specific case that a void (aka False) condition is considered as True
+                condition = action.condition
+                if action.condition is False:
+                    condition = True
+                expr = eval(str(condition), eval_context)
+                if not expr:
+                    continue
+                # call the method related to the action: run_action_<STATE>
+                if hasattr(self, 'run_action_%s' % action.state):
+                    res = getattr(self, 'run_action_%s' % action.state)(cr, uid, action, eval_context=eval_context, context=run_context)
         return res
 
 
