@@ -80,6 +80,7 @@ Dashboard / Reports for Warehouse Management will include:
 #        'report/report_stock_view.xml',
 #        'board_warehouse_view.xml',
 #        'res_config_view.xml',
+        'valuationandcostmethod.yml',
     ],
     'test': [
 #        'test/inventory.yml',
