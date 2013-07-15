@@ -1012,7 +1012,7 @@
                 <form string="Survey Answer">
                     <field name="survey_id"/>
                     <field name="date_create"/>
-                    <field name="user_id"/>
+                    <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_survey_user']}"/>
                     <field name="response_type"/>
                     <field name="question_ids" nolabel="1" colspan="4" />
                     <field name="state"/>
