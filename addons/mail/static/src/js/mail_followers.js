@@ -201,7 +201,7 @@ openerp_mail_followers = function(session, mail) {
             // truncate number of displayed followers
             var truncated = this.followers.slice(0, this.displayed_nb);
             _(truncated).each(function (record) {
-                self.message_is_follower = record[2].is_uid;
+                if (record[2].is_uid == true) { self.message_is_follower = record[2].is_uid; }
                 record[2].avatar_url = mail.ChatterUtils.get_image(self.session, 'res.partner', 'image_small', record[0]);
                 $(session.web.qweb.render('mail.followers.partner', {'record': record, 'widget': self})).appendTo(node_user_list);
                 // On mouse-enter it will show the edit_subtype pencil.
