@@ -153,25 +153,33 @@ class account_invoice(osv.osv):
         return {'value': {'reference': reference}}
 
     def create(self, cr, uid, vals, context=None):
-        if vals.has_key('reference_type'):
-            reference_type = vals['reference_type']
+        reference = vals.get('reference', False)
+        reference_type = vals.get('reference_type', False)
+        if vals.get('type') == 'out_invoice' and not reference_type:
+            # fallback on default communication type for partner
+            reference_type = self.pool.get('res.partner').browse(cr, uid, vals['partner_id']).out_inv_comm_type
             if reference_type == 'bba':
-                if vals.has_key('reference'):
-                    bbacomm = vals['reference']
-                else:
+                reference = self.generate_bbacomm(cr, uid, [], vals['type'], reference_type, vals['partner_id'], '', context={})['value']['reference']
+            vals.update({
+                'reference_type': reference_type or 'none',
+                'reference': reference,
+            })
+
+        if reference_type == 'bba':
+            if not reference:
+                raise osv.except_osv(_('Warning!'),
+                    _('Empty BBA Structured Communication!' \
+                      '\nPlease fill in a unique BBA Structured Communication.'))
+            if self.check_bbacomm(reference):
+                reference = re.sub('\D', '', reference)
+                vals['reference'] = '+++' + reference[0:3] + '/' + reference[3:7] + '/' + reference[7:] + '+++'
+                same_ids = self.search(cr, uid,
+                    [('type', '=', 'out_invoice'), ('reference_type', '=', 'bba'),
+                     ('reference', '=', vals['reference'])])
+                if same_ids:
                     raise osv.except_osv(_('Warning!'),
-                        _('Empty BBA Structured Communication!' \
-                          '\nPlease fill in a unique BBA Structured Communication.'))
-                if self.check_bbacomm(bbacomm):
-                    reference = re.sub('\D', '', bbacomm)
-                    vals['reference'] = '+++' + reference[0:3] + '/' + reference[3:7] + '/' + reference[7:] + '+++'
-                    same_ids = self.search(cr, uid,
-                        [('type', '=', 'out_invoice'), ('reference_type', '=', 'bba'),
-                         ('reference', '=', vals['reference'])])
-                    if same_ids:
-                        raise osv.except_osv(_('Warning!'),
-                            _('The BBA Structured Communication has already been used!' \
-                              '\nPlease create manually a unique BBA Structured Communication.'))
+                        _('The BBA Structured Communication has already been used!' \
+                          '\nPlease create manually a unique BBA Structured Communication.'))
         return super(account_invoice, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
