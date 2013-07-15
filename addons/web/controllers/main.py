@@ -1767,6 +1767,6 @@ class Reports(openerpweb.Controller):
                  ('Content-Disposition', content_disposition(file_name, req)),
                  ('Content-Type', report_mimetype),
                  ('Content-Length', len(report))],
-             cookies={'fileToken': int(token)})
+             cookies={'fileToken': token})
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
