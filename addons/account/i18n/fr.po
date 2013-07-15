@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-14 22:29+0000\n"
-"PO-Revision-Date: 2013-04-23 12:11+0000\n"
-"Last-Translator: Frederic Clementi - Camptocamp.com "
-"<frederic.clementi@camptocamp.com>\n"
+"PO-Revision-Date: 2013-07-13 21:37+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-15 06:14+0000\n"
-"X-Generator: Launchpad (build 16667)\n"
+"X-Launchpad-Export-Date: 2013-07-14 05:58+0000\n"
+"X-Generator: Launchpad (build 16696)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -43,7 +43,7 @@ msgstr ""
 #. module: account
 #: view:res.partner:0
 msgid "the parent company"
-msgstr ""
+msgstr "Maison mère"
 
 #. module: account
 #: view:account.move.reconcile:0
@@ -805,6 +805,8 @@ msgid ""
 "The amount expressed in the secondary currency must be positive when the "
 "journal item is a debit and negative when if it is a credit."
 msgstr ""
+"Le montant exprimé dans la deuxième devise doit être positif quand les "
+"entrées du journal sont au débit, et négatif quand celles-ci sont au crédit."
 
 #. module: account
 #: constraint:account.move:0
@@ -1032,7 +1034,7 @@ msgstr "Septembre"
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:24
 #, python-format
 msgid "Latest Manual Reconciliation Processed:"
-msgstr ""
+msgstr "Derniers lettrages manuels traités:"
 
 #. module: account
 #: selection:account.subscription,period_type:0
@@ -3314,6 +3316,8 @@ msgid ""
 "Set the account that will be set by default on invoice tax lines for "
 "invoices. Leave empty to use the expense account."
 msgstr ""
+"Définir le compte utilisé par défaut  sur les lignes de taxe des factures. "
+"Laisser vide pour utiliser le compte de dépense."
 
 #. module: account
 #: field:account.config.settings,sale_journal_id:0
@@ -3345,6 +3349,8 @@ msgid ""
 "You need an Opening journal with centralisation checked to set the initial "
 "balance."
 msgstr ""
+"Vous avez besoin d'un journal d'ouverture avec \"centralisation\" coché pour "
+"définir la balance initiale."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_tax_code_list
@@ -4515,7 +4521,7 @@ msgstr "Ensemble complet de taxes"
 #. module: account
 #: field:res.partner,last_reconciliation_date:0
 msgid "Latest Full Reconciliation Date"
-msgstr ""
+msgstr "Dernière date de lettrage total"
 
 #. module: account
 #: field:account.account,name:0
@@ -4601,6 +4607,8 @@ msgid ""
 "Check this box if you don't want any tax related to this tax Code to appear "
 "on invoices."
 msgstr ""
+"Cochez cette case si vous ne voulez pas que la taxe relative à ce code de "
+"taxe apparaisse dans les factures."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1058
@@ -5035,7 +5043,7 @@ msgstr ""
 #. module: account
 #: field:account.move.reconcile,opening_reconciliation:0
 msgid "Opening Entries Reconciliation"
-msgstr ""
+msgstr "Lettrage des entrées d'ouverture"
 
 #. module: account
 #: code:addons/account/wizard/account_fiscalyear_close.py:41
@@ -5220,6 +5228,10 @@ msgid ""
 "You can create one in the menu: \n"
 "Configuration\\Journals\\Journals."
 msgstr ""
+"Impossible de trouver un journal de type %s pour cette société.\n"
+"\n"
+"Vous pouvez en créer un dans le menu:\n"
+"Configuration/Journaux/Journaux"
 
 #. module: account
 #: report:account.vat.declaration:0
@@ -5283,7 +5295,7 @@ msgstr "Annulée"
 #: code:addons/account/account.py:1903
 #, python-format
 msgid " (Copy)"
-msgstr ""
+msgstr " (Copier)"
 
 #. module: account
 #: help:account.config.settings,group_proforma_invoices:0
@@ -5358,7 +5370,7 @@ msgstr "Taxe de vente"
 #. module: account
 #: view:account.move:0
 msgid "Cancel Entry"
-msgstr ""
+msgstr "Annuler une entrée"
 
 #. module: account
 #: field:account.tax,ref_tax_code_id:0
@@ -5383,6 +5395,9 @@ msgid ""
 "printed it comes to 'Printed' status. When all transactions are done, it "
 "comes in 'Done' status."
 msgstr ""
+"Quand la période du journal est créée, le statut est \"Brouillon\". Si un "
+"rapport est imprimé, le statut devient \"Imprimée\". Quand toutes les "
+"transactions sont terminées, le statut devient \"Terminée\"."
 
 #. module: account
 #: code:addons/account/account.py:3205
@@ -5552,7 +5567,7 @@ msgstr "Calculer"
 #. module: account
 #: view:account.invoice:0
 msgid "Additional notes..."
-msgstr ""
+msgstr "Notes supplémentaires..."
 
 #. module: account
 #: field:account.tax,type_tax_use:0
@@ -5566,6 +5581,8 @@ msgid ""
 "Please verify the price of the invoice !\n"
 "The encoded total does not match the computed total."
 msgstr ""
+"Merci de vérifier le prix de la facture !\n"
+"Le total enregistré ne correspond pas au total calculé."
 
 #. module: account
 #: field:account.account,active:0
@@ -5669,6 +5686,9 @@ msgid ""
 "If you do not check this box, you will be able to do invoicing & payments, "
 "but not accounting (Journal Items, Chart of  Accounts, ...)"
 msgstr ""
+"Si vous ne cochez pas cette case, vous pourrez facturer et effectuer les "
+"paiements, mais pas de comptabilité (écritures comptables, charte de "
+"comptes, ...)"
 
 #. module: account
 #: view:account.period:0
@@ -5746,6 +5766,8 @@ msgstr "Mouvements Cibles"
 msgid ""
 "Move cannot be deleted if linked to an invoice. (Invoice: %s - Move ID:%s)"
 msgstr ""
+"Les mouvements ne peuvent pas être supprimés s'ils sont liés à une facture. "
+"(Facture : %s - Id du mouvement : %s)"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -5833,6 +5855,9 @@ msgid ""
 "Put a sequence in the journal definition for automatic numbering or create a "
 "sequence manually for this piece."
 msgstr ""
+"Impossible de créer une séquence automatique pour cet objet.\n"
+"Indiquez une séquence dans la définition du journal pour une numérotation "
+"automatique, ou créez une séquence manuellement pour cet objet."
 
 #. module: account
 #: view:account.invoice:0
@@ -5958,6 +5983,8 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Contient le résumé de la discussion (nombre de messages, ...). Ce résumé est "
+"au format HTML pour permettre son utilisation dans les vues kanban."
 
 #. module: account
 #: field:account.tax,child_depend:0
@@ -6010,7 +6037,7 @@ msgstr "account.installer"
 #. module: account
 #: view:account.invoice:0
 msgid "Recompute taxes and total"
-msgstr ""
+msgstr "Recalculer les taxes et le total"
 
 #. module: account
 #: code:addons/account/account.py:1116
@@ -6076,7 +6103,7 @@ msgstr "Début de la période"
 #. module: account
 #: model:account.account.type,name:account.account_type_asset_view1
 msgid "Asset View"
-msgstr ""
+msgstr "Vue des actifs"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_account_report
@@ -6109,6 +6136,9 @@ msgid ""
 "that you should have your last line with the type 'Balance' to ensure that "
 "the whole amount will be treated."
 msgstr ""
+"Sélectionnez ici le type de valorisation relative à cette ligne de condition "
+"de paiement. Notez que vous devriez avoir votre dernière ligne de type "
+"\"Balance\" pour vous assurer que l'ensemble des montants seront traités."
 
 #. module: account
 #: field:account.partner.ledger,initial_balance:0
@@ -6154,7 +6184,7 @@ msgstr "Avoir brouillon "
 #. module: account
 #: view:cash.box.in:0
 msgid "Fill in this form if you put money in the cash register:"
-msgstr ""
+msgstr "Remplissez ce formulaire si vous ajoutez de l'argent en caisse :"
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -6214,7 +6244,7 @@ msgstr "Date de règlement"
 #: view:account.bank.statement:0
 #: field:account.bank.statement,opening_details_ids:0
 msgid "Opening Cashbox Lines"
-msgstr ""
+msgstr "Lignes d'ouverture de caisse"
 
 #. module: account
 #: view:account.analytic.account:0

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-07 19:36+0000\n"
-"PO-Revision-Date: 2013-04-22 15:04+0000\n"
-"Last-Translator: WANTELLET Sylvain <Swantellet@tetra-info.com>\n"
+"PO-Revision-Date: 2013-07-14 01:36+0000\n"
+"Last-Translator: Gilles Major (OpenERP) <gim@openerp.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-06-08 07:42+0000\n"
-"X-Generator: Launchpad (build 16667)\n"
+"X-Launchpad-Export-Date: 2013-07-15 05:13+0000\n"
+"X-Generator: Launchpad (build 16696)\n"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_config_settings
@@ -98,6 +98,12 @@ msgid ""
 "The 'Waiting Schedule' status is set when the invoice is confirmed           "
 "    but waiting for the scheduler to run on the order date."
 msgstr ""
+"Donne le statut d'un devis ou d'une commande de vente.\n"
+"Le statut 'Exception' est automatiquement défini quand une opération "
+"d'annulation est effectuée dans la validation de la facture (Exception de "
+"facturation) ou dans le processus de colisage (Exception de colisage).\n"
+"Le statut 'En attente' est défini quand une facture est confirmée mais on "
+"attend le lancement du planificateur à la date de la commande."
 
 #. module: sale
 #: view:sale.report:0
@@ -200,6 +206,11 @@ msgid ""
 "user-wise as well as month wise.\n"
 "                This installs the module account_analytic_analysis."
 msgstr ""
+"Pour modifier la vue des comptes analytiques pour voir les données "
+"importantes pour les chefs de projets des entreprises de services.\n"
+"                Vous pouvez également consulter le rapport de synthèse des "
+"comptes analytiques par utilisateur ou par mois.\n"
+"                Ceci installe le module 'account_analytic_analysis'."
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -385,6 +396,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliquez pour créer un devis qui pourra être converti en "
+"commande\n"
+"                de vente.\n"
+"              </p><p>\n"
+"                OpenERP vous aidera à compléter efficacement le flux de "
+"vente :\n"
+"                devis, commande, livraison, facturation et paiement.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: view:sale.order.line.make.invoice:0
@@ -401,7 +422,7 @@ msgstr ""
 #. module: sale
 #: field:sale.order,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Résumé"
 
 #. module: sale
 #: view:sale.order:0
@@ -464,6 +485,13 @@ msgid ""
 "                Use Some Order Lines to invoice a selection of the sales "
 "order lines."
 msgstr ""
+"Utilisez Tous pour créer la facture finale.\n"
+"                Utilisez Pourcentage pour facturer un pourcentage du montant "
+"total.\n"
+"                Utilisez Prix fixe pour facturer en avance un montant "
+"spécifique.\n"
+"                Utilisez Quelques lignes de ventes pour facturer une "
+"sélection de lignes de vente."
 
 #. module: sale
 #: selection:sale.report,state:0
@@ -554,7 +582,7 @@ msgstr "ou"
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
 msgid "Quotation sent"
-msgstr ""
+msgstr "Devis envoyé"
 
 #. module: sale
 #: field:sale.order,invoice_exists:0
@@ -597,6 +625,7 @@ msgstr "Montant total"
 #: field:sale.config.settings,module_sale_journal:0
 msgid "Allow batch invoicing of delivery orders through journals"
 msgstr ""
+"Autoriser la facturation par lot des livraisons sortantes grâce aux journaux"
 
 #. module: sale
 #: field:sale.order.line,price_subtotal:0
@@ -683,6 +712,10 @@ msgid ""
 "                and perform batch operations on journals.\n"
 "                This installs the module sale_journal."
 msgstr ""
+"Vous permet de catégoriser vos commandes de ventes et vos livraisons (listes "
+"de colisage) entre différents journaux\n"
+"                et de lancer des opérations par lot sur les journaux.\n"
+"                Ceci installe le module 'sale_journal'."
 
 #. module: sale
 #: field:sale.order,create_date:0
@@ -729,6 +762,16 @@ msgid ""
 "             \n"
 "* The 'Cancelled' status is set when a user cancel the sales order related."
 msgstr ""
+"* L'état \"Brouillon\" est mis lorsque la commande associée est à l'état "
+"\"Brouillon\".\n"
+"* L'état \"Confirmée\" est mis lorsque la commande associée est à l'état "
+"\"Confirmée\".                                     \n"
+"* L'état \"Exception\" est mis lorsque la commande associée est mise en "
+"\"Exception\".                                 \n"
+"* L'état \"Terminée\" est mis lorsque la ligne de vente a été préparée.      "
+"                                              \n"
+"* L'état \"Annulée\" est mis lorsque l'utilisateur annule la commande "
+"associée."
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:92
@@ -838,6 +881,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliquez pour créer un devis ou une commande de vente pour "
+"votre client.\n"
+"              </p><p>\n"
+"                OpenERP vous aidera à compléter efficacement le flux de "
+"vente :\n"
+"                devis, commande, livraison, facturation et paiement.\n"
+"              </p><p>\n"
+"                La fonctionnalité sociale vous aide à organiser les "
+"discussions sur chaque\n"
+"                commande de vente, et permet à vos clients de garder une "
+"trace de \n"
+"                l'évolution des commandes de vente.\n"
+"\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
@@ -864,6 +923,16 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliquez pour définir une nouvelle boutique.\n"
+"              </p><p>\n"
+"                Chaque devis ou commande de vente doit être lié à une "
+"boutique.\n"
+"                La boutique définit également de quel entrepôt les produits "
+"seront\n"
+"                livrés pour chaque vente.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: field:sale.order,message_is_follower:0
@@ -910,6 +979,13 @@ msgid ""
 "Example: Product: this product is deprecated, do not purchase more than 5.\n"
 "                Supplier: don't forget to ask for an express delivery."
 msgstr ""
+"Vous permet de configurer les notifications sur les produits et de les "
+"déclencher quand un utilisateur veut vendre un produit donné ou vendre à un "
+"client donné.\n"
+"Exemple : Produit : ce produit est déprécié, vous ne pouvez en acheter plus "
+"que 5.\n"
+"                   Fournisseur : ne pas oublier de demander une livraison "
+"expresse."
 
 #. module: sale
 #: code:addons/sale/sale.py:955
@@ -994,6 +1070,9 @@ msgid ""
 "Manage Related Stock.\n"
 "                    This installs the module sale_stock."
 msgstr ""
+"Vous permet de faire des devis, des commandes de vente en utilisant "
+"différentes politique de commande et de gérer les stock associés.\n"
+"                    Ceci installe le module 'sale_stock'."
 
 #. module: sale
 #: model:email.template,subject:sale.email_template_edi_sale
@@ -1033,6 +1112,22 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliquez pour créer un devis, la première étape d'une "
+"commande de vente.\n"
+"              </p><p>\n"
+"                OpenERP vous aidera à compléter efficacement le flux de "
+"vente :\n"
+"                du devis à la commande de vente, la \n"
+"                livraison, la facturation et les paiements.\n"
+"              </p><p>\n"
+"                La fonctionnalité sociale vous aide à organiser les "
+"discussions sur chaque\n"
+"                commande de vente, et permet à vos clients de garder une "
+"trace de \n"
+"                l'évolution des commandes de vente.\n"
+"              </p>\n"
+"            "
 
 #. module: sale
 #: selection:sale.order.line,type:0
@@ -1197,7 +1292,7 @@ msgstr "Date à laquelle le bon de commande a été créé."
 #. module: sale
 #: view:sale.order:0
 msgid "Terms and conditions..."
-msgstr ""
+msgstr "Conditions générales..."
 
 #. module: sale
 #: view:sale.make.invoice:0
@@ -1386,6 +1481,7 @@ msgstr "Utilisez les listes de prix pour adapter votre prix aux clients"
 #, python-format
 msgid "There is no default shop for the current user's company!"
 msgstr ""
+"Il n'y a pas de boutique par défaut pour la société de l'utilisateur courant!"
 
 #. module: sale
 #: code:addons/sale/sale.py:277
@@ -1413,6 +1509,10 @@ msgid ""
 "between the Unit Price and Cost Price.\n"
 "                This installs the module sale_margin."
 msgstr ""
+"Ceci ajoute la 'Marge' sur les commandes de vente.\n"
+"                Ceci donne la rentabilité en calculant la différence entre "
+"le prix unitaire et le coût.\n"
+"                Ceci installe le module 'sale_margin'."
 
 #. module: sale
 #: report:sale.order:0
@@ -1735,7 +1835,7 @@ msgstr "Certaines lignes de commande"
 #. module: sale
 #: view:res.partner:0
 msgid "sale.group_delivery_invoice_address"
-msgstr ""
+msgstr "sale.group_delivery_invoice_address"
 
 #. module: sale
 #: model:res.groups,name:sale.group_discount_per_so_line
@@ -1760,6 +1860,9 @@ msgid ""
 "                        will create a draft invoice that can be modified\n"
 "                        before validation."
 msgstr ""
+"Choisissez comment vous voulez facturer cette commande. \n"
+"                        Une facture brouillon sera générée et pourra \n"
+"                        être modifiée avant validation."
 
 #. module: sale
 #: view:board.board:0
@@ -2024,7 +2127,7 @@ msgstr "Taux de facturation"
 #: code:addons/sale/edi/sale_order.py:140
 #, python-format
 msgid "EDI Pricelist (%s)"
-msgstr ""
+msgstr "Liste de prix EDI (%s)"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -2101,7 +2204,7 @@ msgstr "Comptes analytiques des ventes"
 #. module: sale
 #: model:ir.actions.client,name:sale.action_client_sale_menu
 msgid "Open Sale Menu"
-msgstr ""
+msgstr "Ouvrir le menu \"Vente\""
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -2112,7 +2215,7 @@ msgstr "Juin"
 #: code:addons/sale/wizard/sale_make_invoice.py:55
 #, python-format
 msgid "You shouldn't manually invoice the following sale order %s"
-msgstr ""
+msgstr "Vous ne devriez pas facturer manuellement la vente suivante : %s"
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -2144,6 +2247,8 @@ msgid ""
 "Sales Order Lines that are confirmed, done or in exception state and haven't "
 "yet been invoiced"
 msgstr ""
+"Les lignes de commandes de vente sont dans l'état 'Confirmée', 'Terminée' ou "
+"'En exception' et ne sont pas encore facturées"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -2290,6 +2395,10 @@ msgid ""
 "with\n"
 "                        your customer."
 msgstr ""
+"Utilisez un contrat pour pouvoir gérer les services avec\n"
+"                        facturation multiple dans le cadre d'un même "
+"contrat\n"
+"                        avec votre client."
 
 #. module: sale
 #: view:sale.order:0
