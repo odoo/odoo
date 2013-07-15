@@ -23,7 +23,6 @@ import time
 from lxml import etree
 from openerp.osv import fields, osv
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
-from openerp.tools.float_utils import float_compare
 import openerp.addons.decimal_precision as dp
 from openerp.tools.translate import _
 
@@ -33,8 +32,8 @@ class stock_partial_picking_line(osv.TransientModel):
         res = {}
         for tracklot in self.browse(cursor, user, ids, context=context):
             tracking = False
-            if (tracklot.move_id.picking_id.type == 'in' and tracklot.product_id.track_incoming == True) or \
-                (tracklot.move_id.picking_id.type == 'out' and tracklot.product_id.track_outgoing == True):
+            if (tracklot.move_id.picking_id.type == 'in' and tracklot.product_id.track_incoming) or \
+               (tracklot.move_id.picking_id.type == 'out' and tracklot.product_id.track_outgoing):
                 tracking = True
             res[tracklot.id] = tracking
         return res
@@ -42,17 +41,17 @@ class stock_partial_picking_line(osv.TransientModel):
     _name = "stock.partial.picking.line"
     _rec_name = 'product_id'
     _columns = {
-        'product_id' : fields.many2one('product.product', string="Product", required=True, ondelete='CASCADE'),
-        'quantity' : fields.float("Quantity", digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
+        'product_id': fields.many2one('product.product', string="Product", required=True, ondelete='CASCADE'),
+        'quantity': fields.float("Quantity", digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True, ondelete='CASCADE'),
-        'lot_id' : fields.many2one('stock.production.lot', 'Serial Number', ondelete='CASCADE'),
-        'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete='CASCADE', domain = [('usage','<>','view')]),
-        'location_dest_id': fields.many2one('stock.location', 'Dest. Location', required=True, ondelete='CASCADE',domain = [('usage','<>','view')]),
-        'move_id' : fields.many2one('stock.move', "Move", ondelete='CASCADE'),
-        'wizard_id' : fields.many2one('stock.partial.picking', string="Wizard", ondelete='CASCADE'),
+        'lot_id': fields.many2one('stock.production.lot', 'Serial Number', ondelete='CASCADE'),
+        'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete='CASCADE', domain=[('usage', '<>', 'view')]),
+        'location_dest_id': fields.many2one('stock.location', 'Dest. Location', required=True, ondelete='CASCADE', domain=[('usage', '<>', 'view')]),
+        'move_id': fields.many2one('stock.move', "Move", ondelete='CASCADE'),  # TODO: check if should be required or not
+        'wizard_id': fields.many2one('stock.partial.picking', string="Wizard", ondelete='CASCADE'),
         'update_cost': fields.boolean('Need cost update'),
-        'cost' : fields.float("Cost", help="Unit Cost for this product line"),
-        'currency' : fields.many2one('res.currency', string="Currency", help="Currency in which Unit cost is expressed", ondelete='CASCADE'),
+        'cost': fields.float("Cost", help="Unit Cost for this product line"),
+        'currency': fields.many2one('res.currency', string="Currency", help="Currency in which Unit cost is expressed", ondelete='CASCADE'),
         'tracking': fields.function(_tracking, string='Tracking', type='boolean'),
     }
 
@@ -77,7 +76,7 @@ class stock_partial_picking(osv.osv_memory):
 
     _columns = {
         'date': fields.datetime('Date', required=True),
-        'move_ids' : fields.one2many('stock.partial.picking.line', 'wizard_id', 'Product Moves'),
+        'move_ids': fields.one2many('stock.partial.picking.line', 'wizard_id', 'Product Moves'),
         'picking_id': fields.many2one('stock.picking', 'Picking', required=True, ondelete='CASCADE'),
         'hide_tracking': fields.function(_hide_tracking, string='Tracking', type='boolean', help='This field is for internal purpose. It is used to decide if the column production lot has to be shown on the moves or not.'),
      }
@@ -85,7 +84,7 @@ class stock_partial_picking(osv.osv_memory):
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         #override of fields_view_get in order to change the label of the process button and the separator accordingly to the shipping type
         if context is None:
-            context={}
+            context = {}
         res = super(stock_partial_picking, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         type = context.get('default_type', False)
         if type:
@@ -104,7 +103,8 @@ class stock_partial_picking(osv.osv_memory):
         return res
 
     def default_get(self, cr, uid, fields, context=None):
-        if context is None: context = {}
+        if context is None:
+            context = {}
         res = super(stock_partial_picking, self).default_get(cr, uid, fields, context=context)
         picking_ids = context.get('active_ids', [])
         active_model = context.get('active_model')
@@ -118,30 +118,11 @@ class stock_partial_picking(osv.osv_memory):
             res.update(picking_id=picking_id)
         if 'move_ids' in fields:
             picking = self.pool.get('stock.picking').browse(cr, uid, picking_id, context=context)
-            moves = [self._partial_move_for(cr, uid, m) for m in picking.move_lines if m.state not in ('done','cancel')]
+            moves = [self._partial_move_for(cr, uid, m) for m in picking.move_lines if m.state not in ('done', 'cancel')]
             res.update(move_ids=moves)
         if 'date' in fields:
             res.update(date=time.strftime(DEFAULT_SERVER_DATETIME_FORMAT))
         return res
-
-    #def _product_cost_for_average_update(self, cr, uid, move):
-    #    """Returns product cost and currency ID for the given move, suited for re-computing
-    #       the average product cost.
-
-    #       :return: map of the form::
-
-    #            {'cost': 123.34,
-    #             'currency': 42}
-    #    """
-    #    # Currently, the cost on the product form is supposed to be expressed in the currency
-    #    # of the company owning the product. If not set, we fall back to the picking's company,
-    #    # which should work in simple cases.
-    #    
-    #    # need to take the standard_price from the correct company
-    #    move2 = self.pool.get("stock.move").browse(cr, uid, move.id, context={'force_company': move.company_id.id}) 
-    #    
-    #    return {'cost': move2.product_id.standard_price, 
-    #            'currency':  False}
 
     def _partial_move_for(self, cr, uid, move):
         partial_move = {
@@ -153,68 +134,56 @@ class stock_partial_picking(osv.osv_memory):
             'location_dest_id': move.location_dest_id.id,
             'cost': move.product_id.standard_price,
         }
-    #    if move.picking_id.type == 'in' and move.product_id.cost_method != 'standard':
-    #        partial_move.update(update_cost=True, **self._product_cost_for_average_update(cr, uid, move))
         return partial_move
 
     def do_partial(self, cr, uid, ids, context=None):
         assert len(ids) == 1, 'Partial picking processing may only be done one at a time.'
-        stock_picking = self.pool.get('stock.picking')
-        stock_move = self.pool.get('stock.move')
-        uom_obj = self.pool.get('product.uom')
+        if context is None:
+            context = {}
+
+        stock_move_obj = self.pool.get('stock.move')
+        proc_group = self.pool.get("procurement.group")
+        #uom_obj = self.pool.get('product.uom')
         partial = self.browse(cr, uid, ids[0], context=context)
         partial_data = {
-            'delivery_date' : partial.date
+            'delivery_date': partial.date
         }
-        picking_type = partial.picking_id.type
-        for wizard_line in partial.move_ids:
-            line_uom = wizard_line.product_uom
-            move_id = wizard_line.move_id.id
+        group_id = proc_group.create(cr, uid, {}, context=context)
 
+        todo_move_ids = []
+        for wizard_line in partial.move_ids:
             #Quantity must be Positive
             if wizard_line.quantity < 0:
                 raise osv.except_osv(_('Warning!'), _('Please provide proper Quantity.'))
-
-            #Compute the quantity for respective wizard_line in the line uom (this jsut do the rounding if necessary)
-            qty_in_line_uom = uom_obj._compute_qty(cr, uid, line_uom.id, wizard_line.quantity, line_uom.id)
-
-            if line_uom.factor and line_uom.factor <> 0:
-                if float_compare(qty_in_line_uom, wizard_line.quantity, precision_rounding=line_uom.rounding) != 0:
-                    raise osv.except_osv(_('Warning!'), _('The unit of measure rounding does not allow you to ship "%s %s", only rounding of "%s %s" is accepted by the Unit of Measure.') % (wizard_line.quantity, line_uom.name, line_uom.rounding, line_uom.name))
-            if move_id:
-                #Check rounding Quantity.ex.
-                #picking: 1kg, uom kg rounding = 0.01 (rounding to 10g),
-                #partial delivery: 253g
-                #=> result= refused, as the qty left on picking would be 0.747kg and only 0.75 is accepted by the uom.
-                initial_uom = wizard_line.move_id.product_uom
-                #Compute the quantity for respective wizard_line in the initial uom
-                qty_in_initial_uom = uom_obj._compute_qty(cr, uid, line_uom.id, wizard_line.quantity, initial_uom.id)
-                without_rounding_qty = (wizard_line.quantity / line_uom.factor) * initial_uom.factor
-                if float_compare(qty_in_initial_uom, without_rounding_qty, precision_rounding=initial_uom.rounding) != 0:
-                    raise osv.except_osv(_('Warning!'), _('The rounding of the initial uom does not allow you to ship "%s %s", as it would let a quantity of "%s %s" to ship and only roundings of "%s %s" are accepted by the uom.') % (wizard_line.quantity, line_uom.name, wizard_line.move_id.product_qty - without_rounding_qty, initial_uom.name, initial_uom.rounding, initial_uom.name))
-                stock_move.write(cr, uid, [move_id], {'price_unit': wizard_line.cost, 'price_currency_id': False})
-            else:
-                seq_obj_name =  'stock.picking.' + picking_type
-                move_id = stock_move.create(cr,uid,{'name' : self.pool.get('ir.sequence').get(cr, uid, seq_obj_name),
-                                                    'product_id': wizard_line.product_id.id,
-                                                    'product_qty': wizard_line.quantity,
-                                                    'product_uom': wizard_line.product_uom.id,
-                                                    'lot_id': wizard_line.lot_id.id,
-                                                    'location_id' : wizard_line.location_id.id,
-                                                    'location_dest_id' : wizard_line.location_dest_id.id,
-                                                    'picking_id': partial.picking_id.id,
-                                                    'price_unit': wizard_line.cost,
-                                                    },context=context)
-                stock_move.action_confirm(cr, uid, [move_id], context)
-            partial_data['move%s' % (move_id)] = {
+            partial_data.update({
                 'product_id': wizard_line.product_id.id,
-                'product_qty': wizard_line.quantity,
+                'product_uom_qty': wizard_line.quantity,
                 'product_uom': wizard_line.product_uom.id,
                 'lot_id': wizard_line.lot_id.id,
-            }
-            #if (picking_type == 'in') and (wizard_line.product_id.cost_method != 'standard'):
-            #    partial_data['move%s' % (wizard_line.move_id.id)].update(product_price=wizard_line.cost,)
-        stock_picking.do_partial(cr, uid, [partial.picking_id.id], partial_data, context=context)
+            })
+
+            move_id = wizard_line.move_id.id
+            #if not move_id:
+            #    #TODO: check this out. Do we really need (want?) to support this case since the lot number is on the quant? we may want to raise an error instead...
+            #    picking_type = partial.picking_id.type
+            #    seq_obj_name = 'stock.picking.' + picking_type
+            #    move_id = stock_move_obj.create(cr, uid, {'name': self.pool.get('ir.sequence').get(cr, uid, seq_obj_name),
+            #                                        'product_id': wizard_line.product_id.id,
+            #                                        'product_qty': wizard_line.quantity,
+            #                                        'product_uom': wizard_line.product_uom.id,
+            #                                        'lot_id': wizard_line.lot_id.id,
+            #                                        'location_id': wizard_line.location_id.id,
+            #                                        'location_dest_id': wizard_line.location_dest_id.id,
+            #                                        'picking_id': partial.picking_id.id,
+            #                                        'price_unit': wizard_line.cost}, context=context)
+            #    stock_move_obj.action_confirm(cr, uid, [move_id], context)
+            todo_move_ids += [stock_move_obj.do_partial(cr, uid, move_id, partial_data, group_id, context=context)]
+        picking_ids = context.get('active_ids')
+        picking_id = picking_ids and picking_ids[0] or context.get('active_id')
+        ctx = context.copy()
+        ctx.update({'backorder_of': picking_id})
+        stock_move_obj.action_confirm(cr, uid, todo_move_ids, context=ctx)
+        stock_move_obj.action_done(cr, uid, todo_move_ids, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
