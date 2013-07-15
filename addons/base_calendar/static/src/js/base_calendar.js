@@ -5,13 +5,14 @@ instance.base_calendar = {}
 
     instance.base_calendar.invite = instance.web.Widget.extend({
 
-        init: function(parent,db,token,action,view_type,status) {
+        init: function(parent,db,token,action,view_type,id,status) {
             this._super();
             this.db = db;
             this.token = token;
             this.status = status;
             this.action = action;
             this.view_type = view_type;
+            this.id = id;
         },
         start: function() {
             var self = this;
@@ -48,7 +49,7 @@ instance.base_calendar = {}
             var att_status = "do_decline";
             var self = this;
             var reload_page = function(){
-                return location.replace(_.str.sprintf('/?db=%s#view_type=%s&model=crm.meeting&action=%s&id=%s',self.db,self.view_type,self.action,self.token));
+                return location.replace(_.str.sprintf('/?db=%s#view_type=%s&model=crm.meeting&action=%s&active_id=%s',self.db,self.view_type,self.action,self.id));
             }
             if(self.status === 'accepted'){att_status = "do_accept";}
             var calender_attendee = new instance.web.Model('calendar.attendee')
@@ -198,9 +199,9 @@ instance.base_calendar = {}
     instance.web.form.widgets = instance.web.form.widgets.extend({
         'Many2Many_invite' : 'instance.web.form.Many2Many_invite',
     });
-    instance.base_calendar.event = function (db, token, action, view_type, status) {
+    instance.base_calendar.event = function (db, token, action, view_type, id, status) {
         instance.session.session_bind(instance.session.origin).done(function () {
-            new instance.base_calendar.invite(null,db,token,action,view_type,status).appendTo($("body").addClass('openerp'));
+            new instance.base_calendar.invite(null,db,token,action,view_type,id,status).appendTo($("body").addClass('openerp'));
         });
     }
 };

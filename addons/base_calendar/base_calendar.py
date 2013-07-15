@@ -404,11 +404,11 @@ property or property parameter."),
         return res
 
     def meeting_invitation(self, cr, uid, ids, context=None):
-        attende_obj = self.browse(cr, uid, ids, context=context)
+        meeting_id = self.pool.get('crm.meeting').search(cr, uid, [('attendee_ids','in',ids)])
         action_id = self.pool.get('ir.actions.act_window').search(cr, uid, [('res_model','=','crm.meeting')], context=context)
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
         if action_id:
-            base_url += '/meeting/meeting_invitation?db=%s&debug=&token=%s&action=%s' % (cr.dbname, ids,action_id[0]);
+            base_url += '/meeting/meeting_invitation?db=%s&token=%s&action=%s&id=%s' % (cr.dbname, ids,action_id[0],meeting_id[0]);
         return base_url
 
     def _send_mail(self, cr, uid, ids, mail_to, email_from=tools.config.get('email_from', False), context=None):
