@@ -1125,7 +1125,7 @@
                     <group class="oe_header">
                     <field name="date_deadline"/>
                     <field name="survey_id"/>
-                    <field name="user_id" on_change="on_change_user(user_id)"/>
+                    <field name="user_id" on_change="on_change_user(user_id)" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_survey_user']}"/>
                     <field name="email"/>
                     <field name="response" readonly="1"/>
                     </group>
