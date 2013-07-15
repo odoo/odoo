@@ -35,8 +35,6 @@ openerp_mail_followers = function(session, mail) {
             this.followers = [];
             
             this.view_is_editable = this.__parentedParent.is_action_enabled('edit');
-            this.check_access = false;
-            this.is_follower = false;
         },
 
         start: function() {
@@ -196,22 +194,17 @@ openerp_mail_followers = function(session, mail) {
         display_followers: function (records) {
             var self = this;
             this.followers = records || this.followers;
-            _.each(this.result, function (record) {
-                if (self.session.uid == record.user_ids[0]) {
-                    if (record.is_editable == true) { self.check_access = true; }
-                }
-            });
-            this.message_is_follower = this.set_is_follower(this.followers); // self.is_follower
             // clean and display title
             var node_user_list = this.$('.oe_follower_list').empty();
             this.$('.oe_follower_title').html(this._format_followers(this.followers.length));
             // truncate number of displayed followers
             var truncated = this.followers.slice(0, this.displayed_nb);
             _(truncated).each(function (record) {
-                record.avatar_url = mail.ChatterUtils.get_image(self.session, 'res.partner', 'image_small', record.id);
+                self.message_is_follower = record[2].is_uid;
+                record[2].avatar_url = mail.ChatterUtils.get_image(self.session, 'res.partner', 'image_small', record[0]);
                 $(session.web.qweb.render('mail.followers.partner', {'record': record, 'widget': self})).appendTo(node_user_list);
                 // On mouse-enter it will show the edit_subtype pencil.
-                if (self.check_access == true) {
+                if (record[2].is_editable == true) {
                     self.$el.on('mouseenter', 'div.oe_follower_list', function() {
                         $("img.oe_edit_subtype").removeClass("hidden");
                         $('div.oe_follower_list').find('.oe_partner').addClass('oe_partner_name');
@@ -225,12 +218,6 @@ openerp_mail_followers = function(session, mail) {
             if (truncated.length < this.followers.length) {
                 $(session.web.qweb.render('mail.followers.show_more', {'number': (this.followers.length - truncated.length)} )).appendTo(node_user_list);
             }
-        },
-
-        /** Computes whether the current user is in the followers */
-        set_is_follower: function (records) {
-            var user_ids = _.pluck(_.pluck(records, 'user_ids'), 0);
-            return _.indexOf(user_ids, this.session.uid) != -1;
         },
 
         display_buttons: function () {
