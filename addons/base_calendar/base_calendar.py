@@ -434,11 +434,10 @@ property or property parameter."),
                 att_info = []
                 sub = res_obj.name
                 other_invitation_ids = self.search(cr, uid, [('ref', '=', res_obj._name + ',' + str(res_obj.id))])
-
+                other_invitation_ids.remove(attendee.id)
                 for att2 in self.browse(cr, uid, other_invitation_ids):
                     name = att2.user_id and att2.user_id.name or att2.partner_id and att2.partner_id.name or att2.email
                     att_info.append((image_cricle  % color.get(att2.state)) + name)
-                    
                 tz = context.get('tz', pytz.timezone('UTC'))
                 allday = False
                 date = fields.datetime.context_timestamp(cr, uid, datetime.strptime(res_obj.date, tools.DEFAULT_SERVER_DATETIME_FORMAT), context=context)
@@ -455,17 +454,18 @@ property or property parameter."),
                 map_url = ''
                 if res_obj.location:
                     map_url = """<span style= "color:#A9A9A9; "> (<a href="http://maps.google.com/maps?oi=map&q=%s">View Map</a>)</span>""" % res_obj.location
+                org = [(image_cricle % color.get('needs-action')) + 'You', (image_cricle % color.get('accepted')) + res_obj.organizer]
                 body_vals = {'user':attendee.user_id and attendee.user_id.name,
                              'name': res_obj.name,
                              'responsible': res_obj.user_id and res_obj.user_id.name or 'OpenERP User',
                              'company': company,
                              'description': res_obj.description or '-',
-                             'attendees':  ',\n' .join(att_info),
+                             'attendees': ',\n' .join(att_info),
                              'time': time,
                              'tz': tz,
                              'location': res_obj.location or '-',
                              'map' : map_url or '',
-                             'organizer': res_obj.organizer,
+                             'organizer':',\n' .join(org),
                              'url' : footer}
                 body_id = self.pool.get('email.template').search(cr, uid, [('subject', '=', 'Meeting Invitation')], context=context)
                 body = self.pool.get('email.template').browse(cr, uid, body_id[0], context=context).body_html % body_vals
