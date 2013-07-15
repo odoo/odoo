@@ -199,6 +199,7 @@ class stock_quant(osv.osv):
             'reservation_id': move.move_dest_id and move.move_dest_id.id or False, 
             'history_ids': [(4, move.id)]
         })
+        return quant
 
 
     # FP Note: TODO: implement domain preference that tries to retrieve first with this domain

@@ -99,10 +99,11 @@ class stock_quant(osv.osv):
                 account_moves += self._create_account_move_line(cr, uid, quant, acc_valuation, acc_dest, context=context)
 
     def move_single_quant(self, cr, uid, quant, qty, move, context=None):
-        location_from = quant.location_id
-        super(stock_quant, self).move_single_quant(cr, uid, quant, qty, move, context=context)
+        quant = super(stock_quant, self).move_single_quant(cr, uid, quant, qty, move, context=context)
         quant.refresh()
+        location_from = quant.location_id
         self._account_entry_move(cr, uid, quant, location_from, quant.location_id, move, context=context)
+        return quant
 
 
     # TODO: move this code on the _account_entry_move method above. Should be simpler
