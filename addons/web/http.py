@@ -118,7 +118,7 @@ class WebRequest(object):
         # set db/uid trackers - they're cleaned up at the WSGI
         # dispatching phase in openerp.service.wsgi_server.application
         if self.db:
-            threading.current_thread().dbname = self.session.db
+            threading.current_thread().dbname = self.db
         if self.session.uid:
             threading.current_thread().uid = self.session.uid
         self.context = self.session.context
@@ -597,12 +597,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         self.modified = False
         super(OpenERPSession, self).__init__(*args, **kwargs)
         self.inited = True
-        self.setdefault("db", None)
-        self.setdefault("uid", None)
-        self.setdefault("login", None)
-        self.setdefault("password", None)
-        self.setdefault("context", {'tz': "UTC", "uid": None})
-        self.setdefault("jsonp_requests", {})
+        self._default_values()
         self.modified = False
 
     def __getattr__(self, attr):
@@ -650,6 +645,15 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
     def logout(self):
         for k in self.keys():
             del self[k]
+        self._default_values()
+
+    def _default_values(self):
+        self.setdefault("db", None)
+        self.setdefault("uid", None)
+        self.setdefault("login", None)
+        self.setdefault("password", None)
+        self.setdefault("context", {'tz': "UTC", "uid": None})
+        self.setdefault("jsonp_requests", {})
 
     def get_context(self):
         """
@@ -1059,12 +1063,12 @@ def db_redirect(match_first_only_if_unique):
     db = None
     redirect = None
 
+    dbs = db_list(True)
+
     # 1 try the db in the url
     db_url = request.httprequest.args.get('db')
-    if db_url:
+    if db_url in dbs:
         return (db_url, None)
-
-    dbs = db_list(True)
 
     # 2 use the database from the cookie if it's listable and still listed
     cookie_db = request.httprequest.cookies.get('last_used_database')
