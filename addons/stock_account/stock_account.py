@@ -281,7 +281,7 @@ class stock_quant(osv.osv):
                     'credit': valuation_amount,
                     'account_id': credit_account_id,
         }
-        res += [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
+        res = [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
         return res
 
 
@@ -591,7 +591,8 @@ class stock_picking(osv.osv):
 # ----------------------------------------------------
 
 class stock_move(osv.osv):
-    _name = "stock.move"
+
+    _inherit = "stock.move"
 
     #TODO cancel a move must delete the accounting entry if not posted yet (otherwise raise an error)
     def action_cancel(self, cr, uid, ids, context=None):
