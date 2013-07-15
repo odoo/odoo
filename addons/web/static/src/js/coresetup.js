@@ -334,9 +334,10 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             }).appendTo(document.body);
         }
 
-        _(_.extend({}, options.data || {},
-                   {session_id: this.override_session ? this.session_id : undefined, token: token}))
-            .each(function (value, key) {
+        var hparams = _.extend({}, options.data || {}, {token: token});
+        if (this.override_session)
+            hparams.session_id = this.session_id;
+        _.each(hparams, function (value, key) {
                 var $input = $form.find('[name=' + key +']');
                 if (!$input.length) {
                     $input = $('<input type="hidden" name="' + key + '">')
