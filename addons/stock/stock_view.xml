@@ -1553,12 +1553,43 @@
                 </xpath>
             </field>
         </record>
+        
+        
+        
+        <record model="ir.actions.act_window" id="quantsact">
+            <field name="context">{}</field>
+            <field name="name">Quants</field>
+            <field name="res_model">stock.quant</field>
+        </record>
+
+
+        <record model="ir.ui.view" id="view_stock_quant_tree">
+            <field name="name">stock.quant.tree</field>
+            <field name="model">stock.quant</field>
+            <field eval="10" name="priority"/>
+            
+            <field name="arch" type="xml">
+                <tree string="Quants">
+                    <field name="product_id"/>
+                    <field name="qty"/>
+                    <field name="location_id"/>
+                    <field name="in_date"/>
+                    <field name="reservation_id"/>
+                    <field name="propagated_from_id"/>
+                </tree>
+            </field>
+        </record>
+
+
         <!-- Procurements are located in Warehouse menu hierarchy, MRP users should come to Stock application to use it.  -->
         <menuitem id="menu_stock_sched" name="Schedulers" parent="stock.menu_stock_root" sequence="4" groups="stock.group_stock_manager"/>
             <menuitem action="procurement.action_compute_schedulers" id="menu_stock_proc_schedulers" parent="menu_stock_sched" sequence="20" groups="stock.group_stock_manager"/>
             <menuitem action="procurement.procurement_exceptions" id="menu_stock_procurement_action" parent="menu_stock_sched" sequence="50" groups="stock.group_stock_manager"/>
         <menuitem id="menu_stock_procurement" name="Automatic Procurements" parent="stock.menu_stock_configuration" sequence="5"/>
             <menuitem action="action_orderpoint_form" id="menu_stock_order_points" parent="stock.menu_stock_configuration" sequence="10"/>
+        <menuitem id="quants" name="Quants" parent="stock.menu_stock_configuration" action="quantsact" groups="base.group_no_one"/>
+
+
 
 
         <record model="ir.actions.act_window" id="product_open_orderpoint">

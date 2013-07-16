@@ -106,7 +106,8 @@ class procurement_order(osv.osv):
 
     #
     # Scheduler
-    # When stock is installed, it should also check for the different 
+    # When stock is installed, it should also check for the different confirmed stock moves
+    # if they can not be installed
     #
     #
     def run_scheduler(self, cr, uid, use_new_cursor=False, context=None):
@@ -132,7 +133,7 @@ class procurement_order(osv.osv):
             company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
             move_obj = self.pool.get('stock.move')
             #Search all confirmed stock_moves and try to assign them
-            confirmed_ids = move_obj.search(cr, uid, [('state', 'in', ['confirmed', 'waiting']), ('company_id','=', company.id)], context=context) #Type  = stockable product?
+            confirmed_ids = move_obj.search(cr, uid, [('state', '=', 'confirmed'), ('company_id','=', company.id)], context=context) #Type  = stockable product?
             move_obj.action_assign(cr, uid, confirmed_ids, context=context)
         finally:
             if use_new_cursor:

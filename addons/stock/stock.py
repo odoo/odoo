@@ -205,7 +205,7 @@ class stock_quant(osv.osv):
 
     # FP Note: TODO: implement domain preference that tries to retrieve first with this domain
     # This will be used for reservation
-    def quants_get(self, cr, uid, location, product, qty, domain=None, domain_preference=[], context=None):
+    def quants_get(self, cr, uid, location, product, qty, domain=None, prefered_order=False, reservedcontext=None, context=None):
         """
         Use the removal strategies of product to search for the correct quants
         If you inherit, put the super at the end of your method.
@@ -215,20 +215,20 @@ class stock_quant(osv.osv):
         :qty in UoM of product
         :lot_id NOT USED YET !
         """
+
         result= []
-        # for domain2 in domain_preference:
-        # result = self._quants_get(cr, uid, location, product, qty, domain+domain2, context=context)
-        # qty = remaining quants qty - sum(result)
+        if domain is None:
+            domain = []
+        
         domain = domain or [('qty','>',0.0)]
-        if location:
+        if location and qty>0:
             removal_strategy = self.pool.get('stock.location').get_removal_strategy(cr, uid, location, product, context=context) or 'fifo'
             if removal_strategy=='fifo':
-                result += self._quants_get_fifo(cr, uid, location, product, qty, domain, context=context)
+                result += self._quants_get_fifo(cr, uid, location, product, qty, domain, prefered_order=prefered_order, context=context)
             elif removal_strategy=='lifo':
-                result += self._quants_get_lifo(cr, uid, location, product, qty, domain, context=context)
+                result += self._quants_get_lifo(cr, uid, location, product, qty, domain, prefered_order=prefered_order, context=context)
             else:
                 raise osv.except_osv(_('Error!'),_('Removal strategy %s not implemented.' % (removal_strategy,)))
-
         return result
 
 
@@ -293,7 +293,6 @@ class stock_quant(osv.osv):
                 'cost': 0.0,
             }, context=context)
 
-            
             #TODO: In case of negative quants no removal strategy is applied -> actually removal strategy should be reversed? OR just by in_date?
             quants2 = self._quants_get_order(cr, uid, False, quant.product_id, -quant_neg.qty, domain=[('propagated_from_id','=',quant_neg.id)], orderby='in_date', context=None)
             for qu2, qt2 in quants2:
@@ -309,12 +308,19 @@ class stock_quant(osv.osv):
     def _price_update(self, cr, uid, quant, newprice, context=None):
         self.write(cr, uid, [quant.id], {'cost': newprice}, context=context)
 
+
+    def quants_unreserve(self, cr, uid, move, context=None):
+        cr.execute('update stock_quant set reservation_id=NULL where reservation_id=%s', (move.id,))
+        return True
+
+
     #
     # Implementation of removal strategies
+    # If it can not reserve, it will return a tuple (None, qty)
     #
     def _quants_get_order(self, cr, uid, location, product, quantity, domain=[], orderby='in_date', context=None):
         domain += location and [('location_id', 'child_of', location.id)] or []
-        domain += [('product_id','=',product.id), ('reservation_id', '=', False)] + domain
+        domain += [('product_id','=',product.id)] + domain
         res = []
         offset = 0
         while quantity > 0:
@@ -335,13 +341,19 @@ class stock_quant(osv.osv):
 
 
 
-    def _quants_get_fifo(self, cr, uid, location, product, quantity, domain=[], context=None):
+    def _quants_get_fifo(self, cr, uid, location, product, quantity, domain=[], prefered_order=False,context=None):
+        order = 'in_date'
+        if prefered_order:
+            order = prefered_order + ', in_date'
         return self._quants_get_order(cr, uid, location, product, quantity,
-            domain, 'in_date', context=context)
+            domain, order, context=context)
 
-    def _quants_get_lifo(self, cr, uid, location, product, quantity, domain=[], context=None):
+    def _quants_get_lifo(self, cr, uid, location, product, quantity, domain=[], prefered_order=False, context=None):
+        order = 'in_date desc'
+        if prefered_order:
+            order = prefered_order + ', in_date desc'
         return self._quants_get_order(cr, uid, location, product, quantity,
-            domain, 'in_date desc', context=context)
+            domain, order, context=context)
 
     # Return the company owning the location if any
     def _location_owner(self, cr, uid, quant, location, context=None):
@@ -1206,6 +1218,15 @@ class stock_move(osv.osv):
             ['location_id','location_dest_id'])
     ]
 
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default['procurement_group'] = False
+        return super(stock_move, self).copy(cr, uid, id, default, context)
+    
+    
     def _default_location_destination(self, cr, uid, context=None):
         """ Gets default address of partner for destination location
         @return: Address id or False
@@ -1576,8 +1597,10 @@ class stock_move(osv.osv):
         """ Changes the state to assigned.
         @return: True
         """
-        self.action_assign(cr, uid, ids, context=context)
-        return self.write(cr, uid, ids, {'state': 'assigned'})
+        done = self.action_assign(cr, uid, ids, context=context)
+        self.write(cr, uid, list(set(ids) - set(done)), {'state': 'assigned'})        
+        return True
+    
 
     def cancel_assign(self, cr, uid, ids, context=None):
         """ Changes the state to confirmed.
@@ -1593,6 +1616,7 @@ class stock_move(osv.osv):
         quant_obj = self.pool.get("stock.quant")
         uom_obj = self.pool.get("product.uom")
         done = []
+        pickings = set()
         for move in self.browse(cr, uid, ids, context=context):
             if move.state not in ('confirmed', 'waiting'):
                 continue
@@ -1602,19 +1626,24 @@ class stock_move(osv.osv):
             else:
                 qty = uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, move.product_id.uom_id.id)
                 dp = []
-                if move.move_orig_ids:
-                    for m2 in move.move_orig_ids:
-                        for q in m2.quant_ids:
-                            dp.append(q.id)
-                quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, domain_preference=dp and [('id', 'in', dp)], context=context)
+                for m2 in move.move_orig_ids:
+                    for q in m2.quant_ids:
+                        dp.append(str(q.id))
+                domain = ['|', ('reservation_id', '=', False), ('reservation_id', '=', move.id)]
+                quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, domain=domain, prefered_order = dp and ('id not in ('+','.join(dp)+')') or False, context=context)
+                #Will only reserve physical quants, no negative 
                 quant_obj.quants_reserve(cr, uid, quants, move, context=context)
-                #TODO Should have a check to really check it passed
-                sum_of_qua = 0
-                for qua in quants:
-                    sum_of_qua += qua[1]
-                if qua >= move.product_uom_qty:
+                # the total quantity is provided by existing quants
+                if all(map(lambda x:x[0], quants)):
                     done.append(move.id)
+                    pickings.add(move.picking_id and move.picking_id.id or False)
         self.write(cr, uid, done, {'state': 'assigned'})
+        #TODO: More elegant way to solve this
+        pick_obj = self.pool.get("stock.picking")
+        for pick in list(pickings):
+            if pick_obj.test_assigned(cr, uid, [pick]):
+             pick_obj.write(cr, uid, [pick], {'state': 'assigned'})
+        return done
 
 
     #
@@ -1646,6 +1675,8 @@ class stock_move(osv.osv):
 
     def action_done(self, cr, uid, ids, context=None):
         """ Makes the move done and if all moves are done, it will finish the picking.
+        If quants are not assigned yet, it should assign them
+        Putaway strategies should be applied
         @return:
         """
         context = context or {}
@@ -1656,13 +1687,33 @@ class stock_move(osv.osv):
         if todo:
             self.action_confirm(cr, uid, todo, context=context)
 
-        qty = move.product_qty
-        # for qty, location_id in move_id.prefered_location_ids:
-        #    quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, context=context)
-        #    quant_obj.quants_move(cr, uid, quants, move, location_dest_id, context=context)
-        # should replace the above 2 lines
-        quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, context=context)
-        quant_obj.quants_move(cr, uid, quants, move, context=context)
+        for move in self.browse(cr, uid, ids, context=context):
+            qty = move.product_uom_qty
+            
+            # for qty, location_id in move_id.prefered_location_ids:
+            #    quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, context=context)
+            #    quant_obj.quants_move(cr, uid, quants, move, location_dest_id, context=context)
+            # should replace the above 2 lines
+            domain = ['|', ('reservation_id', '=', False), ('reservation_id', '=', move.id)]
+            quants = quant_obj.quants_get(cr, uid, move.location_id, move.product_id, qty, domain=domain, prefered_order = 'reservation_id<>'+str(move.id),  context=context)
+            #Will move all quants_get and as such create negative quants
+            quant_obj.quants_move(cr, uid, quants, move, context=context)
+            quant_obj.quants_unreserve(cr, uid, move, context=context)
+            
+            #
+            #Check moves that were pushed
+            if move.move_dest_id.state in ('waiting', 'confirmed'):
+                other_upstream_move_ids = self.search(cr, uid, [('id','!=',move.id),('state','not in',['done','cancel']),
+                                            ('move_dest_id','=',move.move_dest_id.id)], context=context)
+                #If no other moves for the move that got pushed:
+                if not other_upstream_move_ids and move.move_dest_id.state in ('waiting', 'confirmed'):
+                    self.action_assign(cr, uid, [move.move_dest_id.id], context=context)
+                    
+#                     quants = quant_obj.search(cr, uid, [('history_ids', 'in', move.id), ('location_id', '=', move.location_dest_id.id), ('reservation_id', '=', False)], context=context)
+#                     if quants:
+#                         quant_obj.write(cr, uid, quants, {'reservation_id':move.move_dest_id.id}, context=context)
+                    if move.move_dest_id.auto_validate: #TO be removed everywhere
+                        self.action_done(cr, uid, [move.move_dest_id.id], context=context)
 
         self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
 
