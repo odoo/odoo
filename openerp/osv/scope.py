@@ -291,9 +291,11 @@ class Cache(defaultdict):
             model = proxy.model(model_name)
             for record_id, record_cache in model_cache.iteritems():
                 record = model.browse(record_id)
-                for field, value in record_cache.iteritems():
-                    if record[field] != value:
-                        invalids.append((record, field, {'cached': value, 'fetched': record[field]}))
+                if not record.is_draft():
+                    for field, value in record_cache.iteritems():
+                        if record[field] != value:
+                            info = {'cached': value, 'fetched': record[field]}
+                            invalids.append((record, field, info))
 
         if invalids:
             raise Exception('Invalid cache for records\n' + pformat(invalids))

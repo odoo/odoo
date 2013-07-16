@@ -467,6 +467,8 @@ class Many2one(Field):
         return bool(value) and value.name_get()[0]
 
     def convert_to_write(self, value):
+        if value.is_draft():
+            return False
         return value.id
 
     def convert_to_export(self, value):
@@ -477,8 +479,8 @@ class Many2one(Field):
         if self.inherits:
             # special case: fields that implement inheritance between models
             value = record[self.name]
-            if not value and not value.is_draft():
-                # put a draft record instead of the null record
+            if not value:
+                # the default value cannot be null, use a draft record instead
                 record[self.name] = scope.model(self.comodel).draft()
 
 

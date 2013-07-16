@@ -332,11 +332,7 @@ def one(method):
             return convert(self, value)
 
     def new_api(self, *args, **kwargs):
-        if self.is_draft():
-            # FIXME: this is horrible!
-            value = [method(self, *args, **kwargs)]
-        else:
-            value = [method(rec, *args, **kwargs) for rec in self]
+        value = [method(rec, *args, **kwargs) for rec in self]
         return convert_new(self, value)
 
     return _make_wrapper(method, old_api, new_api)

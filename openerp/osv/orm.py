@@ -325,6 +325,14 @@ def get_pg_type(f, type_override=None):
     return pg_type
 
 
+# Special class for refering to records without an actual id
+class VirtualID(object): pass
+
+# Valid classes for record ids
+DatabaseID = (int, long)
+AnyID = (int, long, VirtualID)
+
+
 class MetaModel(api.Meta):
     """ Metaclass for the models.
 
@@ -2713,8 +2721,7 @@ class BaseModel(object):
             draft = self.draft()
             field = self._fields[column_name]
             field.compute_default(draft)
-            if draft[column_name] != field.null():
-                default = draft[column_name]
+            default = draft.get_draft_values().get(column_name)
         if default is not None:
             _logger.debug("Table '%s': setting default value of new column %s",
                           self._table, column_name)
@@ -5202,7 +5209,7 @@ class BaseModel(object):
             ids = (arg,)
         else:
             ids = ()
-        assert all(isinstance(id, (int, long)) for id in ids)
+        assert all(isinstance(id, AnyID) for id in ids), "Unexpected ids: %s" % ids
 
         instance = object.__new__(cls)
         instance._scope = scope_proxy.current
@@ -5231,29 +5238,32 @@ class BaseModel(object):
         return list(self._ids)
 
     #
-    # Draft instances
+    # Draft instances - represent records that do not exist in the database yet;
+    # they are used to compute default values.
     #
 
-    def draft(self):
-        """ Return a draft instance attached to the current scope. """
+    def draft(self, values={}):
+        """ Return a new draft instance attached to the current scope, and
+            initialized with the `values` dictionary.
+        """
         #
-        # Draft records have a specific cache dictionary that contains the draft
-        # values set on the record.
+        # A draft instance has a special record id and uses the regular record
+        # cache to store its values.
         #
-        instance = self.browse()
-        instance._draft = {}
+        instance = self.browse(VirtualID())
+        instance._get_cache().update(values)
         return instance
 
     def is_draft(self):
         """ Test whether `self` is a draft record. """
-        return hasattr(self, '_draft')
+        return self._ids and isinstance(self._ids[0], VirtualID)
 
     def get_draft_values(self):
         """ Return the draft values of `self` as a dictionary mapping field
             names to values in the format accepted by method :meth:`write`.
         """
         result = {}
-        for name, value in self._draft.iteritems():
+        for name, value in self._get_cache().iteritems():
             if value is not None:
                 field = self._fields[name]
                 result[name] = field.convert_to_write(value)
@@ -5357,23 +5367,33 @@ class BaseModel(object):
     # Field access/assignment
     #
 
+    def _get_model_cache(self):
+        """ Return the cache of the corresponding model. """
+        return self._scope.cache[self._name]
+
+    def _get_cache(self):
+        """ Return the cache of the first record in `self`. """
+        return self._scope.cache[self._name][self._ids[0]]
+
     def _get_field(self, name):
         """ read the field with the given `name` on a record instance """
+        # null instances: return null values
         if not self._ids:
-            # null instances
             with self._scope:
-                if self.is_draft():
-                    if name not in self._draft:
-                        self.add_default_value(name)
-                    value = self._draft[name]
-                    if value is not None:
-                        return value
                 return self._fields[name].null()
 
-        id = self._ids[0]
-        model_cache = self._scope.cache[self._name]
-        record_cache = model_cache[id]
+        record_id = self._ids[0]
+        record_cache = self._get_cache()
 
+        # draft records: retrieve default values
+        if self.is_draft():
+            with self._scope:
+                if name not in record_cache:
+                    self.add_default_value(name)
+                value = record_cache[name]
+                return self._fields[name].null() if value is None else value
+
+        # check the record's cache
         if name in record_cache:
             return record_cache[name]
 
@@ -5384,12 +5404,10 @@ class BaseModel(object):
             if not field.store:
                 assert field.compute
                 getattr(self, field.compute)()
-                if self.is_draft():
-                    return self._draft[name]
                 return record_cache[name]
 
             recomputing = scope_proxy.recomputing(self._name)
-            if recomputing and field.compute and id in recomputing.get(name, ()):
+            if recomputing and field.compute and record_id in recomputing.get(name, ()):
                 # field is stored and must be recomputed (in batch!)
                 recs = self.browse(recomputing[name]).exists()
                 getattr(recs, field.compute)()
@@ -5400,14 +5418,15 @@ class BaseModel(object):
 
             # pure function fields: simply evaluate them on self
             if isinstance(column, fields.function) and not column.store:
-                record = self.browse(id)
+                record = self.browse(record_id)
                 value = record.read([name], load='_classic_write')[0][name]
                 return field.convert_from_read(value)
 
             # fetch the record of this model without name in their cache
+            model_cache = self._get_model_cache()
             fetch_ids = set(fid
                 for fid, fcache in model_cache.iteritems()
-                if name not in fcache)
+                if isinstance(fid, DatabaseID) and name not in fcache)
 
             # prefetch all classic and many2one fields if column is one of them
             # Note: do not prefetch fields when self.pool._init is True, because
@@ -5423,21 +5442,21 @@ class BaseModel(object):
             if recomputing:
                 for fname in list(fetch_fields):
                     recompute_ids = recomputing.get(fname, set())
-                    if id in recompute_ids:
+                    if record_id in recompute_ids:
                         fetch_fields.discard(fname)     # do not fetch that field at all
                     else:
                         fetch_ids -= recompute_ids      # do not fetch those records
 
             # fetch and check result;
             # method read is supposed to fetch the cache with the results
-            assert name in fetch_fields and id in fetch_ids
+            assert name in fetch_fields and record_id in fetch_ids
             fetch_recs = self.browse(fetch_ids)
             result = fetch_recs.read(list(fetch_fields), load='_classic_write')
 
             if name not in record_cache:
                 # retrieve values for self in result
                 try:
-                    values = next(data for data in result if data['id'] == id)
+                    values = next(data for data in result if data['id'] == record_id)
                 except StopIteration:
                     raise except_orm("AccessError", "%s does not exist." % self)
 
@@ -5457,15 +5476,17 @@ class BaseModel(object):
             The value is assigned in the records cache, and if the field is
             stored, the value is also written to the database.
         """
-        if self.is_draft():
-            for model, field, path in self._recompute[name]:
-                if model == self._name:
-                    self._draft.pop(field, None)
-            # store the value in the draft cache
-            self._draft[name] = value
+        if not self:
             return
 
-        if not self:
+        record_cache = self._get_cache()
+
+        # draft records: store dirty value, and invalidate other fields
+        if self.is_draft():
+            for model, field, path in self._recompute[name]:
+                assert model == self._name, "We don't handle invalidation on other models"
+                record_cache.pop(field, None)
+            record_cache[name] = value
             return
 
         # FIXME: no fnct_inv
@@ -5476,7 +5497,7 @@ class BaseModel(object):
                 self[0].write({name: field.convert_to_write(value)})
 
         # store value in cache (here because write() invalidates the cache!)
-        self._scope.cache[self._name][self.id][name] = value
+        record_cache[name] = value
 
     #
     # Cache and recomputation management
@@ -5586,8 +5607,7 @@ class BaseModel(object):
         )
 
         # create a draft with those values
-        record = self.draft()
-        record._draft.update(values)
+        record = self.draft(values)
 
         # assign the changed field, in order to provoke some effect
         record[changed] = values[changed]
