@@ -895,13 +895,15 @@ class actions_server(osv.osv):
             context = {}
         res = False
         user = self.pool.get('res.users').browse(cr, uid, uid)
-        active_ids = context.get('active_ids', [context.get('active_id'), None])
+        active_ids = context.get('active_ids', [context.get('active_id', None)])
         for action in self.browse(cr, uid, ids, context):
             obj = None
             obj_pool = self.pool[action.model_id.model]
             for active_id in active_ids:
                 if context.get('active_model') == action.model_id.model and active_id:
                     obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
+                # run context dedicated to a particular active_id
+                run_context = dict(context, active_ids=[active_id], active_id=active_id)
                 # evaluation context for python strings to evaluate
                 eval_context = {
                     'self': obj_pool,
@@ -910,12 +912,10 @@ class actions_server(osv.osv):
                     'pool': self.pool,
                     'time': time,
                     'cr': cr,
-                    'context': dict(context),  # copy context to prevent side-effects of eval
+                    'context': dict(run_context),  # copy context to prevent side-effects of eval
                     'uid': uid,
                     'user': user
                 }
-                # run context dedicated to a particular active_id
-                run_context = dict(context, active_id=active_id)
 
                 # evaluate the condition, with the specific case that a void (aka False) condition is considered as True
                 condition = action.condition

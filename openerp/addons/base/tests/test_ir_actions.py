@@ -97,7 +97,7 @@ class TestServerActions(TestServerActionsBase):
             'code': """partner_name = obj.name + '_code'
 self.pool["res.partner"].create(cr, uid, {"name": partner_name}, context=context)"""
         })
-        run_res = self.ir_actions_server.run(cr, uid, [self.act_id], self.context)
+        run_res = self.ir_actions_server.run(cr, uid, [self.act_id], context=self.context)
         self.assertFalse(run_res, 'ir_actions_server: code server action correctly finished should return False')
 
         pids = self.res_partner.search(cr, uid, [('name', 'ilike', 'TestingPartner_code')])
