@@ -6,7 +6,7 @@
             <field name="model">crm.lead</field>
             <field name="priority" eval="32"/>
             <field name="arch" type="xml">
-            <tree string="Leads" colors="blue:state=='pending';grey:state in ('cancel', 'done');red:stage_id[1]=='Disinterested';black:stage_id[1]=='Interested'">
+            <tree string="Leads" colors="red:stage_id[1]=='Disinterested';black:stage_id[1]=='Interested'">
               <field name="date_deadline" invisible="1"/>
               <field name="create_date"/>
               <field name="name" string="Subject"/>
@@ -18,7 +18,6 @@
               <field name="type_id" invisible="1"/>
               <field name="referred" invisible="1"/>
               <field name="channel_id" invisible="1"/>
-              <field name="state" invisible="1"/>
               <field name="section_id" invisible="context.get('invisible_section', True)" />
 
               <button string="I'm interested" name="case_interested" icon="gtk-index" type="object"/>
@@ -69,7 +68,7 @@
             <field name="model">crm.lead</field>
             <field name="priority" eval="32"/>
             <field name="arch" type="xml">
-               <tree string="Leads" colors="blue:state=='pending';grey:state in ('cancel', 'done')">
+               <tree string="Leads">
                    <field name="date_deadline" invisible="1"/>
                    <field name="create_date" groups="base.group_no_one"/>
                    <field name="name" string="Opportunity"/>
@@ -83,7 +82,6 @@
                    <field name="probability" widget="progressbar" avg="Avg. of Probability"/>
                    <field name="section_id" invisible="context.get('invisible_section', True)" />
                    <field name="priority" invisible="1"/>
-                   <field name="state" invisible="1"/>
                </tree>
             </field>
         </record>
