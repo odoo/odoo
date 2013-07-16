@@ -258,7 +258,6 @@
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id">
-                    <field name="state" groups="base.group_no_one"/>
                     <field name="stage_id"/>
                     <field name="color"/>
                     <field name="priority"/>
@@ -481,7 +480,6 @@
                                     <field name="day_open" groups="base.group_no_one"/>
                                     <field name="day_close" groups="base.group_no_one"/>
                                     <field name="referred"/>
-                                    <field name="state" invisible="1"/>
                                     <field name="type" invisible="1"/>
                                 </group>
                                 <group string="References">

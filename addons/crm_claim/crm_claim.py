@@ -68,7 +68,7 @@ class crm_claim(osv.osv):
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
         section_id = self._get_default_section_id(cr, uid, context=context)
-        return self.stage_find(cr, uid, [], section_id, [('state', '=', 'draft')], context=context)
+        return self.stage_find(cr, uid, [], section_id, [('sequence', '=', '1')], context=context)
 
     _columns = {
         'id': fields.integer('ID', readonly=True),

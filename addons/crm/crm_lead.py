@@ -687,7 +687,8 @@ class crm_lead(format_address, osv.osv):
             partner = self.pool.get('res.partner')
             customer = partner.browse(cr, uid, partner_id, context=context)
         for lead in self.browse(cr, uid, ids, context=context):
-            if lead.state in ('done', 'cancel'):
+            # TDE: was if lead.state in ('done', 'cancel'):
+            if (lead.probability == '100') or (lead.probability == '0' and lead.stage_id.sequence != '1'):
                 continue
             vals = self._convert_opportunity_data(cr, uid, lead, customer, section_id, context=context)
             self.write(cr, uid, [lead.id], vals, context=context)
