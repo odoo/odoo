@@ -188,8 +188,8 @@ class Ecommerce(http.Controller):
     def remove_cart(self, product_id=0):
         return self.add_cart(product_id=product_id, remove=True)
 
-    @http.route(['/shop/customer'], type='http', auth="admin")
-    def customer(self, *arg, **post):
+    @http.route(['/shop/checkout'], type='http', auth="admin")
+    def checkout(self, *arg, **post):
         cr, uid, partner_id = self.get_cr_uid()
         values = self.get_values()
         partner_obj = request.registry.get('res.partner')
@@ -204,7 +204,7 @@ class Ecommerce(http.Controller):
         if partner_id:
             values['partner'] = partner_obj.browse(cr, uid, partner_id)
 
-        return request.registry.get("ir.ui.view").render(cr, uid, "website_sale.customer", values)
+        return request.registry.get("ir.ui.view").render(cr, uid, "website_sale.checkout", values)
 
     @http.route(['/shop/confirm_cart'], type='http', auth="admin")
     def confirm_cart(self, *arg, **post):

@@ -1,20 +1,3 @@
-.oe_ecommerce {
-  font-family: "Lato";
-  font-size: 13px;
-}
-.oe_ecommerce input:not([type="radio"]):not([type="checkbox"]) {
-  height: 30px;
-}
-.oe_ecommerce label > input:not([type="radio"]):not([type="checkbox"]), .oe_ecommerce label > div {
-  display: block;
-  margin-top: 3px;
-}
-.oe_ecommerce label select {
-  margin-top: 3px;
-}
-.oe_ecommerce label > div > input {
-  margin-bottom: 0;
-}
 .oe_ecommerce .oe_total {
   margin-top: 10px;
 }
@@ -144,9 +127,6 @@
   background: -o-linear-gradient(#51a351, #418541);
   background: linear-gradient(#51a351, #418541);
 }
-.oe_ecommerce form.oe_signup {
-  display: none;
-}
 .oe_ecommerce .oe_search form {
   width: 100%;
   margin: 24px;
@@ -163,10 +143,20 @@
   max-width: 64px;
   max-height: 64px;
 }
-.oe_ecommerce .oe_checkout .accordion-inner {
-  padding: 9px;
-}
-.oe_ecommerce .oe_checkout .accordion-inner h4 {
+.oe_ecommerce .oe_checkout h4 {
   border-bottom: 1px solid #dddddd;
   margin-right: 30px;
+}
+.oe_ecommerce .oe_checkout input:not([type="radio"]):not([type="checkbox"]) {
+  height: 30px;
+}
+.oe_ecommerce .oe_checkout label > input:not([type="radio"]):not([type="checkbox"]), .oe_ecommerce .oe_checkout label > div {
+  display: block;
+  margin-top: 3px;
+}
+.oe_ecommerce .oe_checkout label select {
+  margin-top: 3px;
+}
+.oe_ecommerce .oe_checkout label > div > input {
+  margin-bottom: 0;
 }

@@ -2,22 +2,10 @@
 
 
 .oe_ecommerce
-  input:not([type="radio"]):not([type="checkbox"])
-    height: 30px
-  label
-    > input:not([type="radio"]):not([type="checkbox"]), > div
-      display: block
-      margin-top: 3px
-    select
-      margin-top: 3px
-    > div > input
-      margin-bottom: 0
   .oe_total
     margin-top: 10px
     td
       padding: 5px 10px
-  font-family: "Lato"
-  font-size: 13px
   .oe_products
     .oe_product
       .oe_hidden
@@ -104,8 +92,6 @@
         @include background(linear-gradient(#0088cc,#0076b1))
       &.btn-success
         @include background(linear-gradient(#51a351, #418541))
-  form.oe_signup
-    display: none
   .oe_search
     form
       width: 100%
@@ -122,8 +108,16 @@
       max-width: 64px
       max-height: 64px
   .oe_checkout
-    .accordion-inner
-      padding: 9px
-      h4
-        border-bottom: 1px solid #ddd
-        margin-right: 30px
+    h4
+      border-bottom: 1px solid #ddd
+      margin-right: 30px
+    input:not([type="radio"]):not([type="checkbox"])
+      height: 30px
+    label
+      > input:not([type="radio"]):not([type="checkbox"]), > div
+        display: block
+        margin-top: 3px
+      select
+        margin-top: 3px
+      > div > input
+        margin-bottom: 0

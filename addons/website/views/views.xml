@@ -3,6 +3,60 @@
 -->
 <openerp>
     <data>
+        <record id="header" model="ir.ui.view">
+            <field name="name">customer</field>
+            <field name="type">qweb</field>
+            <field name="arch" type="xml">
+                <div class="container">
+                    <div class="row">
+                        <div class="oe_website_logo span4">
+                            <a href='/page/website.homepage'><img t-att-alt="res_company.name" src='/web/binary/company_logo'/></a>
+                        </div>
+                        <ul class="oe_website_nav span8 nav nav-pills">
+                            <li class="pull-right"><a href="/admin">Sign in</a></li>
+                            <li class="pull-right"><a href="/page/website.contactus">Contact us</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </field>
+        </record>
+
+        <record id="footer" model="ir.ui.view">
+            <field name="name">customer</field>
+            <field name="type">qweb</field>
+            <field name="arch" type="xml">
+                <div class="container">
+                    <div class="row">
+                        <div class="span4">
+                            <h5>Product and services</h5>
+                            <ul>
+                                <li><a href="https://www.openerp.com/start?download">Download</a></li>
+                                <li><a href="https://launchpad.net/openobject">Launchpad</a></li>
+                                <li><a href="http://runbot.openerp.com">Automated Tests</a></li>
+                            </ul>
+                        </div>
+                        <div class="span4">
+                            <h5>Social</h5>
+                            <ul>
+                                <li><a href="http://twitter.com/openerp"><i class="icon-twitter-sign"></i>Twitter</a></li>
+                                <li><a href="http://www.facebook.com/OpenERP"><i class="icon-facebook-sign"></i>Facebook</a></li>
+                                <li><a href="https://plus.google.com/+openerp/posts"><i class="icon-google-plus-sign"></i>Google+</a></li>
+                            </ul>
+                        </div>
+                        <div class="span4">
+                            <h5 t-esc="res_company.name">Company name</h5>
+                            <ul>
+                                <li><a href="/page/website.contactus">Contact us</a></li>
+                                <li><a href="/page/website.news">News</a></li>
+                                <li><a href="/page/website.contactus">About us</a></li>
+                                <li>&amp;#x2706; <span t-record="res_company" t-field="phone"/></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </field>
+        </record>
+
         <record id="layout" model="ir.ui.view">
             <field name="name">layout</field>
             <field name="type">qweb</field>
@@ -45,17 +99,7 @@
                     <body class="oe_website oe_styling_v8">
                     
                         <header class="oe_website_header">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="oe_website_logo span4">
-                                        <a href='/page/website.homepage'><img t-att-alt="res_company.name" src='/web/binary/company_logo'/></a>
-                                    </div>
-                                    <ul class="oe_website_nav span8 nav nav-pills">
-                                        <li class="pull-right"><a href="/admin">Sign in</a></li>
-                                        <li class="pull-right"><a href="/page/website.contactus">Contact us</a></li>
-                                    </ul>
-                                </div>
-                            </div>
+                            <t t-call="website.header"/>
                         </header>
                         <div class="oe_website_body" t-raw="0">
                             <div class="container">
@@ -65,35 +109,7 @@
                             </div>
                         </div>
                         <footer class="oe_website_footer">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="span4">
-                                        <h5>Product and services</h5>
-                                        <ul>
-                                            <li><a href="https://www.openerp.com/start?download">Download</a></li>
-                                            <li><a href="https://launchpad.net/openobject">Launchpad</a></li>
-                                            <li><a href="http://runbot.openerp.com">Automated Tests</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="span4">
-                                        <h5>Social</h5>
-                                        <ul>
-                                            <li><a href="http://twitter.com/openerp"><i class="icon-twitter-sign"></i>Twitter</a></li>
-                                            <li><a href="http://www.facebook.com/OpenERP"><i class="icon-facebook-sign"></i>Facebook</a></li>
-                                            <li><a href="https://plus.google.com/+openerp/posts"><i class="icon-google-plus-sign"></i>Google+</a></li>
-                                        </ul>
-                                    </div>
-                                    <div class="span4">
-                                        <h5 t-esc="res_company.name">Company name</h5>
-                                        <ul>
-                                            <li><a href="/page/website.contactus">Contact us</a></li>
-                                            <li><a href="/page/website.news">News</a></li>
-                                            <li><a href="/page/website.contactus">About us</a></li>
-                                            <li>&amp;#x2706; <span t-record="res_company" t-field="phone"/></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
+                            <t t-call="website.footer"/>
                             <p class="oe_website_copy text-center">&amp;copy; <span t-record="res_company" t-field="name">Company name</span>.</p>
                         </footer>
 

@@ -18,10 +18,6 @@ $(document).ready(function (){
             $('.oe_ecommerce .oe_total').replaceWith(''+result.totalHTML);
         });
     });
-    $('.oe_ecommerce form').on('click', '.oe_toggleform', function (ev) {
-        ev.preventDefault();
-        $('.oe_ecommerce form').toggle();
-    });
 });
 
 
@@ -34,8 +30,11 @@ openerp.website = function(instance) {
             'click button[data-action=gotostep]': 'gotostep',
         },
         start: function() {
-            console.log("instance.website.sale.Checkout", this);
-            return this._super.apply(this, arguments);
+            var self = this;
+            this._super.apply(this, arguments);
+            this.$('input[name="shipping_different"]').on('change', function (ev) {
+                self.$('.oe_shipping').toggle();
+            });
         },
         goto: function (e) {
 
@@ -62,5 +61,5 @@ $(document).ready(function () {
     instance.web.qweb.add_template('/website_sale/static/src/xml/ecommerce.xml');
 
     var editor = new instance.website.sale.Checkout(instance.webclient);
-    editor.prependTo($('.oe_placeholder_checkout'));
+    editor.replace($('.oe_placeholder_checkout'));
 });

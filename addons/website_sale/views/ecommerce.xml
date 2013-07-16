@@ -3,16 +3,24 @@
     <data>
         <!-- Layout add nav and footer -->
 
-        <record id="layout_ecommerce" model="ir.ui.view">
-            <field name="name">layout_ecommerce</field>
-            <field name="inherit_id" ref="website.layout"/>
+        <record id="header_ecommerce" model="ir.ui.view">
+            <field name="name">header_ecommerce</field>
+            <field name="inherit_id" ref="website.header"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="(//header//li)[last()]" position="after">
+                    <xpath expr="(//li)[last()]" position="after">
                         <li class="pull-right"><a href="/shop/mycart"><i class="icon-shopping-cart icon-large"></i> My cart</a></li>
                         <li class="pull-right"><a href="/shop">Shop</a></li>
                     </xpath>
-                    <xpath expr="//footer/div/div/div[3]" position="inside">
+               </data>
+            </field>
+        </record>
+        <record id="footer_ecommerce" model="ir.ui.view">
+            <field name="name">footer_ecommerce</field>
+            <field name="inherit_id" ref="website.footer"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="/div/div/div[3]" position="inside">
                         SHOP Footer
                     </xpath>
                </data>
@@ -186,7 +194,7 @@
                             </div>
                             <t t-call="website_sale.product_recommended"/>
                             <t t-call="website_sale.total"/>
-                            <a t-if="order.order_line" href="/shop/customer"><button class="btn btn-success">Next stage</button></a>
+                            <a t-if="order.order_line" href="/shop/checkout"><button class="btn btn-success">Next stage</button></a>
                         </span>
                     </t>
                 </t>
@@ -217,40 +225,15 @@
 
         <!-- Page confirm my cart -->
 
-        <record id="customer" model="ir.ui.view">
-            <field name="name">customer</field>
+        <record id="checkout" model="ir.ui.view">
+            <field name="name">checkout</field>
             <field name="type">qweb</field>
             <field name="arch" type="xml">
                 <t t-name="website_sale.customer">
                 <t t-call="website_sale.page">
-                    <t t-set="title">Your informations</t>
+                    <t t-set="title">Checkout</t>
                     <t t-set="shop_content">
-                        <div class="oe_placeholder_checkout">-</div>
-                        <form action="/shop/customer" class="oe_signin" method="post" t-if="not partner">
-                            <h5>Please Sign in or enter your informations</h5>
-                            <input name="login" type="text" placeholder="Login..."/><br/>
-                            <input name="password" type="password" placeholder="Password..."/><br/>
-                            <button type="submit" class="btn btn-success">Login</button> or <button type="reset" class="btn btn-primary oe_toggleform">Complete your address</button>
-                        </form>
-                        <form action="/shop/confirm_cart" class="oe_signup" method="post" t-att-style="partner and 'display:block' or ''">
-                            <h5 t-if="partner">Please confirm your informations</h5>
-                            <h5 t-if="not partner">Please enter your informations</h5>
-                            <input name="name" type="text" required="True" placeholder="Name..." t-att-value="partner and partner.name or ''"/><br/>
-                            <input name="phone" type="tel"
-                                required="True" placeholder="Phone number..." t-att-value="partner and partner.phone or ''"/>
-                            <input name="email" type="email" required="True" placeholder="Email..." t-att-value="partner and partner.email or ''"/>
-                            <h5 t-if="partner">Please confirm your address</h5>
-                            <h5 t-if="not partner">Please enter your address</h5>
-                            <address>
-                                <input name="street" type="text" required="True" placeholder="Street..." t-att-value="partner and partner.street or ''"/><br/>
-                                <input name="street2" type="text" placeholder="Street..." t-att-value="partner and partner.street2 or ''"/><br/>
-                                <input name="zip" type="text" required="True" placeholder="Zip-code..." t-att-value="partner and partner.zip or ''"/>
-                                <input name="city" type="text" required="True" placeholder="City..." t-att-value="partner and partner.city or ''"/><br/>
-                                <input name="country" type="text" required="True" placeholder="Country..." t-att-value="partner and partner.country_id and partner.country_id.name_get()[0][1] or ''"/>
-                                <input name="state" type="text" placeholder="State..." t-att-value="partner and partner.state_id and partner.state_id.name_get()[0][1] or ''"/>
-                            </address>
-                            <button type="submit" class="btn btn-success">Next stage</button><t t-if="not partner"> or <button type="reset" class="btn btn-primary oe_toggleform">Sign in</button></t>
-                        </form>
+                        <div class="oe_placeholder_checkout">oe_placeholder_checkout</div>
                     </t>
                 </t>
                 </t>
