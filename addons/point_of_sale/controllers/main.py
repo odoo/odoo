@@ -4,29 +4,31 @@ import simplejson
 import os
 import openerp
 
+from openerp.addons.web import http
+from openerp.addons.web.http import request
 from openerp.addons.web.controllers.main import manifest_list, module_boot, html_template
 
-class PointOfSaleController(openerp.addons.web.http.Controller):
-    _cp_path = '/pos'
+class PointOfSaleController(http.Controller):
 
-    @openerp.addons.web.http.httprequest
-    def app(self, req, s_action=None, **kw):
-        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list(req, None, 'js'))
-        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list(req, None, 'css'))
+    @http.route('/pos/app', type='http', auth='admin')
+    def app(self):
+        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js',db=request.db))
+        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list('css',db=request.db))
 
-        cookie = req.httprequest.cookies.get("instance0|session_id")
+        cookie = request.httprequest.cookies.get("instance0|session_id")
         session_id = cookie.replace("%22","")
-        template = html_template.replace('<html','<html manifest="/pos/manifest?session_id=%s"'%session_id)
+        template = html_template.replace('<html','<html manifest="/pos/manifest?session_id=%s"' % request.session_id)
+
         r = template % {
             'js': js,
             'css': css,
-            'modules': simplejson.dumps(module_boot(req)),
+            'modules': simplejson.dumps(module_boot(request)),
             'init': 'var wc = new s.web.WebClient();wc.appendTo($(document.body));'
         }
         return r
 
-    @openerp.addons.web.http.httprequest
-    def manifest(self, req, **kwargs):
+    @http.route('/pos/manifest',type='http', auth='admin')
+    def manifest(self):
         """ This generates a HTML5 cache manifest files that preloads the categories and products thumbnails 
             and other ressources necessary for the point of sale to work offline """
 
@@ -45,16 +47,16 @@ class PointOfSaleController(openerp.addons.web.http.Controller):
         imgdir = openerp.modules.get_module_resource('point_of_sale','static/src/img');
         load_css_img(imgdir,'/point_of_sale/static/src/img')
         
-        products = req.session.model('product.product')
-        for p in products.search_read([('pos_categ_id','!=',False)], ['name']):
+        products = request.registry.get('product.product')
+        for p in products.search_read(request.cr, request.uid, [('pos_categ_id','!=',False)], ['name']):
             product_id = p['id']
-            url = "/web/binary/image?session_id=%s&model=product.product&field=image&id=%s" % (req.session_id, product_id)
+            url = "/web/binary/image?session_id=%s&model=product.product&field=image&id=%s" % (request.session_id, product_id)
             ml.append(url)
         
-        categories = req.session.model('pos.category')
-        for c in categories.search_read([],['name']):
+        categories = request.registry.get('pos.category')
+        for c in categories.search_read(request.cr, request.uid, [], ['name']):
             category_id = c['id']
-            url = "/web/binary/image?session_id=%s&model=pos.category&field=image&id=%s" % (req.session_id, category_id)
+            url = "/web/binary/image?session_id=%s&model=pos.category&field=image&id=%s" % (request.session_id, category_id)
             ml.append(url)
 
         ml += ["NETWORK:","*"]
@@ -62,108 +64,103 @@ class PointOfSaleController(openerp.addons.web.http.Controller):
 
         return m
 
-    @openerp.addons.web.http.jsonrequest
-    def dispatch(self, request, iface, **kwargs):
-        method = 'iface_%s' % iface
-        return getattr(self, method)(request, **kwargs)
-
-    @openerp.addons.web.http.jsonrequest
-    def scan_item_success(self, request, ean):
+    @http.route('/pos/scan_item_success', type='json', auth='admin')
+    def scan_item_success(self, ean):
         """
         A product has been scanned with success
         """
         print 'scan_item_success: ' + str(ean)
         return 
 
-    @openerp.addons.web.http.jsonrequest
-    def scan_item_error_unrecognized(self, request, ean):
+    @http.route('/pos/scan_item_error_unrecognized')
+    def scan_item_error_unrecognized(self, ean):
         """
         A product has been scanned without success
         """
         print 'scan_item_error_unrecognized: ' + str(ean)
         return 
 
-    @openerp.addons.web.http.jsonrequest
-    def help_needed(self, request):
+    @http.route('/pos/help_needed', type='json', auth='admin')
+    def help_needed(self):
         """
         The user wants an help (ex: light is on)
         """
         print "help_needed"
         return 
 
-    @openerp.addons.web.http.jsonrequest
-    def help_canceled(self, request):
+    @http.route('/pos/help_canceled', type='json', auth='admin')
+    def help_canceled(self):
         """
         The user stops the help request
         """
         print "help_canceled"
         return 
 
-    @openerp.addons.web.http.jsonrequest
-    def weighting_start(self, request):
+    @http.route('/pos/weighting_start', type='json', auth='admin')
+    def weighting_start(self):
         print "weighting_start"
         return 
 
-    @openerp.addons.web.http.jsonrequest
-    def weighting_read_kg(self, request):
+    @http.route('/pos/weighting_read_kg', type='json', auth='admin')
+    def weighting_read_kg(self):
         print "weighting_read_kg"
-        return 0.0
+        return 3.14
 
-    @openerp.addons.web.http.jsonrequest
-    def weighting_end(self, request):
+    @http.route('/pos/weighting_end', type='json', auth='admin')
+    def weighting_end(self):
         print "weighting_end"
         return 
 
-    @openerp.addons.web.http.jsonrequest
-    def payment_request(self, request, price):
+    @http.route('/pos/payment_request', type='json', auth='admin')
+    def payment_request(self, price):
         """
         The PoS will activate the method payment 
         """
         print "payment_request: price:"+str(price)
         return 'ok'
 
-    @openerp.addons.web.http.jsonrequest
-    def payment_status(self, request):
+    @http.route('/pos/payment_status', type='json', auth='admin')
+    def payment_status(self):
         print "payment_status"
         return { 'status':'waiting' } 
 
-    @openerp.addons.web.http.jsonrequest
-    def payment_cancel(self, request):
+    @http.route('/pos/payment_cancel', type='json', auth='admin')
+    def payment_cancel(self):
         print "payment_cancel"
         return 
 
-    @openerp.addons.web.http.jsonrequest
-    def transaction_start(self, request):
+    @http.route('/pos/transaction_start', type='json', auth='admin')
+    def transaction_start(self):
         print 'transaction_start'
         return 
 
-    @openerp.addons.web.http.jsonrequest
-    def transaction_end(self, request):
+    @http.route('/pos/transaction_end', type='json', auth='admin')
+    def transaction_end(self):
         print 'transaction_end'
         return 
 
-    @openerp.addons.web.http.jsonrequest
-    def cashier_mode_activated(self, request):
+    @http.route('/pos/cashier_mode_activated', type='json', auth='admin')
+    def cashier_mode_activated(self):
         print 'cashier_mode_activated'
         return 
 
-    @openerp.addons.web.http.jsonrequest
-    def cashier_mode_deactivated(self, request):
+    @http.route('/pos/cashier_mode_deactivated', type='json', auth='admin')
+    def cashier_mode_deactivated(self):
         print 'cashier_mode_deactivated'
         return 
 
-    @openerp.addons.web.http.jsonrequest
-    def open_cashbox(self, request):
+    @http.route('/pos/open_cashbox', type='json', auth='admin')
+    def open_cashbox(self):
         print 'open_cashbox'
         return
 
-    @openerp.addons.web.http.jsonrequest
-    def print_receipt(self, request, receipt):
+    @http.route('/pos/print_receipt', type='json', auth='admin')
+    def print_receipt(self, receipt):
         print 'print_receipt' + str(receipt)
         return
 
-    @openerp.addons.web.http.jsonrequest
-    def print_pdf_invoice(self, request, pdfinvoice):
+    @http.route('/pos/print_pdf_invoice', type='json', auth='admin')
+    def print_pdf_invoice(self, pdfinvoice):
         print 'print_pdf_invoice' + str(pdfinvoice)
         return
 

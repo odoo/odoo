@@ -838,6 +838,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             instance.web.blockUI(); 
 
             this.pos = new module.PosModel(this.session);
+            this.pos.pos_widget = this;
             this.pos_widget = this; //So that pos_widget's childs have pos_widget set automatically
 
             this.numpad_visible = true;
@@ -952,6 +953,12 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.error_negative_price_popup = new module.ErrorNegativePricePopupWidget(this, {});
             this.error_negative_price_popup.appendTo($('.point-of-sale'));
 
+            this.error_no_client_popup = new module.ErrorNoClientPopupWidget(this, {});
+            this.error_no_client_popup.appendTo($('.point-of-sale'));
+
+            this.error_invoice_transfer_popup = new module.ErrorInvoiceTransferPopupWidget(this, {});
+            this.error_invoice_transfer_popup.appendTo($('.point-of-sale'));
+
             // --------  Misc ---------
 
             this.notification = new module.SynchNotificationWidget(this,{});
@@ -1013,6 +1020,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     'error-session': this.error_session_popup,
                     'error-negative-price': this.error_negative_price_popup,
                     'choose-receipt': this.choose_receipt_popup,
+                    'error-no-client': this.error_no_client_popup,
+                    'error-invoice-transfer': this.error_invoice_transfer_popup,
                 },
                 default_client_screen: 'welcome',
                 default_cashier_screen: 'products',
