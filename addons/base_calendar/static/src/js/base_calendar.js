@@ -49,13 +49,12 @@ instance.base_calendar = {}
             var att_status = "do_decline";
             var self = this;
             var reload_page = function(){
-                return location.replace(_.str.sprintf('/?db=%s#view_type=%s&model=crm.meeting&action=%s&active_id=%s',self.db,self.view_type,self.action,self.id));
+                return location.replace(_.str.sprintf('/?db=%s#id=%s&view_type=%s&model=crm.meeting',self.db,self.id,self.view_type));
             }
             if(self.status === 'accepted'){att_status = "do_accept";}
             var calender_attendee = new instance.web.Model('calendar.attendee')
-            var check = calender_attendee.query(["state"]).filter([["id", "=", parseInt(this.token)]]).first();
-            return check.done(function(res){
-                if(res['state'] === "needs-action"){
+            return calender_attendee.get_func("search_read")([["id", "=", parseInt(this.token)]],['state']).done(function(res){
+                if(res[0] && res[0]['state'] === "needs-action"){
                     return calender_attendee.call(att_status,[[parseInt(self.token)]]).done(reload_page);
                 }
                 reload_page();
