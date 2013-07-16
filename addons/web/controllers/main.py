@@ -778,7 +778,7 @@ class Database(http.Controller):
             return request.make_response(db_dump,
                [('Content-Type', 'application/octet-stream; charset=binary'),
                ('Content-Disposition', content_disposition(filename))],
-               {'fileToken': int(token)}
+               {'fileToken': token}
             )
         except Exception, e:
             return simplejson.dumps([[],[{'error': openerp.tools.ustr(e), 'title': _('Backup Database')}]])
@@ -1273,7 +1273,7 @@ class Binary(http.Controller):
             return request.make_response(filecontent,
                 headers=[('Content-Type', 'application/octet-stream'),
                         ('Content-Disposition', content_disposition(filename))],
-                cookies={'fileToken': int(token)})
+                cookies={'fileToken': token})
 
     @http.route('/web/binary/upload', type='http', auth="user")
     def upload(self, callback, ufile):
@@ -1572,7 +1572,7 @@ class ExportFormat(object):
             headers=[('Content-Disposition',
                             content_disposition(self.filename(model))),
                      ('Content-Type', self.content_type)],
-            cookies={'fileToken': int(token)})
+            cookies={'fileToken': token})
 
 class CSVExport(ExportFormat, http.Controller):
     fmt = {'tag': 'csv', 'label': 'CSV'}
