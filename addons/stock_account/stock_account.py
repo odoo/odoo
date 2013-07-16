@@ -73,6 +73,8 @@ class stock_quant(osv.osv):
     location_from: can be None if it's a new quant
     """
     def _account_entry_move(self, cr, uid, quant, location_from, location_to, move, context=None):
+        if context is None:
+            context = {}
         if quant.product_id.valuation <> 'real_time':
             return False
         company_from = self._location_owner(cr, uid, quant, location_from, context=context)
@@ -80,25 +82,30 @@ class stock_quant(osv.osv):
         if company_from == company_to:
             return False
 
-        journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(cr, uid, move, context=context)
-        account_moves = []
         # Create Journal Entry for products arriving in the company
         if company_to:
+            ctx = context.copy()
+            ctx['force_company'] = company_to.id
+            journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(cr, uid, move, context=ctx)
             if location_from and location_from.usage == 'customer':
                 #goods returned from customer
-                account_moves += self._create_account_move_line(cr, uid, quant, move, acc_dest, acc_valuation, context=context)
+                self._create_account_move_line(cr, uid, quant, move, acc_dest, acc_valuation, journal_id, context=ctx)
             else:
-                account_moves += self._create_account_move_line(cr, uid, quant, move, acc_src, acc_valuation, context=context)
+                self._create_account_move_line(cr, uid, quant, move, acc_src, acc_valuation, journal_id, context=ctx)
 
         # Create Journal Entry for products leaving the company
         if company_from:
+            ctx = context.copy()
+            ctx['force_company'] = company_from.id
+            journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(cr, uid, move, context=ctx)
             if location_to and location_to.usage == 'supplier':
                 #goods returned to supplier
-                account_moves += self._create_account_move_line(cr, uid, quant, move, acc_valuation, acc_src, context=context)
+                self._create_account_move_line(cr, uid, quant, move, acc_valuation, acc_src, journal_id, context=ctx)
             else:
-                account_moves += self._create_account_move_line(cr, uid, quant, move, acc_valuation, acc_dest, context=context)
+                self._create_account_move_line(cr, uid, quant, move, acc_valuation, acc_dest, journal_id, context=ctx)
 
     def move_single_quant(self, cr, uid, quant, qty, move, context=None):
+        #TODO check if the stock valuation works for negative quants (fp thinks it should be taken care into _quant_create and _quant_split)
         location_from = quant and quant.location_id or False
         quant = super(stock_quant, self).move_single_quant(cr, uid, quant, qty, move, context=context)
         quant.refresh()
@@ -253,7 +260,7 @@ class stock_quant(osv.osv):
     #                     'line_id': move_lines,
     #                     'ref': move.picking_id and move.picking_id.name})
 
-    def _create_account_move_line(self, cr, uid, quant, move, credit_account_id, debit_account_id, context=None):
+    def _prepare_account_move_line(self, cr, uid, quant, move, credit_account_id, debit_account_id, context=None):
         """
         Generate the account.move.line values to post to track the stock valuation difference due to the
         processing of the given quant.
@@ -268,7 +275,7 @@ class stock_quant(osv.osv):
                     'ref': move.picking_id and move.picking_id.name or False,
                     'date': time.strftime('%Y-%m-%d'),
                     'partner_id': partner_id,
-                    'debit': valuation_amount,
+                    'debit': valuation_amount * quant.qty,
                     'account_id': debit_account_id,
         }
         credit_line_vals = {
@@ -279,11 +286,18 @@ class stock_quant(osv.osv):
                     'ref': move.picking_id and move.picking_id.name or False,
                     'date': time.strftime('%Y-%m-%d'),
                     'partner_id': partner_id,
-                    'credit': valuation_amount,
+                    'credit': valuation_amount * quant.qty,
                     'account_id': credit_account_id,
         }
         res = [(0, 0, debit_line_vals), (0, 0, credit_line_vals)]
         return res
+
+    def _create_account_move_line(self, cr, uid, quant, move, credit_account_id, debit_account_id, journal_id, context=None):
+        move_obj = self.pool.get('account.move')
+        move_lines = self._prepare_account_move_line(cr, uid, quant, move, credit_account_id, debit_account_id, context=context)
+        return move_obj.create(cr, uid, {'journal_id': journal_id,
+                                  'line_id': move_lines,
+                                  'ref': move.picking_id and move.picking_id.name}, context=context)
 
 
 #----------------------------------------------------------

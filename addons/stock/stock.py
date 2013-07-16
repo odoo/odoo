@@ -185,7 +185,6 @@ class stock_quant(osv.osv):
             self.move_single_quant(cr, uid, quant, qty, move, context=context)
 
     def move_single_quant(self, cr, uid, quant, qty, move, context=None):
-        #TODO check if the stock valuation works for negative quants (fp thinks it should be taken care into _quant_create and _quant_split)
         location_from = quant and quant.location_id
         if not quant:
             quant = self._quant_create(cr, uid, qty, move, context=context)
@@ -1904,7 +1903,6 @@ class stock_move(osv.osv):
         move = self.browse(cr, uid, move_id, context=context)
         product_uom_qty = partial_data.get('product_uom_qty', 0.0)
         product_uom = partial_data.get('product_uom', False)
-        #product_price = partial_data.get('product_price', 0.0)
         #lot_id = partial_data.get('lot_id')
         if move.state in ('done', 'cancel') or product_uom_qty == 0:
             return
@@ -1939,7 +1937,7 @@ class stock_move(osv.osv):
                         'group_id': move_group_id,
                         'state': 'assigned',
                         'move_dest_id': False,
-                        #'price_unit': product_price,  # not needed, isn't it?
+                        'price_unit': partial_data.get('price_unit', 0.0),
                         }
             new_move = self.copy(cr, uid, move.id, defaults)
             todo_move_id = new_move

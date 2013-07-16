@@ -160,6 +160,7 @@ class stock_partial_picking(osv.osv_memory):
                 'product_uom_qty': wizard_line.quantity,
                 'product_uom': wizard_line.product_uom.id,
                 'lot_id': wizard_line.lot_id.id,
+                'price_unit': wizard_line.cost,
             })
 
             move_id = wizard_line.move_id.id
