@@ -169,6 +169,13 @@ class stock_quant(osv.osv):
         # Used for negative quants to reconcile after compensated by a new positive one
         'propagated_from_id': fields.many2one('stock.quant', 'Linked Quant', help = 'The negative quant this is coming from'), 
     }
+    
+    
+    def _check_qorder(self, word):
+        """
+        Needs to pass True to allow "expression order" in search
+        """
+        return True
 
     def quants_reserve(self, cr, uid, quants, move, context=None):
         toreserve = []
