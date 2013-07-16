@@ -2,28 +2,162 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="Website.sale.Checkout">
-    <div class="accordion" id="accordion2">
-      <div class="accordion-group">
-        <div class="accordion-heading">
-          <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
-            Collapsible Group Item #1
-          </a>
-        </div>
-        <div id="collapseOne" class="accordion-body collapse in">
-          <div class="accordion-inner">
-            Anim pariatur cliche...
+    <div class="oe_checkout">
+      <div class="accordion" id="accordion_checkout">
+        <div class="accordion-group">
+          <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_checkout" href="#accordion_checkout_method">Checkout Method</a>
+          </div>
+          <div id="accordion_checkout_method" class="accordion-body collapse in">
+            <div class="accordion-inner">
+              <div class="span4">
+                <h4>Checkout as a Guest or Register</h4>
+                <p>Register with us for future convenience:</p>
+                <div>
+                  <label class="radio">Checkout as Guest<input type="radio" checked="checked" name="register_mode" value="guest"/></label>
+                  <label class="radio">Register<input type="radio" name="register_mode" value="register"/></label>
+                </div>
+                <h5>Register and save time!</h5>
+                <p>Register with us for future convenience:</p>
+                <ul class="ul">
+                  <li>Fast and easy check out</li>
+                  <li>Easy access to your order history and status</li>
+                </ul>
+                <button type="button" class="btn" data-toggle="collapse" data-target="#accordion_checkout_billing" data-parent="#accordion_checkout">Continue</button>
+              </div>
+              <div class="span4">
+                <h4>Login</h4>
+                <h5>Already registered?</h5>
+                <p>Please log in below:</p>
+                <input type="text" name="email" placeholder="Email address"/>
+                <input type="password" name="password" placeholder="Password"/>
+                <div><a href="#">Forgot your password?</a></div>
+                <button type="submit" class="btn" data-toggle="collapse" data-target="#accordion_checkout_billing" data-parent="#accordion_checkout">Login</button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="accordion-group">
-        <div class="accordion-heading">
-          <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseTwo">
-            Collapsible Group Item #2
-          </a>
+        <div class="accordion-group">
+          <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_checkout" href="#accordion_checkout_billing">Billing Information</a>
+          </div>
+          <div id="accordion_checkout_billing" class="accordion-body collapse">
+            <div class="accordion-inner">
+              <label class="span8">Name and firstname<input class="span7" type="text" name="name" placeholder="Name and firstname"/></label>
+              <label class="span4">Telephone<input type="text" name="tel" placeholder="Telephone"/></label>
+              <label class="span4">Fax<input type="text" name="fax" placeholder="Fax"/></label>
+              <label class="span4">Company<input type="text" name="company" placeholder="Company"/></label>
+              <label class="span4">Email address<input type="email" name="email" placeholder="Email address"/></label>
+              <label class="span8">Street<input class="span7" type="text" name="street" placeholder="Street address"/></label>
+              <label class="span4">City<input type="text" name="city" placeholder="City"/></label>
+              <label class="span4">State/Province<input type="text" name="state" placeholder="State/Province"/></label>
+              <label class="span4">Zip/Postal Code<input type="text" name="zip" placeholder="Zip/Postal Code"/></label>
+              <label class="span4">Country<input type="text" name="state" placeholder="Country"/></label>
+              <div>
+                <label class="radio">Ship to this address<input type="radio" name="shipping_method" checked="checked" value="same"/></label>
+                <label class="radio">Ship to different address<input type="radio" name="shipping_method" value="different"/></label>
+              </div>
+              <div class="span8">
+                <button type="submit" class="btn" data-toggle="collapse" data-target="#accordion_checkout_shipping" data-parent="#accordion_checkout">Continue</button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div id="collapseTwo" class="accordion-body collapse">
-          <div class="accordion-inner">
-            Anim pariatur cliche...
+        <div class="accordion-group">
+          <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_checkout" href="#accordion_checkout_shipping">Shipping Information</a>
+          </div>
+          <div id="accordion_checkout_shipping" class="accordion-body collapse">
+            <div class="accordion-inner">
+              <label class="span8">Name and firstname<input class="span7" type="text" name="name" placeholder="Name and firstname"/></label>
+              <label class="span4">Telephone<input type="text" name="tel" placeholder="Telephone"/></label>
+              <label class="span4">Fax<input type="text" name="fax" placeholder="Fax"/></label>
+              <label class="span4">Company<input type="text" name="company" placeholder="Company"/></label>
+              <label class="span8">Street<input class="span7" type="text" name="street" placeholder="Street address"/></label>
+              <label class="span4">City<input type="text" name="city" placeholder="City"/></label>
+              <label class="span4">State/Province<input type="text" name="state" placeholder="State/Province"/></label>
+              <label class="span4">Zip/Postal Code<input type="text" name="zip" placeholder="Zip/Postal Code"/></label>
+              <label class="span4">Country<input type="text" name="state" placeholder="Country"/></label>
+              <div class="span8">
+                <button type="submit" class="btn" data-toggle="collapse" data-target="#accordion_checkout_payment" data-parent="#accordion_checkout">Continue</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-group">
+          <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_checkout" href="#accordion_checkout_payment">Payment Information</a>
+          </div>
+          <div id="accordion_checkout_payment" class="accordion-body collapse">
+            <div class="accordion-inner">
+              <div>
+                <label class="radio">Check / Money order<input type="radio" name="payment_method" checked="checked" value="check"/></label>
+                <label class="radio">Credit Card (saved)<input type="radio" name="payment_method" value="card"/></label>
+              </div>
+              <div>
+                <label class="span4">Name on Card<input type="text" name="name" placeholder="Name on Card"/></label>
+                <label class="span4">Credit Card Type
+                  <select name="type">
+                    <option value="">--Please Select--</option>
+                    <option value="AE">American Express</option>
+                    <option value="VI">Visa</option>
+                    <option value="MC">MasterCard</option>
+                    <option value="DI">Discover</option>
+                  </select>
+                </label>
+                <label class="span4">Credit Card Number<input type="text" name="number" placeholder="Credit Card Number"/></label>
+                <label class="span4">Expiration Date
+                  <div>
+                    <select class="span2" name="expiration_month">
+                      <option value="" selected="selected">Month</option>
+                      <option value="1">01 - January</option>
+                      <option value="2">02 - February</option>
+                      <option value="3">03 - March</option>
+                      <option value="4">04 - April</option>
+                      <option value="5">05 - May</option>
+                      <option value="6">06 - June</option>
+                      <option value="7">07 - July</option>
+                      <option value="8">08 - August</option>
+                      <option value="9">09 - September</option>
+                      <option value="10">10 - October</option>
+                      <option value="11">11 - November</option>
+                      <option value="12">12 - December</option>
+                    </select>
+                    <select class="span1" name="expiration_year">
+                      <option value="" selected="selected">Year</option>
+                      <option value="2013">2013</option>
+                      <option value="2014">2014</option>
+                      <option value="2015">2015</option>
+                      <option value="2016">2016</option>
+                      <option value="2017">2017</option>
+                      <option value="2018">2018</option>
+                      <option value="2019">2019</option>
+                      <option value="2020">2020</option>
+                      <option value="2021">2021</option>
+                      <option value="2022">2022</option>
+                      <option value="2023">2023</option>
+                    </select>
+                  </div>
+                </label>
+                <label class="span4">Card Verification Number<input type="text" name="verification" placeholder="Card Verification Number"/></label>
+              </div>
+              <div class="span8">
+                <button type="submit" class="btn" data-toggle="collapse" data-target="#accordion_checkout_review" data-parent="#accordion_checkout">Continue</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-group">
+          <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_checkout" href="#accordion_checkout_review">Order Review</a>
+          </div>
+          <div id="accordion_checkout_review" class="accordion-body collapse">
+            <div class="accordion-inner">
+              Anim pariatur cliche...
+              <div class="span8">
+                <button type="submit" class="btn">Confirm your order</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -208,6 +208,7 @@
                 <t t-call="website_sale.page">
                     <t t-set="title">Your informations</t>
                     <t t-set="shop_content">
+                        <div class="oe_placeholder_checkout">-</div>
                         <form action="/shop/customer" class="oe_signin" method="post" t-if="not partner">
                             <h5>Please Sign in or enter your informations</h5>
                             <input name="login" type="text" placeholder="Login..."/><br/>
@@ -233,8 +234,6 @@
                             </address>
                             <button type="submit" class="btn btn-success">Next stage</button><t t-if="not partner"> or <button type="reset" class="btn btn-primary oe_toggleform">Sign in</button></t>
                         </form>
-                        <t t-call="website_sale.total"/>
-                        <div class="oe_placeholder_checkout">-</div>
                     </t>
                 </t>
             </field>
