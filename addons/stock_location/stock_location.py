@@ -38,6 +38,13 @@ class stock_location_route(osv.osv):
         'sequence': lambda self,cr,uid,ctx: 0,
     }
 
+class stock_warehouse(osv.osv):
+    _inherit = 'stock.warehouse'
+    _columns = {
+        'route_id': fields.many2one('stock.location.route', help='Default route through the warehouse'), 
+    }
+
+
 class stock_location_path(osv.osv):
     _name = "stock.location.path"
     _description = "Pushed Flows"
@@ -130,9 +137,12 @@ class procurement_rule(osv.osv):
 
 
 
-
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
+    
+    _columns = {
+        'route_ids': fields.many2many('stock.location.route', 'stock_location_route_procurement', 'procurement_id', 'route_id', 'Destination route', help="Preferred route to be followed by the procurement order"),
+        }
     
     def _run_move_create(self, cr, uid, procurement, context=None):
         d = super(procurement_order, self)._run_move_create(cr, uid, procurement, context=context)
@@ -150,11 +160,13 @@ class procurement_order(osv.osv):
 
     def _search_suitable_rule(self, cr, uid, procurement, domain, context=None):
         '''we try to first find a rule among the ones defined on the procurement order group and if none is found, we try on the routes defined for the product, and finally we fallback on the default behavior'''
-        #TODO check first on procurement order group
-        route_ids = [x.id for x in procurement.product_id.route_ids]
+        route_ids = [x.id for x in procurement.route_ids]
         res = super(procurement_order, self)._search_suitable_rule(cr, uid, procurement, domain + [('route_id', 'in', route_ids)], context=context)
         if not res:
-            return super(procurement_order, self)._search_suitable_rule(cr, uid, procurement, domain, context=context)
+            route_ids = [x.id for x in procurement.product_id.route_ids]
+            res = super(procurement_order, self)._search_suitable_rule(cr, uid, procurement, domain + [('route_id', 'in', route_ids)], context=context)
+            if not res:
+                return super(procurement_order, self)._search_suitable_rule(cr, uid, procurement, domain, context=context)
         return res
 
 

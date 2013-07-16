@@ -736,14 +736,6 @@ class sale_order_line(osv.osv):
                                     WHERE rel.invoice_id = ANY(%s)""", (list(ids),))
         return [i[0] for i in cr.fetchall()]
 
-    def _number_packages(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            try:
-                res[line.id] = int((line.product_uom_qty+line.product_packaging.qty-0.0001) / line.product_packaging.qty)
-            except:
-                res[line.id] = 1
-        return res
 
     _name = 'sale.order.line'
     _description = 'Sales Order Line'
@@ -781,8 +773,7 @@ class sale_order_line(osv.osv):
         'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation and the shipping of the products to the customer", readonly=True, states={'draft': [('readonly', False)]}),
         'procurement_id': fields.many2one('procurement.order', 'Procurement'),
         #'property_ids': fields.many2many('mrp.property', 'sale_order_line_property_rel', 'order_id', 'property_id', 'Properties', readonly=True, states={'draft': [('readonly', False)]}),
-        'product_packaging': fields.many2one('product.packaging', 'Packaging'),
-        'number_packages': fields.function(_number_packages, type='integer', string='Number Packages'),
+
         
     }
     _order = 'order_id desc, sequence, id'
@@ -796,7 +787,6 @@ class sale_order_line(osv.osv):
         'type': 'make_to_stock',
         'price_unit': 0.0,
         'delay': 0.0,
-        'product_packaging': False,
     }
 
     def _get_line_qty(self, cr, uid, line, context=None):
@@ -867,106 +857,6 @@ class sale_order_line(osv.osv):
 
 
     
-    def product_packaging_change(self, cr, uid, ids, pricelist, product, qty=0, uom=False,
-                                   partner_id=False, packaging=False, flag=False, context=None):
-        if not product:
-            return {'value': {'product_packaging': False}}
-        product_obj = self.pool.get('product.product')
-        product_uom_obj = self.pool.get('product.uom')
-        pack_obj = self.pool.get('product.packaging')
-        warning = {}
-        result = {}
-        warning_msgs = ''
-        if flag:
-            res = self.product_id_change(cr, uid, ids, pricelist=pricelist,
-                    product=product, qty=qty, uom=uom, partner_id=partner_id,
-                    packaging=packaging, flag=False, context=context)
-            warning_msgs = res.get('warning') and res['warning']['message']
-
-        products = product_obj.browse(cr, uid, product, context=context)
-        if not products.packaging:
-            packaging = result['product_packaging'] = False
-        elif not packaging and products.packaging and not flag:
-            packaging = products.packaging[0].id
-            result['product_packaging'] = packaging
-
-        if packaging:
-            default_uom = products.uom_id and products.uom_id.id
-            pack = pack_obj.browse(cr, uid, packaging, context=context)
-            q = product_uom_obj._compute_qty(cr, uid, uom, pack.qty, default_uom)
-#            qty = qty - qty % q + q
-            if qty and (q and not (qty % q) == 0):
-                ean = pack.ean or _('(n/a)')
-                qty_pack = pack.qty
-                type_ul = pack.ul
-                if not warning_msgs:
-                    warn_msg = _("You selected a quantity of %d Units.\n"
-                                "But it's not compatible with the selected packaging.\n"
-                                "Here is a proposition of quantities according to the packaging:\n"
-                                "EAN: %s Quantity: %s Type of ul: %s") % \
-                                    (qty, ean, qty_pack, type_ul.name)
-                    warning_msgs += _("Picking Information ! : ") + warn_msg + "\n\n"
-                warning = {
-                       'title': _('Configuration Error!'),
-                       'message': warning_msgs
-                }
-            result['product_uom_qty'] = qty
-
-        return {'value': result, 'warning': warning}
-
-    def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
-            uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
-        context = context or {}
-        product_uom_obj = self.pool.get('product.uom')
-        partner_obj = self.pool.get('res.partner')
-        product_obj = self.pool.get('product.product')
-        warning = {}
-        res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty,
-            uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
-            lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
-
-        if not product:
-            res['value'].update({'product_packaging': False})
-            return res
-
-        #update of result obtained in super function
-        product_obj = product_obj.browse(cr, uid, product, context=context)
-        res['value']['delay'] = (product_obj.sale_delay or 0.0)
-        #res['value']['type'] = product_obj.procure_method
-
-        #check if product is available, and if not: raise an error
-        uom2 = False
-        if uom:
-            uom2 = product_uom_obj.browse(cr, uid, uom)
-            if product_obj.uom_id.category_id.id != uom2.category_id.id:
-                uom = False
-        if not uom2:
-            uom2 = product_obj.uom_id
-
-        # Calling product_packaging_change function after updating UoM
-        res_packing = self.product_packaging_change(cr, uid, ids, pricelist, product, qty, uom, partner_id, packaging, context=context)
-        res['value'].update(res_packing.get('value', {}))
-        warning_msgs = res_packing.get('warning') and res_packing['warning']['message'] or ''
-        compare_qty = float_compare(product_obj.virtual_available * uom2.factor, qty * product_obj.uom_id.factor, precision_rounding=product_obj.uom_id.rounding)
-        if (product_obj.type=='product') and int(compare_qty) == -1:
-          #and (product_obj.procure_method=='make_to_stock'): --> need to find alternative for procure_method
-            warn_msg = _('You plan to sell %.2f %s but you only have %.2f %s available !\nThe real stock is %.2f %s. (without reservations)') % \
-                    (qty, uom2 and uom2.name or product_obj.uom_id.name,
-                     max(0,product_obj.virtual_available), product_obj.uom_id.name,
-                     max(0,product_obj.qty_available), product_obj.uom_id.name)
-            warning_msgs += _("Not enough stock ! : ") + warn_msg + "\n\n"
-
-        #update of warning messages
-        if warning_msgs:
-            warning = {
-                       'title': _('Configuration Error!'),
-                       'message' : warning_msgs
-                    }
-        res.update({'warning': warning})
-        return res
-
-
 
 
 

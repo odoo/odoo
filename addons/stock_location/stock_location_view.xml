@@ -61,6 +61,17 @@
 			</field>
 		</record>
 
+        <record id="view_warehouse_inherit" model="ir.ui.view">
+            <field name="name">stock.warehouse</field>
+            <field name="model">stock.warehouse</field>
+            <field name="inherit_id" ref="stock.view_warehouse"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="route_id"/>
+                </xpath>
+            </field>
+        </record>
+
 		<record id="stock_location_route_tree" model="ir.ui.view">
 			<field name="name">stock.location.route.tree</field>
 			<field name="model">stock.location.route</field>

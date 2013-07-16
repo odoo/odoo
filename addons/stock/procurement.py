@@ -47,7 +47,7 @@ class procurement_order(osv.osv):
     _columns = {
         'location_id': fields.many2one('stock.location', 'Destination Location'),
         'move_id': fields.many2one('stock.move', 'Move', help="Move created by the procurement"),
-        'move_dest_id': fields.many2one('stock.move', 'Destination Move', help="Move which caused (created) the procurement")
+        'move_dest_id': fields.many2one('stock.move', 'Destination Move', help="Move which caused (created) the procurement"),
     }
 
     def _search_suitable_rule(self, cr, uid, procurement, domain, context=None):
