@@ -212,7 +212,7 @@
                             <h5>Please Sign in or enter your informations</h5>
                             <input name="login" type="text" placeholder="Login..."/><br/>
                             <input name="password" type="password" placeholder="Password..."/><br/>
-                            <button type="submit" class="btn btn-success">Next stage</button> or <button type="reset" class="btn btn-primary oe_toggleform">Complete your address</button>
+                            <button type="submit" class="btn btn-success">Login</button> or <button type="reset" class="btn btn-primary oe_toggleform">Complete your address</button>
                         </form>
                         <form action="/shop/confirm_cart" class="oe_signup" method="post" t-att-style="partner and 'display:block' or ''">
                             <h5 t-if="partner">Please confirm your informations</h5>
@@ -234,6 +234,7 @@
                             <button type="submit" class="btn btn-success">Next stage</button><t t-if="not partner"> or <button type="reset" class="btn btn-primary oe_toggleform">Sign in</button></t>
                         </form>
                         <t t-call="website_sale.total"/>
+                        <div class="oe_placeholder_checkout">-</div>
                     </t>
                 </t>
             </field>

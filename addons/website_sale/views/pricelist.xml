@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="product_pricelist_view">
+            <field name="name">product.pricelist.website.form</field>
+            <field name="model">product.pricelist</field>
+            <field name="inherit_id" ref="product.product_pricelist_view"/>
+            <field name="arch" type="xml">
+                <field name="active" position="after">
+                    <field name="code"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
