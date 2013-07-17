@@ -105,7 +105,7 @@ class stock_location_path(osv.osv):
                 'company_id': rule.company_id and rule.company_id.id or False,
                 'date_expected': newdate,
                 'picking_id': False,
-                'picking_type': move_obj.get_type_from_usage(cr, uid, move.location_id, move.location_dest_id, context=context)
+                'type': move_obj.get_type_from_usage(cr, uid, move.location_id, move.location_dest_id, context=context)
             })
             move_obj.write(cr, uid, [move.id], {
                 'move_dest_id': move_id,
@@ -253,6 +253,21 @@ class stock_move(osv.osv):
         moves = self.browse(cr, uid, ids, context=context)
         self._push_apply(cr, uid, moves, context=context)
         return result
+
+    def _create_procurement(self, cr, uid, move, context=None):
+        """
+            Next to creating the procurement order, it will propagate the routes
+        """
+        proc_id = super(stock_move, self)._create_procurement(cr, uid, move, context=context)
+        proc_obj = self.pool.get("procurement.order")
+        procs = proc_obj.search(cr, uid, [("move_id", "=", move.id)], context=context)
+        routes = []
+        for proc in proc_obj.browse(cr, uid, procs, context=context):
+            routes += [x.id for x in proc.route_ids]
+        if routes:
+            proc_obj.write(cr, uid, [proc_id], {'route_ids': [(4,x) for x in routes]}, context=context)
+        return proc_id
+
 
 class stock_location(osv.osv):
     _inherit = 'stock.location'

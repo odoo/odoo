@@ -43,6 +43,7 @@ class sale_order(osv.osv):
         res.update({
                 'route_ids': routes
                 })
+        return res
 
 class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'

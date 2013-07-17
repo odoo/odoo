@@ -29,7 +29,7 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='price_unit']" position="before">
+                <xpath expr="//tree/field[@name='price_unit']" position="before">
                     <field name="route_id"/>
                 </xpath>
             </field>
