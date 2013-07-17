@@ -291,16 +291,32 @@
     display: inline-block;
     text-align: center;
     vertical-align: top;
+    width: 205px;
+    max-height: 232px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 .point-of-sale #paypad button {
     height: 50px;
-    width: 208px;
+    display: block;
+    width: 100%;
     margin: 0px -6px 4px -2px;
     font-weight: bold;
     vertical-align: middle;
     color: #555555;
     border-top: 1px solid #efefef;
     font-size: 14px;
+}
+.point-of-sale #paypad button, .point-of-sale #numpad button, .point-of-sale .popup button{
+    position: relative;
+    top: 0;
+    -webkit-transition: top 150ms linear;
+       -moz-transition: top 150ms linear;
+        -ms-transition: top 150ms linear;
+            transition: top 150ms linear;
+}
+.point-of-sale #paypad button:active, .point-of-sale #numpad button:active, .point-of-sale .popup button:active{
+    top:3px;
 }
 .point-of-sale #paypad button:hover, .point-of-sale #numpad button:hover, .point-of-sale #numpad .selected-mode, .point-of-sale .popup button:hover {
     border: none;

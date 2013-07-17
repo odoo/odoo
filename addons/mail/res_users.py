@@ -23,6 +23,7 @@ from openerp.osv import fields, osv
 from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
 
+
 class res_users(osv.Model):
     """ Update of res.users class
         - add a preference about sending emails about notifications
@@ -42,7 +43,6 @@ class res_users(osv.Model):
     }
 
     _defaults = {
-        'alias_domain': False,  # always hide alias during creation
         'display_groups_suggestions': True,
     }
 
@@ -63,25 +63,20 @@ class res_users(osv.Model):
     def _auto_init(self, cr, context=None):
         """ Installation hook: aliases, partner following themselves """
         # create aliases for all users and avoid constraint errors
-        res = self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(res_users, self)._auto_init,
-            self._columns['alias_id'], 'login', alias_force_key='id', context=context)
-        return res
+        return self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(res_users, self)._auto_init,
+            self._name, self._columns['alias_id'], 'login', alias_force_key='id', context=context)
 
     def create(self, cr, uid, data, context=None):
-        # create default alias same as the login
         if not data.get('login', False):
             raise osv.except_osv(_('Invalid Action!'), _('You may not create a user. To create new users, you should use the "Settings > Users" menu.'))
+        if context is None:
+            context = {}
 
-        mail_alias = self.pool.get('mail.alias')
-        alias_id = mail_alias.create_unique_alias(cr, uid, {'alias_name': data['login']}, model_name=self._name, context=context)
-        data['alias_id'] = alias_id
-        data.pop('alias_name', None)  # prevent errors during copy()
-
-        # create user
-        user_id = super(res_users, self).create(cr, uid, data, context=context)
+        create_context = dict(context, alias_model_name=self._name, alias_parent_model_name=self._name)
+        user_id = super(res_users, self).create(cr, uid, data, context=create_context)
         user = self.browse(cr, uid, user_id, context=context)
-        # alias
-        mail_alias.write(cr, SUPERUSER_ID, [alias_id], {"alias_force_thread_id": user_id}, context)
+        self.pool.get('mail.alias').write(cr, SUPERUSER_ID, [user.alias_id.id], {"alias_force_thread_id": user_id, "alias_parent_thread_id": user_id}, context)
+
         # create a welcome message
         self._create_welcome_message(cr, uid, user, context=context)
         return user_id
@@ -94,12 +89,6 @@ class res_users(osv.Model):
         # TODO change SUPERUSER_ID into user.id but catch errors
         return self.pool.get('res.partner').message_post(cr, SUPERUSER_ID, [user.partner_id.id],
             body=body, context=context)
-
-    def write(self, cr, uid, ids, vals, context=None):
-        # User alias is sync'ed with login
-        if vals.get('login'):
-            vals['alias_name'] = vals['login']
-        return super(res_users, self).write(cr, uid, ids, vals, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
         # Cascade-delete mail aliases as well, as they should not exist without the user.
