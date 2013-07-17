@@ -29,7 +29,7 @@ from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp import netsvc
 from openerp import tools
-from openerp.tools import float_compare
+from openerp.tools import float_compare, DEFAULT_SERVER_DATETIME_FORMAT
 import openerp.addons.decimal_precision as dp
 import logging
 _logger = logging.getLogger(__name__)
@@ -543,6 +543,7 @@ class stock_picking(osv.osv):
     _name = "stock.picking"
     _inherit = ['mail.thread']
     _description = "Picking List"
+    _order = "id desc"
 
     def _set_maximum_date(self, cr, uid, ids, name, value, arg, context=None):
         """ Calculates planned date if it is greater than 'value'.
@@ -647,7 +648,7 @@ class stock_picking(osv.osv):
         ),
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
                  store=True, type='datetime', string='Scheduled Time', select=1, help="Scheduled time for the shipment to be processed"),
-        'date': fields.datetime('Time', help="Creation time, usually the time of the order.", select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
+        'date': fields.datetime('Creation Date', help="Creation date, usually the time of the order.", select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'date_done': fields.datetime('Date of Transfer', help="Date of Completion", states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
                  store=True, type='datetime', string='Max. Expected Date', select=2),
@@ -1109,7 +1110,7 @@ class stock_picking(osv.osv):
             if isinstance(partner, int):
                 partner = partner_obj.browse(cr, uid, [partner], context=context)[0]
             if not partner:
-                raise osv.except_osv(_('Error, no partner !'),
+                raise osv.except_osv(_('Error, no partner!'),
                     _('Please put a partner on the picking list if you want to generate invoice.'))
 
             if not inv_type:
@@ -1636,7 +1637,7 @@ class stock_move(osv.osv):
                        "* Waiting Availability: This state is reached when the procurement resolution is not straight forward. It may need the scheduler to run, a component to me manufactured...\n"\
                        "* Available: When products are reserved, it is set to \'Available\'.\n"\
                        "* Done: When the shipment is processed, the state is \'Done\'."),
-        'price_unit': fields.float('Unit Price', digits_compute= dp.get_precision('Account'), help="Technical field used to record the product cost set by the user during a picking confirmation (when average price costing method is used)"),
+        'price_unit': fields.float('Unit Price', digits_compute= dp.get_precision('Product Price'), help="Technical field used to record the product cost set by the user during a picking confirmation (when average price costing method is used)"),
         'price_currency_id': fields.many2one('res.currency', 'Currency for average price', help="Technical field used to record the currency chosen by the user during a picking confirmation (when average price costing method is used)"),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
         'backorder_id': fields.related('picking_id','backorder_id',type='many2one', relation="stock.picking", string="Back Order of", select=True),
@@ -1763,7 +1764,7 @@ class stock_move(osv.osv):
             for move in self.browse(cr, uid, ids, context=context):
                 if move.state == 'done':
                     if frozen_fields.intersection(vals):
-                        raise osv.except_osv(_('Operation forbidden !'),
+                        raise osv.except_osv(_('Operation Forbidden!'),
                                              _('Quantities, Units of Measure, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator).'))
         return  super(stock_move, self).write(cr, uid, ids, vals, context=context)
 
@@ -2191,7 +2192,7 @@ class stock_move(osv.osv):
                 if move.picking_id:
                     pickings.add(move.picking_id.id)
             if move.move_dest_id and move.move_dest_id.state == 'waiting':
-                self.write(cr, uid, [move.move_dest_id.id], {'state': 'assigned'})
+                self.write(cr, uid, [move.move_dest_id.id], {'state': 'confirmed'})
                 if context.get('call_unlink',False) and move.move_dest_id.picking_id:
                     wf_service.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
         self.write(cr, uid, ids, {'state': 'cancel', 'move_dest_id': False})
@@ -2323,7 +2324,6 @@ class stock_move(osv.osv):
                          'line_id': move_lines,
                          'ref': move.picking_id and move.picking_id.name})
 
-
     def action_done(self, cr, uid, ids, context=None):
         """ Makes the move done and if all moves are done, it will finish the picking.
         @return:
@@ -2369,7 +2369,7 @@ class stock_move(osv.osv):
         if todo:
             self.action_confirm(cr, uid, todo, context=context)
 
-        self.write(cr, uid, move_ids, {'state': 'done', 'date': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
+        self.write(cr, uid, move_ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
         for id in move_ids:
              wf_service.trg_trigger(uid, 'stock.move', id, cr)
 
@@ -2419,7 +2419,7 @@ class stock_move(osv.osv):
             # fix credit line:
             credit_line_vals['credit'] = cur_obj.compute(cr, uid, reference_currency_id, src_main_currency_id, reference_amount, context=context)
             if (not src_acct.currency_id) or src_acct.currency_id.id == reference_currency_id:
-                credit_line_vals.update(currency_id=reference_currency_id, amount_currency=reference_amount)
+                credit_line_vals.update(currency_id=reference_currency_id, amount_currency=-reference_amount)
         if reference_currency_id != dest_main_currency_id:
             # fix debit line:
             debit_line_vals['debit'] = cur_obj.compute(cr, uid, reference_currency_id, dest_main_currency_id, reference_amount, context=context)

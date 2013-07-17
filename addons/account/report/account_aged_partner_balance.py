@@ -366,12 +366,13 @@ class aged_trial_report(report_sxw.rml_parse, common_report_header):
         return period or 0.0
 
     def _get_partners(self,data):
+        # TODO: deprecated, to remove in trunk
         if data['form']['result_selection'] == 'customer':
-            return 'Receivable Accounts'
+            return self._translate('Receivable Accounts')
         elif data['form']['result_selection'] == 'supplier':
-            return 'Payable Accounts'
+            return self._translate('Payable Accounts')
         elif data['form']['result_selection'] == 'customer_supplier':
-            return 'Receivable and Payable Accounts'
+            return self._translate('Receivable and Payable Accounts')
         return ''
 
 report_sxw.report_sxw('report.account.aged_trial_balance', 'res.partner',

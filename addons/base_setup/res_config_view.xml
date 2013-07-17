@@ -31,7 +31,7 @@
                     <group>
                         <label for="id" string="Email"/>
                         <div name="email">
-                            <div>
+                            <div name="email.outgoing_server">
                                 <button type="action"
                                     name="%(base.action_ir_mail_server_list)d"
                                     string="Configure outgoing email servers" class="oe_link"/>
@@ -78,6 +78,15 @@
                             <div>
                                 <field name="module_base_import" class="oe_inline"/>
                                 <label for="module_base_import"/>
+                            </div>
+                        </div>
+                    </group>
+                    <group>
+                        <label for="id" string="Google Drive"/>
+                        <div name="google_drive">
+                            <div name="module_google_drive">
+                                <field name="module_google_drive" class="oe_inline"/>
+                                <label for="module_google_drive"/>
                             </div>
                         </div>
                     </group>

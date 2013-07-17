@@ -60,7 +60,7 @@ class crm_meeting(base_state, osv.Model):
         'categ_ids': fields.many2many('crm.meeting.type', 'meeting_category_rel',
             'event_id', 'type_id', 'Tags'),
         'attendee_ids': fields.many2many('calendar.attendee', 'meeting_attendee_rel',\
-                            'event_id', 'attendee_id', 'Attendees', states={'done': [('readonly', True)]}),
+                            'event_id', 'attendee_id', 'Invited People', states={'done': [('readonly', True)]}),
     }
     _defaults = {
         'state': 'open',

@@ -26,7 +26,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #
 ##############################################################################
 
@@ -173,7 +173,7 @@ class WebKitParser(report_sxw):
                                  ),
                                 'w'
                             )
-            head_file.write(header)
+            head_file.write(header.encode('utf-8'))
             head_file.close()
             file_to_del.append(head_file.name)
             command.extend(['--header-html', head_file.name])
@@ -184,7 +184,7 @@ class WebKitParser(report_sxw):
                                  ),
                                 'w'
                             )
-            foot_file.write(footer)
+            foot_file.write(footer.encode('utf-8'))
             foot_file.close()
             file_to_del.append(foot_file.name)
             command.extend(['--footer-html', foot_file.name])
@@ -205,7 +205,7 @@ class WebKitParser(report_sxw):
         for html in html_list :
             html_file = file(os.path.join(tmp_dir, str(time.time()) + str(count) +'.body.html'), 'w')
             count += 1
-            html_file.write(html)
+            html_file.write(html.encode('utf-8'))
             html_file.close()
             file_to_del.append(html_file.name)
             command.append(html_file.name)
@@ -242,8 +242,13 @@ class WebKitParser(report_sxw):
     def translate_call(self, src):
         """Translate String."""
         ir_translation = self.pool['ir.translation']
+        name = self.tmpl and 'addons/' + self.tmpl or None
         res = ir_translation._get_source(self.parser_instance.cr, self.parser_instance.uid,
-                                         None, 'report', self.parser_instance.localcontext.get('lang', 'en_US'), src)
+                                         name, 'report', self.parser_instance.localcontext.get('lang', 'en_US'), src)
+        if res == src:
+            # no translation defined, fallback on None (backward compatibility)
+            res = ir_translation._get_source(self.parser_instance.cr, self.parser_instance.uid,
+                                             None, 'report', self.parser_instance.localcontext.get('lang', 'en_US'), src)
         if not res :
             return src
         return res
@@ -280,7 +285,7 @@ class WebKitParser(report_sxw):
         template =  False
 
         if report_xml.report_file :
-            path = get_module_resource(*report_xml.report_file.split(os.path.sep))
+            path = get_module_resource(*report_xml.report_file.split('/'))
             if path and os.path.exists(path) :
                 template = file(path).read()
         if not template and report_xml.report_webkit_data :

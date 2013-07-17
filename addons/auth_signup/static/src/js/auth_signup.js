@@ -7,7 +7,7 @@ openerp.auth_signup = function(instance) {
             var self = this;
             this.signup_enabled = false;
             this.reset_password_enabled = false;
-            return this._super().then(function() {
+            return this._super().always(function() {
 
                 // Switches the login box to the select mode whith mode == [default|signup|reset]
                 self.on('change:login_mode', self, function() {
@@ -57,14 +57,14 @@ openerp.auth_signup = function(instance) {
                         self.signup_enabled = result.signup;
                         self.reset_password_enabled = result.reset_password;
                         if (!self.signup_enabled || self.$("form input[name=login]").val()){
-                            self.set('login_mode', 'default');
+                            self.set('login_mode', self.params.type || 'default');
                         } else {
                             self.set('login_mode', 'signup');
                         }
                     });
                 } else {
                     // TODO: support multiple database mode
-                    self.set('login_mode', 'default');
+                    self.set('login_mode', self.params.type || 'default');
                 }
             });
         },
