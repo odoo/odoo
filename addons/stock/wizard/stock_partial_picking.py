@@ -127,7 +127,7 @@ class stock_partial_picking(osv.osv_memory):
     def _partial_move_for(self, cr, uid, move):
         partial_move = {
             'product_id': move.product_id.id,
-            'quantity': move.product_qty - move.remaining_qty if move.state == 'assigned' else 0,
+            'quantity': move.product_uom_qty,
             'product_uom': move.product_uom.id,
             'move_id': move.id,
             'location_id': move.location_id.id,

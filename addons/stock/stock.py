@@ -30,6 +30,7 @@ from openerp.tools.translate import _
 from openerp import netsvc
 from openerp import tools
 from openerp.tools import float_compare, DEFAULT_SERVER_DATETIME_FORMAT
+from openerp import SUPERUSER_ID
 import openerp.addons.decimal_precision as dp
 import logging
 _logger = logging.getLogger(__name__)
@@ -191,21 +192,20 @@ class stock_quant(osv.osv):
             self.move_single_quant(cr, uid, quant, qty, move, context=context)
 
     def move_single_quant(self, cr, uid, quant, qty, move, context=None):
-        location_from = quant and quant.location_id
         if not quant:
             quant = self._quant_create(cr, uid, qty, move, context=context)
         else:
             self._quant_split(cr, uid, quant, qty, context=context)
-        self._quant_reconcile_negative(cr, uid, quant, context=context)
-
         # FP Note: improve this using preferred locations
         location_to = move.location_dest_id
 
         self.write(cr, uid, [quant.id], {
             'location_id': location_to.id,
-            'reservation_id': move.move_dest_id and move.move_dest_id.id or False, 
+            'reservation_id': move.move_dest_id and move.move_dest_id.id or False,
             'history_ids': [(4, move.id)]
         })
+        quant.refresh()
+        self._quant_reconcile_negative(cr, uid, quant, context=context)
         return quant
 
 
@@ -221,20 +221,17 @@ class stock_quant(osv.osv):
         :qty in UoM of product
         :lot_id NOT USED YET !
         """
-
-        result= []
-        if domain is None:
-            domain = []
-        
+        result = []
         domain = domain or [('qty','>',0.0)]
-        if location and qty>0:
+        if location:
             removal_strategy = self.pool.get('stock.location').get_removal_strategy(cr, uid, location, product, context=context) or 'fifo'
             if removal_strategy=='fifo':
                 result += self._quants_get_fifo(cr, uid, location, product, qty, domain, prefered_order=prefered_order, context=context)
             elif removal_strategy=='lifo':
                 result += self._quants_get_lifo(cr, uid, location, product, qty, domain, prefered_order=prefered_order, context=context)
             else:
-                raise osv.except_osv(_('Error!'),_('Removal strategy %s not implemented.' % (removal_strategy,)))
+                raise osv.except_osv(_('Error!'), _('Removal strategy %s not implemented.' % (removal_strategy,)))
+
         return result
 
 
@@ -244,71 +241,79 @@ class stock_quant(osv.osv):
     # Reconcile a positive quant with a negative is possible
     # 
     def _quant_create(self, cr, uid, qty, move, context=None):
-        vals = {
-            'product_id': move.product_id.id, 
-            'location_id': move.location_dest_id.id, 
-            'qty': qty, 
-            'history_ids': [(4, move.id)], 
-            'in_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-            'company_id': move.company_id.id, 
-        }
-        quant_id = self.create(cr, uid, vals, context=context)
-        if move.location_id.usage == 'internal':
-            vals['location_id'] = move.location_id.id
-            vals['qty'] = -qty
-            vals['cost'] = 0.0
-            new_quant_id = self.create(cr, uid, vals, context=context)
-            self.write(cr, uid, [quant_id], {'propagated_from_id': new_quant_id}, context=context)
-        obj = self.browse(cr, uid, quant_id, context=context)
-
         # FP Note: TODO: compute the right price according to the move, with currency convert
         # QTY is normally already converted to main product's UoM
         price_unit = move.price_unit
+        vals = {
+            'product_id': move.product_id.id,
+            'location_id': move.location_dest_id.id,
+            'qty': qty,
+            'cost': price_unit,
+            'history_ids': [(4, move.id)],
+            'in_date': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'company_id': move.company_id.id,
+        }
 
-        self._price_update(cr, uid, obj, price_unit, context=context)
-        return obj
+        negative_quant_id = False
+        if move.location_id.usage == 'internal':
+            #if we were trying to move something from an internal location and reach here (quant creation),
+            #it means that a negative quant has to be created as well.
+            negative_vals = vals.copy()
+            negative_vals['location_id'] = move.location_id.id
+            negative_vals['qty'] = -qty
+            negative_vals['cost'] = price_unit
+            negative_quant_id = self.create(cr, uid, negative_vals, context=context)
+
+        #create the quant
+        vals.update({'propagated_from_id': negative_quant_id})
+        quant_id = self.create(cr, uid, vals, context=context)
+        return self.browse(cr, uid, quant_id, context=context)
 
     def _quant_split(self, cr, uid, quant, qty, context=None):
-        context=context or {}
-        if quant.qty<=qty:
+        context = context or {}
+        if (quant.qty > 0 and quant.qty <= qty) or (quant.qty <= 0 and quant.qty >= qty):
             return False
-        new_quant = self.copy(cr, uid, quant.id, default={'qty': quant.qty-qty}, context=context)
+        new_quant = self.copy(cr, uid, quant.id, default={'qty': quant.qty - qty}, context=context)
         self.write(cr, uid, quant.id, {'qty': qty}, context=context)
         quant.refresh()
-        return new_quant
+        return self.browse(cr, uid, new_quant, context=context)
 
-    """
-        When new quant arrive in a location, try to reconcile it with
-        negative quants. If it's possible, apply the cost of the new
-        quant to the conter-part of the negative quant.
-    """
+    def _get_latest_move(self, cr, uid, quant, context=None):
+        move = False
+        for m in quant.history_ids:
+            if not move or m.date > move.date:
+                move = m
+        return move
+
     def _quant_reconcile_negative(self, cr, uid, quant, context=None):
-        if quant.location_id.usage <> 'internal': return False
-        quants = self.quants_get(cr, uid, quant.location_id, quant.product_id, quant.qty, [('qty','<','0')], context=context)
+        """
+            When new quant arrive in a location, try to reconcile it with
+            negative quants. If it's possible, apply the cost of the new
+            quant to the conter-part of the negative quant.
+        """
+        if quant.location_id.usage != 'internal':
+            return False
+        quants = self.quants_get(cr, uid, quant.location_id, quant.product_id, quant.qty, [('qty', '<', '0')], context=context)
         result = False
         for quant_neg, qty in quants:
-            if not quant_neg: continue
-            result=True
-
-            self._quant_split(cr, uid, quant_neg, qty, context=context)
+            if not quant_neg:
+                continue
+            result = True
+            to_solve_quant = self.search(cr, uid, [('propagated_from_id', '=', quant_neg.id)], context=context)
+            if not to_solve_quant:
+                continue
+            to_solve_quant = self.browse(cr, uid, to_solve_quant[0], context=context)
+            move = self._get_latest_move(cr, uid, to_solve_quant, context=context)
             self._quant_split(cr, uid, quant, qty, context=context)
-
-            cost = quant.id
-
-            self.write(cr, uid, [quant.id, quant_neg.id], {
-                'cost': 0.0,
-            }, context=context)
-
-            #TODO: In case of negative quants no removal strategy is applied -> actually removal strategy should be reversed? OR just by in_date?
-            quants2 = self._quants_get_order(cr, uid, False, quant.product_id, -quant_neg.qty, domain=[('propagated_from_id','=',quant_neg.id)], orderby='in_date', context=None)
-            for qu2, qt2 in quants2:
-                #TODO  history ids on quant!
-                if not qu2: raise 'Error: negative stock linked to nothing'
-                self._quant_split(cr, uid, qu2, qt2, context=context)
-                self.write(cr, uid, [qu2.id], {
-                    'propagated_from_id': False
-                }, context=context)
-                self._price_update(cr, uid, qu2, cost, context=context)
+            remaining_to_solve_quant = self._quant_split(cr, uid, to_solve_quant, qty, context=context)
+            remaining_neg_quant = self._quant_split(cr, uid, quant_neg, -qty, context=context)
+            #if the reconciliation was not complete, we need to link together the remaining parts
+            if remaining_to_solve_quant and remaining_neg_quant:
+                self.write(cr, uid, remaining_to_solve_quant.id, {'propagated_from_id': remaining_neg_quant.id}, context=context)
+            #delete the reconciled quants, as it is replaced by the solving quant
+            self.unlink(cr, SUPERUSER_ID, [quant_neg.id, to_solve_quant.id], context=context)
+            #call move_single_quant to ensure recursivity if necessary and do the stock valuation
+            self.move_single_quant(cr, uid, quant, qty, move, context=context)
         return result
 
     def _price_update(self, cr, uid, quant, newprice, context=None):
@@ -351,15 +356,13 @@ class stock_quant(osv.osv):
         order = 'in_date'
         if prefered_order:
             order = prefered_order + ', in_date'
-        return self._quants_get_order(cr, uid, location, product, quantity,
-            domain, order, context=context)
+        return self._quants_get_order(cr, uid, location, product, quantity, domain, order, context=context)
 
     def _quants_get_lifo(self, cr, uid, location, product, quantity, domain=[], prefered_order=False, context=None):
         order = 'in_date desc'
         if prefered_order:
             order = prefered_order + ', in_date desc'
-        return self._quants_get_order(cr, uid, location, product, quantity,
-            domain, order, context=context)
+        return self._quants_get_order(cr, uid, location, product, quantity, domain, order, context=context)
 
     # Return the company owning the location if any
     def _location_owner(self, cr, uid, quant, location, context=None):

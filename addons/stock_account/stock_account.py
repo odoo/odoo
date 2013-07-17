@@ -75,7 +75,11 @@ class stock_quant(osv.osv):
     def _account_entry_move(self, cr, uid, quant, location_from, location_to, move, context=None):
         if context is None:
             context = {}
-        if quant.product_id.valuation <> 'real_time':
+        if quant.product_id.valuation != 'real_time':
+            return False
+        if quant.qty <= 0 or quant.propagated_from_id:
+            #we don't make any stock valuation for negative quants because we may not know the real cost price.
+            #The valuation will be made at the time of the reconciliation of the negative quant.
             return False
         company_from = self._location_owner(cr, uid, quant, location_from, context=context)
         company_to = self._location_owner(cr, uid, quant, location_to, context=context)
@@ -112,9 +116,6 @@ class stock_quant(osv.osv):
         self._account_entry_move(cr, uid, quant, location_from, quant.location_id, move, context=context)
         return quant
 
-
-    # TODO: move this code on the _account_entry_move method above. Should be simpler
-    
     def _get_accounting_data_for_valuation(self, cr, uid, move, context=None):
         """
         Return the accounts and journal to use to post Journal Entries for the real-time
@@ -124,7 +125,7 @@ class stock_quant(osv.osv):
         :returns: journal_id, source account, destination account, valuation account
         :raise: osv.except_osv() is any mandatory account or journal is not defined.
         """
-        product_obj=self.pool.get('product.product')
+        product_obj = self.pool.get('product.product')
         accounts = product_obj.get_product_accounts(cr, uid, move.product_id.id, context)
         if move.location_id.valuation_out_account_id:
             acc_src = move.location_id.valuation_out_account_id.id
@@ -140,7 +141,7 @@ class stock_quant(osv.osv):
         journal_id = accounts['stock_journal']
 
         if not all([acc_src, acc_dest, acc_valuation, journal_id]):
-            raise osv.except_osv(_('Error!'),  _('''One of the following information is missing on the product or product category and prevents the accounting valuation entries to be created:
+            raise osv.except_osv(_('Error!'), _('''One of the following information is missing on the product or product category and prevents the accounting valuation entries to be created:
     Stock Input Account: %s
     Stock Output Account: %s
     Stock Valuation Account: %s
