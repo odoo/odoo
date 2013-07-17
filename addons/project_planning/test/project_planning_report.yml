@@ -1,8 +1,0 @@
--
-  In order to test the PDF reports defined on a Project Planning, we will print Project Planning Report
--
-  !python {model: report_account_analytic.planning}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.report_account_analytic.planning.print').create(cr, uid, [ref('project_planning.project_plannning_1')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'project_planning-project_planning_report'+format), 'wb+').write(data)

@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* base_iban
+# Spanish translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2011-01-11 17:50+0000\n"
-"Last-Translator: Borja López Soilán (NeoPolus) <borjalopezsoilan@gmail.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:50+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:07+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: base_iban
 #: constraint:res.partner.bank:0
@@ -23,16 +24,25 @@ msgid ""
 "Please define BIC/Swift code on bank for bank type IBAN Account to make "
 "valid payments"
 msgstr ""
+"\n"
+"Por favor defina el código BIC/Swift del banco para una cuenta de tipo IBAN "
+"para realizar pagos válidos"
+
+#. module: base_iban
+#: code:addons/base_iban/base_iban.py:141
+#, python-format
+msgid "This IBAN does not pass the validation check, please verify it"
+msgstr "El código IBAN no es válido, por favor verifiquelo"
 
 #. module: base_iban
 #: model:res.partner.bank.type,format_layout:base_iban.bank_iban
 msgid "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
-msgstr ""
+msgstr "%(bank_name)s: IBAN %(acc_number)s - BIC %(bank_bic)s"
 
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_swift_field
 msgid "bank_bic"
-msgstr ""
+msgstr "Número BIC"
 
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_zip_field
@@ -55,12 +65,14 @@ msgid "country_id"
 msgstr "País"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:130
+#: code:addons/base_iban/base_iban.py:138
 #, python-format
 msgid ""
 "The IBAN does not seem to be correct. You should have entered something like "
 "this %s"
 msgstr ""
+"El código IBAN no parece correcto. Introduzca una estructura similar a esta "
+"%s"
 
 #. module: base_iban
 #: field:res.partner.bank,iban:0
@@ -68,53 +80,12 @@ msgid "IBAN"
 msgstr "IBAN"
 
 #. module: base_iban
-#: code:addons/base_iban/base_iban.py:131
+#: code:addons/base_iban/base_iban.py:142
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
-msgstr ""
+msgstr "El código IBAN es inválido, debe empieza por el código del país"
 
 #. module: base_iban
 #: model:res.partner.bank.type,name:base_iban.bank_iban
 msgid "IBAN Account"
 msgstr "Cuenta IBAN"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "¡XML inválido para la definición de la vista!"
-
-#~ msgid "bic"
-#~ msgstr "BIC"
-
-#~ msgid "iban"
-#~ msgstr "IBAN"
-
-#~ msgid "acc_number"
-#~ msgstr "Número cuenta"
-
-#, python-format
-#~ msgid "The IBAN is invalid, It should begin with the country code"
-#~ msgstr "El IBAN no es válido, debería empezar con el código del país"
-
-#~ msgid "Create IBAN bank accounts"
-#~ msgstr "Crear cuentas banco IBAN"
-
-#, python-format
-#~ msgid ""
-#~ "The IBAN does not seems to be correct. You should have entered something "
-#~ "like this %s"
-#~ msgstr ""
-#~ "El IBAN no parece que sea correcto. Debería haber introducido algo como esto "
-#~ "%s"
-
-#~ msgid ""
-#~ "\n"
-#~ "This module installs the base for IBAN (International Bank Account Number) "
-#~ "bank accounts and checks for its validity.\n"
-#~ "\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Este módulo instala la base para las cuentas bancarias IBAN (International "
-#~ "Bank Account Number; o Número de Cuenta Bancaria Internacional) y comprueba "
-#~ "su validez.\n"
-#~ "\n"
-#~ "    "

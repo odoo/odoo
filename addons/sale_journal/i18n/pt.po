@@ -1,25 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* sale_journal
+# Portuguese translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
-"PO-Revision-Date: 2011-12-10 12:02+0000\n"
-"Last-Translator: Paulino Ascenção <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:52+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
-
-#. module: sale_journal
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr ""
+"X-Launchpad-Export-Date: 2012-12-22 07:33+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -29,18 +25,12 @@ msgstr "Nota"
 #. module: sale_journal
 #: field:res.partner,property_invoice_type:0
 msgid "Invoicing Type"
-msgstr ""
+msgstr "Tipo faturação"
 
 #. module: sale_journal
 #: help:res.partner,property_invoice_type:0
 msgid ""
-"This invoicing type will be used, by default, for invoicing the current "
-"partner."
-msgstr ""
-
-#. module: sale_journal
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
+"This invoicing type will be used, by default, to invoice the current partner."
 msgstr ""
 
 #. module: sale_journal
@@ -49,11 +39,23 @@ msgid "Sales & Purchases"
 msgstr "Vendas & Compras"
 
 #. module: sale_journal
+#: view:res.partner:0
+msgid "Invoicing"
+msgstr "Faturação"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_picking_in
+msgid "Incoming Shipments"
+msgstr ""
+
+#. module: sale_journal
 #: help:sale_journal.invoice.type,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the invoice "
 "type without removing it."
 msgstr ""
+"Se o campo ativo é definido como Falso, ele permitirá que oculte o tipo de "
+"fatura sem o remover."
 
 #. module: sale_journal
 #: view:sale_journal.invoice.type:0
@@ -63,14 +65,19 @@ msgstr "Notas"
 #. module: sale_journal
 #: field:sale_journal.invoice.type,invoicing_method:0
 msgid "Invoicing method"
-msgstr "Método de facturação"
+msgstr "Método de faturação"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_picking
+msgid "Picking List"
+msgstr "Lista Picking"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
 #: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
 #: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
 msgid "Invoice Types"
-msgstr "Tipos de Factura"
+msgstr "Tipos de Fatura"
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
@@ -89,302 +96,46 @@ msgid ""
 "can create a specific invoicing journal to group your invoicing according to "
 "your customer's needs: daily, each Wednesday, monthly, etc."
 msgstr ""
+"Tipos de fatura são usados ​​para os parceiros, as ordens das vendas e "
+"ordens das entregas. Pode criar um diário de faturação específico para o seu "
+"grupo de faturação de acordo com as necessidades do cliente: diariamente, "
+"cada quarta-feira, mensal, etc."
 
 #. module: sale_journal
-#: sql_constraint:stock.picking:0
-msgid "Reference must be unique per Company!"
-msgstr ""
+#: help:sale.order,invoice_type_id:0
+msgid "Generate invoice based on the selected option."
+msgstr "Gerar fatura com base na opção selecionada."
 
 #. module: sale_journal
+#: view:sale.order:0
 #: field:sale.order,invoice_type_id:0
 #: view:sale_journal.invoice.type:0
 #: field:sale_journal.invoice.type,name:0
+#: view:stock.picking:0
 #: field:stock.picking,invoice_type_id:0
+#: view:stock.picking.in:0
+#: field:stock.picking.in,invoice_type_id:0
+#: view:stock.picking.out:0
+#: field:stock.picking.out,invoice_type_id:0
 msgid "Invoice Type"
-msgstr "Tipo de Factura"
+msgstr "Tipo de Fatura"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,active:0
 msgid "Active"
-msgstr "Activo"
+msgstr "Ativo"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
 msgid "Partner"
-msgstr "Terceiro"
+msgstr "Parceiro"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Ordem de Vendas"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking
-msgid "Picking List"
-msgstr "Lista de recolha"
-
-#. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
-msgstr "Facturação"
-
-#~ msgid "Packing"
-#~ msgstr "Embalagem"
-
-#~ msgid "Packing by journals"
-#~ msgstr "Embalagem por diários"
-
-#~ msgid "Packing by journal"
-#~ msgstr "Embalagem por diário"
-
-#~ msgid "Monthly sales"
-#~ msgstr "Vendas Mensais"
-
-#~ msgid "assigned"
-#~ msgstr "atribuído"
-
-#~ msgid "to be invoiced"
-#~ msgstr "a ser facturado"
-
-#~ msgid "waiting"
-#~ msgstr "em espera"
-
-#~ msgid "Journal date"
-#~ msgstr "Data do diário"
-
-#~ msgid "My open journals"
-#~ msgstr "Meus diários abertos"
-
-#~ msgid "done"
-#~ msgstr "concluído"
-
-#~ msgid "Average Price"
-#~ msgstr "Preço Médio"
-
-#~ msgid "State"
-#~ msgstr "Estado"
-
-#~ msgid "Total Price"
-#~ msgstr "Preço Total"
-
-#~ msgid "Reporting"
-#~ msgstr "Relatório"
-
-#~ msgid "My open packing journals"
-#~ msgstr "Meus diários de embalagem abertos"
-
-#~ msgid "None"
-#~ msgstr "Nenhum(a)"
-
-#~ msgid "Sales by journal (this month)"
-#~ msgstr "Vendas por diário (mês actual)"
-
-#~ msgid "Month"
-#~ msgstr "Mês"
-
-#~ msgid "Invoice state"
-#~ msgstr "Estado da factura"
-
-#~ msgid "Shipping Exception"
-#~ msgstr "Excepção de Envio"
-
-#~ msgid "cancel"
-#~ msgstr "Cancelar"
-
-#~ msgid "Invoice Exception"
-#~ msgstr "Excepção da Factura"
-
-#~ msgid "Validation date"
-#~ msgstr "Data de Validação"
-
-#~ msgid "Quotation"
-#~ msgstr "Cotação"
-
-#~ msgid "sale_journal.invoice.type.tree"
-#~ msgstr "sale_journal.invoice.type.tree"
-
-#~ msgid "Creation date"
-#~ msgstr "Data de criação"
-
-#~ msgid "Invoicing Method"
-#~ msgstr "Método de Facturação"
-
-#~ msgid "Code"
-#~ msgstr "Código"
-
-#~ msgid "Sales"
-#~ msgstr "Vendas"
-
-#~ msgid "Packing Journal"
-#~ msgstr "Diário de Embalagem"
-
-#~ msgid "Done"
-#~ msgstr "Concluído"
-
-#~ msgid "Cancel"
-#~ msgstr "Cancelar"
-
-#~ msgid "Open"
-#~ msgstr "Aberto"
-
-#~ msgid "Responsible"
-#~ msgstr "Responsável"
-
-#~ msgid "confirmed"
-#~ msgstr "Confirmado"
-
-#~ msgid "Quantities"
-#~ msgstr "Quantidades"
-
-#~ msgid "Journal"
-#~ msgstr "Diário"
-
-#~ msgid "Sales by Journal"
-#~ msgstr "Vendas por diário"
-
-#~ msgid "States"
-#~ msgstr "Estados"
-
-#~ msgid "Approved sales"
-#~ msgstr "Vendas aprovadas"
-
-#~ msgid "Assigned packing"
-#~ msgstr "Embalagem Atribuída"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nome do modelo inválido na definição da ação."
-
-#~ msgid "Waiting Schedule"
-#~ msgstr "A Espera da Data Agendada"
-
-#~ msgid "Sale Journal"
-#~ msgstr "Diário de Venda"
-
-#~ msgid "Sale Stats"
-#~ msgstr "Estatísticas da Venda"
-
-#~ msgid "Set to Draft"
-#~ msgstr "Definido como Rascunho"
-
-#~ msgid "Packing by Invoice Method"
-#~ msgstr "Embalagem por Método de Facturação"
-
-#~ msgid "Packing Journals"
-#~ msgstr "Diários de Embalagem"
-
-#~ msgid "# of Lines"
-#~ msgstr "# Linhas de"
-
-#~ msgid "All Open Journals"
-#~ msgstr "Todos os Diários Abertos"
-
-#~ msgid "Managing sales and deliveries by journal"
-#~ msgstr "Gestão de vendas e entregas por diário"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML Inválido para a Arquitectura de Vista!"
-
-#~ msgid "All Months"
-#~ msgstr "Todos os Meses"
-
-#~ msgid "Packing journals"
-#~ msgstr "Diários de Embalagem"
-
-#~ msgid "Sales Orders by Journal"
-#~ msgstr "Ordens de Venda por Diário"
-
-#~ msgid "Open journals"
-#~ msgstr "Abrir Diários"
-
-#~ msgid "The type of journal used for sales and packing."
-#~ msgstr "O tipo de diário utilizado para vendas e embalagem."
-
-#~ msgid "Manual in progress"
-#~ msgstr "Manual em progresso"
-
-#~ msgid "Cancel Packing"
-#~ msgstr "Cancelar Embalagem"
-
-#~ msgid "Confirmed packing"
-#~ msgstr "Embalagem Confirmada"
-
-#~ msgid "In progress"
-#~ msgstr "Em progresso"
-
-#~ msgid "Packing by invoice method"
-#~ msgstr "Embalagem pelo método de facturação"
-
-#~ msgid "Order State"
-#~ msgstr "Estado da Ordem de Venda"
-
-#~ msgid "Draft"
-#~ msgstr "Rascunho"
-
-#~ msgid "draft"
-#~ msgstr "rascunho"
-
-#~ msgid "Draft sales"
-#~ msgstr "Rascunho de vendas"
-
-#~ msgid "Sales Journals"
-#~ msgstr "Diários de Vendas"
-
-#~ msgid "Confirm Sales"
-#~ msgstr "Confirmar Vendas"
-
-#~ msgid "Open Journal"
-#~ msgstr "Diário Aberto"
-
-#~ msgid "Journal Stats"
-#~ msgstr "Estatística dos Diários"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "O nome do Objecto deve começar com x_ e não pode conter nenhum caracter "
-#~ "especial !"
-
-#~ msgid "My Open Journals"
-#~ msgstr "Meus Diários Abertos"
-
-#~ msgid "Statistics on packing to invoice"
-#~ msgstr "Estatísticas sobre a embalagem na factura"
-
-#~ msgid "Cancel Sales"
-#~ msgstr "Cancelar Vendas"
-
-#~ msgid "invoiced"
-#~ msgstr "facturado"
-
-#~ msgid "Packing lists by Journal"
-#~ msgstr "LIstas de embalagem por Diário"
-
-#~ msgid "This Month"
-#~ msgstr "Este Mês"
-
-#~ msgid "Invoicing Methods"
-#~ msgstr "Métodos de Facturação"
-
-#~ msgid "Packing to invoice"
-#~ msgstr "Embalagem a ser Facturada"
-
-#~ msgid "Journal Information"
-#~ msgstr "Informações do Diário"
-
-#~ msgid "Stats on packing by invoice method"
-#~ msgstr "Estatística sobre a embalagem pelo metodo facturação"
-
-#~ msgid "Packing by Journal"
-#~ msgstr "Embalagem por Diário"
-
-#~ msgid "Close Journal"
-#~ msgstr "Fechar Diário"
-
-#~ msgid "Packing to Invoice"
-#~ msgstr "Embalagem para Facturar"
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Erro! Não pode criar membros associados recursivamente."
-
-#~ msgid "The type of journal used for sales and picking."
-#~ msgstr "O tipo de diário usado nas vendas e remessas"
+#: model:ir.model,name:sale_journal.model_stock_picking_out
+msgid "Delivery Orders"
+msgstr "Ordens de entrega"

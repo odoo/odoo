@@ -6,16 +6,16 @@
         <record id="view_pos_discount" model="ir.ui.view">
             <field name="name">Apply Discount</field>
             <field name="model">pos.discount</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Apply Discount">
-                    <field name="discount" colspan="4"/>
-                    <separator colspan="4" string=""/>
-                    <group colspan="2"/>
-                    <button icon='gtk-cancel' special="cancel"
-                        string="Close" />
-                    <button name="apply_discount" string="Apply Discount"
-                        colspan="1" type="object" icon="gtk-ok" />
+                <form string="Apply Discount" version="7.0">
+                    <group>
+                        <field name="discount"/>
+                    </group>
+                    <footer>
+                        <button name="apply_discount" string="Apply Discount" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

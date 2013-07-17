@@ -23,29 +23,25 @@
 {
     'name': 'Sales and MRP Management',
     'version': '1.0',
-    'category': 'Hidden/Links',
-    'complexity': "easy",
+    'category': 'Hidden',
     'description': """
 This module provides facility to the user to install mrp and sales modulesat a time.
 ====================================================================================
 
-It is basically used when we want to keep track of production
-orders generated from sales order.
-It adds sales name and sales Reference on production order.
+It is basically used when we want to keep track of production orders generated
+from sales order. It adds sales name and sales Reference on production order.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/SO_to_MO.jpeg'],
-    'depends': ['mrp', 'sale'],
-    'init_xml': [],
-    'update_xml': [
+    'depends': ['mrp', 'sale_stock'],
+    'data': [
         'security/ir.model.access.csv',
         'sale_mrp_view.xml',
     ],
-    'demo_xml': [],
+    'demo': [],
     'test':['test/sale_mrp.yml'],
     'installable': True,
-    'active': False,
-    'certificate': '00395598976683092013',
+    'auto_install': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

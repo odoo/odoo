@@ -1,33 +1,27 @@
 # Brazilian Portuguese translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2011-02-18 09:25+0000\n"
-"Last-Translator: Emerson <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:32+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:05+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
 #: model:ir.actions.act_window,name:account_sequence.action_account_seq_installer
 msgid "Account Sequence Application Configuration"
 msgstr "Configuração do Aplicativo de Sequência de Contas"
-
-#. module: account_sequence
-#: constraint:account.move:0
-msgid ""
-"You can not create more than one move per period on centralized journal"
-msgstr ""
 
 #. module: account_sequence
 #: help:account.move,internal_sequence_number:0
@@ -58,7 +52,7 @@ msgstr "O próximo número da sequência será incrementada com este número"
 #. module: account_sequence
 #: view:account.sequence.installer:0
 msgid "Configure Your Account Sequence Application"
-msgstr "Configure Seu Aplicativo de Sequência de Conta"
+msgstr "Configure a Aplicação da Sequência da Conta"
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
@@ -74,20 +68,6 @@ msgstr "Sufíxo do registro para a sequência"
 #: field:account.sequence.installer,company_id:0
 msgid "Company"
 msgstr "Empresa"
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "Você não pode criar linhas de movimento em uma conta fechada."
-
-#. module: account_sequence
-#: help:account.journal,internal_sequence_id:0
-msgid ""
-"This sequence will be used to maintain the internal number for the journal "
-"entries related to this journal."
-msgstr ""
-"Esta sequência será usada para controlar o número interno do lançamento de "
-"diário relacionado."
 
 #. module: account_sequence
 #: field:account.sequence.installer,padding:0
@@ -106,11 +86,6 @@ msgid "Internal Number"
 msgstr "Número Interno"
 
 #. module: account_sequence
-#: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "A Empresa precisar ser a mesma para a conta relacionada e período."
-
-#. module: account_sequence
 #: help:account.sequence.installer,padding:0
 msgid ""
 "OpenERP will automatically adds some '0' on the left of the 'Next Number' to "
@@ -125,23 +100,6 @@ msgid "Name"
 msgstr "Nome"
 
 #. module: account_sequence
-#: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period!"
-msgstr ""
-
-#. module: account_sequence
-#: constraint:account.journal:0
-msgid ""
-"Configuration error! The currency chosen should be shared by the default "
-"accounts too."
-msgstr ""
-
-#. module: account_sequence
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr "Valor de Crédito ou Débito incorreto no lançamento contábil!"
-
-#. module: account_sequence
 #: field:account.journal,internal_sequence_id:0
 msgid "Internal Sequence"
 msgstr "Sequência Interna"
@@ -149,7 +107,7 @@ msgstr "Sequência Interna"
 #. module: account_sequence
 #: help:account.sequence.installer,prefix:0
 msgid "Prefix value of the record for the sequence"
-msgstr "Prefixo de registro para a sequência"
+msgstr "Prefixo do registro para a sequência"
 
 #. module: account_sequence
 #: model:ir.model,name:account_sequence.model_account_move
@@ -162,26 +120,9 @@ msgid "Suffix"
 msgstr "Sufixo"
 
 #. module: account_sequence
-#: field:account.sequence.installer,config_logo:0
-msgid "Image"
-msgstr "Imagem"
-
-#. module: account_sequence
 #: view:account.sequence.installer:0
 msgid "title"
-msgstr "Titulo"
-
-#. module: account_sequence
-#: sql_constraint:account.journal:0
-msgid "The name of the journal must be unique per company !"
-msgstr "O nome do diário deve ser único por empresa!"
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry must receive a value in its "
-"secondary currency"
-msgstr ""
+msgstr "título"
 
 #. module: account_sequence
 #: field:account.sequence.installer,prefix:0
@@ -189,9 +130,13 @@ msgid "Prefix"
 msgstr "Prefixo"
 
 #. module: account_sequence
-#: sql_constraint:account.journal:0
-msgid "The code of the journal must be unique per company !"
-msgstr "O código do diário deve ser único por empresa!"
+#: help:account.journal,internal_sequence_id:0
+msgid ""
+"This sequence will be used to maintain the internal number for the journal "
+"entries related to this journal."
+msgstr ""
+"Esta sequência será usada para controlar o número interno do lançamento de "
+"diário relacionado."
 
 #. module: account_sequence
 #: model:ir.model,name:account_sequence.model_account_sequence_installer
@@ -207,35 +152,3 @@ msgstr "Diário"
 #: view:account.sequence.installer:0
 msgid "You can enhance the Account Sequence Application by installing ."
 msgstr "Você pode melhorar o Aplicativo de Sequência de Contas instalando ."
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "Você não pode criar linhas de movimento em uma conta de exibição."
-
-#~ msgid ""
-#~ "\n"
-#~ "    This module maintains internal sequence number for accounting entries.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Este módulo controla o número sequencial interno para lançamentos "
-#~ "contábeis.\n"
-#~ "    "
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Progresso da Configuração"
-
-#~ msgid "Entries Sequence Numbering"
-#~ msgstr "Numeração Sequencial de Lançamento"
-
-#~ msgid ""
-#~ "You cannot create entries on different periods/journals in the same move"
-#~ msgstr ""
-#~ "Você não pode criar lançamentos em períodos/diários diferentes no mesmo "
-#~ "movimento."
-
-#~ msgid ""
-#~ "You cannot create more than one move per period on centralized journal"
-#~ msgstr ""
-#~ "Você não pode criar mais que um movimento por período em diário centralizado."

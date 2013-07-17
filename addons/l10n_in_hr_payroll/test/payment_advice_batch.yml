@@ -1,0 +1,61 @@
+-
+  In order to test Payment Advice Creation from Payslip Bacth I create New Payslip Batch
+-
+  I Create a bank record
+-
+  !record {model: res.partner.bank, id: res_partner_bank_0}:
+    acc_number: '3025632343043'
+    partner_id: base.res_partner_21
+    state: bank
+    bank: base.res_bank_1
+-
+  I create a new employee “Rahul”
+-
+  !record {model: hr.employee, id: hr_employee_rahul0}:
+    country_id: base.in
+    department_id: hr.dep_rd
+    name: Rahul
+    bank_account_id: res_partner_bank_0
+-
+  I want to generate a payslip from Payslip Batch.
+-
+  !record {model: hr.payslip.run, id: hr_payslip_run_forAdvice}:
+    name: Payslip Batch
+-
+  I create record for generating the Payslip for Payslip Batch.
+-
+  !record {model: hr.payslip.employees, id: hr_payslip_employees}:
+    employee_ids:
+      - hr_employee_rahul0
+-
+  I generate the payslip by clicking on Generate button wizard.
+-
+  !python {model: hr.payslip.employees}: |
+     self.compute_sheet(cr, uid, [ref('hr_payslip_employees')], context={'active_id': ref('hr_payslip_run_forAdvice')})
+-
+  I check that the Payslip Batch is in "Draft"
+-
+  !assert {model: hr.payslip.run, id: hr_payslip_run_forAdvice}:
+    - state == 'draft'
+-
+  Now I close Payslip Batch
+-    
+  !python {model: hr.payslip.run}: |
+    self.close_payslip_run(cr, uid, [ref('hr_payslip_run_forAdvice')])
+-
+  I check that the Payslip Batch is "Close"
+-
+  !python {model: hr.payslip.run}: |
+    batch = self.browse(cr, uid, ref("hr_payslip_run_forAdvice"))
+    assert (batch.state == 'close')
+- 
+  I create Advice from Payslip Batch using Create Advice button
+-
+    !python {model: hr.payslip.run}: |
+     self.create_advice(cr, uid, [ref('hr_payslip_run_forAdvice')])
+-
+  I check for Advice is created from Payslip Batch
+-
+  !python {model: hr.payroll.advice}: |
+    advice_ids = self.search(cr, uid, [('batch_id','=',ref('hr_payslip_run_forAdvice'))])
+    assert advice_ids,"Advice is not created from Payslip Batch."

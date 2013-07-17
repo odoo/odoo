@@ -20,9 +20,8 @@
 ##############################################################################
 
 import portal
+import mail_mail
 import wizard
-import res_user
-import ir_ui_menu
-
+import acquirer
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

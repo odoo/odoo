@@ -19,22 +19,22 @@
 #
 ##############################################################################
 
-import logging
-import time
 import datetime
 from dateutil.relativedelta import relativedelta
+import logging
 from operator import itemgetter
 from os.path import join as opj
+import time
 
-from tools.translate import _
-from osv import fields, osv
-import netsvc
-import tools
+from openerp import netsvc, tools
+from openerp.tools.translate import _
+from openerp.osv import fields, osv
+
+_logger = logging.getLogger(__name__)
 
 class account_installer(osv.osv_memory):
     _name = 'account.installer'
     _inherit = 'res.config.installer'
-    __logger = logging.getLogger(_name)
 
     def _get_charts(self, cr, uid, context=None):
         modules = self.pool.get('ir.module.module')
@@ -45,12 +45,12 @@ class account_installer(osv.osv_memory):
             sorted(((m.name, m.shortdesc)
                     for m in modules.browse(cr, uid, ids, context=context)),
                    key=itemgetter(1)))
-        charts.insert(0, ('configurable', 'Generic Chart Of Accounts'))
+        charts.insert(0, ('configurable', _('Custom')))
         return charts
 
     _columns = {
         # Accounting
-        'charts': fields.selection(_get_charts, 'Chart of Accounts',
+        'charts': fields.selection(_get_charts, 'Accounting Package',
             required=True,
             help="Installs localized accounting charts to match as closely as "
                  "possible the accounting needs of your company based on your "
@@ -78,15 +78,27 @@ class account_installer(osv.osv_memory):
         'has_default_company': _default_has_default_company,
         'charts': 'configurable'
     }
-
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        res = super(account_installer, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
+    
+    def get_unconfigured_cmp(self, cr, uid, context=None):
+        """ get the list of companies that have not been configured yet
+        but don't care about the demo chart of accounts """
         cmp_select = []
         company_ids = self.pool.get('res.company').search(cr, uid, [], context=context)
-        #display in the widget selection of companies, only the companies that haven't been configured yet (but don't care about the demo chart of accounts)
         cr.execute("SELECT company_id FROM account_account WHERE active = 't' AND account_account.parent_id IS NULL AND name != %s", ("Chart For Automated Tests",))
         configured_cmp = [r[0] for r in cr.fetchall()]
-        unconfigured_cmp = list(set(company_ids)-set(configured_cmp))
+        return list(set(company_ids)-set(configured_cmp))
+    
+    def check_unconfigured_cmp(self, cr, uid, context=None):
+        """ check if there are still unconfigured companies """
+        if not self.get_unconfigured_cmp(cr, uid, context=context):
+            raise osv.except_osv(_('No unconfigured company !'), _("There is currently no company without chart of account. The wizard will therefore not be executed."))
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if context is None:context = {}
+        res = super(account_installer, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
+        cmp_select = []
+        # display in the widget selection only the companies that haven't been configured yet
+        unconfigured_cmp = self.get_unconfigured_cmp(cr, uid, context=context)
         for field in res['fields']:
             if field == 'company_id':
                 res['fields'][field]['domain'] = [('id','in',unconfigured_cmp)]
@@ -112,11 +124,6 @@ class account_installer(osv.osv_memory):
             context = {}
         fy_obj = self.pool.get('account.fiscalyear')
         for res in self.read(cr, uid, ids, context=context):
-            if 'charts' in res and res['charts'] == 'configurable':
-                #load generic chart of account
-                fp = tools.file_open(opj('account', 'configurable_account_chart.xml'))
-                tools.convert_xml_import(cr, 'account', fp, {}, 'init', True, None)
-                fp.close()
             if 'date_start' in res and 'date_stop' in res:
                 f_ids = fy_obj.search(cr, uid, [('date_start', '<=', res['date_start']), ('date_stop', '>=', res['date_stop']), ('company_id', '=', res['company_id'][0])], context=context)
                 if not f_ids:
@@ -142,7 +149,7 @@ class account_installer(osv.osv_memory):
             cr, uid, ids, context=context)
         chart = self.read(cr, uid, ids, ['charts'],
                           context=context)[0]['charts']
-        self.__logger.debug('Installing chart of accounts %s', chart)
+        _logger.debug('Installing chart of accounts %s', chart)
         return modules | set([chart])
 
 account_installer()

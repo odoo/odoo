@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-import tools
-from osv import fields,osv
-import decimal_precision as dp
+from openerp import tools
+from openerp.osv import fields,osv
+import openerp.addons.decimal_precision as dp
 
 class account_treasury_report(osv.osv):
     _name = "account.treasury.report"

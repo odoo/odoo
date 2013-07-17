@@ -103,7 +103,7 @@
         <td>
           <para style="terp_default_8">[[ user.name ]] </para>
           <para style="terp_default_8">[[ user.login  ]]</para>
-          <para style="terp_default_8">[[ user.user_email ]]</para>
+          <para style="terp_default_8">[[ user.email ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -149,10 +149,10 @@
               <para style="terp_default_9_left9">[[ formatLang(lines.date,date='True') ]]</para>
             </td>
             <td>
-              <para style="terp_default_9">[[ (lines.product and lines.product.name) or '' ]]</para>
+              <para style="terp_default_9">[[ (lines.product_id and lines.product_id.name) or '' ]]</para>
             </td>
             <td>
-              <para style="terp_default_9">[[ lines.descript]]</para>
+              <para style="terp_default_9">[[ lines.note]]</para>
             </td>
             <td>
               <para style="terp_default_9_right">[[ lines.price ]] [[ (o.company_id and o.company_id.currency_id and o.company_id.currency_id.symbol) or '' ]]</para>

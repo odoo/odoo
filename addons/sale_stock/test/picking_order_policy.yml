@@ -1,0 +1,169 @@
+-
+  In order to test process of the Sale Order,
+-
+  First I check the total amount of the Quotation before Approved.
+-
+  !assert {model: sale.order, id: sale.sale_order_6, string: The amount of the Quotation is not correctly computed}:
+    - sum([l.price_subtotal for l in order_line]) == amount_untaxed
+-
+  I confirm the quotation with Invoice based on deliveries policy.
+-
+  !workflow {model: sale.order, action: order_confirm, ref: sale.sale_order_6}
+-
+  I check that invoice should not created before dispatch delivery.
+-
+  !python {model: sale.order}: |
+    order = self.pool.get('sale.order').browse(cr, uid, ref("sale.sale_order_6"))
+    assert order.state == 'progress', 'Order should be in inprogress.'
+    assert len(order.invoice_ids) == False, "Invoice should not created."
+-
+  I check the details of procurement after confirmed quotation.
+-
+  !python {model: sale.order}: |
+    from datetime import datetime, timedelta
+    from dateutil.relativedelta import relativedelta
+    from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+    order = self.browse(cr, uid, ref("sale.sale_order_6"))
+    for order_line in order.order_line:
+        procurement = order_line.procurement_id
+        date_planned = datetime.strptime(order.date_order, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(days=order_line.delay or 0.0)
+        date_planned = (date_planned - timedelta(days=order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+        assert procurement.date_planned == date_planned, "Scheduled date is not correspond."
+        assert procurement.product_id.id == order_line.product_id.id, "Product is not correspond."
+        assert procurement.product_qty == order_line.product_uom_qty, "Qty is not correspond."
+        assert procurement.product_uom.id == order_line.product_uom.id, "UOM is not correspond."
+        assert procurement.procure_method == order_line.type, "Procurement method is not correspond."
+-
+  I run the scheduler.
+-
+  !python {model: procurement.order}: |
+    self.run_scheduler(cr, uid)
+-
+  I check the details of delivery order after confirmed quotation.
+-
+  !python {model: sale.order}: |
+    from datetime import datetime, timedelta
+    from dateutil.relativedelta import relativedelta
+    from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+    sale_order = self.browse(cr, uid, ref("sale.sale_order_6"))
+    assert sale_order.picking_ids, "Delivery order is not created."
+    for picking in sale_order.picking_ids:
+      assert picking.state == "auto" or "confirmed", "Delivery order should be in 'Waitting Availability' state."
+      assert picking.origin == sale_order.name,"Origin of Delivery order is not correspond with sequence number of sale order."
+      assert picking.type == 'out',"Shipment should be Outgoing."
+      assert picking.move_type == sale_order.picking_policy,"Delivery Method is not corresponding with delivery method of sale order."
+      assert picking.partner_id.id == sale_order.partner_shipping_id.id,"Shipping Address is not correspond with sale order."
+      assert picking.note == sale_order.note,"Note is not correspond with sale order."
+      assert picking.invoice_state == (sale_order.order_policy=='picking' and '2binvoiced') or 'none',"Invoice policy is not correspond with sale order."
+      assert len(picking.move_lines) == len(sale_order.order_line), "Total move of delivery order are not corresposning with total sale order lines."
+      location_id = sale_order.shop_id.warehouse_id.lot_stock_id.id
+      output_id = sale_order.shop_id.warehouse_id.lot_output_id.id
+      for move in picking.move_lines:
+         order_line = move.sale_line_id
+         date_planned = datetime.strptime(sale_order.date_order, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(days=order_line.delay or 0.0)
+         date_planned = (date_planned - timedelta(days=sale_order.company_id.security_lead)).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+         assert datetime.strptime(move.date_expected, DEFAULT_SERVER_DATETIME_FORMAT) == datetime.strptime(date_planned, DEFAULT_SERVER_DATETIME_FORMAT), "Excepted Date is not correspond with Planned Date."
+         assert move.product_id.id == order_line.product_id.id,"Product is not correspond."
+         assert move.product_qty == order_line.product_uom_qty,"Product Quantity is not correspond."
+         assert move.product_uom.id == order_line.product_uom.id,"Product UOM is not correspond."
+         assert move.product_uos_qty == (order_line.product_uos and order_line.product_uos_qty) or order_line.product_uom_qty,"Product UOS Quantity is not correspond."
+         assert move.product_uos == (order_line.product_uos and order_line.product_uos.id) or order_line.product_uom.id,"Product UOS is not correspond"
+         assert move.product_packaging.id == order_line.product_packaging.id,"Product packaging is not correspond."
+         assert move.partner_id.id == order_line.address_allotment_id.id or sale_order.partner_shipping_id.id,"Address is not correspond"
+         #assert move.location_id.id == location_id,"Source Location is not correspond."
+         #assert move.location_dest_id == output_id,"Destination Location is not correspond."
+         assert move.price_unit == order_line.product_id.standard_price or 0.0,"Price Unit is not correspond"
+-
+  Now, I dispatch delivery order.
+-
+  !python {model: stock.partial.picking}: |
+    order = self.pool.get('sale.order').browse(cr, uid, ref("sale.sale_order_6"))
+    for pick in order.picking_ids:
+        data = pick.force_assign()
+        if data == True:
+          partial_id = self.create(cr, uid, {}, context={'active_model': 'stock.picking','active_ids': [pick.id]})
+          self.do_partial(cr, uid, [partial_id])
+-
+  I check sale order to verify shipment.
+-
+  !python {model: sale.order}: |
+    order = self.pool.get('sale.order').browse(cr, uid, ref("sale.sale_order_6"))
+    assert order.shipped == True, "Sale order is not Delivered."
+    assert order.picked_rate == 100, "Shipment progress is not 100%."
+    #assert order.state == 'progress', 'Order should be in inprogress.'
+    assert len(order.invoice_ids) == False, "Invoice should not created on dispatch delivery order."
+-
+  I create Invoice from Delivery Order.
+-
+  !python {model: stock.invoice.onshipping}: |
+    sale = self.pool.get('sale.order')
+    sale_order = sale.browse(cr, uid, ref("sale.sale_order_6"))
+    ship_ids = [x.id for x in sale_order.picking_ids]
+    wiz_id = self.create(cr, uid, {'journal_id': ref('account.sales_journal')},
+      {'active_ids': ship_ids, 'active_model': 'stock.picking'})
+    self.create_invoice(cr, uid, [wiz_id], {"active_ids": ship_ids, "active_id": ship_ids[0]})
+-
+  I check the invoice details after dispatched delivery.
+-
+  !python {model: sale.order}: |
+    order = self.browse(cr, uid, ref("sale.sale_order_6"))
+    assert order.invoice_ids, "Invoice is not created."
+    ac = order.partner_id.property_account_receivable.id
+    journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)])
+    for invoice in order.invoice_ids:
+        assert invoice.type == 'out_invoice',"Invoice should be Customer Invoice."
+        assert invoice.account_id.id == ac,"Invoice account is not correspond."
+        assert invoice.reference == order.client_order_ref or order.name,"Reference is not correspond."
+        assert invoice.partner_id.id == order.partner_id.id,"Customer is not correspond."
+        assert invoice.currency_id.id == order.pricelist_id.currency_id.id, "Currency is not correspond."
+        assert invoice.comment == (order.note or ''),"Note is not correspond."
+        assert invoice.journal_id.id in journal_ids,"Sales Journal is not link on Invoice."
+        assert invoice.payment_term.id == order.payment_term.id, "Payment term is not correspond."
+    for so_line in order.order_line:
+        inv_line = so_line.invoice_lines[0]
+        ac = so_line.product_id.property_account_income.id or so_line.product_id.categ_id.property_account_income_categ.id
+        assert inv_line.product_id.id == so_line.product_id.id or False,"Product is not correspond"
+        assert inv_line.account_id.id == ac,"Account of Invoice line is not corresponding."
+        assert inv_line.uos_id.id == (so_line.product_uos and so_line.product_uos.id) or so_line.product_uom.id, "Product UOS is not correspond."
+        assert inv_line.price_unit == so_line.price_unit , "Price Unit is not correspond."
+        assert inv_line.quantity == (so_line.product_uos and so_line.product_uos_qty) or so_line.product_uom_qty , "Product qty is not correspond."
+        assert inv_line.price_subtotal == so_line.price_subtotal, "Price sub total is not correspond."
+-
+  I open the Invoice.
+-
+  !python {model: sale.order}: |
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    so = self.browse(cr, uid, ref("sale.sale_order_6"))
+    for invoice in so.invoice_ids:
+      wf_service.trg_validate(uid, 'account.invoice', invoice.id, 'invoice_open', cr)
+-
+  I pay the invoice
+-
+  !python {model: account.invoice}: |
+    sale_order = self.pool.get('sale.order')
+    order = sale_order.browse(cr, uid, ref("sale.sale_order_6"))
+    journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', order.company_id.id)], limit=1)
+    for invoice in order.invoice_ids:
+        invoice.pay_and_reconcile(
+            invoice.amount_total, ref('account.cash'), ref('account.period_8'),
+            journal_ids[0], ref('account.cash'),
+            ref('account.period_8'), journal_ids[0],
+            name='test')
+-
+  I check the order after paid invoice.
+-
+  !python {model: sale.order}: |
+    order = self.browse(cr, uid, ref("sale.sale_order_6"))
+    assert order.invoiced == True, "Sale order is not invoiced."
+    assert order.invoiced_rate == 100, "Invoiced progress is not 100%."
+    assert order.state == 'done', 'Order should be in closed.'
+-
+  I print a sale order report.
+-
+  !python {model: sale.order}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.sale.order').create(cr, uid, [ref('sale.sale_order_6')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'sale-sale_order.'+format), 'wb+').write(data)
+

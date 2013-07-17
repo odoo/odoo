@@ -3,22 +3,21 @@
  <data>
           <menuitem
             id="hr.menu_hr_reporting"
-            name="Reporting"
-            parent="hr.menu_hr_root"
+            name="Human Resources"
+            parent="base.menu_reporting"
             sequence="40" />
 
         <!-- Report for Users' Timesheet and Task Hours per Month -->
 
-		<record id="view_report_timesheet_task_user_tree" model="ir.ui.view">
+        <record id="view_report_timesheet_task_user_tree" model="ir.ui.view">
             <field name="name">report.timesheet.task.user.tree</field>
             <field name="model">report.timesheet.task.user</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Timesheet/Task hours Report Per Month" >
-                    <field name="name" select="1"/>
-                    <field name="year" select="1" invisible="1"/>
-                    <field name="month" select="1" invisible="1"/>
-                    <field name="user_id" select="1"/>
+                    <field name="name"/>
+                    <field name="year" invisible="1"/>
+                    <field name="month" invisible="1"/>
+                    <field name="user_id"/>
                     <field name="timesheet_hrs" widget="float_time" />
                     <field name="task_hrs"  widget="float_time"/>
                 </tree>
@@ -27,42 +26,22 @@
       <record id="view_report_timesheet_task_user_search" model="ir.ui.view">
             <field name="name">report.timesheet.task.user.search</field>
             <field name="model">report.timesheet.task.user</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
-            	<search string="Tasks by User">
-            		<group>
-                        <filter icon="terp-go-year" string="Year"
-                            name="year"
-                            domain="[('name','&lt;=', time.strftime('%%Y-%%m-%%d')),('name','&gt;=',time.strftime('%%Y-01-01'))]"
-                            help="Task Hours in current year"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-go-month" string="Month"
-                            name="month"
-                            domain="[('name','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('name','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                            help="Task Hours in current month"/>
-                        <filter icon="terp-go-month"
-                            string=" Month-1 "
-                            domain="[('name','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('name','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                            help="Task hours of last month"/>            		
-	            		<separator orientation="vertical"/>
-	                    <field name="user_id"/>
-                	</group>
-                	<newline/>
-                	<group expand="1" string="Group By...">
-                	    <filter string="User" name="group_user_id" icon="terp-personal" context="{'group_by':'user_id'}"/>
-                        <separator orientation="vertical"/>
+                <search string="Tasks by User">
+                    <field name="name" string="Date"/>
+                    <field name="user_id"/>
+                    <group expand="1" string="Group By...">
+                        <filter string="User" name="group_user_id" icon="terp-personal" context="{'group_by':'user_id'}"/>
                         <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}" help="Group by month of date"/>
                         <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Group by year of date"/>
                     </group>
-
-            	</search>
+                </search>
             </field>
         </record>
-        
+
         <record id="view_task_hour_per_month_graph" model="ir.ui.view">
             <field name="name">report.timesheet.task.user.graph</field>
             <field name="model">report.timesheet.task.user</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Task Hours Per Month" type="bar">
                      <field name="user_id"/>
@@ -71,7 +50,7 @@
                  </graph>
             </field>
         </record>
-                
+
         <record id="action_report_timesheet_task_user" model="ir.actions.act_window">
             <field name="name">Task Hours Per Month</field>
             <field name="res_model">report.timesheet.task.user</field>
@@ -79,7 +58,7 @@
             <field name="view_mode">tree,graph</field>
             <field name="context">{'search_default_year':1,'search_default_month':1, 'search_default_group_user_id':1}</field>
         </record>
-        <menuitem id="menu_timesheet_task_user" parent="hr_timesheet.menu_hr_reporting_timesheet"
+        <menuitem id="menu_timesheet_task_user" parent="hr.menu_hr_reporting_timesheet"
                     action="action_report_timesheet_task_user" sequence="1"/>
 
     </data>

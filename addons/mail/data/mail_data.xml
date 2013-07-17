@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <record forcecreate="True" id="ir_cron_mail_scheduler_action" model="ir.cron">
+            <field name="name">Email Queue Manager</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall"/>
+            <field eval="'mail.mail'" name="model"/>
+            <field eval="'process_email_queue'" name="function"/>
+            <field eval="'()'" name="args"/>
+        </record>
+
+        <record id="ir_cron_module_update_notification" model="ir.cron">
+            <field name="name">Update Notification</field>
+            <field eval="True" name="active" />
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall" />
+            <field eval="'publisher_warranty.contract'" name="model" />
+            <field eval="'update_notification'" name="function" />
+            <field eval="'(None,)'" name="args" />
+            <field name="priority">1000</field>
+        </record>
+
+        <!-- Discussion subtype for messaging / Chatter -->
+        <record id="mt_comment" model="mail.message.subtype">
+            <field name="name">Discussions</field>
+        </record>
+    </data>
+</openerp>

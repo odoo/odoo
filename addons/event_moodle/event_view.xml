@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="moodle_information">
+            <field name="name">event.moodle.registration</field>
+            <field name="model">event.registration</field>
+            <field name="inherit_id" ref="event.view_event_registration_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="moodle_user_password" readonly='1'/>
+                    <field name="moodle_uid" readonly="1"/>
+                </xpath>
+                <field name="email" position="replace">
+                     <!-- set the email as required -->
+                     <field name="email" nolabel="1" required="1" />
+                </field>
+                <field name="name" position="replace">
+                     <field name="moodle_username" colspan="2" on_change="onchange_moodle_name(moodle_user_password)"/>
+                     <field name="name" required="1" />
+                </field>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="moodle_information_event">
+            <field name="name">event.moodle.event</field>
+            <field name="model">event.event</field>
+            <field name="inherit_id" ref="event.view_event_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='registration_ids']/tree/field[@name='name']" position="replace">
+                   <field name="moodle_username" on_change="onchange_moodle_name(moodle_user_password)"/>
+                   <field name="name" required="1" />
+                </xpath>
+                <field name="email" position="replace">
+                    <field name="email" required="1" />
+                </field>
+           </field>
+        </record>
+    </data>
+</openerp>

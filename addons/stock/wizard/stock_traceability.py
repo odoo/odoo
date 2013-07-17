@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class action_traceability(osv.osv_memory):
     """
@@ -47,11 +47,11 @@ class action_traceability(osv.osv_memory):
         obj = self.pool.get('stock.move')
         ids = obj.search(cr, uid, [(field, 'in',lot_id)])
         cr.execute('select id from ir_ui_view where model=%s and field_parent=%s and type=%s', ('stock.move', type1, 'tree'))
-        view_id = cr.fetchone()[0]
+        view_ids = cr.fetchone()
+        view_id = view_ids and view_ids[0] or False
         value = {
             'domain': "[('id','in',["+','.join(map(str, ids))+"])]",
             'name': ((type1=='move_history_ids2') and _('Upstream Traceability')) or _('Downstream Traceability'),
-            'view_type': 'tree',
             'view_mode': 'tree',
             'res_model': 'stock.move',
             'field_parent': type1,

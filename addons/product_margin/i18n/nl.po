@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
-"PO-Revision-Date: 2011-01-17 10:22+0000\n"
-"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:09+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:28+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: product_margin
 #: view:product.product:0
@@ -33,16 +33,10 @@ msgid "From"
 msgstr "Van"
 
 #. module: product_margin
-#: help:product.product,sale_expected:0
+#: help:product.product,total_cost:0
 msgid ""
-"Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
+"Sum of Multiplication of Invoice price and quantity of Supplier Invoices "
 msgstr ""
-"Som van product van verkoopcatalogusprijs en de hoeveelheid op klantfacturen."
-
-#. module: product_margin
-#: help:product.product,total_margin:0
-msgid "Turnorder - Standard price"
-msgstr "Omzet - standaard prijs"
 
 #. module: product_margin
 #: field:product.margin,to_date:0
@@ -50,14 +44,14 @@ msgid "To"
 msgstr "Aan"
 
 #. module: product_margin
-#: field:product.product,date_to:0
-msgid "To Date"
-msgstr "Tot datum"
+#: help:product.product,total_margin:0
+msgid "Turnover - Standard price"
+msgstr ""
 
 #. module: product_margin
-#: field:product.product,date_from:0
-msgid "From Date"
-msgstr "Vanaf datum"
+#: field:product.product,total_margin_rate:0
+msgid "Total Margin Rate(%)"
+msgstr ""
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0
@@ -66,26 +60,41 @@ msgid "Draft, Open and Paid"
 msgstr "Concept, Open en Betaald"
 
 #. module: product_margin
+#: code:addons/product_margin/wizard/product_margin.py:73
+#: model:ir.actions.act_window,name:product_margin.product_margin_act_window
+#: model:ir.ui.menu,name:product_margin.menu_action_product_margin
+#: view:product.product:0
+#, python-format
+msgid "Product Margins"
+msgstr "Productmarges"
+
+#. module: product_margin
 #: field:product.product,purchase_avg_price:0
 #: field:product.product,sale_avg_price:0
 msgid "Avg. Unit Price"
 msgstr "Gem. stuksprijs"
 
 #. module: product_margin
-#: model:ir.model,name:product_margin.model_product_product
-msgid "Product"
-msgstr "Product"
+#: field:product.product,sale_num_invoiced:0
+msgid "# Invoiced in Sale"
+msgstr ""
 
 #. module: product_margin
 #: view:product.product:0
 msgid "Catalog Price"
-msgstr "Catalogusprijs"
+msgstr "Verkoopprijs"
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0
 #: selection:product.product,invoice_state:0
 msgid "Paid"
 msgstr "Betaald"
+
+#. module: product_margin
+#: view:product.product:0
+#: field:product.product,sales_gap:0
+msgid "Sales Gap"
+msgstr "Verkoopkloof"
 
 #. module: product_margin
 #: help:product.product,sales_gap:0
@@ -100,7 +109,7 @@ msgstr "Verwachte verkoop"
 #. module: product_margin
 #: view:product.product:0
 msgid "Standard Price"
-msgstr "Standaardprijs"
+msgstr "Kostprijs"
 
 #. module: product_margin
 #: help:product.product,purchase_num_invoiced:0
@@ -108,27 +117,25 @@ msgid "Sum of Quantity in Supplier Invoices"
 msgstr "Totale hoeveelheid over leveranciersfacturen"
 
 #. module: product_margin
-#: help:product.product,normal_cost:0
-msgid "Sum of Multification of Cost price and quantity of Supplier Invoices"
+#: field:product.product,date_to:0
+msgid "Margin Date To"
 msgstr ""
-"Totaal van product van kostprijs en hoeveelheid in leveranciersfacturen"
 
 #. module: product_margin
-#: help:product.product,expected_margin:0
-msgid "Expected Sale - Normal Cost"
-msgstr "Verwachte verkoop - Kostpijs"
-
-#. module: product_margin
-#: field:product.product,purchase_num_invoiced:0
-#: field:product.product,sale_num_invoiced:0
-msgid "# Invoiced"
-msgstr "# Gefactureerd"
+#: view:product.product:0
+msgid "Analysis Criteria"
+msgstr "Analysecriteria"
 
 #. module: product_margin
 #: view:product.product:0
 #: field:product.product,total_cost:0
 msgid "Total Cost"
 msgstr "Totaal kosten"
+
+#. module: product_margin
+#: help:product.product,normal_cost:0
+msgid "Sum of Multiplication of Cost price and quantity of Supplier Invoices"
+msgstr ""
 
 #. module: product_margin
 #: field:product.product,expected_margin:0
@@ -141,27 +148,19 @@ msgid "#Purchased"
 msgstr "#Gekocht"
 
 #. module: product_margin
-#: help:product.product,turnover:0
-msgid ""
-"Sum of Multification of Invoice price and quantity of Customer Invoices"
-msgstr "Totaal van product van factuurprijs en hoeveelheid op klantfacturen."
-
-#. module: product_margin
 #: help:product.product,expected_margin_rate:0
 msgid "Expected margin * 100 / Expected Sale"
 msgstr "Verwachte marge * 100 / Verwachte verkoop"
 
 #. module: product_margin
 #: help:product.product,sale_avg_price:0
-msgid "Avg. Price in Customer Invoices)"
-msgstr "Gemiddelde prijs in klantfacturen"
+msgid "Avg. Price in Customer Invoices."
+msgstr ""
 
 #. module: product_margin
-#: help:product.product,total_cost:0
-msgid ""
-"Sum of Multification of Invoice price and quantity of Supplier Invoices "
-msgstr ""
-"Totaal product van factuurprijs en hoeveelheid in leveranciersfacturen "
+#: help:product.product,purchase_avg_price:0
+msgid "Avg. Price in Supplier Invoices "
+msgstr "Gem. prijs in leveranciersfacturen "
 
 #. module: product_margin
 #: field:product.margin,invoice_state:0
@@ -175,15 +174,26 @@ msgid "Normal Cost - Total Cost"
 msgstr "Normale kosten- Totale kosten"
 
 #. module: product_margin
+#: help:product.product,sale_expected:0
+msgid ""
+"Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
+msgstr ""
+
+#. module: product_margin
 #: field:product.product,total_margin:0
 msgid "Total Margin"
 msgstr "Totale Marge"
 
 #. module: product_margin
-#: view:product.product:0
-#: field:product.product,sales_gap:0
-msgid "Sales Gap"
-msgstr "Verkoopkloof"
+#: field:product.product,date_from:0
+msgid "Margin Date From"
+msgstr ""
+
+#. module: product_margin
+#: help:product.product,turnover:0
+msgid ""
+"Sum of Multiplication of Invoice price and quantity of Customer Invoices"
+msgstr ""
 
 #. module: product_margin
 #: field:product.product,normal_cost:0
@@ -196,9 +206,14 @@ msgid "Purchases"
 msgstr "Inkopen"
 
 #. module: product_margin
-#: help:product.product,purchase_avg_price:0
-msgid "Avg. Price in Supplier Invoices "
-msgstr "Gem. prijs in leveranciersfacturen "
+#: field:product.product,purchase_num_invoiced:0
+msgid "# Invoiced in Purchase"
+msgstr ""
+
+#. module: product_margin
+#: help:product.product,expected_margin:0
+msgid "Expected Sale - Normal Cost"
+msgstr "Verwachte verkoop - Kostpijs"
 
 #. module: product_margin
 #: view:product.margin:0
@@ -211,9 +226,9 @@ msgid "Total margin * 100 / Turnover"
 msgstr "Totale marge * 100 / omzet"
 
 #. module: product_margin
-#: view:product.product:0
-msgid "Analysis Criteria"
-msgstr "Analysecriteria"
+#: view:product.margin:0
+msgid "Open Margins"
+msgstr "Open marges"
 
 #. module: product_margin
 #: selection:product.margin,invoice_state:0
@@ -227,13 +242,9 @@ msgid "Sales"
 msgstr "Verkopen"
 
 #. module: product_margin
-#: code:addons/product_margin/wizard/product_margin.py:73
-#: model:ir.actions.act_window,name:product_margin.product_margin_act_window
-#: model:ir.ui.menu,name:product_margin.menu_action_product_margin
-#: view:product.product:0
-#, python-format
-msgid "Product Margins"
-msgstr "Productmarges"
+#: model:ir.model,name:product_margin.model_product_product
+msgid "Product"
+msgstr "Product"
 
 #. module: product_margin
 #: view:product.margin:0
@@ -241,24 +252,9 @@ msgid "General Information"
 msgstr "Algemene informatie"
 
 #. module: product_margin
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Fout: ongeldige ean code"
-
-#. module: product_margin
 #: field:product.product,purchase_gap:0
 msgid "Purchase Gap"
 msgstr "Inkoopkloof"
-
-#. module: product_margin
-#: field:product.product,total_margin_rate:0
-msgid "Total Margin (%)"
-msgstr "Totale marge (%)"
-
-#. module: product_margin
-#: view:product.margin:0
-msgid "Open Margins"
-msgstr "Open marges"
 
 #. module: product_margin
 #: view:product.margin:0
@@ -276,41 +272,11 @@ msgid "Sum of Quantity in Customer Invoices"
 msgstr "Totaal aantal in klantfacturen"
 
 #. module: product_margin
+#: view:product.margin:0
+msgid "or"
+msgstr "of"
+
+#. module: product_margin
 #: model:ir.model,name:product_margin.model_product_margin
 msgid "Product Margin"
 msgstr "Product marge"
-
-#~ msgid "Margins in Product"
-#~ msgstr "Marge in producten"
-
-#~ msgid "Excepted Sale - Normal Cost"
-#~ msgstr "Verwachte verkoop- Normale kosten"
-
-#~ msgid "Reporting"
-#~ msgstr "Overzichten"
-
-#~ msgid "Excepted Sale - Turn Over"
-#~ msgstr "Verwachter verkoop - Omzet"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Ongeldige XML voor weergave!"
-
-#~ msgid "Select "
-#~ msgstr "Kies "
-
-#~ msgid "View Stock of Products"
-#~ msgstr "Bekijk productvoorraad"
-
-#~ msgid ""
-#~ "\n"
-#~ "Adds a reporting menu in products that computes sales, purchases, margins\n"
-#~ "and other interesting indicators based on invoices. The wizard to launch\n"
-#~ "the report has several options to help you get the data you need.\n"
-#~ msgstr ""
-#~ "\n"
-#~ "Voegt een rapportage menu toe in producten dat verkoop, inkoop en marges en "
-#~ "ander\n"
-#~ "interessante indicatoren berekent gebaseerd op facturen. De assistent bij "
-#~ "het starten van\n"
-#~ "het overzicht heeft enkele opties die u helpen de gewenste informatie te "
-#~ "krijgen.\n"

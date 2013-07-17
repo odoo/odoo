@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="contact_form_view" model="ir.ui.view">
+            <field name="name">Contact form</field>
+            <field name="model">portal_crm.crm_contact_us</field>
+            <field name="arch" type="xml">
+                <form string="Contact form" version="7.0" class="oe_portal_crm_contact">
+                    <h1>Contact us</h1>
+                    <div style="width: 300px; float:right;">
+                        <field name="company_ids" nolabel="1" widget="many2many_kanban" class="oe_portal_crm_office" colspan="2">
+                            <kanban>
+                                <field name="name"/>
+                                <field name="email"/>
+                                <field name="phone"/>
+                                <field name="street"/>
+                                <field name="street2"/>
+                                <field name="zip"/>
+                                <field name="city"/>
+                                <field name="country_id" options='{"no_open": True}'/>
+                                <field name="state_id" options='{"no_open": True}'/>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <h4><field name="name"/></h4>
+                                        <ul class="oe_portal_crm_address">
+                                            <li t-if="record.street"><field name="street"/></li>
+                                            <li t-if="record.street2"><field name="street2"/></li>
+                                            <li t-if="record.zip"><field name="zip"/></li>
+                                            <li t-if="record.city"><field name="city"/></li>
+                                            <li t-if="record.country_id"><field name="country_id"/></li>
+                                        </ul>
+                                        <ul class="oe_portal_crm_contact_info">
+                                            <li t-if="record.phone"><field name="phone"/></li>
+                                            <li t-if="record.email.raw_value">
+                                                <a title="Mail" t-att-href="'mailto:'+record.email.value">
+                                                <field name="email"/>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </t>
+                                </templates>
+                            </kanban>
+                        </field>
+                        <div class="oe_portal_crm_team">
+
+                        </div>
+                    </div>
+                    <div  style="margin-right: 320px; max-width: 900px;">
+                        <group>
+                            <group>
+                                <field name="partner_name" string="Name" placeholder="Your name..." required="True"/>
+                                <field name="email_from" placeholder="Your email..." required="True"/>
+                                <field name="phone" placeholder="Your phone number..."/>
+                            </group>
+                            <field name="name" placeholder="Subject..." nolabel="1" colspan="2"/>
+                            <field name="description" String="Content" placeholder="Content..." nolabel="1" colspan="2"/>
+                        </group>
+                    </div>
+                    <div>
+                        <button string="Submit" name="submit" type="object" class="oe_highlight"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- wizard thanks message (shows after submitting the form) -->
+        <record id="wizard_contact_form_view_thanks" model="ir.ui.view">
+            <field name="name">Wizard thanks message</field>
+            <field name="model">portal_crm.crm_contact_us</field>
+            <!-- give it a low priority to ensure this won't be the default view -->
+            <field name="priority">99</field>
+            <field name="arch" type="xml">
+                <form string="Thank you" version="7.0">
+                    <!--
+                        make sure there is at least one field in the view,
+                        otherwise the orm will try to select all the model's
+                        records and this will result in a permission denied error
+                    -->
+                    <field name="partner_name" invisible="1"/>
+                    <label string="Thank you for your interest, we'll respond to your request shortly."/>
+                    <footer>
+                        <button string="Close" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_contact_us" model="ir.actions.act_window">
+            <field name="name">Contact Us</field>
+            <field name="res_model">portal_crm.crm_contact_us</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="contact_form_view"/>
+            <field name="target">inline</field>
+        </record>
+
+        <!-- attach it to the portal menu -->
+        <menuitem name="Contact" id="portal_company_contact"
+            parent="portal.portal_company" action="action_contact_us" sequence="40"/>
+
+    </data>
+</openerp>

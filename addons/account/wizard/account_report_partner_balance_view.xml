@@ -5,14 +5,9 @@
         <record id="account_partner_balance_view" model="ir.ui.view">
             <field name="name">Partner Balance</field>
             <field name="model">account.partner.balance</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account_common_report_view" />
             <field name="arch" type="xml">
             <data>
-            <xpath expr="/form/label[@string='']" position="replace">
-                <separator string="Partner Balance" colspan="4"/>
-                <label nolabel="1" colspan="4" string="This report is an analysis done by a partner. It is a PDF report containing one line per partner representing the cumulative credit balance"/>
-            </xpath>
             <xpath expr="//field[@name='target_move']" position="after">
                 <field name="result_selection"/>
                 <field name="display_partner"/>
@@ -31,7 +26,6 @@
              <field name="view_id" ref="account_partner_balance_view"/>
              <field name="context">{}</field>
              <field name="target">new</field>
-             <field name="help">This report is analysis by partner. It is a PDF report containing one line per partner representing the cumulative credit balance.</field>
        </record>
 
         <menuitem icon="STOCK_PRINT"

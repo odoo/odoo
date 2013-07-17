@@ -1,36 +1,380 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* project
+# Swedish translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.14\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-23 09:54+0000\n"
-"PO-Revision-Date: 2010-11-23 09:31+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-24 05:39+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:29+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
+
+#. module: project
+#: view:project.project:0
+msgid "Email Interface"
+msgstr ""
+
+#. module: project
+#: help:account.analytic.account,use_tasks:0
+msgid ""
+"If checked, this contract will be available in the project menu and you will "
+"be able to manage tasks or track issues"
+msgstr ""
+
+#. module: project
+#: field:project.project,progress_rate:0
+#: view:report.project.task.user:0
+#: field:report.project.task.user,progress:0
+msgid "Progress"
+msgstr "Upparbetat"
+
+#. module: project
+#: model:process.node,name:project.process_node_taskbydelegate0
+msgid "Task by delegate"
+msgstr "Aktiviteter per deltagare"
+
+#. module: project
+#: view:project.project:0
+msgid "Parent"
+msgstr "Överliggande"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.dblc_proj
+msgid "Project's tasks"
+msgstr "Projektets aktiviteter"
+
+#. module: project
+#: field:project.task.type,name:0
+msgid "Stage Name"
+msgstr "Etappnamn"
+
+#. module: project
+#: model:process.transition.action,name:project.process_transition_action_openpendingtask0
+msgid "Set pending"
+msgstr "Sätt till vilande"
+
+#. module: project
+#: view:project.project:0
+msgid "New Project Based on Template"
+msgstr "Nytt projekt från mall"
 
 #. module: project
 #: view:report.project.task.user:0
-msgid "New tasks"
+#: field:report.project.task.user,day:0
+msgid "Day"
+msgstr "Dag"
+
+#. module: project
+#: model:project.task.type,name:project.project_tt_merge
+msgid "Merge"
 msgstr ""
 
 #. module: project
-#: help:project.task.delegate,new_task_description:0
-msgid "Reinclude the description of the task in the task of the user"
-msgstr ""
+#: view:res.partner:0
+msgid "Start Task"
+msgstr "Starta aktivitet"
 
 #. module: project
-#: code:addons/project/project.py:916
+#: code:addons/project/project.py:932
 #, python-format
-msgid "The task '%s' has been delegated to %s."
+msgid "Warning !"
+msgstr "Varning !"
+
+#. module: project
+#: help:project.project,message_unread:0
+#: help:project.task,message_unread:0
+msgid "If checked new messages require your attention."
 msgstr ""
+
+#. module: project
+#: model:process.node,name:project.process_node_donetask0
+msgid "Done task"
+msgstr "Avslutade aktiviteter"
+
+#. module: project
+#: model:process.node,note:project.process_node_donetask0
+msgid "Task is Completed"
+msgstr "Aktiviteten är avslutad"
+
+#. module: project
+#: view:res.partner:0
+msgid "False"
+msgstr ""
+
+#. module: project
+#: model:project.task.type,name:project.project_tt_testing
+msgid "Testing"
+msgstr "Test"
+
+#. module: project
+#: model:ir.model,name:project.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "Objekt"
+
+#. module: project
+#: field:project.config.settings,group_time_work_estimation_tasks:0
+msgid "Manage time estimation on tasks"
+msgstr ""
+
+#. module: project
+#: help:project.project,message_summary:0
+#: help:project.task,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+
+#. module: project
+#: code:addons/project/project.py:432
+#: code:addons/project/project.py:1305
+#, python-format
+msgid "Warning!"
+msgstr ""
+
+#. module: project
+#: model:ir.model,name:project.model_res_partner
+msgid "Partner"
+msgstr "Företag"
+
+#. module: project
+#: field:project.config.settings,group_manage_delegation_task:0
+msgid "Allow task delegation"
+msgstr ""
+
+#. module: project
+#: field:project.task.delegate,planned_hours:0
+#: view:report.project.task.user:0
+#: field:report.project.task.user,hours_planned:0
+msgid "Planned Hours"
+msgstr "Planerade timmar"
+
+#. module: project
+#: view:project.project:0
+msgid "Reset as Project"
+msgstr "Återställ som projekt"
+
+#. module: project
+#: view:report.project.task.user:0
+msgid "In progress tasks"
+msgstr "Pågående aktiviteter"
+
+#. module: project
+#: help:project.project,progress_rate:0
+msgid "Percent of tasks closed according to the total of tasks todo."
+msgstr "Procentuell andel av avslutade aktiviteter."
+
+#. module: project
+#: model:ir.actions.client,name:project.action_client_project_menu
+msgid "Open Project Menu"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,help:project.action_project_task_user_tree
+msgid ""
+"This report allows you to analyse the performance of your projects and "
+"users. You can analyse the quantities of tasks, the hours spent compared to "
+"the planned hours, the average number of days to open or close a task, etc."
+msgstr ""
+"Med denna rapport kan du analysera effektiviteten för dina projekt och dina "
+"projektdeltagare. Du kan analysera stora mängder av aktiviteter, nedlagd tid "
+"jämfört med de planerade timmar, det genomsnittliga antalet dagar för att "
+"öppna eller stänga en aktivitet etc."
+
+#. module: project
+#: view:project.task.delegate:0
+msgid "Validation Task Title"
+msgstr "Utvärdera aktivitetsrubrik"
+
+#. module: project
+#: model:res.groups,name:project.group_delegate_task
+msgid "Task Delegation"
+msgstr ""
+
+#. module: project
+#: field:project.project,planned_hours:0
+#: field:project.task.history,planned_hours:0
+#: field:project.task.history.cumulative,planned_hours:0
+msgid "Planned Time"
+msgstr "Planerade timmar"
+
+#. module: project
+#: selection:project.project,privacy_visibility:0
+msgid "Public"
+msgstr ""
+
+#. module: project
+#: model:project.category,name:project.project_category_01
+msgid "Contact's suggestion"
+msgstr ""
+
+#. module: project
+#: help:project.config.settings,group_time_work_estimation_tasks:0
+msgid "Allows you to compute Time Estimation on tasks."
+msgstr ""
+
+#. module: project
+#: field:report.project.task.user,user_id:0
+msgid "Assigned To"
+msgstr "Tilldelad"
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_closed
+#: model:mail.message.subtype,name:project.mt_task_closed
+msgid "Task Done"
+msgstr ""
+
+#. module: project
+#: view:project.project:0
+#: view:report.project.task.user:0
+#: field:report.project.task.user,partner_id:0
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: project
+#: model:process.transition,name:project.process_transition_delegate0
+#: view:project.task:0
+msgid "Delegate"
+msgstr "Delegera"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.open_view_template_project
+#: view:project.project:0
+msgid "Templates of Projects"
+msgstr "Mallprojekt"
+
+#. module: project
+#: field:project.project,analytic_account_id:0
+msgid "Contract/Analytic"
+msgstr ""
+
+#. module: project
+#: view:project.config.settings:0
+msgid "Project Management"
+msgstr "Projekthantering"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_task_delegate
+#: view:project.task.delegate:0
+msgid "Project Task Delegate"
+msgstr "Projektaktivitetsdelegering"
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_started
+#: model:mail.message.subtype,name:project.mt_task_started
+msgid "Task Started"
+msgstr ""
+
+#. module: project
+#: view:project.task:0
+msgid "Very Important"
+msgstr ""
+
+#. module: project
+#: view:project.config.settings:0
+msgid "Support"
+msgstr ""
+
+#. module: project
+#: view:project.project:0
+msgid "Member"
+msgstr "Medlem"
+
+#. module: project
+#: view:project.task:0
+msgid "Cancel Task"
+msgstr ""
+
+#. module: project
+#: help:project.project,members:0
+msgid ""
+"Project's members are users who can have an access to the tasks related to "
+"this project."
+msgstr ""
+"Projektmedlemmar är användare som får tillgång till relaterade aktiviteter "
+"till detta projekt."
+
+#. module: project
+#: view:project.project:0
+#: field:project.task,manager_id:0
+msgid "Project Manager"
+msgstr "Projektledare"
+
+#. module: project
+#: field:project.project,state:0
+#: field:project.task,state:0
+#: field:project.task.history,state:0
+#: field:project.task.history.cumulative,state:0
+#: field:report.project.task.user,state:0
+msgid "Status"
+msgstr "Status"
+
+#. module: project
+#: selection:report.project.task.user,month:0
+msgid "August"
+msgstr "augusti"
+
+#. module: project
+#: view:project.project:0
+#: field:project.project,complete_name:0
+msgid "Project Name"
+msgstr "Projektnamn"
+
+#. module: project
+#: selection:report.project.task.user,month:0
+msgid "June"
+msgstr "juni"
+
+#. module: project
+#: selection:report.project.task.user,month:0
+msgid "October"
+msgstr "oktober"
+
+#. module: project
+#: help:project.project,total_hours:0
+msgid ""
+"Sum of total hours of all tasks related to this project and its child "
+"projects."
+msgstr ""
+"Summan av alla timmar för aktiviteter relaterat till detta projekt och "
+"underliggande."
+
+#. module: project
+#: help:project.project,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the project "
+"without removing it."
+msgstr ""
+"Om det aktiva fältet är Falskt, kan du gömma projektet utan att radera det."
+
+#. module: project
+#: model:process.transition,note:project.process_transition_opendonetask0
+msgid "When task is completed, it will come into the done state."
+msgstr "När aktiviteten är avslutad sätts status till klar."
+
+#. module: project
+#: field:project.project,message_summary:0
+#: field:project.task,message_summary:0
+msgid "Summary"
+msgstr ""
+
+#. module: project
+#: view:project.project:0
+msgid "Append this project to another one using analytic accounts hierarchy"
+msgstr ""
+
+#. module: project
+#: view:project.task:0
+#: view:project.task.history.cumulative:0
+msgid "In Progress Tasks"
+msgstr "Pågående aktiviteter"
 
 #. module: project
 #: help:res.company,project_time_mode_id:0
@@ -39,88 +383,138 @@ msgid ""
 "If you use the timesheet linked to projects (project_timesheet module), "
 "don't forget to setup the right unit of measure in your employees."
 msgstr ""
-"This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects (project_timesheet module), "
-"don't forget to setup the right unit of measure in your employees."
+"Detta ställer in den måttenhet som används i projekt och aktiviteter.\n"
+"Om du använder tidrapporten kopplad till projekt (project_timesheet "
+"modulen), glöm inte att ställa in rätt måttenhet för dina medarbetare."
 
 #. module: project
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
-
-#. module: project
+#: field:project.task,user_id:0
 #: view:report.project.task.user:0
-msgid "Previous Month"
+msgid "Assigned to"
+msgstr "Tilldelad till"
+
+#. module: project
+#: code:addons/project/project.py:1021
+#, python-format
+msgid "Delegated User should be specified"
+msgstr "Användaren som ärendet delegeras till måste anges"
+
+#. module: project
+#: view:project.project:0
+msgid "Project(s) Manager"
 msgstr ""
 
 #. module: project
-#: view:report.project.task.user:0
-msgid "My tasks"
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
+#: selection:project.task.history,state:0
+#: selection:project.task.history.cumulative,state:0
+#: selection:project.task.type,state:0
+#: selection:report.project.task.user,state:0
+msgid "In Progress"
+msgstr "Pågår"
+
+#. module: project
+#: view:project.task:0
+msgid "Reactivate"
+msgstr "Återaktivera"
+
+#. module: project
+#: field:project.project,resource_calendar_id:0
+msgid "Working Time"
+msgstr "Arbetstid"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_task_reevaluate
+msgid "Re-evaluate Task"
+msgstr "Ovärdera aktivitet"
+
+#. module: project
+#: view:project.task:0
+msgid "Validate planned time"
 msgstr ""
 
 #. module: project
-#: field:project.project,warn_customer:0
-msgid "Warn Partner"
-msgstr "Varna företag"
+#: field:project.config.settings,module_pad:0
+msgid "Use integrated collaborative note pads on task"
+msgstr ""
 
 #. module: project
-#: help:project.task.reevaluate,remaining_hours:0
-msgid "Put here the remaining hours required to close the task."
+#: model:mail.message.subtype,name:project.mt_project_task_blocked
+#: model:mail.message.subtype,name:project.mt_task_blocked
+msgid "Task Blocked"
+msgstr ""
+
+#. module: project
+#: model:process.node,note:project.process_node_opentask0
+msgid "Encode your working hours."
+msgstr "Koda dina arbetstimmar"
+
+#. module: project
+#: field:project.project,alias_id:0
+msgid "Alias"
 msgstr ""
 
 #. module: project
 #: view:project.task:0
-msgid "Deadlines"
+msgid "oe_kanban_text_red"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:120
-#, python-format
-msgid "Operation Not Permitted !"
-msgstr "Operation Not Permitted !"
-
-#. module: project
-#: code:addons/project/wizard/project_task_delegate.py:69
-#: code:addons/project/wizard/project_task_delegate.py:70
-#: code:addons/project/wizard/project_task_delegate.py:77
-#: code:addons/project/wizard/project_task_delegate.py:78
-#, python-format
-msgid "CHECK: "
-msgstr "CHECK: "
-
-#. module: project
-#: code:addons/project/project.py:315
-#, python-format
-msgid "You must assign members on the project '%s' !"
+#: model:mail.message.subtype,description:project.mt_task_blocked
+msgid "Task blocked"
 msgstr ""
 
 #. module: project
-#: field:project.task,work_ids:0
-msgid "Work done"
-msgstr "Avslutat arbete"
+#: view:project.task:0
+msgid "Delegation"
+msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:315
-#: code:addons/project/project.py:754
-#: code:addons/project/project.py:1113
-#, python-format
-msgid "Warning !"
+#: field:project.task,create_date:0
+msgid "Create Date"
+msgstr "Registreringsdatum"
+
+#. module: project
+#: view:res.partner:0
+msgid "For changing to open state"
+msgstr "För att byta till öppen status"
+
+#. module: project
+#: view:project.config.settings:0
+msgid "Apply"
 msgstr ""
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_delegate
 msgid "Task Delegate"
+msgstr "Aktivitetsdelegering"
+
+#. module: project
+#: help:project.task.delegate,new_task_description:0
+msgid "Reinclude the description of the task in the task of the user"
+msgstr "Återinföra beskrivningen av aktiviteten i arbetet för användaren"
+
+#. module: project
+#: view:project.project:0
+msgid "Project Settings"
 msgstr ""
+
+#. module: project
+#: view:report.project.task.user:0
+msgid "My tasks"
+msgstr "Mina aktiviteter"
+
+#. module: project
+#: model:process.transition,name:project.process_transition_opendonetask0
+msgid "Open Done Task"
+msgstr "Öppna avslutade aktiviteter"
 
 #. module: project
 #: field:project.task.delegate,planned_hours_me:0
 msgid "Hours to Validate"
 msgstr "Timmar som ska valideras"
-
-#. module: project
-#: view:project.project:0
-msgid "Pending Projects"
-msgstr ""
 
 #. module: project
 #: help:project.task,remaining_hours:0
@@ -132,55 +526,13 @@ msgstr ""
 "aktiviteten."
 
 #. module: project
-#: help:project.project,priority:0
-msgid "Gives the sequence order when displaying the list of projects"
-msgstr ""
-
-#. module: project
-#: constraint:project.project:0
-msgid "Error! project start-date must be lower then project end-date."
-msgstr ""
-
-#. module: project
-#: view:project.task.reevaluate:0
-msgid "Reevaluation Task"
-msgstr ""
-
-#. module: project
-#: field:project.project,members:0
-msgid "Project Members"
-msgstr "Projektmedlemmar"
-
-#. module: project
-#: model:process.node,name:project.process_node_taskbydelegate0
-msgid "Task by delegate"
-msgstr "Aktiviteter per delegerare"
-
-#. module: project
 #: selection:report.project.task.user,month:0
 msgid "March"
-msgstr ""
+msgstr "mars"
 
 #. module: project
-#: view:project.task:0
-msgid "Delegated tasks"
-msgstr "Delegerade aktiviteter"
-
-#. module: project
-#: field:project.task,child_ids:0
-msgid "Delegated Tasks"
-msgstr "Delegerade aktiviteter"
-
-#. module: project
-#: help:project.project,warn_header:0
-msgid ""
-"Header added at the beginning of the email for the warning message sent to "
-"the customer when a task is closed."
-msgstr ""
-"Huvud som läggs till i början av det epost-meddelande som skickas till "
-"kunden när en aktivtet är avslutad."
-
-#. module: project
+#: view:board.board:0
+#: model:ir.actions.act_window,name:project.my_open_tasks_action
 #: view:project.task:0
 #: view:project.task.history.cumulative:0
 msgid "My Tasks"
@@ -189,60 +541,23 @@ msgstr "Mina aktiviteter"
 #. module: project
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
-msgstr "Error ! You cannot create recursive tasks."
-
-#. module: project
-#: field:project.task,company_id:0
-#: field:project.task.work,company_id:0
-#: view:report.project.task.user:0
-#: field:report.project.task.user,company_id:0
-msgid "Company"
-msgstr ""
+msgstr "Fel ! Du kan inte skapa rekursiva aktiviteter."
 
 #. module: project
 #: view:report.project.task.user:0
 msgid "Pending tasks"
-msgstr ""
+msgstr "Vilande aktiviteter"
 
 #. module: project
-#: field:project.task.delegate,prefix:0
-msgid "Your Task Title"
-msgstr "Din aktivitets titel"
+#: view:project.task.reevaluate:0
+msgid "_Evaluate"
+msgstr "_Utvärdera"
 
 #. module: project
-#: field:project.task.type,name:0
-msgid "Stage Name"
-msgstr ""
-
-#. module: project
-#: model:process.transition.action,name:project.process_transition_action_openpendingtask0
-msgid "Set pending"
-msgstr "Sätt till vilande"
-
-#. module: project
-#: selection:project.task,priority:0
-msgid "Important"
-msgstr ""
-
-#. module: project
-#: model:process.node,note:project.process_node_drafttask0
-msgid "Define the Requirements and Set Planned Hours."
-msgstr "Definiera behov och planerade timmar"
-
-#. module: project
-#: view:project.task:0
-msgid "Change Stage"
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-msgid "New Project Based on Template"
-msgstr "Nytt projekt baserat på en mall"
-
-#. module: project
-#: constraint:project.project:0
-msgid "Error! You cannot assign escalation to the same project!"
-msgstr ""
+#: view:report.project.task.user:0
+#: field:report.project.task.user,opening_days:0
+msgid "Days to Open"
+msgstr "Dagar för att öppna"
 
 #. module: project
 #: selection:report.project.task.user,priority:0
@@ -253,24 +568,7 @@ msgstr "Mycket bråttom"
 #: help:project.task.delegate,project_id:0
 #: help:project.task.delegate,user_id:0
 msgid "User you want to delegate this task to"
-msgstr ""
-
-#. module: project
-#: view:report.project.task.user:0
-msgid "My Task"
-msgstr ""
-
-#. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,day:0
-#: field:task.by.days,day:0
-msgid "Day"
-msgstr ""
-
-#. module: project
-#: model:ir.ui.menu,name:project.menu_project_config_project
-msgid "Projects and Stages"
-msgstr ""
+msgstr "En användare vill delegera detta ärende till"
 
 #. module: project
 #: view:project.project:0
@@ -278,12 +576,10 @@ msgid "Set as Template"
 msgstr "Definiera som mall"
 
 #. module: project
-#: model:process.node,name:project.process_node_drafttask0
-msgid "Draft task"
-msgstr "Preliminär aktivitet"
-
-#. module: project
 #: model:ir.model,name:project.model_project_task
+#: view:project.config.settings:0
+#: view:project.project:0
+#: view:project.task:0
 #: field:project.task.history,task_id:0
 #: field:project.task.history.cumulative,task_id:0
 #: field:project.task.work,task_id:0
@@ -292,836 +588,8 @@ msgid "Task"
 msgstr "Aktivitet"
 
 #. module: project
-#: view:project.project:0
-msgid "Members"
-msgstr ""
-
-#. module: project
-#: view:board.board:0
-#: model:ir.actions.act_window,name:project.my_open_tasks_action
-msgid "My Open Tasks"
-msgstr "Mina öppna aktiviteter"
-
-#. module: project
-#: code:addons/project/wizard/mail_compose_message.py:43
-#, python-format
-msgid ""
-"Please specify the Project Manager or email address of Project Manager."
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-msgid "For cancelling the task"
-msgstr ""
-
-#. module: project
-#: model:ir.model,name:project.model_project_task_work
-msgid "Project Task Work"
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-#: view:project.task:0
-#: field:project.task,notes:0
-msgid "Notes"
-msgstr "Anteckningar"
-
-#. module: project
-#: view:project.vs.hours:0
-msgid "Project vs remaining hours"
-msgstr ""
-
-#. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,hours_delay:0
-msgid "Avg. Plan.-Eff."
-msgstr ""
-
-#. module: project
-#: help:project.task,active:0
-msgid ""
-"This field is computed automatically and have the same behavior than the "
-"boolean 'active' field: if the task is linked to a template or unactivated "
-"project, it will be hidden unless specifically asked."
-msgstr ""
-
-#. module: project
-#: field:project.task,name:0
-#: field:report.project.task.user,name:0
-msgid "Task Summary"
-msgstr ""
-
-#. module: project
-#: field:project.task,active:0
-msgid "Not a Template Task"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-#: view:res.partner:0
-msgid "Start Task"
-msgstr "Starta aktivitet"
-
-#. module: project
-#: model:process.node,note:project.process_node_donetask0
-msgid "Task is Completed"
-msgstr "Aktiviteten är avslutad"
-
-#. module: project
-#: view:project.project:0
-msgid ""
-"Automatic variables for headers and footer. Use exactly the same notation."
-msgstr ""
-"Automatiska variabler för sidhuvud och sidfot. Använd exakt samma notation."
-
-#. module: project
-#: view:project.task:0
-msgid "Show only tasks having a deadline"
-msgstr ""
-
-#. module: project
-#: selection:project.task,state:0
-#: selection:project.task.history,state:0
-#: selection:project.task.history.cumulative,state:0
-#: selection:project.vs.hours,state:0
-#: selection:report.project.task.user,state:0
-#: selection:task.by.days,state:0
-msgid "Cancelled"
-msgstr "Avbruten"
-
-#. module: project
-#: field:project.task,date_end:0
-#: field:report.project.task.user,date_end:0
-msgid "Ending Date"
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-#: field:project.project,warn_header:0
-msgid "Mail Header"
-msgstr "Epost huvud"
-
-#. module: project
-#: view:project.task:0
-msgid "Change to Next Stage"
-msgstr ""
-
-#. module: project
-#: model:process.node,name:project.process_node_donetask0
-msgid "Done task"
-msgstr "Avslutade aktiviteter"
-
-#. module: project
-#: field:project.task,color:0
-msgid "Color Index"
-msgstr ""
-
-#. module: project
-#: model:ir.ui.menu,name:project.menu_definitions
-#: view:res.company:0
-msgid "Configuration"
-msgstr "Konfiguration"
-
-#. module: project
-#: view:report.project.task.user:0
-msgid "Current Month"
-msgstr ""
-
-#. module: project
-#: model:process.transition,note:project.process_transition_delegate0
-msgid "Delegates tasks to the other user"
-msgstr "Delegerar aktiviteter till den andra användaren"
-
-#. module: project
-#: view:project.project:0
-#: view:project.task:0
-#: view:report.project.task.user:0
-msgid "Group By..."
-msgstr ""
-
-#. module: project
-#: field:project.task.work,user_id:0
-msgid "Done by"
-msgstr "Utfört av"
-
-#. module: project
-#: help:project.project,warn_customer:0
-msgid ""
-"If you check this, the user will have a popup when closing a task that "
-"propose a message to send by email to the customer."
-msgstr ""
-"Om du kryssar i denna kommer användaren att för möjlighet att skicka ett "
-"epostmeddelande till kunden när en aktivitet avslutas."
-
-#. module: project
-#: model:project.task.type,name:project.project_tt_testing
-msgid "Testing"
-msgstr ""
-
-#. module: project
-#: code:addons/project/project.py:794
-#, python-format
-msgid "Task '%s' closed"
-msgstr "Task '%s' closed"
-
-#. module: project
-#: model:ir.model,name:project.model_account_analytic_account
-#: field:project.project,analytic_account_id:0
-msgid "Analytic Account"
-msgstr "Objekt"
-
-#. module: project
-#: help:project.task,effective_hours:0
-msgid "Computed using the sum of the task work done."
-msgstr "Beräknad utgående från summan av utförda timmar."
-
-#. module: project
-#: view:project.task:0
-msgid "Planning"
-msgstr "Planering"
-
-#. module: project
-#: view:project.task:0
-#: field:project.task,date_deadline:0
-#: field:report.project.task.user,date_deadline:0
-msgid "Deadline"
-msgstr "Slutdatum"
-
-#. module: project
-#: view:project.task.delegate:0
-#: view:project.task.reevaluate:0
-msgid "_Cancel"
-msgstr ""
-
-#. module: project
-#: view:project.task.history.cumulative:0
-msgid "Ready"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-msgid "Change Color"
-msgstr ""
-
-#. module: project
-#: constraint:account.analytic.account:0
-msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
-
-#. module: project
-#: code:addons/project/project.py:221
-#: code:addons/project/project.py:260
-#, python-format
-msgid " (copy)"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-msgid "New Tasks"
-msgstr ""
-
-#. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,nbr:0
-msgid "# of tasks"
-msgstr ""
-
-#. module: project
-#: selection:project.task,priority:0
-#: selection:report.project.task.user,priority:0
-msgid "Low"
-msgstr "Låg"
-
-#. module: project
-#: field:project.vs.hours,user_id:0
-#: field:report.project.task.user,user_id:0
-msgid "Assigned To"
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-msgid "Date Stop: %(date)s"
-msgstr ""
-
-#. module: project
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-msgid "Reset as Project"
-msgstr "Återställ som projekt"
-
-#. module: project
-#: selection:project.vs.hours,state:0
-msgid "Template"
-msgstr "Mall"
-
-#. module: project
-#: model:ir.actions.act_window,name:project.act_my_project
-msgid "My projects"
-msgstr "Mina projekt"
-
-#. module: project
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-msgid "Next"
-msgstr ""
-
-#. module: project
-#: model:process.transition,note:project.process_transition_draftopentask0
-msgid "From draft state, it will come into the open state."
-msgstr "Från status preliminär, det kommer att få status öppen"
-
-#. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,no_of_days:0
-msgid "# of Days"
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-msgid "Open Projects"
-msgstr ""
-
-#. module: project
-#: view:report.project.task.user:0
-msgid "In progress tasks"
-msgstr ""
-
-#. module: project
-#: help:project.project,progress_rate:0
-msgid "Percent of tasks closed according to the total of tasks todo."
-msgstr "Procentuell andel av avslutade aktiviteter."
-
-#. module: project
-#: view:project.task.delegate:0
-#: field:project.task.delegate,new_task_description:0
-msgid "New Task Description"
-msgstr "Ny aktivitetsbeskrivning"
-
-#. module: project
-#: model:res.request.link,name:project.req_link_task
-msgid "Project task"
-msgstr "Projektaktivitet"
-
-#. module: project
-#: view:project.task:0
-#: selection:project.task.history,state:0
-#: selection:project.task.history.cumulative,state:0
-#: view:report.project.task.user:0
-msgid "New"
-msgstr ""
-
-#. module: project
-#: help:project.task,total_hours:0
-msgid "Computed as: Time Spent + Remaining Time."
-msgstr "Beräknas som: Nedlagd tid + Återstående tid."
-
-#. module: project
-#: model:ir.actions.act_window,name:project.action_view_task_history_cumulative
-#: model:ir.ui.menu,name:project.menu_action_view_task_history_cumulative
-msgid "Cumulative Flow"
-msgstr ""
-
-#. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,hours_effective:0
-msgid "Effective Hours"
-msgstr ""
-
-#. module: project
-#: view:project.task.delegate:0
-msgid "Validation Task Title"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-msgid "Reevaluate"
-msgstr ""
-
-#. module: project
-#: code:addons/project/project.py:561
-#, python-format
-msgid "%s (copy)"
-msgstr ""
-
-#. module: project
-#: view:report.project.task.user:0
-msgid "OverPass delay"
-msgstr ""
-
-#. module: project
-#: selection:project.task,priority:0
-#: selection:report.project.task.user,priority:0
-msgid "Medium"
-msgstr "Medel"
-
-#. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
-msgid "Pending Tasks"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-#: field:project.task,remaining_hours:0
-#: field:project.task.reevaluate,remaining_hours:0
-#: field:project.vs.hours,remaining_hours:0
-#: view:report.project.task.user:0
-#: field:report.project.task.user,remaining_hours:0
-msgid "Remaining Hours"
-msgstr "Återstående timmar"
-
-#. module: project
-#: model:ir.model,name:project.model_mail_compose_message
-msgid "E-mail composition wizard"
-msgstr ""
-
-#. module: project
-#: view:report.project.task.user:0
-msgid "Creation Date"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-#: field:project.task.history,remaining_hours:0
-#: field:project.task.history.cumulative,remaining_hours:0
-msgid "Remaining Time"
-msgstr ""
-
-#. module: project
-#: field:project.project,planned_hours:0
-#: field:project.task.history,planned_hours:0
-#: field:project.task.history.cumulative,planned_hours:0
-msgid "Planned Time"
-msgstr "Planerade timmar"
-
-#. module: project
-#: view:project.task:0
-msgid "Information"
-msgstr "Information"
-
-#. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
-msgid "Unassigned Tasks"
-msgstr "Ej tilldelade aktiviteter"
-
-#. module: project
-#: view:report.project.task.user:0
-msgid "Non Assigned Tasks to users"
-msgstr ""
-
-#. module: project
-#: help:project.project,planned_hours:0
-msgid ""
-"Sum of planned hours of all tasks related to this project and its child "
-"projects."
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-#: view:project.task:0
-#: selection:project.task,state:0
-#: selection:project.task.delegate,state:0
-#: selection:project.task.history,state:0
-#: view:project.task.history.cumulative:0
-#: selection:project.task.history.cumulative,state:0
-#: selection:project.vs.hours,state:0
-#: view:report.project.task.user:0
-#: selection:report.project.task.user,state:0
-#: selection:task.by.days,state:0
-msgid "Pending"
-msgstr "Väntande"
-
-#. module: project
-#: field:project.task.delegate,name:0
-msgid "Delegated Title"
-msgstr "Delegerad titel"
-
-#. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
-#: view:report.project.task.user:0
-msgid "My Projects"
-msgstr "Mina projekt"
-
-#. module: project
-#: view:project.task:0
-msgid "Extra Info"
-msgstr "Tilläggsinformation"
-
-#. module: project
-#: selection:report.project.task.user,month:0
-msgid "July"
-msgstr ""
-
-#. module: project
-#: view:project.task.history.burndown:0
-msgid "Burndown Chart of Tasks"
-msgstr ""
-
-#. module: project
-#: field:project.task,date_start:0
-#: field:report.project.task.user,date_start:0
-msgid "Starting Date"
-msgstr "Startdatum"
-
-#. module: project
-#: code:addons/project/project.py:281
-#: model:ir.actions.act_window,name:project.open_view_project_all
-#: model:ir.ui.menu,name:project.menu_open_view_project_all
-#: view:project.project:0
-#: field:project.task.type,project_ids:0
-#, python-format
-msgid "Projects"
-msgstr "Projects"
-
-#. module: project
-#: view:project.task:0
-#: field:project.task,type_id:0
-#: field:project.task.history,type_id:0
-#: field:project.task.history.cumulative,type_id:0
-#: view:report.project.task.user:0
-#: field:report.project.task.user,type_id:0
-msgid "Stage"
-msgstr ""
-
-#. module: project
-#: model:ir.actions.act_window,help:project.open_task_type_form
-msgid ""
-"Define the steps that will be used in the project from the creation of the "
-"task, up to the closing of the task or issue. You will use these stages in "
-"order to track the progress in solving a task or an issue."
-msgstr ""
-
-#. module: project
-#: code:addons/project/project.py:868
-#, python-format
-msgid "The task '%s' is opened."
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-msgid "Dates"
-msgstr "Datum"
-
-#. module: project
-#: help:project.task.delegate,name:0
-msgid "New title of the task delegated to the user"
-msgstr ""
-
-#. module: project
-#: code:addons/project/project.py:120
-#, python-format
-msgid ""
-"You cannot delete a project containing tasks. I suggest you to desactivate "
-"it."
-msgstr ""
-
-#. module: project
-#: view:project.vs.hours:0
-msgid "Project vs Planned and Total Hours"
-msgstr ""
-
-#. module: project
-#: model:process.transition,name:project.process_transition_draftopentask0
-msgid "Draft Open task"
-msgstr "Utkast öppna ärenden"
-
-#. module: project
-#: selection:report.project.task.user,month:0
-msgid "January"
-msgstr ""
-
-#. module: project
-#: field:project.task,delay_hours:0
-msgid "Delay Hours"
-msgstr "Fördröjda timmar"
-
-#. module: project
-#: selection:project.task,priority:0
-msgid "Very important"
-msgstr ""
-
-#. module: project
-#: model:ir.actions.act_window,name:project.action_project_task_user_tree
-#: model:ir.ui.menu,name:project.menu_project_task_user_tree
-#: view:report.project.task.user:0
-msgid "Tasks Analysis"
-msgstr ""
-
-#. module: project
-#: model:process.transition,name:project.process_transition_delegate0
-#: view:project.task:0
-msgid "Delegate"
-msgstr "Delegera"
-
-#. module: project
-#: model:ir.model,name:project.model_res_partner
-#: view:project.project:0
-#: field:project.task,partner_id:0
-#: view:report.project.task.user:0
-#: field:report.project.task.user,partner_id:0
-msgid "Partner"
-msgstr "Företag"
-
-#. module: project
-#: model:ir.model,name:project.model_project_project
-#: model:ir.ui.menu,name:project.menu_project_management
-#: view:project.project:0
-#: view:project.task:0
-#: field:project.task,project_id:0
-#: field:project.task.delegate,project_id:0
-#: field:project.task.history.cumulative,project_id:0
-#: field:project.vs.hours,project:0
-#: view:report.project.task.user:0
-#: field:report.project.task.user,project_id:0
-#: model:res.request.link,name:project.req_link_project
-#: field:res.users,context_project_id:0
-#: field:task.by.days,project_id:0
-msgid "Project"
-msgstr "Projekt"
-
-#. module: project
-#: view:project.task.reevaluate:0
-msgid "_Evaluate"
-msgstr ""
-
-#. module: project
-#: view:board.board:0
-msgid "My Board"
-msgstr "Min dashboard"
-
-#. module: project
-#: model:ir.actions.act_window,name:project.open_task_type_form
-#: model:ir.ui.menu,name:project.menu_task_types_view
-msgid "Stages"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-msgid "Change to Previous Stage"
-msgstr ""
-
-#. module: project
-#: model:ir.actions.todo.category,name:project.category_project_config
-#: view:res.company:0
-msgid "Project Management"
-msgstr "Projekt"
-
-#. module: project
-#: field:res.company,project_time_mode_id:0
-msgid "Project Time Unit"
-msgstr "Projektets tidsenhet"
-
-#. module: project
-#: view:report.project.task.user:0
-msgid "In progress"
-msgstr ""
-
-#. module: project
-#: model:ir.actions.act_window,name:project.action_project_task_delegate
-#: view:project.task.delegate:0
-msgid "Project Task Delegate"
-msgstr ""
-
-#. module: project
-#: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
-#: model:ir.actions.act_window,name:project.action_view_task
-#: model:ir.ui.menu,name:project.menu_action_view_task
-#: model:ir.ui.menu,name:project.menu_tasks_config
-#: model:ir.ui.menu,name:project.project_report_task
-#: model:process.process,name:project.process_process_tasksprocess0
-#: view:project.task:0
-#: view:res.partner:0
-#: field:res.partner,task_ids:0
-msgid "Tasks"
-msgstr "Aktiviteter"
-
-#. module: project
-#: view:project.project:0
-msgid "Parent"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-msgid "Mark as Blocked"
-msgstr ""
-
-#. module: project
-#: model:ir.actions.act_window,help:project.action_view_task
-msgid ""
-"A task represents a work that has to be done. Each user works in his own "
-"list of tasks where he can record his task work in hours. He can work and "
-"close the task itself or delegate it to another user. If you delegate a task "
-"to another user, you get a new task in pending state, which will be reopened "
-"when you have to review the work achieved. If you install the "
-"project_timesheet module, task work can be invoiced based on the project "
-"configuration. With the project_mrp module, sales orders can create tasks "
-"automatically when they are confirmed."
-msgstr ""
-
-#. module: project
-#: selection:report.project.task.user,month:0
-msgid "September"
-msgstr ""
-
-#. module: project
-#: selection:report.project.task.user,month:0
-msgid "December"
-msgstr ""
-
-#. module: project
-#: field:project.task,progress:0
-msgid "Progress (%)"
-msgstr "Upparbetat (%)"
-
-#. module: project
-#: help:project.task,state:0
-msgid ""
-"If the task is created the state is 'Draft'.\n"
-" If the task is started, the state becomes 'In Progress'.\n"
-" If review is needed the task is in 'Pending' state.                         "
-"         \n"
-" If the task is over, the states is set to 'Done'."
-msgstr ""
-
-#. module: project
-#: view:project.task.reevaluate:0
-msgid "Reevaluate Task"
-msgstr ""
-
-#. module: project
-#: view:project.task.history.cumulative:0
-#: view:report.project.task.user:0
-#: field:report.project.task.user,month:0
-msgid "Month"
-msgstr ""
-
-#. module: project
-#: model:ir.actions.act_window,name:project.dblc_proj
-msgid "Project's tasks"
-msgstr "Projektets aktiviteter"
-
-#. module: project
-#: model:ir.model,name:project.model_project_task_type
-#: view:project.task.type:0
-msgid "Task Stage"
-msgstr ""
-
-#. module: project
-#: model:project.task.type,name:project.project_tt_specification
-msgid "Design"
-msgstr ""
-
-#. module: project
-#: field:project.task,planned_hours:0
-#: field:project.task.delegate,planned_hours:0
-#: field:project.vs.hours,planned_hours:0
-#: view:report.project.task.user:0
-#: field:report.project.task.user,hours_planned:0
-msgid "Planned Hours"
-msgstr "Planerade timmar"
-
-#. module: project
-#: model:ir.actions.act_window,name:project.action_review_task_stage
-msgid "Review Task Stages"
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-msgid "Status: %(state)s"
-msgstr "Status: %(state)s"
-
-#. module: project
-#: help:project.task,sequence:0
-msgid "Gives the sequence order when displaying a list of tasks."
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-#: view:project.task:0
-msgid "Start Date"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-msgid "Previous"
-msgstr ""
-
-#. module: project
-#: selection:project.task,kanban_state:0
-#: selection:project.task.history,kanban_state:0
-#: selection:project.task.history.cumulative,kanban_state:0
-msgid "Ready To Pull"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-#: field:project.task,parent_ids:0
-msgid "Parent Tasks"
-msgstr ""
-
-#. module: project
-#: selection:project.task,kanban_state:0
-#: selection:project.task.history,kanban_state:0
-#: view:project.task.history.cumulative:0
-#: selection:project.task.history.cumulative,kanban_state:0
-msgid "Blocked"
-msgstr ""
-
-#. module: project
-#: help:project.task,progress:0
-msgid ""
-"If the task has a progress of 99.99% you should close the task if it's "
-"finished or reevaluate the time"
-msgstr ""
-
-#. module: project
-#: field:project.task,user_email:0
-msgid "User Email"
-msgstr ""
-
-#. module: project
-#: help:project.task,kanban_state:0
-msgid ""
-"A task's kanban state indicates special situations affecting it:\n"
-" * Normal is the default situation\n"
-" * Blocked indicates something is preventing the progress of this task\n"
-" * Ready To Pull indicates the task is ready to be pulled to the next stage"
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-msgid "User: %(user_id)s"
-msgstr "Användare: %(user_id)s"
-
-#. module: project
-#: view:project.project:0
-msgid "Billing"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-msgid "For changing to delegate state"
-msgstr ""
-
-#. module: project
-#: field:project.task,priority:0
-#: field:report.project.task.user,priority:0
-msgid "Priority"
-msgstr ""
-
-#. module: project
-#: model:ir.actions.act_window,name:project.open_view_template_project
-msgid "Templates of Projects"
+#: help:project.config.settings,group_tasks_work_on_tasks:0
+msgid "Allows you to compute work on tasks."
 msgstr ""
 
 #. module: project
@@ -1130,138 +598,129 @@ msgid "Administration"
 msgstr "Administration"
 
 #. module: project
-#: model:ir.model,name:project.model_project_task_reevaluate
-msgid "project.task.reevaluate"
+#: field:project.config.settings,group_tasks_work_on_tasks:0
+msgid "Log work activities on tasks"
 msgstr ""
 
 #. module: project
-#: code:addons/project/wizard/project_task_delegate.py:81
-#, python-format
-msgid "CHECK: %s"
+#: model:project.task.type,name:project.project_tt_analysis
+msgid "Analysis"
+msgstr "Analys"
+
+#. module: project
+#: field:project.task,name:0
+#: field:report.project.task.user,name:0
+msgid "Task Summary"
+msgstr "Aktivitetssammanfattning"
+
+#. module: project
+#: field:project.task,active:0
+msgid "Not a Template Task"
+msgstr "Inte en aktivitetsmall"
+
+#. module: project
+#: field:project.task,planned_hours:0
+msgid "Initially Planned Hours"
 msgstr ""
 
 #. module: project
-#: view:project.project:0
-msgid "Member"
+#: model:process.transition,note:project.process_transition_delegate0
+msgid "Delegates tasks to the other user"
+msgstr "Delegerar aktiviteter till den andra användaren"
+
+#. module: project
+#: help:project.task,effective_hours:0
+msgid "Computed using the sum of the task work done."
+msgstr "Beräknad utgående från summan av utförda timmar."
+
+#. module: project
+#: model:ir.actions.act_window,help:project.open_view_project_all
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                  Click to start a new project.\n"
+"                </p><p>\n"
+"                  Projects are used to organize your activities; plan\n"
+"                  tasks, track issues, invoice timesheets. You can define\n"
+"                  internal projects (R&amp;D, Improve Sales Process),\n"
+"                  private projects (My Todos) or customer ones.\n"
+"                </p><p>\n"
+"                  You will be able collaborate with internal users on\n"
+"                  projects or invite customers to share your activities.\n"
+"                </p>\n"
+"            "
 msgstr ""
+
+#. module: project
+#: view:project.config.settings:0
+msgid "Planning"
+msgstr "Planering"
 
 #. module: project
 #: view:project.task:0
+#: field:project.task,date_deadline:0
+#: field:report.project.task.user,date_deadline:0
+msgid "Deadline"
+msgstr "Tidsfrist"
+
+#. module: project
 #: view:project.task.history.cumulative:0
-msgid "Project Tasks"
-msgstr "Projektaktiviteter"
+msgid "Ready"
+msgstr "Klara"
 
 #. module: project
-#: help:project.task.delegate,planned_hours:0
-msgid "Estimated time to close this task by the delegated user"
-msgstr ""
-
-#. module: project
-#: model:process.transition.action,name:project.process_transition_action_opendrafttask0
 #: view:project.task:0
-#: selection:project.task,state:0
-#: selection:project.vs.hours,state:0
-#: selection:report.project.task.user,state:0
-#: selection:task.by.days,state:0
-msgid "Draft"
-msgstr "Preliminär"
+msgid "New Tasks"
+msgstr "Ny aktivitet"
 
 #. module: project
-#: view:project.project:0
-msgid "Invoice Address"
-msgstr ""
-
-#. module: project
-#: field:project.task,kanban_state:0
-#: field:project.task.history,kanban_state:0
-#: field:project.task.history.cumulative,kanban_state:0
-msgid "Kanban State"
+#: field:project.config.settings,module_project_issue_sheet:0
+msgid "Invoice working time on issues"
 msgstr ""
 
 #. module: project
 #: view:project.project:0
-msgid "Performance"
-msgstr ""
-
-#. module: project
-#: model:ir.actions.act_window,help:project.action_project_task_user_tree
-msgid ""
-"This report allows you to analyse the performance of your projects and "
-"users. You can analyse the quantities of tasks, the hours spent compared to "
-"the planned hours, the average number of days to open or close a task, etc."
-msgstr ""
-
-#. module: project
 #: view:project.task:0
-msgid "Change Type"
+#: field:project.task.history,end_date:0
+#: field:project.task.history.cumulative,end_date:0
+msgid "End Date"
+msgstr "Slutdatum"
+
+#. module: project
+#: model:project.task.type,name:project.project_tt_specification
+msgid "Specification"
 msgstr ""
 
 #. module: project
-#: help:project.project,members:0
-msgid ""
-"Project's members are users who can have an access to the tasks related to "
-"this project."
-msgstr ""
+#: model:process.transition,note:project.process_transition_draftopentask0
+msgid "From draft state, it will come into the open state."
+msgstr "Från status preliminär, det kommer att få status öppen"
 
 #. module: project
-#: view:project.project:0
-#: field:project.task,manager_id:0
-msgid "Project Manager"
-msgstr "Projektledare"
+#: view:project.task.history.cumulative:0
+msgid "Task's Analysis"
+msgstr "Aktivitetsanalys"
 
 #. module: project
-#: view:project.task:0
-#: view:res.partner:0
-msgid "For changing to done state"
-msgstr ""
+#: view:project.task.delegate:0
+#: field:project.task.delegate,new_task_description:0
+msgid "New Task Description"
+msgstr "Ny aktivitetsbeskrivning"
 
 #. module: project
-#: model:ir.model,name:project.model_report_project_task_user
-msgid "Tasks by user and project"
-msgstr ""
+#: field:report.project.task.user,delay_endings_days:0
+msgid "Overpassed Deadline"
+msgstr "Passerad tidsfrist"
 
 #. module: project
-#: selection:report.project.task.user,month:0
-msgid "August"
-msgstr ""
+#: view:report.project.task.user:0
+msgid "New tasks"
+msgstr "Nya aktiviteter"
 
 #. module: project
-#: view:project.task:0
-#: selection:project.task,kanban_state:0
-#: selection:project.task.history,kanban_state:0
-#: selection:project.task.history.cumulative,kanban_state:0
-msgid "Normal"
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-#: field:project.project,complete_name:0
-msgid "Project Name"
-msgstr "Projektnamn"
-
-#. module: project
-#: model:ir.model,name:project.model_project_task_history
-#: model:ir.model,name:project.model_project_task_history_cumulative
-msgid "History of Tasks"
-msgstr ""
-
-#. module: project
-#: help:project.task.delegate,state:0
-msgid ""
-"New state of your own task. Pending will be reopened automatically when the "
-"delegated task is closed"
-msgstr ""
-
-#. module: project
-#: code:addons/project/wizard/mail_compose_message.py:45
-#, python-format
-msgid "Please specify the Customer or email address of Customer."
-msgstr ""
-
-#. module: project
-#: selection:report.project.task.user,month:0
-msgid "June"
-msgstr ""
+#: selection:project.task,priority:0
+#: selection:report.project.task.user,priority:0
+msgid "Medium"
+msgstr "Medel"
 
 #. module: project
 #: field:project.project,total_hours:0
@@ -1270,119 +729,155 @@ msgstr "Total tid"
 
 #. module: project
 #: view:report.project.task.user:0
-#: field:report.project.task.user,closing_days:0
-msgid "Days to Close"
-msgstr ""
+msgid "Creation Date"
+msgstr "Registeringsdatum"
 
 #. module: project
-#: model:ir.actions.act_window,name:project.open_board_project
-#: model:ir.ui.menu,name:project.menu_board_project
-msgid "Project Dashboard"
-msgstr "Projekt dashboard"
+#: view:project.project:0
+msgid "Miscellaneous"
+msgstr ""
 
 #. module: project
 #: view:project.task:0
-msgid "Reactivate"
-msgstr "Återaktivera"
+#: field:project.task,stage_id:0
+#: field:project.task.history,type_id:0
+#: field:project.task.history.cumulative,type_id:0
+msgid "Stage"
+msgstr "Etapp"
 
 #. module: project
-#: model:res.groups,name:project.group_project_user
-msgid "User"
+#: model:process.transition,name:project.process_transition_draftopentask0
+msgid "Draft Open task"
+msgstr "Utkast öppna ärenden"
+
+#. module: project
+#: field:project.project,alias_model:0
+msgid "Alias Model"
 msgstr ""
 
 #. module: project
-#: field:project.project,active:0
-msgid "Active"
-msgstr "Active"
+#: help:report.project.task.user,closing_days:0
+msgid "Number of Days to close the task"
+msgstr "Dagar för att genomföra aktiviteten"
+
+#. module: project
+#: view:board.board:0
+msgid "My Board"
+msgstr "Min dashboard"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.open_task_type_form
+msgid "Stages"
+msgstr "Etapper"
+
+#. module: project
+#: view:project.project:0
+#: view:project.task:0
+msgid "Delete"
+msgstr ""
 
 #. module: project
 #: view:report.project.task.user:0
-#: field:report.project.task.user,opening_days:0
-msgid "Days to Open"
-msgstr ""
+msgid "In progress"
+msgstr "Pågående"
 
 #. module: project
 #: selection:report.project.task.user,month:0
-msgid "November"
+msgid "September"
+msgstr "september"
+
+#. module: project
+#: selection:report.project.task.user,priority:0
+msgid "Urgent"
+msgstr "Viktigt"
+
+#. module: project
+#: model:project.category,name:project.project_category_02
+msgid "Feature request"
 msgstr ""
 
 #. module: project
-#: model:ir.actions.act_window,name:project.action_create_initial_projects_installer
-msgid "Create your Firsts Projects"
-msgstr ""
+#: view:project.task:0
+msgid "Delegated tasks"
+msgstr "Delegerade aktiviteter"
 
 #. module: project
-#: code:addons/project/project.py:186
+#: model:ir.model,name:project.model_project_task_work
+msgid "Project Task Work"
+msgstr "Projektaktivitetsarbete"
+
+#. module: project
+#: code:addons/project/wizard/project_task_delegate.py:81
 #, python-format
-msgid "The project '%s' has been closed."
+msgid "CHECK: %s"
+msgstr "KONTROLL: %s"
+
+#. module: project
+#: view:project.project:0
+msgid "Close Project"
 msgstr ""
 
 #. module: project
-#: view:project.task.history.cumulative:0
-msgid "Tasks's Cumulative Flow"
+#: field:project.project,tasks:0
+msgid "Task Activities"
 msgstr ""
 
 #. module: project
+#: field:project.project,effective_hours:0
+#: field:project.task.work,hours:0
+msgid "Time Spent"
+msgstr "Nedlagd tid"
+
+#. module: project
+#: view:project.project:0
 #: view:project.task:0
-msgid "Task edition"
-msgstr "Aktivitetsutgåva"
-
-#. module: project
-#: selection:report.project.task.user,month:0
-msgid "October"
+msgid "í"
 msgstr ""
 
 #. module: project
-#: view:project.task:0
-msgid "Validate planned time and open task"
+#: field:account.analytic.account,company_uom_id:0
+msgid "unknown"
 msgstr ""
 
 #. module: project
-#: model:process.node,name:project.process_node_opentask0
-msgid "Open task"
-msgstr "Öppna aktivitet"
-
-#. module: project
-#: view:project.task:0
-msgid "Delegations History"
+#: field:project.project,message_is_follower:0
+#: field:project.task,message_is_follower:0
+msgid "Is a Follower"
 msgstr ""
 
 #. module: project
-#: model:ir.model,name:project.model_res_users
-msgid "res.users"
+#: field:project.task,work_ids:0
+msgid "Work done"
+msgstr "Avslutat arbete"
+
+#. module: project
+#: view:report.project.task.user:0
+msgid "Extended Filters..."
+msgstr "Utökade filter..."
+
+#. module: project
+#: model:ir.ui.menu,name:project.menu_tasks_config
+msgid "GTD"
 msgstr ""
 
 #. module: project
-#: help:project.project,active:0
+#: help:project.task,state:0
 msgid ""
-"If the active field is set to False, it will allow you to hide the project "
-"without removing it."
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-msgid "Users"
+"The status is set to 'Draft', when a case is created.                      "
+"If the case is in progress the status is set to 'Open'.                      "
+"When the case is over, the status is set to 'Done'.                      If "
+"the case needs to be reviewed then the status is                       set "
+"to 'Pending'."
 msgstr ""
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Bolag"
 
 #. module: project
-#: view:project.project:0
-msgid "Projects in which I am a member."
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-msgid "Search Project"
-msgstr ""
-
-#. module: project
-#: code:addons/project/project.py:208
-#, python-format
-msgid "The project '%s' has been opened."
+#: field:project.task.type,fold:0
+msgid "Folded by Default"
 msgstr ""
 
 #. module: project
@@ -1393,121 +888,26 @@ msgid "Date"
 msgstr "Datum"
 
 #. module: project
-#: model:ir.ui.menu,name:project.next_id_86
-msgid "Dashboard"
-msgstr ""
-
-#. module: project
-#: constraint:account.analytic.account:0
+#: help:project.config.settings,module_project_issue:0
 msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
+"Provides management of issues/bugs in projects.\n"
+"                This installs the module project_issue."
 msgstr ""
 
 #. module: project
-#: code:addons/project/wizard/mail_compose_message.py:43
-#: code:addons/project/wizard/mail_compose_message.py:45
-#, python-format
-msgid "Error"
-msgstr "Error"
-
-#. module: project
-#: model:ir.actions.act_window,name:project.act_res_users_2_project_project
-msgid "User's projects"
-msgstr "Användarens projekt"
-
-#. module: project
-#: view:project.project:0
-msgid "Reactivate Project"
-msgstr "Återaktivera projektet"
-
-#. module: project
-#: view:project.task.delegate:0
-msgid "_Delegate"
-msgstr ""
-
-#. module: project
-#: help:report.project.task.user,opening_days:0
-msgid "Number of Days to Open the task"
-msgstr ""
-
-#. module: project
-#: field:project.task,delegated_user_id:0
-msgid "Delegated To"
-msgstr "Delegerad till"
-
-#. module: project
-#: view:res.partner:0
-msgid "History"
-msgstr ""
-
-#. module: project
-#: field:project.task,user_id:0
-#: view:report.project.task.user:0
-msgid "Assigned to"
-msgstr "Tilldelad till"
-
-#. module: project
-#: help:project.task,planned_hours:0
+#: help:project.task,kanban_state:0
 msgid ""
-"Estimated time to do the task, usually set by the project manager when the "
-"task is in draft state."
+"A task's kanban state indicates special situations affecting it:\n"
+" * Normal is the default situation\n"
+" * Blocked indicates something is preventing the progress of this task\n"
+" * Ready for next stage indicates the task is ready to be pulled to the next "
+"stage"
 msgstr ""
-"Beräknad tid för att utföra aktiviteten, registreras vanligen av "
-"projektledaren när aktiviteten har status preliminär."
-
-#. module: project
-#: help:project.task.delegate,prefix:0
-msgid "Title for your validation task"
-msgstr ""
-
-#. module: project
-#: view:report.project.task.user:0
-msgid "Extended Filters..."
-msgstr ""
-
-#. module: project
-#: code:addons/project/project.py:1113
-#, python-format
-msgid "Please delete the project linked with this account first."
-msgstr ""
-
-#. module: project
-#: field:project.task,total_hours:0
-#: field:project.vs.hours,total_hours:0
-#: view:report.project.task.user:0
-#: field:report.project.task.user,total_hours:0
-msgid "Total Hours"
-msgstr "Summa timmar"
 
 #. module: project
 #: view:project.task:0
-#: field:project.task,state:0
-#: field:project.task.history,state:0
-#: field:project.task.history.cumulative,state:0
-#: field:project.vs.hours,state:0
-#: view:report.project.task.user:0
-#: field:report.project.task.user,state:0
-#: field:task.by.days,state:0
-msgid "State"
-msgstr "Status"
-
-#. module: project
-#: code:addons/project/project.py:890
-#, python-format
-msgid "Delegated User should be specified"
+msgid "10"
 msgstr ""
-
-#. module: project
-#: code:addons/project/project.py:827
-#, python-format
-msgid "Task '%s' set in progress"
-msgstr "Task '%s' set in progress"
-
-#. module: project
-#: view:project.project:0
-msgid "Date Start: %(date_start)s"
-msgstr "Startdatum: %(date_start)s"
 
 #. module: project
 #: help:project.project,analytic_account_id:0
@@ -1521,122 +921,24 @@ msgstr ""
 "visa en resultaträkning för projektet, visa tidrapporter för projektet osv."
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
-#: selection:project.task,state:0
-#: selection:project.task.delegate,state:0
-#: selection:project.task.history,state:0
-#: selection:project.task.history.cumulative,state:0
-#: view:report.project.task.user:0
-#: selection:report.project.task.user,state:0
-#: view:res.partner:0
-#: selection:task.by.days,state:0
-msgid "Done"
-msgstr "Klar"
-
-#. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
 #: model:process.transition.action,name:project.process_transition_action_opencanceltask0
+#: view:project.config.settings:0
 #: view:project.project:0
-#: view:project.task:0
+#: view:project.task.delegate:0
+#: view:project.task.reevaluate:0
 msgid "Cancel"
 msgstr "Avbryt"
 
 #. module: project
-#: selection:project.vs.hours,state:0
-msgid "Close"
-msgstr ""
-
-#. module: project
-#: code:addons/project/project.py:816
-#, python-format
-msgid "The task '%s' is done"
-msgstr ""
-
-#. module: project
-#: model:process.transition.action,name:project.process_transition_action_draftopentask0
 #: view:project.project:0
-#: selection:project.vs.hours,state:0
-msgid "Open"
-msgstr "Öppna"
-
-#. module: project
-#: view:project.project:0
-msgid "ID: %(task_id)s"
-msgstr "ID: %(task_id)s"
-
-#. module: project
-#: view:project.task:0
-#: selection:project.task,state:0
-#: selection:project.task.history,state:0
-#: view:project.task.history.cumulative:0
-#: selection:project.task.history.cumulative,state:0
-#: selection:report.project.task.user,state:0
-#: selection:task.by.days,state:0
-msgid "In Progress"
-msgstr "Pågår"
-
-#. module: project
-#: view:project.task.history.cumulative:0
-msgid "Task's Analysis"
-msgstr ""
-
-#. module: project
-#: code:addons/project/project.py:754
-#, python-format
-msgid ""
-"Child task still open.\n"
-"Please cancel or complete child task first."
-msgstr ""
-
-#. module: project
-#: view:project.task.type:0
-msgid "Stages common to all projects"
-msgstr ""
-
-#. module: project
-#: constraint:project.task:0
-msgid "Error ! Task end-date must be greater then task start-date"
-msgstr ""
-
-#. module: project
-#: field:project.task.history,user_id:0
-#: field:project.task.history.cumulative,user_id:0
-msgid "Responsible"
-msgstr ""
-
-#. module: project
-#: field:project.project,resource_calendar_id:0
-msgid "Working Time"
-msgstr "Arbetstid"
-
-#. module: project
-#: view:project.project:0
-msgid "Projects in which I am a manager"
-msgstr ""
-
-#. module: project
-#: code:addons/project/project.py:924
-#, python-format
-msgid "The task '%s' is pending."
-msgstr ""
-
-#. module: project
-#: model:ir.model,name:project.model_project_vs_hours
-msgid " Project vs  hours"
+msgid "Other Info"
 msgstr ""
 
 #. module: project
 #: view:project.task.delegate:0
-msgid "Delegated Task"
-msgstr "Delegerade aktiviteter"
-
-#. module: project
-#: help:project.project,effective_hours:0
-msgid ""
-"Sum of spent hours of all tasks related to this project and its child "
-"projects."
-msgstr ""
+msgid "_Delegate"
+msgstr "_Delegera"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -1645,218 +947,576 @@ msgid "Very Low"
 msgstr "Mycket låg"
 
 #. module: project
+#: help:project.project,effective_hours:0
+msgid ""
+"Sum of spent hours of all tasks related to this project and its child "
+"projects."
+msgstr ""
+"Totalt antal timmar förbrukade på alla aktiviteter relaterade till detta "
+"projekt och underliggande."
+
+#. module: project
+#: view:project.project:0
+msgid ""
+"Follow this project to automatically track the events associated to tasks "
+"and issues of this project."
+msgstr ""
+
+#. module: project
+#: view:project.task:0
+msgid "Users"
+msgstr "Användare"
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_task_stage
+msgid "Stage Changed"
+msgstr ""
+
+#. module: project
+#: view:project.project:0
+#: model:res.groups,name:project.group_project_manager
+msgid "Manager"
+msgstr "Chef"
+
+#. module: project
+#: selection:project.task,priority:0
+msgid "Important"
+msgstr "Viktigt"
+
+#. module: project
+#: field:project.category,name:0
+msgid "Name"
+msgstr ""
+
+#. module: project
+#: selection:report.project.task.user,month:0
+msgid "November"
+msgstr "november"
+
+#. module: project
+#: view:project.task.reevaluate:0
+msgid "Reevaluate Task"
+msgstr "Omvärdera aktivitet"
+
+#. module: project
+#: model:ir.model,name:project.model_project_task_type
+#: view:project.task.type:0
+msgid "Task Stage"
+msgstr "Aktivitetsetapper"
+
+#. module: project
+#: view:project.task.type:0
+msgid "Common"
+msgstr "Vanlig"
+
+#. module: project
+#: help:project.project,message_ids:0
+#: help:project.task,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
+
+#. module: project
+#: view:project.project:0
+msgid ""
+"To invoice or setup invoicing and renewal options, go to the related "
+"contract:"
+msgstr ""
+
+#. module: project
+#: field:project.task.delegate,state:0
+msgid "Validation State"
+msgstr "Granskningsstatus"
+
+#. module: project
+#: field:project.task.work,name:0
+msgid "Work summary"
+msgstr "Sammanställning av arbete"
+
+#. module: project
+#: view:project.project:0
+#: view:project.task:0
+#: view:report.project.task.user:0
+msgid "Group By..."
+msgstr "Gruppera på..."
+
+#. module: project
+#: view:project.project:0
+#: selection:project.project,state:0
+msgid "Template"
+msgstr "Mall"
+
+#. module: project
+#: view:project.project:0
+msgid "Re-open project"
+msgstr "Återstarta projekt"
+
+#. module: project
+#: help:project.project,priority:0
+msgid "Gives the sequence order when displaying the list of projects"
+msgstr "Ger ordningsföljden vid listning av projekt"
+
+#. module: project
+#: constraint:project.project:0
+msgid "Error! project start-date must be lower then project end-date."
+msgstr "Fel! projektets startdatum måste föregå projekets slutdatum."
+
+#. module: project
+#: field:project.project,members:0
+msgid "Project Members"
+msgstr "Projektmedlemmar"
+
+#. module: project
+#: field:project.task,child_ids:0
+msgid "Delegated Tasks"
+msgstr "Delegerade aktiviteter"
+
+#. module: project
+#: view:project.project:0
+#: field:project.project,message_unread:0
+#: view:project.task:0
+#: field:project.task,message_unread:0
+msgid "Unread Messages"
+msgstr ""
+
+#. module: project
+#: view:project.task:0
+#: field:project.task,parent_ids:0
+msgid "Parent Tasks"
+msgstr "Överliggande aktiviteter"
+
+#. module: project
+#: model:process.node,name:project.process_node_opentask0
+msgid "Open task"
+msgstr "Öppna aktivitet"
+
+#. module: project
+#: view:project.task.type:0
+msgid "Stages common to all projects"
+msgstr "Etapper gemensamma med alla projekt"
+
+#. module: project
+#: model:process.node,name:project.process_node_drafttask0
+msgid "Draft task"
+msgstr "Preliminär aktivitet"
+
+#. module: project
+#: field:project.task,notes:0
+msgid "Notes"
+msgstr "Anteckningar"
+
+#. module: project
+#: view:project.task:0
+#: view:project.task.history.cumulative:0
+msgid "Pending Tasks"
+msgstr "Vilande aktiviteter"
+
+#. module: project
+#: view:project.task:0
+msgid "Show only tasks having a deadline"
+msgstr "Visa endast aktiviteter med tidsfrist"
+
+#. module: project
+#: model:project.category,name:project.project_category_04
+msgid "Usability"
+msgstr ""
+
+#. module: project
+#: view:report.project.task.user:0
+#: field:report.project.task.user,hours_delay:0
+msgid "Avg. Plan.-Eff."
+msgstr "Gen.plan.-eff."
+
+#. module: project
+#: field:project.task.work,user_id:0
+msgid "Done by"
+msgstr "Utfört av"
+
+#. module: project
+#: code:addons/project/project.py:181
+#, python-format
+msgid "Invalid Action!"
+msgstr ""
+
+#. module: project
+#: help:project.task.type,state:0
+msgid ""
+"The status of your document is automatically changed regarding the selected "
+"stage. For example, if a stage is related to the status 'Close', when your "
+"document reaches this stage, it is automatically closed."
+msgstr ""
+
+#. module: project
+#: view:project.task:0
+msgid "Extra Info"
+msgstr "Tilläggsinformation"
+
+#. module: project
+#: view:project.task:0
+msgid "Edit..."
+msgstr ""
+
+#. module: project
+#: view:report.project.task.user:0
+#: field:report.project.task.user,nbr:0
+msgid "# of tasks"
+msgstr "# aktiviteter"
+
+#. module: project
+#: field:project.project,doc_count:0
+msgid "Number of documents attached"
+msgstr ""
+
+#. module: project
+#: field:project.task,priority:0
+#: field:report.project.task.user,priority:0
+msgid "Priority"
+msgstr "Prioritet"
+
+#. module: project
+#: view:project.project:0
+msgid "Open Projects"
+msgstr "Öppna projekt"
+
+#. module: project
+#: help:project.project,alias_id:0
+msgid ""
+"Internal email associated with this project. Incoming emails are "
+"automatically synchronizedwith Tasks (or optionally Issues if the Issue "
+"Tracker module is installed)."
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,help:project.open_task_type_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a stage in the task pipeline.\n"
+"              </p><p>\n"
+"                Define the steps that will be used in the project from the\n"
+"                creation of the task, up to the closing of the task or "
+"issue.\n"
+"                You will use these stages in order to track the progress in\n"
+"                solving a task or an issue.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: project
+#: help:project.task,total_hours:0
+msgid "Computed as: Time Spent + Remaining Time."
+msgstr "Beräknas som: Nedlagd tid + Återstående tid."
+
+#. module: project
+#: code:addons/project/project.py:356
+#: code:addons/project/project.py:377
+#: code:addons/project/project.py:709
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (kopia)"
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_stage
+msgid "Task Stage Changed"
+msgstr ""
+
+#. module: project
+#: view:project.task:0
+#: field:project.task.history,remaining_hours:0
+#: field:project.task.history.cumulative,remaining_hours:0
+msgid "Remaining Time"
+msgstr "Återstående tid"
+
+#. module: project
+#: field:project.task.delegate,name:0
+msgid "Delegated Title"
+msgstr "Delegerad titel"
+
+#. module: project
+#: selection:report.project.task.user,month:0
+msgid "July"
+msgstr "juli"
+
+#. module: project
+#: model:ir.model,name:project.model_project_task_reevaluate
+msgid "project.task.reevaluate"
+msgstr "project.task.reevaluate"
+
+#. module: project
+#: field:project.task,delay_hours:0
+msgid "Delay Hours"
+msgstr "Fördröjda timmar"
+
+#. module: project
+#: view:project.project:0
+msgid "Team"
+msgstr ""
+
+#. module: project
+#: help:project.config.settings,time_unit:0
+msgid "This will set the unit of measure used in projects and tasks."
+msgstr ""
+
+#. module: project
+#: selection:project.task,priority:0
+msgid "Very important"
+msgstr "Mycket viktigt"
+
+#. module: project
+#: view:report.project.task.user:0
+#: field:report.project.task.user,month:0
+msgid "Month"
+msgstr "Månad"
+
+#. module: project
+#: model:project.task.type,name:project.project_tt_design
+msgid "Design"
+msgstr "Design"
+
+#. module: project
+#: view:project.task:0
+msgid "Start Date"
+msgstr "Startdatum"
+
+#. module: project
+#: view:project.task:0
+#: selection:project.task,kanban_state:0
+#: selection:project.task.history,kanban_state:0
+#: view:project.task.history.cumulative:0
+#: selection:project.task.history.cumulative,kanban_state:0
+msgid "Blocked"
+msgstr "Hindrade"
+
+#. module: project
+#: help:project.task,progress:0
+msgid ""
+"If the task has a progress of 99.99% you should close the task if it's "
+"finished or reevaluate the time"
+msgstr ""
+"Aktiviteter med förloppet 99.99 % kan stängas om den är klar eller omvärdera "
+"tiden"
+
+#. module: project
+#: field:project.task,user_email:0
+msgid "User Email"
+msgstr "Användarens e-post"
+
+#. module: project
+#: help:project.task.delegate,prefix:0
+msgid "Title for your validation task"
+msgstr "Rubrik för din aktivitetsgranskning"
+
+#. module: project
+#: field:project.config.settings,time_unit:0
+msgid "Working time unit"
+msgstr ""
+
+#. module: project
+#: view:project.project:0
+msgid "Projects in which I am a member."
+msgstr "Projekt där jag medverkar"
+
+#. module: project
+#: selection:project.task,priority:0
+#: selection:report.project.task.user,priority:0
+msgid "Low"
+msgstr "Låg"
+
+#. module: project
+#: selection:project.project,state:0
+msgid "Closed"
+msgstr ""
+
+#. module: project
+#: view:project.project:0
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
+#: selection:project.task.delegate,state:0
+#: selection:project.task.history,state:0
+#: selection:project.task.history.cumulative,state:0
+#: selection:project.task.type,state:0
+#: view:report.project.task.user:0
+#: selection:report.project.task.user,state:0
+msgid "Pending"
+msgstr "Vilande"
+
+#. module: project
+#: field:project.task,categ_ids:0
+msgid "Tags"
+msgstr ""
+
+#. module: project
+#: model:ir.model,name:project.model_project_task_history
+#: model:ir.model,name:project.model_project_task_history_cumulative
+msgid "History of Tasks"
+msgstr "Aktivitetshistorik"
+
+#. module: project
+#: help:project.task.delegate,state:0
+msgid ""
+"New state of your own task. Pending will be reopened automatically when the "
+"delegated task is closed"
+msgstr ""
+"Ny status för din egen aktivietet. Vilande aktiviteter aktiveras automatiskt "
+"när den delegerade aktiviteten stängs."
+
+#. module: project
+#: help:project.config.settings,group_manage_delegation_task:0
+msgid "Allows you to delegate tasks to other users."
+msgstr ""
+
+#. module: project
+#: field:project.project,active:0
+msgid "Active"
+msgstr "Aktiv"
+
+#. module: project
+#: model:ir.model,name:project.model_project_category
+msgid "Category of project's task, issue, ..."
+msgstr ""
+
+#. module: project
 #: help:project.project,resource_calendar_id:0
 msgid "Timetable working hours to adjust the gantt diagram report"
 msgstr "Tidsplanera arbetstid för att justera Gantt-diagramet."
 
 #. module: project
-#: field:project.project,warn_manager:0
-msgid "Warn Manager"
-msgstr "Varna projektledaren"
-
-#. module: project
-#: field:report.project.task.user,delay_endings_days:0
-msgid "Overpassed Deadline"
-msgstr ""
-
-#. module: project
-#: model:ir.actions.act_window,name:project.action_view_task_tree_deadline
-msgid "My Task's Deadlines"
-msgstr "Mina aktiviteters deadlines"
-
-#. module: project
 #: help:project.task,delay_hours:0
 msgid ""
-"Computed as difference of the time estimated by the project manager and the "
-"real time to close the task."
+"Computed as difference between planned hours by the project manager and the "
+"total hours of the task."
+msgstr ""
+"Beräknas som skillnaden mellan projektledarens planerade timmar och "
+"aktivitetens totala antal timmar."
+
+#. module: project
+#: view:project.config.settings:0
+msgid "Helpdesk & Support"
 msgstr ""
 
 #. module: project
-#: model:ir.actions.act_window,name:project.action_project_task_reevaluate
-msgid "Re-evaluate Task"
+#: help:report.project.task.user,opening_days:0
+msgid "Number of Days to Open the task"
+msgstr "Antal dagar innan aktiviteten startas"
+
+#. module: project
+#: field:project.task,delegated_user_id:0
+msgid "Delegated To"
+msgstr "Delegerad till"
+
+#. module: project
+#: help:project.task,planned_hours:0
+msgid ""
+"Estimated time to do the task, usually set by the project manager when the "
+"task is in draft state."
+msgstr ""
+"Beräknad tid för att utföra aktiviteten, registreras vanligen av "
+"projektledaren när aktiviteten har status preliminär."
+
+#. module: project
+#: code:addons/project/project.py:220
+#, python-format
+msgid "Attachments"
+msgstr ""
+
+#. module: project
+#: view:project.task:0
+#: selection:project.task,state:0
+#: selection:project.task.delegate,state:0
+#: selection:project.task.history,state:0
+#: selection:project.task.history.cumulative,state:0
+#: model:project.task.type,name:project.project_tt_deployment
+#: selection:project.task.type,state:0
+#: view:report.project.task.user:0
+#: selection:report.project.task.user,state:0
+#: view:res.partner:0
+msgid "Done"
+msgstr "Klar"
+
+#. module: project
+#: code:addons/project/project.py:182
+#, python-format
+msgid ""
+"You cannot delete a project containing tasks. You can either delete all the "
+"project's tasks and then delete the project or simply deactivate the project."
+msgstr ""
+
+#. module: project
+#: model:process.transition.action,name:project.process_transition_action_draftopentask0
+#: view:project.project:0
+msgid "Open"
+msgstr "Öppna"
+
+#. module: project
+#: field:project.project,privacy_visibility:0
+msgid "Privacy / Visibility"
+msgstr ""
+
+#. module: project
+#: view:project.task:0
+#: field:project.task,remaining_hours:0
+#: field:project.task.reevaluate,remaining_hours:0
+#: view:report.project.task.user:0
+#: field:report.project.task.user,remaining_hours:0
+msgid "Remaining Hours"
+msgstr "Återstående timmar"
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_stage
+msgid "Stage changed"
+msgstr ""
+
+#. module: project
+#: constraint:project.task:0
+msgid "Error ! Task end-date must be greater then task start-date"
+msgstr "Fel ! Aktivitetens slutdatum måste komma efter startdatumet"
+
+#. module: project
+#: field:project.task.history,user_id:0
+#: field:project.task.history.cumulative,user_id:0
+msgid "Responsible"
+msgstr "Ansvarig"
+
+#. module: project
+#: view:project.project:0
+msgid "Search Project"
+msgstr "Sök projekt"
+
+#. module: project
+#: view:project.task.delegate:0
+msgid "Delegated Task"
+msgstr "Delegerade aktiviteter"
+
+#. module: project
+#: view:report.project.task.user:0
+#: field:report.project.task.user,total_hours:0
+msgid "Total Hours"
+msgstr "Summa timmar"
+
+#. module: project
+#: model:ir.model,name:project.model_project_config_settings
+msgid "project.config.settings"
 msgstr ""
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_development
 msgid "Development"
-msgstr ""
+msgstr "Utveckling"
 
 #. module: project
-#: view:board.board:0
-msgid "My Remaining Hours by Project"
-msgstr ""
-
-#. module: project
-#: field:project.task,description:0
-#: view:project.task.type:0
-#: field:project.task.type,description:0
-msgid "Description"
-msgstr "Beskrivning"
-
-#. module: project
-#: selection:report.project.task.user,priority:0
-msgid "Urgent"
-msgstr "Viktigt"
-
-#. module: project
-#: selection:report.project.task.user,month:0
-msgid "May"
-msgstr ""
-
-#. module: project
-#: view:project.task.delegate:0
-msgid "Validation Task"
-msgstr "Granska ärende"
-
-#. module: project
-#: field:task.by.days,total_task:0
-msgid "Total tasks"
-msgstr ""
-
-#. module: project
-#: help:project.task.type,project_default:0
+#: help:project.task,active:0
 msgid ""
-"If you check this field, this stage will be proposed by default on each new "
-"project. It will not assign this stage to existing projects."
+"This field is computed automatically and have the same behavior than the "
+"boolean 'active' field: if the task is linked to a template or unactivated "
+"project, it will be hidden unless specifically asked."
 msgstr ""
+"Detta fält beräknas automatiskt och har samma beteende som \"aktiva\" "
+"fältet: om aktiviteten är kopplad till en mall eller inaktiverat projektet "
+"kommer det att döljas om den inte uttryckligen erterfrågas."
 
 #. module: project
-#: view:board.board:0
-#: model:ir.actions.act_window,name:project.action_view_delegate_task_tree
-#: view:project.task:0
-msgid "My Delegated Tasks"
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-msgid "Task: %(name)s"
-msgstr "Uppgift: %(name)s"
-
-#. module: project
-#: field:project.task.delegate,user_id:0
-msgid "Assign To"
-msgstr "Tilldela till"
-
-#. module: project
-#: field:project.project,progress_rate:0
-#: view:report.project.task.user:0
-#: field:report.project.task.user,progress:0
-msgid "Progress"
-msgstr "Upparbetat"
-
-#. module: project
-#: field:project.project,effective_hours:0
-#: field:project.task.work,hours:0
-msgid "Time Spent"
-msgstr "Nedlagd tid"
-
-#. module: project
-#: model:ir.actions.act_window,name:project.act_my_account
-msgid "My accounts to invoice"
-msgstr "Mina konton som skall fakturerar"
-
-#. module: project
-#: model:project.task.type,name:project.project_tt_merge
-msgid "Deployment"
-msgstr ""
-
-#. module: project
-#: field:project.project,tasks:0
-msgid "Project tasks"
-msgstr "Projektaktiviteter"
-
-#. module: project
-#: help:project.project,warn_manager:0
-msgid ""
-"If you check this field, the project manager will receive a request each "
-"time a task is completed by his team."
-msgstr ""
-"Om du kryssar i denna ruta, kommer projektledaren a få en förfrågan varje "
-"gång en aktivitet är avslutad av hans grupp."
-
-#. module: project
-#: help:project.project,total_hours:0
-msgid ""
-"Sum of total hours of all tasks related to this project and its child "
-"projects."
-msgstr ""
-
-#. module: project
-#: field:project.task.type,project_default:0
-msgid "Common to All Projects"
-msgstr ""
-
-#. module: project
-#: model:process.transition,note:project.process_transition_opendonetask0
-msgid "When task is completed, it will come into the done state."
-msgstr "När aktiviteten är avslutad sätts status till klar."
-
-#. module: project
-#: view:project.project:0
-msgid "Customer"
-msgstr ""
-
-#. module: project
-#: view:project.project:0
-#: view:project.task:0
-#: field:project.task.history,end_date:0
-#: field:project.task.history.cumulative,end_date:0
-msgid "End Date"
-msgstr ""
-
-#. module: project
-#: selection:report.project.task.user,month:0
-msgid "February"
-msgstr ""
-
-#. module: project
-#: model:ir.actions.act_window,name:project.action_task_by_days_graph
-#: model:ir.model,name:project.model_task_by_days
-#: view:task.by.days:0
-msgid "Task By Days"
-msgstr ""
-
-#. module: project
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-msgid "Edit"
-msgstr ""
-
-#. module: project
-#: model:process.node,note:project.process_node_opentask0
-msgid "Encode your working hours."
-msgstr "Koda dina arbetstimmar"
-
-#. module: project
-#: view:report.project.task.user:0
-#: field:report.project.task.user,year:0
-msgid "Year"
-msgstr ""
-
-#. module: project
-#: view:project.task.history.cumulative:0
-msgid "Month-2"
-msgstr ""
-
-#. module: project
-#: help:report.project.task.user,closing_days:0
-msgid "Number of Days to close the task"
-msgstr ""
-
-#. module: project
-#: view:project.task.history.cumulative:0
-#: view:report.project.task.user:0
-msgid "Month-1"
-msgstr ""
-
-#. module: project
-#: selection:report.project.task.user,month:0
-msgid "April"
-msgstr ""
+#: model:res.request.link,name:project.req_link_task
+msgid "Project task"
+msgstr "Projektaktivitet"
 
 #. module: project
 #: field:project.task,effective_hours:0
@@ -1864,73 +1524,589 @@ msgid "Hours Spent"
 msgstr "Nedlagda timmar"
 
 #. module: project
-#: view:project.project:0
-#: view:project.task:0
-msgid "Miscelleanous"
-msgstr ""
-
-#. module: project
-#: model:process.transition,name:project.process_transition_opendonetask0
-msgid "Open Done Task"
-msgstr "Öppna avslutade aktiviteter"
-
-#. module: project
-#: view:project.task.type:0
-msgid "Common"
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-msgid "Spent Hours"
-msgstr ""
-
-#. module: project
-#: model:ir.actions.act_window,help:project.action_review_task_stage
+#: help:project.config.settings,module_pad:0
 msgid ""
-"The stages can be common to all project or specific to one project. Each "
-"task will follow the different stages in order to be closed."
-msgstr ""
-
-#. module: project
-#: help:project.project,sequence:0
-msgid "Gives the sequence order when displaying a list of Projects."
-msgstr ""
-
-#. module: project
-#: code:addons/project/wizard/mail_compose_message.py:64
-#, python-format
-msgid "Task '%s' Closed"
+"Lets the company customize which Pad installation should be used to link to "
+"new pads\n"
+"                (by default, http://ietherpad.com/).\n"
+"                This installs the module pad."
 msgstr ""
 
 #. module: project
 #: field:project.task,id:0
 msgid "ID"
-msgstr ""
-
-#. module: project
-#: model:ir.actions.act_window,name:project.action_view_task_history_burndown
-#: model:ir.ui.menu,name:project.menu_action_view_task_history_burndown
-msgid "Burndown Chart"
-msgstr ""
-
-#. module: project
-#: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
-msgid "Assigned Tasks"
-msgstr ""
+msgstr "ID"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
 msgid "Overpassed Tasks"
+msgstr "Övertrasserade aktiviteter"
+
+#. module: project
+#: code:addons/project/project.py:932
+#, python-format
+msgid ""
+"Child task still open.\n"
+"Please cancel or complete child task first."
+msgstr ""
+"Fortfarande öppna underliggande aktiviteter\n"
+"Vänligen avbryt eller avsluta underliggande aktiviteter först."
+
+#. module: project
+#: field:project.task.delegate,user_id:0
+msgid "Assign To"
+msgstr "Tilldela till"
+
+#. module: project
+#: model:res.groups,name:project.group_time_work_estimation_tasks
+msgid "Time Estimation on Tasks"
+msgstr ""
+
+#. module: project
+#: field:project.task,total_hours:0
+msgid "Total"
+msgstr ""
+
+#. module: project
+#: model:process.node,note:project.process_node_taskbydelegate0
+msgid "Delegate your task to the other user"
+msgstr "Delegera din aktivitet till den andra användaren"
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_started
+msgid "Task started"
+msgstr ""
+
+#. module: project
+#: help:project.task.reevaluate,remaining_hours:0
+msgid "Put here the remaining hours required to close the task."
+msgstr "Ange kvarvarande timmar som krävs för att avsluta aktiviteten"
+
+#. module: project
+#: help:project.task.type,fold:0
+msgid ""
+"This stage is not visible, for example in status bar or kanban view, when "
+"there are no records in that stage to display."
+msgstr ""
+
+#. module: project
+#: view:project.task:0
+msgid "Deadlines"
+msgstr "Tidsfrister"
+
+#. module: project
+#: code:addons/project/wizard/project_task_delegate.py:69
+#: code:addons/project/wizard/project_task_delegate.py:70
+#: code:addons/project/wizard/project_task_delegate.py:77
+#: code:addons/project/wizard/project_task_delegate.py:78
+#, python-format
+msgid "CHECK: "
+msgstr "CHECK: "
+
+#. module: project
+#: code:addons/project/project.py:432
+#, python-format
+msgid "You must assign members on the project '%s' !"
+msgstr "Du måste tilldela medarbetare till projektet '%s'!"
+
+#. module: project
+#: view:project.project:0
+msgid "Pending Projects"
+msgstr "Vilande projekt"
+
+#. module: project
+#: view:project.task:0
+msgid "Remaining"
+msgstr ""
+
+#. module: project
+#: field:project.task,progress:0
+msgid "Progress (%)"
+msgstr "Upparbetat (%)"
+
+#. module: project
+#: field:project.task,company_id:0
+#: field:project.task.work,company_id:0
+#: view:report.project.task.user:0
+#: field:report.project.task.user,company_id:0
+msgid "Company"
+msgstr "Bolag"
+
+#. module: project
+#: help:project.config.settings,module_project_timesheet:0
+msgid ""
+"This allows you to transfer the entries under tasks defined for Project "
+"Management to\n"
+"                the timesheet line entries for particular date and user, "
+"with the effect of creating,\n"
+"                editing and deleting either ways.\n"
+"                This installs the module project_timesheet."
+msgstr ""
+
+#. module: project
+#: field:project.config.settings,module_project_issue:0
+msgid "Track issues and bugs"
+msgstr ""
+
+#. module: project
+#: field:project.config.settings,module_project_mrp:0
+msgid "Generate tasks from sale orders"
+msgstr ""
+
+#. module: project
+#: model:ir.ui.menu,name:project.menu_task_types_view
+msgid "Task Stages"
+msgstr ""
+
+#. module: project
+#: model:process.node,note:project.process_node_drafttask0
+msgid "Define the Requirements and Set Planned Hours."
+msgstr "Definiera behov och planerade timmar"
+
+#. module: project
+#: field:project.project,message_ids:0
+#: field:project.task,message_ids:0
+msgid "Messages"
+msgstr ""
+
+#. module: project
+#: field:project.project,color:0
+#: field:project.task,color:0
+msgid "Color Index"
+msgstr "Färgindex"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.open_board_project
+#: model:ir.model,name:project.model_project_project
+#: model:ir.ui.menu,name:project.menu_project_dashboard
+#: model:ir.ui.menu,name:project.menu_project_management
+#: view:project.project:0
+#: view:project.task:0
+#: field:project.task,project_id:0
+#: field:project.task.delegate,project_id:0
+#: field:project.task.history.cumulative,project_id:0
+#: view:report.project.task.user:0
+#: field:report.project.task.user,project_id:0
+#: model:res.request.link,name:project.req_link_project
+msgid "Project"
+msgstr "Projekt"
+
+#. module: project
+#: selection:project.project,state:0
+#: selection:project.task,state:0
+#: selection:project.task.history,state:0
+#: selection:project.task.history.cumulative,state:0
+#: model:project.task.type,name:project.project_tt_cancel
+#: selection:project.task.type,state:0
+#: selection:report.project.task.user,state:0
+msgid "Cancelled"
+msgstr "Avbruten"
+
+#. module: project
+#: model:ir.actions.act_window,help:project.action_view_task
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new task.\n"
+"              </p><p>\n"
+"                OpenERP's project management allows you to manage the "
+"pipeline\n"
+"                of tasks in order to get things done efficiently. You can\n"
+"                track progress, discuss on tasks, attach documents, etc.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: project
+#: field:project.task,date_end:0
+#: field:report.project.task.user,date_end:0
+msgid "Ending Date"
+msgstr "Slutdatum"
+
+#. module: project
+#: field:project.task.type,state:0
+msgid "Related Status"
+msgstr ""
+
+#. module: project
+#: view:project.project:0
+msgid "Documents"
+msgstr ""
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_new
+msgid "Task created"
 msgstr ""
 
 #. module: project
 #: view:report.project.task.user:0
-msgid "Current Year"
+#: field:report.project.task.user,no_of_days:0
+msgid "# of Days"
+msgstr "# dagar"
+
+#. module: project
+#: field:project.project,message_follower_ids:0
+#: field:project.task,message_follower_ids:0
+msgid "Followers"
 msgstr ""
 
 #. module: project
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
+#: selection:project.project,state:0
+#: view:project.task:0
+#: selection:project.task,state:0
+#: selection:project.task.history,state:0
+#: selection:project.task.history.cumulative,state:0
+#: selection:project.task.type,state:0
+#: view:report.project.task.user:0
+msgid "New"
+msgstr "Ny"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_view_task_history_cumulative
+#: model:ir.ui.menu,name:project.menu_action_view_task_history_cumulative
+msgid "Cumulative Flow"
+msgstr "Kummulativt flöde"
+
+#. module: project
+#: view:report.project.task.user:0
+#: field:report.project.task.user,hours_effective:0
+msgid "Effective Hours"
+msgstr "Faktisk tid"
+
+#. module: project
+#: view:report.project.task.user:0
+msgid "OverPass delay"
+msgstr "Övertrasserad försening"
+
+#. module: project
+#: view:project.task.delegate:0
+msgid "Validation Task"
+msgstr "Granska ärende"
+
+#. module: project
+#: field:project.config.settings,module_project_long_term:0
+msgid "Manage resources planning on gantt view"
+msgstr ""
+
+#. module: project
+#: view:project.task:0
+#: view:project.task.history.cumulative:0
+msgid "Unassigned Tasks"
+msgstr "Ej tilldelade aktiviteter"
+
+#. module: project
+#: help:project.project,planned_hours:0
+msgid ""
+"Sum of planned hours of all tasks related to this project and its child "
+"projects."
+msgstr ""
+"Summan av planerad tid för alla aktiviteter relaterade till detta projekt "
+"och underliggande."
+
+#. module: project
+#: view:res.partner:0
+msgid "For changing to done state"
+msgstr "För att ändra till klarstatus"
+
+#. module: project
+#: view:report.project.task.user:0
+msgid "My Task"
+msgstr "Mina aktiviteter"
+
+#. module: project
+#: view:project.task:0
+#: view:project.task.history.cumulative:0
+#: view:report.project.task.user:0
+msgid "My Projects"
+msgstr "Mina projekt"
+
+#. module: project
+#: help:project.task,sequence:0
+msgid "Gives the sequence order when displaying a list of tasks."
+msgstr "Ger sorteringsordning vid listning av aktiviteter."
+
+#. module: project
+#: field:project.task,date_start:0
+#: field:report.project.task.user,date_start:0
+msgid "Starting Date"
+msgstr "Startdatum"
+
+#. module: project
+#: code:addons/project/project.py:398
+#: model:ir.actions.act_window,name:project.open_view_project_all
+#: model:ir.ui.menu,name:project.menu_projects
+#: view:project.project:0
+#: field:project.task.type,project_ids:0
+#: view:res.company:0
+#, python-format
+msgid "Projects"
+msgstr "Projekt"
+
+#. module: project
+#: model:res.groups,name:project.group_tasks_work_on_tasks
+msgid "Task's Work on Tasks"
+msgstr ""
+
+#. module: project
+#: help:project.task.delegate,name:0
+msgid "New title of the task delegated to the user"
+msgstr "Ny rubrik på aktiviteten delegerad till användaren"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_project_task_user_tree
+#: model:ir.ui.menu,name:project.menu_project_task_user_tree
+#: view:report.project.task.user:0
+msgid "Tasks Analysis"
+msgstr "Aktivietetsanalys"
+
+#. module: project
+#: view:project.task:0
+#: view:project.task.history.cumulative:0
+msgid "Project Tasks"
+msgstr "Projektaktiviteter"
+
+#. module: project
+#: field:account.analytic.account,use_tasks:0
+#: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
+#: model:ir.actions.act_window,name:project.action_view_task
+#: model:ir.ui.menu,name:project.menu_action_view_task
+#: model:process.process,name:project.process_process_tasksprocess0
+#: view:project.project:0
+#: view:project.task:0
+#: view:res.partner:0
+#: field:res.partner,task_ids:0
+msgid "Tasks"
+msgstr "Aktiviteter"
+
+#. module: project
+#: selection:report.project.task.user,month:0
+msgid "December"
+msgstr "december"
+
+#. module: project
+#: view:project.config.settings:0
+#: view:project.task.delegate:0
+#: view:project.task.reevaluate:0
+msgid "or"
+msgstr ""
+
+#. module: project
+#: help:project.config.settings,module_project_mrp:0
+msgid ""
+"This feature automatically creates project tasks from service products in "
+"sale orders.\n"
+"                More precisely, tasks are created for procurement lines with "
+"product of type 'Service',\n"
+"                procurement method 'Make to Order', and supply method "
+"'Manufacture'.\n"
+"                This installs the module project_mrp."
+msgstr ""
+
+#. module: project
+#: help:project.task.delegate,planned_hours:0
+msgid "Estimated time to close this task by the delegated user"
+msgstr ""
+"Uppskatta tid som krävs för att stänga ärendet av den delegerade användaren"
+
+#. module: project
+#: model:project.category,name:project.project_category_03
+msgid "Experiment"
+msgstr ""
+
+#. module: project
+#: model:process.transition.action,name:project.process_transition_action_opendrafttask0
+#: selection:report.project.task.user,state:0
+msgid "Draft"
+msgstr "Preliminär"
+
+#. module: project
+#: field:project.task,kanban_state:0
+#: field:project.task.history,kanban_state:0
+#: field:project.task.history.cumulative,kanban_state:0
+msgid "Kanban State"
+msgstr "Kanbanstatus"
+
+#. module: project
+#: field:project.config.settings,module_project_timesheet:0
+msgid "Record timesheet lines per tasks"
+msgstr ""
+
+#. module: project
+#: model:ir.model,name:project.model_report_project_task_user
+msgid "Tasks by user and project"
+msgstr "Aktiviteter per användare och projekt"
+
+#. module: project
+#: field:res.company,project_time_mode_id:0
+msgid "Project Time Unit"
+msgstr "Projektets tidsenhet"
+
+#. module: project
+#: view:project.task:0
+#: selection:project.task,kanban_state:0
+#: selection:project.task.history,kanban_state:0
+#: selection:project.task.history.cumulative,kanban_state:0
+msgid "Normal"
+msgstr "Normal"
+
+#. module: project
+#: view:report.project.task.user:0
+#: field:report.project.task.user,closing_days:0
+msgid "Days to Close"
+msgstr "Dagar i behandling"
+
+#. module: project
+#: model:res.groups,name:project.group_project_user
+msgid "User"
+msgstr "Användare"
+
+#. module: project
+#: help:project.project,alias_model:0
+msgid ""
+"The kind of document created when an email is received on this project's "
+"email alias"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_config_settings
+#: view:project.config.settings:0
+msgid "Configure Project"
+msgstr ""
+
+#. module: project
+#: view:project.task.history.cumulative:0
+msgid "Tasks's Cumulative Flow"
+msgstr "Aktiviteters kummulativa flöde"
+
+#. module: project
+#: selection:report.project.task.user,month:0
+msgid "January"
+msgstr "januari"
+
+#. module: project
+#: field:project.task.delegate,prefix:0
+msgid "Your Task Title"
+msgstr "Din aktivitets titel"
+
+#. module: project
+#: view:project.task.reevaluate:0
+msgid "Reevaluation Task"
+msgstr "Omvärdering av aktiviteten"
+
+#. module: project
+#: code:addons/project/project.py:1305
+#, python-format
+msgid "Please delete the project linked with this account first."
+msgstr "Vänligen radera projektet som är länkat till detta konto först."
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_new
+#: model:mail.message.subtype,name:project.mt_task_new
+msgid "Task Created"
+msgstr ""
+
+#. module: project
+#: view:report.project.task.user:0
+msgid "Non Assigned Tasks to users"
+msgstr "Icke tilldelade aktiviteter"
+
+#. module: project
+#: view:project.project:0
+msgid "Projects in which I am a manager"
+msgstr "Projekt där jag är ansvarig"
+
+#. module: project
+#: view:project.task:0
+#: selection:project.task,kanban_state:0
+#: selection:project.task.history,kanban_state:0
+#: selection:project.task.history.cumulative,kanban_state:0
+msgid "Ready for next stage"
+msgstr ""
+
+#. module: project
+#: field:project.task.type,case_default:0
+msgid "Default for New Projects"
+msgstr ""
+
+#. module: project
+#: view:project.task:0
+#: field:project.task,description:0
+#: field:project.task.type,description:0
+msgid "Description"
+msgstr "Beskrivning"
+
+#. module: project
+#: selection:report.project.task.user,month:0
+msgid "May"
+msgstr "maj"
+
+#. module: project
+#: help:project.task.type,case_default:0
+msgid ""
+"If you check this field, this stage will be proposed by default on each new "
+"project. It will not assign this stage to existing projects."
+msgstr ""
+"Om du markerar detta fält kommer denna etapp att föreslås som standard på "
+"varje nytt projekt. Befintliga projekt påverkas inte av detta."
+
+#. module: project
+#: field:project.task,partner_id:0
+msgid "Customer"
+msgstr "Uppdragsgivare"
+
+#. module: project
+#: selection:report.project.task.user,month:0
+msgid "February"
+msgstr "februari"
+
+#. module: project
+#: help:project.config.settings,module_project_long_term:0
+msgid ""
+"A long term project management module that tracks planning, scheduling, and "
+"resource allocation.\n"
+"                This installs the module project_long_term."
+msgstr ""
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_task_closed
+msgid "Task closed"
+msgstr ""
+
+#. module: project
+#: selection:report.project.task.user,month:0
+msgid "April"
+msgstr "april"
+
+#. module: project
+#: view:project.task:0
+msgid "Spent Hours"
+msgstr "Förbrukade timmar"
+
+#. module: project
+#: help:project.project,sequence:0
+msgid "Gives the sequence order when displaying a list of Projects."
+msgstr "Ger ordningsföljden vid listning av projekt."
+
+#. module: project
+#: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
+msgid "Assigned Tasks"
+msgstr "Tilldelade aktiviteter"
+
+#. module: project
+#: help:project.config.settings,module_project_issue_sheet:0
+msgid ""
+"Provides timesheet support for the issues/bugs management in project.\n"
+"                This installs the module project_issue_sheet."
+msgstr ""
+
+#. module: project
+#: selection:project.project,privacy_visibility:0
+msgid "Followers Only"
+msgstr ""
+
+#. module: project
+#: view:board.board:0
+#: field:project.project,task_count:0
+msgid "Open Tasks"
 msgstr ""
 
 #. module: project
@@ -1942,49 +2118,10 @@ msgid "Sequence"
 msgstr "Sekvens"
 
 #. module: project
-#: model:ir.actions.act_window,name:project.action_project_vs_remaining_hours_graph
-#: view:project.vs.hours:0
-msgid "Remaining Hours Per Project"
-msgstr ""
-
-#. module: project
-#: help:project.project,warn_footer:0
-msgid ""
-"Footer added at the beginning of the email for the warning message sent to "
-"the customer when a task is closed."
-msgstr ""
-"For tillagd i slutet av det epostmeddelande som skickas till kunden när en "
-"aktivitet är avslutad."
-
-#. module: project
-#: model:ir.actions.act_window,help:project.open_view_project_all
-msgid ""
-"A project contains a set of tasks or issues that will be performed by your "
-"resources assigned to it. A project can be hierarchically structured, as a "
-"child of a Parent Project. This allows you to design large project "
-"structures with different phases spread over the project duration cycle. "
-"Each user can set his default project in his own preferences to "
-"automatically filter the tasks or issues he usually works on. If you choose "
-"to invoice the time spent on a project task, you can find project tasks to "
-"be invoiced in the billing section."
-msgstr ""
-
-#. module: project
 #: view:project.task:0
 #: view:project.task.work:0
 msgid "Task Work"
 msgstr "Aktivitetsarbete"
-
-#. module: project
-#: field:project.task.delegate,state:0
-msgid "Validation State"
-msgstr "Granskningsstatus"
-
-#. module: project
-#: code:addons/project/project.py:847
-#, python-format
-msgid "Task '%s' cancelled"
-msgstr "Task '%s' cancelled"
 
 #. module: project
 #: help:project.task.delegate,planned_hours_me:0
@@ -1992,389 +2129,18 @@ msgid ""
 "Estimated time for you to validate the work done by the user to whom you "
 "delegate this task"
 msgstr ""
+"Estimerad tid för dig att utvärdera genomfört arbete av användaren som fick "
+"sig aktiviteten delegerad"
 
 #. module: project
-#: view:project.project:0
-#: model:res.groups,name:project.group_project_manager
-msgid "Manager"
-msgstr ""
-
-#. module: project
-#: field:project.task,create_date:0
-msgid "Create Date"
-msgstr ""
-
-#. module: project
-#: code:addons/project/project.py:855
-#, python-format
-msgid "The task '%s' is cancelled."
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-#: view:res.partner:0
-msgid "For changing to open state"
-msgstr ""
-
-#. module: project
-#: field:project.task.work,name:0
-msgid "Work summary"
-msgstr "Sammanställning av arbete"
-
-#. module: project
-#: code:addons/project/project.py:769
-#, python-format
-msgid "Send Email after close task"
-msgstr ""
+#: view:report.project.task.user:0
+#: field:report.project.task.user,year:0
+msgid "Year"
+msgstr "År"
 
 #. module: project
 #: view:project.project:0
 #: field:project.project,type_ids:0
 #: view:project.task.type:0
 msgid "Tasks Stages"
-msgstr ""
-
-#. module: project
-#: model:process.node,note:project.process_node_taskbydelegate0
-msgid "Delegate your task to the other user"
-msgstr "Delegera din aktivitet till den andra användaren"
-
-#. module: project
-#: view:project.project:0
-#: field:project.project,warn_footer:0
-msgid "Mail Footer"
-msgstr "Epost fot"
-
-#. module: project
-#: view:project.task:0
-#: view:project.task.history.cumulative:0
-msgid "In Progress Tasks"
-msgstr ""
-
-#~ msgid "Subproject"
-#~ msgstr "Underprojekt"
-
-#~ msgid "Type"
-#~ msgstr "Typ"
-
-#~ msgid "Contact"
-#~ msgstr "Kontakt"
-
-#~ msgid "Project's members"
-#~ msgstr "Projektets medlemmar"
-
-#~ msgid "Date Closed"
-#~ msgstr "Datum stängd"
-
-#~ msgid "Task summary"
-#~ msgstr "Uppgiftssammandrag"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
-
-#~ msgid "Close Task"
-#~ msgstr "Avsluta aktivitet"
-
-#~ msgid "Change Remaining Hours"
-#~ msgstr "Ändra återstående timmar"
-
-#~ msgid "Tasks Process"
-#~ msgstr "Aktivitetsprocess"
-
-#~ msgid "Assigned tasks"
-#~ msgstr "Tilldelade aktiviteter"
-
-#~ msgid "All Attachments"
-#~ msgstr "Alla bilagor"
-
-#~ msgid "Update"
-#~ msgstr "Uppdatera"
-
-#~ msgid "Validate"
-#~ msgstr "Validera"
-
-#~ msgid "My Tasks in Progress"
-#~ msgstr "Mina pågående aktiviteter"
-
-#~ msgid "Days"
-#~ msgstr "Dagar"
-
-#~ msgid "Parent Project"
-#~ msgstr "Överliggande projekt"
-
-#~ msgid "Weeks"
-#~ msgstr "Veckor"
-
-#~ msgid "My Current Tasks"
-#~ msgstr "Mina pågående aktiviteter"
-
-#~ msgid "Internal description of the project."
-#~ msgstr "Intern beskrivning av projektet"
-
-#~ msgid "All projects"
-#~ msgstr "Alla projekt"
-
-#~ msgid "Hours"
-#~ msgstr "Timmar"
-
-#~ msgid "New Project"
-#~ msgstr "Nytt projekt"
-
-#~ msgid "Project task type"
-#~ msgstr "Projekt aktivitetstyp"
-
-#~ msgid "Tasks in Progress"
-#~ msgstr "Pågående aktiviteter"
-
-#~ msgid "Task Details"
-#~ msgstr "Aktivitetsdetaljer"
-
-#~ msgid "New Task"
-#~ msgstr "Ny aktivitet"
-
-#~ msgid "Task type"
-#~ msgstr "Aktivitetstyp"
-
-#~ msgid "Review"
-#~ msgstr "Granska"
-
-#~ msgid "Send Message"
-#~ msgstr "Skicka meddelande"
-
-#~ msgid "Status"
-#~ msgstr "Status"
-
-#~ msgid "Quotation"
-#~ msgstr "Offert"
-
-#~ msgid "Months"
-#~ msgstr "Månader"
-
-#~ msgid "Bug"
-#~ msgstr "Fel"
-
-#~ msgid "Create a Task"
-#~ msgstr "Skapa en aktivitet"
-
-#~ msgid "Send mail to customer"
-#~ msgstr "Skicka epost till kunden"
-
-#~ msgid "Task invoice"
-#~ msgstr "Aktivtetsfaktura"
-
-#~ msgid "New Feature"
-#~ msgstr "Ny funktion"
-
-#~ msgid "Projects Structure"
-#~ msgstr "Projektstruktur"
-
-#~ msgid "Running projects"
-#~ msgstr "Pågående projekt"
-
-#~ msgid "My Draft Tasks"
-#~ msgstr "Mina preliminära aktiviteter"
-
-#~ msgid "My Running Projects"
-#~ msgstr "Mina pågående projekt"
-
-#~ msgid "Analysis"
-#~ msgstr "Analys"
-
-#~ msgid "After task is completed, Create its invoice."
-#~ msgstr "Skapa en faktura när aktiviteten är avslutad"
-
-#~ msgid "Computed as: Time Spent / Total Time."
-#~ msgstr "Beräknas som: nedlagd tid/total tid"
-
-#~ msgid "E-Mails"
-#~ msgstr "E-mails"
-
-#~ msgid "New title of the task delegated to the user."
-#~ msgstr "Ny titel för aktiviteten som har delegerats till användaren"
-
-#~ msgid "All Tasks"
-#~ msgstr "Alla aktiviteter"
-
-#~ msgid "Importance"
-#~ msgstr "Viktighetsgrad"
-
-#~ msgid "User you want to delegate this task to."
-#~ msgstr "Användaren som du vill delegera denna uppgift till"
-
-#~ msgid ""
-#~ "Project's member. Not used in any computation, just for information purpose."
-#~ msgstr "Projektets medlemmar. Används endast som information."
-
-#~ msgid "Delegations"
-#~ msgstr "Delegering"
-
-#~ msgid "Estimated time to close this task by the delegated user."
-#~ msgstr ""
-#~ "Beräknad tid för att avsluta denna aktivitet för den tilldelade användaren."
-
-#~ msgid "Sum of total hours of all tasks related to this project."
-#~ msgstr "Summan av alla timmar för aktivteter relaterade till detta projekt."
-
-#~ msgid "Delegate this task to a user"
-#~ msgstr "Delegera denna aktivitet till en användare."
-
-#~ msgid ""
-#~ "Computed as: Total Time - Estimated Time. It gives the difference of the "
-#~ "time estimated by the project manager and the real time to close the task."
-#~ msgstr ""
-#~ "Beräknad som: total tid - beräknad tid. Det ger skillanden mellan den "
-#~ "beräknade tiden av projektledaren och den verkliga tid som krävdes för att "
-#~ "avsluta aktiviteten."
-
-#~ msgid "Gantt Representation"
-#~ msgstr "Gantt diagram"
-
-#~ msgid "Delay"
-#~ msgstr "Fördröjning"
-
-#~ msgid "Parent Task"
-#~ msgstr "Överliggande aktivitet"
-
-#~ msgid ""
-#~ "If you have [?] in the name, it means there are no analytic account linked "
-#~ "to project."
-#~ msgstr ""
-#~ "Om du har [?] i namnet, så betyder det att det inte finns något objekt "
-#~ "kopplat till projektet."
-
-#~ msgid "Running"
-#~ msgstr "Pågående"
-
-#~ msgid "Template of Projects"
-#~ msgstr "Projektmallar"
-
-#~ msgid "Delegate Task"
-#~ msgstr "Delegera aktivitet"
-
-#~ msgid "Date Stop: %(date_stop)s"
-#~ msgstr "Slutdatum: %(date_stop)s"
-
-#~ msgid "Compute Remaining Hours"
-#~ msgstr "Beräkna återstående timmar"
-
-#~ msgid "Reinclude the description of the task in the task of the user."
-#~ msgstr "Ta med ärende beskrivningen i användarens ärende."
-
-#~ msgid "Sum of spent hours of all tasks related to this project."
-#~ msgstr "Totalt antal nedlagda timmar relaterade till detta projekt."
-
-#~ msgid "Sum of planned hours of all tasks related to this project."
-#~ msgstr ""
-#~ "Totalt antal planerade timmar för alla aktiviteter relaterade till detta "
-#~ "projekt."
-
-#~ msgid ""
-#~ "If you have [?] in the project name, it means there are no analytic account "
-#~ "linked to this project."
-#~ msgstr ""
-#~ "Om du har [?] i projektets namn, betyder detta att det inte finns något "
-#~ "objekt kopplat till projektet."
-
-#~ msgid "New title of your own task to validate the work done."
-#~ msgstr "Ny title på din egen aktivitet för att bekräfta nedlagt arbete."
-
-#~ msgid "Error ! You can not create recursive projects."
-#~ msgstr "Fel! Du kan inte registrera rekursiva projekt."
-
-#~ msgid ""
-#~ "Project management module that track multi-level projects, tasks,\n"
-#~ "works done on tasks, eso. It is able to render planning, order tasks, eso.\n"
-#~ "    "
-#~ msgstr ""
-#~ "Projektmodulen administrerar projekt med flera nivåer, aktivitet, "
-#~ "rapporterat arbete osv. Modulen kan användas för planering, aktiviteter "
-#~ "osv.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "Estimated time for you to validate the work done by the user to whom you "
-#~ "delegate this task."
-#~ msgstr ""
-#~ "Beräknad tid för dig för att godkänna det arbete utfört av den användaren "
-#~ "som du delegerade denna uppgift."
-
-#~ msgid "Trigger Invoice"
-#~ msgstr "Skapar faktura"
-
-#~ msgid "Trigger invoices from sale order lines"
-#~ msgstr "Utlös faktura från försäljningsorderrader"
-
-#~ msgid ""
-#~ "New state of your own task. Pending will be reopened automatically when the "
-#~ "delegated task is closed."
-#~ msgstr ""
-#~ "Ny status på dina egna ärenden. Ärenden som väntar kommer att återupptas "
-#~ "automatiskt när den delegerade uppgiften är stängd."
-
-#~ msgid "Month works"
-#~ msgstr "Månadsarbetstid"
-
-#~ msgid "config.compute.remaining"
-#~ msgstr "config.compute.remaining"
-
-#~ msgid "Quiet close"
-#~ msgstr "Tyst stängning"
-
-#~ msgid "Partner Info"
-#~ msgstr "Företagsinfo"
-
-#~ msgid "Expected End"
-#~ msgstr "Förväntat slutdatum"
-
-#~ msgid "Timesheets"
-#~ msgstr "Tidrapporter"
-
-#~ msgid "Public Notes"
-#~ msgstr "Publika Inlägg"
-
-#, python-format
-#~ msgid ""
-#~ "Couldn't send mail because the contact for this task (%s) has no email "
-#~ "address!"
-#~ msgstr ""
-#~ "Couldn't send mail because the contact for this task (%s) has no email "
-#~ "address!"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Invalid model name in the action definition."
-
-#~ msgid "Task Types"
-#~ msgstr "Aktivitetstyper"
-
-#, python-format
-#~ msgid ""
-#~ "A new project has been created !\n"
-#~ "We suggest you to close this one and work on this new project."
-#~ msgstr ""
-#~ "A new project has been created !\n"
-#~ "We suggest you to close this one and work on this new project."
-
-#~ msgid "My Pending Tasks"
-#~ msgstr "Mina väntande aktiviteter"
-
-#, python-format
-#~ msgid "Operation Done"
-#~ msgstr "Operation Done"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Invalid XML for View Architecture!"
-
-#~ msgid "Planned"
-#~ msgstr "Planned"
-
-#, python-format
-#~ msgid "Couldn't send mail because your email address is not configured!"
-#~ msgstr "Couldn't send mail because your email address is not configured!"
-
-#, python-format
-#~ msgid ""
-#~ "You can not delete a project with tasks. I suggest you to deactivate it."
-#~ msgstr ""
-#~ "You can not delete a project with tasks. I suggest you to deactivate it."
+msgstr "Aktivitetsetapper"

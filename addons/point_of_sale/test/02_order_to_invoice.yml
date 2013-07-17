@@ -1,17 +1,17 @@
 -
-  I create a new PoS order with 2 units of PC1 at 450 EUR (Tax Incl) and 3 units of PC2 at 300 EUR. (Tax Excl)
+  I create a new PoS order with 2 units of PC1 at 450 EUR (Tax Incl) and 3 units of PCSC349 at 300 EUR. (Tax Excl)
 -
   !record {model: pos.order, id: pos_order_pos1}:
     company_id: base.main_company
-    partner_id: base.res_partner_asus
+    partner_id: base.res_partner_1
     lines:
       - name: OL/0001
-        product_id: product.product_product_pc1
+        product_id: product.product_product_3
         price_unit: 450
         discount: 5.0
         qty: 2.0
       - name: OL/0002
-        product_id: product.product_product_pc2
+        product_id: product.product_product_4
         price_unit: 300
         discount: 5.0
         qty: 3.0
@@ -43,5 +43,4 @@
   I test that the total of the attached invoice is correct
 -
   !assert {model: pos.order, id: pos_order_pos1, string: Invoice not correct}:
-     - bool(invoice_id)
-     - invoice_id.amount_total == (450*2 + 300*3*1.05)*0.95
+     - amount_total == (450*2 + 300*3*1.05)*0.95

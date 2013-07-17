@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="email_compose_message_wizard_inherit_form">
+            <field name="name">mail.compose.message.form</field>
+            <field name="model">mail.compose.message</field>
+            <field name="inherit_id" ref="mail.email_compose_message_wizard_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//footer" position="inside">
+                    <group class="oe_right" col="1">
+                        <div>Use template
+                            <field name="template_id" nolabel="1"
+                                on_change="onchange_template_id(template_id, composition_mode, model, res_id, context)"/>
+                        </div>
+                        <button icon="/email_template/static/src/img/email_template_save.png"
+                            type="object" name="save_as_template" string="Save as new template" class="oe_link"
+                            help="Save as a new template"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

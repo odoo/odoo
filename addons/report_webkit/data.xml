@@ -67,15 +67,15 @@
                 <td/>
             </tr>
             <tr>
-                <td >${company.partner_id.address and company.partner_id.address[0].street or ''|entity}</td>
+                <td >${company.partner_id.street or ''|entity}</td>
                 <td/>
             </tr>
             <tr>
-                <td>Phone: ${company.partner_id.address and company.partner_id.address[0].phone or ''|entity} </td>
+                <td>Phone: ${company.partner_id.phone or ''|entity} </td>
                 <td/>
             </tr>
             <tr>
-                <td>Mail: ${company.partner_id.address and company.partner_id.address[0].email or ''|entity}<br/></td>
+                <td>Mail: ${company.partner_id.email or ''|entity}<br/></td>
             </tr>
         </table> ${_debug or ''|n} </body>
 </html>]]>

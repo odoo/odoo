@@ -21,7 +21,7 @@
 #
 ##############################################################################
 
-from osv import osv
+from openerp.osv import osv
 
 class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
@@ -40,7 +40,7 @@ class account_invoice_line(osv.osv):
 
         if inv.type in ('out_invoice','out_refund'):
             for i_line in inv.invoice_line:
-                if i_line.product_id:
+                if i_line.product_id and i_line.product_id.valuation == 'real_time':
                     if inv.type == 'out_invoice':
                         # debit account dacc will be the output account
                         # first check the product, if empty check the category
@@ -69,7 +69,7 @@ class account_invoice_line(osv.osv):
                             'account_id':dacc,
                             'product_id':i_line.product_id.id,
                             'uos_id':i_line.uos_id.id,
-                            'account_analytic_id':i_line.account_analytic_id.id,
+                            'account_analytic_id': False,
                             'taxes':i_line.invoice_line_tax_id,
                             })
 
@@ -82,12 +82,12 @@ class account_invoice_line(osv.osv):
                             'account_id':cacc,
                             'product_id':i_line.product_id.id,
                             'uos_id':i_line.uos_id.id,
-                            'account_analytic_id':i_line.account_analytic_id.id,
+                            'account_analytic_id': False,
                             'taxes':i_line.invoice_line_tax_id,
                             })
         elif inv.type in ('in_invoice','in_refund'):
             for i_line in inv.invoice_line:
-                if i_line.product_id:
+                if i_line.product_id and i_line.product_id.valuation == 'real_time':
                     if i_line.product_id.type != 'service':
                         # get the price difference account at the product
                         acc = i_line.product_id.property_account_creditor_price_difference and i_line.product_id.property_account_creditor_price_difference.id
@@ -136,9 +136,9 @@ class account_invoice_line(osv.osv):
                         res += diff_res
         return res
 
-    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None, company_id=None):
+    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, currency_id=False, context=None, company_id=None):
         fiscal_pool = self.pool.get('account.fiscal.position')
-        res = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, currency_id, context, company_id)
+        res = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, currency_id, context, company_id)
         if not product:
             return res
         if type in ('in_invoice','in_refund'):
@@ -157,28 +157,27 @@ class account_invoice_line(osv.osv):
                 res['value'].update({'account_id':a})
         return res
 
-account_invoice_line()
-
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
 
-    def _refund_cleanup_lines(self, cr, uid, lines):
-        for line in lines:
-            inv_id = line['invoice_id']
-            inv_obj = self.browse(cr, uid, inv_id[0])
-            if inv_obj.type == 'in_invoice':
-                if line.get('product_id',False):
-                    product_obj = self.pool.get('product.product').browse(cr, uid, line['product_id'][0])
-                    oa = product_obj.property_stock_account_output and product_obj.property_stock_account_output.id
-                    if not oa:
-                        oa = product_obj.categ_id.property_stock_account_output_categ and product_obj.categ_id.property_stock_account_output_categ.id
-                    if oa:
-                        fpos = inv_obj.fiscal_position or False
-                        a = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, oa)
-                        account_data = self.pool.get('account.account').read(cr, uid, [a], ['name'])[0]
-                        line.update({'account_id': (account_data['id'],account_data['name'])})
-        res = super(account_invoice,self)._refund_cleanup_lines(cr, uid, lines)
-        return res
+    def _prepare_refund(self, cr, uid, invoice, date=None, period_id=None, description=None, journal_id=None, context=None):
+        invoice_data = super(account_invoice, self)._prepare_refund(cr, uid, invoice, date, period_id,
+                                                                    description, journal_id, context=context)
+        if invoice.type == 'in_invoice':
+            fiscal_position = self.pool.get('account.fiscal.position')
+            for _, _, line_dict in invoice_data['invoice_line']:
+                if line_dict.get('product_id'):
+                    product = self.pool.get('product.product').browse(cr, uid, line_dict['product_id'], context=context)
+                    counterpart_acct_id = product.property_stock_account_output and \
+                            product.property_stock_account_output.id
+                    if not counterpart_acct_id:
+                        counterpart_acct_id = product.categ_id.property_stock_account_output_categ and \
+                                product.categ_id.property_stock_account_output_categ.id
+                    if counterpart_acct_id:
+                        fpos = invoice.fiscal_position or False
+                        line_dict['account_id'] = fiscal_position.map_account(cr, uid,
+                                                                              fpos,
+                                                                              counterpart_acct_id)
+        return invoice_data
 
-account_invoice()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

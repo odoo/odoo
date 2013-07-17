@@ -5,20 +5,21 @@
         <record id="view_account_tax_chart" model="ir.ui.view">
             <field name="name">account.tax.chart.form</field>
             <field name="model">account.tax.chart</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Account tax charts">
-                    <group colspan="4" >
-                        <field name="period_id"/>
-                        <label align="0.7" colspan="6" string="(If you do not select period it will take all open periods)"/>
+                <form string="Account tax charts" version="7.0">
+                    <group>
+                        <label for="period_id"/>
+                        <div>
+                            <field name="period_id" class="oe_inline"/>
+                            <label string="(If you do not select period it will take all open periods)" class="oe_inline"/>
+                        </div>
                         <field name="target_move"/>
-                    </group>
-                    <separator string="" colspan="4" />
-                    <group colspan="4" col="6">
-                        <label string ="" colspan="2"/>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel" />
-                        <button icon="terp-gtk-go-back-rtl" string="Open Charts" name="account_tax_chart_open_window" type="object" />
-                    </group>
+	                </group>
+                    <footer>
+                        <button string="Open Charts" name="account_tax_chart_open_window" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -30,7 +31,6 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
             <field name="view_id" ref="view_account_tax_chart"/>
-            <field name="help">Chart of Taxes is a tree view reflecting the structure of the Tax Cases (or tax codes) and shows the current tax situation. The tax chart represents the amount of each area of the tax declaration for your country. It’s presented in a hierarchical structure, which can be modified to fit your needs.</field>
             <field name="target">new</field>
         </record>
 

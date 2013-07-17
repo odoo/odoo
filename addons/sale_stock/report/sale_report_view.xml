@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+     <data>
+         <record id="view_order_product_tree_inherit" model="ir.ui.view">
+             <field name="name">sale.report.tree.sale.stock</field>
+             <field name="model">sale.report</field>
+             <field name="inherit_id" ref="sale.view_order_product_tree"/>
+             <field name="arch" type="xml">
+                 <field name="product_uom_qty" position="after">
+                     <field name="shipped_qty_1" sum="Shipped"/>
+                 </field>
+             </field>
+         </record>
+     </data>
+</openerp>

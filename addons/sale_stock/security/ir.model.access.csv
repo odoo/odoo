@@ -1,0 +1,16 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_stock_picking_salesman,stock_picking salesman,stock.model_stock_picking,base.group_sale_salesman,1,1,1,0
+access_stock_move_salesman,stock_move salesman,stock.model_stock_move,base.group_sale_salesman,1,1,1,0
+access_stock_move_manager,stock_move manager,stock.model_stock_move,base.group_sale_manager,1,1,1,1
+access_procurement_salesman,procurement.order salesman,procurement.model_procurement_order,base.group_sale_salesman,1,1,1,0
+access_procurement_manager,procurement.order manager,procurement.model_procurement_order,base.group_sale_manager,1,1,1,1
+access_sale_order_stock_worker,sale.order stock worker,model_sale_order,stock.group_stock_user,1,1,0,0
+access_sale_order_line_stock_worker,sale.order.line stock worker,model_sale_order_line,stock.group_stock_user,1,1,0,0
+access_report_stock_move_sales,report.stock.move.sale,stock.model_report_stock_move,base.group_sale_manager,1,1,1,1
+access_stock_picking_sales,stock.picking.sales,stock.model_stock_picking,base.group_sale_manager,1,1,1,1
+access_product_packaging_user,product.packaging.user,product.model_product_packaging,base.group_sale_salesman,1,1,1,0
+access_product_packaging_manager,product.packaging.manager,product.model_product_packaging,base.group_sale_manager,1,0,0,0
+access_stock_warehouse_user,stock.warehouse.user,stock.model_stock_warehouse,base.group_sale_salesman,1,0,0,0
+access_stock_location_user,stock.location.user,stock.model_stock_location,base.group_sale_salesman,1,0,0,0
+access_product_packaging_sale_manager,product.packaging salemanager,product.model_product_packaging,base.group_sale_manager,1,1,1,1
+access_stock_warehouse_orderpoint_sale_salesman,stock.warehouse.orderpoint,procurement.model_stock_warehouse_orderpoint,base.group_sale_salesman,1,0,0,0

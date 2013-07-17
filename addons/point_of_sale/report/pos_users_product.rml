@@ -191,7 +191,7 @@
               <para style="terp_default_Right_9">[[ formatLang(line_ids['qty']) ]] [[line_ids['uom'] ]]</para>
             </td>
             <td>
-              <para style="terp_default_Right_9">[[ formatLang(line_ids['amt']) ]] [[ company.currency_id.symbol ]]</para>
+              <para style="terp_default_Right_9">[[ formatLang(line_ids['amt'], currency_obj = company.currency_id) ]]</para>
             </td>
           </tr>
         </blockTable>
@@ -208,7 +208,7 @@
           <para style="terp_tblheader_General_Right">Total :</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ formatLang(get_total(statement)) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ formatLang(get_total(statement), currency_obj = company.currency_id) ]]</para>
         </td>
       </tr>
     </blockTable>

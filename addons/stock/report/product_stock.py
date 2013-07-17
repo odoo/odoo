@@ -22,13 +22,13 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-import osv
+from openerp import osv
 import time
-from report.interface import report_int
-from report.render import render
+from openerp.report.interface import report_int
+from openerp.report.render import render
 
 import stock_graph
-import pooler
+from openerp import pooler
 import StringIO
 
 class external_pdf(render):
@@ -42,7 +42,9 @@ class external_pdf(render):
 
 
 class report_stock(report_int):
-    def create(self, cr, uid, ids, datas, context={}):
+    def create(self, cr, uid, ids, datas, context=None):
+        if context is None:
+            context = {}
         product_ids = ids
         if 'location_id' in context:
             location_id = context['location_id']

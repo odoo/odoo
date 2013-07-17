@@ -1,32 +1,26 @@
 # Albanian translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2011-03-28 15:12+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Albanian <sq@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:31+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:05+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
 #: model:ir.actions.act_window,name:account_sequence.action_account_seq_installer
 msgid "Account Sequence Application Configuration"
-msgstr ""
-
-#. module: account_sequence
-#: constraint:account.move:0
-msgid ""
-"You can not create more than one move per period on centralized journal"
 msgstr ""
 
 #. module: account_sequence
@@ -76,18 +70,6 @@ msgid "Company"
 msgstr ""
 
 #. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr ""
-
-#. module: account_sequence
-#: help:account.journal,internal_sequence_id:0
-msgid ""
-"This sequence will be used to maintain the internal number for the journal "
-"entries related to this journal."
-msgstr ""
-
-#. module: account_sequence
 #: field:account.sequence.installer,padding:0
 msgid "Number padding"
 msgstr ""
@@ -104,11 +86,6 @@ msgid "Internal Number"
 msgstr ""
 
 #. module: account_sequence
-#: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr ""
-
-#. module: account_sequence
 #: help:account.sequence.installer,padding:0
 msgid ""
 "OpenERP will automatically adds some '0' on the left of the 'Next Number' to "
@@ -118,23 +95,6 @@ msgstr ""
 #. module: account_sequence
 #: field:account.sequence.installer,name:0
 msgid "Name"
-msgstr ""
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period!"
-msgstr ""
-
-#. module: account_sequence
-#: constraint:account.journal:0
-msgid ""
-"Configuration error! The currency chosen should be shared by the default "
-"accounts too."
-msgstr ""
-
-#. module: account_sequence
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
 msgstr ""
 
 #. module: account_sequence
@@ -158,25 +118,8 @@ msgid "Suffix"
 msgstr ""
 
 #. module: account_sequence
-#: field:account.sequence.installer,config_logo:0
-msgid "Image"
-msgstr ""
-
-#. module: account_sequence
 #: view:account.sequence.installer:0
 msgid "title"
-msgstr ""
-
-#. module: account_sequence
-#: sql_constraint:account.journal:0
-msgid "The name of the journal must be unique per company !"
-msgstr ""
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry must receive a value in its "
-"secondary currency"
 msgstr ""
 
 #. module: account_sequence
@@ -185,8 +128,10 @@ msgid "Prefix"
 msgstr ""
 
 #. module: account_sequence
-#: sql_constraint:account.journal:0
-msgid "The code of the journal must be unique per company !"
+#: help:account.journal,internal_sequence_id:0
+msgid ""
+"This sequence will be used to maintain the internal number for the journal "
+"entries related to this journal."
 msgstr ""
 
 #. module: account_sequence
@@ -202,9 +147,4 @@ msgstr ""
 #. module: account_sequence
 #: view:account.sequence.installer:0
 msgid "You can enhance the Account Sequence Application by installing ."
-msgstr ""
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
 msgstr ""

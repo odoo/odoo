@@ -1,25 +1,32 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* crm_profiling
+# Romanian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2011-01-21 19:07+0000\n"
-"Last-Translator: Mihai Satmarean <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2013-01-10 06:23+0000\n"
+"Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
+"Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:04+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2013-01-11 05:21+0000\n"
+"X-Generator: Launchpad (build 16412)\n"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 msgid "Questions List"
-msgstr "Lista de întrebări"
+msgstr "Lista de Intrebari"
+
+#. module: crm_profiling
+#: view:crm_profiling.question:0
+#: field:crm_profiling.question,answers_ids:0
+msgid "Avalaible Answers"
+msgstr "Raspunsuri Disponibile"
 
 #. module: crm_profiling
 #: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
@@ -29,10 +36,10 @@ msgid ""
 "segmentation tool allows you to automatically assign a partner to a category "
 "according to his answers to the different questionnaires."
 msgstr ""
-"Puteți crea chestionare specifice legate de subiect pentru a ghida "
-"echipa(le) în ciclul de vânzări ajutându-le să pună întrebările potrivite. "
-"Instrumentul de segmentare vă permite să atribui în mod automat un partener "
-"pentru o categorie în conformitate cu răspunsurile sale la diferite "
+"Puteti crea chestionare specifice legate de subiect pentru a va ghida "
+"echipa(ele) in ciclul de vanzari ajutandu-le sa puna intrebarile potrivite. "
+"Instrumentul de segmentare va permite sa atribuiti in mod automat un "
+"partener unei categorii in functie de raspunsurile sale la diferite "
 "chestionare."
 
 #. module: crm_profiling
@@ -41,35 +48,35 @@ msgstr ""
 #: model:ir.model,name:crm_profiling.model_crm_profiling_question
 #: field:open.questionnaire.line,question_id:0
 msgid "Question"
-msgstr "Întrebare"
+msgstr "Intrebare"
 
 #. module: crm_profiling
 #: model:ir.actions.act_window,name:crm_profiling.action_open_questionnaire
 #: view:open.questionnaire:0
 msgid "Open Questionnaire"
-msgstr "Deschide chestionarul"
+msgstr "Deschide Chestionarul"
 
 #. module: crm_profiling
 #: field:crm.segmentation,child_ids:0
 msgid "Child Profiles"
-msgstr "Profile copil"
+msgstr "Profile Secundare"
 
 #. module: crm_profiling
 #: view:crm.segmentation:0
 msgid "Partner Segmentations"
-msgstr "Segmentare partener"
+msgstr "Segmentari partener"
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,name:0
 #: model:ir.model,name:crm_profiling.model_crm_profiling_answer
 #: field:open.questionnaire.line,answer_id:0
 msgid "Answer"
-msgstr "Răspuns"
+msgstr "Raspuns"
 
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_open_questionnaire_line
 msgid "open.questionnaire.line"
-msgstr ""
+msgstr "deschide.linie.chestionar"
 
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_crm_segmentation
@@ -79,7 +86,7 @@ msgstr "Segmentare partener"
 #. module: crm_profiling
 #: view:res.partner:0
 msgid "Profiling"
-msgstr "Profilare"
+msgstr "Stabilirea profilului"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
@@ -90,19 +97,19 @@ msgstr "Descriere"
 #. module: crm_profiling
 #: field:crm.segmentation,answer_no:0
 msgid "Excluded Answers"
-msgstr "Răspunsuri excluse"
+msgstr "Raspunsuri excluse"
 
 #. module: crm_profiling
 #: view:crm_profiling.answer:0
 #: view:crm_profiling.question:0
 #: field:res.partner,answers_ids:0
 msgid "Answers"
-msgstr "Răspunsuri"
+msgstr "Raspunsuri"
 
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_open_questionnaire
 msgid "open.questionnaire"
-msgstr ""
+msgstr "deschide.chestionar"
 
 #. module: crm_profiling
 #: field:open.questionnaire,questionnaire_id:0
@@ -112,17 +119,12 @@ msgstr "Numele chestionarului"
 #. module: crm_profiling
 #: view:res.partner:0
 msgid "Use a questionnaire"
-msgstr "Foloseşte un chestionar"
-
-#. module: crm_profiling
-#: view:open.questionnaire:0
-msgid "_Cancel"
-msgstr ""
+msgstr "Foloseste un chestionar"
 
 #. module: crm_profiling
 #: field:open.questionnaire,question_ans_ids:0
 msgid "Question / Answers"
-msgstr ""
+msgstr "Intrebare / Raspunsuri"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
@@ -139,35 +141,23 @@ msgid ""
 "part of the                              segmentation rule. If not checked, "
 "the criteria beneath will be ignored"
 msgstr ""
-"Bifaţi această casetă dacă doriţi să utilizați această filă, ca parte a "
-"regulii de segmentare. Dacă nu este bifată, criteriile de sub ea vor fi "
-"ignorate"
-
-#. module: crm_profiling
-#: constraint:crm.segmentation:0
-msgid "Error ! You can not create recursive profiles."
-msgstr "Eroare! Nu puteţi crea profile recursive."
+"Bifati aceasta casuta daca doriti sa utilizati acest tab ca parte a regulii "
+"de segmentare. Daca nu este bifata, criteriile de sub ea vor fi ignorate"
 
 #. module: crm_profiling
 #: field:crm.segmentation,profiling_active:0
 msgid "Use The Profiling Rules"
-msgstr "Folosește regulile de profilare"
+msgstr "Foloseste regulile de profil"
 
 #. module: crm_profiling
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
-
-#. module: crm_profiling
-#: view:crm_profiling.question:0
-#: field:crm_profiling.question,answers_ids:0
-msgid "Avalaible answers"
-msgstr "Răspunsuri disponibile"
+#: constraint:crm.segmentation:0
+msgid "Error ! You cannot create recursive profiles."
+msgstr "Eroare ! Nu puteti crea profile recursive."
 
 #. module: crm_profiling
 #: field:crm.segmentation,answer_yes:0
 msgid "Included Answers"
-msgstr "Răspunsuri incluse"
+msgstr "Raspunsuri incluse"
 
 #. module: crm_profiling
 #: view:crm_profiling.question:0
@@ -175,17 +165,17 @@ msgstr "Răspunsuri incluse"
 #: model:ir.actions.act_window,name:crm_profiling.open_questions
 #: model:ir.ui.menu,name:crm_profiling.menu_segm_answer
 msgid "Questions"
-msgstr "Întrebări"
+msgstr "Intrebari"
 
 #. module: crm_profiling
 #: field:crm.segmentation,parent_id:0
 msgid "Parent Profile"
-msgstr "Profilul părinte"
+msgstr "Profilul principal"
 
 #. module: crm_profiling
 #: view:open.questionnaire:0
 msgid "Cancel"
-msgstr "Renunță"
+msgstr "Anuleaza"
 
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_res_partner
@@ -206,52 +196,9 @@ msgstr "Chestionar"
 #. module: crm_profiling
 #: view:open.questionnaire:0
 msgid "Save Data"
-msgstr "Salvează date"
+msgstr "Salveaza datele"
 
-#~ msgid "Using a questionnaire"
-#~ msgstr "Folosirea unui chestionar"
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Eroare ! Nu puteţi crea membri asociaţi recursiv."
-
-#~ msgid "Crm Profiling management - To Perform Segmentation within Partners"
-#~ msgstr ""
-#~ "CRM gestionarea profilării - Pentru a efectua segmentarea în cadrul "
-#~ "partenerilor"
-
-#~ msgid ""
-#~ "\n"
-#~ "    This module allows users to perform segmentation within partners.\n"
-#~ "    It uses the profiles criteria from the earlier segmentation module and "
-#~ "improve it. Thanks to the new concept of questionnaire. You can now regroup "
-#~ "questions into a questionnaire and directly use it on a partner.\n"
-#~ "\n"
-#~ "    It also has been merged with the earlier CRM & SRM segmentation tool "
-#~ "because they were overlapping.\n"
-#~ "\n"
-#~ "    The menu items related are in \"CRM & SRM\\Configuration\\"
-#~ "Segmentations\"\n"
-#~ "\n"
-#~ "\n"
-#~ "    * Note: this module is not compatible with the module segmentation, "
-#~ "since it's the same which has been renamed.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Acest modul permite utilizatorilor să efectueze segmentare între "
-#~ "parteneri.\n"
-#~ "    Acesta utilizează criteriile de profile din modulul anterior de "
-#~ "segmentare și le îmbunătățește. Mulțumită acestui noul concept de "
-#~ "chestionar. Aveți posibilitatea să regrupați acum întrebări într-un "
-#~ "chestionar și să-l utilizați direct pe un partener.\n"
-#~ "\n"
-#~ "    De asemenea, a fost fuzionat cu instrumentul de segmentare mai vechi CRM "
-#~ "& SRM, deoarece acestea se suprapuneau.\n"
-#~ "\n"
-#~ "    Elementele de meniu asociate sunt în \"CRM & SRM\\Configurare\\"
-#~ "Segmentări\"\n"
-#~ "\n"
-#~ "\n"
-#~ "    * Nota: acest modul nu este compatibil cu modulul de segmentare, din "
-#~ "moment ce este același care a fost redenumit.\n"
-#~ "    "
+#. module: crm_profiling
+#: view:open.questionnaire:0
+msgid "or"
+msgstr "sau"

@@ -23,7 +23,7 @@
   !python {model: crm.helpdesk}: |
     question_ids = self.search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
     try:
-      self.message_update(cr, uid, question_ids, {'subject': 'Link of product', 'body_text': 'www.openerp.com'})
+      self.message_update(cr, uid, question_ids, {'subject': 'Link of product', 'body': 'www.openerp.com'})
     except:
       pass
 

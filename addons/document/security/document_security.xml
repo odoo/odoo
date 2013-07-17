@@ -5,15 +5,14 @@
     <record id="base.group_document_user" model="res.groups">
         <field name="name">User</field>
         <field name="category_id" ref="base.module_category_knowledge_management"/>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
 
 <!--    <record id="group_document_manager" model="res.groups">-->
 <!--        <field name="name">Document / Manager</field>-->
 <!--    </record>-->
-
-    <record id="knowledge.menu_document_configuration" model="ir.ui.menu">
-        <field name="groups_id" eval="[(6,0,[ref('base.group_no_one')])]"/>
-    </record>
+</data>
+<data noupdate="1">
 
     <record id="ir_rule_readpublicdirectories0" model="ir.rule">
         <field name="model_id" ref="document.model_document_directory"/>

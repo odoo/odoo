@@ -21,9 +21,9 @@
 
 from datetime import datetime, timedelta
 
-from osv import fields, osv
-from tools.translate import _
-from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 
 class sale_order_dates(osv.osv):
     """Add several date fields to Sale Orders, computed or user-entered"""

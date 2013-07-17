@@ -3,8 +3,8 @@
 <openerp>
 <data>
        <!--
-	journaux standards
-	-->
+    journaux standards
+    -->
 <!--
         <record id="journal_vente" model="account.journal">
             <field name="name">Journal des Ventes</field>
@@ -13,17 +13,17 @@
             <field name="view_id" ref="account.account_journal_view"/>
             <field name="sequence_id" ref="account.sequence_journal"/>
 -->
-			<!--
-			comptes par défaul
+            <!--
+            comptes par défaul
 
-	    	<field name="default_debit_account_id" ref="pcg_34211" />
-	    	<field name="default_credit_account_id" ref="pcg_7111" />
-			-->
+            <field name="default_debit_account_id" ref="pcg_34211" />
+            <field name="default_credit_account_id" ref="pcg_7111" />
+            -->
 <!--        </record>
 
 
 
-	<record id="journal_achat" model="account.journal">
+    <record id="journal_achat" model="account.journal">
             <field name="name">Journal des Achats</field>
             <field name="code">JAC</field>
             <field name="type">purchase</field>
@@ -32,7 +32,7 @@
 
         </record>
 
-	<record id="journal_banque" model="account.journal">
+    <record id="journal_banque" model="account.journal">
             <field name="name">Journal de Banque</field>
             <field name="code">JBQ</field>
             <field name="type">cash</field>
@@ -40,13 +40,13 @@
             <field name="sequence_id" ref="account.sequence_journal"/>
             </record>
 
-	<record id="journal_caisse" model="account.journal">
+    <record id="journal_caisse" model="account.journal">
             <field name="name">Journal de Caisse</field>
             <field name="code">JCS</field>
             <field name="type">cash</field>
             <field name="view_id" ref="account.account_journal_view"/>
             <field name="sequence_id" ref="account.sequence_journal"/>
-	    </record>
+        </record>
 
         <record id="journal_divers" model="account.journal">
             <field name="name">Journal des Opérations Diverses</field>
@@ -56,6 +56,6 @@
             <field name="sequence_id" ref="account.sequence_journal"/>
             </record>
 -->
-	</data>
+    </data>
 </openerp>
 

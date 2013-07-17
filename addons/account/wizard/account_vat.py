@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class account_vat_declaration(osv.osv_memory):
     _name = 'account.vat.declaration'
@@ -30,10 +30,12 @@ class account_vat_declaration(osv.osv_memory):
                                       ('payments', 'Payments'),],
                                       'Based on', required=True),
         'chart_tax_id': fields.many2one('account.tax.code', 'Chart of Tax', help='Select Charts of Taxes', required=True, domain = [('parent_id','=', False)]),
+        'display_detail': fields.boolean('Display Detail'),
     }
 
     def _get_tax(self, cr, uid, context=None):
-        taxes = self.pool.get('account.tax.code').search(cr, uid, [('parent_id', '=', False)], limit=1)
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        taxes = self.pool.get('account.tax.code').search(cr, uid, [('parent_id', '=', False), ('company_id', '=', user.company_id.id)], limit=1)
         return taxes and taxes[0] or False
 
     _defaults = {

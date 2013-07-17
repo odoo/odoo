@@ -7,7 +7,7 @@
   I check the issue is in cancel state.
 -
   !assert {model: project.issue, id: crm_case_buginaccountsmodule0, severity: error, string: Issue is in cancel state}:
-    - state == 'cancel' 
+    - state == 'cancelled' 
 -
   I re-open the Issue.
 -
@@ -37,7 +37,7 @@
   I check the issue is in cancel state.
 -
   !assert {model: project.issue, id: crm_case_buginaccountsmodule0, severity: error, string: Issue is in cancel state}:
-    - state == 'cancel'
+    - state == 'cancelled'
 -
   I close Issue.
 -
@@ -57,4 +57,4 @@
   I check the issue is in cancel state.
 -
   !assert {model: project.issue, id: crm_case_buginaccountsmodule0, severity: error, string: Issue is in cancel state}:
-    - state == 'cancel'
+    - state == 'cancelled'

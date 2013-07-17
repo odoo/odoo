@@ -1,21 +1,21 @@
 # Estonian translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
-"PO-Revision-Date: 2010-08-28 08:21+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:17+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:32+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: resource
 #: help:resource.calendar.leaves,resource_id:0
@@ -46,13 +46,9 @@ msgid "Resources Leaves"
 msgstr ""
 
 #. module: resource
-#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
-#: view:resource.calendar:0
-#: field:resource.calendar,attendance_ids:0
-#: view:resource.calendar.attendance:0
-#: field:resource.resource,calendar_id:0
-msgid "Working Time"
-msgstr "Tööaeg"
+#: field:resource.calendar.attendance,dayofweek:0
+msgid "Day of Week"
+msgstr "Nädalapäev"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -71,6 +67,11 @@ msgid "Sunday"
 msgstr "Pühapäev"
 
 #. module: resource
+#: field:resource.resource,time_efficiency:0
+msgid "Efficiency Factor"
+msgstr ""
+
+#. module: resource
 #: view:resource.resource:0
 msgid "Search Resource"
 msgstr ""
@@ -87,19 +88,20 @@ msgid "Resources"
 msgstr "Ressursid"
 
 #. module: resource
-#: code:addons/resource/resource.py:392
+#: code:addons/resource/resource.py:389
 #, python-format
 msgid "Make sure the Working time has been configured with proper week days!"
 msgstr ""
 
 #. module: resource
-#: field:resource.calendar,manager:0
-msgid "Workgroup manager"
-msgstr "Töörühma juhataja"
+#: code:addons/resource/resource.py:307
+#, python-format
+msgid "%s (copy)"
+msgstr ""
 
 #. module: resource
-#: help:resource.calendar.attendance,hour_from:0
-msgid "Working time will start from"
+#: view:resource.calendar:0
+msgid "Search Working Time"
 msgstr ""
 
 #. module: resource
@@ -127,23 +129,8 @@ msgid "Friday"
 msgstr "Reede"
 
 #. module: resource
-#: field:resource.calendar.attendance,dayofweek:0
-msgid "Day of week"
-msgstr "Nädalapäev"
-
-#. module: resource
-#: help:resource.calendar.attendance,hour_to:0
-msgid "Working time will end at"
-msgstr ""
-
-#. module: resource
-#: field:resource.calendar.attendance,date_from:0
-msgid "Starting date"
-msgstr "Alustamise kuupäev"
-
-#. module: resource
-#: view:resource.calendar:0
-msgid "Search Working Time"
+#: view:resource.calendar.attendance:0
+msgid "Hours"
 msgstr ""
 
 #. module: resource
@@ -168,9 +155,14 @@ msgid "Search Working Period Leaves"
 msgstr ""
 
 #. module: resource
-#: field:resource.resource,time_efficiency:0
-msgid "Efficiency factor"
+#: field:resource.calendar.attendance,date_from:0
+msgid "Starting Date"
 msgstr ""
+
+#. module: resource
+#: field:resource.calendar,manager:0
+msgid "Workgroup Manager"
+msgstr "Töörühma juhataja"
 
 #. module: resource
 #: field:resource.calendar.leaves,date_to:0
@@ -191,7 +183,6 @@ msgid "Resource"
 msgstr "Ressurss"
 
 #. module: resource
-#: view:resource.calendar:0
 #: field:resource.calendar,name:0
 #: field:resource.calendar.attendance,name:0
 #: field:resource.calendar.leaves,name:0
@@ -200,15 +191,30 @@ msgid "Name"
 msgstr "Nimi"
 
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Wednesday"
-msgstr "Kolmapäev"
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
+#: view:resource.calendar:0
+#: field:resource.calendar,attendance_ids:0
+#: view:resource.calendar.attendance:0
+#: field:resource.calendar.leaves,calendar_id:0
+#: field:resource.resource,calendar_id:0
+msgid "Working Time"
+msgstr "Tööaeg"
+
+#. module: resource
+#: help:resource.calendar.attendance,hour_from:0
+msgid "Start and End time of working."
+msgstr ""
 
 #. module: resource
 #: view:resource.calendar.leaves:0
 #: view:resource.resource:0
 msgid "Working Period"
 msgstr "Tööaeg"
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Wednesday"
+msgstr "Kolmapäev"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_resource
@@ -275,12 +281,8 @@ msgid "Work to"
 msgstr "Töötab kuni"
 
 #. module: resource
-#: help:resource.resource,time_efficiency:0
-msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficency of "
-"200%, then his load will only be 50%."
+#: model:ir.model,name:resource.model_resource_calendar_attendance
+msgid "Work Detail"
 msgstr ""
 
 #. module: resource
@@ -289,9 +291,13 @@ msgid "Tuesday"
 msgstr "Teisipäev"
 
 #. module: resource
-#: field:resource.calendar.leaves,calendar_id:0
-msgid "Working time"
-msgstr "Tööaeg"
+#: help:resource.resource,time_efficiency:0
+msgid ""
+"This field depict the efficiency of the resource to complete tasks. e.g  "
+"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
+"show a load of 100% for this phase by default, but if we put a efficiency of "
+"200%, then his load will only be 50%."
+msgstr ""
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
@@ -319,7 +325,7 @@ msgid "(vacation)"
 msgstr ""
 
 #. module: resource
-#: code:addons/resource/resource.py:392
+#: code:addons/resource/resource.py:389
 #, python-format
 msgid "Configuration Error!"
 msgstr ""
@@ -330,20 +336,14 @@ msgid "Human"
 msgstr "Inimene"
 
 #. module: resource
-#: model:ir.model,name:resource.model_resource_calendar_attendance
-msgid "Work Detail"
+#: view:resource.calendar.leaves:0
+msgid "Duration"
 msgstr ""
 
 #. module: resource
 #: field:resource.calendar.leaves,date_from:0
 msgid "Start Date"
 msgstr "Alguskuupäev"
-
-#. module: resource
-#: code:addons/resource/resource.py:310
-#, python-format
-msgid " (copy)"
-msgstr ""
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0

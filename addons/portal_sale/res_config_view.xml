@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        
+        <!--  Add payment options to sale.order and invoice forms -->
+        <record model="ir.ui.view" id="portal_sale_payment_option_config">
+                <field name="model">account.config.settings</field>
+                <field name="inherit_id" ref="account.view_account_config_settings"/>
+                <field name="arch" type="xml">
+                    <xpath expr="//group[@name='bank_cash']/div" version="7.0" position="inside">
+                        <div>
+                            <field name="group_payment_options" class="oe_inline"/>
+                            <label for="group_payment_options"/>
+                            <button name='%(portal.action_acquirer_list)d' type="action"
+                                    string="Configure payment acquiring methods" class="oe_link"/>
+                        </div>
+                    </xpath>
+                </field>
+        </record>
+ 
+    </data>
+</openerp>

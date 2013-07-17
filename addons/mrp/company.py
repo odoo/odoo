@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv,fields
+from openerp.osv import osv,fields
 
 class company(osv.osv):
     _inherit = 'res.company'

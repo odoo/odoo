@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+  <record model="ir.actions.act_window" id="action_fleet_vehicle_log_fuel_graph">
+      <field name="name">Fuel Costs by Month</field>
+      <field name="res_model">fleet.vehicle.cost</field>
+      <field name="view_id" ref="fleet_vehicle_costs_graph"></field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree</field>
+      <field name="domain">['&amp;',('parent_id','=',False),('cost_type','=','fuel')]</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_fleet_vehicle_log_services_graph">
+      <field name="name">Services Costs by Month</field>
+      <field name="res_model">fleet.vehicle.cost</field>
+      <field name="view_id" ref="fleet_vehicle_costs_graph" />
+      <field name="view_type">form</field>
+      <field name="view_mode">tree</field>
+      <field name="domain">['&amp;',('parent_id','=',False),('cost_type','=','services')]</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_fleet_vehicle_log_contract_graph">
+      <field name="name">Contracts Costs by Month</field>
+      <field name="res_model">fleet.vehicle.cost</field>
+      <field name="view_id" ref="fleet_vehicle_costs_graph"></field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree</field>
+      <field name="domain">['&amp;',('parent_id','=',False),('cost_type','=','contract')]</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_fleet_vehicle_costs_graph">
+      <field name="name">Costs by Month</field>
+      <field name="res_model">fleet.vehicle.cost</field>
+      <field name="view_id" ref="fleet_vehicle_costs_graph"></field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree</field>
+      <field name="domain">[('parent_id','=',False)]</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_fleet_vehicle_kanban">
+      <field name="name">Vehicles with alerts</field>
+      <field name="res_model">fleet.vehicle</field>
+      <field name="view_id" ref="fleet_vehicle_kanban"></field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree</field>
+      <field name="domain">['|',('contract_renewal_due_soon','=',True),('contract_renewal_overdue','=',True)]</field>
+      <field name="help" type="html">
+        <p>
+          Here are displayed vehicles for which one or more contracts need to be renewed. If you see this message, then there is no contracts to renew.
+        </p>
+      </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_fleet_reporting_costs">
+      <field name="name">Costs Analysis</field>
+      <field name="res_model">fleet.vehicle.cost</field>
+      <field name="view_id" ref="fleet_vehicle_costs_tree"></field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree</field>
+      <field name="context">{"search_default_parent_false" : True,"search_default_groupby_year" : True,"search_default_groupby_cost_type" : True,"search_default_groupby_cost_subtype" : True, "search_default_groupby_vehicle_id" : True,}</field>
+      <field name="help" type="html">
+        <p>
+          OpenERP helps you managing the costs for your different vehicles
+          Costs are generally created from services and contract and appears here.
+        </p>
+        <p>
+          Thanks to the different filters, OpenERP can only print the effective
+          costs, sort them by type and by vehicle.
+        </p>
+      </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_fleet_reporting_costs_non_effective">
+      <field name="name">Indicative Costs Analysis</field>
+      <field name="res_model">fleet.vehicle.cost</field>
+      <field name="view_id" ref="fleet_vehicle_costs_tree"></field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree</field>
+      <field name="context">{"search_default_parent_true" : True,"search_default_groupby_cost_subtype" : True,"search_default_groupby_cost_type" : True,"search_default_groupby_parent_id" : True,}</field>
+      <field name="help" type="html">
+        <p>
+          OpenERP helps you managing the costs for your different vehicles
+          Costs are generally created from services and contract and appears here.
+        </p>
+        <p>
+          Thanks to the different filters, OpenERP can only print the effective
+          costs, sort them by type and by vehicle.
+        </p>
+      </field>
+    </record>
+
+    <record id="board_fleet_form" model="ir.ui.view">
+        <field name="name">board.fleet.form</field>
+        <field name="model">board.board</field>
+        <field name="arch" type="xml">
+            <form string="Fleet Dashboard"  version="7.0">
+                <board style="2-1">
+                    <column>
+                      <action string="Vehicles With Alerts" name="%(fleet.action_fleet_vehicle_kanban)d" view_mode="kanban"/>
+                      <action string="Costs by Month" name="%(fleet.action_fleet_vehicle_costs_graph)d" view_mode="graph,tree"/>
+                    </column>
+                    <column>
+                      <action string="Fuel Costs" name="%(fleet.action_fleet_vehicle_log_fuel_graph)d" view_mode="graph,tree"/>
+                      <action string="Services Costs" name="%(fleet.action_fleet_vehicle_log_services_graph)d" view_mode="graph,tree"/>
+                      <action string="Contracts Costs" name="%(fleet.action_fleet_vehicle_log_contract_graph)d" view_mode="graph,tree"/>
+                    </column>
+                </board>
+            </form>
+        </field>
+    </record>
+
+    <record id="open_board_fleet" model="ir.actions.act_window">
+        <field name="name">Fleet</field>
+        <field name="res_model">board.board</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="usage">menu</field>
+        <field name="view_id" ref="board_fleet_form"/>
+            <field name="help" type="html">
+              <div class="oe_empty_custom_dashboard">
+                  <p>
+                    <b>Fleet dashboard is empty.</b>
+                  </p><p>
+                    To add your first report into this dashboard, go to any
+                    menu, switch to list or graph view, and click <i>'Add to
+                    Dashboard'</i> in the extended search options.
+                  </p><p>
+                    You can filter and group data before inserting into the
+                    dashboard using the search options.
+                  </p>
+              </div>
+            </field>
+    </record>
+    
+    <menuitem id="menu_fleet_dashboard" 
+              parent="base.menu_reporting_dashboard" 
+              action="open_board_fleet" 
+              sequence="50"
+              groups="group_fleet_user"/>
+    
+    <menuitem name="Fleet" parent="base.menu_reporting" id="menu_fleet_reporting" sequence="50" groups="group_fleet_manager"/>
+
+    <menuitem id="menu_fleet_reporting_costs" 
+              parent="menu_fleet_reporting" 
+              action="action_fleet_reporting_costs" 
+              sequence="1"
+              groups="group_fleet_manager"/>
+    <menuitem id="menu_fleet_reporting_indicative_costs" 
+              parent="menu_fleet_reporting" 
+              action="action_fleet_reporting_costs_non_effective" 
+              sequence="2"
+              groups="group_fleet_manager"/>
+</data>
+</openerp>

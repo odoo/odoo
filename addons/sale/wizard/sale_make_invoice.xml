@@ -4,16 +4,18 @@
         <record id="view_sale_order_make_invoice" model="ir.ui.view">
             <field name="name">Create invoices</field>
             <field name="model">sale.make.invoice</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Create invoices">
-                    <separator colspan="4" string="Do you really want to create the invoice(s) ?" />
-                    <field name="grouped"/>
-                    <newline/>
-                    <field name="invoice_date"/>
-                    <separator string="" colspan="6"/>
-                    <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                    <button name="make_invoices" string="Create Invoices" type="object" icon="terp-gtk-go-back-rtl"/>
+                <form string="Create invoices" version="7.0">
+                    <header>
+                        <button name="make_invoices" string="Create Invoices" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
+                    <separator colspan="4" string="Do you really want to create the invoice(s)?" />
+                    <group>
+                        <field name="grouped"/>
+                        <field name="invoice_date"/>
+                    </group>
                </form>
             </field>
         </record>
@@ -28,7 +30,7 @@
             <field name="target">new</field>
             <field name="multi">True</field>
         </record>
-        
+
         <record model="ir.values" id="sale_order_make_invoice">
             <field name="model_id" ref="sale.model_sale_order" />
             <field name="name">Make Invoices</field>

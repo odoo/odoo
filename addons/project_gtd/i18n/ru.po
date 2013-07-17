@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* project_gtd
+# Russian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:43+0000\n"
-"PO-Revision-Date: 2010-10-30 10:34+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-26 09:10+0000\n"
+"Last-Translator: Denis Karataev <dskarataev@gmail.com>\n"
+"Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:00+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-12-27 05:53+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: project_gtd
 #: view:project.task:0
@@ -76,6 +77,11 @@ msgid "Today"
 msgstr ""
 
 #. module: project_gtd
+#: view:project.task:0
+msgid "Timeframe"
+msgstr ""
+
+#. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_lt
 msgid "Long Term"
 msgstr ""
@@ -93,7 +99,6 @@ msgstr ""
 #. module: project_gtd
 #: view:project.gtd.timebox:0
 #: field:project.gtd.timebox,name:0
-#: view:project.task:0
 #: field:project.task,timebox_id:0
 msgid "Timebox"
 msgstr "Период"
@@ -104,31 +109,15 @@ msgid "Set to Timebox"
 msgstr "Установить период"
 
 #. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
-#, python-format
-msgid "Error !"
-msgstr "Ошибка !"
-
-#. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_task
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_timebox_tree
 #: view:project.task:0
 msgid "My Tasks"
-msgstr ""
+msgstr "Мои задачи"
 
 #. module: project_gtd
-#: constraint:project.task:0
-msgid "Error ! You cannot create recursive tasks."
-msgstr ""
-
-#. module: project_gtd
-#: model:project.gtd.timebox,name:project_gtd.timebox_weekly
-msgid "This Week"
-msgstr ""
-
-#. module: project_gtd
-#: view:project.timebox.fill.plan:0
-msgid "_Cancel"
+#: help:project.task,context_id:0
+msgid "The context place where user has to treat task"
 msgstr ""
 
 #. module: project_gtd
@@ -143,8 +132,8 @@ msgid "Tasks having no timebox assigned yet"
 msgstr ""
 
 #. module: project_gtd
-#: constraint:project.task:0
-msgid "Error ! Task end-date must be greater then task start-date"
+#: model:project.gtd.timebox,name:project_gtd.timebox_weekly
+msgid "This Week"
 msgstr ""
 
 #. module: project_gtd
@@ -179,6 +168,11 @@ msgid "Contexts"
 msgstr "Контексты"
 
 #. module: project_gtd
+#: model:project.gtd.context,name:project_gtd.context_car
+msgid "Car"
+msgstr ""
+
+#. module: project_gtd
 #: view:project.task:0
 msgid "Show Context"
 msgstr ""
@@ -193,6 +187,12 @@ msgstr "Планирование периода"
 #: model:ir.model,name:project_gtd.model_project_gtd_timebox
 msgid "project.gtd.timebox"
 msgstr "project.gtd.timebox"
+
+#. module: project_gtd
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "Error!"
+msgstr ""
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_timebox_tree
@@ -215,13 +215,13 @@ msgid "Context"
 msgstr "Контекст"
 
 #. module: project_gtd
-#: view:project.task:0
-msgid "Next"
-msgstr ""
+#: field:project.timebox.fill.plan,task_ids:0
+msgid "Tasks selection"
+msgstr "Выбор заданий"
 
 #. module: project_gtd
-#: view:project.timebox.empty:0
-msgid "_Ok"
+#: view:project.task:0
+msgid "Display"
 msgstr ""
 
 #. module: project_gtd
@@ -256,11 +256,6 @@ msgid "Timebox Definition"
 msgstr "Определение периода"
 
 #. module: project_gtd
-#: field:project.timebox.fill.plan,task_ids:0
-msgid "Tasks selection"
-msgstr "Выбор заданий"
-
-#. module: project_gtd
 #: view:project.task:0
 msgid "Inbox"
 msgstr ""
@@ -271,8 +266,13 @@ msgid "Get from Timebox"
 msgstr "Получить из периода"
 
 #. module: project_gtd
-#: help:project.task,context_id:0
-msgid "The context place where user has to treat task"
+#: view:project.timebox.fill.plan:0
+msgid "Cancel"
+msgstr "Отмена"
+
+#. module: project_gtd
+#: model:project.gtd.context,name:project_gtd.context_home
+msgid "Home"
 msgstr ""
 
 #. module: project_gtd
@@ -289,144 +289,6 @@ msgid "For reopening the tasks"
 msgstr ""
 
 #. module: project_gtd
-#: view:project.task:0
-msgid "Previous"
+#: view:project.timebox.fill.plan:0
+msgid "or"
 msgstr ""
-
-#~ msgid "Visible Columns"
-#~ msgstr "Отображаемые столбцы"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Название объекта должно начинаться с x_  и не должно содержать специальных "
-#~ "символов !"
-
-#~ msgid "My Deadlines"
-#~ msgstr "Мои сроки"
-
-#~ msgid "Monthly"
-#~ msgstr "На месяц"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Неправильный XML для просмотра архитектуры!"
-
-#~ msgid "Priority"
-#~ msgstr "Приоритет"
-
-#~ msgid "My Inbox"
-#~ msgstr "Мои входящие"
-
-#~ msgid "Default Project"
-#~ msgstr "Проект по умолчанию"
-
-#~ msgid "Context 4"
-#~ msgstr "Контекст 4"
-
-#~ msgid "Other"
-#~ msgstr "Прочие"
-
-#~ msgid "Effective Hours"
-#~ msgstr "Эффективных часов"
-
-#~ msgid "Type"
-#~ msgstr "Тип"
-
-#~ msgid "Inbox Tasks"
-#~ msgstr "Входящие задания"
-
-#~ msgid "My Pending Tasks"
-#~ msgstr "Мои задания в ожидании"
-
-#~ msgid "User"
-#~ msgstr "Пользователь"
-
-#~ msgid "Context 1"
-#~ msgstr "Контекст 1"
-
-#~ msgid "Context 2"
-#~ msgstr "Контекст 2"
-
-#~ msgid "Context 3"
-#~ msgstr "Контекст 3"
-
-#~ msgid "Context 5"
-#~ msgstr "Контекст 5"
-
-#~ msgid "Context 6"
-#~ msgstr "Контекст 6"
-
-#~ msgid "Daily"
-#~ msgstr "Ежедневно"
-
-#~ msgid "Project"
-#~ msgstr "Проект"
-
-#~ msgid "My Open Tasks"
-#~ msgstr "Мои открытые задания"
-
-#~ msgid "Time Management"
-#~ msgstr "Управление временем"
-
-#~ msgid "Tasks"
-#~ msgstr "Задания"
-
-#~ msgid "Deadline"
-#~ msgstr "Срок"
-
-#~ msgid "Cancel"
-#~ msgstr "Отмена"
-
-#~ msgid "Date Start"
-#~ msgstr "Дата начала"
-
-#~ msgid "Planned Hours"
-#~ msgstr "Запланированные часы"
-
-#~ msgid "Weekly"
-#~ msgstr "Еженедельно"
-
-#~ msgid "Parent Timebox"
-#~ msgstr "Основной период"
-
-#, python-format
-#~ msgid "No timebox of the type \"%s\" defined !"
-#~ msgstr "Период для типа '%s' не определен!"
-
-#~ msgid "Getting Things Done - Time Management Module"
-#~ msgstr "Модуль управления временем"
-
-#~ msgid "Timebox Tasks"
-#~ msgstr "Период заданий"
-
-#~ msgid "Timebox tasks selection"
-#~ msgstr "Выбор задач периода"
-
-#~ msgid "My Daily Timebox"
-#~ msgstr "Мой дневной период"
-
-#~ msgid "My Timeboxes"
-#~ msgstr "Мои периоды"
-
-#~ msgid "Child Timeboxes"
-#~ msgstr "Подчиненный период"
-
-#~ msgid "All My Timeboxes"
-#~ msgstr "Все мои периоды"
-
-#, python-format
-#~ msgid "Eff. Hours"
-#~ msgstr "Эфф.часы"
-
-#~ msgid "project.gtd.context"
-#~ msgstr "Контекст"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Недопустимое имя модели в определении действия"
-
-#~ msgid "Planned"
-#~ msgstr "Запланировано"
-
-#, python-format
-#~ msgid "Getting Things Done"
-#~ msgstr "Getting Things Done"

@@ -19,14 +19,14 @@
 #
 ##############################################################################
 
-import pooler
-from report.interface import report_rml
-from report.interface import toxml
+from openerp import pooler
+from openerp.report.interface import report_rml
+from openerp.report.interface import toxml
 
 #FIXME: we should use toxml
 
 class report_custom(report_rml):
-    def create_xml(self, cr, uid, ids, datas, context={}):
+    def create_xml(self, cr, uid, ids, datas, context=None):
         config = """
         <config>
             <date>09/09/2005</date>

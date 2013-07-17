@@ -34,7 +34,7 @@ with flatten, everything is turned into text.
 """
 
 import os
-import tools
+from openerp import tools
 
 HEAD="""%FDF-1.2
 %\xE2\xE3\xCF\xD3
@@ -57,7 +57,7 @@ trailer
 %%EOF
 """
 
-def output_field( f ):
+def output_field(f):
     return "\xfe\xff" + "".join( [ "\x00"+c for c in f ] )
 
 def extract_keys(lines):

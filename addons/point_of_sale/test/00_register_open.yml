@@ -9,9 +9,3 @@
 - 
   !python {model: pos.open.statement}: |
     self.open_statement(cr, uid, [ref('new_statement_open')], context={})
-- 
-  I check that I have some bank statements open for the admin user
-- 
-  !python {model: account.bank.statement}: |
-    ids = self.search(cr, uid, [('state', 'in', ('open','new')), ('user_id', '=', 1)])
-    assert (len(ids)>0), 'No statement open for the admin user!'

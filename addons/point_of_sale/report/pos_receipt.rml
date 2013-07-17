@@ -72,8 +72,7 @@
   <story>
     <para style="terp_default_8">[[ repeatIn(objects,'o') ]]</para>
     <para style="terp_header_Centre">[[o.user_id.company_id.name]]</para>
-    <para style="terp_default_Centre_9">[[ address and address.street ]], [[ address and address.zip ]] [[ address and address.city ]]</para>
-    <para style="terp_default_Centre_9">[[ address and address.country_id.name ]]</para>
+    <para style="terp_default_Centre_9">[[ address and display_address(address)]]</para>
     <para style="terp_default_Centre_9">Tel : [[ address and address.phone ]]</para>
     <para style="terp_default_Centre_9">User : [[ o.user_id.name ]]</para>
     <para style="terp_default_Centre_9">Shop : [[ o.shop_id.name ]]</para>
@@ -104,12 +103,18 @@
         <td>
           <para style="P1">[[ repeatIn(o.lines,'line') ]]</para>
           <para style="terp_default_9b">[[ line.product_id.name ]]</para>
+          <para style="terp_default_Right_9">
+            <font face="Helvetica">With a [[ line and line.discount == 0.0 and removeParentNode('font') ]] ([[ '%.2f' % line.discount ]]) % discount.</font>
+          </para>
+          <para style="terp_default_9b">
+            <font color="white"> </font>
+          </para>
         </td>
         <td>
           <para style="terp_default_Right_9">[[o.state=='cancel' and o.statement_ids and '-' or '']][['%.f' % line.qty ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[o.state=='cancel' and o.statement_ids and '-' or '']][[ '%.2f' % net(line.id) ]] [[company.currency_id.symbol]] <font face="Helvetica">[[ line and line.discount == 0.0 and removeParentNode('font') ]] ([[ '%.2f' % line.discount ]]%) [[company.currency_id.symbol]]</font></para>
+          <para style="terp_default_Right_9">[[o.state=='cancel' and o.statement_ids and '-' or '']][[ formatLang(net(line.id), currency_obj=company.currency_id) ]] <font face="Helvetica">[[ line and line.discount == 0.0 and removeParentNode('font') ]] ([[ formatLang(line.discount, currency_obj=company.currency_id) ]])</font></para>
         </td>
       </tr>
     </blockTable>
@@ -119,7 +124,7 @@
           <para style="P6a">Taxes :</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[o.state=='cancel' and o.statement_ids and '-' or '']][['%.2f' % o.amount_tax]] [[company.currency_id.symbol]]</para>
+          <para style="terp_default_Right_9">[[o.state=='cancel' and o.statement_ids and '-' or '']][[formatLang(o.amount_tax, currency_obj=company.currency_id)]]</para>
         </td>
       </tr>
     </blockTable>
@@ -129,7 +134,7 @@
           <para style="P6">Total :</para>
         </td>
         <td>
-          <para style="terp_default_Bold_9_Right2">[[o.state=='cancel' and o.statement_ids and '-' or '']][['%.2f' % o.amount_total]] [[company.currency_id.symbol]]</para>
+          <para style="terp_default_Bold_9_Right2">[[o.state=='cancel' and o.statement_ids and '-' or '']][[formatLang(o.amount_total, currency_obj=company.currency_id)]]</para>
         </td>
       </tr>
     </blockTable>
@@ -158,7 +163,7 @@
           </para>
         </td>
         <td>
-          <para style="P8">[[ '%.2f' %(d['amt'] or 0) ]] [[company.currency_id.symbol]]</para>
+          <para style="P8">[[ formatLang(d['amt'] or 0, currency_obj=company.currency_id) ]]</para>
         </td>
       </tr>
     </blockTable>

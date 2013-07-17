@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?> <openerp>
+    <data noupdate="0">
+    <!-- account.tax.template -->
+        <record id="tr_kdv_satis_18" model="account.tax.template">
+            <field name="sequence">11</field>
+            <field name="description">KDV %18</field>
+            <field name="name">KDV %18</field>
+            <field name="account_collected_id" ref="tr391"/>
+            <field name="account_paid_id" ref="tr191"/>
+            <field name="price_include" eval="0"/>
+            <field name="amount">0.18</field>
+            <field name="type">percent</field>
+            <field name="type_tax_use">all</field>
+            <field name="base_code_id" ref="tr_vergi_kdv"/>
+            <field name="base_sign">1</field>
+            <field name="tax_code_id" ref="tr_vergi_kdv_tahsil"/>
+            <field name="tax_sign">1</field>
+            <field name="ref_base_code_id" ref="tr_vergi_kdv"/>
+            <field name="ref_base_sign">1</field>
+            <field name="ref_tax_code_id" ref="tr_vergi_kdv_tahsil"/>
+            <field name="ref_tax_sign">-1</field>
+            <field name="child_depend" eval="0"/>
+            <field name="chart_template_id" ref="l10ntr_tek_duzen_hesap"/>
+        </record>
+    </data> 
+</openerp>

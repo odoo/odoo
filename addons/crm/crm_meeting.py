@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-today OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,83 +19,21 @@
 #
 ##############################################################################
 
-from base_calendar import base_calendar
-from crm import crm_base, crm_case
-from osv import fields, osv
-from tools.translate import _
+from openerp.osv import fields, osv
 import logging
+_logger = logging.getLogger(__name__)
 
-class crm_lead(crm_case, osv.osv):
-    """ CRM Leads """
-    _name = 'crm.lead'
-crm_lead()
-
-class crm_phonecall(crm_case, osv.osv):
-    """ CRM Phonecall """
-    _name = 'crm.phonecall'
-crm_phonecall()
-
-
-class crm_meeting(crm_base, osv.osv):
-    """ CRM Meeting Cases """
-
-    _name = 'crm.meeting'
-    _description = "Meeting"
-    _order = "id desc"
-    _inherit = "calendar.event"
+#
+# crm.meeting is defined in module base_calendar
+#
+class crm_meeting(osv.Model):
+    """ Model for CRM meetings """
+    _inherit = 'crm.meeting'
     _columns = {
-        # From crm.case
-        'name': fields.char('Summary', size=124, required=True, states={'done': [('readonly', True)]}),
-        'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}),
-        'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
-                                 domain="[('partner_id','=',partner_id)]", states={'done': [('readonly', True)]}),
-        'section_id': fields.many2one('crm.case.section', 'Sales Team', states={'done': [('readonly', True)]}, \
-                        select=True, help='Sales team to which Case belongs to.'),
-        'email_from': fields.char('Email', size=128, states={'done': [('readonly', True)]}, help="These people will receive email."),
-        'id': fields.integer('ID', readonly=True),
-        'create_date': fields.datetime('Creation Date' , readonly=True),
-        'write_date': fields.datetime('Write Date' , readonly=True),
-        'date_action_last': fields.datetime('Last Action', readonly=1),
-        'date_action_next': fields.datetime('Next Action', readonly=1),
-        # Meeting fields
-        'categ_id': fields.many2one('crm.case.categ', 'Meeting Type', \
-                        domain="[('object_id.model', '=', 'crm.meeting')]", \
-            ),
         'phonecall_id': fields.many2one ('crm.phonecall', 'Phonecall'),
         'opportunity_id': fields.many2one ('crm.lead', 'Opportunity', domain="[('type', '=', 'opportunity')]"),
-        'attendee_ids': fields.many2many('calendar.attendee', 'meeting_attendee_rel',\
-                                 'event_id', 'attendee_id', 'Attendees', states={'done': [('readonly', True)]}),
-        'date_closed': fields.datetime('Closed', readonly=True),
-        'date_deadline': fields.datetime('Deadline', states={'done': [('readonly', True)]}),
-        'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
-        'state': fields.selection([('open', 'Confirmed'),
-                                    ('draft', 'Unconfirmed'),
-                                    ('cancel', 'Cancelled'),
-                                    ('done', 'Done')], 'State', \
-                                    size=16, readonly=True),
-    }
-    _defaults = {
-        'state': 'draft',
-        'active': 1,
-        'user_id': lambda self, cr, uid, ctx: uid,
     }
 
-    def case_open(self, cr, uid, ids, *args):
-        """Confirms meeting
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Meeting Ids
-        @param *args: Tuple Value for additional Params
-        """
-        res = super(crm_meeting, self).case_open(cr, uid, ids, args)
-        for (id, name) in self.name_get(cr, uid, ids):
-            message = _("The meeting '%s' has been confirmed.") % name
-            id=base_calendar.base_calendar_id2real_id(id)
-            self.log(cr, uid, id, message)
-        return res
-
-crm_meeting()
 
 class calendar_attendee(osv.osv):
     """ Calendar Attendee """
@@ -130,8 +68,6 @@ class calendar_attendee(osv.osv):
                         relation="crm.case.categ", multi='categ_id'),
     }
 
-calendar_attendee()
-
 class res_users(osv.osv):
     _name = 'res.users'
     _inherit = 'res.users'
@@ -149,10 +85,7 @@ class res_users(osv.osv):
                                             'user_id': user_id}, context=context)
             except:
                 # Tolerate a missing shortcut. See product/product.py for similar code.
-                logging.getLogger('orm').debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
+                _logger.debug('Skipped meetings shortcut for user "%s".', data.get('name','<new'))
         return user_id
-
-res_users()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

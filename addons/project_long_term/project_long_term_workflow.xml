@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-		<record id="wkf_phase" model="workflow">
+        <record id="wkf_phase" model="workflow">
             <field name="name">project.phase.wkf</field>
             <field name="osv">project.phase</field>
             <field name="on_create">True</field>
@@ -31,7 +31,7 @@
             <field name="action">set_cancel()</field>
         </record>
 
-		<record id="act_phase_pending" model="workflow.activity">
+        <record id="act_phase_pending" model="workflow.activity">
             <field name="wkf_id" ref="wkf_phase"/>
             <field name="name">set_pending</field>
             <field name="kind">function</field>
@@ -64,7 +64,7 @@
             <field name="signal">set_done</field>
         </record>
 
-		<record id="t3" model="workflow.transition">
+        <record id="t3" model="workflow.transition">
             <field name="act_from" ref="act_start_phase"/>
             <field name="act_to" ref="act_phase_pending"/>
             <field name="signal">set_pending</field>
@@ -106,5 +106,5 @@
             <field name="signal">set_draft</field>
         </record>
 
- 	</data>
+     </data>
 </openerp>

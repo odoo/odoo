@@ -1,50 +1,48 @@
 <?xml version="1.0" ?>
 <openerp>
-	<data noupdate="1">
-		<record id="demo_invoice_0" model="account.invoice">
-			<field name="date_due" eval="time.strftime('%Y')+'-01-30'"/>
-			<field name="payment_term" ref="account.account_payment_term"/>
-			<field name="journal_id" ref="account.expenses_journal"/>
-			<field name="currency_id" ref="base.EUR"/>
-			<field name="address_invoice_id" ref="base.res_partner_address_wong"/>
-			<field name="user_id" ref="base.user_demo"/>
-			<field name="address_contact_id" ref="base.res_partner_address_wong"/>
-			<field name="reference_type">none</field>
-			<field name="company_id" ref="base.main_company"/>
-			<field name="state">draft</field>
-			<field name="type">in_invoice</field>
-			<field name="account_id" ref="account.a_pay"/>
-			<field eval="0" name="reconciled"/>
-			<field name="date_invoice" eval="time.strftime('%Y')+'-01-01'"/>
-			<field eval="14.0" name="amount_untaxed"/>
-			<field eval="14.0" name="amount_total"/>
-			<field name="partner_id" ref="base.res_partner_maxtor"/>
-		</record>
-		<record id="demo_invoice_0_line_rpanrearpanelshe0" model="account.invoice.line">
-			<field name="invoice_id" ref="demo_invoice_0"/>
-			<field name="account_id" ref="account.a_expense"/>
-			<field name="uos_id" ref="product.product_uom_unit"/>
-			<field name="price_unit" eval="10.0" />
-			<field name="price_subtotal" eval="10.0" />
-			<field name="company_id" ref="base.main_company"/>
-			<field name="invoice_line_tax_id" eval="[(6,0,[])]"/>
-			<field name="product_id" ref="product.product_product_rearpanelarm0"/>
-			<field name="quantity" eval="1.0" />
-			<field name="partner_id" ref="base.res_partner_maxtor"/>
-			<field name="name">[RPAN100] Rear Panel SHE100</field>
-		</record>
-		<record id="demo_invoice_0_line_rckrackcm0" model="account.invoice.line">
-			<field name="invoice_id" ref="demo_invoice_0"/>
-			<field name="account_id" ref="account.a_expense"/>
-			<field name="uos_id" ref="product.product_uom_unit"/>
-			<field name="price_unit" eval="4.0"/>
-			<field name="price_subtotal" eval="4.0"/>
-			<field name="company_id" ref="base.main_company"/>
-			<field name="invoice_line_tax_id" eval="[(6,0,[])]"/>
-			<field name="product_id" ref="product.product_product_shelf1"/>
-			<field name="quantity" eval="1.0" />
-			<field name="partner_id" ref="base.res_partner_maxtor"/>
-			<field name="name">[RCK200] Rack 200cm</field>
-		</record>
-	</data>
+    <data noupdate="1">
+        <record id="demo_invoice_0" model="account.invoice">
+            <field name="date_due" eval="time.strftime('%Y')+'-01-30'"/>
+            <field name="payment_term" ref="account.account_payment_term"/>
+            <field name="journal_id" ref="account.expenses_journal"/>
+            <field name="currency_id" ref="base.EUR"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="reference_type">none</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="state">draft</field>
+            <field name="type">in_invoice</field>
+            <field name="account_id" ref="account.a_pay"/>
+            <field eval="0" name="reconciled"/>
+            <field name="date_invoice" eval="time.strftime('%Y')+'-01-01'"/>
+            <field eval="14.0" name="amount_untaxed"/>
+            <field eval="14.0" name="amount_total"/>
+            <field name="partner_id" ref="base.res_partner_17"/>
+        </record>
+        <record id="demo_invoice_0_line_rpanrearpanelshe0" model="account.invoice.line">
+            <field name="invoice_id" ref="demo_invoice_0"/>
+            <field name="account_id" ref="account.a_expense"/>
+            <field name="uos_id" ref="product.product_uom_unit"/>
+            <field name="price_unit" eval="10.0" />
+            <field name="price_subtotal" eval="10.0" />
+            <field name="company_id" ref="base.main_company"/>
+            <field name="invoice_line_tax_id" eval="[(6,0,[])]"/>
+            <field name="product_id" ref="product.product_product_39"/>
+            <field name="quantity" eval="1.0" />
+            <field name="partner_id" ref="base.res_partner_16"/>
+            <field name="name">Toner Cartridge</field>
+        </record>
+        <record id="demo_invoice_0_line_rckrackcm0" model="account.invoice.line">
+            <field name="invoice_id" ref="demo_invoice_0"/>
+            <field name="account_id" ref="account.a_expense"/>
+            <field name="uos_id" ref="product.product_uom_unit"/>
+            <field name="price_unit" eval="4.0"/>
+            <field name="price_subtotal" eval="4.0"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="invoice_line_tax_id" eval="[(6,0,[])]"/>
+            <field name="product_id" ref="product.product_product_43"/>
+            <field name="quantity" eval="1.0" />
+            <field name="partner_id" ref="base.res_partner_17"/>
+            <field name="name">Zed+ Antivirus</field>
+        </record>
+    </data>
 </openerp>

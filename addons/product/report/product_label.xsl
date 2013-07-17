@@ -61,22 +61,25 @@
 	</xsl:template>
 
 	<xsl:template match="lot-line" mode="story">
-			<blockTable style="mytable" colWidths="2.8cm,5.4cm">
-			<tr>
-				<td>
-					<para style="nospace"><xsl:value-of select="code"/></para>
-				</td><td>
-					<para style="nospace" t="1"><xsl:value-of select="price"/> <xsl:value-of select="currency"/></para>
-				</td>
-			</tr><tr>
-				<td>
-				<barCode><xsl:value-of select="code"/></barCode>
-				</td><td>
-					<para style="nospace"><xsl:value-of select="product"/></para><xsl:text>, </xsl:text>
-					<para style="nospace"><xsl:value-of select="variant"/></para>
-				</td>
-			</tr>
-			</blockTable>
+            <blockTable style="mytable" colWidths="2.8cm,5.4cm">
+                <tr>
+                    <td>
+                        <para style="nospace"><xsl:value-of select="code"/></para>
+                    </td>
+                    <td>
+                        <para style="nospace" t="1"><xsl:value-of select="price"/> <xsl:value-of select="currency"/></para>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <barCode><xsl:value-of select="ean13" /></barCode> 
+                    </td>
+                    <td>
+                        <para style="nospace"><xsl:value-of select="product"/></para><xsl:text>, </xsl:text>
+                        <para style="nospace"><xsl:value-of select="variant"/></para>
+                    </td>
+                </tr>
+            </blockTable>
 	<nextFrame/>
 	</xsl:template>
 </xsl:stylesheet>

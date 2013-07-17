@@ -19,14 +19,15 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class procurement_order(osv.osv):
     _name = "procurement.order"
     _inherit = "procurement.order"
     _columns = {
         'task_id': fields.many2one('project.task', 'Task'),
-        'sale_line_id': fields.many2one('sale.order.line', 'Sale order line')
+        'sale_line_id': fields.many2one('sale.order.line', 'Sales order line')
     }
 
     def action_check_finished(self, cr, uid, ids):
@@ -37,17 +38,19 @@ class procurement_order(osv.osv):
         """ Checks if task is done or not.
         @return: True or False.
         """
-        return all(proc.product_id.type != 'service' or (proc.task_id and proc.task_id.state in ('done', 'cancelled')) \
-                    for proc in self.browse(cr, uid, ids, context=context))
+        for p in self.browse(cr, uid, ids, context=context):
+            if (p.product_id.type=='service') and (p.procure_method=='make_to_order') and p.task_id and (p.task_id.state not in ('done', 'cancelled')):
+                return False
+        return True
 
-    def check_produce_service(self, cr, uid, procurement, context=None):    
+    def check_produce_service(self, cr, uid, procurement, context=None):
         return True
 
     def _convert_qty_company_hours(self, cr, uid, procurement, context=None):
         product_uom = self.pool.get('product.uom')
-        company_time_uom_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
-        if procurement.product_uom.id != company_time_uom_id:
-            planned_hours = product_uom._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, company_time_uom_id)
+        company_time_uom_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id
+        if procurement.product_uom.id != company_time_uom_id.id and procurement.product_uom.category_id.id == company_time_uom_id.category_id.id:
+            planned_hours = product_uom._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, company_time_uom_id.id)
         else:
             planned_hours = procurement.product_qty
         return planned_hours
@@ -56,7 +59,7 @@ class procurement_order(osv.osv):
         project_project = self.pool.get('project.project')
         project = procurement.product_id.project_id
         if not project and procurement.sale_line_id:
-            # find the project corresponding to the analytic account of the sale order
+            # find the project corresponding to the analytic account of the sales order
             account = procurement.sale_line_id.order_id.project_id
             project_ids = project_project.search(cr, uid, [('analytic_account_id', '=', account.id)])
             projects = project_project.browse(cr, uid, project_ids, context=context)
@@ -71,17 +74,23 @@ class procurement_order(osv.osv):
             task_id = project_task.create(cr, uid, {
                 'name': '%s:%s' % (procurement.origin or '', procurement.product_id.name),
                 'date_deadline': procurement.date_planned,
-                'planned_hours':planned_hours,
+                'planned_hours': planned_hours,
                 'remaining_hours': planned_hours,
+                'partner_id': procurement.sale_line_id and procurement.sale_line_id.order_id.partner_id.id or False,
                 'user_id': procurement.product_id.product_manager.id,
-                'notes': procurement.note,
                 'procurement_id': procurement.id,
-                'description': procurement.note,
+                'description': procurement.name + '\n' + (procurement.note or ''),
                 'project_id':  project and project.id or False,
                 'company_id': procurement.company_id.id,
             },context=context)
-            self.write(cr, uid, [procurement.id], {'task_id': task_id, 'state': 'running'}, context=context)
+            self.write(cr, uid, [procurement.id], {'task_id': task_id, 'state': 'running', 'message':_('Task created.')}, context=context)            
+        self.project_task_create_note(cr, uid, ids, context=context)
         return task_id
+
+    def project_task_create_note(self, cr, uid, ids, context=None):
+        for procurement in self.browse(cr, uid, ids, context=context):
+            body = _("Task created")
+            self.message_post(cr, uid, [procurement.id], body=body, context=context)
 
 procurement_order()
 

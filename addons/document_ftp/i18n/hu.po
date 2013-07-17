@@ -1,21 +1,26 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#    * document_ftp
+# Hungarian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2011-02-03 12:46+0000\n"
-"Last-Translator: NOVOTRADE RENDSZERHÁZ ( novotrade.hu ) "
-"<openerp@novotrade.hu>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:25+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:12+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
+
+#. module: document_ftp
+#: view:document.ftp.configuration:0
+msgid "Configure FTP Server"
+msgstr "FTP szerver beállítása"
 
 #. module: document_ftp
 #: model:ir.model,name:document_ftp.model_document_ftp_configuration
@@ -33,19 +38,19 @@ msgid ""
 msgstr ""
 
 #. module: document_ftp
-#: model:ir.actions.url,name:document_ftp.action_document_browse
+#: model:ir.model,name:document_ftp.model_knowledge_config_settings
+msgid "knowledge.config.settings"
+msgstr ""
+
+#. module: document_ftp
+#: model:ir.actions.act_url,name:document_ftp.action_document_browse
 msgid "Browse Files"
 msgstr "Fájlok böngészése"
 
 #. module: document_ftp
-#: field:document.ftp.configuration,config_logo:0
-msgid "Image"
-msgstr "Kép"
-
-#. module: document_ftp
-#: field:document.ftp.configuration,host:0
-msgid "Address"
-msgstr "Cím"
+#: help:knowledge.config.settings,document_ftp_url:0
+msgid "Click the url to browse the documents"
+msgstr ""
 
 #. module: document_ftp
 #: field:document.ftp.browse,url:0
@@ -56,6 +61,11 @@ msgstr "FTP szerver"
 #: model:ir.actions.act_window,name:document_ftp.action_config_auto_directory
 msgid "FTP Server Configuration"
 msgstr "FTP szerver konfiguráció"
+
+#. module: document_ftp
+#: field:knowledge.config.settings,document_ftp_url:0
+msgid "Browse Documents"
+msgstr ""
 
 #. module: document_ftp
 #: view:document.ftp.browse:0
@@ -74,18 +84,13 @@ msgid "Shared Repository (FTP)"
 msgstr ""
 
 #. module: document_ftp
+#: field:document.ftp.configuration,host:0
+msgid "Address"
+msgstr "Cím"
+
+#. module: document_ftp
 #: view:document.ftp.browse:0
-msgid "_Cancel"
-msgstr ""
-
-#. module: document_ftp
-#: view:document.ftp.configuration:0
-msgid "Configure FTP Server"
-msgstr "FTP szerver beállítása"
-
-#. module: document_ftp
-#: view:document.ftp.configuration:0
-msgid "title"
+msgid "Cancel"
 msgstr ""
 
 #. module: document_ftp
@@ -105,6 +110,11 @@ msgstr "Dokumentum böngészése"
 
 #. module: document_ftp
 #: view:document.ftp.browse:0
+msgid "or"
+msgstr ""
+
+#. module: document_ftp
+#: view:document.ftp.browse:0
 msgid "Browse Document"
 msgstr ""
 
@@ -112,6 +122,3 @@ msgstr ""
 #: view:document.ftp.configuration:0
 msgid "res_config_contents"
 msgstr "res_config_contents"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Beállítás előrehaladása"

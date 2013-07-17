@@ -1,0 +1,107 @@
+-
+  In order to test the process of payment order, I start with the supplier invoice.
+-
+  !python {model: account.invoice}: |
+     self.write(cr, uid, [ref('account.demo_invoice_0')], {'check_total': 14})
+-
+  In order to test account move line of journal, I check that there is no move attached to the invoice.
+-
+  !python {model: account.invoice}: |
+    invoice = self.browse(cr, uid, ref("account.demo_invoice_0"))
+    assert (not invoice.move_id), "Moves are wrongly created for invoice."
+-
+  I open the invoice.
+-
+  !workflow {model: account.invoice, action: invoice_open, ref: account.demo_invoice_0}
+-
+  I check that the invoice state is now "Open".
+-
+  !assert {model: account.invoice, id: account.demo_invoice_0, severity: error, string: Invoice should be in 'Open' state}:
+    - state == 'open'
+-
+  I confirm the payment order.
+-
+  !workflow {model: payment.order, action: open, ref: payment_order_1}
+-
+  I check that payment order is now "Confirmed".
+-
+  !assert {model: payment.order, id: payment_order_1, severity: error, string: Payment Order should be 'Confirmed'.}:
+    - state == 'open'
+-
+  !record {model: payment.order.create, id: payment_order_create_0}:
+    duedate: !eval time.strftime('%Y-%m-%d')
+-
+  I search for the invoice entries to make the payment.
+-
+  !python {model: payment.order.create}: |
+    self.search_entries(cr, uid, [ref("payment_order_create_0")], {
+      "active_model": "payment.order", "active_ids": [ref("payment_order_1")],
+      "active_id": ref("payment_order_1"), })
+-
+  I create payment lines entries.
+-
+  !python {model: payment.order.create}: |
+    invoice = self.pool.get('account.invoice').browse(cr, uid, ref("account.demo_invoice_0"))
+    move_line = invoice.move_id.line_id[0]
+    self.write(cr, uid, [ref("payment_order_create_0")], {'entries': [(6,0,[move_line.id])]})
+    self.create_payment(cr, uid, [ref("payment_order_create_0")], {
+      "active_model": "payment.order", "active_ids": [ref("payment_order_1")],
+      "active_id": ref("payment_order_1")})
+-
+  I check that payment line is created with proper data.
+-
+  !python {model: payment.order}: |
+    invoice = self.pool.get('account.invoice').browse(cr, uid, ref("account.demo_invoice_0"))
+    payment = self.browse(cr, uid, ref("payment_order_1"))
+    payment_line = payment.line_ids[0]
+
+    assert payment_line.move_line_id, "move line is not created in payment line."
+    assert invoice.move_id.name == payment_line.ml_inv_ref.number, "invoice reference number is not same created."
+    assert invoice.partner_id == payment_line.partner_id, "Partner is not correct."
+    assert invoice.date_due == payment_line.ml_maturity_date, "Due date is not correct."
+    assert invoice.amount_total == payment_line.amount, "Payment amount is not correct."
+-
+  After making all payments, I finish the payment order.
+-
+  !python {model: payment.order}: |
+    self.set_done(cr, uid, [ref("payment_order_1")])
+-
+  I check that payment order is now "Done".
+-
+  !assert {model: payment.order, id: payment_order_1, severity: error, string: Payment Order should be in 'Done' state}:
+    - state == 'done'
+-
+  I check that payment order is done with proper data.
+-
+  !python {model: payment.order}: |
+    payment = self.browse(cr, uid, ref("payment_order_1"))
+    assert payment.date_done, "Date is not created."
+-
+  I create a bank statement.
+-
+  !record {model: account.bank.statement, id: account_bank_statement_1}:
+    balance_end_real: 0.0
+    balance_start: 0.0
+    date: !eval time.strftime('%Y-%m-%d')
+    journal_id: account.bank_journal
+    name: /
+    period_id: account.period_10
+-
+  I import payment order lines for the bank statement.
+-
+  !python {model: account.payment.populate.statement}: |
+    payment = self.pool.get('payment.order').browse(cr, uid, ref("payment_order_1"))
+    payment_line = payment.line_ids[0]
+    import_payment_id = self.create(cr, uid, {'lines': [(6,0,[payment_line.id])]})
+    self.populate_statement(cr, uid, [import_payment_id], {"statement_id": ref("account_bank_statement_1"),
+      "active_model": "account.bank.statement", "journal_type": "cash",
+      "active_id": ref("account_bank_statement_1")})
+-
+  I am checking whether the calculations of Owner Account and Destination Account are done correctly or not in payment line.
+-
+  !python {model: payment.line}: |
+    payment = self.pool.get('payment.order').browse(cr, uid, ref("payment_order_1"))
+    line_id = self.browse(cr, uid,payment.line_ids[0].id,context)
+    assert line_id.info_owner, "Owner Account not proper."
+    assert line_id.info_partner, "Destination Account not proper."
+    assert line_id.ml_inv_ref, "Invoice reference is not proper."

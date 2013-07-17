@@ -4,18 +4,16 @@
         <record id="view_account_move_line_reconcile_select" model="ir.ui.view">
             <field name="name">account.move.line.reconcile.select.form</field>
             <field name="model">account.move.line.reconcile.select</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Reconciliation">
-                    <group colspan="4" >
+                <form string="Reconciliation" version="7.0">
+                    <group>
                          <field name="account_id"/>
                     </group>
-                    <separator string="" colspan="4" />
-                    <group colspan="4" col="6">
-                        <label string ="" colspan="2"/>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel" />
-                        <button icon="terp-gtk-go-back-rtl" string="Open for Reconciliation" name="action_open_window" type="object" />
-                   </group>
+                    <footer>
+                        <button string="Open for Reconciliation" name="action_open_window" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                </form>
             </field>
         </record>

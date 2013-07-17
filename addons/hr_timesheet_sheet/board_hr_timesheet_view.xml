@@ -2,30 +2,17 @@
 <openerp>
     <data>
 
-        <record id="action_hr_timesheet_sheet_graph" model="ir.actions.act_window">
-            <field name="name">Timesheets</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">hr_timesheet_sheet.sheet</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
-            <field name="view_id" ref="hr_timesheet_sheet.hr_timesheet_sheet_graph"/>
-        </record>
-        <record id="hr_timesheet_sheet_tree" model="ir.ui.view">
-            <field name="name">hr.timesheet.sheet.tree.simplified.board</field>
+        <record id="view_hr_timesheet_sheet_graph" model="ir.ui.view">
+            <field name="name">hr.timesheet.sheet.sheet.graph</field>
             <field name="model">hr_timesheet_sheet.sheet</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state == 'draft';black:state in ('confirm','new');gray:state == 'done'" string="Timesheets">
-                    <field name="date_from"/>
-                    <field name="user_id"/>
-                    <field name="department_id" invisible="1"/>
+                <graph orientation="horizontal" string="Available Attendance" type="bar">
                     <field name="name"/>
-                    <field name="total_attendance" widget="float_time"/>
-                    <field name="total_timesheet" widget="float_time"/>
-                    <field name="state"/>
-                </tree>
+                    <field name="total_attendance" operator="+"/>
+                </graph>
             </field>
         </record>
+
         <record id="action_week_attendance_graph" model="ir.actions.act_window">
             <field name="name">My Total Attendances By Week</field>
             <field name="res_model">hr_timesheet_sheet.sheet</field>
@@ -34,16 +21,17 @@
             <field name="domain">[('user_id','=',uid)]</field>
             <field name="view_id" ref="hr_timesheet_sheet.view_hr_timesheet_sheet_graph"/>
         </record>
+
         <record id="board_hr_week_attendace_form" model="ir.ui.view">
             <field name="name">board.hr.timesheet.sheet.form</field>
             <field name="model">board.board</field>
             <field name="inherit_id" ref="hr.board_hr_form"/>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="/form/board/column[2]" position="inside">
                     <action name="%(action_week_attendance_graph)d" string="My Total Attendance By Week"/>
                 </xpath>
             </field>
         </record>
+
     </data>
 </openerp>

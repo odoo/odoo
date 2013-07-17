@@ -21,7 +21,6 @@
 ##############################################################################
 
 import account_bank_statement
-import res_company
 import res_partner_bank
 import report
 import wizard

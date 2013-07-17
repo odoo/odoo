@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="base_gengo_translation_wizard_from">
+            <field name="name">base.gengo.translation.form</field>
+            <field name="model">base.gengo.translations</field>
+            <field name="arch" type="xml">
+                <form string="Gengo Request Form" version="7.0">
+                    <group>
+                        <field name="lang_id"/>
+                        <field name="restart_send_job"/>
+                    </group>
+                    <footer>
+                        <button name="act_update" string="Send" type="object" class="oe_highlight"/> 
+                        or 
+                        <button name="act_cancel" special="cancel" string="Cancel" type="object" class="oe_link"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_wizard_base_gengo_translations" model="ir.actions.act_window">
+            <field name="name">Gengo: Manual Request of Translation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">base.gengo.translations</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        <menuitem action="action_wizard_base_gengo_translations" id="menu_action_wizard_base_gengo_translations" parent="base.menu_translation_app"/>
+
+    </data>
+</openerp>

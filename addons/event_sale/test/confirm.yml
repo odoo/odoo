@@ -1,0 +1,54 @@
+-
+    In order to test process of the Sale Order with an event product , I create sale order
+-
+    First I create an event product 
+-
+    !record {model: product.product, id: event_product}:
+         name: test_formation
+         type: service
+         event_ok: True
+         event_type_id: 1
+-
+    I create an event from the same type than my product
+-
+    !record {model: event.event,id: event}:
+         name: test_event
+         type: 1
+         date_end: '2012-01-01 19:05:15'
+         date_begin: '2012-01-01 18:05:15'
+-
+    I create a sale order
+-
+    !record {model: sale.order, id: order1}:
+         partner_id: base.res_partner_2
+         note: Invoice after delivery
+         payment_term: account.account_payment_term
+-
+    In the sale order I add some sale order lines. i choose event product
+-
+    !record {model: sale.order.line, id: line}:
+         product_id: event_product
+         price_unit: 190.50
+         product_uom_qty: 8
+         order_id: order1
+         name: sale order line
+         event_id: event
+-
+    I confirm the sale order
+-
+    !workflow {model: sale.order, ref: order1, action: order_confirm}
+-
+    I check if the sale order is confirmed
+-
+    !assert {model: sale.order, id: order1}:
+         - state == 'manual'
+-
+    I check if a registration is created
+-
+    !python {model: event.registration}: |
+        order_id = ref('order1')
+        order =  self.pool.get('sale.order').browse(cr, uid,order_id)
+        registration_ids = self.search(cr,uid,[('origin','=',order.name)])
+        if registration_ids == []:
+           raise osv.except_osv(_('Error!'),_("The registration is not created."))
+

@@ -1,25 +1,34 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* account_budget
+# Lithuanian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2010-09-09 07:05+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Lithuanian <lt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:10+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:03+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
+
+#. module: account_budget
+#: view:account.budget.analytic:0
+#: view:account.budget.crossvered.report:0
+#: view:account.budget.crossvered.summary.report:0
+#: view:account.budget.report:0
+msgid "Select Dates Period"
+msgstr ""
 
 #. module: account_budget
 #: field:crossovered.budget,creating_user_id:0
 msgid "Responsible User"
-msgstr ""
+msgstr "Atsakingas naudotojas"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -30,18 +39,12 @@ msgstr "Patvirtinta"
 #: model:ir.actions.act_window,name:account_budget.open_budget_post_form
 #: model:ir.ui.menu,name:account_budget.menu_budget_post_form
 msgid "Budgetary Positions"
-msgstr ""
-
-#. module: account_budget
-#: code:addons/account_budget/account_budget.py:119
-#, python-format
-msgid "The General Budget '%s' has no Accounts!"
-msgstr ""
+msgstr "Biudžeto pozicija"
 
 #. module: account_budget
 #: report:account.budget:0
 msgid "Printed at:"
-msgstr ""
+msgstr "Atspausdinta:"
 
 #. module: account_budget
 #: view:crossovered.budget:0
@@ -51,17 +54,17 @@ msgstr "Patvirtinti"
 #. module: account_budget
 #: field:crossovered.budget,validating_user_id:0
 msgid "Validate User"
-msgstr ""
+msgstr "Patvirtinti vartotoją"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_summary_report
 msgid "Print Summary"
-msgstr ""
+msgstr "Spausdinti suvestinę"
 
 #. module: account_budget
 #: field:crossovered.budget.lines,paid_date:0
 msgid "Paid Date"
-msgstr ""
+msgstr "Apmokėjimo data"
 
 #. module: account_budget
 #: field:account.budget.analytic,date_to:0
@@ -80,7 +83,7 @@ msgstr "Juodraštis"
 #. module: account_budget
 #: report:account.budget:0
 msgid "at"
-msgstr ""
+msgstr "ties"
 
 #. module: account_budget
 #: view:account.budget.report:0
@@ -102,17 +105,12 @@ msgstr ""
 #. module: account_budget
 #: selection:crossovered.budget,state:0
 msgid "Validated"
-msgstr ""
+msgstr "Patvirtintas"
 
 #. module: account_budget
 #: field:crossovered.budget.lines,percentage:0
 msgid "Percentage"
-msgstr ""
-
-#. module: account_budget
-#: report:crossovered.budget.report:0
-msgid "to"
-msgstr "iki"
+msgstr "Procentai"
 
 #. module: account_budget
 #: field:crossovered.budget,state:0
@@ -120,28 +118,10 @@ msgid "Status"
 msgstr "Būsena"
 
 #. module: account_budget
-#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
-msgid ""
-"A budget is a forecast of your company's income and expenses expected for a "
-"period in the future. With a budget, a company is able to carefully look at "
-"how much money they are taking in during a given period, and figure out the "
-"best way to divide it among various categories. By keeping track of where "
-"your money goes, you may be less likely to overspend, and more likely to "
-"meet your financial goals. Forecast a budget by detailing the expected "
-"revenue per analytic account and monitor its evolution based on the actuals "
-"realised during that period."
-msgstr ""
-
-#. module: account_budget
-#: view:account.budget.crossvered.summary.report:0
-msgid "This wizard is used to print summary of budgets"
-msgstr ""
-
-#. module: account_budget
-#: report:account.budget:0
-#: report:crossovered.budget.report:0
-msgid "%"
-msgstr "%"
+#: code:addons/account_budget/account_budget.py:119
+#, python-format
+msgid "The Budget '%s' has no accounts!"
+msgstr "Biudžetui '%s' nepriskirtos sąskaitos!"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -152,42 +132,42 @@ msgstr "Aprašas"
 #. module: account_budget
 #: report:crossovered.budget.report:0
 msgid "Currency"
-msgstr ""
+msgstr "Valiuta"
 
 #. module: account_budget
 #: report:crossovered.budget.report:0
 msgid "Total :"
-msgstr ""
+msgstr "Iš viso:"
 
 #. module: account_budget
 #: field:account.budget.post,company_id:0
 #: field:crossovered.budget,company_id:0
 #: field:crossovered.budget.lines,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Įmonė"
 
 #. module: account_budget
-#: view:crossovered.budget:0
-msgid "To Approve"
-msgstr ""
+#: report:crossovered.budget.report:0
+msgid "to"
+msgstr "iki"
 
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Reset to Draft"
-msgstr ""
+msgstr "Atstatyti į juodraštį"
 
 #. module: account_budget
 #: view:account.budget.post:0
 #: view:crossovered.budget:0
 #: field:crossovered.budget.lines,planned_amount:0
 msgid "Planned Amount"
-msgstr ""
+msgstr "Suplanuota suma"
 
 #. module: account_budget
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Perc(%)"
-msgstr ""
+msgstr "Procentai (%)"
 
 #. module: account_budget
 #: view:crossovered.budget:0
@@ -199,7 +179,7 @@ msgstr "Atlikta"
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Practical Amt"
-msgstr ""
+msgstr "Praktinė suma"
 
 #. module: account_budget
 #: view:account.analytic.account:0
@@ -207,7 +187,7 @@ msgstr ""
 #: view:crossovered.budget:0
 #: field:crossovered.budget.lines,practical_amount:0
 msgid "Practical Amount"
-msgstr ""
+msgstr "Praktinė suma"
 
 #. module: account_budget
 #: field:crossovered.budget,date_to:0
@@ -219,12 +199,12 @@ msgstr "Pabaigos data"
 #: model:ir.model,name:account_budget.model_account_budget_analytic
 #: model:ir.model,name:account_budget.model_account_budget_report
 msgid "Account Budget report for analytic account"
-msgstr ""
+msgstr "Biudžeto ataskaita analitinei sąskaitai"
 
 #. module: account_budget
 #: view:account.analytic.account:0
 msgid "Theoritical Amount"
-msgstr ""
+msgstr "Teorinė suma"
 
 #. module: account_budget
 #: field:account.budget.post,name:0
@@ -235,13 +215,7 @@ msgstr "Pavadinimas"
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_crossovered_budget_lines
 msgid "Budget Line"
-msgstr ""
-
-#. module: account_budget
-#: view:account.analytic.account:0
-#: view:account.budget.post:0
-msgid "Lines"
-msgstr "Eilutės"
+msgstr "Biudžeto eilutė"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -256,13 +230,12 @@ msgstr "Biudžetas"
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "To Approve Budgets"
-msgstr ""
+msgstr "Patvirtinti biudžetą"
 
 #. module: account_budget
-#: code:addons/account_budget/account_budget.py:119
-#, python-format
-msgid "Error!"
-msgstr ""
+#: view:crossovered.budget:0
+msgid "Duration"
+msgstr "Trukmė"
 
 #. module: account_budget
 #: field:account.budget.post,code:0
@@ -274,11 +247,10 @@ msgstr "Kodas"
 #: view:account.budget.analytic:0
 #: view:account.budget.crossvered.report:0
 msgid "This wizard is used to print budget"
-msgstr ""
+msgstr "Šis vedlys naudojamas atspausdinti biudžetui"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
-#: model:ir.actions.act_window,name:account_budget.action_account_budget_post_tree
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_report
 #: model:ir.actions.report.xml,name:account_budget.report_crossovered_budget
 #: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_view
@@ -289,11 +261,9 @@ msgid "Budgets"
 msgstr "Biudžetai"
 
 #. module: account_budget
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr ""
+#: view:account.budget.crossvered.summary.report:0
+msgid "This wizard is used to print summary of budgets"
+msgstr "Šis vedlys naudojamas atspausdinti biudžetų suvestinei"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -303,20 +273,19 @@ msgstr "Nutrauktas"
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Approve"
-msgstr ""
+msgstr "Patvirtinti"
 
 #. module: account_budget
-#: field:crossovered.budget,date_from:0
-#: field:crossovered.budget.lines,date_from:0
-msgid "Start Date"
-msgstr "Pradžios data"
+#: view:crossovered.budget:0
+msgid "To Approve"
+msgstr "Patvirtinti"
 
 #. module: account_budget
 #: view:account.budget.post:0
 #: field:crossovered.budget.lines,general_budget_id:0
 #: model:ir.model,name:account_budget.model_account_budget_post
 msgid "Budgetary Position"
-msgstr ""
+msgstr "Biudžeto pozicija"
 
 #. module: account_budget
 #: field:account.budget.analytic,date_from:0
@@ -335,15 +304,13 @@ msgstr ""
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Theoretical Amt"
-msgstr ""
+msgstr "Teorinė suma"
 
 #. module: account_budget
-#: view:account.budget.analytic:0
-#: view:account.budget.crossvered.report:0
-#: view:account.budget.crossvered.summary.report:0
-#: view:account.budget.report:0
-msgid "Select Dates Period"
-msgstr ""
+#: code:addons/account_budget/account_budget.py:119
+#, python-format
+msgid "Error!"
+msgstr "Klaida!"
 
 #. module: account_budget
 #: view:account.budget.analytic:0
@@ -358,7 +325,15 @@ msgstr "Spausdinti"
 #: view:crossovered.budget:0
 #: field:crossovered.budget.lines,theoritical_amount:0
 msgid "Theoretical Amount"
-msgstr ""
+msgstr "Teorinė suma"
+
+#. module: account_budget
+#: view:account.budget.analytic:0
+#: view:account.budget.crossvered.report:0
+#: view:account.budget.crossvered.summary.report:0
+#: view:account.budget.report:0
+msgid "or"
+msgstr "arba"
 
 #. module: account_budget
 #: field:crossovered.budget.lines,analytic_account_id:0
@@ -369,13 +344,36 @@ msgstr "Analitinė sąskaita"
 #. module: account_budget
 #: report:account.budget:0
 msgid "Budget :"
+msgstr "Biudžetas:"
+
+#. module: account_budget
+#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
+msgid ""
+"<p>\n"
+"                A budget is a forecast of your company's income and/or "
+"expenses\n"
+"                expected for a period in the future. A budget is defined on "
+"some\n"
+"                financial accounts and/or analytic accounts (that may "
+"represent\n"
+"                projects, departments, categories of products, etc.)\n"
+"              </p><p>\n"
+"                By keeping track of where your money goes, you may be less\n"
+"                likely to overspend, and more likely to meet your financial\n"
+"                goals. Forecast a budget by detailing the expected revenue "
+"per\n"
+"                analytic account and monitor its evolution based on the "
+"actuals\n"
+"                realised during that period.\n"
+"              </p>\n"
+"            "
 msgstr ""
 
 #. module: account_budget
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Planned Amt"
-msgstr ""
+msgstr "Planuojama suma"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -395,7 +393,7 @@ msgstr "Sąskaitos"
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_lines_view
 #: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_lines_view
 msgid "Budget Lines"
-msgstr ""
+msgstr "Biudžeto eilutės"
 
 #. module: account_budget
 #: view:account.budget.analytic:0
@@ -407,56 +405,18 @@ msgid "Cancel"
 msgstr "Atšaukti"
 
 #. module: account_budget
-#: constraint:account.analytic.account:0
-msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
+#: field:crossovered.budget,date_from:0
+#: field:crossovered.budget.lines,date_from:0
+msgid "Start Date"
+msgstr "Pradžios data"
 
 #. module: account_budget
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Analysis from"
-msgstr ""
+msgstr "Analizė nuo"
 
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Draft Budgets"
-msgstr ""
-
-#~ msgid "% performance"
-#~ msgstr "% vykdymas"
-
-#~ msgid "Period"
-#~ msgstr "Periodas"
-
-#~ msgid "Printing date:"
-#~ msgstr "Spausdinimo data:"
-
-#~ msgid "From"
-#~ msgstr "Nuo"
-
-#~ msgid "Results"
-#~ msgstr "Rezultatai"
-
-#~ msgid "Period Budget"
-#~ msgstr "Periodo biudžetas"
-
-#~ msgid "Budget Analysis"
-#~ msgstr "Biudžeto analizė"
-
-#~ msgid "Validate"
-#~ msgstr "Patvirtinti"
-
-#~ msgid "Spread amount"
-#~ msgstr "Išskleisti sumą"
-
-#~ msgid "Amount"
-#~ msgstr "Suma"
-
-#~ msgid "Print Budget"
-#~ msgstr "Spausdinti biudžetą"
-
-#~ msgid "Select period"
-#~ msgstr "Parinkite periodą"
-
-#~ msgid "Fiscal Year"
-#~ msgstr "Mokestiniai metai"
+msgstr "Nepatvirtinti biudžetai"

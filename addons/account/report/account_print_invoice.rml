@@ -162,13 +162,13 @@
         </td>
         <td>
           <para style="terp_default_8">[[ (o.partner_id and o.partner_id.title and o.partner_id.title.name) or '' ]] [[ (o.partner_id and o.partner_id.name) or '' ]]</para>
-          <para style="terp_default_8">[[ display_address(o.address_invoice_id) ]]</para>
+          <para style="terp_default_8">[[ display_address(o.partner_id) ]]</para>
           <para style="terp_default_8">
             <font color="white"> </font>
           </para>
-          <para style="terp_default_8">Tel. : [[ (o.address_invoice_id and o.address_invoice_id.phone) or removeParentNode('para') ]]</para>
-          <para style="terp_default_8">Fax : [[ (o.address_invoice_id and o.address_invoice_id.fax) or removeParentNode('para') ]]</para>
-          <para style="terp_default_8">VAT : [[ (o.partner_id and o.partner_id.vat) or removeParentNode('para') ]]</para>
+          <para style="terp_default_8">Tel. : [[ (o.partner_id.phone) or removeParentNode('para') ]]</para>
+          <para style="terp_default_8">Fax : [[ (o.partner_id.fax) or removeParentNode('para') ]]</para>
+          <para style="terp_default_8">VAT : [[ (o.partner_id.vat) or removeParentNode('para') ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -191,7 +191,7 @@
           <para style="terp_tblheader_General_Centre">Invoice Date</para>
         </td>
     <td>
-          <para style="terp_tblheader_General_Centre">Origin</para>
+          <para style="terp_tblheader_General_Centre">Source</para>
         </td>
         <td>
           <para style="terp_tblheader_General_Centre">Customer Code</para>
@@ -210,7 +210,7 @@
           <para style="terp_default_Centre_9">[[ o.origin or '' ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_9">[[ (o.address_invoice_id and o.address_invoice_id.partner_id and o.address_invoice_id.partner_id.ref) or ' ' ]]</para>
+          <para style="terp_default_Centre_9">[[ (o.partner_id.ref) or ' ' ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -244,7 +244,7 @@
       <blockTable colWidths="185.0,70.0,80.0,60.0,50.0,85.0" style="Table8">
         <tr>
           <td>
-            <para style="terp_default_9">[[ l.name ]]</para>
+            <para style="terp_default_9">[[ format(l.name) ]]</para>
           </td>
           <td>
             <para style="terp_default_Centre_9">[[ ', '.join([ lt.name or '' for lt in l.invoice_line_tax_id ]) ]]</para>
@@ -260,36 +260,6 @@
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(l.price_subtotal, dp='Account', currency_obj=o.currency_id) ]]</para>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <para style="terp_default_Note">[[ format(l.note or '') or removeParentNode('tr') ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_9">
-              <font color="white"> </font>
-            </para>
-          </td>
-          <td>
-            <para style="terp_default_Right_9">
-              <font color="white"> </font>
-            </para>
-          </td>
-          <td>
-            <para style="terp_default_Right_9">
-              <font color="white"> </font>
-            </para>
-          </td>
-          <td>
-            <para style="terp_default_Right_9">
-              <font color="white"> </font>
-            </para>
-          </td>
-          <td>
-            <para style="terp_default_Right_9">
-              <font color="white"> </font>
-            </para>
           </td>
         </tr>
       </blockTable>

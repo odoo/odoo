@@ -1,8 +1,8 @@
 -
-  In order to test the PDF reports defined on Account Payment, Print a Payment Order
-- 
+  In order to test the PDF reports defined on Account Payment, I print a Payment Order report.
+-
   !python {model: payment.order}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.payment.order').create(cr, uid, [ref('account_payment.payment_order_1')], {}, {})
+    (data, format) = netsvc.LocalService('report.payment.order').create(cr, uid, [ref('payment_order_1')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'account_payment-payment_order_report.'+format), 'wb+').write(data)

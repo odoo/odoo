@@ -1,4 +1,9 @@
-input[name='openid_url'] {
+.login .pane {
+    width: 260px;
+    height: 175px;
+}
+
+.login .pane input[name='openid_url'] {
     background: #fff url(../img/login-bg.gif) no-repeat 1px;
     padding-left: 20px;
 }
@@ -6,19 +11,6 @@ input[name='openid_url'] {
 .auth_choice {
     position: static;
     display: none;
-}
-
-.openerp .login .oe_forms .oe_box2 td input[name="db"], .oe_forms .oe_box2 td select[name="db"] {
-    width: 50%;
-    float: left;
-    margin-top: 15px;
-}
-
-.openerp .login .oe_login_right_pane {
-    margin-left: 525px;
-}
-.openerp .login form {
-    width: 475px;
 }
 
 .openid_providers {
@@ -59,6 +51,6 @@ input[name='openid_url'] {
 .openid_providers a[title="Launchpad"]   { background-image: url(../img/launchpad.png); }
 
 
-tr.auth_choice.selected {
+li.auth_choice.selected {
     display: table-row;
 }

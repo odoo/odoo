@@ -234,7 +234,8 @@
           </para>
         </td>
         <td>
-          <para style="P5">[[o.employee_id.address_home_id and o.employee_id.address_home_id.name or '' ]],[[o.employee_id.address_home_id and o.employee_id.address_home_id.street or '' ]],[[o.employee_id.address_home_id and o.employee_id.address_home_id.street2 or '' ]],[[o.employee_id.address_home_id and o.employee_id.address_home_id.zip or '' ]],[[o.employee_id.address_home_id and o.employee_id.address_home_id.city or '' ]],[[o.employee_id.address_home_id and o.employee_id.address_home_id.state_id and o.employee_id.address_home_id.state_id.name or '' ]] [[o.employee_id.address_home_id and o.employee_id.address_home_id.country_id and o.employee_id.address_home_id.country_id.name or '' ]]</para>
+          <para style="P5">[[o.employee_id.address_home_id and o.employee_id.address_home_id.name or '' ]]
+                           [[o.employee_id.address_home_id and display_address(o.employee_id.address_home_id)]]</para>
         </td>
       </tr>
     </blockTable>
@@ -334,7 +335,7 @@
             <para style="P17"><font face="Helvetica" color="white">[[ '..'*h['level'] ]]</font>[[ h['rule_category'] ]]<font face="Helvetica">[[ h['level']!=0 and ( setTag('para','para',{'style':'terp_default_8'})) or removeParentNode('font') ]]</font></para>
           </td>
           <td>
-            <para style="P6">[[ formatLang(h['total']) ]] [[o.company_id and o.company_id.currency_id.symbol or '']] <font face="Helvetica" size="8.0">[[ h['level']==0 and ( setTag('para','para',{'style':'terp_default_10'})) or removeParentNode('font') ]]</font></para>
+            <para style="P6">[[ formatLang(h['total'], currency_obj = o.company_id and o.company_id.currency_id)]] <font face="Helvetica" size="8.0">[[ h['level']==0 and ( setTag('para','para',{'style':'terp_default_10'})) or removeParentNode('font') ]]</font></para>
           </td>
         </tr>
       </blockTable>
@@ -391,7 +392,7 @@
             <para style="P5">[[ formatLang(r['amount']) ]]</para>
           </td>
           <td>
-            <para style="P6">[[ formatLang(r['total']) ]] [[ o.company_id and o.company_id.currency_id.symbol or '']]<font face="Helvetica">[[ r.get('register_name', False) and ( setTag('para','para',{'style':'terp_default_10'})) or removeParentNode('font')]]</font></para>
+            <para style="P6">[[ formatLang(r['total'], currency_obj = o.company_id and o.company_id.currency_id)]]<font face="Helvetica">[[ r.get('register_name', False) and ( setTag('para','para',{'style':'terp_default_10'})) or removeParentNode('font')]]</font></para>
           </td>
         </tr>
       </blockTable>

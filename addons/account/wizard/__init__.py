@@ -31,7 +31,6 @@ import account_reconcile_partner_process
 import account_reconcile
 import account_unreconcile
 import account_invoice_refund
-import account_move_journal
 import account_journal_select
 import account_move_bank_reconcile
 import account_subscription_generate
@@ -63,6 +62,8 @@ import account_report_general_ledger
 import account_report_account_balance
 
 import account_change_currency
+
+import pos_box;
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

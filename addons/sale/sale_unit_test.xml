@@ -3,19 +3,18 @@
     <data>
         <!-- Resource: sale.order -->
         <record id="test_order_1" model="sale.order">
-            <field name="shop_id" ref="shop"/>
+            <field name="shop_id" ref="sale_shop_1"/>
             <field model="product.pricelist" name="pricelist_id" search="[]"/>
             <field name="user_id" ref="base.user_root"/>
             <field model="res.partner" name="partner_id" search="[]"/>
-            <field model="res.partner.address" name="partner_invoice_id" search="[]"/>
-            <field model="res.partner.address" name="partner_shipping_id" search="[]"/>
-            <field model="res.partner.address" name="partner_order_id" search="[]"/>
+            <field model="res.partner" name="partner_invoice_id" search="[]"/>
+            <field model="res.partner" name="partner_shipping_id" search="[]"/>
         </record>
         <!-- Resource: sale.order.line -->
         <record id="test_order_1_line_1" model="sale.order.line">
             <field name="order_id" ref="test_order_1"/>
-            <field name="name">[PC1] Basic PC</field>
-            <field name="product_id" ref="product.product_product_pc1"/>
+            <field name="name">[PCSC234] PC Assemble SC234</field>
+            <field name="product_id" ref="product.product_product_3"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="price_unit">450</field>
             <field name="product_uom_qty">2</field>
@@ -24,8 +23,8 @@
         </record>
         <record id="test_order_1_line_3" model="sale.order.line">
             <field name="order_id" ref="test_order_1"/>
-            <field name="name">[RAM512] DDR 512MB PC400</field>
-            <field name="product_id" ref="product.product_product_ram512"/>
+            <field name="name">[HDD-SH2] HDD SH-2</field>
+            <field name="product_id" ref="product.product_product_18"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="price_unit">90</field>
             <field name="product_uom_qty">3</field>
@@ -85,7 +84,7 @@
         </assert>
 
         <assert id="test_order_1" model="sale.order" severity="error" string="the sales order's picking will be sent to the good address and is already confirmed">
-            <test expr="picking_ids[0].address_id == partner_shipping_id"/>
+            <test expr="picking_ids[0].partner_id == partner_shipping_id"/>
             <!-- test expr="picking_ids[0].state">confirmed</test # Desactivated because of MRP_JIT -->
         </assert>
 

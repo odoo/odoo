@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-import pooler
-import tools
-from osv import fields, osv
+from openerp import pooler
+from openerp import tools
+from openerp.osv import fields, osv
 
 class Env(dict):
 
@@ -118,6 +118,7 @@ class process_process(osv.osv):
             data['active'] = False
             data['gray'] = False
             data['url'] = node.help_url
+            data['model_states'] = node.model_states
 
             # get assosiated workflow
             if data['model']:
@@ -131,21 +132,21 @@ class process_process(osv.osv):
             if node.menu_id:
                 data['menu'] = {'name': node.menu_id.complete_name, 'id': node.menu_id.id}
 
-            if node.model_id and node.model_id.model == res_model:
-                try:
-                    data['active'] = eval(node.model_states, expr_context)
-                except Exception:
-                    pass
+            try:
+                gray = True
+                for cond in node.condition_ids:
+                    if cond.model_id and cond.model_id.model == res_model:
+                        gray = gray and eval(cond.model_states, expr_context)
+                data['gray'] = not gray
+            except:
+                pass
 
-            if not data['active']:
-                try:
-                    gray = True
-                    for cond in node.condition_ids:
-                        if cond.model_id and cond.model_id.model == res_model:
-                            gray = gray and eval(cond.model_states, expr_context)
-                    data['gray'] = not gray
-                except:
-                    pass
+            if not data['gray']:
+                if node.model_id and node.model_id.model == res_model:
+                    try:
+                        data['active'] = eval(node.model_states, expr_context)
+                    except Exception:
+                        pass
 
             nodes[node.id] = data
             if node.flow_start:
@@ -195,9 +196,15 @@ class process_process(osv.osv):
             if nodes[nid].get('directory_id', False):
                 resource['directory'] = self.pool.get('document.directory').get_resource_path(cr, uid, nodes[nid]['directory_id'], ref_model, ref_id)
 
-            resource['name'] = refobj.name_get(context)[0][1]
-            resource['perm'] = pool.get(ref_model).perm_read(cr, uid, [ref_id], context)[0]
+            resource['name'] = pool.get(ref_model).name_get(cr, uid, [ref_id], context=context)[0][1]
+            resource['perm'] = pool.get(ref_model).perm_read(cr, uid, [ref_id], context=context)[0]
 
+            ref_expr_context = Env(refobj, current_user)
+            try:
+                if not nodes[nid]['gray']:
+                    nodes[nid]['active'] = eval(nodes[nid]['model_states'], ref_expr_context)
+            except:
+                pass 
             for r in relatives:
                 node = nodes[r]
                 if 'res' not in node:
@@ -293,7 +300,7 @@ class process_node(osv.osv):
     _columns = {
         'name': fields.char('Name', size=30,required=True, translate=True),
         'process_id': fields.many2one('process.process', 'Process', required=True, ondelete='cascade'),
-        'kind': fields.selection([('state','State'), ('subflow','Subflow')], 'Kind of Node', required=True),
+        'kind': fields.selection([('state','Status'), ('subflow','Subflow')], 'Kind of Node', required=True),
         'menu_id': fields.many2one('ir.ui.menu', 'Related Menu'),
         'note': fields.text('Notes', translate=True),
         'model_id': fields.many2one('ir.model', 'Object', ondelete='set null'),

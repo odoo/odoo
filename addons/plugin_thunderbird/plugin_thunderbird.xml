@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_thunderbird_installer" model="ir.ui.view">
+            <field name="name">plugin_thunderbird.installer.view</field>
+            <field name="model">plugin_thunderbird.installer</field>
+            <field name="inherit_id" ref="base.res_config_installer"/>
+            <field name="arch" type="xml">
+                <data>
+                    <form position="attributes">
+                        <attribute name="string">Install Thunderbird Plug-In</attribute>
+                    </form>
+                    <xpath expr="//footer" position="replace">
+                       <footer>
+                            <button string="Close" class="oe_link" special="cancel" />
+                       </footer>
+                    </xpath>
+                    <xpath expr="//separator[@string='title']" position="after">
+                        <group>
+                            <field name="thunderbird" invisible="1"/>
+                            <field name="plugin_name" invisible="1"/>
+                            <field name="plugin_file" filename="plugin_name" widget="url"/>
+                        </group>
+                        <separator string="Installation and Configuration Steps"/>
+                        <p>Thunderbird plug-in installation:</p>
+                        <ol>
+                            <li> Save the Thunderbird plug-in.</li>
+                            <li> From the Thunderbird menubar: Tools ­> Add-ons -> Screwdriver/Wrench Icon -> Install add-on from file...</li>
+                            <li> Select the plug-in (the file named openerp_plugin.xpi).</li>
+                            <li> Click "Install Now".</li>
+                            <li> Restart Thunderbird.</li>
+                            <li> From the Thunderbird menubar: OpenERP -> Configuration.</li>
+                            <li> Configure your openerp server.</li>
+                        </ol>
+                    </xpath>
+                    <separator string="title" position="attributes">
+                        <attribute name="string"></attribute>
+                    </separator>
+                </data>
+            </field>
+        </record>
+
+        <record id="action_thunderbird_installer" model="ir.actions.act_window">
+          <field name="name">Install Thunderbird Plug-In</field>
+          <field name="type">ir.actions.act_window</field>
+          <field name="res_model">plugin_thunderbird.installer</field>
+          <field name="view_id" ref="view_thunderbird_installer"/>
+          <field name="view_type">form</field>
+          <field name="view_mode">form</field>
+          <field name="target">new</field>
+        </record>
+
+        <!-- Sales Configuration -->
+        <record id="view_config_thunderbird_installer" model="ir.ui.view">
+            <field name="name">Sales Application</field>
+            <field name="model">sale.config.settings</field>
+            <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
+            <field name="arch" type="xml">
+                <div name="module_plugin_thunderbird" version="7.0" position="replace">
+                    <div>
+                        <field name="module_plugin_thunderbird" class="oe_inline"/>
+                        <label for="module_plugin_thunderbird"/>
+                        <button name="%(action_thunderbird_installer)d" type="action" string="Download and install the plug-in" icon="gtk-execute"
+                            attrs="{'invisible': [('module_plugin_thunderbird','=',False)]}" class="oe_link"/>
+                    </div>
+                </div>
+            </field>
+        </record>
+
+<!--      <menuitem id="base.menu_base_config_plugins" name="Plugins" parent="base.menu_base_config" sequence="10"/>-->
+        <menuitem id="menu_base_config_plugins_thunderbird" action="action_thunderbird_installer" parent="base.menu_base_config" sequence="10"/>
+
+    </data>
+</openerp>

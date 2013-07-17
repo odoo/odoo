@@ -5,7 +5,7 @@
 -
   !record {model: res.partner.bank, id: res_partner_bank_0}:
     acc_number: '001-9876543-21'
-    partner_id: base.res_partner_desertic_hispafuentes
+    partner_id: base.res_partner_12
     state: bank
     bank: base.res_bank_1
 -
@@ -42,7 +42,7 @@
   I create a contract for "John".
 -
   !record {model: hr.contract, id: hr_contract_john}:
-    date_end: !eval "'%s-%s-%s' %(datetime.now().year+1,datetime.now().month,datetime.now().day)"
+    date_end: !eval "(datetime.now() + timedelta(days=365)).strftime('%Y-%m-%d')"
     date_start: !eval time.strftime('%Y-%m-%d')
     name: Contract for John
     wage: 5000.0

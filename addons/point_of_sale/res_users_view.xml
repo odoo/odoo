@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+    <record id="res_users_form_preference_view" model="ir.ui.view">
+        <field name="name">res.users.form.view</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='preferences']" position="inside">
+                <field name="pos_config" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_users_form_view" model="ir.ui.view">
+        <field name="name">res.users.form.view</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form" />
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Point of Sale">
+                    <group>
+                        <field name="pos_config" />
+                        <field name="ean13" />
+                        <button name="edit_ean" type="object" string="Edit EAN" class="oe_edit_only" />
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+    </data>
+</openerp>

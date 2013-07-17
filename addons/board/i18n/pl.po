@@ -1,398 +1,167 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* board
+# Polish translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2011-01-14 13:29+0000\n"
-"Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:01+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:08+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: board
-#: view:res.log.report:0
-msgid "  Year  "
-msgstr "  Rok  "
+#: model:ir.actions.act_window,name:board.action_board_create
+#: model:ir.ui.menu,name:board.menu_board_create
+msgid "Create Board"
+msgstr "Utwórz panel"
 
 #. module: board
-#: model:ir.model,name:board.model_board_menu_create
-msgid "Menu Create"
-msgstr "Utwórz menu"
+#: view:board.create:0
+msgid "Create"
+msgstr "Utwórz"
 
 #. module: board
-#: view:board.menu.create:0
-msgid "Menu Information"
-msgstr "Informacja o menu"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:4
+#, python-format
+msgid "Reset Layout.."
+msgstr "Przywracanie układu..."
 
 #. module: board
-#: view:res.users:0
-msgid "Latest Connections"
-msgstr "Ostatnie połączenia"
+#: view:board.create:0
+msgid "Create New Dashboard"
+msgstr "Utwórz nową konsolę"
 
 #. module: board
-#: view:res.log.report:0
-msgid "Log created in last month"
-msgstr ""
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:40
+#, python-format
+msgid "Choose dashboard layout"
+msgstr "Wybierz układ konsoli"
 
 #. module: board
-#: view:board.board:0
-#: model:ir.actions.act_window,name:board.open_board_administration_form
-msgid "Administration Dashboard"
-msgstr "Konsola administracyjna"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:70
+#, python-format
+msgid "Add"
+msgstr "Dodaj"
 
 #. module: board
-#: view:res.log.report:0
-msgid "Group By..."
-msgstr "Grupuj wg..."
-
-#. module: board
-#: view:res.log.report:0
-msgid "Log created in current year"
-msgstr ""
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:139
+#, python-format
+msgid "Are you sure you want to remove this item ?"
+msgstr "Jesteś pewien, że chcesz usunąć ten element?"
 
 #. module: board
 #: model:ir.model,name:board.model_board_board
 msgid "Board"
-msgstr "Konsola"
-
-#. module: board
-#: field:board.menu.create,menu_name:0
-msgid "Menu Name"
-msgstr "Menu nazwy"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.board_weekly_res_log_report_action
-#: view:res.log.report:0
-msgid "Weekly Global Activity"
-msgstr "Ogólna tygodniowa aktywność"
-
-#. module: board
-#: field:board.board.line,name:0
-msgid "Title"
-msgstr "Tytuł"
-
-#. module: board
-#: field:res.log.report,nbr:0
-msgid "# of Entries"
-msgstr "# Zapisów"
-
-#. module: board
-#: view:res.log.report:0
-#: field:res.log.report,month:0
-msgid "Month"
-msgstr "Miesiąc"
-
-#. module: board
-#: view:res.log.report:0
-msgid "Log created in current month"
-msgstr ""
-
-#. module: board
-#: model:ir.actions.act_window,name:board.board_monthly_res_log_report_action
-#: view:res.log.report:0
-msgid "Monthly Activity per Document"
-msgstr "Miesięczna aktywność wg dokumentów"
+msgstr "Panel"
 
 #. module: board
 #: view:board.board:0
-msgid "Configuration Overview"
+#: model:ir.actions.act_window,name:board.open_board_my_dash_action
+#: model:ir.ui.menu,name:board.menu_board_my_dash
+msgid "My Dashboard"
+msgstr "Moja konsola"
+
+#. module: board
+#: field:board.create,name:0
+msgid "Board Name"
+msgstr "Nazwa panelu"
+
+#. module: board
+#: model:ir.model,name:board.model_board_create
+msgid "Board Creation"
+msgstr "Tworzenie panelu"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:67
+#, python-format
+msgid "Add to Dashboard"
+msgstr "Dodaj do konsoli"
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:28
+#, python-format
+msgid "&nbsp;"
 msgstr ""
 
 #. module: board
-#: model:ir.actions.act_window,name:board.action_view_board_list_form
-#: model:ir.ui.menu,name:board.menu_view_board_form
-msgid "Dashboard Definition"
-msgstr "Definicja konsoli"
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid ""
+"<div class=\"oe_empty_custom_dashboard\">\n"
+"                  <p>\n"
+"                    <b>Your personal dashboard is empty.</b>\n"
+"                  </p><p>\n"
+"                    To add your first report into this dashboard, go to any\n"
+"                    menu, switch to list or graph view, and click <i>'Add "
+"to\n"
+"                    Dashboard'</i> in the extended search options.\n"
+"                  </p><p>\n"
+"                    You can filter and group data before inserting into the\n"
+"                    dashboard using the search options.\n"
+"                  </p>\n"
+"              </div>\n"
+"            "
+msgstr ""
 
 #. module: board
-#: selection:res.log.report,month:0
-msgid "March"
-msgstr "Marzec"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "August"
-msgstr "Sierpień"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_user_connection_tree
-msgid "User Connections"
-msgstr "Połaczenia użytkownika"
-
-#. module: board
-#: field:res.log.report,creation_date:0
-msgid "Creation Date"
-msgstr "Data utworzenia"
-
-#. module: board
-#: view:res.log.report:0
-msgid "Log Analysis"
-msgstr "Analiza logów"
-
-#. module: board
-#: field:res.log.report,res_model:0
-msgid "Object"
-msgstr "Obiekt"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "June"
-msgstr "Czerwiec"
-
-#. module: board
-#: field:board.board,line_ids:0
-msgid "Action Views"
-msgstr "Widoki akcji"
-
-#. module: board
-#: model:ir.model,name:board.model_res_log_report
-msgid "Log Report"
-msgstr "Raport logów"
-
-#. module: board
-#: code:addons/board/wizard/board_menu_create.py:46
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:6
 #, python-format
-msgid "Please Insert Dashboard View(s) !"
-msgstr "Proszę wstawić Widoki konsoli !"
+msgid "Reset"
+msgstr "Wyczyść"
 
 #. module: board
-#: selection:res.log.report,month:0
-msgid "July"
-msgstr "Lipiec"
-
-#. module: board
-#: view:res.log.report:0
-#: field:res.log.report,day:0
-msgid "Day"
-msgstr "Dzień"
-
-#. module: board
-#: view:board.menu.create:0
-msgid "Create Menu For Dashboard"
-msgstr "Utwórz menu dla konsoli"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "February"
-msgstr "Luty"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "October"
-msgstr "Październik"
-
-#. module: board
-#: model:ir.model,name:board.model_board_board_line
-msgid "Board Line"
-msgstr "Pozycja konsoli"
-
-#. module: board
-#: field:board.menu.create,menu_parent_id:0
+#: field:board.create,menu_parent_id:0
 msgid "Parent Menu"
 msgstr "Menu nadrzędne"
 
 #. module: board
-#: view:res.log.report:0
-msgid "    Month-1    "
-msgstr "    Miesiąc-1    "
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "January"
-msgstr "Styczeń"
-
-#. module: board
-#: view:board.board:0
-msgid "Users"
-msgstr ""
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "November"
-msgstr "Listopad"
-
-#. module: board
-#: help:board.board.line,sequence:0
-msgid ""
-"Gives the sequence order                         when displaying a list of "
-"board lines."
-msgstr "Określa kolejność pozycji konsoli w listach."
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "April"
-msgstr "Kwiecień"
-
-#. module: board
-#: view:board.board:0
-#: field:board.board,name:0
-#: field:board.board.line,board_id:0
-#: model:ir.ui.menu,name:board.menu_dasboard
-msgid "Dashboard"
-msgstr "Konsola"
-
-#. module: board
-#: code:addons/board/wizard/board_menu_create.py:45
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:8
 #, python-format
-msgid "User Error!"
-msgstr "Błąd użytkownika!"
+msgid "Change Layout.."
+msgstr "Zmiana układu..."
 
 #. module: board
-#: field:board.board.line,action_id:0
-msgid "Action"
-msgstr "Akcja"
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:93
+#, python-format
+msgid "Edit Layout"
+msgstr "Edytuj układ"
 
 #. module: board
-#: field:board.board.line,position:0
-msgid "Position"
-msgstr "Położenie"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:10
+#, python-format
+msgid "Change Layout"
+msgstr "Zmień układ"
 
 #. module: board
-#: view:res.log.report:0
-msgid "Model"
-msgstr ""
-
-#. module: board
-#: model:ir.actions.act_window,name:board.board_homepage_action
-msgid "Home Page"
-msgstr ""
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_latest_activities_tree
-msgid "Latest Activities"
-msgstr "Ostatnia aktywność"
-
-#. module: board
-#: selection:board.board.line,position:0
-msgid "Left"
-msgstr "Po lewej"
-
-#. module: board
-#: field:board.board,view_id:0
-msgid "Board View"
-msgstr "Widok konsoli"
-
-#. module: board
-#: selection:board.board.line,position:0
-msgid "Right"
-msgstr "Po prawej"
-
-#. module: board
-#: field:board.board.line,width:0
-msgid "Width"
-msgstr "Szerokość"
-
-#. module: board
-#: view:res.log.report:0
-msgid "   Month   "
-msgstr "   Miesiąc   "
-
-#. module: board
-#: field:board.board.line,sequence:0
-msgid "Sequence"
-msgstr "Sekwencja"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "September"
-msgstr "Wrzesień"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "December"
-msgstr "Grudzień"
-
-#. module: board
-#: view:board.board:0
-#: view:board.menu.create:0
-msgid "Create Menu"
-msgstr "Utwórz menu"
-
-#. module: board
-#: field:board.board.line,height:0
-msgid "Height"
-msgstr "Wysokość"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_board_menu_create
-msgid "Create Board Menu"
-msgstr "Utwórz menu konsoli"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "May"
-msgstr "Maj"
-
-#. module: board
-#: view:res.log.report:0
-#: field:res.log.report,name:0
-msgid "Year"
-msgstr "Rok"
-
-#. module: board
-#: view:board.menu.create:0
+#: view:board.create:0
 msgid "Cancel"
 msgstr "Anuluj"
 
 #. module: board
-#: view:board.board:0
-msgid "Dashboard View"
-msgstr "Widok konsoli"
+#: view:board.create:0
+msgid "or"
+msgstr ""
 
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
-#~ "specjalnych !"
-
-#~ msgid "Author"
-#~ msgstr "Autor"
-
-#~ msgid "Note"
-#~ msgstr "Uwagi"
-
-#~ msgid "Date"
-#~ msgstr "Data"
-
-#~ msgid "Configuration"
-#~ msgstr "Ustawienia"
-
-#~ msgid "Note Type"
-#~ msgstr "Typ notatki"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
-
-#~ msgid "Notes"
-#~ msgstr "Uwagi"
-
-#~ msgid "Subject"
-#~ msgstr "Temat"
-
-#~ msgid "Dashboard main module"
-#~ msgstr "Główny moduł konsol"
-
-#~ msgid "Open Dashboard"
-#~ msgstr "Otwórz konsolę"
-
-#~ msgid "Note type"
-#~ msgstr "Typ uwagi"
-
-#~ msgid "Dashboards"
-#~ msgstr "Konsole"
-
-#~ msgid "Publish a note"
-#~ msgstr "Publikuj notatkę"
-
-#~ msgid "Extended Filters..."
-#~ msgstr "Rozszerzone filtry..."
-
-#~ msgid "Base module for all dashboards."
-#~ msgstr "Moduł podstawowy dla wszystkich konsol"
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:69
+#, python-format
+msgid "Title of new dashboard item"
+msgstr "Tytuł nowego elementu konsoli"

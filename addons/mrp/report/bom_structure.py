@@ -20,9 +20,9 @@
 ##############################################################################
 
 import time
-from report import report_sxw
-from osv import osv
-import pooler
+from openerp.report import report_sxw
+from openerp.osv import osv
+from openerp import pooler
 
 class bom_structure(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -35,7 +35,7 @@ class bom_structure(report_sxw.rml_parse):
     def get_children(self, object, level=0):
         result = []
 
-        def _get_rec(object,level):
+        def _get_rec(object, level):
             for l in object:
                 res = {}
                 res['name'] = l.name

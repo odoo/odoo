@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?> <openerp>
+    <data>
+        <!-- account.account.type --> 
+        <record id="tr_asset" model="account.account.type">
+             <field name="name">Aktif Varlık</field>
+             <field name="code">tr_asset</field>
+             <field name="report_type">asset</field>
+             <field name="close_method">balance</field>
+         </record>
+        <record id="tr_bank" model="account.account.type">
+             <field name="name">Banka</field>
+             <field name="code">tr_bank</field>
+             <field name="close_method">balance</field>
+         </record>
+        <record id="tr_cash" model="account.account.type">
+             <field name="name">Nakit</field>
+             <field name="code">tr_cash</field>
+             <field name="close_method">balance</field>
+         </record>
+        <record id="tr_check" model="account.account.type">
+             <field name="name">Çek</field>
+             <field name="code">tr_check</field>
+             <field name="report_type">asset</field>
+             <field name="close_method">unreconciled</field>
+         </record>
+        <record id="tr_equity" model="account.account.type">
+             <field name="name">Öz sermaye</field>
+             <field name="code">tr_equity</field>
+             <field name="report_type">liability</field>
+             <field name="close_method">unreconciled</field>
+         </record>
+        <record id="tr_expense" model="account.account.type">
+             <field name="name">Gider</field>
+             <field name="code">tr_expense</field>
+             <field name="report_type">expense</field>
+             <field name="close_method">none</field>
+         </record>
+        <record id="tr_income" model="account.account.type">
+             <field name="name">Gelir</field>
+             <field name="code">tr_income</field>
+             <field name="report_type">income</field>
+             <field name="close_method">none</field>
+         </record>
+        <record id="tr_liability" model="account.account.type">
+             <field name="name">Sorumluluk</field>
+             <field name="code">tr_liability</field>
+             <field name="report_type">liability</field>
+             <field name="close_method">balance</field>
+         </record>
+        <record id="tr_payable" model="account.account.type">
+             <field name="name">Borç</field>
+             <field name="code">tr_payable</field>
+             <field name="close_method">unreconciled</field>
+         </record>
+        <record id="tr_receivable" model="account.account.type">
+             <field name="name">Alacak</field>
+             <field name="code">tr_receivable</field>
+             <field name="close_method">unreconciled</field>
+         </record>
+        <record id="tr_tax" model="account.account.type">
+             <field name="name">Vergi</field>
+             <field name="code">tr_tax</field>
+             <field name="report_type">expense</field>
+             <field name="close_method">unreconciled</field>
+         </record>
+        <record id="tr_view" model="account.account.type">
+             <field name="name">Görünüm</field>
+             <field name="code">tr_view</field>
+             <field name="close_method">unreconciled</field>
+         </record>
+    </data>
+ </openerp>

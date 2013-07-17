@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>        
+
+        <!-- add visibility field to the employee form view -->
+        <record id="view_employee_form" model="ir.ui.view">
+            <field name="name">portal_hr_employees_form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="visibility"/>
+                    <field name="public_info" String="Public Notes" placeholder="Here you can write information about you to be shown in the portal..." attrs='{"invisible":[("visibility", "=", "private")]}'/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="portal_view_employee_filter" model="ir.ui.view">
+            <field name="name">Employees</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <search string="Employees">
+                    <field name="name" string="Employees"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'parent_id'}"/>
+                        <filter string="Coach" icon="terp-personal" domain="[]" context="{'group_by':'coach_id'}"/>
+                        <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
+                        <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="portal_hr_kanban_view_employees">
+            <field name="name">HR - Employess Kanban</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='oe_employee_details']" position="inside">
+                    <t t-if="record.public_info.raw_value"><field name="public_info"/></t>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_team" model="ir.actions.act_window">
+            <field name="name">Our Team</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_id" ref="portal_hr_kanban_view_employees"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('visibility','!=','private')]</field>
+            <field name="search_view_id" ref="portal_view_employee_filter"/>
+            <field name="target">current</field>
+        </record>
+
+        <record id="crm_contact_us" model="ir.ui.view">
+            <field name="name">crm_contact_us</field>
+            <field name="model">portal_crm.crm_contact_us</field>
+            <field name="inherit_id" ref="portal_crm.contact_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='oe_portal_crm_team']" position="inside">
+                    <a href="#action=portal_hr_employees.action_team">Our Team</a>
+                </xpath>
+            </field>
+        </record>
+
+        
+    </data>
+</openerp>

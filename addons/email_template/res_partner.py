@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from openerp.osv import fields,osv
 
 class res_partner(osv.osv):
     """Inherit res.partner to add a generic opt-out field that can be used
@@ -28,7 +28,7 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
 
     _columns = {
-        'opt_out': fields.boolean('Opt-out', help="If checked, this partner will not receive any automated email " \
+        'opt_out': fields.boolean('Opt-Out', help="If checked, this partner will not receive any automated email " \
                                                   "notifications, such as the availability of invoices."),
     }
 

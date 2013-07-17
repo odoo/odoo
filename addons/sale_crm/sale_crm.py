@@ -19,17 +19,30 @@
 #
 ##############################################################################
 
-from osv import osv,fields
+from openerp.osv import osv, fields
 
 class sale_order(osv.osv):
     _inherit = 'sale.order'
-
     _columns = {
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', \
+        'categ_ids': fields.many2many('crm.case.categ', 'sale_order_category_rel', 'order_id', 'category_id', 'Categories', \
             domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]")
     }
 
-sale_order()
+
+class res_users(osv.Model):
+    _inherit = 'res.users'
+    _columns = {
+        'default_section_id': fields.many2one('crm.case.section', 'Default Sales Team'),
+    }
+
+class account_invoice(osv.osv):
+    _inherit = 'account.invoice'
+    _columns = {
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+    }
+    _defaults = {
+        'section_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).default_section_id.id or False,
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

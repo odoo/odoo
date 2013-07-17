@@ -1,43 +1,45 @@
 <?xml version="1.0" ?>
 <openerp>
-	<data>
+    <data>
 
-		<!-- Survey Print answer Form View -->
+        <!-- Survey Print answer Form View -->
 
-		<record id="view_survey_print_answer" model="ir.ui.view">
-			<field name="name">Survey Print Answer</field>
-			<field name="model">survey.print.answer</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Print Answer">
-					<separator string="Answer" colspan="4"/>
-					<field name="response_ids" nolabel="1" colspan="4" />
-				    <separator string="Print Option" colspan="4"/>
-				    <field name="orientation" colspan="4"/>
-				    <field name="paper_size" colspan="4"/>
-				    <field name="page_number" colspan="4"/>
-				    <field name="without_pagebreak" colspan="4"/>
-					<separator colspan="4" />
-					<label align="0.0" colspan="2" string="" />
-					<button colspan="1" icon="gtk-cancel" special="cancel" string="Cancel"/>
-					<button colspan="1" icon="gtk-print" name="action_next" string="Print" type="object"/>
-				</form>
-			</field>
-		</record>
+        <record id="view_survey_print_answer" model="ir.ui.view">
+            <field name="name">Survey Print Answer</field>
+            <field name="model">survey.print.answer</field>
+            <field name="arch" type="xml">
+                <form string="Print Answer" version="7.0">
+                    <header>
+                        <button name="action_next" string="Print" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
+                    <group col="4">
+                        <separator string="Answer" colspan="4"/>
+                        <field name="response_ids" nolabel="1" colspan="4" />
+                        <separator string="Print Option" colspan="4"/>
+                        <field name="orientation" colspan="4"/>
+                        <field name="paper_size" colspan="4"/>
+                        <field name="page_number" colspan="4"/>
+                        <field name="without_pagebreak" colspan="4"/>
+                    </group>
+                </form>
+            </field>
+        </record>
 
-		<!-- Survey Print answer action -->
+        <!-- Survey Print answer action -->
 
-		<record id="action_view_survey_print_answer"
-			model="ir.actions.act_window">
-			<field name="name">Print Answer</field>
-			<field name="res_model">survey.print.answer</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">form</field>
-			<field name="target">new</field>
-		</record>
+        <record id="action_view_survey_print_answer"
+            model="ir.actions.act_window">
+            <field name="name">Print Answer</field>
+            <field name="res_model">survey.print.answer</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
 
-		<menuitem name="Surveys Answers" action="action_view_survey_print_answer" id="menu_print_survey_answer"
-			parent="menu_reporting" icon="STOCK_PRINT" groups="base.group_tool_manager"/>
+        <menuitem name="Surveys Answers" action="action_view_survey_print_answer" id="menu_print_survey_answer"
+            parent="base.next_id_10" icon="STOCK_PRINT" groups="base.group_tool_manager"/>
 
-	</data>
+    </data>
 </openerp>

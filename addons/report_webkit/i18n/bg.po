@@ -1,21 +1,21 @@
 # Bulgarian translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
-"PO-Revision-Date: 2011-03-27 18:09+0000\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:27+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:31+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: report_webkit
 #: view:ir.actions.report.xml:0
@@ -28,17 +28,12 @@ msgid "Tabloid 29 279.4 x 431.8 mm"
 msgstr "Tabloid 29 279.4 x 431.8 mm"
 
 #. module: report_webkit
-#: field:res.company,lib_path:0
-msgid "Webkit Executable Path"
-msgstr ""
-
-#. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "Ledger  28  431.8 x 279.4 mm"
 msgstr "Ledger  28  431.8 x 279.4 mm"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:226
+#: code:addons/report_webkit/webkit_report.py:233
 #, python-format
 msgid "No header defined for this Webkit report!"
 msgstr ""
@@ -69,14 +64,9 @@ msgid "Company"
 msgstr "Фирма"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:101
+#: code:addons/report_webkit/webkit_report.py:234
 #, python-format
-msgid "path to Wkhtmltopdf is not absolute"
-msgstr ""
-
-#. module: report_webkit
-#: view:ir.header_webkit:0
-msgid "Company and Page Setup"
+msgid "Please set a header in company settings."
 msgstr ""
 
 #. module: report_webkit
@@ -90,16 +80,6 @@ msgid "B7  21  88 x 125 mm"
 msgstr "B7  21  88 x 125 mm"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:255
-#: code:addons/report_webkit/webkit_report.py:266
-#: code:addons/report_webkit/webkit_report.py:275
-#: code:addons/report_webkit/webkit_report.py:288
-#: code:addons/report_webkit/webkit_report.py:299
-#, python-format
-msgid "Webkit render"
-msgstr ""
-
-#. module: report_webkit
 #: view:res.company:0
 msgid "Headers"
 msgstr ""
@@ -108,21 +88,6 @@ msgstr ""
 #: help:ir.header_img,name:0
 msgid "Name of Image"
 msgstr "Име на изображението"
-
-#. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:95
-#, python-format
-msgid ""
-"Wrong Wkhtmltopdf path set in company'+\n"
-"                                'Given path is not executable or path is "
-"wrong"
-msgstr ""
-
-#. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:170
-#, python-format
-msgid "Webkit raise an error"
-msgstr ""
 
 #. module: report_webkit
 #: model:ir.actions.act_window,name:report_webkit.action_header_webkit
@@ -146,33 +111,25 @@ msgid "A4  0   210 x 297 mm, 8.26 x 11.69 inches"
 msgstr "A4  0   210 x 297 mm, 8.26 x 11.69 inches"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:83
+#: code:addons/report_webkit/webkit_report.py:176
 #, python-format
-msgid ""
-"Please install executable on your system'+\n"
-"                             ' (sudo apt-get install wkhtmltopdf) or "
-"download it from here:'+\n"
-"                             ' "
-"http://code.google.com/p/wkhtmltopdf/downloads/list and set the'+\n"
-"                             ' path to the executable on the Company "
-"form.'+\n"
-"                             'Minimal version is 0.9.9"
+msgid "Webkit error"
 msgstr ""
-
-#. module: report_webkit
-#: selection:ir.header_webkit,format:0
-msgid "B6  20  125 x 176 mm"
-msgstr "B6  20  125 x 176 mm"
-
-#. module: report_webkit
-#: view:report.webkit.actions:0
-msgid "_Cancel"
-msgstr "_Отказ"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "B2  17  500 x 707 mm"
 msgstr "B2  17  500 x 707 mm"
+
+#. module: report_webkit
+#: code:addons/report_webkit/webkit_report.py:260
+#: code:addons/report_webkit/webkit_report.py:271
+#: code:addons/report_webkit/webkit_report.py:280
+#: code:addons/report_webkit/webkit_report.py:293
+#: code:addons/report_webkit/webkit_report.py:304
+#, python-format
+msgid "Webkit render!"
+msgstr ""
 
 #. module: report_webkit
 #: model:ir.model,name:report_webkit.model_ir_header_img
@@ -185,9 +142,14 @@ msgid "Precise Mode"
 msgstr ""
 
 #. module: report_webkit
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Грешка! НЕ може да създавате рекурсивни фирми"
+#: code:addons/report_webkit/webkit_report.py:96
+#, python-format
+msgid ""
+"Please install executable on your system (sudo apt-get install wkhtmltopdf) "
+"or download it from here: "
+"http://code.google.com/p/wkhtmltopdf/downloads/list and set the path in the "
+"ir.config_parameter with the webkit_path key.Minimal version is 0.9.9"
+msgstr ""
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -205,7 +167,7 @@ msgid "Type"
 msgstr "Тип"
 
 #. module: report_webkit
-#: code:addons/report_webkit/wizard/report_webkit_actions.py:137
+#: code:addons/report_webkit/wizard/report_webkit_actions.py:133
 #, python-format
 msgid "Client Actions Connections"
 msgstr "Връзки към действията на клиента"
@@ -236,9 +198,9 @@ msgid "The header linked to the report"
 msgstr ""
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:82
+#: code:addons/report_webkit/webkit_report.py:95
 #, python-format
-msgid "Wkhtmltopdf library path is not set in company"
+msgid "Wkhtmltopdf library path is not set"
 msgstr ""
 
 #. module: report_webkit
@@ -283,12 +245,6 @@ msgid "Top Margin (mm)"
 msgstr "Горна граница (mm)"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:227
-#, python-format
-msgid "Please set a header in company settings"
-msgstr ""
-
-#. module: report_webkit
 #: view:report.webkit.actions:0
 msgid "_Ok"
 msgstr "_Ok"
@@ -321,6 +277,11 @@ msgid "Image"
 msgstr "Изображение"
 
 #. module: report_webkit
+#: view:ir.header_img:0
+msgid "Header Image"
+msgstr ""
+
+#. module: report_webkit
 #: field:res.company,header_webkit:0
 msgid "Available html"
 msgstr ""
@@ -343,6 +304,11 @@ msgid "Portrait"
 msgstr "Вертикално"
 
 #. module: report_webkit
+#: view:report.webkit.actions:0
+msgid "or"
+msgstr ""
+
+#. module: report_webkit
 #: selection:ir.header_webkit,orientation:0
 msgid "Landscape"
 msgstr "Хоризонтално"
@@ -351,6 +317,12 @@ msgstr "Хоризонтално"
 #: selection:ir.header_webkit,format:0
 msgid "B8  22  62 x 88 mm"
 msgstr "B8  22  62 x 88 mm"
+
+#. module: report_webkit
+#: code:addons/report_webkit/webkit_report.py:177
+#, python-format
+msgid "The command 'wkhtmltopdf' failed with error code = %s. Message: %s"
+msgstr ""
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -366,11 +338,6 @@ msgstr "Добавяне на бутон за печат"
 #: selection:ir.header_webkit,format:0
 msgid "A9  13  37 x 52 mm"
 msgstr "A9  13  37 x 52 mm"
-
-#. module: report_webkit
-#: view:ir.header_webkit:0
-msgid "Footer"
-msgstr ""
 
 #. module: report_webkit
 #: model:ir.model,name:report_webkit.model_res_company
@@ -398,17 +365,20 @@ msgid "Right Margin (mm)"
 msgstr "Дясна граница (mm)"
 
 #. module: report_webkit
+#: code:addons/report_webkit/webkit_report.py:228
+#, python-format
+msgid "Webkit report template not found!"
+msgstr ""
+
+#. module: report_webkit
 #: field:ir.header_webkit,orientation:0
 msgid "Orientation"
 msgstr "Ориентация"
 
 #. module: report_webkit
-#: help:res.company,lib_path:0
-msgid ""
-"Full path to the wkhtmltopdf executable file. Version 0.9.9 is required. "
-"Install a static version of the library if you experience missing "
-"header/footers on Linux."
-msgstr ""
+#: selection:ir.header_webkit,format:0
+msgid "B6  20  125 x 176 mm"
+msgstr "B6  20  125 x 176 mm"
 
 #. module: report_webkit
 #: help:ir.header_webkit,html:0
@@ -421,18 +391,13 @@ msgid "Paper size"
 msgstr "Размер на хартията"
 
 #. module: report_webkit
-#: view:ir.header_webkit:0
-msgid "Header"
-msgstr ""
-
-#. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid ":B10    16  31 x 44 mm"
 msgstr ":B10    16  31 x 44 mm"
 
 #. module: report_webkit
-#: view:ir.header_webkit:0
-msgid "CSS Style"
+#: view:report.webkit.actions:0
+msgid "Cancel"
 msgstr ""
 
 #. module: report_webkit
@@ -449,6 +414,12 @@ msgstr "B4  19  250 x 353 mm"
 #: model:ir.actions.act_window,name:report_webkit.action_header_img
 #: model:ir.ui.menu,name:report_webkit.menu_header_img
 msgid "Webkit Logos"
+msgstr ""
+
+#. module: report_webkit
+#: code:addons/report_webkit/webkit_report.py:172
+#, python-format
+msgid "No diagnosis message was provided"
 msgstr ""
 
 #. module: report_webkit
@@ -482,11 +453,6 @@ msgid "B0  14  1000 x 1414 mm"
 msgstr ""
 
 #. module: report_webkit
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr ""
-
-#. module: report_webkit
 #: field:ir.header_img,name:0
 #: field:ir.header_webkit,name:0
 msgid "Name"
@@ -514,18 +480,12 @@ msgid "Comm10E 25  105 x 241 mm, U.S. Common 10 Envelope"
 msgstr "Comm10E 25  105 x 241 mm, U.S. Common 10 Envelope"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:221
-#, python-format
-msgid "Webkit Report template not found !"
-msgstr ""
-
-#. module: report_webkit
 #: field:ir.header_webkit,margin_left:0
 msgid "Left Margin (mm)"
 msgstr ""
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:221
+#: code:addons/report_webkit/webkit_report.py:228
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -544,3 +504,14 @@ msgstr "B9  23  33 x 62 mm"
 #: model:ir.model,name:report_webkit.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
+
+#. module: report_webkit
+#: code:addons/report_webkit/webkit_report.py:174
+#, python-format
+msgid "The following diagnosis message was provided:\n"
+msgstr ""
+
+#. module: report_webkit
+#: view:ir.header_webkit:0
+msgid "HTML Header"
+msgstr ""

@@ -21,8 +21,8 @@
 
 import time
 
-from osv import fields, osv
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class hr_action_reason(osv.osv):
     _name = "hr.action.reason"
@@ -55,7 +55,7 @@ class hr_attendance(osv.osv):
         'name': fields.datetime('Date', required=True, select=1),
         'action': fields.selection([('sign_in', 'Sign In'), ('sign_out', 'Sign Out'), ('action','Action')], 'Action', required=True),
         'action_desc': fields.many2one("hr.action.reason", "Action Reason", domain="[('action_type', '=', action)]", help='Specifies the reason for Signing In/Signing Out in case of extra hours.'),
-        'employee_id': fields.many2one('hr.employee', "Employee's Name", required=True, select=True),
+        'employee_id': fields.many2one('hr.employee', "Employee", required=True, select=True),
         'day': fields.function(_day_compute, type='char', string='Day', store=True, select=1, size=32),
     }
     _defaults = {
@@ -64,22 +64,26 @@ class hr_attendance(osv.osv):
     }
 
     def _altern_si_so(self, cr, uid, ids, context=None):
-        for id in ids:
-            sql = '''
-            SELECT action, name
-            FROM hr_attendance AS att
-            WHERE employee_id = (SELECT employee_id FROM hr_attendance WHERE id=%s)
-            AND action IN ('sign_in','sign_out')
-            AND name <= (SELECT name FROM hr_attendance WHERE id=%s)
-            ORDER BY name DESC
-            LIMIT 2 '''
-            cr.execute(sql,(id,id))
-            atts = cr.fetchall()
-            if not ((len(atts)==1 and atts[0][0] == 'sign_in') or (len(atts)==2 and atts[0][0] != atts[1][0] and atts[0][1] != atts[1][1])):
+        """ Alternance sign_in/sign_out check.
+            Previous (if exists) must be of opposite action.
+            Next (if exists) must be of opposite action.
+        """
+        for att in self.browse(cr, uid, ids, context=context):
+            # search and browse for first previous and first next records
+            prev_att_ids = self.search(cr, uid, [('employee_id', '=', att.employee_id.id), ('name', '<', att.name), ('action', 'in', ('sign_in', 'sign_out'))], limit=1, order='name DESC')
+            next_add_ids = self.search(cr, uid, [('employee_id', '=', att.employee_id.id), ('name', '>', att.name), ('action', 'in', ('sign_in', 'sign_out'))], limit=1, order='name ASC')
+            prev_atts = self.browse(cr, uid, prev_att_ids, context=context)
+            next_atts = self.browse(cr, uid, next_add_ids, context=context)
+            # check for alternance, return False if at least one condition is not satisfied
+            if prev_atts and prev_atts[0].action == att.action: # previous exists and is same action
+                return False
+            if next_atts and next_atts[0].action == att.action: # next exists and is same action
+                return False
+            if (not prev_atts) and (not next_atts) and att.action != 'sign_in': # first attendance must be sign_in
                 return False
         return True
 
-    _constraints = [(_altern_si_so, 'Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)', ['action'])]
+    _constraints = [(_altern_si_so, 'Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)', ['action'])]
     _order = 'name desc'
 
 hr_attendance()
@@ -108,9 +112,32 @@ class hr_employee(osv.osv):
         for res in cr.fetchall():
             result[res[1]] = res[0] == 'sign_in' and 'present' or 'absent'
         return result
+    
+    def _last_sign(self, cr, uid, ids, name, args, context=None):
+        result = {}
+        if not ids:
+            return result
+        for id in ids:
+            result[id] = False
+            cr.execute("""select max(name) as name
+                        from hr_attendance
+                        where action in ('sign_in', 'sign_out') and employee_id = %s""",(id,))
+            for res in cr.fetchall():
+                result[id] = res[0]
+        return result
+
+    def _attendance_access(self, cr, uid, ids, name, args, context=None):
+        # this function field use to hide attendance button to singin/singout from menu
+        group = self.pool.get('ir.model.data').get_object(cr, uid, 'base', 'group_hr_attendance')
+        visible = False
+        if uid in [user.id for user in group.users]:
+            visible = True
+        return dict([(x, visible) for x in ids])
 
     _columns = {
        'state': fields.function(_state, type='selection', selection=[('absent', 'Absent'), ('present', 'Present')], string='Attendance'),
+       'last_sign': fields.function(_last_sign, type='datetime', string='Last Sign'),
+       'attendance_access': fields.function(_attendance_access, string='Attendance Access', type='boolean'),
     }
 
     def _action_check(self, cr, uid, emp_id, dt=False, context=None):
@@ -118,30 +145,25 @@ class hr_employee(osv.osv):
         res = cr.fetchone()
         return not (res and (res[0]>=(dt or time.strftime('%Y-%m-%d %H:%M:%S'))))
 
-    def attendance_action_change(self, cr, uid, ids, type='action', context=None, dt=False, *args):
-        obj_attendance = self.pool.get('hr.attendance')
-        id = False
-        warning_sign = 'sign'
-        res = {}
+    def attendance_action_change(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        action_date = context.get('action_date', False)
+        action = context.get('action', False)
+        hr_attendance = self.pool.get('hr.attendance')
+        warning_sign = {'sign_in': _('Sign In'), 'sign_out': _('Sign Out')}
+        for employee in self.browse(cr, uid, ids, context=context):
+            if not action:
+                if employee.state == 'present': action = 'sign_out'
+                if employee.state == 'absent': action = 'sign_in'
 
-        #Special case when button calls this method: type=context
-        if isinstance(type, dict):
-            type = type.get('type','action')
-        if type == 'sign_in':
-            warning_sign = "Sign In"
-        elif type == 'sign_out':
-            warning_sign = "Sign Out"
-        for emp in self.read(cr, uid, ids, ['id'], context=context):
-            if not self._action_check(cr, uid, emp['id'], dt, context):
-                raise osv.except_osv(_('Warning'), _('You tried to %s with a date anterior to another event !\nTry to contact the administrator to correct attendances.')%(warning_sign,))
+            if not self._action_check(cr, uid, employee.id, action_date, context):
+                raise osv.except_osv(_('Warning'), _('You tried to %s with a date anterior to another event !\nTry to contact the HR Manager to correct attendances.')%(warning_sign[action],))
 
-            res = {'action': type, 'employee_id': emp['id']}
-            if dt:
-                res['name'] = dt
-        id = obj_attendance.create(cr, uid, res, context=context)
-
-        if type != 'action':
-            return id
+            vals = {'action': action, 'employee_id': employee.id}
+            if action_date:
+                vals['name'] = action_date
+            hr_attendance.create(cr, uid, vals, context=context)
         return True
 
 hr_employee()

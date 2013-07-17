@@ -2,99 +2,99 @@
 <openerp>
     <data>
 
-	<record model="account.tax.code.template" id="vat_code_tax_en">
-		<field name="name">Tax</field>
-	</record>
-	
-	<record model="account.tax.code.template" id="vat_code_balance_net_en">
-		<field name="name">Tax Balance to Pay</field>
-		<field name="parent_id" ref="vat_code_tax_en"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_tax_en">
+        <field name="name">Tax</field>
+    </record>
+    
+    <record model="account.tax.code.template" id="vat_code_balance_net_en">
+        <field name="name">Tax Balance</field>
+        <field name="parent_id" ref="vat_code_tax_en"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_receivable_tva_en">
-		<field name="name">Receivable Taxes</field>
-		<field name="parent_id" ref="vat_code_balance_net_en"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_receivable_tva_en">
+        <field name="name">Taxes paid</field>
+        <field name="parent_id" ref="vat_code_balance_net_en"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_receivable_gst_en">
-		<field name="name">GST to Receive</field>
-		<field name="parent_id" ref="vat_code_receivable_tva_en"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_receivable_gst_en">
+        <field name="name">GST paid</field>
+        <field name="parent_id" ref="vat_code_receivable_tva_en"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_receivable_pst_en">
-		<field name="name">PST to Receive</field>
-		<field name="parent_id" ref="vat_code_receivable_tva_en"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_receivable_pst_en">
+        <field name="name">PST paid</field>
+        <field name="parent_id" ref="vat_code_receivable_tva_en"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_receivable_hst_en">
-		<field name="name">HST to Receive</field>
-		<field name="parent_id" ref="vat_code_receivable_tva_en"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_receivable_hst_en">
+        <field name="name">HST paid</field>
+        <field name="parent_id" ref="vat_code_receivable_tva_en"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_payable_en">
-		<field name="name">Payable Taxes</field>
-		<field name="parent_id" ref="vat_code_balance_net_en"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_payable_en">
+        <field name="name">Taxes received</field>
+        <field name="parent_id" ref="vat_code_balance_net_en"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_payable_gst_en">
-		<field name="name">GST to Pay</field>
-		<field name="parent_id" ref="vat_code_payable_en"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_payable_gst_en">
+        <field name="name">GST received</field>
+        <field name="parent_id" ref="vat_code_payable_en"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_payable_pst_en">
-		<field name="name">PST to Pay</field>
-		<field name="parent_id" ref="vat_code_payable_en"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_payable_pst_en">
+        <field name="name">PST received</field>
+        <field name="parent_id" ref="vat_code_payable_en"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_payable_hst_en">
-		<field name="name">HST to Pay</field>
-		<field name="parent_id" ref="vat_code_payable_en"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_payable_hst_en">
+        <field name="name">HST received</field>
+        <field name="parent_id" ref="vat_code_payable_en"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_base_net_en">
-		<field name="name">Taxes Base</field>
-		<field name="parent_id" ref="vat_code_tax_en"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_base_net_en">
+        <field name="name">Taxes Base</field>
+        <field name="parent_id" ref="vat_code_tax_en"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_base_receivable_en">
-		<field name="name">Base of Sales Tax</field>
-		<field name="parent_id" ref="vat_code_base_net_en"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_base_receivable_en">
+        <field name="name">Base of Sales Tax</field>
+        <field name="parent_id" ref="vat_code_base_net_en"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_base_receivable_gst_en">
-		<field name="name">Base of GST for Sales</field>
-		<field name="parent_id" ref="vat_code_base_receivable_en"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_base_receivable_gst_en">
+        <field name="name">Base of GST for Sales</field>
+        <field name="parent_id" ref="vat_code_base_receivable_en"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_base_receivable_pst_en">
-		<field name="name">Base of PST for Sales</field>
-		<field name="parent_id" ref="vat_code_base_receivable_en"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_base_receivable_pst_en">
+        <field name="name">Base of PST for Sales</field>
+        <field name="parent_id" ref="vat_code_base_receivable_en"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_base_receivable_hst_en">
-		<field name="name">Base of HST for Sales</field>
-		<field name="parent_id" ref="vat_code_base_receivable_en"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_base_receivable_hst_en">
+        <field name="name">Base of HST for Sales</field>
+        <field name="parent_id" ref="vat_code_base_receivable_en"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_base_payable_en">
-		<field name="name">Base of Purchases Tax</field>
-		<field name="parent_id" ref="vat_code_base_net_en"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_base_payable_en">
+        <field name="name">Base of Purchases Tax</field>
+        <field name="parent_id" ref="vat_code_base_net_en"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_base_payable_gst_en">
-		<field name="name">Base of GST for Purchases</field>
-		<field name="parent_id" ref="vat_code_base_payable_en"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_base_payable_gst_en">
+        <field name="name">Base of GST for Purchases</field>
+        <field name="parent_id" ref="vat_code_base_payable_en"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_base_payable_pst_en">
-		<field name="name">Base of PST for Purchases</field>
-		<field name="parent_id" ref="vat_code_base_payable_en"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_base_payable_pst_en">
+        <field name="name">Base of PST for Purchases</field>
+        <field name="parent_id" ref="vat_code_base_payable_en"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_base_payable_hst_en">
-		<field name="name">Base of HST for Purchases</field>
-		<field name="parent_id" ref="vat_code_base_payable_en"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_base_payable_hst_en">
+        <field name="name">Base of HST for Purchases</field>
+        <field name="parent_id" ref="vat_code_base_payable_en"/>
+    </record>
 
     </data>
 </openerp>

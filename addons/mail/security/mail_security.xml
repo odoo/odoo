@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- RULES -->
+        <record id="mail_group_public_and_joined" model="ir.rule">
+            <field name="name">Mail.group: access only public and joined groups</field>
+            <field name="model_id" ref="model_mail_group"/>
+            <!-- This rule has to be improved for employee only groups -->
+            <field name="domain_force">['|', '|', ('public', '=', 'public'), ('message_follower_ids', 'in', [user.partner_id.id]), '&amp;', ('public','=','groups'), ('group_public_id','in', [g.id for g in user.groups_id])]</field>
+            <field name="perm_create" eval="False"/>
+        </record>
+
+        <record id="mail_followers_read_write_own" model="ir.rule">
+            <field name="name">mail.followers: read and write its own entries</field>
+            <field name="model_id" ref="model_mail_followers"/>
+            <field name="domain_force">[('partner_id', '=', user.partner_id.id)]</field>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="mail_notification_read_write_own" model="ir.rule">
+            <field name="name">mail.notification: read and write its own entries</field>
+            <field name="model_id" ref="model_mail_notification"/>
+            <field name="domain_force">[('partner_id', '=', user.partner_id.id)]</field>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!--
+        This rule can not be uncommented, because we have a more wide method in mail.message. When we implement a many2one_variable field, we will be able to uncomment this.
+        <record id="mail_message_read_partner_or_author" model="ir.rule">
+            <field name="name">mail.message: read if notified or author</field>
+            <field name="model_id" ref="model_mail_message"/>
+            <field name="domain_force">['|', ('partner_ids', 'in', user.partner_id.id), ('author_id', '=', user.partner_id.id)]</field>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+        -->
+
+    </data>
+</openerp>

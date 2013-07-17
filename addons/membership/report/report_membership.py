@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-import tools
-import decimal_precision as dp
+from openerp.osv import fields, osv
+from openerp import tools
+import openerp.addons.decimal_precision as dp
 
 STATE = [
     ('none', 'Non Member'),
@@ -59,7 +59,7 @@ class report_membership(osv.osv):
         'associate_member_id': fields.many2one('res.partner', 'Associate Member', readonly=True),
         'membership_id': fields.many2one('product.product', 'Membership Product', readonly=True),
         'membership_state': fields.selection(STATE, 'Current Membership State', readonly=True),
-        'user_id': fields.many2one('res.users', 'Salesman', readonly=True),
+        'user_id': fields.many2one('res.users', 'Salesperson', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True)
         }
 

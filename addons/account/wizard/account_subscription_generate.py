@@ -21,14 +21,14 @@
 
 import time
 
-from osv import fields, osv
+from openerp.osv import fields, osv
 
 class account_subscription_generate(osv.osv_memory):
 
     _name = "account.subscription.generate"
     _description = "Subscription Compute"
     _columns = {
-       'date': fields.date('Date', required=True),
+       'date': fields.date('Generate Entries Before', required=True),
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d'),

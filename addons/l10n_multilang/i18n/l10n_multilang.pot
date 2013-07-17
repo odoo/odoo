@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1beta\n"
+"Project-Id-Version: OpenERP Server 6.1rc1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-22 18:45+0000\n"
-"PO-Revision-Date: 2011-12-22 18:45+0000\n"
+"POT-Creation-Date: 2012-02-08 01:06+0000\n"
+"PO-Revision-Date: 2012-02-08 01:06+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,8 +21,8 @@ msgid "Template for Fiscal Position"
 msgstr ""
 
 #. module: l10n_multilang
-#: constraint:account.analytic.account:0
-msgid "Error! The currency has to be the same as the currency of the selected company"
+#: sql_constraint:account.account:0
+msgid "The code of the account must be unique per company !"
 msgstr ""
 
 #. module: l10n_multilang
@@ -52,6 +52,11 @@ msgid "Templates for Account Chart"
 msgstr ""
 
 #. module: l10n_multilang
+#: sql_constraint:account.tax:0
+msgid "The description must be unique per company!"
+msgstr ""
+
+#. module: l10n_multilang
 #: constraint:account.tax.code.template:0
 msgid "Error ! You can not create recursive Tax Codes."
 msgstr ""
@@ -64,6 +69,11 @@ msgstr ""
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_tax
 msgid "account.tax"
+msgstr ""
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_account
+msgid "Account"
 msgstr ""
 
 #. module: l10n_multilang
@@ -87,8 +97,14 @@ msgid "State here the languages for which the translations of templates could be
 msgstr ""
 
 #. module: l10n_multilang
-#: sql_constraint:account.tax:0
-msgid "Tax Name must be unique per company!"
+#: constraint:account.account:0
+msgid "Error ! You can not create recursive accounts."
+msgstr ""
+
+#. module: l10n_multilang
+#: constraint:account.account:0
+msgid "Configuration Error! \n"
+"You can not select an account type with a deferral method different of \"Unreconciled\" for accounts with internal type \"Payable/Receivable\"! "
 msgstr ""
 
 #. module: l10n_multilang
@@ -109,6 +125,12 @@ msgstr ""
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_fiscal_position
 msgid "Fiscal Position"
+msgstr ""
+
+#. module: l10n_multilang
+#: constraint:account.account:0
+msgid "Configuration Error! \n"
+"You can not define children to an account with internal type different of \"View\"! "
 msgstr ""
 
 #. module: l10n_multilang

@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-import tools
+from openerp.osv import fields, osv
+from openerp import tools
 
 class hr_department(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
@@ -76,7 +76,7 @@ class hr_department(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, 'Error! You can not create recursive departments.', ['parent_id'])
+        (_check_recursion, 'Error! You cannot create recursive departments.', ['parent_id'])
     ]
 
 hr_department()
@@ -105,14 +105,5 @@ class ir_action_window(osv.osv):
 
 ir_action_window()
 
-class res_users(osv.osv):
-    _inherit = 'res.users'
-    _description = 'User'
-
-    _columns = {
-        'context_department_id': fields.many2one('hr.department', 'Departments'),
-    }
-
-res_users()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

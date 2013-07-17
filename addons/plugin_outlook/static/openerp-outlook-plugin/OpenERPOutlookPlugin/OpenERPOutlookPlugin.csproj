@@ -44,6 +44,7 @@
     <IncrementalBuild>false</IncrementalBuild>
     <RegisterForComInterop>true</RegisterForComInterop>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>false</DebugSymbols>
@@ -242,12 +243,6 @@
     <Content Include="Resources\Task.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OpenERPClient\OpenERPClient.csproj">
-      <Project>{8E62B8DF-E3A2-4429-A820-FB8A31C2EB00}</Project>
-      <Name>OpenERPClient</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
@@ -263,6 +258,12 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OpenERPClient\OpenERPClient.csproj">
+      <Project>{8E62B8DF-E3A2-4429-A820-FB8A31C2EB00}</Project>
+      <Name>OpenERPClient</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSHARP.Targets" />
   <PropertyGroup>

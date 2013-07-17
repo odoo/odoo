@@ -3,7 +3,7 @@
 -
   !python {model: purchase.order}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.purchase.quotation').create(cr, uid, [ref('purchase.order_purchase1'),ref('purchase.order_purchase2')], {}, {})
+    (data, format) = netsvc.LocalService('report.purchase.quotation').create(cr, uid, [ref('purchase.purchase_order_1'),ref('purchase.purchase_order_2')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'purchase-request_quotation'+format), 'wb+').write(data)
 -
@@ -11,6 +11,6 @@
 -
   !python {model: purchase.order}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.purchase.order').create(cr, uid, [ref('purchase.order_purchase1'),ref('purchase.order_purchase2')], {}, {})
+    (data, format) = netsvc.LocalService('report.purchase.order').create(cr, uid, [ref('purchase.purchase_order_1'),ref('purchase.purchase_order_2')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'purchase-purchase_order_report'+format), 'wb+').write(data)

@@ -125,7 +125,7 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    
+
     <blockTable colWidths="287.0,254.0" repeatRows="1" style="Tableau1">
       <tr>
         <td>
@@ -134,8 +134,8 @@
           <para style="terp_default_9">[[ o.sale_id and o.sale_id.partner_invoice_id and display_address(o.sale_id.partner_invoice_id) ]]</para>
         </td>
         <td>
-          <para style="terp_default_9">[[ o.address_id and o.address_id.partner_id and o.address_id.partner_id.name or '' ]]</para>
-          <para style="terp_default_9">[[ o.address_id and o.address_id and display_address(o.address_id) ]]</para>
+          <para style="terp_default_9">[[ o.partner_id and o.partner_id and o.partner_id.name or '' ]]</para>
+          <para style="terp_default_9">[[ o.partner_id and o.partner_id and display_address(o.partner_id) ]]</para>
         </td>
       </tr>
     </blockTable>

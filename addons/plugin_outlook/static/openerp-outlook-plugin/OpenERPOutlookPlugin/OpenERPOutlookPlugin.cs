@@ -1,4 +1,4 @@
-﻿/*
+/*
 
     OpenERP, Open Source Business Applications
     Copyright (c) 2011 OpenERP S.A. <http://openerp.com>
@@ -105,7 +105,7 @@ namespace OpenERPOutlookPlugin
             /*
              
              * Will Redirect to the web-browser and open partner.
-             * If it will not found partner in res.partner.address (in contact) then 
+             * If it will not found partner in res.partner (in contact) then 
                it will open the contact form to create a partner.
                :Param outlook.MailItem mailItem : Outlook Mail item
              */
@@ -144,7 +144,16 @@ namespace OpenERPOutlookPlugin
                 OpenERPConnect openerp_connect = openerp_outlook.Connection;
                 ArrayList args = new ArrayList();               
                 Hashtable vals = new Hashtable();
-                string email = Tools.GetHeader(mail); //TODO: Outlook.MailItem Should be Converted into MIME Message
+                string email;
+                if (Tools.GetHeader(mail)!= null)
+                {
+                    email = Tools.GetHeader(mail); //TODO: Outlook.MailItem Should be Converted into MIME Message
+                }
+                else
+                {
+                    email = "";
+                }
+                
                 args.Add(model);
                 args.Add(email.ToString());
                 args.Add(thread_id);              
@@ -180,7 +189,7 @@ namespace OpenERPOutlookPlugin
         {
             /*
              
-            * Creates a Contact record in the res.partner.address as per the details given in the 
+            * Creates a Contact record in the res.partner as per the details given in the 
               plugin form of openERP outlook Plugin.
               :Param string partner_id : Partner id for which it creates a contact
               :Param string name : Contact name 

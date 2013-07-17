@@ -3,7 +3,7 @@
 -
   !python {model: pos.order}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.pos.details_summary').create(cr, uid, [ref('point_of_sale.order_pos1'), ref('point_of_sale.order_pos2')], {}, {})
+    (data, format) = netsvc.LocalService('report.pos.details_summary').create(cr, uid, [ref('point_of_sale.pos_order_pos1')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-details_summary report'+format), 'wb+').write(data)
 
@@ -12,7 +12,7 @@
 -
   !python {model: pos.order}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.pos.invoice').create(cr, uid, [ref('point_of_sale.pos_order_pos11')], {}, {})
+    (data, format) = netsvc.LocalService('report.pos.invoice').create(cr, uid, [ref('point_of_sale.pos_order_pos1')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-invoice report'+format), 'wb+').write(data)
 
@@ -21,7 +21,7 @@
 -
   !python {model: pos.order}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.pos.lines').create(cr, uid, [ref('point_of_sale.order_pos1'), ref('point_of_sale.order_pos2')], {}, {})
+    (data, format) = netsvc.LocalService('report.pos.lines').create(cr, uid, [ref('point_of_sale.pos_order_pos1')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-lines report'+format), 'wb+').write(data)
 
@@ -30,7 +30,7 @@
 -
   !python {model: pos.order}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.pos.receipt').create(cr, uid, [ref('point_of_sale.order_pos1'), ref('point_of_sale.order_pos2')], {}, {})
+    (data, format) = netsvc.LocalService('report.pos.receipt').create(cr, uid, [ref('point_of_sale.pos_order_pos1')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-receipt report'+format), 'wb+').write(data)
 
@@ -51,7 +51,7 @@
   !python {model: pos.order}: |
     import netsvc, tools, os, time
     data_dict = {'model':'ir.ui.menu', 'form':{'date_start': time.strftime('%Y-%m-%d'), 'date_end': time.strftime('%Y-%m-%d'),'user_id':[ref('base.user_root')] }}
-    (data, format) = netsvc.LocalService('report.pos.sales.user').create(cr, uid, [ref('point_of_sale.order_pos1'), ref('point_of_sale.order_pos2')], data_dict, {})
+    (data, format) = netsvc.LocalService('report.pos.sales.user').create(cr, uid, [ref('point_of_sale.pos_order_pos1')], data_dict, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-sales_user_report'+format), 'wb+').write(data)
 -
@@ -68,6 +68,6 @@
   !python {model: pos.order}: |
     import netsvc, tools, os, time
     data_dict = {'model':'ir.ui.menu', 'form':{'user_id':[ref('base.user_root'),ref('base.user_demo')] }}
-    (data, format) = netsvc.LocalService('report.pos.payment.report.user').create(cr, uid, [ref('point_of_sale.order_pos1'), ref('point_of_sale.order_pos2')], data_dict, {})
+    (data, format) = netsvc.LocalService('report.pos.payment.report.user').create(cr, uid, [ref('point_of_sale.pos_order_pos1')], data_dict, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-payment_user_report'+format), 'wb+').write(data)

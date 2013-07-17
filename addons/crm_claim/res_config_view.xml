@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_project_config_claim" model="ir.ui.view">
+            <field name="name">crm_claim settings</field>
+            <field name="model">sale.config.settings</field>
+            <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
+            <field name="priority" eval="20"/>       
+            <field name="arch" type="xml">
+                <div name="fetchmail_lead" position="after">
+                    <div>
+                        <field name="fetchmail_claim" class="oe_inline"/>
+                        <label for="fetchmail_claim"/>
+                        <button type="object" name="configure_fetchmail_claim" string="Configure" icon="gtk-go-forward" 
+                            attrs="{'invisible': [('fetchmail_claim','=',False)]}" class="oe_link"/>
+                    </div>
+                </div>
+            </field>
+        </record>
+
+    </data>
+</openerp>

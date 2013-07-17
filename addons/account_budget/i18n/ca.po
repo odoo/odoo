@@ -1,20 +1,29 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* account_budget
+# Catalan translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2010-10-30 08:25+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:10+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:03+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
+
+#. module: account_budget
+#: view:account.budget.analytic:0
+#: view:account.budget.crossvered.report:0
+#: view:account.budget.crossvered.summary.report:0
+#: view:account.budget.report:0
+msgid "Select Dates Period"
+msgstr "Seleccioni dates del període"
 
 #. module: account_budget
 #: field:crossovered.budget,creating_user_id:0
@@ -31,12 +40,6 @@ msgstr "Confirmat"
 #: model:ir.ui.menu,name:account_budget.menu_budget_post_form
 msgid "Budgetary Positions"
 msgstr "Posicions pressupostaries"
-
-#. module: account_budget
-#: code:addons/account_budget/account_budget.py:119
-#, python-format
-msgid "The General Budget '%s' has no Accounts!"
-msgstr "El pressupost general '%s' no té comptes!"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -110,47 +113,15 @@ msgid "Percentage"
 msgstr "Percentatge"
 
 #. module: account_budget
-#: report:crossovered.budget.report:0
-msgid "to"
-msgstr "fins"
-
-#. module: account_budget
 #: field:crossovered.budget,state:0
 msgid "Status"
 msgstr "Estat"
 
 #. module: account_budget
-#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
-msgid ""
-"A budget is a forecast of your company's income and expenses expected for a "
-"period in the future. With a budget, a company is able to carefully look at "
-"how much money they are taking in during a given period, and figure out the "
-"best way to divide it among various categories. By keeping track of where "
-"your money goes, you may be less likely to overspend, and more likely to "
-"meet your financial goals. Forecast a budget by detailing the expected "
-"revenue per analytic account and monitor its evolution based on the actuals "
-"realised during that period."
+#: code:addons/account_budget/account_budget.py:119
+#, python-format
+msgid "The Budget '%s' has no accounts!"
 msgstr ""
-"Un pressupost és una previsió dels ingressos i despeses esperats per la "
-"vostra companyia en un període futur. Amb un pressupost, una companyia és "
-"capaç d'observar minuciosament quants diners està ingressant en un període "
-"determinat, i pensar en la millor manera de dividir-lo entre diverses "
-"categories. En fer el seguiment dels moviments dels diners, tindreu menys "
-"tendència a una sobre-despesa, i us aproximareu més a les vostres metes "
-"financeres. Feu una previsió d'un pressupost detallant l'ingrés esperat per "
-"compte analític i monitoritzeu l'avaluació basant-vos en els valors actuals "
-"durant aquest període."
-
-#. module: account_budget
-#: view:account.budget.crossvered.summary.report:0
-msgid "This wizard is used to print summary of budgets"
-msgstr "Aquest assistent s'utilitza per imprimir el resum dels pressupostos"
-
-#. module: account_budget
-#: report:account.budget:0
-#: report:crossovered.budget.report:0
-msgid "%"
-msgstr "%"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -176,9 +147,9 @@ msgid "Company"
 msgstr "Companyia"
 
 #. module: account_budget
-#: view:crossovered.budget:0
-msgid "To Approve"
-msgstr "Per aprovar"
+#: report:crossovered.budget.report:0
+msgid "to"
+msgstr "fins"
 
 #. module: account_budget
 #: view:crossovered.budget:0
@@ -247,12 +218,6 @@ msgid "Budget Line"
 msgstr "Línia de pressupost"
 
 #. module: account_budget
-#: view:account.analytic.account:0
-#: view:account.budget.post:0
-msgid "Lines"
-msgstr "Línies"
-
-#. module: account_budget
 #: report:account.budget:0
 #: view:crossovered.budget:0
 #: field:crossovered.budget.lines,crossovered_budget_id:0
@@ -268,10 +233,9 @@ msgid "To Approve Budgets"
 msgstr ""
 
 #. module: account_budget
-#: code:addons/account_budget/account_budget.py:119
-#, python-format
-msgid "Error!"
-msgstr "Error!"
+#: view:crossovered.budget:0
+msgid "Duration"
+msgstr ""
 
 #. module: account_budget
 #: field:account.budget.post,code:0
@@ -287,7 +251,6 @@ msgstr "Aquest assistent és utilitzat per imprimir el pressupost"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
-#: model:ir.actions.act_window,name:account_budget.action_account_budget_post_tree
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_report
 #: model:ir.actions.report.xml,name:account_budget.report_crossovered_budget
 #: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_view
@@ -298,13 +261,9 @@ msgid "Budgets"
 msgstr "Pressupostos"
 
 #. module: account_budget
-#: constraint:account.analytic.account:0
-msgid ""
-"Error! The currency has to be the same as the currency of the selected "
-"company"
-msgstr ""
-"Error! La moneda ha de ser la mateixa que la moneda de la companyia "
-"seleccionada"
+#: view:account.budget.crossvered.summary.report:0
+msgid "This wizard is used to print summary of budgets"
+msgstr "Aquest assistent s'utilitza per imprimir el resum dels pressupostos"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -317,10 +276,9 @@ msgid "Approve"
 msgstr "Aprova"
 
 #. module: account_budget
-#: field:crossovered.budget,date_from:0
-#: field:crossovered.budget.lines,date_from:0
-msgid "Start Date"
-msgstr "Data d'inici"
+#: view:crossovered.budget:0
+msgid "To Approve"
+msgstr "Per aprovar"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -349,12 +307,10 @@ msgid "Theoretical Amt"
 msgstr "Import teòric"
 
 #. module: account_budget
-#: view:account.budget.analytic:0
-#: view:account.budget.crossvered.report:0
-#: view:account.budget.crossvered.summary.report:0
-#: view:account.budget.report:0
-msgid "Select Dates Period"
-msgstr "Seleccioni dates del període"
+#: code:addons/account_budget/account_budget.py:119
+#, python-format
+msgid "Error!"
+msgstr "Error!"
 
 #. module: account_budget
 #: view:account.budget.analytic:0
@@ -372,6 +328,14 @@ msgid "Theoretical Amount"
 msgstr "Import teòric"
 
 #. module: account_budget
+#: view:account.budget.analytic:0
+#: view:account.budget.crossvered.report:0
+#: view:account.budget.crossvered.summary.report:0
+#: view:account.budget.report:0
+msgid "or"
+msgstr ""
+
+#. module: account_budget
 #: field:crossovered.budget.lines,analytic_account_id:0
 #: model:ir.model,name:account_budget.model_account_analytic_account
 msgid "Analytic Account"
@@ -381,6 +345,29 @@ msgstr "Compte analític"
 #: report:account.budget:0
 msgid "Budget :"
 msgstr "Pressupost :"
+
+#. module: account_budget
+#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
+msgid ""
+"<p>\n"
+"                A budget is a forecast of your company's income and/or "
+"expenses\n"
+"                expected for a period in the future. A budget is defined on "
+"some\n"
+"                financial accounts and/or analytic accounts (that may "
+"represent\n"
+"                projects, departments, categories of products, etc.)\n"
+"              </p><p>\n"
+"                By keeping track of where your money goes, you may be less\n"
+"                likely to overspend, and more likely to meet your financial\n"
+"                goals. Forecast a budget by detailing the expected revenue "
+"per\n"
+"                analytic account and monitor its evolution based on the "
+"actuals\n"
+"                realised during that period.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: account_budget
 #: report:account.budget:0
@@ -418,9 +405,10 @@ msgid "Cancel"
 msgstr "Cancel·la"
 
 #. module: account_budget
-#: constraint:account.analytic.account:0
-msgid "Error! You can not create recursive analytic accounts."
-msgstr "Error! No podeu crear comptes analítiques recursives."
+#: field:crossovered.budget,date_from:0
+#: field:crossovered.budget.lines,date_from:0
+msgid "Start Date"
+msgstr "Data d'inici"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -432,220 +420,3 @@ msgstr "Anàlisi des de"
 #: view:crossovered.budget:0
 msgid "Draft Budgets"
 msgstr ""
-
-#~ msgid "Period"
-#~ msgstr "Període"
-
-#~ msgid "Dotations"
-#~ msgstr "Dotacions"
-
-#~ msgid "Performance"
-#~ msgstr "Rendiment"
-
-#~ msgid "From"
-#~ msgstr "Des de"
-
-#~ msgid "Results"
-#~ msgstr "Resultats"
-
-#~ msgid "Period Budget"
-#~ msgstr "Període del pressupost"
-
-#~ msgid "Budget Analysis"
-#~ msgstr "Anàlisi pressupostari"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "﻿XML invàlid per a la definició de la vista!"
-
-#~ msgid "Amount"
-#~ msgstr "Import"
-
-#~ msgid "Item"
-#~ msgstr "Element"
-
-#~ msgid "Fiscal Year"
-#~ msgstr "Exercici fiscal"
-
-#~ msgid "Spread"
-#~ msgstr "Dispersa"
-
-#~ msgid "Select period"
-#~ msgstr "Selecciona període"
-
-#~ msgid "% performance"
-#~ msgstr "% de rendiment"
-
-#~ msgid "Printing date:"
-#~ msgstr "Data d'impressió:"
-
-#, python-format
-#~ msgid "Insufficient Data!"
-#~ msgstr "Dades insuficients!"
-
-#, python-format
-#~ msgid "No Dotations or Master Budget Expenses Found on Budget %s!"
-#~ msgstr ""
-#~ "No existeixen dotacions o s'ha trobat despeses pressupostaris principals en "
-#~ "el pressupost %s!"
-
-#~ msgid "Validate"
-#~ msgstr "Valida"
-
-#~ msgid "Print Summary of Budgets"
-#~ msgstr "Imprimeix resum de pressupostos"
-
-#~ msgid "Spread amount"
-#~ msgstr "Quantitat Estesa"
-
-#~ msgid "Spreading"
-#~ msgstr "Difusió"
-
-#~ msgid "Total Planned Amount"
-#~ msgstr "Import total previst"
-
-#~ msgid "Budget Dotation"
-#~ msgstr "Dotació al pressupost"
-
-#~ msgid "Budget Item Detail"
-#~ msgstr "Detall elements del pressupost"
-
-#~ msgid "Budget Dotations"
-#~ msgstr "Dotacions al pressupost"
-
-#~ msgid "Print Budget"
-#~ msgstr "Imprimeix pressupostos"
-
-#~ msgid "Budget Management"
-#~ msgstr "Gestió de pressupostos"
-
-#~ msgid "Analytic Account :"
-#~ msgstr "Compte analític:"
-
-#~ msgid "A/c No."
-#~ msgstr "Nº compte"
-
-#~ msgid ""
-#~ "This module allows accountants to manage analytic and crossovered budgets.\n"
-#~ "\n"
-#~ "Once the Master Budgets and the Budgets defined (in Financial\n"
-#~ "Management/Budgets/), the Project Managers can set the planned amount on "
-#~ "each\n"
-#~ "Analytic Account.\n"
-#~ "\n"
-#~ "The accountant has the possibility to see the total of amount planned for "
-#~ "each\n"
-#~ "Budget and Master Budget in order to ensure the total planned is not\n"
-#~ "greater/lower than what he planned for this Budget/Master Budget. Each list "
-#~ "of\n"
-#~ "record can also be switched to a graphical view of it.\n"
-#~ "\n"
-#~ "Three reports are available:\n"
-#~ "    1. The first is available from a list of Budgets. It gives the "
-#~ "spreading, for these Budgets, of the Analytic Accounts per Master Budgets.\n"
-#~ "\n"
-#~ "    2. The second is a summary of the previous one, it only gives the "
-#~ "spreading, for the selected Budgets, of the Analytic Accounts.\n"
-#~ "\n"
-#~ "    3. The last one is available from the Analytic Chart of Accounts. It "
-#~ "gives the spreading, for the selected Analytic Accounts, of the Master "
-#~ "Budgets per Budgets.\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Aquest mòdul permet als comptables gestionar pressupostos analítics (costos) "
-#~ "i creuats.\n"
-#~ "\n"
-#~ "Una vegada s'han definit els pressupostos principals i els pressupostos (en "
-#~ "Gestió\n"
-#~ "financera/Pressupostos/), els gestors de projectes poden determinar l'import "
-#~ "previst en\n"
-#~ "cada compte analític.\n"
-#~ "\n"
-#~ "El comptable té la possibilitat de veure el total de l'import previst per a "
-#~ "cada\n"
-#~ "pressupost i pressupost principal per tal de garantir el total previst no "
-#~ "és\n"
-#~ "major/menor que el que tenia previst per a aquest pressupost/pressupost "
-#~ "principal.\n"
-#~ "Cada llista de dades també es pot canviar a una vista gràfica de la "
-#~ "mateixa.\n"
-#~ "\n"
-#~ "Tres informes estan disponibles:\n"
-#~ "    1. El primer està disponible des d'una llista de pressupostos. "
-#~ "Proporciona la difusió, per a aquests pressupostos, dels comptes analítics "
-#~ "per pressupostos principals.\n"
-#~ "\n"
-#~ "    2. El segon és un resum de l'anterior. Només indica la difusió, per als "
-#~ "pressupostos seleccionats, dels comptes analítics.\n"
-#~ "\n"
-#~ "    3. L'últim està disponible des d'un pla de comptes analític. Indica la "
-#~ "difusió, per als comptes analítics seleccionats, dels pressupostos "
-#~ "principals per pressupostos.\n"
-#~ "\n"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nom de model no vàlid en la definició de l'acció."
-
-#~ msgid "Select Options"
-#~ msgstr "Selecciona opcions"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "El nom de l'objecte ha de començar per x_ i no pot contenir cap caràcter "
-#~ "especial!"
-
-#~ msgid ""
-#~ "This module allows accountants to manage analytic and crossovered budgets.\n"
-#~ "\n"
-#~ "Once the Master Budgets and the Budgets are defined (in "
-#~ "Accounting/Budgets/),\n"
-#~ "the Project Managers can set the planned amount on each Analytic Account.\n"
-#~ "\n"
-#~ "The accountant has the possibility to see the total of amount planned for "
-#~ "each\n"
-#~ "Budget and Master Budget in order to ensure the total planned is not\n"
-#~ "greater/lower than what he planned for this Budget/Master Budget. Each list "
-#~ "of\n"
-#~ "record can also be switched to a graphical view of it.\n"
-#~ "\n"
-#~ "Three reports are available:\n"
-#~ "    1. The first is available from a list of Budgets. It gives the "
-#~ "spreading, for these Budgets, of the Analytic Accounts per Master Budgets.\n"
-#~ "\n"
-#~ "    2. The second is a summary of the previous one, it only gives the "
-#~ "spreading, for the selected Budgets, of the Analytic Accounts.\n"
-#~ "\n"
-#~ "    3. The last one is available from the Analytic Chart of Accounts. It "
-#~ "gives the spreading, for the selected Analytic Accounts, of the Master "
-#~ "Budgets per Budgets.\n"
-#~ "\n"
-#~ msgstr ""
-#~ "Aquest mòdul permet als comptables gestionar pressupostos analítics (costos) "
-#~ "i creuats.\n"
-#~ "\n"
-#~ "Una vegada que s'han definit els pressupostos principals i els pressupostos "
-#~ "(en Comptabilitat/Pressupostats/),\n"
-#~ "els gestors de projectes poden establir l'import previst en cada compte "
-#~ "analític.\n"
-#~ "\n"
-#~ "El comptable té la possibilitat de veure el total de l'import previst per a "
-#~ "cada\n"
-#~ "pressupost i pressupost principal a fi de garantir que el total previst no "
-#~ "és\n"
-#~ "major/menor que el que havia previst per a aquest pressupost / pressupost "
-#~ "principal.\n"
-#~ "Cada llista de dades també pot canviar-se a una vista gràfica de la "
-#~ "mateixa.\n"
-#~ "\n"
-#~ "Estan disponibles tres informes:\n"
-#~ "1. El primer està disponible des d'una llista de pressupostos. Proporciona "
-#~ "la difusió, per a aquests pressupostos, dels comptes analítics per "
-#~ "pressupostos principals.\n"
-#~ "\n"
-#~ "2. El segon és un resum de l'anterior. Només indica la difusió, per als "
-#~ "pressupostos seleccionats, dels comptes analítics.\n"
-#~ "\n"
-#~ "3. L'últim està disponible des del pla de comptes analític. Indica la "
-#~ "difusió, per als comptes analítics seleccionats, dels pressupostos "
-#~ "principals per pressupostos.\n"
-#~ "\n"

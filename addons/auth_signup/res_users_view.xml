@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <!-- add context in action to enable automatic reset password -->
+        <record id="base.action_res_users" model="ir.actions.act_window">
+            <field name="context">{'reset_password': True}</field>
+        </record>
+
+        <record id="res_users_form_view" model="ir.ui.view">
+            <field name="name">user.form.state</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <!-- add state field in header -->
+                <xpath expr="//sheet" position="before">
+                    <header>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                </xpath>
+                <!-- add Reset Password button -->
+                <xpath expr="//div[@class='oe_right oe_button_box']" position="replace">
+                    <div class="oe_right oe_button_box">
+                        <button string="Reset Password" type="object" name="action_reset_password"
+                            help="Send an email to the user to (re)set their password."/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

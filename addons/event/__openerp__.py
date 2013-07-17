@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
@@ -24,43 +25,38 @@
     'name': 'Events Organisation',
     'version': '0.1',
     'category': 'Tools',
-    'complexity': "easy",
+    'summary': 'Trainings, Conferences, Meetings, Exhibitions, Registrations',
     'description': """
 Organization and management of Events.
 ======================================
 
-This module allows you
-    * to manage your events and their registrations
-    * to use emails to automatically confirm and send acknowledgements for any registration to an event
-    * ...
+The event module allows you to efficiently organise events and all related tasks: planification, registration tracking,
+attendances, etc.
 
-Note that:
-    - You can define new types of events in
-        Association / Configuration / Types of Events
+Key Features
+------------
+* Manage your Events and Registrations
+* Use emails to automatically confirm and send acknowledgements for any event registration
 """,
     'author': 'OpenERP SA',
-    'depends': ['crm', 'account', 'marketing', 'mail'],
-    'init_xml': [],
-    'update_xml': [
+    'depends': ['base_setup', 'board', 'email_template'],
+    'data': [
+        'security/event_security.xml',
         'security/ir.model.access.csv',
-        'wizard/event_confirm_registration_view.xml',
         'wizard/event_confirm_view.xml',
         'event_view.xml',
+        'event_data.xml',
         'report/report_event_registration_view.xml',
-        'wizard/event_make_invoice_view.xml',
-        'wizard/partner_event_registration_view.xml',
         'board_association_view.xml',
         'res_partner_view.xml',
+        'email_template.xml',
     ],
-    'demo_xml': ['event_demo.xml'],
-    'test': ['test/process/event_confirm2done.yml',
-             'test/process/event_draft2cancel.yml',
-             'test/process/partner_register2invoice.yml',
-             'test/ui/duplicate_event.yml',
-             'test/ui/demo_data.yml'],
+    'demo': ['event_demo.xml'],
+    'test': ['test/process/event_draft2done.yml'],
+    'css': ['static/src/css/event.css'],
     'installable': True,
-    'active': False,
-    'certificate': '0083059161581',
+    'application': True,
+    'auto_install': False,
     'images': ['images/1_event_type_list.jpeg','images/2_events.jpeg','images/3_registrations.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

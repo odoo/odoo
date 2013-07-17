@@ -206,7 +206,7 @@
             <para style="P2">[[ formatLang(r['amount']) ]]</para>
           </td>
           <td>
-            <para style="P3">[[ formatLang(r['total']) ]] [[o.company_id and o.company_id.currency_id.symbol or '']]</para>
+            <para style="P3">[[ formatLang(r['total'], currency_obj = o.company_id and o.company_id.currency_id)]]</para>
           </td>
         </tr>
       </blockTable>
@@ -222,7 +222,7 @@
           <para style="P15">Total:</para>
         </td>
         <td>
-          <para style="P11">[[ formatLang(sum_total()) ]] [[o.company_id and o.company_id.currency_id.symbol or '']]</para>
+          <para style="P11">[[ formatLang(sum_total(), currency_obj = o.company_id and o.company_id.currency_id)]]</para>
         </td>
       </tr>
     </blockTable>

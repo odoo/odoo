@@ -18,9 +18,9 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-from tools.translate import _
-import netsvc
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp import netsvc
 
 class sale_make_invoice(osv.osv_memory):
     _name = "sale.make.invoice"
@@ -30,7 +30,8 @@ class sale_make_invoice(osv.osv_memory):
         'invoice_date': fields.date('Invoice Date'),
     }
     _defaults = {
-        'grouped': False
+        'grouped': False,
+        'invoice_date': fields.date.context_today,
     }
 
     def view_init(self, cr, uid, fields_list, context=None):
@@ -39,7 +40,7 @@ class sale_make_invoice(osv.osv_memory):
         record_id = context and context.get('active_id', False)
         order = self.pool.get('sale.order').browse(cr, uid, record_id, context=context)
         if order.state == 'draft':
-            raise osv.except_osv(_('Warning !'),'You can not create invoice when sales order is not confirmed.')
+            raise osv.except_osv(_('Warning!'),'You cannot create invoice when sales order is not confirmed.')
         return False
 
     def make_invoices(self, cr, uid, ids, context=None):

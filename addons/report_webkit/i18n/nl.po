@@ -1,26 +1,27 @@
 # Dutch translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
-"PO-Revision-Date: 2011-01-26 18:25+0000\n"
-"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-25 21:14+0000\n"
+"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:27+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-12-26 05:18+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: report_webkit
 #: view:ir.actions.report.xml:0
 msgid "Webkit Template (used if Report File is not found)"
-msgstr "Webkit sjabloon (gebruikt als overzicht bestand niet gevonden)"
+msgstr ""
+"Webkit sjabloon (deze wordt gebruikt als rapport bestand niet gevonden)"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -28,17 +29,12 @@ msgid "Tabloid 29 279.4 x 431.8 mm"
 msgstr "Tabloid 29 279.4 x 431.8 mm"
 
 #. module: report_webkit
-#: field:res.company,lib_path:0
-msgid "Webkit Executable Path"
-msgstr "Webkit uitvoering pad"
-
-#. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "Ledger  28  431.8 x 279.4 mm"
 msgstr "Ledger  28  431.8 x 279.4 mm"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:226
+#: code:addons/report_webkit/webkit_report.py:233
 #, python-format
 msgid "No header defined for this Webkit report!"
 msgstr "Geen koptekst gedefinieerd voor dit Webkit rapport!"
@@ -56,6 +52,8 @@ msgid ""
 "                                                         but memory and disk "
 "usage is wider"
 msgstr ""
+"In deze mode geeft een nauwkeurigere elementpositie omdat ieder object wordt "
+"afgedrukt op een aparte HTML. Geheugen en schijfgebruik is alleen hoger."
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -69,14 +67,9 @@ msgid "Company"
 msgstr "Bedrijf"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:101
+#: code:addons/report_webkit/webkit_report.py:234
 #, python-format
-msgid "path to Wkhtmltopdf is not absolute"
-msgstr "pad naar Wkhtmltopdf is niet absoluut"
-
-#. module: report_webkit
-#: view:ir.header_webkit:0
-msgid "Company and Page Setup"
+msgid "Please set a header in company settings."
 msgstr ""
 
 #. module: report_webkit
@@ -90,16 +83,6 @@ msgid "B7  21  88 x 125 mm"
 msgstr "B7  21  88 x 125 mm"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:255
-#: code:addons/report_webkit/webkit_report.py:266
-#: code:addons/report_webkit/webkit_report.py:275
-#: code:addons/report_webkit/webkit_report.py:288
-#: code:addons/report_webkit/webkit_report.py:299
-#, python-format
-msgid "Webkit render"
-msgstr "Webkit maken"
-
-#. module: report_webkit
 #: view:res.company:0
 msgid "Headers"
 msgstr "Kopteksten"
@@ -110,28 +93,10 @@ msgid "Name of Image"
 msgstr "Naam van de afbeelding"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:95
-#, python-format
-msgid ""
-"Wrong Wkhtmltopdf path set in company'+\n"
-"                                'Given path is not executable or path is "
-"wrong"
-msgstr ""
-"Onjuist Wkhtmltopdf pad ingesteld in bedrijf'+\n"
-"                                'Opgegeven pad is geen programma of pad is "
-"verkeerd"
-
-#. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:170
-#, python-format
-msgid "Webkit raise an error"
-msgstr "Webkit geef een fout"
-
-#. module: report_webkit
 #: model:ir.actions.act_window,name:report_webkit.action_header_webkit
 #: model:ir.ui.menu,name:report_webkit.menu_header_webkit
 msgid "Webkit Headers/Footers"
-msgstr ""
+msgstr "Webkit Koptekst/Voettekst"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -149,41 +114,25 @@ msgid "A4  0   210 x 297 mm, 8.26 x 11.69 inches"
 msgstr "A4  0   210 x 297 mm, 8.26 x 11.69 inches"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:83
+#: code:addons/report_webkit/webkit_report.py:176
 #, python-format
-msgid ""
-"Please install executable on your system'+\n"
-"                             ' (sudo apt-get install wkhtmltopdf) or "
-"download it from here:'+\n"
-"                             ' "
-"http://code.google.com/p/wkhtmltopdf/downloads/list and set the'+\n"
-"                             ' path to the executable on the Company "
-"form.'+\n"
-"                             'Minimal version is 0.9.9"
-msgstr ""
-"Installeer aub het volgende programma op uw systeem'+\n"
-"                             ' (sudo apt-get install wkhtmltopdf) of "
-"download het hier:'+\n"
-"                             ' "
-"http://code.google.com/p/wkhtmltopdf/downloads/list en zet het'+\n"
-"                             ' pad naar het programma op het Bedrijf "
-"formulier.'+\n"
-"                             'Minimale versie is 0.9.9"
-
-#. module: report_webkit
-#: selection:ir.header_webkit,format:0
-msgid "B6  20  125 x 176 mm"
-msgstr "B6  20  125 x 176 mm"
-
-#. module: report_webkit
-#: view:report.webkit.actions:0
-msgid "_Cancel"
-msgstr "_Annuleren"
+msgid "Webkit error"
+msgstr "Webkit fout"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "B2  17  500 x 707 mm"
 msgstr "B2  17  500 x 707 mm"
+
+#. module: report_webkit
+#: code:addons/report_webkit/webkit_report.py:260
+#: code:addons/report_webkit/webkit_report.py:271
+#: code:addons/report_webkit/webkit_report.py:280
+#: code:addons/report_webkit/webkit_report.py:293
+#: code:addons/report_webkit/webkit_report.py:304
+#, python-format
+msgid "Webkit render!"
+msgstr ""
 
 #. module: report_webkit
 #: model:ir.model,name:report_webkit.model_ir_header_img
@@ -193,12 +142,17 @@ msgstr "ir.header_img"
 #. module: report_webkit
 #: field:ir.actions.report.xml,precise_mode:0
 msgid "Precise Mode"
-msgstr ""
+msgstr "Exacte Mode"
 
 #. module: report_webkit
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Fout ! U kunt geen recursieve bedrijven maken."
+#: code:addons/report_webkit/webkit_report.py:96
+#, python-format
+msgid ""
+"Please install executable on your system (sudo apt-get install wkhtmltopdf) "
+"or download it from here: "
+"http://code.google.com/p/wkhtmltopdf/downloads/list and set the path in the "
+"ir.config_parameter with the webkit_path key.Minimal version is 0.9.9"
+msgstr ""
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -216,7 +170,7 @@ msgid "Type"
 msgstr "Soort"
 
 #. module: report_webkit
-#: code:addons/report_webkit/wizard/report_webkit_actions.py:137
+#: code:addons/report_webkit/wizard/report_webkit_actions.py:133
 #, python-format
 msgid "Client Actions Connections"
 msgstr "Client-actie verbindingen"
@@ -244,13 +198,13 @@ msgstr "A1  6   594 x 841 mm"
 #. module: report_webkit
 #: help:ir.actions.report.xml,webkit_header:0
 msgid "The header linked to the report"
-msgstr "De aan het overzicht gekoppelde koptekst"
+msgstr "De aan het rapport gekoppelde koptekst"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:82
+#: code:addons/report_webkit/webkit_report.py:95
 #, python-format
-msgid "Wkhtmltopdf library path is not set in company"
-msgstr "Wkhtmltopdf library pad is niet ingesteld in bedrijf"
+msgid "Wkhtmltopdf library path is not set"
+msgstr ""
 
 #. module: report_webkit
 #: view:ir.actions.report.xml:0
@@ -281,8 +235,7 @@ msgstr "A6  10  105 x 148 mm"
 #. module: report_webkit
 #: help:ir.actions.report.xml,report_webkit_data:0
 msgid "This template will be used if the main report file is not found"
-msgstr ""
-"Dit sjabloon wordt gebruikt als het hoofdoverzicht bestand niet gevonden is"
+msgstr "Dit sjabloon wordt gebruikt als het rapportbestand niet gevonden is"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -292,13 +245,7 @@ msgstr "Folio 27  210 x 330 mm"
 #. module: report_webkit
 #: field:ir.header_webkit,margin_top:0
 msgid "Top Margin (mm)"
-msgstr "Top merge (mm)"
-
-#. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:227
-#, python-format
-msgid "Please set a header in company settings"
-msgstr "Stel aub een koptekst in bij uw bedrijfsinstellingen"
+msgstr "Bovenmarge (mm)"
 
 #. module: report_webkit
 #: view:report.webkit.actions:0
@@ -311,8 +258,8 @@ msgid ""
 "Check this to add a Print action for this Report in the sidebar of the "
 "corresponding document types"
 msgstr ""
-"Zet dit aan om een Afdruk actie toe te voegen voor dit overzicht in de "
-"zijbalk van de corresponderende documentsoorten"
+"Zet dit aan om voor sit rapport een Afdruk actie toe te voegen in de "
+"rechterzijbalk van de corresponderende documentsoorten."
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -322,7 +269,7 @@ msgstr "B3  18  353 x 500 mm"
 #. module: report_webkit
 #: field:ir.actions.report.xml,webkit_header:0
 msgid "Webkit Header"
-msgstr ""
+msgstr "Webkit Kopteksts"
 
 #. module: report_webkit
 #: help:ir.actions.report.xml,webkit_debug:0
@@ -333,6 +280,11 @@ msgstr "Zet de webkit engine debugger aan"
 #: field:ir.header_img,img:0
 msgid "Image"
 msgstr "Afbeelding"
+
+#. module: report_webkit
+#: view:ir.header_img:0
+msgid "Header Image"
+msgstr "Kop afbeelding"
 
 #. module: report_webkit
 #: field:res.company,header_webkit:0
@@ -359,6 +311,11 @@ msgid "Portrait"
 msgstr "Staand"
 
 #. module: report_webkit
+#: view:report.webkit.actions:0
+msgid "or"
+msgstr "of"
+
+#. module: report_webkit
 #: selection:ir.header_webkit,orientation:0
 msgid "Landscape"
 msgstr "Liggend"
@@ -367,6 +324,12 @@ msgstr "Liggend"
 #: selection:ir.header_webkit,format:0
 msgid "B8  22  62 x 88 mm"
 msgstr "B8  22  62 x 88 mm"
+
+#. module: report_webkit
+#: code:addons/report_webkit/webkit_report.py:177
+#, python-format
+msgid "The command 'wkhtmltopdf' failed with error code = %s. Message: %s"
+msgstr ""
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -382,11 +345,6 @@ msgstr "Afdrukknop toevoegen"
 #: selection:ir.header_webkit,format:0
 msgid "A9  13  37 x 52 mm"
 msgstr "A9  13  37 x 52 mm"
-
-#. module: report_webkit
-#: view:ir.header_webkit:0
-msgid "Footer"
-msgstr ""
 
 #. module: report_webkit
 #: model:ir.model,name:report_webkit.model_res_company
@@ -414,22 +372,25 @@ msgid "Right Margin (mm)"
 msgstr "Rechtermarge (mm)"
 
 #. module: report_webkit
+#: code:addons/report_webkit/webkit_report.py:228
+#, python-format
+msgid "Webkit report template not found!"
+msgstr ""
+
+#. module: report_webkit
 #: field:ir.header_webkit,orientation:0
 msgid "Orientation"
 msgstr "Afdrukstand"
 
 #. module: report_webkit
-#: help:res.company,lib_path:0
-msgid ""
-"Full path to the wkhtmltopdf executable file. Version 0.9.9 is required. "
-"Install a static version of the library if you experience missing "
-"header/footers on Linux."
-msgstr ""
+#: selection:ir.header_webkit,format:0
+msgid "B6  20  125 x 176 mm"
+msgstr "B6  20  125 x 176 mm"
 
 #. module: report_webkit
 #: help:ir.header_webkit,html:0
 msgid "Set Webkit Report Header"
-msgstr "WebKit overzicht koptekst instellen"
+msgstr "WebKit rapport koptekst instellen"
 
 #. module: report_webkit
 #: field:ir.header_webkit,format:0
@@ -437,19 +398,14 @@ msgid "Paper size"
 msgstr "Papierformaat"
 
 #. module: report_webkit
-#: view:ir.header_webkit:0
-msgid "Header"
-msgstr ""
-
-#. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid ":B10    16  31 x 44 mm"
 msgstr ":B10    16  31 x 44 mm"
 
 #. module: report_webkit
-#: view:ir.header_webkit:0
-msgid "CSS Style"
-msgstr ""
+#: view:report.webkit.actions:0
+msgid "Cancel"
+msgstr "Annuleren"
 
 #. module: report_webkit
 #: field:ir.header_webkit,css:0
@@ -465,6 +421,12 @@ msgstr "B4  19  250 x 353 mm"
 #: model:ir.actions.act_window,name:report_webkit.action_header_img
 #: model:ir.ui.menu,name:report_webkit.menu_header_img
 msgid "Webkit Logos"
+msgstr "Webkit Logos"
+
+#. module: report_webkit
+#: code:addons/report_webkit/webkit_report.py:172
+#, python-format
+msgid "No diagnosis message was provided"
 msgstr ""
 
 #. module: report_webkit
@@ -498,11 +460,6 @@ msgid "B0  14  1000 x 1414 mm"
 msgstr "B0  14  1000 x 1414 mm"
 
 #. module: report_webkit
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr ""
-
-#. module: report_webkit
 #: field:ir.header_img,name:0
 #: field:ir.header_webkit,name:0
 msgid "Name"
@@ -530,18 +487,12 @@ msgid "Comm10E 25  105 x 241 mm, U.S. Common 10 Envelope"
 msgstr "Comm10E 25  105 x 241 mm, U.S. Common 10 Envelope"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:221
-#, python-format
-msgid "Webkit Report template not found !"
-msgstr "WebKit overzicht sjabloon niet gevonden !"
-
-#. module: report_webkit
 #: field:ir.header_webkit,margin_left:0
 msgid "Left Margin (mm)"
 msgstr "Linkermarge (mm)"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:221
+#: code:addons/report_webkit/webkit_report.py:228
 #, python-format
 msgid "Error!"
 msgstr "Fout!"
@@ -549,7 +500,7 @@ msgstr "Fout!"
 #. module: report_webkit
 #: help:ir.header_webkit,footer_html:0
 msgid "Set Webkit Report Footer."
-msgstr "WebKit overzicht voettekst instellen."
+msgstr "WebKit rapport voettekst instellen."
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -561,107 +512,13 @@ msgstr "B9  23  33 x 62 mm"
 msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
 
-#~ msgid "Header IMG"
-#~ msgstr "Kop afbeelding"
+#. module: report_webkit
+#: code:addons/report_webkit/webkit_report.py:174
+#, python-format
+msgid "The following diagnosis message was provided:\n"
+msgstr ""
 
-#~ msgid "Content and styling"
-#~ msgstr "Inhoud en stijl"
-
-#~ msgid "page setup"
-#~ msgstr "Pagina-instellingen"
-
-#~ msgid "Complete (Absolute) path to the wkhtmltopdf executable."
-#~ msgstr "Volledig (absoluut) pad naar het wkhtmltopdf programma."
-
-#~ msgid "Webkit Report Engine"
-#~ msgstr "WebKit rapportgenerator"
-
-#~ msgid ""
-#~ "This module adds a new Report Engine based on WebKit library (wkhtmltopdf) "
-#~ "to support reports designed in HTML + CSS.\n"
-#~ "The module structure and some code is inspired by the report_openoffice "
-#~ "module.\n"
-#~ "The module allows:\n"
-#~ "    -HTML report definition\n"
-#~ "    -Multi header support \n"
-#~ "    -Multi logo\n"
-#~ "    -Multi company support\n"
-#~ "    -HTML and CSS-3 support (In the limit of the actual WebKIT version)\n"
-#~ "    -JavaScript support \n"
-#~ "    -Raw HTML debugger\n"
-#~ "    -Book printing capabilities\n"
-#~ "    -Margins definition \n"
-#~ "    -Paper size definition\n"
-#~ "and much more\n"
-#~ "\n"
-#~ "Multiple headers and logos can be defined per company.\n"
-#~ "CSS style, header and footer body are defined per company\n"
-#~ "\n"
-#~ "The library to install can be found here\n"
-#~ "http://code.google.com/p/wkhtmltopdf/\n"
-#~ "The system libraries are available for Linux, Mac OS X i386 and Windows 32.\n"
-#~ "\n"
-#~ "After installing the wkhtmltopdf library on the OpenERP Server machine, you "
-#~ "need to set the\n"
-#~ "path to the wkthtmltopdf executable file on the Company.\n"
-#~ "\n"
-#~ "For a sample report see also the webkit_report_sample module, and this "
-#~ "video:\n"
-#~ "    http://files.me.com/nbessi/06n92k.mov \n"
-#~ "\n"
-#~ "\n"
-#~ "TODO :\n"
-#~ "JavaScript support activation deactivation\n"
-#~ "Collated and book format support\n"
-#~ "Zip return for separated PDF\n"
-#~ "Web client WYSIWYG\n"
-#~ "                    "
-#~ msgstr ""
-#~ "Deze module voegt een nieuwe rapportgenerator toe op basis van de WebKit "
-#~ "bibliotheek (wkhtmltopdf) om overzichten te ondersteunen ontworpen in HTML + "
-#~ "CSS.\n"
-#~ "De module structuuren sommige code is geïnspireerd op de report_openoffice "
-#~ "module.\n"
-#~ "De module ondersteunt:\n"
-#~ "    -HTML overzicht definitie\n"
-#~ "    -Meer kopteksten \n"
-#~ "    -Meer logo's \n"
-#~ "    -Meer bedrijven\n"
-#~ "    -HTML en CSS-3 ondersteuning (binnen de grenzen van de actuele WebKIT "
-#~ "versie)\n"
-#~ "    -JavaScript ondersteuning \n"
-#~ "    -Raw HTML debugger\n"
-#~ "    -Boek afdruk mogelijkheden\n"
-#~ "    -Marges definitie \n"
-#~ "    -Papiergrootte definitie\n"
-#~ "en nog veel meer\n"
-#~ "\n"
-#~ "Meer kopteksten en logos kunne per bedrijf worden gedefinieerd.\n"
-#~ "CSS stijl, koptekst en voettekst worden per bedrijf gedefinieerd\n"
-#~ "\n"
-#~ "De te installeren library kan hier worden gevonden\n"
-#~ "http://code.google.com/p/wkhtmltopdf/\n"
-#~ "De systeem libraries zijn beschikbaar voor Linux, Mac OS X i386 en Windows "
-#~ "32.\n"
-#~ "\n"
-#~ "Na installatie van de wkhtmltopdf library op de OpenERP Server machine, moet "
-#~ "u het\n"
-#~ "pad naar het wkthtmltopdf programma bestand instellen bij het bedrijf.\n"
-#~ "\n"
-#~ "Voor een voorbeeld overzicht zie de webkit_report_sample module, en deze "
-#~ "video:\n"
-#~ "    http://files.me.com/nbessi/06n92k.mov \n"
-#~ "\n"
-#~ "\n"
-#~ "TODO :\n"
-#~ "JavaScript ondersteuning activeren en de-activeren\n"
-#~ "Sorteren en boekformaat ondersteuning\n"
-#~ "Zip retour voor aparte PDF\n"
-#~ "Web client WYSIWYG\n"
-#~ "                    "
-
-#~ msgid "WebKit Header"
-#~ msgstr "WebKit koptekst"
-
-#~ msgid "Header HTML"
-#~ msgstr "Koptekst HTML"
+#. module: report_webkit
+#: view:ir.header_webkit:0
+msgid "HTML Header"
+msgstr ""

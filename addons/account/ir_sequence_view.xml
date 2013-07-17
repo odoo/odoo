@@ -4,11 +4,10 @@
         <record id="sequence_inherit_form" model="ir.ui.view">
             <field name="name">ir.sequence.form</field>
             <field name="model">ir.sequence</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.sequence_view"/>
             <field name="arch" type="xml">
                 <page position="after">
-                    <page string="Fiscal Years" groups="base.group_extended">
+                    <page string="Fiscal Years">
                         <field name="fiscal_ids" nolabel="1" colspan="4">
                             <tree string="Fiscal Year Sequences" editable="bottom">
                                 <field name="fiscalyear_id"/>

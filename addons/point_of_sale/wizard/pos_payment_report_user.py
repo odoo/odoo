@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import osv, fields
 
 class pos_payment_report_user(osv.osv_memory):
     _name = 'pos.payment.report.user'
@@ -46,7 +46,7 @@ class pos_payment_report_user(osv.osv_memory):
         }
 
     _columns = {
-        'user_id': fields.many2many('res.users', 'res_user_sale', 'user_id', 'sale_id', 'Salesman')
+        'user_id': fields.many2many('res.users', 'res_user_sale', 'user_id', 'sale_id', 'Salesperson')
     }
 
 pos_payment_report_user()

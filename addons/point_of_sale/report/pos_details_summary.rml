@@ -204,7 +204,7 @@
             <para style="P1">[[ p[0] ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9_Bold">[[ p[1] ]] [[company.currency_id.symbol]]</para>
+            <para style="terp_default_Right_9_Bold">[[ formatLang(p[1], currency_obj=company.currency_id) ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -235,7 +235,7 @@
             <para style="P2">[[ t[0] ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9_Bold">[[ '%.2f' % (t[1],) ]] [[company.currency_id.symbol]]</para>
+            <para style="terp_default_Right_9_Bold">[[ formatLang(t[1], currency_obj=company.currency_id) ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -280,7 +280,7 @@
           <para style="terp_default_Bold_9">Total invoiced</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ '%.2f' % getsuminvoice(objects) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ formatLang(getsuminvoice(objects), currency_obj=company.currency_id) ]]</para>
         </td>
       </tr>
       <tr>
@@ -288,7 +288,7 @@
           <para style="terp_default_Bold_9">Total discount</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ '%.2f' % getsumdisc(objects) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ formatLang(getsumdisc(objects), currency_obj=company.currency_id) ]]</para>
         </td>
       </tr>
       <tr>
@@ -296,7 +296,7 @@
           <para style="terp_default_Bold_9">Total paid</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ '%.2f' % getpaidtotal(objects) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ formatLang(getpaidtotal(objects), currency_obj=company.currency_id) ]]</para>
         </td>
       </tr>
       <tr>
@@ -304,7 +304,7 @@
           <para style="terp_default_Bold_9">Total of the day</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ '%.2f' % gettotalofthaday(objects) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ formatLang(gettotalofthaday(objects), currency_obj=company.currency_id) ]]</para>
         </td>
       </tr>
     </blockTable>

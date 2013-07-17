@@ -1,21 +1,21 @@
 # Serbian translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2010-10-30 14:22+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:54+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:08+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: base_report_designer
 #: model:ir.model,name:base_report_designer.model_base_report_sxw
@@ -35,7 +35,7 @@ msgid ""
 msgstr ""
 
 #. module: base_report_designer
-#: view:base.report.file.sxw:0
+#: view:base.report.sxw:0
 msgid "Upload the modified report"
 msgstr "Pošalji promenjen izveštaj na Server"
 
@@ -50,14 +50,9 @@ msgid "base_report_designer.installer"
 msgstr "base_report_designer.installer"
 
 #. module: base_report_designer
-#: view:base_report_designer.installer:0
-msgid "_Close"
-msgstr "_Close"
-
-#. module: base_report_designer
-#: view:base.report.rml.save:0
-msgid "The RML report"
-msgstr "RML Izvestaj"
+#: model:ir.model,name:base_report_designer.model_base_report_rml_save
+msgid "base.report.rml.save"
+msgstr "base.report.rml.save"
 
 #. module: base_report_designer
 #: view:base_report_designer.installer:0
@@ -76,9 +71,9 @@ msgid "Report"
 msgstr "Izveštaj"
 
 #. module: base_report_designer
-#: model:ir.model,name:base_report_designer.model_base_report_rml_save
-msgid "base.report.rml.save"
-msgstr "base.report.rml.save"
+#: view:base.report.rml.save:0
+msgid "The RML Report"
+msgstr "RML Izvestaj"
 
 #. module: base_report_designer
 #: model:ir.ui.menu,name:base_report_designer.menu_action_report_designer_wizard
@@ -157,11 +152,6 @@ msgstr ""
 "Jednom izmenjen, ponovo ga uvezite u OpenERP koristeci ovog carobnjaka."
 
 #. module: base_report_designer
-#: field:base_report_designer.installer,config_logo:0
-msgid "Image"
-msgstr "Slika"
-
-#. module: base_report_designer
 #: model:ir.actions.act_window,name:base_report_designer.action_view_base_report_sxw
 msgid "Base Report sxw"
 msgstr "Bazni sxw Izvestaj"
@@ -182,12 +172,14 @@ msgid "OpenERP Report Designer Installation"
 msgstr "Instalacija OpenERP dizajnera Izvestaja"
 
 #. module: base_report_designer
-#: view:base.report.file.sxw:0
-#: view:base.report.rml.save:0
 #: view:base.report.sxw:0
-#: view:base_report_designer.installer:0
 msgid "Cancel"
 msgstr "Otkaži"
+
+#. module: base_report_designer
+#: view:base.report.sxw:0
+msgid "or"
+msgstr ""
 
 #. module: base_report_designer
 #: model:ir.model,name:base_report_designer.model_ir_actions_report_xml
@@ -198,59 +190,3 @@ msgstr "ir.actions.report.xml"
 #: view:base.report.sxw:0
 msgid "Select your report"
 msgstr "Odaberite izvještaj"
-
-#~ msgid "Report designer interface module"
-#~ msgstr "Modul Interfejsa Dizajnera Izveštaja"
-
-#~ msgid "Your report has been modified."
-#~ msgstr "Vaš je Izveštaj izmenjen"
-
-#~ msgid "Report modified"
-#~ msgstr "Izveštaj je promenjen"
-
-#~ msgid "Modify a report"
-#~ msgstr "Izmeni Izveštaj"
-
-#~ msgid "Upload your modified report"
-#~ msgstr "Pošalji promenjen izveštaj na Server"
-
-#~ msgid "Introduction"
-#~ msgstr "Predstavljanje"
-
-#~ msgid "Close"
-#~ msgstr "Zatvori"
-
-#~ msgid "Modify an existing report"
-#~ msgstr "Izmeni postojeći izveštaj"
-
-#~ msgid ""
-#~ "This is the template of your requested report. Save it as a .SXW file and "
-#~ "open it with OpenOffice. Don't forget to install the Tiny OpenOffice package "
-#~ "to modify it. Once it is modified, re-upload it in Open ERP using this "
-#~ "wizard."
-#~ msgstr ""
-#~ "Ovo je Predložak vašeg traženog Izveštaja. Spremite ga kao .SXW datoteku i "
-#~ "otvorite s programon OpenOffice. Ne zaboravite instalirati Tiny OpenOffice "
-#~ "paket kako biste mogli vršiti izmjene. kad izvršite izmjene, vratite "
-#~ "datoteku u Open ERP koristeći ovaj Čarobnjak."
-
-#~ msgid "Create a new report"
-#~ msgstr "Napravi novi Izvještaj"
-
-#~ msgid "Report designer"
-#~ msgstr "Dizajner Izveštaja"
-
-#~ msgid "Update the report"
-#~ msgstr "Ažurirajte Izvještaj"
-
-#~ msgid "Report designer introduction"
-#~ msgstr "Uvod u Dizajner Izveštaja"
-
-#~ msgid "Operation"
-#~ msgstr "Postupak"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Napredak Konfiguracije"
-
-#~ msgid "Skip"
-#~ msgstr "Preskoci"

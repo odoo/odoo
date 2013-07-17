@@ -1,26 +1,36 @@
 # Norwegian Bokmal translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# Rolv Råen <rora@adego.no>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2011-04-05 22:53+0000\n"
-"Last-Translator: Rolv Råen <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:53+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:11+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Order Ref."
 msgstr "Ordre ref."
+
+#. module: delivery
+#: model:product.template,name:delivery.product_product_delivery_product_template
+msgid "Delivery by Poste"
+msgstr "Levering pr. post"
+
+#. module: delivery
+#: view:delivery.grid.line:0
+msgid " in Function of "
+msgstr ""
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -31,22 +41,17 @@ msgstr "Destinasjon"
 #. module: delivery
 #: field:stock.move,weight_net:0
 msgid "Net weight"
-msgstr ""
-
-#. module: delivery
-#: view:stock.picking:0
-msgid "Delivery Order"
-msgstr ""
-
-#. module: delivery
-#: code:addons/delivery/delivery.py:215
-#, python-format
-msgid "No price available !"
-msgstr "Ingen pris tilgjengelig !"
+msgstr "Nettovekt"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
+msgstr "Levering Rutenettlinje"
+
+#. module: delivery
+#: field:stock.move,weight_uom_id:0
+#: field:stock.picking,weight_uom_id:0
+msgid "Unit of Measure"
 msgstr ""
 
 #. module: delivery
@@ -59,8 +64,14 @@ msgstr "Delivery grids"
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: field:stock.picking,volume:0
+#: field:stock.picking.out,volume:0
 msgid "Volume"
 msgstr "Mengde"
+
+#. module: delivery
+#: view:delivery.carrier:0
+msgid "Zip"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -70,44 +81,62 @@ msgstr "Linjebredde i rutenett"
 #. module: delivery
 #: help:delivery.carrier,partner_id:0
 msgid "The partner that is doing the delivery service."
-msgstr ""
+msgstr "Parteneren som utfører leveransen."
 
 #. module: delivery
 #: model:ir.actions.report.xml,name:delivery.report_shipping
 msgid "Delivery order"
-msgstr ""
+msgstr "Leveringsordre"
 
 #. module: delivery
-#: view:res.partner:0
-msgid "Deliveries Properties"
-msgstr "Deliveries Properties"
+#: code:addons/delivery/delivery.py:221
+#, python-format
+msgid "No line matched this product or order in the chosen delivery grid."
+msgstr ""
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
 msgid "Picking to be invoiced"
-msgstr ""
+msgstr "Plukking klar for fakturering"
 
 #. module: delivery
 #: field:delivery.carrier,pricelist_ids:0
 msgid "Advanced Pricing"
-msgstr ""
+msgstr "Avansert prising"
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
 msgid "Gives the sequence order when displaying a list of delivery grid."
-msgstr ""
+msgstr "Gir sekvensen ordre når du viser en liste over levering rutenett."
 
 #. module: delivery
-#: view:delivery.carrier:0
 #: view:delivery.grid:0
 #: field:delivery.grid,country_ids:0
 msgid "Countries"
 msgstr "Land"
 
 #. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a delivery price list for a specific "
+"region.\n"
+"              </p><p>\n"
+"                The delivery price list allows you to compute the cost and\n"
+"                sales price of the delivery according to the weight of the\n"
+"                products and other criteria. You can define several price "
+"lists\n"
+"                for each delivery method: per country or a zone in a "
+"specific\n"
+"                country defined by a postal code range.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: delivery
 #: report:sale.shipping:0
 msgid "Delivery Order :"
-msgstr ""
+msgstr "Lveringsordre :"
 
 #. module: delivery
 #: field:delivery.grid.line,variable_factor:0
@@ -115,17 +144,13 @@ msgid "Variable Factor"
 msgstr "Variabel faktor"
 
 #. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
-msgid ""
-"The delivery price list allows you to compute the cost and sales price of "
-"the delivery according to the weight of the products and other criteria. You "
-"can define several price lists for one delivery method, per country or a "
-"zone in a specific country defined by a postal code range."
-msgstr ""
-
-#. module: delivery
 #: field:delivery.carrier,amount:0
 msgid "Amount"
+msgstr "Beløp"
+
+#. module: delivery
+#: view:sale.order:0
+msgid "Add in Quote"
 msgstr ""
 
 #. module: delivery
@@ -135,14 +160,16 @@ msgstr "Fast"
 
 #. module: delivery
 #: field:delivery.carrier,name:0
-#: view:delivery.sale.order:0
-#: field:delivery.sale.order,carrier_id:0
-#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
-#: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 #: field:res.partner,property_delivery_carrier:0
 #: field:sale.order,carrier_id:0
 msgid "Delivery Method"
 msgstr "Leveringsmåte"
+
+#. module: delivery
+#: code:addons/delivery/delivery.py:221
+#, python-format
+msgid "No price available!"
+msgstr "Ingen pris tilgjengelig!"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
@@ -150,20 +177,17 @@ msgid "Stock Move"
 msgstr "Lagerflytting"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:215
-#, python-format
-msgid "No line matched this order in the choosed delivery grids !"
-msgstr "Ingen linjer på aktuell ordre passer valgt spedisjonsnettverk!"
-
-#. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
+#: field:stock.picking.out,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
-msgstr ""
+msgstr "Transportørs sporingsref."
 
 #. module: delivery
 #: field:stock.picking,weight_net:0
+#: field:stock.picking.in,weight_net:0
+#: field:stock.picking.out,weight_net:0
 msgid "Net Weight"
-msgstr ""
+msgstr "Nettovekt"
 
 #. module: delivery
 #: view:delivery.grid.line:0
@@ -177,9 +201,10 @@ msgid "Grid definition"
 msgstr "Avgiftsdefinisjon"
 
 #. module: delivery
-#: view:delivery.sale.order:0
-msgid "_Cancel"
-msgstr "_Avbryt"
+#: code:addons/delivery/stock.py:90
+#, python-format
+msgid "Warning!"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
@@ -197,31 +222,31 @@ msgid "Sales Order"
 msgstr "Salgsordre"
 
 #. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form1
-msgid ""
-"Define your delivery methods and their pricing. The delivery costs can be "
-"added on the sale order form or in the invoice, based on the delivery orders."
+#: model:ir.model,name:delivery.model_stock_picking_out
+msgid "Delivery Orders"
 msgstr ""
 
 #. module: delivery
-#: report:sale.shipping:0
-msgid "Lot"
+#: view:sale.order:0
+msgid ""
+"If you don't 'Add in Quote', the exact price will be computed when invoicing "
+"based on delivery order(s)."
 msgstr ""
 
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Transport Company"
-msgstr ""
+msgstr "Transportør"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
 msgid "Delivery Grid"
-msgstr ""
+msgstr "Levering Rutenett"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Invoiced to"
-msgstr ""
+msgstr "fakturert til"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
@@ -229,24 +254,18 @@ msgid "Picking List"
 msgstr "Plukkliste"
 
 #. module: delivery
-#: field:delivery.carrier,grids_id:0
-msgid "Delivery Grids"
-msgstr "Leveringsmåte"
-
-#. module: delivery
-#: model:ir.model,name:delivery.model_delivery_sale_order
-msgid "Make Delievery"
-msgstr ""
-
-#. module: delivery
 #: field:delivery.grid.line,name:0
 msgid "Name"
 msgstr "Navn"
 
 #. module: delivery
-#: field:delivery.grid,zip_from:0
-msgid "Start Zip"
-msgstr "Start postnummer"
+#: help:delivery.carrier,free_if_more_than:0
+msgid ""
+"If the order is more expensive than a certain amount, the customer can "
+"benefit from a free shipping"
+msgstr ""
+"Hvis bestillingen er dyrere enn et bestemt beløp, kan kunden dra nytte av en "
+"gratis frakt."
 
 #. module: delivery
 #: help:delivery.carrier,amount:0
@@ -254,12 +273,13 @@ msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
 msgstr ""
+"Mengden av ordrene for å dra nytte av en gratis frakt, uttrykt i selskapet "
+"valuta"
 
 #. module: delivery
-#: code:addons/delivery/stock.py:89
-#, python-format
-msgid "Warning"
-msgstr "Advarsel"
+#: field:delivery.carrier,free_if_more_than:0
+msgid "Free If Order Total Amount Is More Than"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
@@ -272,6 +292,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "grid without removing it."
 msgstr ""
+"Hvis det aktive feltet er satt til False, vil det tillate deg å skjule "
+"levering rutenettet uten å fjerne den."
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
@@ -279,20 +301,15 @@ msgid "To Zip"
 msgstr "Til postnummer"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:143
+#: code:addons/delivery/delivery.py:147
 #, python-format
 msgid "Default price"
-msgstr ""
-
-#. module: delivery
-#: model:ir.model,name:delivery.model_delivery_define_delivery_steps_wizard
-msgid "delivery.define.delivery.steps.wizard"
-msgstr ""
+msgstr "Standardpris"
 
 #. module: delivery
 #: field:delivery.carrier,normal_price:0
 msgid "Normal Price"
-msgstr ""
+msgstr "Normal pris"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -305,12 +322,8 @@ msgid "Grid Name"
 msgstr "Tilgjengelig navn"
 
 #. module: delivery
-#: view:stock.move:0
-msgid "Weights"
-msgstr ""
-
-#. module: delivery
 #: field:stock.picking,number_of_packages:0
+#: field:stock.picking.out,number_of_packages:0
 msgid "Number of Packages"
 msgstr "Antall kolli"
 
@@ -318,8 +331,12 @@ msgstr "Antall kolli"
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: report:sale.shipping:0
+#: view:stock.move:0
 #: field:stock.move,weight:0
+#: view:stock.picking:0
 #: field:stock.picking,weight:0
+#: field:stock.picking.in,weight:0
+#: field:stock.picking.out,weight:0
 msgid "Weight"
 msgstr "Vekt"
 
@@ -329,23 +346,21 @@ msgid ""
 "Check this box if you want to manage delivery prices that depends on the "
 "destination, the weight, the total of the order, etc."
 msgstr ""
+"Kryss av her hvis du ønsker å administrere levering priser som avhenger av "
+"destinasjonen, vekten, summen av ordren, etc."
 
 #. module: delivery
 #: help:delivery.carrier,normal_price:0
 msgid ""
 "Keep empty if the pricing depends on the advanced pricing per destination"
 msgstr ""
+"Hold tom hvis prisingen er avhengig av avansert prising per destinasjon."
 
 #. module: delivery
-#: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
-msgstr ""
-
-#. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:94
+#: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid available !"
-msgstr ""
+msgstr "Ingen rutenett tilgjengelig !"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -353,21 +368,15 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:65
-#: code:addons/delivery/wizard/delivery_sale_order.py:97
+#: code:addons/delivery/sale.py:57
 #, python-format
 msgid "Order not in draft state !"
 msgstr "Ordren har ikke utkast-status!"
 
 #. module: delivery
-#: view:delivery.define.delivery.steps.wizard:0
-msgid "Choose Your Default Picking Policy"
-msgstr ""
-
-#. module: delivery
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+#: report:sale.shipping:0
+msgid "Lot"
+msgstr "Lot/batch"
 
 #. module: delivery
 #: field:delivery.carrier,active:0
@@ -378,7 +387,7 @@ msgstr "Aktiv"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Shipping Date"
-msgstr ""
+msgstr "Forsendelsesdato"
 
 #. module: delivery
 #: field:delivery.carrier,product_id:0
@@ -396,11 +405,6 @@ msgid "Cost Price"
 msgstr "Kostpris"
 
 #. module: delivery
-#: field:delivery.define.delivery.steps.wizard,picking_policy:0
-msgid "Picking Policy"
-msgstr ""
-
-#. module: delivery
 #: selection:delivery.grid.line,price_type:0
 #: field:delivery.grid.line,type:0
 msgid "Variable"
@@ -409,11 +413,27 @@ msgstr "Variabel"
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from picking."
-msgstr ""
+msgstr "Denne leveringsmetoden vil bli brukt ved fakturering fra plukking."
 
 #. module: delivery
-#: sql_constraint:stock.picking:0
-msgid "Reference must be unique per Company!"
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new deliver method. \n"
+"              </p><p>\n"
+"                Each carrier (e.g. UPS) can have several delivery methods "
+"(e.g.\n"
+"                UPS Express, UPS Standard) with a set of pricing rules "
+"attached\n"
+"                to each method.\n"
+"              </p><p>\n"
+"                These methods allows to automaticaly compute the delivery "
+"price\n"
+"                according to your settings; on the sales order (based on "
+"the\n"
+"                quotation) or the invoice (based on the delivery orders).\n"
+"              </p>\n"
+"            "
 msgstr ""
 
 #. module: delivery
@@ -427,57 +447,27 @@ msgid "Quantity"
 msgstr "Antall"
 
 #. module: delivery
-#: view:delivery.define.delivery.steps.wizard:0
-#: model:ir.actions.act_window,name:delivery.action_define_delivery_steps
-msgid "Setup Your Picking Policy"
-msgstr ""
-
-#. module: delivery
-#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form1
-msgid "Define Delivery Methods"
-msgstr ""
-
-#. module: delivery
-#: help:delivery.carrier,free_if_more_than:0
-msgid ""
-"If the order is more expensive than a certain amount, the customer can "
-"benefit from a free shipping"
-msgstr ""
+#: field:delivery.grid,zip_from:0
+msgid "Start Zip"
+msgstr "Start postnummer"
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
 msgid ""
 "Complete this field if you plan to invoice the shipping based on picking."
 msgstr ""
+"Fullfør dette feltet hvis du har tenkt å fakturere frakt basert på plukking."
 
 #. module: delivery
-#: view:delivery.define.delivery.steps.wizard:0
-msgid "Cancel"
-msgstr ""
-
-#. module: delivery
-#: code:addons/delivery/delivery.py:131
+#: code:addons/delivery/delivery.py:136
 #, python-format
 msgid "Free if more than %.2f"
-msgstr ""
+msgstr "Gratis vis det er mer enn %.2f"
 
 #. module: delivery
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
+#: model:ir.model,name:delivery.model_stock_picking_in
+msgid "Incoming Shipments"
 msgstr ""
-
-#. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
-msgid ""
-"Define the delivery methods you are using and their pricing in order to "
-"reinvoice the delivery costs when you are doing invoicing based on delivery "
-"orders"
-msgstr ""
-
-#. module: delivery
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "Salg & Innkjøp"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -485,26 +475,9 @@ msgid "<="
 msgstr "<="
 
 #. module: delivery
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
+#: help:stock.picking,weight_uom_id:0
+msgid "Unit of measurement for Weight"
 msgstr ""
-
-#. module: delivery
-#: field:delivery.carrier,free_if_more_than:0
-msgid "Free If More Than"
-msgstr ""
-
-#. module: delivery
-#: view:delivery.sale.order:0
-msgid "Create Deliveries"
-msgstr ""
-
-#. module: delivery
-#: view:delivery.carrier:0
-#: view:delivery.grid:0
-#: field:delivery.grid,state_ids:0
-msgid "States"
-msgstr "Bekreftelser"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -517,12 +490,14 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "carrier without removing it."
 msgstr ""
+"Hvis det aktive feltet er satt til False, vil det tillate deg å skjule "
+"levering transportør uten å fjerne den."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_grid_form
 msgid "Delivery Pricelist"
-msgstr ""
+msgstr "Leveringsprisliste"
 
 #. module: delivery
 #: field:delivery.carrier,price:0
@@ -532,7 +507,7 @@ msgid "Price"
 msgstr "Pris"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:94
+#: code:addons/delivery/sale.py:54
 #, python-format
 msgid "No grid matching for this carrier !"
 msgstr "No grid matching for this carrier !"
@@ -540,7 +515,7 @@ msgstr "No grid matching for this carrier !"
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
 msgid "Delivery"
-msgstr ""
+msgstr "Leveranse"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -549,12 +524,7 @@ msgid "Weight * Volume"
 msgstr "Vekt * Volum"
 
 #. module: delivery
-#: selection:delivery.grid.line,operator:0
-msgid "="
-msgstr "="
-
-#. module: delivery
-#: code:addons/delivery/stock.py:90
+#: code:addons/delivery/stock.py:91
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
 msgstr "Transportøren %s (ID %d) har ingen leveringsnett!"
@@ -562,17 +532,12 @@ msgstr "Transportøren %s (ID %d) har ingen leveringsnett!"
 #. module: delivery
 #: view:delivery.carrier:0
 msgid "Pricing Information"
-msgstr ""
-
-#. module: delivery
-#: selection:delivery.define.delivery.steps.wizard,picking_policy:0
-msgid "Deliver all products at once"
-msgstr ""
+msgstr "Prisinformasjon"
 
 #. module: delivery
 #: field:delivery.carrier,use_detailed_pricelist:0
 msgid "Advanced Pricing per Destination"
-msgstr ""
+msgstr "Avansert priser pr. destinasjon"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -580,31 +545,27 @@ msgstr ""
 #: model:ir.model,name:delivery.model_delivery_carrier
 #: report:sale.shipping:0
 #: field:stock.picking,carrier_id:0
+#: field:stock.picking.out,carrier_id:0
 msgid "Carrier"
 msgstr "Transportør"
 
 #. module: delivery
-#: view:delivery.sale.order:0
-msgid "_Apply"
+#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
+#: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
+msgid "Delivery Methods"
 msgstr ""
 
 #. module: delivery
-#: field:sale.order,id:0
-msgid "ID"
-msgstr "ID"
-
-#. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:65
-#: code:addons/delivery/wizard/delivery_sale_order.py:97
+#: code:addons/delivery/sale.py:57
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""
 "Ordrestatusen må være \"utkast\" for å kunne legge til leveringslinjer."
 
 #. module: delivery
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+#: field:delivery.carrier,grids_id:0
+msgid "Delivery Grids"
+msgstr "Leveringsmåte"
 
 #. module: delivery
 #: field:delivery.grid,sequence:0
@@ -617,50 +578,23 @@ msgid "Sale Price"
 msgstr "Salgspris"
 
 #. module: delivery
-#: model:ir.actions.act_window,name:delivery.action_delivery_cost
-#: view:sale.order:0
-msgid "Delivery Costs"
+#: view:stock.picking.out:0
+msgid "Print Delivery Order"
 msgstr ""
 
 #. module: delivery
-#: selection:delivery.define.delivery.steps.wizard,picking_policy:0
-msgid "Deliver each product when available"
-msgstr ""
+#: view:delivery.grid:0
+#: field:delivery.grid,state_ids:0
+msgid "States"
+msgstr "Bekreftelser"
 
 #. module: delivery
-#: view:delivery.define.delivery.steps.wizard:0
-msgid "Apply"
+#: help:stock.move,weight_uom_id:0
+msgid ""
+"Unit of Measure (Unit of Measure) is the unit of measurement for Weight"
 msgstr ""
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "Pristype"
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "Ordre referanse må være unik !"
-
-#~ msgid "Carrier Partner"
-#~ msgstr "Transportør"
-
-#~ msgid "Carriers and deliveries"
-#~ msgstr "Finn og e_rstatt"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr "Objektnavnet må begynne med x_ og kan ikke inneholde spesialtegn !"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Ugyldig XML for visningsarkitektur"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Ugyldig modellnavn i aksjonsdefinisjonen."
-
-#~ msgid "Notes"
-#~ msgstr "Notater"
-
-#~ msgid "Add Delivery Costs"
-#~ msgstr "leveringstid"
-
-#~ msgid "Delivery method"
-#~ msgstr "Leveringsmåte"

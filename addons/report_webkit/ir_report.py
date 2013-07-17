@@ -29,13 +29,13 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-import netsvc
+from openerp.osv import fields, osv
+from openerp import netsvc
 from webkit_report import WebKitParser
-from report.report_sxw import rml_parse
+from openerp.report.report_sxw import rml_parse
 
 def register_report(name, model, tmpl_path, parser=rml_parse):
-    "Register the report into the services"
+    """Register the report into the services"""
     name = 'report.%s' % name
     if netsvc.Service._services.get(name, False):
         service = netsvc.Service._services[name]

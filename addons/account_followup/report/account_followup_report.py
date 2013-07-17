@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-import tools
+from openerp.osv import fields, osv
+from openerp import tools
 
 class account_followup_stat(osv.osv):
     _name = "account_followup.stat"
-    _description = "Followup Statistics"
+    _description = "Follow-up Statistics"
     _rec_name = 'partner_id'
     _auto = False
     _columns = {
@@ -68,7 +68,7 @@ class account_followup_stat(osv.osv):
         cr.execute("""
             create or replace view account_followup_stat as (
                 SELECT
-                    l.partner_id AS id,
+                    l.id as id,
                     l.partner_id AS partner_id,
                     min(l.date) AS date_move,
                     max(l.date) AS date_move_last,

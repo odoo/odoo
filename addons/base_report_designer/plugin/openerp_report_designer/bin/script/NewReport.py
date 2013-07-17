@@ -66,7 +66,7 @@ if __name__<>"package":
 #
 #
 class NewReport(unohelper.Base, XJobExecutor):
-    def __init__(self,ctx):
+    def __init__(self, ctx):
         self.ctx     = ctx
         self.module  = "openerp_report"
         self.version = "0.1"
@@ -99,7 +99,7 @@ class NewReport(unohelper.Base, XJobExecutor):
         self.win.addButton('btnCancel',-2 - 70 - 5 ,-5, 35,15,'Cancel' ,actionListenerProc = self.btnCancel_clicked )
         self.win.doModalDialog("",None)
 
-    def btnOk_clicked(self,oActionEvent):
+    def btnOk_clicked(self, oActionEvent):
         desktop=getDesktop()
         doc = desktop.getCurrentComponent()
         docinfo=doc.getDocumentInfo()
@@ -107,7 +107,7 @@ class NewReport(unohelper.Base, XJobExecutor):
         self.logobj.log_write('Module Name',LOG_INFO, ':Module use in creating a report %s  using database %s' % (self.aModuleName[self.lstModule.getSelectedItemPos()], database))
         self.win.endExecute()
 
-    def btnCancel_clicked( self, oActionEvent ):
+    def btnCancel_clicked(self, oActionEvent):
         self.win.endExecute()
 
 if __name__<>"package" and __name__=="__main__":

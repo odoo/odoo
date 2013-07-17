@@ -5,16 +5,16 @@
         <record id="view_hr_recruitment_hired_employee" model="ir.ui.view">
             <field name="name">hr.recruitment.hired2employee.form</field>
             <field name="model">hired.employee</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Create New Employee">
-                    <label string="Would you like to create an employee ?" colspan="4" />
-                    <separator string="" colspan="4"/>
-                    <newline />
-                    <button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-                    <button name="case_close" string="No" icon='gtk-no' type="object"/>
-                    <button name="case_close_with_emp" string="Yes" colspan="1" type="object" icon="terp-camera_test"/>
-            </form>
+                <form string="Create New Employee" version="7.0">
+                    <header>
+                        <button name="case_close_with_emp" string="Yes" type="object" class="oe_highlight" />
+                        <button name="case_close" string="No" type="object"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
+                    <label string="Would you like to create an employee ?"/>
+                </form>
             </field>
         </record>
         <record id="action_hr_recruitment_hired_employee" model="ir.actions.act_window">

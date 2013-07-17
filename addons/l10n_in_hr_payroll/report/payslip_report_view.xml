@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <record id="view_payslip_tree" model="ir.ui.view">
+        <field name="name">payslip.report.tree</field>
+        <field name="model">payslip.report</field>
+        <field name="arch" type="xml">
+            <tree colors="blue:state == 'draft';black:state == 'done';gray:state == 'cancel' " create="false" string="Payslip Analysis">
+                <field name="nbr" sum="# Payslip Lines"/>
+                <field name="name"/>
+                <field name="employee_id" invisible="1"/>
+                <field name="date_to" invisible="1"/>
+                <field name="date_from" invisible="1"/>
+                <field name="state" invisible="1"/>
+                <field name="number" invisible="1"/>
+                <field name="struct_id" invisible="1"/>
+                <field name="year" invisible="1"/>
+                <field name="day" invisible="1"/>
+                <field name="month" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+                <field name="paid" invisible="1"/>
+                <field name="total" />
+                <field name="category_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_payslip_search" model="ir.ui.view">
+        <field name="name">payslip.report.search</field>
+        <field name="model">payslip.report</field>
+        <field name="arch" type="xml">
+            <search string="Payslip Analysis">
+                 <group>
+                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Payslips which are in draft state"/>
+                    <filter icon="terp-check" string="Done" name="done" domain="[('state','=','done')]" help="Payslips which are in done state"/>
+                    <separator orientation="vertical"/>
+                    <filter icon="terp-camera_test" string="Paid" domain="[('paid','=',True)]" help="Payslips which are paid"/>
+                    <separator orientation="vertical"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <separator orientation="vertical"/>
+                    <field name="number"/>
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                </group>
+                <newline/>
+                 <group expand="1" string="Extended Filters...">
+                    <separator orientation="vertical"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                </group>
+                <newline/>
+                <group expand="1" string="Group By...">
+                    <filter string="Employee" name="employee" icon="terp-personal" context="{'group_by':'employee_id'}" />
+                    <filter string="Structure" context="{'group_by':'struct_id'}" />
+                    <filter string="Category" name="category" context="{'group_by':'category_id'}" />
+                    <filter string="Payslip Line" context="{'group_by':'name'}" />
+                    <separator orientation="vertical"/>
+                    <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Company" icon="terp-go-home" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Day of Payslip"/>
+                    <filter string="Month" name="order_month" icon="terp-go-month" context="{'group_by':'month'}" help="Month of Payslip"/>
+                    <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Year of Payslip"/>
+
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_payslip_report_all" model="ir.actions.act_window">
+        <field name="name">Payslip Analysis</field>
+        <field name="res_model">payslip.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_payslip_tree"/>
+        <field name="context">{'search_default_employee':1,'search_default_category':1,'group_by_no_leaf':uid,'group_by':[]}</field>
+        <field name="help">This report performs analysis on Payslip</field>
+    </record>
+
+    <menuitem action="action_payslip_report_all" id="menu_reporting_payslip" parent="hr.menu_hr_reporting" sequence="5" groups="base.group_hr_manager"/>
+
+</data>
+</openerp>

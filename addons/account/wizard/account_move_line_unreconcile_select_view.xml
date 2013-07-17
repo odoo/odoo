@@ -4,18 +4,16 @@
         <record id="view_account_move_line_unreconcile_select" model="ir.ui.view">
             <field name="name">account.move.line.unreconcile.select.form</field>
             <field name="model">account.move.line.unreconcile.select</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Unreconciliation">
-                    <group colspan="4" >
+                <form string="Unreconciliation" version="7.0">
+                    <group>
                         <field name="account_id"/>
                     </group>
-                    <separator string="" colspan="4" />
-                    <group colspan="4" col="6">
-                        <label string ="" colspan="2"/>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel" />
-                        <button icon="terp-gtk-go-back-rtl" string="Open For Unreconciliation" name="action_open_window" type="object" />
-                   </group>
+                    <footer>
+                        <button string="Open for Unreconciliation" name="action_open_window" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                </form>
             </field>
         </record>

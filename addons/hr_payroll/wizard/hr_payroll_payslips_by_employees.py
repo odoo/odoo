@@ -23,8 +23,8 @@ import time
 from datetime import datetime
 from dateutil import relativedelta
 
-from osv import fields, osv
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 class hr_payslip_employees(osv.osv_memory):
 
@@ -49,7 +49,7 @@ class hr_payslip_employees(osv.osv_memory):
         to_date = run_data.get('date_end', False)
         credit_note = run_data.get('credit_note', False)
         if not data['employee_ids']:
-            raise osv.except_osv(_("Warning !"), _("You must select employee(s) to generate payslip(s)"))
+            raise osv.except_osv(_("Warning !"), _("You must select employee(s) to generate payslip(s)."))
         for emp in emp_pool.browse(cr, uid, data['employee_ids'], context=context):
             slip_data = slip_pool.onchange_employee_id(cr, uid, [], from_date, to_date, emp.id, contract_id=False, context=context)
             res = {

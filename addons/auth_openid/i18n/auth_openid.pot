@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1beta\n"
+"Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2011-12-22 18:44+0000\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 17:05+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,13 +16,41 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: auth_openid
+#. openerp-web
+#: code:addons/auth_openid/static/src/xml/auth_openid.xml:24
+#, python-format
+msgid "Username"
+msgstr ""
+
+#. module: auth_openid
+#. openerp-web
+#: code:addons/auth_openid/static/src/xml/auth_openid.xml:12
 #: view:res.users:0
+#, python-format
 msgid "OpenID"
 msgstr ""
 
 #. module: auth_openid
+#. openerp-web
+#: code:addons/auth_openid/static/src/xml/auth_openid.xml:30
 #: field:res.users,openid_url:0
+#, python-format
 msgid "OpenID URL"
+msgstr ""
+
+#. module: auth_openid
+#. openerp-web
+#: code:addons/auth_openid/static/src/xml/auth_openid.xml:9
+#: code:addons/auth_openid/static/src/xml/auth_openid.xml:10
+#, python-format
+msgid "Google"
+msgstr ""
+
+#. module: auth_openid
+#. openerp-web
+#: code:addons/auth_openid/static/src/xml/auth_openid.xml:11
+#, python-format
+msgid "Launchpad"
 msgstr ""
 
 #. module: auth_openid
@@ -31,8 +59,10 @@ msgid "Used for disambiguation in case of a shared OpenID URL"
 msgstr ""
 
 #. module: auth_openid
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
+#. openerp-web
+#: code:addons/auth_openid/static/src/xml/auth_openid.xml:18
+#, python-format
+msgid "Google Apps Domain"
 msgstr ""
 
 #. module: auth_openid
@@ -41,17 +71,26 @@ msgid "OpenID Email"
 msgstr ""
 
 #. module: auth_openid
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
-
-#. module: auth_openid
 #: field:res.users,openid_key:0
 msgid "OpenID Key"
 msgstr ""
 
 #. module: auth_openid
+#. openerp-web
+#: code:addons/auth_openid/static/src/xml/auth_openid.xml:8
+#, python-format
+msgid "Password"
+msgstr ""
+
+#. module: auth_openid
+#. openerp-web
+#: code:addons/auth_openid/static/src/xml/auth_openid.xml:10
+#, python-format
+msgid "Google Apps"
+msgstr ""
+
+#. module: auth_openid
 #: model:ir.model,name:auth_openid.model_res_users
-msgid "res.users"
+msgid "Users"
 msgstr ""
 

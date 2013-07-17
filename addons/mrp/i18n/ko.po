@@ -1,36 +1,39 @@
 # Korean translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:43+0000\n"
-"PO-Revision-Date: 2011-12-06 11:08+0000\n"
-"Last-Translator: qdp (OpenERP) <qdp-launchpad@tinyerp.com>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 05:51+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:23+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: mrp
-#: view:mrp.routing.workcenter:0
-msgid "Routing Work Centers"
-msgstr ""
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_production_action
+#: help:mrp.config.settings,module_mrp_repair:0
 msgid ""
-"Manufacturing Orders are usually proposed automatically by OpenERP based on "
-"the bill of materials and the procurement rules, but you can also create "
-"manufacturing orders manually. OpenERP will handle the consumption of the "
-"raw materials (stock decrease) and the production of the finished products "
-"(stock increase) when the order is processed."
+"Allows to manage all product repairs.\n"
+"                    * Add/remove products in the reparation\n"
+"                    * Impact for stocks\n"
+"                    * Invoicing (products and/or services)\n"
+"                    * Warranty concept\n"
+"                    * Repair quotation report\n"
+"                    * Notes for the technician and for the final customer.\n"
+"                This installs the module mrp_repair."
 msgstr ""
+
+#. module: mrp
+#: report:mrp.production.order:0
+msgid "No. Of Cycles"
+msgstr "싸이클 횟수"
 
 #. module: mrp
 #: help:mrp.production,location_src_id:0
@@ -43,12 +46,14 @@ msgid "Work Centers Utilisation"
 msgstr ""
 
 #. module: mrp
-#: report:mrp.production.order:0
-msgid "No. Of Cycles"
-msgstr "싸이클 횟수"
+#: view:mrp.routing.workcenter:0
+msgid "Routing Work Centers"
+msgstr ""
 
 #. module: mrp
+#: field:mrp.production.workcenter.line,cycle:0
 #: field:mrp.routing.workcenter,cycle_nbr:0
+#: field:report.workcenter.load,cycle:0
 msgid "Number of Cycles"
 msgstr ""
 
@@ -60,20 +65,9 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: field:mrp.production,picking_id:0
-msgid "Picking list"
-msgstr ""
-
-#. module: mrp
 #: code:addons/mrp/report/price.py:130
 #, python-format
 msgid "Hourly Cost"
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/report/price.py:139
-#, python-format
-msgid "Cost Price per Uom"
 msgstr ""
 
 #. module: mrp
@@ -82,15 +76,15 @@ msgid "Scrap Products"
 msgstr ""
 
 #. module: mrp
+#: view:mrp.workcenter:0
+msgid "Mrp Workcenter"
+msgstr ""
+
+#. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_routing_action
 msgid "Routings"
 msgstr "라우팅"
-
-#. module: mrp
-#: field:mrp.workcenter,product_id:0
-msgid "Work Center Product"
-msgstr ""
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -103,8 +97,10 @@ msgid "For stockable products and consumables"
 msgstr ""
 
 #. module: mrp
-#: model:process.transition,name:mrp.process_transition_stockproduction0
-msgid "To Produce"
+#: help:mrp.bom,message_unread:0
+#: help:mrp.production,message_unread:0
+#: help:mrp.production.workcenter.line,message_unread:0
+msgid "If checked new messages require your attention."
 msgstr ""
 
 #. module: mrp
@@ -115,9 +111,13 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: view:product.product:0
+msgid "False"
+msgstr ""
+
+#. module: mrp
 #: view:mrp.bom:0
 #: field:mrp.bom,code:0
-#: view:mrp.production:0
 #: field:mrp.production,name:0
 msgid "Reference"
 msgstr "참조"
@@ -130,6 +130,15 @@ msgstr "완제품"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Manufacturing Orders which are currently in production."
+msgstr ""
+
+#. module: mrp
+#: help:mrp.bom,message_summary:0
+#: help:mrp.production,message_summary:0
+#: help:mrp.production.workcenter.line,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
 msgstr ""
 
 #. module: mrp
@@ -154,42 +163,26 @@ msgid "Set / Pack"
 msgstr "세트 / 팩"
 
 #. module: mrp
-#: view:mrp.production:0
-#: field:mrp.production,state:0
-msgid "State"
-msgstr ""
-
-#. module: mrp
 #: field:mrp.workcenter,costs_hour:0
 msgid "Cost per hour"
 msgstr "시간당 원가"
 
 #. module: mrp
-#: model:process.transition,note:mrp.process_transition_servicemts0
+#: model:process.transition,note:mrp.process_transition_stockproduction0
 msgid ""
-"This is used in case of a service without any impact in the system, a "
-"training session for instance."
+"In case the Supply method of the product is Produce, the system creates a "
+"production order."
 msgstr ""
 
 #. module: mrp
-#: view:mrp.production:0
-msgid "UOM"
-msgstr "UoM"
-
-#. module: mrp
 #: field:change.production.qty,product_qty:0
-#: field:mrp.bom,product_qty:0
-#: field:mrp.production,product_qty:0
-#: field:mrp.production.product.line,product_qty:0
 msgid "Product Qty"
 msgstr "상품 수량"
 
 #. module: mrp
-#: help:mrp.workcenter,product_id:0
-msgid ""
-"Fill this product to track easily your production costs in the analytic "
-"accounting."
-msgstr ""
+#: view:mrp.production:0
+msgid "Unit of Measure"
+msgstr "측정 단위"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_purchaseprocure0
@@ -197,20 +190,19 @@ msgid "For purchased material"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom.revision,indice:0
-msgid "Revision"
-msgstr "개정 번호"
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.product_form_config_action
-msgid ""
-"Create a product form for everything you buy or sell. Specify a supplier if "
-"the product can be purchased."
+#: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
+msgid "Order Planning"
 msgstr ""
 
 #. module: mrp
-#: model:ir.ui.menu,name:mrp.next_id_77
-msgid "Reporting"
+#: field:mrp.config.settings,module_mrp_operations:0
+msgid "Allow detailed planning of work order"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:633
+#, python-format
+msgid "Cannot cancel manufacturing order!"
 msgstr ""
 
 #. module: mrp
@@ -225,11 +217,6 @@ msgid "Work Cost"
 msgstr ""
 
 #. module: mrp
-#: report:bom.structure:0
-msgid "["
-msgstr ""
-
-#. module: mrp
 #: model:process.transition,name:mrp.process_transition_procureserviceproduct0
 msgid "Procurement of services"
 msgstr ""
@@ -240,6 +227,27 @@ msgid "Capacity Information"
 msgstr "생산용량 정보"
 
 #. module: mrp
+#: field:mrp.routing,workcenter_lines:0
+msgid "Work Centers"
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_routing_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a routing.\n"
+"              </p><p>\n"
+"                Routings allow you to create and manage the manufacturing\n"
+"                operations that should be followed within your work centers "
+"in\n"
+"                order to produce a product.  They are attached to bills of\n"
+"                materials that will define the required raw materials.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: mrp
+#: view:mrp.production:0
 #: field:mrp.production,move_created_ids2:0
 msgid "Produced Products"
 msgstr ""
@@ -250,15 +258,28 @@ msgid "Destination Location"
 msgstr "목적지 위치"
 
 #. module: mrp
-#: model:ir.ui.menu,name:mrp.menu_mrp_bom
+#: view:mrp.config.settings:0
 msgid "Master Data"
 msgstr ""
 
 #. module: mrp
-#: model:process.transition,note:mrp.process_transition_stockmts0
+#: field:mrp.config.settings,module_mrp_byproduct:0
+msgid "Produce several products from one manufacturing order"
+msgstr ""
+
+#. module: mrp
+#: help:mrp.config.settings,group_mrp_properties:0
 msgid ""
-"The system waits for the products to be available in the stock. These "
-"products are typically procured manually or through a minimum stock rule."
+"The selection of the right Bill of Material to use will depend on the "
+"properties specified on the sales order and the Bill of Material."
+msgstr ""
+
+#. module: mrp
+#: view:mrp.bom:0
+msgid ""
+"When processing a sales order for this product, the delivery order\n"
+"                                will contain the raw materials, instead of "
+"the finished product."
 msgstr ""
 
 #. module: mrp
@@ -282,13 +303,19 @@ msgid "Sets / Phantom"
 msgstr "세트 / 판톰"
 
 #. module: mrp
+#: view:mrp.production:0
+#: field:mrp.production,state:0
+msgid "Status"
+msgstr "상태"
+
+#. module: mrp
 #: help:mrp.bom,position:0
 msgid "Reference to a position in an external plan."
 msgstr "외부 플랜 내 위치에 대한 참조"
 
 #. module: mrp
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product"
+#: model:res.groups,name:mrp.group_mrp_routings
+msgid "Manage Routings"
 msgstr ""
 
 #. module: mrp
@@ -312,28 +339,49 @@ msgid "Procurement of stockable Product"
 msgstr ""
 
 #. module: mrp
-#: view:mrp.bom:0
-msgid "Default UOM"
+#: model:ir.actions.act_window,help:mrp.mrp_production_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a manufacturing order. \n"
+"              </p><p>\n"
+"                A manufacuring order, based on a bill of materials, will\n"
+"                consume raw materials and produce finished products.\n"
+"              </p><p>\n"
+"                Manufacturing orders are usually proposed automatically "
+"based\n"
+"                on customer requirements or automated rules like the "
+"minimum\n"
+"                stock rule.\n"
+"              </p>\n"
+"            "
 msgstr ""
 
 #. module: mrp
 #: sql_constraint:mrp.production:0
-#: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
 msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:139
 #: report:bom.structure:0
+#: view:mrp.bom:0
 #: field:mrp.product_price,number:0
+#: view:mrp.production:0
 #: report:mrp.production.order:0
 #, python-format
 msgid "Quantity"
 msgstr "수량"
 
 #. module: mrp
-#: field:mrp.production.workcenter.line,hour:0
-msgid "Nbr of hours"
+#: help:mrp.workcenter,product_id:0
+msgid ""
+"Fill this product to easily track your production costs in the analytic "
+"accounting."
+msgstr ""
+
+#. module: mrp
+#: field:mrp.workcenter,product_id:0
+msgid "Work Center Product"
 msgstr ""
 
 #. module: mrp
@@ -349,21 +397,18 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: model:process.transition,note:mrp.process_transition_stockproduction0
+#: model:process.transition,note:mrp.process_transition_servicemts0
 msgid ""
-"In case the Supply method of the product is Produce, the system creates a "
-"production order."
+"This is used in case of a service without any impact in the system, a "
+"training session for instance."
 msgstr ""
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_property_action
-msgid ""
-"The Properties in OpenERP are used to select the right bill of materials for "
-"manufacturing a product when you have different ways of building the same "
-"product. You can assign several properties to each Bill of Materials. When a "
-"sales person creates a sales order, he can relate it to several properties "
-"and OpenERP will automatically select the BoM to use according the needs."
-msgstr ""
+#: field:mrp.bom,product_qty:0
+#: field:mrp.production,product_qty:0
+#: field:mrp.production.product.line,product_qty:0
+msgid "Product Quantity"
+msgstr "상품 수량"
 
 #. module: mrp
 #: help:mrp.production,picking_id:0
@@ -378,23 +423,61 @@ msgid "Working Time"
 msgstr "근로 시간"
 
 #. module: mrp
+#: help:mrp.production,state:0
+msgid ""
+"When the production order is created the status is set to 'Draft'.\n"
+"                If the order is confirmed the status is set to 'Waiting "
+"Goods'.\n"
+"                If any exceptions are there, the status is set to 'Picking "
+"Exception'.\n"
+"                If the stock is available then the status is set to 'Ready "
+"to Produce'.\n"
+"                When the production gets started then the status is set to "
+"'In Production'.\n"
+"                When the production is over, the status is set to 'Done'."
+msgstr ""
+
+#. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_in_out_picking_tree
 msgid "Weekly Stock Value Variation"
 msgstr ""
 
 #. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new property.\n"
+"              </p><p>\n"
+"                The Properties in OpenERP are used to select the right bill "
+"of\n"
+"                materials for manufacturing a product when you have "
+"different\n"
+"                ways of building the same product.  You can assign several\n"
+"                properties to each bill of materials.  When a salesperson\n"
+"                creates a sales order, they can relate it to several "
+"properties\n"
+"                and OpenERP will automatically select the BoM to use "
+"according\n"
+"                the needs.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: mrp
 #: view:mrp.production:0
-#: field:mrp.production,date_planned_date:0
+#: field:mrp.production,date_planned:0
 #: report:mrp.production.order:0
 msgid "Scheduled Date"
 msgstr ""
 
 #. module: mrp
-#: view:mrp.bom:0
-msgid "Component Product"
+#: code:addons/mrp/procurement.py:124
+#, python-format
+msgid "Manufacturing Order <em>%s</em> created."
 msgstr ""
 
 #. module: mrp
+#: view:mrp.bom:0
 #: report:mrp.production.order:0
 msgid "Bill Of Material"
 msgstr "BoM"
@@ -425,18 +508,6 @@ msgid "Product type is service"
 msgstr ""
 
 #. module: mrp
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr ""
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
-msgid ""
-"Define specific property groups that can be assigned to the properties of "
-"your bill of materials."
-msgstr ""
-
-#. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
 msgid "Specify Cost of Work Center per cycle."
 msgstr ""
@@ -452,27 +523,18 @@ msgid "For Services."
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom.revision,date:0
-msgid "Modification Date"
-msgstr "수정 날짜"
-
-#. module: mrp
-#: help:mrp.workcenter,costs_cycle_account_id:0
-#: help:mrp.workcenter,costs_hour_account_id:0
-msgid ""
-"Complete this only if you want automatic analytic accounting entries on "
-"production orders."
-msgstr "생산 주문에 따라 자동적으로 분석 회계 엔트리를 생성하려면, 이를 작성하십시오."
-
-#. module: mrp
-#: field:mrp.production.workcenter.line,cycle:0
-msgid "Nbr of cycles"
-msgstr ""
-
-#. module: mrp
 #: model:process.node,note:mrp.process_node_orderrfq0
 #: model:process.node,note:mrp.process_node_rfq0
 msgid "Request for Quotation."
+msgstr ""
+
+#. module: mrp
+#: view:change.production.qty:0
+#: view:mrp.config.settings:0
+#: view:mrp.product.produce:0
+#: view:mrp.product_price:0
+#: view:mrp.workcenter.load:0
+msgid "or"
 msgstr ""
 
 #. module: mrp
@@ -483,13 +545,14 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
+#: view:mrp.production:0
+#: field:mrp.production,move_created_ids:0
+msgid "Products to Produce"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.production,move_created_ids:0
-msgid "Products to Produce"
+#: view:mrp.config.settings:0
+msgid "Apply"
 msgstr ""
 
 #. module: mrp
@@ -500,23 +563,8 @@ msgstr "생산 위치"
 
 #. module: mrp
 #: view:mrp.production:0
-msgid "Change Qty"
-msgstr "수량 변경"
-
-#. module: mrp
-#: model:ir.actions.act_window,name:mrp.action_configure_workcenter
-msgid "Configure your work centers"
-msgstr ""
-
-#. module: mrp
-#: view:mrp.production:0
 msgid "Force Reservation"
 msgstr "예약하기"
-
-#. module: mrp
-#: field:mrp.bom.revision,author_id:0
-msgid "Author"
-msgstr "작성자"
 
 #. module: mrp
 #: field:report.mrp.inout,value:0
@@ -534,20 +582,9 @@ msgid "Search Production"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:139
-#, python-format
-msgid "Supplier Price per Uom"
-msgstr ""
-
-#. module: mrp
 #: help:mrp.routing.workcenter,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of routing Work Centers."
-msgstr ""
-
-#. module: mrp
-#: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
 msgstr ""
 
 #. module: mrp
@@ -556,11 +593,23 @@ msgid "BoM Hierarchy"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom,product_uom:0
-#: field:mrp.production,product_uom:0
-#: field:mrp.production.product.line,product_uom:0
-msgid "Product UOM"
-msgstr "상품 UOM"
+#: model:process.transition,name:mrp.process_transition_stockproduction0
+msgid "To Produce"
+msgstr ""
+
+#. module: mrp
+#: help:mrp.config.settings,module_stock_no_autopicking:0
+msgid ""
+"This module allows an intermediate picking process to provide raw materials "
+"to production orders.\n"
+"                For example to manage production made by your suppliers (sub-"
+"contracting).\n"
+"                To achieve this, set the assembled product which is sub-"
+"contracted to \"No Auto-Picking\"\n"
+"                and put the location of the supplier in the routing of the "
+"assembly operation.\n"
+"                This installs the module stock_no_autopicking."
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -604,7 +653,7 @@ msgid "Work Center Load"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:43
+#: code:addons/mrp/procurement.py:50
 #, python-format
 msgid "No BoM defined for this product !"
 msgstr "이 상품에 정의된 BoM이 없습니다 !"
@@ -622,6 +671,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_planning
+#: view:mrp.config.settings:0
 msgid "Planning"
 msgstr ""
 
@@ -645,6 +695,20 @@ msgid "Time in hours for doing one cycle."
 msgstr "한 사이클을 수행하는 시간"
 
 #. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_bom_form_action2
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a component to a bill of material.\n"
+"              </p><p>\n"
+"                Bills of materials components are components and by-"
+"products\n"
+"                used to create master bills of materials.  Use this menu to\n"
+"                search in which BoM a specific component is used.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: mrp
 #: constraint:mrp.bom:0
 msgid "BoM line product should not be same as BoM product."
 msgstr ""
@@ -660,10 +724,14 @@ msgid "Master Bill of Materials"
 msgstr ""
 
 #. module: mrp
-#: help:mrp.bom,product_uos:0
+#: help:mrp.config.settings,module_product_manufacturer:0
 msgid ""
-"Product UOS (Unit of Sale) is the unit of measurement for the invoicing and "
-"promotion of stock."
+"This allows you to define the following for a product:\n"
+"                    * Manufacturer\n"
+"                    * Manufacturer Product Name\n"
+"                    * Manufacturer Product Code\n"
+"                    * Product Attributes.\n"
+"                This installs the module product_manufacturer."
 msgstr ""
 
 #. module: mrp
@@ -679,6 +747,21 @@ msgid "Type"
 msgstr "유형"
 
 #. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a work center.\n"
+"              </p><p>\n"
+"                Work Centers allow you to create and manage manufacturing\n"
+"                units. They consist of workers and/or machines, which are\n"
+"                considered as units for task assignation as well as "
+"capacity\n"
+"                and planning forecast.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: mrp
 #: model:process.node,note:mrp.process_node_minimumstockrule0
 msgid "Linked to the 'Minimum stock rule' supplying method."
 msgstr ""
@@ -689,12 +772,11 @@ msgid "Per month"
 msgstr "월별"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:603
-#: code:addons/mrp/wizard/change_production_qty.py:78
-#: code:addons/mrp/wizard/change_production_qty.py:83
-#, python-format
-msgid "Couldn't find bill of material for product"
-msgstr "상품의 BoM을 찾을 수 없습니다"
+#: help:mrp.bom,product_uom:0
+msgid ""
+"Unit of Measure (Unit of Measure) is the unit of measurement for the "
+"inventory control"
+msgstr ""
 
 #. module: mrp
 #: report:bom.structure:0
@@ -702,18 +784,13 @@ msgid "Product Name"
 msgstr "상품 이름"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:503
-#, python-format
-msgid "Invalid action !"
-msgstr "유효하지 않은 액션 !"
-
-#. module: mrp
 #: help:mrp.bom,product_efficiency:0
 msgid "A factor of 0.9 means a loss of 10% within the production process."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:734
+#: code:addons/mrp/mrp.py:737
+#: code:addons/mrp/mrp.py:765
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -732,6 +809,19 @@ msgstr "RFQ"
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_producttostockrules0
 msgid "Procurement rule"
+msgstr ""
+
+#. module: mrp
+#: help:mrp.workcenter,costs_cycle_account_id:0
+#: help:mrp.workcenter,costs_hour_account_id:0
+msgid ""
+"Fill this only if you want automatic analytic accounting entries on "
+"production orders."
+msgstr ""
+
+#. module: mrp
+#: view:mrp.production:0
+msgid "Mark as Started"
 msgstr ""
 
 #. module: mrp
@@ -763,23 +853,33 @@ msgid "Manufacturing Orders which are waiting for raw materials."
 msgstr ""
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
+#: code:addons/mrp/mrp.py:285
+#, python-format
 msgid ""
-"Work Centers allow you to create and manage manufacturing units.  They "
-"consist of workers and/or machines, which are considered as units for "
-"capacity and planning forecast.  Keep in mind that the working time and "
-"resource leave are not taken into account in the time computation of the "
-"work center."
+"The Product Unit of Measure you chose has a different category than in the "
+"product form."
 msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
+#: view:mrp.config.settings:0
+#: view:mrp.production:0
+#: field:mrp.production.workcenter.line,production_id:0
+#: field:procurement.order,production_id:0
 msgid "Manufacturing Order"
 msgstr ""
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_productionprocureproducts0
 msgid "Procurement of raw material"
+msgstr ""
+
+#. module: mrp
+#: sql_constraint:mrp.bom:0
+msgid ""
+"All product quantities must be greater than 0.\n"
+"You should install the mrp_byproduct module if you want to manage extra "
+"products on BoMs !"
 msgstr ""
 
 #. module: mrp
@@ -794,9 +894,11 @@ msgid "Ready to Produce"
 msgstr "생산 준비"
 
 #. module: mrp
-#: field:mrp.bom.revision,name:0
-msgid "Modification name"
-msgstr "수정 이름"
+#: field:mrp.bom,message_is_follower:0
+#: field:mrp.production,message_is_follower:0
+#: field:mrp.production.workcenter.line,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -805,12 +907,30 @@ msgid "Date"
 msgstr ""
 
 #. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to start a new manufacturing order. \n"
+"              </p><p>\n"
+"                A manufacuring order, based on a bill of materials, will\n"
+"                consume raw materials and produce finished products.\n"
+"              </p><p>\n"
+"                Manufacturing orders are usually proposed automatically "
+"based\n"
+"                on customer requirements or automated rules like the "
+"minimum\n"
+"                stock rule.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: mrp
 #: field:mrp.bom,type:0
 msgid "BoM Type"
 msgstr "BoM 유형"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:45
+#: code:addons/mrp/procurement.py:52
 #, python-format
 msgid ""
 "Procurement '%s' has an exception: 'No BoM defined for this product !'"
@@ -822,15 +942,9 @@ msgid "Search"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:626
-#, python-format
-msgid "Could not cancel manufacturing order !"
+#: model:process.node,note:mrp.process_node_billofmaterial0
+msgid "Product's structure"
 msgstr ""
-
-#. module: mrp
-#: field:report.workcenter.load,cycle:0
-msgid "Nbr of cycle"
-msgstr "사이클 수"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_res_company
@@ -838,7 +952,7 @@ msgid "Companies"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:627
+#: code:addons/mrp/mrp.py:634
 #, python-format
 msgid ""
 "You must first cancel related internal picking attached to this "
@@ -849,17 +963,6 @@ msgstr ""
 #: model:process.node,name:mrp.process_node_minimumstockrule0
 #: model:process.node,name:mrp.process_node_productminimumstockrule0
 msgid "Minimum Stock"
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:503
-#, python-format
-msgid "Cannot delete a manufacturing order in state '%s'"
-msgstr ""
-
-#. module: mrp
-#: model:ir.ui.menu,name:mrp.menus_dash_mrp
-msgid "Dashboard"
 msgstr ""
 
 #. module: mrp
@@ -894,14 +997,13 @@ msgstr "시간"
 
 #. module: mrp
 #: view:mrp.property:0
-#: view:mrp.property.group:0
 msgid "Property Group"
 msgstr "속성 그룹"
 
 #. module: mrp
-#: view:mrp.production:0
-msgid "Qty"
-msgstr "수량"
+#: field:mrp.config.settings,group_mrp_routings:0
+msgid "Manage routings and work orders "
+msgstr ""
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_production0
@@ -916,6 +1018,7 @@ msgstr ""
 
 #. module: mrp
 #: view:change.production.qty:0
+#: view:mrp.config.settings:0
 #: view:mrp.product.produce:0
 #: view:mrp.product_price:0
 #: view:mrp.production:0
@@ -924,22 +1027,11 @@ msgid "Cancel"
 msgstr "취소"
 
 #. module: mrp
-#: code:addons/mrp/wizard/change_production_qty.py:63
-#, python-format
-msgid "Active Id is not found"
-msgstr ""
-
-#. module: mrp
 #: model:process.transition,note:mrp.process_transition_servicerfq0
 msgid ""
 "If the service has a 'Buy' supply method, this creates a RFQ, a "
 "subcontracting demand for instance."
 msgstr ""
-
-#. module: mrp
-#: field:mrp.production,move_prod_id:0
-msgid "Move product"
-msgstr "상품 이동"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -957,60 +1049,17 @@ msgid "BOM Name"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:762
-#, python-format
-msgid ""
-"You are going to produce total %s quantities of \"%s\".\n"
-"But you can produce upto total %s quantities.' % (production_qty, prod_name, "
-"rest_qty)))\n"
-"                if rest_qty > 0 :\n"
-"                    stock_mov_obj.action_consume(cr, uid, "
-"[produce_product.id], (subproduct_factor * production_qty), "
-"context=context)\n"
-"\n"
-"        for raw_product in production.move_lines2:\n"
-"            new_parent_ids = []\n"
-"            parent_move_ids = [x.id for x in raw_product.move_history_ids]\n"
-"            for final_product in production.move_created_ids2:\n"
-"                if final_product.id not in parent_move_ids:\n"
-"                    new_parent_ids.append(final_product.id)\n"
-"            for new_parent_id in new_parent_ids:\n"
-"                stock_mov_obj.write(cr, uid, [raw_product.id], "
-"{'move_history_ids': [(4,new_parent_id)]})\n"
-"\n"
-"        wf_service = netsvc.LocalService(\"workflow\")\n"
-"        wf_service.trg_validate(uid, 'mrp.production', production_id, "
-"'button_produce_done', cr)\n"
-"        return True\n"
-"\n"
-"    def _costs_generate(self, cr, uid, production):\n"
-"        \"\"\" Calculates total costs at the end of the production.\n"
-"        @param production: Id of production order.\n"
-"        @return: Calculated amount.\n"
-"        \"\"\"\n"
-"        amount = 0.0\n"
-"        analytic_line_obj = self.pool.get('account.analytic.line"
-msgstr ""
-
-#. module: mrp
+#: model:ir.actions.act_window,name:mrp.act_product_manufacturing_open
+#: model:ir.actions.act_window,name:mrp.mrp_production_action
+#: model:ir.actions.act_window,name:mrp.mrp_production_action_planning
+#: model:ir.ui.menu,name:mrp.menu_mrp_production_action
 #: view:mrp.production:0
-msgid "Start Production"
-msgstr "생산 시작"
-
-#. module: mrp
-#: model:ir.actions.act_window,name:mrp.open_board_manufacturing
-#: model:ir.ui.menu,name:mrp.menu_board_manufacturing
-msgid "Production Dashboard"
+msgid "Manufacturing Orders"
 msgstr ""
 
 #. module: mrp
-#: model:res.groups,name:mrp.group_mrp_manager
-msgid "Manager"
-msgstr ""
-
-#. module: mrp
-#: view:mrp.production:0
-msgid "Source Loc."
+#: selection:mrp.production,state:0
+msgid "Awaiting Raw Materials"
 msgstr ""
 
 #. module: mrp
@@ -1019,18 +1068,24 @@ msgid "Internal Reference"
 msgstr ""
 
 #. module: mrp
-#: model:process.node,note:mrp.process_node_billofmaterial0
-msgid "Product's structure"
+#: field:mrp.production,product_uos_qty:0
+msgid "Product UoS Quantity"
 msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,name:0
 #: report:mrp.production.order:0
 #: field:mrp.production.product.line,name:0
+#: view:mrp.property:0
 #: field:mrp.routing,name:0
 #: field:mrp.routing.workcenter,name:0
 msgid "Name"
 msgstr "이름"
+
+#. module: mrp
+#: report:mrp.production.order:0
+msgid "Production Order N° :"
+msgstr "생산 주문 번호:"
 
 #. module: mrp
 #: field:mrp.product.produce,mode:0
@@ -1038,8 +1093,10 @@ msgid "Mode"
 msgstr ""
 
 #. module: mrp
-#: report:bom.structure:0
-msgid "]"
+#: help:mrp.bom,message_ids:0
+#: help:mrp.production,message_ids:0
+#: help:mrp.production.workcenter.line,message_ids:0
+msgid "Messages and communication history"
 msgstr ""
 
 #. module: mrp
@@ -1048,19 +1105,13 @@ msgid "Amount measuring unit"
 msgstr "수량 측정 단위"
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
+#: help:mrp.config.settings,module_mrp_jit:0
 msgid ""
-"Manufacturing Orders describe the operations that need to be carried out and "
-"the raw materials usage for each production stage. You use specifications "
-"(bills of materials or BoM) to work out the raw material requirements and "
-"the manufacturing orders needed for the finished products. Once the bills of "
-"materials have been defined, OpenERP is capable of automatically deciding on "
-"the manufacturing route depending on the needs of the company."
-msgstr ""
-
-#. module: mrp
-#: model:ir.actions.todo.category,name:mrp.category_mrp_config
-msgid "MRP Management"
+"This allows Just In Time computation of procurement orders.\n"
+"                All procurement orders will be processed immediately, which "
+"could in some\n"
+"                cases entail a small performance impact.\n"
+"                This installs the module mrp_jit."
 msgstr ""
 
 #. module: mrp
@@ -1078,6 +1129,11 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action3
 msgid "Manufacturing Orders in Progress"
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.client,name:mrp.action_client_mrp_menu
+msgid "Open MRP Menu"
 msgstr ""
 
 #. module: mrp
@@ -1099,6 +1155,13 @@ msgstr ""
 #, python-format
 msgid "Cycles Cost"
 msgstr "사이클 원가"
+
+#. module: mrp
+#: code:addons/mrp/wizard/change_production_qty.py:83
+#: code:addons/mrp/wizard/change_production_qty.py:88
+#, python-format
+msgid "Cannot find bill of material for this product."
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.workcenter.load,measure_unit:0
@@ -1128,10 +1191,9 @@ msgid "Analytic Journal"
 msgstr "분석 저널"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
-#: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
-#: field:mrp.routing,workcenter_lines:0
-msgid "Work Centers"
+#: code:addons/mrp/report/price.py:139
+#, python-format
+msgid "Supplier Price per Unit of Measure"
 msgstr ""
 
 #. module: mrp
@@ -1140,23 +1202,18 @@ msgid "Per week"
 msgstr "주당"
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_routing_action
+#: field:mrp.bom,message_unread:0
+#: field:mrp.production,message_unread:0
+#: field:mrp.production.workcenter.line,message_unread:0
+msgid "Unread Messages"
+msgstr ""
+
+#. module: mrp
+#: model:process.transition,note:mrp.process_transition_stockmts0
 msgid ""
-"Routings allow you to create and manage the manufacturing operations that "
-"should be followed within your work centers in order to produce a product. "
-"They are attached to bills of materials that will define the required raw "
-"materials."
+"The system waits for the products to be available in the stock. These "
+"products are typically procured manually or through a minimum stock rule."
 msgstr ""
-
-#. module: mrp
-#: model:ir.actions.act_window,name:mrp.product_form_config_action
-msgid "Create or Import Products"
-msgstr ""
-
-#. module: mrp
-#: field:report.workcenter.load,hour:0
-msgid "Nbr of hour"
-msgstr "시간"
 
 #. module: mrp
 #: view:mrp.routing:0
@@ -1187,6 +1244,14 @@ msgid "Select time unit"
 msgstr "시간 단위 선택"
 
 #. module: mrp
+#: model:ir.actions.act_window,name:mrp.product_supply_method_produce
+#: model:ir.ui.menu,name:mrp.menu_mrp_bom
+#: model:ir.ui.menu,name:mrp.menu_mrp_product_form
+#: view:mrp.config.settings:0
+msgid "Products"
+msgstr ""
+
+#. module: mrp
 #: view:report.workcenter.load:0
 msgid "Work Center load"
 msgstr ""
@@ -1202,6 +1267,12 @@ msgid ""
 "Routing indicates all the Work Centers used, for how long and/or cycles.If "
 "Routing is indicated then,the third tab of a production order (Work Centers) "
 "will be automatically pre-completed."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:505
+#, python-format
+msgid "Invalid Action!"
 msgstr ""
 
 #. module: mrp
@@ -1224,35 +1295,27 @@ msgid "Day by day"
 msgstr "일일"
 
 #. module: mrp
-#: view:mrp.bom:0
-msgid "Revisions"
-msgstr "리비전"
-
-#. module: mrp
 #: field:mrp.production,priority:0
 msgid "Priority"
 msgstr "우선순위"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_picking
+#: field:mrp.production,picking_id:0
 msgid "Picking List"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1000
-#, python-format
-msgid "Manufacturing order '%s' is scheduled for the %s."
+#: help:mrp.production,bom_id:0
+msgid ""
+"Bill of Materials allow you to define the list of required raw materials to "
+"make a finished product."
 msgstr ""
 
 #. module: mrp
-#: report:mrp.production.order:0
-msgid "Production Order N° :"
-msgstr "생산 주문 번호:"
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:647
+#: code:addons/mrp/mrp.py:375
 #, python-format
-msgid "Manufacturing order '%s' is ready to produce."
+msgid "%s (copy)"
 msgstr ""
 
 #. module: mrp
@@ -1272,11 +1335,6 @@ msgid "Security days for each manufacturing operation."
 msgstr "각 생산 오퍼레이션을 위한 여유 기간 (일)"
 
 #. module: mrp
-#: view:mrp.bom:0
-msgid "Component Name"
-msgstr ""
-
-#. module: mrp
 #: model:process.node,name:mrp.process_node_mts0
 #: model:process.transition,name:mrp.process_transition_servicemts0
 #: model:process.transition,name:mrp.process_transition_stockmts0
@@ -1286,16 +1344,6 @@ msgstr "재고 생산"
 #. module: mrp
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero!"
-msgstr ""
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
-msgid ""
-"Master Bills of Materials allow you to create and manage the list of "
-"necessary raw materials used to make a finished product. OpenERP will use "
-"these BoMs to automatically propose manufacturing orders according to "
-"product needs. You can either create a bill of materials to define specific "
-"production steps or define a single multi-level bill of materials."
 msgstr ""
 
 #. module: mrp
@@ -1309,6 +1357,11 @@ msgstr ""
 #: model:ir.model,name:mrp.model_procurement_order
 msgid "Procurement"
 msgstr "조달"
+
+#. module: mrp
+#: field:mrp.config.settings,module_product_manufacturer:0
+msgid "Define manufacturers on products "
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_view_mrp_product_price_wizard
@@ -1325,11 +1378,6 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:0
 msgid "Production Work Centers"
-msgstr ""
-
-#. module: mrp
-#: view:mrp.production:0
-msgid "Split in production lots"
 msgstr ""
 
 #. module: mrp
@@ -1353,6 +1401,13 @@ msgid "Hour Account"
 msgstr "시간 계정"
 
 #. module: mrp
+#: field:mrp.bom,product_uom:0
+#: field:mrp.production,product_uom:0
+#: field:mrp.production.product.line,product_uom:0
+msgid "Product Unit of Measure"
+msgstr ""
+
+#. module: mrp
 #: view:mrp.production:0
 msgid "Destination Loc."
 msgstr ""
@@ -1374,9 +1429,14 @@ msgid "Active"
 msgstr "활성"
 
 #. module: mrp
-#: model:process.node,name:mrp.process_node_procureproducts0
-msgid "Procure Products"
-msgstr "상품 조달"
+#: help:mrp.config.settings,group_mrp_routings:0
+msgid ""
+"Routings allow you to create and manage the manufacturing operations that "
+"should be followed\n"
+"                within your work centers in order to produce a product. They "
+"are attached to bills of materials\n"
+"                that will define the required raw materials."
+msgstr ""
 
 #. module: mrp
 #: view:report.workcenter.load:0
@@ -1384,9 +1444,14 @@ msgid "Work Center Loads"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_bom_revision
-msgid "Bill of Material Revision"
-msgstr ""
+#: model:ir.actions.act_window,name:mrp.mrp_property_action
+#: model:ir.ui.menu,name:mrp.menu_mrp_property_action
+#: view:mrp.bom:0
+#: field:mrp.bom,property_ids:0
+#: view:mrp.property:0
+#: field:procurement.order,property_ids:0
+msgid "Properties"
+msgstr "속성"
 
 #. module: mrp
 #: help:mrp.production,origin:0
@@ -1395,11 +1460,8 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: sql_constraint:mrp.bom:0
-msgid ""
-"All product quantities must be greater than 0.\n"
-"You should install the mrp_subproduct module if you want to manage extra "
-"products on BoMs !"
+#: model:process.transition,name:mrp.process_transition_minimumstockprocure0
+msgid "'Minimum stock rule' material"
 msgstr ""
 
 #. module: mrp
@@ -1418,6 +1480,11 @@ msgid "Drives the procurement orders for raw material."
 msgstr ""
 
 #. module: mrp
+#: field:mrp.production.product.line,product_uos_qty:0
+msgid "Product UOS Quantity"
+msgstr ""
+
+#. module: mrp
 #: field:mrp.workcenter,costs_general_account_id:0
 msgid "General Account"
 msgstr "일반 계정"
@@ -1428,9 +1495,20 @@ msgid "SO Number"
 msgstr "SO 번호"
 
 #. module: mrp
+#: code:addons/mrp/mrp.py:505
+#, python-format
+msgid "Cannot delete a manufacturing order in state '%s'."
+msgstr ""
+
+#. module: mrp
 #: selection:mrp.production,state:0
 msgid "Done"
 msgstr "완료"
+
+#. module: mrp
+#: view:product.product:0
+msgid "When you sell this product, OpenERP will trigger"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.production,origin:0
@@ -1454,12 +1532,39 @@ msgid "Manufacturing Orders To Start"
 msgstr ""
 
 #. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
 #: model:ir.model,name:mrp.model_mrp_workcenter
+#: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
 #: field:mrp.production.workcenter.line,workcenter_id:0
 #: field:mrp.routing.workcenter,workcenter_id:0
 #: view:mrp.workcenter:0
 #: field:report.workcenter.load,workcenter_id:0
 msgid "Work Center"
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a group of properties.\n"
+"              </p><p>\n"
+"                Define specific property groups that can be assigned to "
+"your\n"
+"                bill of materials and sales orders. Properties allows "
+"OpenERP\n"
+"                to automatically select the right bill of materials "
+"according\n"
+"                to properties selected in the sales order by salesperson.\n"
+"              </p><p>\n"
+"                For instance, in the property group \"Warranty\", you an "
+"have\n"
+"                two properties: 1 year warranty, 3 years warranty. "
+"Depending\n"
+"                on the propoerties selected in the sales order, OpenERP "
+"will\n"
+"                schedule a production using the matching bill of materials.\n"
+"              </p>\n"
+"            "
 msgstr ""
 
 #. module: mrp
@@ -1520,22 +1625,11 @@ msgid "Make to Order"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:358
-#, python-format
-msgid "Copy"
-msgstr ""
-
-#. module: mrp
 #: help:mrp.workcenter,note:0
 msgid ""
 "Description of the Work Center. Explain here what's a cycle according to "
 "this Work Center."
 msgstr ""
-
-#. module: mrp
-#: view:mrp.production.lot.line:0
-msgid "Production Products"
-msgstr "상품 생산"
 
 #. module: mrp
 #: field:mrp.production,date_finished:0
@@ -1578,6 +1672,11 @@ msgid "Approve"
 msgstr ""
 
 #. module: mrp
+#: view:mrp.config.settings:0
+msgid "Order"
+msgstr ""
+
+#. module: mrp
 #: view:mrp.property.group:0
 msgid "Properties categories"
 msgstr "속성 카테고리"
@@ -1599,18 +1698,8 @@ msgid "Scheduled Products"
 msgstr "계획된 상품"
 
 #. module: mrp
-#: view:mrp.production.lot.line:0
-msgid "Production Products Consommation"
-msgstr "생산 상품 소비"
-
-#. module: mrp
-#: model:ir.actions.act_window,name:mrp.act_product_manufacturing_open
-#: model:ir.actions.act_window,name:mrp.mrp_production_action
-#: model:ir.actions.act_window,name:mrp.mrp_production_action_planning
-#: model:ir.ui.menu,name:mrp.menu_mrp_production_action
-#: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
-#: view:mrp.production:0
-msgid "Manufacturing Orders"
+#: model:res.groups,name:mrp.group_mrp_manager
+msgid "Manager"
 msgstr ""
 
 #. module: mrp
@@ -1646,9 +1735,24 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: mrp
-#: help:mrp.bom,product_uom:0
+#: view:mrp.production:0
+msgid "(Update)"
+msgstr ""
+
+#. module: mrp
+#: help:mrp.config.settings,module_mrp_operations:0
 msgid ""
-"UoM (Unit of Measure) is the unit of measurement for the inventory control"
+"This allows to add state, date_start,date_stop in production order operation "
+"lines (in the \"Work Centers\" tab).\n"
+"                This installs the module mrp_operations."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:737
+#, python-format
+msgid ""
+"You are going to consume total %s quantities of \"%s\".\n"
+"But you can only consume up to total %s quantities."
 msgstr ""
 
 #. module: mrp
@@ -1669,6 +1773,11 @@ msgid "Company"
 msgstr ""
 
 #. module: mrp
+#: view:mrp.bom:0
+msgid "Default Unit of Measure"
+msgstr ""
+
+#. module: mrp
 #: field:mrp.workcenter,time_cycle:0
 msgid "Time for 1 cycle (hour)"
 msgstr "1 사이클 시간"
@@ -1676,7 +1785,6 @@ msgstr "1 사이클 시간"
 #. module: mrp
 #: model:ir.actions.report.xml,name:mrp.report_mrp_production_report
 #: field:mrp.production.product.line,production_id:0
-#: field:mrp.production.workcenter.line,production_id:0
 #: model:process.node,name:mrp.process_node_production0
 #: model:process.node,name:mrp.process_node_productionorder0
 msgid "Production Order"
@@ -1688,14 +1796,24 @@ msgid "Automatic procurement rule"
 msgstr ""
 
 #. module: mrp
+#: field:mrp.bom,message_ids:0
+#: field:mrp.production,message_ids:0
+#: field:mrp.production.workcenter.line,message_ids:0
+msgid "Messages"
+msgstr ""
+
+#. module: mrp
 #: view:mrp.production:0
 msgid "Compute Data"
 msgstr "데이터 계산"
 
 #. module: mrp
-#: field:mrp.production,product_uos_qty:0
-msgid "Product UoS Qty"
-msgstr "상품 UoS 수량"
+#: code:addons/mrp/mrp.py:610
+#: code:addons/mrp/wizard/change_production_qty.py:83
+#: code:addons/mrp/wizard/change_production_qty.py:88
+#, python-format
+msgid "Error!"
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:139
@@ -1709,6 +1827,11 @@ msgstr ""
 #: model:ir.actions.report.xml,name:mrp.report_bom_structure
 msgid "BOM Structure"
 msgstr "BOM 구조"
+
+#. module: mrp
+#: field:mrp.config.settings,module_mrp_jit:0
+msgid "Generate procurement in real time"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,date_stop:0
@@ -1731,10 +1854,20 @@ msgid "Manufacturing Lead Time"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/mrp.py:285
+#, python-format
+msgid "Warning"
+msgstr ""
+
+#. module: mrp
 #: field:mrp.bom,product_uos_qty:0
-#: field:mrp.production.product.line,product_uos_qty:0
 msgid "Product UOS Qty"
 msgstr "상품 UOS 수량"
+
+#. module: mrp
+#: field:mrp.production,move_prod_id:0
+msgid "Product Move"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_report_in_out_picking_tree
@@ -1755,8 +1888,10 @@ msgid "Manufacturing Efficiency"
 msgstr ""
 
 #. module: mrp
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
+#: field:mrp.bom,message_follower_ids:0
+#: field:mrp.production,message_follower_ids:0
+#: field:mrp.production.workcenter.line,message_follower_ids:0
+msgid "Followers"
 msgstr ""
 
 #. module: mrp
@@ -1787,86 +1922,18 @@ msgid "Recreate Picking"
 msgstr "피킹 다시 생성"
 
 #. module: mrp
-#: help:mrp.bom,type:0
-msgid ""
-"If a sub-product is used in several products, it can be useful to create its "
-"own BoM. Though if you don't want separated production orders for this sub-"
-"product, select Set/Phantom as BoM type. If a Phantom BoM is used for a root "
-"product, it will be sold and shipped as a set of components, instead of "
-"being produced."
-msgstr ""
-
-#. module: mrp
-#: help:mrp.production,state:0
-msgid ""
-"When the production order is created the state is set to 'Draft'.\n"
-" If the order is confirmed the state is set to 'Waiting Goods'.\n"
-" If any exceptions are there, the state is set to 'Picking Exception'.       "
-"                             \n"
-"If the stock is available then the state is set to 'Ready to Produce'.\n"
-" When the production gets started then the state is set to 'In Production'.\n"
-" When the production is over, the state is set to 'Done'."
-msgstr ""
-
-#. module: mrp
 #: selection:mrp.bom,method:0
 msgid "On Order"
 msgstr "주문에 따라"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration
-#: view:res.company:0
 msgid "Configuration"
 msgstr "구성"
 
 #. module: mrp
 #: view:mrp.bom:0
 msgid "Starting Date"
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:734
-#, python-format
-msgid ""
-"You are going to consume total %s quantities of \"%s\".\n"
-"But you can consume upto total %s quantities.' % (qty, prod_name, "
-"qty_avail)))\n"
-"                    if qty <= 0.0:\n"
-"                        # we already have more qtys consumed than we need \n"
-"                        continue\n"
-"\n"
-"                    raw_product[0].action_consume(qty, "
-"raw_product[0].location_id.id, context=context)\n"
-"\n"
-"        if production_mode == 'consume_produce':\n"
-"            # To produce remaining qty of final product\n"
-"            #vals = {'state':'confirmed'}\n"
-"            #final_product_todo = [x.id for x in "
-"production.move_created_ids]\n"
-"            #stock_mov_obj.write(cr, uid, final_product_todo, vals)\n"
-"            #stock_mov_obj.action_confirm(cr, uid, final_product_todo, "
-"context)\n"
-"            produced_products = {}\n"
-"            for produced_product in production.move_created_ids2:\n"
-"                if produced_product.scrapped:\n"
-"                    continue\n"
-"                if not produced_products.get(produced_product.product_id.id, "
-"False):\n"
-"                    produced_products[produced_product.product_id.id] = 0\n"
-"                produced_products[produced_product.product_id.id] += "
-"produced_product.product_qty\n"
-"\n"
-"            for produce_product in production.move_created_ids:\n"
-"                produced_qty = "
-"produced_products.get(produce_product.product_id.id, 0)\n"
-"                subproduct_factor = self._get_subproduct_factor(cr, uid, "
-"production.id, produce_product.id, context=context)\n"
-"                rest_qty = (subproduct_factor * production.product_qty) - "
-"produced_qty\n"
-"\n"
-"                if rest_qty < production_qty:\n"
-"                    prod_name = produce_product.product_id.name_get()[0][1]\n"
-"                    raise osv.except_osv(_('Warning!"
 msgstr ""
 
 #. module: mrp
@@ -1885,7 +1952,9 @@ msgid "Total Qty"
 msgstr "총 수량"
 
 #. module: mrp
+#: field:mrp.production.workcenter.line,hour:0
 #: field:mrp.routing.workcenter,hour_nbr:0
+#: field:report.workcenter.load,hour:0
 msgid "Number of Hours"
 msgstr "시간"
 
@@ -1910,6 +1979,25 @@ msgid "Assignment from Production or Purchase Order."
 msgstr ""
 
 #. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a bill of material. \n"
+"              </p><p>\n"
+"                Bills of Materials allow you to define the list of required "
+"raw\n"
+"                materials used to make a finished product; through a "
+"manufacturing\n"
+"                order or a pack of products.\n"
+"              </p><p>\n"
+"                OpenERP uses these BoMs to automatically propose "
+"manufacturing\n"
+"                orders according to procurement needs.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: mrp
 #: field:mrp.routing.workcenter,routing_id:0
 msgid "Parent Routing"
 msgstr "부모 라우팅"
@@ -1920,7 +2008,20 @@ msgid "Time in hours for the setup."
 msgstr "셋업 시간"
 
 #. module: mrp
-#: field:mrp.bom.revision,bom_id:0
+#: field:mrp.config.settings,module_mrp_repair:0
+msgid "Manage repairs of products "
+msgstr ""
+
+#. module: mrp
+#: help:mrp.config.settings,module_mrp_byproduct:0
+msgid ""
+"You can configure by-products in the bill of material.\n"
+"                Without this module: A + B + C -> D.\n"
+"                With this module: A + B + C -> D + E.\n"
+"                This installs the module mrp_byproduct."
+msgstr ""
+
+#. module: mrp
 #: field:procurement.order,bom_id:0
 msgid "BoM"
 msgstr "BoM"
@@ -1938,23 +2039,14 @@ msgid "Assignment from stock."
 msgstr ""
 
 #. module: mrp
-#: selection:mrp.production,state:0
-msgid "Waiting Goods"
-msgstr "대기 상품"
-
-#. module: mrp
-#: field:mrp.bom.revision,last_indice:0
-msgid "last indice"
-msgstr "마지막 인덱스"
-
-#. module: mrp
-#: field:mrp.bom,revision_ids:0
-#: view:mrp.bom.revision:0
-msgid "BoM Revisions"
-msgstr "BoM 리비전"
+#: code:addons/mrp/report/price.py:139
+#, python-format
+msgid "Cost Price per Unit of Measure"
+msgstr ""
 
 #. module: mrp
 #: field:report.mrp.inout,date:0
+#: view:report.workcenter.load:0
 #: field:report.workcenter.load,name:0
 msgid "Week"
 msgstr ""
@@ -2002,11 +2094,11 @@ msgid "BOM Ref"
 msgstr ""
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_bom_form_action2
+#: code:addons/mrp/mrp.py:765
+#, python-format
 msgid ""
-"Bills of materials components are components and sub-products used to create "
-"master bills of materials. Use this menu to search in which BoM a specific "
-"component is used."
+"You are going to produce total %s quantities of \"%s\".\n"
+"But you can only produce up to total %s quantities."
 msgstr ""
 
 #. module: mrp
@@ -2015,17 +2107,14 @@ msgid "Product type is Stockable or Consumable."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:603
-#: code:addons/mrp/wizard/change_production_qty.py:78
-#: code:addons/mrp/wizard/change_production_qty.py:83
-#, python-format
-msgid "Error"
-msgstr "에러"
-
-#. module: mrp
 #: selection:mrp.production,state:0
 msgid "Production Started"
 msgstr ""
+
+#. module: mrp
+#: model:process.node,name:mrp.process_node_procureproducts0
+msgid "Procure Products"
+msgstr "상품 조달"
 
 #. module: mrp
 #: field:mrp.product.produce,product_qty:0
@@ -2033,23 +2122,33 @@ msgid "Select Quantity"
 msgstr ""
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.act_product_product_2_mrp_bom
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
+#: model:ir.actions.act_window,name:mrp.product_open_bom
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action
+#: view:mrp.bom:0
+#: view:product.product:0
 #: field:product.product,bom_ids:0
 msgid "Bill of Materials"
 msgstr "BoM"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_property_action
-#: model:ir.ui.menu,name:mrp.menu_mrp_property_action
-#: view:mrp.bom:0
-#: field:mrp.bom,property_ids:0
-#: view:mrp.property:0
-#: view:procurement.order:0
-#: field:procurement.order,property_ids:0
-msgid "Properties"
-msgstr "속성"
+#: code:addons/mrp/mrp.py:610
+#, python-format
+msgid "Cannot find a bill of material for this product."
+msgstr ""
+
+#. module: mrp
+#: view:product.product:0
+msgid ""
+"using the bill of materials assigned to this product.\n"
+"                        The delivery order will be ready once the production "
+"is done."
+msgstr ""
+
+#. module: mrp
+#: field:mrp.config.settings,module_stock_no_autopicking:0
+msgid "Manage manual picking to fulfill manufacturing orders "
+msgstr ""
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
@@ -2063,27 +2162,20 @@ msgid "Productions"
 msgstr "생산"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_routing
-#: view:mrp.bom:0
-#: field:mrp.bom,routing_id:0
+#: model:ir.model,name:mrp.model_stock_move_split
 #: view:mrp.production:0
-#: field:mrp.production,routing_id:0
-#: view:mrp.routing:0
-#: model:process.node,name:mrp.process_node_routing0
-msgid "Routing"
-msgstr "라우팅"
-
-#. module: mrp
-#: field:mrp.production,date_planned:0
-msgid "Scheduled date"
-msgstr "계획된 날짜"
-
-#. module: mrp
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
+msgid "Split in Serial Numbers"
 msgstr ""
 
 #. module: mrp
+#: help:mrp.bom,product_uos:0
+msgid ""
+"Product UOS (Unit of Sale) is the unit of measurement for the invoicing and "
+"promotion of stock."
+msgstr ""
+
+#. module: mrp
+#: view:mrp.production:0
 #: field:stock.move,production_id:0
 msgid "Production"
 msgstr "생산"
@@ -2100,18 +2192,8 @@ msgid "Procurements in Exception"
 msgstr ""
 
 #. module: mrp
-#: model:process.transition,name:mrp.process_transition_minimumstockprocure0
-msgid "'Minimum stock rule' material"
-msgstr ""
-
-#. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_price
 msgid "Product Price"
-msgstr ""
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_stock_move_split
-msgid "Split in Production lots"
 msgstr ""
 
 #. module: mrp
@@ -2126,14 +2208,8 @@ msgid "Change Product Qty"
 msgstr "상품 수량 변경"
 
 #. module: mrp
-#: view:mrp.bom.revision:0
-#: field:mrp.bom.revision,description:0
-#: view:mrp.property:0
-#: view:mrp.property.group:0
 #: field:mrp.routing,note:0
-#: view:mrp.routing.workcenter:0
 #: field:mrp.routing.workcenter,note:0
-#: view:mrp.workcenter:0
 #: field:mrp.workcenter,note:0
 msgid "Description"
 msgstr "설명"
@@ -2144,8 +2220,9 @@ msgid "Manufacturing board"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.production,date_planned_end:0
-msgid "Scheduled End Date"
+#: code:addons/mrp/wizard/change_production_qty.py:68
+#, python-format
+msgid "Active Id not found"
 msgstr ""
 
 #. module: mrp
@@ -2154,13 +2231,39 @@ msgid "The way to procurement depends on the product type."
 msgstr ""
 
 #. module: mrp
+#: model:ir.actions.act_window,name:mrp.open_board_manufacturing
+#: model:ir.ui.menu,name:mrp.menu_board_manufacturing
 #: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
+#: model:ir.ui.menu,name:mrp.next_id_77
 msgid "Manufacturing"
 msgstr "제조"
 
 #. module: mrp
-#: view:board.board:0
-msgid "Next Production Orders"
+#: help:mrp.bom,type:0
+msgid ""
+"If a by-product is used in several products, it can be useful to create its "
+"own BoM. Though if you don't want separated production orders for this by-"
+"product, select Set/Phantom as BoM type. If a Phantom BoM is used for a root "
+"product, it will be sold and shipped as a set of components, instead of "
+"being produced."
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_mrp_configuration
+#: view:mrp.config.settings:0
+msgid "Configure Manufacturing"
+msgstr ""
+
+#. module: mrp
+#: view:product.product:0
+msgid ""
+"a manufacturing\n"
+"                        order"
+msgstr ""
+
+#. module: mrp
+#: field:mrp.config.settings,group_mrp_properties:0
+msgid "Allow several bill of materials per products using properties"
 msgstr ""
 
 #. module: mrp
@@ -2170,6 +2273,17 @@ msgid "Property Groups"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_mrp_routing
+#: view:mrp.bom:0
+#: field:mrp.bom,routing_id:0
+#: view:mrp.production:0
+#: field:mrp.production,routing_id:0
+#: view:mrp.routing:0
+#: model:process.node,name:mrp.process_node_routing0
+msgid "Routing"
+msgstr "라우팅"
+
+#. module: mrp
 #: model:process.transition,note:mrp.process_transition_procurestockableproduct0
 msgid ""
 "Depending on the chosen method to supply the stockable products, the "
@@ -2177,17 +2291,16 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:874
-#: code:addons/mrp/mrp.py:929
-#: code:addons/mrp/mrp.py:954
-#, python-format
-msgid "PROD: %s"
-msgstr ""
-
-#. module: mrp
 #: help:mrp.workcenter,time_stop:0
 msgid "Time in hours for the cleaning."
 msgstr "청소 시간"
+
+#. module: mrp
+#: field:mrp.bom,message_summary:0
+#: field:mrp.production,message_summary:0
+#: field:mrp.production.workcenter.line,message_summary:0
+msgid "Summary"
+msgstr ""
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_purchaseprocure0
@@ -2240,728 +2353,13 @@ msgid "Gives the sequence order when displaying a list of bills of material."
 msgstr ""
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_mrp_config_settings
+msgid "mrp.config.settings"
+msgstr ""
+
+#. module: mrp
 #: view:mrp.production:0
 #: field:mrp.production,move_lines:0
 #: report:mrp.production.order:0
 msgid "Products to Consume"
 msgstr ""
-
-#~ msgid "Manufacturing Resource Planning"
-#~ msgstr "제조 리소스 계획"
-
-#~ msgid "Moves Created"
-#~ msgstr "생성된 무브"
-
-#~ msgid "UoS Quantity"
-#~ msgstr "UoS 수량"
-
-#~ msgid "Routing Workcenters"
-#~ msgstr "워크센터 라우팅"
-
-#, python-format
-#~ msgid "Warning !"
-#~ msgstr "경고 !"
-
-#~ msgid "Origin"
-#~ msgstr "기원"
-
-#~ msgid "Automatic orderpoint"
-#~ msgstr "자동 주문포인트"
-
-#~ msgid "Packing list"
-#~ msgstr "포장 리스트"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "뷰 아키텍처용 XML로 유효하지 않음!"
-
-#~ msgid "Best price (not yet active!)"
-#~ msgstr "최고 가격 (아직 비활성 !)"
-
-#, python-format
-#~ msgid "Product name"
-#~ msgstr "제품 이름"
-
-#~ msgid "MRP & Logistic Scheduler"
-#~ msgstr "MRP 및 물류 스케줄러"
-
-#~ msgid "Ask New Products"
-#~ msgstr "새 제품 문의"
-
-#~ msgid "Product & Location"
-#~ msgstr "제품 및 위치"
-
-#~ msgid "Do nothing"
-#~ msgstr "아무 것도 안함"
-
-#~ msgid "Automatic Procurements"
-#~ msgstr "자동 조달"
-
-#~ msgid "Analytic Accounting"
-#~ msgstr "분석 회계"
-
-#~ msgid "Products Consummed"
-#~ msgstr "소비된 상품"
-
-#~ msgid "Packing Exception"
-#~ msgstr "포장 예외"
-
-#, python-format
-#~ msgid "products"
-#~ msgstr "상품"
-
-#~ msgid "This wizard will schedule procurements."
-#~ msgstr "이 위저드는 조달 일정을 작성합니다."
-
-#~ msgid "Internal Ref."
-#~ msgstr "내부 참조"
-
-#~ msgid "Status"
-#~ msgstr "상태"
-
-#~ msgid "Production Orders"
-#~ msgstr "상품 주문"
-
-#, python-format
-#~ msgid "Workcenter name"
-#~ msgstr "워크센터 이름"
-
-#~ msgid "Procure Service Product"
-#~ msgstr "서비스 상품 조달"
-
-#~ msgid "Procurements"
-#~ msgstr "조달"
-
-#~ msgid "Details"
-#~ msgstr "상세"
-
-#~ msgid "Production scheduled products"
-#~ msgstr "계획된 상품 생산"
-
-#~ msgid "Procurement Process"
-#~ msgstr "조달 프로세스"
-
-#, python-format
-#~ msgid "Product Standard Price"
-#~ msgstr "상품 표준 가격"
-
-#, python-format
-#~ msgid "Product Quantity"
-#~ msgstr "상품 수량"
-
-#~ msgid "Product to stock rules"
-#~ msgstr "재고 생산 규칙"
-
-#~ msgid "max"
-#~ msgstr "최대"
-
-#~ msgid "product"
-#~ msgstr "상품"
-
-#~ msgid ""
-#~ "Rounding applied on the product quantity. For integer only values, put 1.0"
-#~ msgstr "상품 수량에는 반올림이 적용됩니다. 정수 값의 경우, 1.0을 입력하십시오."
-
-#~ msgid "Reservation"
-#~ msgstr "예약"
-
-#~ msgid "Print product price"
-#~ msgstr "상품 가격 출력"
-
-#~ msgid "If Procure method is Make to order and supply method is produce"
-#~ msgstr "조달 방식이 '주문 생산'이고, 공급 방식이 생산일 경우"
-
-#~ msgid "Purchase Lead Time"
-#~ msgstr "구매 리드 타임"
-
-#~ msgid "Make Procurement"
-#~ msgstr "조달하기"
-
-#~ msgid "Production Procure Products"
-#~ msgstr "생산 조달 상품"
-
-#~ msgid "Latest error"
-#~ msgstr "최종 에러"
-
-#~ msgid "Service Product Process"
-#~ msgstr "서비스 상품 프로세스"
-
-#~ msgid "Error ! You can not create recursive BoM."
-#~ msgstr "에러 ! 재귀적 BoM을 만들 수는 없습니다."
-
-#~ msgid "Production Orders Planning"
-#~ msgstr "생산 주문 계획"
-
-#~ msgid "Manufacturity Lead Time"
-#~ msgstr "생산성 리드 타임"
-
-#~ msgid "Workcenter Operations"
-#~ msgstr "워크센터 운영"
-
-#~ msgid "Exceptions Procurements to Fix"
-#~ msgstr "고정할 예외 조달"
-
-#~ msgid "Factor that multiplies all times expressed in the workcenter."
-#~ msgstr "워크센터에 표현된 모든 시간들을 곱하는 팩터"
-
-#~ msgid "Waiting"
-#~ msgstr "대기"
-
-#~ msgid "Qty Multiple"
-#~ msgstr "수량"
-
-#~ msgid ""
-#~ "This is the internal picking list take bring the raw materials to the "
-#~ "production plan."
-#~ msgstr "원재료를 생산 플랜에 가져갈 내부 피킹 리스트"
-
-#~ msgid "indice type"
-#~ msgstr "색인 유형"
-
-#, python-format
-#~ msgid "Hours Cost"
-#~ msgstr "시간 원가"
-
-#~ msgid "Min Quantity"
-#~ msgstr "최소 수량"
-
-#~ msgid "If Product type is service and procure method is Make to stock"
-#~ msgstr "상품 타입이 서비스이고, 조달 방식이 '재고 생산'일 경우"
-
-#~ msgid "Procurement Lines"
-#~ msgstr "조달 라인"
-
-#~ msgid "Production orders"
-#~ msgstr "생산 주문"
-
-#, python-format
-#~ msgid "SUBTOTAL"
-#~ msgstr "소계"
-
-#~ msgid "Security Days"
-#~ msgstr "안전 기간 (일)"
-
-#~ msgid "If Product type is service"
-#~ msgstr "상품 타입이 서비스일 경우"
-
-#~ msgid "BoM Hyerarchy"
-#~ msgstr "BoM 계층구조"
-
-#~ msgid ""
-#~ "This wizard will planify the procurement for this product. This procurement "
-#~ "may generate task, production orders or purchase orders."
-#~ msgstr "이 위저드는 이 상품의 조달 계획을 작성합니다. 조달 프로세스는 과제, 생산 주문 또는 구매 주문을 생성합니다."
-
-#~ msgid "Exception"
-#~ msgstr "예외"
-
-#~ msgid "Production done"
-#~ msgstr "생산 완료"
-
-#, python-format
-#~ msgid "Unit Product Price"
-#~ msgstr "단위 상품 가격"
-
-#~ msgid "Workcenter Name"
-#~ msgstr "워크센터 이름"
-
-#~ msgid "Machine"
-#~ msgstr "기계"
-
-#~ msgid "References"
-#~ msgstr "참조"
-
-#~ msgid "min"
-#~ msgstr "최소"
-
-#~ msgid "Compute All Schedulers"
-#~ msgstr "모든 스케줄러 계산"
-
-#~ msgid "-"
-#~ msgstr "-"
-
-#~ msgid "on order"
-#~ msgstr "주문"
-
-#~ msgid "Workcenters"
-#~ msgstr "워크센터"
-
-#, python-format
-#~ msgid "Product uom"
-#~ msgstr "상품 UoM"
-
-#~ msgid "Create Procurement"
-#~ msgstr "조달 생성"
-
-#~ msgid "Run procurement"
-#~ msgstr "조달 실행"
-
-#~ msgid ""
-#~ "This is the time frame analysed by the scheduler when computing "
-#~ "procurements. All procurement that are not between today and today+range are "
-#~ "skipped for futur computation."
-#~ msgstr ""
-#~ "조달을 계산할 때 스케줄러에 의해 분석되는 시간 프레임입니다. 오늘과 오늘+범위 사이에 있지 않은 모든 조달이 향후 계산에서 제외됩니다."
-
-#~ msgid "Number of Cycle"
-#~ msgstr "사이클 수"
-
-#~ msgid "Time Efficiency"
-#~ msgstr "시간 효율"
-
-#~ msgid "Scheduler Parameters"
-#~ msgstr "스케줄러 파라미터"
-
-#~ msgid "Unit of Measure"
-#~ msgstr "측정 단위"
-
-#~ msgid "A cycle is defined in the workcenter definition."
-#~ msgstr "사이클은 워크센터 정의 속에 정의됩니다."
-
-#~ msgid "Procurement Method"
-#~ msgstr "조달 방법"
-
-#~ msgid "Compute Procurements"
-#~ msgstr "조달 계산"
-
-#~ msgid "Material routing"
-#~ msgstr "원재료 라우팅"
-
-#~ msgid "Number of products to produce"
-#~ msgstr "생산할 상품의 수량"
-
-#~ msgid "Procurement Purchase"
-#~ msgstr "조달 구매"
-
-#~ msgid "Validate"
-#~ msgstr "검증"
-
-#~ msgid "Location"
-#~ msgstr "위치"
-
-#~ msgid "Sale Ref"
-#~ msgstr "판매 참조"
-
-#~ msgid "New Procurement"
-#~ msgstr "새 조달"
-
-#~ msgid "Service Make to Stock"
-#~ msgstr "서비스 '재고 생산'"
-
-#~ msgid "Product Efficiency"
-#~ msgstr "상품 효율"
-
-#~ msgid "Orderpoint minimum rule"
-#~ msgstr "주문포인트 최소 규칙"
-
-#~ msgid "Minimum stock rule"
-#~ msgstr "최소 스톡 규칙"
-
-#~ msgid "Procurement orders"
-#~ msgstr "조달 주문"
-
-#~ msgid "Max Quantity"
-#~ msgstr "최대 수량"
-
-#~ msgid "Planned Date"
-#~ msgstr "계획된 날짜"
-
-#~ msgid "If product type is service and procure method is Make to order"
-#~ msgstr "상품 유형이 서비스이고, 조달 방법이 '주문 생산'일 경우"
-
-#~ msgid "Scheduler Range"
-#~ msgstr "스케줄러 범위"
-
-#~ msgid "Tool"
-#~ msgstr "툴"
-
-#~ msgid "alphabetical indices"
-#~ msgstr "문자 인덱스"
-
-#~ msgid "Note"
-#~ msgstr "노트"
-
-#~ msgid "This is the leads/security time for each purchase order."
-#~ msgstr "각 구매 주문의 리드/안전 시간"
-
-#~ msgid "Minimum Stock Procure"
-#~ msgstr "최소 스톡 조달"
-
-#~ msgid "Procurement for raw materials."
-#~ msgstr "원재료 조달"
-
-#~ msgid "Define the product structure, with sub-products and/or components."
-#~ msgstr "상품 구조를 하위 상품 및/또는 부품과 더불어 정의"
-
-#~ msgid ""
-#~ "Procurement is created if the product quantity is lower than the minimum "
-#~ "limit."
-#~ msgstr "상품 수량이 최소 한계 이하일 경우 조달이 생성됩니다."
-
-#~ msgid "Define a routing to describe the manufacturing steps."
-#~ msgstr "생산 단계를 기술할 라우팅 정의"
-
-#~ msgid "Change Product Qty."
-#~ msgstr "상품 수량 변경"
-
-#~ msgid "Production Orders Waiting Products"
-#~ msgstr "상품을 기다리는 생산 주문"
-
-#~ msgid "Reordering Mode"
-#~ msgstr "재 주문 모드"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr "오브젝트 이름은 x_로 시작하고, 특수 문자가 없어야 합니다 !"
-
-#~ msgid "Date Closed"
-#~ msgstr "마감된 날짜"
-
-#~ msgid "Properties composition"
-#~ msgstr "속성 구성"
-
-#~ msgid "The procurement quantity will by rounded up to this multiple."
-#~ msgstr "조달 수량은 이 배수로 반올림됩니다."
-
-#~ msgid "Production Orders in Progress"
-#~ msgstr "진행 중인 생산 주문"
-
-#~ msgid "Central document to procure products"
-#~ msgstr "상품을 조달할 중앙 문서"
-
-#~ msgid "Production Workcenters"
-#~ msgstr "생산 워크센터"
-
-#~ msgid "Purchase Order"
-#~ msgstr "구매 주문"
-
-#~ msgid "Product UoM"
-#~ msgstr "상품 UoM"
-
-#~ msgid "Workcenter"
-#~ msgstr "워크센터"
-
-#~ msgid ""
-#~ "If you encode manually a procurement, you probably want to use a make to "
-#~ "order method."
-#~ msgstr "조달을 수작업으로 인코드할 경우, '주문 생산' 방식이 적합합니다."
-
-#~ msgid "numeric indices"
-#~ msgstr "수치 인덱스"
-
-#~ msgid "If Procure method is Make to order and supply method is buy"
-#~ msgstr "조달 방식이 '주문 생산'이고, 공급 방식이 구매일 경우"
-
-#~ msgid "BOM"
-#~ msgstr "BOM"
-
-#~ msgid "Internal Procurement Request"
-#~ msgstr "내부 조달 요청"
-
-#~ msgid "Planification"
-#~ msgstr "계획"
-
-#~ msgid "Bill of material revisions"
-#~ msgstr "BoM 리비전"
-
-#, python-format
-#~ msgid "No address defined for the supplier"
-#~ msgstr "이 공급자의 주소가 없음"
-
-#~ msgid "Your procurement request has been sent !"
-#~ msgstr "조달 요청이 전송되었습니다 !"
-
-#~ msgid ""
-#~ "Use a phantom bill of material in raw materials lines that have to be "
-#~ "automatically computed in on eproduction order and not one per level.If you "
-#~ "put \"Phantom/Set\" at the root level of a bill of material it is considered "
-#~ "as a set or pack: the products are replaced by the components between the "
-#~ "sale order to the picking without going through the production order.The "
-#~ "normal BoM will generate one production order per BoM level."
-#~ msgstr ""
-#~ "레벨 당 하나가 아니라, 하나의 생산 주문에서 자동 계산되어야 하는 원재료 라인 속의 팬텀 BoM을 이용하십시오. BOM의 루트 레벨에 "
-#~ "\"팬텀/세트\"을 두면, 세트나 팩으로 간주됩니다: 상품은 생산 주문을 통하지 않고, 판매 오더에서 피킹 사이에 컴포넌트로 대체됩니다. "
-#~ "일반 BoM은 각 BoM 레벨 마다 하나의 생산 주문을 생성합니다."
-
-#~ msgid "Property Categories"
-#~ msgstr "속성 카테고리"
-
-#~ msgid "Confirmed"
-#~ msgstr "확정됨"
-
-#~ msgid "Temporary Procurement Exceptions"
-#~ msgstr "일시적 조달 예외"
-
-#~ msgid "Compute Procurements Only"
-#~ msgstr "조달만 계산"
-
-#~ msgid "Workcenters Utilisation"
-#~ msgstr "워크센터 활용"
-
-#~ msgid "Production workcenters used"
-#~ msgstr "이용된 생산 워크센터"
-
-#~ msgid "If procurement is make to order"
-#~ msgstr "조달이 '주문 생산'일 경우"
-
-#~ msgid ""
-#~ "Efficiency on the production. A factor of 0.9 means a loss of 10% in the "
-#~ "production."
-#~ msgstr "생산 효율. 팩터 0.9는 생산 중에 10%의 손실이 발생함을 의미함."
-
-#~ msgid "Parameters"
-#~ msgstr "파라미터"
-
-#~ msgid "New Bill of Materials"
-#~ msgstr "새 BoM"
-
-#~ msgid "Property"
-#~ msgstr "속성"
-
-#, python-format
-#~ msgid "Product quantity"
-#~ msgstr "상품 수량"
-
-#~ msgid "Canceled"
-#~ msgstr "취소됨"
-
-#~ msgid "New Production Order"
-#~ msgstr "새 생산 주문"
-
-#~ msgid "plus"
-#~ msgstr "더하기"
-
-#~ msgid "A Request for Quotation is created and sent to the supplier."
-#~ msgstr "견적 요청이 생성되어 공급자에게 전송됩니다."
-
-#~ msgid ""
-#~ "The list of operations (list of workcenters) to produce the finished "
-#~ "product. The routing is mainly used to compute workcenter costs during "
-#~ "operations and to plan futur loads on workcenters based on production "
-#~ "plannification."
-#~ msgstr ""
-#~ "완제품 생산을 위한 오퍼레이션 리스트 (워크센터 리스트). 이 라우팅은 주로 오퍼레이션 중의 워크센터 원가 계산과 생산 계획에 기초한 "
-#~ "워크센터 부하량을 계획하는데 이용됩니다."
-
-#~ msgid "Procurement Reason"
-#~ msgstr "조달 이유"
-
-#~ msgid "Order to Max"
-#~ msgstr "최대 주문"
-
-#~ msgid "The normal working time of the workcenter."
-#~ msgstr "워크센터의 평균 근로시간"
-
-#~ msgid "Draft"
-#~ msgstr "초안"
-
-#~ msgid "Retry"
-#~ msgstr "다시 시도"
-
-#~ msgid "When any procuere products, it comes into the prpcurement orders"
-#~ msgstr "상품 조달 시, 조달 주문에 들어갑니다."
-
-#~ msgid "Production Orders To Start"
-#~ msgstr "시작할 생산 주문"
-
-#~ msgid "In procurement order, if product type is service"
-#~ msgstr "상품 유형이 서비스일 경우, 조달 주문 내에서"
-
-#~ msgid "Sale Name"
-#~ msgstr "판매 이름"
-
-#~ msgid "Close"
-#~ msgstr "닫기"
-
-#, python-format
-#~ msgid "Product supplier"
-#~ msgstr "상품 공급자"
-
-#, python-format
-#~ msgid "TOTAL"
-#~ msgstr "총"
-
-#~ msgid "Close Move at end"
-#~ msgstr "마지막에 무브를 닫기"
-
-#~ msgid "Service Product"
-#~ msgstr "서비스 상품"
-
-#~ msgid "Warehouse"
-#~ msgstr "창고"
-
-#~ msgid "Bill of Material Structure"
-#~ msgstr "BoM 구조"
-
-#~ msgid "Workcenter load"
-#~ msgstr "워크센터 부하"
-
-#~ msgid "Bill of Materials Components"
-#~ msgstr "BoM 컴포넌트"
-
-#~ msgid "You can see its bill of material which are used to make product"
-#~ msgstr "상품 생산에 이용될 BoM을 볼 수 있습니다."
-
-#~ msgid "Procurement Details"
-#~ msgstr "조달 상세내용"
-
-#~ msgid "Not used in computations, for information purpose only."
-#~ msgstr "계산용이 아닌 정보 용도"
-
-#~ msgid ""
-#~ "Triggers an automatic procurement for all products that have a virtual stock "
-#~ "under 0. You should probably not use this option, we suggest using a MTO "
-#~ "configuration on products."
-#~ msgstr ""
-#~ "가상 재고가 0 이하인 모든 제품에 대해 자동 조달 프로세스가 작동되는 트리거. 이 옵션보다는 제품에 대한 MTO 구성을 이용하시길 "
-#~ "권합니다."
-
-#~ msgid "Compute Stock Minimum Rules Only"
-#~ msgstr "최소 재고 규칙만 계산"
-
-#~ msgid "Exceptions Procurements"
-#~ msgstr "예외적 조달"
-
-#, python-format
-#~ msgid "No supplier defined for this product !"
-#~ msgstr "이 체품에 할당된 공급자가 없음 !"
-
-#~ msgid "Stockable Stock"
-#~ msgstr "재고"
-
-#~ msgid ""
-#~ "Number of operation this workcenter can do in parallel. If this workcenter "
-#~ "represent a team of 5 workers, the capacity per cycle is 5."
-#~ msgstr ""
-#~ "이 워크센터가 병렬처리할 수 있는 오퍼레이션의 수. 워크 센터가 5명의 작업자로 구성된 팀일 경우, 사이클당 생산용량은 5입니다."
-
-#~ msgid ""
-#~ "This is the days added to what you promise to customers for security purpose"
-#~ msgstr "고객과의 약속 이행을 보장하기 위한 여유 기간 (일)입니다."
-
-#~ msgid "A purchase order is created for a sub-contracting demand."
-#~ msgstr "하청 계약 수요를 위해 구매 주문이 생성됩니다."
-
-#~ msgid "If the stock of a product is under 0, it will act like an orderpoint"
-#~ msgstr "제품 스톡이 0 이하일 때, 주문포인트처럼 역할합니다."
-
-#~ msgid "you can see the minimum stock rules from product"
-#~ msgstr "상품으로부터 최소 재고 규칙을 볼 수 있습니다."
-
-#~ msgid "Stockable Request"
-#~ msgstr "재고 요청"
-
-#~ msgid "Stockable Production Order"
-#~ msgstr "재고 주문"
-
-#~ msgid ""
-#~ "When the virtual stock goes belong the Min Quantity, Open ERP generates a "
-#~ "procurement to bring the virtual stock to the Max Quantity."
-#~ msgstr "가상 재고가 최소 수량 이하로 떨어지면, Linkr는 가상 재고를 최대 수량으로 증가시킬 조달 프로세스를 생성합니다."
-
-#~ msgid "Stockable Make to Stock"
-#~ msgstr "재고 생산"
-
-#~ msgid "Service on Order"
-#~ msgstr "주문 서비스"
-
-#, python-format
-#~ msgid "from stock: products assigned."
-#~ msgstr "재고로부터: 할당된 상품"
-
-#~ msgid "Stockable Product Stock"
-#~ msgstr "재고"
-
-#~ msgid "Routing workcenter usage"
-#~ msgstr "워크센타 활용 라우팅"
-
-#, python-format
-#~ msgid "from stock and no minimum orderpoint rule defined"
-#~ msgstr "재고로부터, 그리고 최소 주문포인트 규칙이 정의되지 않음"
-
-#~ msgid "Procurement convert into the draft purchase order."
-#~ msgstr "구매주문 초안으로 전환되는 조달"
-
-#~ msgid "If Product type is Stockable and procure method is make to stock"
-#~ msgstr "상품 유형이 재고인 경우, 그리고 조달 방법이 '재고 생산'일 경우"
-
-#~ msgid "For stockable and consumable"
-#~ msgstr "재고성이고 소비성"
-
-#~ msgid "Production orders are created for the product manufacturing."
-#~ msgstr "상품 생산 주문이 생성되었습니다."
-
-#~ msgid "From minimum stock rules, it goes for procure product."
-#~ msgstr "최소 재고 규칙으로부터 상품 조달로 이동합니다."
-
-#~ msgid "Serivce Stockable Order"
-#~ msgstr "서비스 재고 주문"
-
-#~ msgid "The system waits for requested products in stock."
-#~ msgstr "시스템이 재고 상품 요청을 기다리고 있습니다."
-
-#~ msgid ""
-#~ "Description of the workcenter. Explain here what's a cycle according to this "
-#~ "workcenter."
-#~ msgstr "워크센터 설명. 이 워크센터에 기초하여 사이클을 설명하십시오."
-
-#, python-format
-#~ msgid ""
-#~ "The production is in \"%s\" state. You can not change the production "
-#~ "quantity anymore"
-#~ msgstr "생산은 \"%s\" 상태입니다. 더 이상 생산수량을 변경할 수 없습니다."
-
-#~ msgid "Human Resource"
-#~ msgstr "사람"
-
-#~ msgid "Wait for available products for reservation"
-#~ msgstr "예약 가능한 상품 대기"
-
-#~ msgid ""
-#~ "Location where the system will look for products used in raw materials."
-#~ msgstr "시스템이 원재료를 찾는 장소"
-
-#~ msgid "Procure Stockable Product"
-#~ msgstr "재고성 상품 조달"
-
-#~ msgid "Paid ?"
-#~ msgstr "지불됨 ?"
-
-#~ msgid "Minimum Stock Rules"
-#~ msgstr "최소 재고 규칙"
-
-#~ msgid ""
-#~ "Reference of the document that created this procurement.\n"
-#~ "This is automatically completed by Open ERP."
-#~ msgstr ""
-#~ "이 조달을 생성한 문저의 참조.\n"
-#~ "시스템이 자동 완성합니다."
-
-#~ msgid "Product type is Stockable and procure method is make to stock"
-#~ msgstr "상품 유형이 재고성이며, 조달 방식이 '재고 생산'"
-
-#~ msgid "if Product type is Stockable in procurement order"
-#~ msgstr "상품 유형이 조달 주문에서 재고성일 경우"
-
-#~ msgid "Stockable Order Request"
-#~ msgstr "재고성 주문 요청"
-
-#~ msgid "Minimum Stock Rule"
-#~ msgstr "최소 재고 규칙"
-
-#~ msgid "Stockable Product Process"
-#~ msgstr "재고성 상품 프로세스"
-
-#~ msgid "An entry is being made from billing material to routing."
-#~ msgstr "원재료 청구에서 라우팅까지 엔트리가 만들어 집니다."
-
-#~ msgid "Create minimum stock rules"
-#~ msgstr "최소 재고 규칙 만들기"
-
-#~ msgid "from stock"
-#~ msgstr "재고로부터"
-
-#~ msgid "Unscheduled procurements"
-#~ msgstr "계획 외 조달"
-
-#~ msgid "Running"
-#~ msgstr "작동 중"

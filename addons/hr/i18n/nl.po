@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* hr
+# Dutch translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-23 09:54+0000\n"
-"PO-Revision-Date: 2011-01-14 11:19+0000\n"
-"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:04+0000\n"
+"PO-Revision-Date: 2013-01-01 18:11+0000\n"
+"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
+"Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-24 05:53+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2013-01-02 05:25+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -22,32 +23,50 @@ msgid "Openerp user"
 msgstr "OpenERP gebruiker"
 
 #. module: hr
-#: view:hr.job:0
+#: field:hr.config.settings,module_hr_timesheet_sheet:0
+msgid "Allow timesheets validation by managers"
+msgstr "Urenstaaat controle door managers"
+
+#. module: hr
 #: field:hr.job,requirements:0
 msgid "Requirements"
 msgstr "Functie-eisen"
 
 #. module: hr
-#: constraint:hr.department:0
-msgid "Error! You can not create recursive departments."
-msgstr "Fout! U kunt geen recursieve afdelingen aanmaken."
-
-#. module: hr
 #: model:process.transition,name:hr.process_transition_contactofemployee0
 msgid "Link the employee to information"
-msgstr "Koppel de medewerker met informatie"
+msgstr "Koppel de werknemer met informatie"
 
 #. module: hr
 #: field:hr.employee,sinid:0
 msgid "SIN No"
-msgstr "BSN-nr"
+msgstr "Verzekeringsnummer"
 
 #. module: hr
+#: model:ir.actions.act_window,name:hr.open_board_hr
+#: model:ir.ui.menu,name:hr.menu_hr_dashboard
 #: model:ir.ui.menu,name:hr.menu_hr_main
-#: model:ir.ui.menu,name:hr.menu_hr_management
+#: model:ir.ui.menu,name:hr.menu_hr_reporting
 #: model:ir.ui.menu,name:hr.menu_hr_root
+#: model:ir.ui.menu,name:hr.menu_human_resources_configuration
 msgid "Human Resources"
 msgstr "Personeel"
+
+#. module: hr
+#: help:hr.employee,image_medium:0
+msgid ""
+"Medium-sized photo of the employee. It is automatically resized as a "
+"128x128px image, with aspect ratio preserved. Use this field in form views "
+"or some kanban views."
+msgstr ""
+"Foto van gemiddeld formaat van de werknemer. Deze afbeelding wordt, in "
+"verhouding, geschaald naar 128x128px. Gebruik dit veld in de formulier "
+"weergave of sommige kanban weergaven."
+
+#. module: hr
+#: view:hr.config.settings:0
+msgid "Time Tracking"
+msgstr "Tijdregistratie"
 
 #. module: hr
 #: view:hr.employee:0
@@ -58,35 +77,46 @@ msgstr "Groepeer op..."
 #. module: hr
 #: model:ir.actions.act_window,name:hr.view_department_form_installer
 msgid "Create Your Departments"
-msgstr ""
+msgstr "Maak uw afdelingen aan"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.action_hr_job
-msgid ""
-"Job Positions are used to define jobs and their requirements. You can keep "
-"track of the number of employees you have per job position and how many you "
-"expect in the future. You can also attach a survey to a job position that "
-"will be used in the recruitment process to evaluate the applicants for this "
-"job position."
-msgstr ""
-"Banen worden gebruikt om functies te definiëren met hun functie-eisen. U "
-"kunt bijhouden hoeveel medewerkers u heeft per baan en hoeveel u er in de "
-"toekomst verwacht. U kunt ook een enquête koppelen aan een baan die in het "
-"wervingsproces wordt gebruikt om de kandidaten voor deze baan te evalueren."
+#: help:hr.job,no_of_employee:0
+msgid "Number of employees currently occupying this job position."
+msgstr "Huidige aantal werknemers welke deze functie bekleden ."
 
 #. module: hr
+#: field:hr.config.settings,module_hr_evaluation:0
+msgid "Organize employees periodic evaluation"
+msgstr "Organiseer periodieke werknemer beoordelingen"
+
+#. module: hr
+#: view:hr.department:0
 #: view:hr.employee:0
 #: field:hr.employee,department_id:0
 #: view:hr.job:0
 #: field:hr.job,department_id:0
-#: view:res.users:0
+#: model:ir.model,name:hr.model_hr_department
 msgid "Department"
 msgstr "Afdeling"
 
 #. module: hr
-#: view:hr.job:0
-msgid "Mark as Old"
-msgstr "Markeer als oud"
+#: field:hr.employee,work_email:0
+msgid "Work Email"
+msgstr "E-mail werk"
+
+#. module: hr
+#: help:hr.employee,image:0
+msgid ""
+"This field holds the image used as photo for the employee, limited to "
+"1024x1024px."
+msgstr ""
+"Dit veld bevat de afbeelding, welke wordt gebruikt als foto voor de "
+"werknemer. Maximale grootte 1024x1024px."
+
+#. module: hr
+#: help:hr.config.settings,module_hr_holidays:0
+msgid "This installs the module hr_holidays."
+msgstr "Dit installeert de module hr_holidays."
 
 #. module: hr
 #: view:hr.job:0
@@ -97,6 +127,11 @@ msgstr "Functies"
 #: view:hr.job:0
 msgid "In Recruitment"
 msgstr "Wordt geworven"
+
+#. module: hr
+#: field:hr.job,message_unread:0
+msgid "Unread Messages"
+msgstr "Ongelezen berichten"
 
 #. module: hr
 #: field:hr.department,company_id:0
@@ -112,23 +147,40 @@ msgid "Expected in Recruitment"
 msgstr "Werving verwacht"
 
 #. module: hr
-#: model:ir.actions.todo.category,name:hr.category_hr_management_config
-msgid "HR Management"
-msgstr ""
+#: field:res.users,employee_ids:0
+msgid "Related employees"
+msgstr "Betreffende werknemers"
 
 #. module: hr
-#: help:hr.employee,partner_id:0
-msgid ""
-"Partner that is related to the current employee. Accounting transaction will "
-"be written on this partner belongs to employee."
-msgstr ""
-"Relatie die is verbonden met de actuele medewerker. Boekingen worden gemaakt "
-"op de relatie die verbonden is met de medewerker."
+#: constraint:hr.employee.category:0
+msgid "Error! You cannot create recursive Categories."
+msgstr "Fout! het is niet toegestaan om recursieve categorieën te maken."
+
+#. module: hr
+#: help:hr.config.settings,module_hr_recruitment:0
+msgid "This installs the module hr_recruitment."
+msgstr "Dit installeert de module hr_recruitment."
+
+#. module: hr
+#: view:hr.employee:0
+msgid "Birth"
+msgstr "Geboortedatum"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_view_categ_form
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+msgid "Employee Tags"
+msgstr "Werknemer labels"
+
+#. module: hr
+#: view:hr.job:0
+msgid "Launch Recruitement"
+msgstr "Start werving en selectie"
 
 #. module: hr
 #: model:process.transition,name:hr.process_transition_employeeuser0
 msgid "Link a user to an employee"
-msgstr "Koppel een gebruiker aan een medewerker"
+msgstr "Koppel een gebruiker aan een werknemer"
 
 #. module: hr
 #: field:hr.department,parent_id:0
@@ -136,10 +188,9 @@ msgid "Parent Department"
 msgstr "Hoofdafdeling"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,notes:0
-msgid "Notes"
-msgstr "Opmerkingen"
+#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
+msgid "Leaves"
+msgstr "Verlof"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -147,29 +198,39 @@ msgid "Married"
 msgstr "Getrouwd"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.action_create_hr_employee_installer
-msgid ""
-"Create employees form and link them to an OpenERP user if you want them to "
-"access this instance. Categories can be set on employees to perform massive "
-"operations on all the employees of the same category, i.e. allocating "
-"holidays."
-msgstr ""
+#: field:hr.job,message_ids:0
+msgid "Messages"
+msgstr "Berichten"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.open_module_tree_department
-msgid ""
-"Your Company's Department Structure is used to manage all documents related "
-"to employees by departments: expenses and timesheet validation, leaves "
-"management, recruitments, etc."
-msgstr ""
-"De afdelingsstructuur van uw bedrijf wordt gebruikt om alle documenten te "
-"beheren die gerelateerd zijn aan medewerkers per afdeling: declaraties en "
-"urenstaten, verlof, werving etc."
+#: view:hr.config.settings:0
+msgid "Talent Management"
+msgstr "Kwaliteiten beheer"
+
+#. module: hr
+#: help:hr.config.settings,module_hr_timesheet_sheet:0
+msgid "This installs the module hr_timesheet_sheet."
+msgstr "Dit installeert de module hr_timesheet_sheet."
+
+#. module: hr
+#: view:hr.employee:0
+msgid "Mobile:"
+msgstr "Mobiel:"
+
+#. module: hr
+#: view:hr.employee:0
+msgid "Position"
+msgstr "Baan"
+
+#. module: hr
+#: help:hr.job,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
 
 #. module: hr
 #: field:hr.employee,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "Kleur index"
 
 #. module: hr
 #: model:process.transition,note:hr.process_transition_employeeuser0
@@ -178,13 +239,12 @@ msgid ""
 "(and her rights) to the employee."
 msgstr ""
 "Het verbonden gebruiker veld op het medewerker formulier laat de OpenERP "
-"gebruiker (en haar rechten) koppelen met de medewerker."
+"gebruiker (en haar rechten) koppelen met de werknemer."
 
 #. module: hr
-#: view:hr.job:0
-#: selection:hr.job,state:0
-msgid "In Recruitement"
-msgstr "Wordt geworven"
+#: field:hr.employee,image_medium:0
+msgid "Medium-sized photo"
+msgstr "Foto van gemiddelde grootte"
 
 #. module: hr
 #: field:hr.employee,identification_id:0
@@ -197,19 +257,9 @@ msgid "Female"
 msgstr "Vrouw"
 
 #. module: hr
-#: help:hr.job,expected_employees:0
-msgid "Required number of employees in total for that job."
-msgstr ""
-
-#. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
 msgid "Attendance"
-msgstr ""
-
-#. module: hr
-#: view:hr.employee:0
-msgid "Social IDs"
-msgstr "BSN (SoFi) nummer"
+msgstr "Aanwezigheid"
 
 #. module: hr
 #: field:hr.employee,work_phone:0
@@ -222,7 +272,6 @@ msgid "Child Categories"
 msgstr "Subcategorieën"
 
 #. module: hr
-#: view:hr.job:0
 #: field:hr.job,description:0
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
@@ -234,16 +283,16 @@ msgid "Office Location"
 msgstr "Locatie kantoor"
 
 #. module: hr
-#: view:hr.employee:0
-msgid "My Departments Employee"
-msgstr "Mijn afdeling medewerkers"
+#: field:hr.job,message_follower_ids:0
+msgid "Followers"
+msgstr "Volgers"
 
 #. module: hr
 #: view:hr.employee:0
 #: model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
-msgstr "Medewerker"
+msgstr "Werknemer"
 
 #. module: hr
 #: model:process.node,note:hr.process_node_employeecontact0
@@ -251,9 +300,15 @@ msgid "Other information"
 msgstr "Overige informatie"
 
 #. module: hr
-#: field:hr.employee,work_email:0
-msgid "Work E-mail"
-msgstr "Werk email"
+#: help:hr.employee,image_small:0
+msgid ""
+"Small-sized photo of the employee. It is automatically resized as a 64x64px "
+"image, with aspect ratio preserved. Use this field anywhere a small image is "
+"required."
+msgstr ""
+"Kleinen foto van de werknemer. Deze foto wordt automatisch, in verhouding, "
+"geschaald naar 64x64px. Gebruik dit veld, overal waar een kleine afbeelding "
+"nodig is."
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -261,15 +316,38 @@ msgid "Date of Birth"
 msgstr "Geboortedatum"
 
 #. module: hr
-#: model:ir.ui.menu,name:hr.menu_hr_reporting
-msgid "Reporting"
-msgstr "Overzichten"
+#: help:hr.job,no_of_recruitment:0
+msgid "Number of new employees you expect to recruit."
+msgstr "Verwachte aantal te werven nieuwe werknemers."
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_board_hr
-#: model:ir.ui.menu,name:hr.menu_hr_dashboard_user
+#: model:ir.actions.client,name:hr.action_client_hr_menu
+msgid "Open HR Menu"
+msgstr "Personeelsbeheer menu openen"
+
+#. module: hr
+#: help:hr.job,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+"Bevat de samenvatting van de chatter (aantal berichten,...). Deze "
+"samenvatting is direct in html formaat om zo in de kanban weergave te worden "
+"ingevoegd."
+
+#. module: hr
+#: help:hr.config.settings,module_account_analytic_analysis:0
+msgid ""
+"This installs the module account_analytic_analysis, which will install sales "
+"management too."
+msgstr ""
+"Dit installeert de module  account_analytic_analysis, welke tevens de "
+"verkoopbeheer modules zal installeren."
+
+#. module: hr
+#: view:board.board:0
 msgid "Human Resources Dashboard"
-msgstr "Personeel dashboard"
+msgstr "Personeelsbeheer dashboard"
 
 #. module: hr
 #: view:hr.employee:0
@@ -277,6 +355,11 @@ msgstr "Personeel dashboard"
 #: view:hr.job:0
 msgid "Job"
 msgstr "Functie"
+
+#. module: hr
+#: field:hr.job,no_of_employee:0
+msgid "Current Number of Employees"
+msgstr "Huidig aantal werknemers"
 
 #. module: hr
 #: field:hr.department,member_ids:0
@@ -289,15 +372,19 @@ msgid "Configuration"
 msgstr "Instellingen"
 
 #. module: hr
-#: view:hr.employee:0
-#: field:hr.employee,category_ids:0
-msgid "Categories"
-msgstr "Categorieën"
+#: model:process.node,note:hr.process_node_employee0
+msgid "Employee form and structure"
+msgstr "Werknemerformulier en structuur"
 
 #. module: hr
-#: field:hr.job,expected_employees:0
-msgid "Expected Employees"
-msgstr "Verwachte medewerkers"
+#: field:hr.config.settings,module_hr_expense:0
+msgid "Manage employees expenses"
+msgstr "Beheers werknemers declaraties"
+
+#. module: hr
+#: view:hr.employee:0
+msgid "Tel:"
+msgstr "Tel:"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -310,27 +397,39 @@ msgid "Parent Category"
 msgstr "Bovenliggende categorie"
 
 #. module: hr
-#: constraint:hr.employee.category:0
-msgid "Error ! You cannot create recursive Categories."
-msgstr "Fout ! U kunt geen recursieve categorieën maken."
-
-#. module: hr
 #: view:hr.department:0
 #: model:ir.actions.act_window,name:hr.open_module_tree_department
 #: model:ir.ui.menu,name:hr.menu_hr_department_tree
-#: field:res.users,context_department_id:0
 msgid "Departments"
 msgstr "Afdelingen"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_employeecontact0
 msgid "Employee Contact"
-msgstr "Contactpersoon medewerker"
+msgstr "Contactpersoon werknemer"
 
 #. module: hr
-#: view:board.board:0
-msgid "My Board"
-msgstr "Mijn board"
+#: model:ir.actions.act_window,help:hr.action_hr_job
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new job position.\n"
+"              </p><p>\n"
+"                Job Positions are used to define jobs and their "
+"requirements.\n"
+"                You can keep track of the number of employees you have per "
+"job\n"
+"                position and follow the evolution according to what you "
+"planned\n"
+"                for the future.\n"
+"              </p><p>\n"
+"                You can attach a survey to a job position. It will be used "
+"in\n"
+"                the recruitment process to evaluate the applicants for this "
+"job\n"
+"                position.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -338,31 +437,61 @@ msgid "Male"
 msgstr "Man"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_categ_form
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
-msgid "Categories of Employee"
-msgstr "Categorieën medewerkers"
+#: view:hr.employee:0
+msgid ""
+"$('.oe_employee_picture').load(function() { if($(this).width() > "
+"$(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
+msgstr ""
+"$('.oe_employee_picture').load(function() { if($(this).width() > "
+"$(this).height()) { $(this).addClass('oe_employee_picture_wide') } });"
+
+#. module: hr
+#: help:hr.config.settings,module_hr_evaluation:0
+msgid "This installs the module hr_evaluation."
+msgstr "Dit installeert de module  hr_evaluation."
+
+#. module: hr
+#: constraint:hr.employee:0
+msgid "Error! You cannot create recursive hierarchy of Employee(s)."
+msgstr ""
+"Fout! Het is niet toegestaan om een recursieve werknemer hiërarchie aan te "
+"maken."
+
+#. module: hr
+#: help:hr.config.settings,module_hr_attendance:0
+msgid "This installs the module hr_attendance."
+msgstr "Dit installeert de module  hr_attendance."
+
+#. module: hr
+#: field:hr.employee,image_small:0
+msgid "Smal-sized photo"
+msgstr "Kleine foto"
 
 #. module: hr
 #: view:hr.employee.category:0
 #: model:ir.model,name:hr.model_hr_employee_category
 msgid "Employee Category"
-msgstr "Categorie medewerker"
+msgstr "Categorie werknemer"
 
 #. module: hr
-#: model:process.process,name:hr.process_process_employeecontractprocess0
-msgid "Employee Contract"
-msgstr "Arbeidsovereenkomst"
+#: field:hr.employee,category_ids:0
+msgid "Tags"
+msgstr "Labels"
 
 #. module: hr
-#: model:ir.model,name:hr.model_hr_department
-msgid "hr.department"
-msgstr "hr.department"
+#: help:hr.config.settings,module_hr_contract:0
+msgid "This installs the module hr_contract."
+msgstr "Dit installeert de module hr_contact."
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.action_create_hr_employee_installer
-msgid "Create your Employees"
-msgstr ""
+#: view:hr.employee:0
+msgid "Related User"
+msgstr "Gekoppelde gebruiker"
+
+#. module: hr
+#: view:hr.config.settings:0
+msgid "or"
+msgstr "of"
 
 #. module: hr
 #: field:hr.employee.category,name:0
@@ -370,35 +499,19 @@ msgid "Category"
 msgstr "Categorie"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.open_view_employee_list_my
-msgid ""
-"Here you can manage your work force by creating employees and assigning them "
-"specific properties in the system. Maintain all employee related information "
-"and keep track of anything that needs to be recorded for them. The personal "
-"information tab will help you maintain their identity data. The Categories "
-"tab gives you the opportunity to assign them related employee categories "
-"depending on their position and activities within the company. A category "
-"can be a seniority level within the company or a department. The Timesheets "
-"tab allows to assign them a specific timesheet and analytic journal where "
-"they will be able to enter time through the system. In the note tab, you can "
-"enter text data that should be recorded for a specific employee."
-msgstr ""
-"Hier kunt u uw personeel beheren door medewerkers te maken en toe te wijzen "
-"aan verschillende eigenschappen van het systeem. Onderhoudt alle medewerker "
-"gerelateerde informatie en volg alles wat ervoor moet worden vastgelegd. Het "
-"persoonlijke informatie tabblad helpt u bij het bijhouden van "
-"identiteitsgegevens. Het categorieën tabblad geeft de mogelijkheid "
-"categorieën toe te wijzen afhankelijk van positie en activiteiten binnen de "
-"organisatie. Een categorie kan een senioriteitsniveau zijn binnen het "
-"bedrijf of afdeling. Het urenstaten tabblad laat specifieke urenstaat en "
-"analytische dagboeken toewijzen waarmee ze uren kunnen invoeren door het "
-"systeem heen. In het notitie tabblad kunt u tekst invoeren die moet worden "
-"vastgelegd voor een specifieke medewerker."
+#: view:hr.job:0
+msgid "Stop Recruitment"
+msgstr "Werving en selectie stoppen"
+
+#. module: hr
+#: field:hr.config.settings,module_hr_attendance:0
+msgid "Install attendances feature"
+msgstr "Installeer aanwezigheids opties"
 
 #. module: hr
 #: help:hr.employee,bank_account_id:0
 msgid "Employee bank salary account"
-msgstr "Medewerker salaris bankrekening"
+msgstr "Werknemers salaris bankrekening"
 
 #. module: hr
 #: field:hr.department,note:0
@@ -411,46 +524,46 @@ msgid "Employees Structure"
 msgstr "Organigram"
 
 #. module: hr
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr "Het gekozen bedrijf is geen toegestaan bedrijf voor deze gebruiker"
-
-#. module: hr
 #: view:hr.employee:0
 msgid "Contact Information"
 msgstr "Contactgegevens"
 
 #. module: hr
-#: field:hr.employee,address_id:0
-msgid "Working Address"
-msgstr "Werkadres"
+#: field:hr.config.settings,module_hr_holidays:0
+msgid "Manage holidays, leaves and allocation requests"
+msgstr "Beheer vakanties, verlof en wijs aanvragen toe."
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_board_hr_manager
-#: model:ir.ui.menu,name:hr.menu_hr_dashboard_manager
-msgid "HR Manager Dashboard"
-msgstr "HR manager dashboard"
+#: field:hr.department,child_ids:0
+msgid "Child Departments"
+msgstr "Sub-afdelingen"
 
 #. module: hr
 #: view:hr.employee:0
+#: view:hr.job:0
+#: field:hr.job,state:0
 msgid "Status"
 msgstr "Status"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_categ_tree
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_tree
-msgid "Categories structure"
-msgstr "Categoriestructuur"
+#: field:hr.employee,otherid:0
+msgid "Other Id"
+msgstr "Andere ID"
 
 #. module: hr
-#: field:hr.employee,partner_id:0
-msgid "unknown"
-msgstr "onbekend"
+#: model:process.process,name:hr.process_process_employeecontractprocess0
+msgid "Employee Contract"
+msgstr "Arbeidsovereenkomst"
 
 #. module: hr
-#: help:hr.job,no_of_employee:0
-msgid "Number of employees with that job."
-msgstr ""
+#: view:hr.config.settings:0
+msgid "Contracts"
+msgstr "Contracten"
+
+#. module: hr
+#: help:hr.job,message_ids:0
+msgid "Messages and communication history"
+msgstr "Berichten en communicatie historie"
 
 #. module: hr
 #: field:hr.employee,ssnid:0
@@ -458,32 +571,34 @@ msgid "SSN No"
 msgstr "BSN nummer"
 
 #. module: hr
+#: field:hr.job,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Is een volger"
+
+#. module: hr
+#: field:hr.config.settings,module_hr_recruitment:0
+msgid "Manage the recruitment process"
+msgstr "Beheers het werving en selectie proces"
+
+#. module: hr
 #: view:hr.employee:0
 msgid "Active"
 msgstr "Actief"
 
 #. module: hr
-#: constraint:hr.employee:0
-msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr "Fout ! U kunt geen recursieve hiërarchie van medewerkers maken."
+#: view:hr.config.settings:0
+msgid "Human Resources Management"
+msgstr "Personeelsbeheer"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.action2
-msgid "Subordonate Hierarchy"
-msgstr ""
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.view_department_form_installer
-msgid ""
-"Your departments structure is used to manage all documents related to "
-"employees by departments: expenses and timesheet validation, leaves "
-"management, recruitments, etc."
-msgstr ""
+#: view:hr.config.settings:0
+msgid "Install your country's payroll"
+msgstr "Installeer uw land specifieke salarisadministratie"
 
 #. module: hr
 #: field:hr.employee,bank_account_id:0
 msgid "Bank Account Number"
-msgstr "Nummer bankrekening"
+msgstr "Bankrekeningnummer"
 
 #. module: hr
 #: view:hr.department:0
@@ -491,34 +606,58 @@ msgid "Companies"
 msgstr "Bedrijven"
 
 #. module: hr
+#: field:hr.job,message_summary:0
+msgid "Summary"
+msgstr "Samenvatting"
+
+#. module: hr
 #: model:process.transition,note:hr.process_transition_contactofemployee0
 msgid ""
 "In the Employee form, there are different kind of information like Contact "
 "information."
 msgstr ""
-"In het medewerker formulier staan verschillende soorten informatie zoals "
+"In het werknemerformulier staan verschillende soorten informatie zoals "
 "contactgegevens."
 
 #. module: hr
-#: model:ir.ui.menu,name:hr.menu_hr_dashboard
-msgid "Dashboard"
+#: model:ir.actions.act_window,help:hr.open_view_employee_list_my
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a new employee.\n"
+"              </p><p>\n"
+"                With just a quick glance on the OpenERP employee screen, "
+"you\n"
+"                can easily find all the information you need for each "
+"person;\n"
+"                contact data, job position, availability, etc.\n"
+"              </p>\n"
+"            "
 msgstr ""
 
 #. module: hr
-#: selection:hr.job,state:0
-msgid "Old"
-msgstr "Oud"
+#: view:hr.employee:0
+msgid "HR Settings"
+msgstr "Personeelsbeheer instellingen"
 
 #. module: hr
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr "U kunt niet twee gebruikers hebben met dezelfde gebruikersnaam !"
+#: view:hr.employee:0
+msgid "Citizenship & Other Info"
+msgstr "Nationaliteit & andere informatie"
 
 #. module: hr
-#: view:hr.job:0
-#: field:hr.job,state:0
-msgid "State"
-msgstr "Status"
+#: constraint:hr.department:0
+msgid "Error! You cannot create recursive departments."
+msgstr "Fout! het is niet toegestaan recursieve afdelingen aan te maken."
+
+#. module: hr
+#: field:hr.employee,address_id:0
+msgid "Working Address"
+msgstr "Werkadres"
+
+#. module: hr
+#: view:hr.employee:0
+msgid "Public Information"
+msgstr "Publieke informatie"
 
 #. module: hr
 #: field:hr.employee,marital:0
@@ -531,19 +670,58 @@ msgid "ir.actions.act_window"
 msgstr "ir.actions.act_window"
 
 #. module: hr
-#: model:process.node,note:hr.process_node_employee0
-msgid "Employee form and structure"
-msgstr "Medewerker formulier en structuur"
+#: field:hr.employee,last_login:0
+msgid "Latest Connection"
+msgstr "Laatste verbinding"
 
 #. module: hr
-#: field:hr.employee,photo:0
+#: field:hr.employee,image:0
 msgid "Photo"
 msgstr "Foto"
 
 #. module: hr
-#: model:ir.model,name:hr.model_res_users
-msgid "res.users"
-msgstr "res.users"
+#: view:hr.config.settings:0
+msgid "Cancel"
+msgstr "Annuleren"
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.open_module_tree_department
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a department.\n"
+"              </p><p>\n"
+"                OpenERP's department structure is used to manage all "
+"documents\n"
+"                related to employees by departments: expenses, timesheets,\n"
+"                leaves and holidays, recruitments, etc.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: hr
+#: help:hr.config.settings,module_hr_timesheet:0
+msgid "This installs the module hr_timesheet."
+msgstr "Dit installeert de module hr_timesheet."
+
+#. module: hr
+#: help:hr.job,expected_employees:0
+msgid ""
+"Expected number of employees for this job position after new recruitment."
+msgstr "Verwachte aantal werknemers voor deze functie na de nieuwe werving."
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.view_department_form_installer
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new department.\n"
+"              </p><p>\n"
+"                Your departments structure is used to manage all documents\n"
+"                related to employees by departments: expenses and "
+"timesheets,\n"
+"                leaves and holidays, recruitments, etc.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: hr
 #: view:hr.employee:0
@@ -553,7 +731,7 @@ msgstr "Persoonlijke gegevens"
 #. module: hr
 #: field:hr.employee,city:0
 msgid "City"
-msgstr ""
+msgstr "Plaats"
 
 #. module: hr
 #: field:hr.employee,passport_id:0
@@ -563,12 +741,25 @@ msgstr "Paspoort nr"
 #. module: hr
 #: field:hr.employee,mobile_phone:0
 msgid "Work Mobile"
+msgstr "Mobiel nummer werk"
+
+#. module: hr
+#: selection:hr.job,state:0
+msgid "Recruitement in Progress"
+msgstr "Werving en selectie in behandeling"
+
+#. module: hr
+#: field:hr.config.settings,module_account_analytic_analysis:0
+msgid ""
+"Allow invoicing based on timesheets (the sale application will be installed)"
 msgstr ""
+"Sta facturering op basis van urenstaten (de verkoopbeheer  module wordt "
+"geinstalleerd)"
 
 #. module: hr
 #: view:hr.employee.category:0
 msgid "Employees Categories"
-msgstr "Categorieën medewerkers"
+msgstr "Categorieën werknemers"
 
 #. module: hr
 #: field:hr.employee,address_home_id:0
@@ -576,9 +767,14 @@ msgid "Home Address"
 msgstr "Privé-adres"
 
 #. module: hr
-#: view:hr.job:0
-msgid "Description"
-msgstr "Omschrijving"
+#: field:hr.config.settings,module_hr_timesheet:0
+msgid "Manage timesheets"
+msgstr "Urenstaten beheren"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.open_payroll_modules
+msgid "Payroll"
+msgstr "Loonlijst"
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -592,9 +788,18 @@ msgstr "Functienaam"
 
 #. module: hr
 #: view:hr.job:0
-#: selection:hr.job,state:0
 msgid "In Position"
 msgstr "Is vervuld"
+
+#. module: hr
+#: help:hr.config.settings,module_hr_payroll:0
+msgid "This installs the module hr_payroll."
+msgstr "Dit installeert de module hr_payroll."
+
+#. module: hr
+#: field:hr.config.settings,module_hr_contract:0
+msgid "Record contracts per employee"
+msgstr ""
 
 #. module: hr
 #: view:hr.department:0
@@ -607,14 +812,19 @@ msgid "Nationality"
 msgstr "Nationaliteit"
 
 #. module: hr
-#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
-msgid "Leaves"
-msgstr ""
+#: view:hr.config.settings:0
+msgid "Additional Features"
+msgstr "Extra opties"
 
 #. module: hr
-#: view:board.board:0
-msgid "HR Manager Board"
-msgstr "HR manager board"
+#: field:hr.employee,notes:0
+msgid "Notes"
+msgstr "Opmerkingen"
+
+#. module: hr
+#: model:ir.actions.act_window,name:hr.action2
+msgid "Subordinate Hierarchy"
+msgstr "Hiërarchische ondergeschikte"
 
 #. module: hr
 #: field:hr.employee,resource_id:0
@@ -623,6 +833,7 @@ msgstr "Resource"
 
 #. module: hr
 #: field:hr.department,complete_name:0
+#: field:hr.employee,name_related:0
 #: field:hr.employee.category,complete_name:0
 msgid "Name"
 msgstr "Naam"
@@ -634,22 +845,19 @@ msgstr "Sexe"
 
 #. module: hr
 #: view:hr.employee:0
-#: view:hr.employee.category:0
 #: field:hr.employee.category,employee_ids:0
-#: view:hr.job:0
 #: field:hr.job,employee_ids:0
 #: model:ir.actions.act_window,name:hr.hr_employee_normal_action_tree
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
 #: model:ir.actions.act_window,name:hr.open_view_employee_list_my
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_configuration_form
 msgid "Employees"
-msgstr "Medewerkers"
+msgstr "Werknemers"
 
 #. module: hr
 #: help:hr.employee,sinid:0
 msgid "Social Insurance Number"
-msgstr "SOFI nummer"
+msgstr "BSN nummer"
 
 #. module: hr
 #: field:hr.department,name:0
@@ -657,9 +865,30 @@ msgid "Department Name"
 msgstr "Naam afdeling"
 
 #. module: hr
+#: model:ir.ui.menu,name:hr.menu_hr_reporting_timesheet
+msgid "Reports"
+msgstr "Rapportages"
+
+#. module: hr
+#: field:hr.config.settings,module_hr_payroll:0
+msgid "Manage payroll"
+msgstr "Loonadministratie"
+
+#. module: hr
+#: view:hr.config.settings:0
+#: model:ir.actions.act_window,name:hr.action_human_resources_configuration
+msgid "Configure Human Resources"
+msgstr "Personeelsbeheer instellen"
+
+#. module: hr
+#: selection:hr.job,state:0
+msgid "No Recruitment"
+msgstr "Geen werving en selectie"
+
+#. module: hr
 #: help:hr.employee,ssnid:0
 msgid "Social Security Number"
-msgstr "SOFI nummer"
+msgstr "Verzekeringsnummer"
 
 #. module: hr
 #: model:process.node,note:hr.process_node_openerpuser0
@@ -667,24 +896,50 @@ msgid "Creation of a OpenERP user"
 msgstr "OpenERP gebruiker aanmaken"
 
 #. module: hr
-#: field:hr.department,child_ids:0
-msgid "Child Departments"
-msgstr "Sub-afdelingen"
+#: field:hr.employee,login:0
+msgid "Login"
+msgstr "Login"
 
 #. module: hr
-#: view:hr.employee:0
-msgid "Job Information"
-msgstr "Functieomschrijving"
+#: field:hr.job,expected_employees:0
+msgid "Total Forecasted Employees"
+msgstr "Totaal aantal verwachte werknmers"
+
+#. module: hr
+#: help:hr.job,state:0
+msgid ""
+"By default 'In position', set it to 'In Recruitment' if recruitment process "
+"is going on for this job position."
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_res_users
+msgid "Users"
+msgstr "Gebruikers"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_hr_job
 msgid "Job Positions"
-msgstr "Vacatures"
+msgstr "Functies"
 
 #. module: hr
-#: field:hr.employee,otherid:0
-msgid "Other Id"
+#: model:ir.actions.act_window,help:hr.open_board_hr
+msgid ""
+"<div class=\"oe_empty_custom_dashboard\">\n"
+"                  <p>\n"
+"                    <b>Human Resources dashboard is empty.</b>\n"
+"                  </p><p>\n"
+"                    To add your first report into this dashboard, go to any\n"
+"                    menu, switch to list or graph view, and click <i>'Add "
+"to\n"
+"                    Dashboard'</i> in the extended search options.\n"
+"                  </p><p>\n"
+"                    You can filter and group data before inserting into the\n"
+"                    dashboard using the search options.\n"
+"                  </p>\n"
+"              </div>\n"
+"            "
 msgstr ""
 
 #. module: hr
@@ -696,12 +951,17 @@ msgstr "Coach"
 #. module: hr
 #: sql_constraint:hr.job:0
 msgid "The name of the job position must be unique per company!"
-msgstr ""
+msgstr "De naam van de functie  moet uniek zijn per bedrijf!"
 
 #. module: hr
-#: view:hr.job:0
-msgid "My Departments Jobs"
-msgstr ""
+#: help:hr.config.settings,module_hr_expense:0
+msgid "This installs the module hr_expense."
+msgstr "Dit installeert de module hr_expense."
+
+#. module: hr
+#: model:ir.model,name:hr.model_hr_config_settings
+msgid "hr.config.settings"
+msgstr "hr.config.settings"
 
 #. module: hr
 #: field:hr.department,manager_id:0
@@ -721,279 +981,6 @@ msgid "Subordinates"
 msgstr "Ondergeschikten"
 
 #. module: hr
-#: field:hr.job,no_of_employee:0
-msgid "Number of Employees"
-msgstr ""
-
-#~ msgid "Sunday"
-#~ msgstr "Zondag"
-
-#~ msgid "Work Email"
-#~ msgstr "E-mail werk"
-
-#~ msgid "Group name"
-#~ msgstr "Groepsnaam"
-
-#~ msgid "Friday"
-#~ msgstr "Vrijdag"
-
-#~ msgid "Work from"
-#~ msgstr "Werkt van"
-
-#~ msgid "Workgroup manager"
-#~ msgstr "Manager"
-
-#~ msgid "Fill up contact information"
-#~ msgstr "Vul contactinformatie in"
-
-#~ msgid "Create openerp user"
-#~ msgstr "Maak een OpenERP gebruiker aan"
-
-#~ msgid "Tuesday"
-#~ msgstr "Dinsdag"
-
-#~ msgid "Related User"
-#~ msgstr "Gekoppelde gebruiker"
-
-#~ msgid "Monday"
-#~ msgstr "Maandag"
-
-#~ msgid "Wednesday"
-#~ msgstr "Woensdag"
-
-#~ msgid "Starting date"
-#~ msgstr "Startdatum"
-
-#~ msgid "Working Time"
-#~ msgstr "Werktijd"
-
-#~ msgid "Thursday"
-#~ msgstr "Donderdag"
-
-#~ msgid "Work to"
-#~ msgstr "Werkt tot"
-
-#~ msgid "Other"
-#~ msgstr "Overig"
-
-#~ msgid "Other ID"
-#~ msgstr "Ander ID"
-
-#~ msgid "Saturday"
-#~ msgstr "Zaterdag"
-
-#~ msgid "New Employee"
-#~ msgstr "Nieuwe werknemer"
-
-#~ msgid "Parent Users"
-#~ msgstr "Bovenliggende gebruikers"
-
-#~ msgid "Parents"
-#~ msgstr "Bovenliggende"
-
-#~ msgid "Employee Hierarchy"
-#~ msgstr "Medewerkershierarchie"
-
-#~ msgid "Contact  of employee"
-#~ msgstr "Contactpersoon werknemer"
-
-#~ msgid "Working Time Categories"
-#~ msgstr "Werktijdcategorieën"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Ongeldige modelnaam in de actie-definitie."
-
-#~ msgid "Unmaried"
-#~ msgstr "Ongehuwd"
-
-#~ msgid "Maried"
-#~ msgstr "Gehuwd"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Ongeldige XML voor weergave!"
-
-#~ msgid "Day of week"
-#~ msgstr "Dag van de week"
-
-#~ msgid "Employee Contract Process"
-#~ msgstr "Contractproces werknemer"
-
-#~ msgid "Timesheet Line"
-#~ msgstr "Regel urenstaat"
-
-#~ msgid "All Employees"
-#~ msgstr "Alle werknemers"
-
-#~ msgid "Fill up employee's contact information"
-#~ msgstr "Vul de contactgegevens van de werknemer in"
-
-#~ msgid "Employee Complete Form"
-#~ msgstr "Maak werknemersformulier compleet"
-
-#~ msgid "Working Time Category"
-#~ msgstr "Werktijd categorie"
-
-#~ msgid "Employee's timesheet group"
-#~ msgstr "Werknemers urenstaatgroep"
-
-#~ msgid "Create OpenERP User"
-#~ msgstr "Maak een OpenERP gebruiker aan"
-
-#~ msgid "Birthday"
-#~ msgstr "Geboortedatum"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
-
-#~ msgid "title"
-#~ msgstr "titel"
-
-#~ msgid "Simplifies the management of employee's attendances."
-#~ msgstr "Vereenvoudigt het beheer van medewerkers aanwezigheid."
-
-#~ msgid "Holidays"
-#~ msgstr "Vakantie"
-
-#~ msgid "Employee Marital Status"
-#~ msgstr "Medewerker huwelijkse staat"
-
-#~ msgid "Tracks employee leaves, allocation requests and planning."
-#~ msgstr "Houdt medewerker verlof, vakanties en planning bij."
-
-#~ msgid "Employee Passport Information"
-#~ msgstr "Medewerker paspoort informatie"
-
-#~ msgid "Generic Payroll system."
-#~ msgstr "Algemeen loonlijst systeem."
-
-#~ msgid "Employee's Contracts"
-#~ msgstr "Arbeidsovereenkomsten"
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr ""
-#~ "Fout ! U kunt geen afdeling selecteren waarvan de medewerker de beheerder is."
-
-#~ msgid "Position"
-#~ msgstr "Baan"
-
-#~ msgid ""
-#~ "Tracks and helps employees encode and validate timesheets and attendances."
-#~ msgstr ""
-#~ "Helpt medewerkers hun urenstaten en aanwezigheid invullen en controleren."
-
-#~ msgid "Periodic Evaluations"
-#~ msgstr "Periodieke evaluaties"
-
-#~ msgid "Timesheets"
-#~ msgstr "Urenstaten"
-
-#~ msgid "Number of employee with that job."
-#~ msgstr "Aantal medewerkers met deze functie."
-
-#~ msgid "No of Employee"
-#~ msgstr "Aantal medewerkers"
-
-#~ msgid "Human Resources Application Configuration"
-#~ msgstr "Personeel applicatie configuratie"
-
-#~ msgid "Image"
-#~ msgstr "Afbeelding"
-
-#~ msgid "Recruitment Process"
-#~ msgstr "Wervingsproces"
-
-#~ msgid "It is linked with manager of Department"
-#~ msgstr "Het is gekoppeld met de manager van de afdeling"
-
-#~ msgid ""
-#~ "Lets you create and manage the periodic evaluation and performance review of "
-#~ "employees."
-#~ msgstr ""
-#~ "Laat u de periodieke evaluaties en functioneringsgesprekken van medewerkers "
-#~ "maken en beheren"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Configuratievoortgang"
-
-#~ msgid "Holidays / Leaves Management"
-#~ msgstr "Vakantie / verlofbeheer"
-
-#~ msgid "Helps you manage and streamline your recruitment process."
-#~ msgstr "Helpt u bij het beheren en stroomlijnen van uw wervingsproces."
-
-#~ msgid "Status Description"
-#~ msgstr "Status omschrijving"
-
-#~ msgid "Required number of Employees in total for that job."
-#~ msgstr "Totaal aantal vereiste medewerkers voor deze functie."
-
-#~ msgid "Payroll Accounting"
-#~ msgstr "Loonadministratie"
-
-#~ msgid "Current"
-#~ msgstr "Actueel"
-
-#~ msgid ""
-#~ "Tracks and manages employee expenses, and can automatically re-invoice "
-#~ "clients if the expenses are project-related."
-#~ msgstr ""
-#~ "Beheert medewerker declaraties en kan automatisch doorberekenen aan klanten "
-#~ "als de uitgave project-gerelateerd is."
-
-#~ msgid "Current Activity"
-#~ msgstr "Actuele activiteit"
-
-#~ msgid "hr.installer"
-#~ msgstr "hr.installer"
-
-#~ msgid "Extends employee profiles to help manage their contracts."
-#~ msgstr ""
-#~ "Verruimt medewerker profielen voor beheer van hun arbeidsovereenkomsten."
-
-#~ msgid "Expenses"
-#~ msgstr "Declaraties"
-
-#~ msgid "Attendances"
-#~ msgstr "Aanwezigheid"
-
-#~ msgid "Generic Payroll system Integrated with Accountings."
-#~ msgstr "Algemeen loonlijst systeem met geïntegreerde boekhouding."
-
-#~ msgid "Payroll"
-#~ msgstr "Loonlijst"
-
-#~ msgid ""
-#~ "\n"
-#~ "    Module for human resource management. You can manage:\n"
-#~ "    * Employees and hierarchies : You can define your employee with User and "
-#~ "display hierarchies\n"
-#~ "    * HR Departments\n"
-#~ "    * HR Jobs\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Module voor personeel management. U kunt beheren:\n"
-#~ "    * Medewerkers en hiërarchieën : U kunt uw medewerkers met gebruiker "
-#~ "definieren en hiërarchieën tonen\n"
-#~ "    * HR afdelingen\n"
-#~ "    * HR banen\n"
-#~ "    "
-
-#~ msgid "Mobile"
-#~ msgstr "Mobiel"
-
-#~ msgid "Configure"
-#~ msgstr "Configureren"
-
-#~ msgid ""
-#~ "You can enhance the base HR Application by installing few HR-related "
-#~ "functionalities."
-#~ msgstr ""
-#~ "U kunt de basis HR applicatie verbeteren door een paar HR-gerelateerde "
-#~ "functionaliteiten te installeren."
-
-#~ msgid "Configure Your Human Resources Application"
-#~ msgstr "Configureer uw HR applicatie"
+#: view:hr.config.settings:0
+msgid "Apply"
+msgstr "Toepassen"

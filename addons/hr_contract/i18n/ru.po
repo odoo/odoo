@@ -1,20 +1,21 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* hr_contract
+# Russian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2011-06-27 05:15+0000\n"
-"Last-Translator: Stanislav Hanzhin <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:59+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:14+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: hr_contract
 #: field:hr.contract,wage:0
@@ -27,34 +28,14 @@ msgid "Information"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract:0
-msgid "Trial Period"
-msgstr "Испытательный срок"
-
-#. module: hr_contract
 #: field:hr.contract,trial_date_start:0
 msgid "Trial Start Date"
 msgstr "Начало испытательного срока"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Medical Examination"
-msgstr "Медицинский осмотр"
-
-#. module: hr_contract
 #: field:hr.employee,vehicle:0
 msgid "Company Vehicle"
 msgstr "Служебный транспорт"
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Miscellaneous"
-msgstr "Разное"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Current"
-msgstr "Текущий"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -65,11 +46,6 @@ msgstr "Объеденить по..."
 #: field:hr.contract,department_id:0
 msgid "Department"
 msgstr "Подразделение"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Overpassed"
-msgstr "Переведён"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -85,16 +61,7 @@ msgstr "Поиск договора"
 
 #. module: hr_contract
 #: view:hr.contract:0
-msgid "Contracts in progress"
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.employee,vehicle_distance:0
-msgid "Home-Work Distance"
-msgstr "Расстояние работа-дом"
-
-#. module: hr_contract
-#: view:hr.contract:0
+#: view:hr.employee:0
 #: field:hr.employee,contract_ids:0
 #: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract
@@ -103,14 +70,9 @@ msgid "Contracts"
 msgstr "Договоры"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Personal Info"
-msgstr "Личные данные"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Contracts whose end date already passed"
-msgstr ""
+#: field:hr.employee,children:0
+msgid "Number of Children"
+msgstr "Количество детей"
 
 #. module: hr_contract
 #: help:hr.employee,contract_id:0
@@ -123,25 +85,14 @@ msgid "Job"
 msgstr "Должность"
 
 #. module: hr_contract
-#: view:hr.contract:0
 #: field:hr.contract,advantages:0
 msgid "Advantages"
 msgstr "Выгоды"
 
 #. module: hr_contract
 #: view:hr.contract:0
-msgid "Valid for"
-msgstr "Действителен до"
-
-#. module: hr_contract
-#: view:hr.contract:0
 msgid "Work Permit"
 msgstr "Разрешение на работу"
-
-#. module: hr_contract
-#: field:hr.employee,children:0
-msgid "Number of Children"
-msgstr "Количество детей"
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract_type
@@ -150,9 +101,9 @@ msgid "Contract Types"
 msgstr "Типы договоров"
 
 #. module: hr_contract
-#: constraint:hr.employee:0
-msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr "Ошибка! Структура подчинения не может быть рекурсивной."
+#: view:hr.employee:0
+msgid "Medical Exam"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,date_end:0
@@ -187,6 +138,7 @@ msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
+#: view:hr.employee:0
 #: field:hr.employee,contract_id:0
 #: model:ir.model,name:hr_contract.model_hr_contract
 #: model:ir.ui.menu,name:hr_contract.next_id_56
@@ -209,19 +161,19 @@ msgid "Working Schedule"
 msgstr "График работы"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Job Info"
-msgstr "Информация о должности"
-
-#. module: hr_contract
-#: field:hr.contract,visa_expire:0
-msgid "Visa Expire Date"
+#: view:hr.contract:0
+msgid "Salary and Advantages"
 msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,job_id:0
 msgid "Job Title"
 msgstr "Название должности"
+
+#. module: hr_contract
+#: constraint:hr.contract:0
+msgid "Error! Contract start-date must be less than contract end-date."
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.employee,manager:0
@@ -234,14 +186,13 @@ msgid "Start Date"
 msgstr "Дата начала"
 
 #. module: hr_contract
-#: constraint:hr.contract:0
-msgid "Error! contract start-date must be lower then contract end-date."
-msgstr ""
-"Ошибка! Дата начала действия контракта должна быть раньше даты окончания"
-
-#. module: hr_contract
 #: field:hr.contract,visa_no:0
 msgid "Visa No"
+msgstr ""
+
+#. module: hr_contract
+#: field:hr.employee,vehicle_distance:0
+msgid "Home-Work Dist."
 msgstr ""
 
 #. module: hr_contract
@@ -251,8 +202,18 @@ msgstr "Место рождения"
 
 #. module: hr_contract
 #: view:hr.contract:0
+msgid "Trial Period Duration"
+msgstr ""
+
+#. module: hr_contract
+#: view:hr.contract:0
 msgid "Duration"
 msgstr "Продолжительность"
+
+#. module: hr_contract
+#: field:hr.contract,visa_expire:0
+msgid "Visa Expire Date"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.employee,medic_exam:0
@@ -268,156 +229,3 @@ msgstr "Окончание испытательного срока"
 #: view:hr.contract.type:0
 msgid "Search Contract Type"
 msgstr "Поиск по типу договора"
-
-#~ msgid "Hourly cost computation"
-#~ msgstr "Расчет стоимости часа"
-
-#~ msgid "Gross"
-#~ msgstr "С налогами"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Название объекта должно начинаться с x_  и не должно содержать специальных "
-#~ "символов !"
-
-#~ msgid "Number of children"
-#~ msgstr "Кол-во детей"
-
-#~ msgid "Factor for hour cost"
-#~ msgstr "Множитель стоимости часа"
-
-#~ msgid "Wage Types"
-#~ msgstr "Типы зарплаты"
-
-#~ msgid "Net"
-#~ msgstr "Сумма на руки"
-
-#~ msgid "Hours in the period"
-#~ msgstr "Часов в периоде"
-
-#~ msgid "Function"
-#~ msgstr "Функция"
-
-#~ msgid "Marital Status"
-#~ msgstr "Семейное положение"
-
-#~ msgid "Miscelleanous"
-#~ msgstr "Разное"
-
-#~ msgid "Type"
-#~ msgstr "Тип"
-
-#~ msgid "Wage Type"
-#~ msgstr "Тип зарплаты"
-
-#~ msgid "Period Name"
-#~ msgstr "Название периода"
-
-#~ msgid "Employee Marital Status"
-#~ msgstr "Семейное положение сотрудника"
-
-#~ msgid "Medical examination date"
-#~ msgstr "Дата мед. осмотра"
-
-#~ msgid "Wage Type Name"
-#~ msgstr "Название типов зарплаты"
-
-#~ msgid "Working hours per day"
-#~ msgstr "Рабочих часов в день"
-
-#~ msgid "Salary"
-#~ msgstr "Жалование"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Неправильный XML для просмотра архитектуры!"
-
-#~ msgid "Wage Period"
-#~ msgstr "Зарплатный период"
-
-#~ msgid "Remuneration"
-#~ msgstr "Вознаграждение"
-
-#~ msgid "Contract Wage Type"
-#~ msgstr "Тип зарплаты по договору"
-
-#~ msgid "Manager"
-#~ msgstr "Начальник"
-
-#~ msgid "Wage period"
-#~ msgstr "Зарплатный период"
-
-#~ msgid ""
-#~ "This field is used by the timesheet system to compute the price of an hour "
-#~ "of work wased on the contract of the employee"
-#~ msgstr ""
-#~ "Данное поле используется табельной системой для расчета стоимости рабочего "
-#~ "часа на основании договора с отрудником"
-
-#~ msgid "Status Description"
-#~ msgstr "Описание статуса"
-
-#~ msgid "Contract Duration"
-#~ msgstr "Продолжительность договора"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Недопустимое имя модели в определении действия."
-
-#~ msgid "Human Resources Contracts"
-#~ msgstr "Договор с содрудником"
-
-#~ msgid "AUDIENS Number"
-#~ msgstr "Номер посещения"
-
-#~ msgid "Generalities"
-#~ msgstr "Общее положение"
-
-#~ msgid "Passport"
-#~ msgstr "Паспорт"
-
-#~ msgid "Contract Name"
-#~ msgstr "Название договора"
-
-#~ msgid "Basic"
-#~ msgstr "Основной"
-
-#~ msgid "Deductions"
-#~ msgstr "Отчисления"
-
-#~ msgid "Allowances"
-#~ msgstr "Доплаты"
-
-#~ msgid "Main Data"
-#~ msgstr "Основные данные"
-
-#~ msgid "Period"
-#~ msgstr "Период"
-
-#~ msgid ""
-#~ "Error ! You cannot select a department for which the employee is the manager."
-#~ msgstr ""
-#~ "Ошибка! Вы не можете выбрать подразделение, руководителем которого является "
-#~ "этот сотрудник."
-
-#~ msgid ""
-#~ "\n"
-#~ "    Add all information on the employee form to manage contracts:\n"
-#~ "    * Marital status,\n"
-#~ "    * Security number,\n"
-#~ "    * Place of birth, birth date, ...\n"
-#~ "    You can assign several contracts per employee.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Добавляйте информацию в форму сотрудника для управления договорами:\n"
-#~ "    * Семейное положение,\n"
-#~ "    * Номер свидетельства социального страхования,\n"
-#~ "    * Место рождения, дата рождения, ...\n"
-#~ "    Можно назначить несколько договоров одному сотруднику.\n"
-#~ "    "
-
-#~ msgid "Search Wage Type"
-#~ msgstr "Поиск по типу выплаты"
-
-#~ msgid "Search Wage Period"
-#~ msgstr "Поиск по периоду выплаты"

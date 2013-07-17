@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_yearly_salary_detail" model="ir.ui.view">
+            <field name="name">Employee Yearly Salary</field>
+            <field name="model">yearly.salary.detail</field>
+            <field name="arch" type="xml">
+            <form string="Pay Head Employee Breakup" version="7.0">
+                <label string="This wizard will print report which display a pay head employee breakup for a specified dates."/>
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
+                <group>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <separator string="Employees" />
+                    <field name="employee_ids"  nolabel="1" colspan="4"/>
+                </group>
+            </form>
+            </field>
+        </record>
+
+        <record id="action_yearly_salary_detail" model="ir.actions.act_window">
+            <field name="name">Yearly Salary by Employee</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">yearly.salary.detail</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem
+            name="Yearly Salary by Employee"
+            parent="hr.menu_hr_reporting_timesheet"
+            action="action_yearly_salary_detail"
+            sequence="250" icon="STOCK_PRINT"
+            id="menu_yearly_salary_detail"
+           />
+
+</data>
+</openerp>

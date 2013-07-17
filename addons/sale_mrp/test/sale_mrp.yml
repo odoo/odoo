@@ -8,7 +8,7 @@
 -
   I define product category Mobile Services.
 -
-  !record {model: product.category, id: product_category_services0}:
+  !record {model: product.category, id: product_category_16}:
     name: Mobile Services
 -
   I define product template for Slider Mobile.
@@ -38,7 +38,7 @@
     seller_delay: '1'
     seller_ids:
       - delay: 1
-        name: base.res_partner_agrolait
+        name: base.res_partner_2
         min_qty: 2.0
         qty: 5.0
     standard_price: 189.0
@@ -80,11 +80,10 @@
     order_policy: manual
     partner_id: base.res_partner_4
     partner_invoice_id: base.res_partner_address_7
-    partner_order_id: base.res_partner_address_7
     partner_shipping_id: base.res_partner_address_7
     picking_policy: direct
     pricelist_id: product.list0
-    shop_id: sale.shop
+    shop_id: sale.sale_shop_1
 -
   I confirm the sale order
 -
@@ -118,26 +117,13 @@
     proc_ids = self.search(cr, uid, [('origin','=',so.name) and ('state','=','running')])
     assert proc_ids, _('Procurement is not in the running state!')
 -
-  I verify that a manufacturing order has been generated
+  I verify that a manufacturing order has been generated, and that its name and reference are correct
 -
   !python {model: sale.order}: |
+    mnf_obj = self.pool.get('mrp.production')
     so = self.browse(cr, uid, ref("sale_order_so0"))
-    mnf_obj=self.pool.get('mrp.production')
-    mnf_id=mnf_obj.search(cr, uid, [('origin','=',so.name)])
+    mnf_id = mnf_obj.search(cr, uid, [('origin','=',so.name)])
     assert mnf_id, _('Manufacturing order has not been generated')
--
-  I verify that a 'Sale Name' field of Manufacturing order gets bind with the value
--
-  !python {model: sale.order}: |
-    so = self.browse(cr, uid, ref("sale_order_so0"))
-    mnf_obj=self.pool.get('mrp.production')
-    mnf_id=mnf_obj.search(cr, uid, [('sale_name','=',so.name)])
-    assert mnf_id, _('Sale Name is not bind with the value')
--
-  I verify that a 'Sale Reference' field of Manufacturing order gets bind with the value
--
-  !python {model: sale.order}: |
-    so = self.browse(cr, uid, ref("sale_order_so0"))
-    mnf_obj=self.pool.get('mrp.production')
-    mnf_id=mnf_obj.search(cr, uid, [('sale_ref','=',so.client_order_ref)])
-    assert mnf_id, _('Sale Reference is not bind with the value')
+    mo = mnf_obj.browse(cr, uid, mnf_id)[0]
+    assert mo.sale_name == so.name, 'Wrong Name for the Manufacturing Order. Expected %s, Got %s' % (so.name, mo.name)
+    assert mo.sale_ref == so.client_order_ref, 'Wrong Sale Reference for the Manufacturing Order'

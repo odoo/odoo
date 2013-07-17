@@ -25,28 +25,26 @@
     'depends': ['hr_payroll'],
     'version': '1.0',
     'description': """
-Belgian Payroll Rules
-=====================
+Belgian Payroll Rules.
+======================
 
     * Employee Details
     * Employee Contracts
     * Passport based Contract
-    * Allowances / Deductions
-    * Allow to configure Basic / Grows / Net Salary
+    * Allowances/Deductions
+    * Allow to configure Basic/Gross/Net Salary
     * Employee Payslip
     * Monthly Payroll Register
     * Integrated with Holiday Management
     * Salary Maj, ONSS, Withholding Tax, Child Allowance, ...
     """,
 
-    'active': False,
-    'demo': [
-     'l10n_be_hr_payroll_demo.xml',
-    ],
+    'auto_install': False,
+    'demo': ['l10n_be_hr_payroll_demo.xml'],
     'data':[
-     'l10n_be_hr_payroll_view.xml',
-     'l10n_be_hr_payroll_data.xml',
-     'data/hr.salary.rule.csv',
+        'l10n_be_hr_payroll_view.xml',
+        'l10n_be_hr_payroll_data.xml',
+        'data/hr.salary.rule.csv',
     ],
     'installable': True
 }

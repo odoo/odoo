@@ -524,7 +524,7 @@
               <para style="terp_default_8">[[ line['a_code'] ]]</para>
             </td>
             <td>
-              <para style="terp_default_8">[[ strip_name(line['ref'],10) ]] - [[ strip_name(line['name'],15) ]]</para>
+              <para style="terp_default_8">[[ line['ref'] and strip_name(line['ref'],10) ]] - [[ strip_name(line['name'],15) ]]</para>
             </td>
             <td>
               <para style="terp_default_Right_8">[[ formatLang((line['debit'])) ]]</para>

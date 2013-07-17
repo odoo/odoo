@@ -1,94 +1,102 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* audittrail
+# Arabic translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2009-02-03 06:25+0000\n"
-"Last-Translator: <>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:04+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:06+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:75
+#: view:audittrail.log:0
+msgid "Old Value Text : "
+msgstr "نص القيمة القديمة : "
+
+#. module: audittrail
+#: code:addons/audittrail/audittrail.py:76
 #, python-format
 msgid "WARNING: audittrail is not part of the pool"
-msgstr ""
+msgstr "تحذير: طريقة التحقق من الحسابات ليست جزء من الأسهم"
 
 #. module: audittrail
 #: field:audittrail.log.line,log_id:0
 msgid "Log"
-msgstr ""
+msgstr "سِجِل"
 
 #. module: audittrail
 #: view:audittrail.rule:0
 #: selection:audittrail.rule,state:0
 msgid "Subscribed"
-msgstr ""
+msgstr "تم الإشتراك"
 
 #. module: audittrail
-#: sql_constraint:audittrail.rule:0
-msgid ""
-"There is already a rule defined on this object\n"
-" You cannot define another: please edit the existing one."
+#: code:addons/audittrail/audittrail.py:260
+#: code:addons/audittrail/audittrail.py:347
+#: code:addons/audittrail/audittrail.py:408
+#, python-format
+msgid "'%s' Model does not exist..."
 msgstr ""
 
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "Subscribed Rule"
-msgstr ""
+msgstr "قواعد مشترك بها"
 
 #. module: audittrail
+#: view:audittrail.rule:0
 #: model:ir.model,name:audittrail.model_audittrail_rule
 msgid "Audittrail Rule"
-msgstr ""
+msgstr "قاعدة طريقة التحقق من الجسابات"
+
+#. module: audittrail
+#: view:audittrail.rule:0
+#: field:audittrail.rule,state:0
+msgid "Status"
+msgstr "الحالة"
 
 #. module: audittrail
 #: view:audittrail.view.log:0
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_log_tree
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
+#: model:ir.ui.menu,name:audittrail.menu_audit_logs
 msgid "Audit Logs"
-msgstr ""
+msgstr "سجلات التحقق من الحسابات"
 
 #. module: audittrail
 #: view:audittrail.log:0
 #: view:audittrail.rule:0
 msgid "Group By..."
-msgstr ""
-
-#. module: audittrail
-#: view:audittrail.rule:0
-#: field:audittrail.rule,state:0
-msgid "State"
-msgstr ""
+msgstr "تجميع حسب..."
 
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "_Subscribe"
-msgstr ""
+msgstr "_إشترِك"
 
 #. module: audittrail
 #: view:audittrail.rule:0
 #: selection:audittrail.rule,state:0
 msgid "Draft"
-msgstr ""
+msgstr "مسودة"
 
 #. module: audittrail
 #: field:audittrail.log.line,old_value:0
 msgid "Old Value"
-msgstr ""
+msgstr "قيمة قديمة"
 
 #. module: audittrail
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_view_log
 msgid "View log"
-msgstr ""
+msgstr "أعرض السجلّ"
 
 #. module: audittrail
 #: help:audittrail.rule,log_read:0
@@ -96,31 +104,33 @@ msgid ""
 "Select this if you want to keep track of read/open on any record of the "
 "object of this rule"
 msgstr ""
+"إختار هذا اذا كنت تريد موواصلة تتبع القراءة/الفتح لأي تسجيل للهدف لهذه "
+"القاعدة"
 
 #. module: audittrail
 #: field:audittrail.log,method:0
 msgid "Method"
-msgstr ""
+msgstr "طريقة"
 
 #. module: audittrail
 #: field:audittrail.view.log,from:0
 msgid "Log From"
-msgstr ""
+msgstr "سجل من"
 
 #. module: audittrail
 #: field:audittrail.log.line,log:0
 msgid "Log ID"
-msgstr ""
+msgstr "هوية السجلات"
 
 #. module: audittrail
 #: field:audittrail.log,res_id:0
 msgid "Resource Id"
-msgstr ""
+msgstr "هوية المصدر"
 
 #. module: audittrail
 #: help:audittrail.rule,user_id:0
 msgid "if  User is not added then it will applicable for all users"
-msgstr ""
+msgstr "إذا لم يتم إضافة المستخدم فسينطبق على جميع المستخدمين"
 
 #. module: audittrail
 #: help:audittrail.rule,log_workflow:0
@@ -128,65 +138,66 @@ msgid ""
 "Select this if you want to keep track of workflow on any record of the "
 "object of this rule"
 msgstr ""
+"اختار هذا اذا كنت تريد مواصلة تتبع سير العمل لأي تسجيل للهدف لهذه القاعدة"
 
 #. module: audittrail
 #: field:audittrail.rule,user_id:0
 msgid "Users"
-msgstr ""
+msgstr "مستخدمين"
 
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "Log Lines"
-msgstr ""
+msgstr "خطوط التسجيل"
 
 #. module: audittrail
 #: view:audittrail.log:0
 #: field:audittrail.log,object_id:0
 #: field:audittrail.rule,object_id:0
 msgid "Object"
-msgstr ""
+msgstr "كائن"
 
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "AuditTrail Rule"
-msgstr ""
+msgstr "قاعدة لطريقة التحقق من الحسابات"
 
 #. module: audittrail
 #: field:audittrail.view.log,to:0
 msgid "Log To"
-msgstr ""
+msgstr "التسجيل الى"
 
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "New Value Text: "
-msgstr ""
+msgstr "نص القيمة الجديدة: "
 
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "Search Audittrail Rule"
-msgstr ""
+msgstr "ابحث عن قاعدة لطريقة التحقق من الحسابات"
 
 #. module: audittrail
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_rule_tree
 #: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree
 msgid "Audit Rules"
-msgstr ""
+msgstr "قواعد التحقق من الحسابات"
 
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "Old Value : "
-msgstr ""
+msgstr "القيمة القديمة : "
 
 #. module: audittrail
 #: field:audittrail.log,name:0
 msgid "Resource Name"
-msgstr ""
+msgstr "إسم المصدر"
 
 #. module: audittrail
 #: view:audittrail.log:0
 #: field:audittrail.log,timestamp:0
 msgid "Date"
-msgstr ""
+msgstr "التاريخ"
 
 #. module: audittrail
 #: help:audittrail.rule,log_write:0
@@ -194,52 +205,53 @@ msgid ""
 "Select this if you want to keep track of modification on any record of the "
 "object of this rule"
 msgstr ""
-
-#. module: audittrail
-#: field:audittrail.rule,log_create:0
-msgid "Log Creates"
-msgstr ""
-
-#. module: audittrail
-#: help:audittrail.rule,object_id:0
-msgid "Select object for which you want to generate log."
-msgstr ""
-
-#. module: audittrail
-#: view:audittrail.log:0
-msgid "Old Value Text : "
-msgstr ""
-
-#. module: audittrail
-#: field:audittrail.rule,log_workflow:0
-msgid "Log Workflow"
-msgstr ""
-
-#. module: audittrail
-#: field:audittrail.rule,log_read:0
-msgid "Log Reads"
-msgstr ""
-
-#. module: audittrail
-#: code:addons/audittrail/audittrail.py:76
-#, python-format
-msgid "Change audittrail depends -- Setting rule as DRAFT"
-msgstr ""
-
-#. module: audittrail
-#: field:audittrail.log,line_ids:0
-msgid "Log lines"
-msgstr ""
-
-#. module: audittrail
-#: field:audittrail.log.line,field_id:0
-msgid "Fields"
-msgstr ""
+"اختار هذا اذا كنت تريد مواصلة تتبع التعديل لأي تسجيل للهدف من هذه القاعدة"
 
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "AuditTrail Rules"
-msgstr ""
+msgstr "قواعد طريقة التحقق من الحسابات"
+
+#. module: audittrail
+#: help:audittrail.rule,object_id:0
+msgid "Select object for which you want to generate log."
+msgstr "حدد هدف لما تريده لإنشاء تسجيل"
+
+#. module: audittrail
+#: model:ir.ui.menu,name:audittrail.menu_audit
+msgid "Audit"
+msgstr "التدقيق و المراجعة"
+
+#. module: audittrail
+#: field:audittrail.rule,log_workflow:0
+msgid "Log Workflow"
+msgstr "سير عمل التسجيل"
+
+#. module: audittrail
+#: field:audittrail.rule,log_read:0
+msgid "Log Reads"
+msgstr "قراءات التسجيل"
+
+#. module: audittrail
+#: code:addons/audittrail/audittrail.py:77
+#, python-format
+msgid "Change audittrail depends -- Setting rule as DRAFT"
+msgstr "يعتمد تغيير طريقة التحقق من الحسابات على -- قاعدة الضبط ك سحب"
+
+#. module: audittrail
+#: field:audittrail.log,line_ids:0
+msgid "Log lines"
+msgstr "خطوط التسجيل"
+
+#. module: audittrail
+#: field:audittrail.log.line,field_id:0
+msgid "Fields"
+msgstr "حقول"
+
+#. module: audittrail
+#: field:audittrail.rule,log_create:0
+msgid "Log Creates"
+msgstr "إنشاء تسجيل"
 
 #. module: audittrail
 #: help:audittrail.rule,log_unlink:0
@@ -247,122 +259,151 @@ msgid ""
 "Select this if you want to keep track of deletion on any record of the "
 "object of this rule"
 msgstr ""
+"اختار هذا اذا كنت تريد مواصلة تتبع الحذف لأي تسجيل للهدف لهذه القاعدة"
 
 #. module: audittrail
 #: view:audittrail.log:0
 #: field:audittrail.log,user_id:0
 msgid "User"
-msgstr ""
+msgstr "المستخدم"
 
 #. module: audittrail
 #: field:audittrail.rule,action_id:0
 msgid "Action ID"
-msgstr ""
+msgstr "هوية الحدث"
 
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "Users (if User is not added then it will applicable for all users)"
 msgstr ""
+"المستخدمين (إذا لم يتم إضافة المستخدم بعد ذلك سوف ينطبق على جميع المستخدمين)"
 
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "UnSubscribe"
+msgstr "إلغاء الاشتراك"
+
+#. module: audittrail
+#: sql_constraint:audittrail.rule:0
+msgid ""
+"There is already a rule defined on this object\n"
+" You cannot define another: please edit the existing one."
 msgstr ""
+"هذه القواعد تم تعريفها لهذا الكائن\n"
+"لا ينكن تعريف آخر: من فضلك قم بتعديل القائم."
 
 #. module: audittrail
 #: field:audittrail.rule,log_unlink:0
 msgid "Log Deletes"
+msgstr "محذوفات التسجيل"
+
+#. module: audittrail
+#: view:audittrail.log:0
+#: view:audittrail.rule:0
+msgid "Model"
 msgstr ""
 
 #. module: audittrail
 #: field:audittrail.log.line,field_description:0
 msgid "Field Description"
-msgstr ""
+msgstr "وصف الحقل"
 
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "Search Audittrail Log"
-msgstr ""
+msgstr "ابحث عن تسجيل لطريقة التحقق من الحسابات"
 
 #. module: audittrail
 #: field:audittrail.rule,log_write:0
 msgid "Log Writes"
-msgstr ""
+msgstr "كتابات التسجيل"
 
 #. module: audittrail
 #: view:audittrail.view.log:0
 msgid "Open Logs"
-msgstr ""
+msgstr "قم بفتح التسجيلات"
 
 #. module: audittrail
 #: field:audittrail.log.line,new_value_text:0
 msgid "New value Text"
-msgstr ""
+msgstr "نص القيمة الجديدة"
 
 #. module: audittrail
 #: field:audittrail.rule,name:0
 msgid "Rule Name"
-msgstr ""
+msgstr "اسم القاعدة"
 
 #. module: audittrail
 #: field:audittrail.log.line,new_value:0
 msgid "New Value"
+msgstr "قيمة جديدة"
+
+#. module: audittrail
+#: code:addons/audittrail/audittrail.py:223
+#, python-format
+msgid "'%s' field does not exist in '%s' model"
 msgstr ""
 
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "AuditTrail Logs"
-msgstr ""
+msgstr "تسجيلات طريقة التحقق من الحسابات"
 
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "Draft  Rule"
-msgstr ""
+msgstr "قواعد مؤقتة"
 
 #. module: audittrail
+#: view:audittrail.log:0
 #: model:ir.model,name:audittrail.model_audittrail_log
 msgid "Audittrail Log"
-msgstr ""
+msgstr "تسجيل طريقة التحقق من الحسابات"
 
 #. module: audittrail
 #: help:audittrail.rule,log_action:0
 msgid ""
 "Select this if you want to keep track of actions on the object of this rule"
-msgstr ""
+msgstr "اختار هذا اذا كنت تريد مواصلة تتبع الاحداث للهدف لهذه القيمة"
 
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "New Value : "
-msgstr ""
+msgstr "قيمة جديدة : "
 
 #. module: audittrail
 #: field:audittrail.log.line,old_value_text:0
 msgid "Old value Text"
-msgstr ""
+msgstr "نص القيمة القديمة"
 
 #. module: audittrail
 #: view:audittrail.view.log:0
 msgid "Cancel"
-msgstr ""
+msgstr "إلغاء"
 
 #. module: audittrail
 #: model:ir.model,name:audittrail.model_audittrail_view_log
 msgid "View Log"
-msgstr ""
+msgstr "عرض السجل"
 
 #. module: audittrail
 #: model:ir.model,name:audittrail.model_audittrail_log_line
 msgid "Log Line"
-msgstr ""
+msgstr "خط التسجيل"
+
+#. module: audittrail
+#: view:audittrail.view.log:0
+msgid "or"
+msgstr "أو"
 
 #. module: audittrail
 #: field:audittrail.rule,log_action:0
 msgid "Log Action"
-msgstr ""
+msgstr "اجراء التسجيل"
 
 #. module: audittrail
 #: help:audittrail.rule,log_create:0
 msgid ""
 "Select this if you want to keep track of creation on any record of the "
 "object of this rule"
-msgstr ""
+msgstr "اختار هذا اذا كنت تريد مواصلة تتبع انشاء لاي هدف لهذه القاعدة"

@@ -20,8 +20,8 @@
 ##############################################################################
 
 
-from osv import fields, osv
-from tools.translate import _
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
 
 
 #in this file, we mostly add the tag translate=True on existing fields that we now want to be translated
@@ -32,6 +32,13 @@ class account_account_template(osv.osv):
         'name': fields.char('Name', size=128, required=True, select=True, translate=True),
     }
 account_account_template()
+
+class account_account(osv.osv):
+    _inherit = 'account.account'
+    _columns = {
+        'name': fields.char('Name', size=128, required=True, select=True, translate=True),
+    }
+account_account()
 
 class account_tax(osv.osv):
     _inherit = 'account.tax'

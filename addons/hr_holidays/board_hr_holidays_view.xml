@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
         <record model="ir.actions.act_window" id="action_hr_holidays_leaves_by_month">
             <field name="name">My Leaves</field>
             <field name="res_model">hr.holidays.status</field>
@@ -10,16 +11,17 @@
             <field name="context">{}</field>
             <field name="domain">[]</field>
         </record>
+
         <record id="board_hr_holidays_leave_by_month_form" model="ir.ui.view">
             <field name="name">board.hr.holidays.leave.month.form</field>
             <field name="model">board.board</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="hr.board_hr_form"/>
             <field name="arch" type="xml">
                 <xpath expr="/form/board/column[1]" position="inside">
-                 <action name="%(action_hr_holidays_leaves_by_month)d" string="Leaves"/>
+                    <action name="%(action_hr_holidays_leaves_by_month)d" string="My Leaves"/>
                 </xpath>
             </field>
         </record>
+
     </data>
 </openerp>

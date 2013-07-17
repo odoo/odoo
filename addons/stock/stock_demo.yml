@@ -10,7 +10,7 @@
  !record {model: stock.location, id: location_refrigerator_small}:
     name: Small Refrigerator
     usage: internal
-    location_id: location_refrigerator   
+    location_id: location_refrigerator
 -
  !record {model: stock.location, id: location_opening}:
     name: opening
@@ -18,11 +18,7 @@
 -
  !record {model: stock.location, id: location_convenience_shop}:
     name: Convenient Store
-    chained_auto_packing: auto
-    chained_location_type: fixed
     usage: supplier
-    chained_location_id: location_refrigerator
-    location_id: stock_location_suppliers
 -
  !record {model: stock.warehouse, id: warehouse_icecream}:
     name: Ice Cream Shop
@@ -34,16 +30,17 @@
     default_code: 001
     name: Ice Cream
     type: product
-    categ_id: product.cat1
-    supply_method: buy
+    categ_id: product.product_category_1
     list_price: 100.0
     standard_price: 70.0
     uom_id: product.product_uom_kgm
     uom_po_id: product.product_uom_kgm
     procure_method: make_to_stock
     property_stock_inventory: location_opening
-    property_stock_account_input: location_refrigerator
-    property_stock_account_output: location_delivery_counter
+    valuation: real_time
+    cost_method: average
+    property_stock_account_input: account.o_expense
+    property_stock_account_output: account.o_income
     description: Ice cream can be mass-produced and thus is widely available in developed parts of the world. Ice cream can be purchased in large cartons (vats and squrounds) from supermarkets and grocery stores, in smaller quantities from ice cream shops, convenience stores, and milk bars, and in individual servings from small carts or vans at public events.
 
 -
@@ -73,7 +70,7 @@
     product_qty: 40.0
     prod_lot_id: lot_icecream_1
     location_id: location_refrigerator
-        
+
 -
  !record {model: stock.picking, id: outgoing_shipment}:
     type: out
@@ -90,7 +87,7 @@
  !record {model: stock.picking, id: incomming_shipment}:
     type: in
     invoice_state: 2binvoiced
-    address_id: base.res_partner_address_9
+    partner_id: base.res_partner_address_9
     location_dest_id: location_refrigerator
 -
  !record {model: stock.move, id: incomming_shipment_icecream}:

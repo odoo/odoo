@@ -1,0 +1,15 @@
+-
+  In order to test conversation of UOM,
+-
+  I convert Grams into TON with price.
+-
+  !python {model: product.uom}: |
+    from_uom_id = ref("product_uom_gram")
+    to_uom_id = ref("product_uom_ton")
+    price = 2
+    qty = 1020000
+    price = self._compute_price(cr, uid, from_uom_id, price, to_uom_id)
+    qty = self._compute_qty(cr, uid, from_uom_id, qty, to_uom_id)
+    assert qty == 1.02, "Qty is not correspond."
+    assert price == 2000000.0, "Price is not correspond."
+

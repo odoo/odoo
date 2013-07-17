@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <!-- Activity -->
+        
+        <record id="act_wait_ship" model="workflow.activity">
+            <field name="wkf_id" ref="sale.wkf_sale"/>
+            <field name="name">wait_ship</field>
+        </record>
+        
+        <record id="act_cancel3" model="workflow.activity">
+            <field name="wkf_id" ref="sale.wkf_sale"/>
+            <field name="name">cancel3</field>
+            <field name="flow_stop">True</field>
+            <field name="kind">stopall</field>
+            <field name="action">action_cancel()</field>
+        </record>
+        
+        <record id="act_ship" model="workflow.activity">
+            <field name="wkf_id" ref="sale.wkf_sale"/>
+            <field name="name">ship</field>
+            <field name="kind">function</field>
+            <field name="action">action_ship_create()</field>
+        </record>
+
+        <record id="act_ship_except" model="workflow.activity">
+            <field name="wkf_id" ref="sale.wkf_sale"/>
+            <field name="name">ship_except</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'shipping_except'})</field>
+        </record>
+        
+        <record id="act_ship_end" model="workflow.activity">
+            <field name="wkf_id" ref="sale.wkf_sale"/>
+            <field name="name">ship_end</field>
+            <field name="kind">function</field>
+            <field name="action">action_ship_end()</field>
+        </record>
+        
+        <record id="act_ship_cancel" model="workflow.activity">
+            <field name="wkf_id" ref="sale.wkf_sale"/>
+            <field name="name">ship_cancel</field>
+            <field name="flow_stop">True</field>
+            <field name="kind">stopall</field>
+            <field name="action">action_cancel()</field>
+        </record>
+        
+        <!-- Transistion -->
+        
+        <record id="trans_router_wait_ship" model="workflow.transition">
+            <field name="act_from" ref="sale.act_router"/>
+            <field name="act_to" ref="act_wait_ship"/>
+        </record>
+        
+        <record id="trans_router_wait_invoice_shipping" model="workflow.transition">
+            <field name="act_from" ref="sale.act_wait_invoice"/>
+            <field name="act_to" ref="sale.act_invoice_end"/>
+            <field name="condition">(order_policy=='picking')</field>
+        </record>
+
+        <record id="trans_wait_invoice_invoice" model="workflow.transition">
+            <field name="act_from" ref="sale.act_wait_invoice"/>
+            <field name="act_to" ref="sale.act_invoice"/>
+            <field name="condition">order_policy=='prepaid'</field>
+        </record>
+        
+        <record id="trans_wait_ship_cancel3" model="workflow.transition">
+            <field name="act_from" ref="act_wait_ship"/>
+            <field name="act_to" ref="act_cancel3"/>
+            <field name="signal">cancel</field>
+        </record>
+
+        <record id="trans_wait_ship_ship" model="workflow.transition">
+            <field name="act_from" ref="act_wait_ship"/>
+            <field name="act_to" ref="act_ship"/>
+            <field name="condition">(order_policy!='prepaid') or invoiced</field>
+        </record>
+        
+        <record id="trans_ship_end_done" model="workflow.transition">
+            <field name="act_from" ref="act_ship_end"/>
+            <field name="act_to" ref="sale.act_done"/>
+        </record>
+        
+        <record id="trans_ship_ship_end" model="workflow.transition">
+            <field name="act_from" ref="act_ship"/>
+            <field name="act_to" ref="act_ship_end"/>
+            <field name="trigger_model">procurement.order</field>
+            <field name="trigger_expr_id">procurement_lines_get()</field>
+            <field name="condition">test_state('finished')</field>
+        </record>
+        
+        <record id="trans_ship_ship_except" model="workflow.transition">
+            <field name="act_from" ref="act_ship"/>
+            <field name="act_to" ref="act_ship_except"/>
+            <field name="condition">test_state('canceled')</field>
+        </record>
+        
+        
+        <record id="trans_ship_except_ship" model="workflow.transition">
+            <field name="act_from" ref="act_ship_except"/>
+            <field name="act_to" ref="act_ship"/>
+            <field name="signal">ship_recreate</field>
+        </record>
+        
+        <record id="trans_ship_except_ship_end" model="workflow.transition">
+            <field name="act_from" ref="act_ship_except"/>
+            <field name="act_to" ref="act_ship_end"/>
+            <field name="signal">ship_corrected</field>
+        </record>
+        
+        <record id="trans_ship_except_ship_cancel" model="workflow.transition">
+            <field name="act_from" ref="act_ship_except"/>
+            <field name="act_to" ref="act_ship_cancel"/>
+            <field name="signal">ship_cancel</field>
+        </record>
+        
+    </data>
+</openerp>

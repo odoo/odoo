@@ -20,10 +20,9 @@
 #
 ##############################################################################
 
-import pooler
-from report.interface import report_rml
-from tools import to_xml
-import tools
+from openerp import pooler, tools
+from openerp.report.interface import report_rml
+from openerp.tools import to_xml
 
 class survey_form(report_rml):
     def create(self, cr, uid, ids, datas, context):
@@ -135,7 +134,7 @@ class survey_form(report_rml):
             </initialize>
             <paraStyle name="response" fontName="Helvetica-oblique" fontSize="9.5"/>
             <paraStyle name="page" fontName="helvetica-bold" fontSize="15.0" leftIndent="0.0" textColor="white"/>
-            <paraStyle name="title" fontName="helvetica-bold" fontSize="18.0" leftIndent="0.0" textColor="white"/>
+            <paraStyle name="title" fontName="helvetica-bold" fontSize="18.0" leading="15" leftIndent="0.0" textColor="white"/>
             <paraStyle name="question" fontName="helvetica-boldoblique" fontSize="10.0" leftIndent="3.0"/>
             <paraStyle name="answer" fontName="helvetica" fontSize="09.0" leftIndent="0.0"/>
             <paraStyle name="descriptive_text" fontName="helvetica" fontSize="10.0" leftIndent="0.0"/>
@@ -165,7 +164,7 @@ class survey_form(report_rml):
                 seq += 1
                 rml += """
                 <blockTable colWidths='"""+_tbl_widths+"""' style="page_tbl">
-                    <tr><td><para style="page">"""+ tools.ustr(seq) + """. """ + to_xml(tools.ustr(page.title)) + """</para></td></tr>
+                    <tr><td><para style="page">"""+ tools.ustr(seq) + """. """ + to_xml(tools.ustr(page.title)) + """</para><para style="P2"><font></font></para></td></tr>
                 </blockTable>"""
                 if page.note:
                     rml += """<para style="P2"></para><blockTable colWidths='"""+_tbl_widths+"""' style="note_table">

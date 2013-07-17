@@ -19,9 +19,10 @@
 #
 ##############################################################################
 
-import tools
-from osv import fields,osv
-from decimal_precision import decimal_precision as dp
+from openerp import tools
+from openerp.osv import fields, osv
+
+from openerp.addons.decimal_precision import decimal_precision as dp
 
 
 class hr_expense_report(osv.osv):
@@ -39,11 +40,10 @@ class hr_expense_report(osv.osv):
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'journal_id': fields.many2one('account.journal', 'Force Journal', readonly=True),
         'product_qty':fields.float('Qty', readonly=True),
-        'invoiced':fields.integer('# of Invoiced Lines', readonly=True),
         'employee_id': fields.many2one('hr.employee', "Employee's Name", readonly=True),
         'date_confirm': fields.date('Confirmation Date', readonly=True),
         'date_valid': fields.date('Validation Date', readonly=True),
-        'invoice_id': fields.many2one('account.invoice', 'Invoice', readonly=True),
+        'voucher_id': fields.many2one('account.voucher', 'Receipt', readonly=True),
         'department_id':fields.many2one('hr.department','Department', readonly=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
         'user_id':fields.many2one('res.users', 'Validation User', readonly=True),
@@ -60,10 +60,9 @@ class hr_expense_report(osv.osv):
             ('draft', 'Draft'),
             ('confirm', 'Waiting confirmation'),
             ('accepted', 'Accepted'),
-            ('invoiced', 'Invoiced'),
-            ('paid', 'Reimbursed'),
+            ('done', 'Done'),
             ('cancelled', 'Cancelled')],
-            'State', readonly=True),
+            'Status', readonly=True),
     }
     _order = 'date desc'
     def init(self, cr):
@@ -78,8 +77,7 @@ class hr_expense_report(osv.osv):
                      s.currency_id,
                      to_date(to_char(s.date_confirm, 'dd-MM-YYYY'),'dd-MM-YYYY') as date_confirm,
                      to_date(to_char(s.date_valid, 'dd-MM-YYYY'),'dd-MM-YYYY') as date_valid,
-                     s.invoice_id,
-                     count(s.invoice_id) as invoiced,
+                     s.voucher_id,
                      s.user_valid as user_id,
                      s.department_id,
                      to_char(date_trunc('day',s.create_date), 'YYYY') as year,
@@ -92,7 +90,7 @@ class hr_expense_report(osv.osv):
                      sum(l.unit_quantity * u.factor) as product_qty,
                      s.company_id as company_id,
                      sum(l.unit_quantity*l.unit_amount) as price_total,
-                     (sum(l.unit_quantity*l.unit_amount)/sum(l.unit_quantity * u.factor))::decimal(16,2) as price_average,
+                     (sum(l.unit_quantity*l.unit_amount)/sum(case when l.unit_quantity=0 or u.factor=0 then 1 else l.unit_quantity * u.factor end))::decimal(16,2) as price_average,
                      count(*) as nbr,
                      (select unit_quantity from hr_expense_line where id=l.id and product_id is not null) as no_of_products,
                      (select analytic_account from hr_expense_line where id=l.id and analytic_account is not null) as no_of_account,
@@ -109,7 +107,7 @@ class hr_expense_report(osv.osv):
                      to_date(to_char(s.date_valid, 'dd-MM-YYYY'),'dd-MM-YYYY'),
                      l.product_id,
                      l.analytic_account,
-                     s.invoice_id,
+                     s.voucher_id,
                      s.currency_id,
                      s.user_valid,
                      s.department_id,

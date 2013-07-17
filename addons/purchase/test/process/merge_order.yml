@@ -2,9 +2,9 @@
   In order to merge RFQ, I merge two RFQ which has same supplier and check new merged order.
 -
   !python {model: purchase.order}: |
-    new_id = self.do_merge(cr, uid, [ref('order_purchase3'), ref('order_purchase7')])
-    order3 = self.browse(cr, uid, ref('order_purchase3'))
-    order7 = self.browse(cr, uid, ref('order_purchase7'))
+    new_id = self.do_merge(cr, uid, [ref('purchase_order_4'), ref('purchase_order_7')])
+    order3 = self.browse(cr, uid, ref('purchase_order_4'))
+    order7 = self.browse(cr, uid, ref('purchase_order_7'))
     total_qty = sum([x.product_qty for x in order3.order_line] + [x.product_qty for x in order7.order_line])
 
     assert order3.state == 'cancel', "Merged order should be canceled"
@@ -26,7 +26,6 @@
        
        assert total_new_qty == total_qty,"product quantities are not correspond" 
        assert order.partner_id == order3.partner_id ,"partner is not correspond"
-       assert order.partner_address_id == order3.partner_address_id ,"Partner address is not correspond"
        assert order.warehouse_id == order3.warehouse_id or order7.warehouse_id,"Warehouse is not correspond"
        assert order.state == 'draft',"New created order state should be in draft"
        assert order.pricelist_id == order3.pricelist_id,"Price list is not correspond"

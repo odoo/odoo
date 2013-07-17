@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- wizard view -->
+        <record model="ir.ui.view" id="mail_wizard_invite_form">
+            <field name="name">Add Followers</field>
+            <field name="model">mail.wizard.invite</field>
+            <field name="arch" type="xml">
+                <form string="Add Followers" version="7.0">
+                    <group>
+                        <field name="res_model" invisible="1"/>
+                        <field name="res_id" invisible="1"/>
+                        <field name="partner_ids" widget="many2many_tags_email"
+                                placeholder="Add contacts to notify..."
+                                context="{'force_email':True, 'show_email':True}"/>
+                        <field name="message"/>
+                    </group>
+                    <footer>
+                        <button string="Add Followers"
+                            name="add_followers" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />    
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+
+    <record id="account_coda_import_view" model="ir.ui.view">
+      <field name="name">Import CODA File</field>
+      <field name="model">account.coda.import</field>
+      <field name="priority">1</field>
+      <field name="arch" type="xml">
+        <form string="Import CODA File" version="7.0">
+            <group col="2">
+                <field name="coda_data" filename="coda_fname"/>
+                <field name="temporary_account_id" />
+            </group>
+            <footer>
+                <button name="coda_parsing" string="_Import" type="object" class="oe_highlight"/>
+                or
+                <button string="Cancel" class="oe_link" special="cancel"/>
+            </footer>
+        </form>
+      </field>
+    </record>
+
+    <record id="action_account_coda_import" model="ir.actions.act_window">
+      <field name="name">Import CODA File</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">account.coda.import</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="target">new</field>
+      <field name="view_id" ref="account_coda_import_view"/>
+    </record>
+    
+  </data> 
+</openerp>

@@ -26,13 +26,13 @@
   !python {model: hr.employee}: |
     self.write(cr, uid, [ref('employee_niv')], {'job_id':ref('job_developer')})
 -
-  Now I dont want to recruit new employee for this position. so I mark it as Old.
+  Now I dont want to recruit new employee for this position. so I mark it as Open.
 -
   !python {model: hr.job}: |
-    self.job_old(cr, uid, [ref('job_developer')])
+    self.job_open(cr, uid, [ref('job_developer')])
 -
   I check 'state' and number of 'Expected in Recruitment' after closing the Job position.
 -
-  !assert {model: hr.job, id: job_developer, string: Job position is in 'old' state and no_of_recruitment = 0}:
-    - state == 'old'
+  !assert {model: hr.job, id: job_developer, string: Job position is in 'open' state and no_of_recruitment = 0}:
+    - state == 'open'
     - no_of_recruitment == 0

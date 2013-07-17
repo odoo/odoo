@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from osv import fields,osv,orm
-from tools.translate import _
+from openerp.osv import fields,osv,orm
+from openerp.tools.translate import _
 
 class project_issue(osv.osv):
     _inherit = 'project.issue'
@@ -54,7 +54,7 @@ class project_issue(osv.osv):
         result = {}
 
         if account and account.state == 'pending':
-            result = {'warning' : {'title' : _('Analytic Account'), 'message' : _('The Analytic Account is in pending !')}}
+            result = {'warning' : {'title' : _('Analytic Account'), 'message' : _('The Analytic Account is pending !')}}
             
         return result
 

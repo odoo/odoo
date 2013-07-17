@@ -23,8 +23,8 @@
 #   Error treatment: exception, request, ... -> send request to user_id
 
 import time
-from osv import fields,osv
-from tools.translate import _
+from openerp.osv import fields,osv
+from openerp.tools.translate import _
 
 class subscription_document(osv.osv):
     _name = "subscription.document"
@@ -69,10 +69,10 @@ class subscription_subscription(osv.osv):
         'interval_type': fields.selection([('days', 'Days'), ('weeks', 'Weeks'), ('months', 'Months')], 'Interval Unit'),
         'exec_init': fields.integer('Number of documents'),
         'date_init': fields.datetime('First Date'),
-        'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'State'),
+        'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'Status'),
         'doc_source': fields.reference('Source Document', required=True, selection=_get_document_types, size=128, help="User can choose the source document on which he wants to create documents"),
         'doc_lines': fields.one2many('subscription.subscription.history', 'subscription_id', 'Documents created', readonly=True),
-        'cron_id': fields.many2one('ir.cron', 'Cron Job', help="Scheduler which runs on subscription"),
+        'cron_id': fields.many2one('ir.cron', 'Cron Job', help="Scheduler which runs on subscription", states={'running':[('readonly',True)], 'done':[('readonly',True)]}),
         'note': fields.text('Notes', help="Description or Summary of Subscription"),
     }
     _defaults = {
@@ -133,7 +133,7 @@ class subscription_subscription(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for record in self.browse(cr, uid, ids, context or {}):
             if record.state=="running":
-                raise osv.except_osv(_('Error !'),_('You cannot delete an active subscription !'))
+                raise osv.except_osv(_('Error!'),_('You cannot delete an active subscription !'))
         return super(subscription_subscription, self).unlink(cr, uid, ids, context)
 
     def set_done(self, cr, uid, ids, context=None):
@@ -155,7 +155,7 @@ class subscription_subscription_history(osv.osv):
     _columns = {
         'date': fields.datetime('Date'),
         'subscription_id': fields.many2one('subscription.subscription', 'Subscription', ondelete='cascade'),
-        'document_id': fields.reference('Source Document', required=True, selection=[('account.invoice','Invoice'),('sale.order','Sale Order')], size=128),
+        'document_id': fields.reference('Source Document', required=True, selection=_get_document_types, size=128),
     }
 subscription_subscription_history()
 

@@ -80,45 +80,45 @@
         </record>
 
         <record id="resource_analyst" model="resource.resource">
-	        <field eval="1.0" name="time_efficiency"/>
-	        <field name="user_id" ref="base.user_root"/>
-	        <field name="name">Analyst</field>
-	        <field eval="1" name="active"/>
-	        <field name="calendar_id" ref="timesheet_group1"/>
-	        <field name="resource_type">user</field>
+            <field eval="1.0" name="time_efficiency"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="name">Analyst</field>
+            <field eval="1" name="active"/>
+            <field name="calendar_id" ref="timesheet_group1"/>
+            <field name="resource_type">user</field>
         </record>
 
         <record id="resource_designer" model="resource.resource">
-	        <field eval="1.0" name="time_efficiency"/>
-	        <field name="user_id" ref="base.user_demo"/>
-	        <field name="name">Designer</field>
-	        <field eval="1" name="active"/>
-	        <field name="calendar_id" ref="timesheet_group1"/>
-	        <field name="resource_type">user</field>
+            <field eval="1.0" name="time_efficiency"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="name">Designer</field>
+            <field eval="1" name="active"/>
+            <field name="calendar_id" ref="timesheet_group1"/>
+            <field name="resource_type">user</field>
         </record>
 
         <record id="resource_developer" model="resource.resource">
-	        <field eval="1.0" name="time_efficiency"/>
-	        <field name="user_id" ref="base.user_demo"/>
-	        <field name="name">Developer</field>
-	        <field eval="1" name="active"/>
-	        <field name="calendar_id" ref="timesheet_group1"/>
-	        <field name="resource_type">user</field>
+            <field eval="1.0" name="time_efficiency"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="name">Developer</field>
+            <field eval="1" name="active"/>
+            <field name="calendar_id" ref="timesheet_group1"/>
+            <field name="resource_type">user</field>
         </record>
 
         <record id="resource_analyst_leaves_demoleave1" model="resource.calendar.leaves">
-	        <field name="name">2 Hours On Leave</field>
-	        <field name="resource_id" ref="resource_analyst"/>
-	        <field name="date_from" eval="time.strftime('%Y-%m-%d 08:00:00')"/>
-	        <field name="date_to" eval="time.strftime('%Y-%m-%d 11:00:00')"/>
-	        <field name="calendar_id" ref="timesheet_group1"/>
+            <field name="name">2 Hours On Leave</field>
+            <field name="resource_id" ref="resource_analyst"/>
+            <field name="date_from" eval="time.strftime('%Y-%m-%d 08:00:00')"/>
+            <field name="date_to" eval="time.strftime('%Y-%m-%d 11:00:00')"/>
+            <field name="calendar_id" ref="timesheet_group1"/>
         </record>
         
         <record id="resource_dummyleave" model="resource.calendar.leaves">
-	        <field name="name">Dummy Resource Leave</field>
-	        <field name="resource_id" ref="resource_analyst"/>
-	        <field name="date_from" eval="time.strftime('%Y-%m-%d 08:00:00')"/>
-	        <field name="date_to" eval="time.strftime('%Y-%m-%d 11:00:00')"/>
+            <field name="name">Dummy Resource Leave</field>
+            <field name="resource_id" ref="resource_analyst"/>
+            <field name="date_from" eval="time.strftime('%Y-%m-%d 08:00:00')"/>
+            <field name="date_to" eval="time.strftime('%Y-%m-%d 11:00:00')"/>
         </record>
 
     </data>

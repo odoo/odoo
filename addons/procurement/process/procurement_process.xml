@@ -11,7 +11,7 @@
             <field name="model_id" ref="procurement.model_procurement_order"/>
             <field eval="1" name="active"/>
         </record>
-    	<record id="process_node_procureproducts0" model="process.node">
+        <record id="process_node_procureproducts0" model="process.node">
             <field name="menu_id" ref="menu_stock_procurement_action"/>
             <field name="model_id" ref="procurement.model_procurement_order"/>
             <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
@@ -22,21 +22,21 @@
             <field eval="0" name="flow_start"/>
         </record>
         
-		<record id="process_process_serviceproductprocess0" model="process.process">
-			<field eval="&quot;&quot;&quot;Service&quot;&quot;&quot;" name="name"/>
-			<field name="model_id" ref="procurement.model_procurement_order"/>
-			<field eval="1" name="active"/>
-		</record>        
-      	<record id="process_node_serviceonorder0" model="process.node">
-			<field name="menu_id" ref="menu_stock_procurement_action"/>
-			<field name="model_id" ref="procurement.model_procurement_order"/>
-			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Assignment from Production or Purchase Order.&quot;&quot;&quot;" name="note"/>
-			<field eval="&quot;&quot;&quot;Make to Order&quot;&quot;&quot;" name="name"/>
-			<field name="process_id" ref="procurement.process_process_serviceproductprocess0"/>
-			<field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
-			<field eval="0" name="flow_start"/>
-		</record>
+        <record id="process_process_serviceproductprocess0" model="process.process">
+            <field eval="&quot;&quot;&quot;Service&quot;&quot;&quot;" name="name"/>
+            <field name="model_id" ref="procurement.model_procurement_order"/>
+            <field eval="1" name="active"/>
+        </record>        
+          <record id="process_node_serviceonorder0" model="process.node">
+            <field name="menu_id" ref="menu_stock_procurement_action"/>
+            <field name="model_id" ref="procurement.model_procurement_order"/>
+            <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+            <field eval="&quot;&quot;&quot;Assignment from Production or Purchase Order.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Make to Order&quot;&quot;&quot;" name="name"/>
+            <field name="process_id" ref="procurement.process_process_serviceproductprocess0"/>
+            <field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
+            <field eval="0" name="flow_start"/>
+        </record>
         
     </data>
 </openerp>

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+  <record id="note_note_rule_global" model="ir.rule">
+    <field name="name">Only followers can access a sticky notes</field>
+    <field model="ir.model" ref="model_note_note" name="model_id"/>
+    <field name="domain_force">[('message_follower_ids','=',user.partner_id.id)]</field>
+    <field eval="True" name="global"/>
+    <field eval="1" name="perm_unlink"/>
+    <field eval="0" name="perm_write"/>
+    <field eval="1" name="perm_read"/>
+    <field eval="0" name="perm_create"/>
+  </record>
+
+  <record id="note_stage_rule_global" model="ir.rule">
+    <field name="name">Each user have his stage name</field>
+    <field model="ir.model" ref="model_note_stage" name="model_id"/>
+    <field name="domain_force">['|',('user_id','=',False),('user_id','=',user.id)]</field>
+    <field eval="True" name="global"/>
+  </record>
+</data>
+</openerp>
+

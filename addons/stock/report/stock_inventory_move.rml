@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="Stock Inventory.pdf">
-  <template title="Stock Inventory" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Stock Inventory" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="28.0" y1="28.0" width="539" height="786"/>
     </pageTemplate>
@@ -47,6 +47,7 @@
       <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table8">
       <blockAlignment value="LEFT"/>
@@ -55,12 +56,14 @@
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table7">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
       <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
       <lineStyle kind="LINEABOVE" colorName="#000000" start="2,0" stop="2,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/>
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
@@ -104,25 +107,6 @@
     <images/>
   </stylesheet>
   <story>
-  <pto>
-  <pto_header>
-    <blockTable colWidths="70.0,103.0,256.0,109.0" style="Table4">
-      <tr>
-        <td>
-          <para style="terp_tblheader_Details">Location</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Centre">Production Lot</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details">Product </para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Right">Quantity</para>
-        </td>
-      </tr>
-    </blockTable>
-  </pto_header>
     <para style="terp_default_8">[[ repeatIn(objects,'o') ]] </para>
     <blockTable colWidths="539.0" style="Table3">
       <tr>
@@ -163,7 +147,7 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="70.0,103.0,256.0,109.0" style="Table4">
+    <blockTable colWidths="59.0,86.0,213.0,91.0,91.0" style="Table4">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Location</para>
@@ -177,11 +161,14 @@
         <td>
           <para style="terp_tblheader_Details_Right">Quantity</para>
         </td>
+        <td>
+          <para style="terp_tblheader_Details_Centre">Manual Quantity</para>
+        </td>
       </tr>
     </blockTable>
     <section>
       <para style="terp_default_2">[[ repeatIn(o.inventory_line_id, 'p') ]]</para>
-      <blockTable colWidths="70.0,105.0,255.0,109.0" style="Table8">
+      <blockTable colWidths="58.0,87.0,212.0,91.0,91.0" style="Table8">
         <tr>
           <td>
             <para style="terp_default_9">[[ p.location_id.name ]]</para>
@@ -195,10 +182,15 @@
           <td>
             <para style="terp_default_Right_9">[[ formatLang(p.product_qty) ]] [[ p.product_uom.name ]]</para>
           </td>
+          <td>
+            <para style="terp_default_Right_9">
+              <font color="white"> </font>
+            </para>
+          </td>
         </tr>
       </blockTable>
     </section>
-    <blockTable colWidths="383.0,47.0,109.0" style="Table7">
+    <blockTable colWidths="318.0,39.0,91.0,91.0" style="Table7">
       <tr>
         <td>
           <para style="terp_default_Bold_9">
@@ -211,11 +203,16 @@
         <td>
           <para style="terp_default_Bold_Right_9">[[ formatLang(qty_total(o.inventory_line_id)['quantity']) ]] [[ qty_total(o.inventory_line_id)['uom'] ]]</para>
         </td>
+        <td>
+          <para style="terp_default_Bold_Right_9">
+            <font color="white"> </font>
+          </para>
+        </td>
       </tr>
     </blockTable>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-  </pto>
   </story>
 </document>
+

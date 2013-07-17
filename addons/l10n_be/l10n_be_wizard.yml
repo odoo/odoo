@@ -1,11 +1,6 @@
 -
-  !record {model: ir.actions.todo, id: config_call_account_template}:
-    action_id: account.action_wizard_multi_chart
-    category_id: account.category_accounting_configuration
-    type: automatic
--
   !python {model: ir.actions.todo}: |
-    install_todo = self.browse(cr, uid, ref('l10n_be.config_call_account_template'))
+    install_todo = self.browse(cr, uid, ref('account.action_wizard_multi_chart_todo'))
     if install_todo.state == 'open':
         wiz = self.pool.get('wizard.multi.charts.accounts')
         values = {

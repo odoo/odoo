@@ -2,23 +2,21 @@
 <openerp>
     <data>
 
-  		<record id="view_project_account_analytic_line_form" model="ir.ui.view">
+        <record id="view_project_account_analytic_line_form" model="ir.ui.view">
             <field name="name">project.account.analytic.line.form</field>
             <field name="model">project.account.analytic.line</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="View Account Analytic Lines">
-                	<group colspan="4" >
-                    	<field name="from_date"/>
-                    	<newline/>
-                    	<field name="to_date" />
+                <form string="View Account Analytic Lines" version="7.0">
+                    <header>
+                        <button string="Open Entries" name="action_open_window" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </header>
+                    <group col="4">
+                        <field name="from_date"/>
+                        <field name="to_date"/>
                     </group>
-                         <label string ="(Keep empty to open the current situation)" />
-                       	 <separator string="" colspan="4" />
-                    <group colspan="4" col="6">
-                    	 <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    	 <button icon="terp-gtk-go-back-rtl" string="Open Entries" name="action_open_window" type="object"/>
-                   	</group>
+                    <label string ="(Keep empty to open the current situation)" />
                 </form>
             </field>
         </record>

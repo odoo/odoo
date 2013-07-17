@@ -1,6 +1,6 @@
 -
   In order to test the cancel flow of mrp_repair module,
-  I start by creating new copy Repair order for "Basic PC" product.
+  I start by creating new copy Repair order for "PC Assemble SC234" product.
 -
   !python {model: mrp.repair}: |
     copy_id = self.copy(cr, uid, ref("mrp_repair_rmrp1"))

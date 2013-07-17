@@ -1,21 +1,21 @@
 # Finnish translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2011-01-12 15:29+0000\n"
-"Last-Translator: Pekka Pylvänäinen <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:11+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:11+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -23,25 +23,10 @@ msgid "Parent Directory"
 msgstr "Yläkansio"
 
 #. module: document
-#: code:addons/document/document_directory.py:276
+#: code:addons/document/document.py:336
 #, python-format
 msgid "Directory name contains special characters!"
 msgstr "Kansion nimi sisältää erikoismerkkejä!"
-
-#. module: document
-#: field:document.directory,resource_field:0
-msgid "Name field"
-msgstr "Nimikenttä"
-
-#. module: document
-#: view:board.board:0
-msgid "Document board"
-msgstr "Dokumenttien työpöytä"
-
-#. module: document
-#: model:ir.model,name:document.model_process_node
-msgid "Process Node"
-msgstr "Prosessisolmu"
 
 #. module: document
 #: view:document.directory:0
@@ -59,14 +44,13 @@ msgstr ""
 
 #. module: document
 #: view:document.directory:0
-#: view:document.storage:0
 msgid "Group By..."
 msgstr "Ryhmittely.."
 
 #. module: document
-#: model:ir.model,name:document.model_document_directory_content_type
-msgid "Directory Content Type"
-msgstr "Hakemiston sisällön tyyppi"
+#: view:ir.attachment:0
+msgid "Modification"
+msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -80,20 +64,14 @@ msgid "Files"
 msgstr "Tiedostot"
 
 #. module: document
-#: view:report.files.partner:0
-msgid "Files per Month"
-msgstr "Tiedostoja kuukautta kohti"
+#: field:document.directory.content.type,mimetype:0
+msgid "Mime Type"
+msgstr "Mime-tyyppi"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "March"
 msgstr "Maaliskuu"
-
-#. module: document
-#: view:document.configuration:0
-msgid "title"
-msgstr "otsikko"
 
 #. module: document
 #: field:document.directory.dctx,expr:0
@@ -112,9 +90,9 @@ msgid "Directory Content"
 msgstr "Hakemiston sisältö"
 
 #. module: document
-#: view:document.directory:0
-msgid "Dynamic context"
-msgstr "Dynaaminen konteksti"
+#: view:ir.attachment:0
+msgid "My Document(s)"
+msgstr ""
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_management_configuration
@@ -133,18 +111,13 @@ msgstr ""
 "viitteenä nykyiseen tietueeseen dynaamisissa hakemistoissa"
 
 #. module: document
-#: view:report.document.user:0
-msgid "This Year"
-msgstr "Tänä vuonna"
+#: help:document.directory.dctx,field:0
+msgid "The name of the field."
+msgstr ""
 
 #. module: document
-#: field:document.storage,path:0
-msgid "Path"
-msgstr "Polku"
-
-#. module: document
-#: code:addons/document/document_directory.py:266
-#: code:addons/document/document_directory.py:271
+#: code:addons/document/document.py:326
+#: code:addons/document/document.py:331
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "Kansionimen tulee olla ainutkertainen!"
@@ -152,9 +125,10 @@ msgstr "Kansionimen tulee olla ainutkertainen!"
 #. module: document
 #: view:ir.attachment:0
 msgid "Filter on my documents"
-msgstr ""
+msgstr "Suodata dokumenttejani"
 
 #. module: document
+#: view:ir.attachment:0
 #: field:ir.attachment,index_content:0
 msgid "Indexed Content"
 msgstr "Indeksoitu sisältö"
@@ -169,13 +143,8 @@ msgstr ""
 "etsitään, jos epätosi (false) vain ne joilla on tämä ylätasona."
 
 #. module: document
-#: model:ir.actions.todo.category,name:document.category_knowledge_mgmt_config
-msgid "Knowledge Management"
-msgstr ""
-
-#. module: document
 #: view:document.directory:0
-#: field:document.storage,dir_ids:0
+#: model:ir.actions.act_window,name:document.action_document_directory_form
 #: model:ir.ui.menu,name:document.menu_document_directories
 msgid "Directories"
 msgstr "Hakemistot"
@@ -186,13 +155,6 @@ msgid "Files details by Users"
 msgstr "Tiedoston yksityiskohdat käyttäjittäin"
 
 #. module: document
-#: code:addons/document/document_storage.py:573
-#: code:addons/document/document_storage.py:601
-#, python-format
-msgid "Error!"
-msgstr "Virhe!"
-
-#. module: document
 #: field:document.directory,resource_find_all:0
 msgid "Find all resources"
 msgstr "Hae kaikki resurssit"
@@ -201,11 +163,6 @@ msgstr "Hae kaikki resurssit"
 #: selection:document.directory,type:0
 msgid "Folders per resource"
 msgstr "Hakemistoja resurssia kohden"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Indexed Content - experimental"
-msgstr ""
 
 #. module: document
 #: field:document.directory.content,suffix:0
@@ -225,26 +182,32 @@ msgstr "Tiedonhallintaohjelmiston konfiguraatio"
 #. module: document
 #: view:ir.attachment:0
 #: field:ir.attachment,partner_id:0
-#: field:report.files.partner,partner:0
 msgid "Partner"
 msgstr "Kumppani"
 
 #. module: document
-#: view:board.board:0
-msgid "Files by Users"
-msgstr "Tiedostoja käyttäjittäin"
+#: model:ir.actions.act_window,name:document.act_res_partner_document
+#: model:ir.actions.act_window,name:document.zoom_directory
+msgid "Related Documents"
+msgstr "Liittyvät dokumentit"
 
 #. module: document
-#: field:process.node,directory_id:0
-msgid "Document directory"
-msgstr "Dokumenttihakemisto"
+#: model:ir.actions.act_window,help:document.action_document_file_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to create a new document. \n"
+"          </p><p>\n"
+"            The Documents repository gives you access to all attachments, "
+"such\n"
+"            as mails, project documents, invoices etc.\n"
+"          </p>\n"
+"        "
+msgstr ""
 
 #. module: document
-#: code:addons/document/document.py:220
-#: code:addons/document/document.py:299
-#: code:addons/document/document_directory.py:266
-#: code:addons/document/document_directory.py:271
-#: code:addons/document/document_directory.py:276
+#: code:addons/document/document.py:326
+#: code:addons/document/document.py:331
+#: code:addons/document/document.py:336
 #, python-format
 msgid "ValidateError"
 msgstr "Tarkistusvirhe"
@@ -256,22 +219,10 @@ msgstr ""
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_file_form
-#: view:ir.attachment:0
 #: model:ir.ui.menu,name:document.menu_document_doc
 #: model:ir.ui.menu,name:document.menu_document_files
 msgid "Documents"
 msgstr "Asiakirjat"
-
-#. module: document
-#: constraint:document.directory:0
-msgid "Error! You can not create recursive Directories."
-msgstr "Virhe! Et voi luoda rekursiivisia kansioita."
-
-#. module: document
-#: view:document.directory:0
-#: field:document.directory,storage_id:0
-msgid "Storage"
-msgstr "Tallennus"
 
 #. module: document
 #: field:document.directory,ressource_type_id:0
@@ -279,10 +230,8 @@ msgid "Resource model"
 msgstr "Resurssimalli"
 
 #. module: document
-#: field:ir.attachment,file_size:0
 #: field:report.document.file,file_size:0
 #: field:report.document.user,file_size:0
-#: field:report.files.partner,file_size:0
 msgid "File Size"
 msgstr "Tiedostokoko"
 
@@ -295,10 +244,20 @@ msgstr "Sisällön tyyppi"
 #. module: document
 #: view:document.directory:0
 #: field:document.directory,type:0
-#: view:document.storage:0
-#: field:document.storage,type:0
 msgid "Type"
 msgstr "Tyyppi"
+
+#. module: document
+#: sql_constraint:ir.attachment:0
+msgid "The filename must be unique in a directory !"
+msgstr ""
+
+#. module: document
+#: code:addons/document/document.py:110
+#: code:addons/document/document.py:296
+#, python-format
+msgid "%s (copy)"
+msgstr ""
 
 #. module: document
 #: help:document.directory,ressource_type_id:0
@@ -317,19 +276,19 @@ msgstr ""
 "resursseille."
 
 #. module: document
-#: model:ir.actions.act_window,name:document.action_view_files_by_partner
-msgid "Files Per Partner"
-msgstr "Tiedostoja yhteistyökumppania kohden"
+#: constraint:document.directory:0
+msgid "Error! You cannot create recursive directories."
+msgstr ""
+
+#. module: document
+#: field:document.directory,resource_field:0
+msgid "Name field"
+msgstr "Nimikenttä"
 
 #. module: document
 #: field:document.directory,dctx_ids:0
 msgid "Context fields"
 msgstr "Kontekstikentät"
-
-#. module: document
-#: field:ir.attachment,store_fname:0
-msgid "Stored Filename"
-msgstr "Tallennettu tiedostonnimi"
 
 #. module: document
 #: view:document.directory:0
@@ -344,15 +303,8 @@ msgstr "Raportti"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "July"
 msgstr "Heinäkuu"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.open_board_document_manager
-#: model:ir.ui.menu,name:document.menu_reports_document_manager
-msgid "Document Dashboard"
-msgstr "Dokumenttien työpöytä"
 
 #. module: document
 #: field:document.directory.content.type,code:0
@@ -360,22 +312,12 @@ msgid "Extension"
 msgstr "Lisäosa"
 
 #. module: document
-#: view:ir.attachment:0
-msgid "Created"
-msgstr "Luotu"
-
-#. module: document
 #: field:document.directory,content_ids:0
 msgid "Virtual Files"
 msgstr "Virtuaaliset tiedostot"
 
 #. module: document
-#: view:ir.attachment:0
-msgid "Modified"
-msgstr "Muokattu"
-
-#. module: document
-#: code:addons/document/document_storage.py:639
+#: code:addons/document/document.py:562
 #, python-format
 msgid "Error at doc write!"
 msgstr "Virhe kirjoitettaessa asiakirjaa !"
@@ -410,16 +352,20 @@ msgstr "Turvallisuus"
 
 #. module: document
 #: field:document.directory,write_uid:0
-#: field:document.storage,write_uid:0
 #: field:ir.attachment,write_uid:0
 msgid "Last Modification User"
 msgstr "Viimeksi muuttanut käyttäjä"
 
 #. module: document
-#: model:ir.actions.act_window,name:document.act_res_partner_document
-#: model:ir.actions.act_window,name:document.zoom_directory
-msgid "Related Documents"
-msgstr "Liittyvät dokumentit"
+#: model:ir.actions.act_window,name:document.action_view_files_by_user_graph
+#: view:report.document.user:0
+msgid "Files by User"
+msgstr ""
+
+#. module: document
+#: view:ir.attachment:0
+msgid "on"
+msgstr ""
 
 #. module: document
 #: field:document.directory,domain:0
@@ -428,7 +374,6 @@ msgstr "Toimialue"
 
 #. module: document
 #: field:document.directory,write_date:0
-#: field:document.storage,write_date:0
 #: field:ir.attachment,write_date:0
 msgid "Date Modified"
 msgstr "Muokkauspäivä"
@@ -444,7 +389,6 @@ msgid "All users files"
 msgstr "Kaikki käyttäjän tiedostot"
 
 #. module: document
-#: view:board.board:0
 #: model:ir.actions.act_window,name:document.action_view_size_month
 #: view:report.document.file:0
 msgid "File Size by Month"
@@ -452,14 +396,8 @@ msgstr "Tiedoston koko kuukausittain"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "December"
 msgstr "Joulukuu"
-
-#. module: document
-#: field:document.configuration,config_logo:0
-msgid "Image"
-msgstr "Kuva"
 
 #. module: document
 #: selection:document.directory,type:0
@@ -467,9 +405,10 @@ msgid "Static Directory"
 msgstr "Kiinteä hakemisto"
 
 #. module: document
-#: field:document.directory,child_ids:0
-msgid "Children"
-msgstr "Alatunnukset"
+#: field:report.document.file,month:0
+#: field:report.document.user,month:0
+msgid "Month"
+msgstr "Kuukausi"
 
 #. module: document
 #: view:document.directory:0
@@ -478,20 +417,21 @@ msgstr ""
 "Määrittele kontekstin sanat kaikille alatason hakemistoille ja tiedostoille"
 
 #. module: document
-#: help:document.storage,online:0
-msgid ""
-"If not checked, media is currently offline and its contents not available"
+#: view:document.directory:0
+msgid "Static"
+msgstr "Kiinteä"
+
+#. module: document
+#: field:report.document.user,user:0
+msgid "unknown"
 msgstr ""
-"Jos ei valittu, media on pois käytöstä ja sen sisältö ei ole saatavilla"
 
 #. module: document
 #: view:document.directory:0
 #: field:document.directory,user_id:0
-#: field:document.storage,user_id:0
 #: view:ir.attachment:0
 #: field:ir.attachment,user_id:0
 #: field:report.document.user,user_id:0
-#: field:report.document.wall,user_id:0
 msgid "Owner"
 msgstr "Omistaja"
 
@@ -507,7 +447,6 @@ msgstr "Sisältö"
 
 #. module: document
 #: field:document.directory,create_date:0
-#: field:document.storage,create_date:0
 #: field:report.document.user,create_date:0
 msgid "Date Created"
 msgstr "Luontipäivä"
@@ -524,9 +463,10 @@ msgstr ""
 "Jos asetettu, hakemiston on oltava resurssityyppinen."
 
 #. module: document
+#: view:document.configuration:0
 #: model:ir.actions.act_window,name:document.action_config_auto_directory
 msgid "Configure Directories"
-msgstr ""
+msgstr "Määrittele hakemistot"
 
 #. module: document
 #: field:document.directory.content,include_name:0
@@ -534,19 +474,9 @@ msgid "Include Record Name"
 msgstr "Sisällytä tietueen nimi"
 
 #. module: document
-#: view:ir.attachment:0
-msgid "Attachment"
-msgstr "Liite"
-
-#. module: document
 #: field:ir.actions.report.xml,model_id:0
 msgid "Model Id"
 msgstr "Mallin tunnus"
-
-#. module: document
-#: field:document.storage,online:0
-msgid "Online"
-msgstr "Online-tilassa"
 
 #. module: document
 #: help:document.directory,ressource_tree:0
@@ -567,10 +497,21 @@ msgstr ""
 "tietueeseen ylätason mallissa"
 
 #. module: document
+#. openerp-web
+#: code:addons/document/static/src/js/document.js:6
+#, python-format
+msgid "Attachment(s)"
+msgstr ""
+
+#. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "August"
 msgstr "Elokuu"
+
+#. module: document
+#: view:document.directory:0
+msgid "Dynamic context"
+msgstr "Dynaaminen konteksti"
 
 #. module: document
 #: sql_constraint:document.directory:0
@@ -579,19 +520,11 @@ msgstr "Hakemisto ei voi olla itsensä ylähakemisto!"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "June"
 msgstr "Kesäkuu"
 
 #. module: document
-#: field:report.document.user,user:0
-#: field:report.document.wall,user:0
-msgid "User"
-msgstr "Käyttäjä"
-
-#. module: document
 #: field:document.directory,group_ids:0
-#: field:document.storage,group_ids:0
 msgid "Groups"
 msgstr "Ryhmät"
 
@@ -602,15 +535,8 @@ msgstr "Aktiivinen"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "November"
 msgstr "Marraskuu"
-
-#. module: document
-#: view:ir.attachment:0
-#: field:ir.attachment,db_datas:0
-msgid "Data"
-msgstr "Data"
 
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
@@ -631,7 +557,6 @@ msgstr "Määritelmä"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "October"
 msgstr "Lokakuu"
 
@@ -641,45 +566,19 @@ msgid "Seq."
 msgstr "Sarja"
 
 #. module: document
-#: selection:document.storage,type:0
-msgid "Database"
-msgstr "Tietokanta"
+#: model:ir.actions.act_window,name:document.action_view_all_document_tree1
+msgid "All Users files"
+msgstr "Kaikki käyttäjän tiedostot"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "January"
 msgstr "Tammikuu"
 
 #. module: document
-#: view:ir.attachment:0
-msgid "Related to"
-msgstr "Liittyy"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Attached To"
-msgstr "Liitetty kohteeseen"
-
-#. module: document
-#: model:ir.ui.menu,name:document.menu_reports_document
-msgid "Dashboard"
-msgstr "Työpöytä"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_user_graph
-msgid "Files By Users"
-msgstr "Tiedostot käyttäjittäin"
-
-#. module: document
-#: field:document.storage,readonly:0
-msgid "Read Only"
-msgstr "Vain luku"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_document_directory_form
+#: view:document.directory:0
 msgid "Document Directory"
-msgstr ""
+msgstr "Dokumenttihakemisto"
 
 #. module: document
 #: sql_constraint:document.directory:0
@@ -687,15 +586,14 @@ msgid "The directory name must be unique !"
 msgstr "Hakemiston nimen tulee olla uniikki !"
 
 #. module: document
-#: field:document.directory,create_uid:0
-#: field:document.storage,create_uid:0
-msgid "Creator"
-msgstr "Tekijä"
+#: view:ir.attachment:0
+msgid "Attachments"
+msgstr ""
 
 #. module: document
-#: field:document.directory.content,sequence:0
-msgid "Sequence"
-msgstr "Sarja"
+#: field:document.directory,create_uid:0
+msgid "Creator"
+msgstr "Tekijä"
 
 #. module: document
 #: view:document.configuration:0
@@ -707,7 +605,6 @@ msgid ""
 msgstr ""
 
 #. module: document
-#: view:board.board:0
 #: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
 #: view:report.document.user:0
 msgid "Files by Month"
@@ -715,7 +612,6 @@ msgstr "Tiedostot kuukausittain"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "September"
 msgstr "Syyskuu"
 
@@ -725,46 +621,14 @@ msgid "Prefix"
 msgstr "Etuliite"
 
 #. module: document
-#: field:report.document.wall,last:0
-msgid "Last Posted Time"
-msgstr "Viimeisin lisäysajankohta"
-
-#. module: document
-#: field:report.document.user,datas_fname:0
-msgid "File Name"
-msgstr "Tiedostonimi"
-
-#. module: document
-#: view:document.configuration:0
-msgid "res_config_contents"
-msgstr ""
+#: field:document.directory,child_ids:0
+msgid "Children"
+msgstr "Alatunnukset"
 
 #. module: document
 #: field:document.directory,ressource_id:0
 msgid "Resource ID"
 msgstr "Resurssin tunnus"
-
-#. module: document
-#: selection:document.storage,type:0
-msgid "External file storage"
-msgstr "Ulkoinen tietovarasto"
-
-#. module: document
-#: view:board.board:0
-#: model:ir.actions.act_window,name:document.action_view_wall
-#: view:report.document.wall:0
-msgid "Wall of Shame"
-msgstr "Häpeäseinä"
-
-#. module: document
-#: help:document.storage,path:0
-msgid "For file storage, the root path of the storage"
-msgstr "Tietovaraston peruspolku"
-
-#. module: document
-#: model:ir.model,name:document.model_report_files_partner
-msgid "Files details by Partners"
-msgstr "Tiedostojen yksityiskohdat yhteistyökumppaneittain"
 
 #. module: document
 #: field:document.directory.dctx,field:0
@@ -782,59 +646,18 @@ msgid "Parent Model"
 msgstr "Ylätason malli"
 
 #. module: document
-#: view:report.document.user:0
-msgid "Files by users"
-msgstr "Tiedostoja käyttäjittäin"
-
-#. module: document
-#: field:report.document.file,month:0
-#: field:report.document.user,month:0
-#: field:report.document.wall,month:0
-#: field:report.document.wall,name:0
-#: field:report.files.partner,month:0
-msgid "Month"
-msgstr "Kuukausi"
-
-#. module: document
-#: view:report.document.user:0
-msgid "This Months Files"
+#: view:document.directory:0
+msgid ""
+"These groups, however, do NOT apply to children directories, which must "
+"define their own groups."
 msgstr ""
-
-#. module: document
-#: model:ir.ui.menu,name:document.menu_reporting
-msgid "Reporting"
-msgstr "Raportointi"
-
-#. module: document
-#: field:document.directory,ressource_tree:0
-msgid "Tree Structure"
-msgstr "Puurakenne"
+"Nämä ryhmät eivät kuitenkaan vaikuta alatason hakemistoihin, vaan niihin on "
+"määriteltävä omat ryhmät"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "May"
 msgstr "Toukokuu"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_all_document_tree1
-msgid "All Users files"
-msgstr "Kaikki käyttäjän tiedostot"
-
-#. module: document
-#: model:ir.model,name:document.model_report_document_wall
-msgid "Users that did not inserted documents since one month"
-msgstr ""
-"Käyttäjät jotka eivät ole lisänneet dokumentteja viimeisen kuukauden aikana"
-
-#. module: document
-#: model:ir.actions.act_window,help:document.action_document_file_form
-msgid ""
-"The Documents repository gives you access to all attachments, such as mails, "
-"project documents, invoices etc."
-msgstr ""
-"Dokumenttivarasto antaa sinulle pääsyn kaikkiin liitteisiin, kuten "
-"sähköposteihin, projektidokumetteihin, laskuihin yms."
 
 #. module: document
 #: view:document.directory:0
@@ -849,39 +672,14 @@ msgid "ir.attachment"
 msgstr ""
 
 #. module: document
-#: view:board.board:0
-msgid "New Files"
-msgstr "Uudet tiedostot"
-
-#. module: document
-#: view:document.directory:0
-msgid "Static"
-msgstr "Kiinteä"
-
-#. module: document
-#: view:report.files.partner:0
-msgid "Files By Partner"
-msgstr "Tiedostot yhteistyökumppaneittain"
-
-#. module: document
-#: view:document.configuration:0
-msgid "Configure Direcories"
-msgstr ""
-
-#. module: document
 #: view:report.document.user:0
-msgid "This Month"
-msgstr "Tässä kuussa"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Notes"
-msgstr "Huomautukset"
+msgid "Users File"
+msgstr ""
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
 msgid "Directory Configuration"
-msgstr ""
+msgstr "Hakemiston määrittelyt"
 
 #. module: document
 #: help:document.directory,type:0
@@ -901,34 +699,13 @@ msgstr ""
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "February"
 msgstr "Helmikuu"
 
 #. module: document
-#: model:ir.actions.act_window,name:document.open_board_document_manager1
-#: model:ir.ui.menu,name:document.menu_reports_document_manager1
-msgid "Statistics by User"
-msgstr "Tilastot käyttäjittäin"
-
-#. module: document
-#: help:document.directory.dctx,field:0
-msgid ""
-"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
-"what is typed here."
-msgstr ""
-"Kentän nimi. Huomaa että etuliite \"dctx_\" lisätään tähän kirjoitetun eteen"
-
-#. module: document
 #: field:document.directory,name:0
-#: field:document.storage,name:0
 msgid "Name"
 msgstr "Nimi"
-
-#. module: document
-#: sql_constraint:document.storage:0
-msgid "The storage path must be unique!"
-msgstr "Talletuspaikan polun tulee olla uniikki!"
 
 #. module: document
 #: view:document.directory:0
@@ -936,28 +713,20 @@ msgid "Fields"
 msgstr "Kentät"
 
 #. module: document
-#: help:document.storage,readonly:0
-msgid "If set, media is for reading only"
-msgstr "Jos asetettu, media on vain lukemista varten"
-
-#. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "April"
 msgstr "Huhtikuu"
 
 #. module: document
 #: field:report.document.file,nbr:0
 #: field:report.document.user,nbr:0
-#: field:report.files.partner,nbr:0
 msgid "# of Files"
 msgstr "Tiedostojen määrä"
 
 #. module: document
-#: code:addons/document/document.py:209
-#, python-format
-msgid "(copy)"
-msgstr "(kopio)"
+#: model:ir.model,name:document.model_document_directory_content_type
+msgid "Directory Content Type"
+msgstr "Hakemiston sisällön tyyppi"
 
 #. module: document
 #: view:document.directory:0
@@ -968,23 +737,16 @@ msgstr ""
 "Vain näiden ryhmien jäsenillä on pääsy thän hakemistoon ja sen tiedostoihin."
 
 #. module: document
-#: view:document.directory:0
-msgid ""
-"These groups, however, do NOT apply to children directories, which must "
-"define their own groups."
+#. openerp-web
+#: code:addons/document/static/src/js/document.js:17
+#, python-format
+msgid "%s (%s)"
 msgstr ""
-"Nämä ryhmät eivät kuitenkaan vaikuta alatason hakemistoihin, vaan niihin on "
-"määriteltävä omat ryhmät"
 
 #. module: document
-#: field:document.directory.content.type,mimetype:0
-msgid "Mime Type"
-msgstr "Mime-tyyppi"
-
-#. module: document
-#: view:report.document.user:0
-msgid "All Months Files"
-msgstr ""
+#: field:document.directory.content,sequence:0
+msgid "Sequence"
+msgstr "Sarja"
 
 #. module: document
 #: field:document.directory.content,name:0
@@ -992,21 +754,19 @@ msgid "Content Name"
 msgstr "Sisällön nimi"
 
 #. module: document
-#: code:addons/document/document.py:220
-#: code:addons/document/document.py:299
-#, python-format
-msgid "File name must be unique!"
-msgstr "Tiedostonimen täytyy olla ainutkertainen!"
+#: field:report.document.user,datas_fname:0
+msgid "File Name"
+msgstr "Tiedostonimi"
 
 #. module: document
-#: selection:document.storage,type:0
-msgid "Internal File storage"
-msgstr "Sisäinen tietovarasto"
+#: field:document.directory,ressource_tree:0
+msgid "Tree Structure"
+msgstr "Puurakenne"
 
 #. module: document
-#: sql_constraint:document.directory:0
-msgid "Directory must have a parent or a storage"
-msgstr "Hakemistolla täytyy olla ylätason hakemisto tai tietovarasto"
+#: view:document.configuration:0
+msgid "res_config_contents"
+msgstr ""
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
@@ -1015,147 +775,16 @@ msgid "Directories' Structure"
 msgstr "Hakemistojen rakenne"
 
 #. module: document
-#: view:report.document.user:0
-msgid "Files by Resource Type"
-msgstr "Tiedostoja resurssityypeittäin"
-
-#. module: document
 #: field:report.document.user,name:0
-#: field:report.files.partner,name:0
 msgid "Year"
 msgstr "Vuosi"
 
 #. module: document
-#: view:document.storage:0
-#: model:ir.actions.act_window,name:document.action_document_storage_form
 #: model:ir.model,name:document.model_document_storage
-#: model:ir.ui.menu,name:document.menu_document_storage_media
 msgid "Storage Media"
 msgstr "Tallennusmedia"
-
-#. module: document
-#: view:document.storage:0
-msgid "Search Document storage"
-msgstr "Hae dokumenttivarastosta"
 
 #. module: document
 #: field:document.directory.content,extension:0
 msgid "Document Type"
 msgstr "Dokumenttityyppi"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr "Objektin nimen tulee alkaa x_ ja se ei saa sisältää erikoismerkkejä!"
-
-#~ msgid "Preview"
-#~ msgstr "Esikatselu"
-
-#~ msgid ""
-#~ "Check this field if you want that the name of the file start by the record "
-#~ "name."
-#~ msgstr "Merkitse tämä jos haluat tiedostonimen alkavan tietueen nimellä."
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Virheellinen mallin nimi toimenpiteen määrittelyssä."
-
-#~ msgid "Filesystem"
-#~ msgstr "Tiedostojärjestelmä"
-
-#~ msgid "Browse Files"
-#~ msgstr "Selaa tiedostoja"
-
-#~ msgid "Document Management System."
-#~ msgstr "Tiedostonhallintajärjestelmä."
-
-#~ msgid "Server Address"
-#~ msgstr "Palvelimen osoite"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Virheellinen XML näkymäarkkitehtuurille!"
-
-#~ msgid "Search a File"
-#~ msgstr "Etsi tiedosto"
-
-#~ msgid "Configure"
-#~ msgstr "Määritä"
-
-#~ msgid "Directorie's Structure"
-#~ msgstr "Hakemistojen rakenne"
-
-#~ msgid "Document Configuration"
-#~ msgstr "Asiakirjan määritykset"
-
-#~ msgid "Auto Configure Directory"
-#~ msgstr "Määritä hakemistoasetukset automaattisesti"
-
-#~ msgid "History"
-#~ msgstr "Historia"
-
-#~ msgid "Integrated Document Management System"
-#~ msgstr "Integroitu tiedostonhallintajärjestelmä"
-
-#~ msgid ""
-#~ "This is a complete document management system:\n"
-#~ "    * FTP Interface\n"
-#~ "    * User Authentication\n"
-#~ "    * Document Indexation\n"
-#~ msgstr ""
-#~ "Tämä on täydellinen tiedostonhallintajärjestelmä:\n"
-#~ "    * FTP-liittymä\n"
-#~ "    * Käyttäjän tunnistus\n"
-#~ "    * Asiakirjan indeksointi\n"
-
-#~ msgid "Browse Files Using FTP"
-#~ msgstr "Selaa tiedostoja FTP:llä"
-
-#~ msgid "Cancel"
-#~ msgstr "Peruuta"
-
-#~ msgid "Auto Configure"
-#~ msgstr "Automaattinen asetusten tekeminen"
-
-#~ msgid "Directories Mapped to Objects"
-#~ msgstr "Objekteilla sijaitsevat hakemistot"
-
-#~ msgid "File Information"
-#~ msgstr "Tiedoston tiedot"
-
-#~ msgid "Link"
-#~ msgstr "Linkki"
-
-#~ msgid "Auto Directory Configuration"
-#~ msgstr "Automaattinen hakemistojen konfigurointi"
-
-#~ msgid "Auto directory configuration for Products."
-#~ msgstr "Automaattinen hakemistojen konfigurointi tuotteille"
-
-#~ msgid "Sale Order"
-#~ msgstr "Myyntitilaus"
-
-#~ msgid "Project"
-#~ msgstr "Projekti"
-
-#~ msgid "Configure Resource Directory"
-#~ msgstr "Konfiguroi resurssin hakemisto"
-
-#~ msgid "Files by Partner"
-#~ msgstr "Tiedostot yhteistyökumppaneittain"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Konfiguraation eteneminen"
-
-#~ msgid "Auto directory configuration for Projects."
-#~ msgstr "Automaattinen hakemistojen konfiguraatio projekteille"
-
-#~ msgid "Choose the following Resouces to auto directory configuration."
-#~ msgstr ""
-#~ "Valitse seuraavat resurssit automaattista hakemiston konfiguraatiota varten."
-
-#~ msgid "Product"
-#~ msgstr "Tuote"
-
-#~ msgid ""
-#~ "Auto directory configuration for Sale Orders and Quotation with report."
-#~ msgstr ""
-#~ "Automaattinen hakemiston konfiguraatio myyntitilauksille ja tarjouksille "
-#~ "raportteineen."

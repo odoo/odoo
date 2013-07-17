@@ -22,7 +22,7 @@
 import time
 
 from common_report_header import common_report_header
-from report import report_sxw
+from openerp.report import report_sxw
 
 class tax_report(report_sxw.rml_parse, common_report_header):
     _name = 'report.account.vat.declaration'
@@ -32,6 +32,7 @@ class tax_report(report_sxw.rml_parse, common_report_header):
         res = {}
         self.period_ids = []
         period_obj = self.pool.get('account.period')
+        self.display_detail = data['form']['display_detail']
         res['periods'] = ''
         res['fiscalyear'] = data['form'].get('fiscalyear_id', False)
 
@@ -104,6 +105,8 @@ class tax_report(report_sxw.rml_parse, common_report_header):
         return top_result
 
     def _get_general(self, tax_code_id, period_list, company_id, based_on, context=None):
+        if not self.display_detail:
+            return []
         res = []
         obj_account = self.pool.get('account.account')
         periods_ids = tuple(period_list)
@@ -157,9 +160,9 @@ class tax_report(report_sxw.rml_parse, common_report_header):
             i+=1
         return res
 
-    def _get_codes(self, based_on, company_id, parent=False, level=0, period_list=[], context=None):
+    def _get_codes(self, based_on, company_id, parent=False, level=0, period_list=None, context=None):
         obj_tc = self.pool.get('account.tax.code')
-        ids = obj_tc.search(self.cr, self.uid, [('parent_id','=',parent),('company_id','=',company_id)], context=context)
+        ids = obj_tc.search(self.cr, self.uid, [('parent_id','=',parent),('company_id','=',company_id)], order='sequence', context=context)
 
         res = []
         for code in obj_tc.browse(self.cr, self.uid, ids, {'based_on': based_on}):
@@ -168,7 +171,11 @@ class tax_report(report_sxw.rml_parse, common_report_header):
             res += self._get_codes(based_on, company_id, code.id, level+1, context=context)
         return res
 
-    def _add_codes(self, based_on, account_list=[], period_list=[], context=None):
+    def _add_codes(self, based_on, account_list=None, period_list=None, context=None):
+        if account_list is None:
+            account_list = []
+        if period_list is None:
+            period_list = []
         res = []
         obj_tc = self.pool.get('account.tax.code')
         for account in account_list:

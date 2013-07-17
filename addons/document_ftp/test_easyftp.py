@@ -25,7 +25,7 @@
 """
 
 from ftplib import FTP
-from tools import config
+from openerp.tools import config
 
 def get_plain_ftp(timeout=10.0):
     ftp = FTP()
@@ -62,7 +62,7 @@ def get_ftp_fulldata(ftp, fname, limit=8192):
     data = []
     def ffp(data, ndata):
         if len(data)+ len(ndata) > limit:
-            raise IndexError('Data over the limit')
+            raise IndexError('Data over the limit.')
         data.append(ndata)
     ftp.retrbinary('RETR %s' % fname, partial(ffp,data))
     return ''.join(data)

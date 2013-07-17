@@ -4,24 +4,17 @@
         <record model="ir.ui.view" id="view_google_login_form">
             <field name="name">google.login.form</field>
             <field name="model">google.login</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Google login" >
-                    <group colspan="4" col="4" width="300">
-                        <field name="user" />
-                        <newline/>
-                        <label string="ex: user@gmail.com" align="1.0" colspan="2"/>
-                        <newline/>
+                <form string="Google login"  version="7.0">
+                    <group>
+                        <field name="user" placeholder="e.g. user@gmail.com"/>
                         <field name="password" password="True"/>
                     </group>
-                    <separator string="" colspan="4"/>
-                    <group colspan="4" col="4">
-                        <group colspan="2"/>
-                        <group colspan="2">  
-                            <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
-                            <button name="login" string="_Login" type="object" icon="terp-check"/>
-                        </group>
-                    </group>
+                    <footer>
+                        <button name="login" string="_Login" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

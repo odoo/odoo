@@ -7,24 +7,22 @@
         <record model="ir.ui.view" id="phonecall_to_phonecall_view">
             <field name="name">crm.phonecall2phonecall.form</field>
             <field name="model">crm.phonecall2phonecall</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Schedule/Log a call">
-                        <separator string="Schedule/Log a call" colspan="4"/>
+                <form string="Schedule/Log a Call" version="7.0">
+                    <group col="4">
                         <field name="action"/>
-                        <separator string="Call Details" colspan="4"/>
                         <field name="name"/>
                         <field name="date" string="Planned Date" attrs="{'invisible': [('action','=','log')]}"/>
                         <field name="partner_id" readonly="True"/>
-                        <field name="user_id" />
+                        <field name="user_id"/>
                         <field name="section_id"/>
-                        <field name="categ_id" string="Type" widget="selection" domain="[('object_id.model', '=', 'crm.phonecall')]"/>
-                        <separator string=" " colspan="4"/>
-                        <group colspan="4" col="3" >
-                            <button name="action_cancel" string="_Cancel" icon="gtk-cancel" special="cancel" />
-                            <button name="action_schedule" type="object" string="Log call" icon="gtk-ok" attrs="{'invisible' : [('action', '!=', 'log')]}" />
-                            <button name="action_schedule" type="object" string="Schedule call" icon="gtk-ok" attrs="{'invisible' : [('action', '!=', 'schedule')]}" />
-                        </group>
+                    </group>
+                    <footer>
+                        <button name="action_schedule" type="object" string="Log Call" attrs="{'invisible' : [('action', '!=', 'log')]}" class="oe_highlight"/>
+                        <button name="action_schedule" type="object" string="Schedule Call" attrs="{'invisible' : [('action', '!=', 'schedule')]}" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

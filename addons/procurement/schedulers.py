@@ -19,15 +19,15 @@
 #
 ##############################################################################
 
-import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from osv import osv
-from tools.translate import _
-from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
-import tools
-import netsvc
-import pooler
+from openerp import netsvc
+from openerp import pooler
+from openerp.osv import osv
+from openerp.osv import fields
+from openerp.tools.translate import _
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from openerp import tools
 
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
@@ -54,7 +54,6 @@ class procurement_order(osv.osv):
         '''
         if context is None:
             context = {}
-
         try:
             if use_new_cursor:
                 cr = pooler.get_db(use_new_cursor).cursor()
@@ -69,7 +68,7 @@ class procurement_order(osv.osv):
                 cr.commit()
             company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
             maxdate = (datetime.today() + relativedelta(days=company.schedule_range)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-            start_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
+            start_date = fields.datetime.now()
             offset = 0
             report = []
             report_total = 0
@@ -113,29 +112,12 @@ class procurement_order(osv.osv):
                                     proc.product_id.name,))
                         report_except += 1
 
+
                 if use_new_cursor:
                     cr.commit()
                 offset += len(ids)
                 if not ids: break
-            end_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
-            if uid:
-                request = self.pool.get('res.request')
-                summary = _("""Here is the procurement scheduling report.
-
-        Start Time: %s 
-        End Time: %s 
-        Total Procurements processed: %d 
-        Procurements with exceptions: %d 
-        Skipped Procurements (scheduled date outside of scheduler range) %d 
-
-        Exceptions:\n""") % (start_date, end_date, report_total, report_except, report_later)
-                summary += '\n'.join(report)
-                request.create(cr, uid,
-                    {'name': "Procurement Processing Report.",
-                        'act_from': uid,
-                        'act_to': uid,
-                        'body': summary,
-                    })
+            end_date = fields.datetime.now()
 
             if use_new_cursor:
                 cr.commit()
@@ -176,14 +158,17 @@ class procurement_order(osv.osv):
         wf_service = netsvc.LocalService("workflow")
 
         warehouse_ids = warehouse_obj.search(cr, uid, [], context=context)
-        products_id = product_obj.search(cr, uid, [('purchase_ok', '=', True)], order='id', context=context)
+        products_ids = product_obj.search(cr, uid, [('purchase_ok', '=', True)], order='id', context=context)
 
         for warehouse in warehouse_obj.browse(cr, uid, warehouse_ids, context=context):
             context['warehouse'] = warehouse
-            for product in product_obj.browse(cr, uid, products_id, context=context):
-                if product.virtual_available >= 0.0:
+            # Here we check products availability.
+            # We use the method 'read' for performance reasons, because using the method 'browse' may crash the server.
+            for product_read in product_obj.read(cr, uid, products_ids, ['virtual_available'], context=context):
+                if product_read['virtual_available'] >= 0.0:
                     continue
 
+                product = product_obj.browse(cr, uid, [product_read['id']], context=context)[0]
                 if product.supply_method == 'buy':
                     location_id = warehouse.lot_input_id.id
                 elif product.supply_method == 'produce':
@@ -191,8 +176,8 @@ class procurement_order(osv.osv):
                 else:
                     continue
                 proc_id = proc_obj.create(cr, uid,
-                                          self._prepare_automatic_op_procurement(cr, uid, product, warehouse, location_id, context=context),
-                                          context=context)
+                            self._prepare_automatic_op_procurement(cr, uid, product, warehouse, location_id, context=context),
+                            context=context)
                 wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
                 wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_check', cr)
         return True
@@ -212,6 +197,12 @@ class procurement_order(osv.osv):
                 'location_id': orderpoint.location_id.id,
                 'procure_method': 'make_to_order',
                 'origin': orderpoint.name}
+        
+    def _product_virtual_get(self, cr, uid, order_point):
+        location_obj = self.pool.get('stock.location')
+        return location_obj._product_virtual_get(cr, uid,
+                order_point.location_id.id, [order_point.product_id.id],
+                {'uom': order_point.product_uom.id})[order_point.product_id.id]
 
     def _procure_orderpoint_confirm(self, cr, uid, automatic=False,\
             use_new_cursor=False, context=None, user_id=False):
@@ -232,11 +223,9 @@ class procurement_order(osv.osv):
         if use_new_cursor:
             cr = pooler.get_db(use_new_cursor).cursor()
         orderpoint_obj = self.pool.get('stock.warehouse.orderpoint')
-        location_obj = self.pool.get('stock.location')
+        
         procurement_obj = self.pool.get('procurement.order')
-        request_obj = self.pool.get('res.request')
         wf_service = netsvc.LocalService("workflow")
-        report = []
         offset = 0
         ids = [1]
         if automatic:
@@ -244,13 +233,9 @@ class procurement_order(osv.osv):
         while ids:
             ids = orderpoint_obj.search(cr, uid, [], offset=offset, limit=100)
             for op in orderpoint_obj.browse(cr, uid, ids, context=context):
-                if op.procurement_id.state != 'exception':
-                    if op.procurement_id and op.procurement_id.purchase_id and op.procurement_id.purchase_id.state in ('draft', 'confirmed'):
-                        continue
-                prods = location_obj._product_virtual_get(cr, uid,
-                        op.location_id.id, [op.product_id.id],
-                        {'uom': op.product_uom.id})[op.product_id.id]
-
+                prods = self._product_virtual_get(cr, uid, op)
+                if prods is None:
+                    continue
                 if prods < op.product_min_qty:
                     qty = max(op.product_min_qty, op.product_max_qty)-prods
 
@@ -264,7 +249,8 @@ class procurement_order(osv.osv):
                         if op.procurement_draft_ids:
                         # Check draft procurement related to this order point
                             pro_ids = [x.id for x in op.procurement_draft_ids]
-                            procure_datas = procurement_obj.read(cr, uid, pro_ids, ['id','product_qty'], context=context, order='product_qty desc')
+                            procure_datas = procurement_obj.read(
+                                cr, uid, pro_ids, ['id', 'product_qty'], context=context)
                             to_generate = qty
                             for proc_data in procure_datas:
                                 if to_generate >= proc_data['product_qty']:
@@ -288,13 +274,6 @@ class procurement_order(osv.osv):
             offset += len(ids)
             if use_new_cursor:
                 cr.commit()
-        if user_id and report:
-            request_obj.create(cr, uid, {
-                'name': 'Orderpoint report.',
-                'act_from': user_id,
-                'act_to': user_id,
-                'body': '\n'.join(report)
-            })
         if use_new_cursor:
             cr.commit()
             cr.close()

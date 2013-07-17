@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="event_sale_order">
+             <field name="name">event.product</field>
+             <field name="model">product.product</field>
+             <field name="inherit_id" ref="product.product_normal_form_view" />
+             <field name="arch" type="xml">
+                <div name="options" position="inside">
+                    <field name="event_ok" on_change="onchange_event_ok(event_ok, context)"/>
+                    <label for="event_ok"/>
+                </div>
+                <div name='ean' position="after">
+                    <field name="event_type_id" attrs="{'readonly': [('event_ok', '=', False)]}"/>
+                </div>
+             </field>
+        </record>
+
+        <record model="ir.ui.view" id="event_order_line">
+             <field name="name">event.sale.order</field>
+             <field name="model">sale.order</field>
+             <field name="inherit_id" ref="sale.view_order_form" />
+             <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="after">
+                    <field name="event_id" domain="['|', ('type','=', False),('type', '=', event_type_id)]" attrs="{'invisible': [('event_ok', '=', False)],'required': [('event_ok', '!=', False)]}"/>
+                    <field name="event_type_id" invisible="1"/>
+                    <field name="event_ok" invisible="1"/>
+                </xpath>
+             </field>
+        </record>
+        
+        <!-- the presence of 'event user' makes the order lines non-editable -->
+        <record id="sale.view_order_form_editable_list" model="ir.ui.view">
+            <field name="groups_id" eval="[(4, ref('event.group_event_user'))]"/>
+        </record>        
+        
+    </data>
+</openerp>

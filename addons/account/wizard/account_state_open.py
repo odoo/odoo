@@ -18,10 +18,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from osv import osv
+from openerp.osv import osv
 
-import netsvc
-from tools.translate import _
+from openerp import netsvc
+from openerp.tools.translate import _
 
 class account_state_open(osv.osv_memory):
     _name = 'account.state.open'
@@ -34,7 +34,7 @@ class account_state_open(osv.osv_memory):
         if 'active_ids' in context:
             data_inv = obj_invoice.browse(cr, uid, context['active_ids'][0], context=context)
             if data_inv.reconciled:
-                raise osv.except_osv(_('Warning'), _('Invoice is already reconciled'))
+                raise osv.except_osv(_('Warning!'), _('Invoice is already reconciled.'))
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'account.invoice', context['active_ids'][0], 'open_test', cr)
         return {'type': 'ir.actions.act_window_close'}

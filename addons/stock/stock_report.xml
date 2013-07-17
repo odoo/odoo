@@ -2,9 +2,11 @@
 <openerp>
     <data>
         <report auto="False" id="report_product_history" model="product.product" name="stock.product.history" string="Stock Level Forecast"/>
-        <report id="report_picking_list" model="stock.picking" name="stock.picking.list" string="Packing list" rml="stock/report/picking.rml"/>
+        <report id="report_picking_list" model="stock.picking" name="stock.picking.list" string="Picking Slip" rml="stock/report/picking.rml"/>
+        <report id="report_picking_list_in" model="stock.picking.in" name="stock.picking.list" string="Receipt Slip" rml="stock/report/picking.rml"/>
+        <report id="report_picking_list_out" model="stock.picking.out" name="stock.picking.list" string="Delivery Slip" rml="stock/report/picking.rml"/>
         <report id="report_move_labels" model="stock.move" name="stock.move.label" string="Item Labels" xml="stock/report/lot_move_label.xml" xsl="stock/report/lot_move_label.xsl"/>
-        <report auto="False"  id="report_location_overview" model="stock.location" name="lot.stock.overview" string="Location Inventory Overview" rml="stock/report/lot_overview.rml" groups="base.group_extended"/>
+        <report auto="False"  id="report_location_overview" model="stock.location" name="lot.stock.overview" string="Location Inventory Overview" rml="stock/report/lot_overview.rml"/>
         <report id="report_location_overview_all" model="stock.location" name="lot.stock.overview_all" string="Location Content" rml="stock/report/lot_overview_all.rml"/>
         <report id="report_stock_inventory_move" model="stock.inventory" name="stock.inventory.move" string="Stock Inventory" rml="stock/report/stock_inventory_move.rml"/>
     </data>

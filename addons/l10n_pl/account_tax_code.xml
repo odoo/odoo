@@ -5,43 +5,43 @@
 #
 # Tax Code Template Configuration
 #
-	<record model="account.tax.code.template" id="vat_code_tax">
-		<field name="name">Podatek</field>
-	</record>
-	
-	<record model="account.tax.code.template" id="vat_code_balance_net">
-		<field name="name">Różnica podatku do zapłacenia</field>
-		<field name="parent_id" ref="vat_code_tax"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_tax">
+        <field name="name">Podatek</field>
+    </record>
+    
+    <record model="account.tax.code.template" id="vat_code_balance_net">
+        <field name="name">Różnica podatku do zapłacenia</field>
+        <field name="parent_id" ref="vat_code_tax"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_due_tva">
-		<field name="name">Podatek należny (Podatek do zapłacenia)</field>
-		<field name="parent_id" ref="vat_code_balance_net"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_due_tva">
+        <field name="name">Podatek należny (Podatek do zapłacenia)</field>
+        <field name="parent_id" ref="vat_code_balance_net"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_payable">
-		<field name="name">Podatek naliczony (Podatek do odliczenia)</field>
-		<field name="parent_id" ref="vat_code_balance_net"/>
-		<field eval="-1" name="sign"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_payable">
+        <field name="name">Podatek naliczony (Podatek do odliczenia)</field>
+        <field name="parent_id" ref="vat_code_balance_net"/>
+        <field eval="-1" name="sign"/>
+    </record>
 
-	<record model="account.tax.code.template" id="vat_code_base_net">
-		<field name="name">Podstawy podatku</field>
-		<field name="parent_id" ref="vat_code_tax"/>
-	</record>
-
-
-	<record model="account.tax.code.template" id="vat_code_base_due">
-		<field name="name">Podstawa dla podatku przy sprzedaży</field>
-		<field name="parent_id" ref="vat_code_base_net"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_base_net">
+        <field name="name">Podstawy podatku</field>
+        <field name="parent_id" ref="vat_code_tax"/>
+    </record>
 
 
-	<record model="account.tax.code.template" id="vat_code_receivable_net">
-		<field name="name">Podstawa dla podatku przy zakupach</field>
-		<field name="parent_id" ref="vat_code_base_net"/>
-		<field eval="-1" name="sign"/>
-	</record>
+    <record model="account.tax.code.template" id="vat_code_base_due">
+        <field name="name">Podstawa dla podatku przy sprzedaży</field>
+        <field name="parent_id" ref="vat_code_base_net"/>
+    </record>
+
+
+    <record model="account.tax.code.template" id="vat_code_receivable_net">
+        <field name="name">Podstawa dla podatku przy zakupach</field>
+        <field name="parent_id" ref="vat_code_base_net"/>
+        <field eval="-1" name="sign"/>
+    </record>
 
 </data>
 </openerp>

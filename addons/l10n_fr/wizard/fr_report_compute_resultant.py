@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from openerp.osv import fields, osv
 
 class account_cdr_report(osv.osv_memory):
     _name = 'account.cdr.report'
@@ -49,7 +49,7 @@ class account_cdr_report(osv.osv_memory):
         data = {}
         data['form'] = {}
         data['ids'] = active_ids
-        data['form']['fiscalyear'] = self.browse(cr, uid, ids)[0].fiscalyear_id.id
+        data['form']['fiscalyear_id'] = self.browse(cr, uid, ids)[0].fiscalyear_id.id
         return { 'type': 'ir.actions.report.xml', 'report_name': 'l10n.fr.compute_resultant', 'datas': data}
 
 account_cdr_report()

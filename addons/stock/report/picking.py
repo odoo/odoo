@@ -20,23 +20,22 @@
 ##############################################################################
 
 import time
-from report import report_sxw
-from osv import osv
-import pooler
+from openerp.report import report_sxw
+from openerp.osv import osv
+from openerp import pooler
 
 class picking(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(picking, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'time': time,
-            'get_qtytotal':self._get_qtytotal
+            'get_product_desc':self.get_product_desc
         })
-    def _get_qtytotal(self,move_lines):
-        total = 0.0
-        uom = move_lines[0].product_uom.name
-        for move in move_lines:
-            total+=move.product_qty
-        return {'quantity':total,'uom':uom}
+    def get_product_desc(self,move_line):
+        desc = move_line.product_id.name
+        if move_line.product_id.default_code:
+            desc = '[' + move_line.product_id.default_code + ']' + ' ' + desc
+        return desc
 
 report_sxw.report_sxw('report.stock.picking.list','stock.picking','addons/stock/report/picking.rml',parser=picking)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

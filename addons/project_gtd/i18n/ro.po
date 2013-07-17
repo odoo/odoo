@@ -1,66 +1,67 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* project_gtd
+# Romanian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:43+0000\n"
-"PO-Revision-Date: 2009-02-03 06:25+0000\n"
-"Last-Translator: <>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:00+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:29+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "In Progress"
-msgstr ""
+msgstr "In desfasurare"
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "Show only tasks having a deadline"
-msgstr ""
+msgstr "Afiseaza numai sarcini cu data scadenta"
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "Reactivate"
-msgstr ""
+msgstr "Reactivati"
 
 #. module: project_gtd
 #: help:project.task,timebox_id:0
 msgid "Time-laps during which task has to be treated"
-msgstr ""
+msgstr "Ture in timpul carora trebuie efectuata sarcina de lucru"
 
 #. module: project_gtd
 #: help:project.gtd.timebox,sequence:0
 msgid "Gives the sequence order when displaying a list of timebox."
-msgstr ""
+msgstr "Prezinta ordinea secventei atunci cand afiseaza o lista a perioadei."
 
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_travel
 msgid "Travel"
-msgstr ""
+msgstr "Calatorie"
 
 #. module: project_gtd
 #: view:project.timebox.empty:0
 msgid "Timebox Empty Process Completed Successfully."
-msgstr ""
+msgstr "Timpul s-a scurs Procesul a fost incheiat cu succes"
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "Pending Tasks"
-msgstr ""
+msgstr "Sarcini in asteptare"
 
 #. module: project_gtd
 #: code:addons/project_gtd/wizard/project_gtd_empty.py:52
 #, python-format
 msgid "No timebox child of this one !"
-msgstr ""
+msgstr "Nu exista o perioada secundara !"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,help:project_gtd.open_gtd_timebox_tree
@@ -69,129 +70,131 @@ msgid ""
 "defines a period of time in order to categorize your tasks: today, this "
 "week, this month, long term."
 msgstr ""
+"Perioadele sunt definite in metodologia \"Sa Efectuam Lucrurile\". O "
+"perioada defineste o perioada de timp pentru clasificarea sarcinilor "
+"dumneavoastra: astazi, saptamana aceasta, luna aceasta, pe termen lung."
 
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_daily
 msgid "Today"
+msgstr "Astazi"
+
+#. module: project_gtd
+#: view:project.task:0
+msgid "Timeframe"
 msgstr ""
 
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_lt
 msgid "Long Term"
-msgstr ""
+msgstr "Pe termen lung"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_timebox_empty
 msgid "Project Timebox Empty"
-msgstr ""
+msgstr "Timpul alocat proiectului s-a scurs"
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "Pending"
-msgstr ""
+msgstr "In asteptare"
 
 #. module: project_gtd
 #: view:project.gtd.timebox:0
 #: field:project.gtd.timebox,name:0
-#: view:project.task:0
 #: field:project.task,timebox_id:0
 msgid "Timebox"
-msgstr ""
+msgstr "Perioada"
 
 #. module: project_gtd
 #: field:project.timebox.fill.plan,timebox_to_id:0
 msgid "Set to Timebox"
-msgstr ""
-
-#. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
-#, python-format
-msgid "Error !"
-msgstr ""
+msgstr "Setati perioada"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_task
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_timebox_tree
 #: view:project.task:0
 msgid "My Tasks"
-msgstr ""
+msgstr "Sarcinile mele"
 
 #. module: project_gtd
-#: constraint:project.task:0
-msgid "Error ! You cannot create recursive tasks."
-msgstr ""
-
-#. module: project_gtd
-#: model:project.gtd.timebox,name:project_gtd.timebox_weekly
-msgid "This Week"
-msgstr ""
-
-#. module: project_gtd
-#: view:project.timebox.fill.plan:0
-msgid "_Cancel"
-msgstr ""
+#: help:project.task,context_id:0
+msgid "The context place where user has to treat task"
+msgstr "Contextul in care utilizatorul trebuie sa efectueze sarcina de lucru"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.action_project_gtd_empty
 #: view:project.timebox.empty:0
 msgid "Empty Timebox"
-msgstr ""
+msgstr "Resetati Perioada"
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "Tasks having no timebox assigned yet"
-msgstr ""
+msgstr "Sarcini care nu au inca perioada atribuita"
 
 #. module: project_gtd
-#: constraint:project.task:0
-msgid "Error ! Task end-date must be greater then task start-date"
-msgstr ""
+#: model:project.gtd.timebox,name:project_gtd.timebox_weekly
+msgid "This Week"
+msgstr "Saptamana aceasta"
 
 #. module: project_gtd
 #: field:project.gtd.timebox,icon:0
 msgid "Icon"
-msgstr ""
+msgstr "Pictograma"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_timebox_fill_plan
 msgid "Project Timebox Fill"
-msgstr ""
+msgstr "Completati Perioada Proiectului"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_task
 msgid "Task"
-msgstr ""
+msgstr "Sarcina"
 
 #. module: project_gtd
 #: view:project.timebox.fill.plan:0
 msgid "Add to Timebox"
-msgstr ""
+msgstr "Adaugati Perioada"
 
 #. module: project_gtd
 #: field:project.timebox.empty,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nume"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_context_tree
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_contexts
 msgid "Contexts"
-msgstr ""
+msgstr "Contexte"
+
+#. module: project_gtd
+#: model:project.gtd.context,name:project_gtd.context_car
+msgid "Car"
+msgstr "Masina"
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "Show Context"
-msgstr ""
+msgstr "Afiseaza Contextul"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.action_project_gtd_fill
 #: view:project.timebox.fill.plan:0
 msgid "Plannify Timebox"
-msgstr ""
+msgstr "Planificati Perioada"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_gtd_timebox
 msgid "project.gtd.timebox"
+msgstr "project.gtd.perioada"
+
+#. module: project_gtd
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "Error!"
 msgstr ""
 
 #. module: project_gtd
@@ -199,12 +202,12 @@ msgstr ""
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_timeboxes
 #: view:project.gtd.timebox:0
 msgid "Timeboxes"
-msgstr ""
+msgstr "Perioade"
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "In Progress and draft tasks"
-msgstr ""
+msgstr "In desfasurare si sarcini ciorna"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_gtd_context
@@ -212,68 +215,68 @@ msgstr ""
 #: field:project.gtd.context,name:0
 #: field:project.task,context_id:0
 msgid "Context"
-msgstr ""
+msgstr "Context"
+
+#. module: project_gtd
+#: field:project.timebox.fill.plan,task_ids:0
+msgid "Tasks selection"
+msgstr "Selectie sarcini de lucru"
 
 #. module: project_gtd
 #: view:project.task:0
-msgid "Next"
-msgstr ""
-
-#. module: project_gtd
-#: view:project.timebox.empty:0
-msgid "_Ok"
+msgid "Display"
 msgstr ""
 
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_office
 msgid "Office"
-msgstr ""
+msgstr "Birou"
 
 #. module: project_gtd
 #: field:project.gtd.context,sequence:0
 #: field:project.gtd.timebox,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Secventa"
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "Show the context field"
-msgstr ""
+msgstr "Afiseaza campul context"
 
 #. module: project_gtd
 #: help:project.gtd.context,sequence:0
 msgid "Gives the sequence order when displaying a list of contexts."
-msgstr ""
+msgstr "Prezinta ordinea secventei atunci cand afiseaza o lista cu contexte."
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "Show Deadlines"
-msgstr ""
+msgstr "Afiseaza Termene limita"
 
 #. module: project_gtd
 #: view:project.gtd.timebox:0
 msgid "Timebox Definition"
-msgstr ""
-
-#. module: project_gtd
-#: field:project.timebox.fill.plan,task_ids:0
-msgid "Tasks selection"
-msgstr ""
+msgstr "Definitie Perioada"
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "Inbox"
-msgstr ""
+msgstr "Inbox"
 
 #. module: project_gtd
 #: field:project.timebox.fill.plan,timebox_id:0
 msgid "Get from Timebox"
+msgstr "Obtineti de la Perioada"
+
+#. module: project_gtd
+#: view:project.timebox.fill.plan:0
+msgid "Cancel"
 msgstr ""
 
 #. module: project_gtd
-#: help:project.task,context_id:0
-msgid "The context place where user has to treat task"
-msgstr ""
+#: model:project.gtd.context,name:project_gtd.context_home
+msgid "Home"
+msgstr "Acasa"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,help:project_gtd.open_gtd_context_tree
@@ -282,13 +285,16 @@ msgid ""
 "you to categorize your tasks according to the context in which they have to "
 "be done: at the office, at home, when I take my car, etc."
 msgstr ""
+"Contextele sunt definite in metodologia \"Sa Efectuam Lucrurile\". Va "
+"permite sa va clasificati sarcinile de lucru in functie de contextul in care "
+"trebuie efectuate: la birou, acasa, atunci cand imi iau masina, etc."
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "For reopening the tasks"
-msgstr ""
+msgstr "Pentru redeschiderea sarcinilor"
 
 #. module: project_gtd
-#: view:project.task:0
-msgid "Previous"
+#: view:project.timebox.fill.plan:0
+msgid "or"
 msgstr ""

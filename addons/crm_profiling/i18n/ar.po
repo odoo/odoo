@@ -1,25 +1,32 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* crm_profiling
+# Arabic translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2009-02-03 06:26+0000\n"
-"Last-Translator: <>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:04+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:11+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 msgid "Questions List"
-msgstr ""
+msgstr "قائمة الأسئلة"
+
+#. module: crm_profiling
+#: view:crm_profiling.question:0
+#: field:crm_profiling.question,answers_ids:0
+msgid "Avalaible Answers"
+msgstr "الإجابات المتاحة"
 
 #. module: crm_profiling
 #: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
@@ -29,6 +36,9 @@ msgid ""
 "segmentation tool allows you to automatically assign a partner to a category "
 "according to his answers to the different questionnaires."
 msgstr ""
+"يمكنك إنشاء موضوع محدد ذو صلة بالاستبيانات لتوجيه الفريق الخاص بك في دورة "
+"المبيعات من خلال مساعدتهم على طرح الأسئلة المناسبة. تسمح لك أداة التجزئة "
+"تلقائيا بتعيين شريك للفئة وفقا لإجاباته على الاستبيانات المختلفة."
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,question_id:0
@@ -36,88 +46,83 @@ msgstr ""
 #: model:ir.model,name:crm_profiling.model_crm_profiling_question
 #: field:open.questionnaire.line,question_id:0
 msgid "Question"
-msgstr ""
+msgstr "سؤال"
 
 #. module: crm_profiling
 #: model:ir.actions.act_window,name:crm_profiling.action_open_questionnaire
 #: view:open.questionnaire:0
 msgid "Open Questionnaire"
-msgstr ""
+msgstr "افتح استبيان"
 
 #. module: crm_profiling
 #: field:crm.segmentation,child_ids:0
 msgid "Child Profiles"
-msgstr ""
+msgstr "الملفات الشخصية الفرعية"
 
 #. module: crm_profiling
 #: view:crm.segmentation:0
 msgid "Partner Segmentations"
-msgstr ""
+msgstr "إنقسامات الشريك"
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,name:0
 #: model:ir.model,name:crm_profiling.model_crm_profiling_answer
 #: field:open.questionnaire.line,answer_id:0
 msgid "Answer"
-msgstr ""
+msgstr "جواب"
 
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_open_questionnaire_line
 msgid "open.questionnaire.line"
-msgstr ""
+msgstr "open.questionnaire.line"
 
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_crm_segmentation
 msgid "Partner Segmentation"
-msgstr ""
+msgstr "إنقسام الشريك"
 
 #. module: crm_profiling
 #: view:res.partner:0
 msgid "Profiling"
-msgstr ""
+msgstr "الملف الشخصى"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 #: field:crm_profiling.questionnaire,description:0
 msgid "Description"
-msgstr ""
+msgstr "وصف"
 
 #. module: crm_profiling
 #: field:crm.segmentation,answer_no:0
 msgid "Excluded Answers"
-msgstr ""
+msgstr "أجوبة مستبعدة"
 
 #. module: crm_profiling
 #: view:crm_profiling.answer:0
 #: view:crm_profiling.question:0
 #: field:res.partner,answers_ids:0
 msgid "Answers"
-msgstr ""
+msgstr "الأجوبة"
 
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_open_questionnaire
 msgid "open.questionnaire"
-msgstr ""
+msgstr "open.questionnaire"
 
 #. module: crm_profiling
 #: field:open.questionnaire,questionnaire_id:0
 msgid "Questionnaire name"
-msgstr ""
+msgstr "اسم الاستبيان"
 
 #. module: crm_profiling
 #: view:res.partner:0
 msgid "Use a questionnaire"
-msgstr ""
-
-#. module: crm_profiling
-#: view:open.questionnaire:0
-msgid "_Cancel"
-msgstr ""
+msgstr "استخدم استبيان"
 
 #. module: crm_profiling
 #: field:open.questionnaire,question_ans_ids:0
 msgid "Question / Answers"
-msgstr ""
+msgstr "سؤال / جواب"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
@@ -125,7 +130,7 @@ msgstr ""
 #: model:ir.ui.menu,name:crm_profiling.menu_segm_questionnaire
 #: view:open.questionnaire:0
 msgid "Questionnaires"
-msgstr ""
+msgstr "استبيان"
 
 #. module: crm_profiling
 #: help:crm.segmentation,profiling_active:0
@@ -134,32 +139,23 @@ msgid ""
 "part of the                              segmentation rule. If not checked, "
 "the criteria beneath will be ignored"
 msgstr ""
-
-#. module: crm_profiling
-#: constraint:crm.segmentation:0
-msgid "Error ! You can not create recursive profiles."
-msgstr ""
+"تحقق من هذا الصندوق اذا كنت تريد استخدام هذا الحساب كجزء من قاعدة الانقسام. "
+"اذا لم تتحقق منها، ستم تجاهل ما دون المعايير"
 
 #. module: crm_profiling
 #: field:crm.segmentation,profiling_active:0
 msgid "Use The Profiling Rules"
-msgstr ""
+msgstr "استخدم قواعد للملف الشخصى"
 
 #. module: crm_profiling
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
-
-#. module: crm_profiling
-#: view:crm_profiling.question:0
-#: field:crm_profiling.question,answers_ids:0
-msgid "Avalaible answers"
-msgstr ""
+#: constraint:crm.segmentation:0
+msgid "Error ! You cannot create recursive profiles."
+msgstr "خطأ! لا يمكنك انشاء أوضاع متداخلة."
 
 #. module: crm_profiling
 #: field:crm.segmentation,answer_yes:0
 msgid "Included Answers"
-msgstr ""
+msgstr "الإجابات المتضمنة"
 
 #. module: crm_profiling
 #: view:crm_profiling.question:0
@@ -167,22 +163,22 @@ msgstr ""
 #: model:ir.actions.act_window,name:crm_profiling.open_questions
 #: model:ir.ui.menu,name:crm_profiling.menu_segm_answer
 msgid "Questions"
-msgstr ""
+msgstr "أسئلة"
 
 #. module: crm_profiling
 #: field:crm.segmentation,parent_id:0
 msgid "Parent Profile"
-msgstr ""
+msgstr "الملف الشخصى الرئيسى"
 
 #. module: crm_profiling
 #: view:open.questionnaire:0
 msgid "Cancel"
-msgstr ""
+msgstr "إلغاء"
 
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "شريك"
 
 #. module: crm_profiling
 #: code:addons/crm_profiling/wizard/open_questionnaire.py:77
@@ -193,9 +189,14 @@ msgstr ""
 #: field:open.questionnaire.line,wizard_id:0
 #, python-format
 msgid "Questionnaire"
-msgstr ""
+msgstr "إستبيان"
 
 #. module: crm_profiling
 #: view:open.questionnaire:0
 msgid "Save Data"
-msgstr ""
+msgstr "حفظ البيانات"
+
+#. module: crm_profiling
+#: view:open.questionnaire:0
+msgid "or"
+msgstr "أو"

@@ -12,9 +12,9 @@
     account_collected_id: account.iva
     price_include: 1
 -
-  I assign this 10 percent tax on the PC1 product as a sale tax
+  I assign this 10 percent tax on the [PCSC234] PC Assemble SC234 product as a sale tax
 -
-  !record {model: product.product, id: product.product_product_pc1}:
+  !record {model: product.product, id: product.product_product_3}:
     taxes_id: [account_tax_10_incl]
 - |
   I create a VAT tax of 5%, which is added to the public price
@@ -27,23 +27,43 @@
     account_collected_id: account.iva
     price_include: 0
 -
-  I assign this 5 percent tax on the PC2 product as a sale tax
+  I assign this 5 percent tax on the PCSC349 product as a sale tax
 -
-  !record {model: product.product, id: product.product_product_pc2}:
+  !record {model: product.product, id: product.product_product_4}:
     taxes_id: [account_tax_05_incl]
 -
-  I create a PoS order with 2 units of PC1 at 450 EUR (Tax Incl) and 3 units of PC2 at 300 EUR. (Tax Excl)
+  I create a new session
+-
+  !record {model: pos.session, id: pos_order_session0}:
+    user_id: 1
+    config_id: point_of_sale.pos_config_main
+-
+  I open a new PoS Session wizard
+-
+  !record {model: pos.session.opening, id: pos_order_session_wizard0}:
+    pos_config_id: point_of_sale.pos_config_main
+- 
+  I click on create a new session button
+- 
+  !python {model: pos.session.opening}: |
+    self.open_existing_session_cb(cr, uid, [ref('pos_order_session_wizard0')])
+-
+  I open the session after having counted the money
+- 
+  !workflow {model: pos.session, action: open, ref: pos_order_session0}
+-
+  I create a PoS order with 2 units of PCSC234 at 450 EUR (Tax Incl) and 3 units of PCSC349 at 300 EUR. (Tax Excl)
 -
   !record {model: pos.order, id: pos_order_pos0}:
     company_id: base.main_company
     lines:
       - name: OL/0001
-        product_id: product.product_product_pc1
+        product_id: product.product_product_3
         price_unit: 450
         discount: 0.0
         qty: 2.0
       - name: OL/0002
-        product_id: product.product_product_pc2
+        product_id: product.product_product_4
         price_unit: 300
         discount: 0.0
         qty: 3.0

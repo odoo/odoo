@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,13 +15,13 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import netsvc
-from osv import osv,fields
-from tools.translate import _
+from openerp import netsvc
+from openerp.osv import osv,fields
+from openerp.tools.translate import _
 import time
 
 class pos_return(osv.osv_memory):
@@ -53,8 +53,8 @@ class pos_return(osv.osv_memory):
         for order in order_obj.browse(cr, uid, active_ids, context=context):
             for line in order.lines:
                 result.append({
-                            'product_id' : line.product_id.id, 
-                            'quantity' : line.qty, 
+                            'product_id' : line.product_id.id,
+                            'quantity' : line.qty,
                             'line_id':line.id
                         })
             res.update({'pos_moves_ids': result})
@@ -93,7 +93,7 @@ class pos_return(osv.osv_memory):
             'type': 'ir.actions.act_window',
         }
     def create_returns2(self, cr, uid, ids, context=None):
-       
+
         if context is None:
             context = {}
         active_id = context.get('active_id', False)
@@ -113,7 +113,7 @@ class pos_return(osv.osv_memory):
             for order_id in order_obj.browse(cr, uid, [active_id], context=context):
                 source_stock_id = property_obj.get(cr, uid, 'property_stock_customer', 'res.partner', context=context).id
                 cr.execute("SELECT s.id FROM stock_location s, stock_warehouse w "
-                            "WHERE w.lot_stock_id=s.id AND w.id=%s ", 
+                            "WHERE w.lot_stock_id=s.id AND w.id=%s ",
                             (order_id.shop_id.warehouse_id.id,))
                 res = cr.fetchone()
                 location_id = res and res[0] or None
@@ -121,7 +121,7 @@ class pos_return(osv.osv_memory):
                                                                                'move_lines': [],
                                                                                'state':'draft',
                                                                                'type': 'in',
-                                                                               'address_id': order_id.partner_id.id,
+                                                                               'partner_id': order_id.partner_id.id,
                                                                                'date': date_cur })
                 new_order = order_obj.copy(cr, uid, order_id.id, {'name': 'Refund %s'%order_id.name,
                                                               'lines':[],
@@ -151,7 +151,7 @@ class pos_return(osv.osv_memory):
                                                 'name': 'Refund %s'%order_id.name,
                                                 'statement_id': order_id.statement_ids[0].statement_id.id,
                                                 'pos_statement_id': new_order,
-                                                'date': time.strftime('%Y-%m-%d'),
+                                                'date': fields.date.context_today(self, cr, uid, context=context),
                                                 'account_id': order_id.partner_id and order_id.partner_id.property_account_payable \
                                                              and order_id.partner_id.property_account_payable.id or account_def.id,
                                                 'amount': -amount,
@@ -268,7 +268,7 @@ class add_product(osv.osv_memory):
         wf_service = netsvc.LocalService("workflow")
         self_data = self.browse(cr, uid, ids, context=context)[0]
         order_obj.add_product(cr, uid, active_ids[0], self_data.product_id.id, self_data.quantity, context=context)
-        
+
         for order_id in order_obj.browse(cr, uid, active_ids, context=context):
             stock_dest_id = property_obj.get(cr, uid, 'property_stock_customer', 'res.partner', context=context).id
             cr.execute("SELECT s.id FROM stock_location s, stock_warehouse w "
@@ -278,7 +278,7 @@ class add_product(osv.osv_memory):
             location_id=res and res[0] or None
 
             if order_id.invoice_id:
-                invoice_obj.refund(cr, uid, [order_id.invoice_id.id], time.strftime('%Y-%m-%d'), False, order_id.name)
+                invoice_obj.refund(cr, uid, [order_id.invoice_id.id], time.strftime('%Y-%m-%d'), False, order_id.name, context=context)
             new_picking=picking_obj.create(cr, uid, {
                             'name':'%s (return)' %order_id.name,
                             'move_lines':[], 'state':'draft',
@@ -287,7 +287,7 @@ class add_product(osv.osv_memory):
                         })
             for line in order_id.lines:
                 key= 'return%s' % line.id
-                if line.id: 
+                if line.id:
                     if data.has_key(key):
                         qty = data[key]
                         lines_obj.write(cr,uid,[line.id], {

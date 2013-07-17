@@ -27,7 +27,7 @@
   I create a contract for "Richard"
 -
   !record {model: hr.contract, id: hr_contract_richard}:
-    date_end: !eval "'%s-%s-%s' %(datetime.now().year+1,datetime.now().month,datetime.now().day)"
+    date_end: !eval "(datetime.now() + timedelta(days=365)).strftime('%Y-%m-%d')"
     date_start: !eval time.strftime('%Y-%m-%d')
     name: Contract for Richard
     wage: 5000.0

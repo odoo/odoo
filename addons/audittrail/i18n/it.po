@@ -1,26 +1,32 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* audittrail
+# Italian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2011-01-28 07:46+0000\n"
-"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:04+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:06+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:75
+#: view:audittrail.log:0
+msgid "Old Value Text : "
+msgstr "Vecchio valore del campo: "
+
+#. module: audittrail
+#: code:addons/audittrail/audittrail.py:76
 #, python-format
 msgid "WARNING: audittrail is not part of the pool"
-msgstr ""
+msgstr "ATTENZIONE: audittrail non è parte del gruppo"
 
 #. module: audittrail
 #: field:audittrail.log.line,log_id:0
@@ -34,26 +40,34 @@ msgid "Subscribed"
 msgstr "Iscritto"
 
 #. module: audittrail
-#: sql_constraint:audittrail.rule:0
-msgid ""
-"There is already a rule defined on this object\n"
-" You cannot define another: please edit the existing one."
-msgstr ""
+#: code:addons/audittrail/audittrail.py:260
+#: code:addons/audittrail/audittrail.py:347
+#: code:addons/audittrail/audittrail.py:408
+#, python-format
+msgid "'%s' Model does not exist..."
+msgstr "Il modello '%s' non esiste..."
 
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "Subscribed Rule"
-msgstr ""
+msgstr "Regola sottoscritta"
 
 #. module: audittrail
+#: view:audittrail.rule:0
 #: model:ir.model,name:audittrail.model_audittrail_rule
 msgid "Audittrail Rule"
 msgstr "Regola audit"
 
 #. module: audittrail
+#: view:audittrail.rule:0
+#: field:audittrail.rule,state:0
+msgid "Status"
+msgstr "Stato"
+
+#. module: audittrail
 #: view:audittrail.view.log:0
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_log_tree
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
+#: model:ir.ui.menu,name:audittrail.menu_audit_logs
 msgid "Audit Logs"
 msgstr "Log di verifica"
 
@@ -62,12 +76,6 @@ msgstr "Log di verifica"
 #: view:audittrail.rule:0
 msgid "Group By..."
 msgstr "Raggruppa per..."
-
-#. module: audittrail
-#: view:audittrail.rule:0
-#: field:audittrail.rule,state:0
-msgid "State"
-msgstr "Stato"
 
 #. module: audittrail
 #: view:audittrail.rule:0
@@ -202,9 +210,9 @@ msgstr ""
 "dell'oggetto di questa regola"
 
 #. module: audittrail
-#: field:audittrail.rule,log_create:0
-msgid "Log Creates"
-msgstr "Log creazioni"
+#: view:audittrail.rule:0
+msgid "AuditTrail Rules"
+msgstr "Regole AuditTrail"
 
 #. module: audittrail
 #: help:audittrail.rule,object_id:0
@@ -212,9 +220,9 @@ msgid "Select object for which you want to generate log."
 msgstr "Seleziona l'oggetto per il quale volete generare il log"
 
 #. module: audittrail
-#: view:audittrail.log:0
-msgid "Old Value Text : "
-msgstr "Vecchio valore del campo: "
+#: model:ir.ui.menu,name:audittrail.menu_audit
+msgid "Audit"
+msgstr "Audit"
 
 #. module: audittrail
 #: field:audittrail.rule,log_workflow:0
@@ -227,10 +235,10 @@ msgid "Log Reads"
 msgstr "Log letture"
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:76
+#: code:addons/audittrail/audittrail.py:77
 #, python-format
 msgid "Change audittrail depends -- Setting rule as DRAFT"
-msgstr ""
+msgstr "Cambio dipendente audittrail -- Imposto la regola a BOZZA"
 
 #. module: audittrail
 #: field:audittrail.log,line_ids:0
@@ -243,9 +251,9 @@ msgid "Fields"
 msgstr "Campi"
 
 #. module: audittrail
-#: view:audittrail.rule:0
-msgid "AuditTrail Rules"
-msgstr "Regole AuditTrail"
+#: field:audittrail.rule,log_create:0
+msgid "Log Creates"
+msgstr "Log creazioni"
 
 #. module: audittrail
 #: help:audittrail.rule,log_unlink:0
@@ -278,9 +286,24 @@ msgid "UnSubscribe"
 msgstr "Annulla sottoscrizione"
 
 #. module: audittrail
+#: sql_constraint:audittrail.rule:0
+msgid ""
+"There is already a rule defined on this object\n"
+" You cannot define another: please edit the existing one."
+msgstr ""
+"Esiste già una rego su questo oggetto\n"
+" Non è possibile definirne altre: prego modificare una esistente."
+
+#. module: audittrail
 #: field:audittrail.rule,log_unlink:0
 msgid "Log Deletes"
 msgstr "Log cancellazioni"
+
+#. module: audittrail
+#: view:audittrail.log:0
+#: view:audittrail.rule:0
+msgid "Model"
+msgstr "Modello"
 
 #. module: audittrail
 #: field:audittrail.log.line,field_description:0
@@ -318,6 +341,12 @@ msgid "New Value"
 msgstr "Nuovo valore"
 
 #. module: audittrail
+#: code:addons/audittrail/audittrail.py:223
+#, python-format
+msgid "'%s' field does not exist in '%s' model"
+msgstr "Il campo '%s' non esiste nel modello '%s'"
+
+#. module: audittrail
 #: view:audittrail.log:0
 msgid "AuditTrail Logs"
 msgstr "Logs di AuditTrail"
@@ -325,9 +354,10 @@ msgstr "Logs di AuditTrail"
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "Draft  Rule"
-msgstr ""
+msgstr "Regola bozza"
 
 #. module: audittrail
+#: view:audittrail.log:0
 #: model:ir.model,name:audittrail.model_audittrail_log
 msgid "Audittrail Log"
 msgstr "Log audit"
@@ -366,6 +396,11 @@ msgid "Log Line"
 msgstr "Riga log"
 
 #. module: audittrail
+#: view:audittrail.view.log:0
+msgid "or"
+msgstr "o"
+
+#. module: audittrail
 #: field:audittrail.rule,log_action:0
 msgid "Log Action"
 msgstr "Log azioni"
@@ -378,113 +413,3 @@ msgid ""
 msgstr ""
 "Selezionare questo se volete tenere traccia della creazione su ogni record "
 "dell'oggetto di questa regola"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
-#~ "speciali!"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML non valido per Visualizzazione Architettura!"
-
-#~ msgid "Rules"
-#~ msgstr "Regole"
-
-#~ msgid "Create"
-#~ msgstr "Crea"
-
-#~ msgid "Audit Trail"
-#~ msgstr "Audit Trail"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nome modello non valido nella definizione dell'azione."
-
-#~ msgid "Write"
-#~ msgstr "Scrivi"
-
-#~ msgid "Read"
-#~ msgstr "Leggi"
-
-#~ msgid ""
-#~ "Allows the administrator to track every user operations on all objects of "
-#~ "the system.\n"
-#~ "    Subscribe Rules for read, write, create and delete on objects and check "
-#~ "logs"
-#~ msgstr ""
-#~ "Permette all'amministratore di tenere traccia di tutte le operazioni utente "
-#~ "su tutti gli oggetti di sistema.\n"
-#~ "    Regole che posso sottoscrivere: lettura, scrittura, creazione e "
-#~ "cancellazione oggetti e controllo logs"
-
-#~ msgid "Subscribe"
-#~ msgstr "Sottoscrivi"
-
-#~ msgid "Name"
-#~ msgstr "Nome"
-
-#~ msgid "audittrail.rule"
-#~ msgstr "audittrail.rule"
-
-#~ msgid "Subscribed Rules"
-#~ msgstr "Regole applicate"
-
-#~ msgid "Delete"
-#~ msgstr "Elimina"
-
-#~ msgid "Log writes"
-#~ msgstr "Scrittura Log"
-
-#~ msgid "audittrail.log"
-#~ msgstr "audittrail.log"
-
-#~ msgid "Log reads"
-#~ msgstr "Lettura Logs"
-
-#~ msgid "Log deletes"
-#~ msgstr "Cancellazioni Log"
-
-#~ msgid "Log creates"
-#~ msgstr "Creazione Log"
-
-#~ msgid "View Logs"
-#~ msgstr "Guarda i Logs"
-
-#~ msgid "Audittrails"
-#~ msgstr "Audittrails"
-
-#~ msgid "audittrail.log.line"
-#~ msgstr "audittrail.log.line"
-
-#~ msgid "Logs"
-#~ msgstr "Logs"
-
-#~ msgid ""
-#~ "There is a rule defined on this object\n"
-#~ " You can not define other on the same!"
-#~ msgstr ""
-#~ "C'è una regola definita su questo oggetto\n"
-#~ " Non è possibile definirne altre sullo stesso!"
-
-#~ msgid ""
-#~ "\n"
-#~ "    This module gives the administrator the rights\n"
-#~ "    to track every user operation on all the objects\n"
-#~ "    of the system.\n"
-#~ "\n"
-#~ "    Administrator can subscribe rules for read,write and\n"
-#~ "    delete on objects and can check logs.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Questo modulo fornisce all'amministratore i diritti\n"
-#~ "    di tracciare ogni operazione utente su tutti gli oggetti\n"
-#~ "    del sistema.\n"
-#~ "\n"
-#~ "    L'amministratore può sottoscrivere regole per lettura, scrittura e\n"
-#~ "    cancellazione su oggetti e può controllare inoltre anche i log.\n"
-#~ "    "
-
-#, python-format
-#~ msgid "WARNING:audittrail is not part of the pool"
-#~ msgstr "ATTENZIONE: audittrail non è parte del gruppo"

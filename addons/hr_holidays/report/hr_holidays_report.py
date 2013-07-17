@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-import tools
-from osv import fields,osv
+from openerp import tools
+from openerp.osv import fields,osv
 
 class hr_holidays_remaining_leaves_user(osv.osv):
     _name = "hr.holidays.remaining.leaves.user"

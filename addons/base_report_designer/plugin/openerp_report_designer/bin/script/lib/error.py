@@ -48,7 +48,7 @@
 if __name__<>"package":
     from gui import *
 class ErrorDialog:
-    def __init__(self,sErrorMsg, sErrorHelpMsg="",sTitle="Error Message"):
+    def __init__(self, sErrorMsg, sErrorHelpMsg="", sTitle="Error Message"):
         self.win = DBModalDialog(50, 50, 150, 90, sTitle)
         self.win.addFixedText("lblErrMsg", 5, 5, 190, 25, sErrorMsg)
         self.win.addFixedText("lblErrHelpMsg", 5, 30, 190, 25, sErrorHelpMsg)

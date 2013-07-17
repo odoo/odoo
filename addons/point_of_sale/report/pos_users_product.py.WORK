@@ -39,16 +39,13 @@ class pos_user_product(report_sxw.rml_parse):
         data={}
         for o in object :
             sql1=""" SELECT distinct(o.id) from account_bank_statement s, account_bank_statement_line l,pos_order o,pos_order_line i where  i.order_id=o.id and o.state in ('paid','invoiced') and l.statement_id=s.id and l.pos_statement_id=o.id and s.id=%d"""%(o.id)
-            print sql1
             self.cr.execute(sql1)
             data = self.cr.dictfetchall()
-            print "DATA",data
             a_l=[]
             for r in data:
                 if r['id']:
                     a_l.append(r['id'])
             a = ','.join(map(str,a_l))
-            print a_l, a
             if len(a_l):
                 sql2="""SELECT sum(qty) as qty,l.price_unit*sum(l.qty) as amt,t.name as name from product_product p, product_template t, pos_order_line l where order_id in (%s) and p.product_tmpl_id=t.id and l.product_id=p.id group by t.name, l.price_unit"""%(a)
                 self.cr.execute(sql2)

@@ -1,0 +1,81 @@
+
+.openerp .oe_application .oe_form_sheetbg {
+	/* Establish a stacking context on top of which the 
+	   payment_acquirers::before element can be positioned */
+	position: relative;
+	z-index: 0;
+}
+
+.openerp .payment_acquirers {
+    margin: -40px 0 -32px -24px;
+    position: relative;
+    padding: 10px 15px;
+    right: -153px;
+     
+    background: #729FCF;
+	background-image: -webkit-gradient(linear, left top, left bottom, from(#729FCF), to(#3465A4));
+	background-image: -webkit-linear-gradient(top, #729FCF, #3465A4);
+	background-image:    -moz-linear-gradient(top, #729FCF, #3465A4);
+	background-image:     -ms-linear-gradient(top, #729FCF, #3465A4);
+	background-image:      -o-linear-gradient(top, #729FCF, #3465A4);
+	background-image: linear-gradient(to bottom, #729FCF, #3465A4);
+    border-bottom: 1px solid #043574;
+
+    -webkit-box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+}
+
+.openerp .payment_acquirers form {
+	display: inline-block;
+	vertical-align: top;
+}
+
+.openerp .payment_acquirers form input,
+.openerp .payment_acquirers form textarea,
+.openerp .payment_acquirers form select
+{
+    -webkit-box-shadow: none;
+            box-shadow: none;
+    background: transparent;
+    border: none;
+    padding: none;
+}
+
+.openerp .payment_acquirers::after {
+	content: " ";
+	display: block;
+	width: 10px;
+	height: 20px;
+	position: absolute;
+	bottom: 0;
+	right: 1px;
+	
+	margin-bottom: -6px;
+    background: #043574;
+
+    -webkit-transform: skewY(-45deg);
+       -moz-transform: skewY(-45deg);
+        -ms-transform: skewY(-45deg);
+         -o-transform: skewY(-45deg);
+            transform: skewY(-45deg);
+
+    -webkit-box-shadow: inset 1px -1px 2px black, -1px 1px 3px black;
+            box-shadow: inset 1px -1px 2px black, -1px 1px 3px black;
+
+	/* push it under all its siblings, just on top of its root
+	   in the z-index stack: div.oe_form_sheetbg */
+    z-index: -1;
+}
+
+.openerp .payment_acquirers .payment_header {
+    display: inline-block;
+    font-weight: bold;
+    font-size: 110%;
+    padding-right: 15px;
+    color: white;
+    text-shadow: 0 1px 1px #729FCF, 0 -1px 1px #3465A4;
+}
+.openerp .payment_acquirers .payment_header .payment_amount {
+    font-size: 130%;
+    padding: 6px 0px;
+}

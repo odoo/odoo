@@ -20,7 +20,7 @@
 ##############################################################################
 
 import time
-from report import report_sxw
+from openerp.report import report_sxw
 
 class pos_sales_user_today(report_sxw.rml_parse):
 
@@ -33,7 +33,7 @@ class pos_sales_user_today(report_sxw.rml_parse):
 
         })
 
-    def _get_data(self,form):
+    def _get_data(self, form):
         data={}
         ids = form['user_id']
 

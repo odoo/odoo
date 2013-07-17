@@ -1,63 +1,48 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* sale_crm
+# Indonesian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
-"PO-Revision-Date: 2009-11-09 13:57+0000\n"
-"Last-Translator: <>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Indonesian <id@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:02+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:33+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: sale_crm
-#: field:sale.order,categ_id:0
-msgid "Category"
-msgstr ""
-
-#. module: sale_crm
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr ""
-
-#. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:112
+#: code:addons/sale_crm/wizard/crm_make_sale.py:90
 #, python-format
-msgid "Converted to Sales Quotation(%s)."
+msgid "Insufficient Data!"
 msgstr ""
 
 #. module: sale_crm
+#: view:crm.lead:0
 #: view:crm.make.sale:0
 msgid "Convert to Quotation"
 msgstr "Konversi ke Quotation"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:89
-#, python-format
-msgid "Data Insufficient!"
-msgstr "Data penuh !!!"
+#: model:ir.model,name:sale_crm.model_account_invoice_report
+msgid "Invoices Statistics"
+msgstr ""
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:89
-#, python-format
-msgid "Customer has no addresses defined!"
-msgstr "Alamat Customer tidak ditemukan !"
+#: field:crm.make.sale,close:0
+msgid "Mark Won"
+msgstr ""
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_crm_make_sale
-msgid "Make sales"
-msgstr "Buat Sales"
-
-#. module: sale_crm
-#: view:crm.make.sale:0
-msgid "_Create"
-msgstr "_Buat"
+#: field:res.users,default_section_id:0
+msgid "Default Sales Team"
+msgstr ""
 
 #. module: sale_crm
 #: view:sale.order:0
@@ -65,25 +50,32 @@ msgid "My Sales Team(s)"
 msgstr ""
 
 #. module: sale_crm
-#: help:crm.make.sale,close:0
-msgid ""
-"Check this to close the opportunity after having created the sale order."
-msgstr "Centang ini untuk menutup peluang setelah membuat order penjualan."
-
-#. module: sale_crm
-#: view:board.board:0
-msgid "My Opportunities"
+#: model:ir.model,name:sale_crm.model_res_users
+msgid "Users"
 msgstr ""
 
 #. module: sale_crm
-#: view:crm.lead:0
-msgid "Convert to Quote"
-msgstr "Konversikan ke Quote"
+#: help:crm.make.sale,close:0
+msgid ""
+"Check this to close the opportunity after having created the sales order."
+msgstr ""
 
 #. module: sale_crm
-#: field:crm.make.sale,shop_id:0
-msgid "Shop"
-msgstr "Toko"
+#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_sent
+msgid "Quotation Send"
+msgstr ""
+
+#. module: sale_crm
+#: field:sale.order,categ_ids:0
+msgid "Categories"
+msgstr ""
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:124
+#: code:addons/sale_crm/wizard/crm_make_sale.py:135
+#, python-format
+msgid "Quotation"
+msgstr ""
 
 #. module: sale_crm
 #: field:crm.make.sale,partner_id:0
@@ -91,32 +83,61 @@ msgid "Customer"
 msgstr "Customer"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:92
+#: view:crm.make.sale:0
+msgid "_Create"
+msgstr "_Buat"
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_crm_make_sale
+msgid "Make sales"
+msgstr "Buat Sales"
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_account_invoice
+msgid "Invoice"
+msgstr ""
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:93
 #, python-format
 msgid "Opportunity: %s"
 msgstr "Kesempatan: %s"
 
 #. module: sale_crm
-#: field:crm.make.sale,close:0
-msgid "Close Opportunity"
-msgstr "Peluang yang paling dekat"
-
-#. module: sale_crm
-#: view:board.board:0
-msgid "My Planned Revenues by Stage"
-msgstr ""
-
-#. module: sale_crm
 #: code:addons/sale_crm/wizard/crm_make_sale.py:110
 #, python-format
-msgid "Opportunity  '%s' is converted to Quotation."
+msgid "Opportunity has been <b>converted</b> to the quotation <em>%s</em>."
 msgstr ""
 
 #. module: sale_crm
+#: field:crm.make.sale,shop_id:0
+msgid "Shop"
+msgstr "Toko"
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_make_sale.py:90
+#, python-format
+msgid "No addresse(s) defined for this customer."
+msgstr ""
+
+#. module: sale_crm
+#: model:mail.message.subtype,name:sale_crm.mt_salesteam_order_confirmed
+msgid "Sales Order Confirmed"
+msgstr ""
+
+#. module: sale_crm
+#: view:account.invoice:0
+#: field:account.invoice,section_id:0
+#: field:account.invoice.report,section_id:0
 #: view:sale.order:0
 #: field:sale.order,section_id:0
 msgid "Sales Team"
 msgstr "Team Sales"
+
+#. module: sale_crm
+#: view:crm.lead:0
+msgid "Create Quotation"
+msgstr ""
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
@@ -133,61 +154,7 @@ msgstr "Batal"
 msgid "Sales Order"
 msgstr "Sales order"
 
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "Referensi order harus unik !"
-
-#, python-format
-#~ msgid "is converted to Quotation."
-#~ msgstr "ini sudah dikonversi ke Quotation"
-
-#~ msgid ""
-#~ "\n"
-#~ "This module adds a shortcut on one or several opportunity cases in the CRM.\n"
-#~ "This shortcut allows you to generate a sales order based on the selected "
-#~ "case.\n"
-#~ "If different cases are open (a list), it generates one sale order by\n"
-#~ "case.\n"
-#~ "The case is then closed and linked to the generated sales order.\n"
-#~ "\n"
-#~ "We suggest you to install this module if you installed both the sale and "
-#~ "the\n"
-#~ "crm modules.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Modul ini menambahkan shortcut pada satu atau beberapa kesempatan kasus "
-#~ "CRM.\n"
-#~ "Cara pintas ini memungkinkan Anda untuk menghasilkan sales order berdasarkan "
-#~ "kasus yang dipilih.\n"
-#~ "Jika kasus yang berbeda terbuka (daftar), ia menghasilkan satu order dijual\n"
-#~ "kasus.\n"
-#~ "Kasus ini kemudian ditutup dan dihubungkan dengan sales order yang "
-#~ "dihasilkan.\n"
-#~ "\n"
-#~ "Kami sarankan Anda untuk menginstal modul ini jika Anda menginstal keduanya "
-#~ "baik sale dan\n"
-#~ "crm modul.\n"
-#~ "    "
-
-#~ msgid "Monthly Turnover"
-#~ msgstr "Perputaran Bulanan"
-
-#, python-format
-#~ msgid "Converted to Sales Quotation(id: %s)."
-#~ msgstr "Dikonversi menjadi Quotation Sales (id:%s)."
-
-#, python-format
-#~ msgid "Opportunity "
-#~ msgstr "Kesempatan "
-
-#~ msgid "Creates Sales order from Opportunity"
-#~ msgstr "Buat Sales Order dari Kesempatan"
-
-#~ msgid "My Quotations"
-#~ msgstr "Quotation Saya"
-
-#~ msgid "Quotations"
-#~ msgstr "Quotations"
-
-#~ msgid "Opportunities by Stage"
-#~ msgstr "Kesempatan menurut tingkatan"
+#. module: sale_crm
+#: view:crm.make.sale:0
+msgid "or"
+msgstr ""

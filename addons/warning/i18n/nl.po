@@ -6,21 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:46+0000\n"
-"PO-Revision-Date: 2011-01-24 10:43+0000\n"
-"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:06+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: Mario Gielissen <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:11+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
-
-#. module: warning
-#: sql_constraint:purchase.order:0
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr ""
+"X-Launchpad-Export-Date: 2012-12-22 07:37+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order_line
@@ -29,9 +23,9 @@ msgid "Purchase Order Line"
 msgstr "Inkooporderregel"
 
 #. module: warning
-#: field:product.product,sale_line_warn_msg:0
-msgid "Message for Sale Order Line"
-msgstr "Bericht voor Verkooporderregel"
+#: model:ir.model,name:warning.model_stock_picking_in
+msgid "Incoming Shipments"
+msgstr "Inkomende leveringen"
 
 #. module: warning
 #: field:product.product,purchase_line_warn_msg:0
@@ -42,11 +36,6 @@ msgstr "Bericht voor Aankooporderregel"
 #: model:ir.model,name:warning.model_stock_picking
 msgid "Picking List"
 msgstr "Verzamellijst"
-
-#. module: warning
-#: field:product.product,sale_line_warn:0
-msgid "Sale Order Line"
-msgstr "Verkooporderregel"
 
 #. module: warning
 #: view:product.product:0
@@ -71,23 +60,8 @@ msgstr "Waarschuwingen"
 #: selection:res.partner,picking_warn:0
 #: selection:res.partner,purchase_warn:0
 #: selection:res.partner,sale_warn:0
-msgid "Warning"
-msgstr "Waarschuwing"
-
-#. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
 msgid "Blocking Message"
 msgstr "Blokkerend bericht"
-
-#. module: warning
-#: field:res.partner,picking_warn:0
-msgid "Stock Picking"
-msgstr "Stock Picking"
 
 #. module: warning
 #: view:res.partner:0
@@ -116,30 +90,15 @@ msgid "Warning when Selling this Product"
 msgstr "Waarschuw bij verkopen van dit product"
 
 #. module: warning
-#: field:res.partner,sale_warn:0
-msgid "Sale Order"
-msgstr "Verkooporder"
-
-#. module: warning
-#: field:res.partner,invoice_warn_msg:0
-msgid "Message for Invoice"
-msgstr "Bericht voor Factuur"
+#: field:res.partner,picking_warn:0
+msgid "Stock Picking"
+msgstr "Stock Picking"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order
 #: field:res.partner,purchase_warn:0
 msgid "Purchase Order"
 msgstr "Inkooporder"
-
-#. module: warning
-#: sql_constraint:stock.picking:0
-msgid "Reference must be unique per Company!"
-msgstr ""
-
-#. module: warning
-#: field:res.partner,sale_warn_msg:0
-msgid "Message for Sale Order"
-msgstr "Bericht voor Verkooporder"
 
 #. module: warning
 #: field:res.partner,purchase_warn_msg:0
@@ -168,33 +127,35 @@ msgstr ""
 #. module: warning
 #: code:addons/warning/warning.py:67
 #: code:addons/warning/warning.py:96
-#: code:addons/warning/warning.py:132
-#: code:addons/warning/warning.py:163
-#: code:addons/warning/warning.py:213
-#: code:addons/warning/warning.py:246
+#: code:addons/warning/warning.py:130
+#: code:addons/warning/warning.py:162
+#: code:addons/warning/warning.py:192
+#: code:addons/warning/warning.py:218
+#: code:addons/warning/warning.py:266
+#: code:addons/warning/warning.py:299
 #, python-format
 msgid "Alert for %s !"
 msgstr "Bericht voor %s!"
 
 #. module: warning
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr ""
+#: view:res.partner:0
+msgid "Warning on the Sales Order"
+msgstr "Waarschuwing bij een verkooprder"
 
 #. module: warning
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+#: field:res.partner,invoice_warn_msg:0
+msgid "Message for Invoice"
+msgstr "Bericht voor Factuur"
 
 #. module: warning
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr ""
+#: field:res.partner,sale_warn_msg:0
+msgid "Message for Sales Order"
+msgstr "Bericht bij een verkooporder"
 
 #. module: warning
 #: view:res.partner:0
 msgid "Warning on the Picking"
-msgstr "Waarschuwing op de pickinglijst"
+msgstr "Waarschuwing op de verzamellijst"
 
 #. module: warning
 #: view:res.partner:0
@@ -204,23 +165,30 @@ msgstr "Waarschuwing op de inkooporder"
 #. module: warning
 #: code:addons/warning/warning.py:68
 #: code:addons/warning/warning.py:97
-#: code:addons/warning/warning.py:134
-#: code:addons/warning/warning.py:164
-#: code:addons/warning/warning.py:214
-#: code:addons/warning/warning.py:247
+#: code:addons/warning/warning.py:132
+#: code:addons/warning/warning.py:163
+#: code:addons/warning/warning.py:193
+#: code:addons/warning/warning.py:219
+#: code:addons/warning/warning.py:267
+#: code:addons/warning/warning.py:300
 #, python-format
 msgid "Warning for %s"
 msgstr "Waarschuwing voor %s"
 
 #. module: warning
-#: view:res.partner:0
-msgid "Warning on the Sale Order"
-msgstr "Waarschuwing bij de verkooporder."
+#: field:product.product,sale_line_warn_msg:0
+msgid "Message for Sales Order Line"
+msgstr "Bericht bij een verkooporderregel"
 
 #. module: warning
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Fout: ongeldige ean code"
+#: selection:product.product,purchase_line_warn:0
+#: selection:product.product,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0
+#: selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0
+#: selection:res.partner,sale_warn:0
+msgid "Warning"
+msgstr "Waarschuwing"
 
 #. module: warning
 #: field:res.partner,picking_warn_msg:0
@@ -234,25 +202,17 @@ msgstr "Relatie"
 
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order
+#: field:res.partner,sale_warn:0
 msgid "Sales Order"
 msgstr "Verkooporder"
 
 #. module: warning
+#: model:ir.model,name:warning.model_stock_picking_out
+msgid "Delivery Orders"
+msgstr "Uitgaande leveringen"
+
+#. module: warning
 #: model:ir.model,name:warning.model_sale_order_line
+#: field:product.product,sale_line_warn:0
 msgid "Sales Order Line"
 msgstr "Verkooporderregel"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Ongeldige XML, kan overzicht niet weergeven!"
-
-#~ msgid "Module for Warnings form onchange Event."
-#~ msgstr "Module voor waarschuwingen bij \"onchange Event\""
-
-#~ msgid "Module for Warnings form onchange Event"
-#~ msgstr "Module voor waarschuwingen bij \"onchange Event\""
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Fout ! U kunt geen recursieve aangesloten leden maken."
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "Orderreferentie moet uniek zijn!"

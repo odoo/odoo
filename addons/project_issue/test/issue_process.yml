@@ -19,9 +19,9 @@
   !assert {model: project.issue, id: crm_case_buginaccountsmodule0, severity: error, string: Issue should be in pending state}:
     - state == 'pending'
 -
-  I send mail to get more details.
+  I send mail to get more details. TODO revert mail.mail to mail.compose.message (conversion to customer should be automatic).
 -
-  !python {model: mail.compose.message }: |
+  !python {model: mail.mail }: |
     ctx = context.copy()
     ctx.update({'active_model': 'project.issue', 'active_id': ref("crm_case_buginaccountsmodule0"), 'active_ids': [ref("crm_case_buginaccountsmodule0")]})
     vals = self.default_get(cr, uid , [], context=ctx)

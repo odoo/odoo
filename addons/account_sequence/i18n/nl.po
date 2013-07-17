@@ -1,33 +1,27 @@
 # Dutch translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2011-02-21 11:57+0000\n"
-"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:31+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:05+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
 #: model:ir.actions.act_window,name:account_sequence.action_account_seq_installer
 msgid "Account Sequence Application Configuration"
 msgstr "Boeking volgnummer applicatie configuratie"
-
-#. module: account_sequence
-#: constraint:account.move:0
-msgid ""
-"You can not create more than one move per period on centralized journal"
-msgstr ""
 
 #. module: account_sequence
 #: help:account.move,internal_sequence_number:0
@@ -76,20 +70,6 @@ msgid "Company"
 msgstr "Bedrijf"
 
 #. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "U kunt geen boekingsregel creëren op een gesloten rekening"
-
-#. module: account_sequence
-#: help:account.journal,internal_sequence_id:0
-msgid ""
-"This sequence will be used to maintain the internal number for the journal "
-"entries related to this journal."
-msgstr ""
-"Dit volgnummer wordt gebruikt voor de interne nummering van journaalposten "
-"in dit dagboek."
-
-#. module: account_sequence
 #: field:account.sequence.installer,padding:0
 msgid "Number padding"
 msgstr "Nummer verspringing"
@@ -97,18 +77,13 @@ msgstr "Nummer verspringing"
 #. module: account_sequence
 #: model:ir.model,name:account_sequence.model_account_move_line
 msgid "Journal Items"
-msgstr "Dagboekregels"
+msgstr "Journaalpostregels"
 
 #. module: account_sequence
 #: field:account.move,internal_sequence_number:0
 #: field:account.move.line,internal_sequence_number:0
 msgid "Internal Number"
 msgstr "Intern Nummer"
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "Bedrijf moet hetzelfde zijn voor de betreffende rekening en periode."
 
 #. module: account_sequence
 #: help:account.sequence.installer,padding:0
@@ -125,23 +100,6 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: account_sequence
-#: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period!"
-msgstr ""
-
-#. module: account_sequence
-#: constraint:account.journal:0
-msgid ""
-"Configuration error! The currency chosen should be shared by the default "
-"accounts too."
-msgstr ""
-
-#. module: account_sequence
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr "Verkeerde debet of credit waarde in boekingsregel!"
-
-#. module: account_sequence
 #: field:account.journal,internal_sequence_id:0
 msgid "Internal Sequence"
 msgstr "Intern volgnummer"
@@ -154,7 +112,7 @@ msgstr "Voorvoegsel voor het record voor de reeks"
 #. module: account_sequence
 #: model:ir.model,name:account_sequence.model_account_move
 msgid "Account Entry"
-msgstr "Boeking"
+msgstr "Journaalpost"
 
 #. module: account_sequence
 #: field:account.sequence.installer,suffix:0
@@ -162,26 +120,9 @@ msgid "Suffix"
 msgstr "Achtervoegsel"
 
 #. module: account_sequence
-#: field:account.sequence.installer,config_logo:0
-msgid "Image"
-msgstr "Afbeelding"
-
-#. module: account_sequence
 #: view:account.sequence.installer:0
 msgid "title"
 msgstr "titel"
-
-#. module: account_sequence
-#: sql_constraint:account.journal:0
-msgid "The name of the journal must be unique per company !"
-msgstr "De naam van het dagboek moet uniek zijn per bedrijf !"
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry must receive a value in its "
-"secondary currency"
-msgstr ""
 
 #. module: account_sequence
 #: field:account.sequence.installer,prefix:0
@@ -189,9 +130,13 @@ msgid "Prefix"
 msgstr "Voorvoegsel"
 
 #. module: account_sequence
-#: sql_constraint:account.journal:0
-msgid "The code of the journal must be unique per company !"
-msgstr "De code van het dagboek moet uniek zijn per bedrijf !"
+#: help:account.journal,internal_sequence_id:0
+msgid ""
+"This sequence will be used to maintain the internal number for the journal "
+"entries related to this journal."
+msgstr ""
+"Dit volgnummer wordt gebruikt voor de interne nummering van journaalposten "
+"in dit dagboek."
 
 #. module: account_sequence
 #: model:ir.model,name:account_sequence.model_account_sequence_installer
@@ -208,34 +153,3 @@ msgstr "Dagboek"
 msgid "You can enhance the Account Sequence Application by installing ."
 msgstr ""
 "Je kunt de  Account Sequence Application verbeteren door het installeren."
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "U kunt geen boekingsregel creëren op een zichtrekening"
-
-#~ msgid "Entries Sequence Numbering"
-#~ msgstr "Volgnummers bij boekingen"
-
-#~ msgid ""
-#~ "\n"
-#~ "    This module maintains internal sequence number for accounting entries.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Deze module beheert de interne volgnummers voor boekingen.\n"
-#~ "    "
-
-#~ msgid ""
-#~ "You cannot create entries on different periods/journals in the same move"
-#~ msgstr ""
-#~ "U kunt geen boekingen aanmaken met verschillende periodes of dagboeken"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Configuratievoortgang"
-
-#~ msgid ""
-#~ "You cannot create more than one move per period on centralized journal"
-#~ msgstr ""
-#~ "Je mag niet meer dan een verschuiving per periode maken op een "
-#~ "gecentraliseerd dagboek"

@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- Create a partner, that is also a portal user -->
+        <record id="partner_demo_portal" model="res.partner">
+            <field name="name">Demo Portal User</field>
+            <field name="email">demo@portal.example.com</field>
+            <field name="supplier" eval="False"/>
+            <field name="customer" eval="True"/>
+        </record>
+        <record id="demo_user0" model="res.users">
+            <field name="partner_id" ref="partner_demo_portal"/>
+            <field name="login">portal</field>
+            <field name="password">portal</field>
+            <field name="signature">--
+Mr Demo Portal</field>
+            <!-- Avoid auto-including this user in any default group -->
+            <field name="groups_id" eval="[(5,)]"/>
+        </record>
+
+        <!-- Add the demo user to the portal (and therefore to the portal member group) -->
+        <record id="group_portal" model="res.groups">
+            <field name="users" eval="[(4,ref('demo_user0'))]"/>
+        </record>
+
+        <!-- Company news and comments -->
+        <record id="message_company_news0" model="mail.message">
+            <field name="subject">Our company's first blog-post !</field>
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="company_news_feed"/>
+            <field name="body"><![CDATA[<p>Hello, and welcome to our company's portal !</p>
+<p>It is a great pleasure to announce you the creation of our portal by writing this first news! As you may have seen, a new discussion group is now present under your 'My groups' menu: <b>Company's News</b>. We will post news about the company and its employees in this discussion group. Moreover, we will be able to communicate with our partners that are given the opportunity to join us in our portal.</p>
+<p>A new era of communication has begun! <b>Feel free to post your feelings about our portal by replying on this message!</b></p>]]></field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="author_id" ref="base.partner_root"/>
+        </record>
+
+        <record id="message_company_news0_comment0" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="company_news_feed"/>
+            <field name="body"><![CDATA[<p>As your first portal member, I am very pleased to be able to be able to communicate directly with you. Be sure I'll read all news carefully!</p>]]></field>
+            <field name="parent_id" ref="message_company_news0"/>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="author_id" ref="partner_demo_portal"/>
+        </record>
+
+        <record id="message_company_news0_comment1" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="company_news_feed"/>
+            <field name="body"><![CDATA[<p>That's good news! As said by <i>Demo Portal User</i> in the previous post, I'm looking forward to hearing from you!</p>]]></field>
+            <field name="parent_id" ref="message_company_news0"/>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="author_id" ref="base.res_partner_1"/>
+        </record>
+
+        <record id="message_company_news0_comment2" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="company_news_feed"/>
+            <field name="body"><![CDATA[<p>This feature is really great! We will be able to communicate directly to our partners!</p>]]></field>
+            <field name="parent_id" ref="message_company_news0"/>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+        </record>
+
+    </data>
+</openerp>

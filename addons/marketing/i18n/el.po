@@ -1,21 +1,61 @@
 # Greek translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:45+0000\n"
-"PO-Revision-Date: 2010-12-20 14:30+0000\n"
-"Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:20+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:21+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
+
+#. module: marketing
+#: model:ir.model,name:marketing.model_marketing_config_settings
+msgid "marketing.config.settings"
+msgstr ""
+
+#. module: marketing
+#: help:marketing.config.settings,module_marketing_campaign_crm_demo:0
+msgid ""
+"Installs demo data like leads, campaigns and segments for Marketing "
+"Campaigns.\n"
+"                This installs the module marketing_campaign_crm_demo."
+msgstr ""
+
+#. module: marketing
+#: model:ir.actions.act_window,name:marketing.action_marketing_configuration
+#: view:marketing.config.settings:0
+msgid "Configure Marketing"
+msgstr ""
+
+#. module: marketing
+#: view:crm.lead:0
+#: model:ir.ui.menu,name:marketing.menu_marketing_configuration
+msgid "Marketing"
+msgstr "Μάρκετινγκ"
+
+#. module: marketing
+#: field:marketing.config.settings,module_marketing_campaign:0
+msgid "Marketing campaigns"
+msgstr ""
+
+#. module: marketing
+#: view:marketing.config.settings:0
+msgid "or"
+msgstr ""
+
+#. module: marketing
+#: view:marketing.config.settings:0
+msgid "Campaigns"
+msgstr ""
 
 #. module: marketing
 #: model:res.groups,name:marketing.group_marketing_manager
@@ -27,56 +67,43 @@ msgstr ""
 msgid "User"
 msgstr ""
 
-#~ msgid "Configure Your Marketing Application"
-#~ msgstr "Παραμετροποιήστε την Εφαρμογή Μάρκετινγκ"
+#. module: marketing
+#: view:marketing.config.settings:0
+msgid "Campaigns Settings"
+msgstr ""
 
-#~ msgid "Image"
-#~ msgstr "Εικόνα"
+#. module: marketing
+#: field:marketing.config.settings,module_crm_profiling:0
+msgid "Track customer profile to focus your campaigns"
+msgstr ""
 
-#~ msgid "title"
-#~ msgstr "τίτλος"
+#. module: marketing
+#: view:marketing.config.settings:0
+msgid "Cancel"
+msgstr ""
 
-#~ msgid "Configuration Progress"
-#~ msgstr "Πρόοδος Παραμετροποίησης"
+#. module: marketing
+#: view:marketing.config.settings:0
+msgid "Apply"
+msgstr ""
 
-#~ msgid "Marketing Applications Configuration"
-#~ msgstr "Παραμετροποίηση Εφαρμογών Μάρκετινγκ"
+#. module: marketing
+#: help:marketing.config.settings,module_marketing_campaign:0
+msgid ""
+"Provides leads automation through marketing campaigns.\n"
+"                Campaigns can in fact be defined on any resource, not just "
+"CRM leads.\n"
+"                This installs the module marketing_campaign."
+msgstr ""
 
-#~ msgid "Marketing"
-#~ msgstr "Μάρκετινγκ"
+#. module: marketing
+#: help:marketing.config.settings,module_crm_profiling:0
+msgid ""
+"Allows users to perform segmentation within partners.\n"
+"                This installs the module crm_profiling."
+msgstr ""
 
-#~ msgid "Configure"
-#~ msgstr "Παραμετροποίηση"
-
-#~ msgid "Marketing Application Configuration"
-#~ msgstr "Παραμετροποίηση Εφαρμογής Μάρκετινγκ"
-
-#~ msgid "Marketing Campaigns"
-#~ msgstr "Εκστρατεία Μάρκετινγκ"
-
-#~ msgid "Profiling Tools"
-#~ msgstr "Εργαλεία δημιουργίας Προφίλ"
-
-#~ msgid ""
-#~ "OpenERP provides Addons to better manage your sales and marketing processes. "
-#~ "Select the ones you would be interested in."
-#~ msgstr ""
-#~ "Το OpenERP σας παρέχει Πρόσθετα για να διαχειριστήτε καλύτερα τις "
-#~ "διαδικασίες πώλησης και μάρκετινγκ. Επιλέξτε αυτά που σας ενδιαφέρουν."
-
-#~ msgid ""
-#~ "Helps you to manage marketing campaigns and automate actions and "
-#~ "communication steps."
-#~ msgstr ""
-#~ "Σας βοηθά να διαχειριστείτε τις εκστρατείες μάρκετινγκ και να "
-#~ "αυτοματοποιήσετε δράσεις και βήματα επικοινωνίας."
-
-#~ msgid "Menu for Marketing"
-#~ msgstr "Μενού για Μάρκετινγκ"
-
-#~ msgid ""
-#~ "Helps you to design templates of emails and integrate them in your different "
-#~ "processes."
-#~ msgstr ""
-#~ "Σας βοηθά να σχεδιάσετε πρότυπα emails και να τα ενσωματώσετε σε διάφορες "
-#~ "διαδικασίες σας."
+#. module: marketing
+#: field:marketing.config.settings,module_marketing_campaign_crm_demo:0
+msgid "Demo data for marketing campaigns"
+msgstr ""

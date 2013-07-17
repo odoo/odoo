@@ -1,25 +1,34 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* account_payment
+# Indonesian translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-12-22 18:44+0000\n"
-"PO-Revision-Date: 2011-03-19 05:53+0000\n"
-"Last-Translator: moelyana <Unknown>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Indonesian <id@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 06:51+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:04+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: account_payment
-#: field:payment.order,date_scheduled:0
-msgid "Scheduled date if fixed"
-msgstr "Jadwalkan tanggal jika sudah tetapra"
+#: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a payment order.\n"
+"              </p><p>\n"
+"                A payment order is a payment request from your company to "
+"pay a\n"
+"                supplier invoice or a customer refund.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -55,17 +64,6 @@ msgid "Owner Account"
 msgstr "Pemilik akun"
 
 #. module: account_payment
-#: help:payment.order,state:0
-msgid ""
-"When an order is placed the state is 'Draft'.\n"
-" Once the bank is confirmed the state is set to 'Confirmed'.\n"
-" Then the order is paid the state is 'Done'."
-msgstr ""
-"Ketika pesanan ditempatkan status adalah 'Draft'.\n"
-"  Setelah bank dikonfirmasi status diatur ke 'Dikonfirmasi'.\n"
-"  Maka order dibayar status adalah 'Selesai'."
-
-#. module: account_payment
 #: help:account.invoice,amount_to_pay:0
 msgid ""
 "The amount which should be paid at the current date\n"
@@ -82,11 +80,6 @@ msgid "Company"
 msgstr "Perusahaan"
 
 #. module: account_payment
-#: field:payment.order,date_prefered:0
-msgid "Preferred date"
-msgstr "Tanggal yang di pilih"
-
-#. module: account_payment
 #: model:res.groups,name:account_payment.group_account_payment
 msgid "Accounting / Payments"
 msgstr ""
@@ -97,6 +90,7 @@ msgid "Free"
 msgstr "Bebas"
 
 #. module: account_payment
+#: view:payment.order.create:0
 #: field:payment.order.create,entries:0
 msgid "Entries"
 msgstr "Entri"
@@ -113,16 +107,6 @@ msgid "Due Date"
 msgstr "Jatuh Tempo"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr ""
-
-#. module: account_payment
-#: view:account.move.line:0
-msgid "Account Entry Line"
-msgstr "Baris Entri Rekening"
-
-#. module: account_payment
 #: view:payment.order.create:0
 msgid "_Add to payment order"
 msgstr "Tambahkan ke perintah pembayaran"
@@ -134,15 +118,25 @@ msgid "Payment Populate statement"
 msgstr ""
 
 #. module: account_payment
+#: code:addons/account_payment/account_invoice.py:43
+#, python-format
+msgid ""
+"You cannot cancel an invoice which has already been imported in a payment "
+"order. Remove it from the following payment order : %s."
+msgstr ""
+
+#. module: account_payment
+#: code:addons/account_payment/account_invoice.py:43
+#: code:addons/account_payment/account_move_line.py:110
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: account_payment
 #: report:payment.order:0
 #: view:payment.order:0
 msgid "Amount"
 msgstr "Jumlah"
-
-#. module: account_payment
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr "Nilai kredit atau debit salah dalam catatan akuntansi !"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -171,11 +165,6 @@ msgid "The payment line name must be unique!"
 msgstr "Nama line pembayaran harus unik!"
 
 #. module: account_payment
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr ""
-
-#. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
@@ -200,6 +189,14 @@ msgid "Amount Total"
 msgstr "Jumlah total"
 
 #. module: account_payment
+#: help:payment.order,state:0
+msgid ""
+"When an order is placed the status is 'Draft'.\n"
+" Once the bank is confirmed the status is set to 'Confirmed'.\n"
+" Then the order is paid the status is 'Done'."
+msgstr ""
+
+#. module: account_payment
 #: view:payment.order:0
 #: selection:payment.order,state:0
 msgid "Confirmed"
@@ -221,10 +218,9 @@ msgid "Structured"
 msgstr "Terstruktur"
 
 #. module: account_payment
-#: view:payment.order:0
-#: field:payment.order,state:0
-msgid "State"
-msgstr "Status"
+#: view:account.bank.statement:0
+msgid "Import Payment Lines"
+msgstr ""
 
 #. module: account_payment
 #: view:payment.line:0
@@ -238,6 +234,7 @@ msgstr "Informasi Transaksi"
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
 #: view:payment.mode:0
 #: view:payment.order:0
+#: field:payment.order,mode:0
 msgid "Payment Mode"
 msgstr "Mode Pembayaran"
 
@@ -260,20 +257,9 @@ msgid ""
 msgstr ""
 
 #. module: account_payment
-#: code:addons/account_payment/account_move_line.py:110
-#, python-format
-msgid "Error !"
-msgstr "Ada Kesalahan !!!"
-
-#. module: account_payment
-#: view:account.move.line:0
-msgid "Total debit"
-msgstr "Total debit"
-
-#. module: account_payment
-#: field:payment.order,date_done:0
-msgid "Execution date"
-msgstr "Tanggal Pelaksanaan"
+#: field:payment.order,date_created:0
+msgid "Creation Date"
+msgstr ""
 
 #. module: account_payment
 #: help:payment.mode,journal:0
@@ -378,6 +364,12 @@ msgid "Account Payment Populate Statement"
 msgstr ""
 
 #. module: account_payment
+#: code:addons/account_payment/account_move_line.py:110
+#, python-format
+msgid "There is no partner defined on the entry line."
+msgstr ""
+
+#. module: account_payment
 #: help:payment.mode,name:0
 msgid "Mode of Payment"
 msgstr "Cara Pembayaran"
@@ -404,15 +396,15 @@ msgid "Draft"
 msgstr "Draft"
 
 #. module: account_payment
+#: view:payment.order:0
+#: field:payment.order,state:0
+msgid "Status"
+msgstr ""
+
+#. module: account_payment
 #: help:payment.line,communication2:0
 msgid "The successor message of Communication."
 msgstr "Pesan pengganti dari Komunikasi."
-
-#. module: account_payment
-#: code:addons/account_payment/account_move_line.py:110
-#, python-format
-msgid "No partner defined on entry line"
-msgstr "Tidak ada partner didefinisikan pada baris entri"
 
 #. module: account_payment
 #: help:payment.line,info_partner:0
@@ -425,21 +417,11 @@ msgid "Populate Statement:"
 msgstr ""
 
 #. module: account_payment
-#: view:account.move.line:0
-msgid "Total credit"
-msgstr "Total Kredit"
-
-#. module: account_payment
 #: help:payment.order,date_scheduled:0
 msgid "Select a date if you have chosen Preferred Date to be fixed."
 msgstr ""
 "Pilih tanggal jika Anda telah memilih Tanggal Preferred yang harus "
 "diperbaiki."
-
-#. module: account_payment
-#: field:payment.order,user_id:0
-msgid "User"
-msgstr "Pengguna"
 
 #. module: account_payment
 #: field:account.payment.populate.statement,lines:0
@@ -450,11 +432,6 @@ msgstr "Daftar Pembayaran"
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
 msgstr "Item Jurnal"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "Perusahaan harus sama untuk account terkait dan periode."
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -470,10 +447,9 @@ msgid "Search"
 msgstr "Penelusuran"
 
 #. module: account_payment
-#: model:ir.actions.report.xml,name:account_payment.payment_order1
-#: model:ir.model,name:account_payment.model_payment_order
-msgid "Payment Order"
-msgstr "Order Pembayaran"
+#: field:payment.order,user_id:0
+msgid "Responsible"
+msgstr ""
 
 #. module: account_payment
 #: field:payment.line,date:0
@@ -486,9 +462,9 @@ msgid "Total:"
 msgstr "Total:"
 
 #. module: account_payment
-#: field:payment.order,date_created:0
-msgid "Creation date"
-msgstr "Tanggal Pembuatan"
+#: field:payment.order,date_done:0
+msgid "Execution Date"
+msgstr ""
 
 #. module: account_payment
 #: view:account.payment.populate.statement:0
@@ -496,9 +472,9 @@ msgid "ADD"
 msgstr "Tambahkan"
 
 #. module: account_payment
-#: view:account.bank.statement:0
-msgid "Import payment lines"
-msgstr "Impor baris pembayaran"
+#: model:ir.actions.act_window,name:account_payment.action_create_payment_order
+msgid "Populate Payment"
+msgstr ""
 
 #. module: account_payment
 #: field:account.move.line,amount_to_pay:0
@@ -524,11 +500,6 @@ msgstr "Akun untuk pembayaran"
 #: report:payment.order:0
 msgid "Invoice Ref"
 msgstr "Ref. Faktur"
-
-#. module: account_payment
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr ""
 
 #. module: account_payment
 #: field:payment.line,name:0
@@ -582,18 +553,11 @@ msgid "Information"
 msgstr "Informasi"
 
 #. module: account_payment
-#: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
-msgid ""
-"A payment order is a payment request from your company to pay a supplier "
-"invoice or a customer credit note. Here you can register all payment orders "
-"that should be done, keep track of all payment orders and mention the "
-"invoice reference and the partner the payment should be done for."
-msgstr ""
-"Sebuah perintah pembayaran adalah permintaan pembayaran dari perusahaan Anda "
-"untuk membayar Tagihan dari pemasok atau catatan kredit pelanggan. Di sini "
-"Anda dapat mendaftarkan semua perintah pembayaran yang harus dilakukan, "
-"melacak semua perintah pembayaran dan menyebutkan referensi faktur dan mitra "
-"pembayaran harus dilakukan"
+#: model:ir.actions.report.xml,name:account_payment.payment_order1
+#: model:ir.model,name:account_payment.model_payment_order
+#: view:payment.order:0
+msgid "Payment Order"
+msgstr "Order Pembayaran"
 
 #. module: account_payment
 #: help:payment.line,amount:0
@@ -616,6 +580,11 @@ msgid "Communication 2"
 msgstr "komunikasi 2"
 
 #. module: account_payment
+#: field:payment.order,date_scheduled:0
+msgid "Scheduled Date"
+msgstr ""
+
+#. module: account_payment
 #: view:account.payment.make.payment:0
 msgid "Are you sure you want to make payment?"
 msgstr "Apakah Anda yakin ingin melakukan pembayaran?"
@@ -635,11 +604,6 @@ msgstr "Akun Bank"
 #: view:payment.order:0
 msgid "Confirm Payments"
 msgstr "Konfirmasi Pembayaran"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period!"
-msgstr ""
 
 #. module: account_payment
 #: field:payment.line,company_currency:0
@@ -712,47 +676,18 @@ msgid "Make Payment"
 msgstr "Lakukan Pembayaran"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry must receive a value in its "
-"secondary currency"
+#: field:payment.order,date_prefered:0
+msgid "Preferred Date"
 msgstr ""
 
 #. module: account_payment
-#: field:payment.order,mode:0
-msgid "Payment mode"
-msgstr "Mode Pembayaran"
-
-#. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_create_payment_order
-msgid "Populate Payment"
+#: view:account.payment.make.payment:0
+#: view:account.payment.populate.statement:0
+#: view:payment.order.create:0
+msgid "or"
 msgstr ""
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
 msgstr ""
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr ""
-
-#~ msgid ""
-#~ "\n"
-#~ "This module provides :\n"
-#~ "* a more efficient way to manage invoice payment.\n"
-#~ "* a basic mechanism to easily plug various automated payment.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Modul ini menyediakan:\n"
-#~ "* cara yang lebih efisien untuk mengatur pembayaran tagihan.\n"
-#~ "* mekanisme dasar untuk mudah plug berbagai pembayaran otomatis.\n"
-#~ "    "
-
-#~ msgid "Payment Management"
-#~ msgstr "Manajemen pembayaran"
-
-#~ msgid "Destination Bank account"
-#~ msgstr "Akun Bank Tujuan"

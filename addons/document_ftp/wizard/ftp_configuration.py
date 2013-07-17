@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-from tools import config
+from openerp.osv import fields, osv
+from openerp.tools import config
 
 class document_ftp_configuration(osv.osv_memory):
 
@@ -44,7 +44,7 @@ class document_ftp_configuration(osv.osv_memory):
         # Update the action for FTP browse.
         aid = data_pool._get_id(cr, uid, 'document_ftp', 'action_document_browse')
         aid = data_pool.browse(cr, uid, aid, context=context).res_id
-        self.pool.get('ir.actions.url').write(cr, uid, [aid], 
+        self.pool.get('ir.actions.act_url').write(cr, uid, [aid], 
                 {'url': 'ftp://'+(conf.host or 'localhost:8021')+'/' + cr.dbname+'/'})
 
 document_ftp_configuration()

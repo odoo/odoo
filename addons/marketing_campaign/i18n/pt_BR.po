@@ -1,21 +1,21 @@
 # Brazilian Portuguese translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-22 18:45+0000\n"
-"PO-Revision-Date: 2011-03-04 00:59+0000\n"
-"Last-Translator: Emerson <Unknown>\n"
+"POT-Creation-Date: 2012-12-21 17:05+0000\n"
+"PO-Revision-Date: 2012-12-21 23:00+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-12-23 07:23+0000\n"
-"X-Generator: Launchpad (build 14560)\n"
+"X-Launchpad-Export-Date: 2012-12-22 07:22+0000\n"
+"X-Generator: Launchpad (build 16378)\n"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -28,23 +28,17 @@ msgid "Previous Activity"
 msgstr "Atividade Anterior"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:818
+#: code:addons/marketing_campaign/marketing_campaign.py:819
 #, python-format
 msgid "The current step for this item has no email or report to preview."
 msgstr ""
+"O passo atual para este item não tem nenhum email ou relatório para "
+"visualização"
 
 #. module: marketing_campaign
 #: constraint:marketing.campaign.transition:0
 msgid "The To/From Activity of transition must be of the same Campaign "
-msgstr ""
-
-#. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:148
-#, python-format
-msgid ""
-"The campaign cannot be started: it doesn't have any starting activity (or "
-"any activity with a signal and no previous activity)"
-msgstr ""
+msgstr "A transição da Atividade Para/De precisa pertencer a mesma Campanha "
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,trigger:0
@@ -54,7 +48,7 @@ msgstr "Hora"
 #. module: marketing_campaign
 #: selection:marketing.campaign.activity,type:0
 msgid "Custom Action"
-msgstr ""
+msgstr "Ação customizada"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -71,11 +65,19 @@ msgid ""
 "reached this point has generated a certain revenue. You can get revenue "
 "statistics in the Reporting section"
 msgstr ""
+"Escolha a receita esperada, se você considerar que cada item da campanha de "
+"marketing que atingiu este ponto gerou uma certa receita, então você pode "
+"ter as estatísticas de receita na seção de Relatórios."
 
 #. module: marketing_campaign
 #: field:marketing.campaign.transition,trigger:0
 msgid "Trigger"
 msgstr "Gatilho"
+
+#. module: marketing_campaign
+#: view:marketing.campaign:0
+msgid "Follow-Up"
+msgstr "Acompanhamento"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,count:0
@@ -85,13 +87,7 @@ msgstr "# de Ações"
 #. module: marketing_campaign
 #: view:marketing.campaign:0
 msgid "Campaign Editor"
-msgstr ""
-
-#. module: marketing_campaign
-#: view:campaign.analysis:0
-#: view:marketing.campaign.workitem:0
-msgid "Today"
-msgstr "Hoje"
+msgstr "Editor de Campanhas"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -99,7 +95,16 @@ msgstr "Hoje"
 #: view:marketing.campaign.segment:0
 #: selection:marketing.campaign.segment,state:0
 msgid "Running"
+msgstr "Em Execução"
+
+#. module: marketing_campaign
+#: model:email.template,body_html:marketing_campaign.email_template_3
+msgid ""
+"Hi, we are delighted to let you know that you have entered the select circle "
+"of our Gold Partners"
 msgstr ""
+"Oi, temos o prazer de informá-lo que você entrou no seleto círculo dos "
+"nossos Parceiros Ouro"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -114,7 +119,7 @@ msgstr "Objeto"
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Sync mode: only records created after last sync"
-msgstr ""
+msgstr "Sync mode: Apenas registros criados após a última sincronização"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,condition:0
@@ -128,6 +133,15 @@ msgid ""
 "   - transitions: list of campaign transitions outgoing from this activity\n"
 "...- re: Python regular expression module"
 msgstr ""
+"Expressão Python para decidir se a atividade pode ser executada, caso "
+"contrário, ele será excluído ou cancelado. A expressão pode usar as "
+"seguintes variáveis:\n"
+"    - Atividade: a atividade de campanha\n"
+"    - Workitem: o item de trabalho da campanha\n"
+"    - Recurso: o objeto do recurso este item campanha representa\n"
+"    - Transições: lista de transições de campanha de saída a partir desta "
+"atividade\n"
+"... - Re: módulo de expressão regular Python"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -136,31 +150,31 @@ msgid "Set to Draft"
 msgstr "Definir como Provisório"
 
 #. module: marketing_campaign
+#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,to_ids:0
 msgid "Next Activities"
 msgstr "Próximas Atividades"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:0
-msgid "Synchronization"
-msgstr "Sincronização"
-
-#. module: marketing_campaign
-#: sql_constraint:marketing.campaign.transition:0
-msgid "The interval must be positive or zero"
-msgstr "O intervalo precisa ser positivo ou zero"
-
-#. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:818
+#: code:addons/marketing_campaign/marketing_campaign.py:148
 #, python-format
-msgid "No preview"
-msgstr "Sem visualização"
+msgid ""
+"The campaign cannot be started. It does not have any starting activity. "
+"Modify campaign's activities to mark one as the starting point."
+msgstr ""
+"A campanha não pode ser iniciada. Ela não tem qualquer atividade inicial. "
+"Modifique as atividades de campanha para marcar uma como o ponto de partida."
+
+#. module: marketing_campaign
+#: help:marketing.campaign.activity,email_template_id:0
+msgid "The email to send when this activity is activated"
+msgstr "O email a ser enviado quando esta atividade for ativada"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 #: field:marketing.campaign.segment,date_run:0
 msgid "Launch Date"
-msgstr ""
+msgstr "Data de lançamento"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -171,22 +185,27 @@ msgstr "Dia"
 #. module: marketing_campaign
 #: view:marketing.campaign.activity:0
 msgid "Outgoing Transitions"
-msgstr ""
+msgstr "Transições de saída"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Reset"
-msgstr ""
+msgstr "Reiniciar"
 
 #. module: marketing_campaign
 #: help:marketing.campaign,object_id:0
 msgid "Choose the resource on which you want this campaign to be run"
-msgstr ""
+msgstr "Escolha o recurso que você quer executar na campanha."
+
+#. module: marketing_campaign
+#: model:ir.actions.client,name:marketing_campaign.action_client_marketing_menu
+msgid "Open Marketing Menu"
+msgstr "Abrir Menu Marketing"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,sync_last_date:0
 msgid "Last Synchronization"
-msgstr ""
+msgstr "Última sincronização"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -194,17 +213,13 @@ msgid "Year(s)"
 msgstr "Ano(s)"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:214
-#, python-format
-msgid "Sorry, campaign duplication is not supported at the moment."
-msgstr ""
-
-#. module: marketing_campaign
 #: help:marketing.campaign.segment,sync_last_date:0
 msgid ""
 "Date on which this segment was synchronized last time (automatically or "
 "manually)"
 msgstr ""
+"Data em que este segmento foi sincronizado pela última vez (automaticamente "
+"ou manualmente)"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,state:0
@@ -231,11 +246,24 @@ msgid ""
 "Normal - the campaign runs normally and automatically sends all emails and "
 "reports (be very careful with this mode, you're live!)"
 msgstr ""
+"Teste - Ele cria e processa todas as atividades diretamente (sem esperar "
+"pela demora nas transições), mas não enviar e-mails ou produzir relatórios.\n"
+"Teste em Tempo Real - Cria e processa todas as atividades diretamente, mas "
+"não envia e-mails ou produz relatórios.\n"
+"Com a confirmação Manual - as campanhas funciona normalmente, mas o usuário "
+"tem que validar todos os itens de trabalho manualmente.\n"
+"Normal - A campanha decorre normalmente e envia automaticamente todos os e-"
+"mails e relatórios (ter muito cuidado com este modo, você está em produção!)"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_run:0
 msgid "Initial start date of this segment."
-msgstr ""
+msgstr "Data inicial deste segmento."
+
+#. module: marketing_campaign
+#: view:res.partner:0
+msgid "False"
+msgstr "Falso"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -250,9 +278,10 @@ msgid "Campaign"
 msgstr "Campanha"
 
 #. module: marketing_campaign
-#: field:marketing.campaign.activity,start:0
-msgid "Start"
-msgstr "Iniciar"
+#: model:email.template,body_html:marketing_campaign.email_template_1
+msgid "Hello, you will receive your welcome pack via email shortly."
+msgstr ""
+"Olá, você irá receber as instruções de boas vindas por e-mail em breve."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -264,9 +293,10 @@ msgid "Segment"
 msgstr "Segmento"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.activity:0
-msgid "Cost / Revenue"
-msgstr ""
+#: code:addons/marketing_campaign/marketing_campaign.py:214
+#, python-format
+msgid "You cannot duplicate a campaign, Not supported yet."
+msgstr "Você não pode duplicar uma campanha, não suportado ainda."
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,type:0
@@ -279,11 +309,21 @@ msgid ""
 "of the resource record\n"
 "  "
 msgstr ""
+"O tipo de ação a ser executada quando um item entra nesta atividade, tais "
+"como:\n"
+"    - E-mail: envie um e-mail usando um modelo de e-mail pré-definido\n"
+"    - Relatório: imprimir um relatório existente definido no item recursos e "
+"salvá-lo em um diretório específico\n"
+"    - Ação Custom: executar uma ação pré-definida, por exemplo, para "
+"modificar os campos do registro de recurso\n"
+"  "
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_next_sync:0
 msgid "Next time the synchronization job is scheduled to run automatically"
 msgstr ""
+"Próxima hora em que o trabalho de sincronização está programado para rodar "
+"automaticamente."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -299,42 +339,30 @@ msgid "Partner"
 msgstr "Parceiro"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.activity:0
-msgid "Transitions"
-msgstr "Transições"
-
-#. module: marketing_campaign
-#: field:marketing.campaign.activity,keep_if_condition_not_met:0
-msgid "Don't delete workitems"
-msgstr ""
-
-#. module: marketing_campaign
-#: view:campaign.analysis:0
-#: field:campaign.analysis,state:0
-#: view:marketing.campaign:0
-#: field:marketing.campaign,state:0
-#: view:marketing.campaign.segment:0
-#: field:marketing.campaign.segment,state:0
-#: view:marketing.campaign.workitem:0
-#: field:marketing.campaign.workitem,state:0
-msgid "State"
-msgstr "Status"
+#: model:ir.filters,name:marketing_campaign.filter0
+msgid "Partners"
+msgstr "Parceiros"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 msgid "Marketing Reports"
-msgstr ""
+msgstr "Relatórios de Marketing"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,state:0
 #: selection:marketing.campaign.segment,state:0
 msgid "New"
-msgstr ""
+msgstr "Novo"
 
 #. module: marketing_campaign
-#: field:marketing.campaign.activity,type:0
-msgid "Type"
-msgstr "Tipo"
+#: sql_constraint:marketing.campaign.transition:0
+msgid "The interval must be positive or zero"
+msgstr "O intervalo precisa ser positivo ou zero"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.activity,type:0
+msgid "Email"
+msgstr "Email"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,name:0
@@ -361,14 +389,20 @@ msgid "Run"
 msgstr "Executar"
 
 #. module: marketing_campaign
+#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,from_ids:0
 msgid "Previous Activities"
 msgstr "Atividades Anteriores"
 
 #. module: marketing_campaign
+#: model:email.template,subject:marketing_campaign.email_template_2
+msgid "Congratulations! You are now a Silver Partner!"
+msgstr "Parabéns! Você agora é um parceiro prata!"
+
+#. module: marketing_campaign
 #: help:marketing.campaign.segment,date_done:0
 msgid "Date this segment was last closed or cancelled."
-msgstr ""
+msgstr "Data em que este segmento foi fechado ou cancelado pela última vez"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
@@ -386,6 +420,7 @@ msgstr "Mensagem de Erro"
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_form
 #: view:marketing.campaign:0
+#: view:res.partner:0
 msgid "Campaigns"
 msgstr "Campanhas"
 
@@ -422,16 +457,14 @@ msgid ""
 "reached this point has entailed a certain cost. You can get cost statistics "
 "in the Reporting section"
 msgstr ""
+"Defina uma variável de custo se você considerar que cada item da campanha "
+"atingiu este ponto gerou um certo custo, você pode verificar as informações "
+"nos relatórios."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
 msgid "Hour(s)"
 msgstr "Hora(s)"
-
-#. module: marketing_campaign
-#: view:campaign.analysis:0
-msgid "    Month-1    "
-msgstr ""
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_segment
@@ -444,6 +477,9 @@ msgid ""
 "By activating this option, workitems that aren't executed because the "
 "condition is not met are marked as cancelled instead of being deleted."
 msgstr ""
+"Ao ativar esta opção, os itens de trabalho que não foram executados por que "
+"uma condição não foi atendida serão marcados como cancelados em vez de serem "
+"excluído."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -451,9 +487,10 @@ msgid "Exceptions"
 msgstr "Exceções"
 
 #. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
 #: field:res.partner,workitem_ids:0
 msgid "Workitems"
-msgstr ""
+msgstr "Itens de trabalho"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,fixed_cost:0
@@ -463,18 +500,57 @@ msgstr "Custo Fixo"
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Newly Modified"
+msgstr "Recém modificado"
+
+#. module: marketing_campaign
+#: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to create a marketing campaign.\n"
+"          </p><p>\n"
+"            OpenERP's marketing campaign allows you to automate "
+"communication\n"
+"            to your prospects. You can define a segment (set of conditions) "
+"on\n"
+"            your leads and partners to fullfil the campaign.\n"
+"          </p><p>\n"
+"            A campaign can have many activities like sending an email, "
+"printing\n"
+"            a letter, assigning to a team, etc. These activities are "
+"triggered\n"
+"            from specific situations; contact form, 10 days after first\n"
+"            contact, if a lead is not closed yet, etc.\n"
+"          </p>\n"
+"        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Clique para criar uma campanha de marketing.\n"
+"          </p><p>\n"
+"            A campanha de marketing do OpenERP te permite automatizar a "
+"comunicação com seus prospectos\n"
+"            Você pode definir um segmento (definido em condições) em seus "
+"prospectos e parceiros\n"
+"            para a concretização da campanha.\n"
+"          </p><p>\n"
+"            A campaign can have many activities like sending an email, "
+"printing\n"
+"            a letter, assigning to a team, etc. These activities are "
+"triggered\n"
+"            from specific situations; contact form, 10 days after first\n"
+"            contact, if a lead is not closed yet, etc.\n"
+"          </p>\n"
+"        "
 
 #. module: marketing_campaign
 #: field:marketing.campaign.transition,interval_nbr:0
 msgid "Interval Value"
-msgstr ""
+msgstr "Valor de Intervalo"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,revenue:0
 #: field:marketing.campaign.activity,revenue:0
 msgid "Revenue"
-msgstr ""
+msgstr "Receita"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -494,6 +570,10 @@ msgid ""
 "for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
 "views."
 msgstr ""
+"Os itens de trabalho gerados serão ligados ao parceiro relacionado ao "
+"registro. Se o registro é o próprio parceiro parceiro deixar este campo em "
+"branco. Isso é útil para fins de relatório, através da Análise de Campanha "
+"ou Visualização de Follow Up de Campanhas."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -507,14 +587,11 @@ msgid "Next Activity"
 msgstr "Próxima Atividade"
 
 #. module: marketing_campaign
-#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_stat
+#: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_workitem
+#: model:ir.ui.menu,name:marketing_campaign.menu_action_marketing_campaign_workitem
 msgid "Campaign Follow-up"
 msgstr "Acompanhamento de Campanha"
-
-#. module: marketing_campaign
-#: help:marketing.campaign.activity,email_template_id:0
-msgid "The e-mail to send when this activity is activated"
-msgstr ""
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -525,6 +602,7 @@ msgstr "Modo de Teste"
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "Only records modified after last sync (no duplicates)"
 msgstr ""
+"Apenas registros modificados após a última sincronização (sem duplicados)"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_ir_actions_report_xml
@@ -532,14 +610,14 @@ msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
 
 #. module: marketing_campaign
-#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_stat
+#: view:marketing.campaign:0
 msgid "Campaign Statistics"
 msgstr "Estatísticas de Campanha"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,server_action_id:0
 msgid "The action to perform when this activity is activated"
-msgstr ""
+msgstr "A Ação a ser executada quando esta atividade for ativada"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,partner_field_id:0
@@ -552,7 +630,7 @@ msgstr "Campo de Parceiro"
 #: model:ir.model,name:marketing_campaign.model_campaign_analysis
 #: model:ir.ui.menu,name:marketing_campaign.menu_action_campaign_analysis_all
 msgid "Campaign Analysis"
-msgstr ""
+msgstr "Análise da campanha"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,sync_mode:0
@@ -564,6 +642,12 @@ msgid ""
 "records which have the same value for the unique field as other records that "
 "already entered the campaign."
 msgstr ""
+"Determina um critério adicional para adicionar o filtro ao selecionar novos "
+"registros para injetar na campanha. \"Sem duplicados\" impede seleção de "
+"registros que já entraram na campanha anteriormente. Se a campanha tem um "
+"\"único campo\" defina \"Sem duplicados\" também vai impedir a seleção de "
+"registros que têm o mesmo valor para o campo único como outros registros que "
+"já entraram a campanha."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -588,13 +672,25 @@ msgstr "Provisório"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
+msgid "Marketing Campaign Activity"
+msgstr "Atividades da Campanha de Marketing"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.workitem:0
 msgid "Preview"
 msgstr "Visualização"
 
 #. module: marketing_campaign
+#: view:campaign.analysis:0
+#: field:campaign.analysis,state:0
+#: view:marketing.campaign:0
+#: field:marketing.campaign,state:0
+#: view:marketing.campaign.segment:0
+#: field:marketing.campaign.segment,state:0
 #: view:marketing.campaign.workitem:0
-msgid "Related Resource"
-msgstr "Recurso Relacionado"
+#: field:marketing.campaign.workitem,state:0
+msgid "Status"
+msgstr "Situação"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -609,7 +705,7 @@ msgstr "Normal"
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,start:0
 msgid "This activity is launched when the campaign starts."
-msgstr ""
+msgstr "Essa atividade é lançada quando a campanha iniciar."
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,signal:0
@@ -617,6 +713,16 @@ msgid ""
 "An activity with a signal can be called programmatically. Be careful, the "
 "workitem is always created when a signal is sent"
 msgstr ""
+"Uma atividade com um sinal pode ser chamado de programação. Tenha cuidado, o "
+"item de trabalho é sempre criado quando um sinal é enviado"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:0
+#: selection:campaign.analysis,state:0
+#: view:marketing.campaign.workitem:0
+#: selection:marketing.campaign.workitem,state:0
+msgid "To Do"
+msgstr "A Fazer"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -626,26 +732,25 @@ msgstr "Junho"
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_email_template
 msgid "Email Templates"
-msgstr ""
+msgstr "Modelos de Email"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Sync mode: all records"
-msgstr ""
+msgstr "Modo de Sincronização: todos os registros"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "All records (no duplicates)"
-msgstr ""
+msgstr "Todos os registros (não duplicados)"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Newly Created"
-msgstr ""
+msgstr "Recentemente criado"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,date:0
-#: view:marketing.campaign.workitem:0
 msgid "Date"
 msgstr "Data"
 
@@ -655,7 +760,6 @@ msgid "November"
 msgstr "Novembro"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,condition:0
 msgid "Condition"
 msgstr "Condição"
@@ -663,12 +767,12 @@ msgstr "Condição"
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,report_id:0
 msgid "The report to generate when this activity is activated"
-msgstr ""
+msgstr "O relatório a gerar quando a atividade for ativada"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,unique_field_id:0
 msgid "Unique Field"
-msgstr ""
+msgstr "Campo único"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,state:0
@@ -701,17 +805,17 @@ msgstr "Data de Execução"
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_workitem
 msgid "Campaign Workitem"
-msgstr ""
+msgstr "Item de Trabalho da Campanha"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_activity
 msgid "Campaign Activity"
-msgstr ""
+msgstr "Atividade da Campanha"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,report_directory_id:0
 msgid "This folder is used to store the generated reports"
-msgstr ""
+msgstr "Este diretório é usado para armazenar os relatórios gerados"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:136
@@ -722,49 +826,43 @@ msgid "Error"
 msgstr "Erro"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,server_action_id:0
 msgid "Action"
-msgstr ""
+msgstr "Ação"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:528
 #, python-format
 msgid "Automatic transition"
-msgstr ""
+msgstr "Transição automática"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:0
-#: view:res.partner:0
-msgid "History"
-msgstr ""
+#: field:marketing.campaign.activity,start:0
+msgid "Start"
+msgstr "Iniciar"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:819
+#, python-format
+msgid "No preview"
+msgstr "Sem visualização"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 msgid "Process"
-msgstr ""
+msgstr "Processar"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:530
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
 msgid "Cosmetic"
-msgstr ""
+msgstr "Cosmético"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.transition,trigger:0
 msgid "How is the destination workitem triggered"
-msgstr ""
-
-#. module: marketing_campaign
-#: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
-msgid ""
-"A marketing campaign is an event or activity that will help you manage and "
-"reach your partners with specific messages. A campaign can have many "
-"activities that will be triggered from a specific situation. One action "
-"could be sending an email template that has previously been created in the "
-"system."
-msgstr ""
+msgstr "Como o item de trabalho é disparado"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -774,13 +872,13 @@ msgstr ""
 #: selection:marketing.campaign.segment,state:0
 #: selection:marketing.campaign.workitem,state:0
 msgid "Done"
-msgstr ""
+msgstr "Concluído"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:214
 #, python-format
 msgid "Operation not supported"
-msgstr ""
+msgstr "Operação não suportada"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -792,85 +890,84 @@ msgstr "Cancelar"
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Close"
-msgstr ""
+msgstr "Fechar"
 
 #. module: marketing_campaign
 #: constraint:marketing.campaign.segment:0
 msgid "Model of filter must be same as resource model of Campaign "
-msgstr ""
+msgstr "Modelo de filtro deve ser igual ao modelo de recursos de campanha "
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Synchronize Manually"
-msgstr ""
-
-#. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:158
-#, python-format
-msgid "The campaign cannot be marked as done before all segments are done"
-msgstr ""
+msgstr "sincronizar manualmente"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,res_id:0
 msgid "Resource ID"
-msgstr ""
+msgstr "ID do Recurso"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_transition
 msgid "Campaign Transition"
-msgstr ""
+msgstr "Transição de campanha"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: selection:campaign.analysis,state:0
-#: view:marketing.campaign.workitem:0
-#: selection:marketing.campaign.workitem,state:0
-msgid "To Do"
-msgstr ""
-
-#. module: marketing_campaign
-#: view:marketing.campaign.workitem:0
-msgid "Campaign Step"
-msgstr ""
-
-#. module: marketing_campaign
-#: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_segment_form
-#: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_segment_form
 #: view:marketing.campaign.segment:0
-msgid "Segments"
-msgstr ""
+msgid "Marketing Campaign Segment"
+msgstr "Segmento da Campanha de Marketing"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_segment_opened
-msgid "All Segments"
-msgstr ""
+#: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_segment_form
+#: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_segment_form
+#: view:marketing.campaign:0
+#: view:marketing.campaign.segment:0
+msgid "Segments"
+msgstr "Segmentos"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.activity,keep_if_condition_not_met:0
+msgid "Don't Delete Workitems"
+msgstr "Não excluir itens de trabalho"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.activity:0
 msgid "Incoming Transitions"
-msgstr ""
-
-#. module: marketing_campaign
-#: selection:marketing.campaign.activity,type:0
-msgid "E-mail"
-msgstr ""
+msgstr "Transições de Entrada"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
 msgid "Day(s)"
-msgstr ""
+msgstr "Dia(s)"
 
 #. module: marketing_campaign
+#: view:marketing.campaign:0
 #: field:marketing.campaign,activity_ids:0
 #: view:marketing.campaign.activity:0
 msgid "Activities"
-msgstr ""
+msgstr "Atividades"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign,mode:0
+msgid "With Manual Confirmation"
+msgstr "Com Confirmação Manual"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "May"
-msgstr ""
+msgstr "Maio"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.activity,type:0
+msgid "Type"
+msgstr "Tipo"
+
+#. module: marketing_campaign
+#: model:email.template,subject:marketing_campaign.email_template_3
+msgid "Congratulations! You are now one of our Gold Partners!"
+msgstr "Parabéns! Você agora é um dos nossos Parceiros Ouro!"
 
 #. module: marketing_campaign
 #: help:marketing.campaign,unique_field_id:0
@@ -884,27 +981,37 @@ msgid ""
 "campaign previously. Only easily comparable fields like textfields, "
 "integers, selections or single relationships may be used."
 msgstr ""
+"Se definido, este campo vai ajudar segmentos que atuam em \"sem duplicados\" "
+"de modo a evitar a seleção de registros semelhantes duas vezes. Registros "
+"semelhantes são registros que têm o mesmo valor para esse campo único. Por "
+"exemplo, escolhendo o \"email_from\" do campo de Prospectos do CRM que "
+"impediria o envio da mesma campanha para o endereço de e-mail mesmo. Se não "
+"for definido, o \"não\" segmentos duplicados só evitar selecionar o mesmo "
+"registro novamente se ele entrou na campanha anteriormente. Campos só "
+"facilmente comparáveis ​​como textfields, inteiros, seleções ou "
+"relacionamentos simples podem ser utilizadas."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:529
 #, python-format
 msgid "After %(interval_nbr)d %(interval_type)s"
-msgstr ""
+msgstr "Após %(interval_nbr)d %(interval_type)s"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign
+#: view:marketing.campaign:0
 msgid "Marketing Campaign"
-msgstr ""
+msgstr "Campanha de Marketing"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,date_done:0
 msgid "End Date"
-msgstr ""
+msgstr "Data Final"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "February"
-msgstr ""
+msgstr "Fevereiro"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -915,7 +1022,7 @@ msgstr ""
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,object_id:0
 msgid "Resource"
-msgstr ""
+msgstr "Recurso"
 
 #. module: marketing_campaign
 #: help:marketing.campaign,fixed_cost:0
@@ -924,53 +1031,61 @@ msgid ""
 "revenue on each campaign activity. Cost and Revenue statistics are included "
 "in Campaign Reporting."
 msgstr ""
+"Custo fixo para a execução desta campanha. Você também pode especificar o "
+"custo variável e receita em cada atividade de campanha. Estatísticas de "
+"custos e receitas estão incluídos no relatório da campanha."
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Sync mode: only records updated after last sync"
 msgstr ""
+"Modo de Sincronização: somente os registros atualizados após última "
+"sincronização"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:792
+#: code:addons/marketing_campaign/marketing_campaign.py:793
 #, python-format
 msgid "Email Preview"
-msgstr ""
+msgstr "Visualizar Email"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,signal:0
 msgid "Signal"
-msgstr ""
-
-#. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:136
-#, python-format
-msgid "The campaign cannot be started: there are no activities in it"
-msgstr ""
+msgstr "Sinal"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.workitem,date:0
 msgid "If date is not set, this workitem has to be run manually"
 msgstr ""
+"Se a data não está definida, este item de trabalho tem de ser executado "
+"manualmente"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "April"
+msgstr "Abril"
+
+#. module: marketing_campaign
+#: code:addons/marketing_campaign/marketing_campaign.py:158
+#, python-format
+msgid "The campaign cannot be marked as done before all segments are closed."
 msgstr ""
+"A campanha não pode ser marcado como feito antes que todos os segmentos "
+"estejam fechados."
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
 #: field:marketing.campaign,mode:0
 msgid "Mode"
-msgstr ""
+msgstr "Modo"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,activity_id:0
-#: view:marketing.campaign.activity:0
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,activity_id:0
 msgid "Activity"
-msgstr ""
+msgstr "Atividade"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,ir_filter_id:0
@@ -980,70 +1095,65 @@ msgid ""
 "view of the Resource. If no filter is set, all records are selected without "
 "filtering. The synchronization mode may also add a criterion to the filter."
 msgstr ""
+"Filtro para selecionar os registros de recursos correspondentes que "
+"pertencem a este segmento. Novos filtros podem ser criados e salvos com a "
+"pesquisa avançada sobre a exibição de lista do recurso. Se nenhum filtro for "
+"definido, todos os registros são selecionados sem filtragem. O modo de "
+"sincronização pode também adicionar um critério para o filtro."
 
 #. module: marketing_campaign
-#: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_workitem
-#: model:ir.ui.menu,name:marketing_campaign.menu_action_marketing_campaign_workitem
-msgid "Campaign Followup"
+#: code:addons/marketing_campaign/marketing_campaign.py:136
+#, python-format
+msgid "The campaign cannot be started. There are no activities in it."
 msgstr ""
+"A campanha não pode ser iniciada. Não existe nenhuma atividade cadastrada."
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,date_next_sync:0
 msgid "Next Synchronization"
-msgstr ""
+msgstr "Próxima Sincronização"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:0
+#: model:email.template,body_html:marketing_campaign.email_template_2
+msgid ""
+"Hi, we are delighted to welcome you among our Silver Partners as of today!"
+msgstr ""
+"Oi, temos o prazer de recebê-lo entre os nossos Parceiros Prata a partir de "
+"hoje!"
+
+#. module: marketing_campaign
 #: field:marketing.campaign.segment,ir_filter_id:0
 msgid "Filter"
-msgstr ""
+msgstr "Filtro"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "All"
-msgstr ""
+msgstr "Todos"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "Only records created after last sync"
-msgstr ""
-
-#. module: marketing_campaign
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "Somente os registros criados após última sincronização"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,variable_cost:0
 msgid "Variable Cost"
-msgstr ""
+msgstr "Custo Variável"
 
 #. module: marketing_campaign
-#: selection:marketing.campaign,mode:0
-msgid "With Manual Confirmation"
-msgstr ""
+#: model:email.template,subject:marketing_campaign.email_template_1
+msgid "Welcome to the OpenERP Partner Channel!"
+msgstr "Bem-vindo ao Canal de Parceiros OpenERP!"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,total_cost:0
-#: view:marketing.campaign:0
 msgid "Cost"
-msgstr ""
+msgstr "Custo"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,year:0
 msgid "Year"
-msgstr ""
-
-#~ msgid "This Year"
-#~ msgstr "Este Ano"
-
-#~ msgid "This Month"
-#~ msgstr "Este Mês"
-
-#~ msgid "The template name must be unique !"
-#~ msgstr "O nome do modelo deve ser único!"
-
-#~ msgid "Error ! You can not create recursive associated members."
-#~ msgstr "Erro ! Você não pode criar membros associados recursivos."
+msgstr "Ano"

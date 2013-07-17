@@ -497,7 +497,7 @@
               <para style="terp_default_8">[[ strip_name(line['partner_name'],10) ]]</para>
             </td>
             <td>
-              <para style="terp_default_8">[[ strip_name(line['lref'],9) ]]</para>
+              <para style="terp_default_8">[[ line['lref'] and strip_name(line['lref'],9) ]]</para>
             </td>
             <td>
               <para style="terp_default_8">[[ strip_name(line['move'],9) ]]</para>
@@ -590,7 +590,7 @@
               <para style="terp_default_8">[[ strip_name(line['partner_name'],20) ]]</para>
             </td>
             <td>
-              <para style="terp_default_8">[[ strip_name(line['lref'],9) ]]</para>
+              <para style="terp_default_8">[[ line['lref'] and strip_name(line['lref'],9) ]]</para>
             </td>
             <td>
               <para style="terp_default_8">[[ strip_name(line['move'],9) ]]</para>

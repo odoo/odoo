@@ -1,0 +1,356 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- Update 'Demo user' and partners email preferences to avoid mail bombing -->
+        <record id="base.partner_demo" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_1" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_2" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_3" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_4" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_5" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_6" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_7" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_8" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_9" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_10" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_11" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_12" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_13" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_14" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_15" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_16" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_17" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_18" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_19" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_20" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_21" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_22" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_23" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+
+        <!-- Discussion: attachments and spec [DEMO: search on has_attachments -->
+        <record id="msg_discus6_attach1" model="ir.attachment">
+            <field name="datas">bWlncmF0aW9uIHRlc3Q=</field>
+            <field name="datas_fname">RedHat_spec.doc</field>
+            <field name="name">RedHat_spec.doc</field>
+        </record>
+        <record id="msg_discus6_attach2" model="ir.attachment">
+            <field name="datas">bWlncmF0aW9uIHRlc3Q=</field>
+            <field name="datas_fname">RedHat_spec_draft_v3.doc</field>
+            <field name="name">RedHat_spec_draft_v3.doc</field>
+        </record>
+        <record id="msg_discus6" model="mail.message">
+            <field name="subject">RedHat server updated spec</field>
+            <field name="body"><![CDATA[<p>Hello Demo,</p>
+            <p>We have a lot of inquiries about our now solution based on RedHat servers. However I do not have the updated specification ready at hand.</p>
+            <p>Could you please send me the last version of the file asap?</p>
+            <p>Thanks,</p>]]></field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_root"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(days=1)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="msg_discus6_1" model="mail.message">
+            <field name="body"><![CDATA[<p>Sure, here it is. Have a nice day!</p>]]></field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="parent_id" ref="msg_discus6"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
+            <field name="attachment_ids" eval="[(6, 0, [ref('msg_discus6_attach1')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(hours=3)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="msg_discus6_2" model="mail.message">
+            <field name="body"><![CDATA[<p>I just found a more recent draft of the spec. Jon did some cleaning in the specifications. Could you merge the two documents to have an updated one?</p><p>When it's done, put it on the internal document management system.</p><p>Thanks,</p>]]></field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="parent_id" ref="msg_discus6"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
+            <field name="attachment_ids" eval="[(6, 0, [ref('msg_discus6_attach2')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(hours=3)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+
+        <!-- Thread: 1 incoming email -->
+        <record id="msg_discus5" model="mail.message">
+            <field name="subject">Plan to install backup servers</field>
+            <field name="body"><![CDATA[<p>Hello,</p>
+<p>We need to deploy new backup servers, with the following requirements:</p>
+<ul>
+    <li>daily incremental backups, with an history of 15 days,</li>
+    <li>45 servers should be backuped between 1am and 3am when our offices are closed,</li>
+    <li>two redundant servers,</li>
+    <li>total capacity of 200Gb.</li>
+</ul>
+<p>
+    Do you have a simple solution with servers running on Redhat Linux?
+</p>
+<p>Best regards,</p>
+            ]]></field>
+            <field name="type">email</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="email_from">virginie@agrolait.fr</field>
+            <field name="author_id" eval="False"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(days=2)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+
+        <!-- Admin and Demo with attachments -->
+        <record id="msg_discus4_attach1" model="ir.attachment">
+            <field name="datas">bWlncmF0aW9uIHRlc3Q=</field>
+            <field name="datas_fname">catalog.doc</field>
+            <field name="name">catalog.doc</field>
+        </record>
+        <record id="msg_discus4_attach2" model="ir.attachment">
+            <field name="datas_fname">activity_graph_2012.jpg</field>
+            <field name="name">activity_graph_2012</field>
+            <field name="datas">
+                /9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEP
+                ERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4e
+                Hh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCABQAGQDAREA
+                AhEBAxEB/8QAHAABAAIDAQEBAAAAAAAAAAAABgUHAAMEAgEI/8QATBAAAQIEAQYHCA8GBwAAAAAA
+                AgMEAAEFBhIHERMis7QUMjQ2QnN0IzE3UnJ1ssIVFhchNVRiY3GCkpOxw9IkJiczQVFDVWGDosHi
+                /8QAGwEAAgMBAQEAAAAAAAAAAAAABQYABAcCAwH/xABAEQABAgMDCAgDBQcFAAAAAAAAAgMEBQYB
+                EjUHFDIzNEJy8BMiMVJxssLSESE2QXORksEVIySBgqKzobHD0eL/2gAMAwEAAhEDEQA/AP1mLpMl
+                VgTTWM0VNGeAOlgx/gcLyIVa9A9jdwhT4q7+7jvMXjjpLDOET+Kr/dxMxePvSWHFUlHq1McpU8VE
+                HhoqC3WJHGAKYNQ/ojtEE8fL4YUbZRUJKptXtCSQkOFGRiusefSZwmZ4NfUwDHvmJL5uFvfKmAVn
+                9NMBXxzworAZBp0D8TxAXl9cImauEv2HK3bZTBNA3VUoa2jRQkp+zLBjXkYabocTR6bB8vBEzQl8
+                8IoZTQQMlajQl19CpLOLVbMS+OeDocQA/wCYS8f3pmJL50PE8oarkJN6hRUGoKOcaajZYzMNJ3Do
+                eJx/LiZoS+eE0MoxOFDXqNGkhN2iphSbLYxRDBpA4nTzH9uJmhL424RP4qv93FXMXj70lhnCJ/FV
+                /u4mYvE6SwxiuDpElUJywyUNOf0gUxn6MeDram1XbToMySBzcFfTV0EiDQ8G0xamkNH/AMB9iLyF
+                rQwi4ch26nziiSeBNtSFDBuayEhTWPH4nT8uJna2+us83+o2taCxLYWNa2qY4U45tUzP7EE0aBCU
+                xR6EMxRCGYohDMUQhmKIQzFEIZiiEMxRCA6/brcW1JnJCmpPFHMjmUzc6GQCGHP0Dz8eAU4niJYt
+                pC0X74Slsrz2+qxegTFu8iX7a625xIvW2lBHYRk6DTay9q0n6BGPDUZywnh4iAYPTOLkKhDjHXJa
+                bDsm31GugNqsYaPQz7uesH+se+aMrJY4tBPsGyTFkiyaBIEUAAA8mLRwdUQh814hDNeIQ+xCEa+q
+                1OYOWzR48RQWclgQAz1jnHaELVYea30IVcUSOvHB6AyqXgjp6tT2TdQH7FssumawZkVME5B3/LOK
+                81WuXwK4s5l7jMbG5qebdrtUqOT064vwOVQGTmUpAmWhxJrGAauLP0P7x4yCJXMYZl1fas950hEv
+                UtKNwF3dUnlVt2jvn+h4SZVBM9EMxDua4B6kKtet9DHQqEd/2ByjXlvQL6186ZaFu8iX7a625wcj
+                dbaAUdh6ofLqz24NghF6B1ZFkxF44IR3X6a2rTajrrkLxzLuI6IsJTzHPjZs3eAo7QytaL5XXFNp
+                c6HfJuOCwBLEq9WqFx1xnUHvCkEQQWQDQCGgxmvqZ+n7wBF+Oh0MJRcBEtilvrXfJq+iVC2nJorK
+                InIk8xongOWuEeECi+/ZYsszJa0Qq7UH2xjWVtGmKLrKLmSGczWPEZxzFWWWPLssO4K2+wi0OZRO
+                dFM6+n76EXYXZVg2O25s92pXKs6ygVmmPH2lZoAoaCOgEcGZXBx5d+EKSzSIjY+IZXoIHiYwbDEE
+                y4jTWQDrnTcPm57t04ZqswJfAK1O42TNleCRTy328rQNonD4YN1brnvD0BGs8yqN19U3qAeUPEoX
+                j9heobDn+e+W1bvIl+2utucFo3W2gdHYGbrJYGFV0DpdqZ1YO6IngPkqcHJGhC7euC5y4tDHUEln
+                qLOLSo66ypGsqwQMz8YppynOcdv6ay0xqUBq7/CZb/Xh6C8EWNhWCn8RQP8AB8soFhwrfJnLFd9x
+                dkZbR1BeZaLYvSfWPc98UX4H7sONc/5iG2CKMFr7AhNdkWV0b1+2O00WzxdFGfBcQAeopI3UgPP9
+                TPCVUcwimKgZh23OosapBCsLkq1qR8/h6BJlC51Uvr2W+pw/wuyrEiO25s5bK8KVe6lXbxl9NYtG
+                8a/MaLOcMY53COec8bh81vdsEPNXYEvgEmnMcs53yYs7wRq+W+3laBlE4dDBurdc94egI1nmVRuv
+                qm9QEyh4lC8fsL9DYc/z3y2rd5Ev211tzgtG620Do7A3dnIal53DdU4PU/2gie7OILIEfabQsX+X
+                IegMR/TWXIXUoDl3+Ey3+vD0F4JMbCsFv4igfYAgWHCuMnUxTuy4jVLCINWWv/uOoKTLRQAJPrnO
+                e+Jr30J2quYHiAlENfH88EVJdr0F6a7Ksrd1yq0Pop+/SjPao+q4fn7VjhTuBK8LfIKcoQ/vVS5/
+                Pst9TjTIXZViFHbc2ctleFKvdSrt4y+msWjeNfmNFnOGMc7hHPOdtxebHu2CHmrsCXwCTTmOWc75
+                LWWP8I1ZfLfbytA2isPhg5Vuue8PQE6zzKo3X1TeoB5Q8SheP2F6hsOf575bVu8iX7a625wWjdba
+                B0dgbu/kNS87huqcH6f7QRPdQc+R6tu6lSVWDtBqAU5FFFEwH3z1MGt9iF2Rzdc4vvLQBKSnr03Y
+                X0iNA1325bsb6ojp0uCLcFkiMz94A1F4a1RbENL1reXcLkyfZhI1Djy7iBhR6zRqvpfY162c6HDj
+                0c5TwQIhI5iKs/crvjQ5DuIQha0aZVwgCyN3gYAYGhT9Q+1Lx8ygW9HJF89wpUPii+e+JmogOSGn
+                ag/ykNsESltmY4P0LFV6x/jDDrlVofRT9+lClVH1XD8/asP07gSvC3yCbKDh9tVKwcXTst9TjTIX
+                ZViFHbc2aLKw+6jXM2DDoD20ZdTOLRvGvzmjTnDWOdwjXmf213F4nsW926cPVW4GvgEinsbJa0cP
+                uRnxcWke7yrAyidghg5Vuuf8PQFKzzKo3X1TeoCZQ8SheP2F6hsOf575bVu8iX7a625wWjdbaB0d
+                gbuvkVS87huqcH6f7QRPdQFsitXY0528YOlCTWfqIg2zjx8wnGbUbGsotXDL01i1k4l0SqWPRNiO
+                pfOjLXrPx8hL8yGassET956FgvKFqPyf8hIZHfhSudS1/FaFnJ9oP/0G71T2sA2rvXLetuWyRSBF
+                8CILBg42AzMPTgplHmr7dyAs0Ll78V/+DK6WmrzNWMwSdWu/5Fj9v4Iaf1SG1GGildmh+D9BqqvW
+                P8YLk+bO3FuJomZm0WZILTwf4nDU4Rp/GsxNTsKZV8k/L8L4To+OYipG90O5fR/YM8oXOql9ey31
+                ONWhdlWJ0dtzZzWT4Uq51J7eMvpnFo3jX5zSJzhrHO4RjznXcXmx7t04eauwJfAI1PY2S9ol/CM5
+                /OPd5VgZROwQwcqzXP8Ah6AnWeZVG6+qb1ATKHiULx+wvUNhz/PfLbt/ka/bXW3OC8ZrbQOjsDV2
+                chqXncN1Tg7T/aCJ7s5XOT7nXQ/OP5KkYrTOLtnWS/6Qf41/7NibLX8Ip+QHrxpNZYIn7z0LEPKH
+                qPyes7sjvwtXOqa/itCzk+1b/ij9TeKp7WP5gi4ecqH0fmHHGUzEEcHrWY3Tf1xBcC/8bhY7XwPs
+                eqQ2wQ/UlqoXg/Qeqn03+P1lb0L4ca+eWW9BGRMfUTfGUMl2Axn3i/8AGgZ5XpqA5FwkaiSwJIqJ
+                GHRMFsca9OYl2DkrrzOnZ70CzVby4ZpbzNvXSizz2HNkfNVS7HSqpmqopTsahl0j00Z/Q7jj8U+t
+                Zp6nlvSCCWvuI8hw3FUAp111XSAZ8LQdNk8HjmsH6Icq3mjENLLIZemtAhyeaswNQssL31iayvBI
+                p5b7eVo+0Th8MN9W657w9ARrPMqjdfVN6gHlDxKF4/YXqGw5/nvlt2/yNftrrbnBWL1toIsD1zUy
+                puAepMmILiu9ByB6cA7yIB6kE5VHIhdMoTKFXFN3EA+2bPuOm1ynPV6egYtnM1jwOg72Aw9eEKTS
+                B2BjERC1/I4o+DVJZI5AP6a13/J/0S9+0S4Lhcpm1paaWEA47oP6aT9cNM9SmZS3NW+/fAVVSB6b
+                JsQyvnrnbYVKrtvun7h1SgPhKaIJiDoOhj/XAemZZ+yEL6demaLOZi3G2otQG6paFzOquLkacgCY
+                5s4E6Cf949KrlypzEodh17l3n8RDlUnegqiZmji+oi//AKoX7xSDGtJ2M3oPsR3YQAJnwoOgeP8A
+                6hgkkS3L22W3NwYpz/GrXc3wpS7Oudu+RXUpyE003qLif7SHQXA/UhLRIHUTRuMv9S/f/H4njR6H
+                JNK4mGf01rWv8yPgTl90ivV6eFrSQDuIJ67kP6HjhymzqI2WOwbemv3oAdRSZ+YQ622973/E1WDQ
+                6/blTXeuaYBaRsCAADoO/jzwu05KrZWta316Y3JdsslUNB76EIR+RBw3LatyVSrk9QpaAJzWUPWd
+                B0zi1VkNbObGbGF6HyE6yRv2TuGj7/UQu+IaBTq7TrIOhHSBNY9PPGLoOmsZ+vBKQOIl8My05uDb
+                O1WR63FN74OlZFz8JXMmTfQLGZAPDeJjOFmZyeKi5hnC3upfvguj2XpIuNcinL/TXLn9/vLUpDNw
+                kxzLdwM111ZhJXPm0ixn3/rQxvK6Vd4vn//Z
+            </field>
+        </record>
+        <record id="msg_discus4" model="mail.message">
+            <field name="body"><![CDATA[<p>Hi Demo,</p>
+            <p>The next version of our products catalog is scheduled for next month. Our product team send me their updated document holding the prices and costs, and I updated our catalog.</p>
+            <p>You will find it in attachment, as well as a comparative benchmark of the different solutions currently existing on the market.<br />Have a nice reading!<br />
+            Sincerely,</p>]]></field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_root"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo')])]"/>
+            <field name="attachment_ids" eval="[(6, 0, [ref('msg_discus4_attach1'), ref('msg_discus4_attach2')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(days=1)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="msg_discuss4_1" model="mail.message">
+            <field name="body"><![CDATA[<p>Thank you!<br/>Could you send me the updated pricelists as negotiated at the beginning of this year?</p>
+            <p>Sincerely,</p>]]></field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="parent_id" ref="msg_discus4"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root'), ref('base.partner_demo')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(hours=1, minutes=30)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+
+        <!-- Thread: Demo (network admin) and Admin -->
+        <record id="msg_discus3" model="mail.message">
+            <field name="body"><![CDATA[<p>Hello,</p><p>I have a friend working at Epic Technologies. He told me they plan to upgrade their backup servers within the next 3 months.</p><p>I think that someone should contact them and check if there is an opportunity.</p>]]></field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(hours=3)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="msg_discus3_1" model="mail.message">
+            <field name="body"><![CDATA[Contact Chris: +1 (650) 307-6736.]]></field>
+            <field name="parent_id" ref="msg_discus3"/>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+
+        <!-- Thread: Epic Technologies and Admin as salesman discuss about a meeting [DEMO: see context, mark thread as done] -->
+        <record id="msg_discus2" model="mail.message">
+            <field name="subject">Information meeting</field>
+            <field name="body"><![CDATA[<p>Hello,</p><p>Epic Technologies is a small company specialized in software managing huge volume of data. Having an efficient and reliable backup system is very important for us, and critical for our customers. I eared you have some interesting solutions to manage our backups. Could we meet each other as soon as possible to discuss our need? Here is a first list of requirements:</p>
+            <ul>
+                <li>about 25 backup servers, running on Redhat Linux</li>
+                <li>minimum 200Gb of storage per server</li>
+                <li>setup a VPN between all our servers in New York and Chicago</li>
+            </ul>
+            <p>Thanks,</p>
+            ]]></field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.res_partner_5"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(days=1)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="msg_discus2_1" model="mail.message">
+            <field name="subject">RE: Information meeting</field>
+            <field name="body"><![CDATA[<p>Hello Epic!</p>
+            <p>I am glad you are interested in our products. Indeed, we are have several backup solutions that should meet your requirements. In order to prepare a detailed offer, we will have to discuss several technical points about your needs and the context of your data management.</p>
+            <p>I propose to have a meeting tomorrow at 2 PM. Does it seem suitable for you ?<br />Best regards,</p>]]></field>
+            <field name="parent_id" ref="msg_discus2"/>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_root"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.res_partner_5')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="msg_discus2_2" model="mail.message">
+            <field name="subject">RE: Information meeting</field>
+            <field name="body"><![CDATA[<p>It is not possible for me to come tomorrow at 2 PM. Maybe at 4 PM?</p>]]></field>
+            <field name="parent_id" ref="msg_discus2"/>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.res_partner_5"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=35)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="msg_discus2_3" model="mail.message">
+            <field name="subject">RE: Information meeting</field>
+            <field name="body"><![CDATA[<p>4 PM is fine! See you tomorrow!<br />Best regards,</p>]]></field>
+            <field name="parent_id" ref="msg_discus2"/>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_root"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.res_partner_5')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="msg_discus2_4" model="mail.message">
+            <field name="subject">RE: Information meeting</field>
+            <field name="body"><![CDATA[<p>Ok! See you tomorrow.</p>]]></field>
+            <field name="parent_id" ref="msg_discus2"/>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.res_partner_5"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=10)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+
+        <!-- Short thread: Admin ask, Agrolait answer [DEMO: mark thread as done] -->
+        <record id="msg_discus1" model="mail.message">
+            <field name="subject">Feedback about our On Site Assistance</field>
+            <field name="body"><![CDATA[<p>Hi Virginie,</p><p>I writing to you about our <i>On Site Assistance Service</i> that we delivered to Agrolait last week. Do you have any feedback or remark about our service? I noticed you requested new IP phones. Will it be used for new employees, or did you have any issue with the ones we provided?<br />Best regards,</p>]]></field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_root"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.res_partner_2')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(days=2)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="msg_discus1_1" model="mail.message">
+            <field name="subject">RE: Feedback about our On Site Assistance</field>
+            <field name="body"><![CDATA[<p>Hello Administrator,</p><p>Glad to hear from you! Everything is perfect, thanks for asking. Concerning the order of 2 IP phones, I ordered them for new employees. We are satisfied with the products of <i>YourCompany</i>, and we plan to fit out each new employee with one of your phone this year.<br />Regards,</p>]]></field>
+            <field name="parent_id" ref="msg_discus1"/>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.res_partner_2"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=5)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+
+        <!-- Header only: message from res_partner_1 [DEMO: mark as done] -->
+        <record id="msg_discus0" model="mail.message">
+            <field name="subject">FWD: Meeting with Demo </field>
+            <field name="body"><![CDATA[<p>Hello Administrator,</p><p>A small email to inform you that we will have a meeting with Mr Demo next Tuesday. Everything is under control!<br />Regards,</p>]]></field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.res_partner_1"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=1)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+
+    </data>
+</openerp>

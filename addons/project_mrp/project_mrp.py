@@ -19,15 +19,15 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-import netsvc
+from openerp.osv import fields, osv
+from openerp import netsvc
 
 class project_task(osv.osv):
     _name = "project.task"
     _inherit = "project.task"
     _columns = {
         'procurement_id': fields.many2one('procurement.order', 'Procurement', ondelete='set null'),
-        'sale_line_id': fields.related('procurement_id', 'sale_line_id', type='many2one', relation='sale.order.line', store=True, string='Sale Order Line'),
+        'sale_line_id': fields.related('procurement_id', 'sale_line_id', type='many2one', relation='sale.order.line', store=True, string='Sales Order Line'),
     }
 
     def _validate_subflows(self, cr, uid, ids):
@@ -96,11 +96,12 @@ class sale_order(osv.osv):
                 res_sale[item['sale_id']]['number_of_done'] += item['total']
 
         for sale in self.browse(cr, uid, ids, context=context):
-            res_sale[sale.id]['number_of_stockable'] -= res_sale[sale.id]['total_no_task']
-            #adjust previously percentage because now we must also count the product of type service
-            res[sale.id] = res[sale.id] * float(res_sale[sale.id]['number_of_stockable']) / (res_sale[sale.id]['number_of_stockable'] + res_sale[sale.id]['total_no_task'])
-            #add the task
-            res[sale.id] += res_sale[sale.id]['number_of_done'] * 100 /  (res_sale[sale.id]['number_of_stockable'] + res_sale[sale.id]['total_no_task'])
+            if 'number_of_stockable' in res_sale[sale.id]:
+                res_sale[sale.id]['number_of_stockable'] -= res_sale[sale.id]['total_no_task']
+                #adjust previously percentage because now we must also count the product of type service
+                res[sale.id] = res[sale.id] * float(res_sale[sale.id]['number_of_stockable']) / (res_sale[sale.id]['number_of_stockable'] + res_sale[sale.id]['total_no_task'])
+                #add the task
+                res[sale.id] += res_sale[sale.id]['number_of_done'] * 100 /  (res_sale[sale.id]['number_of_stockable'] + res_sale[sale.id]['total_no_task'])
         return res
 
     _columns = {

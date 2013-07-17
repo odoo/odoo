@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import cost_ledger
 import account_analytic_profit
 import report_analytic
 import hr_timesheet_invoice_report

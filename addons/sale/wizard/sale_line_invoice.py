@@ -19,9 +19,9 @@
 #
 ##############################################################################
 
-from osv import osv
-from tools.translate import _
-import netsvc
+from openerp.osv import osv, fields
+from openerp.tools.translate import _
+from openerp import netsvc
 
 class sale_order_line_make_invoice(osv.osv_memory):
     _name = "sale.order.line.make.invoice"
@@ -65,16 +65,15 @@ class sale_order_line_make_invoice(osv.osv_memory):
                 'type': 'out_invoice',
                 'reference': "P%dSO%d" % (order.partner_id.id, order.id),
                 'account_id': a,
-                'partner_id': order.partner_id.id,
-                'address_invoice_id': order.partner_invoice_id.id,
-                'address_contact_id': order.partner_invoice_id.id,
+                'partner_id': order.partner_invoice_id.id,
                 'invoice_line': [(6, 0, lines)],
                 'currency_id' : order.pricelist_id.currency_id.id,
                 'comment': order.note,
                 'payment_term': pay_term,
                 'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
                 'user_id': order.user_id and order.user_id.id or False,
-                'company_id': order.company_id and order.company_id.id or False
+                'company_id': order.company_id and order.company_id.id or False,
+                'date_invoice': fields.date.today(),
             }
             inv_id = self.pool.get('account.invoice').create(cr, uid, inv)
             return inv_id
@@ -90,8 +89,6 @@ class sale_order_line_make_invoice(osv.osv_memory):
                         [line.id])
                 for lid in line_id:
                     invoices[line.order_id.id].append((line, lid))
-                sales_order_line_obj.write(cr, uid, [line.id],
-                        {'invoiced': True})
         for result in invoices.values():
             order = result[0][0].order_id
             il = map(lambda x: x[1], result)
@@ -106,13 +103,34 @@ class sale_order_line_make_invoice(osv.osv_memory):
                     flag = False
                     break
             if flag:
-                wf_service.trg_validate(uid, 'sale.order', line.order_id.id, 'all_lines', cr)
+                wf_service.trg_validate(uid, 'sale.order', line.order_id.id, 'manual_invoice', cr)
                 sales_order_obj.write(cr, uid, [line.order_id.id], {'state': 'progress'})
 
         if not invoices:
-            raise osv.except_osv(_('Warning'), _('Invoice cannot be created for this Sales Order Line due to one of the following reasons:\n1.The state of this sales order line is either "draft" or "cancel"!\n2.The Sales Order Line is Invoiced!'))
-
+            raise osv.except_osv(_('Warning!'), _('Invoice cannot be created for this Sales Order Line due to one of the following reasons:\n1.The state of this sales order line is either "draft" or "cancel"!\n2.The Sales Order Line is Invoiced!'))
+        if context.get('open_invoices', False):
+            return self.open_invoices( cr, uid, ids, res, context=context)
         return {'type': 'ir.actions.act_window_close'}
+
+    def open_invoices(self, cr, uid, ids, invoice_ids, context=None):
+        """ open a view on one of the given invoice_ids """
+        ir_model_data = self.pool.get('ir.model.data')
+        form_res = ir_model_data.get_object_reference(cr, uid, 'account', 'invoice_form')
+        form_id = form_res and form_res[1] or False
+        tree_res = ir_model_data.get_object_reference(cr, uid, 'account', 'invoice_tree')
+        tree_id = tree_res and tree_res[1] or False
+ 
+        return {
+            'name': _('Invoice'),
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'account.invoice',
+            'res_id': invoice_ids,
+            'view_id': False,
+            'views': [(form_id, 'form'), (tree_id, 'tree')],
+            'context': {'type': 'out_invoice'},
+            'type': 'ir.actions.act_window',
+        }
 
 sale_order_line_make_invoice()
 

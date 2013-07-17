@@ -6,13 +6,12 @@
         <record id="invoice_1" model="account.invoice">
             <field name="currency_id" ref="base.EUR"/>
             <field name="company_id" ref="base.main_company"/>
-            <field name="address_invoice_id" ref="base.res_partner_address_8"/>
-            <field name="partner_id" ref="base.res_partner_agrolait"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
             <field name="journal_id" ref="account.sales_journal"/>
             <field name="state">draft</field>
             <field name="type">out_invoice</field>
             <field name="account_id" ref="a_recv"/>
-            <field name="address_contact_id" ref="base.res_partner_address_8"/>
+            <field name="partner_id" ref="base.res_partner_address_8"/>
         </record>
         <record id="invoice_1_line_1" model="account.invoice.line">
             <field name="name">Otpez Laptop without OS</field>
@@ -32,13 +31,12 @@
         <record id="invoice_2" model="account.invoice">
             <field name="currency_id" ref="base.EUR"/>
             <field name="company_id" ref="base.main_company"/>
-            <field name="address_invoice_id" ref="base.res_partner_address_8"/>
-            <field name="partner_id" ref="base.res_partner_agrolait"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
             <field name="journal_id" ref="account.sales_journal"/>
             <field name="state">draft</field>
             <field name="type">out_invoice</field>
             <field name="account_id" ref="a_recv"/>
-            <field name="address_contact_id" ref="base.res_partner_address_8"/>
+            <field name="partner_id" ref="base.res_partner_address_8"/>
             <field eval="time.strftime('%Y-%m') + '-01'" name="date_invoice"/>
         </record>
         <record id="invoice_2_line_1" model="account.invoice.line">
@@ -60,13 +58,12 @@
         <record id="invoice_3" model="account.invoice">
             <field name="currency_id" ref="base.EUR"/>
             <field name="company_id" ref="base.main_company"/>
-            <field name="address_invoice_id" ref="base.res_partner_address_8"/>
-            <field name="partner_id" ref="base.res_partner_agrolait"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
             <field name="journal_id" ref="account.sales_journal"/>
             <field name="state">draft</field>
             <field name="type">out_invoice</field>
             <field name="account_id" ref="a_recv"/>
-            <field name="address_contact_id" ref="base.res_partner_address_8"/>
+            <field name="partner_id" ref="base.res_partner_address_8"/>
             <field eval="time.strftime('%Y-%m') + '-08'" name="date_invoice"/>
         </record>
         <record id="invoice_3_line_1" model="account.invoice.line">
@@ -88,13 +85,12 @@
         <record id="invoice_4" model="account.invoice">
             <field name="currency_id" ref="base.EUR"/>
             <field name="company_id" ref="base.main_company"/>
-            <field name="address_invoice_id" ref="base.res_partner_address_8"/>
-            <field name="partner_id" ref="base.res_partner_agrolait"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
             <field name="journal_id" ref="account.sales_journal"/>
             <field name="state">draft</field>
             <field name="type">out_invoice</field>
             <field name="account_id" ref="a_recv"/>
-            <field name="address_contact_id" ref="base.res_partner_address_8"/>
+            <field name="partner_id" ref="base.res_partner_address_8"/>
             <field eval="time.strftime('%Y-%m') + '-15'" name="date_invoice"/>
         </record>
         <record id="invoice_4_line_1" model="account.invoice.line">

@@ -505,7 +505,7 @@
             <para style="terp_default_Bold_7_Right">[[ formatLang(sum_credit_account(o), digits=get_digits(dp='Account')) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Bold_7_Right">[[ formatLang(sum_balance_account(o), digits=get_digits(dp='Account'), currency = company.currency_id) ]]</para>
+            <para style="terp_default_Bold_7_Right">[[ formatLang(sum_balance_account(o), digits=get_digits(dp='Account'), currency_obj= company.currency_id) ]]</para>
           </td>
           <td>
             <para style="terp_default_Bold_7_Right">[[ o.currency_id and formatLang(sum_currency_amount_account(o), digits=get_digits(dp='Account'),currency_obj=o.currency_id) or '' ]]</para>
@@ -529,7 +529,7 @@
               <para style="terp_default_7">[[ strip_name(line['partner_name'],20) ]]</para>
             </td>
             <td>
-              <para style="terp_default_7">[[ strip_name(line['lref'],17) ]]</para>
+              <para style="terp_default_7">[[ line['lref'] and strip_name(line['lref'],17) ]]</para>
             </td>
             <td>
               <para style="terp_default_7">[[ line['move'] ]]</para>

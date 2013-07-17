@@ -4,11 +4,9 @@
             <field name="name">res.company.form.inherit</field>
             <field name="model">res.company</field>
             <field name="inherit_id" ref="base.view_company_form"/>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <notebook position="inside">
                     <page string="Webkit">
-                        <field name="lib_path" colspan="4"/>
                         <separator string="Images" colspan="4"/>
                         <field name="header_image" colspan="4" nolabel="1"/>
                         <separator string="Headers" colspan="4"/>
