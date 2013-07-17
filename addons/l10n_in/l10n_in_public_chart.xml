@@ -116,7 +116,7 @@
         <record model="account.account.template" id="p15400">
             <field name="name">Tax Receivable</field>
             <field name="code">15400</field>
-            <field name="type">other</field>
+            <field name="type">view</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p10000"/>
@@ -658,7 +658,327 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="p96000"/>
         </record>
-        
+
+        <record model="account.account.template" id="p154001">
+            <field name="name">Input CST 5%</field>
+            <field name="code">154001</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p154002">
+            <field name="name">Input Service Tax Seco. &amp; HEC 1%</field>
+            <field name="code">154002</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p154003">
+            <field name="name">Input Credit - URD</field>
+            <field name="code">154003</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p154004">
+            <field name="name">TDS on Audit Fees - 94J</field>
+            <field name="code">154004</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p154005">
+            <field name="name">TDS on Commission Or Brokerage - 94H</field>
+            <field name="code">154005</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p154006">
+            <field name="name">Input Credit - Import Duty</field>
+            <field name="code">154006</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p154007">
+            <field name="name">Additional Duty (Imports) 4%</field>
+            <field name="code">154007</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p154008">
+            <field name="name">Input Service Tax 12%</field>
+            <field name="code">154008</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p154009">
+            <field name="name">Input Service Tax Edu. Cess. 2%</field>
+            <field name="code">154009</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p154010">
+            <field name="name">TDS on Salary - 92B</field>
+            <field name="code">154010</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p154011">
+            <field name="name">Input Excise Duty 6%</field>
+            <field name="code">154011</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p154012">
+            <field name="name">Input Excise Duty 5%</field>
+            <field name="code">154012</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p154013">
+            <field name="name">Input Excise Duty 12%</field>
+            <field name="code">154013</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p154014">
+            <field name="name">Education Cess 2% - Purchase</field>
+            <field name="code">154014</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p154015">
+            <field name="name">Seco. &amp; Higher Edu. Cess 1% - Purchase</field>
+            <field name="code">154015</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p247001">
+            <field name="name">Excise Duty 12% - Sales</field>
+            <field name="code">247001</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p24700"/>
+        </record>
+
+        <record model="account.account.template" id="p247010">
+            <field name="name">Education Cess 2% - Sales</field>
+            <field name="code">247010</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p24700"/>
+        </record>
+
+        <record model="account.account.template" id="p247002">
+            <field name="name">Seco. &amp; Higher Edu. Cess 1% - Sales</field>
+            <field name="code">247002</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p24700"/>
+        </record>
+
+        <record model="account.account.template" id="p154016">
+            <field name="name">Input Sec. &amp; HEC - Capital Goods</field>
+            <field name="code">154016</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p154017">
+            <field name="name">TDS on Contractor - 94C</field>
+            <field name="code">154017</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p154018">
+            <field name="name">TDS on Director's Interest</field>
+            <field name="code">154018</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p154019">
+            <field name="name">TDS on Director's Remuneration - 92B</field>
+            <field name="code">154019</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p154020">
+            <field name="name">TDS on Interest</field>
+            <field name="code">154020</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p154021">
+            <field name="name">TDS on Professional Fees - 94J</field>
+            <field name="code">154021</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p154022">
+            <field name="name">TDS on Rent - 94I</field>
+            <field name="code">154022</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p154023">
+            <field name="name">Input Edu. Cess - Capital Goods</field>
+            <field name="code">154023</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p154024">
+            <field name="name">Input Excise Duty 12% - Capital Goods</field>
+            <field name="code">154024</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p154025">
+            <field name="name">Input VAT 4%</field>
+            <field name="code">154025</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p154026">
+            <field name="name">Input Additional VAT 1%</field>
+            <field name="code">154026</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p154027">
+            <field name="name">Input VAT 15%</field>
+            <field name="code">154027</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p247003">
+            <field name="name">Output VAT 4%</field>
+            <field name="code">247003</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p24700"/>
+        </record>
+
+        <record model="account.account.template" id="p247004">
+            <field name="name">Output Adi. VAT 1%</field>
+            <field name="code">247004</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p24700"/>
+        </record>
+
+        <record model="account.account.template" id="p247005">
+            <field name="name">CST 2% on Sales - Against Form - C</field>
+            <field name="code">247005</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p24700"/>
+        </record>
+
+        <record model="account.account.template" id="p247006">
+            <field name="name">CST 5% on Sales</field>
+            <field name="code">247006</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p24700"/>
+        </record>
+
+        <record model="account.account.template" id="p154028">
+            <field name="name">Input VAT 12.5%</field>
+            <field name="code">154028</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p154029">
+            <field name="name">Input Additional VAT 2.5%</field>
+            <field name="code">154029</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p154030">
+            <field name="name">Input CST 2%</field>
+            <field name="code">154030</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_expense"/>
+            <field name="parent_id" ref="p15400"/>
+        </record>
+
+        <record model="account.account.template" id="p247007">
+            <field name="name">CST 2% on Sales - CT3 Against Form C</field>
+            <field name="code">247007</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p24700"/>
+        </record>
+
+        <record model="account.account.template" id="p247008">
+            <field name="name">Output VAT 4% on Sales - CT3</field>
+            <field name="code">247008</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p24700"/>
+        </record>
+
+        <record model="account.account.template" id="p247009">
+            <field name="name">Output Adi. VAT 1% Sales CT3</field>
+            <field name="code">247009</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="parent_id" ref="p24700"/>
+        </record>
+
         <record id="indian_chart_template_public" model="account.chart.template">
             <field name="name">India - Chart of Accounts for Public Ltd</field>
             <field name="account_root_id" ref="p0"/>
