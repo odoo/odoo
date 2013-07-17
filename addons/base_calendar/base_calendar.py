@@ -1217,20 +1217,44 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             new_rrule_str = ';'.join(new_rrule_str)
             rdates = get_recurrent_dates(str(new_rrule_str), exdate, event_date, data['exrule'])
             for r_date in rdates:
-                ok = True
+                # fix domain evaluation
+                # step 1: check date and replace expression by True or False, replace other expressions by True
+                # step 2: evaluation of & and |
+                # check if there are one False
+                pile = []
                 for arg in domain:
-                    if arg[0] in ('date', 'date_deadline'):
-                        if (arg[1]=='='):
-                            ok = ok and r_date.strftime('%Y-%m-%d')==arg[2]
-                        if (arg[1]=='>'):
-                            ok = ok and r_date.strftime('%Y-%m-%d')>arg[2]
-                        if (arg[1]=='<'):
-                            ok = ok and r_date.strftime('%Y-%m-%d')<arg[2]
-                        if (arg[1]=='>='):
-                            ok = ok and r_date.strftime('%Y-%m-%d')>=arg[2]
-                        if (arg[1]=='<='):
-                            ok = ok and r_date.strftime('%Y-%m-%d')<=arg[2]
-                if not ok:
+                    if str(arg[0]) in (str('date'), str('date_deadline')):
+                        if (arg[1] == '='):
+                            ok = r_date.strftime('%Y-%m-%d')==arg[2]
+                        if (arg[1] == '>'):
+                            ok = r_date.strftime('%Y-%m-%d')>arg[2]
+                        if (arg[1] == '<'):
+                            ok = r_date.strftime('%Y-%m-%d')<arg[2]
+                        if (arg[1] == '>='):
+                            ok = r_date.strftime('%Y-%m-%d')>=arg[2]
+                        if (arg[1] == '<='):
+                            ok = r_date.strftime('%Y-%m-%d')<=arg[2]
+                        pile.append(ok)
+                    elif str(arg) == str('&') or str(arg) == str('|'):
+                        pile.append(arg)
+                    else:
+                        pile.append(True)
+                pile.reverse()
+                new_pile = []
+                for item in pile:
+                    if not isinstance(item, basestring):
+                        res = item
+                    elif str(item) == str('&'):
+                        first = new_pile.pop()
+                        second = new_pile.pop()
+                        res = first and second
+                    elif str(item) == str('|'):
+                        first = new_pile.pop()
+                        second = new_pile.pop()
+                        res = first or second
+                    new_pile.append(res)
+
+                if [True for item in new_pile if not item]:
                     continue
                 idval = real_id2base_calendar_id(data['id'], r_date.strftime("%Y-%m-%d %H:%M:%S"))
                 result.append(idval)
