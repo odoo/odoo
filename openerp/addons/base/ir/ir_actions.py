@@ -529,12 +529,15 @@ class actions_server(osv.osv):
         'use_create': fields.selection([('new', 'Create a new record in the Base Model'),
                                         ('new_other', 'Create a new record in another model'),
                                         ('copy_current', 'Copy the current record'),
-                                        ('copy_other', 'Copy another record')],
+                                        ('copy_other', 'Choose and copy a record in the database')],
                                        string="Creation Policy", required=True,
                                        help=""),
         'crud_model_id': fields.many2one('ir.model', 'Target Model',
                                          oldname='srcmodel_id',
                                          help="Model for record creation / update. Set this field only to specify a different model than the base model."),
+        'crud_model_name': fields.related('crud_model_id', 'model', type='char',
+                                          string='Create/Write Target Model Name',
+                                          store=True, readonly=True),
         'ref_object': fields.reference('Reference record', selection=_select_objects, size=128,
                                        oldname='copy_object'),
         'link_new_record': fields.boolean('Link to current record',
@@ -544,13 +547,13 @@ class actions_server(osv.osv):
                                          oldname='record_id',
                                          help="Provide the field where the record id is stored after the operations."),
         'use_write': fields.selection([('current', 'Update the current record'),
-                                       ('other', 'Update another record'),
-                                       ('expression', 'Update according a Python expression')],
+                                       ('expression', 'Update a record linked to the current record using python'),
+                                       ('other', 'Choose and Update a record in the database')],
                                       string='Update Policy', required=True,
                                       help=""),
-        'write_expression': fields.char('Write Record Expression',
+        'write_expression': fields.char('Expression',
                                         oldname='write_id',
-                                        help="Provide the field name that the record id refers to for the write operation. If it is empty it will refer to the active id of the object."),
+                                        help="Provide an expression that, applied on the current record, gives the field to update."),
         'fields_lines': fields.one2many('ir.server.object.lines', 'server_id',
                                         string='Value Mapping',
                                         help=""),
@@ -575,6 +578,15 @@ class actions_server(osv.osv):
         'condition': 'True',
         'type': 'ir.actions.server',
         'sequence': 5,
+        'code': """# You can use the following variables:
+#  - self: ORM model of the record on which the action is triggered
+#  - object: browse_record of the record on which the action is triggered if there is one, otherwise None
+#  - pool: ORM model pool (i.e. self.pool)
+#  - cr: database cursor
+#  - uid: current user id
+#  - context: current context
+#  - time: Python time module
+# If you plan to return an action, assign: action = {...}""",
         'use_relational_model': 'base',
         'use_create': 'new',
         'use_write': 'current',
@@ -626,6 +638,7 @@ class actions_server(osv.osv):
             'use_write': 'current',
             'use_relational_model': 'base',
             'wkf_model_id': model_id,
+            'wkf_field_id': False,
             'crud_model_id': model_id,
         }
         return {'value': values}
@@ -643,8 +656,6 @@ class actions_server(osv.osv):
             values['wkf_model_id'] = new_wkf_model_id
         else:
             values['wkf_model_id'] = model_id
-        if values.get('wkf_model_id') != wkf_model_id:
-            values['wkf_transition_id'] = False
         return {'value': values}
 
     def on_change_wkf_model_id(self, cr, uid, ids, wkf_model_id, context=None):
@@ -652,7 +663,8 @@ class actions_server(osv.osv):
         wkf_model_name = False
         if wkf_model_id:
             wkf_model_name = self.pool.get('ir.model').browse(cr, uid, wkf_model_id, context).model
-        return {'value': {'wkf_model_name': wkf_model_name}}
+        values = {'wkf_transition_id': False, 'wkf_model_name': wkf_model_name}
+        return {'value': values}
 
     def on_change_crud_config(self, cr, uid, ids, state, use_create, use_write, ref_object, crud_model_id, model_id, context=None):
         """ TODO """
@@ -713,6 +725,14 @@ class actions_server(osv.osv):
                 'message': message,
             }
         }
+
+    def on_change_crud_model_id(self, cr, uid, ids, crud_model_id, context=None):
+        """ When changing the CRUD model, update its stored name also """
+        crud_model_name = False
+        if crud_model_id:
+            crud_model_name = self.pool.get('ir.model').browse(cr, uid, crud_model_id, context).model
+        values = {'link_field_id': False, 'crud_model_name': crud_model_name}
+        return {'value': values}
 
     def build_expression(self, field_name, sub_field_name):
         """Returns a placeholder expression for use in a template field,

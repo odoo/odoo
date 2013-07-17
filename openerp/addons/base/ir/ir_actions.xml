@@ -355,9 +355,9 @@
                                             attrs="{'required': [('state', '=', 'trigger'), ('use_relational_model', '=', 'relational')],
                                                     'invisible': [('use_relational_model', '=', 'base')]}"
                                             domain="[('model_id', '=', model_id), ('ttype', 'in', ['many2one'])]"/>
-                                    <field name="wkf_model_id" readonly="1"
-                                            on_change="on_change_wkf_model_id(wkf_model_id)"/> <!-- set me invisible -->
-                                    <field name="wkf_model_name" readonly="1"/> <!-- set me invisible -->
+                                    <field name="wkf_model_id" invisible="1"
+                                            on_change="on_change_wkf_model_id(wkf_model_id)"/>
+                                    <field name="wkf_model_name" invisible="1"/>
                                     <field name="wkf_transition_id" attrs="{'required': [('state', '=', 'trigger')]}"
                                             domain="[('wkf_id.osv', '=', wkf_model_name)]"/>
                                 </group>
@@ -385,17 +385,27 @@
                                             on_change="on_change_crud_config(state, use_create, use_write, ref_object, crud_model_id, model_id)"
                                             attrs="{'invisible': [('state', '!=', 'object_write')]}"/>
 
-                                    <field name="crud_model_id"
-                                            attrs="{'readonly': ['|', ('state', '!=', 'object_create'), ('use_create', '!=', 'new_other')]}"/> <!-- set me part invisible -->
+                                    <label for="ref_object" string=" "
+                                            attrs="{'invisible': ['&amp;', 
+                                                                    '|', ('state', '!=', 'object_write'), ('use_write', '!=', 'other'),
+                                                                    '|', ('state', '!=', 'object_create'), ('use_create', '!=', 'copy_other')]}"/>
+                                    <div style="margin-left: 24px;" 
+                                            attrs="{'invisible': ['&amp;', 
+                                                                    '|', ('state', '!=', 'object_write'), ('use_write', '!=', 'other'),
+                                                                    '|', ('state', '!=', 'object_create'), ('use_create', '!=', 'copy_other')]}">
+                                        <field name="ref_object" nolabel="1"
+                                                on_change="on_change_crud_config(state, use_create, use_write, ref_object, crud_model_id, model_id)"/>
+                                    </div>
 
-                                    <field name="ref_object"
-                                            on_change="on_change_crud_config(state, use_create, use_write, ref_object, crud_model_id, model_id)"
-                                            attrs="{'invisible': [('use_write', '!=', 'other'), ('use_create', '!=', 'copy_other')]}"/>
+                                    <field name="crud_model_id"
+                                            on_change="on_change_crud_model_id(crud_model_id)"
+                                            attrs="{'invisible': ['|', ('state', '!=', 'object_create'), ('use_create', '!=', 'new_other')]}"/>
+                                    <field name="crud_model_name" invisible="1"/>
 
                                     <field name="link_new_record" attrs="{'invisible': [('state', '!=', 'object_create')]}"/>
                                     <field name="link_field_id"
-                                            domain="[('model_id', '=', crud_model_id), ('ttype', 'in', ['many2one'])]"
-                                            attrs="{'readonly': [('state', '!=', 'object_create')],
+                                            domain="[('model_id', '=', model_id), ('relation', '=', crud_model_name), ('ttype', 'in', ['many2one'])]"
+                                            attrs="{'required': [('state', '=', 'object_create'), ('link_new_record', '=', True)],
                                                     'invisible': ['|', ('state', '!=', 'object_create'), ('link_new_record', '=', False)]}"/>
 
                                     <field name="write_expression"
@@ -421,12 +431,16 @@
                             </page>
 
                             <page string="Execute several actions" autofocus="autofocus"
-                                    attrs="{'invisible':[('state','!=','other')]}">
-                                <p>If you use client actions in your multiple actions, only the last client action will be executed. Other client actions will be discarded.</p>
-                                <field name="child_ids"/>
+                                    attrs="{'invisible': [('state', '!=', 'multi')]}">
+                                <p class="oe_grey">
+                                    If several child actions return an action, only the last one will be executed.
+                                    This may happen when having server actions executing code that returns an action, or server actions returning a client action.
+                                </p>
+                                <field name="child_ids"
+                                        domain="[('model_id', '=', model_id)]"/>
                             </page>
 
-                            <page string="Help" class="oe_edit_only">
+                            <page string="Help">
                                 <group>
                                     <div style="margin-top: 4px;">
                                         <h3>Help with Python expressions.</h3>
