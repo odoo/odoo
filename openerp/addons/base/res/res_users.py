@@ -38,6 +38,7 @@ class groups(osv.osv):
     _name = "res.groups"
     _description = "Access Groups"
     _rec_name = 'full_name'
+    _order = 'name'
 
     def _get_full_name(self, cr, uid, ids, field, arg, context=None):
         res = {}
@@ -164,6 +165,9 @@ class res_users(osv.osv):
         'user_email': fields.related('email', type='char',
             deprecated='Use the email field instead of user_email. This field will be removed with OpenERP 7.1.'),
     }
+
+    def on_change_login(self, cr, uid, ids, login, context=None):
+        return {'value': {'email': login}}
 
     def on_change_company_id(self, cr, uid, ids, company_id):
         return {'warning' : {
@@ -841,6 +845,7 @@ class users_view(osv.osv):
                     'string': app and app.name or _('Other'),
                     'selection': [(False, '')] + [(g.id, g.name) for g in gs],
                     'help': '\n'.join(tips),
+                    'exportable': False,
                 }
             else:
                 # boolean group fields
@@ -849,6 +854,7 @@ class users_view(osv.osv):
                         'type': 'boolean',
                         'string': g.name,
                         'help': g.comment,
+                        'exportable': False,
                     }
         return res
 

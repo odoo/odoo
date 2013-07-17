@@ -49,8 +49,6 @@
             <field name="symbol">€</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
-            <!-- Company ID will be set later -->
-            <field name="company_id" eval="None"/>
         </record>
         <record id="rateEUR" model="res.currency.rate">
             <field name="rate">1.0</field>
@@ -83,10 +81,6 @@ Administrator</field>
         </record>
 
         <record id="main_partner" model="res.partner">
-            <field name="company_id" ref="main_company"/>
-        </record>
-
-        <record id="EUR" model="res.currency">
             <field name="company_id" ref="main_company"/>
         </record>
 

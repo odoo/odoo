@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
@@ -98,6 +97,8 @@ def preload_registry(dbname):
         openerp.modules.registry.RegistryManager.new(dbname, update_module=update_module)
     except Exception:
         _logger.exception('Failed to initialize database `%s`.', dbname)
+        return False
+    return True
 
 def run_test_file(dbname, test_file):
     """ Preload a registry, possibly run a test file, and start the cron."""
@@ -220,6 +221,18 @@ def quit_on_signals():
         os.unlink(config['pidfile'])
     sys.exit(0)
 
+def watch_parent(beat=4):
+    import gevent
+    ppid = os.getppid()
+    while True:
+        if ppid != os.getppid():
+            pid = os.getpid()
+            _logger.info("LongPolling (%s) Parent changed", pid)
+            # suicide !!
+            os.kill(pid, signal.SIGTERM)
+            return
+        gevent.sleep(beat)
+
 def main(args):
     check_root_user()
     openerp.tools.config.parse_config(args)
@@ -256,17 +269,25 @@ def main(args):
         setup_pid_file()
         # Some module register themselves when they are loaded so we need the
         # services to be running before loading any registry.
-        if config['workers']:
-            openerp.service.start_services_workers()
+        if not openerp.evented:
+            if config['workers']:
+                openerp.service.start_services_workers()
+            else:
+                openerp.service.start_services()
         else:
+            config['xmlrpc_port'] = config['longpolling_port']
+            import gevent
+            gevent.spawn(watch_parent)
             openerp.service.start_services()
 
+    rc = 0
     if config['db_name']:
         for dbname in config['db_name'].split(','):
-            preload_registry(dbname)
+            if not preload_registry(dbname):
+                rc += 1
 
     if config["stop_after_init"]:
-        sys.exit(0)
+        sys.exit(rc)
 
     _logger.info('OpenERP server is running, waiting for connections...')
     quit_on_signals()

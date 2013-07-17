@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2012 OpenERP SA (<http://www.openerp.com>)
+#    Copyright (C) 2010-2013 OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -37,6 +37,7 @@ import openerp.netsvc
 import openerp.osv
 from openerp.release import nt_service_name
 import openerp.tools
+from openerp.tools.misc import stripped_sys_argv
 
 import common
 import db
@@ -128,9 +129,7 @@ def _reexec():
     if openerp.tools.osutil.is_running_as_nt_service():
         subprocess.call('net stop {0} && net start {0}'.format(nt_service_name), shell=True)
     exe = os.path.basename(sys.executable)
-    strip_args = ['-d', '-u']
-    a = sys.argv[:]
-    args = [x for i, x in enumerate(a) if x not in strip_args and a[max(i - 1, 0)] not in strip_args]
+    args = stripped_sys_argv()
     if not args or args[0] != exe:
         args.insert(0, exe)
     os.execv(sys.executable, args)

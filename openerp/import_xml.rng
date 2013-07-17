@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rng:grammar xmlns:rng="http://relaxng.org/ns/structure/1.0">
+<rng:grammar xmlns:rng="http://relaxng.org/ns/structure/1.0"
+        datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
     <rng:define name="any">
-      <rng:element>
-        <rng:anyName/>
-        <rng:zeroOrMore>
-            <rng:choice>
-            <rng:attribute>
+        <rng:element>
             <rng:anyName/>
-            </rng:attribute>
-            <rng:text/>
-            <rng:ref name="any"/>
-            </rng:choice>
-        </rng:zeroOrMore>
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:attribute>
+                        <rng:anyName/>
+                    </rng:attribute>
+                    <rng:text/>
+                    <rng:ref name="any"/>
+                </rng:choice>
+            </rng:zeroOrMore>
         </rng:element>
     </rng:define>
 
@@ -125,19 +126,66 @@
     <rng:define name="field">
         <rng:element name="field">
             <rng:attribute name="name" />
-            <rng:optional><rng:attribute name="type"/></rng:optional>
-            <rng:optional><rng:attribute name="ref"/></rng:optional>
-            <rng:optional><rng:attribute name="eval"/></rng:optional>
-            <rng:optional><rng:attribute name="domain"/></rng:optional>
-            <rng:optional><rng:attribute name="search"/></rng:optional>
-            <rng:optional><rng:attribute name="model"/></rng:optional>
-            <rng:optional><rng:attribute name="use"/></rng:optional>
-            <rng:oneOrMore>
-                <rng:choice>
-                    <rng:ref name="any"/>
+            <rng:choice>
+                <rng:group>
+                    <rng:attribute name="type">
+                        <rng:choice>
+                            <rng:value>char</rng:value>
+                            <rng:value>file</rng:value>
+                        </rng:choice>
+                    </rng:attribute>
                     <rng:text/>
-                </rng:choice>
-            </rng:oneOrMore>
+                </rng:group>
+                <rng:group>
+                    <rng:attribute name="type"><rng:value>int</rng:value></rng:attribute>
+                    <rng:choice>
+                        <rng:data type="int"/>
+                        <rng:value>None</rng:value>
+                    </rng:choice>
+                </rng:group>
+                <rng:group>
+                    <rng:attribute name="type"><rng:value>float</rng:value></rng:attribute>
+                    <rng:data type="float"/>
+                </rng:group>
+                <rng:group>
+                    <rng:attribute name="type">
+                        <rng:choice>
+                            <rng:value>list</rng:value>
+                            <rng:value>tuple</rng:value>
+                        </rng:choice>
+                    </rng:attribute>
+                    <rng:oneOrMore><rng:ref name="value"/></rng:oneOrMore>
+                </rng:group>
+                <rng:group>
+                    <rng:attribute name="type">
+                        <rng:choice>
+                            <rng:value>html</rng:value>
+                            <rng:value>xml</rng:value>
+                        </rng:choice>
+                    </rng:attribute>
+                    <rng:oneOrMore>
+                        <rng:ref name="any"/>
+                    </rng:oneOrMore>
+                </rng:group>
+                <rng:group>
+                    <rng:attribute name="ref"/>
+                    <rng:empty/>
+                </rng:group>
+                <rng:group>
+                    <rng:attribute name="eval"/>
+                    <rng:optional><rng:attribute name="model"/></rng:optional>
+                    <rng:empty/>
+                </rng:group>
+                <rng:group>
+                    <rng:attribute name="search"/>
+                    <rng:optional><rng:attribute name="model"/></rng:optional>
+                    <rng:optional><rng:attribute name="use"/></rng:optional>
+                    <rng:empty/>
+                </rng:group>
+                <rng:group>
+                    <rng:text/>
+                </rng:group>
+            </rng:choice>
         </rng:element>
     </rng:define>
 

@@ -282,6 +282,9 @@ class browse_null(object):
     def __unicode__(self):
         return u''
 
+    def __iter__(self):
+        raise NotImplementedError("Iteration is not allowed on %s" % self)
+
 
 #
 # TODO: execute an object method on browse_record_list
@@ -382,11 +385,11 @@ class browse_record(object):
             # if the field is a classic one or a many2one, we'll fetch all classic and many2one fields
             if col._prefetch:
                 # gen the list of "local" (ie not inherited) fields which are classic or many2one
-                fields_to_fetch = filter(lambda x: x[1]._classic_write, self._table._columns.items())
+                fields_to_fetch = filter(lambda x: x[1]._classic_write and x[1]._prefetch, self._table._columns.items())
                 # gen the list of inherited fields
                 inherits = map(lambda x: (x[0], x[1][2]), self._table._inherit_fields.items())
                 # complete the field list with the inherited fields which are classic or many2one
-                fields_to_fetch += filter(lambda x: x[1]._classic_write, inherits)
+                fields_to_fetch += filter(lambda x: x[1]._classic_write and x[1]._prefetch, inherits)
             # otherwise we fetch only that field
             else:
                 fields_to_fetch = [(name, col)]
@@ -770,7 +773,6 @@ class BaseModel(object):
                 'field_description': f.string,
                 'ttype': f._type,
                 'relation': f._obj or '',
-                'view_load': (f.view_load and 1) or 0,
                 'select_level': tools.ustr(f.select or 0),
                 'readonly': (f.readonly and 1) or 0,
                 'required': (f.required and 1) or 0,
@@ -800,12 +802,12 @@ class BaseModel(object):
                 vals['id'] = id
                 cr.execute("""INSERT INTO ir_model_fields (
                     id, model_id, model, name, field_description, ttype,
-                    relation,view_load,state,select_level,relation_field, translate, serialization_field_id
+                    relation,state,select_level,relation_field, translate, serialization_field_id
                 ) VALUES (
-                    %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
+                    %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
                 )""", (
                     id, vals['model_id'], vals['model'], vals['name'], vals['field_description'], vals['ttype'],
-                     vals['relation'], bool(vals['view_load']), 'base',
+                     vals['relation'], 'base',
                     vals['select_level'], vals['relation_field'], bool(vals['translate']), vals['serialization_field_id']
                 ))
                 if 'module' in context:
@@ -823,11 +825,11 @@ class BaseModel(object):
                         cr.commit()
                         cr.execute("""UPDATE ir_model_fields SET
                             model_id=%s, field_description=%s, ttype=%s, relation=%s,
-                            view_load=%s, select_level=%s, readonly=%s ,required=%s, selectable=%s, relation_field=%s, translate=%s, serialization_field_id=%s
+                            select_level=%s, readonly=%s ,required=%s, selectable=%s, relation_field=%s, translate=%s, serialization_field_id=%s
                         WHERE
                             model=%s AND name=%s""", (
                                 vals['model_id'], vals['field_description'], vals['ttype'],
-                                vals['relation'], bool(vals['view_load']),
+                                vals['relation'],
                                 vals['select_level'], bool(vals['readonly']), bool(vals['required']), bool(vals['selectable']), vals['relation_field'], bool(vals['translate']), vals['serialization_field_id'], vals['model'], vals['name']
                             ))
                         break
@@ -1032,6 +1034,7 @@ class BaseModel(object):
                 'ondelete': field['on_delete'],
                 'translate': (field['translate']),
                 'manual': True,
+                '_prefetch': False,
                 #'select': int(field['select_level'])
             }
 
@@ -1536,7 +1539,7 @@ class BaseModel(object):
                 else:
                     translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, msg)
                 error_msgs.append(
-                        _("Error occurred while validating the field(s) %s: %s") % (','.join(fields), translated_msg)
+                        _("The field(s) `%s` failed against a constraint: %s") % (', '.join(fields), translated_msg)
                 )
                 self._invalids.update(fields)
         if error_msgs:
@@ -2971,7 +2974,7 @@ class BaseModel(object):
         update_custom_fields = context.get('update_custom_fields', False)
         self._field_create(cr, context=context)
         create = not self._table_exist(cr)
-        if getattr(self, '_auto', True):
+        if self._auto:
 
             if create:
                 self._create_table(cr)
@@ -3205,7 +3208,8 @@ class BaseModel(object):
 
         cr.commit()     # start a new transaction
 
-        self._add_sql_constraints(cr)
+        if self._auto:
+            self._add_sql_constraints(cr)
 
         if create:
             self._execute_sql(cr)
@@ -3853,11 +3857,12 @@ class BaseModel(object):
             # Attempt to distinguish record rule restriction vs deleted records,
             # to provide a more specific error message - check if the missinf
             cr.execute('SELECT id FROM ' + self._table + ' WHERE id IN %s', (tuple(missing_ids),))
-            if cr.rowcount:
+            forbidden_ids = [x[0] for x in cr.fetchall()]
+            if forbidden_ids:
                 # the missing ids are (at least partially) hidden by access rules
                 if uid == SUPERUSER_ID:
                     return
-                _logger.warning('Access Denied by record rules for operation: %s, uid: %s, model: %s', operation, uid, self._name)
+                _logger.warning('Access Denied by record rules for operation: %s on record ids: %r, uid: %s, model: %s', operation, forbidden_ids, uid, self._name)
                 raise except_orm(_('Access Denied'),
                                  _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
                                     (self._description, operation))
@@ -5282,6 +5287,34 @@ class BaseModel(object):
 
     # for backward compatibility
     resolve_o2m_commands_to_record_dicts = resolve_2many_commands
+
+    def search_read(self, cr, uid, domain=None, fields=None, offset=0, limit=None, order=None, context=None):
+        """
+        Performs a ``search()`` followed by a ``read()``.
+
+        :param cr: database cursor
+        :param user: current user id
+        :param domain: Search domain, see ``args`` parameter in ``search()``. Defaults to an empty domain that will match all records.
+        :param fields: List of fields to read, see ``fields`` parameter in ``read()``. Defaults to all fields.
+        :param offset: Number of records to skip, see ``offset`` parameter in ``search()``. Defaults to 0.
+        :param limit: Maximum number of records to return, see ``limit`` parameter in ``search()``. Defaults to no limit.
+        :param order: Columns to sort result, see ``order`` parameter in ``search()``. Defaults to no sort.
+        :param context: context arguments.
+        :return: List of dictionaries containing the asked fields.
+        :rtype: List of dictionaries.
+
+        """
+        record_ids = self.search(cr, uid, domain or [], offset, limit or False, order or False, context or {})
+        if not record_ids:
+            return []
+        result = self.read(cr, uid, record_ids, fields or [], context or {})
+        # reorder read
+        if len(result) >= 1:
+            index = {}
+            for r in result:
+                index[r['id']] = r
+            result = [index[x] for x in record_ids if x in index]
+        return result
 
     def _register_hook(self, cr):
         """ stuff to do right after the registry is built """

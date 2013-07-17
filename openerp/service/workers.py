@@ -14,6 +14,8 @@ import signal
 import socket
 import sys
 import time
+import subprocess
+import os.path
 
 import werkzeug.serving
 try:
@@ -23,6 +25,7 @@ except ImportError:
 
 import openerp
 import openerp.tools.config as config
+from openerp.tools.misc import stripped_sys_argv
 
 _logger = logging.getLogger(__name__)
 
@@ -35,7 +38,6 @@ class Multicorn(object):
     def __init__(self, app):
         # config
         self.address = (config['xmlrpc_interface'] or '0.0.0.0', config['xmlrpc_port'])
-        self.long_polling_address = (config['xmlrpc_interface'] or '0.0.0.0', config['longpolling_port'])
         self.population = config['workers']
         self.timeout = config['limit_time_real']
         self.limit_request = config['limit_request']
@@ -46,10 +48,10 @@ class Multicorn(object):
         self.socket = None
         self.workers_http = {}
         self.workers_cron = {}
-        self.workers_longpolling = {}
         self.workers = {}
         self.generation = 0
         self.queue = []
+        self.long_polling_pid = None
 
     def pipe_new(self):
         pipe = os.pipe()
@@ -88,6 +90,14 @@ class Multicorn(object):
         else:
             worker.run()
             sys.exit(0)
+
+    def long_polling_spawn(self):
+        nargs = stripped_sys_argv('--pidfile')
+        cmd = nargs[0]
+        cmd = os.path.join(os.path.dirname(cmd), "openerp-long-polling")
+        nargs[0] = cmd
+        popen = subprocess.Popen(nargs)
+        self.long_polling_pid = popen.pid
 
     def worker_pop(self, pid):
         if pid in self.workers:
@@ -143,8 +153,8 @@ class Multicorn(object):
             self.worker_spawn(WorkerHTTP, self.workers_http)
         while len(self.workers_cron) < config['max_cron_threads']:
             self.worker_spawn(WorkerCron, self.workers_cron)
-        while len(self.workers_longpolling) < 1:
-            self.worker_spawn(WorkerLongPolling, self.workers_longpolling)
+        if not self.long_polling_pid:
+            self.long_polling_spawn()
 
     def sleep(self):
         try:
@@ -183,14 +193,11 @@ class Multicorn(object):
         self.socket.setblocking(0)
         self.socket.bind(self.address)
         self.socket.listen(8*self.population)
-        # long polling socket
-        self.long_polling_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.long_polling_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.long_polling_socket.setblocking(0)
-        self.long_polling_socket.bind(self.long_polling_address)
-        self.long_polling_socket.listen(8)
 
     def stop(self, graceful=True):
+        if self.long_polling_pid is not None:
+            self.worker_kill(self.long_polling_pid, signal.SIGKILL)     # FIXME make longpolling process handle SIGTERM correctly
+            self.long_polling_pid = None
         if graceful:
             _logger.info("Stopping gracefully")
             limit = time.time() + self.timeout
@@ -355,26 +362,6 @@ class WorkerHTTP(Worker):
         Worker.start(self)
         self.server = WorkerBaseWSGIServer(self.multi.app)
 
-class WorkerLongPolling(Worker):
-    """ Long polling workers """
-    def __init__(self, multi):
-        super(WorkerLongPolling, self).__init__(multi)
-        # Disable the watchdog feature for this kind of worker.
-        self.watchdog_timeout = None
-
-    def start(self):
-        openerp.evented = True
-        _logger.info('Using gevent mode')
-        import gevent.monkey
-        gevent.monkey.patch_all()
-        import gevent_psycopg2
-        gevent_psycopg2.monkey_patch()
-
-        Worker.start(self)
-        from gevent.wsgi import WSGIServer
-        self.server = WSGIServer(self.multi.long_polling_socket, self.multi.app)
-        self.server.serve_forever()
-
 class WorkerBaseWSGIServer(werkzeug.serving.BaseWSGIServer):
     """ werkzeug WSGI Server patched to allow using an external listen socket
     """
@@ -405,14 +392,18 @@ class WorkerCron(Worker):
             interval = 60 + self.pid % 10 # chorus effect
             time.sleep(interval)
 
-    def process_work(self):
-        rpc_request = logging.getLogger('openerp.netsvc.rpc.request')
-        rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
-        _logger.debug("WorkerCron (%s) polling for jobs", self.pid)
+    def _db_list(self):
         if config['db_name']:
             db_names = config['db_name'].split(',')
         else:
             db_names = openerp.service.db.exp_list(True)
+        return db_names
+
+    def process_work(self):
+        rpc_request = logging.getLogger('openerp.netsvc.rpc.request')
+        rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
+        _logger.debug("WorkerCron (%s) polling for jobs", self.pid)
+        db_names = self._db_list()
         if len(db_names):
             self.db_index = (self.db_index + 1) % len(db_names)
             db_name = db_names[self.db_index]
@@ -446,7 +437,15 @@ class WorkerCron(Worker):
             self.db_index = 0
 
     def start(self):
+        os.nice(10)     # mommy always told me to be nice with others...
         Worker.start(self)
+        self.multi.socket.close()
         openerp.service.start_internal()
+
+        # chorus effect: make cron workers do not all start at first database
+        mct = config['max_cron_threads']
+        p = float(self.pid % mct) / mct
+        self.db_index = int(len(self._db_list()) * p)
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
