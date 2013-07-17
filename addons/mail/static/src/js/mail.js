@@ -967,10 +967,8 @@ openerp.mail = function (session) {
             this.$('.oe_reply').on('click', this.on_message_reply);
             this.$('.oe_star').on('click', this.on_star);
             this.$('.oe_msg_vote').on('click', this.on_vote);
-<<<<<<< TREE
             this.$('.oe_mail_expand').on('click', this.on_expand);
             this.$('.oe_mail_reduce').on('click', this.on_expand);
-=======
             this.$('.oe_mail_action_model').on('click', this.on_record_clicked);
         },
 
@@ -989,7 +987,6 @@ openerp.mail = function (session) {
                 views: [[false, 'form']]
             });
             return false;
->>>>>>> MERGE-SOURCE
         },
 
         /* Call the on_compose_message on the thread of this message. */
