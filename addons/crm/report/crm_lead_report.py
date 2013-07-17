@@ -58,8 +58,9 @@ class crm_lead_report(osv.osv):
 
         # other date fields
         'create_date': fields.datetime('Create Date', readonly=True),
-        'opening_date': fields.date('Opening Date', readonly=True),
+        'opening_date': fields.date('Assignation Date', readonly=True),
         'date_closed': fields.date('Close Date', readonly=True),
+        'date_last_stage_update': fields.datetime('Last Stage Update', readonly=True),
 
         # durations
         'delay_open': fields.float('Delay to Assign',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
@@ -97,7 +98,6 @@ class crm_lead_report(osv.osv):
             CREATE OR REPLACE VIEW crm_lead_report AS (
                 SELECT
                     id,
-
                     to_char(c.date_deadline, 'YYYY') as deadline_year,
                     to_char(c.date_deadline, 'MM') as deadline_month,
                     to_char(c.date_deadline, 'YYYY-MM-DD') as deadline_day,
@@ -108,6 +108,8 @@ class crm_lead_report(osv.osv):
 
                     to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
                     to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
+
+                    date_trunc('day',c.date_last_stage_update) as date_last_stage_update,
 
                     c.user_id,
                     c.probability,

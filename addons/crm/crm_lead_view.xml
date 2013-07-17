@@ -545,7 +545,7 @@
                     <field name="section_id" context="{'invisible_section': False}" groups="base.group_multi_salesteams"/>
                     <field name="user_id"/>
                     <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
-                    <field name="stage_id"/>
+                    <field name="stage_id" domain="[]"/>
                     <field name="probability"/>
                     <separator/>
                     <filter string="New" name="new"

@@ -246,11 +246,12 @@ class crm_lead(format_address, osv.osv):
                         domain="['&', ('section_ids', '=', section_id), '|', ('type', '=', type), ('type', '=', 'both')]"),
         'user_id': fields.many2one('res.users', 'Salesperson', select=True, track_visibility='onchange'),
         'referred': fields.char('Referred By', size=64),
-        'date_open': fields.datetime('Opened', readonly=True),
+        'date_open': fields.datetime('Assigned', readonly=True),
         'day_open': fields.function(_compute_day, string='Days to Open', \
                                 multi='day_open', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 multi='day_close', type="float", store=True),
+        'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
 
         # Only used for type opportunity
         'probability': fields.float('Success Rate (%)', group_operator="avg"),
@@ -295,6 +296,7 @@ class crm_lead(format_address, osv.osv):
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
         'color': 0,
+        'date_last_stage_update': fields.datetime.now(),
     }
 
     _sql_constraints = [
@@ -678,7 +680,7 @@ class crm_lead(format_address, osv.osv):
             'phone': customer and customer.phone or lead.phone,
         }
         if not lead.stage_id or lead.stage_id.type=='lead':
-            val['stage_id'] = self.stage_find(cr, uid, [lead], section_id, [('state', '=', 'draft'),('type', 'in', ('opportunity','both'))], context=context)
+            val['stage_id'] = self.stage_find(cr, uid, [lead], section_id, [('sequence', '=', '1'), ('type', 'in', ('opportunity','both'))], context=context)
         return val
 
     def convert_opportunity(self, cr, uid, ids, partner_id, user_ids=False, section_id=False, context=None):
@@ -918,6 +920,10 @@ class crm_lead(format_address, osv.osv):
         return super(crm_lead, self).create(cr, uid, vals, context=create_context)
 
     def write(self, cr, uid, ids, vals, context=None):
+        # stage change: update date_last_stage_update
+        if 'stage_id' in vals:
+            vals['date_last_stage_update'] = fields.datetime.now()
+        # stage change with new stage: update probability
         if vals.get('stage_id') and not vals.get('probability'):
             onchange_stage_values = self.onchange_stage_id(cr, uid, ids, vals.get('stage_id'), context=context)['value']
             vals.update(onchange_stage_values)
