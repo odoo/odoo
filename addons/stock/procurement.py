@@ -57,7 +57,7 @@ class procurement_order(osv.osv):
     def _find_suitable_rule(self, cr, uid, procurement, context=None):
         rule_id = super(procurement_order, self)._find_suitable_rule(cr, uid, procurement, context=context)
         if not rule_id:
-            rule_id = self._search_suitable_rule(cr, uid, procurement, [('action', '=', 'move'), ('location_id', '=', procurement.location_id.id)], context=context)
+            rule_id = self._search_suitable_rule(cr, uid, procurement, [('location_id', '=', procurement.location_id.id)], context=context) #action=move
             rule_id = rule_id and rule_id[0] or False
         return rule_id
 

@@ -158,15 +158,22 @@ class procurement_order(osv.osv):
         })
         return d
 
+    def _find_suitable_rule(self, cr, uid, procurement, context=None):
+        rule_id = super(procurement_order, self)._find_suitable_rule(cr, uid, procurement, context=context)
+        if not rule_id:
+            rule_id = self._search_suitable_rule(cr, uid, procurement, [('location_id', '=', procurement.location_id.id)], context=context) #action=move
+            rule_id = rule_id and rule_id[0] or False
+        return rule_id
+
     def _search_suitable_rule(self, cr, uid, procurement, domain, context=None):
         '''we try to first find a rule among the ones defined on the procurement order group and if none is found, we try on the routes defined for the product, and finally we fallback on the default behavior'''
         route_ids = [x.id for x in procurement.route_ids]
-        res = super(procurement_order, self)._search_suitable_rule(cr, uid, procurement, domain + [('route_id', 'in', route_ids)], context=context)
+        res = self.pool.get('procurement.rule').search(cr, uid, domain + [('route_id', 'in', route_ids)], context=context)
         if not res:
             route_ids = [x.id for x in procurement.product_id.route_ids]
-            res = super(procurement_order, self)._search_suitable_rule(cr, uid, procurement, domain + [('route_id', 'in', route_ids)], context=context)
+            self.pool.get('procurement.rule').search(cr, uid, domain + [('route_id', 'in', route_ids)], context=context)
             if not res:
-                return super(procurement_order, self)._search_suitable_rule(cr, uid, procurement, domain, context=context)
+                self.pool.get('procurement.rule').search(cr, uid, domain, context=context)
         return res
 
 
