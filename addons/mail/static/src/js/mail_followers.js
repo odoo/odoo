@@ -151,14 +151,11 @@ openerp_mail_followers = function(session, mail) {
         },
 
         fetch_followers: function (value_) {
-            var self = this;
             this.value = value_ || {};
-            return this.ds_model.call('read_followers_data', [this.value]).then(function(result) {
-                self.result = result;
-                self.display_followers(result), self.proxy('fetch_generic');
-                self.display_buttons();
-                self.fetch_subtypes();
-            });
+            return this.ds_model.call('read_followers_data', [this.value])
+                .then(this.proxy('display_followers'), this.proxy('fetch_generic'))
+                .then(this.proxy('display_buttons'))
+                .then(this.proxy('fetch_subtypes'));
         },
 
         /** Read on res.partner failed: fall back on a generic case
@@ -201,19 +198,17 @@ openerp_mail_followers = function(session, mail) {
             // truncate number of displayed followers
             var truncated = this.followers.slice(0, this.displayed_nb);
             _(truncated).each(function (record) {
+                if (record.length < 3) { return; }
                 if (record[2].is_uid == true) { self.message_is_follower = record[2].is_uid; }
                 record[2].avatar_url = mail.ChatterUtils.get_image(self.session, 'res.partner', 'image_small', record[0]);
                 $(session.web.qweb.render('mail.followers.partner', {'record': record, 'widget': self})).appendTo(node_user_list);
                 // On mouse-enter it will show the edit_subtype pencil.
                 if (record[2].is_editable == true) {
-                    self.$el.on('mouseenter', 'div.oe_follower_list', function() {
-                        $("img.oe_edit_subtype").removeClass("hidden");
-                        $('div.oe_follower_list').find('.oe_partner').addClass('oe_partner_name');
-                        }).on('mouseleave', 'div.oe_follower_list', function(){
-                            $("img.oe_edit_subtype").addClass("hidden");
-                            $('div.oe_follower_list').find('.oe_partner').removeClass('oe_partner_name');
-                        });
-                    }
+                    self.$el.find('div.oe_follower_list').on('mouseenter mouseleave', function(e) {
+                        self.$el.find('img.oe_edit_subtype').toggleClass('hidden', e.type == 'mouseleave');
+                        self.$el.find('div.oe_follower_list').find('.oe_partner').toggleClass('oe_partner_name', e.type == 'mouseenter');
+                    });
+                }
             });
             // FVA note: be sure it is correctly translated
             if (truncated.length < this.followers.length) {
