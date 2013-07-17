@@ -39,8 +39,8 @@
             <field eval="[(6,0,[])]" name="transition_ids"/>
             <field eval="&quot;&quot;&quot;To Buy&quot;&quot;&quot;" name="name"/>
             <field eval="&quot;&quot;&quot;If the service has a 'Buy' supply method, this creates a RFQ, a subcontracting demand for instance.&quot;&quot;&quot;" name="note"/>
-            <field model="process.node" name="target_node_id" ref="process_node_orderrfq0"/>
-            <field model="process.node" name="source_node_id" ref="procurement.process_node_serviceonorder0"/>
+            <field name="target_node_id" ref="process_node_orderrfq0"/>
+            <field name="source_node_id" ref="procurement.process_node_serviceonorder0"/>
         </record>
 
     </data>

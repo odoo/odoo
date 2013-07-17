@@ -336,11 +336,11 @@
         <div class="modal-dialog">
             <div class="popup popup-help">
                 <p class="message">The scanned product was not recognized<br /> Please wait, a cashier is on the way</p>
-            </div>
-        </div>
-        <div class="footer">
-            <div class="button">
-                Ok
+                <div class="footer">
+                    <div class="button">
+                        Ok
+                    </div>
+                </div>
             </div>
         </div>
     </t>
@@ -357,6 +357,33 @@
         <div class="modal-dialog">
             <div class="popup popup-help">
                 <p class="message">Your order has to be validated by a cashier.</p>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ErrorNoClientPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-help">
+                <p class="message">An anonymous order cannot be invoiced</p>
+                <div class="footer">
+                    <div class="button">
+                        Ok
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ErrorInvoiceTransferPopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-help">
+                <p class="message">The Order could not be sent to the server for invoicing. Invoices cannot be generated
+                    in offline mode. Please check your internet connection and try again.</p>
+                <div class="footer">
+                    <div class="button">
+                        Ok
+                    </div>
+                </div>
             </div>
         </div>
     </t>
@@ -538,7 +565,6 @@
         <button class="paypad-button" t-att-cash-register-id="widget.cashRegister.get('id')">
             <t t-esc="widget.cashRegister.get('journal').name"/>
         </button>
-        <br />
     </t>
 
     <t t-name="OrderButtonWidget">

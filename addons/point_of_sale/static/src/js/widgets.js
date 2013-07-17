@@ -1,5 +1,6 @@
 function openerp_pos_widgets(instance, module){ //module is instance.point_of_sale
-    var QWeb = instance.web.qweb;
+    var QWeb = instance.web.qweb,
+	_t = instance.web._t;
 
     // The ImageCache is used to hide the latency of the application cache on-disk access in chrome 
     // that causes annoying flickering on product pictures. Why the hell a simple access to
@@ -319,6 +320,14 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 this.payment_line.set_amount(amount);
             }
         },
+        checkAmount: function(e){
+            if (e.which !== 0 && e.charCode !== 0) {
+                if(isNaN(String.fromCharCode(e.charCode))){
+                    return (String.fromCharCode(e.charCode) === "." && e.currentTarget.value.toString().split(".").length < 2)?true:false;
+                }
+            }
+            return true
+        },
         changedAmount: function() {
         	if (this.amount !== this.payment_line.get_amount()){
         		this.renderElement();
@@ -328,7 +337,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var self = this;
             this.name =   this.payment_line.get_cashregister().get('journal_id')[1];
             this._super();
-            this.$('input').keyup(function(event){
+            this.$('input').keypress(_.bind(this.checkAmount, this))
+			.keyup(function(event){
                 self.changeAmount(event);
             });
             this.$('.delete-payment-line').click(function() {
@@ -498,7 +508,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
 
         get_image_url: function(category){
-            return instance.session.url('/web/binary/image', {model: 'pos.category', field: 'image', id: category.id});
+            return instance.session.url('/web/binary/image', {model: 'pos.category', field: 'image_medium', id: category.id});
         },
 
         renderElement: function(){
@@ -828,6 +838,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             instance.web.blockUI(); 
 
             this.pos = new module.PosModel(this.session);
+            this.pos.pos_widget = this;
             this.pos_widget = this; //So that pos_widget's childs have pos_widget set automatically
 
             this.numpad_visible = true;
@@ -942,6 +953,12 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.error_negative_price_popup = new module.ErrorNegativePricePopupWidget(this, {});
             this.error_negative_price_popup.appendTo($('.point-of-sale'));
 
+            this.error_no_client_popup = new module.ErrorNoClientPopupWidget(this, {});
+            this.error_no_client_popup.appendTo($('.point-of-sale'));
+
+            this.error_invoice_transfer_popup = new module.ErrorInvoiceTransferPopupWidget(this, {});
+            this.error_invoice_transfer_popup.appendTo($('.point-of-sale'));
+
             // --------  Misc ---------
 
             this.notification = new module.SynchNotificationWidget(this,{});
@@ -971,13 +988,13 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.onscreen_keyboard.appendTo($(".point-of-sale #content")); 
 
             this.close_button = new module.HeaderButtonWidget(this,{
-                label:'Close',
+                label: _t('Close'),
                 action: function(){ self.try_close(); },
             });
             this.close_button.appendTo(this.$('#rightheader'));
 
             this.client_button = new module.HeaderButtonWidget(this,{
-                label:'Self-Checkout',
+                label: _t('Self-Checkout'),
                 action: function(){ self.screen_selector.set_user_mode('client'); },
             });
             this.client_button.appendTo(this.$('#rightheader'));
@@ -1003,6 +1020,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     'error-session': this.error_session_popup,
                     'error-negative-price': this.error_negative_price_popup,
                     'choose-receipt': this.choose_receipt_popup,
+                    'error-no-client': this.error_no_client_popup,
+                    'error-invoice-transfer': this.error_invoice_transfer_popup,
                 },
                 default_client_screen: 'welcome',
                 default_cashier_screen: 'products',

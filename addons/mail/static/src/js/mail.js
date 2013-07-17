@@ -4,8 +4,8 @@ openerp.mail = function (session) {
 
     var mail = session.mail = {};
 
-    openerp_mail_followers(session, mail);        // import mail_followers.js
-    openerp_FieldMany2ManyTagsEmail(session);      // import manyy2many_tags_email.js
+    openerp_mail_followers(session, mail);          // import mail_followers.js
+    openerp_FieldMany2ManyTagsEmail(session);       // import manyy2many_tags_email.js
 
     /**
      * ------------------------------------------------------------
@@ -219,6 +219,7 @@ openerp.mail = function (session) {
             this.type = datasets.type ||  false,
             this.subtype = datasets.subtype ||  false,
             this.is_author = datasets.is_author ||  false,
+            this.author_avatar = datasets.author_avatar || false,
             this.is_private = datasets.is_private ||  false,
             this.subject = datasets.subject ||  false,
             this.name = datasets.name ||  false,
@@ -236,8 +237,15 @@ openerp.mail = function (session) {
 
             this.format_data();
 
+            // update record_name: Partner profile
+            if (this.model == 'res.partner') {
+                this.record_name = 'Partner Profile of ' + this.record_name;
+            }
+            else if (this.model == 'hr.employee') {
+                this.record_name = 'News from ' + this.record_name;
+            }
             // record options and data
-            this.show_record_name = this.options.show_record_name && this.record_name && !this.thread_level && this.model != 'res.partner';
+            this.show_record_name = this.options.show_record_name && this.record_name && !this.thread_level;
             this.options.show_read = false;
             this.options.show_unread = false;
             if (this.options.show_read_unread_button) {
@@ -256,12 +264,16 @@ openerp.mail = function (session) {
 
         /* Convert date, timerelative and avatar in displayable data. */
         format_data: function () {
+
             //formating and add some fields for render
             this.date = this.date ? session.web.str_to_datetime(this.date) : false;
+            this.display_date = this.date.toString('ddd MMM dd yyyy HH:mm');
             if (this.date && new Date().getTime()-this.date.getTime() < 7*24*60*60*1000) {
                 this.timerelative = $.timeago(this.date);
-            } 
-            if (this.type == 'email' && (!this.author_id || !this.author_id[0])) {
+            }
+            if (this.author_avatar) {
+                this.avatar = "data:image/png;base64," + this.author_avatar;
+            } else if (this.type == 'email' && (!this.author_id || !this.author_id[0])) {
                 this.avatar = ('/mail/static/src/img/email_icon.png');
             } else if (this.author_id && this.template != 'mail.compose_message') {
                 this.avatar = mail.ChatterUtils.get_image(this.session, 'res.partner', 'image_small', this.author_id[0]);
@@ -620,10 +632,7 @@ openerp.mail = function (session) {
             // have unknown names -> call message_get_partner_info_from_emails to try to find partner_id
             var find_done = $.Deferred();
             if (names_to_find.length > 0) {
-                var values = {
-                    'res_id': this.context.default_res_id,
-                }
-                find_done = self.parent_thread.ds_thread._model.call('message_get_partner_info_from_emails', [names_to_find], values);
+                find_done = self.parent_thread.ds_thread._model.call('message_partner_info_from_emails', [this.context.default_res_id, names_to_find]);
             }
             else {
                 find_done.resolve([]);
@@ -669,11 +678,7 @@ openerp.mail = function (session) {
                     var new_names_to_find = _.difference(names_to_find, names_to_remove);
                     find_done = $.Deferred();
                     if (new_names_to_find.length > 0) {
-                        var values = {
-                            'link_mail': true,
-                            'res_id': self.context.default_res_id,
-                        }
-                        find_done = self.parent_thread.ds_thread._model.call('message_get_partner_info_from_emails', [new_names_to_find], values);
+                        find_done = self.parent_thread.ds_thread._model.call('message_partner_info_from_emails', [self.context.default_res_id, new_names_to_find, true]);
                     }
                     else {
                         find_done.resolve([]);
@@ -742,7 +747,7 @@ openerp.mail = function (session) {
                 }
                 // create object and attach to the thread object
                 thread.message_fetch([["id", "=", message_id]], false, [message_id], function (arg, data) {
-                    var message = thread.create_message_object( data[0] );
+                    var message = thread.create_message_object( data.slice(-1)[0] );
                     // insert the message on dom
                     thread.insert_message( message, root ? undefined : self.$el, root );
                 });
@@ -850,9 +855,9 @@ openerp.mail = function (session) {
 
         on_checked_recipient: function (event) {
             var $input = $(event.target);
-            var email = $input.attr("data");
+            var full_name = $input.attr("data");
             _.each(this.recipients, function (recipient) {
-                if (recipient.email_address == email) {
+                if (recipient.full_name == full_name) {
                     recipient.checked = $input.is(":checked");
                 }
             });
@@ -962,6 +967,24 @@ openerp.mail = function (session) {
             this.$('.oe_reply').on('click', this.on_message_reply);
             this.$('.oe_star').on('click', this.on_star);
             this.$('.oe_msg_vote').on('click', this.on_vote);
+            this.$('.oe_mail_action_model').on('click', this.on_record_clicked);
+        },
+
+        on_record_clicked: function  (event) {
+            event.stopPropagation();
+            var state = {
+                'model': this.model,
+                'id': this.res_id,
+                'title': this.record_name
+            };
+            session.webclient.action_manager.do_push_state(state);
+            this.do_action({
+                res_model: state.model,
+                res_id: state.id,
+                type: 'ir.actions.act_window',
+                views: [[false, 'form']]
+            });
+            return false;
         },
 
         /* Call the on_compose_message on the thread of this message. */
@@ -975,8 +998,8 @@ openerp.mail = function (session) {
         expender: function () {
             this.$('.oe_msg_body:first').expander({
                 slicePoint: this.options.truncate_limit,
-                expandText: 'read more',
-                userCollapseText: 'read less',
+                expandText: _t('read more'),
+                userCollapseText: _t('read less'),
                 detailClass: 'oe_msg_tail',
                 moreClass: 'oe_mail_expand',
                 lessClass: 'oe_mail_reduce',
@@ -1056,9 +1079,7 @@ openerp.mail = function (session) {
                             msg.renderElement();
                             msg.start();
                         }
-                        if( self.options.root_thread.__parentedParent.__parentedParent.do_reload_menu_emails ) {
-                            self.options.root_thread.__parentedParent.__parentedParent.do_reload_menu_emails();
-                        }
+                        self.options.root_thread.MailWidget.do_reload_menu_emails();
                     });
 
                 });
@@ -1198,6 +1219,7 @@ openerp.mail = function (session) {
         init: function (parent, datasets, options) {
             var self = this;
             this._super(parent, options);
+            this.MailWidget = parent.__proto__ == mail.Widget.prototype ? parent : false;
             this.domain = options.domain || [];
             this.context = _.extend(options.context || {});
 
@@ -1431,11 +1453,16 @@ openerp.mail = function (session) {
 
         message_fetch_set_read: function (message_list) {
             if (! this.context.mail_read_set_read) return;
-            this.render_mutex.exec(_.bind(function() {
+            var self = this;
+            this.render_mutex.exec(function() {
                 msg_ids = _.pluck(message_list, 'id');
-                return this.ds_message.call('set_message_read', [
-                        msg_ids, true, false, this.context]);
-             }, this));
+                return self.ds_message.call('set_message_read', [msg_ids, true, false, self.context])
+                    .then(function (nb_read) {
+                        if (nb_read) {
+                            self.options.root_thread.MailWidget.do_reload_menu_emails();
+                        }
+                    });
+             });
         },
 
         /**
@@ -1701,6 +1728,22 @@ openerp.mail = function (session) {
         },
         
         /**
+        * create an object "related_menu"
+        * contains the menu widget and the sub menu related of this wall
+        */
+        do_reload_menu_emails: function () {
+            var menu = session.webclient.menu;
+            if (!menu || !menu.current_menu) {
+                return $.when();
+            }
+            return menu.rpc("/web/menu/load_needaction", {'menu_ids': [menu.current_menu]}).done(function(r) {
+                menu.on_needaction_loaded(r);
+            }).then(function () {
+                menu.trigger("need_action_reloaded");
+            });
+        },
+
+        /**
          *Create the root thread and display this object in the DOM.
          * Call the no_message method then c all the message_fetch method 
          * of this root thread to display the messages.
@@ -1749,6 +1792,7 @@ openerp.mail = function (session) {
 
         init: function (parent, node) {
             this._super.apply(this, arguments);
+            this.ParentViewManager = parent;
             this.node = _.clone(node);
             this.node.params = _.extend({
                 'display_indented_thread': -1,
@@ -1768,7 +1812,7 @@ openerp.mail = function (session) {
 
             this.domain = this.node.params && this.node.params.domain || [];
 
-            if (!this.__parentedParent.is_action_enabled('edit')) {
+            if (!this.ParentViewManager.is_action_enabled('edit')) {
                 this.node.params.show_link = false;
             }
         },
@@ -1818,6 +1862,19 @@ openerp.mail = function (session) {
 
     /**
      * ------------------------------------------------------------
+     * Aside Widget
+     * ------------------------------------------------------------
+     * 
+     * This widget handles the display of a sidebar on the Wall. Its main use
+     * is to display group and employees suggestion (if hr is installed).
+     */
+    mail.WallSidebar = session.web.Widget.extend({
+        template: 'mail.wall.sidebar',
+    });
+
+
+    /**
+     * ------------------------------------------------------------
      * Wall Widget
      * ------------------------------------------------------------
      *
@@ -1839,12 +1896,20 @@ openerp.mail = function (session) {
          */
         init: function (parent, action) {
             this._super(parent, action);
+            this.ActionManager = parent;
 
             this.action = _.clone(action);
             this.domain = this.action.params.domain || this.action.domain || [];
             this.context = _.extend(this.action.params.context || {}, this.action.context || {});
 
+            // filter some parameters that we will propagate as search_default
             this.defaults = {};
+            for (var key in this.action.context.params) {
+                if (_.indexOf(['model', 'res_id'], key) == -1) {
+                    continue;
+                }
+                this.context['search_default_' + key] = this.action.context.params[key];
+            }
             for (var key in this.context) {
                 if (key.match(/^search_default_/)) {
                     this.defaults[key.replace(/^search_default_/, '')] = this.context[key];
@@ -1869,23 +1934,9 @@ openerp.mail = function (session) {
             if (! this.searchview.has_defaults) {
                 this.message_render();
             }
-        },
-
-        /**
-        * crete an object "related_menu"
-        * contain the menu widget and the the sub menu related of this wall
-        */
-        do_reload_menu_emails: function () {
-            var menu = this.__parentedParent.__parentedParent.menu;
-            // return this.rpc("/web/menu/load", {'menu_id': 100}).done(function(r) {
-            //     _.each(menu.data.data.children, function (val) {
-            //         if (val.id == 100) {
-            //             val.children = _.find(r.data.children, function (r_val) {return r_val.id == 100;}).children;
-            //         }
-            //     });
-            //     var r = menu.data;
-            // window.setTimeout(function(){menu.do_reload();}, 0);
-            // });
+            // render sidebar
+            var wall_sidebar = new mail.WallSidebar(this);
+            wall_sidebar.appendTo(this.$el.find('.oe_mail_wall_aside'));
         },
 
         /**
@@ -2003,4 +2054,16 @@ openerp.mail = function (session) {
             });
         },
     });
+
+
+    /**
+     * ------------------------------------------------------------
+     * Sub-widgets loading
+     * ------------------------------------------------------------
+     * 
+     * Load here widgets that could depend on widgets defined in mail.js
+     */
+
+    openerp.mail.suggestions(session, mail);        // import suggestion.js (suggestion widget)
+
 };
