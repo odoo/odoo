@@ -534,7 +534,6 @@ class stock_picking(osv.osv):
         @return: True
         """
         proc_group = self.pool.get("procurement.group")
-        self.write(cr, uid, ids, {'state': 'confirmed'})
         pickings = self.browse(cr, uid, ids, context=context)
         todo = []
         for picking in pickings:
@@ -557,7 +556,7 @@ class stock_picking(osv.osv):
         """
         for pick in self.browse(cr, uid, ids):
             if pick.state == 'draft':
-                self.signal_button_confirm(cr, uid, [pick.id])
+                self.action_confirm(cr, uid, [pick.id])
             move_ids = [x.id for x in pick.move_lines if x.state == 'confirmed']
             if not move_ids:
                 raise osv.except_osv(_('Warning!'),_('Not enough stock, unable to reserve the products.'))
@@ -577,7 +576,7 @@ class stock_picking(osv.osv):
         """ Confirms picking directly from draft state.
         @return: True
         """
-        return self.signal_button_confirm(cr, uid, ids)
+        return self.action_confirm(cr, uid, ids)
 
     def draft_validate(self, cr, uid, ids, context=None):
         """ Validates picking directly from draft state.
@@ -595,42 +594,6 @@ class stock_picking(osv.osv):
             self.pool.get('stock.move').cancel_assign(cr, uid, move_ids)
         return True
 
-    def action_assign_wkf(self, cr, uid, ids, context=None):
-        """ Changes picking state to assigned.
-        @return: True
-        """
-        self.write(cr, uid, ids, {'state': 'assigned'})
-        return True
-
-    def test_finished(self, cr, uid, ids):
-        """ Tests whether the move is in done or cancel state or not.
-        @return: True or False
-        """
-        move_ids = self.pool.get('stock.move').search(cr, uid, [('picking_id', 'in', ids)])
-        for move in self.pool.get('stock.move').browse(cr, uid, move_ids):
-            if move.state not in ('done', 'cancel'):
-                return False
-        return True
-
-    def test_assigned(self, cr, uid, ids):
-        """ Tests whether the move is in assigned state or not.
-        @return: True or False
-        """
-        #TOFIX: assignment of move lines should be call before testing assigment otherwise picking never gone in assign state
-        ok = True
-        for pick in self.browse(cr, uid, ids):
-            mt = pick.move_type
-            # incomming shipments are always set as available if they aren't chained
-            if pick.type == 'in':
-                if all([x.state != 'waiting' for x in pick.move_lines]):
-                    return True
-            for move in pick.move_lines:
-                if (move.state in ('confirmed', 'draft')) and (mt == 'one'):
-                    return False
-                if (mt == 'direct') and (move.state == 'assigned') and (move.product_qty):
-                    return True
-                ok = ok and (move.state in ('cancel', 'done', 'assigned'))
-        return ok
 
     def action_cancel(self, cr, uid, ids, context=None):
         """ Changes picking state to cancel.
@@ -651,12 +614,12 @@ class stock_picking(osv.osv):
         This method is called at the end of the workflow by the activity "done".
         @return: True
         """
-        self.write(cr, uid, ids, {'state': 'done', 'date_done': time.strftime('%Y-%m-%d %H:%M:%S')})
+        self.action_move(cr, uid, ids, context=context)#write(cr, uid, ids, {'date_done': time.strftime('%Y-%m-%d %H:%M:%S')})
         return True
 
     def action_move(self, cr, uid, ids, context=None):
         """Process the Stock Moves of the Picking
-        
+          
         This method is called by the workflow by the activity "move".
         Normally that happens when the signal button_done is received (button 
         "Done" pressed on a Picking view). 
@@ -675,30 +638,6 @@ class stock_picking(osv.osv):
                 self.pool.get('stock.move').action_done(cr, uid, todo, context=context)
         return True
 
-    def test_done(self, cr, uid, ids, context=None):
-        """ Test whether the move lines are done or not.
-        @return: True or False
-        """
-        ok = False
-        for pick in self.browse(cr, uid, ids, context=context):
-            if not pick.move_lines:
-                return True
-            for move in pick.move_lines:
-                if move.state not in ('cancel','done'):
-                    return False
-                if move.state=='done':
-                    ok = True
-        return ok
-
-    def test_cancel(self, cr, uid, ids, context=None):
-        """ Test whether the move lines are canceled or not.
-        @return: True or False
-        """
-        for pick in self.browse(cr, uid, ids, context=context):
-            for move in pick.move_lines:
-                if move.state not in ('cancel',):
-                    return False
-        return True
 
     def unlink(self, cr, uid, ids, context=None):
         move_obj = self.pool.get('stock.move')
@@ -741,7 +680,7 @@ class stock_picking(osv.osv):
             elif op.package_id:
                 #moving a package never splits quants but we need to take care of the reserved_quant_ids
                 all_children_quants = self.pool.get('stock.quant.package').quants_get(cr, uid, op.package_id, context=context)
-                done_reserved_quants = done_reserved_quants.union(set(all_chilren_quants))
+                done_reserved_quants = done_reserved_quants.union(set(all_children_quants))
 
 
         #finish the partial split by operation that leaves the choice of quant to move
