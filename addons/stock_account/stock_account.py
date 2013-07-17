@@ -109,7 +109,6 @@ class stock_quant(osv.osv):
                 self._create_account_move_line(cr, uid, quant, move, acc_valuation, acc_dest, journal_id, context=ctx)
 
     def move_single_quant(self, cr, uid, quant, qty, move, context=None):
-        #TODO check if the stock valuation works for negative quants (fp thinks it should be taken care into _quant_create and _quant_split)
         location_from = quant and quant.location_id or False
         quant = super(stock_quant, self).move_single_quant(cr, uid, quant, qty, move, context=context)
         quant.refresh()
@@ -148,118 +147,6 @@ class stock_quant(osv.osv):
     Stock Journal: %s
     ''') % (acc_src, acc_dest, acc_valuation, journal_id))
         return journal_id, acc_src, acc_dest, acc_valuation
-
-
-    ##We can use a preliminary type
-    #def get_reference_amount(self, cr, uid, move, qty, context=None):
-    #    # if product is set to average price and a specific value was entered in the picking wizard,
-    #    # we use it
-
-    #    # by default the reference currency is that of the move's company
-    #    reference_currency_id = move.company_id.currency_id.id
-    #    
-    #    #I use 
-    #    if move.product_id.cost_method != 'standard' and move.price_unit:
-    #        reference_amount = move.product_qty * move.price_unit #Using move.price_qty instead of qty to have correct amount
-    #        reference_currency_id = move.price_currency_id.id or reference_currency_id
-
-    #    # Otherwise we default to the company's valuation price type, considering that the values of the
-    #    # valuation field are expressed in the default currency of the move's company.
-    #    else:
-    #        if context is None:
-    #            context = {}
-    #        currency_ctx = dict(context, currency_id = move.company_id.currency_id.id)
-    #        amount_unit = move.product_id.price_get('standard_price', context=currency_ctx)[move.product_id.id]
-    #        reference_amount = amount_unit * qty
-    #    
-    #    return reference_amount, reference_currency_id
-
-
-    #def _get_reference_accounting_values_for_valuation(self, cr, uid, move, context=None):
-    #    """
-    #    Return the reference amount and reference currency representing the inventory valuation for this move.
-    #    These reference values should possibly be converted before being posted in Journals to adapt to the primary
-    #    and secondary currencies of the relevant accounts.
-    #    """
-    #    product_uom_obj = self.pool.get('product.uom')
-
-    #    default_uom = move.product_id.uom_id.id
-    #    qty = product_uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, default_uom)
-    #    
-    #    reference_amount, reference_currency_id = self.get_reference_amount(cr, uid, move, qty, context=context)
-    #    return reference_amount, reference_currency_id
-
-
-    #    
-
-
-    #def _create_product_valuation_moves(self, cr, uid, move, matches, context=None):
-    #    """
-    #    Generate the appropriate accounting moves if the product being moved is subject
-    #    to real_time valuation tracking, and the source or the destination location is internal (not both)
-    #    This means an in or out move. 
-    #    
-    #    Depending on the matches it will create the necessary moves
-    #    """
-    #    ctx = context.copy()
-    #    ctx['force_company'] = move.company_id.id
-    #    valuation = self.pool.get("product.product").browse(cr, uid, move.product_id.id, context=ctx).valuation
-    #    move_obj = self.pool.get('account.move')
-    #    if valuation == 'real_time':
-    #        if context is None:
-    #            context = {}
-    #        company_ctx = dict(context,force_company=move.company_id.id)
-    #        journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation(cr, uid, move, context=company_ctx)
-    #        reference_amount, reference_currency_id = self._get_reference_accounting_values_for_valuation(cr, uid, move, context=company_ctx)
-    #        account_moves = []
-    #        # Outgoing moves (or cross-company output part)
-    #        if move.location_id.company_id \
-    #            and (move.location_id.usage == 'internal' and move.location_dest_id.usage != 'internal'):
-    #            #returning goods to supplier
-    #            if move.location_dest_id.usage == 'supplier':
-    #                account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, matches, acc_valuation, acc_src, reference_amount, reference_currency_id, 'out', context=company_ctx))]
-    #            else:
-    #                account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, matches, acc_valuation, acc_dest, reference_amount, reference_currency_id, 'out', context=company_ctx))]
-
-    #        # Incoming moves (or cross-company input part)
-    #        if move.location_dest_id.company_id \
-    #            and (move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal'):
-    #            #goods return from customer
-    #            if move.location_id.usage == 'customer':
-    #                account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, matches, acc_dest, acc_valuation, reference_amount, reference_currency_id, 'in', context=company_ctx))]
-    #            else:
-    #                account_moves += [(journal_id, self._create_account_move_line(cr, uid, move, matches, acc_src, acc_valuation, reference_amount, reference_currency_id, 'in', context=company_ctx))]
-    #            if matches and move.product_id.cost_method in ('fifo', 'lifo'):
-    #                outs = {}
-    #                match_obj = self.pool.get("stock.move.matching")
-    #                for match in match_obj.browse(cr, uid, matches, context=context):
-    #                    if match.move_out_id.id in outs:
-    #                        outs[match.move_out_id.id] += [match.id]
-    #                    else:
-    #                        outs[match.move_out_id.id] = [match.id]
-    #                #When in stock was negative, you will get matches for the in also:
-    #                account_moves_neg = []
-    #                for out_mov in self.browse(cr, uid, outs.keys(), context=context):
-    #                    journal_id_out, acc_src_out, acc_dest_out, acc_valuation_out = self._get_accounting_data_for_valuation(cr, uid, out_mov, context=company_ctx)
-    #                    reference_amount_out, reference_currency_id_out = self._get_reference_accounting_values_for_valuation(cr, uid, out_mov, context=company_ctx)
-    #                    if out_mov.location_dest_id.usage == 'supplier':
-    #                        # Is not the way it should be with acc_valuation
-    #                        account_moves_neg += [(journal_id_out, self._create_account_move_line(cr, uid, out_mov, outs[out_mov.id], acc_valuation_out, acc_src_out, reference_amount_out, reference_currency_id_out, 'out', context=company_ctx))]
-    #                    else:
-    #                        account_moves_neg += [(journal_id_out, self._create_account_move_line(cr, uid, out_mov, outs[out_mov.id], acc_valuation_out, acc_dest_out, reference_amount_out, reference_currency_id_out, 'out', context=company_ctx))]
-    #                #Create account moves for outs which made stock go negative
-    #                for j_id, move_lines in account_moves_neg:
-    #                    move_obj.create(cr, uid,
-    #                                    {'journal_id': j_id, 
-    #                                     'line_id': move_lines, 
-    #                                     'ref': out_mov.picking_id and out_mov.picking_id.name,
-    #                                     })
-    #        for j_id, move_lines in account_moves:
-    #            move_obj.create(cr, uid,
-    #                    {
-    #                     'journal_id': j_id,
-    #                     'line_id': move_lines,
-    #                     'ref': move.picking_id and move.picking_id.name})
 
     def _prepare_account_move_line(self, cr, uid, quant, move, credit_account_id, debit_account_id, context=None):
         """
@@ -534,8 +421,7 @@ class stock_picking(osv.osv):
             'account_analytic_id': self._get_account_analytic_invoice(cr, uid, picking, move_line),
         }
 
-    def action_invoice_create(self, cr, uid, ids, journal_id=False,
-            group=False, type='out_invoice', context=None):
+    def action_invoice_create(self, cr, uid, ids, journal_id=False, group=False, type='out_invoice', context=None):
         """ Creates invoice based on the invoice state selected for picking.
         @param journal_id: Id of journal
         @param group: Whether to create a group invoice or not
