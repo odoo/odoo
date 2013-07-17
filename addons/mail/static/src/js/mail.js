@@ -632,10 +632,7 @@ openerp.mail = function (session) {
             // have unknown names -> call message_get_partner_info_from_emails to try to find partner_id
             var find_done = $.Deferred();
             if (names_to_find.length > 0) {
-                var values = {
-                    'res_id': this.context.default_res_id,
-                }
-                find_done = self.parent_thread.ds_thread._model.call('message_get_partner_info_from_emails', [names_to_find], values);
+                find_done = self.parent_thread.ds_thread._model.call('message_partner_info_from_emails', [this.context.default_res_id, names_to_find]);
             }
             else {
                 find_done.resolve([]);
@@ -681,11 +678,7 @@ openerp.mail = function (session) {
                     var new_names_to_find = _.difference(names_to_find, names_to_remove);
                     find_done = $.Deferred();
                     if (new_names_to_find.length > 0) {
-                        var values = {
-                            'link_mail': true,
-                            'res_id': self.context.default_res_id,
-                        }
-                        find_done = self.parent_thread.ds_thread._model.call('message_get_partner_info_from_emails', [new_names_to_find], values);
+                        find_done = self.parent_thread.ds_thread._model.call('message_partner_info_from_emails', [self.context.default_res_id, new_names_to_find, true]);
                     }
                     else {
                         find_done.resolve([]);
@@ -974,6 +967,24 @@ openerp.mail = function (session) {
             this.$('.oe_reply').on('click', this.on_message_reply);
             this.$('.oe_star').on('click', this.on_star);
             this.$('.oe_msg_vote').on('click', this.on_vote);
+            this.$('.oe_mail_action_model').on('click', this.on_record_clicked);
+        },
+
+        on_record_clicked: function  (event) {
+            event.stopPropagation();
+            var state = {
+                'model': this.model,
+                'id': this.res_id,
+                'title': this.record_name
+            };
+            session.webclient.action_manager.do_push_state(state);
+            this.do_action({
+                res_model: state.model,
+                res_id: state.id,
+                type: 'ir.actions.act_window',
+                views: [[false, 'form']]
+            });
+            return false;
         },
 
         /* Call the on_compose_message on the thread of this message. */
