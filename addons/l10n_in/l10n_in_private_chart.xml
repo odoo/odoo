@@ -135,11 +135,47 @@
         <record model="account.account.template" id="a189">
             <field name="name">Tax Receivable</field>
             <field name="code">189</field>
-            <field name="type">other</field>
+            <field name="type">view</field>
             <field name="user_type" ref="account.data_account_type_asset"/>
-            <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="a10"/>
         </record>
+
+        <record model="account.account.template" id="a189100">
+            <field name="name">Purchase Tax Receivable</field>
+            <field name="code">189100</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="a189"/>
+        </record>
+
+        <record model="account.account.template" id="a189200">
+            <field name="name">VAT Receivable</field>
+            <field name="code">189200</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="a189"/>
+        </record>
+
+        <record model="account.account.template" id="a189300">
+            <field name="name">Service Tax Receivable</field>
+            <field name="code">189300</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="a189"/>
+        </record>
+
+        <record model="account.account.template" id="a189400">
+            <field name="name">Exice Duty Receivable</field>
+            <field name="code">189400</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account.data_account_type_liability"/>
+            <field name="reconcile" eval="True"/>
+            <field name="parent_id" ref="a189"/>
+        </record>
+
         <!-- Liabilities -->
         
         <record model="account.account.template" id="a20">
