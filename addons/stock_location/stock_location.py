@@ -171,9 +171,9 @@ class procurement_order(osv.osv):
         res = self.pool.get('procurement.rule').search(cr, uid, domain + [('route_id', 'in', route_ids)], context=context)
         if not res:
             route_ids = [x.id for x in procurement.product_id.route_ids]
-            self.pool.get('procurement.rule').search(cr, uid, domain + [('route_id', 'in', route_ids)], context=context)
+            res = self.pool.get('procurement.rule').search(cr, uid, domain + [('route_id', 'in', route_ids)], context=context)
             if not res:
-                self.pool.get('procurement.rule').search(cr, uid, domain, context=context)
+                res = self.pool.get('procurement.rule').search(cr, uid, domain, context=context)
         return res
 
 

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <!-- Drop Shipping-->
+        <record id="route_drop_shipping" model='stock.location.route'>
+            <field name="name">Drop Shipping</field>
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="procurement_rule_drop_shipping" model="procurement.rule">
+            <field name="name">Supplier → Customer</field>
+            <field name="action">buy</field>
+            <field name="location_id" ref="stock.stock_location_customers"/>
+            <field name="location_src_id" ref="stock.stock_location_suppliers"/>
+            <field name="procure_method">make_to_stock</field>
+            <field name="route_id" ref="route_drop_shipping"/>
+        </record>
+
+
+        <!-- Crossdock -->
+        <record id="procurement_rule_customer0_xdock" model="procurement.rule">
+            <field name="name"> Supplier → Output</field>
+            <field name="action">buy</field>
+            <field name="location_id" ref="stock.stock_location_output"/>
+            <field name="location_src_id" ref="stock.stock_location_suppliers"/>
+            <field name="route_id" ref="stock_location.route_warehouse0_crossdock"/>
+        </record>
+    </data>
+</openerp>

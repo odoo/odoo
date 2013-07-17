@@ -408,6 +408,33 @@ class stock_picking(osv.osv):
             vals['name'] = self.pool.get('ir.sequence').get(cr, user, self._name)
         return super(stock_picking, self).create(cr, user, vals, context)
 
+
+    def _get_state(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for pick in self.browse(cr, uid, ids, context=context):
+            states = [x.state for x in pick.move_lines]
+            res[pick.id] = 'draft'
+            if not 'draft' in states:
+                if 'confirmed' in states:
+                    res[pick.id] = 'confirmed'
+                elif 'waiting' in states:
+                    res[pick.id] = 'auto'
+                elif 'assigned' in states:
+                    res[pick.id] = 'assigned'
+                elif 'done' in states:
+                    res[pick.id] = 'done'
+            if all([x == 'cancel' for x in states]):
+                res[pick.id] = 'cancel'
+        return res
+
+    def _get_pickings(self, cr, uid, ids, context=None):
+        res = set()
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.picking_id: 
+                res.add(move.picking_id.id)
+        return list(res)
+    
+    
     _columns = {
         'name': fields.char('Reference', size=64, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'origin': fields.char('Source Document', size=64, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Reference of the document", select=True),
@@ -416,14 +443,14 @@ class stock_picking(osv.osv):
         'note': fields.text('Notes', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'stock_journal_id': fields.many2one('stock.journal','Stock Journal', select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'move_type': fields.selection([('direct', 'Partial'), ('one', 'All at once')], 'Delivery Method', required=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="It specifies goods to be deliver partially or all at once"),
-        'state': fields.selection([
+        'state': fields.function(_get_state, type="selection", store = {'stock.move': (_get_pickings, ['state'], 20)}, selection = [
             ('draft', 'Draft'),
             ('cancel', 'Cancelled'),
             ('auto', 'Waiting Another Operation'),
             ('confirmed', 'Waiting Availability'),
             ('assigned', 'Ready to Transfer'),
             ('done', 'Transferred'),
-            ], 'Status', readonly=True, select=True, track_visibility='onchange', help="""
+            ], string='Status', readonly=True, select=True, track_visibility='onchange', help="""
             * Draft: not confirmed yet and will not be scheduled until confirmed\n
             * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n
             * Waiting Availability: still waiting for the availability of products\n
@@ -1626,7 +1653,6 @@ class stock_move(osv.osv):
         quant_obj = self.pool.get("stock.quant")
         uom_obj = self.pool.get("product.uom")
         done = []
-        pickings = set()
         for move in self.browse(cr, uid, ids, context=context):
             if move.state not in ('confirmed', 'waiting'):
                 continue
@@ -1646,13 +1672,7 @@ class stock_move(osv.osv):
                 # the total quantity is provided by existing quants
                 if all(map(lambda x:x[0], quants)):
                     done.append(move.id)
-                    pickings.add(move.picking_id and move.picking_id.id or False)
         self.write(cr, uid, done, {'state': 'assigned'})
-        #TODO: More elegant way to solve this
-        pick_obj = self.pool.get("stock.picking")
-        for pick in list(pickings):
-            if pick_obj.test_assigned(cr, uid, [pick]):
-                pick_obj.write(cr, uid, [pick], {'state': 'assigned'})
         return done
 
 

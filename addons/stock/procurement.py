@@ -135,6 +135,8 @@ class procurement_order(osv.osv):
             #Search all confirmed stock_moves and try to assign them
             confirmed_ids = move_obj.search(cr, uid, [('state', '=', 'confirmed'), ('company_id','=', company.id)], context=context) #Type  = stockable product?
             move_obj.action_assign(cr, uid, confirmed_ids, context=context)
+            if use_new_cursor:
+                cr.commit()
         finally:
             if use_new_cursor:
                 try:
