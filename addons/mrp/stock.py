@@ -88,7 +88,6 @@ class StockMove(osv.osv):
                     
                 move_obj.write(cr, uid, [move.id], {
                     'location_dest_id': move.location_id.id, # dummy move for the kit
-                    'auto_validate': True,
                     'picking_id': False,
                     'state': 'confirmed'
                 })

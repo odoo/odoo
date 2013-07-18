@@ -1140,8 +1140,7 @@ class stock_move(osv.osv):
 
         # FP Note: should we remove this?
         'partner_id': fields.many2one('res.partner', 'Destination Address ', states={'done': [('readonly', True)]}, help="Optional address where goods are to be delivered, specifically used for allotment"),
-
-        'auto_validate': fields.boolean('Auto Validate'),
+        
 
         'move_dest_id': fields.many2one('stock.move', 'Destination Move', help="Optional: next stock move when chaining them", select=True),
         'move_orig_ids': fields.one2many('stock.move', 'move_dest_id', 'Original Move', help="Optional: next stock move when chaining them", select=True),
@@ -1681,8 +1680,6 @@ class stock_move(osv.osv):
 #                     quants = quant_obj.search(cr, uid, [('history_ids', 'in', move.id), ('location_id', '=', move.location_dest_id.id), ('reservation_id', '=', False)], context=context)
 #                     if quants:
 #                         quant_obj.write(cr, uid, quants, {'reservation_id':move.move_dest_id.id}, context=context)
-                    if move.move_dest_id.auto_validate: #TO be removed everywhere
-                        self.action_done(cr, uid, [move.move_dest_id.id], context=context)
 
         self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
 
