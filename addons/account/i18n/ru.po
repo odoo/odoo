@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-14 22:29+0000\n"
-"PO-Revision-Date: 2013-07-10 11:30+0000\n"
+"PO-Revision-Date: 2013-07-16 14:34+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-07-11 05:42+0000\n"
+"X-Launchpad-Export-Date: 2013-07-17 07:25+0000\n"
 "X-Generator: Launchpad (build 16696)\n"
 
 #. module: account
@@ -769,6 +769,8 @@ msgid ""
 "The amount expressed in the secondary currency must be positive when the "
 "journal item is a debit and negative when if it is a credit."
 msgstr ""
+"Сумма, выраженная во вторичной валюте, должна быть положительной, если "
+"элемент журнала дебетовый и отрицательной, когда если это кредит."
 
 #. module: account
 #: constraint:account.move:0
@@ -851,6 +853,8 @@ msgid ""
 "Cannot %s invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only refund this invoice."
 msgstr ""
+"Нельзя %s счет, который уже сверен, сначала надо отменить сверку. Можно "
+"только сделать возврат счета."
 
 #. module: account
 #: view:account.account:0
@@ -1024,6 +1028,8 @@ msgid ""
 "                                                  opening/closing fiscal "
 "year process."
 msgstr ""
+"Нельзя отменить сверку элементов журнала, если они были созданы процессом "
+"открытия/закрытия финансового года."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form_new
@@ -1586,7 +1592,7 @@ msgstr "Статус счета"
 #: model:ir.actions.act_window,name:account.action_account_open_closed_fiscalyear
 #: model:ir.ui.menu,name:account.menu_wizard_account_open_closed_fiscalyear
 msgid "Cancel Closing Entries"
-msgstr ""
+msgstr "Отмена проводок закрытия"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -2858,7 +2864,7 @@ msgstr "Банковская информация"
 #. module: account
 #: view:account.bank.statement:0
 msgid "Cancel CashBox"
-msgstr ""
+msgstr "Отмена кассы"
 
 #. module: account
 #: help:account.invoice,payment_term:0
@@ -3173,6 +3179,8 @@ msgid ""
 "Set the account that will be set by default on invoice tax lines for "
 "invoices. Leave empty to use the expense account."
 msgstr ""
+"Установите счет по умолчанию для налога по позициям в выставляемых счетах. "
+"Оставьте пустым для использования счета прибылей/убытков."
 
 #. module: account
 #: field:account.config.settings,sale_journal_id:0
@@ -3459,7 +3467,7 @@ msgstr ""
 #: code:addons/account/account.py:2678
 #, python-format
 msgid "There is no parent code for the template account."
-msgstr ""
+msgstr "Нет кода родителя для шаблона счета."
 
 #. module: account
 #: help:account.chart.template,code_digits:0
