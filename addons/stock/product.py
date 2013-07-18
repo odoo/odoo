@@ -111,21 +111,25 @@ class product_product(osv.osv):
         context = context or {}
         field_names = field_names or []
 
+        domain_products = [('product_id', 'in', ids)]
         domain_quant, domain_move_in, domain_move_out = self._get_domain_locations(cr, uid, ids, context=context)
-        domain_move_in += self._get_domain_dates(cr, uid, ids, context=context) + [('state','not in',('done','cancel'))]
-        domain_move_out += self._get_domain_dates(cr, uid, ids, context=context) + [('state','not in',('done','cancel'))]
+        domain_move_in += self._get_domain_dates(cr, uid, ids, context=context) + [('state','not in',('done','cancel'))] + domain_products
+        domain_move_out += self._get_domain_dates(cr, uid, ids, context=context) + [('state','not in',('done','cancel'))] + domain_products
+        domain_quant += domain_products
 
         if context.get('lot_id', False):
-            domain_quants.append(('lot_id','=',context['lot_id']))
+            domain_quant.append(('lot_id','=',context['lot_id']))
             moves_in  = []
             moves_out = []
         else:
+#             if field_names in ['incoming_qty', 'outgoing_qty', 'virtual_available']:
             moves_in  = self.pool.get('stock.move').read_group(cr, uid, domain_move_in, ['product_id', 'product_qty'], ['product_id'], context=context)
             moves_out = self.pool.get('stock.move').read_group(cr, uid, domain_move_out, ['product_id', 'product_qty'], ['product_id'], context=context)
 
         quants = self.pool.get('stock.quant').read_group(cr, uid, domain_quant, ['product_id', 'qty'], ['product_id'], context=context)
 
         quants = dict(map(lambda x: (x['product_id'][0], x['qty']), quants))
+
         moves_in = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_in))
         moves_out = dict(map(lambda x: (x['product_id'][0], x['product_qty']), moves_out))
 

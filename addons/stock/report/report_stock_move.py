@@ -58,7 +58,7 @@ class report_stock_inventory(osv.osv):
             prods = product_obj.browse(cr, uid, proddict[prodelem].keys(), context=ctx)
             for prod in prods:
                 prodbrow[(prodelem, prod.id)] = prod
-        # use prodbrow and exisiting value on the report lines to calculate the inventory_value on the report lines
+        # use prodbrow and existing value on the report lines to calculate the inventory_value on the report lines
         for line in lines:
             ctx = context.copy()
             ctx['force_company'] = line.company_id.id
