@@ -692,8 +692,32 @@ class purchase_order(osv.osv):
                 todo_moves.append(move)
         stock_move.action_confirm(cr, uid, todo_moves)
         stock_move.force_assign(cr, uid, todo_moves)
-        stock_picking.signal_button_confirm(cr, uid, [picking_id])
         return [picking_id]
+
+    def test_moves_done(self, cr, uid, ids, context=None):
+        done = True
+        for purchase in self.browse(cr, uid, ids, context=context):
+            for line in purchase.order_line:
+                for move in line.move_ids:
+                    if move.state != 'done':
+                        done = False
+        return done
+        
+
+    def test_moves_except(self, cr, uid, ids, context=None):
+        '''
+            If one of the pickings is cancel and the other pickings are done: except
+        '''
+        cancel = False
+        alldoneorcancel = True
+        for purchase in self.browse(cr, uid, ids, context=context):
+            for line in purchase.order_line:
+                for move in line.move_ids:
+                    if move.state == 'cancel':
+                        cancel = True
+                    if move.state not in  ['done', 'cancel']:
+                        alldoneorcancel = False
+        return cancel and alldoneorcancel
 
     def action_picking_create(self, cr, uid, ids, context=None):
         picking_ids = []

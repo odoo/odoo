@@ -73,8 +73,7 @@
         <record id="act_picking" model="workflow.activity">
             <field name="wkf_id" ref="purchase_order"/>
             <field name="name">picking</field>
-            <field name="kind">subflow</field>
-            <field name="subflow_id" search="[('osv','=','stock.picking')]"/>
+            <field name="kind">function</field>
             <field name="action">action_picking_create()</field>
         </record>
         <record id="act_picking_done" model="workflow.activity">
@@ -172,7 +171,7 @@
         <record id="trans_picking_except_picking" model="workflow.transition">
             <field name="act_from" ref="act_picking"/>
             <field name="act_to" ref="act_except_picking"/>
-            <field name="signal">subflow.cancel</field>
+            <field name="condition">test_moves_except()</field>
         </record>
         <record id="trans_invoice_except_invoice" model="workflow.transition">
             <field name="act_from" ref="act_invoice"/>
@@ -182,7 +181,7 @@
         <record id="trans_picking_picking_done" model="workflow.transition">
             <field name="act_from" ref="act_picking"/>
             <field name="act_to" ref="act_picking_done"/>
-            <field name="signal">subflow.done</field>
+            <field name="condition">test_moves_done()</field>
         </record>
         <record id="trans_invoice_invoice_done" model="workflow.transition">
             <field name="act_from" ref="act_invoice"/>

@@ -20,7 +20,7 @@
 ##############################################################################
 
 from openerp.osv import fields, osv
-
+from openerp import netsvc
 class stock_move(osv.osv):
     _inherit = 'stock.move'
     _columns = {
@@ -28,6 +28,21 @@ class stock_move(osv.osv):
             'Purchase Order Line', ondelete='set null', select=True,
             readonly=True),
     }
+
+
+
+    def action_done(self, cr, uid, ids, context=None):
+        '''
+        THIS SHOULD BE REPLACED BY SOMETHING THAT WILL TRIGGER AUTOMATICALLY
+        DOES NOT WORK ANYWAYS
+        '''
+        res = super(stock_move, self).action_done(cr, uid, ids, context=context)
+        wf_service = netsvc.LocalService("workflow")
+        for move in self.browse(cr, uid, ids, context=context):
+            if move.purchase_line_id:
+                wf_service.trg_trigger(uid, 'purchase.order', move.purchase_line_id.order_id.id, cr)
+        return res
+
 
 
 #
