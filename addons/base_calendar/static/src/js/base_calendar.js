@@ -187,7 +187,7 @@ instance.base_calendar = {}
                 }
             };
             if (! values || values.length > 0) {
-                if(self.getParent().datarecord.attendee_ids && self.getParent().datarecord.attendee_ids.length == values.length){
+                if(self.getParent().datarecord.attendee_ids && self.getParent().datarecord.partner_ids.length == values.length){
                     return new instance.web.Model("calendar.attendee").call('read',[self.getParent().datarecord.attendee_ids ,['state','cn','partner_id']]).then(function(res){
                         data = []
                         _.each(res,function(val){
