@@ -31,8 +31,7 @@ class ProjectTaskStageMrp(osv.Model):
     _inherit = 'project.task.type'
 
     _columns = {
-        'closed': fields.boolean('Close',
-            help="Tasks in this stage are considered as closed."),
+        'closed': fields.boolean('Close', help="Tasks in this stage are considered as closed."),
     }
 
     _defaults = {
@@ -72,7 +71,7 @@ class product_product(osv.osv):
 
 
 class sale_order(osv.osv):
-    _inherit ='sale.order'
+    _inherit = 'sale.order'
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, context=None):
         proc_data = super(sale_order, self)._prepare_order_line_procurement(cr,
@@ -85,11 +84,12 @@ class sale_order(osv.osv):
             return {}
         res_sale = {}
         res = super(sale_order, self)._picked_rate(cr, uid, ids, name, arg, context=context)
-        cr.execute('''select sol.order_id as sale_id, t.state as task_state ,
+        cr.execute('''select sol.order_id as sale_id, stage.closed as task_closed ,
                     t.id as task_id, sum(sol.product_uom_qty) as total
                     from project_task as t
                     left join sale_order_line as sol on sol.id = t.sale_line_id
-                    where sol.order_id in %s group by sol.order_id,t.state,t.id ''',(tuple(ids),))
+                    left join project_task_type as stage on stage.id = t.stage_id
+                    where sol.order_id in %s group by sol.order_id,stage.closed,t.id ''',(tuple(ids),))
         sale_task_data = cr.dictfetchall()
 
         if not sale_task_data:
@@ -109,7 +109,7 @@ class sale_order(osv.osv):
 
         for item in sale_task_data:
             res_sale[item['sale_id']]['total_no_task'] += item['total']
-            if item['task_state'] == 'done':
+            if item['task_closed']:
                 res_sale[item['sale_id']]['number_of_done'] += item['total']
 
         for sale in self.browse(cr, uid, ids, context=context):
