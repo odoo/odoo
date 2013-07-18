@@ -10,7 +10,6 @@
     standard_price: 70.0
     uom_id: product.product_uom_kgm
     uom_po_id: product.product_uom_kgm
-    procure_method: make_to_stock
     cost_method: real
     valuation: real_time
     property_stock_account_input: account.o_expense
@@ -107,10 +106,6 @@
     product_uom: product.product_uom_kgm
     product_qty: 20.0
     type: out
--
-  I confirm outgoing shipment of 20 kg of FIFO Ice Cream.
--
-  !workflow {model: stock.picking, action: button_confirm, ref: outgoing_fifo_shipment}
 - 
   I assign this outgoing shipment 
 - 
@@ -141,10 +136,6 @@
     product_uom: product.product_uom_gram
     product_qty: 500.0
     type: out
--
-  I confirm outgoing shipment of 500g of FIFO Ice Cream.
--
-  !workflow {model: stock.picking, action: button_confirm, ref: outgoing_fifo_shipment_uom}
 - 
   I assign this outgoing shipment 
 - 
@@ -228,10 +219,6 @@
     product_uom: product.product_uom_kgm
     product_qty: 49.5
     type: out
--
-  I confirm outgoing shipment of 49.5 kg
--
-  !workflow {model: stock.picking, action: button_confirm, ref: outgoing_fifo_shipment_cur}
 - 
   I assign this outgoing shipment 
 - 
@@ -262,10 +249,6 @@
     product_uom: product.product_uom_kgm
     product_qty: 10.0
     type: out
--
-  I confirm outgoing shipment of 10 kg of FIFO Ice Cream.
--
-  !workflow {model: stock.picking, action: button_confirm, ref: outgoing_fifo_shipment_ret}
 - 
   I assign this outgoing shipment 
 - 

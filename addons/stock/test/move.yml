@@ -16,7 +16,7 @@
   !python {model: stock.move}: |
     self.action_confirm(cr, uid, [ref('move_test0')], context=context)
 -
-  I check that the quantity on hand is 18 and virutal is 13
+  I check that the quantity on hand is 18 and virtual is 13
 -
   !python {model: product.product}: |
     context['location'] = False

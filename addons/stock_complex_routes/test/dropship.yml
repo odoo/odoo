@@ -1,0 +1,21 @@
+- 
+  Create new product candy without any routes
+- 
+  !record {model:product.product, id:}
+- 
+  Create a sales order with a line of 200 PCE incoming shipment, with route_id drop shipping
+- 
+  !record {model: sale.order}
+    
+- 
+  Confirm sales order
+- 
+  !python{model: sale.order}: |
+
+- 
+  Run schedulers
+- 
+  !python{model: procurement.order, id: }: |
+    
+- 
+  

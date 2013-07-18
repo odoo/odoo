@@ -61,7 +61,7 @@ Dashboard / Reports for Warehouse Management will include:
         'stock_demo.xml',
         'procurement_demo.xml',
         'stock_orderpoint.xml',
-#        'stock_demo.yml',
+        'stock_demo.yml',
     ],
     'data': [
         'security/stock_security.xml',
@@ -95,7 +95,7 @@ Dashboard / Reports for Warehouse Management will include:
     'test': [
         'test/inventory.yml',
         'test/move.yml',
-#        'test/shipment.yml',
+        'test/shipment.yml',
     ],
     'installable': True,
     'application': True,

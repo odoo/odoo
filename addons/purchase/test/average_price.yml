@@ -8,7 +8,6 @@
     categ_id: product.product_category_1
     uom_id: product.product_uom_kgm
     uom_po_id: product.product_uom_kgm
-    procure_method: make_to_stock
     valuation: real_time
     cost_method: average
     property_stock_account_input: account.o_expense
@@ -98,10 +97,6 @@
 - 
   !python {model: stock.picking}: |
     self.action_assign(cr, uid, [ref("outgoing_average_shipment")])
-- 
-  I confirm outgoing shipment of 20 kg of Average Ice Cream. 
-- 
-  !workflow {model: stock.picking, action: button_confirm, ref: outgoing_average_shipment}
 - 
   Process the delivery of the outgoing shipment
 - 
