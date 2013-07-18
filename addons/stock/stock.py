@@ -1676,11 +1676,6 @@ class stock_move(osv.osv):
                 #If no other moves for the move that got pushed:
                 if not other_upstream_move_ids and move.move_dest_id.state in ('waiting', 'confirmed'):
                     self.action_assign(cr, uid, [move.move_dest_id.id], context=context)
-                    
-#                     quants = quant_obj.search(cr, uid, [('history_ids', 'in', move.id), ('location_id', '=', move.location_dest_id.id), ('reservation_id', '=', False)], context=context)
-#                     if quants:
-#                         quant_obj.write(cr, uid, quants, {'reservation_id':move.move_dest_id.id}, context=context)
-
         self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
 
         if move.picking_id:

@@ -48,9 +48,15 @@ class sale_order(osv.osv):
 class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'
     _columns = { 
-        'route_id': fields.many2one('stock.location.route', 'Route'),
+        'route_id': fields.many2one('stock.location.route', 'Route', domain=[('sale', '=', True)]),
     }
 
+
+class stock_location_route(osv.osv):
+    _inherit = "stock.location.route"
+    _columns = {
+        'sale':fields.boolean("Can be set on sale order line")
+        }
 
 
 
