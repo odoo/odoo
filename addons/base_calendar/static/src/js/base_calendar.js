@@ -187,19 +187,24 @@ instance.base_calendar = {}
                 }
             };
             if (! values || values.length > 0) {
-                if(self.getParent().datarecord.attendee_ids && self.getParent().datarecord.partner_ids.length == values.length){
-                    return new instance.web.Model("calendar.attendee").call('read',[self.getParent().datarecord.attendee_ids ,['state','cn','partner_id']]).then(function(res){
-                        data = []
+                var record = [];
+                if(self.getParent().datarecord.attendee_ids){
+                    new instance.web.Model("calendar.attendee").call('read',[self.getParent().datarecord.attendee_ids ,['state','cn','partner_id']]).then(function(res){
                         _.each(res,function(val){
-                            data.push([val['partner_id'][0],val['cn'],val['state']])
+                            record.push([val['partner_id'][0],val['cn'],val['state']])
                         });
-                        handle_names(data)
+                        handle_names(record);
                     });
-                } else {
-                    this._display_orderer.add(dataset.name_get(values)).done(handle_names); }
+                }
+                var new_attendee = _.difference(values,self.getParent().datarecord.partner_ids)
+                if(new_attendee.length > 0) {
+                    self._display_orderer.add(dataset.name_get(new_attendee)).done(function(res){
+                        _.each(res,function(val){record.push(val);})
+                        return handle_names(record);
+                    });
+                }
             } else { handle_names([]); }
         },
-
     });
     instance.web.form.widgets = instance.web.form.widgets.extend({
         'Many2Many_invite' : 'instance.web.form.Many2Many_invite',
