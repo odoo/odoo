@@ -23,6 +23,7 @@
             <field name="name">thanks</field>
             <field name="type">qweb</field>
             <field name="arch" type="xml">
+                <t t-name="website_crm.thanks">
                 <t t-call="website.layout">
                     <t t-set="title">Thank You!</t>
                     <div class="container">
@@ -30,6 +31,7 @@
                                 <h2 class="oe_slogan">Thanks for your message.</h2>
                         </div>
                     </div>
+                </t>
                 </t>
             </field>
         </record>

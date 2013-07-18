@@ -25,6 +25,7 @@
             <field name="name">page</field>
             <field name="type">qweb</field>
             <field name="arch" type="xml">
+                <t t-name="website_sale.page">
                 <t t-call="website.layout">
                     <t t-set="title">Shop - <t t-raw="title">Categories</t></t>
                     <div class="container oe_ecommerce">
@@ -43,6 +44,7 @@
                         </div>
                     </div>
                 </t>
+                </t>
             </field>
         </record>
 
@@ -52,6 +54,7 @@
             <field name="name">categories_recursive</field>
             <field name="type">qweb</field>
             <field name="arch" type="xml">
+                <t t-name="website_sale.categories_recursive">
                 <li t-att-class="category.id == current_category and 'active' or ''">
                     <a t-att-href="'/shop/category/%%s' %% category.id"><span t-record="category" t-field="name"><t t-esc="category.name"/></span></a>
                     <ul t-if="category.child_id" class="nav nav-list">
@@ -60,6 +63,7 @@
                         </t>
                     </ul>
                 </li>
+                </t>
             </field>
         </record>
 
@@ -69,6 +73,7 @@
             <field name="name">products</field>
             <field name="type">qweb</field>
             <field name="arch" type="xml">
+                <t t-name="website_sale.products">
                 <t t-call="website_sale.page">
                     <t t-set="title">Product</t>
                     <t t-set="shop_content">
@@ -86,6 +91,7 @@
                         </span>
                     </t>
                 </t>
+                </t>
             </field>
         </record>
 
@@ -93,6 +99,7 @@
             <field name="name">product_card</field>
             <field name="type">qweb</field>
             <field name="arch" type="xml">
+                <t t-name="website_sale.product_card">
                 <div class="media oe_product">
                     <a t-att-href="'/shop/product/%%s' %% product.id"><h4 class="media-heading"><span t-record="product" t-field="name"><t t-esc="product.name"/></span></h4></a>
                     <a class="pull-left" t-att-href="'/shop/product/%%s' %% product.id"><img class="media-object" t-att-src="'data:image/png;base64,' + product.image"/></a>
@@ -107,6 +114,7 @@
                         </div>
                     </div>
                 </div>
+                </t>
             </field>
         </record>
 
@@ -114,12 +122,14 @@
             <field name="name">product_recommended</field>
             <field name="type">qweb</field>
             <field name="arch" type="xml">
+                <t t-name="website_sale.product_recommended">
                 <div class="oe_recommended media well well-small" t-if="recommended_products">
                     <h6>Other customers have also take this products:</h6>
                     <t t-foreach="recommended_products or []" t-as="product">
                         <a t-att-href="'/shop/product/%%s' %% product.id"><img t-att-src="'data:image/png;base64,' + product.image"/></a>
                     </t>
                 </div>
+                </t>
             </field>
         </record>
 
@@ -129,6 +139,7 @@
             <field name="name">product</field>
             <field name="type">qweb</field>
             <field name="arch" type="xml">
+                <t t-name="website_sale.product">
                 <t t-call="website_sale.page">
                     <t t-set="title">Product</t>
                     <t t-set="shop_content">
@@ -147,6 +158,7 @@
                         </div>
                     </t>
                 </t>
+                </t>
             </field>
         </record>
 
@@ -156,6 +168,7 @@
             <field name="name">mycart</field>
             <field name="type">qweb</field>
             <field name="arch" type="xml">
+                <t t-name="website_sale.mycart">
                 <t t-call="website_sale.page">
                     <t t-set="title">My cart</t>
                     <t t-set="shop_content">
@@ -177,6 +190,7 @@
                         </span>
                     </t>
                 </t>
+                </t>
             </field>
         </record>
 
@@ -186,6 +200,7 @@
             <field name="name">total</field>
             <field name="type">qweb</field>
             <field name="arch" type="xml">
+                <t t-name="website_sale.total">
                 <div class="oe_total">
                     <div class="media well well-small">
                         <table t-if="order.order_line">
@@ -196,6 +211,7 @@
                         <span t-if="not order.order_line">Your cart is empty</span>
                     </div>
                 </div>
+                </t>
             </field>
         </record>
 
@@ -205,6 +221,7 @@
             <field name="name">customer</field>
             <field name="type">qweb</field>
             <field name="arch" type="xml">
+                <t t-name="website_sale.customer">
                 <t t-call="website_sale.page">
                     <t t-set="title">Your informations</t>
                     <t t-set="shop_content">
@@ -236,12 +253,14 @@
                         </form>
                     </t>
                 </t>
+                </t>
             </field>
         </record>
         <record id="order" model="ir.ui.view">
             <field name="name">order</field>
             <field name="type">qweb</field>
             <field name="arch" type="xml">
+                <t t-name="website_sale.order">
                 <t t-call="website_sale.page">
                     <t t-set="title">Order</t>
                     <t t-set="shop_content">
@@ -275,17 +294,20 @@
                         <a t-if="order.order_line" href="/shop/confirm_order"><button class="btn btn-success">Confirm order</button></a>
                     </t>
                 </t>
+                </t>
             </field>
         </record>
         <record id="thanks" model="ir.ui.view">
             <field name="name">thanks</field>
             <field name="type">qweb</field>
             <field name="arch" type="xml">
+                <t t-name="website_sale.thanks">
                 <t t-call="website_sale.page">
                     <t t-set="title">Order</t>
                     <t t-set="shop_content">
                         Thanks for your sale order
                     </t>
+                </t>
                 </t>
             </field>
         </record>
