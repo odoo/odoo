@@ -1328,24 +1328,9 @@ class stock_move(osv.osv):
                     raise osv.except_osv(_('Operation Forbidden!'),
                         _('Quantities, Units of Measure, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator).'))
         result = super(stock_move, self).write(cr, uid, ids, vals, context=context)
-        self._update_picking(cr, uid, ids, vals, context=context)
         return result
 
-    # update picking as the move changed
-    def _update_picking(self, cr, uid, ids, vals, context=None):
-        # FP Note: test if this would do the trick
-        #for id in ids:
-        #    wf_service.trg_trigger(uid, 'stock.move', id, cr)
-        if ('state' in vals) or ('picking_id' in vals):
-            wf_service = netsvc.LocalService('workflow')
-            done = {}
-            for move in self.browse(cr, uid, ids, context):
-                if move.picking_id and (move.picking_id.id not in done):
-                    wf_service.trg_write(uid, 'stock.picking', move.picking_id.id, cr)
-                    done[move.picking_id.id] = True
-            for id in ids:
-                 wf_service.trg_trigger(uid, 'stock.move', id, cr)
-        return True
+
 
     def _auto_init(self, cursor, context=None):
         res = super(stock_move, self)._auto_init(cursor, context=context)
@@ -1678,11 +1663,6 @@ class stock_move(osv.osv):
                     self.action_assign(cr, uid, [move.move_dest_id.id], context=context)
         self.write(cr, uid, ids, {'state': 'done', 'date': time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
 
-        if move.picking_id:
-            move.picking_id.refresh()
-            if all([m.state in ('done', 'cancel') for m in move.picking_id.move_lines]):
-                #finish the picking if it was the last move (we exclude the move we just set to done because we know the value and the browse record cache isn't up to date
-                picking_obj.action_done(cr, uid, [move.picking_id.id], context=context)
         return True
 
     def unlink(self, cr, uid, ids, context=None):

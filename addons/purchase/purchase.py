@@ -719,6 +719,15 @@ class purchase_order(osv.osv):
                         alldoneorcancel = False
         return cancel and alldoneorcancel
 
+
+    def move_lines_get(self, cr, uid, ids, *args):
+        res = []
+        for order in self.browse(cr, uid, ids, context={}):
+            for line in order.order_line:
+                res += [x.id for x in line.move_ids]
+        return res
+
+
     def action_picking_create(self, cr, uid, ids, context=None):
         picking_ids = []
         for order in self.browse(cr, uid, ids):

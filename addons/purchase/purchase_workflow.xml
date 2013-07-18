@@ -76,12 +76,14 @@
             <field name="kind">function</field>
             <field name="action">action_picking_create()</field>
         </record>
+        
+        
+        
         <record id="act_picking_done" model="workflow.activity">
             <field name="wkf_id" ref="purchase_order"/>
             <field name="name">picking_done</field>
             <field name="action">picking_done()</field>
             <field name="kind">function</field>
-            <field name="signal_send">subflow.delivery_done</field>
         </record>
         <record id="act_done" model="workflow.activity">
             <field name="wkf_id" ref="purchase_order"/>
@@ -171,6 +173,8 @@
         <record id="trans_picking_except_picking" model="workflow.transition">
             <field name="act_from" ref="act_picking"/>
             <field name="act_to" ref="act_except_picking"/>
+            <field name="trigger_model">stock.move</field>
+            <field name="trigger_expr_id">move_lines_get()</field>
             <field name="condition">test_moves_except()</field>
         </record>
         <record id="trans_invoice_except_invoice" model="workflow.transition">
@@ -181,7 +185,10 @@
         <record id="trans_picking_picking_done" model="workflow.transition">
             <field name="act_from" ref="act_picking"/>
             <field name="act_to" ref="act_picking_done"/>
+            <field name="trigger_model">stock.move</field>
+            <field name="trigger_expr_id">move_lines_get()</field>
             <field name="condition">test_moves_done()</field>
+            
         </record>
         <record id="trans_invoice_invoice_done" model="workflow.transition">
             <field name="act_from" ref="act_invoice"/>
