@@ -31,7 +31,6 @@ from lxml import etree
 from functools import partial
 
 from openerp import tools
-from openerp.modules import module
 from openerp.osv import fields, osv, orm
 from openerp.tools import graph, SKIPPED_ELEMENT_TYPES
 from openerp.tools.safe_eval import safe_eval as eval
@@ -59,32 +58,6 @@ class view_custom(osv.osv):
 class view(osv.osv):
     _name = 'ir.ui.view'
 
-    def _arch_get(self, cr, uid, ids, name, arg, context=None):
-        """
-        For each id being read, return arch_db or the content of arch_file
-        """
-        result = {}
-        for record in self.read(cr, uid, ids, ['arch_file', 'arch_db'], context=context):
-            if record['arch_db']:
-                result[record['id']] = record['arch_db']
-                continue
-
-            view_module, path = record['arch_file'].split('/', 1)
-            arch_path = module.get_module_resource(view_module, path)
-            if not arch_path:
-                raise IOError("No file '%s' in module '%s'" % (path, view_module))
-
-            with misc.file_open(arch_path) as f:
-                result[record['id']] = f.read().decode('utf-8')
-
-        return result
-
-    def _arch_set(self, cr, uid, id, name, value, arg, context=None):
-        """
-        Forward writing to arch_db
-        """
-        self.write(cr, uid, id, {'arch_db': value}, context=context)
-
     _columns = {
         'name': fields.char('View Name', required=True),
         'model': fields.char('Object', size=64, select=True),
@@ -100,9 +73,7 @@ class view(osv.osv):
             ('kanban', 'Kanban'),
             ('search','Search'),
             ('qweb', 'QWeb')], string='View Type'),
-        'arch_file': fields.char("View path"),
-        'arch_db': fields.text("Arch content", oldname='arch'),
-        'arch': fields.function(_arch_get, fnct_inv=_arch_set, store=False, string="View Architecture", type='text', nodrop=True),
+        'arch': fields.text('View Architecture', required=True),
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade', select=True),
         'field_parent': fields.char('Child Field',size=64),
         'xml_id': fields.function(osv.osv.get_xml_id, type='char', size=128, string="External ID",
@@ -767,13 +738,12 @@ class view(osv.osv):
     def render(self, cr, uid, id_or_xml_id, values, context=None):
         def loader(name):
             arch = self.read_template(cr, uid, name, context=context)
-
             arch_tree = etree.fromstring(arch)
             self.distribute_branding(arch_tree)
             arch = etree.tostring(arch_tree, encoding='utf-8')
-            arch = '<?xml version="1.0" encoding="utf-8"?><tpl><t t-name="%s">%s</t></tpl>' % (name.encode('utf-8'), arch)
-
+            arch = '<?xml version="1.0" encoding="utf-8"?><tpl>%s</tpl>' % (arch)
             return arch
+
         engine = qweb.QWebXml(loader)
         return engine.render(id_or_xml_id, values)
 
