@@ -65,8 +65,6 @@
                         <field name="product_id" />
                         <field name="quantity" />
                         <field name="product_uom" />
-                        <field name="location_id" />
-                        <field name="location_dest_id" />
                         <field name="tracking" invisible="1"/>
                         <field name="lot_id" domain="[('product_id', '=', product_id)]" attrs="{'required':[('tracking','=',True)]}"/>
                         <field name="update_cost" invisible="1"/>
