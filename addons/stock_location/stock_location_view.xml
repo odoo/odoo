@@ -8,28 +8,38 @@
             <field name="model">stock.location</field>
             <field name="inherit_id" ref="stock.view_location_form"/>
             <field name="arch" type="xml">
-                <group name="localization" position="after">
+                <separator string="Additional Information" position="before">
+                        <separator string="Removal Strategies"/>
+                        <div class="oe_inline">
                         <p class="oe_grey">
                             Removal strategies define the method used for suggesting the 
                             location to take the products from
                         </p>
-                        <field name="removal_strategy_ids">
+                        <field name="removal_strategy_ids" class ="oe_inline">
                             <tree editable="bottom" string="removal">
                                 <field name="product_categ_id"/>
                                 <field name="method"/>
                             </tree>
                         </field>
+
+                        </div>
+                        <newline/>
+                        <separator string="Putaway Strategies"/>
+                        <newline/>
+                        <div class="oe_inline">
                         <p class="oe_grey">
-                            
+                            Putaway strategies define the method used for suggesting the 
+                            location to put the products
                         </p>
-                        <field name="putaway_strategy_ids">
+                        <field name="putaway_strategy_ids" class="oe_inline">
                             <tree string="Put Away" editable="bottom">
                                 <field name="product_categ_id"/>
                                 <field name="method"/>
                                 <field name="location_spec_id"/>
                             </tree>
                         </field>
-                </group>
+                        </div>
+                </separator>
             </field>
         </record>
 
