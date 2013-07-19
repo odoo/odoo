@@ -47,7 +47,6 @@ You can define the different phases of interviews and easily rate the applicant 
         'fetchmail',
     ],
     'data': [
-        'wizard/hr_recruitment_employee_hired.xml',
         'wizard/hr_recruitment_create_partner_job_view.xml',
         'hr_recruitment_view.xml',
         'hr_recruitment_menu.xml',
