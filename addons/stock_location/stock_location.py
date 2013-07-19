@@ -183,7 +183,8 @@ class product_putaway_strategy(osv.osv):
     _columns = {
         'product_categ_id':fields.many2one('product.category', 'Product Category', required=True),
         'location_id': fields.many2one('stock.location','Parent Location', help="Parent Destination Location from which a child bin location needs to be chosen", required=True), #domain=[('type', '=', 'parent')], 
-        'method': fields.selection([('empty', 'Empty'), ('fixed', 'Fixed Location')], "Method", required = True),
+        'method': fields.selection([('fixed', 'Fixed Location')], "Method", required = True),
+        'location_spec_id': fields.many2one('stock.location','Specific Location', help="When the location is specific, it will be put over there"), #domain=[('type', '=', 'parent')],
     }
 
 # TODO: move this on stock module
@@ -193,8 +194,9 @@ class product_removal_strategy(osv.osv):
     _description = 'Removal Strategy'
     _order = 'sequence'
     _columns = {
-        'product_categ_id': fields.many2one('product.removal', 'Category', required=True), 
+        'product_categ_id': fields.many2one('product.category', 'Category', required=True), 
         'sequence': fields.integer('Sequence'),
+        'method': fields.selection([('fifo', 'FIFO'), ('lifo', 'LIFO')], "Method", required = True),
         'location_id': fields.many2one('stock.location', 'Locations', required=True),
     }
 
@@ -223,6 +225,18 @@ class stock_move_putaway(osv.osv):
         'quantity': fields.float('Quantity', required=True),
     }
 
+
+class stock_quant(osv.osv):
+    _inherit = "stock.quant"
+    def check_preferred_location(self, cr, uid, move, context=None):
+        # moveputaway_obj = self.pool.get('stock.move.putaway')
+        if move.putaway_ids and move.putaway_ids[0]:
+            #Take only first suggestion for the moment
+            return move.putaway_ids[0].location_id
+        else:
+            return super(stock_quant, self).check_preferred_location(cr, uid, move, context=context)
+
+
 class stock_move(osv.osv):
     _inherit = 'stock.move'
     _columns = {
@@ -244,10 +258,16 @@ class stock_move(osv.osv):
 
     # Create the stock.move.putaway records
     def _putaway_apply(self,cr, uid, ids, context=None):
+        moveputaway_obj = self.pool.get('stock.move.putaway')
         for move in self.browse(cr, uid, ids, context=context):
-            res = self.pool.get('stock.location').get_putaway_strategy(cr, uid, move.location_dest_id, move.product_id, context=context)
-            if res:
-                raise 'put away strategies not implemented yet!'
+            putaway = self.pool.get('stock.location').get_putaway_strategy(cr, uid, move.location_dest_id, move.product_id, context=context)
+            if putaway:
+                # Should call different methods here in later versions
+                # TODO: take care of lots
+                if putaway.method == 'fixed' and putaway.location_id:
+                    moveputaway_obj.create(cr, uid, {'move_id': move.id,
+                                                     'location_id': putaway.location_id.id,
+                                                     'quantity': move.product_uom_qty}, context=context)
         return True
 
     def action_assign(self, cr, uid, ids, context=None):

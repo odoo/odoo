@@ -56,7 +56,8 @@ class procurement_group(osv.osv):
     _description = 'Procurement Requisition'
     _order = "id desc"
     _columns = {
-        'name': fields.char('Reference'),
+        'name': fields.char('Reference'), 
+        'partner_id': fields.many2one('res.partner', string = 'Partner'), #Sale should pass it here 
     }
     _defaults = {
         'name': lambda self, cr, uid, c: self.pool.get('ir.sequence').get(cr, uid, 'procurement.group') or ''

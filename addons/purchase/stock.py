@@ -29,8 +29,12 @@ class stock_move(osv.osv):
             readonly=True),
     }
 
-
-
+    def action_done(self, cr ,uid, ids, context=None):
+        res = super(stock_move, self).action_done(cr, uid, ids, context)
+        wf_service = netsvc.LocalService('workflow')
+        for id in ids:
+            wf_service.trg_trigger(uid, 'stock.move', id, cr)
+        return res
 #
 # Inherit of picking to add the link to the PO
 #
