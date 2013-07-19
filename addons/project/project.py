@@ -49,7 +49,7 @@ class project_task_type(osv.osv):
         'sequence': 1,
         'fold': False,
         'case_default': False,
-        'project_ids': lambda self, cr, uid, ctx=None: self.pool['project.project']._get_default_project_id(cr, uid, context=ctx),
+        'project_ids': lambda self, cr, uid, ctx=None: self.pool['project.task']._get_default_project_id(cr, uid, context=ctx),
     }
     _order = 'sequence'
 
