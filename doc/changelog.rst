@@ -6,6 +6,8 @@ Changelog
 `trunk`
 -------
 
+- Added MONTHS attribute on fields.date and fields.datetime, holding the list
+  (month_number, month_name)
 - Almost removed ``LocalService()``. For reports,
   ``openerp.osv.orm.Model.print_report()`` can be used. For workflows, see
   :ref:`orm-workflows`.
