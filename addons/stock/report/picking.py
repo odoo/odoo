@@ -36,5 +36,6 @@ class picking(report_sxw.rml_parse):
             desc = '[' + move_line.product_id.default_code + ']' + ' ' + desc
         return desc
 
-report_sxw.report_sxw('report.stock.picking.list','stock.picking','addons/stock/report/picking.rml',parser=picking, header='internal')
+report_sxw.report_sxw('report.stock.picking.list','stock.picking','addons/stock/report/picking.rml',parser=picking)
+report_sxw.report_sxw('report.stock.picking.list.internal','stock.picking','addons/stock/report/picking_internal.rml',parser=picking, header='internal')
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

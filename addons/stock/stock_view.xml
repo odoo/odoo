@@ -1173,6 +1173,14 @@
 
         <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability" sequence="3" groups="stock.group_locations"/>
 
+        <record id="action_stock_stock_ui" model="ir.actions.client">
+            <field name="name">Stock picking</field>
+            <field name="tag">stock.ui</field>
+            <field name="res_model">stock</field>
+        </record>
+
+        <menuitem action="action_stock_stock_ui" id="menu_action_stock_stock_ui" parent="menu_stock_warehouse_mgmt" sequence="4"/>
+
         <!--
             Reception Picking (By Stock Move)
             From stock_partial_move_view

@@ -82,6 +82,7 @@ function openerp_picking_widgets(instance){
             this.$('.js_pack_row').each(function(){
                 var pack_id = parseInt($(this).attr('pack-id'));
 
+                $('.js_pack_print', this).click(function(){ model.print_package(pack_id); });
                 $('.js_pack_plus', this).click(function(){ model.copy_package(pack_id); });
                 $('.js_pack_minus', this).click(function(){ model.delete_package(pack_id); });
                 $('.js_pack_select', this).click(function(){ 
@@ -229,7 +230,17 @@ function openerp_picking_widgets(instance){
                 .call('action_done_from_packing_ui',[self.picking.id])
                 .then(function(new_picking_id){
                     console.log('New picking id:',new_picking_id);
-                    //return self.refresh_ui(new_picking_id);
+                    return self.refresh_ui(new_picking_id);
+                });
+        },
+        print_package: function(package_id){
+            var self = this;
+            console.log('Print Package:',package_id);
+            new instance.web.Model('stock.quant.package')
+                .call('action_print',[[package_id]])
+                .then(function(action){
+                    console.log('Print Package Repport Action:',action);
+                    return self.do_action(action);
                 });
         },
         copy_package: function(package_id){
