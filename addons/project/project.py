@@ -44,26 +44,15 @@ class project_task_type(osv.osv):
         'fold': fields.boolean('Folded by Default',
                         help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
     }
-    def _get_default_project_id(self, cr, uid, ctx={}):
-        proj = ctx.get('default_project_id', False)
-        if type(proj) is int:
-            return [proj]
-        return proj
+
     _defaults = {
         'sequence': 1,
         'fold': False,
         'case_default': False,
-        'project_ids': _get_default_project_id
+        'project_ids': lambda self, cr, uid, ctx=None: self.pool['project.project']._get_default_project_id(cr, uid, context=ctx),
     }
     _order = 'sequence'
 
-def short_name(name):
-        """Keep first word(s) of name to make it small enough
-           but distinctive"""
-        if not name: return name
-        # keep 7 chars + end of the last word
-        keep_words = name[:7].strip().split()
-        return ' '.join(name.split()[:len(keep_words)])
 
 class project(osv.osv):
     _name = "project.project"
@@ -92,9 +81,9 @@ class project(osv.osv):
 
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
         partner_obj = self.pool.get('res.partner')
-        if not part:
-            return {'value':{}}
         val = {}
+        if not part:
+            return {'value': val}
         if 'pricelist_id' in self.fields_get(cr, uid, context=context):
             pricelist = partner_obj.read(cr, uid, part, ['property_product_pricelist'], context=context)
             pricelist_id = pricelist.get('property_product_pricelist', False) and pricelist.get('property_product_pricelist')[0] or False
@@ -447,8 +436,6 @@ class project(osv.osv):
             if project.user_id and (project.user_id.id not in u_ids):
                 u_ids.append(project.user_id.id)
             for task in project.tasks:
-                if task.stage_id and task.stage_id.fold:
-                    continue
                 if task.user_id and (task.user_id.id not in u_ids):
                     u_ids.append(task.user_id.id)
             calendar_id = project.resource_calendar_id and project.resource_calendar_id.id or False
@@ -533,7 +520,8 @@ def Project():
             context = {}
         # Prevent double project creation when 'use_tasks' is checked + alias management
         create_context = dict(context, project_creation_in_progress=True,
-                                alias_model_name=vals.get('alias_model', 'project.task'), alias_parent_model_name=self._name)
+                              alias_model_name=vals.get('alias_model', 'project.task'),
+                              alias_parent_model_name=self._name)
 
         if vals.get('type', False) not in ('template', 'contract'):
             vals['type'] = 'contract'
@@ -565,7 +553,7 @@ class task(osv.osv):
         'user_id': {
             'project.mt_task_assigned': lambda self, cr, uid, obj, ctx=None: obj.user_id and obj.user_id.id,
         },
-        'kanban_state': {  # kanban state: tracked, but only block subtype
+        'kanban_state': {
             'project.mt_task_blocked': lambda self, cr, uid, obj, ctx=None: obj.kanban_state == 'blocked',
         },
     }
@@ -687,7 +675,6 @@ class task(osv.osv):
         vals = {}
         if user_id:
             vals['date_start'] = fields.datetime.now()
-            vals['date_end'] = False
         return {'value': vals}
 
     def duplicate_task(self, cr, uid, map_ids, context=None):
