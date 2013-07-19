@@ -1327,7 +1327,7 @@ class stock_move(osv.osv):
                 'product_uos_qty': (move.product_uos and move.product_uos_qty) or move.product_qty,
                 'product_uos': (move.product_uos and move.product_uos.id) or move.product_uom.id,
                 'location_id': move.location_id.id,
-                'move_id': move.id,
+                'move_dest_id': move.id,
                 'group_id': move.group_id and move.group_id.id or False, 
             })
 

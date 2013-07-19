@@ -116,6 +116,13 @@ class stock_location_path(osv.osv):
 
 class procurement_rule(osv.osv):
     _inherit = 'procurement.rule'
+    
+    def _get_rules(self, cr, uid, ids, context=None):
+        res = []
+        for route in self.browse(cr, uid, ids):
+            res += [x.id for x in route.pull_ids]
+        return res
+
     _columns = {
         'route_id': fields.many2one('stock.location.route', 'Route',
             help="If route_id is False, the rule is global"),
@@ -128,6 +135,7 @@ class procurement_rule(osv.osv):
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")], "Invoice Status",
             required=True,),
+        'sequence': fields.related('route_id', 'sequence', string='Route Sequence', store={'stock.location.route': (_get_rules, ['sequence'], 10)}), 
     }
     _defaults = {
         'procure_method': 'make_to_stock',
@@ -155,6 +163,7 @@ class procurement_order(osv.osv):
         d.update({
             'date': newdate,
             'procure_method': procure_method, 
+            'route_ids': [(4,x.id) for x in procurement.route_ids]
         })
         return d
 
@@ -168,12 +177,12 @@ class procurement_order(osv.osv):
     def _search_suitable_rule(self, cr, uid, procurement, domain, context=None):
         '''we try to first find a rule among the ones defined on the procurement order group and if none is found, we try on the routes defined for the product, and finally we fallback on the default behavior'''
         route_ids = [x.id for x in procurement.route_ids]
-        res = self.pool.get('procurement.rule').search(cr, uid, domain + [('route_id', 'in', route_ids)], context=context)
+        res = self.pool.get('procurement.rule').search(cr, uid, domain + [('route_id', 'in', route_ids)], order = 'sequence', context=context)
         if not res:
             route_ids = [x.id for x in procurement.product_id.route_ids]
-            res = self.pool.get('procurement.rule').search(cr, uid, domain + [('route_id', 'in', route_ids)], context=context)
+            res = self.pool.get('procurement.rule').search(cr, uid, domain + [('route_id', 'in', route_ids)], order = 'sequence', context=context)
             if not res:
-                res = self.pool.get('procurement.rule').search(cr, uid, domain, context=context)
+                res = self.pool.get('procurement.rule').search(cr, uid, domain, order='sequence', context=context)
         return res
 
 
@@ -242,6 +251,7 @@ class stock_move(osv.osv):
     _columns = {
         'cancel_cascade': fields.boolean('Cancel Cascade', help='If checked, when this move is cancelled, cancel the linked move too'),
         'putaway_ids': fields.one2many('stock.move.putaway', 'move_id', 'Put Away Suggestions'), 
+        'route_ids': fields.many2many('stock.location.route', 'stock_location_route_move', 'move_id', 'route_id', 'Destination route', help="Preferred route to be followed by the procurement order"),
     }
 
     def _push_apply(self, cr, uid, moves, context):
@@ -287,12 +297,7 @@ class stock_move(osv.osv):
         """
         proc_id = super(stock_move, self)._create_procurement(cr, uid, move, context=context)
         proc_obj = self.pool.get("procurement.order")
-        procs = proc_obj.search(cr, uid, [("move_id", "=", move.id)], context=context)
-        routes = []
-        for proc in proc_obj.browse(cr, uid, procs, context=context):
-            routes += [x.id for x in proc.route_ids]
-        if routes:
-            proc_obj.write(cr, uid, [proc_id], {'route_ids': [(4,x) for x in routes]}, context=context)
+        proc_obj.write(cr, uid, [proc_id], {'route_ids': [(4,x.id) for x in move.route_ids]}, context=context)
         return proc_id
 
 
@@ -333,7 +338,7 @@ class stock_location(osv.osv):
             ('product_categ_id', 'in', categs)
         ], context=context)
         if result:
-            return pr.browse(cr, uid, result[0], context=context)
+            return pr.browse(cr, uid, result[0], context=context).method
         return super(stock_location, self).get_removal_strategy(cr, uid, location, product, context=context)
 
 
