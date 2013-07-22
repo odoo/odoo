@@ -837,6 +837,7 @@ form: module.record_id""" % (xml_id,)
         # set the full template name for qweb <module>.<id>
         el.attrib['t-name'] = '%s.%s' % (module, tpl_id)
         el.attrib.pop('id', None)
+        el.tag = 't'
 
         record = etree.Element('record')
         record_attrs = {
