@@ -7,221 +7,299 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-12-21 17:05+0000\n"
-"PO-Revision-Date: 2012-12-07 22:47+0000\n"
-"Last-Translator: Fábio Martinelli - http://zupy.com.br "
-"<webmaster@guaru.net>\n"
+"POT-Creation-Date: 2013-06-27 16:03+0000\n"
+"PO-Revision-Date: 2013-07-20 22:32+0000\n"
+"Last-Translator: Claudio de Araujo Santos <claudioaraujosantos@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-03-16 05:53+0000\n"
-"X-Generator: Launchpad (build 16532)\n"
+"X-Launchpad-Export-Date: 2013-07-22 05:34+0000\n"
+"X-Generator: Launchpad (build 16696)\n"
 
-#. module: google_docs
-#: code:addons/google_docs/google_docs.py:167
+#. module: google_drive
+#: model:ir.ui.menu,name:google_drive.menu_google_drive_config
+msgid "Google Drive configuration"
+msgstr "Configuração do Google Drive"
+
+#. module: google_drive
+#: code:addons/google_drive/google_drive.py:48
 #, python-format
 msgid "Key Error!"
 msgstr "Erro de Chave!"
 
-#. module: google_docs
-#: view:google.docs.config:0
+#. module: google_drive
+#: view:google.drive.config:0
 msgid ""
-"for a presentation (slide show) document with url like "
-"`https://docs.google.com/a/openerp.com/presentation/d/123456789/edit#slide=id"
-".p`, the ID is `presentation:123456789`"
+"The name of the attached document can use fixed or variable data. To "
+"distinguish between documents in\n"
+"                                Google Drive, use fixed words and fields. "
+"For instance, in the example above, if you wrote Agrolait_%(name)s_Sales\n"
+"                                in the Google Drive name field, the document "
+"in your Google Drive and in OpenERP attachment will be named\n"
+"                                'Agrolait_SO0001_Sales'."
 msgstr ""
-"para um documento de apresentação (slide) com a url como "
-"`https://docs.google.com/a/openerp.com/presentation/d/123456789/edit#slide=id"
-".p`, o ID é `presentation:123456789`"
+"O nome do documento em anexo pode usar dados fixos ou variáveis. Para "
+"distinguir entre documentos\n"
+"                                Google Drive, usar palavras fixos e campos. "
+"Por exemplo, no exemplo acima, se escreveu Agrolait_% (nome) s_Sales\n"
+"                                no campo Nome da unidade do Google, o "
+"documento em seu Google Drive e em OpenERP anexo será nomeado\n"
+"                                'Agrolait_SO0001_Sales \"."
 
-#. module: google_docs
-#: view:google.docs.config:0
+#. module: google_drive
+#: view:google.drive.config:0
 msgid ""
-"for a text document with url like "
-"`https://docs.google.com/a/openerp.com/document/d/123456789/edit`, the ID is "
-"`document:123456789`"
+"- If filter is not specified, link of google document will appear in "
+"\"More\" option for all users for all opportunities."
 msgstr ""
-"para um documento de texto com a url como "
-"`https://docs.google.com/a/openerp.com/document/d/123456789/edit`, o ID é "
-"`document:123456789`"
+"- Se o filtro não for especificado, ligação de documento google aparecerá na "
+"opção \"Mais\" para todos os usuários de todas as oportunidades."
 
-#. module: google_docs
-#: field:google.docs.config,gdocs_resource_id:0
-msgid "Google Resource ID to Use as Template"
-msgstr "Id de Recurso do Google para usar como Modelo"
+#. module: google_drive
+#: view:google.drive.config:0
+msgid "To create a new filter:"
+msgstr "Para criar um novo filtro:"
 
-#. module: google_docs
-#: view:google.docs.config:0
+#. module: google_drive
+#: model:ir.model,name:google_drive.model_base_config_settings
+msgid "base.config.settings"
+msgstr "base.config.settings"
+
+#. module: google_drive
+#: model:ir.actions.act_window,help:google_drive.action_google_drive_users_config
 msgid ""
-"for a drawing document with url like "
-"`https://docs.google.com/a/openerp.com/drawings/d/123456789/edit`, the ID is "
-"`drawings:123456789`"
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Click to add a new template.\n"
+"                </p>\n"
+"                <p>\n"
+"                    Link your own google drive templates to any record of "
+"OpenERP. If you have really specific documents you want your collaborator "
+"fill in, e.g. Use a spreadsheet to control the quality of your product or "
+"review the delivery checklist for each order in a foreign country, ... Its "
+"very easy to manage them, link them to OpenERP and use them to collaborate "
+"with your employees.\n"
+"                </p>\n"
+"            "
 msgstr ""
-"para um documento de desenho com a url como "
-"`https://docs.google.com/a/openerp.com/drawings/d/123456789/edit`, o ID "
-"é`drawings:123456789`"
+"<p class=\"oe_view_nocontent_create\">\n"
+"                    Clique para adicionar um novo modelo.\n"
+"                </ P>\n"
+"                <p>\n"
+"                    Vincular seus próprios modelos Google Drive para "
+"qualquer registro de OpenERP. Se você tem documentos específicos que você "
+"realmente deseja que seu colaborador preencher, por exemplo, usar uma "
+"planilha para controlar a qualidade do seu produto ou rever a lista de "
+"entrega para cada ordem em um país estrangeiro, ... É muito fácil de "
+"gerenciá-los, associá-los a OpenERP e usá-los para colaborar com seus "
+"empregados.\n"
+"                </ P>\n"
+"            "
 
-#. module: google_docs
-#. openerp-web
-#: code:addons/google_docs/static/src/xml/gdocs.xml:6
+#. module: google_drive
+#: code:addons/google_drive/google_drive.py:150
 #, python-format
-msgid "Add Google Doc..."
-msgstr "Adicionar um Documento do Google..."
+msgid "Incorrect URL!"
+msgstr "URL incorreto!"
 
-#. module: google_docs
-#: view:google.docs.config:0
+#. module: google_drive
+#: view:base.config.settings:0
+msgid "Configure your templates"
+msgstr "Configure seus modelos"
+
+#. module: google_drive
+#: help:google.drive.config,name_template:0
 msgid ""
-"This is the id of the template document, on google side. You can find it "
-"thanks to its URL:"
+"Choose how the new google drive will be named, on google side. Eg. "
+"gdoc_%(field_name)s"
 msgstr ""
-"Este é o id do modelo do documento, no lado do google. Você pode encontrá-lo "
-"graças à url:"
+"Escolha como a nova unidade google será nomeado, no lado google. Por "
+"exemplo. gdoc_% (field_name) s"
 
-#. module: google_docs
-#: model:ir.model,name:google_docs.model_google_docs_config
-msgid "Google Docs templates config"
-msgstr "Configuração dos modelos do Google Docs"
+#. module: google_drive
+#: view:google.drive.config:0
+msgid ""
+"- Go to the OpenERP document you want to filter. For instance, go to "
+"Opportunities and search on Sales Department."
+msgstr ""
+"- Vá para o documento OpenERP você deseja filtrar. Por exemplo, ir para "
+"Oportunidades e de pesquisa no Departamento de Vendas."
 
-#. module: google_docs
-#. openerp-web
-#: code:addons/google_docs/static/src/js/gdocs.js:25
+#. module: google_drive
+#: view:google.drive.config:0
+msgid ""
+"- In this \"Search\" view, select the option \"Save Current Filter\", enter "
+"the name (Ex: Sales Department)"
+msgstr ""
+"- Neste ponto de vista \"Pesquisar\", selecione a opção \"Salvar Filtro "
+"Atual\", digite o nome (Ex: Departamento de Vendas)"
+
+#. module: google_drive
+#: view:google.drive.config:0
+msgid ""
+"- If you select \"Share with all users\", link of google document in "
+"\"More\" options will appear for all users in opportunities of Sales "
+"Department."
+msgstr ""
+"- Se você selecionar \"Compartilhar com todos os usuários\", ligação de "
+"documento google na opção \"Mais\" será exibido para todos os usuários em "
+"oportunidades do Departamento de Vendas."
+
+#. module: google_drive
+#: view:google.drive.config:0
+msgid ""
+"- If you don't select \"Share with all users\", link of google document in "
+"\"More\" options will not appear for other users in opportunities of Sales "
+"Department."
+msgstr ""
+"- Se você não selecionar \"Compartilhar com todos os usuários\", link do "
+"documento google em \"More\" opções não aparecerá para outros usuários em "
+"oportunidades do Departamento de Vendas."
+
+#. module: google_drive
+#: code:addons/google_drive/google_drive.py:48
+#, python-format
+msgid "At least one key cannot be found in your Google Drive name pattern"
+msgstr ""
+"Pelo menos uma chave não pode ser encontrado em seu padrão de nome de Google "
+"Drive"
+
+#. module: google_drive
+#: code:addons/google_drive/google_drive.py:150
+#, python-format
+msgid "Please enter a valid Google Document URL."
+msgstr "Por favor insira um URL Documento Google válida."
+
+#. module: google_drive
+#: field:google.drive.config,google_drive_client_id:0
+msgid "Google Client "
+msgstr "Google Cliente "
+
+#. module: google_drive
+#: view:google.drive.config:0
+msgid ""
+"https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcu"
+"a4/edit"
+msgstr ""
+"https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcu"
+"a4/edit"
+
+#. module: google_drive
+#: field:google.drive.config,filter_id:0
+msgid "Filter"
+msgstr "Filtro"
+
+#. module: google_drive
+#: field:google.drive.config,name_template:0
+msgid "Google Drive Name Pattern"
+msgstr "Nome Padrão Google Drive"
+
+#. module: google_drive
+#: help:base.config.settings,google_drive_uri:0
+msgid "The URL to generate the authorization code from Google"
+msgstr "O URL para gerar o código de autorização do Google"
+
+#. module: google_drive
+#: model:ir.filters,name:google_drive.filter_partner
+msgid "Customer"
+msgstr "Cliente"
+
+#. module: google_drive
+#: field:google.drive.config,google_drive_resource_id:0
+msgid "Resource Id"
+msgstr "ID Recurso"
+
+#. module: google_drive
+#: code:addons/google_drive/google_drive.py:91
+#, python-format
+msgid "The Google Template cannot be found. Maybe it has been deleted."
+msgstr ""
+"O modelo do Google não pode ser encontrado. Talvez tenha sido excluído."
+
+#. module: google_drive
+#: model:ir.actions.act_window,name:google_drive.action_google_drive_users_config
+#: model:ir.ui.menu,name:google_drive.menu_google_drive_model_config
+msgid "Google Drive Templates"
+msgstr "Templates do Google Drive"
+
+#. module: google_drive
+#: code:addons/google_drive/google_drive.py:81
 #, python-format
 msgid ""
-"The user google credentials are not set yet. Contact your administrator for "
-"help."
+"Something went wrong during the token generation. Please request again an "
+"authorization code in %(menu:base_setup.menu_general_configuration)s."
 msgstr ""
-"As credenciais do usuário do google ainda não foram definidas. Para mais "
-"informações, solicite auxílio ao Administrador do Sistema."
+"Algo deu errado durante a geração de token. Por favor, solicite novamente um "
+"código de autorização em%(menu:base_setup.menu_general_configuration)s."
 
-#. module: google_docs
-#: view:google.docs.config:0
-msgid ""
-"for a spreadsheet document with url like "
-"`https://docs.google.com/a/openerp.com/spreadsheet/ccc?key=123456789#gid=0`, "
-"the ID is `spreadsheet:123456789`"
-msgstr ""
-"para uma planilha de cálculo com url como "
-"`https://docs.google.com/a/openerp.com/spreadsheet/ccc?key=123456789#gid=0`, "
-"o ID é `spreadsheet:123456789`"
-
-#. module: google_docs
-#: code:addons/google_docs/google_docs.py:129
+#. module: google_drive
+#: code:addons/google_drive/google_drive.py:124
 #, python-format
-msgid ""
-"Your resource id is not correct. You can find the id in the google docs URL."
-msgstr ""
-"Sua id de recurso não está correta. Você encontra a id na url do google docs."
+msgid "Google Drive Error!"
+msgstr "Google Drive Error!"
 
-#. module: google_docs
-#: code:addons/google_docs/google_docs.py:153
+#. module: google_drive
+#: field:base.config.settings,google_drive_uri:0
+msgid "URI"
+msgstr "URL"
+
+#. module: google_drive
+#: code:addons/google_drive/google_drive.py:124
 #, python-format
-msgid "Creating google docs may only be done by one at a time."
-msgstr "A criação de documentos do google deve ser feita um de cada vez."
+msgid "Creating google drive may only be done by one at a time."
+msgstr "Criação de unidade google só pode ser feito por um de cada vez."
 
-#. module: google_docs
-#: code:addons/google_docs/google_docs.py:83
-#: code:addons/google_docs/google_docs.py:129
-#: code:addons/google_docs/google_docs.py:153
-#, python-format
-msgid "Google Docs Error!"
-msgstr "Erro do Google Docs!"
-
-#. module: google_docs
-#: code:addons/google_docs/google_docs.py:83
-#, python-format
-msgid "Check your google configuration in Users/Users/Synchronization tab."
-msgstr ""
-"Verifique a sua configuração do google na aba "
-"Usuários/Usuários/Sincronização."
-
-#. module: google_docs
-#: model:ir.ui.menu,name:google_docs.menu_gdocs_config
-msgid "Google Docs configuration"
-msgstr "Configuração do Google Docs"
-
-#. module: google_docs
-#: model:ir.actions.act_window,name:google_docs.action_google_docs_users_config
-#: model:ir.ui.menu,name:google_docs.menu_gdocs_model_config
-msgid "Models configuration"
-msgstr "Configuração de modelos"
-
-#. module: google_docs
-#: field:google.docs.config,model_id:0
+#. module: google_drive
+#: field:google.drive.config,model:0
+#: field:google.drive.config,model_id:0
 msgid "Model"
 msgstr "Modelo"
 
-#. module: google_docs
-#. openerp-web
-#: code:addons/google_docs/static/src/js/gdocs.js:28
-#, python-format
-msgid "User Google credentials are not yet set."
-msgstr "As credenciais de usuário do Google ainda não foram definidas."
+#. module: google_drive
+#: view:google.drive.config:0
+msgid "Google Drive Configuration"
+msgstr "Configuração do acionamento Google"
 
-#. module: google_docs
-#: code:addons/google_docs/google_docs.py:167
-#, python-format
-msgid "Your Google Doc Name Pattern's key does not found in object."
-msgstr ""
-"A chave do seu Padrão de Nome do Google Docs não foi encontrada no objeto."
+#. module: google_drive
+#: field:google.drive.config,name:0
+msgid "Template Name"
+msgstr "Nome do modelo"
 
-#. module: google_docs
-#: help:google.docs.config,name_template:0
+#. module: google_drive
+#: constraint:google.drive.config:0
 msgid ""
-"Choose how the new google docs will be named, on google side. Eg. "
-"gdoc_%(field_name)s"
+"Model of selected filter is not matching with model of current template."
 msgstr ""
-"Escolha como os novos documentos do google serão nomeados, no lado do "
-"google. Ex: gdoc_%(field_name)s"
+"Modelo de filtro selecionado não está combinando com o modelo do modelo "
+"atual."
 
-#. module: google_docs
-#: view:google.docs.config:0
-msgid "Google Docs Configuration"
-msgstr "Configuração do Google Docs"
+#. module: google_drive
+#: field:google.drive.config,google_drive_template_url:0
+msgid "Template URL"
+msgstr "Modelo de URL"
 
-#. module: google_docs
-#: help:google.docs.config,gdocs_resource_id:0
+#. module: google_drive
+#: view:base.config.settings:0
+msgid "and paste it here"
+msgstr "e cole-o aqui"
+
+#. module: google_drive
+#: field:base.config.settings,google_drive_authorization_code:0
+msgid "Authorization Code"
+msgstr "Código de Autorização"
+
+#. module: google_drive
+#: model:ir.model,name:google_drive.model_google_drive_config
+msgid "Google Drive templates config"
+msgstr "Google Drive templates de configuração"
+
+#. module: google_drive
+#: code:addons/google_drive/google_drive.py:64
+#, python-format
 msgid ""
-"\n"
-"This is the id of the template document, on google side. You can find it "
-"thanks to its URL: \n"
-"*for a text document with url like "
-"`https://docs.google.com/a/openerp.com/document/d/123456789/edit`, the ID is "
-"`document:123456789`\n"
-"*for a spreadsheet document with url like "
-"`https://docs.google.com/a/openerp.com/spreadsheet/ccc?key=123456789#gid=0`, "
-"the ID is `spreadsheet:123456789`\n"
-"*for a presentation (slide show) document with url like "
-"`https://docs.google.com/a/openerp.com/presentation/d/123456789/edit#slide=id"
-".p`, the ID is `presentation:123456789`\n"
-"*for a drawing document with url like "
-"`https://docs.google.com/a/openerp.com/drawings/d/123456789/edit`, the ID is "
-"`drawings:123456789`\n"
-"...\n"
+"You haven't configured 'Authorization Code' generated from google, Please "
+"generate and configure it in %(menu:base_setup.menu_general_configuration)s."
 msgstr ""
-"\n"
-"Este é o ID do modelo de documento no Google. Você pode encontra-lo graças a "
-"essa URL: \n"
-"*para um documento de texto com uma url como "
-"`https://docs.google.com/a/openerp.com/document/d/123456789/edit`, o ID é "
-"`document:123456789`\n"
-"*para uma planilha com url como "
-"`https://docs.google.com/a/openerp.com/spreadsheet/ccc?key=123456789#gid=0`, "
-"o ID é `spreadsheet:123456789`\n"
-"*para uma apresentação (slide show) com url como "
-"`https://docs.google.com/a/openerp.com/presentation/d/123456789/edit#slide=id"
-".p`, o ID é `presentation:123456789`\n"
-"*para um documento de desenho com url como "
-"`https://docs.google.com/a/openerp.com/drawings/d/123456789/edit`, o ID é "
-"`drawings:123456789`\n"
-"...\n"
-
-#. module: google_docs
-#: model:ir.model,name:google_docs.model_ir_attachment
-msgid "ir.attachment"
-msgstr "Anexo"
-
-#. module: google_docs
-#: field:google.docs.config,name_template:0
-msgid "Google Doc Name Pattern"
-msgstr "Padrão de Nome do Google Docs"
+"Você não configurou \"Código de Autorização\" gerado a partir do Google, por "
+"favor, gerar e configurá-lo em "
+"%(menu:base_setup.menu_general_configuration)s."
