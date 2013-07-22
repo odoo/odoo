@@ -1586,14 +1586,57 @@
             <field name="res_model">procurement.rule</field>
         </record>
         
-        
+        <record id="quant_search_view" model="ir.ui.view">
+            <field name="name">stock.quant.search</field>
+            <field name="model">stock.quant</field>
+            <field eval="10" name="priority"/>
+            <field name="arch" type="xml">
+                <search string="Quants">
+                    <field name="product_id"/>
+                    <field name="location_id"/>
+                    <field name="package_id"/>
+                    <field name="lot_id"/>
+                    <group expand='0' string='Filters'>
+                        <filter string="Internal Locations" domain="[('location_id.usage,'=', 'internal')]"/>
+                    </group>
+                    <group expand='0' string='Group by...'>
+                       <filter name="productgroup" string='Product' context="{'group_by' : 'product_id'}"/>
+                       <filter name="locationgroup" string='Location' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'location_id'}"/>
+                       <filter string='Packaging' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'package_id'}"/>
+                       <filter name="partnergroup" string='Partner' domain="[]" context="{'group_by': 'partner_id'}"/>
+                       <!--<filter string='Company' icon="terp-go-home" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company"/>-->
+                   </group>
+                </search>
+            </field>
+        </record>
         
         
         
         <record model="ir.actions.act_window" id="quantsact">
-            <field name="context">{}</field>
             <field name="name">Quants</field>
+            <field name="context">{'search_default_productgroup':'1', 'search_default_locationgroup':'1'}</field>
             <field name="res_model">stock.quant</field>
+        </record>
+
+
+
+        <record model="ir.ui.view" id="view_stock_quant_form">
+            <field name="name">stock.quant.form</field>
+            <field name="model">stock.quant</field>
+            <field eval="10" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Quants">
+                    <field name="product_id"/>
+                    <field name="qty"/>
+                    <field name="lot_id"/>
+                    <field name="package_id"/>
+                    <field name="location_id"/>
+                    <field name="in_date"/>
+                    <field name="reservation_id"/>
+                    <field name="propagated_from_id"/>
+                    <field name="history_ids"/>
+                </form>
+            </field>
         </record>
 
 
@@ -1607,8 +1650,8 @@
                     <field name="qty"/>
                     <field name="location_id"/>
                     <field name="in_date"/>
-                    <field name="reservation_id"/>
-                    <field name="propagated_from_id"/>
+                    <field name="reservation_id" invisible='1'/>
+                    <field name="propagated_from_id" invisible='1'/>
                 </tree>
             </field>
         </record>

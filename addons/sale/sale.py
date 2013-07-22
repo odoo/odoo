@@ -666,7 +666,7 @@ class sale_order(osv.osv):
         procurement_obj = self.pool.get('procurement.order')
         for order in self.browse(cr, uid, ids, context=context):
             proc_ids = []
-            group_id = self.pool.get("procurement.group").create(cr, uid, {'name': order.name}, context=context)
+            group_id = self.pool.get("procurement.group").create(cr, uid, {'name': order.name, 'sale_id': order.id}, context=context)
             for line in order.order_line:
                 if (line.state == 'done') or not line.product_id:
                     continue
@@ -674,9 +674,8 @@ class sale_order(osv.osv):
                 proc_id = procurement_obj.create(cr, uid, self._prepare_order_line_procurement(cr, uid, order, line, group_id=group_id, context=context))
                 proc_ids.append(proc_id)
                 line.write({'procurement_id': proc_id})
-
-            procurement_obj.signal_button_confirm(cr, uid, proc_ids)
-
+            #Confirm procurement order such that rules will be applied on it
+            procurement_obj.run(cr, uid, proc_ids, context=context)
             # FP NOTE: do we need this? isn't it the workflow that should set this
             val = {}
             if order.state == 'shipping_except':
@@ -1088,5 +1087,13 @@ class account_invoice(osv.Model):
             for id in ids:
                 wf_service.trg_validate(uid, 'account.invoice', id, 'invoice_cancel', cr)
         return super(account_invoice, self).unlink(cr, uid, ids, context=context)
+
+class procurement_group(osv.osv):
+    _inherit = 'procurement.group'
+    
+    _columns = {
+            'sale_id': fields.many2one('sale.order', string = 'Sales Order')
+                }
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

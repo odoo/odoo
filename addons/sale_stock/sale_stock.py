@@ -56,6 +56,28 @@ class sale_order(osv.osv):
             raise osv.except_osv(_('Error!'), _('There is no warehouse defined for current company.'))
         return warehouse_ids[0]
 
+    def _get_shipped(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for sale in self.browse(cr, uid, ids, context=context):
+            res[sale.id]= True
+            #TODO: not better to use picking
+            pickingstates = []
+            for pick in sale.picking_ids:
+                pickingstates += [x.state not in ['cancel', 'done'] for x in pick.move_lines]
+            if any(pickingstates):
+                res[sale.id] = False
+        return res
+
+    def _get_orders(self, cr, uid, ids, context=None):
+        res = set()
+        proc_obj = self.pool.get("procurement.order")
+        procs = proc_obj.search(cr, uid, [('move_id', 'in', ids)], context=context)
+        for proc in proc_obj.browse(cr, uid, procs, context=context):
+            if proc.group_id and proc.group_id.sale_id:
+                res.add(proc.group_id.sale_id.id)
+        return list(res)
+
+
     def _get_picking_ids(self, cr, uid, ids, name, args, context=None):
         res = {}
         if not ids: return res
@@ -66,11 +88,11 @@ class sale_order(osv.osv):
                    LEFT JOIN procurement_order as po on (po.id = sol.procurement_id) \
                    LEFT JOIN stock_move as sm on (sm.id = po.move_id) \
                    LEFT JOIN stock_picking as sp on (sp.id = sm.picking_id) \
-                   WHERE sol.order_id in %s and sp.type = 'out'\
+                   WHERE sol.order_id in %s \
                    GROUP BY sol.order_id, sm.picking_id ORDER BY sol.order_id''',(tuple(ids),))
-        result = cr.fetchall()
+        result = cr.fetchall() #and sp.type = 'out'\
         for r in result:
-           res[r[0]].append(r[1])
+            res[r[0]].append(r[1])
         return res
 
         '''for element in self.browse(cr, uid, ids, context=context):
@@ -110,7 +132,8 @@ class sale_order(osv.osv):
                 ('prepaid', 'Before Delivery'),
             ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
             help="""On demand: A draft invoice can be created from the sales order when needed. \nOn delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \nBefore delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."""),
-        'shipped': fields.boolean('Delivered', readonly=True, help="It indicates that the sales order has been delivered. This field is updated only after the scheduler(s) have been launched."),
+        'shipped': fields.function(_get_shipped, type='boolean', store = {'stock.move': (_get_orders, ['state'], 10)}), 
+    #fields.boolean('Delivered', readonly=True, help="It indicates that the sales order has been delivered. This field is updated only after the scheduler(s) have been launched."),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
         'picking_ids': fields.function(_get_picking_ids, method=True, type='one2many', relation='stock.picking', string='Picking associated to this sale'),
     }

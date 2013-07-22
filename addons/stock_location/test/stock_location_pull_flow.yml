@@ -10,30 +10,31 @@
     uom_po_id: product.product_uom_unit
     property_account_expense: account.a_expense
     property_account_income: account.rev
-    flow_pull_ids:
-      - invoice_state: none
-        location_id: stock.stock_location_shop0
-        location_src_id: stock.stock_location_intermediatelocation0
-        name: E001
-        picking_type: in
-        procure_method: make_to_order
-        type_proc: move
-        company_id: stock.res_company_1
-      - invoice_state: none
-        location_id: stock.stock_location_shop1
-        location_src_id: stock.stock_location_intermediatelocation0
-        name: E002
-        picking_type: in
-        procure_method: make_to_order
-        type_proc: move
-        company_id: stock.res_company_2
-      - invoice_state: none
-        location_id: stock.stock_location_intermediatelocation0
-        location_src_id: stock.stock_location_stock
-        name: E003
-        type_proc: move
-        picking_type: out
-        company_id: base.main_company
+    route_ids:
+      - name: 'Route from one company to the other'
+        pull_ids: 
+        - invoice_state: none
+          location_id: stock.stock_location_shop0
+          location_src_id: stock.stock_location_intermediatelocation0
+          name: E001
+          picking_type: in
+          type_proc: move
+          company_id: stock.res_company_1
+        - invoice_state: none
+          location_id: stock.stock_location_shop1
+          location_src_id: stock.stock_location_intermediatelocation0
+          name: E002
+          picking_type: in
+          procure_method: make_to_order
+          type_proc: move
+          company_id: stock.res_company_2
+        - invoice_state: none
+          location_id: stock.stock_location_intermediatelocation0
+          location_src_id: stock.stock_location_stock
+          name: E003
+          type_proc: move
+          picking_type: out
+          company_id: base.main_company
     property_stock_inventory: stock.location_inventory
     property_stock_procurement: stock.location_procurement
     property_stock_production: stock.location_production
@@ -56,13 +57,8 @@
 -
   I confirm the procurement order.
 -
-  !workflow {model: procurement.order, action: button_confirm, ref: procurement_order_test0}
--
-  I launch the scheduler to compute  procurement.
--
-  !python {model: procurement.order.compute.all}: |
-    proc_obj = self.pool.get('procurement.order')
-    proc_obj._procure_confirm(cr,uid, ids=[ref('procurement_order_test0')])
+  !python {model: procurement.order}: |
+    self.run(cr, uid, ref("procurement_order_test0"))
 -
   I check the new procurement order has been created .
 -

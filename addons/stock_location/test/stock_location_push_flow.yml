@@ -32,20 +32,18 @@
     list_price: 1000.0
     mes_type: fixed
     name: HP CD writers
-    procure_method: make_to_stock
     seller_ids:
       - delay: 1
         name: res_partner_microlinktechnologies0
         min_qty: 5.0
-    path_ids:
-      - auto: auto
-        invoice_state: none
-        location_dest_id: stock_location.stock_location_qualitytest0
-        location_from_id: stock.stock_location_stock
-      - auto: auto
-        invoice_state: none
-        location_dest_id: stock.stock_location_components
-        location_from_id: stock_location.stock_location_qualitytest0
+    route_ids:
+      - push_ids:
+        - invoice_state: none
+          location_dest_id: stock_location.stock_location_qualitytest0
+          location_from_id: stock.stock_location_stock
+        - invoice_state: none
+          location_dest_id: stock.stock_location_components
+          location_from_id: stock_location.stock_location_qualitytest0
     supply_method: buy
     type: product
     uom_id: product.product_uom_unit
