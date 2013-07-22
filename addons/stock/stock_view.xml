@@ -1597,7 +1597,7 @@
                     <field name="package_id"/>
                     <field name="lot_id"/>
                     <group expand='0' string='Filters'>
-                        <filter string="Internal Locations" domain="[('location_id.usage,'=', 'internal')]"/>
+                        <filter string="Internal Locations" domain="[('location_id.usage','=', 'internal')]"/>
                     </group>
                     <group expand='0' string='Group by...'>
                        <filter name="productgroup" string='Product' context="{'group_by' : 'product_id'}"/>

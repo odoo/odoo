@@ -62,6 +62,14 @@ class stock_location(osv.osv):
 class stock_quant(osv.osv):
     _inherit = "stock.quant"
 
+
+    def _get_inventory_value(self, cr, uid, line, prodbrow, context=None):
+        #TODO: what in case of partner_id
+        if prodbrow[(line.company_id.id, line.product_id.id)].cost_method in ('real'):
+            return line.cost
+        return super(stock_quant, self)._get_inventory_value(cr, uid, line, prodbrow, context=context)
+
+
     # FP Note: this is where we should post accounting entries for adjustment
     def _price_update(self, cr, uid, quant, newprice, context=None):
         super(stock_quant, self)._price_update(cr, uid, quant, newprice, context=context)
@@ -533,12 +541,6 @@ class stock_move(osv.osv):
 #        return True
 
 
-class report_stock_inventory(osv.osv):
-    _inherit = "report.stock.inventory"
 
-    def _get_inventory_value(self, cr, uid, line, prodbrow, context=None):
-        if prodbrow[(line.company_id.id, line.product_id.id)].cost_method in ('real'):
-            return line.value
-        return super(report_stock_inventory, self)._get_inventory_value(cr, uid, line, prodbrow, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

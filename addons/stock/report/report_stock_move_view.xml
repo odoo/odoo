@@ -10,66 +10,50 @@
         groups="group_stock_manager"/>
 
     <!-- Inventory Control -->
-    <record id="view_stock_inventory_tree" model="ir.ui.view">
-        <field name="name">report.stock.inventory.tree</field>
-        <field name="model">report.stock.inventory</field>
-        <field name="arch" type="xml">
-            <tree string="Inventory Analysis" create="false">
-                <field name="company_id" invisible="1"/>
-                <field name="location_type" invisible="1"/>
-                <field name="location_id" invisible="1"/>
-                <field name="product_categ_id" invisible="1"/>
-                <field name="product_id" invisible="1"/>
-                <field name="lot_id" invisible="1"/>
-                <field name="product_qty" sum="Total Quantity in Stock"/>
-                <field name="inventory_value" sum="Total Inventory Value"/>
-           </tree>
-        </field>
-    </record>
+    
 
-    <record id="view_stock_inventory_graph" model="ir.ui.view">
-         <field name="name">report.stock.inventory.graph</field>
-         <field name="model">report.stock.inventory</field>
-         <field name="arch" type="xml">
-             <graph string="Inventory Analysis" type="bar">
-                 <field name="product_id"/>
-                 <field name="inventory_value"/>
-             </graph>
-         </field>
-    </record>
+        
+       <record model="ir.ui.view" id="view_stock_quant_tree_value">
+            <field name="name">stock.quant.tree</field>
+            <field name="model">stock.quant</field>
+            <field eval="12" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Quants">
+                    <field name="product_id"/>
+                    <field name="qty"/>
+                    <field name="location_id"/>
+                    <field name="in_date"/>
+                    <field name="inventory_value"/>
+                    <field name="reservation_id" invisible='1'/>
+                    <field name="propagated_from_id" invisible='1'/>
+                    <field name="company_id" invisible='1'/>
+                </tree>
+            </field>
+        </record>
 
-    <record id="view_stock_inventory_search" model="ir.ui.view">
-        <field name="name">report.stock.inventory.search</field>
-        <field name="model">report.stock.inventory</field>
-        <field name="arch" type="xml">
-            <search string="Inventory Analysis">
-                <filter icon="terp-go-home" name="location_type_internal" string="Internal" domain="[('location_type','=','internal')]"/>
-                <field name="product_id" default_focus="1"/>
-                <field name="company_id" groups="base.group_multi_company"/>
-                <field name="location_id" filter_domain="[('location_id', 'child_of', self)]"/>
-                <group expand="0" string="Extended Filters...">
-                    <field name="product_categ_id" />
-                    <field name="lot_id"/>
-                    <field name="location_type"/>
-                    <filter icon="terp-go-home" name="location_type_scrap" string="Scrap" domain="[('scrap_location','=','True')]"/>
-                </group>
-                <group expand="1" string="Group By..." >
-                    <filter name="group_product_categ_id" string="Product Category" icon="terp-stock_symbol-selection" context="{'group_by':'product_categ_id'}"/>
-                    <filter name="group_product" string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
-                    <filter name="group_lot" string="Lot" icon="terp-accessories-archiver" context="{'group_by':'lot_id'}"/>
-                    <filter name="group_company" string="Company" groups="base.group_multi_company" icon="terp-go-home" context="{'group_by':'company_id'}"/>
-                    <filter name="group_location" string="Location" icon="terp-go-home" context="{'group_by':'location_id'}"/>
-                </group>
-            </search>
-        </field>
-    </record>
+
+       <record model="ir.ui.view" id="view_stock_quant_graph_value">
+            <field name="name">stock.quant.graph</field>
+            <field name="model">stock.quant</field>
+            <field eval="12" name="priority"/>
+            <field name="arch" type="xml">
+                <graph string="Quants">
+                    <field name="product_id"/>
+                    <field name="qty"/>
+                    <field name="location_id"/>
+                    <field name="inventory_value"/>
+                  
+                </graph>
+            </field>
+        </record>
+
 
     <record id="action_stock_inventory_report" model="ir.actions.act_window">
         <field name="name">Inventory Valuation</field>
-        <field name="res_model">report.stock.inventory</field>
+        <field name="res_model">stock.quant</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,graph</field>
-        <field name="search_view_id"  eval="False"/>
+        <field name="view_mode">tree,graph,form</field>
+        <field name="view_id" ref="view_stock_quant_tree_value"/>
         <field name="context">{'search_default_real':1, 'search_default_inmovesremaining':1 ,'group_by':['company_id', 'product_id'], 'group_by_no_leaf':0}</field>
         <field name="help">Inventory Analysis allows you to easily check and analyse your company stock levels. Sort and group by selection criteria in order to better analyse and manage your company  activities.</field>
     </record>
