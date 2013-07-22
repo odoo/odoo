@@ -396,3 +396,26 @@ class TestAPI(common.TransactionCase):
         self.assertGreaterEqual(union, pa)
         self.assertGreaterEqual(union, pb)
 
+        # one cannot mix different models with set operations
+        ps = pa
+        ms = self.registry('ir.ui.menu').search([])
+        self.assertNotEqual(ps._name, ms._name)
+        self.assertNotEqual(ps, ms)
+
+        with self.assertRaises(except_orm):
+            res = ps + ms
+        with self.assertRaises(except_orm):
+            res = ps - ms
+        with self.assertRaises(except_orm):
+            res = ps & ms
+        with self.assertRaises(except_orm):
+            res = ps | ms
+        with self.assertRaises(except_orm):
+            res = ps < ms
+        with self.assertRaises(except_orm):
+            res = ps <= ms
+        with self.assertRaises(except_orm):
+            res = ps > ms
+        with self.assertRaises(except_orm):
+            res = ps >= ms
+
