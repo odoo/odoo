@@ -202,6 +202,20 @@
         </rng:element>
     </rng:define>
 
+    <rng:define name="template">
+        <rng:element name="template">
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:attribute>
+                        <rng:anyName/>
+                    </rng:attribute>
+                    <rng:text/>
+                    <rng:ref name="any"/>
+                </rng:choice>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
     <rng:define name="delete">
         <rng:element name="delete">
             <rng:attribute name="model" />
@@ -280,6 +294,7 @@
                     <rng:text/>
                     <rng:ref name="menuitem" />
                     <rng:ref name="record" />
+                    <rng:ref name="template" />
                     <rng:ref name="delete" />
                     <rng:ref name="wizard" />
                     <rng:ref name="act_window" />

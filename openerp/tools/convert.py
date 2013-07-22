@@ -828,6 +828,32 @@ form: module.record_id""" % (xml_id,)
             cr.commit()
         return rec_model, id
 
+    def _tag_template(self, cr, el, data_node=None):
+        # This helper transforms a <template> element into a <record> and forwards it
+        tpl_id = el.get('id', el.get('t-name', '')).encode('ascii')
+        module = self.module
+        if '.' in tpl_id:
+            module, tpl_id = tpl_id.split('.', 1)
+        # set the full template name for qweb <module>.<id>
+        el.attrib['t-name'] = '%s.%s' % (module, tpl_id)
+        el.attrib.pop('id', None)
+
+        record = etree.Element('record')
+        record_attrs = {
+            'id': tpl_id,
+            'model': 'ir.ui.view',
+        }
+        for att in ['forcecreate', 'context']:
+            if att in el.attrib:
+                record_attrs[att] = el.attrib.pop(att)
+
+        record.attrib.update(record_attrs)
+        record.append(etree.fromstring('<field name="name">%s</field>' % tpl_id))
+        record.append(etree.fromstring('<field name="type">qweb</field>'))
+        record.append(etree.fromstring('<field name="arch" type="xml"/>'))
+        record[-1].append(el)
+        return self._tag_record(cr, record, data_node)
+
     def id_get(self, cr, id_str):
         if id_str in self.idref:
             return self.idref[id_str]
@@ -872,6 +898,7 @@ form: module.record_id""" % (xml_id,)
         self._tags = {
             'menuitem': self._tag_menuitem,
             'record': self._tag_record,
+            'template': self._tag_template,
             'assert': self._tag_assert,
             'report': self._tag_report,
             'wizard': self._tag_wizard,
