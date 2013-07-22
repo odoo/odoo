@@ -130,6 +130,7 @@ class mail_compose_message(osv.TransientModel):
     _defaults = {
         'composition_mode': 'comment',
         'body': lambda self, cr, uid, ctx={}: '',
+        'subject': lambda self, cr, uid, ctx={}: False,
         'partner_ids': lambda self, cr, uid, ctx={}: [],
         'post': lambda self, cr, uid, ctx={}: True,
         'same_thread': lambda self, cr, uid, ctx={}: True,
