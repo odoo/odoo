@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_test_workflow_model" model="ir.ui.view">
+            <field name="name">Test workflow</field>
+            <field name="model">test.workflow.model</field>
+            <field name="arch" type="xml">
+                <form string="Test workflow">
+                          <button name="a-b" string="a-b" type="workflow" icon="gtk-ok" colspan="1"/>
+                          <label string="a-b"/>
+                          <button name="trigger" string="trigger" type="object" icon="gtk-ok" colspan="1"/>
+                          <label string="trigger"/>
+                </form>
+           </field>
+        </record>
+
+        <record id="action_test_workflow" model="ir.actions.act_window">
+            <field name="name">Test workflow</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">test.workflow.model</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem icon="STOCK_PREFERENCES" id="base.menu_tests" name="Tests" sequence="1000000"/>
+
+        <menuitem id="menu_test_workflow" parent="base.menu_tests" name="Test workflow"/>
+
+        <menuitem id="menu_test_workflow_leaf"
+            name="Test workflow"
+            action="action_test_workflow"
+            parent="menu_test_workflow"/>
+
+
+        <record id="test_workflow_trigger_1" model="test.workflow.trigger">
+        <!-- A single trigger record, with known ID 1 -->
+        </record>
+
+
+        <!-- A simple workflow:
+
+            a -signal-> b -trigger-> c
+
+        -->
+        <record id="test_workflow" model="workflow">
+            <field name="name">test.workflow</field>
+            <field name="osv">test.workflow.model</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <record id="activity_a" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow"/>
+            <field name="flow_start">True</field>
+            <field name="name">a</field>
+            <field name="kind">function</field>
+            <field name="action">print_a()</field>
+        </record>
+        <record id="activity_b" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow"/>
+            <field name="name">b</field>
+            <field name="kind">function</field>
+            <field name="action">print_b()</field>
+        </record>
+        <record id="activity_c" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow"/>
+            <field name="flow_stop">True</field>
+            <field name="name">c</field>
+            <field name="kind">function</field>
+            <field name="action">print_c()</field>
+        </record>
+
+        <record id="trans_a_b" model="workflow.transition">
+            <field name="act_from" ref="activity_a"/>
+            <field name="act_to" ref="activity_b"/>
+            <field name="signal">a-b</field>
+        </record>
+        <record id="trans_b_c" model="workflow.transition">
+            <field name="act_from" ref="activity_b"/>
+            <field name="act_to" ref="activity_c"/>
+            <field name="condition">condition()</field>
+            <field name="trigger_model">test.workflow.trigger</field>
+            <field name="trigger_expr_id">[1]</field>
+        </record>
+    </data>
+</openerp>
