@@ -5300,6 +5300,24 @@ class BaseModel(object):
             raise except_orm("ValueError", "Mixing apples and oranges: %s + %s" % (self, other))
         return self.browse(self._ids + other._ids)
 
+    def __sub__(self, other):
+        """ Return the difference between two instances (order-preserving). """
+        if not isinstance(other, BaseModel) or self._name != other._name:
+            raise except_orm("ValueError", "Mixing apples and oranges: %s - %s" % (self, other))
+        return self.browse(id for id in self._ids if id not in other._ids)
+
+    def __and__(self, other):
+        """ Return the intersection of two instances. """
+        if not isinstance(other, BaseModel) or self._name != other._name:
+            raise except_orm("ValueError", "Mixing apples and oranges: %s & %s" % (self, other))
+        return self.browse(set(self._ids) & set(other._ids))
+
+    def __or__(self, other):
+        """ Return the union of two instances. """
+        if not isinstance(other, BaseModel) or self._name != other._name:
+            raise except_orm("ValueError", "Mixing apples and oranges: %s | %s" % (self, other))
+        return self.browse(set(self._ids) | set(other._ids))
+
     def __eq__(self, other):
         """ Test whether two instances are equivalent (as sets). """
         if not isinstance(other, BaseModel):
@@ -5309,6 +5327,26 @@ class BaseModel(object):
 
     def __ne__(self, other):
         return not self == other
+
+    def __lt__(self, other):
+        if not isinstance(other, BaseModel) or self._name != other._name:
+            raise except_orm("ValueError", "Mixing apples and oranges: %s < %s" % (self, other))
+        return set(self._ids) < set(other._ids)
+
+    def __le__(self, other):
+        if not isinstance(other, BaseModel) or self._name != other._name:
+            raise except_orm("ValueError", "Mixing apples and oranges: %s <= %s" % (self, other))
+        return set(self._ids) <= set(other._ids)
+
+    def __gt__(self, other):
+        if not isinstance(other, BaseModel) or self._name != other._name:
+            raise except_orm("ValueError", "Mixing apples and oranges: %s > %s" % (self, other))
+        return set(self._ids) > set(other._ids)
+
+    def __ge__(self, other):
+        if not isinstance(other, BaseModel) or self._name != other._name:
+            raise except_orm("ValueError", "Mixing apples and oranges: %s >= %s" % (self, other))
+        return set(self._ids) >= set(other._ids)
 
     def __int__(self):
         return (self._ids or (False,))[0]

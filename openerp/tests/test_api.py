@@ -367,9 +367,32 @@ class TestAPI(common.TransactionCase):
         self.assertTrue(p1 in ps)
 
     @mute_logger('openerp.osv.orm')
-    def test_80_concat(self):
-        """ Check concatenation of recordsets. """
+    def test_80_set_operations(self):
+        """ Check set operations on recordsets. """
         pa = self.Partner.search([('name', 'ilike', 'a')])
         pb = self.Partner.search([('name', 'ilike', 'b')])
-        pab = pa + pb
-        self.assertEqual(list(pab), list(pa) + list(pb))
+        self.assertTrue(pa)
+        self.assertTrue(pb)
+        self.assertTrue(set(pa) & set(pb))
+
+        concat = pa + pb
+        self.assertEqual(list(concat), list(pa) + list(pb))
+        self.assertEqual(len(concat), len(pa) + len(pb))
+
+        difference = pa - pb
+        self.assertEqual(len(difference), len(set(difference)))
+        self.assertEqual(set(difference), set(pa) - set(pb))
+        self.assertLessEqual(difference, pa)
+
+        intersection = pa & pb
+        self.assertEqual(len(intersection), len(set(intersection)))
+        self.assertEqual(set(intersection), set(pa) & set(pb))
+        self.assertLessEqual(intersection, pa)
+        self.assertLessEqual(intersection, pb)
+
+        union = pa | pb
+        self.assertEqual(len(union), len(set(union)))
+        self.assertEqual(set(union), set(pa) | set(pb))
+        self.assertGreaterEqual(union, pa)
+        self.assertGreaterEqual(union, pb)
+
