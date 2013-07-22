@@ -2292,6 +2292,13 @@ class stock_package(osv.osv):
         """ return all sublocations of the given stock locations (included) """
         return self.search(cr, uid, [('id', 'child_of', ids)], context=context)
 
+    def _get_packages(self, cr, uid, ids, context=None):
+        """Returns packages from quants for store"""
+        res = set()
+        for quant in self.browse(cr, uid, ids, context=context):
+            res.add(quant.package_id.id)
+        return list(res)
+
     _columns = {
         'name': fields.char('Package Reference', size=64, select=True),
         'complete_name': fields.function(_complete_name, type='char', string="Package Name",
@@ -2299,7 +2306,8 @@ class stock_package(osv.osv):
         'parent_left': fields.integer('Left Parent', select=1),
         'parent_right': fields.integer('Right Parent', select=1),
         'packaging_id': fields.many2one('product.packaging', 'Type of Packaging'),
-        'location_id': fields.related('quant_ids', 'location_id', type='many2one', relation='stock.location', string='Location', readonly=True),
+        'location_id': fields.related('quant_ids', 'location_id', type='many2one', relation='stock.location', string='Location', 
+                                      store = {'stock.quant': (_get_packages, ['location_id'], 10)}, readonly=True),
         'quant_ids': fields.one2many('stock.quant', 'package_id', 'Bulk Content'),
         'parent_id': fields.many2one('stock.quant.package', 'Container Package', help="The package containing this item"),
         'children_ids': fields.one2many('stock.quant.package', 'parent_id', 'Contained Packages'),

@@ -1769,11 +1769,29 @@
                 </tree>
             </field>
         </record>
+        <record id="quant_package_search_view" model="ir.ui.view">
+            <field name="name">stock.quant.package.search</field>
+            <field name="model">stock.quant.package</field>
+            <field eval="10" name="priority"/>            
+            <field name="arch" type="xml">
+                <search string="Package">
+                    <field name="name" string="Package Name" filter_domain="['|',('name','ilike',self),('default_code','ilike',self)]"/>
+                    <field name="location_id"/>
+                    <field name="packaging_id"/>
+                    <group  expand='0' string='Group by...'>
+                       <filter string='Location' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'location_id'}"/>
+                       <filter string='Name' icon="terp-mrp" domain="[]" context="{'group_by' : 'name'}"/>
+                       <filter string='Packaging' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'packaging_id'}"/>
+                       <!--<filter string='Company' icon="terp-go-home" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company"/>-->
+                   </group>
+                </search>
+            </field>
+        </record>
         <record model="ir.actions.act_window" id="action_package_view">
             <field name="context">{}</field>
             <field name="name">Packages</field>
             <field name="res_model">stock.quant.package</field>
         </record>
-        <menuitem id="menu_package" name="Packages" parent="stock.menu_stock_configuration" action="action_package_view"/>
+        <menuitem id="menu_package" name="Packages" parent="menu_stock_product" action="action_package_view"/>
     </data>
 </openerp>
