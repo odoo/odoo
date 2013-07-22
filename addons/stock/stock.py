@@ -2309,7 +2309,7 @@ class stock_package(osv.osv):
         'location_id': fields.related('quant_ids', 'location_id', type='many2one', relation='stock.location', string='Location', 
                                       store = {'stock.quant': (_get_packages, ['location_id'], 10)}, readonly=True),
         'quant_ids': fields.one2many('stock.quant', 'package_id', 'Bulk Content'),
-        'parent_id': fields.many2one('stock.quant.package', 'Container Package', help="The package containing this item"),
+        'parent_id': fields.many2one('stock.quant.package', 'Container Package', help="The package containing this item", ondelete = "cascade"),
         'children_ids': fields.one2many('stock.quant.package', 'parent_id', 'Contained Packages'),
 
     }
