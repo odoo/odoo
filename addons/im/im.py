@@ -101,17 +101,19 @@ class LongPollingController(http.Controller):
             raise Exception("Not usable in a server not running gevent")
         from openerp.addons.im.watcher import ImWatcher
         if db is not None:
-            request.session.authenticate(db=db, uid=uid, password=password)
+            openerp.service.security.check(db, uid, password)
         else:
-            request.session.authenticate(db=request.session._db, uid=request.session._uid, password=request.session._password)
+            uid = request.session.uid
+            db = request.session.db
 
-        with request.registry.cursor() as cr:
-            request.registry.get('im.user').im_connect(cr, request.uid, uuid=uuid, context=request.context)
-            my_id = request.registry.get('im.user').get_by_user_id(cr, request.uid, uuid or request.session._uid, request.context)["id"]
+        registry = openerp.modules.registry.RegistryManager.get(db)
+        with registry.cursor() as cr:
+            registry.get('im.user').im_connect(cr, uid, uuid=uuid, context=request.context)
+            my_id = registry.get('im.user').get_by_user_id(cr, uid, uuid or uid, request.context)["id"]
         num = 0
         while True:
-            with request.registry.cursor() as cr:
-                res = request.registry.get('im.message').get_messages(cr, request.uid, last, users_watch, uuid=uuid, context=request.context)
+            with registry.cursor() as cr:
+                res = registry.get('im.message').get_messages(cr, uid, last, users_watch, uuid=uuid, context=request.context)
             if num >= 1 or len(res["res"]) > 0:
                 return res
             last = res["last"]

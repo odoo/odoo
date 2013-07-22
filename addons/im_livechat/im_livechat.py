@@ -37,36 +37,45 @@ env.filters["json"] = json.dumps
 
 class LiveChatController(http.Controller):
 
-    @http.route('/im_livechat/loader')
+    def _auth(self, db):
+        reg = openerp.modules.registry.RegistryManager.get(db)
+        uid = openerp.netsvc.dispatch_rpc('common', 'authenticate', [db, "anonymous", "anonymous", None])
+        return reg, uid
+
+    @http.route('/im_livechat/loader', auth="none")
     def loader(self, **kwargs):
         p = json.loads(kwargs["p"])
         db = p["db"]
         channel = p["channel"]
         user_name = p.get("user_name", None)
-        request.session.authenticate(db=db, login="anonymous", password="anonymous")
-        info = request.session.model('im_livechat.channel').get_info_for_chat_src(channel)
-        info["db"] = db
-        info["channel"] = channel
-        info["userName"] = user_name
-        return request.make_response(env.get_template("loader.js").render(info),
-             headers=[('Content-Type', "text/javascript")])
 
-    @http.route('/im_livechat/web_page')
+        reg, uid = self._auth(db)
+        with reg.cursor() as cr:
+            info = reg.get('im_livechat.channel').get_info_for_chat_src(cr, uid, channel)
+            info["db"] = db
+            info["channel"] = channel
+            info["userName"] = user_name
+            return request.make_response(env.get_template("loader.js").render(info),
+                 headers=[('Content-Type', "text/javascript")])
+
+    @http.route('/im_livechat/web_page', auth="none")
     def web_page(self, **kwargs):
         p = json.loads(kwargs["p"])
         db = p["db"]
         channel = p["channel"]
-        request.session.authenticate(db=db, login="anonymous", password="anonymous")
-        script = request.session.model('im_livechat.channel').read(channel, ["script"])["script"]
-        info = request.session.model('im_livechat.channel').get_info_for_chat_src(channel)
-        info["script"] = script
-        return request.make_response(env.get_template("web_page.html").render(info),
-             headers=[('Content-Type', "text/html")])
+        reg, uid = self._auth(db)
+        with reg.cursor() as cr:
+            script = reg.get('im_livechat.channel').read(cr, uid, channel, ["script"])["script"]
+            info = reg.get('im_livechat.channel').get_info_for_chat_src(cr, uid, channel)
+            info["script"] = script
+            return request.make_response(env.get_template("web_page.html").render(info),
+                 headers=[('Content-Type', "text/html")])
 
-    @http.route('/im_livechat/available', type='json')
+    @http.route('/im_livechat/available', type='json', auth="none")
     def available(self, db, channel):
-        request.session.authenticate(db=db, login="anonymous", password="anonymous")
-        return request.session.model('im_livechat.channel').get_available_user(channel) > 0
+        reg, uid = self._auth(db)
+        with reg.cursor() as cr:
+            return reg.get('im_livechat.channel').get_available_user(cr, uid, channel) > 0
 
 class im_livechat_channel(osv.osv):
     _name = 'im_livechat.channel'

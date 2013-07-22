@@ -621,7 +621,7 @@ class crm_lead(format_address, osv.osv):
                 attachment.write(values)
         return True
 
-    def merge_opportunity(self, cr, uid, ids, context=None):
+    def merge_opportunity(self, cr, uid, ids, user_id=False, section_id=False, context=None):
         """
         Different cases of merge:
         - merge leads together = 1 new lead
@@ -654,6 +654,11 @@ class crm_lead(format_address, osv.osv):
 
         fields = list(CRM_LEAD_FIELDS_TO_MERGE)
         merged_data = self._merge_data(cr, uid, ids, highest, fields, context=context)
+
+        if user_id:
+            merged_data['user_id'] = user_id
+        if section_id:
+            merged_data['section_id'] = section_id
 
         # Merge messages and attachements into the first opportunity
         self._merge_opportunity_history(cr, uid, highest.id, tail_opportunities, context=context)
