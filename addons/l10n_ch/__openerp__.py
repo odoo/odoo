@@ -24,8 +24,8 @@
 
 {'name': 'Switzerland - Accounting',
  'description':  """
- Swiss localization :
- ====================
+Swiss localization
+==================
  **Multilang swiss STERCHI account chart and taxes**
   **Author:** Camptocamp SA
 

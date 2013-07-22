@@ -434,6 +434,14 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         template:'ErrorNegativePricePopupWidget',
     });
 
+    module.ErrorNoClientPopupWidget = module.ErrorPopupWidget.extend({
+        template: 'ErrorNoClientPopupWidget',
+    });
+
+    module.ErrorInvoiceTransferPopupWidget = module.ErrorPopupWidget.extend({
+        template: 'ErrorInvoiceTransferPopupWidget',
+    });
+
     module.ScaleInviteScreenWidget = module.ScreenWidget.extend({
         template:'ScaleInviteScreenWidget',
 
@@ -452,7 +460,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     clearInterval(this.intervalID);
                     self.pos_widget.screen_selector.set_current_screen(self.next_screen);
                 }
-            },500);
+            },100);
 
             this.add_action_button({
                     label: _t('Back'),
@@ -507,7 +515,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     self.weight = weight;
                     self.renderElement();
                 }
-            },200);
+            },100);
         },
         renderElement: function(){
             var self = this;
@@ -640,7 +648,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
                             var cashregister = selfCheckoutRegisters[0] || self.pos.get('cashRegisters').models[0];
                             currentOrder.addPaymentLine(cashregister);
-                            self.pos.push_order(currentOrder.exportAsJSON())
+                            self.pos.push_order(currentOrder)
                             currentOrder.destroy();
                             self.pos.proxy.transaction_end();
                             self.pos_widget.screen_selector.set_current_screen(self.next_screen);
@@ -808,19 +816,42 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this._super();
             var self = this;
 
-            this.add_action_button({
+            var print_button = this.add_action_button({
                     label: _t('Print'),
                     icon: '/point_of_sale/static/src/img/icons/png48/printer.png',
                     click: function(){ self.print(); },
                 });
 
-            this.add_action_button({
+            var finish_button = this.add_action_button({
                     label: _t('Next Order'),
                     icon: '/point_of_sale/static/src/img/icons/png48/go-next.png',
                     click: function() { self.finishOrder(); },
                 });
 
             window.print();
+
+            // THIS IS THE HACK OF THE CENTURY
+            //
+            // The problem is that in chrome the print() is asynchronous and doesn't
+            // execute until all rpc are finished. So it conflicts with the rpc used
+            // to send the orders to the backend, and the user is able to go to the next 
+            // screen before the printing dialog is opened. The problem is that what's 
+            // printed is whatever is in the page when the dialog is opened and not when it's called,
+            // and so you end up printing the product list instead of the receipt... 
+            //
+            // Fixing this would need a re-architecturing
+            // of the code to postpone sending of orders after printing.
+            //
+            // But since the print dialog also blocks the other asynchronous calls, the
+            // button enabling in the setTimeout() is blocked until the printing dialog is 
+            // closed. But the timeout has to be big enough or else it doesn't work
+            // 2 seconds is the same as the default timeout for sending orders and so the dialog
+            // should have appeared before the timeout... so yeah that's not ultra reliable. 
+
+            finish_button.set_disabled(true);   
+            setTimeout(function(){
+                finish_button.set_disabled(false);
+            }, 2000);
         },
         print: function() {
             window.print();
@@ -870,15 +901,15 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
             this.set_numpad_state(this.pos_widget.numpad.state);
             
-            this.back_button = this.add_action_button({
+            this.add_action_button({
                     label: _t('Back'),
                     icon: '/point_of_sale/static/src/img/icons/png48/go-previous.png',
                     click: function(){  
                         self.pos_widget.screen_selector.set_current_screen(self.back_screen);
                     },
                 });
-            
-            this.validate_button = this.add_action_button({
+
+            this.add_action_button({
                     label: _t('Validate'),
                     name: 'validation',
                     icon: '/point_of_sale/static/src/img/icons/png48/validate.png',
@@ -886,6 +917,17 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                         self.validateCurrentOrder();
                     },
                 });
+           
+            if(this.pos.iface_invoicing){
+                this.add_action_button({
+                        label: 'Invoice',
+                        name: 'invoice',
+                        icon: '/point_of_sale/static/src/img/icons/png48/invoice.png',
+                        click: function(){
+                            self.validateCurrentOrder({invoice: true});
+                        },
+                    });
+            }
 
             this.updatePaymentSummary();
             this.line_refocus();
@@ -898,15 +940,44 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         back: function() {
             this.pos_widget.screen_selector.set_current_screen(self.back_screen);
         },
-        validateCurrentOrder: function() {
+        validateCurrentOrder: function(options) {
+            var self = this;
+            options = options || {};
+
             var currentOrder = this.pos.get('selectedOrder');
 
-            this.pos.push_order(currentOrder.exportAsJSON()) 
-            if(this.pos.iface_print_via_proxy){
-                this.pos.proxy.print_receipt(currentOrder.export_for_printing());
-                this.pos.get('selectedOrder').destroy();    //finish order and go back to scan screen
+
+            if(options.invoice){
+                // deactivate the validation button while we try to send the order
+                this.pos_widget.action_bar.set_button_disabled('validation',true);
+                this.pos_widget.action_bar.set_button_disabled('invoice',true);
+
+                var invoiced = this.pos.push_and_invoice_order(currentOrder);
+
+                invoiced.fail(function(error){
+                    if(error === 'error-no-client'){
+                        self.pos_widget.screen_selector.show_popup('error-no-client');
+                    }else{
+                        self.pos_widget.screen_selector.show_popup('error-invoice-transfer');
+                    }
+                    self.pos_widget.action_bar.set_button_disabled('validation',false);
+                    self.pos_widget.action_bar.set_button_disabled('invoice',false);
+                });
+
+                invoiced.done(function(){
+                    self.pos_widget.action_bar.set_button_disabled('validation',false);
+                    self.pos_widget.action_bar.set_button_disabled('invoice',false);
+                    self.pos.get('selectedOrder').destroy();
+                });
+
             }else{
-                this.pos_widget.screen_selector.set_current_screen(this.next_screen);
+                this.pos.push_order(currentOrder) 
+                if(this.pos.iface_print_via_proxy){
+                    this.pos.proxy.print_receipt(currentOrder.export_for_printing());
+                    this.pos.get('selectedOrder').destroy();    //finish order and go back to scan screen
+                }else{
+                    this.pos_widget.screen_selector.set_current_screen(this.next_screen);
+                }
             }
         },
         bindPaymentLineEvents: function() {
@@ -985,6 +1056,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 
             if(this.pos_widget.action_bar){
                 this.pos_widget.action_bar.set_button_disabled('validation', remaining > 0.000001);
+                this.pos_widget.action_bar.set_button_disabled('invoice', remaining > 0.000001);
             }
         },
         set_numpad_state: function(numpadState) {

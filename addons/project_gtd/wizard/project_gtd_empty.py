@@ -52,7 +52,7 @@ class project_timebox_empty(osv.osv_memory):
             raise osv.except_osv(_('Error!'), _('No timebox child of this one!'))
         tids = obj_task.search(cr, uid, [('timebox_id', '=', context['active_id'])])
         for task in obj_task.browse(cr, uid, tids, context):
-            if (task.state in ('cancel','done')) or (task.user_id.id <> uid):
+            if (task.stage_id and task.stage_id.fold) or (task.user_id.id <> uid):
                 close.append(task.id)
             else:
                 up.append(task.id)

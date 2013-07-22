@@ -66,7 +66,7 @@ class document_page(osv.osv):
         'create_date': fields.datetime("Created on", select=True, readonly=True),
         'create_uid': fields.many2one('res.users', 'Author', select=True, readonly=True),
         'write_date': fields.datetime("Modification Date", select=True, readonly=True),
-        'write_uid': fields.many2one('res.users', "Last Contributor", select=True),
+        'write_uid': fields.many2one('res.users', "Last Contributor", select=True, readonly=True),
     }
     _defaults = {
         'type':'content',
