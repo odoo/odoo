@@ -170,11 +170,17 @@ class Field(object):
         """
         return value
 
+    def convert_from_write(self, value):
+        """ convert `value` from method :meth:`openerp.osv.orm.BaseModel.write`
+            the cache level
+        """
+        return self.convert_from_read(value)
+
     def convert_to_write(self, value):
         """ convert `value` from the cache to a valid value for method
             :meth:`openerp.osv.orm.BaseModel.write`
         """
-        return value
+        return self.convert_to_read(value)
 
     def convert_to_export(self, value):
         """ convert `value` from the cache to a valid value for export. """
@@ -392,9 +398,6 @@ class Reference(Selection):
     def convert_to_read(self, value):
         return "%s,%s" % (value._name, value.id) if value else False
 
-    def convert_to_write(self, value):
-        return "%s,%s" % (value._name, value.id) if value else False
-
     def convert_to_export(self, value):
         return bool(value) and value.name_get()[0][1]
 
@@ -466,6 +469,16 @@ class Many2one(Field):
     def convert_to_read(self, value):
         return bool(value) and value.name_get()[0]
 
+    def convert_from_write(self, value):
+        if isinstance(value, dict):
+            # convert values to the cache level
+            model = scope.model(self.comodel)
+            return model.draft(dict(
+                (k, model._fields[k].convert_from_write(v))
+                for k, v in value.iteritems()
+            ))
+        return scope.model(self.comodel).browse(value)
+
     def convert_to_write(self, value):
         if value.is_draft():
             return False
@@ -484,41 +497,19 @@ class Many2one(Field):
                 record[self.name] = scope.model(self.comodel).draft()
 
 
-class One2many(Field):
-    """ One2many field. """
-    type = 'one2many'
+class _Relation2many(Field):
+    """ Abstract class for relational fields *2many. """
     relational = True
     comodel = None                      # model of values
-    inverse = None                      # name of inverse field
     domain = None
     context = None
 
-    def __init__(self, comodel, inverse=None, string=None, **kwargs):
-        super(One2many, self).__init__(
-            comodel=comodel, inverse=inverse, string=string, **kwargs)
-
     def get_description(self):
-        desc = super(One2many, self).get_description()
+        desc = super(_Relation2many, self).get_description()
         desc['relation'] = self.comodel
-        desc['relation_field'] = self.inverse
         desc['domain'] = self.domain(model) if callable(self.domain) else self.domain
         desc['context'] = self.context
         return desc
-
-    @classmethod
-    def _from_column(cls, column):
-        kwargs = dict((attr, getattr(column, attr)) for attr in cls._attrs)
-        # beware when getting parameters: column may be a function field
-        kwargs['comodel'] = column._obj
-        kwargs['inverse'] = getattr(column, '_fields_id', None)
-        return cls(**kwargs)
-
-    def _to_column(self):
-        kwargs = super(One2many, self)._to_column()
-        kwargs['obj'] = self.comodel
-        kwargs['fields_id'] = self.inverse
-        kwargs['domain'] = self.domain or []
-        return kwargs
 
     def null(self):
         return scope.model(self.comodel).browse()
@@ -536,6 +527,32 @@ class One2many(Field):
     def convert_to_read(self, value):
         return value.unbrowse()
 
+    def convert_from_write(self, value):
+        model = scope.model(self.comodel)
+        ids = []
+        for command in value:
+            if isinstance(command, (int, long)):
+                ids.append(command)
+            elif command[0] == 0:
+                record = model.draft(dict(
+                    (k, model._fields[k].convert_from_write(v))
+                    for k, v in command[2].iteritems()
+                ))
+                ids.append(record.id)
+            elif command[0] == 1:
+                raise NotImplementedError()
+            elif command[0] == 2:
+                pass
+            elif command[0] == 3:
+                pass
+            elif command[0] == 4:
+                ids.append(command[1])
+            elif command[0] == 5:
+                ids = []
+            elif command[0] == 6:
+                ids = list(command[2])
+        return model.browse(ids)
+
     def convert_to_write(self, value):
         result = [(5,)]
         for record in value:
@@ -546,19 +563,45 @@ class One2many(Field):
         return result
 
     def convert_to_export(self, value):
-        return bool(value) and ','.join(rec.name_get()[0][1] for rec in value)
+        return bool(value) and ','.join(name for id, name in value.name_get())
 
 
-class Many2many(Field):
+class One2many(_Relation2many):
+    """ One2many field. """
+    type = 'one2many'
+    inverse = None                      # name of inverse field
+
+    def __init__(self, comodel, inverse=None, string=None, **kwargs):
+        super(One2many, self).__init__(
+            comodel=comodel, inverse=inverse, string=string, **kwargs)
+
+    def get_description(self):
+        desc = super(One2many, self).get_description()
+        desc['relation_field'] = self.inverse
+        return desc
+
+    @classmethod
+    def _from_column(cls, column):
+        kwargs = dict((attr, getattr(column, attr)) for attr in cls._attrs)
+        # beware when getting parameters: column may be a function field
+        kwargs['comodel'] = column._obj
+        kwargs['inverse'] = getattr(column, '_fields_id', None)
+        return cls(**kwargs)
+
+    def _to_column(self):
+        kwargs = super(One2many, self)._to_column()
+        kwargs['obj'] = self.comodel
+        kwargs['fields_id'] = self.inverse
+        kwargs['domain'] = self.domain or []
+        return kwargs
+
+
+class Many2many(_Relation2many):
     """ Many2many field. """
     type = 'many2many'
-    relational = True
-    comodel = None                      # model of values
     relation = None                     # name of table
     column1 = None                      # column of table referring to model
     column2 = None                      # column of table referring to comodel
-    domain = None
-    context = None
 
     def __init__(self, comodel, relation=None, column1=None, column2=None,
                 string=None, **kwargs):
@@ -576,13 +619,6 @@ class Many2many(Field):
                         (field.relation, field.column1, field.column2) == expected:
                     return field.name
         return None
-
-    def get_description(self):
-        desc = super(Many2many, self).get_description()
-        desc['relation'] = self.comodel
-        desc['domain'] = self.domain(model) if callable(self.domain) else self.domain
-        desc['context'] = self.context
-        return desc
 
     @classmethod
     def _from_column(cls, column):
@@ -602,34 +638,6 @@ class Many2many(Field):
         kwargs['id2'] = self.column2
         kwargs['domain'] = self.domain or []
         return kwargs
-
-    def null(self):
-        return scope.model(self.comodel).browse()
-
-    def convert_value(self, value):
-        if value is None or value is False:
-            return self.null()
-        if isinstance(value, BaseModel) and value._name == self.comodel:
-            return value.scoped()
-        raise ValueError("Wrong value for %s.%s: %s" % (self.model, self.name, value))
-
-    def convert_from_read(self, value):
-        return scope.model(self.comodel).browse(value or ())
-
-    def convert_to_read(self, value):
-        return value.unbrowse()
-
-    def convert_to_write(self, value):
-        result = [(5,)]
-        for record in value:
-            if record.is_draft():
-                result.append((0, 0, record.get_draft_values()))
-            else:
-                result.append((4, record.id))
-        return result
-
-    def convert_to_export(self, value):
-        return bool(value) and ','.join(rec.name_get()[0][1] for rec in value)
 
 
 class Related(Field):

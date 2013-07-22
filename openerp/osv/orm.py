@@ -5598,26 +5598,29 @@ class BaseModel(object):
                     for rec in recs.exists():
                         rec[field_name]
 
-    @api.model
-    def onchange(self, id, changed, values):
+    @api.multi
+    def onchange(self, field_name, values):
         # convert values to the record level
-        values = dict(
-            (k, self._fields[k].convert_from_read(v))
+        record_values = dict(
+            (k, self._fields[k].convert_from_write(v))
             for k, v in values.iteritems()
         )
+        field_value = record_values.pop(field_name)
 
         # create a draft with those values
-        record = self.draft(values)
+        record = self.draft(record_values)
 
-        # assign the changed field, in order to provoke some effect
-        record[changed] = values[changed]
+        # simply assign the modified field to trigger invalidations, etc.
+        # TODO: call record.onchange_XXX() instead, if it exists
+        record[field_name] = field_value
 
-        # check field values
-        res = {}
-        for k, v in values.iteritems():
+        # check record values, and collect changes
+        changes = {}
+        record_values[field_name] = field_value
+        for k, v in record_values.iteritems():
             if record[k] != v:
-                res[k] = self._fields[k].convert_to_write(record[k])
-        return res
+                changes[k] = self._fields[k].convert_to_write(record[k])
+        return changes
 
 
 # extra definitions for backward compatibility

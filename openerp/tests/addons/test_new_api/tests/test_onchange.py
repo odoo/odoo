@@ -25,7 +25,7 @@ class TestOnChange(common.TransactionCase):
             self.Model.not_really_a_method()
 
     def test_new_onchange_unsaved(self):
-        changed = self.Model.onchange(False, 'name', {
+        changed = self.Model.onchange('name', {
             'name': u"Bob the Builder",
             'name_size': 0,
             'name_utf8_size': 0,
@@ -37,7 +37,7 @@ class TestOnChange(common.TransactionCase):
             'description': u"Bob the Builder (15:15)"
         })
 
-        changed = self.Model.onchange(False, 'description', {
+        changed = self.Model.onchange('description', {
             'name': u"Bob the Builder",
             'name_size': 15,
             'name_utf8_size': 15,
