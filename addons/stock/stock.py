@@ -2266,8 +2266,38 @@ class stock_package(osv.osv):
     """
     _name = "stock.quant.package"
     _description = "Physical Packages"
+    _parent_name = "parent_id"
+    _parent_store = True
+    _parent_order = 'name'
+    _order = 'parent_left'
+
+    def name_get(self, cr, uid, ids, context=None):
+        res = self._complete_name(cr, uid, ids, 'complete_name', None, context=context)
+        return res.items()
+
+    def _complete_name(self, cr, uid, ids, name, args, context=None):
+        """ Forms complete name of location from parent location to child location.
+        @return: Dictionary of values
+        """
+        res = {}
+        for m in self.browse(cr, uid, ids, context=context):
+            res[m.id] = m.name
+            parent = m.parent_id
+            while parent:
+                res[m.id] = parent.name + ' / ' + res[m.id]
+                parent = parent.location_id
+        return res
+
+    def _get_subpackages(self, cr, uid, ids, context=None):
+        """ return all sublocations of the given stock locations (included) """
+        return self.search(cr, uid, [('id', 'child_of', ids)], context=context)
+
     _columns = {
         'name': fields.char('Package Reference', size=64, select=True),
+        'complete_name': fields.function(_complete_name, type='char', string="Package Name",
+                                         store={'stock.quant.package': (_get_subpackages, ['name', 'parent_id'], 10)}),
+        'parent_left': fields.integer('Left Parent', select=1),
+        'parent_right': fields.integer('Right Parent', select=1),
         'packaging_id': fields.many2one('product.packaging', 'Type of Packaging'),
         'location_id': fields.related('quant_ids', 'location_id', type='many2one', relation='stock.location', string='Location', readonly=True),
         'quant_ids': fields.one2many('stock.quant', 'package_id', 'Bulk Content'),
