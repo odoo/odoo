@@ -7,9 +7,9 @@
        </record>
         <record id="meeting_invitation_personal" model="ir.rule">
             <field name="name">Show Only Personal Invitation</field>
-            <field ref="model_calendar_attendee" name="model_id"/>
+            <field ref="model_crm_meeting" name="model_id"/>
             <field eval="1" name="personal"/>
-            <field name="domain_force">[('user_id','=',user.id)]</field>
+            <field name="domain_force">[('attendee_ids.partner_id','=',user.partner_id.id)]</field>
         </record>
    </data>
 </openerp>

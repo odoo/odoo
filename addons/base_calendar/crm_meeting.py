@@ -44,6 +44,22 @@ class crm_meeting(base_state, osv.Model):
     _description = "Meeting"
     _order = "id desc"
     _inherit = ["calendar.event", "mail.thread", "ir.needaction_mixin"]
+    
+    def _check_status(self, cr, uid, ids, context=None):
+        attendee_pool = self.pool.get('calendar.attendee')
+        user = self.pool.get('res.users').read(cr,uid,uid,['partner_id'],context)
+        for attendee in self.browse(cr,uid,ids,context)[0].attendee_ids:
+            if user['partner_id'][0] == attendee_pool.read(cr,uid,attendee.id,['partner_id'],context)['partner_id'][0]:
+                return attendee
+        return False
+        
+    def _check_attendee(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        res[ids[0]] = False
+        if self._check_status(cr, uid, ids, context):
+                res[ids[0]] = True
+        return res
+
     _columns = {
         # base_state required fields
         'create_date': fields.datetime('Creation Date', readonly=True),
@@ -61,6 +77,8 @@ class crm_meeting(base_state, osv.Model):
             'event_id', 'type_id', 'Tags'),
         'attendee_ids': fields.many2many('calendar.attendee', 'meeting_attendee_rel',\
                             'event_id', 'attendee_id', 'Invited People', states={'done': [('readonly', True)]}),
+        'is_attendee': fields.function(_check_attendee, string='Attendee', \
+                            type="boolean"),
     }
     _defaults = {
         'state': 'open',
@@ -120,6 +138,24 @@ class crm_meeting(base_state, osv.Model):
         if isinstance(thread_id, str):
             thread_id = get_real_ids(thread_id)
         return super(crm_meeting, self).message_post(cr, uid, thread_id, body=body, subject=subject, type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, **kwargs)
+
+    def do_decline(self, cr, uid, ids, context=None, *args):
+        attendee_pool = self.pool.get('calendar.attendee')
+        attendee = self._check_status(cr, uid, ids, context)
+        if attendee:
+            if attendee.state != 'declined':
+                self.message_post(cr, uid, ids, body=_(("%s has Declined Invitation") % (attendee.cn)), context=context)
+            attendee_pool.write(cr, uid, attendee.id, {'state': 'declined'}, context)
+        return True
+
+    def do_accept(self, cr, uid, ids, context=None, *args):
+        attendee_pool = self.pool.get('calendar.attendee')
+        attendee = self._check_status(cr, uid, ids, context)
+        if attendee:
+            if attendee.state != 'accepted':
+                self.message_post(cr, uid, ids, body=_(("%s has Accepted Invitation") % (attendee.cn)), context=context)
+            attendee_pool.write(cr, uid, attendee.id, {'state': 'accepted'}, context)
+        return True
 
 class mail_message(osv.osv):
     _inherit = "mail.message"
