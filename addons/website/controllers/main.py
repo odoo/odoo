@@ -7,6 +7,7 @@ from openerp.addons.web.http import request
 
 def template_values():
     script = "\n".join(['<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', db=request.db)])
+    css = "\n".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', db=request.db))
     try:
         request.session.check_security()
         loggued = True
@@ -21,7 +22,8 @@ def template_values():
         'registry': request.registry,
         'cr': request.cr,
         'uid': uid,
-        'script' : script,
+        'script': script,
+        'css': css,
     }
     return values
 
