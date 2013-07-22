@@ -25,6 +25,9 @@
                         <field name="reply_to" placeholder="Email address te redirect replies..."
                             attrs="{'invisible':['|', ('same_thread', '=', True), ('composition_mode', '!=', 'mass_mail')],
                                     'required':[('same_thread', '!=', True)]}"/>
+                        <field name="use_active_domain" groups="base.group_no_one"
+                            attrs="{'invisible': [('composition_mode', '!=', 'mass_mail')]}"/>
+                        <field name="active_domain" attrs="{'invisible': [('use_active_domain', '=', False)]}"/>
                         <label for="partner_ids" string="Recipients"
                             attrs="{'invisible':[('composition_mode', '=', 'mass_mail')]}"/>
                         <div groups="base.group_user"
