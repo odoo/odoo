@@ -54,7 +54,7 @@ class config(osv.osv):
             attachment = attach_pool.browse(cr, uid, attach_ids[0], context)
             url = attachment.url
         else:
-            url = self.copy_doc(cr, uid, res_id, template_id, name_gdocs, model.model, context)
+            url = self.copy_doc(cr, uid, res_id, template_id, name_gdocs, model.model, context).get('url')
         return url
 
     def get_access_token(self, cr, uid, scope=None, context=None):
@@ -105,12 +105,12 @@ class config(osv.osv):
         req = urllib2.Request(request_url, data_json, headers)
         content = urllib2.urlopen(req).read()
         content = json.loads(content)
-        res = False
-        if 'alternateLink' in content.keys():
+        res = {}
+        if content.get('alternateLink'):
             attach_pool = self.pool.get("ir.attachment")
             attach_vals = {'res_model': res_model, 'name': name_gdocs, 'res_id': res_id, 'type': 'url', 'url': content['alternateLink']}
-            attach_pool.create(cr, uid, attach_vals)
-            res = content['alternateLink']
+            res['id'] = attach_pool.create(cr, uid, attach_vals)
+            res['url'] = content['alternateLink']
         return res
 
     def get_google_drive_config(self, cr, uid, res_model, res_id, context=None):

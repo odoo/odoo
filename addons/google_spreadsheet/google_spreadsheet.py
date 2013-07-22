@@ -20,6 +20,7 @@
 
 import simplejson
 from lxml import etree
+import re
 import requests
 
 from openerp.osv import osv
@@ -35,7 +36,7 @@ class base_config_settings(osv.osv):
 class config(osv.osv):
     _inherit = 'google.drive.config'
 
-    def write_config_formula(self, cr, uid, spreadsheet_key, model, domain, groupbys, view_id, context=None):
+    def write_config_formula(self, cr, uid, attachment_id, spreadsheet_key, model, domain, groupbys, view_id, context=None):
         access_token = self.get_access_token(cr, uid, scope='https://spreadsheets.google.com/feeds', context=context)
 
         fields = self.pool.get(model).fields_view_get(cr, uid, view_id=view_id, view_type='tree')
@@ -50,15 +51,15 @@ class config(osv.osv):
         domain = domain.replace("'", r"\'").replace('"', "'")
         if groupbys:
             fields = "%s %s" % (groupbys, fields)
-            formula = '=oe_read_group(&quot;%s&quot;;&quot;%s&quot;;&quot;%s&quot;;&quot;%s&quot;)' % (model, fields, groupbys, domain)
+            formula = '=oe_read_group("%s";"%s";"%s";"%s")' % (model, fields, groupbys, domain)
         else:
-            formula = '=oe_browse(&quot;%s&quot;;&quot;%s&quot;;&quot;%s&quot;)' % (model, fields, domain)
+            formula = '=oe_browse("%s";"%s";"%s")' % (model, fields, domain)
         url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         dbname = cr.dbname
         user = self.pool['res.users'].read(cr, uid, uid, ['login', 'password'], context=context)
         username = user['login']
         password = user['password']
-        config_formula = '=oe_settings(&quot;%s&quot;;&quot;%s&quot;;&quot;%s&quot;;&quot;%s&quot;)' % (url, dbname, username, password)
+        config_formula = '=oe_settings("%s";"%s";"%s";"%s")' % (url, dbname, username, password)
         request = '''<feed xmlns="http://www.w3.org/2005/Atom"
       xmlns:batch="http://schemas.google.com/gdata/batch"
       xmlns:gs="http://schemas.google.com/spreadsheets/2006">
@@ -79,16 +80,29 @@ class config(osv.osv):
       href="https://spreadsheets.google.com/feeds/cells/%s/od6/private/full/R60C15"/>
     <gs:cell row="60" col="15" inputValue="%s"/>
   </entry>
-</feed>''' % (spreadsheet_key, spreadsheet_key, spreadsheet_key, formula, spreadsheet_key, spreadsheet_key, config_formula)
+</feed>''' % (spreadsheet_key, spreadsheet_key, spreadsheet_key, formula.replace('"', '&quot;'), spreadsheet_key, spreadsheet_key, config_formula.replace('"', '&quot;'))
 
         requests.post('https://spreadsheets.google.com/feeds/cells/%s/od6/private/full/batch?v=3&access_token=%s' % (spreadsheet_key, access_token), data=request, headers={'content-type': 'application/atom+xml', 'If-Match': '*'})
+
+        description = '''
+        formula: %s
+        ''' % formula
+        if attachment_id:
+            self.pool['ir.attachment'].write(cr, uid, attachment_id, {'description': description}, context=context)
         return True
 
-    def set_spreadsheet(self, cr, uid, model, context=None):
+    def set_spreadsheet(self, cr, uid, model, domain, groupbys, view_id, context=None):
         try:
             config_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'google_spreadsheet', 'google_spreadsheet_template')[1]
         except ValueError:
             raise
         config = self.browse(cr, uid, config_id, context=context)
-        res = self.copy_doc(cr, uid, 1, config.google_drive_resource_id, 'Spreadsheet %s' % model, model, context=context)
+        title = 'Spreadsheet %s' % model
+        res = self.copy_doc(cr, uid, 1, config.google_drive_resource_id, title, model, context=context)
+
+        mo = re.search("(key=|/d/)([A-Za-z0-9-_]+)", res['url'])
+        if mo:
+            key = mo.group(2)
+
+        self.write_config_formula(cr, uid, res.get('id'), key, model, domain, groupbys, view_id, context=context)
         return res

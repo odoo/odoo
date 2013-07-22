@@ -35,7 +35,7 @@ The module adds the possibility to display data from OpenERP in Google Spreadshe
         'static/src/js/search.js',
     ],
     'qweb': ['static/src/xml/*.xml'],
-    'data': ['google_spreadsheet_data.xml'],
+    'data': ['google_spreadsheet_view.xml', 'google_spreadsheet_data.xml'],
     'demo': [],
     'installable': True,
     'auto_install': False,
