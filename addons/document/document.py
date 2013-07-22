@@ -69,11 +69,17 @@ class document_file(osv.osv):
     ]
 
     def check(self, cr, uid, ids, mode, context=None, values=None):
-        """Check access wrt. res_model, relax the rule of ir.attachment parent
-        With 'document' installed, everybody will have access to attachments of
-        any resources they can *read*.
-        """
-        return super(document_file, self).check(cr, uid, ids, mode='read', context=context, values=values)
+        super(document_file, self).check(cr, uid, ids, mode, context=context, values=values)
+        if ids:
+            # use SQL to avoid recursive loop on read
+            cr.execute('SELECT id, parent_id from ir_attachment WHERE id in %s', (tuple(ids),))
+
+            parent_ids = []
+            for attach_id, attach_parent in cr.fetchall():
+                if attach_parent:
+                    parent_ids.append(attach_parent)
+
+            self.pool.get('document.directory').check_access_rule(cr, uid, parent_ids, mode, context=context)
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         # Grab ids, bypassing 'count'
