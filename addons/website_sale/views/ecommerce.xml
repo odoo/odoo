@@ -229,13 +229,29 @@
             <field name="name">checkout</field>
             <field name="type">qweb</field>
             <field name="arch" type="xml">
-                <t t-name="website_sale.customer">
-                <t t-call="website_sale.page">
-                    <t t-set="title">Checkout</t>
-                    <t t-set="shop_content">
-                        <div class="oe_placeholder_checkout">oe_placeholder_checkout</div>
-                    </t>
-                </t>
+                <t t-call="website.layout">
+                    <t t-set="title">Shop - Checkout</t>
+                    <div class="container oe_ecommerce">
+                        <div class="row">
+                            <div class="span4 oe_total">
+                                <table class="table table-condensed" t-if="order.order_line">
+                                    <thead>
+                                        <tr><th>Product</th><th>Qty.</th><th>Price</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="order.order_line or []" t-as="line">
+                                            <tr><td><t t-esc="line.product_id.name"/></td><td><t t-esc="int(line.product_uom_qty)"/></td><td></td></tr>
+                                        </t>
+                                        <tr><td colspan="3" style="visibility: hidden; border: 0">-</td></tr>
+                                        <tr><th>Untaxed Amount</th><td></td><td><t t-esc="order.amount_untaxed"/> €</td></tr>
+                                        <tr><th>Taxes</th><td></td><td><t t-esc="order.amount_tax"/> €</td></tr>
+                                        <tr><th>Total</th><td></td><td><t t-esc="order.amount_total"/> €</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="span8 oe_checkout"></div>
+                        </div>
+                    </div>
                 </t>
             </field>
         </record>

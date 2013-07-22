@@ -27,7 +27,7 @@ openerp.website = function(instance) {
     instance.website.sale.Checkout = instance.web.Widget.extend({
         template: 'Website.sale.Checkout',
         events: {
-            'click button[data-action=gotostep]': 'gotostep',
+            'click .oe_error_payment': 'error_payment',
         },
         start: function() {
             var self = this;
@@ -36,17 +36,21 @@ openerp.website = function(instance) {
                 self.$('.oe_shipping').toggle();
             });
         },
-        goto: function (e) {
-
+        get_payment_image: function () {
+            // model: portal.payment.acquirer => form_template
+            // see Setting => Accounting => Bank & Cash => Configure payment acquiring methods
         },
         save: function () {
+        },
+        error_payment: function () {
+            alert("error_payment");
         },
     });
 };
 
 
 $(document).ready(function () {
-    if (!$('.oe_placeholder_checkout').size())
+    if (!$('.oe_checkout').size())
         return;
     // Init headless webclient
     // TODO: Webclient research : use iframe embedding mode
@@ -61,5 +65,5 @@ $(document).ready(function () {
     instance.web.qweb.add_template('/website_sale/static/src/xml/ecommerce.xml');
 
     var editor = new instance.website.sale.Checkout(instance.webclient);
-    editor.replace($('.oe_placeholder_checkout'));
+    editor.appendTo($('.oe_checkout'));
 });
