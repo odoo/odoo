@@ -34,9 +34,11 @@ openerp.google_spreadsheet = function(instance) {
 		        var groupbys = instance.web.pyeval.eval('groupbys', data.groupbys).join(" ");
 		        var view_id = view_id;
                 var ds = new instance.web.DataSet(self, 'google.drive.config');
-                ds.call('set_spreadsheet', [model, domain, groupbys, view_id]).done(function (url) {
+                ds.call('set_spreadsheet', [model]).done(function (url) {
         			if (url){
             			window.open(url, '_blank');
+            			var key = url.match("(key=|/d/)([A-Za-z0-9-_]+)")[2]
+						ds.call('write_config_formula', [key, model, domain, groupbys, view_id]);
         			}
 				});
 	        });
