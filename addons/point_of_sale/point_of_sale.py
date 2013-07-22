@@ -63,6 +63,7 @@ class pos_config(osv.osv):
         'iface_electronic_scale' : fields.boolean('Electronic Scale Interface'),
         'iface_vkeyboard' : fields.boolean('Virtual KeyBoard Interface'),
         'iface_print_via_proxy' : fields.boolean('Print via Proxy'),
+        'iface_invoicing': fields.boolean('Invoicing',help='Enables invoice generation from the Point of Sale'),
 
         'state' : fields.selection(POS_CONFIG_STATE, 'Status', required=True, readonly=True),
         'sequence_id' : fields.many2one('ir.sequence', 'Order IDs Sequence', readonly=True,
@@ -127,7 +128,8 @@ class pos_config(osv.osv):
         'warehouse_id': _default_warehouse,
         'journal_id': _default_sale_journal,
         'group_by' : True,
-        'pricelist_id': _default_pricelist
+        'pricelist_id': _default_pricelist,
+        'iface_invoicing': True,
     }
 
     def set_active(self, cr, uid, ids, context=None):
@@ -492,13 +494,17 @@ class pos_order(osv.osv):
         #_logger.info("orders: %r", orders)
         order_ids = []
         for tmp_order in orders:
+            to_invoice = tmp_order['to_invoice']
             order = tmp_order['data']
+
+
             order_id = self.create(cr, uid, {
                 'name': order['name'],
                 'user_id': order['user_id'] or False,
                 'session_id': order['pos_session_id'],
                 'lines': order['lines'],
-                'pos_reference':order['name']
+                'pos_reference':order['name'],
+                'partner_id': order['partner_id'] or False
             }, context)
 
             for payments in order['statement_ids']:
@@ -529,6 +535,12 @@ class pos_order(osv.osv):
                 }, context=context)
             order_ids.append(order_id)
             self.signal_paid(cr, uid, [order_id])
+
+            if to_invoice:
+                self.action_invoice(cr, uid, [order_id], context)
+                order_obj = self.browse(cr, uid, order_id, context)
+                self.pool['account.invoice'].signal_invoice_open(cr, uid, [order_obj.invoice_id.id])
+
         return order_ids
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -881,6 +893,7 @@ class pos_order(osv.osv):
                 inv_line_ref.create(cr, uid, inv_line, context=context)
             inv_ref.button_reset_taxes(cr, uid, [inv_id], context=context)
             self.signal_invoice(cr, uid, [order.id])
+            inv_ref.signal_validate(cr, uid, [inv_id])
 
         if not inv_ids: return {}
 
