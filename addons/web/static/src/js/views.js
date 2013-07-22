@@ -1183,25 +1183,39 @@ instance.web.Sidebar = instance.web.Widget.extend({
             var active_ids_context = {
                 active_id: ids[0],
                 active_ids: ids,
-                active_model: self.getParent().dataset.model
+                active_model: self.getParent().dataset.model,
             }; 
-            var c = instance.web.pyeval.eval('context',
+
+            var search_view = self.getParent().ViewManager.searchview;
+            var search_data = search_view.build_search_data();
+            var active_domain_done = instance.web.pyeval.eval_domains_and_contexts({
+                domains: search_data.domains,
+                contexts: search_data.contexts,
+                group_by_seq: search_data.groupbys || []
+            }).done(function (results) {
+                active_ids_context['active_domain'] = results.domain;
+            });
+
+            $.when(active_domain_done).done(function () {
+                var c = instance.web.pyeval.eval('context',
                 new instance.web.CompoundContext(
                     sidebar_eval_context, active_ids_context));
-            self.rpc("/web/action/load", {
-                action_id: item.action.id,
-                context: c
-            }).done(function(result) {
-                result.context = new instance.web.CompoundContext(
-                    result.context || {}, active_ids_context)
-                        .set_eval_context(c);
-                result.flags = result.flags || {};
-                result.flags.new_window = true;
-                self.do_action(result, {
-                    on_close: function() {
-                        // reload view
-                        self.getParent().reload();
-                    },
+
+                self.rpc("/web/action/load", {
+                    action_id: item.action.id,
+                    context: c
+                }).done(function(result) {
+                    result.context = new instance.web.CompoundContext(
+                        result.context || {}, active_ids_context)
+                            .set_eval_context(c);
+                    result.flags = result.flags || {};
+                    result.flags.new_window = true;
+                    self.do_action(result, {
+                        on_close: function() {
+                            // reload view
+                            self.getParent().reload();
+                        },
+                    });
                 });
             });
         });
