@@ -3,10 +3,7 @@
 -->
 <openerp>
     <data>
-        <record id="header" model="ir.ui.view">
-            <field name="name">header</field>
-            <field name="type">qweb</field>
-            <field name="arch" type="xml">
+        <template id="header">
                 <div class="container">
                     <div class="row">
                         <div class="oe_website_logo span4">
@@ -18,13 +15,9 @@
                         </ul>
                     </div>
                 </div>
-            </field>
-        </record>
+        </template>
 
-        <record id="footer" model="ir.ui.view">
-            <field name="name">footer</field>
-            <field name="type">qweb</field>
-            <field name="arch" type="xml">
+        <template id="footer">
                 <div class="container">
                     <div class="row">
                         <div class="span4">
@@ -54,14 +47,9 @@
                         </div>
                     </div>
                 </div>
-            </field>
-        </record>
+        </template>
 
-        <record id="layout" model="ir.ui.view">
-            <field name="name">layout</field>
-            <field name="type">qweb</field>
-            <field name="arch" type="xml">
-                <t t-name="website.layout">
+        <template id="layout">
                 &lt;!DOCTYPE html&gt;
                 <html>
                     <head>
@@ -200,16 +188,10 @@
 
                     </body>
                 </html>
-                </t>
-            </field>
-        </record>
+        </template>
 
-        <record id="homepage" model="ir.ui.view">
-            <field name="name">homepage</field>
-            <field name="type">qweb</field>
-            <field name="arch" type="xml">
-                <t t-name="website.homepage">
-                <t t-call="website.layout">
+        <template id="homepage">
+            <t t-call="website.layout">
                 <div>
                     <section class="oe_container">
                         <div class="oe_row oe_spaced oe_dark">
@@ -254,16 +236,10 @@
                         </div>
                     </div>
                 </div>
-                </t>
-                </t>
-            </field>
-        </record>
+            </t>
+        </template>
 
-        <record id="default_page" model="ir.ui.view">
-            <field name="name">New Page</field>
-            <field name="type">qweb</field>
-            <field name="arch" type="xml">
-                <t t-name="website.default_page">
+        <template id="default_page">
                 <t t-call="website.layout">
                     <div class="container">
                         <div class="row">
@@ -274,16 +250,10 @@
                         </div>
                     </div>
                 </t>
-                </t>
-            </field>
-        </record>
+        </template>
 
 
-        <record id="404" model="ir.ui.view">
-            <field name="name">Page not found</field>
-            <field name="type">qweb</field>
-            <field name="arch" type="xml">
-                <t t-name="website.404">
+        <template id="404">
                 <t t-call="website.layout">
                     <div class="container">
                         <div class="row">
@@ -312,15 +282,9 @@
                         </div>
                     </div>
                 </t>
-                </t>
-            </field>
-        </record>
+        </template>
 
-        <record id="contactus" model="ir.ui.view">
-            <field name="name">contactus</field>
-            <field name="type">qweb</field>
-            <field name="arch" type="xml">
-                <t t-name="website.contactus">
+        <template id="contactus">
                 <t t-call="website.layout">
                     <t t-set="title">Contact us - <t t-esc="res_company.name"/></t>
                     <div class="container">
@@ -353,9 +317,7 @@
                         </div>
                     </div>
                 </t>
-                </t>
-            </field>
-        </record>
+        </template>
 
      </data>
 </openerp>

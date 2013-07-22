@@ -19,11 +19,7 @@
             </field>
         </record>
 
-        <record id="thanks" model="ir.ui.view">
-            <field name="name">thanks</field>
-            <field name="type">qweb</field>
-            <field name="arch" type="xml">
-                <t t-name="website_crm.thanks">
+        <template id="thanks">
                 <t t-call="website.layout">
                     <t t-set="title">Thank You!</t>
                     <div class="container">
@@ -32,8 +28,6 @@
                         </div>
                     </div>
                 </t>
-                </t>
-            </field>
-        </record>
+        </template>
      </data>
 </openerp>
