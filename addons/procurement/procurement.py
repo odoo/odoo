@@ -58,6 +58,7 @@ class procurement_group(osv.osv):
     _columns = {
         'name': fields.char('Reference'), 
         'partner_id': fields.many2one('res.partner', string = 'Partner'), #Sale should pass it here 
+        'procurement_ids': fields.many2one('procurement.order', 'group_id', 'Procurements'), 
     }
     _defaults = {
         'name': lambda self, cr, uid, c: self.pool.get('ir.sequence').get(cr, uid, 'procurement.group') or ''
