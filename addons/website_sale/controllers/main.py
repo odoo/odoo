@@ -218,7 +218,7 @@ class Ecommerce(http.Controller):
         obj_data = request.registry.get('ir.model.data')
 
         # check values
-        json = {'error': []}
+        json = {'error': [], 'validation': False}
         required_field = ['phone', 'zip', 'email', 'street', 'city', 'name', 'country_id']
         for key in required_field:
             if not post.get(key):
@@ -235,11 +235,6 @@ class Ecommerce(http.Controller):
             company_id = company_ids and company_ids[0] or None
             if not company_id:
                 company_id = partner_obj.create(cr, uid, {'name': post['company'], 'is_company': True})
-        if 'shipping_name' in post and post['shipping_company']:
-            company_ids = partner_obj.search(cr, uid, [("name", "ilike", post['shipping_company']), ('is_company', '=', True)])
-            shipping_company_id = company_ids and company_ids[0] or None
-            if not company_id:
-                shipping_company_id = partner_obj.create(cr, uid, {'name': post['shipping_company'], 'is_company': True})
 
         partner_value = {
             'fax': post['fax'],
@@ -258,8 +253,8 @@ class Ecommerce(http.Controller):
         else:
             partner_id = partner_obj.create(cr, uid, partner_value)
 
+        shipping_id = None
         if 'shipping_name' in post:
-            shipping_category_id = obj_data.get_object_reference(cr, uid, 'website_sale', 'shipping_address')[1]
             shipping_value = {
                 'fax': post['shipping_fax'],
                 'phone': post['shipping_phone'],
@@ -267,28 +262,24 @@ class Ecommerce(http.Controller):
                 'street': post['shipping_street'],
                 'city': post['shipping_city'],
                 'name': post['shipping_name'],
-                'parent_id': shipping_company_id,
-                'category_id': [(4, shipping_category_id)],
+                'type': 'delivery',
+                'parent_id': partner_id,
                 'country_id': post['shipping_country_id'],
                 'state_id': post['shipping_state_id'],
             }
-            shipping_ids = partner_obj.search(cr, uid, [("parent_id", "=", partner_id), ("category_id", "=", shipping_category_id)])
-            shipping_id = shipping_ids and shipping_ids[0] or None
-            if shipping_id:
-                partner_obj.write(cr, uid, [shipping_id], shipping_value)
-            else:
-                partner_obj.create(cr, uid, shipping_value)
+            shipping_id = partner_obj.create(cr, uid, shipping_value)
 
-        return simplejson.dumps(json)
-
-        cr, uid, partner_id = self.get_cr_uid()
-        if uid == 1:
-            return customer()
         values = self.get_values()
-        values['order'].write({'state': 'progress'})
-        values['partner'] = request.registry.get('res.partner').browse(cr, uid, partner_id)
-        html = request.registry.get("ir.ui.view").render(cr, uid, "website_sale.thanks", values)
+        values['order'].write({
+            'state': 'progress',
+            'partner_id': partner_id,
+            'partner_invoice_id': partner_id,
+            'partner_shipping_id': shipping_id or partner_id
+        })
+        request.httprequest.session['ecommerce_partner_id'] = False
         request.httprequest.session['ecommerce_order'] = None
-        return html
+
+        json['validation'] = True
+        return simplejson.dumps(json)
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

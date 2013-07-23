@@ -38,8 +38,10 @@ $(document).ready(function () {
                 $inputs = $checkout.find("input[name='" + result.error.join("'], input[name='") + "']");
                 $inputs.css("border", "1px solid #dd0000");
                 $inputs.first().focus();
-            } else {
+            }
+            if (result.validation) {
                 var $form = $(e.currentTarget).parent().find("input[name='submit']").click();
+                window.location.href = "/shop";
             }
         });
     });
