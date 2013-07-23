@@ -113,6 +113,19 @@ defined:
 Signals
 '''''''
 
+In addition of a condition, a transition can specify a signal name. When such
+signal name is present, the transition will not be taken directly (even if the
+condition evaluates to true). Instead the transition will block, waiting to be
+woken up.
+
+To wake up a transition with a defined signal name, the signal must be sent to
+the workflow. A common way to send a signal is to use a button in the web
+interface, using the ``<button/>`` element with the signal name as the ``name``
+attribute of the button.
+
+.. note:: The condition is still evaluated when the signal is sent to the
+    workflow instance.
+
 Triggers
 ''''''''
 
