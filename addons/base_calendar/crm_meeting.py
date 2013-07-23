@@ -52,12 +52,20 @@ class crm_meeting(base_state, osv.Model):
             if user['partner_id'][0] == attendee_pool.read(cr,uid,attendee.id,['partner_id'],context)['partner_id'][0]:
                 return attendee
         return False
-        
+
     def _check_attendee(self, cr, uid, ids, name, arg, context=None):
         res = {}
         res[ids[0]] = False
         if self._check_status(cr, uid, ids, context):
                 res[ids[0]] = True
+        return res
+
+    def _compute_status(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        res[ids[0]] = 'needs-action'
+        attendee = self._check_status(cr, uid, ids, context)
+        if attendee:
+            res[ids[0]] = attendee.state
         return res
 
     _columns = {
@@ -79,6 +87,8 @@ class crm_meeting(base_state, osv.Model):
                             'event_id', 'attendee_id', 'Invited People', states={'done': [('readonly', True)]}),
         'is_attendee': fields.function(_check_attendee, string='Attendee', \
                             type="boolean"),
+        'attendee_status': fields.function(_compute_status, string='Attendee Status', \
+                            type="selection"),
     }
     _defaults = {
         'state': 'open',

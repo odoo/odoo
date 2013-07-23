@@ -34,13 +34,14 @@
             <form string="Meetings" version="7.0">
                 <header>
                     <button name="do_accept" type="object"
-                        string="Accept" attrs="{'invisible':[('is_attendee','=',False)]}"/>
+                        string="Accept" attrs="{'invisible':['|',('is_attendee','=',False),('attendee_status','=','accepted')]}"/>
                     <button name="do_decline" type="object"
-                        string="Decline" attrs="{'invisible':[('is_attendee','=',False)]}"/>
+                        string="Decline" attrs="{'invisible':['|',('is_attendee','=',False),('attendee_status','=','declined')]}"/>
                     <field name="state" invisible="True"/>
                 </header>
                 <sheet>
                     <field name="is_attendee" invisible="1"/>
+                    <field name="attendee_status" invisible="1"/>
                     <div class="oe_title">
                         <div class="oe_edit_only">
                             <label for="name"/>
