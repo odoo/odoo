@@ -213,7 +213,12 @@
                             <label class="span4 css_required">Email address<input type="email" name="email" placeholder="Email address" t-att-value="partner.email or ''"/></label>
                             <label class="span8 css_required">Street<input class="span7" type="text" name="street" placeholder="Street address" t-att-value="partner.street or ''"/></label>
                             <label class="span4 css_required">City<input type="text" name="city" placeholder="City" t-att-value="partner.city or ''"/></label>
-                            <label class="span4">State / Province<input type="text" name="state" placeholder="State/Province" t-att-value="partner.state or ''"/></label>
+                            <label class="span4">State / Province <select name="state_id">
+                                <option value="">State / Province...</option>
+                                <t t-foreach="states or []" t-as="state">
+                                    <option t-att-value="state.id" t-att-selected="partner and partner.state_id and state.id == partner.state_id.id or None"><t t-esc="state.name"/></option>
+                                </t>
+                            </select></label>
                             <label class="span4 css_required">Zip / Postal Code<input type="text" name="zip" placeholder="Zip/Postal Code" t-att-value="partner.zip or ''"/></label>
                             <label class="span4 css_required">Country <select name="country_id">
                                 <option value="">Country...</option>
@@ -225,18 +230,23 @@
                         </div>
                         <div class="js_inputs js_shipping row" style="display:none">
                             <h3 class="span8 oe_shipping" style="display:none">Shipping Information</h3>
-                            <label class="span8 css_required">Name and firstname<input class="span7" type="text" name="shipping_name" placeholder="Name and firstname" t-att-value="shipping.name or ''"/></label>
-                            <label class="span4 css_required">Telephone<input type="tel" name="shipping_phone" placeholder="Telephone" t-att-value="shipping.phone or ''"/></label>
-                            <label class="span4">Fax<input type="tel" name="shipping_fax" placeholder="Fax" t-att-value="shipping.phone or ''"/></label>
-                            <label class="span4">Company<input type="text" name="shipping_company" placeholder="Company" t-att-value="shipping.parent_id and shipping.parent_id.name or ''"/></label>
-                            <label class="span8 css_required">Street<input class="span7" type="text" name="shipping_street" placeholder="Street address" t-att-value="shipping.street or ''"/></label>
-                            <label class="span4 css_required">City<input type="text" name="shipping_city" placeholder="City" t-att-value="shipping.city or ''"/></label>
-                            <label class="span4">State / Province<input type="text" name="shipping_state" placeholder="State/Province" t-att-value="shipping.state or ''"/></label>
-                            <label class="span4 css_required">Zip / Postal Code<input type="text" name="shipping_zip" placeholder="Zip/Postal Code" t-att-value="shipping.zip or ''"/></label>
+                            <label class="span8 css_required">Name and firstname<input class="span7" type="text" name="shipping_name" placeholder="Name and firstname"/></label>
+                            <label class="span4 css_required">Telephone<input type="tel" name="shipping_phone" placeholder="Telephone"/></label>
+                            <label class="span4">Fax<input type="tel" name="shipping_fax" placeholder="Fax"/></label>
+                            <label class="span4">Company<input type="text" name="shipping_company" placeholder="Company"/></label>
+                            <label class="span8 css_required">Street<input class="span7" type="text" name="shipping_street" placeholder="Street address"/></label>
+                            <label class="span4 css_required">City<input type="text" name="shipping_city" placeholder="City"/></label>
+                            <label class="span4">State / Province <select name="shipping_state_id">
+                                <option value="">State / Province...</option>
+                                <t t-foreach="states or []" t-as="state">
+                                    <option t-att-value="state.id" t-att-selected="partner and partner.state_id and state.id == partner.state_id.id or None"><t t-esc="state.name"/></option>
+                                </t>
+                            </select></label>
+                            <label class="span4 css_required">Zip / Postal Code<input type="text" name="shipping_zip" placeholder="Zip/Postal Code"/></label>
                             <label class="span4 css_required">Country <select name="shipping_country_id">
                                 <option value="">Country...</option>
                                 <t t-foreach="countries or []" t-as="country">
-                                    <option t-att-value="country.id" t-att-selected="shipping and shipping.country_id and country.id == shipping.country_id.id or None"><t t-esc="country.name"/></option>
+                                    <option t-att-value="country.id" t-att-selected="partner and partner.country_id and country.id == partner.country_id.id or None"><t t-esc="country.name"/></option>
                                 </t>
                             </select></label>
                         </div>

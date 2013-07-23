@@ -195,6 +195,7 @@ class Ecommerce(http.Controller):
         partner_obj = request.registry.get('res.partner')
         user_obj = request.registry.get('res.users')
         country_obj = request.registry.get('res.country')
+        country_state_obj = request.registry.get('res.country.state')
         obj_data = request.registry.get('ir.model.data')
 
         values['partner'] = False
@@ -205,13 +206,8 @@ class Ecommerce(http.Controller):
 
         if partner_id:
             values['partner'] = partner_obj.browse(cr, uid, partner_id)
-
-            shipping_category_id = obj_data.get_object_reference(cr, uid, 'website_sale', 'shipping_address')[1]
-            shipping_ids = partner_obj.search(cr, uid, [("parent_id", "=", partner_id), ("category_id", "=", shipping_category_id)])
-            shipping_id = shipping_ids and shipping_ids[0] or None
-            values['shipping'] = partner_obj.browse(cr, uid, shipping_id)
-
         values['countries'] = country_obj.browse(cr, uid, country_obj.search(cr, uid, [(1, "=", 1)]))
+        values['states'] = country_state_obj.browse(cr, uid, country_state_obj.search(cr, uid, [(1, "=", 1)]))
 
         return request.registry.get("ir.ui.view").render(cr, uid, "website_sale.checkout", values)
 
@@ -233,14 +229,17 @@ class Ecommerce(http.Controller):
             return simplejson.dumps(json)
 
         # search or create company
+        company_id = None
         if post['company']:
-            pass
+            company_ids = partner_obj.search(cr, uid, [("name", "ilike", post['company']), ('is_company', '=', True)])
+            company_id = company_ids and company_ids[0] or None
+            if not company_id:
+                company_id = partner_obj.create(cr, uid, {'name': post['company'], 'is_company': True})
         if 'shipping_name' in post and post['shipping_company']:
-            pass
-        if post['state']:
-            pass
-        if 'shipping_name' in post and post['shipping_state']:
-            pass
+            company_ids = partner_obj.search(cr, uid, [("name", "ilike", post['shipping_company']), ('is_company', '=', True)])
+            shipping_company_id = company_ids and company_ids[0] or None
+            if not company_id:
+                shipping_company_id = partner_obj.create(cr, uid, {'name': post['shipping_company'], 'is_company': True})
 
         partner_value = {
             'fax': post['fax'],
@@ -250,7 +249,9 @@ class Ecommerce(http.Controller):
             'street': post['street'],
             'city': post['city'],
             'name': post['name'],
+            'parent_id': company_id,
             'country_id': post['country_id'],
+            'state_id': post['state_id'],
         }
         if partner_id:
             partner_obj.write(cr, uid, [partner_id], partner_value)
@@ -266,9 +267,10 @@ class Ecommerce(http.Controller):
                 'street': post['shipping_street'],
                 'city': post['shipping_city'],
                 'name': post['shipping_name'],
-                'parent_id': partner_id,
+                'parent_id': shipping_company_id,
                 'category_id': [(4, shipping_category_id)],
                 'country_id': post['shipping_country_id'],
+                'state_id': post['shipping_state_id'],
             }
             shipping_ids = partner_obj.search(cr, uid, [("parent_id", "=", partner_id), ("category_id", "=", shipping_category_id)])
             shipping_id = shipping_ids and shipping_ids[0] or None
