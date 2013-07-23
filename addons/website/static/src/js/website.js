@@ -15,23 +15,25 @@ instance.website.EditorBar = instance.web.Widget.extend({
         self.$('button[data-action]').prop('disabled', true);
         self.$('button[data-action=edit],button[data-action=snippet]').prop('disabled', false);
         self.snippet_start();
+
+        $('body').on("keypress", ".oe_editable", function(e) {
+            var $e = $(e.currentTarget);
+            if (!$e.is('.oe_dirty')) {
+                $e.addClass('oe_dirty');
+                self.$('button[data-action=save],button[data-action=cancel]').prop('disabled', false);
+                // TODO: Are we going to use a meta-data flag in order to know if the field shall be text or html ?
+            }
+            if (e.which == 13) {
+                $e.blur();
+                e.preventDefault();
+            }
+        });
+
         return this._super.apply(this, arguments);
     },
     edit: function () {
-        var self = this;
-        Aloha.ready(function() {
-            Aloha.jQuery('[data-oe-model]').aloha(); //.attr('contentEditable', 'true').addClass('oe_editable');
-            self.$('button').prop('disabled', true);
-            self.$('button[data-action=save],button[data-action=cancel],button[data-action=snippet]').prop('disabled', false);
-            Aloha.bind('aloha-editable-activated', function (ev, args) {
-                var $e = args.editable.obj;
-                if (!$e.is('.oe_dirty')) {
-                    $e.addClass('oe_dirty');
-                    // TODO: Are we going to use a meta-data flag in order to know if the field shall be text or html ?
-                    $e.data('original', $e.html());
-                }
-            });
-        });
+        this.$('button[data-action=edit]').prop('disabled', true);
+        $('[data-oe-model]').attr('contentEditable', 'true').addClass('oe_editable');
     },
     save: function () {
         var self = this;

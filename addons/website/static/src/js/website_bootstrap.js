@@ -1,4 +1,4 @@
-Aloha.ready(function() {
+$(function() {
     // Init headless webclient
     // TODO: Webclient research : use iframe embedding mode
     //       Meanwhile, let's HACK !!!
