@@ -21,10 +21,9 @@ $(document).ready(function (){
 });
 
 
-openerp.website = function(instance) {
+openerp.website_sale = function(instance) {
 
-    instance.website.sale = {};
-    instance.website.sale.Checkout = instance.web.Widget.extend({
+    instance.website_sale.Checkout = instance.web.Widget.extend({
         template: 'Website.sale.Checkout',
         events: {
             'click .oe_error_payment': 'error_payment',
@@ -64,6 +63,6 @@ $(document).ready(function () {
     // Another hack since we have no callback when webclient has loaded modules.
     instance.web.qweb.add_template('/website_sale/static/src/xml/ecommerce.xml');
 
-    var editor = new instance.website.sale.Checkout(instance.webclient);
+    var editor = new instance.website_sale.Checkout(instance.webclient);
     editor.appendTo($('.oe_checkout'));
 });
