@@ -971,7 +971,7 @@ class Root(object):
 
     def _build_router(self, db):
         _logger.info("Generating routing configuration for database %s" % db)
-        routing_map = routing.Map()
+        routing_map = routing.Map(strict_slashes=False)
 
         def gen(modules, nodb_only):
             for module in modules:
