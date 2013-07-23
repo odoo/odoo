@@ -1235,6 +1235,7 @@ openerp.mail = function (session) {
             this.last_id = datasets.last_id || false;
             this.parent_id = datasets.parent_id || false;
             this.is_private = datasets.is_private || false;
+            this.is_author = datasets.is_author ||  false,
             this.author_id = datasets.author_id || false;
             this.thread_level = (datasets.thread_level+1) || 0;
             datasets.partner_ids = datasets.partner_ids || [];
