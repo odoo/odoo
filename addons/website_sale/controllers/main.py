@@ -206,29 +206,66 @@ class Ecommerce(http.Controller):
 
         return request.registry.get("ir.ui.view").render(cr, uid, "website_sale.checkout", values)
 
-    @http.route(['/shop/confirm_cart'], type='http', auth="admin")
-    def confirm_cart(self, *arg, **post):
-        cr, uid, partner_id = self.get_cr_uid()
-        values = self.get_values()
-        partner_obj = request.registry.get('res.partner')
-
-        values['partner'] = False
-        if post:
-            post['country_id'] = (request.registry.get('res.country').search(cr, uid, [('name', 'ilike', post.pop('country'))]) + [None])[0]
-            post['state_id'] = (request.registry.get('res.country.state').search(cr, uid, [('name', 'ilike', post.pop('state'))]) + [None])[0]
-
-            if partner_id:
-                partner_obj.write(cr, uid, [partner_id], post)
-            else:
-                partner_id = partner_obj.create(cr, uid, post)
-                values['order'].write({'partner_id': partner_id})
-                request.httprequest.session['ecommerce_partner_id'] = partner_id
-
-        values['partner'] = partner_obj.browse(cr, uid, partner_id)
-        return request.registry.get("ir.ui.view").render(cr, uid, "website_sale.order", values)
-
     @http.route(['/shop/confirm_order'], type='http', auth="admin")
     def confirm_order(self, *arg, **post):
+        cr, uid, partner_id = self.get_cr_uid()
+        partner_obj = request.registry.get('res.partner')
+        obj_data = request.registry.get('ir.model.data')
+
+        # check values
+        json = {'error': []}
+        required_field = ['tel', 'zip', 'email', 'state', 'street', 'city', 'name']
+        for key in required_field:
+            if not post[key]:
+                json['error'].append(key)
+            if 'shipping_name' in post and key != 'email' and not post["shipping_%s" % key]:
+                json['error'].append("shipping_%s" % key)
+        if json['error']:
+            return simplejson.dumps(json)
+
+        # search or create company
+        if post['company']:
+            pass
+        if 'shipping_company' in post and post['shipping_company']:
+            pass
+
+        partner_value = {
+            'fax': post['fax'],
+            'tel': post['tel'],
+            'zip': post['zip'],
+            'email': post['email'],
+            'state': post['state'],
+            'street': post['street'],
+            'city': post['city'],
+            'name': post['name'],
+        }
+        if partner_id:
+            partner_obj.write(cr, uid, [partner_id], partner_value)
+        else:
+            partner_id = partner_obj.create(cr, uid, partner_value)
+
+        if 'shipping_name' in post:
+            shipping_value = {
+                'fax': post['shipping_fax'],
+                'tel': post['shipping_tel'],
+                'zip': post['shipping_zip'],
+                'state': post['shipping_state'],
+                'street': post['shipping_street'],
+                'city': post['shipping_city'],
+                'name': post['shipping_name'],
+                'parent_id': partner_id,
+                'category_id': (4, shipping_category_id)
+            }
+            shipping_category_id = obj_data.get_object_reference(cr, uid, 'website_sale', 'shipping_address')[1]
+            shipping_ids = partner_obj.search(cr, uid, [("parent_id", "=", partner_id), ("category_id", "=", shipping_category_id)])
+            shipping_id = shipping_ids and shipping_ids[0] or None
+            if shipping_id:
+                partner_obj.write(cr, uid, [shipping_id], shipping_value)
+            else:
+                partner_obj.create(cr, uid, shipping_value)
+
+        return simplejson.dumps(json)
+
         cr, uid, partner_id = self.get_cr_uid()
         if uid == 1:
             return customer()

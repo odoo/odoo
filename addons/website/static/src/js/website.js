@@ -182,4 +182,14 @@ $(function(){
 
 });
 
+
+/**
+ * Client action to go back in global history.
+ * If can't go back in history stack, will go back to home.
+ */
+instance.web.ActionGoBack = function(parent, action) {
+    window.history.back();
+};
+instance.web.client_actions.add("goback", "instance.web.ActionGoBack");
+
 };

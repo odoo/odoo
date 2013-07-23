@@ -1,8 +1,12 @@
 .oe_ecommerce .oe_total {
+  font-size: 13px;
   margin-top: 10px;
 }
 .oe_ecommerce .oe_total td {
   padding: 5px 10px;
+}
+.oe_ecommerce .oe_total table {
+  width: auto;
 }
 .oe_ecommerce .oe_products .oe_product {
   text-align: center;
@@ -143,11 +147,17 @@
   max-width: 64px;
   max-height: 64px;
 }
+.oe_ecommerce .oe_checkout .css_required input {
+  background-color: #d2d2ff !important;
+}
 .oe_ecommerce .oe_checkout h4 {
   border-bottom: 1px solid #dddddd;
   margin-right: 30px;
 }
-.oe_ecommerce .oe_checkout input:not([type="radio"]):not([type="checkbox"]) {
+.oe_ecommerce .oe_checkout input:not([type="radio"]):not([type="checkbox"]):not([type="image"]) {
+  height: 20px;
+}
+.oe_ecommerce .oe_checkout input[type="image"] {
   height: 30px;
 }
 .oe_ecommerce .oe_checkout label > input:not([type="radio"]):not([type="checkbox"]), .oe_ecommerce .oe_checkout label > div {
@@ -160,10 +170,18 @@
 .oe_ecommerce .oe_checkout label > div > input {
   margin-bottom: 0;
 }
-.oe_ecommerce .oe_checkout .oe_payment {
-  position: relative;
+.oe_ecommerce .oe_checkout .css_payments {
+  clear: both;
 }
-.oe_ecommerce .oe_checkout .oe_payment .oe_error_payment {
+.oe_ecommerce .oe_checkout .css_payments .css_payment {
+  position: relative;
+  width: 80px;
+  overflow: hidden;
+  height: 30px;
+  text-align: center;
+  padding: 10px 10px 0 0;
+}
+.oe_ecommerce .oe_checkout .css_payments .css_error_payment {
   width: 100%;
   height: 100%;
   position: absolute;

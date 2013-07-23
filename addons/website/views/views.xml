@@ -53,38 +53,40 @@
                 &lt;!DOCTYPE html&gt;
                 <html>
                     <head>
-                        <title t-raw="title"><t t-esc="res_company.name"/></title>
-                        <link rel="stylesheet" href="/web/webclient/css"/>
-                        <link rel='stylesheet' href='https://www.openerp.com/saas_master/static/site_new/fonts/lato/stylesheet.css'/>
-                        <link href='//fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'/>
-                        <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,600,700' rel='stylesheet' type='text/css'/>
-                        <t t-raw="script"/>
-                        <t t-if="editable">
-                            <link href="http://cdn.aloha-editor.org/latest/css/aloha.css" rel="stylesheet" type="text/css" />
-                            <script>
-                                openerp.$ = jQuery;
-                                delete window.jQuery;
-                                delete window.$;
+                        <t t-raw="head">
+                            <title t-raw="title"><t t-esc="res_company.name"/></title>
+                            <t t-raw="css"/>
+                            <link rel='stylesheet' href='https://www.openerp.com/saas_master/static/site_new/fonts/lato/stylesheet.css'/>
+                            <link href='//fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'/>
+                            <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,600,700' rel='stylesheet' type='text/css'/>
+                            <t t-raw="script"/>
+                            <t t-if="editable">
+                                <link href="http://cdn.aloha-editor.org/latest/css/aloha.css" rel="stylesheet" type="text/css" />
+                                <script>
+                                    openerp.$ = jQuery;
+                                    delete window.jQuery;
+                                    delete window.$;
 
-                                Aloha = {}
-                                Aloha.settings = {sidebar: {disabled: true}};
-                            </script>
-                            <script type="text/javascript" src="http://cdn.aloha-editor.org/latest/lib/require.js"></script>
-                            <script type="text/javascript" src="http://cdn.aloha-editor.org/latest/lib/vendor/jquery-1.7.2.js"></script>
-                            <!--
-                            <script src="http://cdn.aloha-editor.org/latest/lib/aloha.js" data-aloha-plugins="common/ui, common/format, common/list, common/link, common/highlighteditables"></script>
-                            -->
-                            <script src="http://cdn.aloha-editor.org/latest/lib/aloha.js" data-aloha-plugins="common/ui, common/format, common/list, common/link"></script>
-                            <script>
-                                Aloha.ready(function() {
-                                    window.$ = openerp.$;
-                                    window.jQuery = openerp.$;
-                                });
-                            </script>
-                            <script type="text/javascript" src="/website/static/src/js/website_bootstrap.js"></script>
+                                    Aloha = {}
+                                    Aloha.settings = {sidebar: {disabled: true}};
+                                </script>
+                                <script type="text/javascript" src="http://cdn.aloha-editor.org/latest/lib/require.js"></script>
+                                <script type="text/javascript" src="http://cdn.aloha-editor.org/latest/lib/vendor/jquery-1.7.2.js"></script>
+                                <!--
+                                <script src="http://cdn.aloha-editor.org/latest/lib/aloha.js" data-aloha-plugins="common/ui, common/format, common/list, common/link, common/highlighteditables"></script>
+                                -->
+                                <script src="http://cdn.aloha-editor.org/latest/lib/aloha.js" data-aloha-plugins="common/ui, common/format, common/list, common/link"></script>
+                                <script>
+                                    Aloha.ready(function() {
+                                        window.$ = openerp.$;
+                                        window.jQuery = openerp.$;
+                                    });
+                                </script>
+                                <script type="text/javascript" src="/website/static/src/js/website_bootstrap.js"></script>
+                            </t>
                         </t>
                     </head>
-                    <body class="oe_website oe_styling_v8">
+                    <body class="oe_website">
                     
                         <header class="oe_website_header">
                             <t t-call="website.header"/>
@@ -182,9 +184,6 @@
                             </div>
                             </div>
                         </div>
-
-
-
 
                     </body>
                 </html>
