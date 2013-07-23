@@ -39,7 +39,9 @@ class procurement_rule(osv.osv):
     _columns = {
         'location_id': fields.many2one('stock.location', 'Destination Location'),
         'location_src_id': fields.many2one('stock.location', 'Source Location',
-            help="Source location is action=move")
+            help="Source location is action=move"), 
+        'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', 
+            help="Picking Type determines the way the picking should be shown in the view, reports, ...")
     }
 
 class procurement_order(osv.osv):

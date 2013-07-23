@@ -27,7 +27,6 @@ from openerp.addons.decimal_precision import decimal_precision as dp
 class stock_quant(osv.osv):
     _inherit = "stock.quant"
     _description = "Stock Statistics"
-    _auto = False
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
         res = super(stock_quant, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
         product_obj = self.pool.get("product.product")

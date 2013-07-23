@@ -2168,7 +2168,8 @@ class stock_warehouse(osv.osv):
 
 #----------------------------------------------------------
 # "Empty" Classes that are used to vary from the original stock.picking  (that are dedicated to the internal pickings)
-#   in order to offer a different usability with different views, labels, available reports/wizards...
+#   in order to offer a different usability with different views, labels, available reports/wizards.. 
+# --> TO BE REPLACED by stock_picking_type
 #----------------------------------------------------------
 
 class stock_picking_in(osv.osv):

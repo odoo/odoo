@@ -655,7 +655,8 @@ class purchase_order(osv.osv):
             'type':'in',
             'purchase_line_id': order_line.id,
             'company_id': order.company_id.id,
-            'price_unit': order_line.price_unit
+            'price_unit': order_line.price_unit, 
+            'picking_type_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'picking_type_in')[1]
         }
 
     def _create_pickings(self, cr, uid, order, order_lines, picking_id=False, context=None):

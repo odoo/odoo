@@ -116,6 +116,18 @@ watch your stock valuation, and track production lots upstream and downstream (b
             <field name="location_src_id" ref="stock_location_stock"/>
         </record>
 
+        <!--
+            Picking types
+         -->
+        <record id="picking_type_in" model="stock.picking.type">
+            <field name="name">in</field>
+        </record>
+        <record id="picking_type_out" model="stock.picking.type">
+            <field name="name">out</field>
+        </record>
+        <record id="picking_type_internal" model="stock.picking.type">
+            <field name="name">internal</field>
+        </record>
 
         <!--
     Properties
