@@ -70,6 +70,7 @@ class mail_thread(osv.AbstractModel):
     _name = 'mail.thread'
     _description = 'Email Thread'
     _mail_flat_thread = True
+    _mail_post_access = 'write'
 
     # Automatic logging system if mail installed
     # _track = {
@@ -509,12 +510,22 @@ class mail_thread(osv.AbstractModel):
             access rule on the document, for portal document such as issues. """
         if not model_obj:
             model_obj = self
-        if operation in ['create', 'write', 'unlink']:
-            model_obj.check_access_rights(cr, uid, 'write')
-            model_obj.check_access_rule(cr, uid, mids, 'write', context=context)
+        if hasattr(self, '_mail_post_access'):
+            create_allow = self._mail_post_access
         else:
-            model_obj.check_access_rights(cr, uid, operation)
-            model_obj.check_access_rule(cr, uid, mids, operation, context=context)
+            create_allow = 'write'
+
+        if operation in ['write', 'unlink']:
+            check_operation = 'write'
+        elif operation == 'create' and create_allow in ['create', 'read', 'write', 'unlink']:
+            check_operation = create_allow
+        elif operation == 'create':
+            check_operation = 'write'
+        else:
+            check_operation = operation
+
+        model_obj.check_access_rights(cr, uid, check_operation)
+        model_obj.check_access_rule(cr, uid, mids, check_operation, context=context)
 
     def _get_formview_action(self, cr, uid, id, model=None, context=None):
         """ Return an action to open the document. This method is meant to be
