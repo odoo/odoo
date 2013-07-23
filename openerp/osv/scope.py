@@ -263,13 +263,17 @@ class Cache(defaultdict):
                 and `ids` is a list of record ids or ``None`` for all records.
         """
         if spec is None:
-            self.clear()
-            return
-
-        for model, field, ids in spec:
-            model_cache = self[model]
-            for record_cache in get_values(model_cache, ids):
-                record_cache.pop(field, None)
+            # Invalidate the whole cache. Note that model caches cannot be
+            # dropped from the cache, because the access to those caches is
+            # memoized in model instances (see BaseModel._model_cache).
+            for model_cache in self.itervalues():
+                model_cache.clear()
+        else:
+            # Invalidate following the given spec.
+            for model, field, ids in spec:
+                model_cache = self[model]
+                for record_cache in get_values(model_cache, ids):
+                    record_cache.pop(field, None)
 
     def check(self):
         """ self-check for validating the cache """

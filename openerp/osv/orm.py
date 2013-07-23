@@ -3414,7 +3414,7 @@ class BaseModel(object):
         result = select._read_flat(list(old_fields), load=load)
 
         # update record caches
-        model_cache = scope_proxy.cache[self._name]
+        model_cache = select._model_cache
         for f in old_fields:
             convert = self._fields[f].convert_from_read
             for values in result:
@@ -5214,6 +5214,12 @@ class BaseModel(object):
         instance = object.__new__(cls)
         instance._scope = scope_proxy.current
         instance._ids = ids
+
+        # cache prefetching: all records in instance must have a cache entry
+        model_cache = instance._model_cache
+        for id in ids:
+            model_cache[id]
+
         return instance
 
     #
@@ -5251,7 +5257,7 @@ class BaseModel(object):
         # cache to store its values.
         #
         instance = self.browse(VirtualID())
-        instance._get_cache().update(values)
+        instance._record_cache.update(values)
         return instance
 
     def is_draft(self):
@@ -5263,7 +5269,7 @@ class BaseModel(object):
             names to values in the format accepted by method :meth:`write`.
         """
         result = {}
-        for name, value in self._get_cache().iteritems():
+        for name, value in self._record_cache.iteritems():
             if value is not None:
                 field = self._fields[name]
                 result[name] = field.convert_to_write(value)
@@ -5405,13 +5411,21 @@ class BaseModel(object):
     # Field access/assignment
     #
 
-    def _get_model_cache(self):
+    @tools.lazy_property
+    def _model_cache(self):
         """ Return the cache of the corresponding model. """
+        # Note: The value of this property is evaluated only once and memoized.
+        # It is correct to do so, because the scope's cache never drops the
+        # cache of models, even when all caches are invalidated.
         return self._scope.cache[self._name]
 
-    def _get_cache(self):
+    @property
+    def _record_cache(self):
         """ Return the cache of the first record in `self`. """
-        return self._scope.cache[self._name][self._ids[0]]
+        # Note: Contrary to the model's cache, a record's cache can be dropped
+        # by cache invalidation. Therefore, this property must be evaluated at
+        # every access.
+        return self._model_cache[self._ids[0]]
 
     def _get_field(self, name):
         """ read the field with the given `name` on a record instance """
@@ -5421,7 +5435,7 @@ class BaseModel(object):
                 return self._fields[name].null()
 
         record_id = self._ids[0]
-        record_cache = self._get_cache()
+        record_cache = self._record_cache
 
         # draft records: retrieve default values
         if self.is_draft():
@@ -5461,9 +5475,8 @@ class BaseModel(object):
                 return field.convert_from_read(value)
 
             # fetch the record of this model without name in their cache
-            model_cache = self._get_model_cache()
             fetch_ids = set(fid
-                for fid, fcache in model_cache.iteritems()
+                for fid, fcache in self._model_cache.iteritems()
                 if isinstance(fid, DatabaseID) and name not in fcache)
 
             # prefetch all classic and many2one fields if column is one of them
@@ -5517,7 +5530,7 @@ class BaseModel(object):
         if not self:
             return
 
-        record_cache = self._get_cache()
+        record_cache = self._record_cache
 
         # draft records: store dirty value, and invalidate other fields
         if self.is_draft():
