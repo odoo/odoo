@@ -49,7 +49,7 @@ function openerp_picking_widgets(instance){
                     cols: {
                         product: op.product_id[1],
                         uom: op.product_uom ? product_uom[1] : '',
-                        qty: op.product_uom_qty,
+                        qty: op.product_qty,
                     }
                 });
             });
@@ -247,7 +247,7 @@ function openerp_picking_widgets(instance){
             var self = this;
             console.log('Copy Package:',package_id);
             new instance.web.Model('stock.quant.package')
-                .call('action_copy',[[package_id]])
+                .call('copy',[[package_id]])
                 .then(function(){
                     return self.refresh_ui(self.picking.id);
                 });

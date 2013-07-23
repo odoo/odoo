@@ -587,7 +587,7 @@
                     <button name="draft_validate" states="draft" string="Confirm &amp; Transfer" type="object" class="oe_highlight" groups="base.group_user"/>
                     <!-- <button name="check_assign" states="confirmed" string="Check Availability" type="object"/> -->
                     <button name="force_assign" states="confirmed" string="Force Availability" type="object" class="oe_highlight" groups="base.group_user"/>
-                    <button name="action_process" states="assigned" string="Confirm &amp; Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
+                    <button name="do_partial" states="assigned" string="Confirm &amp; Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
                     <button name="%(act_stock_return_picking)d" string="Reverse Transfer" states="done" type="action" groups="base.group_user"/>
                     <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel Transfer" groups="base.group_user"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
@@ -611,7 +611,19 @@
                     <notebook>
                         <page string="Products">
                             <field name="move_lines" context="{'address_in_id': partner_id, 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree', 'picking_type': 'internal'}"/>
+                            <field name="pack_operation_ids" domain="[('result_package_id', '!=', False)]">
+                                <tree editable="top">
+                                    <field name="product_id"/>
+                                    <field name="product_uom_id"/>
+                                    <field name="quant_id"/>
+                                    <field name="package_id"/>
+                                    <field name="move_id" domain="[('picking_id', '=', parent.id)]"/>
+                                    <field name="product_qty"/>
+                                </tree>
+                            </field>
                             <field name="note" placeholder="Add an internal note..." class="oe_inline"/>
+                        </page>
+                        <page string="Packed">
                         </page>
                         <page string="Additional Info">
                             <group>
@@ -628,6 +640,10 @@
                         </page>
                     </notebook>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
                 </form>
             </field>
         </record>
@@ -734,8 +750,8 @@
                     <button name="draft_validate" states="draft" string="Confirm &amp; Deliver" type="object" class="oe_highlight"/>
                     <button name="action_assign" states="confirmed" string="Check Availability" type="object" class="oe_highlight"/>
                 </xpath>
-                <xpath expr="/form/header//button[@name='action_process']" position="replace">
-                    <button name="action_process" states="assigned" string="Deliver" type="object" class="oe_highlight"/>
+                <xpath expr="/form/header//button[@name='do_partial']" position="replace">
+                    <button name="do_partial" states="assigned" string="Deliver" type="object" class="oe_highlight"/>
                 </xpath>
                 <xpath expr="/form/header//field[@name='state']" position="replace">
                     <field name="state" nolabel="1" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
@@ -859,8 +875,8 @@
                 <xpath expr="//button[@name='draft_validate']" position="replace">
                     <button name="draft_validate" states="draft" string="Confirm &amp; Receive" type="object" class="oe_highlight"/>
                 </xpath>
-                <xpath expr="//button[@name='action_process']" position="replace">
-                    <button name="action_process" states="assigned" string="Receive" type="object" class="oe_highlight"/>
+                <xpath expr="//button[@name='do_partial']" position="replace">
+                    <button name="do_partial" states="assigned" string="Receive" type="object" class="oe_highlight"/>
                 </xpath>
                 <xpath expr="//field[@name='move_lines']" position="replace">
                     <field name="move_lines" context="{'address_in_id': partner_id, 'picking_type': 'in', 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree'}"/>
@@ -1003,7 +1019,6 @@
                 <form string="Stock Moves" version="7.0">
                 <header>
                     <button name="action_confirm" states="draft" string="Process Later" type="object" class="oe_highlight"/>
-                    <button name="%(action_partial_move_server)d" string="Process Partially" type="action" states="assigned" class="oe_highlight"/>
                     <button name="action_done" states="draft,assigned,confirmed" string="Process Entirely" type="object" class="oe_highlight"/>
                     <button name="force_assign" states="confirmed" string="Set Available" type="object" class="oe_highlight"/>
                     <button name="action_cancel" states="assigned,confirmed" string="Cancel Move" type="object"/>
@@ -1207,9 +1222,6 @@
                         icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
                         states="draft,waiting,confirmed,assigned"/>
                     <field name="state"/>
-                    <button name="%(action_partial_move_server)d"
-                        icon="terp-stock_effects-object-colorize" type="action"
-                        states="assigned" class="oe_highlight"/>
                     <button name="action_done" states="draft,assigned,confirmed"
                         icon="gtk-go-forward" type="object"
                         class="oe_highlight" help="Done"/>

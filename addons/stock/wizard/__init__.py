@@ -22,8 +22,6 @@
 import stock_traceability
 import stock_move
 import stock_splitinto
-import stock_partial_picking
-import stock_partial_move
 import stock_inventory_merge
 import stock_fill_inventory
 import stock_inventory_line_split
