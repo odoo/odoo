@@ -236,9 +236,9 @@ class account_voucher(osv.osv):
         debit = credit = 0.0
         sign = type == 'payment' and -1 or 1
         for l in line_dr_ids:
-            debit += l['amount']
+            debit += l['amount_unreconciled']
         for l in line_cr_ids:
-            credit += l['amount']
+            credit += l['amount_unreconciled']
         return amount - sign * (credit - debit)
 
     def onchange_line_ids(self, cr, uid, ids, line_dr_ids, line_cr_ids, amount, voucher_currency, type, context=None):
