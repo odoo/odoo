@@ -689,7 +689,7 @@ class stock_picking(osv.osv):
                                                'product_id': product.id,
                                                'product_uom_qty': qty,
                                                'product_uom': product.product_uom.id,
-                                                            #'lot_id': wizard_line.lot_id.id,
+                                              #'lot_id': wizard_line.lot_id.id,
                                                'location_id': picking.location_id.id,
                                                'location_dest_id': picking.location_dest_id.id,
                                                'picking_id': False,
@@ -707,7 +707,7 @@ class stock_picking(osv.osv):
         proc_group = self.pool.get("procurement.group")
         group_id = proc_group.create(cr, uid, {}, context=context)
         todo_move_ids = []
-        assert len(picking_ids) == 1, 'Partial picking is only supported fir one record at a time'
+        assert len(picking_ids) == 1, 'Partial picking is only supported for one record at a time'
         if context is None:
             context = {}
         picking = self.browse(cr, uid, picking_ids[0], context=context)
@@ -943,12 +943,13 @@ class stock_move(osv.osv):
         res = dict.fromkeys(ids, False)
         for move in self.browse(cr, uid, ids, context=context):
             res[move.id] = move.product_qty
-            for op in move.picking_id.pack_operation_ids:
-                if op.product_id == move.product_id or (op.quant_id and op.quant_id.product_id == move.product_id):
-                    res[move.id] -= op.product_qty
-                if op.package_id:
-                    #find the product qty recursively
-                    res[move.id] -= self.pool.get('stock.quant.package')._get_product_total_qty(cr, uid, op.package_id, move.product_id.id, context=context)
+            if move.picking_id:
+                for op in move.picking_id.pack_operation_ids:
+                    if op.product_id == move.product_id or (op.quant_id and op.quant_id.product_id == move.product_id):
+                        res[move.id] -= op.product_qty
+                    if op.package_id:
+                        #find the product qty recursively
+                        res[move.id] -= self.pool.get('stock.quant.package')._get_product_total_qty(cr, uid, op.package_id, move.product_id.id, context=context)
         return res
 
     _columns = {
