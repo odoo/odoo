@@ -832,7 +832,7 @@ openerp.web.form.SidebarAttachments = openerp.web.OldWidget.extend({
         this.$element.find('.oe-sidebar-attachment-delete').click(this.on_attachment_delete);
     },
     on_attachment_changed: function(e) {
-        window[this.element_id + '_iframe'] = this.do_update;
+        window[this.element_id + '_iframe_callback'] = this.do_update;
         var $e = $(e.target);
         if ($e.val() != '') {
             this.$element.find('form.oe-binary-form').submit();
@@ -3484,7 +3484,7 @@ openerp.web.form.FieldBinary = openerp.web.form.Field.extend({
         // TODO: on modern browsers, we could directly read the file locally on client ready to be used on image cropper
         // http://www.html5rocks.com/tutorials/file/dndfiles/
         // http://deepliquid.com/projects/Jcrop/demos.php?demo=handler
-        window[this.iframe] = this.on_file_uploaded;
+        window[this.iframe + '_callback'] = this.on_file_uploaded;
         if ($(e.target).val() != '') {
             this.$element.find('form.oe-binary-form input[name=session_id]').val(this.session.session_id);
             this.$element.find('form.oe-binary-form').submit();

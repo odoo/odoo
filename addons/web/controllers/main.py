@@ -1481,7 +1481,7 @@ class Binary(openerpweb.Controller):
         try:
             out = """<script language="javascript" type="text/javascript">
                         var win = window.top.window,
-                            callback = win[%s];
+                            callback = win[%s + '_callback'];
                         if (typeof(callback) === 'function') {
                             callback.apply(this, %s);
                         } else {
