@@ -24,6 +24,7 @@ import re
 import requests
 
 from openerp.osv import osv
+from openerp import SUPERUSER_ID
 
 
 class base_config_settings(osv.osv):
@@ -59,7 +60,10 @@ class config(osv.osv):
         user = self.pool['res.users'].read(cr, uid, uid, ['login', 'password'], context=context)
         username = user['login']
         password = user['password']
-        config_formula = '=oe_settings("%s";"%s";"%s";"%s")' % (url, dbname, username, password)
+        if self.pool['ir.module.module'].search_count(cr, SUPERUSER_ID, ['&', ('name', '=', 'auth_crypt'), ('state', '=', 'installed')]) == 1:
+            config_formula = '=oe_settings("%s";"%s")' % (url, dbname)
+        else:
+            config_formula = '=oe_settings("%s";"%s";"%s";"%s")' % (url, dbname, username, password)
         request = '''<feed xmlns="http://www.w3.org/2005/Atom"
       xmlns:batch="http://schemas.google.com/gdata/batch"
       xmlns:gs="http://schemas.google.com/spreadsheets/2006">

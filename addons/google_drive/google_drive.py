@@ -171,6 +171,7 @@ class config(osv.osv):
         'google_drive_resource_id': fields.function(_resource_get, type="char", string='Resource Id'),
         'google_drive_client_id': fields.function(_client_id_get, type="char", string='Google Client '),
         'name_template': fields.char('Google Drive Name Pattern', size=64, help='Choose how the new google drive will be named, on google side. Eg. gdoc_%(field_name)s', required=True),
+        'active': fields.boolean('Active'),
     }
 
     def onchange_model_id(self, cr, uid, ids, model_id, context=None):
@@ -184,6 +185,7 @@ class config(osv.osv):
 
     _defaults = {
         'name_template': 'Document %(name)s',
+        'active': True,
     }
 
     def _check_model_id(self, cr, uid, ids, context=None):
