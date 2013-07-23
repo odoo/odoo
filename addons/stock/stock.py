@@ -471,7 +471,8 @@ class stock_picking(osv.osv):
         'auto_picking': fields.boolean('Auto-Picking', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'partner_id': fields.many2one('res.partner', 'Partner', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
-        'pack_operation_ids': fields.one2many('stock.pack.operation', 'picking_id', string='Related Packing Operations'),
+        'pack_operation_ids': fields.one2many('stock.pack.operation', 'picking_id', string='Related Packing Operations'), 
+        'picking_type_id': fields.many2one('stock.picking.type', string="Picking Type"), 
 
         # Used to search a product on pickings
         'product_id': fields.related('move_lines', 'product_id', type='many2one', relation='product.product', string='Product'),
@@ -2584,5 +2585,14 @@ class product_product(osv.osv):
     _columns = {
         'orderpoint_ids': fields.one2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rules'),
     }
+
+class stock_picking_type(osv.osv):
+    _name="stock.picking.type"
+    _columns = {
+        'name': fields.char('name', size=30), 
+        'pack': fields.boolean('Pack', 'This picking type needs packing interface'), 
+        'print_delivery': fields.boolean('Print delivery'), 
+            }
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

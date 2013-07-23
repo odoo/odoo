@@ -68,7 +68,7 @@ class stock_quant(osv.osv):
         return res
 
     def _get_inventory_value(self, cr, uid, line, prodbrow, context=None):
-        return prodbrow[(line.company_id.id, line.product_id.id)].standard_price * line.product_qty
+        return prodbrow[(line.company_id.id, line.product_id.id)].standard_price * line.qty
 
     _columns = {
         'inventory_value': fields.function(_calc_moves, string="Inventory Value", type='float', readonly=True), 

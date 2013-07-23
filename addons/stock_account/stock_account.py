@@ -66,7 +66,7 @@ class stock_quant(osv.osv):
     def _get_inventory_value(self, cr, uid, line, prodbrow, context=None):
         #TODO: what in case of partner_id
         if prodbrow[(line.company_id.id, line.product_id.id)].cost_method in ('real'):
-            return line.cost
+            return line.cost * line.qty
         return super(stock_quant, self)._get_inventory_value(cr, uid, line, prodbrow, context=context)
 
 
