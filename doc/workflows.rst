@@ -74,7 +74,9 @@ been processed), and thus also process the "b" activity.
 Transitions
 -----------
 
-Transitions provide the control structures to orchestrate a workflow. In their
+Transitions provide the control structures to orchestrate a workflow. When an
+activity is completed, the workflow engine will try to get across transitions
+departing from the completed activity, towards the next activities.  In their
 simplest form they just link activities from one to the others (as in the
 example above), and activities are processed as soon as the activities
 preceding them are completed.
@@ -129,28 +131,23 @@ attribute of the button.
 Triggers
 ''''''''
 
-When an activity is completed, the workflow engine will try to get across
-transitions departing from the completed activity, towards the next activities.
-To get across a transition, its associated condition should evaluate to True.
-If the condition evaluates to False, the transition is not taken (and thus the
+With conditions that evaluate to false, transitions are not taken (and thus the
 activity it leads to will not be processed). Still, the workflow instance can
 get new chances to progress across that transition by providing so-called
-triggers. The idea is that when the condition fails, triggers (actually just
-model name/record IDs pairs) are recorded in database. Later, it is possible to
-wake-up specifically the workflow instances that installed those triggers,
-offering them a new chance to evaluation their transition conditions. This
-mechnism makes it cheaper to wake-up workflow instances by targetting just a
-few of them (those that have installed the triggers) instead of all of them.
+triggers. The idea is that when the condition fails, triggers are recorded in
+database. Later, it is possible to wake-up specifically the workflow instances
+that installed those triggers, offering them a new chance to evaluation their
+transition conditions. This mechnism makes it cheaper to wake-up workflow
+instances by targetting just a few of them (those that have installed the
+triggers) instead of all of them.
 
-On each transition, in addition to a condition, records can be defined as a
-trigger. The records will be defined as triggers as the transition is tried
-withing a workflow, after the condition has failed. The actual records are
-stored as model name and record ids. The model name is defined by the
-trigger_model attribute of the transition while the record IDs are retrived by
-evaluating the trigger_expression (also defined on the transition).
+Triggers are recorded in database as record IDs (together with the model name)
+and refer to the workflow instance waiting for them. The transition definition
+can thus provide a Python expression (using the ``trigger_model`` attribute)
+that when evaluated will return the record IDs. Unlike the other expressions
+defined on the workflow, this one is evaluated with respect to a model that can
+be chosen on a per-transition basis with the ``trigger_expression`` attribute.
 
-- I think the triggers are never deleted from the database. They are: they are
-  'on delete cascade' on both the workflow instance and the workitem.
-
-- Are those triggers re-installed whenever the transition is tried ? Nope.
+.. note:: Note that triggers are not re-installed whenever the transition is
+    re-tried.
 
