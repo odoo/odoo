@@ -1009,9 +1009,9 @@ class Root(object):
         with registry.cursor() as cr:
             m = registry.get('ir.module.module')
             ids = m.search(cr, openerp.SUPERUSER_ID, [('state','=','installed')])
-            installed = set([x['name'] for x in m.read(cr, 1, ids, ['name'])])
-            modules_set = modules_set.intersection(set(installed))
-        modules = ["web"] + sorted(modules_set)
+            installed = set(x['name'] for x in m.read(cr, 1, ids, ['name']))
+            modules_set = modules_set & installed
+
         # building all other methods
         gen(["web"] + sorted(modules_set), False)
 
