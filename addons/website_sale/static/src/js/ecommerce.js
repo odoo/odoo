@@ -28,7 +28,7 @@ $(document).ready(function () {
     });
     $(".oe_ecommerce .js_error_payment").click(function(e) {
         var values = {};
-        $checkout.find(".js_inputs:not(:hidden) input:not(:checkbox), .js_signin_modal input").each(function() {
+        $checkout.find(".js_inputs:not(:hidden) input:not(:checkbox), .js_inputs:not(:hidden) select, .js_signin_modal input").each(function() {
             values[$(this).attr("name")] = $(this).val();
         });
         $checkout.find("input").css("border", "");

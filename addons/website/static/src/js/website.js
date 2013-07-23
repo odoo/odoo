@@ -190,7 +190,7 @@ $(function(){
  * If can't go back in history stack, will go back to home.
  */
 instance.web.ActionGoBack = function(parent, action) {
-    window.history.back();
+    window.location.href = document.referrer;
 };
 instance.web.client_actions.add("goback", "instance.web.ActionGoBack");
 

@@ -194,6 +194,8 @@ class Ecommerce(http.Controller):
         values = self.get_values()
         partner_obj = request.registry.get('res.partner')
         user_obj = request.registry.get('res.users')
+        country_obj = request.registry.get('res.country')
+        obj_data = request.registry.get('ir.model.data')
 
         values['partner'] = False
 
@@ -203,6 +205,13 @@ class Ecommerce(http.Controller):
 
         if partner_id:
             values['partner'] = partner_obj.browse(cr, uid, partner_id)
+
+            shipping_category_id = obj_data.get_object_reference(cr, uid, 'website_sale', 'shipping_address')[1]
+            shipping_ids = partner_obj.search(cr, uid, [("parent_id", "=", partner_id), ("category_id", "=", shipping_category_id)])
+            shipping_id = shipping_ids and shipping_ids[0] or None
+            values['shipping'] = partner_obj.browse(cr, uid, shipping_id)
+
+        values['countries'] = country_obj.browse(cr, uid, country_obj.search(cr, uid, [(1, "=", 1)]))
 
         return request.registry.get("ir.ui.view").render(cr, uid, "website_sale.checkout", values)
 
@@ -214,11 +223,11 @@ class Ecommerce(http.Controller):
 
         # check values
         json = {'error': []}
-        required_field = ['tel', 'zip', 'email', 'state', 'street', 'city', 'name']
+        required_field = ['phone', 'zip', 'email', 'street', 'city', 'name', 'country_id']
         for key in required_field:
-            if not post[key]:
+            if not post.get(key):
                 json['error'].append(key)
-            if 'shipping_name' in post and key != 'email' and not post["shipping_%s" % key]:
+            if 'shipping_name' in post and key != 'email' and not post.get("shipping_%s" % key):
                 json['error'].append("shipping_%s" % key)
         if json['error']:
             return simplejson.dumps(json)
@@ -226,18 +235,22 @@ class Ecommerce(http.Controller):
         # search or create company
         if post['company']:
             pass
-        if 'shipping_company' in post and post['shipping_company']:
+        if 'shipping_name' in post and post['shipping_company']:
+            pass
+        if post['state']:
+            pass
+        if 'shipping_name' in post and post['shipping_state']:
             pass
 
         partner_value = {
             'fax': post['fax'],
-            'tel': post['tel'],
+            'phone': post['phone'],
             'zip': post['zip'],
             'email': post['email'],
-            'state': post['state'],
             'street': post['street'],
             'city': post['city'],
             'name': post['name'],
+            'country_id': post['country_id'],
         }
         if partner_id:
             partner_obj.write(cr, uid, [partner_id], partner_value)
@@ -245,18 +258,18 @@ class Ecommerce(http.Controller):
             partner_id = partner_obj.create(cr, uid, partner_value)
 
         if 'shipping_name' in post:
+            shipping_category_id = obj_data.get_object_reference(cr, uid, 'website_sale', 'shipping_address')[1]
             shipping_value = {
                 'fax': post['shipping_fax'],
-                'tel': post['shipping_tel'],
+                'phone': post['shipping_phone'],
                 'zip': post['shipping_zip'],
-                'state': post['shipping_state'],
                 'street': post['shipping_street'],
                 'city': post['shipping_city'],
                 'name': post['shipping_name'],
                 'parent_id': partner_id,
-                'category_id': (4, shipping_category_id)
+                'category_id': [(4, shipping_category_id)],
+                'country_id': post['shipping_country_id'],
             }
-            shipping_category_id = obj_data.get_object_reference(cr, uid, 'website_sale', 'shipping_address')[1]
             shipping_ids = partner_obj.search(cr, uid, [("parent_id", "=", partner_id), ("category_id", "=", shipping_category_id)])
             shipping_id = shipping_ids and shipping_ids[0] or None
             if shipping_id:
