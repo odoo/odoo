@@ -22,10 +22,13 @@
 import time
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+from pytz import timezone
+import pytz
 
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp import netsvc
+from openerp.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 class hr_timesheet_sheet(osv.osv):
     _name = "hr_timesheet_sheet.sheet"
@@ -364,11 +367,20 @@ class hr_attendance(osv.osv):
 
     def _sheet(self, cursor, user, ids, name, args, context=None):
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
+        utc_tz = pytz.utc
         res = {}.fromkeys(ids, False)
         for attendance in self.browse(cursor, user, ids, context=context):
-            date_to = datetime.strftime(datetime.strptime(attendance.name[0:10], '%Y-%m-%d'), '%Y-%m-%d %H:%M:%S')
+
+            # Simulate timesheet in employee timezone
+            att_tz = timezone(attendance.employee_id.user_id.partner_id.tz)
+
+            attendance_dt = datetime.strptime(attendance.name, DEFAULT_SERVER_DATETIME_FORMAT)
+            att_tz_dt = pytz.utc.localize(attendance_dt)
+            att_tz_dt = att_tz_dt.astimezone(att_tz)
+            date_from = datetime.strftime(att_tz_dt, DEFAULT_SERVER_DATETIME_FORMAT)
+            date_to = datetime.strftime(att_tz_dt.date(), DEFAULT_SERVER_DATETIME_FORMAT)
             sheet_ids = sheet_obj.search(cursor, user,
-                [('date_to', '>=', date_to), ('date_from', '<=', attendance.name),
+                [('date_to', '>=', date_to), ('date_from', '<=', date_from),
                  ('employee_id', '=', attendance.employee_id.id)],
                 context=context)
             if sheet_ids:
@@ -488,7 +500,7 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
                                 a.name::date as name,
                                 s.id as sheet_id,
                                 0.0 as total_timesheet,
-                                SUM(((EXTRACT(hour FROM a.name) * 60) + EXTRACT(minute FROM a.name)) * (CASE WHEN a.action = 'sign_in' THEN -1 ELSE 1 END)) as total_attendance
+                                SUM(((EXTRACT(hour FROM a.name AT TIME ZONE 'UTC') * 60) + EXTRACT(minute FROM a.name AT TIME ZONE 'UTC')) * (CASE WHEN a.action = 'sign_in' THEN -1 ELSE 1 END)) as total_attendance
                             from
                                 hr_attendance a
                                 LEFT JOIN hr_timesheet_sheet_sheet s
