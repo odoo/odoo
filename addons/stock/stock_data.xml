@@ -98,27 +98,11 @@ watch your stock valuation, and track production lots upstream and downstream (b
             <field name="location_id" ref="stock_location_company"/>
         </record>
 
-        <!--
-             Procurement rules
-        -->
-
-        <record id="procurement_rule_customer0" model="procurement.rule">
-            <field name="name">Output > Customer</field>
-            <field name="action">move</field>
-            <field name="location_id" ref="stock_location_customers"/>
-            <field name="location_src_id" ref="stock_location_output"/>
-        </record>
-
-        <record id="procurement_rule_customer1" model="procurement.rule">
-            <field name="name">Stock > Output</field>
-            <field name="action">move</field>
-            <field name="location_id" ref="stock_location_output"/>
-            <field name="location_src_id" ref="stock_location_stock"/>
-        </record>
 
         <!--
             Picking types
          -->
+
         <record id="picking_type_in" model="stock.picking.type">
             <field name="name">in</field>
         </record>
@@ -128,6 +112,24 @@ watch your stock valuation, and track production lots upstream and downstream (b
         <record id="picking_type_internal" model="stock.picking.type">
             <field name="name">internal</field>
         </record>
+        <record id="picking_type_inventory" model="stock.picking.type">
+            <field name="name">inventory</field>
+        </record>
+
+
+        <!--
+             Procurement rules
+        -->
+
+        <record id="procurement_rule_customer0" model="procurement.rule">
+            <field name="name">Stock > Customer</field>
+            <field name="action">move</field>
+            <field name="location_id" ref="stock_location_customers"/>
+            <field name="location_src_id" ref="stock_location_stock"/>
+            <field name="picking_type_id" ref="picking_type_out"/>
+        </record>
+
+
 
         <!--
     Properties

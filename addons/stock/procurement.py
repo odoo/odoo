@@ -40,7 +40,7 @@ class procurement_rule(osv.osv):
         'location_id': fields.many2one('stock.location', 'Destination Location'),
         'location_src_id': fields.many2one('stock.location', 'Source Location',
             help="Source location is action=move"), 
-        'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', 
+        'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', required=True, 
             help="Picking Type determines the way the picking should be shown in the view, reports, ...")
     }
 
@@ -83,7 +83,7 @@ class procurement_order(osv.osv):
             'move_dest_id': procurement.move_dest_id and procurement.move_dest_id.id or False,
             #'cancel_cascade': procurement.rule_id and procurement.rule_id.cancel_cascade or False,
             'group_id': procurement.group_id and procurement.group_id.id or False,
-            'picking_type': self.pool.get('stock.move').get_type_from_usage(cr, uid, procurement.rule_id.location_src_id, procurement.rule_id.location_id, context=context)
+            'picking_type_id': procurement.rule_id.picking_type_id.id, 
         }
 
     def _run(self, cr, uid, procurement, context=None):

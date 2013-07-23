@@ -63,7 +63,8 @@ class stock_location_path(osv.osv):
             ("2binvoiced", "To Be Invoiced"),
             ("none", "Not Applicable")], "Invoice Status",
             required=True,),
-        'picking_type': fields.selection([('out','Sending Goods'),('in','Getting Goods'),('internal','Internal')], 'Shipping Type', required=True, select=True, help="Depending on the company, choose whatever you want to receive or send products"),
+#         'picking_type': fields.selection([('out','Sending Goods'),('in','Getting Goods'),('internal','Internal')], 'Shipping Type', required=True, select=True, help="Depending on the company, choose whatever you want to receive or send products"),
+        'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', help="This is the picking type associated with the different pickings"), 
         'auto': fields.selection(
             [('auto','Automatic Move'), ('manual','Manual Operation'),('transparent','Automatic No Step Added')],
             'Automatic Move',
@@ -78,7 +79,6 @@ class stock_location_path(osv.osv):
         'auto': 'auto',
         'delay': 1,
         'invoice_state': 'none',
-        'picking_type': 'internal',
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'procurement.order', context=c)
     }
     def _apply(self, cr, uid, rule, move, context=None):

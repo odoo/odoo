@@ -28,6 +28,7 @@
             <field name="location_src_id" ref="stock.stock_location_stock"/>
             <field name="procure_method">make_to_stock</field>
             <field name="route_id" ref="route_warehouse0_mts"/>
+            <field name="picking_type_id" ref="stock.picking_type_internal"/>
         </record>
 
         <record id="procurement_rule_customer1_mts" model="procurement.rule">
@@ -37,6 +38,7 @@
             <field name="location_src_id" ref="stock.stock_location_output"/>
             <field name="procure_method">make_to_order</field>
             <field name="route_id" ref="route_warehouse0_mts"/>
+            <field name="picking_type_id" ref="stock.picking_type_out"/>
         </record>
         
         
@@ -52,6 +54,7 @@
             <field name="location_src_id" ref="stock.stock_location_stock"/>
             <field name="procure_method">make_to_order</field>
             <field name="route_id" ref="route_warehouse0_mto"/>
+            <field name="picking_type_id" ref="stock.picking_type_internal"/>
         </record>
 
         <record id="route_warehouse0_crossdock" model='stock.location.route'>
@@ -66,6 +69,7 @@
             <field name="location_src_id" ref="stock.stock_location_output"/>
             <field name="procure_method">make_to_order</field>
             <field name="route_id" ref="route_warehouse0_crossdock"/>
+            <field name="picking_type_id" ref="stock.picking_type_out"/>
         </record>
         
         <!--TODO: pack zone must be in data of stock_location, not demo -->
@@ -83,6 +87,7 @@
             <field name="location_src_id" ref="stock.stock_location_stock"/>
             <field name="procure_method">make_to_stock</field>
             <field name="route_id" ref="route_warehouse0_pack"/>
+            <field name="picking_type_id" ref="stock.picking_type_internal"/>
         </record>
 
         <record id="procurement_rule_customer1_pack" model="procurement.rule">
@@ -92,6 +97,7 @@
             <field name="location_src_id" ref="stock.stock_location_output"/>
             <field name="procure_method">make_to_order</field>
             <field name="route_id" ref="route_warehouse0_pack"/>
+            <field name="picking_type_id" ref="stock.picking_type_out"/>
         </record>
         
         <record id="procurement_rule_customer2_pack" model="procurement.rule">
@@ -101,9 +107,8 @@
             <field name="location_src_id" ref="location_pack_zone"/>
             <field name="procure_method">make_to_order</field>
             <field name="route_id" ref="route_warehouse0_pack"/>
+            <field name="picking_type_id" ref="stock.picking_type_internal"/>
         </record>
-        
-        
 
 
         <record id="procurement_rule_customer0_mto_pack" model="procurement.rule">
@@ -113,6 +118,7 @@
             <field name="location_src_id" ref="stock.stock_location_stock"/>
             <field name="procure_method">make_to_order</field>
             <field name="route_id" ref="route_warehouse0_mto"/>
+            <field name="picking_type_id" ref="stock.picking_type_internal"/>
         </record>
     </data>
 </openerp>

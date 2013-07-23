@@ -60,7 +60,7 @@ Dashboard / Reports for Purchase Management will include:
         'purchase_view.xml',
         'stock_view.xml',
         'partner_view.xml',
-        'process/purchase_process.xml',
+#         'process/purchase_process.xml',
         'report/purchase_report_view.xml',
         'board_purchase_view.xml',
         'edi/purchase_order_action_data.xml',

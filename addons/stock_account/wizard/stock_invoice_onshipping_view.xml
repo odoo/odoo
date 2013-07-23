@@ -23,7 +23,7 @@
 
         <act_window name="Create Invoice"
             res_model="stock.invoice.onshipping"
-            src_model="stock.picking.out"
+            src_model="stock.picking"
             key2="client_action_multi"
             multi="True"
             view_mode="form"
@@ -33,7 +33,7 @@
 
         <act_window name="Create Draft Invoices"
             res_model="stock.invoice.onshipping"
-            src_model="stock.picking.in"
+            src_model="stock.picking"
             key2="client_action_multi"
             multi="True"
             view_mode="form"

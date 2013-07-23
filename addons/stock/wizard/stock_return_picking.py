@@ -210,18 +210,12 @@ class stock_return_picking(osv.osv_memory):
             pick_obj.write(cr, uid, [pick.id], {'invoice_state':'none'}, context=context)
         pick_obj.signal_button_confirm(cr, uid, [new_picking])
         pick_obj.force_assign(cr, uid, [new_picking], context)
-        # Update view id in context, lp:702939
-        model_list = {
-                'out': 'stock.picking.out',
-                'in': 'stock.picking.in',
-                'internal': 'stock.picking',
-        }
         return {
             'domain': "[('id', 'in', ["+str(new_picking)+"])]",
             'name': _('Returned Picking'),
             'view_type':'form',
             'view_mode':'tree,form',
-            'res_model': model_list.get(new_type, 'stock.picking'),
+            'res_model': 'stock.picking',
             'type':'ir.actions.act_window',
             'context':context,
         }

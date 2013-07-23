@@ -53,10 +53,10 @@
         </record>-->
 
 
-        <record id="view_picking_in_search_inherit" model="ir.ui.view">
+        <record id="view_picking_internal_search_inherit" model="ir.ui.view">
             <field name="name">stock.picking.in.search.inherit</field>
-            <field name="model">stock.picking.in</field>
-            <field name="inherit_id" ref="stock.view_picking_in_search"/>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_internal_search"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='partner_id']" position="before">
                     <filter string="To Invoice" name="to_invoice" icon="terp-dolar" domain="[('invoice_state', '=', '2binvoiced')]"/>
@@ -66,7 +66,7 @@
         <record id="view_picking_out_search_inherit" model="ir.ui.view">
             <field name="name">stock.picking.out.search.inherit</field>
             <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="stock.view_picking_out_search"/>
+            <field name="inherit_id" ref="stock.view_picking_internal_search"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='partner_id']" position="before">
                     <filter icon="terp-dolar" name="to_invoice" string="To Invoice" domain="[('invoice_state','=','2binvoiced')]" help="Delivery orders to invoice"/>

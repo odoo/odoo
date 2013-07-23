@@ -554,7 +554,7 @@
             <field name="arch" type="xml">
                 <calendar string="Calendar View" date_start="min_date" date_stop="max_date" color="partner_id">
                     <field name="origin"/>
-                    <field name="type"/>
+                    <field name="picking_type_id"/>
                     <field name="partner_id"/>
                 </calendar>
             </field>
@@ -629,7 +629,7 @@
                             <group>
                                 <group>
                                     <field name="move_type"/>
-                                    <field name="type" invisible="1"/>
+                                    <field name="picking_type_id"/>
                                     <field name="auto_picking" groups="base.group_user"/>
                                 </group>
                                 <group>
@@ -671,13 +671,13 @@
             </field>
         </record>
 
-        <record id="action_picking_tree6" model="ir.actions.act_window">
+        <record id="action_picking_tree" model="ir.actions.act_window">
             <field name="name">Internal Moves</field>
             <field name="res_model">stock.picking</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
-            <field name="domain">[('type','=','internal')]</field>
+            <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address', 'search_default_available': 1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
@@ -691,270 +691,22 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window.view" id="action_picking_tree6_tree_view">
+        <record model="ir.actions.act_window.view" id="action_picking_tree_tree_view">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="vpicktree"/>
-            <field name="act_window_id" ref="action_picking_tree6"/>
+            <field name="act_window_id" ref="action_picking_tree"/>
         </record>
-        <record model="ir.actions.act_window.view" id="action_picking_tree6_form_view">
+        <record model="ir.actions.act_window.view" id="action_picking_tree_form_view">
             <field name="sequence" eval="2"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_picking_form"/>
-            <field name="act_window_id" ref="action_picking_tree6"/>
-        </record>
-
-        <!-- Sending Products -->
-        <record model="ir.ui.view" id="stock_picking_out_calendar">
-            <field name="name">stock.picking.out.calendar</field>
-            <field name="model">stock.picking.out</field>
-            <field name="priority" eval="2"/>
-            <field name="arch" type="xml">
-                <calendar string="Calendar View" date_start="min_date" date_stop="max_date" color="partner_id">
-                    <field name="origin"/>
-                    <field name="type"/>
-                    <field name="partner_id"/>
-                </calendar>
-            </field>
-        </record>
-        
-        <record id="view_picking_out_tree" model="ir.ui.view">
-            <field name="name">stock.picking.out.tree</field>
-            <field name="model">stock.picking.out</field>
-            <field name="arch" type="xml">
-                <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and min_date &lt; current_date" string="Delivery Orders">
-                    <field name="name"/>
-                    <field name="partner_id" string="Customer"/>
-                    <field name="origin"/>
-                    <field name="min_date"/>
-                    <field name="date"/>
-                    <field name="backorder_id"/>
-                    <field name="stock_journal_id"/>
-                    <field name="state"/>
-                </tree>
-            </field>
-        </record>
-        <record id="view_picking_out_form" model="ir.ui.view">
-            <field name="name">stock.picking.out.form</field>
-            <field name="model">stock.picking.out</field>
-            <field name="inherit_id" ref="view_picking_form"/>
-            <field name="arch" type="xml">
-                <field name="date_done" position="attributes" version="7.0">
-                    <attribute name="string">Date of Delivery</attribute>
-                </field>
-                <xpath expr="/form/header//button[@name='%(act_stock_return_picking)d']" position="replace">
-                    <button name="%(report_picking_list_out)d" string="Print Delivery Slip" type="action" states="done" class="oe_highlight"/>
-                    <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action"/>
-                </xpath>
-                <xpath expr="/form/header//button[@name='draft_validate']" position="replace">
-                    <button name="draft_validate" states="draft" string="Confirm &amp; Deliver" type="object" class="oe_highlight"/>
-                    <button name="action_assign" states="confirmed" string="Check Availability" type="object" class="oe_highlight"/>
-                </xpath>
-                <xpath expr="/form/header//button[@name='do_partial']" position="replace">
-                    <button name="do_partial" states="assigned" string="Deliver" type="object" class="oe_highlight"/>
-                </xpath>
-                <xpath expr="/form/header//field[@name='state']" position="replace">
-                    <field name="state" nolabel="1" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
-                </xpath>
-                <xpath expr="//field[@name='move_lines']" position="replace">
-                    <field name="move_lines" context="{'address_out_id': partner_id, 'picking_type': 'out', 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree'}"/>
-                </xpath>
-                <xpath expr="/form/sheet" position="after">
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="message_ids" widget="mail_thread"/>
-                    </div>
-                </xpath>
-            </field>
-        </record>
-        <record id="view_picking_out_search" model="ir.ui.view">
-            <field name="name">stock.picking.out.search</field>
-            <field name="model">stock.picking</field>
-            <field name="arch" type="xml">
-                <search string="Picking list">
-                    <field name="name" string="Picking List" filter_domain="['|',('name','ilike', self),('origin','ilike',self)]"/>
-                    <filter icon="terp-check" name="available" string="Ready" domain="[('state','=','assigned')]" help="Assigned Delivery Orders"/>
-                    <filter icon="terp-camera_test" name="confirmed" string="Waiting" domain="[('state','=','confirmed')]" help="Confirmed Delivery Orders"/>
-                    <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Delivery orders already processed"/>
-                    <separator/>
-                    <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order"/>
-                    <separator/>
-                    <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
-                    <field name="stock_journal_id"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <group expand="0" string="Group By...">
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Order Date" icon="terp-go-month" domain="[]"  context="{'group_by':'date'}"/>
-                        <filter string="Expected Date" icon="terp-go-month" domain="[]"  context="{'group_by':'min_date'}"/>
-                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'stock_journal_id'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-
-        <record id="action_picking_tree" model="ir.actions.act_window">
-            <field name="name">Delivery Orders</field>
-            <field name="res_model">stock.picking.out</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
-            <field name="domain">[('type','=','out')]</field>
-            <field name="context">{'default_type': 'out', 'contact_display': 'partner_address'}</field>
-            <field name="search_view_id" ref="view_picking_out_search"/>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a delivery order. 
-              </p><p>
-                This is the list of all delivery orders that have to be
-                prepared, according to your different sales orders and your
-                logistics rules.
-              </p>
-            </field>
-        </record>
-        <record id="action_picking_tree_out_view1_waiting" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_picking_out_tree"/>
             <field name="act_window_id" ref="action_picking_tree"/>
         </record>
-        <record id="action_picking_tree_out_view2_waiting" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_picking_out_form"/>
-            <field name="act_window_id" ref="action_picking_tree"/>
-        </record>
-        <record id="action_picking_tree_out_view2_waiting_cal" model="ir.actions.act_window.view">
-            <field eval="3" name="sequence"/>
-            <field name="view_mode">calendar</field>
-            <field name="view_id" ref="stock_picking_out_calendar"/>
-            <field name="act_window_id" ref="action_picking_tree"/>
-        </record>
-        <menuitem action="action_picking_tree" id="menu_action_picking_tree" parent="menu_stock_warehouse_mgmt" sequence="3"/>
-
-        <!-- Incomming Shipments -->
-        <record model="ir.ui.view" id="stock_picking_in_calendar">
-            <field name="name">stock.picking.in.calendar</field>
-            <field name="model">stock.picking.in</field>
-            <field name="priority" eval="2"/>
-            <field name="arch" type="xml">
-                <calendar string="Calendar View" date_start="min_date" date_stop="max_date" color="partner_id">
-                    <field name="origin"/>
-                    <field name="type"/>
-                    <field name="partner_id"/>
-                </calendar>
-            </field>
-        </record>
-
-        <record id="view_picking_in_tree" model="ir.ui.view">
-            <field name="name">stock.picking.in.tree</field>
-            <field name="model">stock.picking.in</field>
-            <field name="arch" type="xml">
-                <tree colors="blue:state == 'draft';grey:state == 'done';red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
-                    <field name="name"/>
-                    <field name="partner_id" string="Supplier"/>
-                    <field name="backorder_id"/>
-                    <field name="origin"/>
-                    <field name="date"/>
-                    <field name="min_date"/>
-                    <field name="stock_journal_id" widget="selection"/>
-                    <field name="state"/>
-                </tree>
-            </field>
-        </record>
-        <record id="view_picking_in_form" model="ir.ui.view">
-            <field name="name">stock.picking.in.form</field>
-            <field name="model">stock.picking.in</field>
-            <field name="inherit_id" ref="view_picking_form"/>
-            <field name="arch" type="xml">
-                <field name="date_done" position="attributes" version="7.0">
-                    <attribute name="string">Date of Reception</attribute>
-                </field>
-                <xpath expr="/form/header//button[@name='%(act_stock_return_picking)d']" position="replace">
-                    <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action"/>
-                </xpath>
-                <xpath expr="//button[@name='draft_validate']" position="replace">
-                    <button name="draft_validate" states="draft" string="Confirm &amp; Receive" type="object" class="oe_highlight"/>
-                </xpath>
-                <xpath expr="//button[@name='do_partial']" position="replace">
-                    <button name="do_partial" states="assigned" string="Receive" type="object" class="oe_highlight"/>
-                </xpath>
-                <xpath expr="//field[@name='move_lines']" position="replace">
-                    <field name="move_lines" context="{'address_in_id': partner_id, 'picking_type': 'in', 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree'}"/>
-                </xpath>
-                <xpath expr="/form/sheet" position="after">
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="message_ids" widget="mail_thread"/>
-                    </div>
-                </xpath>
-            </field>
-        </record>
-        <record id="view_picking_in_search" model="ir.ui.view">
-            <field name="name">stock.picking.in.search</field>
-            <field name="model">stock.picking.in</field>
-            <field name="arch" type="xml">
-                <search string="Incoming Shipments">
-                    <field name="name" string="Incoming Shipments" filter_domain="['|',('name','ilike',self),('origin','ilike',self)]"/>
-                    <filter icon="terp-check" name="available" string="Ready to Process" domain="[('state','=','assigned')]" help="Incoming Shipments Available"/>
-                    <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Incoming Shipments already processed"/>
-                    <separator/>
-                    <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order"/>
-                    <separator/>
-                    <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
-                    <field name="stock_journal_id"/>
-                    <field name="product_id"/>
-                    <group expand="0" string="Group By...">
-                        <filter icon="terp-stock_effects-object-colorize" name="state" string="Status" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Order Date" icon="terp-go-month" domain="[]"  context="{'group_by':'date'}"/>
-                        <filter string="Expected Date" icon="terp-go-month" domain="[]"  context="{'group_by':'min_date'}"/>
-                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'stock_journal_id'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
 
 
-        <record id="action_picking_tree4" model="ir.actions.act_window">
-            <field name="name">Incoming Shipments</field>
-            <field name="res_model">stock.picking.in</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
-            <field name="domain">[('type','=','in')]</field>
-            <field name="context">{'contact_display': 'partner_address', 'default_type': 'in'}</field>
-            <field name="search_view_id" ref="view_picking_in_search"/>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create an incoming shipment. 
-              </p><p>
-                The Incoming Shipments is the list of all orders you will
-                receive from your suppliers. An incoming shipment contains a
-                list of products to be received according to the original
-                purchase order.
-              </p>
-            </field>
-        </record>
-        <record id="action_invoice_tree5_view1" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_picking_in_tree"/>
-            <field name="act_window_id" ref="action_picking_tree4"/>
-        </record>
-        <record id="action_invoice_tree5_view2" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_picking_in_form"/>
-            <field name="act_window_id" ref="action_picking_tree4"/>
-        </record>
-        <record id="action_invoice_tree5_view2_cal" model="ir.actions.act_window.view">
-            <field eval="3" name="sequence"/>
-            <field name="view_mode">calendar</field>
-            <field name="view_id" ref="stock_picking_in_calendar"/>
-            <field name="act_window_id" ref="action_picking_tree4"/>
-        </record>
-        <menuitem action="action_picking_tree4" id="menu_action_picking_tree4" parent="menu_stock_warehouse_mgmt" sequence="1"/>
+        <menuitem action="action_picking_tree" id="menu_action_picking_tree" parent="menu_stock_warehouse_mgmt" sequence="0"/>
 
-        <menuitem action="action_picking_tree6" id="menu_action_picking_tree6" parent="menu_stock_warehouse_mgmt" sequence="2" groups="stock.group_locations"/>
 
         <record id="view_move_tree" model="ir.ui.view">
             <field name="name">stock.move.tree</field>
@@ -965,7 +717,7 @@
                     <field name="name"/>
                     <field name="picking_id" string="Reference"/>
                     <field name="origin"/>
-                    <field name="type" on_change="onchange_move_type(type)"/>
+                    <field name="picking_type_id" on_change="onchange_move_type(picking_type_id)"/>
                     <field name="create_date" invisible="1" groups="base.group_no_one"/>
                     <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, False)"/>
                     <field name="product_uom_qty" on_change="onchange_quantity(product_id, product_uom_qty, product_uom, product_uos)"/>
@@ -1053,8 +805,8 @@
                         </group>
                         <group name="origin_grp" string="Origin">
                             <field name="origin"/>
-                            <field name="picking_id" domain="[('type','=',type)]"/>
-                             <field name="type" on_change="onchange_move_type(type)"/>
+                            <field name="picking_id" domain="[('picking_type_id','=',picking_type_id)]"/>
+                             <field name="picking_type_id" on_change="onchange_move_type(picking_type_id)"/>
                             <field name="location_id" groups="stock.group_locations"/>
                             <field name="create_date" groups="base.group_no_one"/>
                         </group>
@@ -1087,7 +839,7 @@
                     <group>
                         <field name="name" invisible="1"/>
                         <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.partner_id)"/>
-                        <field name="type" invisible="1"/>
+                        <field name="picking_type_id" invisible="1"/>
                         <field name="procure_method"/>
                         <label for="product_uom_qty"/>
                         <div>
@@ -1251,9 +1003,9 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">['|','&amp;',('picking_id','=',False),('location_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','in')]</field>
+            <field name="domain">['|','&amp;',('picking_id','=',False),('location_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False)]</field>
             <field name="view_id" ref="view_move_tree_reception_picking"/>
-            <field name="context">{'product_receive': True, 'search_default_future': True, 'picking_type': 'in'}</field>
+            <field name="context">{'product_receive': True, 'search_default_future': True}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to register a product reception. 
@@ -1337,33 +1089,8 @@
             <field name="name">Open Products</field>
             <field eval="'ir.actions.act_window,%d'%action_view_stock_location_product" name="value"/>
         </record>
-        <record id="action_picking_tree_out" model="ir.actions.act_window">
-            <field name="name">Customers Packings</field>
-            <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,calendar</field>
-            <field name="domain">[('type','=','out')]</field>
-            <field name="context">{'default_type': 'out', 'contact_display': 'partner',"search_default_available":1}</field>
-            <field name="search_view_id" ref="view_picking_in_search"/>
-        </record>
-        <record id="action_invoice_tree5_out" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_picking_in_tree"/>
-            <field name="act_window_id" ref="action_picking_tree_out"/>
-        </record>
-        <record id="action_invoice_tree5_view2_out" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_picking_in_form"/>
-            <field name="act_window_id" ref="action_picking_tree_out"/>
-        </record>
-        <record id="action_invoice_tree5_viewout_cal" model="ir.actions.act_window.view">
-            <field eval="3" name="sequence"/>
-            <field name="view_mode">calendar</field>
-            <field name="act_window_id" ref="action_picking_tree_out"/>
-        </record>
+
+
 
         <record id="action_out_picking_move" model="ir.actions.act_window">
             <field name="name">Deliver Products</field>
@@ -1586,6 +1313,7 @@
                     <field name="location_src_id"/>
                     <field name="location_id"/>
                     <field name="action"/>
+                    <field name="picking_type_id"/>
                 </tree>
             </field>
         </record>

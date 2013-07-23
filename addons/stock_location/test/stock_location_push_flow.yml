@@ -75,8 +75,8 @@
   !python {model: stock.picking }: |
     self.draft_force_assign(cr, uid, [ref("stock_picking_in0")], {"lang": "en_US",
       "search_default_available": 1, "tz": False, "active_model": "ir.ui.menu",
-      "contact_display": "partner_address", "active_ids": [ref("stock.menu_action_picking_tree4")],
-      "active_id": ref("stock.menu_action_picking_tree4"), })
+      "contact_display": "partner_address", "active_ids": [ref("stock.menu_action_picking_tree")],
+      "active_id": ref("stock.menu_action_picking_tree"), })
 -
   I check that the outgoing order of the supplier  is create with two move line.
   Stock/Input To Quality test and Quality test  To Stock.

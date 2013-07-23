@@ -440,7 +440,7 @@ class stock_picking(osv.osv):
         'name': fields.char('Reference', size=64, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'origin': fields.char('Source Document', size=64, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Reference of the document", select=True),
         'backorder_id': fields.many2one('stock.picking', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
-        'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], 'Shipping Type', required=True, select=True, help="Shipping type specify, goods coming in or going out."),
+        #'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], 'Shipping Type', required=True, select=True, help="Shipping type specify, goods coming in or going out."),
         'note': fields.text('Notes', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'stock_journal_id': fields.many2one('stock.journal','Stock Journal', select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'move_type': fields.selection([('direct', 'Partial'), ('one', 'All at once')], 'Delivery Method', required=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="It specifies goods to be deliver partially or all at once"),
@@ -470,13 +470,13 @@ class stock_picking(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'pack_operation_ids': fields.one2many('stock.pack.operation', 'picking_id', string='Related Packing Operations'), 
-        'picking_type_id': fields.many2one('stock.picking.type', string="Picking Type"), 
-
+         
         # Used to search a product on pickings
         'product_id': fields.related('move_lines', 'product_id', type='many2one', relation='product.product', string='Product'),
         'location_id': fields.related('move_lines', 'location_id', type='many2one', relation='stock.location', string='Location'),
         'location_dest_id': fields.related('move_lines', 'location_dest_id', type='many2one', relation='stock.location', string='Destination Location'),
-        'group_id': fields.related('move_lines', 'group_id', type='many2one', relation='procurement.group', string='Procurement Group'), 
+        'group_id': fields.related('move_lines', 'group_id', type='many2one', relation='procurement.group', string='Procurement Group'),
+        'picking_type_id': fields.related('move_lines', 'picking_type_id', type='many2one', relation='stock.picking.type', string="Picking Type"),
     }
     _defaults = {
         'name': lambda self, cr, uid, context: '/',
@@ -484,7 +484,6 @@ class stock_picking(osv.osv):
         'partner_id': lambda self, cr, uid, context: self.pool.get('stock.move')._default_destination_address(cr, uid, context=context),
         'state': 'draft',
         'move_type': 'direct',
-        'type': 'internal',
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c)
     }
@@ -504,14 +503,6 @@ class stock_picking(osv.osv):
             default['backorder_id'] = False
         return super(stock_picking, self).copy(cr, uid, id, default, context)
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
-        if view_type == 'form' and not view_id:
-            mod_obj = self.pool.get('ir.model.data')
-            if self._name == "stock.picking.in":
-                model, view_id = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_in_form')
-            if self._name == "stock.picking.out":
-                model, view_id = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_out_form')
-        return super(stock_picking, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
 
     def action_confirm(self, cr, uid, ids, context=None):
         """ Confirms picking.
@@ -760,18 +751,14 @@ class stock_picking(osv.osv):
             self.make_packaging(cr, uid, picking.id, todo_move_ids, context=context)
 
     # views associated to each picking type
-    _VIEW_LIST = {
-        'out': 'view_picking_out_form',
-        'in': 'view_picking_in_form',
-        'internal': 'view_picking_form',
-    }
     def _get_view_id(self, cr, uid, type):
         """Get the view id suiting the given type
 
         @param type: the picking type as a string
         @return: view i, or False if no view found
         """
-        res = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', self._VIEW_LIST.get(type, 'view_picking_form'))      
+        res = self.pool.get('ir.model.data').get_object_reference(cr, uid, 
+            'stock', 'view_picking_form')
         return res and res[1] or False
 
     def _get_picking_for_packing_ui(self, cr, uid, context=None):
@@ -1014,8 +1001,9 @@ class stock_move(osv.osv):
 
         # used for colors in tree views:
         'scrapped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scrapped', readonly=True),
-        'type': fields.related('picking_id', 'type', type='selection', selection=[('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], string='Shipping Type'),
-        'quant_ids': fields.many2many('stock.quant', 'stock_quant_move_rel', 'move_id', 'quant_id', 'Quants'),
+        'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', help="The picking type will be used for composing the views and reports the related picking", required=True), 
+        #'type': fields.related('picking_id', 'type', type='selection', selection=[('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], string='Shipping Type'),
+        'quant_ids': fields.many2many('stock.quant',  'stock_quant_move_rel', 'move_id', 'quant_id', 'Quants'),
         'reserved_quant_ids': fields.one2many('stock.quant', 'reservation_id', 'Reserved quants'),
         'remaining_qty': fields.function(_get_remaining_qty, type='float', string='Remaining Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), states={'done': [('readonly', True)]}),
         'group_id': fields.many2one('procurement.group', 'Procurement Group'),
@@ -1126,7 +1114,7 @@ class stock_move(osv.osv):
         'location_id': _default_location_source,
         'location_dest_id': _default_location_destination,
         'partner_id': _default_destination_address,
-        'type': _default_move_type,
+#         'picking_type_id': lambda self, cr, uid, c: self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'picking_type_internal')[1], 
         'state': 'draft',
         'priority': '1',
         'product_qty': 1.0,
@@ -1293,7 +1281,7 @@ class stock_move(osv.osv):
             result['location_dest_id'] = loc_dest_id
         return {'value': result}
 
-    def onchange_move_type(self, cr, uid, ids, type, context=None):
+    def onchange_move_type(self, cr, uid, ids, picking_type_id, context=None):
         """ On change of move type gives sorce and destination location.
         @param type: Move Type
         @return: Dictionary of values
@@ -1301,6 +1289,7 @@ class stock_move(osv.osv):
         mod_obj = self.pool.get('ir.model.data')
         location_source_id = 'stock_location_stock'
         location_dest_id = 'stock_location_stock'
+        type="internal"
         if type == 'in':
             location_source_id = 'stock_location_suppliers'
             location_dest_id = 'stock_location_stock'
@@ -1337,7 +1326,7 @@ class stock_move(osv.osv):
                 original_picking = pick_obj.browse(cr, uid, context.get('backorder_of'), context=context)
                 new_picking_name = original_picking.name
                 #TODO back_order_name is False currently => find why
-                back_order_name = sequence_obj.get(cr, uid, 'stock.picking.%s' % (original_picking.type))
+                back_order_name = sequence_obj.get(cr, uid, 'stock.picking') #TODO: Need to have sequence for every picking type
                 pick_obj.write(cr, uid, [original_picking.id], {'name': back_order_name})
                 pick = pick_obj.copy(cr, uid, original_picking.id, {'name': new_picking_name,
                                                     'move_lines': [],
@@ -1350,7 +1339,7 @@ class stock_move(osv.osv):
                 #a backorder picking doesn't exist yet, create a new one
                 values = {'origin': move.origin,
                           'company_id': move.company_id and move.company_id.id or False,
-                          'type': 'internal',
+#                           'type': 'internal',
                           'move_type': 'one',
                           'partner_id': move.partner_id and move.partner_id.id or False,
                           #'invoice_state': move.invoice_state
@@ -1872,7 +1861,8 @@ class stock_inventory(osv.osv):
                         'product_id': line.product_id.id,
                         'product_uom': line.product_uom.id,
                         'date': inv.date,
-                        'company_id': line.location_id.company_id.id
+                        'company_id': line.location_id.company_id.id, 
+                        'picking_type_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'picking_type_inventory')[1], 
                     }
 
                     if change > 0:
@@ -1975,95 +1965,6 @@ class stock_warehouse(osv.osv):
         'lot_input_id': _default_lot_input_stock_id,
         'lot_stock_id': _default_lot_input_stock_id,
         'lot_output_id': _default_lot_output_id,
-    }
-
-
-#----------------------------------------------------------
-# "Empty" Classes that are used to vary from the original stock.picking  (that are dedicated to the internal pickings)
-#   in order to offer a different usability with different views, labels, available reports/wizards.. 
-# --> TO BE REPLACED by stock_picking_type
-#----------------------------------------------------------
-
-class stock_picking_in(osv.osv):
-    _name = "stock.picking.in"
-    _inherit = "stock.picking"
-    _table = "stock_picking"
-    _description = "Incoming Shipments"
-
-#     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
-#         return self.pool.get('stock.picking').search(cr, user, args, offset, limit, order, context, count)
-# 
-#     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
-#         return self.pool.get('stock.picking').read(cr, uid, ids, fields=fields, context=context, load=load)
-
-    def check_access_rights(self, cr, uid, operation, raise_exception=True):
-        #override in order to redirect the check of acces rights on the stock.picking object
-        return self.pool.get('stock.picking').check_access_rights(cr, uid, operation, raise_exception=raise_exception)
-
-    def check_access_rule(self, cr, uid, ids, operation, context=None):
-        #override in order to redirect the check of acces rules on the stock.picking object
-        return self.pool.get('stock.picking').check_access_rule(cr, uid, ids, operation, context=context)
-
-    _columns = {
-        'backorder_id': fields.many2one('stock.picking.in', 'Back Order of', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
-        'state': fields.selection(
-            [('draft', 'Draft'),
-            ('auto', 'Waiting Another Operation'),
-            ('confirmed', 'Waiting Availability'),
-            ('assigned', 'Ready to Receive'),
-            ('done', 'Received'),
-            ('cancel', 'Cancelled')],
-            'Status', readonly=True, select=True,
-            help="""* Draft: not confirmed yet and will not be scheduled until confirmed\n
-                 * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n
-                 * Waiting Availability: still waiting for the availability of products\n
-                 * Ready to Receive: products reserved, simply waiting for confirmation.\n
-                 * Received: has been processed, can't be modified or cancelled anymore\n
-                 * Cancelled: has been cancelled, can't be confirmed anymore"""),
-    }
-    _defaults = {
-        'type': 'in',
-    }
-
-class stock_picking_out(osv.osv):
-    _name = "stock.picking.out"
-    _inherit = "stock.picking"
-    _table = "stock_picking"
-    _description = "Delivery Orders"
-
-#     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
-#         return self.pool.get('stock.picking').search(cr, user, args, offset, limit, order, context, count)
-# 
-#     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
-#         return self.pool.get('stock.picking').read(cr, uid, ids, fields=fields, context=context, load=load)
-
-    def check_access_rights(self, cr, uid, operation, raise_exception=True):
-        #override in order to redirect the check of acces rights on the stock.picking object
-        return self.pool.get('stock.picking').check_access_rights(cr, uid, operation, raise_exception=raise_exception)
-
-    def check_access_rule(self, cr, uid, ids, operation, context=None):
-        #override in order to redirect the check of acces rules on the stock.picking object
-        return self.pool.get('stock.picking').check_access_rule(cr, uid, ids, operation, context=context)
-
-    _columns = {
-        'backorder_id': fields.many2one('stock.picking.out', 'Back Order of', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
-        'state': fields.selection(
-            [('draft', 'Draft'),
-            ('auto', 'Waiting Another Operation'),
-            ('confirmed', 'Waiting Availability'),
-            ('assigned', 'Ready to Deliver'),
-            ('done', 'Delivered'),
-            ('cancel', 'Cancelled')],
-            'Status', readonly=True, select=True,
-            help="""* Draft: not confirmed yet and will not be scheduled until confirmed\n
-                 * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n
-                 * Waiting Availability: still waiting for the availability of products\n
-                 * Ready to Deliver: products reserved, simply waiting for confirmation.\n
-                 * Delivered: has been processed, can't be modified or cancelled anymore\n
-                 * Cancelled: has been cancelled, can't be confirmed anymore"""),
-    }
-    _defaults = {
-        'type': 'out',
     }
 
 
@@ -2410,7 +2311,8 @@ class stock_picking_type(osv.osv):
     _columns = {
         'name': fields.char('name', size=30), 
         'pack': fields.boolean('Pack', 'This picking type needs packing interface'), 
-        'print_delivery': fields.boolean('Print delivery'), 
+        'delivery': fields.boolean('Print delivery'),
+        
             }
 
 

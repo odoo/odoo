@@ -899,6 +899,7 @@ class mrp_production(osv.osv):
             'move_dest_id': production.move_prod_id.id,
             'state': 'waiting',
             'company_id': production.company_id.id,
+            'picking_type_id': self.pool.get("ir.model.data").get_object_reference(cr, uid, 'stock', 'picking_type_internal')[1], 
         }
         move_id = stock_move.create(cr, uid, data, context=context)
         production.write({'move_created_ids': [(6, 0, [move_id])]}, context=context)
@@ -928,6 +929,7 @@ class mrp_production(osv.osv):
             'state': 'waiting',
             'company_id': production.company_id.id,
             'procure_method': 'make_to_order',
+            'picking_type_id': self.pool.get("ir.model.data").get_object_reference(cr, uid, 'stock', 'picking_type_internal')[1],
         })
         production.write({'move_lines': [(4, move_id)]}, context=context)
         return move_id

@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+        <!-- Picking type dropship-->
+        <record id="picking_type_dropship" model="stock.picking.type">
+            <field name="name">dropship</field>
+        </record>
         <!-- Drop Shipping-->
         <record id="route_drop_shipping" model='stock.location.route'>
             <field name="name">Drop Shipping</field>
@@ -15,6 +19,7 @@
             <field name="location_src_id" ref="stock.stock_location_suppliers"/>
             <field name="procure_method">make_to_stock</field>
             <field name="route_id" ref="route_drop_shipping"/>
+            <field name="picking_type_id" ref="picking_type_dropship"/>
         </record>
 
 
@@ -25,6 +30,7 @@
             <field name="location_id" ref="stock.stock_location_output"/>
             <field name="location_src_id" ref="stock.stock_location_suppliers"/>
             <field name="route_id" ref="stock_location.route_warehouse0_crossdock"/>
+            <field name="picking_type_id" ref="stock.picking_type_in"/>
         </record>
     </data>
 </openerp>

@@ -63,7 +63,7 @@ class sale_order(osv.osv):
             #TODO: not better to use picking
             pickingstates = []
             for pick in sale.picking_ids:
-                pickingstates += [x.state not in ['cancel', 'done'] for x in pick.move_lines]
+                pickingstates += [x.state not in ['cancel', 'done'] for x in pick.move_lines if x]
             if any(pickingstates):
                 res[sale.id] = False
         return res
@@ -175,7 +175,7 @@ class sale_order(osv.osv):
         if len(pick_ids) > 1:
             result['domain'] = "[('id','in',["+','.join(map(str, pick_ids))+"])]"
         else:
-            res = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_out_form')
+            res = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_form')
             result['views'] = [(res and res[1] or False, 'form')]
             result['res_id'] = pick_ids and pick_ids[0] or False
         return result
