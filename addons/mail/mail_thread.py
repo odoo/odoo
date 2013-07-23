@@ -157,18 +157,17 @@ class mail_thread(osv.AbstractModel):
         return res
 
     def read_followers_data(self, cr, uid, follower_ids, context=None):
-        datas = []
+        result = []
         technical_group = self.pool.get('ir.model.data').get_object(cr, uid, 'base', 'group_no_one')
         for follower in self.pool.get('res.partner').browse(cr, uid, follower_ids, context=context):
-            is_editable = uid in map(lambda x:x.id, technical_group.users)
-            is_uid = uid in map(lambda x:x.id, follower.user_ids)
-            data = (
-                     follower.id,
-                     follower.name,
-                     {'is_editable': is_editable, 'is_uid': is_uid},
-            )
-            datas.append(data)
-        return datas
+            is_editable = uid in map(lambda x: x.id, technical_group.users)
+            is_uid = uid in map(lambda x: x.id, follower.user_ids)
+            data = (follower.id,
+                    follower.name,
+                    {'is_editable': is_editable, 'is_uid': is_uid},
+                    )
+            result.append(data)
+        return result
 
     def _get_subscription_data(self, cr, uid, ids, name, args, user_pid=None, context=None):
         """ Computes:

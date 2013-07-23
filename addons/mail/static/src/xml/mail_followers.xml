@@ -29,10 +29,10 @@
         Template used to display a partner following the record
         -->
     <div t-name="mail.followers.partner" class='oe_partner'>
-        <img class="oe_mail_thumbnail oe_mail_frame" t-attf-src="{record[2].avatar_url}"/>
-        <a t-attf-href="#model=res.partner&amp;id=#{record[0]}" t-att-title="record[1]"><t t-esc="record[1]"/></a>
-        <img t-if="record[2].is_editable and (widget.records_length &gt; 1)" class="oe_edit_subtype hidden" t-att-src='_s + "/mail/static/src/img/icon-edit.gif"' title="Edit Subtype" t-att-data-id="record[0]"/>
-        <span t-if="widget.view_is_editable" class="oe_remove_follower oe_e" title="Remove this follower" t-att-data-id="record[0]">X</span>
+        <img class="oe_mail_thumbnail oe_mail_frame" t-attf-src="{record.avatar_url}"/>
+        <a t-attf-href="#model=res.partner&amp;id=#{record.id}" t-att-title="record.name"><t t-esc="record.name"/></a>
+        <span t-if="record.is_editable and (widget.records_length &gt; 1)" class="oe_edit_subtype oe_e oe_hidden" title="Edit subscription" t-att-data-id="record.id">&amp;</span>
+        <span t-if="widget.view_is_editable" class="oe_remove_follower oe_e" title="Remove this follower" t-att-data-id="record.id">X</span>
     </div>
     
     <!--
@@ -42,8 +42,8 @@
     <t t-name="mail.followers.subtype">
         <table class='oe_subtype'>
             <tr>
-                <td width="10%"><input type="checkbox" t-att-checked="record.followed" t-att-id="'input_mail_followers_subtype_'+mode+record.id" t-att-data-id="record.id" t-att-name="record.name"  class="oe_msg_subtype_check"/></td>
-                <td><label t-att-for="'input_mail_followers_subtype_'+mode+record.id"><t t-raw="record.name"/></label></td>
+                <td width="10%"><input type="checkbox" t-att-checked="record.followed" t-att-id="'input_mail_followers_subtype_'+record.id" t-att-data-id="record.id" t-att-name="record.name"  class="oe_msg_subtype_check"/></td>
+                <td><label t-att-for="'input_mail_followers_subtype_'+record.id"><t t-raw="record.name"/></label></td>
             </tr>
         </table>
     </t>
