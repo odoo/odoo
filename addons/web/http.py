@@ -998,8 +998,8 @@ class Root(object):
                                         url = url[: -1]
                                 routing_map.add(routing.Rule(url, endpoint=function))
 
-        modules_set = set(controllers_per_module.keys())
-        modules_set -= set("web")
+        modules_set = set(controllers_per_module)
+        modules_set.discard('web')
         # building all none methods
         gen(["web"] + sorted(modules_set), True)
         if not db:
