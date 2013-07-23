@@ -156,12 +156,26 @@ class mail_thread(osv.AbstractModel):
                 res[id]['message_summary'] = "<span class='oe_kanban_mail_new' title='%s'><span class='oe_e'>9</span> %d %s</span>" % (title, res[id].pop('message_unread_count'), _("New"))
         return res
 
-    def _get_subscription_data(self, cr, uid, ids, name, args, context=None):
+    def read_followers_data(self, cr, uid, follower_ids, context=None):
+        result = []
+        technical_group = self.pool.get('ir.model.data').get_object(cr, uid, 'base', 'group_no_one')
+        for follower in self.pool.get('res.partner').browse(cr, uid, follower_ids, context=context):
+            is_editable = uid in map(lambda x: x.id, technical_group.users)
+            is_uid = uid in map(lambda x: x.id, follower.user_ids)
+            data = (follower.id,
+                    follower.name,
+                    {'is_editable': is_editable, 'is_uid': is_uid},
+                    )
+            result.append(data)
+        return result
+
+    def _get_subscription_data(self, cr, uid, ids, name, args, user_pid=None, context=None):
         """ Computes:
             - message_subtype_data: data about document subtypes: which are
                 available, which are followed if any """
         res = dict((id, dict(message_subtype_data='')) for id in ids)
-        user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+        if user_pid is None:
+            user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
 
         # find current model subtypes, add them to a dictionary
         subtype_obj = self.pool.get('mail.message.subtype')
@@ -1401,9 +1415,9 @@ class mail_thread(osv.AbstractModel):
     # Followers API
     #------------------------------------------------------
 
-    def message_get_subscription_data(self, cr, uid, ids, context=None):
+    def message_get_subscription_data(self, cr, uid, ids, user_pid=None, context=None):
         """ Wrapper to get subtypes data. """
-        return self._get_subscription_data(cr, uid, ids, None, None, context=context)
+        return self._get_subscription_data(cr, uid, ids, None, None, user_pid=user_pid, context=context)
 
     def message_subscribe_users(self, cr, uid, ids, user_ids=None, subtype_ids=None, context=None):
         """ Wrapper on message_subscribe, using users. If user_ids is not
