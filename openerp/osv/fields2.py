@@ -55,7 +55,7 @@ class Field(object):
     interface = False           # whether the field is created by the ORM
 
     name = None                 # name of the field
-    model = None                # name of the model of this field
+    model_name = None           # name of the model of this field
     type = None                 # type of the field (string)
     relational = False          # whether the field is a relational one
 
@@ -90,12 +90,20 @@ class Field(object):
                 field.__dict__.pop(attr, None)
         return field
 
-    def set_model_name(self, model, name):
+    def set_model_name(self, model_name, name):
         """ assign the model and field names of `self` """
-        self.model = model
+        self.model_name = model_name
         self.name = name
         if not self.string:
             self.string = name.replace('_', ' ').capitalize()
+
+    def __str__(self):
+        return "%s.%s" % (self.model_name, self.name)
+
+    @lazy_property
+    def model(self):
+        """ return the model instance of `self` """
+        return scope.model(self.model_name)
 
     def get_description(self):
         """ Return a dictionary that describes the field `self`. """
@@ -139,12 +147,12 @@ class Field(object):
         """ read the value of field `self` for the record `instance` """
         if instance is None:
             return self         # the field is accessed through the class owner
-        assert instance._name == self.model
+        assert instance._name == self.model_name
         return instance._get_field(self.name)
 
     def __set__(self, instance, value):
         """ set the value of field `self` for the record `instance` """
-        assert instance._name == self.model
+        assert instance._name == self.model_name
         # adapt value to the cache level (must be in record's scope!)
         with instance._scope:
             value = self.convert_value(value)
@@ -340,9 +348,9 @@ class Selection(Field):
         """ return the selection list (pairs (value, string)) """
         value = self.selection
         if isinstance(value, basestring):
-            value = getattr(scope.model(self.model), value)()
+            value = getattr(self.model, value)()
         elif callable(value):
-            value = _invoke_model(value, scope.model(self.model))
+            value = _invoke_model(value, self.model)
         return value
 
     def get_values(self):
@@ -354,7 +362,7 @@ class Selection(Field):
             return False
         if value in self.get_values():
             return value
-        raise ValueError("Wrong value for %s.%s: %r" % (self.model, self.name, value))
+        raise ValueError("Wrong value for %s: %r" % (self, value))
 
     def convert_to_export(self, value):
         if not isinstance(self.selection, list):
@@ -387,7 +395,7 @@ class Reference(Selection):
             return False
         if isinstance(value, BaseModel) and value._name in self.get_values() and len(value) == 1:
             return value.scoped()
-        raise ValueError("Wrong value for %s.%s: %r" % (self.model, self.name, value))
+        raise ValueError("Wrong value for %s: %r" % (self, value))
 
     def convert_from_read(self, value):
         if value:
@@ -402,69 +410,75 @@ class Reference(Selection):
         return bool(value) and value.name_get()[0][1]
 
 
-class Many2one(Field):
+class _Relational(Field):
+    """ Abstract class for relational fields. """
+    relational = True
+    comodel_name = None                 # name of model of values
+    inverse_field = None                # inverse field (object), if it exists
+    domain = None                       # domain for searching values
+    context = None                      # context for searching values
+
+    @lazy_property
+    def comodel(self):
+        """ return the comodel instance of `self` """
+        return scope.model(self.comodel_name)
+
+    def get_description(self):
+        desc = super(_Relational, self).get_description()
+        desc['relation'] = self.comodel_name
+        desc['domain'] = self.domain(self.model) if callable(self.domain) else self.domain
+        desc['context'] = self.context
+        return desc
+
+    def null(self):
+        return self.comodel.browse()
+
+
+class Many2one(_Relational):
     """ Many2one field. """
     type = 'many2one'
-    relational = True
-    comodel = None                      # model of values
     ondelete = None                     # defaults to 'set null' in ORM
-    domain = None
-    context = None
 
     _attrs = Field._attrs + ('ondelete',)
 
-    def __init__(self, comodel, string=None, **kwargs):
-        super(Many2one, self).__init__(comodel=comodel, string=string, **kwargs)
+    def __init__(self, comodel_name, string=None, **kwargs):
+        super(Many2one, self).__init__(comodel_name=comodel_name, string=string, **kwargs)
 
     @lazy_property
-    def inverse(self):
-        # retrieve the name of the inverse field, if it exists
-        comodel = scope.model(self.comodel)
-        for field in comodel._fields.itervalues():
-            if isinstance(field, One2many) and \
-                    field.comodel == self.model and field.inverse == self.name:
-                return field.name
+    def inverse_field(self):
+        for field in self.comodel._fields.itervalues():
+            if isinstance(field, One2many) and field.inverse_field == self:
+                return field
         return None
 
     @lazy_property
     def inherits(self):
         """ Whether `self` implements inheritance between model and comodel. """
-        model = scope.model(self.model)
-        return self.name in model._inherits.itervalues()
-
-    def get_description(self):
-        desc = super(Many2one, self).get_description()
-        desc['relation'] = self.comodel
-        desc['domain'] = self.domain(model) if callable(self.domain) else self.domain
-        desc['context'] = self.context
-        return desc
+        return self.name in self.model._inherits.itervalues()
 
     @classmethod
     def _from_column(cls, column):
         kwargs = dict((attr, getattr(column, attr)) for attr in cls._attrs)
-        kwargs['comodel'] = column._obj
+        kwargs['comodel_name'] = column._obj
         return cls(**kwargs)
 
     def _to_column(self):
         kwargs = super(Many2one, self)._to_column()
-        kwargs['obj'] = self.comodel
+        kwargs['obj'] = self.comodel_name
         kwargs['domain'] = self.domain or []
         return kwargs
-
-    def null(self):
-        return scope.model(self.comodel).browse()
 
     def convert_value(self, value):
         if value is None or value is False:
             return self.null()
-        if isinstance(value, BaseModel) and value._name == self.comodel and len(value) <= 1:
+        if isinstance(value, BaseModel) and value._name == self.comodel_name and len(value) <= 1:
             return value.scoped()
-        raise ValueError("Wrong value for %s.%s: %r" % (self.model, self.name, value))
+        raise ValueError("Wrong value for %s: %r" % (self, value))
 
     def convert_from_read(self, value):
         if isinstance(value, tuple):
             value = value[0]
-        return scope.model(self.comodel).browse(value)
+        return self.comodel.browse(value)
 
     def convert_to_read(self, value):
         return bool(value) and value.name_get()[0]
@@ -472,12 +486,11 @@ class Many2one(Field):
     def convert_from_write(self, value):
         if isinstance(value, dict):
             # convert values to the cache level
-            model = scope.model(self.comodel)
-            return model.draft(dict(
-                (k, model._fields[k].convert_from_write(v))
+            return self.comodel.draft(dict(
+                (k, self.comodel._fields[k].convert_from_write(v))
                 for k, v in value.iteritems()
             ))
-        return scope.model(self.comodel).browse(value)
+        return self.comodel.browse(value)
 
     def convert_to_write(self, value):
         if value.is_draft():
@@ -494,48 +507,33 @@ class Many2one(Field):
             value = record[self.name]
             if not value:
                 # the default value cannot be null, use a draft record instead
-                record[self.name] = scope.model(self.comodel).draft()
+                record[self.name] = self.comodel.draft()
 
 
-class _Relation2many(Field):
+class _RelationalMulti(_Relational):
     """ Abstract class for relational fields *2many. """
-    relational = True
-    comodel = None                      # model of values
-    domain = None
-    context = None
-
-    def get_description(self):
-        desc = super(_Relation2many, self).get_description()
-        desc['relation'] = self.comodel
-        desc['domain'] = self.domain(model) if callable(self.domain) else self.domain
-        desc['context'] = self.context
-        return desc
-
-    def null(self):
-        return scope.model(self.comodel).browse()
 
     def convert_value(self, value):
         if value is None or value is False:
             return self.null()
-        if isinstance(value, BaseModel) and value._name == self.comodel:
+        if isinstance(value, BaseModel) and value._name == self.comodel_name:
             return value.scoped()
-        raise ValueError("Wrong value for %s.%s: %s" % (self.model, self.name, value))
+        raise ValueError("Wrong value for %s: %s" % (self, value))
 
     def convert_from_read(self, value):
-        return scope.model(self.comodel).browse(value or ())
+        return self.comodel.browse(value or ())
 
     def convert_to_read(self, value):
         return value.unbrowse()
 
     def convert_from_write(self, value):
-        model = scope.model(self.comodel)
         ids = []
         for command in value:
             if isinstance(command, (int, long)):
                 ids.append(command)
             elif command[0] == 0:
-                record = model.draft(dict(
-                    (k, model._fields[k].convert_from_write(v))
+                record = self.comodel.draft(dict(
+                    (k, self.comodel._fields[k].convert_from_write(v))
                     for k, v in command[2].iteritems()
                 ))
                 ids.append(record.id)
@@ -551,7 +549,7 @@ class _Relation2many(Field):
                 ids = []
             elif command[0] == 6:
                 ids = list(command[2])
-        return model.browse(ids)
+        return self.comodel.browse(ids)
 
     def convert_to_write(self, value):
         result = [(5,)]
@@ -566,65 +564,67 @@ class _Relation2many(Field):
         return bool(value) and ','.join(name for id, name in value.name_get())
 
 
-class One2many(_Relation2many):
+class One2many(_RelationalMulti):
     """ One2many field. """
     type = 'one2many'
-    inverse = None                      # name of inverse field
+    inverse_name = None                 # name of the inverse field
 
-    def __init__(self, comodel, inverse=None, string=None, **kwargs):
+    def __init__(self, comodel_name, inverse_name=None, string=None, **kwargs):
         super(One2many, self).__init__(
-            comodel=comodel, inverse=inverse, string=string, **kwargs)
+            comodel_name=comodel_name, inverse_name=inverse_name, string=string, **kwargs)
+
+    @lazy_property
+    def inverse_field(self):
+        return self.inverse_name and self.comodel._fields[self.inverse_name]
 
     def get_description(self):
         desc = super(One2many, self).get_description()
-        desc['relation_field'] = self.inverse
+        desc['relation_field'] = self.inverse_name
         return desc
 
     @classmethod
     def _from_column(cls, column):
         kwargs = dict((attr, getattr(column, attr)) for attr in cls._attrs)
         # beware when getting parameters: column may be a function field
-        kwargs['comodel'] = column._obj
-        kwargs['inverse'] = getattr(column, '_fields_id', None)
+        kwargs['comodel_name'] = column._obj
+        kwargs['inverse_name'] = getattr(column, '_fields_id', None)
         return cls(**kwargs)
 
     def _to_column(self):
         kwargs = super(One2many, self)._to_column()
-        kwargs['obj'] = self.comodel
-        kwargs['fields_id'] = self.inverse
+        kwargs['obj'] = self.comodel_name
+        kwargs['fields_id'] = self.inverse_name
         kwargs['domain'] = self.domain or []
         return kwargs
 
 
-class Many2many(_Relation2many):
+class Many2many(_RelationalMulti):
     """ Many2many field. """
     type = 'many2many'
     relation = None                     # name of table
     column1 = None                      # column of table referring to model
     column2 = None                      # column of table referring to comodel
 
-    def __init__(self, comodel, relation=None, column1=None, column2=None,
+    def __init__(self, comodel_name, relation=None, column1=None, column2=None,
                 string=None, **kwargs):
-        super(Many2many, self).__init__(comodel=comodel, relation=relation,
+        super(Many2many, self).__init__(comodel_name=comodel_name, relation=relation,
             column1=column1, column2=column2, string=string, **kwargs)
 
     @lazy_property
-    def inverse(self):
+    def inverse_field(self):
         if not self.compute:
-            # retrieve the name of the inverse field, if it exists
-            comodel = scope.model(self.comodel)
             expected = (self.relation, self.column2, self.column1)
-            for field in comodel._fields.itervalues():
+            for field in self.comodel._fields.itervalues():
                 if isinstance(field, Many2many) and \
                         (field.relation, field.column1, field.column2) == expected:
-                    return field.name
+                    return field
         return None
 
     @classmethod
     def _from_column(cls, column):
         kwargs = dict((attr, getattr(column, attr)) for attr in cls._attrs)
         # beware when getting parameters: column may be a function field
-        kwargs['comodel'] = column._obj
+        kwargs['comodel_name'] = column._obj
         kwargs['relation'] = getattr(column, '_rel', None)
         kwargs['column1'] = getattr(column, '_id1', None)
         kwargs['column2'] = getattr(column, '_id2', None)
@@ -632,7 +632,7 @@ class Many2many(_Relation2many):
 
     def _to_column(self):
         kwargs = super(Many2many, self)._to_column()
-        kwargs['obj'] = self.comodel
+        kwargs['obj'] = self.comodel_name
         kwargs['rel'] = self.relation
         kwargs['id1'] = self.column1
         kwargs['id2'] = self.column2
@@ -653,7 +653,7 @@ class Related(Field):
     @lazy_property
     def related_field(self):
         """ determine the related field corresponding to `self` """
-        rec = scope.model(self.model)
+        rec = self.model
         for name in self.related[:-1]:
             rec = rec[name]
         return rec._fields[self.related[-1]]

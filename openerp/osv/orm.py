@@ -3240,10 +3240,10 @@ class BaseModel(object):
         def add_trigger(field, path, model, fname):
             """ add trigger on field model/fname to recompute field """
             path_str = '.'.join(path) if path else 'id'
-            model._recompute[fname].add((field.model, field.name, path_str))
+            model._recompute[fname].add((field.model_name, field.name, path_str))
             _logger.debug(
                 "Add trigger on field %s.%s to recompute field %s.%s",
-                model._name, fname, field.model, field.name)
+                model._name, fname, field.model_name, field.name)
 
         for fname, field in self._fields.iteritems():
             for dependency in field.depends:
@@ -3268,12 +3268,12 @@ class BaseModel(object):
                     # move on to the next model, if dep_field is relational
                     if not dep_field.relational:
                         break
-                    model = self.pool[dep_field.comodel]
+                    model = self.pool[dep_field.comodel_name]
                     path.append(dep)
 
                     # add a recompute trigger on dep's inverse field
-                    if dep_field.inverse:
-                        add_trigger(field, path, model, dep_field.inverse)
+                    if dep_field.inverse_field:
+                        add_trigger(field, path, model, dep_field.inverse_field.name)
 
                 assert not dep_stack
 
@@ -5578,8 +5578,8 @@ class BaseModel(object):
         for fname in fnames:
             spec.append((self._name, fname, ids))
             field = self._fields[fname]
-            if field.relational and field.inverse:
-                spec.append((field.comodel, field.inverse, None))
+            if field.relational and field.inverse_field:
+                spec.append((field.comodel_name, field.inverse_field.name, None))
 
         # invalidate the spec
         scope_proxy.invalidate_cache(spec)
