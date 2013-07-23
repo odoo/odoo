@@ -15,8 +15,8 @@ When defining a workflow, one can attach conditions, signals, and triggers to
 transitions, so that the behavior of the workflow can depend on user actions
 (such as clicking on a button), changes to records, or arbitrary Python code.
 
-XML definition
---------------
+Basics
+------
 
 Defining a workflow with data files is straightforward: a record "workflow" is
 needed together with records for the activities and the transitions. For
@@ -69,13 +69,52 @@ context`` arguments are passed for you).
 
 The transition between "a" and "b" does not specify any conditions. This means
 the workflow instance will immediately progress from "a" to "b" (after "a" has
-been processed), and thus elso process the "b" activity.
+been processed), and thus also process the "b" activity.
+
+Transitions
+-----------
+
+Transitions provide the control structures to orchestrate a workflow. In their
+simplest form they just link activities from one to the others (as in the
+example above), and activities are processed as soon as the activities
+preceding them are completed.
+
+But instead of running all activities in one fell swoop, it is also possible to
+block on transitions, going through them only when some criteria are met. Such
+criteria are the conditions, the signals, and the triggers. They are detailed
+in the next sections.
 
 Conditions
-----------
+''''''''''
+
+When an activity has been completed, its outgoing transitions will be inspected
+to see if it is possible for the workflow instance to proceed through them and
+reach the next activities. When only a condition is defined (i.e. no signal or
+trigger is defined), the condition is evaluated by OpenERP, and if it evaluates
+to ``True``, the worklfow instance will go through.
+
+By default, the ``condition`` attribute (i.e. the expression to be evaluated)
+is just "True", which will trivially evaluate to ``True``.
+
+Actually, the condition can be several lines long, and the value of the last
+one will be used to test if the transition can be taken.
+
+In the condition evaluation environment, several symbols are conveniently
+defined:
+
+- The  database cursor (``cr``),
+- the user ID (``uid``), the record ID tied to the workflow instance (``id``),
+- the user ID wrapped in a list (``ids``),
+- the model name (``model``),
+- the model instance (``obj``),
+- all the model column names,
+- and all the record (the one obtained by browsing the provided ID) attributes.
+
+Signals
+'''''''
 
 Triggers
---------
+''''''''
 
 When an activity is completed, the workflow engine will try to get across
 transitions departing from the completed activity, towards the next activities.
