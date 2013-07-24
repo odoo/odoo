@@ -198,17 +198,18 @@ class Ecommerce(http.Controller):
     def checkout(self, **post):
         cr, uid, partner_id = self.get_cr_uid()
         values = self.get_values()
+        order = values['order']
 
-        if values['order'].state != 'draft':
+        if order.state != 'draft':
             return self.confirmed(**post)
-        if not values['order'].order_line:
+        if not order.order_line:
             return self.mycart(**post)
 
         partner_obj = request.registry.get('res.partner')
         user_obj = request.registry.get('res.users')
         country_obj = request.registry.get('res.country')
         country_state_obj = request.registry.get('res.country.state')
-        obj_data = request.registry.get('ir.model.data')
+        payment_obj = request.registry.get('portal.payment.acquirer')
 
         values['partner'] = False
 
@@ -226,6 +227,12 @@ class Ecommerce(http.Controller):
         values['countries'] = country_obj.browse(cr, uid, country_obj.search(cr, uid, [(1, "=", 1)]))
         values['states'] = country_state_obj.browse(cr, uid, country_state_obj.search(cr, uid, [(1, "=", 1)]))
 
+        payment_ids = payment_obj.search(cr, uid, [('visible', '=', True)])
+        values['payments'] = payment_obj.browse(cr, uid, payment_ids)
+        for payment in values['payments']:
+            content = payment_obj.render(cr, uid, payment.id, order, order.name, order.pricelist_id.currency_id, order.amount_total)
+            payment._content = content
+
         return request.registry.get("ir.ui.view").render(cr, uid, "website_sale.checkout", values)
 
     @http.route(['/shop/confirm_order'], type='http', auth="admin")
@@ -234,7 +241,6 @@ class Ecommerce(http.Controller):
         values = self.get_values()
         json = {'error': [], 'validation': False}
         partner_obj = request.registry.get('res.partner')
-        obj_data = request.registry.get('ir.model.data')
 
         if values['order'].state != 'draft':
             json['validation'] = True

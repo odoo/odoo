@@ -254,18 +254,13 @@
                             </select></label>
                         </div>
                         <div class="js_payments css_payments row">
-                            <h3 class="span8">Choose your payment method</h3>
-                            <div class="css_payment">
-                                <div class="js_error_payment css_error_payment"> </div>
-                                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
-                                  <input type="hidden" name="cmd" value="_xclick"/>
-                                  <input type="hidden" name="business" value="${object.company_id.paypal_account}"/>
-                                  <input type="hidden" name="item_name" value="${object.company_id.name} ${kind.title()} ${reference}"/>
-                                  <input type="hidden" name="amount" value="${amount}"/>
-                                  <input type="hidden" name="currency_code" value="${currency.name}"/>
-                                  <input type="image" name="submit" src="https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif"/>
-                                </form>
-                            </div>
+                            <h3 class="span8">Click on your payment method</h3>
+                            <t t-foreach="payments or []" t-as="payment">
+                                <div class="css_payment" t-att-title="payment.name">
+                                    <div class="js_error_payment css_error_payment"> </div>
+                                    <t t-raw="payment._content"/>
+                                </div>
+                            </t>
                         </div>
                     </div>
                 </div>
