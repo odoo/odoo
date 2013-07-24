@@ -102,7 +102,7 @@ class config(osv.osv):
             raise
         config = self.browse(cr, uid, config_id, context=context)
         title = 'Spreadsheet %s' % model
-        res = self.copy_doc(cr, uid, config.id, config.google_drive_resource_id, title, 'google.drive.config', context=context)
+        res = self.copy_doc(cr, uid, False, config.google_drive_resource_id, title, model, context=context)
 
         mo = re.search("(key=|/d/)([A-Za-z0-9-_]+)", res['url'])
         if mo:

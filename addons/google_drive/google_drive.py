@@ -60,8 +60,13 @@ class config(osv.osv):
     def get_access_token(self, cr, uid, scope=None, context=None):
         ir_config = self.pool['ir.config_parameter']
         google_drive_refresh_token = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_refresh_token')
+        group_config = self.pool['ir.model.data'].get_object_reference(cr, uid, 'base', 'group_erp_manager')[1]
+        user = self.pool['res.users'].read(cr, uid, uid, "groups_id")
         if not google_drive_refresh_token:
-            raise self.pool.get('res.config.settings').get_config_warning(cr, _("You haven't configured 'Authorization Code' generated from google, Please generate and configure it in %(menu:base_setup.menu_general_configuration)s."), context=context)
+            if group_config in user['groups_id']:
+                raise self.pool.get('res.config.settings').get_config_warning(cr, _("You haven't configured 'Authorization Code' generated from google, Please generate and configure it in %(menu:base_setup.menu_general_configuration)s."), context=context)
+            else:
+                raise osv.except_osv(_('Error!'), _("Google Drive is not yet configured. Please contact your administrator."))
         google_drive_client_id = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_client_id')
         google_drive_client_secret = ir_config.get_param(cr, SUPERUSER_ID, 'google_drive_client_secret')
         #For Getting New Access Token With help of old Refresh Token
@@ -75,10 +80,11 @@ class config(osv.osv):
         try:
             req = urllib2.Request('https://accounts.google.com/o/oauth2/token', data, headers)
             content = urllib2.urlopen(req).read()
-        except urllib2.HTTPError as e:
-            print vars(e)
-            print e.read()
-            raise self.pool.get('res.config.settings').get_config_warning(cr, _("Something went wrong during the token generation. Please request again an authorization code in %(menu:base_setup.menu_general_configuration)s."), context=context)
+        except urllib2.HTTPError:
+            if group_config in user['groups_id']:
+                raise self.pool.get('res.config.settings').get_config_warning(cr, _("Something went wrong during the token generation. Please request again an authorization code in %(menu:base_setup.menu_general_configuration)s."), context=context)
+            else:
+                raise osv.except_osv(_('Error!'), _("Google Drive is not yet configured. Please contact your administrator."))
         content = json.loads(content)
         return content.get('access_token')
 
