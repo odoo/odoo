@@ -112,7 +112,7 @@ class stock_location(osv.osv):
         'location_id': fields.many2one('stock.location', 'Parent Location', select=True, ondelete='cascade'),
         'child_ids': fields.one2many('stock.location', 'location_id', 'Contains'),
 
-        'partner_id': fields.many2one('res.partner', 'Owner',help="Owner of the location if not internal"),
+        'partner_id': fields.many2one('res.partner', 'Owner', help="Owner of the location if not internal"),
 
         'comment': fields.text('Additional Information'),
         'posx': fields.integer('Corridor (X)', help="Optional localization details, for information purpose only"),
@@ -157,22 +157,21 @@ class stock_quant(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'location_id': fields.many2one('stock.location', 'Location', required=True),
         'qty': fields.float('Quantity', required=True, help="Quantity of products in this quant, in the default unit of measure of the product"),
-        'package_id': fields.many2one('stock.quant.package', string='Package', help="The package containing this quant"), 
-        'reservation_id': fields.many2one('stock.move', 'Reserved for Move', help="Is this quant reserved for a stock.move?"), 
-        'lot_id': fields.many2one('stock.production.lot', 'Lot'), 
-        'cost': fields.float('Unit Cost'), 
+        'package_id': fields.many2one('stock.quant.package', string='Package', help="The package containing this quant"),
+        'reservation_id': fields.many2one('stock.move', 'Reserved for Move', help="Is this quant reserved for a stock.move?"),
+        'lot_id': fields.many2one('stock.production.lot', 'Lot'),
+        'cost': fields.float('Unit Cost'),
 
-        'create_date': fields.datetime('Creation Date'), 
-        'in_date': fields.datetime('Incoming Date'), 
+        'create_date': fields.datetime('Creation Date'),
+        'in_date': fields.datetime('Incoming Date'),
 
         'history_ids': fields.many2many('stock.move', 'stock_quant_move_rel', 'quant_id', 'move_id', 'Moves', help='Moves that operate(d) on this quant'),
         'company_id': fields.many2one('res.company', 'Company', help="The company to which the quants belong"),
 
         # Used for negative quants to reconcile after compensated by a new positive one
-        'propagated_from_id': fields.many2one('stock.quant', 'Linked Quant', help = 'The negative quant this is coming from'), 
+        'propagated_from_id': fields.many2one('stock.quant', 'Linked Quant', help='The negative quant this is coming from'),
     }
-    
-    
+
     def _check_qorder(self, word):
         """
         Needs to pass True to allow "expression order" in search
@@ -352,8 +351,6 @@ class stock_quant(osv.osv):
                     break
             offset += 10
         return res
-
-
 
     def _quants_get_fifo(self, cr, uid, location, product, quantity, domain=[], prefered_order=False,context=None):
         order = 'in_date'
@@ -635,8 +632,6 @@ class stock_picking(osv.osv):
     # FP Note: review all methods aboce this line for stock.picking
 
     def make_packaging(self, cr, uid, picking_id, todo_move_ids, context=None):
-        stock_operation_obj = self.pool.get('stock.pack.operation')
-        move_obj = self.pool.get('stock.move')
         quant_obj = self.pool.get('stock.quant')
         package_obj = self.pool.get('stock.quant.package')
         picking = self.browse(cr, uid, picking_id, context=context)
@@ -653,7 +648,7 @@ class stock_picking(osv.osv):
                 #TODO raise an error if the quant already had a package_id not null ?
                 quant_obj.write(cr, uid, quant.id, {'package_id': op.result_package_id.id}, context=context)
             if op.product_id:
-                #this kind of opeiration has the lowest priority so we delay its resolution untill all others are done
+                #this kind of operation has the lowest priority so we delay its resolution untill all others are done
                 op_todo.append(op)
         for op in op_todo:
             all_picking_quants = []
