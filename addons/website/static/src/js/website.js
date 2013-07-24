@@ -1,8 +1,4 @@
 openerp.website = function(instance) {
-var block = ['section', 'div'];
-var block_inline = ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
-var terminal = block.concat(block_inline).join(', ');
-
 instance.website.EditorBar = instance.web.Widget.extend({
     template: 'Website.EditorBar',
     events: {
@@ -36,18 +32,19 @@ instance.website.EditorBar = instance.web.Widget.extend({
     },
     edit: function () {
         this.$('button[data-action=edit]').prop('disabled', true);
-        var $root = $('[data-oe-model]');
-        $root.add($root.find(terminal))
+        $('[data-oe-model]')
             .not('link, script, span')
-            .not(':has(' + terminal + ')')
             .prop('contentEditable', true)
             .addClass('oe_editable')
             .each(function () {
                 CKEDITOR.inline(this, {
                     // Don't load ckeditor's style rules
                     stylesSet: [],
-                    toolbar: 'Basic',
+                    // toolbar: TODO,
+                    // Ensure no config file is loaded
                     customConfig: '',
+                    // Disable ACF
+                    allowedContent: true,
                 });
             });
     },
