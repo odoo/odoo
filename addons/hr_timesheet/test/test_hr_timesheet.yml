@@ -35,7 +35,7 @@
     new_id = self.create(cr, uid, {'account_id': ref('account.analytic_nebula'),'analytic_amount': 7.0,
     'date': (datetime.now()+timedelta(1)).strftime('%Y-%m-%d %H:%M:%S') ,
     'date_start': time.strftime('%Y-%m-%d %H:%M:%S'), 'info': 'Create Yaml for hr module',
-    'name': 'Quentin Paolino', 'server_date': time.strftime('%Y-%m-%d %H:%M:%S'), 'state': 'action'})
+    'name': 'Quentin Paolino', 'server_date': time.strftime('%Y-%m-%d %H:%M:%S'), 'state': 'present'})
     self.sign_out_result(cr, uid, [new_id], context)
 -
   My work for this project "Sednacom" is over and I stop working by clicking on "Stop Work" button of this wizard.
