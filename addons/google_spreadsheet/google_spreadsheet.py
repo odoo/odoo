@@ -27,15 +27,12 @@ from openerp.osv import osv
 from openerp import SUPERUSER_ID
 
 
-class base_config_settings(osv.osv):
-    _inherit = "base.config.settings"
-
-    def _get_google_scope(self):
-        return 'https://www.googleapis.com/auth/drive https://spreadsheets.google.com/feeds'
-
-
 class config(osv.osv):
     _inherit = 'google.drive.config'
+
+    def get_google_scope(self):
+        scope = super(config, self).get_google_scope()
+        return '%s https://spreadsheets.google.com/feeds' % scope
 
     def write_config_formula(self, cr, uid, attachment_id, spreadsheet_key, model, domain, groupbys, view_id, context=None):
         access_token = self.get_access_token(cr, uid, scope='https://spreadsheets.google.com/feeds', context=context)

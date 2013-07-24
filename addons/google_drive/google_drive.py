@@ -204,21 +204,21 @@ class config(osv.osv):
         (_check_model_id, 'Model of selected filter is not matching with model of current template.', ['model_id', 'filter_id']),
     ]
 
+    def get_google_scope(self):
+        return 'https://www.googleapis.com/auth/drive'
+
 config()
 
 
 class base_config_settings(osv.osv):
     _inherit = "base.config.settings"
 
-    def _get_google_scope(self):
-        return 'https://www.googleapis.com/auth/drive'
-
     _columns = {
         'google_drive_authorization_code': fields.char('Authorization Code', size=124),
         'google_drive_uri': fields.char('URI', readonly=True, help="The URL to generate the authorization code from Google"),
     }
     _defaults = {
-        'google_drive_uri': lambda s, cr, uid, c: s.pool['google.service']._get_google_token_uri(cr, uid, 'drive', scope=s._get_google_scope(), context=c),
+        'google_drive_uri': lambda s, cr, uid, c: s.pool['google.service']._get_google_token_uri(cr, uid, 'drive', scope=s.pool['google.drive.config'].get_google_scope(), context=c),
     }
 
     def set_google_authorization_code(self, cr, uid, ids, context=None):
