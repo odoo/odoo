@@ -33,7 +33,7 @@ instance.website.EditorBar = instance.web.Widget.extend({
     },
     edit: function () {
         this.$('button[data-action=edit]').prop('disabled', true);
-        $('[data-oe-model]').attr('contentEditable', 'true').addClass('oe_editable');
+        $('[data-oe-model]').prop('contentEditable', true).addClass('oe_editable');
     },
     save: function () {
         var self = this;
@@ -64,7 +64,7 @@ instance.website.EditorBar = instance.web.Widget.extend({
             var $w = $el.clone();
             $w.removeClass('aloha-editable aloha-editable-highlight oe_dirty');
             _.each(['model', 'id', 'field', 'xpath'], function(d) {$w.removeAttr('data-oe-' + d);});
-            _.each(['contenteditable'], function(d) {$w.removeAttr(d);});
+            $w.prop('contentEditable', false).removeClass('oe_editable');
             html = $w.wrap('<div>').parent().html();
         }
         return (new instance.web.DataSet(this, 'ir.ui.view')).call('save', [data.oeModel, data.oeId, data.oeField, html, xpath]);
@@ -76,19 +76,19 @@ instance.website.EditorBar = instance.web.Widget.extend({
         var self = this;
         $('.oe_snippet').click(function(ev) {
             $('.oe_selected').removeClass('oe_selected');
-            $snippet = $(ev.currentTarget);
+            var $snippet = $(ev.currentTarget);
             $snippet.addClass('oe_selected');
             $snippet.draggable();
-            selector = $snippet.data("selector");
-            zone = $(".oe_website_body " + selector);
+            var selector = $snippet.data("selector");
+            var $zone = $(".oe_website_body " + selector);
             var droppable = '<div class="oe_snippet_drop" style="border:1px solid red;">.<br/>.<br/>.<br/>.<br/>.<br/></div>';
-            zone.before(droppable);
-            zone.after(droppable);
+            $zone.before(droppable);
+            $zone.after(droppable);
             $(".oe_snippet_drop").droppable({
                 drop: function( event, ui ) {
                     console.log(event, ui, "DROP");
-                    target = $(event.target);
-                    target.before($snippet.html());
+                    var $target = $(event.target);
+                    $target.before($snippet.html());
                     $('.oe_selected').remove();
                     $('.oe_snippet_drop').remove();
                 }
@@ -97,7 +97,7 @@ instance.website.EditorBar = instance.web.Widget.extend({
 
     },
     snippet: function (ev) {
-        $('.oe_snippet_editor').show();
+        $('.oe_snippet_editor').toggle();
     },
 });
 
@@ -105,8 +105,7 @@ $(function(){
 
     function make_static(){
         $('.oe_snippet_demo').removeClass('oe_new');
-        $('.oe_page *').off('mouseover');
-        $('.oe_page *').off('mouseleave');
+        $('.oe_page *').off('mouseover mouseleave');
         $('.oe_page .oe_selected').removeClass('oe_selected');
     }
 
