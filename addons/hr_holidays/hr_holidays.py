@@ -416,13 +416,16 @@ class hr_holidays(osv.osv):
         return True
 
     def check_holidays(self, cr, uid, ids, context=None):
-        holi_status_obj = self.pool.get('hr.holidays.status')
-        for record in self.browse(cr, uid, ids):
-            if record.holiday_type == 'employee' and record.type == 'remove':
-                if record.employee_id and not record.holiday_status_id.limit:
-                    leaves_rest = holi_status_obj.get_days( cr, uid, [record.holiday_status_id.id], record.employee_id.id, False)[record.holiday_status_id.id]['virtual_remaining_leaves']
-                    if leaves_rest < record.number_of_days_temp:
-                        raise osv.except_osv(_('Warning!'), _('There are not enough %s allocated for employee %s; please create an allocation request for this leave type.') % (record.holiday_status_id.name, record.employee_id.name))
+        for record in self.browse(cr, uid, ids, context=context):
+            if record.holiday_type != 'employee' or record.type != 'remove' or not record.employee_id or record.holiday_status_id.limit:
+                continue
+            leave_days = self.pool.get('hr.holidays.status').get_days(cr, uid, [record.holiday_status_id.id], record.employee_id.id, context=context)[record.holiday_status_id.id]
+            if leave_days['remaining_leaves'] < record.number_of_days_temp:
+                raise osv.except_osv(_('Warning!'),
+                                     _('There are not enough remaining days available in %s for employee %s.') % (record.holiday_status_id.name, record.employee_id.name))
+            if leave_days['virtual_remaining_leaves'] < record.number_of_days_temp:
+                raise osv.except_osv(_('Warning!'),
+                                     _('Other pending requests already book too much days in %s for employee %s.') % (record.holiday_status_id.name, record.employee_id.name))
         return True
 
     # -----------------------------
