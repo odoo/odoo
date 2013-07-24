@@ -623,10 +623,10 @@ class purchase_order(osv.osv):
 
     def _prepare_order_picking(self, cr, uid, order, context=None):
         type_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'picking_type_in')[1]
-        type = self.pool.get("picking.type").browse(cr, uid, type_id, context=context)
+        type = self.pool.get("stock.picking.type").browse(cr, uid, type_id, context=context)
         
         return {
-            'name': self.pool.get('ir.sequence').get(cr, uid, type.sequence_id.id, 'id'),
+            'name': self.pool.get('ir.sequence').get_id(cr, uid, type.sequence_id.id, 'id'),
             'origin': order.name + ((order.origin and (':' + order.origin)) or ''),
             'date': self.date_to_datetime(cr, uid, order.date_order, context),
             'partner_id': order.dest_address_id.id or order.partner_id.id,
@@ -635,6 +635,7 @@ class purchase_order(osv.osv):
             'purchase_id': order.id,
             'company_id': order.company_id.id,
             'move_lines' : [],
+            'picking_type_id': type_id,
         }
 
     def _prepare_order_line_move(self, cr, uid, order, order_line, picking_id, context=None):
@@ -657,7 +658,6 @@ class purchase_order(osv.osv):
             'purchase_line_id': order_line.id,
             'company_id': order.company_id.id,
             'price_unit': order_line.price_unit, 
-            'picking_type_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'picking_type_in')[1]
         }
 
     def _create_pickings(self, cr, uid, order, order_lines, picking_id=False, context=None):

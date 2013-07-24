@@ -67,10 +67,10 @@
 -
  !record {model: stock.picking, id: outgoing_shipment}:
     location_dest_id: location_delivery_counter
+    picking_type_id: picking_type_out
 -
  !record {model: stock.move, id: outgoing_shipment_icecream}:
     picking_id: outgoing_shipment
-    picking_type_id: picking_type_out
     product_id: product_icecream
     product_uom: product.product_uom_kgm
     product_uom_qty: 130.0
@@ -80,10 +80,10 @@
  !record {model: stock.picking, id: incomming_shipment}:
     partner_id: base.res_partner_address_9
     location_dest_id: location_refrigerator
+    picking_type_id: picking_type_in
 -
  !record {model: stock.move, id: incomming_shipment_icecream}:
     picking_id: incomming_shipment
-    picking_type_id: picking_type_in
     product_id: product_icecream
     product_uom: product.product_uom_kgm
     product_uom_qty: 50.0

@@ -403,12 +403,8 @@ class stock_picking(osv.osv):
 
     def create(self, cr, user, vals, context=None):
         if ('name' not in vals) or (vals.get('name') in ('/', False)):
-            import pdb
-            pdb.set_trace()
-            if 'move_lines' in vals:
-                if vals['move_lines'][0] and vals['move_lines'][0][2] and vals['move_lines'][0][2]['picking_type_id']:
-                    sequence_id = self.pool.get('stock.picking.type').browse(cr, user, vals['move_lines'][0][2]['picking_type_id'], context=context).sequence_id.id 
-                    vals['name'] = self.pool.get('ir.sequence').get_id(cr, user, sequence_id, 'id', context=context)
+            sequence_id = self.pool.get('stock.picking.type').browse(cr, user, vals['picking_type_id'], context=context).sequence_id.id 
+            vals['name'] = self.pool.get('ir.sequence').get_id(cr, user, sequence_id, 'id', context=context)
         return super(stock_picking, self).create(cr, user, vals, context)
 
 
@@ -477,7 +473,10 @@ class stock_picking(osv.osv):
         'location_id': fields.related('move_lines', 'location_id', type='many2one', relation='stock.location', string='Location', readonly=True),
         'location_dest_id': fields.related('move_lines', 'location_dest_id', type='many2one', relation='stock.location', string='Destination Location', readonly=True),
         'group_id': fields.related('move_lines', 'group_id', type='many2one', relation='procurement.group', string='Procurement Group', readonly=True),
-        'picking_type_id': fields.related('move_lines', 'picking_type_id', type='many2one', relation='stock.picking.type', string="Picking Type", readonly=True),
+        #Picking type will be on the picking itself instead
+        'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', required=True), 
+        #related('move_lines', 'picking_type_id', type='many2one', relation='stock.picking.type', string="Picking Type", readonly=True),
+        'rule_id': fields.related('move_lines', 'rule_id', type='many2one', relation='procurement.rule', string="Procurement Rule", readonly=True), 
     }
     _defaults = {
         'name': lambda self, cr, uid, context: '/',
@@ -1000,12 +999,13 @@ class stock_move(osv.osv):
 
         # used for colors in tree views:
         'scrapped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scrapped', readonly=True),
-        'picking_type_id': fields.many2one('stock.picking.type', 'Picking Type', help="The picking type will be used for composing the views and reports the related picking", required=True), 
-        #'type': fields.related('picking_id', 'type', type='selection', selection=[('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], string='Shipping Type'),
+        
+        'picking_type_id': fields.related('picking_id', 'picking_type_id', type='many2one', relation='stock.picking.type', string="Picking type" ,readonly=True), 
         'quant_ids': fields.many2many('stock.quant',  'stock_quant_move_rel', 'move_id', 'quant_id', 'Quants'),
         'reserved_quant_ids': fields.one2many('stock.quant', 'reservation_id', 'Reserved quants'),
         'remaining_qty': fields.function(_get_remaining_qty, type='float', string='Remaining Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), states={'done': [('readonly', True)]}),
         'group_id': fields.many2one('procurement.group', 'Procurement Group'),
+        'rule_id': fields.many2one('procurement.rule', 'Procurement Rule'),
     }
 
     def _check_location(self, cr, uid, ids, context=None):
@@ -1329,7 +1329,8 @@ class stock_move(osv.osv):
                 pick_obj.write(cr, uid, [original_picking.id], {'name': back_order_name})
                 pick = pick_obj.copy(cr, uid, original_picking.id, {'name': new_picking_name,
                                                     'move_lines': [],
-                                                    'state': 'draft'})
+                                                    'state': 'draft'
+                                                    })
 
                 pick_obj.message_post(cr, uid, original_picking.id, body=_("Back order <em>%s</em> has been <b>created</b>.") % (back_order_name), context=context)
                 unlink_operation_order = [(2, op.id) for op in original_picking.pack_operation_ids]
@@ -1338,12 +1339,13 @@ class stock_move(osv.osv):
                 #a backorder picking doesn't exist yet, create a new one
                 values = {'origin': move.origin,
                           'company_id': move.company_id and move.company_id.id or False,
-#                           'type': 'internal',
                           'move_type': 'one',
                           'partner_id': move.partner_id and move.partner_id.id or False,
                           #'invoice_state': move.invoice_state
                           'state': 'confirmed',
-                          'group_id': move.group_id and move.group_id.id or False}
+                          'group_id': move.group_id and move.group_id.id or False,
+                          'picking_type_id': move.rule_id and move.rule_id.picking_type_id.id or False, 
+                          } 
                 pick = pick_obj.create(cr, uid, values, context=context)
         return pick
 
@@ -1372,7 +1374,7 @@ class stock_move(osv.osv):
                     state = 'waiting'
             states[state].append(move.id)
 
-            if not move.picking_id:
+            if not move.picking_id and move.location_id.usage not in ['production', 'inventory'] and move.location_dest_id.usage not in ['production', 'inventory']:
                 pick = self._find_or_create_picking(cr, uid, move, context=context)
                 move.write({'picking_id': pick})
 
@@ -1860,8 +1862,7 @@ class stock_inventory(osv.osv):
                         'product_id': line.product_id.id,
                         'product_uom': line.product_uom.id,
                         'date': inv.date,
-                        'company_id': line.location_id.company_id.id, 
-                        'picking_type_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'picking_type_inventory')[1], 
+                        'company_id': line.location_id.company_id.id,  
                     }
 
                     if change > 0:
