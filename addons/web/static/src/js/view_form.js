@@ -722,7 +722,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             self.trigger("save", result);
             self.to_view_mode();
         }).then(function(result) {
-            self.ViewManager.ActionManager.__parentedParent.menu.do_reload_needaction();
+            var parent = self.ViewManager.ActionManager.getParent();
+            if(parent){
+                parent.menu.do_reload_needaction();
+            }
         });
     },
     on_button_cancel: function(event) {
