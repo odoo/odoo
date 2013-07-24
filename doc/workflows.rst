@@ -151,6 +151,14 @@ be chosen on a per-transition basis with the ``trigger_expression`` attribute.
 .. note:: Note that triggers are not re-installed whenever the transition is
     re-tried.
 
+Splitting and joining transitions
+'''''''''''''''''''''''''''''''''
+
+When multiple transitions leave the same activity, or lead to the same
+activity, OpenERP provides some control about which transitions will be
+crossed, or how the reached activity will be processed. The ``split_mode`` and
+``join_mode`` attributes on the activity are used for such control.
+
 Activities
 ----------
 
@@ -207,3 +215,64 @@ activities normally and send to the parent workflow instance a signal with
 
 In other words, it is possible to react and take transitions in the parent
 workflow as activities are executed in the sublow.
+
+Server actions
+''''''''''''''
+
+An activity can run a "Server Action" by specifying its ID in the ``action_id``
+attribute.
+
+Python action
+'''''''''''''
+
+An activity can run some Python code, provided through the ``action``
+attribute. See the section about transition conditions to read about the
+evaluation environment.
+
+Split mode
+''''''''''
+
+After an activity has been processed, its outgoing transitions will be tried.
+Normally, if a transition can be taken, OpenERP will do it and proceed to the
+activity the transition leads to.
+
+Actually, when more than a single transition is leaving an activity, OpenERP
+can proceed, or not, depending on the other transitions. That is, the condition
+on the transitions can be combined together, and the combined result will
+instruct OpenERP to cross zero, one, or all the transitions. The way they are
+combined is controlled by the ``split_mode`` attribute.
+
+There are indeed three modes to decide how to combine the transition
+conditions, ``XOR``, ``OR``, and ``AND``.
+
+``XOR``
+    When the transitions are combined with a ``XOR`` split mode, as soon as a
+    transition with a condition that evaluates to true is found, the
+    transition is taken and the other will not be tried.
+
+``OR``
+    With an ``OR`` mode, all the transitions with a condition that evaluates to
+    true are taken. The remaining transitions will not be tried later.
+
+``AND``
+   With an ``AND`` mode, OpenERP will wait for all transition conditions to
+   evaluate to true, then cross all the transitions at the same time.
+
+Join mode
+'''''''''
+
+Just as departing transition conditions can be combined together to decide
+whether they can be taken or not, arriving transitions can be combined together
+to decide if an activity must be run. The attribute to control that behavior is
+called ``join_mode``.
+
+The join mode is a bit simpler than the split mode: only two modes are
+provided, ``XOR`` and ``AND``.
+
+``XOR``
+    An activity with a ``XOR`` join mode will be run as soon as a transition is
+    crossed to arrive at the activity.
+
+``AND``
+   With an ``AND`` mode, the activity will wait for all its incoming
+   transitions to be crossed before being run.
