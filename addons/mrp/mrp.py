@@ -877,10 +877,6 @@ class mrp_production(osv.osv):
                     res = False
         return res
 
-    def _get_auto_picking(self, cr, uid, production):
-        return True
-
-
     def _make_production_produce_line(self, cr, uid, production, context=None):
         stock_move = self.pool.get('stock.move')
         source_location_id = production.product_id.property_stock_production.id
