@@ -85,10 +85,6 @@ class WebRequest(object):
 
         :class:`~collections.Mapping` of context values for the current request
 
-    .. attribute:: debug
-
-        ``bool``, indicates whether the debug mode is active on the client
-
     .. attribute:: db
 
         ``str``, the name of the database linked to the current request. Can be ``None``
@@ -112,7 +108,6 @@ class WebRequest(object):
         self._cr_cm = None
         self._cr = None
         self.func_request_type = None
-        self.debug = self.httprequest.args.get('debug', False) is not False
         with set_request(self):
             self.db = self.session.db or db_monodb()
         # set db/uid trackers - they're cleaned up at the WSGI
@@ -304,8 +299,6 @@ class JsonRequest(WebRequest):
         error = None
 
         try:
-            #if _logger.isEnabledFor(logging.DEBUG):
-            #    _logger.debug("--> %s.%s\n%s", func.im_class.__name__, func.__name__, pprint.pformat(self.jsonrequest))
             response['id'] = self.jsonrequest.get('id')
             response["result"] = self._call_function(**self.params)
         except AuthenticationError, e:
@@ -326,9 +319,6 @@ class JsonRequest(WebRequest):
             }
         if error:
             response["error"] = error
-
-        if _logger.isEnabledFor(logging.DEBUG):
-            _logger.debug("<--\n%s", pprint.pformat(response))
 
         if self.jsonp:
             # If we use jsonp, that's mean we are called from another host
@@ -394,7 +384,7 @@ class HttpRequest(WebRequest):
     def __init__(self, *args):
         super(HttpRequest, self).__init__(*args)
         params = dict(self.httprequest.args)
-        ex = set(["session_id", "debug"])
+        ex = set(["session_id"])
         for k in params.keys():
             if k in ex:
                 del params[k]
@@ -409,7 +399,6 @@ class HttpRequest(WebRequest):
                 akw[key] = value
             else:
                 akw[key] = type(value)
-        #_logger.debug("%s --> %s.%s %r", self.httprequest.func, func.im_class.__name__, func.__name__, akw)
         try:
             r = self._call_function(**self.params)
         except werkzeug.exceptions.HTTPException, e:
@@ -426,10 +415,6 @@ class HttpRequest(WebRequest):
         else:
             if not r:
                 r = werkzeug.wrappers.Response(status=204)  # no content
-        if isinstance(r, (werkzeug.wrappers.BaseResponse, werkzeug.exceptions.HTTPException)):
-            _logger.debug('<-- %s', r)
-        else:
-            _logger.debug("<-- size: %s", len(r))
         return r
 
     def make_response(self, data, headers=None, cookies=None):

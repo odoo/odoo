@@ -296,13 +296,13 @@ def manifest_glob(extension, addons=None, db=None, include_remotes=False):
                     r.append((path, fs2web(path[len(addons_path):])))
     return r
 
-def manifest_list(extension, mods=None, db=None):
+def manifest_list(extension, mods=None, db=None, debug=False):
     """ list ressources to load specifying either:
     mods: a comma separated string listing modules
     db: a database name (return all installed modules in that database)
     """
     files = manifest_glob(extension, addons=mods, db=db, include_remotes=True)
-    if not request.debug:
+    if not debug:
         path = '/web/webclient/' + extension
         if mods is not None:
             path += '?' + urllib.urlencode({'mods': mods})
@@ -540,8 +540,10 @@ class Home(http.Controller):
         if redir:
             return redirect_with_hash(redir)
 
-        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', db=db))
-        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', db=db))
+        debug = "debug" in kw
+
+        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', db=db, debug=debug))
+        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', db=db, debug=debug))
 
         r = html_template % {
             'js': js,
