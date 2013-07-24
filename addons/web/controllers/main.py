@@ -535,11 +535,15 @@ html_template = """<!DOCTYPE html>
 class Home(http.Controller):
 
     @http.route('/', type='http', auth="none")
-    def index(self, s_action=None, db=None, **kw):
-        db, redir = db_monodb_redirect()
-        if redir:
-            return redirect_with_hash(redir)
-
+    def index(self, s_action=None, **kw):
+        if 'db' in kw:
+            ndb = kw['db']
+            lst = http.db_list(True)
+            if ndb in lst and ndb != request.session.db:
+                request.session.logout()
+                request.session.db = ndb
+                
+        db = request.session.db
         debug = "debug" in kw
 
         js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', db=db, debug=debug))
@@ -821,7 +825,7 @@ class Session(http.Controller):
     @http.route('/web/session/get_session_info', type='json', auth="none")
     def get_session_info(self):
         request.uid = request.session.uid
-        request.db = request.session.db
+        request.disable_db = False
         return self.session_info()
 
     @http.route('/web/session/authenticate', type='json', auth="none")

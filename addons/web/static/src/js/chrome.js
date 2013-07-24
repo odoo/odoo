@@ -705,20 +705,9 @@ instance.web.Login =  instance.web.Widget.extend({
         }
         return d;
     },
-    remember_last_used_database: function(db) {
-        // This cookie will be used server side in order to avoid db reloading on first visit
-        var ttl = 24 * 60 * 60 * 365;
-        document.cookie = [
-            'last_used_database=' + db,
-            'path=/',
-            'max-age=' + ttl,
-            'expires=' + new Date(new Date().getTime() + ttl * 1000).toGMTString()
-        ].join(';');
-    },
     database_selected: function(db) {
         var params = $.deparam.querystring();
         params.db = db;
-        this.remember_last_used_database(db);
         this.$('.oe_login_dbpane').empty().text(_t('Loading...'));
         this.$('[name=login], [name=password]').prop('readonly', true);
         instance.web.redirect('/?' + $.param(params));
@@ -769,7 +758,6 @@ instance.web.Login =  instance.web.Widget.extend({
         self.hide_error();
         self.$(".oe_login_pane").fadeOut("slow");
         return this.session.session_authenticate(db, login, password).then(function() {
-            self.remember_last_used_database(db);
             if (self.has_local_storage && self.remember_credentials) {
                 localStorage.setItem(db + '|last_login', login);
                 if (self.session.debug) {
