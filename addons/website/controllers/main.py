@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+import urllib
+
 import openerp
 from openerp.addons.web import http
 from openerp.addons.web.controllers.main import manifest_list
-from urllib import quote_plus
 from openerp.addons.web.http import request
 
 def template_values():
@@ -68,12 +69,16 @@ class Website(openerp.addons.web.controllers.main.Home):
             'inherit_branding': values['editable'],
         }
         company = request.registry['res.company'].browse(request.cr, uid, 1, context=context)
-        values.update({
-            'res_company': company,
-            'path': path
-        })
-        values['google_map_url'] = "http://maps.googleapis.com/maps/api/staticmap?center=%s&sensor=false&zoom=8&size=298x298" \
-                % quote_plus('%s, %s %s, %s' % (company.street, company.city, company.zip, company.country_id and company.country_id.name_get()[0][1] or ''))
+        values.update(
+            res_company=company,
+            path=path,
+            google_map_url="http://maps.googleapis.com/maps/api/staticmap?" + urllib.urlencode({
+                'center': '%s, %s %s, %s' % (company.street, company.city, company.zip, company.country_id and company.country_id.name_get()[0][1] or ''),
+                'sensor': 'false',
+                'zoom': '8',
+                'size': '298x298',
+            }),
+        )
         try:
             html = request.registry.get("ir.ui.view").render(request.cr, uid, path, values, context)
         except ValueError, e:
