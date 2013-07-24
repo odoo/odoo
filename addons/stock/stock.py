@@ -403,7 +403,12 @@ class stock_picking(osv.osv):
 
     def create(self, cr, user, vals, context=None):
         if ('name' not in vals) or (vals.get('name') in ('/', False)):
-            vals['name'] = self.pool.get('ir.sequence').get(cr, user, self._name)
+            import pdb
+            pdb.set_trace()
+            if 'move_lines' in vals:
+                if vals['move_lines'][0] and vals['move_lines'][0][2] and vals['move_lines'][0][2]['picking_type_id']:
+                    sequence_id = self.pool.get('stock.picking.type').browse(cr, user, vals['move_lines'][0][2]['picking_type_id'], context=context).sequence_id.id 
+                    vals['name'] = self.pool.get('ir.sequence').get_id(cr, user, sequence_id, 'id', context=context)
         return super(stock_picking, self).create(cr, user, vals, context)
 
 
@@ -468,11 +473,11 @@ class stock_picking(osv.osv):
         'pack_operation_ids': fields.one2many('stock.pack.operation', 'picking_id', string='Related Packing Operations'), 
          
         # Used to search a product on pickings
-        'product_id': fields.related('move_lines', 'product_id', type='many2one', relation='product.product', string='Product'),
-        'location_id': fields.related('move_lines', 'location_id', type='many2one', relation='stock.location', string='Location'),
-        'location_dest_id': fields.related('move_lines', 'location_dest_id', type='many2one', relation='stock.location', string='Destination Location'),
-        'group_id': fields.related('move_lines', 'group_id', type='many2one', relation='procurement.group', string='Procurement Group'),
-        'picking_type_id': fields.related('move_lines', 'picking_type_id', type='many2one', relation='stock.picking.type', string="Picking Type"),
+        'product_id': fields.related('move_lines', 'product_id', type='many2one', relation='product.product', string='Product'),#?
+        'location_id': fields.related('move_lines', 'location_id', type='many2one', relation='stock.location', string='Location', readonly=True),
+        'location_dest_id': fields.related('move_lines', 'location_dest_id', type='many2one', relation='stock.location', string='Destination Location', readonly=True),
+        'group_id': fields.related('move_lines', 'group_id', type='many2one', relation='procurement.group', string='Procurement Group', readonly=True),
+        'picking_type_id': fields.related('move_lines', 'picking_type_id', type='many2one', relation='stock.picking.type', string="Picking Type", readonly=True),
     }
     _defaults = {
         'name': lambda self, cr, uid, context: '/',
@@ -2301,13 +2306,14 @@ class product_product(osv.osv):
     }
 
 class stock_picking_type(osv.osv):
-    _name="stock.picking.type"
+    _name = "stock.picking.type"
     _columns = {
         'name': fields.char('name', size=30), 
         'pack': fields.boolean('Pack', 'This picking type needs packing interface'), 
         'delivery': fields.boolean('Print delivery'),
-        
+        'sequence_id': fields.many2one('ir.sequence', 'Sequence', required = True),
             }
+    
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -622,13 +622,15 @@ class purchase_order(osv.osv):
         return user_date.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
     def _prepare_order_picking(self, cr, uid, order, context=None):
+        type_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'picking_type_in')[1]
+        type = self.pool.get("picking.type").browse(cr, uid, type_id, context=context)
+        
         return {
-            'name': self.pool.get('ir.sequence').get(cr, uid, 'stock.picking'),
+            'name': self.pool.get('ir.sequence').get(cr, uid, type.sequence_id.id, 'id'),
             'origin': order.name + ((order.origin and (':' + order.origin)) or ''),
             'date': self.date_to_datetime(cr, uid, order.date_order, context),
             'partner_id': order.dest_address_id.id or order.partner_id.id,
             'invoice_state': '2binvoiced' if order.invoice_method == 'picking' else 'none',
-            'type': 'in',
             'partner_id': order.dest_address_id.id or order.partner_id.id,
             'purchase_id': order.id,
             'company_id': order.company_id.id,
@@ -652,7 +654,6 @@ class purchase_order(osv.osv):
             'partner_id': order.dest_address_id.id or order.partner_id.id,
             'move_dest_id': order_line.move_dest_id.id,
             'state': 'draft',
-            'type':'in',
             'purchase_line_id': order_line.id,
             'company_id': order.company_id.id,
             'price_unit': order_line.price_unit, 

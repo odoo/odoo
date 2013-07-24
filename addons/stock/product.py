@@ -31,7 +31,8 @@ class product_product(osv.osv):
         move_pool=self.pool.get('stock.move')
         moves = move_pool.read_group(cr, uid, [
             ('product_id', 'in', ids),
-            ('picking_id.type', '=', 'in'),
+            ('location_id.usage', '!=', 'internal'),
+            ('location_dest_id.usage', '=', 'internal'),
             ('state','in',('confirmed','assigned','pending'))
         ], ['product_id'], ['product_id'])
         for move in moves:
@@ -39,7 +40,8 @@ class product_product(osv.osv):
             res[product_id]['reception_count'] = move['product_id_count']
         moves = move_pool.read_group(cr, uid, [
             ('product_id', 'in', ids),
-            ('picking_id.type', '=', 'out'),
+            ('location_id.usage', '=', 'internal'),
+            ('location_dest_id.usage', '!=', 'internal'),
             ('state','in',('confirmed','assigned','pending'))
         ], ['product_id'], ['product_id'])
         for move in moves:
