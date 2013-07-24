@@ -14,7 +14,7 @@
         <field name="arch" type="xml">
             <data>
                 <xpath expr="(//li)[last()]" position="after">
-                    <li class="pull-right"><a href="/shop/mycart"><i class="icon-shopping-cart icon-large"></i> My cart</a></li>
+                    <li class="pull-right"><a href="/shop/mycart"><i class="icon-shopping-cart icon-large" style="position: absolute;"></i>&amp;nbsp; &amp;nbsp; &amp;nbsp;  My cart</a></li>
                     <li class="pull-right"><a href="/shop">Shop</a></li>
                 </xpath>
            </data>
@@ -145,14 +145,14 @@
                         <t t-set="quantity" t-value="int(line.product_uom_qty)"/>
                         <t t-call="website_sale.product_card"/>
                     </t>
-                    <div class="media well well-small">
+                    <t t-call="website_sale.product_recommended"/>
+                    <t t-call="website_sale.total"/>
+                    <div class="media well well-small" t-if="order.order_line">
                         <form action="/shop/mycart" class="navbar-form">
                             <input name="code" type="text" placeholder="Reduction Code..."/>
                             <button class="btn">Submit your Reduction Code</button>
                         </form>
                     </div>
-                    <t t-call="website_sale.product_recommended"/>
-                    <t t-call="website_sale.total"/>
                     <a t-if="order.order_line" href="/shop/checkout"><button class="btn btn-success">Next stage</button></a>
                 </span>
             </t>
@@ -193,7 +193,11 @@
                             </thead>
                             <tbody>
                                 <t t-foreach="order.order_line or []" t-as="line">
-                                    <tr><td><t t-esc="line.product_id.name"/></td><td><t t-esc="int(line.product_uom_qty)"/></td><td></td></tr>
+                                    <tr>
+                                        <td><t t-esc="line.product_id.name"/></td>
+                                        <td><t t-esc="int(line.product_uom_qty)"/></td>
+                                        <td class="css_alignright"><t t-esc="line.product_id.list_price"/> €</td>
+                                    </tr>
                                 </t>
                                 <tr><td colspan="3" style="visibility: hidden; border: 0">-</td></tr>
                                 <tr><th>Untaxed Amount</th><td></td><td><t t-esc="order.amount_untaxed"/> €</td></tr>
@@ -230,26 +234,27 @@
                         </div>
                         <div class="js_inputs js_shipping row" style="display:none">
                             <h3 class="span8 oe_shipping" style="display:none">Shipping Information</h3>
-                            <label class="span8 css_required">Name and firstname<input class="span7" type="text" name="shipping_name" placeholder="Name and firstname"/></label>
-                            <label class="span4 css_required">Telephone<input type="tel" name="shipping_phone" placeholder="Telephone"/></label>
-                            <label class="span4">Fax<input type="tel" name="shipping_fax" placeholder="Fax"/></label>
-                            <label class="span8 css_required">Street<input class="span7" type="text" name="shipping_street" placeholder="Street address"/></label>
-                            <label class="span4 css_required">City<input type="text" name="shipping_city" placeholder="City"/></label>
+                            <label class="span8 css_required">Name and firstname<input class="span7" type="text" name="shipping_name" placeholder="Name and firstname" t-att-value="shipping.name or ''"/></label>
+                            <label class="span4 css_required">Telephone<input type="tel" name="shipping_phone" placeholder="Telephone" t-att-value="shipping.phone or ''"/></label>
+                            <label class="span4">Fax<input type="tel" name="shipping_fax" placeholder="Fax" t-att-value="shipping.fax or ''"/></label>
+                            <label class="span8 css_required">Street<input class="span7" type="text" name="shipping_street" placeholder="Street address" t-att-value="shipping.street or ''"/></label>
+                            <label class="span4 css_required">City<input type="text" name="shipping_city" placeholder="City" t-att-value="shipping.city or ''"/></label>
                             <label class="span4">State / Province <select name="shipping_state_id">
                                 <option value="">State / Province...</option>
                                 <t t-foreach="states or []" t-as="state">
-                                    <option t-att-value="state.id" t-att-selected="partner and partner.state_id and state.id == partner.state_id.id or None"><t t-esc="state.name"/></option>
+                                    <option t-att-value="state.id" t-att-selected="shipping and shipping.state_id and state.id == shipping.state_id.id or None"><t t-esc="state.name"/></option>
                                 </t>
                             </select></label>
-                            <label class="span4 css_required">Zip / Postal Code<input type="text" name="shipping_zip" placeholder="Zip/Postal Code"/></label>
+                            <label class="span4 css_required">Zip / Postal Code<input type="text" name="shipping_zip" placeholder="Zip/Postal Code" t-att-value="shipping.zip or ''"/></label>
                             <label class="span4 css_required">Country <select name="shipping_country_id">
                                 <option value="">Country...</option>
                                 <t t-foreach="countries or []" t-as="country">
-                                    <option t-att-value="country.id" t-att-selected="partner and partner.country_id and country.id == partner.country_id.id or None"><t t-esc="country.name"/></option>
+                                    <option t-att-value="country.id" t-att-selected="shipping and shipping.country_id and country.id == shipping.country_id.id or None"><t t-esc="country.name"/></option>
                                 </t>
                             </select></label>
                         </div>
-                        <div class="js_payments css_payments">
+                        <div class="js_payments css_payments row">
+                            <h3 class="span8">Choose your payment method</h3>
                             <div class="css_payment">
                                 <div class="js_error_payment css_error_payment"> </div>
                                 <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
@@ -268,11 +273,30 @@
         </t>
     </template>
 
-    <template id="thanks">
+    <template id="confirmed">
         <t t-call="website_sale.page">
             <t t-set="title">Order</t>
             <t t-set="shop_content">
-                Thanks for your sale order
+                <div class="oe_total">
+                    <table class="table table-condensed" t-if="order.order_line">
+                        <thead>
+                            <tr><th>Product</th><th>Qty.</th><th>Price</th></tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="order.order_line or []" t-as="line">
+                                <tr>
+                                    <td><t t-esc="line.product_id.name"/></td>
+                                    <td><t t-esc="int(line.product_uom_qty)"/></td>
+                                    <td class="css_alignright"><t t-esc="line.product_id.list_price"/> €</td>
+                                </tr>
+                            </t>
+                            <tr><td colspan="3" style="visibility: hidden; border: 0">-</td></tr>
+                            <tr><th>Untaxed Amount</th><td></td><td><t t-esc="order.amount_untaxed"/> €</td></tr>
+                            <tr><th>Taxes</th><td></td><td><t t-esc="order.amount_tax"/> €</td></tr>
+                            <tr><th>Total</th><td></td><td><t t-esc="order.amount_total"/> €</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </t>
         </t>
     </template>

@@ -34,6 +34,7 @@ $(document).ready(function () {
         $checkout.find("input").css("border", "");
         $.post('/shop/confirm_order', values, function (result) {
             var result = JSON.parse(result);
+            console.log(result);
             if (result.error.length) {
                 $inputs = $checkout.find("input[name='" + result.error.join("'], input[name='") + "']");
                 $inputs.css("border", "1px solid #dd0000");
@@ -41,7 +42,9 @@ $(document).ready(function () {
             }
             if (result.validation) {
                 var $form = $(e.currentTarget).parent().find("input[name='submit']").click();
-                window.location.href = "/shop";
+                setTimeout(function() {
+                    window.location.href = "/shop/confirmed";
+                }, 0);
             }
         });
     });
