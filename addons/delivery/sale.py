@@ -72,8 +72,7 @@ class sale_order(osv.osv):
                 'tax_id': [(6,0,taxes_ids)],
                 'type': 'make_to_stock'
             })
-        #remove the value of the carrier_id field on the sale order
-        return self.write(cr, uid, ids, {'carrier_id': False}, context=context)
+        return True
         #return {'type': 'ir.actions.act_window_close'} action reload?
 
 sale_order()
