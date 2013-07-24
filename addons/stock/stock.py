@@ -674,8 +674,8 @@ class stock_picking(osv.osv):
     def _create_unexpected_move(self, cr, uid, picking, product, qty, cost, context=None):
         stock_move_obj = self.pool.get('stock.move')
         #TODO fix me
-        seq_obj_name = 'stock.picking.internal' #+ picking.type
-        return stock_move_obj.create(cr, uid, {'name': self.pool.get('ir.sequence').get(cr, uid, seq_obj_name),
+        move_name = 'stock.picking.in'
+        return stock_move_obj.create(cr, uid, {'name': move_name,
                                                'product_id': product.id,
                                                'product_uom_qty': qty,
                                                'product_uom': product.uom_id.id,
@@ -683,6 +683,8 @@ class stock_picking(osv.osv):
                                                'location_id': picking.location_id.id,
                                                'location_dest_id': picking.location_dest_id.id,
                                                'picking_id': False,
+                                               #TODO fix me
+                                               'picking_type_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'picking_type_internal')[1],
                                                'price_unit': cost}, context=context)
 
     def do_partial(self, cr, uid, picking_ids, context=None):
