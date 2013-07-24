@@ -88,9 +88,6 @@ def rjsmin(script):
 
 db_list = http.db_list
 
-def db_monodb_redirect():
-    return http.db_redirect(not config['list_db'])
-
 db_monodb = http.db_monodb
 
 def redirect_with_hash(url, code=303):
@@ -535,12 +532,21 @@ html_template = """<!DOCTYPE html>
 class Home(http.Controller):
 
     @http.route('/', type='http', auth="none")
-    def index(self, s_action=None, db=None, **kw):
-        db, redir = db_monodb_redirect()
-        if redir:
-            return redirect_with_hash(redir)
+    def index(self, s_action=None, db=None, debug=False, **kw):
+        debug = debug != False
+        if db is not None:
+            lst = http.db_list(True)
+            if db in lst and db != request.session.db:
+                request.session.logout()
+                request.session.db = db
 
-        debug = "debug" in kw
+        if db != request.session.db:
+            query = dict(urlparse.parse_qsl(request.httprequest.query_string, keep_blank_values=True))
+            query.update({'db': request.session.db})
+            redirect = request.httprequest.path + '?' + urllib.urlencode(query)
+            return redirect_with_hash(redirect)
+                
+        db = request.session.db
 
         js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', db=db, debug=debug))
         css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', db=db, debug=debug))
@@ -821,7 +827,7 @@ class Session(http.Controller):
     @http.route('/web/session/get_session_info', type='json', auth="none")
     def get_session_info(self):
         request.uid = request.session.uid
-        request.db = request.session.db
+        request.disable_db = False
         return self.session_info()
 
     @http.route('/web/session/authenticate', type='json', auth="none")
