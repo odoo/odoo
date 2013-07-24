@@ -20,6 +20,17 @@
   font-style: normal;
 }
 
+@media print {
+  .oe_website {
+    padding-top: 0 !important;
+  }
+  .oe_website .oe_website_editorbar, .oe_website .css_noprint, .oe_website .oe_snippet_editor, .oe_website .oe_website_footer {
+    display: none !important;
+  }
+  .oe_website .oe_website_header > .container > .row, .oe_website .oe_website_body > .container > .row {
+    margin-left: 0px !important;
+  }
+}
 .oe_website {
   background: #e9e9e9;
   color: #646464;

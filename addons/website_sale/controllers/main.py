@@ -31,10 +31,11 @@ class Ecommerce(http.Controller):
         cr, uid, partner_id = self.get_cr_uid()
         order_obj = request.registry.get('sale.order')
         # check if order allready exists
-        try:
-            order_obj.browse(cr, uid, order_id).pricelist_id
-        except:
-            order_id = None
+        if order_id:
+            try:
+                order_obj.browse(cr, uid, order_id).pricelist_id
+            except:
+                order_id = None
         if not order_id:
             fields = [k for k, v in order_obj._columns.items()]
             order_value = order_obj.default_get(cr, uid, fields)
@@ -316,8 +317,8 @@ class Ecommerce(http.Controller):
     def confirmed(self, **post):
         cr, uid, partner_id = self.get_cr_uid()
 
-        if request.httprequest.session['ecommerce_order']:
-            order = self.get_order(request.httprequest.session.get('ecommerce_order_old'))
+        if request.httprequest.session.get('ecommerce_order'):
+            order = self.get_order(request.httprequest.session.get('ecommerce_order'))
             if order.state != 'draft':
                 request.httprequest.session['ecommerce_order_old'] = order.id
                 request.httprequest.session['ecommerce_order'] = None
