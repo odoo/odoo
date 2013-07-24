@@ -588,6 +588,7 @@
                     <!-- <button name="check_assign" states="confirmed" string="Check Availability" type="object"/> -->
                     <button name="force_assign" states="confirmed" string="Force Availability" type="object" class="oe_highlight" groups="base.group_user"/>
                     <button name="do_partial" states="assigned" string="Confirm &amp; Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
+                    <button name="action_pack" states="draft, assigned" string="Create Package" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
                     <button name="%(act_stock_return_picking)d" string="Reverse Transfer" states="done" type="action" groups="base.group_user"/>
                     <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel Transfer" groups="base.group_user"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
@@ -611,7 +612,7 @@
                     <notebook>
                         <page string="Products">
                             <field name="move_lines" context="{'address_in_id': partner_id, 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree'}"/>
-                            <field name="pack_operation_ids" domain="[('result_package_id', '!=', False)]">
+                            <field name="pack_operation_ids">
                                 <tree editable="top">
                                     <field name="product_id"/>
                                     <field name="product_uom_id"/>
@@ -619,6 +620,7 @@
                                     <field name="package_id"/>
                                     <field name="move_id" domain="[('picking_id', '=', parent.id)]"/>
                                     <field name="product_qty"/>
+                                    <field name="result_package_id"/>
                                 </tree>
                             </field>
                             <field name="note" placeholder="Add an internal note..." class="oe_inline"/>

@@ -466,7 +466,7 @@ class stock_picking(osv.osv):
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Internal Moves', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
         'partner_id': fields.many2one('res.partner', 'Partner', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
-        'pack_operation_ids': fields.one2many('stock.pack.operation', 'picking_id', string='Related Packing Operations'), 
+        'pack_operation_ids': fields.one2many('stock.pack.operation', 'picking_id', string='Related Packing Operations'),
          
         # Used to search a product on pickings
         'product_id': fields.related('move_lines', 'product_id', type='many2one', relation='product.product', string='Product'),#?
@@ -673,11 +673,12 @@ class stock_picking(osv.osv):
 
     def _create_unexpected_move(self, cr, uid, picking, product, qty, cost, context=None):
         stock_move_obj = self.pool.get('stock.move')
-        seq_obj_name = 'stock.picking.' + picking.type
+        #TODO fix me
+        seq_obj_name = 'stock.picking.internal' #+ picking.type
         return stock_move_obj.create(cr, uid, {'name': self.pool.get('ir.sequence').get(cr, uid, seq_obj_name),
                                                'product_id': product.id,
                                                'product_uom_qty': qty,
-                                               'product_uom': product.product_uom.id,
+                                               'product_uom': product.uom_id.id,
                                               #'lot_id': wizard_line.lot_id.id,
                                                'location_id': picking.location_id.id,
                                                'location_dest_id': picking.location_dest_id.id,
@@ -716,7 +717,7 @@ class stock_picking(osv.osv):
                         move_id = self._find_move_from_product(cr, uid, picking.id, quant.product_id.id, context=context)
                         partial_datas = {
                             'product_qty': quant.qty * op.product_qty,
-                            'product_uom_id': quant.product_id.product_uom_id.id,
+                            'product_uom_id': quant.product_id.uom_id.id,
                             'cost': quant.cost,
                         }
                         if not move_id:
@@ -744,9 +745,10 @@ class stock_picking(osv.osv):
             ctx = context.copy()
             ctx.update({'backorder_of': picking.id})
             stock_move_obj.action_confirm(cr, uid, todo_move_ids, context=ctx)
-        if not only_split_lines:
+        if not only_split_lines and todo_move_ids:
             stock_move_obj.action_done(cr, uid, todo_move_ids, context=context)
-            self.make_packaging(cr, uid, picking.id, todo_move_ids, context=context)
+            picking_to_package = stock_move_obj.browse(cr, uid, todo_move_ids[0], context=context).picking_id
+            self.make_packaging(cr, uid, picking_to_package.id, todo_move_ids, context=context)
 
     # views associated to each picking type
     def _get_view_id(self, cr, uid, type):
@@ -768,7 +770,9 @@ class stock_picking(osv.osv):
         #return id of next picking to work on
         return self._get_picking_for_packing_ui(cr, uid, context=context)
 
-    def action_pack(self, cr, uid, picking_id, context=None):
+    def action_pack(self, cr, uid, picking_ids, context=None):
+        assert len(picking_ids) == 1, 'Packing operation should be done for one picking at a time'
+        picking_id = picking_ids[0]
         #put all the operations of the picking that aren't yet assigned to a package to a new one
         stock_operation_obj = self.pool.get('stock.pack.operation')
         package_obj = self.pool.get('stock.quant.package')
@@ -2035,11 +2039,11 @@ class stock_package(osv.osv):
     def _check_location(self, cr, uid, ids, context=None):
         '''checks that all quants in a package are stored in the same location'''
         for pack in self.browse(cr, uid, ids, context=context):
-            if not all([quant == pack.quant_ids[0].location_id.id for quant in pack.quant_ids]):
+            if not all([quant.location_id.id == pack.quant_ids[0].location_id.id for quant in pack.quant_ids]):
                 return False
         return True
     _constraints = [
-        (_check_location, 'All quant inside a package should be in the same location', ['location_id']),
+        (_check_location, 'All quants inside a package should be in the same location', ['location_id']),
     ]
 
     def action_print(self, cr, uid, ids, context=None):
@@ -2079,11 +2083,12 @@ class stock_package(osv.osv):
     def _get_product_total_qty(self, cr, uid, package_record, product_id, context=None):
         ''' find the total of given product 'product_id' inside the given package 'package_id'''
         quant_obj = self.pool.get('stock.quant')
-        all_quant_ids = self.find_all_quants(cr, uid, package_record, context=context)
+        included_package_ids = self.search(cr, uid, [('parent_id', 'child_of', [package_record.id])], context=context)
+        all_quant_ids = quant_obj.search(cr, uid, [('package_id', 'in', included_package_ids)], context=context)
         total = 0
         for quant in quant_obj.browse(cr, uid, all_quant_ids, context=context):
             if quant.product_id.id == product_id:
-                total += quant.product_qty
+                total += quant.qty
         return total
 
 

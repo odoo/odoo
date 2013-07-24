@@ -215,7 +215,7 @@ function openerp_picking_widgets(instance){
             var self = this;
             console.log('Pack');
             new instance.web.Model('stock.picking')
-                .call('action_pack',[[self.picking.id]])
+                .call('action_pack',[[[self.picking.id]]])
                 .then(function(){
                     instance.session.user_context.current_package_id = false;
                     console.log('Context Reset');
