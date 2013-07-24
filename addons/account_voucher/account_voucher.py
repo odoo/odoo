@@ -236,9 +236,9 @@ class account_voucher(osv.osv):
         debit = credit = 0.0
         sign = type == 'payment' and -1 or 1
         for l in line_dr_ids:
-            debit += l['amount_unreconciled']
+            debit += l['amount']
         for l in line_cr_ids:
-            credit += l['amount_unreconciled']
+            credit += l['amount']
         return amount - sign * (credit - debit)
 
     def onchange_line_ids(self, cr, uid, ids, line_dr_ids, line_cr_ids, amount, voucher_currency, type, context=None):
@@ -1298,10 +1298,8 @@ class account_voucher(osv.osv):
                 }
                 new_id = move_line_obj.create(cr, uid, move_line_foreign_currency, context=context)
                 rec_ids.append(new_id)
-
             if line.move_line_id.id:
                 rec_lst_ids.append(rec_ids)
-
         return (tot_line, rec_lst_ids)
 
     def writeoff_move_line_get(self, cr, uid, voucher_id, line_total, move_id, name, company_currency, current_currency, context=None):
