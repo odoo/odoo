@@ -373,14 +373,18 @@ class WorkerCron(Worker):
             interval = 60 + self.pid % 10 # chorus effect
             time.sleep(interval)
 
-    def process_work(self):
-        rpc_request = logging.getLogger('openerp.netsvc.rpc.request')
-        rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
-        _logger.debug("WorkerCron (%s) polling for jobs", self.pid)
+    def _db_list(self):
         if config['db_name']:
             db_names = config['db_name'].split(',')
         else:
             db_names = openerp.netsvc.ExportService._services['db'].exp_list(True)
+        return db_names
+
+    def process_work(self):
+        rpc_request = logging.getLogger('openerp.netsvc.rpc.request')
+        rpc_request_flag = rpc_request.isEnabledFor(logging.DEBUG)
+        _logger.debug("WorkerCron (%s) polling for jobs", self.pid)
+        db_names = self._db_list()
         if len(db_names):
             self.db_index = (self.db_index + 1) % len(db_names)
             db_name = db_names[self.db_index]
@@ -414,7 +418,14 @@ class WorkerCron(Worker):
             self.db_index = 0
 
     def start(self):
+        os.nice(10)     # mommy always told me to be nice with others...
         Worker.start(self)
         openerp.service.start_internal()
+
+        # chorus effect: make cron workers do not all start at first database
+        mct = config['max_cron_threads']
+        p = float(self.pid % mct) / mct
+        self.db_index = int(len(self._db_list()) * p)
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
