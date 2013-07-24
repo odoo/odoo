@@ -181,3 +181,29 @@ It is important for OpenERP to know when a workflow instance is completed: a
 workflow can have an activity that is actually another workflow (called a
 subflow) and that activity will be completed only when the subflow is
 completed.
+
+Subflow
+'''''''
+
+An activity can embed a complete workflow, called a subflow (the embedding
+workflow is called the parent workflow). The workflow to instanciate is
+specified by the ``subflow_id`` attribute.
+
+.. note:: In the GUI, that attribute can not be set unless the kind of the
+    activity is ``Subflow``.
+
+The activity will be completed (and its outgoing transitions will be tried)
+when the subflow is completed (see the ``flow_stop`` attribute above to read
+about when a workflow is considered completed by OpenERP).
+
+Sending a signal from a subflow
+'''''''''''''''''''''''''''''''
+
+When a workflow is used (as a sublfow) in the activity of a (parent) workflow,
+the sublow can send a signal from its own activities to the parent by specifying a
+signal name in the ``signal_send`` attribute. OpenERP will process those
+activities normally and send to the parent workflow instance a signal with
+``signal_send`` value prefixed with ``subflow.``.
+
+In other words, it is possible to react and take transitions in the parent
+workflow as activities are executed in the sublow.
