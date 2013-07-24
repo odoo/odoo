@@ -247,9 +247,7 @@ class account_analytic_line(osv.osv):
                         ctx = context.copy()
                         ctx.update({'uom': uom})
 
-                        # check force product
-                        if data.get('product'):
-                            price = self._get_invoice_price(cr, uid, account, product_id, user_id, qty, ctx)
+                        price = self._get_invoice_price(cr, uid, account, product_id, user_id, qty, ctx)
 
                         general_account = product.property_account_income or product.categ_id.property_account_income_categ
                         if not general_account:
