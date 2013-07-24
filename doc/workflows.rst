@@ -151,3 +151,33 @@ be chosen on a per-transition basis with the ``trigger_expression`` attribute.
 .. note:: Note that triggers are not re-installed whenever the transition is
     re-tried.
 
+Activities
+----------
+
+While the transitions can be seen as the control structure of the workflows,
+activities are the place where everything happen, from changing record states
+to sending email.
+
+Different kind of activities exist: ``Dummy``, ``Function``, ``Subflow``, and
+``Stop all``; different kind of activities can do different and they are
+detailed below. 
+
+In addition to the activity kind, activies have some properties, detailed in
+the next sections.
+
+Flow start and flow stop
+''''''''''''''''''''''''
+
+The ``flow_start`` attribute is a boolean value specifying if the activity
+starts the workflow. Multiple activities can have the ``flow_start`` attribute
+set to ``True`` and when instanciating a workflow for a record, OpenERP will
+simply process all of them, and try all their outgoing transitions afterwards.
+
+The ``flow_stop`` attribute is also a boolean value, specifying if the activity
+ends the workflow. A workflow is considered to be completed when all its
+activities with the ``flow_stop`` attribute set to ``True`` are completed.
+
+It is important for OpenERP to know when a workflow instance is completed: a
+workflow can have an activity that is actually another workflow (called a
+subflow) and that activity will be completed only when the subflow is
+completed.
