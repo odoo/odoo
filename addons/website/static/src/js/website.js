@@ -40,11 +40,18 @@ instance.website.EditorBar = instance.web.Widget.extend({
                 CKEDITOR.inline(this, {
                     // Don't load ckeditor's style rules
                     stylesSet: [],
-                    // toolbar: TODO,
+                    toolbar: [
+                        ['Bold', 'Italic']
+                    ],
+                    uiColor: '',
                     // Ensure no config file is loaded
                     customConfig: '',
                     // Disable ACF
                     allowedContent: true,
+                    // Support for sharedSpaces in 4.x
+                    extraPlugins: 'sharedspace',
+                    // Place toolbar in controlled location
+                    sharedSpaces: { top: 'oe_rte_toolbar' },
                 });
             });
     },
