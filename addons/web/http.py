@@ -1057,29 +1057,6 @@ def db_list(force=False, httprequest=None):
     dbs = [i for i in dbs if re.match(r, i)]
     return dbs
 
-def db_redirect(match_first_only_if_unique, httprequest=None):
-    httprequest = httprequest or request.httprequest
-    db = None
-    redirect = None
-
-    dbs = db_list(True, httprequest)
-
-    # 1 try the db in the session
-    db_session = httprequest.session.db
-    if db_session in dbs:
-        return (db_session, None)
-
-    # 2 use the first db if user can list databases
-    if dbs and (not match_first_only_if_unique or len(dbs) == 1):
-        db = dbs[0]
-
-    # redirect to the chosen db if multiple are available
-    if db and len(dbs) > 1:
-        query = dict(urlparse.parse_qsl(httprequest.query_string, keep_blank_values=True))
-        query.update({'db': db})
-        redirect = httprequest.path + '?' + urllib.urlencode(query)
-    return (db, redirect)
-
 def db_monodb(httprequest=None):
     """
         Magic function to find the current database.
@@ -1091,8 +1068,25 @@ def db_monodb(httprequest=None):
 
         Returns ``None`` if the magic is not magic enough.
     """
-    return db_redirect(True, httprequest=httprequest)[0]
+    httprequest = httprequest or request.httprequest
+    db = None
+    redirect = None
 
+    dbs = db_list(True, httprequest)
+
+    # 1 try the db already in the session
+    db_session = httprequest.session.db
+    if db_session in dbs:
+        return db_session
+
+    # 2 if there is only one db in the db filters, take it
+    if len(dbs) == 1:
+        return dbs[0]
+
+    # 3 if there are multiple dbs, take the first one only if we can list them
+    if len(dbs) > 1 and config['list_db']:
+        return dbs[0]
+    return None
 
 class CommonController(Controller):
 
