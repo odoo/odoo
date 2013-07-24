@@ -58,6 +58,7 @@ class Field(object):
     model_name = None           # name of the model of this field
     type = None                 # type of the field (string)
     relational = False          # whether the field is a relational one
+    inverse_field = None        # inverse field (object), if it exists
 
     store = True                # whether the field is stored in database
     compute = None              # name of model method that computes value
@@ -414,7 +415,6 @@ class _Relational(Field):
     """ Abstract class for relational fields. """
     relational = True
     comodel_name = None                 # name of model of values
-    inverse_field = None                # inverse field (object), if it exists
     domain = None                       # domain for searching values
     context = None                      # context for searching values
 

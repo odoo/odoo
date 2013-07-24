@@ -73,12 +73,15 @@ class ScopeProxy(object):
         else:
             return Scope(*args, **kwargs)
 
-    def invalidate_cache(self, spec=None):
-        """ Invalidate the record cache in all scopes.
-            See :meth:`Cache.invalidate` for the parameter `spec`.
-        """
+    def invalidate(self, model, field, ids=None):
+        """ Invalidate a field for the given record ids in the caches. """
         for scope in getattr(_local, 'scope_list', ()):
-            scope.cache.invalidate(spec)
+            scope.cache.invalidate(model, field, ids)
+
+    def invalidate_all(self):
+        """ Invalidate the record caches in all scopes. """
+        for scope in getattr(_local, 'scope_list', ()):
+            scope.cache.invalidate_all()
 
     def check_cache(self):
         """ Check the record caches in all scopes. """
@@ -253,27 +256,18 @@ class Cache(defaultdict):
     def __init__(self):
         super(Cache, self).__init__(ModelCache)
 
-    def invalidate(self, spec=None):
-        """ Invalidate the cache.
+    def invalidate(self, model_name, field_name, ids=None):
+        """ Invalidate a field for the given record ids. """
+        model_cache = self[model_name]
+        for record_cache in get_values(model_cache, ids):
+            record_cache.pop(field_name, None)
 
-            :param spec: describes what to invalidate;
-                either ``None`` (invalidate everything), or
-                a list of triples (`model`, `field`, `ids`), where
-                `model` is a model name, `field` is a field name,
-                and `ids` is a list of record ids or ``None`` for all records.
-        """
-        if spec is None:
-            # Invalidate the whole cache. Note that model caches cannot be
-            # dropped from the cache, because the access to those caches is
-            # memoized in model instances (see BaseModel._model_cache).
-            for model_cache in self.itervalues():
-                model_cache.clear()
-        else:
-            # Invalidate following the given spec.
-            for model, field, ids in spec:
-                model_cache = self[model]
-                for record_cache in get_values(model_cache, ids):
-                    record_cache.pop(field, None)
+    def invalidate_all(self):
+        """ Invalidate the whole cache. """
+        # Note that model caches cannot be dropped from the cache, because they
+        # are memoized in model instances (see BaseModel._model_cache).
+        for model_cache in self.itervalues():
+            model_cache.clear()
 
     def check(self):
         """ self-check for validating the cache """
@@ -287,7 +281,7 @@ class Cache(defaultdict):
             ))
             for model_name, model_cache in self.iteritems()
         )
-        self.invalidate()
+        self.invalidate_all()
 
         # re-fetch the records, and compare with their former cache
         invalids = []

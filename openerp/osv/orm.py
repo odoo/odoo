@@ -2640,7 +2640,7 @@ class BaseModel(object):
                     (SELECT id FROM ir_module_module WHERE name=%s),
                     (SELECT id FROM ir_model WHERE model=%s))""",
                        (relation_table, self._module, self._name))
-            scope_proxy.invalidate_cache()
+            self.invalidate_cache()
 
     # checked version: for direct m2o starting from `self`
     def _m2o_add_foreign_key_checked(self, source_field, dest_model, ondelete):
@@ -5570,19 +5570,15 @@ class BaseModel(object):
         """
         if fnames is None:
             if ids is None:
-                return scope_proxy.invalidate_cache()
+                return scope_proxy.invalidate_all()
             fnames = self._fields.keys()
 
-        # make spec to invalidate inverse fields, too
-        spec = []
         for fname in fnames:
-            spec.append((self._name, fname, ids))
-            field = self._fields[fname]
-            if field.relational and field.inverse_field:
-                spec.append((field.comodel_name, field.inverse_field.name, None))
-
-        # invalidate the spec
-        scope_proxy.invalidate_cache(spec)
+            scope_proxy.invalidate(self._name, fname, ids)
+            # invalidate inverse fields, too
+            inv = self._fields[fname].inverse_field
+            if inv:
+                scope_proxy.invalidate(inv.model_name, inv.name, None)
 
     @api.multi
     def recompute_spec(self, modified_fields, spec=None):
@@ -5637,7 +5633,8 @@ class BaseModel(object):
             return
 
         # first invalidate the cache of the fields to recompute
-        scope_proxy.invalidate_cache(spec)
+        for model_name, field_name, ids in spec:
+            scope_proxy.invalidate(model_name, field_name, ids)
 
         with scope_proxy.recomputing_manager(spec):
             # simply evaluate the fields to recompute on their records;

@@ -346,7 +346,7 @@ class TestAPI(common.TransactionCase):
     @mute_logger('openerp.osv.orm')
     def test_60_cache_prefetching(self):
         """ Check the record cache prefetching """
-        scope.invalidate_cache()
+        scope.invalidate_all()
 
         # all the records of an instance already have an entry in cache
         partners = self.Partner.search([])

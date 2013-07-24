@@ -748,7 +748,7 @@ class ir_model_access(osv.osv):
             pass
 
     def call_cache_clearing_methods(self, cr):
-        scope.invalidate_cache()
+        scope.invalidate_all()
         self.check.clear_cache(self)    # clear the cache of check function
         for model, method in self.__cache_clearing_methods:
             if model in self.pool:
