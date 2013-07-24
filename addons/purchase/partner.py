@@ -41,7 +41,7 @@ class res_partner(osv.osv):
 
         default.update({'purchase_order_ids': []})
 
-        super(res_partner, self).copy(cr, uid, id, default=default, context=context)
+        return super(res_partner, self).copy(cr, uid, id, default=default, context=context)
 
     def _commercial_fields(self, cr, uid, context=None):
         return super(res_partner, self)._commercial_fields(cr, uid, context=context) + ['property_product_pricelist_purchase']
