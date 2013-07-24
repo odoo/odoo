@@ -105,7 +105,8 @@ class stock_location_path(osv.osv):
                 'company_id': rule.company_id and rule.company_id.id or False,
                 'date_expected': newdate,
                 'picking_id': False,
-                'type': move_obj.get_type_from_usage(cr, uid, move.location_id, move.location_dest_id, context=context)
+                'type': move_obj.get_type_from_usage(cr, uid, move.location_id, move.location_dest_id, context=context),
+                'rule_id': rule.id,
             })
             move_obj.write(cr, uid, [move.id], {
                 'move_dest_id': move_id,
