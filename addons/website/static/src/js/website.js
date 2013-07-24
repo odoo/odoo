@@ -1,4 +1,7 @@
 openerp.website = function(instance) {
+var block = ['section', 'div'];
+var block_inline = ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+var terminal = block.concat(block_inline).join(', ');
 
 instance.website.EditorBar = instance.web.Widget.extend({
     template: 'Website.EditorBar',
@@ -13,7 +16,7 @@ instance.website.EditorBar = instance.web.Widget.extend({
         var self = this;
         this.saving_mutex = new $.Mutex();
         self.$('button[data-action]').prop('disabled', true);
-        self.$('button[data-action=edit],button[data-action=snippet]').prop('disabled', false);
+        self.$('button[data-action=edit], button[data-action=snippet]').prop('disabled', false);
         self.snippet_start();
 
         $('body').on("keypress", ".oe_editable", function(e) {
@@ -33,7 +36,20 @@ instance.website.EditorBar = instance.web.Widget.extend({
     },
     edit: function () {
         this.$('button[data-action=edit]').prop('disabled', true);
-        $('[data-oe-model]').prop('contentEditable', true).addClass('oe_editable');
+        var $root = $('[data-oe-model]');
+        $root.add($root.find(terminal))
+            .not('link, script, span')
+            .not(':has(' + terminal + ')')
+            .prop('contentEditable', true)
+            .addClass('oe_editable')
+            .each(function () {
+                CKEDITOR.inline(this, {
+                    // Don't load ckeditor's style rules
+                    stylesSet: [],
+                    toolbar: 'Basic',
+                    customConfig: '',
+                });
+            });
     },
     save: function () {
         var self = this;
@@ -62,9 +78,12 @@ instance.website.EditorBar = instance.web.Widget.extend({
         var xpath = data.oeXpath;
         if (xpath) {
             var $w = $el.clone();
-            $w.removeClass('aloha-editable aloha-editable-highlight oe_dirty');
+            $w.removeClass('oe_dirty');
             _.each(['model', 'id', 'field', 'xpath'], function(d) {$w.removeAttr('data-oe-' + d);});
-            $w.prop('contentEditable', false).removeClass('oe_editable');
+            $w
+                .each(function () { console.log(this); })
+                .removeClass('oe_editable')
+                .prop('contentEditable', false);
             html = $w.wrap('<div>').parent().html();
         }
         return (new instance.web.DataSet(this, 'ir.ui.view')).call('save', [data.oeModel, data.oeId, data.oeField, html, xpath]);

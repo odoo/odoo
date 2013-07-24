@@ -63,6 +63,11 @@
                         <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,600,700' rel='stylesheet' type='text/css'/>
 
                         <script type="text/javascript" src="/web/static/lib/jquery/jquery-1.8.3.js"></script>
+                        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/ckeditor/4.2/ckeditor.js"></script>
+                        <script type="text/javascript">
+                            CKEDITOR.disableAutoInline = true;
+                            CKEDITOR.dtd.$editable.li = 1;
+                        </script>
 
                         <t t-if="editable">
                             <t t-raw="css"/>
