@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <!-- add website_published field on mail group -->
+
+    <record model="ir.ui.view" id="blog_website_form">
+        <field name="name">mail.group.website.form</field>
+        <field name="model">mail.group</field>
+        <field name="inherit_id" ref="mail.group_all_employees"/>
+        <field name="arch" type="xml">
+            <field name="public" position="after">
+                <field name="website_published" attrs="{'invisible': [('public','!=','public')]}"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Layout add nav and footer -->
+
+    <record id="header_website_mail" model="ir.ui.view">
+        <field name="name">header_website_mail</field>
+        <field name="inherit_id" ref="website.header"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="(//li)[last()]" position="after">
+                    <li class="pull-right"><a href="/blog">Blog</a></li>
+                </xpath>
+           </data>
+        </field>
+    </record>
+
+    <!-- Page Shop --> 
+
+    <template id="index">
+        <t t-call="website.layout">
+            <t t-set="title">Blog</t>
+            <div class="container css_website_mail">
+                <div class="row">
+                    <div class="span4">
+                        <ul class="nav nav-list">
+                            <li class="nav-header">Most Popular</li>
+                            <t t-foreach="popular_ids or []" t-as="blog">
+                                <li><a t-att-href="'/blog/%%s/%%s' %% (blog.res_id, blog.id)"><t t-esc="blog.subject"/> </a></li>
+                            </t>
+                            <li class="nav-header">Recent</li>
+                            <t t-foreach="recent_ids or []" t-as="blog">
+                                <li><a t-att-href="'/blog/%%s/%%s' %% (blog.res_id, blog.id)"><t t-esc="blog.subject"/> </a></li>
+                            </t>
+                            <li class="nav-header">Last Commit</li>
+                            <t t-foreach="last_ids or []" t-as="blog">
+                                <li><a t-att-href="'/blog/%%s/%%s' %% (blog.res_id, blog.id)"><t t-esc="blog.subject"/> </a></li>
+                            </t>
+                        </ul>
+                    </div>
+                    <div class="span8" t-if="blog_id">
+                        <div class="media">
+                            <div class="media-body well">
+                                <h3><t t-esc="blog_id.subject"/></h3>
+                                <p><t t-raw="blog_id.body"/></p>
+                                <small class="pull-right muted text-right">
+                                    <div><t t-esc="blog_id.author_id.name"/></div>
+                                    <div><t t-esc="blog_id.date"/></div>
+                                </small>
+                            </div>
+                            <ul class="media-list">
+                                <t t-foreach="blog_id.child_ids or []" t-as="mail">
+                                    <li class="media well well-small">
+                                        <div class="media-body">
+                                            <h4 t-if="mail.subject" class="media-heading"><t t-esc="mail.subject"/></h4>
+                                            <div class="media">
+                                                <t t-raw="mail.body"/>
+                                                <small class="pull-right muted text-right">
+                                                    <div><t t-esc="mail.author_id.name"/></div>
+                                                    <div><t t-esc="mail.date"/></div>
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </t>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="span8" t-if="not blog_id">
+                        <ul class="media-list">
+                            <t t-foreach="blog_ids or []" t-as="blog">
+                                <li class="media">
+                                    <div class="media-body">
+                                        <h4 class="media-heading"><t t-esc="blog.subject"/></h4>
+                                        <div class="media">
+                                            <t t-raw="blog.body"/>
+                                            <small class="pull-right muted text-right">
+                                                <a t-att-href="'/blog/%%s/%%s' %% (blog.res_id, blog.id)">Read more </a>
+                                                <div><t t-esc="blog.author_id.name"/></div>
+                                                <div><t t-esc="blog.date"/></div>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </li>
+                            </t>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+ </data>
+</openerp>
