@@ -33,10 +33,10 @@ class sale_configuration(osv.osv_memory):
             implied_group='sale_stock.group_invoice_deli_orders',
             help="To allow your salesman to make invoices for Delivery Orders using the menu 'Deliveries to Invoice'."),
         'task_work': fields.boolean("Prepare invoices based on task's activities",
-            help="""Lets you transfer the entries under tasks defined for Project Management to
-                the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways
-                and to automatically creates project tasks from procurement lines.
-                This installs the modules project_timesheet and project_mrp."""),
+            help='Lets you transfer the entries under tasks defined for Project Management to '
+                'the Timesheet line entries for particular date and particular user  with the effect of creating, editing and deleting either ways '
+                'and to automatically creates project tasks from procurement lines.\n'
+                'This installs the modules project_timesheet and project_mrp.'),
         'default_order_policy': fields.selection(
             [('manual', 'Invoice based on sales orders'), ('picking', 'Invoice based on deliveries')],
             'The default invoicing method is', default_model='sale.order',
