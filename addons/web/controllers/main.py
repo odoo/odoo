@@ -557,7 +557,7 @@ class Home(http.Controller):
             'modules': simplejson.dumps(module_boot(db=db)),
             'init': 'var wc = new s.web.WebClient();wc.appendTo($(document.body));'
         }
-        return r
+        return request.make_response(r, {'Cache-Control': 'no-cache', 'Content-Type': 'text/html; charset=utf-8'})
 
     @http.route('/login', type='http', auth="user")
     def login(self, db, login, key):

@@ -792,10 +792,17 @@ instance.web.redirect = function(url, wait) {
         instance.client.crashmanager.active = false;
     }
 
-    var wait_server = function() {
-        instance.session.rpc("/web/webclient/version_info", {}).done(function() {
+    var load = function() {
+        var old = "" + window.location;
+        if (old === url) {
+            window.location.reload();
+        } else {
             window.location = url;
-        }).fail(function() {
+        }
+    };
+
+    var wait_server = function() {
+        instance.session.rpc("/web/webclient/version_info", {}).done(load).fail(function() {
             setTimeout(wait_server, 250);
         });
     };
@@ -803,7 +810,7 @@ instance.web.redirect = function(url, wait) {
     if (wait) {
         setTimeout(wait_server, 1000);
     } else {
-        window.location = url;
+        load();
     }
 };
 
@@ -818,7 +825,6 @@ instance.web.Reload = function(parent, action) {
     var l = window.location;
 
     var sobj = $.deparam(l.search.substr(1));
-    sobj.ts = new Date().getTime();
     if (params.url_search) {
         sobj = _.extend(sobj, params.url_search);
     }
