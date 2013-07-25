@@ -1,4 +1,5 @@
 openerp.website = function(instance) {
+var _lt = instance.web._lt;
 instance.website.EditorBar = instance.web.Widget.extend({
     template: 'Website.EditorBar',
     events: {
@@ -8,52 +9,39 @@ instance.website.EditorBar = instance.web.Widget.extend({
         'click button[data-action=snippet]': 'snippet',
     },
     container: 'body',
+    init: function () {
+        this._super.apply(this, arguments);
+        this.saving_mutex = new $.Mutex();
+    },
     start: function() {
         var self = this;
-        this.saving_mutex = new $.Mutex();
-        self.$('button[data-action]').prop('disabled', true);
-        self.$('button[data-action=edit], button[data-action=snippet]').prop('disabled', false);
+
+        this.$('button[data-action]').prop('disabled', true);
+        this.$buttons = {
+            edit: this.$('button[data-action=edit]'),
+            save: this.$('button[data-action=save]'),
+            cancel: this.$('button[data-action=cancel]'),
+            snippet: this.$('button[data-action=snippet]'),
+        };
+        this.$buttons.edit.add(this.$buttons.snippet).prop('disabled', false);
+
         self.snippet_start();
 
-        $('body').on("keypress", ".oe_editable", function(e) {
-            var $e = $(e.currentTarget);
-            if (!$e.is('.oe_dirty')) {
-                $e.addClass('oe_dirty');
-                self.$('button[data-action=save],button[data-action=cancel]').prop('disabled', false);
-                // TODO: Are we going to use a meta-data flag in order to know if the field shall be text or html ?
-            }
-            if (e.which == 13) {
-                $e.blur();
-                e.preventDefault();
-            }
-        });
+        this.rte = new instance.website.RTE(this);
+        this.rte.on('change', this, this.proxy('rte_changed'));
 
-        return this._super.apply(this, arguments);
+        return $.when(
+            this._super.apply(this, arguments),
+            this.rte.appendTo(this.$el)
+        );
     },
     edit: function () {
-        this.$('button[data-action=edit]').prop('disabled', true);
-        $('[data-oe-model]')
-            .not('link, script, span')
-            .prop('contentEditable', true)
-            .addClass('oe_editable')
-            .each(function () {
-                CKEDITOR.inline(this, {
-                    // Don't load ckeditor's style rules
-                    stylesSet: [],
-                    toolbar: [
-                        ['Bold', 'Italic']
-                    ],
-                    uiColor: '',
-                    // Ensure no config file is loaded
-                    customConfig: '',
-                    // Disable ACF
-                    allowedContent: true,
-                    // Support for sharedSpaces in 4.x
-                    extraPlugins: 'sharedspace',
-                    // Place toolbar in controlled location
-                    sharedSpaces: { top: 'oe_rte_toolbar' },
-                });
-            });
+        this.$buttons.edit.prop('disabled', true);
+        this.$buttons.cancel.prop('disabled', false);
+        this.rte.start_edition($('[data-oe-model]').addClass('oe_editable'));
+    },
+    rte_changed: function () {
+        this.$buttons.save.prop('disabled', false);
     },
     save: function () {
         var self = this;
@@ -85,7 +73,6 @@ instance.website.EditorBar = instance.web.Widget.extend({
             $w.removeClass('oe_dirty');
             _.each(['model', 'id', 'field', 'xpath'], function(d) {$w.removeAttr('data-oe-' + d);});
             $w
-                .each(function () { console.log(this); })
                 .removeClass('oe_editable')
                 .prop('contentEditable', false);
             html = $w.wrap('<div>').parent().html();
@@ -121,6 +108,79 @@ instance.website.EditorBar = instance.web.Widget.extend({
     },
     snippet: function (ev) {
         $('.oe_snippet_editor').toggle();
+    },
+});
+
+instance.website.RTE = instance.web.Widget.extend({
+    tagName: 'li',
+    className: 'oe_right',
+    commands: [
+        {name: _lt('Bold'), command: 'bold'},
+        {name: _lt('Italic'), command: 'italic'},
+        {name: _lt('Underline'), command: 'underline'},
+        {name: _lt('Strikethrough'), command: 'strike'},
+        {name: _lt('H1'), style: { element: 'h1' }},
+        {name: _lt('H2'), style: { element: 'h2', }},
+        {name: _lt('H3'), style: { element: 'h3', }},
+        {name: _lt('H4'), style: { element: 'h4', }},
+        {name: _lt("Red"), style: { element: 'span', styles: { color: 'red' } }}
+    ],
+    // editor.ui.items -> possible commands &al
+    // editor.applyStyle(new CKEDITOR.style({element: "span",styles: {color: "#(color)"},overrides: [{element: "font",attributes: {color: null}}]}, {color: '#ff0000'}));
+    start: function () {
+        var self = this;
+        this.$el.hide();
+
+        _(this.commands).foldl(function (jq, command) {
+            return jq.add(self.button_for(command));
+        }, $()).appendTo(this.$el);
+    },
+    start_edition: function ($elements) {
+        var self = this;
+        $elements
+            .not('link, script, span')
+            .prop('contentEditable', true)
+            .each(function () {
+                var $this = $(this);
+                CKEDITOR.inline(this, self._config()).on('change', function () {
+                    $this.addClass('oe_dirty');
+                    self.trigger('change', this, null);
+                });
+            });
+        this.$el.show();
+    },
+
+    button_for: function (command) {
+        var self = this;
+        return $('<button type="button">').click(function () {
+            var editor = self._current_editor();
+            editor.fire('saveSnapshot');
+
+            if (command.style) {
+                editor.applyStyle(new CKEDITOR.style(command.style));
+            } else if (typeof command.command === 'string') {
+                editor.execCommand(command.command);
+            } else {
+                command.command(editor);
+            }
+        }).text(command.name);
+    },
+
+    _current_editor: function () {
+        return CKEDITOR.currentInstance;
+    },
+    _config: function () {
+        return {
+            // Don't load ckeditor's style rules
+            stylesSet: [],
+            // Remove toolbar entirely
+            removePlugins: 'toolbar,elementspath,resize',
+            uiColor: '',
+            // Ensure no config file is loaded
+            customConfig: '',
+            // Disable ACF
+            allowedContent: true,
+        };
     },
 });
 
