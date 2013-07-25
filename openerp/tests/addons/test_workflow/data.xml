@@ -164,5 +164,70 @@
             <field name="kind">stopall</field>
             <field name="action">write({'value': 1})</field>
         </record>
+
+        <!-- Workflow E:
+
+            a -True-> b
+
+        Both activities are run when the workflow is instanciated.
+        -->
+        <record id="test_workflow_e" model="workflow">
+            <field name="name">test.workflow.e</field>
+            <field name="osv">test.workflow.model.e</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <record id="activity_e_a" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow_e"/>
+            <field name="flow_start">True</field>
+            <field name="name">a</field>
+            <field name="kind">function</field>
+            <field name="action">write({'value': 1})</field>
+        </record>
+        <record id="activity_e_b" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow_e"/>
+            <field name="flow_stop">True</field>
+            <field name="name">b</field>
+            <field name="kind">function</field>
+            <field name="action">write({'value': 2})</field>
+        </record>
+
+        <record id="trans_e_a_b" model="workflow.transition">
+            <field name="act_from" ref="activity_e_a"/>
+            <field name="act_to" ref="activity_e_b"/>
+        </record>
+
+        <!-- Workflow F:
+
+            a -signal-> b
+
+        Same as E but with a signal on the transition.
+        -->
+        <record id="test_workflow_f" model="workflow">
+            <field name="name">test.workflow.f</field>
+            <field name="osv">test.workflow.model.f</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <record id="activity_f_a" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow_f"/>
+            <field name="flow_start">True</field>
+            <field name="name">a</field>
+            <field name="kind">function</field>
+            <field name="action">write({'value': 1})</field>
+        </record>
+        <record id="activity_f_b" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow_f"/>
+            <field name="flow_stop">True</field>
+            <field name="name">b</field>
+            <field name="kind">function</field>
+            <field name="action">write({'value': 2})</field>
+        </record>
+
+        <record id="trans_f_a_b" model="workflow.transition">
+            <field name="act_from" ref="activity_f_a"/>
+            <field name="act_to" ref="activity_f_b"/>
+            <field name="signal">a-b</field>
+        </record>
     </data>
 </openerp>

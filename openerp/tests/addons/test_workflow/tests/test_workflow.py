@@ -103,3 +103,25 @@ class test_workflows(common.TransactionCase):
         self.check_value(model._name, i, 1)
 
         model.unlink(self.cr, SUPERUSER_ID, [i])
+
+    def test_workflow_e(self):
+        model = self.registry('test.workflow.model.e')
+
+        i = model.create(self.cr, SUPERUSER_ID, {})
+        self.check_activities(model._name, i, ['b'])
+        self.check_value(model._name, i, 2)
+
+        model.unlink(self.cr, SUPERUSER_ID, [i])
+
+    def test_workflow_f(self):
+        model = self.registry('test.workflow.model.f')
+
+        i = model.create(self.cr, SUPERUSER_ID, {})
+        self.check_activities(model._name, i, ['a'])
+        self.check_value(model._name, i, 1)
+
+        model.signal_workflow(self.cr, SUPERUSER_ID, [i], 'a-b')
+        self.check_activities(model._name, i, ['b'])
+        self.check_value(model._name, i, 2)
+
+        model.unlink(self.cr, SUPERUSER_ID, [i])
