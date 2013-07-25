@@ -2,7 +2,7 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     jshint: {
-      files: ['static/src/**/*.js'],
+      files: ['static/src/**/*.js', 'static/test/**/*.js'],
       options: {
         sub: true, //[] instead of .
         evil: true, //eval

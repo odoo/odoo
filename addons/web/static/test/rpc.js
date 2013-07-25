@@ -122,6 +122,6 @@ openerp.testing.section('misordered resolution managemeng', {
             ok(!fail2);
             done.resolve();
         }, 400);
-        return $.when(d1, d2, done)
+        return $.when(d1, d2, done);
     });
 });

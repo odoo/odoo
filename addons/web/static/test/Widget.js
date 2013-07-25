@@ -7,7 +7,7 @@ openerp.testing.section('Widget.proxy', {
                 this.executed = true;
             }
         });
-        var w = new W;
+        var w = new W();
         var fn = w.proxy('exec');
         fn();
         ok(w.executed, 'should execute the named method in the right context');
@@ -18,7 +18,7 @@ openerp.testing.section('Widget.proxy', {
                 this.executed = arg;
             }
         });
-        var w = new W;
+        var w = new W();
         var fn = w.proxy('exec');
         fn(42);
         ok(w.executed, "should execute the named method in the right context");
@@ -32,7 +32,7 @@ openerp.testing.section('Widget.proxy', {
                 this.executed = 1;
             }
         });
-        var w = new W;
+        var w = new W();
         var fn = w.proxy('exec');
         W.include({
             exec: function () { this.executed = 2; }
@@ -43,14 +43,14 @@ openerp.testing.section('Widget.proxy', {
     });
 
     test('(Function)', function (instance) {
-        var w = new (instance.web.Widget.extend({ }));
+        var w = new (instance.web.Widget.extend({ }))();
 
         var fn = w.proxy(function () { this.executed = true; });
         fn();
         ok(w.executed, "should set the function's context (like Function#bind)");
     });
     test('(Function)(*args)', function (instance) {
-        var w = new (instance.web.Widget.extend({ }));
+        var w = new (instance.web.Widget.extend({ }))();
 
         var fn = w.proxy(function (arg) { this.executed = arg; });
         fn(42);
@@ -79,7 +79,7 @@ openerp.testing.section('Widget.renderElement', {
     }
 }, function (test) {
     test('no template, default', function (instance) {
-        var w = new (instance.web.Widget.extend({ }));
+        var w = new (instance.web.Widget.extend({ }))();
 
         var $original = w.$el;
         ok($original, "should initially have a root element");
@@ -96,7 +96,7 @@ openerp.testing.section('Widget.renderElement', {
     test('no template, custom tag', function (instance) {
         var w = new (instance.web.Widget.extend({
             tagName: 'ul'
-        }));
+        }))();
         w.renderElement();
 
         equal(w.el.nodeName, 'UL', "should have generated the custom element tag");
@@ -104,7 +104,7 @@ openerp.testing.section('Widget.renderElement', {
     test('no template, @id', function (instance) {
         var w = new (instance.web.Widget.extend({
             id: 'foo'
-        }));
+        }))();
         w.renderElement();
 
         equal(w.el.attributes.length, 1, "should have one attribute");
@@ -114,7 +114,7 @@ openerp.testing.section('Widget.renderElement', {
     test('no template, @className', function (instance) {
         var w = new (instance.web.Widget.extend({
             className: 'oe_some_class'
-        }));
+        }))();
         w.renderElement();
 
         equal(w.el.className, 'oe_some_class', "should have the right property");
@@ -129,7 +129,7 @@ openerp.testing.section('Widget.renderElement', {
                 'clark': 'gable',
                 'spoiler': 'snape kills dumbledore'
             }
-        }));
+        }))();
         w.renderElement();
 
         equal(w.el.attributes.length, 5, "should have all the specified attributes");
@@ -150,7 +150,7 @@ openerp.testing.section('Widget.renderElement', {
     test('template', function (instance) {
         var w = new (instance.web.Widget.extend({
             template: 'test.widget.template'
-        }));
+        }))();
         w.renderElement();
 
         equal(w.el.nodeName, 'OL');
@@ -160,7 +160,7 @@ openerp.testing.section('Widget.renderElement', {
     test('repeated', { asserts: 4 }, function (instance, $fix) {
         var w = new (instance.web.Widget.extend({
             template: 'test.widget.template-value'
-        }));
+        }))();
         w.value = 42;
         return w.appendTo($fix)
             .done(function () {
@@ -194,7 +194,7 @@ openerp.testing.section('Widget.$', {
     test('basic-alias', function (instance) {
         var w = new (instance.web.Widget.extend({
             template: 'test.widget.template'
-        }));
+        }))();
         w.renderElement();
 
         ok(w.$('li:eq(3)').is(w.$el.find('li:eq(3)')),
@@ -226,13 +226,13 @@ openerp.testing.section('Widget.events', {
             events: {
                 'click': function () {
                     a[0] = true;
-                    strictEqual(this, w, "should trigger events in widget")
+                    strictEqual(this, w, "should trigger events in widget");
                 },
                 'click li.class-3': 'class3',
                 'change input': function () { a[2] = true; }
             },
             class3: function () { a[1] = true; }
-        }));
+        }))();
         w.renderElement();
 
         w.$el.click();
@@ -248,9 +248,9 @@ openerp.testing.section('Widget.events', {
         var w = new (instance.web.Widget.extend({
             template: 'test.widget.template',
             events: { 'click li': function () { clicked = true; } }
-        }));
+        }))();
         w.renderElement();
-        w.$el.on('click', 'li', function () { newclicked = true });
+        w.$el.on('click', 'li', function () { newclicked = true; });
 
         w.$('li').click();
         ok(clicked, "should trigger bound events");
