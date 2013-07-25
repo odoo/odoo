@@ -206,7 +206,6 @@ class mail_compose_message(osv.TransientModel):
         partner_ids += context.get('default_partner_ids', [])
         if context.get('is_private',False) and message_data.author_id : #check message is private then add author also in partner list.
             partner_ids += [message_data.author_id.id]
-        
         # update the result
         result = {
             'record_name': message_data.record_name,
