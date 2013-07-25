@@ -73,7 +73,11 @@ class mail_compose_message(osv.TransientModel):
         res_id = context.get('default_res_id', context.get('active_id'))
         message_id = context.get('default_parent_id', context.get('message_id', context.get('active_id')))
         active_ids = context.get('active_ids')
-        result['active_domain'] = '%s' % context.get('active_domain', [])
+        if context.get('active_domain'):
+            result['use_active_domain'] = True
+            result['active_domain'] = '%s' % context.get('active_domain')
+        else:
+            result['active_domain'] = ''
 
         # get default values according to the composition mode
         if composition_mode == 'reply':

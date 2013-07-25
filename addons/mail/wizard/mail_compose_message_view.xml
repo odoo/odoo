@@ -13,7 +13,9 @@
                         <field name="res_id" invisible="1"/>
                         <field name="parent_id" invisible="1"/>
                         <field name="mail_server_id" invisible="1"/>
+                        <field name="use_active_domain" invisible="1"/>
                         <!-- visible wizard -->
+                        <field name="active_domain" attrs="{'invisible': [('use_active_domain', '=', False)]}"/>
                         <field name="email_from"
                             attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
                         <field name="subject" placeholder="Subject..." required="True"/>
@@ -26,9 +28,6 @@
                         <field name="reply_to" placeholder="Email address te redirect replies..."
                             attrs="{'invisible':['|', ('same_thread', '=', True), ('composition_mode', '!=', 'mass_mail')],
                                     'required':[('same_thread', '!=', True)]}"/>
-                        <field name="use_active_domain" groups="base.group_no_one"
-                            attrs="{'invisible': [('composition_mode', '!=', 'mass_mail')]}"/>
-                        <field name="active_domain" attrs="{'invisible': [('use_active_domain', '=', False)]}"/>
                         <label for="partner_ids" string="Recipients"
                             attrs="{'invisible':[('composition_mode', '=', 'mass_mail')]}"/>
                         <div groups="base.group_user"
