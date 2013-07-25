@@ -7,7 +7,6 @@ module.exports = function(grunt) {
         sub: true, //[] instead of .
         evil: true, //eval
         laxbreak: true, //unsafe line breaks
-        loopfunc: true, // functions in loops
       },
     }
   });

@@ -96,7 +96,7 @@ openerp.web.corelib = function(instance) {
         initializing = false;
 
         // Copy the properties over onto the new prototype
-        for (var name in prop) {
+        _.each(prop, function(val, name) {
             // Check if we're overwriting an existing function
             prototype[name] = typeof prop[name] == "function" &&
                               fnTest.test(prop[name]) ?
@@ -117,7 +117,7 @@ openerp.web.corelib = function(instance) {
                         };
                     })(name, prop[name]) :
                     prop[name];
-        }
+        });
 
         // The dummy class constructor
         function Class() {
@@ -132,7 +132,7 @@ openerp.web.corelib = function(instance) {
             return this;
         }
         Class.include = function (properties) {
-            for (var name in properties) {
+            _.each(properties, function(val, name) {
                 if (typeof properties[name] !== 'function'
                         || !fnTest.test(properties[name])) {
                     prototype[name] = properties[name];
@@ -158,7 +158,7 @@ openerp.web.corelib = function(instance) {
                         };
                     })(name, properties[name]);
                 }
-            }
+            });
         };
 
         // Populate our constructed prototype object

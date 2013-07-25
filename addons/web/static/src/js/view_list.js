@@ -1519,6 +1519,13 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                     // if drag to 1st row (to = 0), start sequencing from 0
                     // (exclusive lower bound)
                     seq = to ? list.records.at(to - 1).get(seqname) : 0;
+                var fct = function (dataset, id, seq) {
+                    $.async_when().done(function () {
+                        var attrs = {};
+                        attrs[seqname] = seq;
+                        dataset.write(id, attrs);
+                    });
+                };
                 while (++seq, (record = list.records.at(index++))) {
                     // write are independent from one another, so we can just
                     // launch them all at the same time and we don't really
@@ -1526,13 +1533,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                     // FIXME: breaks on o2ms (e.g. Accounting > Financial
                     //        Accounting > Taxes > Taxes, child tax accounts)
                     //        when synchronous (without setTimeout)
-                    (function (dataset, id, seq) {
-                        $.async_when().done(function () {
-                            var attrs = {};
-                            attrs[seqname] = seq;
-                            dataset.write(id, attrs);
-                        });
-                    }(dataset, record.get('id'), seq));
+                    fct(dataset, record.get('id'), seq);
                     record.set(seqname, seq);
                 }
             }
