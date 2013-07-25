@@ -1188,7 +1188,6 @@ instance.web.Sidebar = instance.web.Widget.extend({
 
             $.when(domain).done(function (results) {
                 if (results !== undefined) {
-                    console.log(results);
                     active_ids_context.active_domain = results.domain;
                 }
                 var c = instance.web.pyeval.eval('context',
