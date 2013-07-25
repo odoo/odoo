@@ -276,3 +276,32 @@ provided, ``XOR`` and ``AND``.
 ``AND``
    With an ``AND`` mode, the activity will wait for all its incoming
    transitions to be crossed before being run.
+
+Kinds
+'''''
+
+Activities can be of different kinds: ``dummy``, ``function``, ``subflow``, or
+``stopall``. The kind defines what type of work an activity can do.
+
+Dummy
+    The ``dummy`` kind is for activities that do nothing (i.e. they act as hubs
+    to gather/dispatch transitions), or for activities that only call a Server
+    Action.
+
+Function
+    The ``function`` kind is for activities that only need to run some Python
+    code, and possibly a Server Action.
+
+Stop all
+    The ``stopall`` kind is for activities that will completely halt the
+    workflow instance. In addition they can also run some Python code.
+
+Subflow
+    When the kind of the activity is  ``subflow``, the activity will run
+    another workflow. When the sub-workflow is completed, the activity will also be
+    considered completed.
+
+    Normally the sub-workflow is instanciated for the same record as the parent
+    workflow. It is possible to change that default behavior by providing
+    Python code that has to return a record ID for which a workflow has been
+    instanciated.
