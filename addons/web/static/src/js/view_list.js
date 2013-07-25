@@ -132,8 +132,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         this.groups = groups;
         $(this.groups).bind({
-            'selected': function (e, ids, records) {
-                self.do_select(ids, records);
+            'selected': function (e, ids, records, deselected) {
+                self.do_select(ids, records, deselected);
             },
             'deleted': function (e, ids) {
                 self.do_delete(ids);
@@ -603,7 +603,12 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @param {Array} ids selected record ids
      * @param {Array} records selected record values
      */
-    do_select: function (ids, records) {
+    do_select: function (ids, records, deselected) {
+        // uncheck header hook if at least one row has been deselected
+        if (deselected) {
+            this.$('.oe_list_record_selector').prop('checked', false);
+        }
+
         if (!ids.length) {
             this.dataset.index = 0;
             if (this.sidebar) {
@@ -791,6 +796,27 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         return ids;
     },
     /**
+     * Calculate the active domain of the list view. This should be done only
+     * if the header checkbox has been checked.
+     */
+    get_active_domain: function () {
+        if (this.$('.oe_list_record_selector').prop('checked')) {
+            var search_view = this.getParent().searchview;
+            var search_data = search_view.build_search_data();
+            var active_domain_done = instance.web.pyeval.eval_domains_and_contexts({
+                domains: search_data.domains,
+                contexts: search_data.contexts,
+                group_by_seq: search_data.groupbys || []
+            }).done(function (results) {
+                return results.domain;
+            });
+            return active_domain_done;
+        }
+        else {
+            return $.Deferred().resolve();
+        }
+    },
+    /**
      * Adds padding columns at the start or end of all table rows (including
      * field names row)
      *
@@ -951,8 +977,13 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
             .delegate('th.oe_list_record_selector', 'click', function (e) {
                 e.stopPropagation();
                 var selection = self.get_selection();
+                var checked = $(e.currentTarget).find('input').prop('checked');
+                // console.log(checked);
+                // if (! checked) {
+                //     $(self).find('.oe_list_record_selector').prop('checked', false);
+                // }
                 $(self).trigger(
-                        'selected', [selection.ids, selection.records]);
+                        'selected', [selection.ids, selection.records, ! checked]);
             })
             .delegate('td.oe_list_record_delete button', 'click', function (e) {
                 e.stopPropagation();
@@ -1398,10 +1429,10 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
     bind_child_events: function (child) {
         var $this = $(this),
              self = this;
-        $(child).bind('selected', function (e) {
+        $(child).bind('selected', function (e, _0, _1, deselected) {
             // can have selections spanning multiple links
             var selection = self.get_selection();
-            $this.trigger(e, [selection.ids, selection.records]);
+            $this.trigger(e, [selection.ids, selection.records, deselected]);
         }).bind(this.passthrough_events, function (e) {
             // additional positional parameters are provided to trigger as an
             // Array, following the event type or event object, but are
