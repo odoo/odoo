@@ -1125,7 +1125,7 @@ class stock_move(osv.osv):
             This will create a procurement order
         """
         proc_obj = self.pool.get("procurement.order")
-        origin = _('Procurement from  created by rule %s') % (move.group_id and move.group_id.name or "", move.rule_id and move.rule_id.name or "")
+        origin = _('Procurement from %s created by rule %s') % (move.group_id and move.group_id.name or "", move.rule_id and move.rule_id.name or "")
         return proc_obj.create(cr, uid, {
                 'name': _('MTO from rule %s') % move.rule_id and move.rule_id.name or "",
                 'origin': origin,
