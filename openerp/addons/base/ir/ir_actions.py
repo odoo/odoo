@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from functools import partial
 import logging
 import operator
 import os
@@ -448,6 +449,27 @@ class server_object_lines(osv.osv):
 # Actions that are run on the server side
 #
 class actions_server(osv.osv):
+    """ Server actions model. Server action work on a base model and offer various
+    type of actions that can be executed automatically, for example using base
+    action rules, of manually, by adding the action in the 'More' contextual
+    menu.
+
+    Since OpenERP 8.0 a button 'Create Menu Action' button is available on the
+    action form view. It creates an entry in the More menu of the base model.
+    This allows to create server actions and run them in mass mode easily through
+    the interface.
+
+    The available actions are :
+
+    - 'Execute Python Code': a block of python code that will be executed
+    - 'Trigger a Workflow Signal': send a signal to a workflow
+    - 'Run a Client Action': choose a client action to launch
+    - 'Create or Copy a new Record': create a new record with new values, or
+      copy an existing record in your database
+    - 'Write on a Record': update the values of a record
+    - 'Execute several actions': define an action that triggers several other
+      server actions
+    """
     _name = 'ir.actions.server'
     _table = 'ir_act_server'
     _inherit = 'ir.actions.actions'
@@ -487,9 +509,9 @@ class actions_server(osv.osv):
                                   "- 'Execute Python Code': a block of python code that will be executed\n"
                                   "- 'Trigger a Workflow Signal': send a signal to a workflow\n"
                                   "- 'Run a Client Action': choose a client action to launch\n"
-                                  "-  'Create or Copy a new Record': create a new record with new values, or copy an existing record in your database\n"
+                                  "- 'Create or Copy a new Record': create a new record with new values, or copy an existing record in your database\n"
                                   "- 'Write on a Record': update the values of a record\n"
-                                  "- 'Execute several actions': define an action that triggers several other sever actions\n"
+                                  "- 'Execute several actions': define an action that triggers several other server actions\n"
                                   "- 'Send Email': automatically send an email (available in email_template)"),
         'usage': fields.char('Action Usage', size=32),
         'type': fields.char('Action Type', size=32, required=True),
@@ -628,6 +650,9 @@ class actions_server(osv.osv):
         (_check_write_expression,
             'Incorrect Write Record Expression',
             ['write_expression']),
+        (partial(osv.Model._check_m2m_recursion, field_name='child_ids'),
+            'Recursion found in child server actions',
+            ['child_ids']),
     ]
 
     def on_change_model_id(self, cr, uid, ids, model_id, wkf_model_id, crud_model_id, context=None):
@@ -895,21 +920,23 @@ class actions_server(osv.osv):
             self.pool[action.model_id.model].write(cr, uid, [context.get('active_id')], {action.link_field_id.name: res_id})
 
     def run(self, cr, uid, ids, context=None):
-        """ Run the server action, by check the condition and then calling
-        run_action_<STATE>, i.e. run_action_code, allowing easy inheritance
-        of the server actions.
+        """ Run the server action. For each server action, the condition is
+        checked. Note that A void (aka False) condition is considered as always
+        valid. If it is verified, the run_action_<STATE> method is called. This
+        allows easy inheritance of the server actions.
 
-        A void (aka False) condition is considered as always valid.
+        :param dict context: context should contain following keys
 
-        Note coming from previous implementation: FIXME: refactor all the eval()
-        calls in run()!
+                             - active_id: id of the current object (single mode)
+                             - active_model: current model that should equal the action's model
 
-        :param dict context: context should contain following keys:
-            - active_id: current id of the object
-            - active_model: current model that should equal the action's model
-            - TDE: ?? ids: original ids
+                             The following keys are optional:
 
-        :return: False: finished correctly or action_id: action to lanch
+                             - active_ids: ids of the current records (mass mode). If active_ids
+                               and active_id are present, active_ids is given precedence.
+
+        :return: an action_id to be executed, or False is finished correctly without
+                 return action
         """
         if context is None:
             context = {}

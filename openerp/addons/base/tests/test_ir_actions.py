@@ -1,6 +1,8 @@
 import unittest2
 
+from openerp.osv.orm import except_orm
 import openerp.tests.common as common
+from openerp.tools import mute_logger
 
 
 class TestServerActionsBase(common.TransactionCase):
@@ -354,6 +356,7 @@ self.pool["res.partner"].create(cr, uid, {"name": partner_name}, context=context
         cids = self.res_country.search(cr, uid, [('name', 'ilike', 'NewCountry')])
         self.assertEqual(len(cids), 1, 'ir_actions_server: TODO')
 
+    @mute_logger('openerp.addons.base.ir.ir_model', 'openerp.osv.orm')
     def test_60_multi(self):
         cr, uid = self.cr, self.uid
 
@@ -384,6 +387,11 @@ self.pool["res.partner"].create(cr, uid, {"name": partner_name}, context=context
         self.assertEqual(len(pids), 1, 'ir_actions_server: TODO')
         # Test: action returned
         self.assertEqual(res.get('type'), 'ir.actions.act_window', '')
+
+        # Test loops
+        self.assertRaises(except_orm, self.ir_actions_server.write, cr, uid, [self.act_id], {
+            'child_ids': [(6, 0, [self.act_id])]
+        })
 
 
 if __name__ == '__main__':
