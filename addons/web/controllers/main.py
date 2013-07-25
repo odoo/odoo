@@ -1407,7 +1407,8 @@ class Export(http.Controller):
         :returns: for each export format, a pair of identifier and printable name
         :rtype: [(str, str)]
         """
-        return ["CSV", "Excel"]
+        # TDE regression spotted since frameworek update: was impossible to export, hack to make it work temporarily
+        return [{'label': 'csv', 'tag': 'csv'}]
 
     def fields_get(self, model):
         Model = request.session.model(model)

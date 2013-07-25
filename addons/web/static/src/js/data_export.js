@@ -378,21 +378,28 @@ instance.web.DataExport = instance.web.Dialog.extend({
         exported_fields.unshift({name: 'id', label: 'External ID'});
 
         var export_format = this.$el.find("#export_format").val();
-        var ids_to_export = this.$('#export_selection_only').prop('checked')
-                ? this.getParent().get_selected_ids()
-                : this.dataset.ids;
 
-        instance.web.blockUI();
-        this.session.get_file({
-            url: '/web/export/' + export_format,
-            data: {data: JSON.stringify({
-                model: this.dataset.model,
-                fields: exported_fields,
-                ids: ids_to_export,
-                domain: this.dataset.domain,
-                import_compat: !!this.$el.find("#import_compat").val(),
-            })},
-            complete: instance.web.unblockUI,
+        var ids_computation = this.getParent().get_active_domain().then(function (results) {
+            if (results === undefined) {
+                return self.getParent().get_selected_ids();
+            }
+            else {
+                return self.dataset.call('search', [results]);
+            }
+        });
+        $.when(ids_computation).done(function (ids_to_export) {
+            instance.web.blockUI();
+            self.session.get_file({
+                url: '/web/export/' + export_format,
+                data: {data: JSON.stringify({
+                    model: self.dataset.model,
+                    fields: exported_fields,
+                    ids: ids_to_export,
+                    domain: self.dataset.domain,
+                    import_compat: !!self.$el.find("#import_compat").val(),
+                })},
+                complete: instance.web.unblockUI,
+            });
         });
     },
     close: function() {
