@@ -346,7 +346,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             self.on_form_changed();
             self.rendering_engine.init_fields();
             self.is_initialized.resolve();
-            self.do_update_pager(record.id == null);
+            self.do_update_pager(record.id === null || record.id === undefined);
             if (self.sidebar) {
                self.sidebar.do_attachement_update(self.dataset, self.datarecord.id);
             }
@@ -465,7 +465,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             // form field
             if (self.fields[field]) {
                 var value_ = self.fields[field].get_value();
-                return value_ == null ? false : value_;
+                return value_ === null || value_ === undefined ? false : value_;
             }
             // parent field
             var splitted = field.split('.');
@@ -475,7 +475,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 }
                 var p_val = parent_fields[_.str.trim(splitted[1])];
                 if (p_val !== undefined) {
-                    return p_val == null ? false : p_val;
+                    return p_val === null || p_val === undefined ? false : p_val;
                 }
             }
             // string literal
@@ -621,7 +621,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     }
                     return $.when();
                 });
-            };
+            }
             return iterate();
         });
     },
@@ -943,11 +943,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     reload: function() {
         var self = this;
         return this.reload_mutex.exec(function() {
-            if (self.dataset.index == null) {
+            if (self.dataset.index === null || self.dataset.index === undefined) {
                 self.trigger("previous_view");
                 return $.Deferred().reject().promise();
             }
-            if (self.dataset.index == null || self.dataset.index < 0) {
+            if (self.dataset.index < 0) {
                 return $.when(self.on_button_new());
             } else {
                 var fields = _.keys(self.fields_view.fields);
@@ -1714,7 +1714,7 @@ instance.web.form.compute_domain = function(expr, fields) {
 };
 
 instance.web.form.is_bin_size = function(v) {
-    return /^\d+(\.\d*)? \w+$/.test(v);
+    return (/^\d+(\.\d*)? \w+$/).test(v);
 };
 
 /**
@@ -2642,7 +2642,7 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
         if (! this.get("effective_readonly")) {
             var show_value = instance.web.format_value(this.get('value'), this, '');
             if (show_value === '') {
-                this.$textarea.css('height', parseInt(this.default_height)+"px");
+                this.$textarea.css('height', parseInt(this.default_height, 10)+"px");
             }
             this.$textarea.val(show_value);
             if (! this.auto_sized) {
@@ -3265,7 +3265,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         this.$input.keydown(input_changed);
         this.$input.change(input_changed);
         this.$drop_down.click(function() {
-        	self.$input.focus();
+            self.$input.focus();
             if (self.$input.autocomplete("widget").is(":visible")) {
                 self.$input.autocomplete("close");                
             } else {
@@ -3740,7 +3740,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     },
     reload_current_view: function() {
         var self = this;
-        return self.is_loaded = self.is_loaded.then(function() {
+        self.is_loaded = self.is_loaded.then(function() {
             var active_view = self.viewmanager.active_view;
             var view = self.viewmanager.views[active_view].controller;
             if(active_view === "list") {
@@ -3758,13 +3758,15 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                 return view.do_search(self.build_domain(), self.dataset.get_context(), []);
             }
         }, undefined);
+        return self.is_loaded;
     },
     set_value: function(value_) {
         value_ = value_ || [];
         var self = this;
         this.dataset.reset_ids([]);
+        var ids;
         if(value_.length >= 1 && value_[0] instanceof Array) {
-            var ids = [];
+            ids = [];
             _.each(value_, function(command) {
                 var obj = {values: command[2]};
                 switch (command[0]) {
@@ -3795,7 +3797,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
             this._super(ids);
             this.dataset.set_ids(ids);
         } else if (value_.length >= 1 && typeof(value_[0]) === "object") {
-            var ids = [];
+            ids = [];
             this.dataset.delete_all = true;
             _.each(value_, function(command) {
                 var obj = {values: command};
@@ -3850,7 +3852,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
             this.viewmanager.views[this.viewmanager.active_view].controller) {
             var view = this.viewmanager.views[this.viewmanager.active_view].controller;
             if (this.viewmanager.active_view === "form") {
-                if (!view.is_initialized.state() === 'resolved') {
+                if (view.is_initialized.state() !== 'resolved') {
                     return $.when(false);
                 }
                 return $.when(view.save());
@@ -3870,7 +3872,6 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                 .invoke('is_valid')
                 .all(_.identity)
                 .value();
-            break;
         case 'list':
             return view.is_valid();
         }
@@ -4256,7 +4257,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
                 },
                 core: {
                     onSetInputData: function(e, data) {
-                        if (data == '') {
+                        if (data === '') {
                             this._plugins.autocomplete._suggestions = null;
                         }
                         this.input().val(data);
@@ -4578,8 +4579,9 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
         if (type !== "form")
             return;
         var self = this;
+        var pop;
         if (this.dataset.index === null) {
-            var pop = new instance.web.form.SelectCreatePopup(this);
+            pop = new instance.web.form.SelectCreatePopup(this);
             pop.select_element(
                 this.field.relation,
                 {
@@ -4599,7 +4601,7 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
             });
         } else {
             var id = self.dataset.ids[self.dataset.index];
-            var pop = new instance.web.form.FormOpenPopup(this);
+            pop = new instance.web.form.FormOpenPopup(this);
             pop.show_element(self.field.relation, id, self.build_context(), {
                 title: _t("Open: ") + self.string,
                 write_function: function(id, data, options) {
@@ -4935,7 +4937,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                     self.select_elements(self.selected_ids);
                     self.destroy();
                 });
-                var $cbutton = self.$buttonpane.find(".oe_selectcreatepopup-search-create");
+                $cbutton = self.$buttonpane.find(".oe_selectcreatepopup-search-create");
                 $cbutton.click(function() {
                     self.new_object();
                 });
@@ -5190,18 +5192,18 @@ instance.web.form.FieldBinaryFile = instance.web.form.FieldBinary.extend({
         }
     },
     render_value: function() {
+        var show_value;
         if (!this.get("effective_readonly")) {
-            var show_value;
             if (this.node.attrs.filename) {
                 show_value = this.view.datarecord[this.node.attrs.filename] || '';
             } else {
-                show_value = (this.get('value') != null && this.get('value') !== false) ? this.get('value') : '';
+                show_value = (this.get('value') !== null && this.get('value') !== undefined && this.get('value') !== false) ? this.get('value') : '';
             }
             this.$el.find('input').eq(0).val(show_value);
         } else {
             this.$el.find('a').toggle(!!this.get('value'));
             if (this.get('value')) {
-                var show_value = _t("Download")
+                show_value = _t("Download")
                 if (this.view)
                     show_value += " " + (this.view.datarecord[this.node.attrs.filename] || '');
                 this.$el.find('a').text(show_value);
@@ -5553,11 +5555,12 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     on_click_stage: function (ev) {
         var self = this;
         var $li = $(ev.currentTarget);
+        var val;
         if (this.field.type == "many2one") {
-            var val = parseInt($li.data("id"));
+            val = parseInt($li.data("id"), 10);
         }
         else {
-            var val = $li.data("id");
+            val = $li.data("id");
         }
         if (val != self.get('value')) {
             this.view.recursive_save().done(function() {

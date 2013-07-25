@@ -795,11 +795,18 @@ openerp.web.pyeval = function (instance) {
 
         //noinspection FallthroughInSwitchStatementJS
         switch(type) {
-        case 'context': object = [object];
-        case 'contexts': return eval_contexts((options.no_user_context ? [] : [instance.session.user_context]).concat(object), context);
-        case 'domain': object = [object];
-        case 'domains': return eval_domains(object, context);
-        case 'groupbys': return eval_groupbys(object, context);
+        case 'context':
+        case 'contexts':
+            if (type === 'context')
+                object = [object];
+            return eval_contexts((options.no_user_context ? [] : [instance.session.user_context]).concat(object), context);
+        case 'domain':
+        case 'domains':
+            if (type === 'domain')
+                object = [object];
+            return eval_domains(object, context);
+        case 'groupbys':
+            return eval_groupbys(object, context);
         }
         throw new Error("Unknow evaluation type " + type)
     };

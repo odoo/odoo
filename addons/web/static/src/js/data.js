@@ -100,7 +100,7 @@ instance.web.Query = instance.web.Class.extend({
      * @returns {jQuery.Deferred<Number>}
      */
     count: function () {
-        if (this._count != undefined) { return $.when(this._count); }
+        if (this._count !== undefined) { return $.when(this._count); }
         return this._model.call(
             'search_count', [this._filter], {
                 context: this._model.context(this._context)});
@@ -747,7 +747,7 @@ instance.web.DataSetSearch =  instance.web.DataSet.extend({
         });
     },
     size: function () {
-        if (this._length != null) {
+        if (this._length !== null) {
             return this._length;
         }
         return this._super();

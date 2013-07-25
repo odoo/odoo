@@ -1108,7 +1108,7 @@ instance.web.Menu =  instance.web.Widget.extend({
                     add_menu_ids(menu);
                 });
             }
-        };
+        }
         add_menu_ids(menu);
         self.do_load_needaction(menu_ids).then(function () {
             self.trigger("need_action_reloaded");

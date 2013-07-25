@@ -93,7 +93,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
                 self.$el.find('#fields_list option').remove();
                 var export_id = self.$el.find('#saved_export_list option:selected').val();
                 if (export_id) {
-                    self.rpc('/web/export/namelist', {'model': self.dataset.model, export_id: parseInt(export_id)}).done(self.do_load_export_field);
+                    self.rpc('/web/export/namelist', {'model': self.dataset.model, export_id: parseInt(export_id, 10)}).done(self.do_load_export_field);
                 }
             });
             self.$el.find('#delete_export_list').click(function() {
@@ -215,7 +215,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
             self.$el.find("tr[id='treerow-" + record.id + "']").click(function(e) {
                 if (e.shiftKey) {
                     var frst_click, scnd_click = '';
-                    if (self.row_index == 0) {
+                    if (self.row_index === 0) {
                         self.row_index = this.rowIndex;
                         frst_click = self.$el.find("tr[id^='treerow-']")[self.row_index-1];
                         $(frst_click).addClass("ui-selected");

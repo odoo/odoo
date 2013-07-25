@@ -250,7 +250,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
                 continue;
             instance[mod] = {};
             // init module mod
-            if(instance._openerp[mod] != undefined) {
+            if(instance._openerp[mod] !== undefined) {
                 instance._openerp[mod](instance,instance[mod]);
                 this.module_loaded[mod] = true;
             }
@@ -585,7 +585,7 @@ instance.web.qweb.preprocess_node = function() {
         case Node.ELEMENT_NODE:
             // Element
             var attr, attrs = ['label', 'title', 'alt', 'placeholder'];
-            while (attr = attrs.pop()) {
+            while ((attr = attrs.pop())) {
                 if (this.attributes[attr]) {
                     this.attributes[attr] = instance.web._t(this.attributes[attr]);
                 }

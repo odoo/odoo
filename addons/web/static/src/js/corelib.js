@@ -73,7 +73,7 @@ openerp.web.corelib = function(instance) {
  */
 (function() {
     var initializing = false,
-        fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
+        fnTest = /xyz/.test(function(){xyz();}) ? /\b_super\b/ : /.*/;
     // The web Class implementation (does nothing)
     instance.web.Class = function(){};
 
@@ -123,7 +123,6 @@ openerp.web.corelib = function(instance) {
         function Class() {
             if(this.constructor !== instance.web.Class){
                 throw new Error("You can only instanciate objects with the 'new' operator");
-                return null;
             }
             // All construction is actually done in the init method
             if (!initializing && this.init) {
@@ -297,7 +296,7 @@ var Events = instance.web.Class.extend({
         var ev;
         events = events.split(/\s+/);
         var calls = this._callbacks || (this._callbacks = {});
-        while (ev = events.shift()) {
+        while ((ev = events.shift())) {
             var list = calls[ev] || (calls[ev] = {});
             var tail = list.tail || (list.tail = list.next = {});
             tail.callback = callback;
@@ -311,9 +310,9 @@ var Events = instance.web.Class.extend({
         var ev, calls, node;
         if (!events) {
             delete this._callbacks;
-        } else if (calls = this._callbacks) {
+        } else if ((calls = this._callbacks)) {
             events = events.split(/\s+/);
-            while (ev = events.shift()) {
+            while ((ev = events.shift())) {
                 node = calls[ev];
                 delete calls[ev];
                 if (!callback || !node)
@@ -347,7 +346,7 @@ var Events = instance.web.Class.extend({
         all = calls['all'];
         (events = events.split(/\s+/)).push(null);
         // Save references to the current heads & tails.
-        while (event = events.shift()) {
+        while ((event = events.shift())) {
             if (all)
                 events.push({
                     next : all.next,
@@ -362,7 +361,7 @@ var Events = instance.web.Class.extend({
             });
         }
         rest = Array.prototype.slice.call(arguments, 1);
-        while (node = events.pop()) {
+        while ((node = events.pop())) {
             tail = node.tail;
             args = node.event ? [ node.event ].concat(rest) : rest;
             while ((node = node.next) !== tail) {
@@ -693,11 +692,6 @@ instance.web.Widget = instance.web.Controller.extend({
         return this.start();
     },
     /**
-     * This is the method to implement to render the Widget.
-     */
-    renderElement: function() {
-    },
-    /**
      * Method called after rendering. Mostly used to bind actions, perform asynchronous
      * calls, etc...
      *
@@ -966,7 +960,7 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
     init: function() {
         instance.web.PropertiesMixin.init.call(this);
         this.server = null;
-        this.debug = ($.deparam($.param.querystring()).debug != undefined);
+        this.debug = ($.deparam($.param.querystring()).debug !== undefined);
         this.override_session = false;
         this.session_id = undefined;
     },

@@ -65,7 +65,7 @@ my.SearchQuery = B.Collection.extend({
         }, this);
     },
     add: function (values, options) {
-        options || (options = {});
+        options = options || {};
         if (!(values instanceof Array)) {
             values = [values];
         }
@@ -85,7 +85,7 @@ my.SearchQuery = B.Collection.extend({
         return this;
     },
     toggle: function (value, options) {
-        options || (options = {});
+        options = options || {};
 
         var facet = this.detect(function (facet) {
             return facet.get('category') === value.category
@@ -1107,7 +1107,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
 
         if (!contexts.length) { return; }
         if (contexts.length === 1) { return contexts[0]; }
-        return _.extend(new instance.web.CompoundContext, {
+        return _.extend(new instance.web.CompoundContext(), {
             __contexts: contexts
         });
     },
@@ -1276,7 +1276,7 @@ instance.web.search.Field = instance.web.search.Input.extend( /** @lends instanc
 
         if (contexts.length === 1) { return contexts[0]; }
 
-        return _.extend(new instance.web.CompoundContext, {
+        return _.extend(new instance.web.CompoundContext(), {
             __contexts: contexts
         });
     },
@@ -1321,7 +1321,7 @@ instance.web.search.Field = instance.web.search.Input.extend( /** @lends instanc
             domains.unshift(['|']);
         }
 
-        return _.extend(new instance.web.CompoundDomain, {
+        return _.extend(new instance.web.CompoundDomain(), {
             __domains: domains
         });
     }
@@ -1919,7 +1919,7 @@ instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @
     },
     changed: function() {
         var nval = this.$(".searchview_extended_prop_field").val();
-        if(this.attrs.selected == null || nval != this.attrs.selected.name) {
+        if(this.attrs.selected === null || this.attrs.selected === undefined || nval != this.attrs.selected.name) {
             this.select_field(_.detect(this.fields, function(x) {return x.name == nval;}));
         }
     },
@@ -1941,13 +1941,13 @@ instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @
      */
     select_field: function(field) {
         var self = this;
-        if(this.attrs.selected != null) {
+        if(this.attrs.selected !== null && this.attrs.selected !== undefined) {
             this.value.destroy();
             this.value = null;
             this.$('.searchview_extended_prop_op').html('');
         }
         this.attrs.selected = field;
-        if(field == null) {
+        if(field === null || field === undefined) {
             return;
         }
 
@@ -1967,7 +1967,7 @@ instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @
 
     },
     get_proposition: function() {
-        if ( this.attrs.selected == null)
+        if (this.attrs.selected === null || this.attrs.selected === undefined)
             return null;
         var field = this.attrs.selected;
         var op_select = this.$('.searchview_extended_prop_op')[0];
@@ -2097,7 +2097,7 @@ instance.web.search.ExtendedSearchProposition.Integer = instance.web.search.Exte
     get_value: function() {
         try {
             var val =this.$el.val();
-            return instance.web.parse_value(val == "" ? 0 : val, {'widget': 'integer'});
+            return instance.web.parse_value(val === "" ? 0 : val, {'widget': 'integer'});
         } catch (e) {
             return "";
         }
@@ -2124,7 +2124,7 @@ instance.web.search.ExtendedSearchProposition.Float = instance.web.search.Extend
     get_value: function() {
         try {
             var val =this.$el.val();
-            return instance.web.parse_value(val == "" ? 0.0 : val, {'widget': 'float'});
+            return instance.web.parse_value(val === "" ? 0.0 : val, {'widget': 'float'});
         } catch (e) {
             return "";
         }

@@ -515,10 +515,6 @@ openerp.web.list_editable = function (instance) {
                 };
             } else if (document.body.createTextRange) {
                 throw new Error("Implement text range handling for MSIE");
-                var sel = document.body.createTextRange();
-                if (sel.parentElement() === el) {
-
-                }
             }
             // Element without selection ranges (select, div/@contenteditable)
             return null;
@@ -697,7 +693,7 @@ openerp.web.list_editable = function (instance) {
                 throw new Error("Editor delegate's #edition_view must have a" +
                                 " non-empty arch")
             }
-            if (!(arch.tag === "form")) {
+            if (arch.tag !== "form") {
                 throw new Error("Editor delegate's #edition_view must have a" +
                                 " 'form' root node");
             }
