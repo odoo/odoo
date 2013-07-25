@@ -26,8 +26,8 @@ class base_config_settings(osv.osv_memory):
     _inherit = 'res.config.settings'
     _columns = {
         'module_multi_company': fields.boolean('Manage multiple companies',
-            help="""Work in multi-company environments, with appropriate security access between companies.
-                This installs the module multi_company."""),
+            help='Work in multi-company environments, with appropriate security access between companies.\n'
+                'This installs the module multi_company.'),
         'module_share': fields.boolean('Allow documents sharing',
             help="""Share or embbed any screen of openerp."""),
         'module_portal': fields.boolean('Activate the customer portal',
