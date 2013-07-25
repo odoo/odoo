@@ -2,19 +2,6 @@
 <openerp>
 <data>
 
-    <!-- add website_published field on mail group -->
-
-    <record model="ir.ui.view" id="blog_website_form">
-        <field name="name">mail.group.website.form</field>
-        <field name="model">mail.group</field>
-        <field name="inherit_id" ref="mail.group_all_employees"/>
-        <field name="arch" type="xml">
-            <field name="public" position="after">
-                <field name="website_published" attrs="{'invisible': [('public','!=','public')]}"/>
-            </field>
-        </field>
-    </record>
-
     <!-- Layout add nav and footer -->
 
     <record id="header_website_mail" model="ir.ui.view">
@@ -33,8 +20,13 @@
 
     <template id="index">
         <t t-call="website.layout">
+            <t t-set="head">
+                <script type="text/javascript" src="/website_mail/static/src/js/blog.js"></script>
+                <link rel='stylesheet' href='/website_mail/static/src/css/blog.css'/>
+                <t t-raw="head"/>
+            </t>
             <t t-set="title">Blog</t>
-            <div class="container css_website_mail">
+            <div class="container css_website_mail js_website_mail">
                 <div class="row">
                     <div class="span4">
                         <ul class="nav nav-list">
@@ -54,7 +46,13 @@
                     </div>
                     <div class="span8" t-if="blog_id">
                         <div class="media">
-                            <div class="media-body well">
+                            <div t-att-class="'media-body well %%s' %% (blog_id.website_published and 'css_published' or '')">
+                                <t t-if="blog_editable">
+                                    <a href="#" title="Click to publish or unpublish this blog" t-att-data-id="blog_id.id" class="js_publish css_button_publish">
+                                        <i class="icon-ok-circle css_publish"></i>
+                                        <i class="icon-remove-sign css_unpublish"></i>
+                                    </a>
+                                </t>
                                 <h3><t t-esc="blog_id.subject"/></h3>
                                 <p><t t-raw="blog_id.body"/></p>
                                 <small class="pull-right muted text-right">
@@ -63,9 +61,15 @@
                                 </small>
                             </div>
                             <ul class="media-list">
-                                <t t-foreach="blog_id.child_ids or []" t-as="mail">
-                                    <li class="media well well-small">
-                                        <div class="media-body">
+                                <t t-foreach="blog_message_ids or []" t-as="mail">
+                                    <li t-if="mail.website_published or blog_editable" class="media well well-small">
+                                        <div t-att-class="'media-body %%s' %% (mail.website_published and 'css_published' or '')">
+                                            <t t-if="blog_editable">
+                                                <a href="#" title="Click to publish or unpublish this message" t-att-data-id="mail.id" class="js_publish css_button_publish">
+                                                    <i class="icon-ok-circle css_publish"></i>
+                                                    <i class="icon-remove-sign css_unpublish"></i>
+                                                </a>
+                                            </t>
                                             <h4 t-if="mail.subject" class="media-heading"><t t-esc="mail.subject"/></h4>
                                             <div class="media">
                                                 <t t-raw="mail.body"/>
@@ -77,13 +81,38 @@
                                         </div>
                                     </li>
                                 </t>
+                                <form id="post" t-att-action="'/blog/%%s/%%s/post#post' %% (blog_id.res_id, blog_id.id)" method="POST" class="form-horizontal">
+                                    <div class="control-group">
+                                        <label class="control-label">Name</label>
+                                        <div class="controls">
+                                            <input type="text" name="name" placeholder="Name" class="span5"/>
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label">Email</label>
+                                        <div class="controls">
+                                            <input type="email" name="email" placeholder="Email" class="span5"/>
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label">You message</label>
+                                        <div class="controls">
+                                            <textarea rows="4" name="body" placeholder="You message" class="span5"> </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <div class="controls">
+                                            <button type="submit" class="btn">Post</button>
+                                        </div>
+                                    </div>
+                                </form>
                             </ul>
                         </div>
                     </div>
                     <div class="span8" t-if="not blog_id">
                         <ul class="media-list">
                             <t t-foreach="blog_ids or []" t-as="blog">
-                                <li class="media">
+                                <li class="media well">
                                     <div class="media-body">
                                         <h4 class="media-heading"><t t-esc="blog.subject"/></h4>
                                         <div class="media">
