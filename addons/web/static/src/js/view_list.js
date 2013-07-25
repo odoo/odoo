@@ -805,14 +805,13 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         if (this.$('.oe_list_record_selector').prop('checked')) {
             var search_view = this.getParent().searchview;
             var search_data = search_view.build_search_data();
-            var active_domain_done = instance.web.pyeval.eval_domains_and_contexts({
+            return instance.web.pyeval.eval_domains_and_contexts({
                 domains: search_data.domains,
                 contexts: search_data.contexts,
                 group_by_seq: search_data.groupbys || []
-            }).done(function (results) {
+            }).then(function (results) {
                 return results.domain;
             });
-            return active_domain_done;
         }
         else {
             return $.Deferred().resolve();
@@ -980,10 +979,6 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                 e.stopPropagation();
                 var selection = self.get_selection();
                 var checked = $(e.currentTarget).find('input').prop('checked');
-                // console.log(checked);
-                // if (! checked) {
-                //     $(self).find('.oe_list_record_selector').prop('checked', false);
-                // }
                 $(self).trigger(
                         'selected', [selection.ids, selection.records, ! checked]);
             })
