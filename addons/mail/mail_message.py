@@ -375,6 +375,7 @@ class mail_message(osv.Model):
                 'author_id': author,
                 'partner_ids': partner_ids,
                 'attachment_ids': attachment_ids,
+                'user_pid': pid
                 })
         return True
 
