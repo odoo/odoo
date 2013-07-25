@@ -379,15 +379,16 @@ instance.web.DataExport = instance.web.Dialog.extend({
 
         var export_format = this.$el.find("#export_format").val();
 
-        var ids_computation = this.getParent().get_active_domain().then(function (results) {
-            if (results === undefined) {
-                return self.getParent().get_selected_ids();
+        this.getParent().get_active_domain().then(function (domain) {
+            if (domain === undefined) {
+                var ids_to_export = self.getParent().get_selected_ids();
+                var domain = self.dataset.domain;
             }
             else {
-                return self.dataset.call('search', [results]);
+                var ids_to_export = false;
+                var domain = domain;
             }
-        });
-        $.when(ids_computation).done(function (ids_to_export) {
+            var ids_t_
             instance.web.blockUI();
             self.session.get_file({
                 url: '/web/export/' + export_format,
@@ -395,7 +396,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
                     model: self.dataset.model,
                     fields: exported_fields,
                     ids: ids_to_export,
-                    domain: self.dataset.domain,
+                    domain: domain,
                     import_compat: !!self.$el.find("#import_compat").val(),
                 })},
                 complete: instance.web.unblockUI,
