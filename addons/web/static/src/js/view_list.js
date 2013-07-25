@@ -171,11 +171,13 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             current_date: new Date().toString('yyyy-MM-dd')
             // TODO: time, datetime, relativedelta
         });
-
+        var i;
+        var pair;
+        var expression;
         if (this.fonts) {
-            for(var i=0, len=this.fonts.length; i<len; ++i) {
-                var pair = this.fonts[i],
-                font = pair[0],
+            for(i=0, len=this.fonts.length; i<len; ++i) {
+                pair = this.fonts[i];
+                var font = pair[0];
                 expression = pair[1];
                 if (py.evaluate(expression, context).toJSON()) {
                     switch(font) {
@@ -194,10 +196,10 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         }
 
         if (!this.colors) { return style; }
-        for(var i=0, len=this.colors.length; i<len; ++i) {
-            var pair = this.colors[i],
-                color = pair[0],
-                expression = pair[1];
+        for(i=0, len=this.colors.length; i<len; ++i) {
+            pair = this.colors[i];
+            var color = pair[0];
+            expression = pair[1];
             if (py.evaluate(expression, context).toJSON()) {
                 return style += 'color: ' + color + ';';
             }
@@ -361,7 +363,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     sort_by_column: function (e) {
         e.stopPropagation();
         var $column = $(e.currentTarget);
-        var col_name = $column.data('id')
+        var col_name = $column.data('id');
         var field = this.fields_view.fields[col_name];
         // test if the field is a function field with store=false, since it's impossible
         // for the server to sort those fields we desactivate the feature
@@ -394,7 +396,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         var total = dataset.size();
         var limit = this.limit() || total;
-        if (total == 0)
+        if (total === 0)
             this.$pager.hide();
         else
             this.$pager.css("display", "");
@@ -454,7 +456,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @param {String} [view="page"] the view type to switch to
      */
     select_record:function (index, view) {
-        view = view || index == null ? 'form' : 'form';
+        view = view || index === null || index === undefined ? 'form' : 'form';
         this.dataset.index = index;
         _.delay(_.bind(function () {
             this.do_switch_view(view);
@@ -503,7 +505,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         var reloaded = $.Deferred();
         this.$el.find('.oe_list_content').append(
             this.groups.render(function () {
-                if (self.dataset.index == null && self.records.length ||
+                if ((self.dataset.index === null || self.dataset.index === undefined) && self.records.length ||
                     self.dataset.index >= self.records.length) {
                         self.dataset.index = 0;
                 }
@@ -1428,7 +1430,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                d = new $.Deferred(),
             page = this.datagroup.openable ? this.page : view.page;
 
-        var fields = _.pluck(_.select(this.columns, function(x) {return x.tag == "field"}), 'name');
+        var fields = _.pluck(_.select(this.columns, function(x) {return x.tag == "field";}), 'name');
         var options = { offset: page * limit, limit: limit, context: {bin_size: true} };
         //TODO xmo: investigate why we need to put the setTimeout
         $.async_when().done(function() {
@@ -1517,20 +1519,21 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                     // if drag to 1st row (to = 0), start sequencing from 0
                     // (exclusive lower bound)
                     seq = to ? list.records.at(to - 1).get(seqname) : 0;
-                while (++seq, record = list.records.at(index++)) {
+                var fct = function (dataset, id, seq) {
+                    $.async_when().done(function () {
+                        var attrs = {};
+                        attrs[seqname] = seq;
+                        dataset.write(id, attrs);
+                    });
+                };
+                while (++seq, (record = list.records.at(index++))) {
                     // write are independent from one another, so we can just
                     // launch them all at the same time and we don't really
                     // give a fig about when they're done
                     // FIXME: breaks on o2ms (e.g. Accounting > Financial
                     //        Accounting > Taxes > Taxes, child tax accounts)
                     //        when synchronous (without setTimeout)
-                    (function (dataset, id, seq) {
-                        $.async_when().done(function () {
-                            var attrs = {};
-                            attrs[seqname] = seq;
-                            dataset.write(id, attrs);
-                        });
-                    }(dataset, record.get('id'), seq));
+                    fct(dataset, record.get('id'), seq);
                     record.set(seqname, seq);
                 }
             }
@@ -1543,7 +1546,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
 
         this.datagroup.list(
             _(this.view.visible_columns).chain()
-                .filter(function (column) { return column.tag === 'field' })
+                .filter(function (column) { return column.tag === 'field';})
                 .pluck('name').value(),
             function (groups) {
                 $el[0].appendChild(
@@ -1588,7 +1591,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
             return {
                 count: this.datagroup.length,
                 values: this.datagroup.aggregates
-            }
+            };
         }
         return _(this.children).chain()
             .map(function (child) {
@@ -1825,7 +1828,7 @@ var Collection = instance.web.Class.extend(/** @lends Collection# */{
             var instance_ = (records[i] instanceof Record) ? records[i] : new Record(records[i]);
             instance_.bind(null, this._onRecordEvent);
             this._byId[instance_.get('id')] = instance_;
-            if (options.at == undefined) {
+            if (options.at === undefined || options.at === null) {
                 this.records.push(instance_);
                 if (!options.silent) {
                     this.trigger('add', this, instance_, this.records.length-1);
@@ -1867,7 +1870,8 @@ var Collection = instance.web.Class.extend(/** @lends Collection# */{
         if (!_(this._proxies).isEmpty()) {
             var record = null;
             _(this._proxies).detect(function (proxy) {
-                return record = proxy.get(id);
+                record = proxy.get(id);
+                return record;
             });
             return record;
         }
@@ -1881,10 +1885,11 @@ var Collection = instance.web.Class.extend(/** @lends Collection# */{
      * @returns {Collection}
      */
     proxy: function (section) {
-        return this._proxies[section] = new Collection(null, {
+        this._proxies[section] = new Collection(null, {
             parent: this,
             key: section
         }).bind(null, this._onRecordEvent);
+        return this._proxies[section];
     },
     /**
      * @param {Array} [records]
@@ -1954,7 +1959,7 @@ var Collection = instance.web.Class.extend(/** @lends Collection# */{
         var record;
         for(var section in this._proxies) {
             if (!this._proxies.hasOwnProperty(section)) {
-                continue
+                continue;
             }
             if ((record = this._proxies[section].find(callback))) {
                 return record;
@@ -2071,7 +2076,7 @@ instance.web.list.columns.for_ = function (id, field, node) {
         tag + '.'+ description.type,
         tag
     ]);
-    return new Type(id, node.tag, description)
+    return new Type(id, node.tag, description);
 };
 
 instance.web.list.Column = instance.web.Class.extend({
@@ -2234,7 +2239,7 @@ instance.web.list.Char = instance.web.list.Column.extend({
     _format: function (row_data, options) {
         var value = row_data[this.id].value;
         if (value && this.password === 'True') {
-            return value.replace(/[\s\S]/g, _.escape(this.replacement))
+            return value.replace(/[\s\S]/g, _.escape(this.replacement));
         }
         return this._super(row_data, options);
     }

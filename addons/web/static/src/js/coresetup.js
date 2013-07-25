@@ -88,7 +88,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             this.session_id = this.get_cookie('session_id');
         }
         return def.then(function() {
-            return self.rpc("/web/session/get_session_info", {})
+            return self.rpc("/web/session/get_session_info", {});
         }).then(function(result) {
             // If immediately follows a login (triggered by trying to restore
             // an invalid session or no session at all), refresh session data
@@ -250,7 +250,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
                 continue;
             instance[mod] = {};
             // init module mod
-            if(instance._openerp[mod] != undefined) {
+            if(instance._openerp[mod] !== undefined) {
                 instance._openerp[mod](instance,instance[mod]);
                 this.module_loaded[mod] = true;
             }
@@ -343,7 +343,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
                     $input = $('<input type="hidden" name="' + key + '">')
                         .appendTo($form_data);
                 }
-                $input.val(value)
+                $input.val(value);
             });
 
         $form
@@ -404,7 +404,7 @@ instance.web.Bus = instance.web.Class.extend(instance.web.EventDispatcherMixin, 
             });
         });
     }
-})
+});
 instance.web.bus = new instance.web.Bus();
 
 /** OpenERP Translations */
@@ -466,12 +466,12 @@ $.fn.getAttributes = function() {
     var o = {};
     if (this.length) {
         for (var attr, i = 0, attrs = this[0].attributes, l = attrs.length; i < l; i++) {
-            attr = attrs.item(i)
+            attr = attrs.item(i);
             o[attr.nodeName] = attr.nodeValue;
         }
     }
     return o;
-}
+};
 $.fn.openerpClass = function(additionalClass) {
     // This plugin should be applied on top level elements
     additionalClass = additionalClass || '';
@@ -557,7 +557,7 @@ instance.web._t = new instance.web.TranslationDataBase().build_translation_funct
  * @returns {Object} lazy translation object
  */
 instance.web._lt = function (s) {
-    return {toString: function () { return instance.web._t(s); }}
+    return {toString: function () { return instance.web._t(s); }};
 };
 instance.web.qweb = new QWeb2.Engine();
 instance.web.qweb.debug = instance.session.debug;
@@ -585,7 +585,7 @@ instance.web.qweb.preprocess_node = function() {
         case Node.ELEMENT_NODE:
             // Element
             var attr, attrs = ['label', 'title', 'alt', 'placeholder'];
-            while (attr = attrs.pop()) {
+            while ((attr = attrs.pop())) {
                 if (this.attributes[attr]) {
                     this.attributes[attr] = instance.web._t(this.attributes[attr]);
                 }
@@ -692,13 +692,13 @@ instance.web.blockUI = function() {
     instance.web.Throbber.throbbers.push(throbber);
     throbber.appendTo($(".oe_blockui_spin_container"));
     return tmp;
-}
+};
 instance.web.unblockUI = function() {
     _.each(instance.web.Throbber.throbbers, function(el) {
         el.destroy();
     });
     return $.unblockUI.apply($, arguments);
-}
+};
 
 /**
  * Registry for all the client actions key: tag value: widget

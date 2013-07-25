@@ -438,7 +438,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
         self.$el.html(QWeb.render("DatabaseManager", { widget : self }));
         $('.oe_user_menu_placeholder').append(QWeb.render("DatabaseManager.user_menu",{ widget : self }));
         $('.oe_secondary_menus_container').append(QWeb.render("DatabaseManager.menu",{ widget : self }));
-        $('ul.oe_secondary_submenu > li:first').addClass('oe_active')
+        $('ul.oe_secondary_submenu > li:first').addClass('oe_active');
         $('ul.oe_secondary_submenu > li').bind('click', function (event) {
             var menuitem = $(this);
             menuitem.addClass('oe_active').siblings().removeClass('oe_active');
@@ -869,7 +869,7 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
         $button.appendTo(this.getParent().$buttons);
         $button.eq(2).click(function(){
            self.getParent().close();
-        })
+        });
         $button.eq(0).click(function(){
           self.rpc("/web/session/change_password",{
                'fields': $("form[name=change_password_form]").serializeArray()
@@ -881,7 +881,7 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
                    instance.webclient.on_logout();
                }
           });
-       })
+       });
     },
     display_error: function (error) {
         return instance.web.dialog($('<div>'), {
@@ -892,7 +892,7 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
             ]
         }).html(error.error);
     },
-})
+});
 instance.web.client_actions.add("change_password", "instance.web.ChangePassword");
 
 instance.web.Menu =  instance.web.Widget.extend({
@@ -1108,7 +1108,7 @@ instance.web.Menu =  instance.web.Widget.extend({
                     add_menu_ids(menu);
                 });
             }
-        };
+        }
         add_menu_ids(menu);
         self.do_load_needaction(menu_ids).then(function () {
             self.trigger("need_action_reloaded");

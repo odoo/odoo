@@ -49,7 +49,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         if (last) {
             last.hide();
         }
-        var item = _.extend({
+        item = _.extend({
             show: function(index) {
                 this.widget.$el.show();
             },
@@ -423,7 +423,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
 
         if (!(ClientWidget.prototype instanceof instance.web.Widget)) {
             var next;
-            if (next = ClientWidget(this, action)) {
+            if ((next = ClientWidget(this, action))) {
                 return this.do_action(next, options);
             }
             return $.when();
@@ -459,7 +459,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             action_id: action.id,
             context: action.context || {}
         }).done(function (action) {
-            self.do_action(action, options)
+            self.do_action(action, options);
         });
     },
     ir_actions_report_xml: function(action, options) {
@@ -478,8 +478,8 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 var params = {
                     action: JSON.stringify(action),
                     token: new Date().getTime()
-                }
-                var url = self.session.url('/web/report', params)
+                };
+                var url = self.session.url('/web/report', params);
                 instance.web.unblockUI();
                 $('<a href="'+url+'" target="_blank"></a>')[0].click();
                 return;
@@ -502,7 +502,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                         c.rpc_error.apply(c, arguments);
                         d.reject();
                     }
-                })
+                });
             });
         });
     },
@@ -677,7 +677,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.$el.find('.oe_view_title_text:first').text(title);
     },
     add_breadcrumb: function(options) {
-        var options = options || {};
+        options = options || {};
         var self = this;
         var views = [this.active_view || this.views_src[0].view_type];
         this.on('switch_mode', self, function(mode) {
@@ -958,7 +958,6 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                     view_type : 'list',
                     view_mode : 'list'
                 });
-                break;
             case 'edit':
                 this.do_edit_resource($option.data('model'), $option.data('id'), { name : $option.text() });
                 break;
@@ -1000,7 +999,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
         evt.currentTarget.selectedIndex = 0;
     },
     do_edit_resource: function(model, id, action) {
-        var action = _.extend({
+        action = _.extend({
             res_model : model,
             res_id : id,
             type : 'ir.actions.act_window',
@@ -1038,7 +1037,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
     },
     get_action_manager: function() {
         var cur = this;
-        while (cur = cur.getParent()) {
+        while ((cur = cur.getParent())) {
             if (cur instanceof instance.web.ActionManager) {
                 return cur;
             }
@@ -1122,7 +1121,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
         self.$("[title]").tipsy({
             'html': true,
             'delayIn': 500,
-        })
+        });
     },
     /**
      * For each item added to the section:
@@ -1166,7 +1165,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
                         label: items[i]['name'],
                         action: items[i],
                         classname: 'oe_sidebar_' + type
-                    }
+                    };
                 }
                 self.add_items(type=='print' ? 'print' : 'other', items);
             }
@@ -1176,7 +1175,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
         var self = this;
         self.getParent().sidebar_eval_context().done(function (sidebar_eval_context) {
             var ids = self.getParent().get_selected_ids();
-            if (ids.length == 0) {
+            if (ids.length === 0) {
                 instance.web.dialog($("<div />").text(_t("You must choose at least one record.")), { title: _t("Warning"), modal: true });
                 return false;
             }
@@ -1426,7 +1425,7 @@ instance.web.View = instance.web.Widget.extend({
             if (self.is_active()) {
                 fn.apply(self, arguments);
             }
-        }
+        };
     },
     do_push_state: function(state) {
         if (this.getParent() && this.getParent().do_push_state) {
@@ -1537,9 +1536,10 @@ instance.web.xml_to_json = function(node, strip_whitespace) {
                 children: _.compact(_.map(node.childNodes, function(node) {
                     return instance.web.xml_to_json(node, strip_whitespace);
                 })),
-            }
+            };
     }
-}
+};
+
 instance.web.json_node_to_xml = function(node, human_readable, indent) {
     // For debugging purpose, this function will convert a json node back to xml
     indent = indent || 0;

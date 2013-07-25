@@ -100,7 +100,7 @@ instance.web.Query = instance.web.Class.extend({
      * @returns {jQuery.Deferred<Number>}
      */
     count: function () {
-        if (this._count != undefined) { return $.when(this._count); }
+        if (this._count !== undefined) { return $.when(this._count); }
         return this._model.call(
             'search_count', [this._filter], {
                 context: this._model.context(this._context)});
@@ -494,7 +494,7 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
         return this._model.call('create', [data], {
             context: this.get_context()
         }).done(function () {
-            self.trigger('dataset_changed', data, options)
+            self.trigger('dataset_changed', data, options);
         });
     },
     /**
@@ -514,7 +514,7 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
         return this._model.call('write', [[id], data], {
             context: this.get_context(options.context)
         }).done(function () {
-            self.trigger('dataset_changed', id, data, options)
+            self.trigger('dataset_changed', id, data, options);
         });
     },
     /**
@@ -527,7 +527,7 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
         return this._model.call('unlink', [ids], {
             context: this.get_context()
         }).done(function () {
-            self.trigger('dataset_changed', ids)
+            self.trigger('dataset_changed', ids);
         });
     },
     /**
@@ -747,7 +747,7 @@ instance.web.DataSetSearch =  instance.web.DataSet.extend({
         });
     },
     size: function () {
-        if (this._length != null) {
+        if (this._length !== null) {
             return this._length;
         }
         return this._super();
@@ -810,7 +810,7 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         var self = this;
         _.each(ids, function(id) {
             if (! _.detect(self.to_create, function(x) { return x.id === id; })) {
-                self.to_delete.push({id: id})
+                self.to_delete.push({id: id});
             }
         });
         this.to_create = _.reject(this.to_create, function(x) { return _.include(ids, x.id);});
@@ -838,7 +838,7 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
                 _.each(fields, function(x) {if (cached.values[x] === undefined)
                     cached.values[x] = created.defaults[x] || false;});
             } else {
-                if (!cached || !_.all(fields, function(x) {return cached.values[x] !== undefined}))
+                if (!cached || !_.all(fields, function(x) {return cached.values[x] !== undefined;}))
                     to_get.push(id);
             }
         });

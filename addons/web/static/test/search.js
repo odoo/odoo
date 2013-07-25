@@ -2,7 +2,7 @@ openerp.testing.section('search.query', {
     dependencies: ['web.search']
 }, function (test) {
     test('Adding a facet to the query creates a facet and a value', function (instance) {
-        var query = new instance.web.search.SearchQuery;
+        var query = new instance.web.search.SearchQuery();
         var field = {};
         query.add({
             category: 'Foo',
@@ -16,7 +16,7 @@ openerp.testing.section('search.query', {
         deepEqual(facet.get('values'), [{label: 'Value', value: 3}]);
     });
     test('Adding two facets', function (instance) {
-        var query = new instance.web.search.SearchQuery;
+        var query = new instance.web.search.SearchQuery();
         query.add([
             { category: 'Foo', field: {}, values: [{label: 'Value', value: 3}] },
             { category: 'Bar', field: {}, values: [{label: 'Value 2', value: 4}] }
@@ -27,7 +27,7 @@ openerp.testing.section('search.query', {
         equal(query.at(1).values.length, 1);
     });
     test('If a facet already exists, add values to it', function (instance) {
-        var query = new instance.web.search.SearchQuery;
+        var query = new instance.web.search.SearchQuery();
         var field = {};
         query.add({category: 'A', field: field, values: [{label: 'V1', value: 0}]});
         query.add({category: 'A', field: field, values: [{label: 'V2', value: 1}]});
@@ -40,18 +40,18 @@ openerp.testing.section('search.query', {
         ]);
     });
     test('Facet being implicitly changed should trigger change, not add', function (instance) {
-        var query = new instance.web.search.SearchQuery;
+        var query = new instance.web.search.SearchQuery();
         var field = {}, added = false, changed = false;
         query.add({category: 'A', field: field, values: [{label: 'V1', value: 0}]});
         query.on('add', function () { added = true; })
-             .on('change', function () { changed = true });
+             .on('change', function () { changed = true; });
         query.add({category: 'A', field: field, values: [{label: 'V2', value: 1}]});
 
         ok(!added, "query.add adding values to a facet should not trigger an add");
         ok(changed, "query.add adding values to a facet should not trigger a change");
     });
     test('Toggling a facet, value which does not exist should add it', function (instance) {
-        var query = new instance.web.search.SearchQuery;
+        var query = new instance.web.search.SearchQuery();
         var field = {};
         query.toggle({category: 'A', field: field, values: [{label: 'V1', value: 0}]});
 
@@ -63,7 +63,7 @@ openerp.testing.section('search.query', {
     });
     test('Toggling a facet which exists with a value which does not should add the value to the facet', function (instance) {
         var field = {};
-        var query = new instance.web.search.SearchQuery;
+        var query = new instance.web.search.SearchQuery();
         query.add({category: 'A', field: field, values: [{label: 'V1', value: 0}]});
         query.toggle({category: 'A', field: field, values: [{label: 'V2', value: 1}]});
 
@@ -77,7 +77,7 @@ openerp.testing.section('search.query', {
     });
     test('Toggling a facet which exists with a value which does as well should remove the value from the facet', function (instance) {
         var field = {};
-        var query = new instance.web.search.SearchQuery;
+        var query = new instance.web.search.SearchQuery();
         query.add({category: 'A', field: field, values: [{label: 'V1', value: 0}]});
         query.add({category: 'A', field: field, values: [{label: 'V2', value: 1}]});
 
@@ -92,7 +92,7 @@ openerp.testing.section('search.query', {
     });
     test('Toggling off the last value of a facet should remove the facet', function (instance) {
         var field = {};
-        var query = new instance.web.search.SearchQuery;
+        var query = new instance.web.search.SearchQuery();
         query.add({category: 'A', field: field, values: [{label: 'V1', value: 0}]});
 
         query.toggle({category: 'A', field: field, values: [{label: 'V1', value: 0}]});
@@ -101,7 +101,7 @@ openerp.testing.section('search.query', {
     });
     test('Intermediate emptiness should not remove the facet', function (instance) {
         var field = {};
-        var query = new instance.web.search.SearchQuery;
+        var query = new instance.web.search.SearchQuery();
         query.add({category: 'A', field: field, values: [{label: 'V1', value: 0}]});
 
         query.toggle({category: 'A', field: field, values: [
@@ -118,7 +118,7 @@ openerp.testing.section('search.query', {
     });
 
     test('Reseting with multiple facets should still work to load defaults', function (instance) {
-        var query = new instance.web.search.SearchQuery;
+        var query = new instance.web.search.SearchQuery();
         var field = {};
         query.reset([
             {category: 'A', field: field, values: [{label: 'V1', value: 0}]},
@@ -129,7 +129,7 @@ openerp.testing.section('search.query', {
         deepEqual(query.at(0).get('values'), [
             {label: 'V1', value: 0},
             {label: 'V2', value: 1}
-        ])
+        ]);
     });
 });
 
@@ -346,7 +346,7 @@ openerp.testing.section('search.defaults', {
             {attrs: {name: 'dummy', string: 'Dummy'}},
             {relation: 'dummy.model.name'},
             view);
-        mock('dummy.model.name:name_get', function () { return [] });
+        mock('dummy.model.name:name_get', function () { return []; });
         return f.facet_for_defaults({dummy: id})
             .done(function (facet) {
                 ok(!facet, "an invalid m2o default should yield a non-facet");
@@ -358,9 +358,9 @@ openerp.testing.section('search.defaults', {
             {attrs: {name: 'dummy', string: 'Dummy'}},
             {relation: 'dummy.model.name'},
             view);
-        raises(function () { f.facet_for_defaults({dummy: [6, 7]}) },
+        raises(function () { f.facet_for_defaults({dummy: [6, 7]}); },
                "should not accept multiple default values");
-    })
+    });
 });
 openerp.testing.section('search.completions', {
     dependencies: ['web.search'],
@@ -614,6 +614,59 @@ openerp.testing.section('search.completions', {
             {relation: 'dummy.model'}, view);
         return f.complete("bob");
     });
+    test('Integer: invalid', {asserts: 1}, function (instance) {
+        var view = {inputs: []};
+        var f = new instance.web.search.IntegerField(
+            {attrs: {string: "Dummy"}}, {}, view);
+        return f.complete("qux")
+            .done(function (completions) {
+                ok(!completions, "non-number => no completion");
+            });
+    });
+    test('Integer: non-zero', {asserts: 5}, function (instance) {
+        var view = {inputs: []};
+        var f = new instance.web.search.IntegerField(
+            {attrs: {string: "Dummy"}}, {}, view);
+        return f.complete("-2")
+            .done(function (completions) {
+                equal(completions.length, 1, "number fields provide 1 completion only");
+                var facet = new instance.web.search.Facet(completions[0].facet);
+                equal(facet.get('category'), f.attrs.string);
+                equal(facet.get('field'), f);
+                var value = facet.values.at(0);
+                equal(value.get('label'), "-2");
+                equal(value.get('value'), -2);
+            });
+    });
+    test('Integer: zero', {asserts: 3}, function (instance) {
+        var view = {inputs: []};
+        var f = new instance.web.search.IntegerField(
+            {attrs: {string: "Dummy"}}, {}, view);
+        return f.complete("0")
+            .done(function (completions) {
+                equal(completions.length, 1, "number fields provide 1 completion only");
+                var facet = new instance.web.search.Facet(completions[0].facet);
+                var value = facet.values.at(0);
+                equal(value.get('label'), "0");
+                equal(value.get('value'), 0);
+            });
+    });
+    test('Float: non-zero', {asserts: 5}, function (instance) {
+        var view = {inputs: []};
+        var f = new instance.web.search.FloatField(
+            {attrs: {string: "Dummy"}}, {}, view);
+        return f.complete("42.37")
+            .done(function (completions) {
+                equal(completions.length, 1, "float fields provide 1 completion only");
+                var facet = new instance.web.search.Facet(completions[0].facet);
+                equal(facet.get('category'), f.attrs.string);
+                equal(facet.get('field'), f);
+                var value = facet.values.at(0);
+                equal(value.get('label'), "42.37");
+                equal(value.get('value'), 42.37);
+            });
+    });
+    
 });
 openerp.testing.section('search.serialization', {
     dependencies: ['web.search'],
@@ -651,7 +704,7 @@ openerp.testing.section('search.serialization', {
 
                 ok(!got_groupby, "no facet, should not have fetched groupby");
                 ok(_(gs).isEmpty(), "groupby list should be empty");
-            })
+            });
     });
     test('London, calling', {asserts: 8}, function (instance, $fix) {
         var got_domain = false, got_context = false, got_groupby = false;
@@ -686,7 +739,7 @@ openerp.testing.section('search.serialization', {
 
                 ok(got_groupby, "should have fetched groupby");
                 ok(_(gs).isEmpty(), "groupby list should be empty");
-            })
+            });
     });
     test('Generate domains', {asserts: 1}, function (instance, $fix) {
         var view = makeSearchView(instance, {
@@ -1065,7 +1118,7 @@ openerp.testing.section('search.groupby', {
                             '<filter string="Baz" context="{\'group_by\': \'baz\'}"/>',
                         '</search>'
                     ].join(''),
-                }
+                };
             });
         }
     }, function (instance, $fix) {
@@ -1076,7 +1129,7 @@ openerp.testing.section('search.groupby', {
             equal(view.inputs.length, 7,
                   'should have 7 inputs total');
             var group = _.find(view.inputs, function (f) {
-                return f instanceof instance.web.search.GroupbyGroup
+                return f instanceof instance.web.search.GroupbyGroup;
             });
             ok(group, "should have a GroupbyGroup input");
             strictEqual(group.getParent(), view,
@@ -1095,7 +1148,7 @@ openerp.testing.section('search.groupby', {
             deepEqual(results.groupbys, [
                 "{'group_by': 'foo'}",
                 "{'group_by': 'baz'}"
-            ], "should have sequence of contexts")
+            ], "should have sequence of contexts");
         });
     });
     test('unified multiple groupby groups', {
@@ -1114,7 +1167,7 @@ openerp.testing.section('search.groupby', {
                             '<filter string="Baz" context="{\'group_by\': \'baz\'}"/>',
                         '</search>'
                     ].join(''),
-                }
+                };
             });
         }
     }, function (instance, $fix) {
@@ -1125,7 +1178,7 @@ openerp.testing.section('search.groupby', {
             equal(view.inputs.length, 9, "should have 9 inputs total");
 
             var groups = _.filter(view.inputs, function (f) {
-                return f instanceof instance.web.search.GroupbyGroup
+                return f instanceof instance.web.search.GroupbyGroup;
             });
             equal(groups.length, 3, "should have 3 GroupbyGroups");
 
@@ -1169,7 +1222,7 @@ openerp.testing.section('search.filters.saved', {
                     "displayed label should be the name of the filter");
                 equal(values.at(0).get('value'), null,
                     "should have no value set");
-            })
+            });
     });
     test('removal', {asserts: 1}, function (instance, $fix, mock) {
         var view = makeSearchView(instance);
@@ -1361,7 +1414,7 @@ openerp.testing.section('search.invisible', {
         }, ['<search>',
                 '<field name="field0"/>',
                 '<field name="field1" modifiers="{&quot;invisible&quot;: true}"/>',
-            '</search>'].join());
+            '</search>'].join(''));
         return view.appendTo($fix)
         .then(function () {
             var done = $.Deferred();
@@ -1380,7 +1433,7 @@ openerp.testing.section('search.invisible', {
             '<search>',
                 '<filter string="filter 0"/>',
                 '<filter string="filter 1" modifiers="{&quot;invisible&quot;: true}"/>',
-            '</search>'].join());
+            '</search>'].join(''));
         return view.appendTo($fix)
         .then(function () {
             var $fs = $fix.find('.oe_searchview_filters ul');
@@ -1398,6 +1451,26 @@ openerp.testing.section('search.invisible', {
                             "should complete filter 0");
             });
             return done;
+        });
+    });
+    test('invisible-previous-sibling', {asserts: 3}, function (instance, $fix, mock) {
+        var view = makeView(instance, mock, {}, [
+            '<search>',
+                '<filter string="filter 0" context="{&quot;test&quot;: 0}"/>',
+                '<filter string="filter 1" modifiers="{&quot;invisible&quot;: true}" context="{&quot;test&quot;: 1}"/>',
+                '<filter string="filter 2" modifiers="{&quot;invisible&quot;: true}" context="{&quot;test&quot;: 2}"/>',
+                '<filter string="filter 3" context="{&quot;test&quot;: 3}"/>',
+            '</search>'].join(''));
+        return view.appendTo($fix)
+        .done(function () {
+            // Select filter 3
+            $fix.find('.oe_searchview_filters ul li:contains("filter 3")').click();
+            equal(view.query.length, 1, "should have selected a filter");
+            var facet = view.query.at(0);
+            strictEqual(facet.values.at(0).get('label'), "filter 3",
+                        "should have correctly labelled the facet");
+            deepEqual(view.build_search_data().contexts, [{test: 3}],
+                      "should have built correct context");
         });
     });
     // Invisible filter groups should not appear in the drawer

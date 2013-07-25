@@ -126,8 +126,8 @@ openerp.testing.section('web-formats', {
         var str = "134,112.1234";
         var val = instance.web.parse_value(str, {type:"float"});
         equal(val, 134112.1234);
-        var str = "-134,112.1234";
-        var val = instance.web.parse_value(str, {type:"float"});
+        str = "-134,112.1234";
+        val = instance.web.parse_value(str, {type:"float"});
         equal(val, -134112.1234);
         _.extend(instance.web._t.database.parameters, {
             decimal_point: ',',
