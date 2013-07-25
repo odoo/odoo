@@ -14,6 +14,6 @@
   !python {model: project.project}: |
     prj = self.browse(cr, uid, [ref("project.project_project_1")])[0]
     for task in prj.tasks:
-        if task.state in ('done','cancelled'):
+        if task.stage_id and task.stage_id.fold:
             continue
         assert task.user_id and task.date_start and task.date_end, "Project tasks not scheduled"
