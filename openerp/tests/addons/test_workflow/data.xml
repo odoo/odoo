@@ -37,7 +37,6 @@
         <!-- A single trigger record, with known ID 1 -->
         </record>
 
-
         <!-- A simple workflow:
 
             a -signal-> b -trigger-> c
@@ -81,6 +80,89 @@
             <field name="condition">condition()</field>
             <field name="trigger_model">test.workflow.trigger</field>
             <field name="trigger_expr_id">[1]</field>
+        </record>
+
+        <!-- Workflow A (a single activity):
+
+            a
+
+        -->
+        <record id="test_workflow_a" model="workflow">
+            <field name="name">test.workflow.a</field>
+            <field name="osv">test.workflow.model.a</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <record id="activity_a_a" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow_a"/>
+            <field name="flow_start">True</field>
+            <field name="flow_stop">True</field>
+            <field name="name">a</field>
+            <field name="kind">dummy</field>
+        </record>
+
+        <!-- Workflow B (a single activity):
+
+            a
+
+        The function is run when the record is created.
+
+        -->
+        <record id="test_workflow_b" model="workflow">
+            <field name="name">test.workflow.b</field>
+            <field name="osv">test.workflow.model.b</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <record id="activity_b_a" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow_b"/>
+            <field name="flow_start">True</field>
+            <field name="flow_stop">True</field>
+            <field name="name">a</field>
+            <field name="kind">function</field>
+            <field name="action">write({'value': 1})</field>
+        </record>
+
+        <!-- Workflow C (a single activity):
+
+            a
+
+        The function is not run when the kind is dummy and no action_id is provided.
+        -->
+        <record id="test_workflow_c" model="workflow">
+            <field name="name">test.workflow.c</field>
+            <field name="osv">test.workflow.model.c</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <record id="activity_c_a" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow_c"/>
+            <field name="flow_start">True</field>
+            <field name="flow_stop">True</field>
+            <field name="name">a</field>
+            <field name="kind">dummy</field>
+            <field name="action">write({'value': 1})</field>
+        </record>
+
+        <!-- Workflow D (a single activity):
+
+            a
+
+        The function is run when the kind is stopall and no action_id is provided.
+        -->
+        <record id="test_workflow_d" model="workflow">
+            <field name="name">test.workflow.d</field>
+            <field name="osv">test.workflow.model.d</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <record id="activity_d_a" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow_d"/>
+            <field name="flow_start">True</field>
+            <field name="flow_stop">True</field>
+            <field name="name">a</field>
+            <field name="kind">stopall</field>
+            <field name="action">write({'value': 1})</field>
         </record>
     </data>
 </openerp>

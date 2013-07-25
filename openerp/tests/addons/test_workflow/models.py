@@ -2,7 +2,7 @@
 import openerp
 
 class m(openerp.osv.orm.Model):
-    """ A model for which we will define a worflow (see data.xml). """
+    """ A model for which we will define a workflow (see data.xml). """
     _name = 'test.workflow.model'
 
     def print_(self, cr, uid, ids, s, context=None):
@@ -33,5 +33,22 @@ class n(openerp.osv.orm.Model):
     _name = 'test.workflow.trigger'
     _columns = { 'value': openerp.osv.fields.boolean('Value') }
     _defaults = { 'value': False }
+
+class a(openerp.osv.orm.Model):
+    _name = 'test.workflow.model.a'
+    _columns = { 'value': openerp.osv.fields.integer('Value') }
+    _defaults = { 'value': 0 }
+
+class b(openerp.osv.orm.Model):
+    _name = 'test.workflow.model.b'
+    _inherit = 'test.workflow.model.a'
+
+class c(openerp.osv.orm.Model):
+    _name = 'test.workflow.model.c'
+    _inherit = 'test.workflow.model.a'
+
+class d(openerp.osv.orm.Model):
+    _name = 'test.workflow.model.d'
+    _inherit = 'test.workflow.model.a'
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

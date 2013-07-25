@@ -33,6 +33,13 @@ class test_workflows(common.TransactionCase):
             sorted([item.act_id.name for item in workitem_records]),
             sorted(names))
 
+    def check_value(self, model_name, i, value):
+        """ Check that the record i has the given value.
+        """
+        model = self.registry(model_name)
+        record = model.read(self.cr, SUPERUSER_ID, [i], ['value'])[0]
+        self.assertEqual(record['value'], value)
+
     def test_workflow(self):
         model = self.registry('test.workflow.model')
         trigger = self.registry('test.workflow.trigger')
@@ -58,5 +65,41 @@ class test_workflows(common.TransactionCase):
         self.assertEqual(
             True,
             True)
+
+        model.unlink(self.cr, SUPERUSER_ID, [i])
+
+    def test_workflow_a(self):
+        model = self.registry('test.workflow.model.a')
+
+        i = model.create(self.cr, SUPERUSER_ID, {})
+        self.check_activities(model._name, i, ['a'])
+        self.check_value(model._name, i, 0)
+
+        model.unlink(self.cr, SUPERUSER_ID, [i])
+
+    def test_workflow_b(self):
+        model = self.registry('test.workflow.model.b')
+
+        i = model.create(self.cr, SUPERUSER_ID, {})
+        self.check_activities(model._name, i, ['a'])
+        self.check_value(model._name, i, 1)
+
+        model.unlink(self.cr, SUPERUSER_ID, [i])
+
+    def test_workflow_c(self):
+        model = self.registry('test.workflow.model.c')
+
+        i = model.create(self.cr, SUPERUSER_ID, {})
+        self.check_activities(model._name, i, ['a'])
+        self.check_value(model._name, i, 0)
+
+        model.unlink(self.cr, SUPERUSER_ID, [i])
+
+    def test_workflow_d(self):
+        model = self.registry('test.workflow.model.d')
+
+        i = model.create(self.cr, SUPERUSER_ID, {})
+        self.check_activities(model._name, i, ['a'])
+        self.check_value(model._name, i, 1)
 
         model.unlink(self.cr, SUPERUSER_ID, [i])
