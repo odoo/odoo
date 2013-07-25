@@ -1186,9 +1186,9 @@ instance.web.Sidebar = instance.web.Widget.extend({
                 active_model: self.getParent().dataset.model,
             };
 
-            $.when(domain).done(function (results) {
-                if (results !== undefined) {
-                    active_ids_context.active_domain = results.domain;
+            $.when(domain).done(function (domain) {
+                if (domain !== undefined) {
+                    active_ids_context.active_domain = domain;
                 }
                 var c = instance.web.pyeval.eval('context',
                 new instance.web.CompoundContext(
