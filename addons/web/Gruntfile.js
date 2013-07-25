@@ -1,20 +1,20 @@
 module.exports = function(grunt) {
 
-  grunt.initConfig({
-    jshint: {
-      files: ['static/src/**/*.js', 'static/test/**/*.js'],
-      options: {
-        sub: true, //[] instead of .
-        evil: true, //eval
-        laxbreak: true, //unsafe line breaks
-      },
-    }
-  });
+    grunt.initConfig({
+        jshint: {
+            src: ['static/src/**/*.js', 'static/test/**/*.js'],
+            options: {
+                sub: true, //[] instead of .
+                evil: true, //eval
+                laxbreak: true, //unsafe line breaks
+            },
+        }
+    });
 
-  grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
 
-  grunt.registerTask('test', ['jshint']);
+    grunt.registerTask('test', ['jshint']);
 
-  grunt.registerTask('default', ['jshint']);
+    grunt.registerTask('default', ['jshint']);
 
 };
