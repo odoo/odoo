@@ -406,6 +406,8 @@ class project_issue(base_stage, osv.osv):
         #Update last action date every time the user changes the stage
         if 'stage_id' in vals:
             vals['date_action_last'] = time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)
+            if 'kanban_state' not in vals:
+                vals.update(kanban_state='normal')
             state = self.pool.get('project.task.type').browse(cr, uid, vals['stage_id'], context=context).state
             for issue in self.browse(cr, uid, ids, context=context):
                 # Change from draft to not draft EXCEPT cancelled: The issue has been opened -> set the opening date
