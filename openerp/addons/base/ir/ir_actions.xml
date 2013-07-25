@@ -316,10 +316,10 @@
                         </div>
                         <div class="oe_right oe_button_box" name="buttons">
                             <field name="menu_ir_values_id" invisible="1"/>
-                            <button name="create_action" string="Add More menu entry" type="object"
+                            <button name="create_action" string="Add in the 'More' menu" type="object"
                                     attrs="{'invisible':[('menu_ir_values_id','!=',False)]}"
                                     help="Display an option on related documents to run this sever action"/>
-                            <button name="unlink_action" string="Remove More menu entry" type="object" 
+                            <button name="unlink_action" string="Remove from the 'More' menu" type="object" 
                                     attrs="{'invisible':[('menu_ir_values_id','=',False)]}"
                                     help="Remove the contextual action related to this server action"/>
                         </div>
@@ -402,16 +402,33 @@
                                             attrs="{'invisible': ['|', ('state', '!=', 'object_create'), ('use_create', '!=', 'new_other')]}"/>
                                     <field name="crud_model_name" invisible="1"/>
 
-                                    <field name="link_new_record" attrs="{'invisible': [('state', '!=', 'object_create')]}"/>
-                                    <field name="link_field_id"
-                                            domain="[('model_id', '=', model_id), ('relation', '=', crud_model_name), ('ttype', 'in', ['many2one'])]"
-                                            attrs="{'required': [('state', '=', 'object_create'), ('link_new_record', '=', True)],
-                                                    'invisible': ['|', ('state', '!=', 'object_create'), ('link_new_record', '=', False)]}"/>
+                                    <label for="link_new_record" attrs="{'invisible': [('state', '!=', 'object_create')]}"/>
+                                    <div attrs="{'invisible': [('state', '!=', 'object_create')]}">
+                                        <field name="link_new_record" nolabel="1" style="display: inline-block;"/>
+                                        <p class="oe_grey oe_edit_only" style="display: inline-block; margin: 0px 0px 0px 8px;">
+                                            Check to attach the newly created record to the record on which the server action runs.
+                                        </p>
+                                        <group>
+                                            <field name="link_field_id"
+                                                    domain="[('model_id', '=', model_id), ('relation', '=', crud_model_name), ('ttype', 'in', ['many2one'])]"
+                                                    attrs="{'required': [('state', '=', 'object_create'), ('link_new_record', '=', True)],
+                                                            'invisible': ['|', ('state', '!=', 'object_create'), ('link_new_record', '=', False)]}"/>
+                                        </group>
+                                    </div>
 
-                                    <field name="write_expression"
-                                            on_change="on_change_write_expression(write_expression, model_id)"
-                                            attrs="{'invisible': ['|', ('state', '!=', 'object_write'), ('use_write', '!=', 'expression')],
-                                                    'required': [('state', '=', 'object_write'), ('use_write', '=', 'expression')]}"/>
+                                    <label for="link_new_record" attrs="{'invisible': ['|', ('state', '!=', 'object_write'), ('use_write', '!=', 'expression')]}"/>
+                                    <div attrs="{'invisible': ['|', ('state', '!=', 'object_write'), ('use_write', '!=', 'expression')]}">
+                                        <p class="oe_grey oe_edit_only" style="margin: 0px;">
+                                            Write a python expression, beginning with object, that gives the record to update. An expression builder is available in the help tab. Examples:
+                                        </p>
+                                        <ul class="oe_grey oe_edit_only">
+                                            <li>object.partner_id</li>
+                                            <li>object.partner_id.currency_id</li>
+                                        </ul>
+                                        <field name="write_expression"
+                                                on_change="on_change_write_expression(write_expression, model_id)"
+                                                attrs="{'required': [('state', '=', 'object_write'), ('use_write', '=', 'expression')]}"/>
+                                    </div>
 
                                     <field name="fields_lines">
                                         <tree string="Field Mappings" editable="top">
@@ -455,25 +472,18 @@
                                             <li>context: current context</li>
                                         </ul>
                                         <div>
-                                            <p>Hints for using python in the condition</p>
+                                            <p>Example of condition expression using Python</p>
                                             <ul>
                                                 <li>condition: True</li>
                                                 <li>condition: object.list_price > 5000</li>
                                             </ul>
                                         </div>
                                         <div attrs="{'invisible': [('state', '!=', 'code')]}">
-                                            <p>Hints for using python for a code action</p>
-                                            <ul>
-                                                <li>if you plan to return an action, assign action = {...}</li>
-                                            </ul>
-                                        </div>
-                                        <div attrs="{'invisible': [('state', '!=', 'email')]}">
-                                            <p>Hints for using python in email fields</p>
-                                            <ul>
-                                                <li>Email address example: object.invoice_address_id.email</li>
-                                                <li>Subject example: Hello [[object.partner_id.name ]]</li>
-                                                <li>BOdy example: Dear [[ object.partner_id.name ]]</li>
-                                            </ul>
+                                            <p>Example of python code</p>
+                                            <code>
+                                                partner_name = obj.name + '_code'
+                                                self.pool["res.partner"].create(cr, uid, {"name": partner_name}, context=context)  
+                                            </code>
                                         </div>
                                     </div>
                                     <group>
@@ -493,6 +503,9 @@
                                                         'invisible': [('model_id', '=', False)]}"
                                                 on_change="onchange_sub_model_object_value_field(model_object_field,sub_model_object_field)"/>
                                         <field name="copyvalue" attrs="{'invisible': [('model_id', '=', False)]}"/>
+                                        <h3 colspan="2">Find the ID of a record in the database</h3>
+                                        <field name="id_object" on_change="onchange_id_object(id_object)"/>
+                                        <field name="id_value" />
                                     </group>
                                 </group>
                             </page>

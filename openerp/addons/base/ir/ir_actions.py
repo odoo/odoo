@@ -502,7 +502,7 @@ class actions_server(osv.osv):
                                  help="Condition verified before executing the server action. If it "
                                  "is not verified, the action will not be executed. The condition is "
                                  "a Python expression, like 'object.list_price > 5000'. A void "
-                                 "condition is considered as always True. Help about pyhon expression "
+                                 "condition is considered as always True. Help about python expression "
                                  "is given in the help tab."),
         'state': fields.selection(_get_states_wrapper, 'Action To Do', required=True,
                                   help="Type of server action. The following values are available:\n"
@@ -562,10 +562,10 @@ class actions_server(osv.osv):
                                           store=True, readonly=True),
         'ref_object': fields.reference('Reference record', selection=_select_objects, size=128,
                                        oldname='copy_object'),
-        'link_new_record': fields.boolean('Link to current record',
+        'link_new_record': fields.boolean('Attach the new record',
                                           help="Check this if you want to link the newly-created record "
                                           "to the current record on which the server action runs."),
-        'link_field_id': fields.many2one('ir.model.fields', 'Link Field',
+        'link_field_id': fields.many2one('ir.model.fields', 'Link using field',
                                          oldname='record_id',
                                          help="Provide the field where the record id is stored after the operations."),
         'use_write': fields.selection([('current', 'Update the current record'),
@@ -593,6 +593,9 @@ class actions_server(osv.osv):
                                                        "this field lets you select the target field within the "
                                                        "destination document model (sub-model)."),
         'copyvalue': fields.char('Placeholder Expression', help="Final placeholder expression, to be copy-pasted in the desired template field."),
+        # Fake fields used to implement the ID finding assistant
+        'id_object': fields.reference('Record', selection=_select_objects, size=128),
+        'id_value': fields.char('Record ID'),
     }
 
     _defaults = {
@@ -632,9 +635,12 @@ class actions_server(osv.osv):
             if not column_info:
                 return (False, None, 'Part of the expression (%s) is not recognized as a column in the model %s.' % (step, current_model_name))
             column_type = column_info.column._type
-            if column_type not in ['many2one']:
-                return (False, None, 'Part of the expression (%s) is not a valid column type (is %s, should be a many2one)' % (step, column_type))
-            current_model_name = column_info.column._obj
+            if column_type not in ['many2one', 'int']:
+                return (False, None, 'Part of the expression (%s) is not a valid column type (is %s, should be a many2one or an int)' % (step, column_type))
+            if column_type == 'int' and path:
+                return (False, None, 'Part of the expression (%s) is an integer field that is only allowed at the end of an expression' % (step))
+            if column_type == 'many2one':
+                current_model_name = column_info.column._obj
         return (True, current_model_name, None)
 
     def _check_write_expression(self, cr, uid, ids, context=None):
@@ -759,7 +765,7 @@ class actions_server(osv.osv):
         values = {'link_field_id': False, 'crud_model_name': crud_model_name}
         return {'value': values}
 
-    def build_expression(self, field_name, sub_field_name):
+    def _build_expression(self, field_name, sub_field_name):
         """Returns a placeholder expression for use in a template field,
            based on the values provided in the placeholder assistant.
 
@@ -791,14 +797,20 @@ class actions_server(osv.osv):
                 if res_ids:
                     result.update({
                         'sub_object': res_ids[0],
-                        'copyvalue': self.build_expression(field_value.name, sub_field_value and sub_field_value.name or False),
+                        'copyvalue': self._build_expression(field_value.name, sub_field_value and sub_field_value.name or False),
                         'sub_model_object_field': sub_model_object_field or False,
                     })
             else:
                 result.update({
-                    'copyvalue': self.build_expression(field_value.name, False),
+                    'copyvalue': self._build_expression(field_value.name, False),
                 })
         return {'value': result}
+
+    def onchange_id_object(self, cr, uid, ids, id_object, context=None):
+        if id_object:
+            ref_model, ref_id = id_object.split(',')
+            return {'value': {'id_value': ref_id}}
+        return {'value': {'id_value': False}}
 
     def create_action(self, cr, uid, ids, context=None):
         """ Create a contextual action for each of the server actions. """
