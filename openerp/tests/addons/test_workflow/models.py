@@ -55,7 +55,7 @@ class e(openerp.osv.orm.Model):
     _name = 'test.workflow.model.e'
     _inherit = 'test.workflow.model.a'
 
-for name in 'bcdef':
+for name in 'bcdefghijk':
     type(
         name,
         (openerp.osv.orm.Model,),

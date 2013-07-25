@@ -125,3 +125,48 @@ class test_workflows(common.TransactionCase):
         self.check_value(model._name, i, 2)
 
         model.unlink(self.cr, SUPERUSER_ID, [i])
+
+    def test_workflow_g(self):
+        model = self.registry('test.workflow.model.g')
+
+        i = model.create(self.cr, SUPERUSER_ID, {})
+        self.check_activities(model._name, i, ['a'])
+        self.check_value(model._name, i, 1)
+
+        model.unlink(self.cr, SUPERUSER_ID, [i])
+
+    def test_workflow_h(self):
+        model = self.registry('test.workflow.model.h')
+
+        i = model.create(self.cr, SUPERUSER_ID, {})
+        self.check_activities(model._name, i, ['b', 'c'])
+        self.check_value(model._name, i, 2)
+
+        model.unlink(self.cr, SUPERUSER_ID, [i])
+
+    def test_workflow_i(self):
+        model = self.registry('test.workflow.model.i')
+
+        i = model.create(self.cr, SUPERUSER_ID, {})
+        self.check_activities(model._name, i, ['b'])
+        self.check_value(model._name, i, 2)
+
+        model.unlink(self.cr, SUPERUSER_ID, [i])
+
+    def test_workflow_j(self):
+        model = self.registry('test.workflow.model.j')
+
+        i = model.create(self.cr, SUPERUSER_ID, {})
+        self.check_activities(model._name, i, ['a'])
+        self.check_value(model._name, i, 1)
+
+        model.unlink(self.cr, SUPERUSER_ID, [i])
+
+    def test_workflow_k(self):
+        model = self.registry('test.workflow.model.k')
+
+        i = model.create(self.cr, SUPERUSER_ID, {})
+        self.check_activities(model._name, i, ['b'])
+        self.check_value(model._name, i, 2)
+
+        model.unlink(self.cr, SUPERUSER_ID, [i])

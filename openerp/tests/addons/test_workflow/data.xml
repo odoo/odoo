@@ -229,5 +229,221 @@
             <field name="act_to" ref="activity_f_b"/>
             <field name="signal">a-b</field>
         </record>
+
+        <!-- Workflow G:
+
+            a -False-> b
+
+        -->
+        <record id="test_workflow_g" model="workflow">
+            <field name="name">test.workflow.g</field>
+            <field name="osv">test.workflow.model.g</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <record id="activity_g_a" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow_g"/>
+            <field name="flow_start">True</field>
+            <field name="name">a</field>
+            <field name="kind">function</field>
+            <field name="action">write({'value': 1})</field>
+        </record>
+        <record id="activity_g_b" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow_g"/>
+            <field name="flow_stop">True</field>
+            <field name="name">b</field>
+            <field name="kind">function</field>
+            <field name="action">write({'value': 2})</field>
+        </record>
+
+        <record id="trans_g_a_b" model="workflow.transition">
+            <field name="act_from" ref="activity_g_a"/>
+            <field name="act_to" ref="activity_g_b"/>
+            <field name="condition">False</field>
+        </record>
+
+        <!-- Workflow H:
+
+            a or  -> b { value: 2 } 
+                 `-> c { value: 2 }
+
+        Whether the action of b or c is exectued last is non-deterministic.
+
+        -->
+        <record id="test_workflow_h" model="workflow">
+            <field name="name">test.workflow.h</field>
+            <field name="osv">test.workflow.model.h</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <record id="activity_h_a" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow_h"/>
+            <field name="flow_start">True</field>
+            <field name="name">a</field>
+            <field name="kind">function</field>
+            <field name="action">write({'value': 1})</field>
+            <field name="split_mode">OR</field>
+        </record>
+        <record id="activity_h_b" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow_h"/>
+            <field name="flow_stop">True</field>
+            <field name="name">b</field>
+            <field name="kind">function</field>
+            <field name="action">write({'value': 2})</field>
+        </record>
+        <record id="activity_h_c" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow_h"/>
+            <field name="flow_stop">True</field>
+            <field name="name">c</field>
+            <field name="kind">function</field>
+            <field name="action">write({'value': 2})</field>
+        </record>
+
+        <record id="trans_h_a_b" model="workflow.transition">
+            <field name="act_from" ref="activity_h_a"/>
+            <field name="act_to" ref="activity_h_b"/>
+        </record>
+        <record id="trans_h_a_c" model="workflow.transition">
+            <field name="act_from" ref="activity_h_a"/>
+            <field name="act_to" ref="activity_h_c"/>
+        </record>
+
+        <!-- Workflow I:
+
+            a or -> b { value: 2 } 
+                 `false> c { value: 3 }
+
+        -->
+        <record id="test_workflow_i" model="workflow">
+            <field name="name">test.workflow.i</field>
+            <field name="osv">test.workflow.model.i</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <record id="activity_i_a" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow_i"/>
+            <field name="flow_start">True</field>
+            <field name="name">a</field>
+            <field name="kind">function</field>
+            <field name="action">write({'value': 1})</field>
+            <field name="split_mode">OR</field>
+        </record>
+        <record id="activity_i_b" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow_i"/>
+            <field name="flow_stop">True</field>
+            <field name="name">b</field>
+            <field name="kind">function</field>
+            <field name="action">write({'value': 2})</field>
+        </record>
+        <record id="activity_i_c" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow_i"/>
+            <field name="flow_stop">True</field>
+            <field name="name">c</field>
+            <field name="kind">function</field>
+            <field name="action">write({'value': 3})</field>
+        </record>
+
+        <record id="trans_i_a_b" model="workflow.transition">
+            <field name="act_from" ref="activity_i_a"/>
+            <field name="act_to" ref="activity_i_b"/>
+        </record>
+        <record id="trans_i_a_c" model="workflow.transition">
+            <field name="act_from" ref="activity_i_a"/>
+            <field name="act_to" ref="activity_i_c"/>
+            <field name="condition">False</field>
+        </record>
+
+        <!-- Workflow J:
+
+            a and -> b { value: 2 } 
+                  `False> c { value: 3 }
+
+        This will stay in a because all transitions should be True at the same time.
+
+        -->
+        <record id="test_workflow_j" model="workflow">
+            <field name="name">test.workflow.j</field>
+            <field name="osv">test.workflow.model.j</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <record id="activity_j_a" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow_j"/>
+            <field name="flow_start">True</field>
+            <field name="name">a</field>
+            <field name="kind">function</field>
+            <field name="action">write({'value': 1})</field>
+            <field name="split_mode">AND</field>
+        </record>
+        <record id="activity_j_b" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow_j"/>
+            <field name="flow_stop">True</field>
+            <field name="name">b</field>
+            <field name="kind">function</field>
+            <field name="action">write({'value': 2})</field>
+        </record>
+        <record id="activity_j_c" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow_j"/>
+            <field name="flow_stop">True</field>
+            <field name="name">c</field>
+            <field name="kind">function</field>
+            <field name="action">write({'value': 3})</field>
+        </record>
+
+        <record id="trans_j_a_b" model="workflow.transition">
+            <field name="act_from" ref="activity_j_a"/>
+            <field name="act_to" ref="activity_j_b"/>
+        </record>
+        <record id="trans_j_a_c" model="workflow.transition">
+            <field name="act_from" ref="activity_j_a"/>
+            <field name="act_to" ref="activity_j_c"/>
+            <field name="condition">False</field>
+        </record>
+
+        <!-- Workflow K:
+
+            a xor -> b { value: 2 } 
+                  `> c { value: 3 }
+
+        Only one (truish) transition is taken with a XOR.
+
+        -->
+        <record id="test_workflow_k" model="workflow">
+            <field name="name">test.workflow.k</field>
+            <field name="osv">test.workflow.model.k</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <record id="activity_k_a" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow_k"/>
+            <field name="flow_start">True</field>
+            <field name="name">a</field>
+            <field name="kind">function</field>
+            <field name="action">write({'value': 1})</field>
+            <field name="split_mode">XOR</field>
+        </record>
+        <record id="activity_k_b" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow_k"/>
+            <field name="flow_stop">True</field>
+            <field name="name">b</field>
+            <field name="kind">function</field>
+            <field name="action">write({'value': 2})</field>
+        </record>
+        <record id="activity_k_c" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow_k"/>
+            <field name="flow_stop">True</field>
+            <field name="name">c</field>
+            <field name="kind">function</field>
+            <field name="action">write({'value': 3})</field>
+        </record>
+
+        <record id="trans_k_a_b" model="workflow.transition">
+            <field name="act_from" ref="activity_k_a"/>
+            <field name="act_to" ref="activity_k_b"/>
+        </record>
+        <record id="trans_k_a_c" model="workflow.transition">
+            <field name="act_from" ref="activity_k_a"/>
+            <field name="act_to" ref="activity_k_c"/>
+        </record>
     </data>
 </openerp>
