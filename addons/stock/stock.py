@@ -1000,6 +1000,7 @@ class stock_move(osv.osv):
         'remaining_qty': fields.function(_get_remaining_qty, type='float', string='Remaining Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), states={'done': [('readonly', True)]}),
         'group_id': fields.many2one('procurement.group', 'Procurement Group'),
         'rule_id': fields.many2one('procurement.rule', 'Procurement Rule'),
+        'propagate': fields.boolean('Propagate cancel and split', help='If checked, when this move is cancelled, cancel the linked move too'),
     }
 
     def _check_location(self, cr, uid, ids, context=None):
@@ -1107,7 +1108,7 @@ class stock_move(osv.osv):
         'location_id': _default_location_source,
         'location_dest_id': _default_location_destination,
         'partner_id': _default_destination_address,
-#         'picking_type_id': lambda self, cr, uid, c: self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'picking_type_internal')[1], 
+#         'picking_type_id': TODO: will have to depend on context (e.g. by creating from a link from a column in the kanban view 
         'state': 'draft',
         'priority': '1',
         'product_qty': 1.0,
@@ -1116,6 +1117,7 @@ class stock_move(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.move', context=c),
         'date_expected': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'procure_method': 'make_to_stock',
+        'propagate': True,
     }
 
     def _create_procurement(self, cr, uid, move, context=None):
@@ -1125,7 +1127,7 @@ class stock_move(osv.osv):
         proc_obj = self.pool.get("procurement.order")
         origin = _('Procurement from  created by rule %s') % (move.group_id and move.group_id.name or "", move.rule_id and move.rule_id.name or "")
         return proc_obj.create(cr, uid, {
-                'name': _('MTO procurement from rule %s') % move.rule_id and move.rule_id.name or "",
+                'name': _('MTO from rule %s') % move.rule_id and move.rule_id.name or "",
                 'origin': origin,
                 'company_id': move.company_id and move.company_id.id or False,
                 'date_planned': move.date,
@@ -1440,7 +1442,7 @@ class stock_move(osv.osv):
         for move in self.browse(cr, uid, ids, context=context):
             # FP Note: should we create a MTS procurement here?
             if move.move_dest_id:
-                if move.cancel_cascade:
+                if move.propagate:
                     self.action_cancel(cr, uid, [move.move_dest_id.id], context=context)
                 elif move.move_dest_id.state == 'waiting':
                     self.write(cr, uid, [move.move_dest_id.id], {'state': 'confirmed'})

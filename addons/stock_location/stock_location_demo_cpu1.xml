@@ -41,7 +41,7 @@
             <field name="invoice_state">none</field>
             <field name="company_id" ref="stock.res_company_1"/>
             <field name="type_proc">move</field>
-            <field eval="0" name="cancel_cascade"/>
+            <field eval="0" name="propagate"/>
             <field name="procure_method">make_to_order</field>
             <field name="picking_type_id" ref="stock.picking_type_in"/>
             <field name="name">Receive from Warehouse</field>
@@ -55,7 +55,7 @@
             <field name="type_proc">move</field>
             <field name="invoice_state">none</field>
             <field name="company_id" ref="base.main_company"/>
-            <field eval="0" name="cancel_cascade"/>
+            <field eval="0" name="propagate"/>
             <field name="procure_method">make_to_stock</field>
             <field name="picking_type_id" ref="stock.picking_type_out"/>
             <field name="name">Deliver Shop</field>
