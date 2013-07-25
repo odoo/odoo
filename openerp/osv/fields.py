@@ -270,6 +270,21 @@ class float(_column):
 class date(_column):
     _type = 'date'
 
+    MONTHS = [
+        ('01', 'January'),
+        ('02', 'February'),
+        ('03', 'March'),
+        ('04', 'April'),
+        ('05', 'May'),
+        ('06', 'June'),
+        ('07', 'July'),
+        ('08', 'August'),
+        ('09', 'September'),
+        ('10', 'October'),
+        ('11', 'November'),
+        ('12', 'December')
+    ]
+
     @staticmethod
     def today(*args):
         """ Returns the current date in a format fit for being a
@@ -319,6 +334,22 @@ class date(_column):
 
 class datetime(_column):
     _type = 'datetime'
+
+    MONTHS = [
+        ('01', 'January'),
+        ('02', 'February'),
+        ('03', 'March'),
+        ('04', 'April'),
+        ('05', 'May'),
+        ('06', 'June'),
+        ('07', 'July'),
+        ('08', 'August'),
+        ('09', 'September'),
+        ('10', 'October'),
+        ('11', 'November'),
+        ('12', 'December')
+    ]
+
     @staticmethod
     def now(*args):
         """ Returns the current datetime in a format fit for being a
