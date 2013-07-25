@@ -363,7 +363,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     sort_by_column: function (e) {
         e.stopPropagation();
         var $column = $(e.currentTarget);
-        var col_name = $column.data('id')
+        var col_name = $column.data('id');
         var field = this.fields_view.fields[col_name];
         // test if the field is a function field with store=false, since it's impossible
         // for the server to sort those fields we desactivate the feature
@@ -1430,7 +1430,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                d = new $.Deferred(),
             page = this.datagroup.openable ? this.page : view.page;
 
-        var fields = _.pluck(_.select(this.columns, function(x) {return x.tag == "field"}), 'name');
+        var fields = _.pluck(_.select(this.columns, function(x) {return x.tag == "field";}), 'name');
         var options = { offset: page * limit, limit: limit, context: {bin_size: true} };
         //TODO xmo: investigate why we need to put the setTimeout
         $.async_when().done(function() {
@@ -1545,7 +1545,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
 
         this.datagroup.list(
             _(this.view.visible_columns).chain()
-                .filter(function (column) { return column.tag === 'field' })
+                .filter(function (column) { return column.tag === 'field';})
                 .pluck('name').value(),
             function (groups) {
                 $el[0].appendChild(
@@ -1590,7 +1590,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
             return {
                 count: this.datagroup.length,
                 values: this.datagroup.aggregates
-            }
+            };
         }
         return _(this.children).chain()
             .map(function (child) {
@@ -1958,7 +1958,7 @@ var Collection = instance.web.Class.extend(/** @lends Collection# */{
         var record;
         for(var section in this._proxies) {
             if (!this._proxies.hasOwnProperty(section)) {
-                continue
+                continue;
             }
             if ((record = this._proxies[section].find(callback))) {
                 return record;
@@ -2075,7 +2075,7 @@ instance.web.list.columns.for_ = function (id, field, node) {
         tag + '.'+ description.type,
         tag
     ]);
-    return new Type(id, node.tag, description)
+    return new Type(id, node.tag, description);
 };
 
 instance.web.list.Column = instance.web.Class.extend({
@@ -2238,7 +2238,7 @@ instance.web.list.Char = instance.web.list.Column.extend({
     _format: function (row_data, options) {
         var value = row_data[this.id].value;
         if (value && this.password === 'True') {
-            return value.replace(/[\s\S]/g, _.escape(this.replacement))
+            return value.replace(/[\s\S]/g, _.escape(this.replacement));
         }
         return this._super(row_data, options);
     }

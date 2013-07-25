@@ -71,7 +71,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
                 opt.replaceChild(
                     document.createTextNode(
                         _.str.sprintf("%s — %s", format.label, format.error)),
-                    opt.childNodes[0])
+                    opt.childNodes[0]);
             }
             $fmts.append(opt);
         });

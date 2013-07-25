@@ -145,7 +145,7 @@ openerp.web.corelib = function(instance) {
                             var ret = fn.apply(this, arguments);
                             this._super = tmp;
                             return ret;
-                        }
+                        };
                     })(name, properties[name], prototype[name]);
                 } else if (typeof _super[name] === 'function') {
                     prototype[name] = (function (name, fn) {
@@ -155,7 +155,7 @@ openerp.web.corelib = function(instance) {
                             var ret = fn.apply(this, arguments);
                             this._super = tmp;
                             return ret;
-                        }
+                        };
                     })(name, properties[name]);
                 }
             }
@@ -503,7 +503,7 @@ instance.web.Controller = instance.web.Class.extend(instance.web.PropertiesMixin
         return function () {
             var fn = (typeof method === 'string') ? self[method] : method;
             return fn.apply(self, arguments);
-        }
+        };
     },
     /**
      * Informs the action manager to do an action. This supposes that
@@ -883,7 +883,7 @@ instance.web.Registry = instance.web.Class.extend({
     contains: function (key) {
         if (key === undefined) { return false; }
         if (key in this.map) {
-            return true
+            return true;
         }
         if (this.parent) {
             return this.parent.contains(key);
@@ -1148,6 +1148,6 @@ instance.web.py_eval = function(expr, context) {
     return py.eval(expr, _.extend({}, context || {}, {"true": true, "false": false, "null": null}));
 };
 
-}
+};
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

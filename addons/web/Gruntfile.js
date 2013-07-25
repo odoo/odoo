@@ -5,7 +5,6 @@ module.exports = function(grunt) {
       files: ['static/src/**/*.js'],
       options: {
         sub: true, //[] instead of .
-        asi: true, //semicolons
         evil: true, //eval
         laxbreak: true, //unsafe line breaks
         loopfunc: true, // functions in loops

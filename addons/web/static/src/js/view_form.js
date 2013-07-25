@@ -437,7 +437,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
 
         var method = call[1];
         if (!_.str.trim(call[2])) {
-            return {method: method, args: []}
+            return {method: method, args: []};
         }
 
         var argument_replacement = {
@@ -778,7 +778,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             } else {
                 $.async_when().done(function () {
                     def.reject();
-                })
+                });
             }
         });
         return def.promise();
@@ -1028,7 +1028,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 return field.get_displayed();
             }
             return value;
-        }
+        };
         var fields = _.chain(this.fields)
             .map(function (field) {
                 var value = field.get_value();
@@ -1049,7 +1049,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     string: field.string,
                     value: value,
                     displayed: display(field, value),
-                }
+                };
             })
             .compact()
             .sortBy(function (field) { return field.string; })
@@ -1063,7 +1063,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     string: field.string,
                     value: value,
                     displayed: display(field, value),
-                }
+                };
             })
             .value();
 
@@ -1429,7 +1429,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
                 row_cols = cols;
             } else if (tagName==='group') {
                 // When <group> <group/><group/> </group>, we need a spacing between the two groups
-                $td.addClass('oe_group_right')
+                $td.addClass('oe_group_right');
             }
             row_cols -= colspan;
 
@@ -1852,7 +1852,8 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
                     return QWeb.render(template, {
                         debug: instance.session.debug,
                         widget: widget
-                })},
+                    });
+                },
                 gravity: $.fn.tipsy.autoBounds(50, 'nw'),
                 html: true,
                 opacity: 0.85,
@@ -2073,7 +2074,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
      * @param node
      */
     init: function(field_manager, node) {
-        var self = this
+        var self = this;
         this._super(field_manager, node);
         this.name = this.node.attrs.name;
         this.field = this.field_manager.get_field_desc(this.name);
@@ -2937,7 +2938,7 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
     set_value: function (value_) {
         if (value_) {
             if (this.field.type == "selection") {
-                value_ = _.find(this.field.selection, function (sel) { return sel[0] == value_});
+                value_ = _.find(this.field.selection, function (sel) { return sel[0] == value_;});
             }
             else if (!this.selection.length) {
                 this.selection = [value_];
@@ -2954,7 +2955,7 @@ instance.web.form.FieldRadio = instance.web.form.AbstractField.extend(instance.w
         this.$el.toggleClass("oe_readonly", this.get('effective_readonly'));
         this.$("input:checked").prop("checked", false);
         if (this.get_value()) {
-            this.$("input").filter(function () {return this.value == self.get_value()}).prop("checked", true);
+            this.$("input").filter(function () {return this.value == self.get_value();}).prop("checked", true);
             this.$(".oe_radio_readonly").text(this.get('value') ? this.get('value')[1] : "");
         }
     }
@@ -3090,7 +3091,7 @@ instance.web.form.CompletionFieldMixin = {
             self.field.relation,
             {
                 title: (view === 'search' ? _t("Search: ") : _t("Create: ")) + this.string,
-                initial_ids: ids ? _.map(ids, function(x) {return x[0]}) : undefined,
+                initial_ids: ids ? _.map(ids, function(x) {return x[0];}) : undefined,
                 initial_view: view,
                 disable_multiple_selection: true
             },
@@ -3455,7 +3456,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         var self = this;
         if (value_ instanceof Array) {
             this.display_value = {};
-            this.display_value_backup = {}
+            this.display_value_backup = {};
             if (! this.options.always_reload) {
                 this.display_value["" + value_[0]] = value_[1];
             }
@@ -3720,7 +3721,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                  });
                 controller.on('pager_action_executed',self,self.save_any_view);
             } else if (view_type == "graph") {
-                self.reload_current_view()
+                self.reload_current_view();
             }
             def.resolve();
         });
@@ -3963,7 +3964,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         var form = editor.form;
         // If no edition is pending, the listview can not be invalid (?)
         if (!editor.record) {
-            return true
+            return true;
         }
         // If the form has not been modified, the view can only be valid
         // NB: is_dirty will also be set on defaults/onchanges/whatever?
@@ -4168,7 +4169,7 @@ instance.web.form.One2ManyList = instance.web.ListView.List.extend({
         if ($padding.length) {
             $padding.before($newrow);
         } else {
-            this.$current.append($newrow)
+            this.$current.append($newrow);
         }
     }
 });
@@ -5022,8 +5023,8 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
         this.selection.on("change:value", this, this.on_selection_changed);
         this.selection.appendTo(this.$(".oe_form_view_reference_selection"));
         this.selection
-            .on('focused', null, function () {self.trigger('focused')})
-            .on('blurred', null, function () {self.trigger('blurred')});
+            .on('focused', null, function () {self.trigger('focused');})
+            .on('blurred', null, function () {self.trigger('blurred');});
 
         this.m2o = new instance.web.form.FieldMany2One(fm, { attrs: {
             name: 'm2o',
@@ -5032,8 +5033,8 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
         this.m2o.on("change:value", this, this.data_changed);
         this.m2o.appendTo(this.$(".oe_form_view_reference_m2o"));
         this.m2o
-            .on('focused', null, function () {self.trigger('focused')})
-            .on('blurred', null, function () {self.trigger('blurred')});
+            .on('focused', null, function () {self.trigger('focused');})
+            .on('blurred', null, function () {self.trigger('blurred');});
     },
     on_selection_changed: function() {
         if (this.reference_ready) {
@@ -5203,7 +5204,7 @@ instance.web.form.FieldBinaryFile = instance.web.form.FieldBinary.extend({
         } else {
             this.$el.find('a').toggle(!!this.get('value'));
             if (this.get('value')) {
-                show_value = _t("Download")
+                show_value = _t("Download");
                 if (this.view)
                     show_value += " " + (this.view.datarecord[this.node.attrs.filename] || '');
                 this.$el.find('a').text(show_value);
@@ -5422,7 +5423,7 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
             values.push(result.id);
             this.set({'value': values});
         }
-        this.render_value()
+        this.render_value();
     },
     on_file_delete: function (event) {
         event.stopPropagation();
@@ -5476,7 +5477,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         var self = this;
         var content = QWeb.render("FieldStatus.content", {
             'widget': self, 
-            'value_folded': _.find(self.selection.folded, function(i){return i[0] === self.get('value')})
+            'value_folded': _.find(self.selection.folded, function(i){return i[0] === self.get('value');})
         });
         self.$el.html(content);
     },
@@ -5508,7 +5509,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
                     return new instance.web.DataSetSearch(self, self.field.relation, self.build_context(), self.get("evaluated_selection_domain"))
                         .read_slice(fields.fold ? ['fold'] : ['id'], {}).then(function (records) {
 
-                            var ids = _.map(records, function (val) {return val.id});
+                            var ids = _.map(records, function (val) {return val.id;});
                             return self.dataset.name_get(ids).then(function (records_name) {
                                 _.each(records, function (record) {
                                     var name = _.find(records_name, function (val) {return val[0] == record.id;})[1];
@@ -5518,7 +5519,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
                                         selection_unfolded.push([record.id, name]);
                                     }
                                 });
-                            })
+                            });
                         });
                 });
             } else {
@@ -5550,7 +5551,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         return new instance.web.Model(self.field.relation).call("fields_get", [["fold"]]).then(function(fields) {
             self.distant_fields = fields;
             return fields;
-        })
+        });
     },
     on_click_stage: function (ev) {
         var self = this;

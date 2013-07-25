@@ -202,7 +202,7 @@ openerp.web.list_editable = function (instance) {
         make_empty_record: function (id) {
             var attrs = {id: id};
             _(this.columns).chain()
-                .filter(function (x) { return x.tag === 'field'})
+                .filter(function (x) { return x.tag === 'field';})
                 .pluck('name')
                 .each(function (field) { attrs[field] = false; });
             return new instance.web.list.Record(attrs);
@@ -260,7 +260,7 @@ openerp.web.list_editable = function (instance) {
         get_cells_for: function ($row) {
             var cells = {};
             $row.children('td').each(function (index, el) {
-                cells[el.getAttribute('data-field')] = el
+                cells[el.getAttribute('data-field')] = el;
             });
             return cells;
         },
@@ -346,7 +346,7 @@ openerp.web.list_editable = function (instance) {
                         var record = self.records.get(attrs.id);
                         if (!record) {
                             // Record removed by third party during edition
-                            return
+                            return;
                         }
                         return self.reload_record(record);
                     }
@@ -691,7 +691,7 @@ openerp.web.list_editable = function (instance) {
             var arch = edition_view.arch;
             if (!(arch && arch.children instanceof Array)) {
                 throw new Error("Editor delegate's #edition_view must have a" +
-                                " non-empty arch")
+                                " non-empty arch");
             }
             if (arch.tag !== "form") {
                 throw new Error("Editor delegate's #edition_view must have a" +

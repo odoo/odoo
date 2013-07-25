@@ -459,7 +459,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             action_id: action.id,
             context: action.context || {}
         }).done(function (action) {
-            self.do_action(action, options)
+            self.do_action(action, options);
         });
     },
     ir_actions_report_xml: function(action, options) {
@@ -478,8 +478,8 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 var params = {
                     action: JSON.stringify(action),
                     token: new Date().getTime()
-                }
-                var url = self.session.url('/web/report', params)
+                };
+                var url = self.session.url('/web/report', params);
                 instance.web.unblockUI();
                 $('<a href="'+url+'" target="_blank"></a>')[0].click();
                 return;
@@ -502,7 +502,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                         c.rpc_error.apply(c, arguments);
                         d.reject();
                     }
-                })
+                });
             });
         });
     },
@@ -1121,7 +1121,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
         self.$("[title]").tipsy({
             'html': true,
             'delayIn': 500,
-        })
+        });
     },
     /**
      * For each item added to the section:
@@ -1165,7 +1165,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
                         label: items[i]['name'],
                         action: items[i],
                         classname: 'oe_sidebar_' + type
-                    }
+                    };
                 }
                 self.add_items(type=='print' ? 'print' : 'other', items);
             }
@@ -1425,7 +1425,7 @@ instance.web.View = instance.web.Widget.extend({
             if (self.is_active()) {
                 fn.apply(self, arguments);
             }
-        }
+        };
     },
     do_push_state: function(state) {
         if (this.getParent() && this.getParent().do_push_state) {
@@ -1536,9 +1536,10 @@ instance.web.xml_to_json = function(node, strip_whitespace) {
                 children: _.compact(_.map(node.childNodes, function(node) {
                     return instance.web.xml_to_json(node, strip_whitespace);
                 })),
-            }
+            };
     }
-}
+};
+
 instance.web.json_node_to_xml = function(node, human_readable, indent) {
     // For debugging purpose, this function will convert a json node back to xml
     indent = indent || 0;

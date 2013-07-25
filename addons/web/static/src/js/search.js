@@ -148,7 +148,7 @@ my.InputView = instance.web.Widget.extend({
             range.setStart(root, 0);
         }
         if (range.endContainer === this.el && range.endOffset === 1) {
-            range.setEnd(root, root.length)
+            range.setEnd(root, root.length);
         }
         assert(range.startContainer === root,
                "selection should be in the input view");
@@ -157,7 +157,7 @@ my.InputView = instance.web.Widget.extend({
         return {
             start: range.startOffset,
             end: range.endOffset
-        }
+        };
     },
     onKeydown: function (e) {
         this.el.normalize();
@@ -401,7 +401,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             });
 
             $.when(load_view).then(function (r) {
-                return self.search_view_loaded(r)
+                return self.search_view_loaded(r);
             }).fail(function () {
                 self.ready.reject.apply(null, arguments);
             });
@@ -950,7 +950,7 @@ instance.web.search.Input = instance.web.search.Widget.extend( /** @lends instan
      * @returns {jQuery.Deferred<null|Array>}
      */
     complete: function (value) {
-        return $.when(null)
+        return $.when(null);
     },
     /**
      * Returns a Facet instance for the provided defaults if they apply to
@@ -1073,7 +1073,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
             icon: this.icon,
             values: values,
             field: this
-        }
+        };
     },
     make_value: function (filter) {
         return {
@@ -1176,7 +1176,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
                 label: _.str.sprintf(self.completion_label.toString(),
                                      _.escape(facet_value.label)),
                 facet: self.make_facet([facet_value])
-            }
+            };
         }));
     }
 });
@@ -1198,7 +1198,7 @@ instance.web.search.GroupbyGroup = instance.web.search.FilterGroup.extend({
                 get_context: this.proxy('get_context'),
                 get_domain: this.proxy('get_domain'),
                 get_groupby: this.proxy('get_groupby')
-            }
+            };
         }
     },
     match_facet: function (facet) {
@@ -1564,7 +1564,7 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
         return this.model.call('name_get', [value]).then(function (names) {
             if (_(names).isEmpty()) { return null; }
             return facet_from(self, names[0]);
-        })
+        });
     },
     value_from: function (facetValue) {
         return facetValue.get('label');
