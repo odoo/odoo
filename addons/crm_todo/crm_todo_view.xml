@@ -16,12 +16,8 @@
                             <field name="user_id"/>
 
                             <field string="Timebox" name="timebox_id"/>
-                            <button name="prev_timebox" type="object" icon="gtk-go-back" string="Previous" states="draft,pending,open"/>
-                            <button name="next_timebox" type="object" icon="gtk-go-forward" string="Next" states="draft,pending,open"/>
-
-                            <field name="state"/>
-                            <button name="do_cancel" states="draft,open,pending" string="Cancel" type="object" icon="gtk-cancel" help="For cancelling the task"/>
-                            <button name="action_close" states="draft,pending,open" string="Done" type="object" icon="terp-dialog-close" help="For changing to done state"/>
+                            <button name="prev_timebox" type="object" string="Previous"/>
+                            <button name="next_timebox" type="object" string="Next"/>
                         </tree>
                     </field>
                 </page>
