@@ -438,7 +438,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
         self.$el.html(QWeb.render("DatabaseManager", { widget : self }));
         $('.oe_user_menu_placeholder').append(QWeb.render("DatabaseManager.user_menu",{ widget : self }));
         $('.oe_secondary_menus_container').append(QWeb.render("DatabaseManager.menu",{ widget : self }));
-        $('ul.oe_secondary_submenu > li:first').addClass('oe_active')
+        $('ul.oe_secondary_submenu > li:first').addClass('oe_active');
         $('ul.oe_secondary_submenu > li').bind('click', function (event) {
             var menuitem = $(this);
             menuitem.addClass('oe_active').siblings().removeClass('oe_active');
@@ -705,20 +705,9 @@ instance.web.Login =  instance.web.Widget.extend({
         }
         return d;
     },
-    remember_last_used_database: function(db) {
-        // This cookie will be used server side in order to avoid db reloading on first visit
-        var ttl = 24 * 60 * 60 * 365;
-        document.cookie = [
-            'last_used_database=' + db,
-            'path=/',
-            'max-age=' + ttl,
-            'expires=' + new Date(new Date().getTime() + ttl * 1000).toGMTString()
-        ].join(';');
-    },
     database_selected: function(db) {
         var params = $.deparam.querystring();
         params.db = db;
-        this.remember_last_used_database(db);
         this.$('.oe_login_dbpane').empty().text(_t('Loading...'));
         this.$('[name=login], [name=password]').prop('readonly', true);
         instance.web.redirect('/?' + $.param(params));
@@ -769,7 +758,6 @@ instance.web.Login =  instance.web.Widget.extend({
         self.hide_error();
         self.$(".oe_login_pane").fadeOut("slow");
         return this.session.session_authenticate(db, login, password).then(function() {
-            self.remember_last_used_database(db);
             if (self.has_local_storage && self.remember_credentials) {
                 localStorage.setItem(db + '|last_login', login);
                 if (self.session.debug) {
@@ -804,10 +792,17 @@ instance.web.redirect = function(url, wait) {
         instance.client.crashmanager.active = false;
     }
 
-    var wait_server = function() {
-        instance.session.rpc("/web/webclient/version_info", {}).done(function() {
+    var load = function() {
+        var old = "" + window.location;
+        if (old === url) {
+            window.location.reload();
+        } else {
             window.location = url;
-        }).fail(function() {
+        }
+    };
+
+    var wait_server = function() {
+        instance.session.rpc("/web/webclient/version_info", {}).done(load).fail(function() {
             setTimeout(wait_server, 250);
         });
     };
@@ -815,7 +810,7 @@ instance.web.redirect = function(url, wait) {
     if (wait) {
         setTimeout(wait_server, 1000);
     } else {
-        window.location = url;
+        load();
     }
 };
 
@@ -830,7 +825,6 @@ instance.web.Reload = function(parent, action) {
     var l = window.location;
 
     var sobj = $.deparam(l.search.substr(1));
-    sobj.ts = new Date().getTime();
     if (params.url_search) {
         sobj = _.extend(sobj, params.url_search);
     }
@@ -875,7 +869,7 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
         $button.appendTo(this.getParent().$buttons);
         $button.eq(2).click(function(){
            self.getParent().close();
-        })
+        });
         $button.eq(0).click(function(){
           self.rpc("/web/session/change_password",{
                'fields': $("form[name=change_password_form]").serializeArray()
@@ -887,7 +881,7 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
                    instance.webclient.on_logout();
                }
           });
-       })
+       });
     },
     display_error: function (error) {
         return instance.web.dialog($('<div>'), {
@@ -898,7 +892,7 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
             ]
         }).html(error.error);
     },
-})
+});
 instance.web.client_actions.add("change_password", "instance.web.ChangePassword");
 
 instance.web.Menu =  instance.web.Widget.extend({
@@ -1114,7 +1108,7 @@ instance.web.Menu =  instance.web.Widget.extend({
                     add_menu_ids(menu);
                 });
             }
-        };
+        }
         add_menu_ids(menu);
         self.do_load_needaction(menu_ids).then(function () {
             self.trigger("need_action_reloaded");

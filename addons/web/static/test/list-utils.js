@@ -7,7 +7,7 @@ openerp.testing.section('list.events', {
         }
         function Cls() {}
         Cls.prototype = o;
-        return new Cls;
+        return new Cls();
     };
     test('Simple event triggering', function (instance) {
         var e = create(instance.web.list.Events), passed = false;
@@ -23,9 +23,9 @@ openerp.testing.section('list.events', {
     });
     test('Propagate trigger params', function (instance) {
        var e = create(instance.web.list.Events), p = false;
-        e.bind(null, function (_, param) { p = param });
+        e.bind(null, function (_, param) { p = param; });
         e.trigger('foo', true);
-        strictEqual(p, true)
+        strictEqual(p, true);
     });
     test('Bind multiple callbacks', function (instance) {
         var e = create(instance.web.list.Events), count;
@@ -53,7 +53,7 @@ openerp.testing.section('list.events', {
             method: function () { this.trigger('e'); }
         });
         cls.include(instance.web.list.Events);
-        var i = new cls, triggered = false;
+        var i = new cls(), triggered = false;
 
         i.bind('e', function () { triggered = true; });
         i.method();
@@ -97,7 +97,7 @@ openerp.testing.section('list.records', {
     test('Change all the things', function (instance) {
         var r = new instance.web.list.Record(), changed = false, field;
         r.bind('change', function () { changed = true; });
-        r.bind(null, function (e) { field = field || e.split(':')[1]});
+        r.bind(null, function (e) { field = field || e.split(':')[1]; });
         r.set('foo', 1);
         strictEqual(r.get('foo'), 1);
         ok(changed);

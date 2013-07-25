@@ -88,9 +88,6 @@ def rjsmin(script):
 
 db_list = http.db_list
 
-def db_monodb_redirect():
-    return http.db_redirect(not config['list_db'])
-
 db_monodb = http.db_monodb
 
 def redirect_with_hash(url, code=303):
@@ -296,13 +293,13 @@ def manifest_glob(extension, addons=None, db=None, include_remotes=False):
                     r.append((path, fs2web(path[len(addons_path):])))
     return r
 
-def manifest_list(extension, mods=None, db=None):
+def manifest_list(extension, mods=None, db=None, debug=False):
     """ list ressources to load specifying either:
     mods: a comma separated string listing modules
     db: a database name (return all installed modules in that database)
     """
     files = manifest_glob(extension, addons=mods, db=db, include_remotes=True)
-    if not request.debug:
+    if not debug:
         path = '/web/webclient/' + extension
         if mods is not None:
             path += '?' + urllib.urlencode({'mods': mods})
@@ -535,13 +532,24 @@ html_template = """<!DOCTYPE html>
 class Home(http.Controller):
 
     @http.route('/', type='http', auth="none")
-    def index(self, s_action=None, db=None, **kw):
-        db, redir = db_monodb_redirect()
-        if redir:
-            return redirect_with_hash(redir)
+    def index(self, s_action=None, db=None, debug=False, **kw):
+        debug = debug != False
+        if db is not None:
+            lst = http.db_list(True)
+            if db in lst and db != request.session.db:
+                request.session.logout()
+                request.session.db = db
 
-        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', db=db))
-        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', db=db))
+        if db != request.session.db:
+            query = dict(urlparse.parse_qsl(request.httprequest.query_string, keep_blank_values=True))
+            query.update({'db': request.session.db})
+            redirect = request.httprequest.path + '?' + urllib.urlencode(query)
+            return redirect_with_hash(redirect)
+                
+        db = request.session.db
+
+        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', db=db, debug=debug))
+        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', db=db, debug=debug))
 
         r = html_template % {
             'js': js,
@@ -549,7 +557,7 @@ class Home(http.Controller):
             'modules': simplejson.dumps(module_boot(db=db)),
             'init': 'var wc = new s.web.WebClient();wc.appendTo($(document.body));'
         }
-        return r
+        return request.make_response(r, {'Cache-Control': 'no-cache', 'Content-Type': 'text/html; charset=utf-8'})
 
     @http.route('/login', type='http', auth="user")
     def login(self, db, login, key):
@@ -819,7 +827,7 @@ class Session(http.Controller):
     @http.route('/web/session/get_session_info', type='json', auth="none")
     def get_session_info(self):
         request.uid = request.session.uid
-        request.db = request.session.db
+        request.disable_db = False
         return self.session_info()
 
     @http.route('/web/session/authenticate', type='json', auth="none")
