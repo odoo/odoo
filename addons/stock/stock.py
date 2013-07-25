@@ -51,17 +51,6 @@ class stock_incoterms(osv.osv):
         'active': True,
     }
 
-class stock_journal(osv.osv):
-    _name = "stock.journal"
-    _description = "Inventory Journal"
-    _columns = {
-        'name': fields.char('Stock Journal', size=32, required=True),
-        'user_id': fields.many2one('res.users', 'Responsible'),
-    }
-    _defaults = {
-        'user_id': lambda s, c, u, ctx: u
-    }
-
 #----------------------------------------------------------
 # Stock Location
 #----------------------------------------------------------
@@ -440,7 +429,6 @@ class stock_picking(osv.osv):
         'backorder_id': fields.many2one('stock.picking', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
         #'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], 'Shipping Type', required=True, select=True, help="Shipping type specify, goods coming in or going out."),
         'note': fields.text('Notes', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
-        'stock_journal_id': fields.many2one('stock.journal','Stock Journal', select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'move_type': fields.selection([('direct', 'Partial'), ('one', 'All at once')], 'Delivery Method', required=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="It specifies goods to be deliver partially or all at once"),
         'state': fields.function(_get_state, type="selection", store = {'stock.move': (_get_pickings, ['state'], 20)}, selection = [
             ('draft', 'Draft'),
@@ -1135,9 +1123,9 @@ class stock_move(osv.osv):
             This will create a procurement order
         """
         proc_obj = self.pool.get("procurement.order")
-        origin = _('Procurement created by stock move %s') % move.id
+        origin = _('Procurement from  created by rule %s') % (move.group_id and move.group_id.name or "", move.rule_id and move.rule_id.name or "")
         return proc_obj.create(cr, uid, {
-                'name': _('MTO procurement'),
+                'name': _('MTO procurement from rule %s') % move.rule_id and move.rule_id.name or "",
                 'origin': origin,
                 'company_id': move.company_id and move.company_id.id or False,
                 'date_planned': move.date,
@@ -1331,7 +1319,7 @@ class stock_move(osv.osv):
                 original_picking = pick_obj.browse(cr, uid, context.get('backorder_of'), context=context)
                 new_picking_name = original_picking.name
                 #TODO back_order_name is False currently => find why
-                back_order_name = sequence_obj.get(cr, uid, 'stock.picking') #TODO: Need to have sequence for every picking type
+                back_order_name = sequence_obj.get_by_id(cr, uid, original_picking.picking_type_id.id, 'id') #TODO: Need to have sequence for every picking type
                 pick_obj.write(cr, uid, [original_picking.id], {'name': back_order_name})
                 pick = pick_obj.copy(cr, uid, original_picking.id, {'name': new_picking_name,
                                                     'move_lines': [],
@@ -1347,6 +1335,7 @@ class stock_move(osv.osv):
                           'company_id': move.company_id and move.company_id.id or False,
                           'move_type': 'one',
                           'partner_id': move.partner_id and move.partner_id.id or False,
+                          'date_done': move.date_expected,
                           #'invoice_state': move.invoice_state
                           'state': 'confirmed',
                           'group_id': move.group_id and move.group_id.id or False,

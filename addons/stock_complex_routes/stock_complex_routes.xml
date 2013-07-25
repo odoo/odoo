@@ -1,10 +1,21 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <!-- Picking type dropship-->
+        <!-- Sequence and picking type dropship-->
+        
+        <record id="seq_picking_type_dropship" model="ir.sequence">
+            <field name="name">Dropship</field>
+            <field name="prefix">DS</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
         <record id="picking_type_dropship" model="stock.picking.type">
             <field name="name">dropship</field>
+            <field name="sequence_id" ref="seq_picking_type_dropship"/>
         </record>
+        
+        
         <!-- Drop Shipping-->
         <record id="route_drop_shipping" model='stock.location.route'>
             <field name="name">Drop Shipping</field>
@@ -24,6 +35,10 @@
 
 
         <!-- Crossdock -->
+        <record id="stock_location.route_warehouse0_crossdock" model='stock.location.route'>
+            <field name="name">Crossdock</field>
+            <field name="sale">True</field>
+        </record>
         <record id="procurement_rule_customer0_xdock" model="procurement.rule">
             <field name="name"> Supplier → Output</field>
             <field name="action">buy</field>

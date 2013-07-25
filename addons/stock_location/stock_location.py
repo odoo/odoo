@@ -90,9 +90,6 @@ class stock_location_path(osv.osv):
                 'location_dest_id': rule.location_dest_id.id
             })
             vals = {}
-# TODO journal_id was to be removed?
-#             if route.journal_id:
-#                 vals['stock_journal_id'] = route.journal_id.id
             vals['type'] = rule.picking_type
             if rule.location_dest_id.id<>move.location_dest_id.id:
                 move_obj._push_apply(self, cr, uid, move.id, context)

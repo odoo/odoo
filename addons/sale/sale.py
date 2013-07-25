@@ -220,6 +220,7 @@ class sale_order(osv.osv):
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
         'company_id': fields.many2one('res.company', 'Company'),
+        'procurement_group_id': fields.many2one('procurement.group', 'Procurement group'),
     }
     _defaults = {
         'date_order': fields.date.context_today,
@@ -667,6 +668,7 @@ class sale_order(osv.osv):
         for order in self.browse(cr, uid, ids, context=context):
             proc_ids = []
             group_id = self.pool.get("procurement.group").create(cr, uid, {'name': order.name, 'sale_id': order.id}, context=context)
+            order.write({'procurement_group_id': group_id}, context=context)
             for line in order.order_line:
                 if (line.state == 'done') or not line.product_id:
                     continue
@@ -772,8 +774,6 @@ class sale_order_line(osv.osv):
         'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation and the shipping of the products to the customer", readonly=True, states={'draft': [('readonly', False)]}),
         'procurement_id': fields.many2one('procurement.order', 'Procurement'),
         #'property_ids': fields.many2many('mrp.property', 'sale_order_line_property_rel', 'order_id', 'property_id', 'Properties', readonly=True, states={'draft': [('readonly', False)]}),
-
-        
     }
     _order = 'order_id desc, sequence, id'
     _defaults = {

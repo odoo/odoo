@@ -56,7 +56,7 @@ class procurement_group(osv.osv):
     _description = 'Procurement Requisition'
     _order = "id desc"
     _columns = {
-        'name': fields.char('Reference'), 
+        'name': fields.char('Reference', required=True), 
         'partner_id': fields.many2one('res.partner', string = 'Partner'), #Sale should pass it here 
         'procurement_ids': fields.many2one('procurement.order', 'group_id', 'Procurements'), 
     }

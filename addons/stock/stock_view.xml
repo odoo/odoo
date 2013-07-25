@@ -570,7 +570,6 @@
                     <field name="origin"/>
                     <field name="date"/>
                     <field name="min_date"/>
-                    <field name="stock_journal_id" widget="selection"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -601,7 +600,7 @@
                         <group>
                             <field name="partner_id"/>
                             <field name="backorder_id" readonly="1" attrs="{'invisible': [('backorder_id','=',False)]}"/>
-                            <field name="stock_journal_id" widget="selection"/>
+                            <field name="picking_type_id"/>
                         </group>
                         <group>
                             <field name="date"/>
@@ -631,7 +630,6 @@
                             <group>
                                 <group>
                                     <field name="move_type"/>
-                                    <field name="picking_type_id"/>
                                 </group>
                                 <group>
                                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
@@ -660,13 +658,13 @@
                     <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state','=','done')]" help="Pickings already processed"/>
                     <field name="partner_id" filter_domain="[('partner_id','child_of',self)]"/>
                     <field name="product_id"/>
-                    <field name="stock_journal_id"/>
+                    <field name="picking_type_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Order Date" icon="terp-go-month" domain="[]"  context="{'group_by':'date'}"/>
                         <filter string="Expected Date" icon="terp-go-month" domain="[]"  context="{'group_by':'min_date'}"/>
-                        <filter string="Origin" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
-                        <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'stock_journal_id'}"/>
+                        <filter string="Origin" domain="[]" context="{'group_by':'origin'}"/>
+                        <filter string="Picking Type"  domain="[]" context="{'group_by':'picking_type_id'}"/>
                     </group>
                 </search>
             </field>
@@ -1133,58 +1131,61 @@
       <menuitem action="action_out_picking_move" id="menu_action_pdct_out" parent="menu_stock_products_moves" sequence="2"/>
 
 
-         <record id="view_stock_journal_filter" model="ir.ui.view">
-            <field name="name">stock.journal.filter</field>
-            <field name="model">stock.journal</field>
+         <record id="view_pickingtype_filter" model="ir.ui.view">
+            <field name="name">stock.picking.type.filter</field>
+            <field name="model">stock.picking.type</field>
             <field name="arch" type="xml">
-                <search string="Stock Journal">
-                    <field name="name" string="Stock Journal"/>
-                    <field name="user_id"/>
+                <search string="Picking Type">
+                    <field name="name" string="Picking Type"/>
+                    <field name="sequence_id"/>
                 </search>
             </field>
         </record>
-        <record model="ir.ui.view" id="view_stock_journal_tree">
-            <field name="name">Stock Journals</field>
-            <field name="model">stock.journal</field>
+        <record model="ir.ui.view" id="view_picking_type_tree">
+            <field name="name">Picking types</field>
+            <field name="model">stock.picking.type</field>
             <field name="arch" type="xml">
-                <tree string="Stock Journal">
+                <tree string="Picking Types">
                     <field name="name"/>
-                    <field name="user_id"/>
+                    <field name="sequence_id"/>
+                    <field name="pack"/>
                 </tree>
             </field>
         </record>
-        <record model="ir.ui.view" id="view_stock_journal_form">
-            <field name="name">Stock Journals</field>
-            <field name="model">stock.journal</field>
+        <record model="ir.ui.view" id="view_picking_type_form">
+            <field name="name">Picking Types</field>
+            <field name="model">stock.picking.type</field>
             <field name="arch" type="xml">
-                <form string="Stock Journal" version="7.0">
+                <form string="Picking Types" version="7.0">
                     <group>
                         <field name="name"/>
-                        <field name="user_id"/>
+                        <field name="sequence_id"/>
+                        <field name="pack"/>
                     </group>
                 </form>
             </field>
         </record>
-        <record id="action_stock_journal_form" model="ir.actions.act_window">
-            <field name="name">Stock Journals</field>
-            <field name="res_model">stock.journal</field>
+        <record id="action_picking_type_form" model="ir.actions.act_window">
+            <field name="name">Picking Types</field>
+            <field name="res_model">stock.picking.type</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a new journal. 
+                Click to create a new picking type. 
               </p><p>
-                The stock journal system allows you to assign each stock
-                operation to a specific journal according to the type of
-                operation to perform or the worker/team that should perform the
-                operation. Examples of stock journals may be: quality control,
-                pick lists, packing, etc.
+                The picking type system allows you to assign each stock
+                operation a specific type which will alter its views accordingly.  
+                On the picking type you could e.g. specify if packing is needed by default, 
+                if it should show the customer.  
+                <br/>
+                Examples are in, out, internal, packing, quality control, ...
               </p>
             </field>
         </record>
         <menuitem
-            action="action_stock_journal_form"
-            id="menu_action_stock_journal_form"
+            action="action_picking_type_form"
+            id="menu_action_picking_type_form"
             parent="menu_warehouse_config" sequence="1"/>
 
         <!-- Order Point -->
