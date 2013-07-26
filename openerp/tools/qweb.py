@@ -281,21 +281,28 @@ class QWebXml(object):
         record = v[t_att["record"]]
 
         inner = ""
+        field = t_att["field"]
+        field_type = record._model._all_columns.get(field).column._type
         try:
-            if record._model._all_columns.get(t_att["field"]).column._type == 'many2one':
-                field = getattr(record, t_att["field"])
+            if field_type == 'many2one':
+                field = getattr(record, field)
                 if field:
-                    inner = cgi.escape(str(field.name_get()[0][1]))
+                    inner = field.name_get()[0][1]
             else:
-                inner = cgi.escape(str(getattr(record, t_att["field"])))
+                inner = getattr(record, field)
             if e.tagName != 't':
-                # <t/> are escaped
-                g_att += ' %s="%s"' % ('data-oe-model', record._model._name)
-                g_att += ' %s="%s"' % ('data-oe-id', str(record.id))
-                g_att += ' %s="%s"' % ('data-oe-field', t_att["field"])
+                g_att += ''.join(
+                    ' %s="%s"' % (name, cgi.escape(value, True))
+                    for name, value in [
+                        ('data-oe-model', record._model._name),
+                        ('data-oe-id', str(record.id)),
+                        ('data-oe-field', field),
+                        ('data-oe-type', field_type),
+                    ]
+                )
         except AttributeError:
-            _logger.warning("t-field no field %s for model %s", t_att["field"], record._model._name)
+            _logger.warning("t-field no field %s for model %s", field, record._model._name)
 
-        return self.render_element(e, t_att,  g_att, v, inner)
+        return self.render_element(e, t_att,  g_att, v, cgi.escape(str(inner)))
 
 # leave this, al.
