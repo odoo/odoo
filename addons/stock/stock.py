@@ -2231,17 +2231,27 @@ class product_product(osv.osv):
         'orderpoint_ids': fields.one2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rules'),
     }
 
+class stock_picking_code(osv.osv):
+    _name = "stock.picking.code"
+    _description = "Will group picking types for kanban view"
+    _columns = {
+        'name': fields.char("Name", size=30), 
+        }
+
+
 class stock_picking_type(osv.osv):
     _name = "stock.picking.type"
+    _description = "The picking type determines the picking view"
     _columns = {
-        'name': fields.char('name', size=30), 
-        'pack': fields.boolean('Pack', 'This picking type needs packing interface'), 
+        'name': fields.char('name', size=30),
+        'pack': fields.boolean('Pack', 'This picking type needs packing interface'),
         'delivery': fields.boolean('Print delivery'),
         'sequence_id': fields.many2one('ir.sequence', 'Sequence', required = True),
-        'default_location_src_id': fields.many2one('stock.location', 'Default Source Location'), 
+        'default_location_src_id': fields.many2one('stock.location', 'Default Source Location'),
         'default_location_dest_id': fields.many2one('stock.location', 'Default Destination Location'),
+        'code_id': fields.many2one('stock.picking.code', 'Picking type code', required = True),
             }
-    
+
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
