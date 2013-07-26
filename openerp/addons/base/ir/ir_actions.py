@@ -618,7 +618,14 @@ class actions_server(osv.osv):
     }
 
     def _check_expression(self, cr, uid, expression, model_id, context):
-        """ Check python expression (condition, write_expression) """
+        """ Check python expression (condition, write_expression). Each step of
+        the path must be a valid many2one field, or an integer field for the last
+        step.
+
+        :param str expression: a python expression, beginning by 'obj' or 'object'
+        :param int model_id: the base model of the server action
+        :returns tuple: (is_valid, target_model_name, error_msg)
+        """
         if not model_id:
             return (False, None, 'Your expression cannot be validated because the Base Model is not set.')
         # fetch current model
@@ -663,7 +670,7 @@ class actions_server(osv.osv):
 
     def on_change_model_id(self, cr, uid, ids, model_id, wkf_model_id, crud_model_id, context=None):
         """ When changing the action base model, reset workflow and crud config
-        to ease value coherence """
+        to ease value coherence. """
         values = {
             'use_create': 'new',
             'use_write': 'current',
@@ -675,10 +682,11 @@ class actions_server(osv.osv):
         return {'value': values}
 
     def on_change_wkf_wonfig(self, cr, uid, ids, use_relational_model, wkf_field_id, wkf_model_id, model_id, context=None):
-        """ Update workflow configuration
-        - update the workflow model (for base (model_id) /relational (field.relation))
-        - update wkf_transition_id to False if workflow model changes, to force the user
-        to choose a new one
+        """ Update workflow type configuration
+
+         - update the workflow model (for base (model_id) /relational (field.relation))
+         - update wkf_transition_id to False if workflow model changes, to force
+           the user to choose a new one
         """
         values = {}
         if use_relational_model == 'relational' and wkf_field_id:
@@ -698,7 +706,7 @@ class actions_server(osv.osv):
         return {'value': values}
 
     def on_change_crud_config(self, cr, uid, ids, state, use_create, use_write, ref_object, crud_model_id, model_id, context=None):
-        """ TODO """
+        """ Wrapper on CRUD-type (create or write) on_change """
         if state == 'object_create':
             return self.on_change_create_config(cr, uid, ids, use_create, ref_object, crud_model_id, model_id, context=context)
         elif state == 'object_write':
@@ -707,7 +715,14 @@ class actions_server(osv.osv):
             return {}
 
     def on_change_create_config(self, cr, uid, ids, use_create, ref_object, crud_model_id, model_id, context=None):
-        """ TODO """
+        """ When changing the object_create type configuration:
+
+         - `new` and `copy_current`: crud_model_id is the same as base model
+         - `new_other`: user choose crud_model_id
+         - `copy_other`: disassemble the reference object to have its model
+         - if the target model has changed, then reset the link field that is
+           probably not correct anymore
+        """
         values = {}
         if use_create == 'new':
             values['crud_model_id'] = model_id
@@ -725,7 +740,12 @@ class actions_server(osv.osv):
         return {'value': values}
 
     def on_change_write_config(self, cr, uid, ids, use_write, ref_object, crud_model_id, model_id, context=None):
-        """ TODO """
+        """ When changing the object_write type configuration:
+
+         - `current`: crud_model_id is the same as base model
+         - `other`: disassemble the reference object to have its model
+         - `expression`: has its own on_change, nothing special here
+        """
         values = {}
         if use_write == 'current':
             values['crud_model_id'] = model_id
@@ -741,7 +761,7 @@ class actions_server(osv.osv):
         return {'value': values}
 
     def on_change_write_expression(self, cr, uid, ids, write_expression, model_id, context=None):
-        """ Check the write_expression, about fields and models. """
+        """ Check the write_expression and update crud_model_id accordingly """
         values = {}
         valid, model_name, message = self._check_expression(cr, uid, write_expression, model_id, context=context)
         if valid:
@@ -766,12 +786,12 @@ class actions_server(osv.osv):
         return {'value': values}
 
     def _build_expression(self, field_name, sub_field_name):
-        """Returns a placeholder expression for use in a template field,
-           based on the values provided in the placeholder assistant.
+        """ Returns a placeholder expression for use in a template field,
+        based on the values provided in the placeholder assistant.
 
-          :param field_name: main field name
-          :param sub_field_name: sub field name (M2O)
-          :return: final placeholder expression
+        :param field_name: main field name
+        :param sub_field_name: sub field name (M2O)
+        :return: final placeholder expression
         """
         expression = ''
         if field_name:
@@ -849,9 +869,10 @@ class actions_server(osv.osv):
 
     def run_action_trigger(self, cr, uid, action, eval_context=None, context=None):
         """ Trigger a workflow signal, depending on the use_relational_model:
-        - `base`: base_model_pool.signal_<TRIGGER_NAME>(cr, uid, context.get('active_id'))
-        - `relational`: find the related model and object, using the relational
-        field, then target_model_pool.signal_<TRIGGER_NAME>(cr, uid, target_id)
+
+         - `base`: base_model_pool.signal_<TRIGGER_NAME>(cr, uid, context.get('active_id'))
+         - `relational`: find the related model and object, using the relational
+           field, then target_model_pool.signal_<TRIGGER_NAME>(cr, uid, target_id)
         """
         obj_pool = self.pool[action.model_id.model]
         if action.use_relational_model == 'base':
@@ -870,7 +891,6 @@ class actions_server(osv.osv):
         workflow.trg_validate(uid, target_pool._name, target_id, trigger_name, cr)
 
     def run_action_multi(self, cr, uid, action, eval_context=None, context=None):
-        # TDE FIXME: loops are not considered here ^^
         res = []
         for act in action.child_ids:
             result = self.run(cr, uid, [act.id], context)
@@ -879,6 +899,15 @@ class actions_server(osv.osv):
         return res and res[0] or False
 
     def run_action_object_write(self, cr, uid, action, eval_context=None, context=None):
+        """ Write server action.
+
+         - 1. evaluate the value mapping
+         - 2. depending on the write configuration:
+
+          - `current`: id = active_id
+          - `other`: id = from reference object
+          - `expression`: id = from expression evaluation
+        """
         res = {}
         for exp in action.fields_lines:
             if exp.type == 'equation':
@@ -905,6 +934,17 @@ class actions_server(osv.osv):
         obj_pool.write(cr, uid, [ref_id], res, context=context)
 
     def run_action_object_create(self, cr, uid, action, eval_context=None, context=None):
+        """ Create and Copy server action.
+
+         - 1. evaluate the value mapping
+         - 2. depending on the write configuration:
+
+          - `new`: new record in the base model
+          - `copy_current`: copy the current record (id = active_id) + gives custom values
+          - `new_other`: new record in target model
+          - `copy_other`: copy the current record (id from reference object)
+            + gives custom values
+        """
         res = {}
         for exp in action.fields_lines:
             if exp.type == 'equation':
