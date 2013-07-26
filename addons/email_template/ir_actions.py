@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Business Applications
-#    Copyright (c) 2014 OpenERP S.A. <http://www.openerp.com>
+#    Copyright (c) 2013 OpenERP S.A. <http://www.openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -49,8 +49,7 @@ class actions_server(osv.Model):
     }
 
     def on_change_template_id(self, cr, uid, ids, template_id, context=None):
-        """ - mass_mailing: we cannot render, so return the template values
-            - normal mode: return rendered values """
+        """ Render the raw template in the server action fields. """
         if template_id:
             fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'attachment_ids']
             template_values = self.pool.get('email.template').read(cr, uid, template_id, fields, context)
