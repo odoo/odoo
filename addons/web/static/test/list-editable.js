@@ -49,7 +49,7 @@ openerp.testing.section('editor', {
                         readonly: field.readonly
                     })
                 }
-            }
+            };
         });
         return {
             arch: {
@@ -108,7 +108,7 @@ openerp.testing.section('editor', {
             .done(function (record) {
                 ok(!e.is_editing(), "should have stopped editing");
                 equal(record.id, 42, "should have newly created id");
-            })
+            });
     });
     test('toggle-edition-cancel', { asserts: 2 }, function (instance, $fix) {
         var e = new instance.web.list.Editor({
@@ -131,7 +131,7 @@ openerp.testing.section('editor', {
             .done(function (record) {
                 ok(!e.is_editing(), "should have stopped editing");
                 ok(!record.id, "should have no id");
-            })
+            });
     });
     test('toggle-save-required', {
         asserts: 2,

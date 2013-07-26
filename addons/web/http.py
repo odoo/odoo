@@ -85,10 +85,6 @@ class WebRequest(object):
 
         :class:`~collections.Mapping` of context values for the current request
 
-    .. attribute:: debug
-
-        ``bool``, indicates whether the debug mode is active on the client
-
     .. attribute:: db
 
         ``str``, the name of the database linked to the current request. Can be ``None``
@@ -105,20 +101,17 @@ class WebRequest(object):
         self.httpsession = httprequest.session
         self.session = httprequest.session
         self.session_id = httprequest.session.sid
-        self.db = None
+        self.disable_db = False
         self.uid = None
         self.func = None
         self.auth_method = None
         self._cr_cm = None
         self._cr = None
         self.func_request_type = None
-        self.debug = self.httprequest.args.get('debug', False) is not False
-        with set_request(self):
-            self.db = self.session.db or db_monodb()
         # set db/uid trackers - they're cleaned up at the WSGI
         # dispatching phase in openerp.service.wsgi_server.application
         if self.db:
-            threading.current_thread().dbname = self.session.db
+            threading.current_thread().dbname = self.db
         if self.session.uid:
             threading.current_thread().uid = self.session.uid
         self.context = self.session.context
@@ -132,17 +125,16 @@ class WebRequest(object):
                 self.session.logout()
                 raise SessionExpiredException("Session expired for request %s" % self.httprequest)
         if self.auth_method == "none":
-            self.db = None
+            self.disable_db = True
             self.uid = None
         elif self.auth_method == "admin":
-            self.db = self.session.db or db_monodb()
+            self.disable_db = False
             if not self.db:
                 raise SessionExpiredException("No valid database for request %s" % self.httprequest)
             self.uid = openerp.SUPERUSER_ID
         else: # auth
-            self.db = self.session.db
+            self.disable_db = False
             self.uid = self.session.uid
-
     @property
     def registry(self):
         """
@@ -150,6 +142,14 @@ class WebRequest(object):
         ``none'' authentication.
         """
         return openerp.modules.registry.RegistryManager.get(self.db) if self.db else None
+
+    @property
+    def db(self):
+        """
+        The registry to the database linked to this request. Can be ``None`` if the current request uses the
+        ``none'' authentication.
+        """
+        return self.session.db if not self.disable_db else None
 
     @property
     def cr(self):
@@ -184,7 +184,7 @@ class WebRequest(object):
                 return self.func(*args, **kwargs)
         finally:
             # just to be sure no one tries to re-use the request
-            self.db = None
+            self.disable_db = True
             self.uid = None
 
 def route(route, type="http", auth="user"):
@@ -304,8 +304,6 @@ class JsonRequest(WebRequest):
         error = None
 
         try:
-            #if _logger.isEnabledFor(logging.DEBUG):
-            #    _logger.debug("--> %s.%s\n%s", func.im_class.__name__, func.__name__, pprint.pformat(self.jsonrequest))
             response['id'] = self.jsonrequest.get('id')
             response["result"] = self._call_function(**self.params)
         except AuthenticationError, e:
@@ -326,9 +324,6 @@ class JsonRequest(WebRequest):
             }
         if error:
             response["error"] = error
-
-        if _logger.isEnabledFor(logging.DEBUG):
-            _logger.debug("<--\n%s", pprint.pformat(response))
 
         if self.jsonp:
             # If we use jsonp, that's mean we are called from another host
@@ -394,7 +389,7 @@ class HttpRequest(WebRequest):
     def __init__(self, *args):
         super(HttpRequest, self).__init__(*args)
         params = dict(self.httprequest.args)
-        ex = set(["session_id", "debug"])
+        ex = set(["session_id"])
         for k in params.keys():
             if k in ex:
                 del params[k]
@@ -409,7 +404,6 @@ class HttpRequest(WebRequest):
                 akw[key] = value
             else:
                 akw[key] = type(value)
-        #_logger.debug("%s --> %s.%s %r", self.httprequest.func, func.im_class.__name__, func.__name__, akw)
         try:
             r = self._call_function(**self.params)
         except werkzeug.exceptions.HTTPException, e:
@@ -426,10 +420,6 @@ class HttpRequest(WebRequest):
         else:
             if not r:
                 r = werkzeug.wrappers.Response(status=204)  # no content
-        if isinstance(r, (werkzeug.wrappers.BaseResponse, werkzeug.exceptions.HTTPException)):
-            _logger.debug('<-- %s', r)
-        else:
-            _logger.debug("<-- size: %s", len(r))
         return r
 
     def make_response(self, data, headers=None, cookies=None):
@@ -597,12 +587,7 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         self.modified = False
         super(OpenERPSession, self).__init__(*args, **kwargs)
         self.inited = True
-        self.setdefault("db", None)
-        self.setdefault("uid", None)
-        self.setdefault("login", None)
-        self.setdefault("password", None)
-        self.setdefault("context", {'tz': "UTC", "uid": None})
-        self.setdefault("jsonp_requests", {})
+        self._default_values()
         self.modified = False
 
     def __getattr__(self, attr):
@@ -631,8 +616,8 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
         self.uid = uid
         self.login = login
         self.password = password
-        request.db = db
         request.uid = uid
+        request.disable_db = False
 
         if uid: self.get_context()
         return uid
@@ -650,6 +635,15 @@ class OpenERPSession(werkzeug.contrib.sessions.Session):
     def logout(self):
         for k in self.keys():
             del self[k]
+        self._default_values()
+
+    def _default_values(self):
+        self.setdefault("db", None)
+        self.setdefault("uid", None)
+        self.setdefault("login", None)
+        self.setdefault("password", None)
+        self.setdefault("context", {'tz': "UTC", "uid": None})
+        self.setdefault("jsonp_requests", {})
 
     def get_context(self):
         """
@@ -896,6 +890,8 @@ class Root(object):
             else:
                 httprequest.session = self.session_store.get(sid)
 
+            self._find_db(httprequest)
+
             if not "lang" in httprequest.session.context:
                 lang = httprequest.accept_languages.best or "en_US"
                 lang = babel.core.LOCALE_ALIASES.get(lang, lang).replace('-', '_')
@@ -931,6 +927,12 @@ class Root(object):
             return response(environ, start_response)
         except werkzeug.exceptions.HTTPException, e:
             return e(environ, start_response)
+
+    def _find_db(self, httprequest):
+        db = db_monodb(httprequest)
+        if db != httprequest.session.db:
+            httprequest.session.logout()
+            httprequest.session.db = db
 
     def _build_request(self, httprequest):
         if httprequest.args.get('jsonp'):
@@ -1046,43 +1048,16 @@ class Root(object):
 
 root = None
 
-def db_list(force=False):
-    proxy = request.session.proxy("db")
-    dbs = proxy.list(force)
-    h = request.httprequest.environ['HTTP_HOST'].split(':')[0]
+def db_list(force=False, httprequest=None):
+    httprequest = httprequest or request.httprequest
+    dbs = openerp.netsvc.dispatch_rpc("db", "list", [force])
+    h = httprequest.environ['HTTP_HOST'].split(':')[0]
     d = h.split('.')[0]
     r = openerp.tools.config['dbfilter'].replace('%h', h).replace('%d', d)
     dbs = [i for i in dbs if re.match(r, i)]
     return dbs
 
-def db_redirect(match_first_only_if_unique):
-    db = None
-    redirect = None
-
-    # 1 try the db in the url
-    db_url = request.httprequest.args.get('db')
-    if db_url:
-        return (db_url, None)
-
-    dbs = db_list(True)
-
-    # 2 use the database from the cookie if it's listable and still listed
-    cookie_db = request.httprequest.cookies.get('last_used_database')
-    if cookie_db in dbs:
-        db = cookie_db
-
-    # 3 use the first db if user can list databases
-    if dbs and not db and (not match_first_only_if_unique or len(dbs) == 1):
-        db = dbs[0]
-
-    # redirect to the chosen db if multiple are available
-    if db and len(dbs) > 1:
-        query = dict(urlparse.parse_qsl(request.httprequest.query_string, keep_blank_values=True))
-        query.update({'db': db})
-        redirect = request.httprequest.path + '?' + urllib.urlencode(query)
-    return (db, redirect)
-
-def db_monodb():
+def db_monodb(httprequest=None):
     """
         Magic function to find the current database.
 
@@ -1091,10 +1066,27 @@ def db_monodb():
         * Magic
         * More magic
 
-        Return ``None`` if the magic is not magic enough.
+        Returns ``None`` if the magic is not magic enough.
     """
-    return db_redirect(True)[0]
+    httprequest = httprequest or request.httprequest
+    db = None
+    redirect = None
 
+    dbs = db_list(True, httprequest)
+
+    # 1 try the db already in the session
+    db_session = httprequest.session.db
+    if db_session in dbs:
+        return db_session
+
+    # 2 if there is only one db in the db filters, take it
+    if len(dbs) == 1:
+        return dbs[0]
+
+    # 3 if there are multiple dbs, take the first one only if we can list them
+    if len(dbs) > 1 and config['list_db']:
+        return dbs[0]
+    return None
 
 class CommonController(Controller):
 

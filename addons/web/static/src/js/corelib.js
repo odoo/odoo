@@ -73,7 +73,7 @@ openerp.web.corelib = function(instance) {
  */
 (function() {
     var initializing = false,
-        fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
+        fnTest = /xyz/.test(function(){xyz();}) ? /\b_super\b/ : /.*/;
     // The web Class implementation (does nothing)
     instance.web.Class = function(){};
 
@@ -96,7 +96,7 @@ openerp.web.corelib = function(instance) {
         initializing = false;
 
         // Copy the properties over onto the new prototype
-        for (var name in prop) {
+        _.each(prop, function(val, name) {
             // Check if we're overwriting an existing function
             prototype[name] = typeof prop[name] == "function" &&
                               fnTest.test(prop[name]) ?
@@ -117,13 +117,12 @@ openerp.web.corelib = function(instance) {
                         };
                     })(name, prop[name]) :
                     prop[name];
-        }
+        });
 
         // The dummy class constructor
         function Class() {
             if(this.constructor !== instance.web.Class){
                 throw new Error("You can only instanciate objects with the 'new' operator");
-                return null;
             }
             // All construction is actually done in the init method
             if (!initializing && this.init) {
@@ -133,7 +132,7 @@ openerp.web.corelib = function(instance) {
             return this;
         }
         Class.include = function (properties) {
-            for (var name in properties) {
+            _.each(properties, function(val, name) {
                 if (typeof properties[name] !== 'function'
                         || !fnTest.test(properties[name])) {
                     prototype[name] = properties[name];
@@ -146,7 +145,7 @@ openerp.web.corelib = function(instance) {
                             var ret = fn.apply(this, arguments);
                             this._super = tmp;
                             return ret;
-                        }
+                        };
                     })(name, properties[name], prototype[name]);
                 } else if (typeof _super[name] === 'function') {
                     prototype[name] = (function (name, fn) {
@@ -156,10 +155,10 @@ openerp.web.corelib = function(instance) {
                             var ret = fn.apply(this, arguments);
                             this._super = tmp;
                             return ret;
-                        }
+                        };
                     })(name, properties[name]);
                 }
-            }
+            });
         };
 
         // Populate our constructed prototype object
@@ -297,7 +296,7 @@ var Events = instance.web.Class.extend({
         var ev;
         events = events.split(/\s+/);
         var calls = this._callbacks || (this._callbacks = {});
-        while (ev = events.shift()) {
+        while ((ev = events.shift())) {
             var list = calls[ev] || (calls[ev] = {});
             var tail = list.tail || (list.tail = list.next = {});
             tail.callback = callback;
@@ -311,9 +310,9 @@ var Events = instance.web.Class.extend({
         var ev, calls, node;
         if (!events) {
             delete this._callbacks;
-        } else if (calls = this._callbacks) {
+        } else if ((calls = this._callbacks)) {
             events = events.split(/\s+/);
-            while (ev = events.shift()) {
+            while ((ev = events.shift())) {
                 node = calls[ev];
                 delete calls[ev];
                 if (!callback || !node)
@@ -347,7 +346,7 @@ var Events = instance.web.Class.extend({
         all = calls['all'];
         (events = events.split(/\s+/)).push(null);
         // Save references to the current heads & tails.
-        while (event = events.shift()) {
+        while ((event = events.shift())) {
             if (all)
                 events.push({
                     next : all.next,
@@ -362,7 +361,7 @@ var Events = instance.web.Class.extend({
             });
         }
         rest = Array.prototype.slice.call(arguments, 1);
-        while (node = events.pop()) {
+        while ((node = events.pop())) {
             tail = node.tail;
             args = node.event ? [ node.event ].concat(rest) : rest;
             while ((node = node.next) !== tail) {
@@ -504,7 +503,7 @@ instance.web.Controller = instance.web.Class.extend(instance.web.PropertiesMixin
         return function () {
             var fn = (typeof method === 'string') ? self[method] : method;
             return fn.apply(self, arguments);
-        }
+        };
     },
     /**
      * Informs the action manager to do an action. This supposes that
@@ -691,11 +690,6 @@ instance.web.Widget = instance.web.Controller.extend({
         this.renderElement();
         insertion(target);
         return this.start();
-    },
-    /**
-     * This is the method to implement to render the Widget.
-     */
-    renderElement: function() {
     },
     /**
      * Method called after rendering. Mostly used to bind actions, perform asynchronous
@@ -889,7 +883,7 @@ instance.web.Registry = instance.web.Class.extend({
     contains: function (key) {
         if (key === undefined) { return false; }
         if (key in this.map) {
-            return true
+            return true;
         }
         if (this.parent) {
             return this.parent.contains(key);
@@ -966,7 +960,7 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
     init: function() {
         instance.web.PropertiesMixin.init.call(this);
         this.server = null;
-        this.debug = ($.deparam($.param.querystring()).debug != undefined);
+        this.debug = ($.deparam($.param.querystring()).debug !== undefined);
         this.override_session = false;
         this.session_id = undefined;
     },
@@ -1154,6 +1148,6 @@ instance.web.py_eval = function(expr, context) {
     return py.eval(expr, _.extend({}, context || {}, {"true": true, "false": false, "null": null}));
 };
 
-}
+};
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

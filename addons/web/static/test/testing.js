@@ -21,7 +21,7 @@ openerp.testing.section('testing.stack', function (test) {
         return s.execute(function () {
             return $.when(42);
         }).then(function (val) {
-            strictEqual(val, 42, "should return the handler value")
+            strictEqual(val, 42, "should return the handler value");
         });
     });
     test('direct, deferred, failure', {asserts: 1}, function () {
