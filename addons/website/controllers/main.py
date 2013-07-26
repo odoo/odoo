@@ -6,6 +6,8 @@ from openerp.addons.web import http
 from openerp.addons.web.controllers.main import manifest_list
 from openerp.addons.web.http import request
 
+
+
 def template_values():
     script = "\n".join(['<script type="text/javascript" src="%s"></script>' % i for i in manifest_list('js', db=request.db)])
     css = "\n".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list('css', db=request.db))
@@ -16,6 +18,7 @@ def template_values():
     except http.SessionExpiredException:
         loggued = False
         uid = openerp.SUPERUSER_ID
+
     values = {
         'loggued': loggued,
         'editable': loggued,

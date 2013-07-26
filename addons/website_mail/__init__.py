@@ -1,2 +1,3 @@
 import controllers
 import mail_message
+import res_config

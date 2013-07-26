@@ -47,12 +47,10 @@
                     <div class="span8" t-if="blog_id">
                         <div class="media">
                             <div t-att-class="'media-body well %%s' %% (blog_id.website_published and 'css_published' or '')">
-                                <t t-if="blog_editable">
-                                    <a href="#" title="Click to publish or unpublish this blog" t-att-data-id="blog_id.id" class="js_publish css_button_publish">
-                                        <i class="icon-ok-circle css_publish"></i>
-                                        <i class="icon-remove-sign css_unpublish"></i>
-                                    </a>
-                                </t>
+                                <a href="#" title="Click to publish or unpublish this blog" t-att-data-id="blog_id.id" class="js_publish css_button_publish" groups="group_website_mail_manager">
+                                    <i class="icon-ok-circle css_publish"></i>
+                                    <i class="icon-remove-sign css_unpublish"></i>
+                                </a>
                                 <h3><t t-esc="blog_id.subject"/></h3>
                                 <p><t t-raw="blog_id.body"/></p>
                                 <small class="pull-right muted text-right">
@@ -62,14 +60,12 @@
                             </div>
                             <ul class="media-list">
                                 <t t-foreach="blog_message_ids or []" t-as="mail">
-                                    <li t-if="mail.website_published or blog_editable" class="media well well-small">
+                                    <li class="media well well-small">
                                         <div t-att-class="'media-body %%s' %% (mail.website_published and 'css_published' or '')">
-                                            <t t-if="blog_editable">
-                                                <a href="#" title="Click to publish or unpublish this message" t-att-data-id="mail.id" class="js_publish css_button_publish">
-                                                    <i class="icon-ok-circle css_publish"></i>
-                                                    <i class="icon-remove-sign css_unpublish"></i>
-                                                </a>
-                                            </t>
+                                            <a href="#" title="Click to publish or unpublish this message" t-att-data-id="mail.id" class="js_publish css_button_publish" groups="group_website_mail_manager">
+                                                <i class="icon-ok-circle css_publish"></i>
+                                                <i class="icon-remove-sign css_unpublish"></i>
+                                            </a>
                                             <h4 t-if="mail.subject" class="media-heading"><t t-esc="mail.subject"/></h4>
                                             <div class="media">
                                                 <t t-raw="mail.body"/>
@@ -81,7 +77,7 @@
                                         </div>
                                     </li>
                                 </t>
-                                <form id="post" t-att-action="'/blog/%%s/%%s/post#post' %% (blog_id.res_id, blog_id.id)" method="POST" class="form-horizontal">
+                                <form id="post" t-att-action="'/blog/%%s/%%s/post#post' %% (blog_id.res_id, blog_id.id)" method="POST" class="form-horizontal" groups="group_website_mail_reply">
                                     <div class="control-group">
                                         <label class="control-label">Name</label>
                                         <div class="controls">

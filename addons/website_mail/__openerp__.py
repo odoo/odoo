@@ -11,6 +11,8 @@ OpenERP Blog
     'depends': ['website', 'mail'],
     'data': [
         'views/website_mail.xml',
+        'views/res_config.xml',
+        'security/website_mail.xml',
     ],
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,
