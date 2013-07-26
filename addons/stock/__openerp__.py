@@ -72,7 +72,6 @@ Dashboard / Reports for Warehouse Management will include:
         'wizard/stock_fill_inventory_view.xml',
         'wizard/stock_inventory_merge_view.xml',
         'wizard/stock_location_product_view.xml',
-        'wizard/stock_splitinto_view.xml',
         'wizard/stock_inventory_line_split_view.xml',
         'wizard/stock_return_picking_view.xml',
         'wizard/make_procurement_view.xml',
