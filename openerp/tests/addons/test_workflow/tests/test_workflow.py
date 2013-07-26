@@ -166,7 +166,18 @@ class test_workflows(common.TransactionCase):
         model = self.registry('test.workflow.model.k')
 
         i = model.create(self.cr, SUPERUSER_ID, {})
-        self.check_activities(model._name, i, ['b'])
+        # Non-determinisitic: can be b or c
+        # self.check_activities(model._name, i, ['b'])
+        # self.check_activities(model._name, i, ['c'])
         self.check_value(model._name, i, 2)
+
+        model.unlink(self.cr, SUPERUSER_ID, [i])
+
+    def test_workflow_l(self):
+        model = self.registry('test.workflow.model.l')
+
+        i = model.create(self.cr, SUPERUSER_ID, {})
+        self.check_activities(model._name, i, ['c', 'c', 'd'])
+        self.check_value(model._name, i, 3)
 
         model.unlink(self.cr, SUPERUSER_ID, [i])

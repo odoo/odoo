@@ -403,7 +403,7 @@
         <!-- Workflow K:
 
             a xor -> b { value: 2 } 
-                  `> c { value: 3 }
+                  `> c { value: 2 }
 
         Only one (truish) transition is taken with a XOR.
 
@@ -434,7 +434,7 @@
             <field name="flow_stop">True</field>
             <field name="name">c</field>
             <field name="kind">function</field>
-            <field name="action">write({'value': 3})</field>
+	    <field name="action">write({'value': 2})</field>
         </record>
 
         <record id="trans_k_a_b" model="workflow.transition">
@@ -444,6 +444,74 @@
         <record id="trans_k_a_c" model="workflow.transition">
             <field name="act_from" ref="activity_k_a"/>
             <field name="act_to" ref="activity_k_c"/>
+        </record>
+
+        <!-- Workflow L:
+
+            a -> xor c { value: 3 }
+            b ´
+            a -> and d { value: 3 }
+            b ´
+
+        c is run for each incoming (and taken) transition.
+        d is run once when all its incoming transitions are taken at the same time.
+
+        -->
+        <record id="test_workflow_l" model="workflow">
+            <field name="name">test.workflow.l</field>
+            <field name="osv">test.workflow.model.l</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <record id="activity_l_a" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow_l"/>
+            <field name="flow_start">True</field>
+            <field name="name">a</field>
+            <field name="kind">function</field>
+            <field name="action">write({'value': 1})</field>
+            <field name="split_mode">OR</field>
+        </record>
+        <record id="activity_l_b" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow_l"/>
+            <field name="flow_start">True</field>
+            <field name="name">b</field>
+            <field name="kind">function</field>
+            <field name="action">write({'value': 2})</field>
+            <field name="split_mode">OR</field>
+        </record>
+        <record id="activity_l_c" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow_l"/>
+            <field name="flow_stop">True</field>
+            <field name="name">c</field>
+            <field name="kind">function</field>
+            <field name="action">write({'value': 3})</field>
+            <field name="join_mode">XOR</field>
+        </record>
+        <record id="activity_l_d" model="workflow.activity">
+            <field name="wkf_id" ref="test_workflow_l"/>
+            <field name="flow_stop">True</field>
+            <field name="name">d</field>
+            <field name="kind">function</field>
+            <field name="action">write({'value': 3})</field>
+            <field name="join_mode">AND</field>
+        </record>
+
+        <record id="trans_l_a_c" model="workflow.transition">
+            <field name="act_from" ref="activity_l_a"/>
+            <field name="act_to" ref="activity_l_c"/>
+        </record>
+        <record id="trans_l_b_c" model="workflow.transition">
+            <field name="act_from" ref="activity_l_b"/>
+            <field name="act_to" ref="activity_l_c"/>
+        </record>
+
+        <record id="trans_l_a_d" model="workflow.transition">
+            <field name="act_from" ref="activity_l_a"/>
+            <field name="act_to" ref="activity_l_d"/>
+        </record>
+        <record id="trans_l_b_d" model="workflow.transition">
+            <field name="act_from" ref="activity_l_b"/>
+            <field name="act_to" ref="activity_l_d"/>
         </record>
     </data>
 </openerp>
