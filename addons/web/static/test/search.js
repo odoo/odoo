@@ -1387,10 +1387,8 @@ openerp.testing.section('search.invisible', {
     templates: true,
 }, function (test) {
     var registerTestField = function (instance, methods) {
+        instance.testing.TestWidget = instance.web.search.Field.extend(methods);
         instance.web.search.fields.add('test', 'instance.testing.TestWidget');
-        instance.testing = {
-            TestWidget: instance.web.search.Field.extend(methods),
-        };
     };
     var makeView = function (instance, mock, fields, arch, defaults) {
         mock('ir.filters:get_filters', function () { return []; });
