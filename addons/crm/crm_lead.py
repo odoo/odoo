@@ -621,7 +621,7 @@ class crm_lead(format_address, osv.osv):
                 attachment.write(values)
         return True
 
-    def merge_opportunity(self, cr, uid, ids, context=None):
+    def merge_opportunity(self, cr, uid, ids, user_id=False, section_id=False, context=None):
         """
         Different cases of merge:
         - merge leads together = 1 new lead
@@ -654,6 +654,11 @@ class crm_lead(format_address, osv.osv):
 
         fields = list(CRM_LEAD_FIELDS_TO_MERGE)
         merged_data = self._merge_data(cr, uid, ids, highest, fields, context=context)
+
+        if user_id:
+            merged_data['user_id'] = user_id
+        if section_id:
+            merged_data['section_id'] = section_id
 
         # Merge messages and attachements into the first opportunity
         self._merge_opportunity_history(cr, uid, highest.id, tail_opportunities, context=context)
@@ -939,42 +944,6 @@ class crm_lead(format_address, osv.osv):
             onchange_stage_values = self.onchange_stage_id(cr, uid, ids, vals.get('stage_id'), context=context)['value']
             vals.update(onchange_stage_values)
         return super(crm_lead, self).write(cr, uid, ids, vals, context=context)
-
-    def new_mail_send(self, cr, uid, ids, context=None):
-        '''
-        This function opens a window to compose an email, with the edi sale template message loaded by default
-        '''
-        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
-        ir_model_data = self.pool.get('ir.model.data')
-        try:
-            template_id = ir_model_data.get_object_reference(cr, uid, 'crm', 'email_template_opportunity_mail')[1]
-        except ValueError:
-            template_id = False
-        try:
-            compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
-        except ValueError:
-            compose_form_id = False
-        if context is None:
-            context = {}
-        ctx = context.copy()
-        ctx.update({
-            'default_model': 'crm.lead',
-            'default_res_id': ids[0],
-            'default_use_template': bool(template_id),
-            'default_template_id': template_id,
-            'default_composition_mode': 'comment',
-        })
-        return {
-            'name': _('Compose Email'),
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'mail.compose.message',
-            'views': [(compose_form_id, 'form')],
-            'view_id': compose_form_id,
-            'target': 'new',
-            'context': ctx,
-        }
 
     # ----------------------------------------
     # Mail Gateway
