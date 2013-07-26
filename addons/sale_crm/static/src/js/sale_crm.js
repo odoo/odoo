@@ -67,13 +67,17 @@ openerp.sale_crm.GaugeWidget = openerp.web_kanban.AbstractField.extend({
                     $input.focus()
                         .keydown(function (event) {
                             event.stopPropagation();
-                            if (event.keyCode == 13 || event.keyCode == 9) {
-                                if ($input.val() != value) {
-                                    parent.view.dataset.call(self.options.action_change, [parent.id, $input.val()]).then(function () {
-                                        parent.do_reload();
-                                    });
-                                } else {
-                                    $div.remove();
+                            if(isNaN($input.val())){
+                                self.do_warn(_t("Wrong value entered!"), _t("Only Integer Value should be valid."));
+                                $div.remove();
+                            } else {
+                                if (event.keyCode == 13 || event.keyCode == 9) {
+                                    var val = self.parse_client($input.val());
+                                    if (val != value) {
+                                        parent.view.dataset.call(self.options.action_change, [parent.id, $input.val()]).then(function () {
+                                            parent.do_reload();
+                                        });
+                                    } else { $div.remove();}
                                 }
                             }
                         })
@@ -101,6 +105,9 @@ openerp.sale_crm.GaugeWidget = openerp.web_kanban.AbstractField.extend({
                 self.$el.append($div);
             }
         }
+    },
+    parse_client: function(value) {
+        return openerp.web.parse_value(value, { type:"integer" });
     },
 });
 openerp.web_kanban.fields_registry.add("gage", "openerp.sale_crm.GaugeWidget");
