@@ -587,7 +587,7 @@
                     <!-- <button name="check_assign" states="confirmed" string="Check Availability" type="object"/> -->
                     <button name="force_assign" states="confirmed" string="Force Availability" type="object" class="oe_highlight" groups="base.group_user"/>
                     <button name="do_partial" states="assigned" string="Confirm &amp; Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
-                    <button name="action_pack" states="draft, assigned" string="Create Package" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
+                    <button name="action_pack" states="draft,assigned,confirmed" string="Create Package" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
                     <button name="%(act_stock_return_picking)d" string="Reverse Transfer" states="done" type="action" groups="base.group_user"/>
                     <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel Transfer" groups="base.group_user"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
@@ -617,7 +617,6 @@
                                     <field name="product_uom_id"/>
                                     <field name="quant_id"/>
                                     <field name="package_id"/>
-                                    <field name="move_id" domain="[('picking_id', '=', parent.id)]"/>
                                     <field name="product_qty"/>
                                     <field name="result_package_id"/>
                                 </tree>
