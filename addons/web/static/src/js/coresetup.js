@@ -564,7 +564,6 @@ instance.web._t = new instance.web.TranslationDataBase().build_translation_funct
 instance.web._lt = function (s) {
     return {toString: function () { return instance.web._t(s); }};
 };
-instance.web.qweb = new QWeb2.Engine();
 instance.web.qweb.debug = instance.session.debug;
 instance.web.qweb.default_dict = {
     '_' : _,
