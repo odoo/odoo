@@ -288,6 +288,7 @@ class mail_mail(osv.Model):
                     email_list.append(self.send_get_email_dict(cr, uid, mail, context=context))
 
                 # build an RFC2822 email.message.Message object and send it without queuing
+                res = None
                 for email in email_list:
                     msg = ir_mail_server.build_email(
                         email_from = mail.email_from,
