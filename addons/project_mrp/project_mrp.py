@@ -22,6 +22,23 @@
 from openerp.osv import fields, osv
 from openerp import netsvc
 
+
+class ProjectTaskStageMrp(osv.Model):
+    """ Override project.task.type model to add a 'closed' boolean field allowing
+        to know that tasks in this stage are considered as closed. Indeed since
+        OpenERP 8.0 status is not present on tasks anymore, only stage_id. """
+    _name = 'project.task.type'
+    _inherit = 'project.task.type'
+
+    _columns = {
+        'closed': fields.boolean('Close', help="Tasks in this stage are considered as closed."),
+    }
+
+    _defaults = {
+        'closed': False,
+    }
+
+
 class project_task(osv.osv):
     _name = "project.task"
     _inherit = "project.task"
@@ -30,21 +47,21 @@ class project_task(osv.osv):
         'sale_line_id': fields.related('procurement_id', 'sale_line_id', type='many2one', relation='sale.order.line', store=True, string='Sales Order Line'),
     }
 
-    def _validate_subflows(self, cr, uid, ids):
+    def _validate_subflows(self, cr, uid, ids, context=None):
         wf_service = netsvc.LocalService("workflow")
         for task in self.browse(cr, uid, ids):
             if task.procurement_id:
                 wf_service.trg_write(uid, 'procurement.order', task.procurement_id.id, cr)
 
-    def do_close(self, cr, uid, ids, *args, **kwargs):
-        res = super(project_task, self).do_close(cr, uid, ids, *args, **kwargs)
-        self._validate_subflows(cr, uid, ids)
+    def write(self, cr, uid, ids, values, context=None):
+        """ When closing tasks, validate subflows. """
+        res = super(project_task, self).write(cr, uid, ids, values, context=context)
+        if values.get('stage_id'):
+            stage = self.pool.get('project.task.type').browse(cr, uid, values.get('stage_id'), context=context)
+            if stage.closed:
+                self._validate_subflows(cr, uid, ids, context=context)
         return res
 
-    def do_cancel(self, cr, uid, ids, *args, **kwargs):
-        res = super(project_task, self).do_cancel(cr, uid, ids, *args, **kwargs)
-        self._validate_subflows(cr, uid, ids)
-        return res
 
 class product_product(osv.osv):
     _inherit = "product.product"
@@ -52,8 +69,9 @@ class product_product(osv.osv):
         'project_id': fields.many2one('project.project', 'Project', ondelete='set null',)
     }
 
+
 class sale_order(osv.osv):
-    _inherit ='sale.order'
+    _inherit = 'sale.order'
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, context=None):
         proc_data = super(sale_order, self)._prepare_order_line_procurement(cr,
@@ -66,11 +84,12 @@ class sale_order(osv.osv):
             return {}
         res_sale = {}
         res = super(sale_order, self)._picked_rate(cr, uid, ids, name, arg, context=context)
-        cr.execute('''select sol.order_id as sale_id, t.state as task_state ,
+        cr.execute('''select sol.order_id as sale_id, stage.closed as task_closed ,
                     t.id as task_id, sum(sol.product_uom_qty) as total
                     from project_task as t
                     left join sale_order_line as sol on sol.id = t.sale_line_id
-                    where sol.order_id in %s group by sol.order_id,t.state,t.id ''',(tuple(ids),))
+                    left join project_task_type as stage on stage.id = t.stage_id
+                    where sol.order_id in %s group by sol.order_id,stage.closed,t.id ''',(tuple(ids),))
         sale_task_data = cr.dictfetchall()
 
         if not sale_task_data:
@@ -90,7 +109,7 @@ class sale_order(osv.osv):
 
         for item in sale_task_data:
             res_sale[item['sale_id']]['total_no_task'] += item['total']
-            if item['task_state'] == 'done':
+            if item['task_closed']:
                 res_sale[item['sale_id']]['number_of_done'] += item['total']
 
         for sale in self.browse(cr, uid, ids, context=context):

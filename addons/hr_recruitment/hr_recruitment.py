@@ -19,22 +19,12 @@
 #
 ##############################################################################
 
-import time
 from openerp import tools
 
-from openerp.addons.base_status.base_stage import base_stage
 from datetime import datetime
 from openerp.osv import fields, osv
 from openerp.tools.translate import _
 from openerp.tools import html2plaintext
-
-AVAILABLE_STATES = [
-    ('draft', 'New'),
-    ('cancel', 'Refused'),
-    ('open', 'In Progress'),
-    ('pending', 'Pending'),
-    ('done', 'Hired')
-]
 
 AVAILABLE_PRIORITIES = [
     ('', ''),
@@ -62,13 +52,11 @@ class hr_recruitment_stage(osv.osv):
         'name': fields.char('Name', size=64, required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of stages."),
         'department_id':fields.many2one('hr.department', 'Specific to a Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep this field empty."),
-        'state': fields.selection(AVAILABLE_STATES, 'Status', required=True, help="The related status for the stage. The status of your document will automatically change according to the selected stage. Example, a stage is related to the status 'Close', when your document reach this stage, it will be automatically closed."),
         'fold': fields.boolean('Hide in views if empty', help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
         'requirements': fields.text('Requirements'),
     }
     _defaults = {
         'sequence': 1,
-        'state': 'draft',
         'fold': False,
     }
 
@@ -87,19 +75,15 @@ class hr_recruitment_degree(osv.osv):
         ('name_uniq', 'unique (name)', 'The name of the Degree of Recruitment must be unique!')
     ]
 
-class hr_applicant(base_stage, osv.Model):
+class hr_applicant(osv.Model):
     _name = "hr.applicant"
     _description = "Applicant"
     _order = "id desc"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _track = {
-        'state': {
-            'hr_recruitment.mt_applicant_new': lambda self, cr, uid, obj, ctx=None: obj.state == 'draft',
-            'hr_recruitment.mt_applicant_hired': lambda self, cr, uid, obj, ctx=None: obj.state == 'done',
-            'hr_recruitment.mt_applicant_refused': lambda self, cr, uid, obj, ctx=None: obj.state == 'cancel',
-        },
         'stage_id': {
-            'hr_recruitment.mt_stage_changed': lambda self, cr, uid, obj, ctx=None: obj.state not in ['done', 'cancel'],
+            'hr_recruitment.mt_applicant_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence == 1,
+            'hr_recruitment.mt_applicant_stage_changed': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence != 1,
         },
     }
 
@@ -110,7 +94,7 @@ class hr_applicant(base_stage, osv.Model):
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
         department_id = self._get_default_department_id(cr, uid, context=context)
-        return self.stage_find(cr, uid, [], department_id, [('state', '=', 'draft')], context=context)
+        return self.stage_find(cr, uid, [], department_id, [('sequence', '=', '1')], context=context)
 
     def _resolve_department_id_from_context(self, cr, uid, context=None):
         """ Returns ID of department based on the value of 'default_department_id'
@@ -198,20 +182,12 @@ class hr_applicant(base_stage, osv.Model):
         'write_date': fields.datetime('Update Date', readonly=True),
         'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage', track_visibility='onchange',
                         domain="['|', ('department_id', '=', department_id), ('department_id', '=', False)]"),
-        'state': fields.related('stage_id', 'state', type="selection", store=True,
-                selection=AVAILABLE_STATES, string="Status", readonly=True,
-                help='The status is set to \'Draft\', when a case is created.\
-                      If the case is in progress the status is set to \'Open\'.\
-                      When the case is over, the status is set to \'Done\'.\
-                      If the case needs to be reviewed then the status is \
-                      set to \'Pending\'.'),
         'categ_ids': fields.many2many('hr.applicant_category', string='Tags'),
         'company_id': fields.many2one('res.company', 'Company'),
         'user_id': fields.many2one('res.users', 'Responsible', track_visibility='onchange'),
-        # Applicant Columns
         'date_closed': fields.datetime('Closed', readonly=True, select=True),
-        'date_open': fields.datetime('Opened', readonly=True, select=True),
-        'date': fields.datetime('Date'),
+        'date_open': fields.datetime('Assigned', readonly=True, select=True),
+        'date_last_stage_update': fields.datetime('Last Stage Update', select=True),
         'date_action': fields.date('Next Action Date'),
         'title_action': fields.char('Next Action', size=64),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Appreciation'),
@@ -235,35 +211,35 @@ class hr_applicant(base_stage, osv.Model):
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 multi='day_close', type="float", store=True),
         'color': fields.integer('Color Index'),
-        'emp_id': fields.many2one('hr.employee', 'employee'),
+        'emp_id': fields.many2one('hr.employee', string='Employee',
+            help='Employee linked to the applicant.'),
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
     }
 
     _defaults = {
         'active': lambda *a: 1,
         'user_id': lambda s, cr, uid, c: uid,
-        'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c),
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
         'department_id': lambda s, cr, uid, c: s._get_default_department_id(cr, uid, c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'hr.applicant', context=c),
         'color': 0,
+        'date_last_stage_update': fields.datetime.now(),
     }
 
     _group_by_full = {
         'stage_id': _read_group_stage_ids
     }
 
-    def onchange_job(self, cr, uid, ids, job, context=None):
-        if job:
-            job_record = self.pool.get('hr.job').browse(cr, uid, job, context=context)
+    def onchange_job(self, cr, uid, ids, job_id=False, context=None):
+        if job_id:
+            job_record = self.pool.get('hr.job').browse(cr, uid, job_id, context=context)
             if job_record and job_record.department_id:
                 return {'value': {'department_id': job_record.department_id.id}}
         return {}
 
-    def onchange_department_id(self, cr, uid, ids, department_id=False, context=None):
-        obj_recru_stage = self.pool.get('hr.recruitment.stage')
-        stage_ids = obj_recru_stage.search(cr, uid, ['|',('department_id','=',department_id),('department_id','=',False)], context=context)
-        stage_id = stage_ids and stage_ids[0] or False
+    def onchange_department_id(self, cr, uid, ids, department_id=False, stage_id=False, context=None):
+        if not stage_id:
+            stage_id = self.stage_find(cr, uid, [], department_id, [('sequence', '=', '1')], context=context)
         return {'value': {'stage_id': stage_id}}
 
     def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
@@ -410,21 +386,20 @@ class hr_applicant(base_stage, osv.Model):
         obj_id = super(hr_applicant, self).create(cr, uid, vals, context=context)
         return obj_id
 
-    def case_open(self, cr, uid, ids, context=None):
-        """
-            open Request of the applicant for the hr_recruitment
-        """
-        res = super(hr_applicant, self).case_open(cr, uid, ids, context)
-        date = self.read(cr, uid, ids, ['date_open'])[0]
-        if not date['date_open']:
-            self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S'),})
-        return res
+    def write(self, cr, uid, ids, vals, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        # stage change: update date_last_stage_update
+        if 'stage_id' in vals:
+            vals['date_last_stage_update'] = fields.datetime.now()
+        # user_id change: update date_start
+        if vals.get('user_id'):
+            vals['date_start'] = fields.datetime.now()
 
-    def case_close(self, cr, uid, ids, context=None):
-        res = super(hr_applicant, self).case_close(cr, uid, ids, context)
-        return res
+        return super(hr_applicant, self).write(cr, uid, ids, vals, context=context)
 
-    def case_close_with_emp(self, cr, uid, ids, context=None):
+    def create_employee_from_applicant(self, cr, uid, ids, context=None):
+        """ Create an hr.employee from the hr.applicants """
         if context is None:
             context = {}
         hr_employee = self.pool.get('hr.employee')
@@ -434,8 +409,8 @@ class hr_applicant(base_stage, osv.Model):
         for applicant in self.browse(cr, uid, ids, context=context):
             address_id = contact_name = False
             if applicant.partner_id:
-                address_id = self.pool.get('res.partner').address_get(cr,uid,[applicant.partner_id.id],['contact'])['contact']
-                contact_name = self.pool.get('res.partner').name_get(cr,uid,[applicant.partner_id.id])[0][1]
+                address_id = self.pool.get('res.partner').address_get(cr, uid, [applicant.partner_id.id], ['contact'])['contact']
+                contact_name = self.pool.get('res.partner').name_get(cr, uid, [applicant.partner_id.id])[0][1]
             if applicant.job_id and (applicant.partner_name or contact_name):
                 applicant.job_id.write({'no_of_hired_employee': applicant.job_id.no_of_hired_employee + 1})
                 emp_id = hr_employee.create(cr,uid,{'name': applicant.partner_name or contact_name,
@@ -444,7 +419,6 @@ class hr_applicant(base_stage, osv.Model):
                                                      'department_id': applicant.department_id.id
                                                      })
                 self.write(cr, uid, [applicant.id], {'emp_id': emp_id}, context=context)
-                self.case_close(cr, uid, [applicant.id], context)
             else:
                 raise osv.except_osv(_('Warning!'), _('You must define an Applied Job and a Contact Name for this applicant.'))
 
@@ -454,26 +428,6 @@ class hr_applicant(base_stage, osv.Model):
             dict_act_window['res_id'] = emp_id
         dict_act_window['view_mode'] = 'form,tree'
         return dict_act_window
-
-    def case_cancel(self, cr, uid, ids, context=None):
-        """Overrides cancel for crm_case for setting probability
-        """
-        res = super(hr_applicant, self).case_cancel(cr, uid, ids, context)
-        self.write(cr, uid, ids, {'probability': 0.0})
-        return res
-
-    def case_pending(self, cr, uid, ids, context=None):
-        """Marks case as pending"""
-        res = super(hr_applicant, self).case_pending(cr, uid, ids, context)
-        self.write(cr, uid, ids, {'probability': 0.0})
-        return res
-
-    def case_reset(self, cr, uid, ids, context=None):
-        """Resets case as draft
-        """
-        res = super(hr_applicant, self).case_reset(cr, uid, ids, context)
-        self.write(cr, uid, ids, {'date_open': False, 'date_closed': False})
-        return res
 
     def set_priority(self, cr, uid, ids, priority, *args):
         """Set applicant priority

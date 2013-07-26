@@ -51,34 +51,29 @@
         <field name="name">Doctoral Degree</field>
         <field name="sequence">4</field>
     </record>
+
     <record model="hr.recruitment.stage" id="stage_job1">
         <field name="name">Initial Qualification</field>
-        <field name="state">draft</field>
         <field name="sequence">1</field>
     </record>
     <record model="hr.recruitment.stage" id="stage_job2">
         <field name="name">First Interview</field>
-        <field name="state">open</field>
         <field name="sequence">2</field>
     </record>
     <record model="hr.recruitment.stage" id="stage_job3">
         <field name="name">Second Interview</field>
-        <field name="state">open</field>
         <field name="sequence">3</field>
     </record>
     <record model="hr.recruitment.stage" id="stage_job4">
         <field name="name">Contract Proposed</field>
-        <field name="state">pending</field>
         <field name="sequence">4</field>
     </record>
     <record model="hr.recruitment.stage" id="stage_job5">
         <field name="name">Contract Signed</field>
-        <field name="state">done</field>
         <field name="sequence">5</field>
     </record>
     <record model="hr.recruitment.stage" id="stage_job6">
         <field name="name">Refused</field>
-        <field name="state">cancel</field>
         <field name="sequence">6</field>
         <field name="fold" eval="True"/>
     </record>
@@ -463,18 +458,18 @@
 
     <!-- Applicant-related subtypes for messaging / Chatter -->
     <record id="mt_applicant_new" model="mail.message.subtype">
-        <field name="name">Applicant Created</field>
+        <field name="name">New Applicant</field>
         <field name="res_model">hr.applicant</field>
         <field name="default" eval="False"/>
         <field name="description">Applicant created</field>
     </record>
-    <record id="mt_stage_changed" model="mail.message.subtype">
+    <record id="mt_applicant_stage_changed" model="mail.message.subtype">
         <field name="name">Stage Changed</field>
         <field name="res_model">hr.applicant</field>
         <field name="default" eval="False"/>
         <field name="description">Stage changed</field>
     </record>
-    <record id="mt_applicant_hired" model="mail.message.subtype">
+    <record id="mt_applicant_employee" model="mail.message.subtype">
         <field name="name">Applicant Hired</field>
         <field name="res_model">hr.applicant</field>
         <field name="default" eval="False"/>
@@ -500,7 +495,7 @@
         <field name="name">Application Stage Changed</field>
         <field name="res_model">hr.job</field>
         <field name="default" eval="False"/>
-        <field name="parent_id" eval="ref('mt_stage_changed')"/>
+        <field name="parent_id" eval="ref('mt_applicant_stage_changed')"/>
         <field name="relation_field">job_id</field>
     </record>
 
@@ -508,7 +503,7 @@
         <field name="name">Applicant Assigned</field>
         <field name="res_model">hr.job</field>
         <field name="default" eval="False"/>
-        <field name="parent_id" eval="ref('mt_applicant_hired')"/>
+        <field name="parent_id" eval="ref('mt_applicant_employee')"/>
         <field name="relation_field">job_id</field>
     </record>
 

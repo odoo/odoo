@@ -23,6 +23,7 @@
                     <field name="model" invisible="1" />
                     <group>
                         <field name="name" />
+                        <field name="active" />
                         <field name="model_id" on_change="onchange_model_id(model_id)" />
                         <label for='filter_id' />
                         <div>
@@ -54,7 +55,7 @@
         </record>
 
         <record model='ir.actions.act_window' id='action_google_drive_users_config'>
-            <field name='name'>Google Drive Templates</field>
+            <field name='name'>Templates</field>
             <field name='res_model'>google.drive.config</field>
             <field name='type'>ir.actions.act_window</field>
             <field name='view_type'>form</field>
@@ -87,7 +88,7 @@
             </field>
         </record>
 
-        <menuitem name='Google Drive configuration' id='menu_google_drive_config' parent='base.menu_administration' />
+        <menuitem name='Google Drive' id='menu_google_drive_config' parent='base.menu_administration' />
         <menuitem id='menu_google_drive_model_config' parent='menu_google_drive_config' action='action_google_drive_users_config' />
     </data>
 </openerp>

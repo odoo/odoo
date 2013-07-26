@@ -12,3 +12,12 @@ Mail Module documentation topics
    mail_partner
    mail_state
    mail_subtype
+
+
+Changelog
+'''''''''
+
+.. toctree::
+   :maxdepth: 1
+
+   changelog.rst
