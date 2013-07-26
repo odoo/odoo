@@ -73,7 +73,7 @@ class mail_compose_message(osv.TransientModel):
         res_id = context.get('default_res_id', context.get('active_id'))
         message_id = context.get('default_parent_id', context.get('message_id', context.get('active_id')))
         active_ids = context.get('active_ids')
-        if context.get('active_domain'):
+        if 'active_domain' in context:  # not context.get() because we want to keep global [] domains
             result['use_active_domain'] = True
             result['active_domain'] = '%s' % context.get('active_domain')
         else:
