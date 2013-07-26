@@ -1407,7 +1407,10 @@ class Export(http.Controller):
         :returns: for each export format, a pair of identifier and printable name
         :rtype: [(str, str)]
         """
-        return ["CSV", "Excel"]
+        return [
+            {'tag': 'csv', 'label': 'CSV'},
+            {'tag': 'xls', 'label': 'Excel', 'error': None if xlwt else "XLWT required"},
+        ]
 
     def fields_get(self, model):
         Model = request.session.model(model)
@@ -1583,7 +1586,6 @@ class ExportFormat(object):
             cookies={'fileToken': token})
 
 class CSVExport(ExportFormat, http.Controller):
-    fmt = {'tag': 'csv', 'label': 'CSV'}
 
     @http.route('/web/export/csv', type='http', auth="user")
     def index(self, data, token):
@@ -1621,11 +1623,6 @@ class CSVExport(ExportFormat, http.Controller):
         return data
 
 class ExcelExport(ExportFormat, http.Controller):
-    fmt = {
-        'tag': 'xls',
-        'label': 'Excel',
-        'error': None if xlwt else "XLWT required"
-    }
 
     @http.route('/web/export/xls', type='http', auth="user")
     def index(self, data, token):
