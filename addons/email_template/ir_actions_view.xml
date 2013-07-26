@@ -29,16 +29,16 @@
                         <group attrs="{'invisible': ['|', ('model_id', '=', False), ('template_id', '=', False)]}">
                             <label for="email_from"/>
                             <div>
-                                <field name="email_from" nolabel="1'"
+                                <field name="email_from" nolabel="1'" readonly="1"
                                         attrs="{'required': [('state', '=', 'email')]}"/>
                                 <p attrs="{'invisible': [('email_from', '!=', False)]}">
                                     Your template does not defined any email_from. Please update your template.
                                 </p>
                             </div>
-                            <field name="email_to"/>
-                            <field name="partner_to"/>
-                            <field name="subject" attrs="{'required': [('state', '=', 'email')]}"/>
-                            <field name="body_html" attrs="{'required': [('state', '=', 'email')]}"/>
+                            <field name="email_to" readonly="1"/>
+                            <field name="partner_to" readonly="1"/>
+                            <field name="subject" readonly="1" attrs="{'required': [('state', '=', 'email')]}"/>
+                            <field name="body_html" readonly="1" attrs="{'required': [('state', '=', 'email')]}"/>
                         </group>
                     </page>
                 </xpath>

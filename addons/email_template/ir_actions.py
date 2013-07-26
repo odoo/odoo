@@ -33,16 +33,16 @@ class actions_server(osv.Model):
         return res
 
     _columns = {
-        'email_from': fields.char('From', readonly=True,
+        'email_from': fields.char('From',
                                   help="Sender address; define the template to see its value. If not set, the default "
                                   "value will be the author's email alias if configured, or email address."),
-        'email_to': fields.char('To (Emails)', readonly=True,
+        'email_to': fields.char('To (Emails)',
                                 help="Comma-separated recipient addresses; define the template to see its value"),
-        'partner_to': fields.char('To (Partners)', readonly=True,
+        'partner_to': fields.char('To (Partners)',
                                   help="Comma-separated ids of recipient partners; define the template to see its value"),
-        'subject': fields.char('Subject', readonly=True,
+        'subject': fields.char('Subject',
                                help="Email subject; define the template to see its value"),
-        'body_html': fields.text('Body', readonly=True,
+        'body_html': fields.text('Body',
                                  help="Rich-text/HTML version of the message; define the template to see its value"),
         'template_id': fields.many2one('email.template', 'Email Template', ondelete='set null',
                                        help="Define the email template to use for the email to send.")
@@ -60,6 +60,20 @@ class actions_server(osv.Model):
             values = self.default_get(cr, uid, ['subject', 'body_html', 'email_from', 'email_to', 'partner_to'], context=context)
 
         return {'value': values}
+
+    def create(self, cr, uid, values, context=None):
+        if values.get('template_id'):
+            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'attachment_ids']
+            template_values = self.pool.get('email.template').read(cr, uid, values.get('template_id'), fields, context)
+            values.update(dict((field, template_values[field]) for field in fields if template_values.get(field)))
+        return super(actions_server, self).create(cr, uid, values, context=context)
+
+    def write(self, cr, uid, ids, values, context=None):
+        if values.get('template_id'):
+            fields = ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'attachment_ids']
+            template_values = self.pool.get('email.template').read(cr, uid, values.get('template_id'), fields, context)
+            values.update(dict((field, template_values[field]) for field in fields if template_values.get(field)))
+        return super(actions_server, self).write(cr, uid, ids, values, context=context)
 
     def run_action_email(self, cr, uid, action, eval_context=None, context=None):
         if not action.template_id or not context.get('active_id'):
