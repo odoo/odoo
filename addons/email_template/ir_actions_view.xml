@@ -35,7 +35,7 @@
                                     Your template does not defined any email_from. Please update your template.
                                 </p>
                             </div>
-                            <field name="email_to" widget="many2many_tags"/>
+                            <field name="email_to"/>
                             <field name="partner_to"/>
                             <field name="subject" attrs="{'required': [('state', '=', 'email')]}"/>
                             <field name="body_html" attrs="{'required': [('state', '=', 'email')]}"/>
