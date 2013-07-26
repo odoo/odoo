@@ -142,8 +142,9 @@ instance.website.RTE = instance.web.Widget.extend({
     },
     start_edition: function ($elements) {
         var self = this;
+        CKEDITOR.on('currentInstance', this.proxy('_change_focused_editor'));
         $elements
-            .not('span')
+            .not('span, [data-oe-type]')
             .each(function () {
                 var $this = $(this);
                 CKEDITOR.inline(this, self._config()).on('change', function () {
@@ -151,7 +152,6 @@ instance.website.RTE = instance.web.Widget.extend({
                     self.trigger('change', this, null);
                 });
             });
-        this.$el.show();
     },
 
     button_for: function (command) {
@@ -172,6 +172,9 @@ instance.website.RTE = instance.web.Widget.extend({
 
     _current_editor: function () {
         return CKEDITOR.currentInstance;
+    },
+    _change_focused_editor: function () {
+        this.$el.toggle(!!CKEDITOR.currentInstance);
     },
     _config: function () {
         return {
