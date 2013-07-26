@@ -14,7 +14,7 @@
             <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="state">email</field>
-            <field name="template_id" ref="email_template_opportunity_mail"/>
+            <field name="template_id" ref="email_template_opportunity_reminder_mail"/>
         </record>
         <record id="rule_set_reminder_lead" model="base.action.rule">
             <field name="name">Set Auto Reminder on leads which are not open since 5 days.</field>

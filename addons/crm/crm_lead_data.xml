@@ -220,6 +220,15 @@
             <field name="email_to">${not object.partner_id and object.email_from}</field>
             <field name="body_html"></field>
         </record>
+        <record id="email_template_opportunity_reminder_mail" model="email.template">
+            <field name="name">Reminder to User</field>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="email_from">admin@example.com</field>
+            <field name="email_to">[${object.user_id and object.user_id.email}]</field>
+            <field name="subject">Reminder</field>
+            <field name="body_html">This opportunity did not have any activity since at least 5 days.</field>
+        </record>
 
     </data>
 </openerp>
