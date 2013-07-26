@@ -25,6 +25,7 @@ def template_values():
         'uid': uid,
         'script': script,
         'css': css,
+        'host_url': request.httprequest.host_url,
     }
     return values
 

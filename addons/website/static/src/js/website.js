@@ -184,13 +184,12 @@ $(function(){
 });
 
 
-/**
- * Client action to go back in global history.
- * If can't go back in history stack, will go back to home.
- */
-instance.web.ActionGoBack = function(parent, action) {
-    window.location.href = document.referrer;
+instance.web.ActionRedirect = function(parent, action) {
+    var url = $.deparam(window.location.href).url;
+    if (url) {
+        window.location.href = url;
+    }
 };
-instance.web.client_actions.add("goback", "instance.web.ActionGoBack");
+instance.web.client_actions.add("redirect", "instance.web.ActionRedirect");
 
 };
