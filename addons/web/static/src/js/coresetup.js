@@ -565,12 +565,10 @@ instance.web._lt = function (s) {
     return {toString: function () { return instance.web._t(s); }};
 };
 instance.web.qweb.debug = instance.session.debug;
-instance.web.qweb.default_dict = {
-    '_' : _,
+_.extend(instance.web.qweb.default_dict, {
     '_t' : instance.web._t,
-    'JSON': JSON,
     '__debug__': instance.session.debug,
-};
+});
 instance.web.qweb.preprocess_node = function() {
     // Note that 'this' is the Qweb Node
     switch (this.node.nodeType) {

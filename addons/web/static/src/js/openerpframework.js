@@ -735,6 +735,11 @@ openerp.web.Widget = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
 
 openerp.web.qweb = new QWeb2.Engine();
 
+openerp.web.qweb.default_dict = {
+    '_' : _,
+    'JSON': JSON,
+};
+
 return openerp;
 };
 
