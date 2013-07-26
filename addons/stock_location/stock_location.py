@@ -143,6 +143,7 @@ class procurement_rule(osv.osv):
         'procure_method': 'make_to_stock',
         'invoice_state': 'none',
         'propagate': True, 
+        'delay': 0, 
     }
 
 
@@ -157,18 +158,16 @@ class procurement_order(osv.osv):
     
     def _run_move_create(self, cr, uid, procurement, context=None):
         d = super(procurement_order, self)._run_move_create(cr, uid, procurement, context=context)
-        if procurement.move_dest_id:
-            date = procurement.move_dest_id.date
-        else:
-            date = procurement.date_planned
-        procure_method = procurement.rule_id and procurement.rule_id.procure_method or 'make_to_stock'
-        newdate = (datetime.strptime(date, '%Y-%m-%d %H:%M:%S') - relativedelta(days=procurement.rule_id.delay or 0)).strftime('%Y-%m-%d %H:%M:%S')
         d.update({
-            'date': newdate,
-            'procure_method': procure_method, 
-            'route_ids': [(4,x.id) for x in procurement.route_ids], 
-            'propagate': procurement.rule_id.propagate, 
+            'route_ids': [(4,x.id) for x in procurement.route_ids],  
         })
+        if procurement.rule_id:
+            newdate = (datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S') - relativedelta(days=procurement.rule_id.delay or 0)).strftime('%Y-%m-%d %H:%M:%S')
+            d.update({
+                'date': newdate,
+                'procure_method': procurement.rule_id.procure_method or 'make_to_stock',  
+                'propagate': procurement.rule_id.propagate, 
+            })
         return d
 
     def _find_suitable_rule(self, cr, uid, procurement, context=None):

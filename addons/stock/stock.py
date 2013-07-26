@@ -446,11 +446,11 @@ class stock_picking(osv.osv):
             * Cancelled: has been cancelled, can't be confirmed anymore"""
         ),
         'min_date': fields.function(get_min_max_date, multi="min_max_date",
-                 store=True, type='datetime', string='Scheduled Time', select=1, help="Scheduled time for the shipment to be processed"),
+                 store={'stock.move': (_get_pickings, ['state'], 20)}, type='datetime', string='Scheduled Time', select=1, help="Scheduled time for the shipment to be processed"),
         'date': fields.datetime('Creation Date', help="Creation date, usually the time of the order.", select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'date_done': fields.datetime('Date of Transfer', help="Date of Completion", states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'max_date': fields.function(get_min_max_date, multi="min_max_date",
-                 store=True, type='datetime', string='Max. Expected Date', select=2),
+                 store={'stock.move': (_get_pickings, ['state'], 20)}, type='datetime', string='Max. Expected Date', select=2),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Internal Moves', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
         'partner_id': fields.many2one('res.partner', 'Partner', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
@@ -1029,86 +1029,40 @@ class stock_move(osv.osv):
         """ Gets default address of partner for destination location
         @return: Address id or False
         """
-        mod_obj = self.pool.get('ir.model.data')
-        picking_type = context.get('picking_type')
         location_id = False
-        if context is None:
-            context = {}
-        if context.get('move_line', []):
-            if context['move_line'][0]:
-                if isinstance(context['move_line'][0], (tuple, list)):
-                    location_id = context['move_line'][0][2] and context['move_line'][0][2].get('location_dest_id',False)
-                else:
-                    move_list = self.pool.get('stock.move').read(cr, uid, context['move_line'][0], ['location_dest_id'])
-                    location_id = move_list and move_list['location_dest_id'][0] or False
-        elif context.get('address_out_id', False):
-            property_out = self.pool.get('res.partner').browse(cr, uid, context['address_out_id'], context).property_stock_customer
-            location_id = property_out and property_out.id or False
-        else:
-            location_xml_id = False
-            if picking_type in ('in', 'internal'):
-                location_xml_id = 'stock_location_stock'
-            elif picking_type == 'out':
-                location_xml_id = 'stock_location_customers'
-            if location_xml_id:
-                location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
-                if location_id:
-                    location_company = self.pool.get("stock.location").browse(cr, uid, location_id, context=context).company_id
-                    user_company = self.pool.get("res.users").browse(cr, uid, uid, context=context).company_id.id
-                    if location_company and location_company.id != user_company:
-                        location_id = False
+        context = context or {}
+        if 'picking_type_id' in context and context['picking_type_id']:
+            pick_type = self.pool.get('stock.picking.type').browse(cr, uid, context['picking_type_id'], context=context)
+            location_id = pick_type.location_dest_id and pick_type.location_dest_id.id or False
         return location_id
 
     def _default_location_source(self, cr, uid, context=None):
         """ Gets default address of partner for source location
         @return: Address id or False
         """
-        mod_obj = self.pool.get('ir.model.data')
-        picking_type = context.get('picking_type')
         location_id = False
-
-        if context is None:
-            context = {}
-        if context.get('move_line', []):
-            try:
-                location_id = context['move_line'][0][2]['location_id']
-            except:
-                pass
-        elif context.get('address_in_id', False):
-            part_obj_add = self.pool.get('res.partner').browse(cr, uid, context['address_in_id'], context=context)
-            if part_obj_add:
-                location_id = part_obj_add.property_stock_supplier.id
-        else:
-            location_xml_id = False
-            if picking_type == 'in':
-                location_xml_id = 'stock_location_suppliers'
-            elif picking_type in ('out', 'internal'):
-                location_xml_id = 'stock_location_stock'
-            if location_xml_id:
-                location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
-                if location_id:
-                    location_company = self.pool.get("stock.location").browse(cr, uid, location_id, context=context).company_id
-                    user_company = self.pool.get("res.users").browse(cr, uid, uid, context=context).company_id.id
-                    if location_company and location_company.id != user_company:
-                        location_id = False
+        context = context or {}
+        if 'picking_type_id' in context and context['picking_type_id']:
+            pick_type = self.pool.get('stock.picking.type').browse(cr, uid, context['picking_type_id'], context=context)
+            location_id = pick_type.location_src_id and pick_type.location_src_id.id or False
         return location_id
 
     def _default_destination_address(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         return user.company_id.partner_id.id
 
-    def _default_move_type(self, cr, uid, context=None):
+    def _default_picking_type(self, cr, uid, context=None):
         """ Gets default type of move
         @return: type
         """
         context = context or {}
-        return context.get('picking_type', 'internal')
+        return context.get('picking_type_id', False)
 
     _defaults = {
         'location_id': _default_location_source,
         'location_dest_id': _default_location_destination,
         'partner_id': _default_destination_address,
-#         'picking_type_id': TODO: will have to depend on context (e.g. by creating from a link from a column in the kanban view 
+        'picking_type_id': _default_picking_type,
         'state': 'draft',
         'priority': '1',
         'product_qty': 1.0,
@@ -2311,6 +2265,8 @@ class stock_picking_type(osv.osv):
         'pack': fields.boolean('Pack', 'This picking type needs packing interface'), 
         'delivery': fields.boolean('Print delivery'),
         'sequence_id': fields.many2one('ir.sequence', 'Sequence', required = True),
+        'default_location_src_id': fields.many2one('stock.location', 'Default Source Location'), 
+        'default_location_dest_id': fields.many2one('stock.location', 'Default Destination Location'),
             }
     
 

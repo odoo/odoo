@@ -69,6 +69,7 @@ class procurement_order(osv.osv):
             'company_id': procurement.company_id.id,
             'product_id': procurement.product_id.id,
             'date': procurement.date_planned,
+            'date_expected': procurement.date_planned,
             'product_qty': procurement.product_qty,
             'product_uom': procurement.product_uom.id,
             'product_uom_qty': procurement.product_qty,
