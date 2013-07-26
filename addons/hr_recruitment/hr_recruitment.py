@@ -94,6 +94,7 @@ class hr_applicant(base_stage, osv.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _track = {
         'state': {
+            'hr_recruitment.mt_applicant_new': lambda self, cr, uid, obj, ctx=None: obj.state == 'draft',
             'hr_recruitment.mt_applicant_hired': lambda self, cr, uid, obj, ctx=None: obj.state == 'done',
             'hr_recruitment.mt_applicant_refused': lambda self, cr, uid, obj, ctx=None: obj.state == 'cancel',
         },
@@ -407,9 +408,6 @@ class hr_applicant(base_stage, osv.Model):
             context['default_department_id'] = vals.get('department_id')
 
         obj_id = super(hr_applicant, self).create(cr, uid, vals, context=context)
-        applicant = self.browse(cr, uid, obj_id, context=context)
-        if applicant.job_id:
-            self.pool.get('hr.job').message_post(cr, uid, [applicant.job_id.id], body=_('Applicant <b>created</b>'), subtype="hr_recruitment.mt_job_new_applicant", context=context)
         return obj_id
 
     def case_open(self, cr, uid, ids, context=None):

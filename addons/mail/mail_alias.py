@@ -240,6 +240,15 @@ class mail_alias(osv.Model):
             vals['alias_parent_model_id'] = model_id
         return super(mail_alias, self).create(cr, uid, vals, context=context)
 
+    def write(self, cr, uid, ids, vals, context=None):
+        """"give uniqe alias name if given alias name is allready assigned"""
+        if vals.get('alias_name'):
+            alias_name = remove_accents(vals['alias_name']).lower().split('@')[0]
+            alias_name = re.sub(r'[^\w+.]+', '-', alias_name)
+            alias_name = self._find_unique(cr, uid, alias_name, context=context)
+            vals['alias_name'] = alias_name
+        write_res = super(mail_alias, self).write(cr, uid, ids, vals, context=context)
+
     def open_document(self, cr, uid, ids, context=None):
         alias = self.browse(cr, uid, ids, context=context)[0]
         if not alias.alias_model_id or not alias.alias_force_thread_id:
