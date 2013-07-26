@@ -222,7 +222,7 @@ class TestAPI(common.TransactionCase):
             self.assertEqual(scope.uid, self.uid)
 
             with self.assertRaises(Exception):
-                with scope(user, lang=user.lang) as scope2:
+                with scope(user=user, lang=user.lang) as scope2:
                     self.assertNotEqual(scope.current, scope1)
                     self.assertEqual(scope.cr, self.cr)
                     self.assertEqual(scope.user, user)
@@ -268,7 +268,7 @@ class TestAPI(common.TransactionCase):
         # create a scope with the demo user
         demo = self.Users.search([('login', '=', 'demo')])[0]
 
-        with scope(demo) as inner_scope:
+        with scope(user=demo) as inner_scope:
             self.assertNotEqual(inner_scope, outer_scope)
 
             # partners and related records are still attached to outer_scope

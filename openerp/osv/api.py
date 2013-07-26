@@ -353,8 +353,7 @@ def cr(method):
             return method(self, cr, *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = scope
-        value = method(self, cr, *args, **kwargs)
+        value = method(self, scope.cr, *args, **kwargs)
         return convert(self, value)
 
     return _make_wrapper(method, old_api, new_api)
@@ -370,7 +369,7 @@ def cr_context(method):
             return method(self, cr, *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = scope
+        cr, _uid, context = scope.args
         kwargs = dict(kwargs, context=context)
         value = method(self, cr, *args, **kwargs)
         return convert(self, value)
@@ -388,7 +387,7 @@ def cr_uid(method):
             return method(self, cr, uid, *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = scope
+        cr, uid, _context = scope.args
         value = method(self, cr, uid, *args, **kwargs)
         return convert(self, value)
 
@@ -411,7 +410,7 @@ def cr_uid_context(method):
             return method(self, cr, uid, *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = scope
+        cr, uid, context = scope.args
         kwargs = dict(kwargs, context=context)
         value = method(self, cr, uid, *args, **kwargs)
         return convert(self, value)
@@ -432,7 +431,7 @@ def cr_uid_id(method):
             return method(self, cr, uid, id, *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = scope
+        cr, uid, _context = scope.args
         value = [method(self, cr, uid, id, *args, **kwargs) for id in self._ids]
         return convert(self, value)
 
@@ -463,7 +462,7 @@ def cr_uid_id_context(method):
             return method(self, cr, uid, id, *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = scope
+        cr, uid, context = scope.args
         kwargs = dict(kwargs, context=context)
         value = [method(self, cr, uid, id, *args, **kwargs) for id in self._ids]
         return convert(self, value)
@@ -484,7 +483,7 @@ def cr_uid_ids(method):
             return method(self, cr, uid, ids, *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = scope
+        cr, uid, _context = scope.args
         value = method(self, cr, uid, self.unbrowse(), *args, **kwargs)
         return convert(self, value)
 
@@ -517,7 +516,7 @@ def cr_uid_ids_context(method):
             return method(self, cr, uid, ids, *args, **kwargs)
 
     def new_api(self, *args, **kwargs):
-        cr, uid, context = scope
+        cr, uid, context = scope.args
         kwargs = dict(kwargs, context=context)
         value = method(self, cr, uid, self.unbrowse(), *args, **kwargs)
         return convert(self, value)

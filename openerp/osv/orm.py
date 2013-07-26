@@ -1356,7 +1356,7 @@ class BaseModel(object):
             ``self[name] = value``.
         """
         assert self.is_draft(), "Expected draft record: %s" % self
-        cr, uid, context = scope_proxy
+        cr, uid, context = scope_proxy.args
         field = self._fields[name]
 
         # 1. look up context

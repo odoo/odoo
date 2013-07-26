@@ -167,7 +167,7 @@ class TestNewFields(common.TransactionCase):
         self.assertEqual(alpha1._scope, outer_scope)
         self.assertEqual(beta._scope, outer_scope)
 
-        with scope(demo) as inner_scope:
+        with scope(user=demo) as inner_scope:
             self.assertNotEqual(inner_scope, outer_scope)
 
             # assign alpha1's parent to a record in inner scope

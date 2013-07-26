@@ -37,8 +37,7 @@ def _invoke_model(func, model):
     try:
         return func(model)
     except TypeError:
-        cr, uid, context = scope
-        return func(model, cr, uid, context=context)
+        return func(model, *scope.args)
 
 
 class MetaField(type):

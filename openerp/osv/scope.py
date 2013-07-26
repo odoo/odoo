@@ -63,14 +63,9 @@ class ScopeProxy(object):
     def __getattr__(self, name):
         return getattr(self.current, name)
 
-    def __iter__(self):
-        return iter(self.current)
-
     def __call__(self, *args, **kwargs):
-        if self.current:
-            return self.current(*args, **kwargs)
-        else:
-            return Scope(*args, **kwargs)
+        # apply current scope or instantiate one
+        return (self.current or Scope)(*args, **kwargs)
 
     def invalidate(self, model, field, ids=None):
         """ Invalidate a field for the given record ids in the caches. """
@@ -111,39 +106,41 @@ class Scope(object):
             with Scope(cr, uid, context):
                 # statements execute in given scope
 
-                # iterating over a scope returns cr, uid, context
-                cr, uid, context = scope
+                # retrieve environment data
+                cr, uid, context = scope.args
 
         The scope provides extra attributes:
 
          - :attr:`registry`, the model registry of the current database,
-         - :attr:`cache`, a records cache (see :class:`Cache`).
+         - :attr:`cache`, a records cache (see :class:`openerp.osv.cache.Cache`).
     """
     def __new__(cls, cr, uid, context):
-        args = (cr, int(uid), context if context is not None else {})
+        if context is None:
+            context = {}
+        args = (cr, uid, context)
+
         # get the list of all scopes in the current context
         scope_list = getattr(_local, 'scope_list', None)
         if scope_list is None:
             _local.scope_list = scope_list = []
-        # if scope already exists, return it
-        for obj in scope_list:
-            if obj == args:
-                return obj
-        # otherwise create scope, and add it in the list
-        obj = object.__new__(cls)
-        obj.cr, obj.uid, obj.context = args
-        obj.registry = RegistryManager.get(cr.dbname)
-        obj.cache = Cache()
-        scope_list.append(obj)
-        return obj
 
-    def __iter__(self):
-        yield self.cr
-        yield self.uid
-        yield self.context
+        # if scope already exists, return it
+        for scope in scope_list:
+            if scope.args == args:
+                return scope
+
+        # otherwise create scope, and add it in the list
+        scope = object.__new__(cls)
+        scope.cr, scope.uid, scope.context = scope.args = args
+        scope.registry = RegistryManager.get(cr.dbname)
+        scope.cache = Cache()
+        scope_list.append(scope)
+        return scope
 
     def __eq__(self, other):
-        return isinstance(other, (Scope, tuple)) and tuple(self) == tuple(other)
+        if isinstance(other, Scope):
+            other = other.args
+        return self.args == tuple(other)
 
     def __ne__(self, other):
         return not self == other
@@ -155,34 +152,35 @@ class Scope(object):
     def __exit__(self, exc_type, exc_value, traceback):
         proxy.pop()
 
-    def __call__(self, *args, **kwargs):
+    def __call__(self, cr=None, user=None, context=(), **kwargs):
         """ Return a scope based on `self` with modified parameters.
 
-            :param args: contains a database cursor to change the current
-                cursor, a user id or record to change the current user, a
-                context dictionary to change the current context
+            :param cr: optional database cursor to change the current cursor
+            :param user: optional user/user id to change the current user
+            :param context: optional context dictionary to change the current context
             :param kwargs: a set of key-value pairs to update the context
         """
-        cr, uid, context = self
-        for arg in args:
-            if arg is None:
-                context = {}
-            elif isinstance(arg, dict):
-                context = arg
-            elif isinstance(arg, (int, long)):
-                uid = arg
-            elif isinstance(arg, BaseModel) and arg._name == 'res.users':
-                uid = arg.id
-            elif isinstance(arg, Cursor):
-                cr = arg
-            else:
-                raise Exception("Unexpected argument: %r", arg)
+        # determine cr, uid, context
+        if cr is None:
+            cr = self.cr
+
+        if user is None:
+            uid = self.user
+        elif isinstance(user, BaseModel):
+            assert user._name == 'res.users'
+            uid = user.id
+        else:
+            uid = user
+
+        if context == ():
+            context = self.context
         context = dict(context, **kwargs)
+
         return Scope(cr, uid, context)
 
     def SUDO(self):
         """ Return a scope based on `self`, with the superuser. """
-        return self(SUPERUSER_ID)
+        return self(user=SUPERUSER_ID)
 
     def model(self, model_name):
         """ return a given model """
@@ -318,5 +316,4 @@ class Recomputation(object):
 # keep those imports here in order to handle cyclic dependencies correctly
 from openerp import SUPERUSER_ID
 from openerp.osv.orm import BaseModel
-from openerp.sql_db import Cursor
 from openerp.modules.registry import RegistryManager
