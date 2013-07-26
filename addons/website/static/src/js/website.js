@@ -38,7 +38,12 @@ instance.website.EditorBar = instance.web.Widget.extend({
     edit: function () {
         this.$buttons.edit.prop('disabled', true);
         this.$buttons.cancel.prop('disabled', false);
-        this.rte.start_edition($('[data-oe-model]').addClass('oe_editable'));
+        // TODO: span edition changing edition state (save button)
+        this.rte.start_edition(
+                $('[data-oe-model]')
+                    .not('link, script')
+                    .prop('contentEditable', true)
+                    .addClass('oe_editable'));
     },
     rte_changed: function () {
         this.$buttons.save.prop('disabled', false);
@@ -138,8 +143,7 @@ instance.website.RTE = instance.web.Widget.extend({
     start_edition: function ($elements) {
         var self = this;
         $elements
-            .not('link, script, span')
-            .prop('contentEditable', true)
+            .not('span')
             .each(function () {
                 var $this = $(this);
                 CKEDITOR.inline(this, self._config()).on('change', function () {
