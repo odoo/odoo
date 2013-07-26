@@ -13,30 +13,20 @@ class website_mail(website):
         mail_group_obj = request.registry['mail.group']
         message_obj = request.registry['mail.message']
 
-        domain = [("subject", "!=", False), ("parent_id", "=", False)]
-
-        if blog_id and not message_obj.search(cr, uid, [("id", "=", blog_id)] + domain):
-            blog_id = None
-        else:
-            blog_domain = [("parent_id", "=", blog_id)]
-
-        domain += [("id", "in", message_obj.search(cr, uid,
-            mail_group_id and [("res_id", "=", mail_group_id), ("model", "=", 'mail.group')] or [("model", "=", 'mail.group')]))]
-
         values = {
             'res_company': request.registry['res.company'].browse(cr, uid, 1),
-            'blog_ids': not blog_id and message_obj.browse(cr, uid,
-                    message_obj.search(cr, uid, domain, order="create_date desc", limit=20)) or None,
-            'popular_ids': message_obj.browse(cr, uid,
-                    message_obj.search(cr, uid, domain, order="child_ids desc", limit=5)),
-            'recent_ids': message_obj.browse(cr, uid,
-                    message_obj.search(cr, uid, domain, order="create_date desc", limit=5)),
-            'last_ids': message_obj.browse(cr, uid,
-                    message_obj.search(cr, uid, domain, order="write_date desc", limit=5)),
-            'blog_id': blog_id and message_obj.browse(cr, uid, blog_id) or None,
-            'blog_message_ids': blog_id and message_obj.browse(cr, uid,
-                    message_obj.search(cr, uid, blog_domain, order="create_date asc", limit=20)) or None,
+            'blog_ids': None,
+            'blog_id': None,
         }
+        if not blog_id:
+            message_ids = mail_group_obj.get_public_message_ids(cr, uid, domain=mail_group_id and [("res_id", "=", mail_group_id)] or [])
+            if message_ids:
+                values['blog_ids'] = message_obj.browse(cr, uid, message_ids)
+        else:
+            values['blog_id'] = message_obj.browse(cr, uid, blog_id)
+
+        print values
+
         html = self.render(cr, uid, "website_mail.index", values)
         return html
 

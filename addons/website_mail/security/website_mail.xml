@@ -16,16 +16,5 @@
         <field name="perm_create" eval="False"/>
         <field name="perm_unlink" eval="False"/>
     </record>
-
-    <record id="website_mail_public_post" model="ir.rule">
-        <field name="name">website_mail: Public post message</field>
-        <field name="model_id" ref="model_mail_message"/>
-        <field name="domain_force">[('website_published', '=', True), ("model", "=", 'mail.group')]</field>
-        <field name="groups" eval="[(4, ref('group_website_mail_reply'))]"/>
-        <field name="perm_read" eval="True"/>
-        <field name="perm_write" eval="False"/>
-        <field name="perm_create" eval="True"/>
-        <field name="perm_unlink" eval="False"/>
-    </record>
 </data>
 </openerp>

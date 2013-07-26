@@ -30,18 +30,8 @@
                 <div class="row">
                     <div class="span4">
                         <ul class="nav nav-list">
-                            <li class="nav-header">Most Popular</li>
-                            <t t-foreach="popular_ids or []" t-as="blog">
-                                <li><a t-att-href="'/blog/%%s/%%s' %% (blog.res_id, blog.id)"><t t-esc="blog.subject"/> </a></li>
-                            </t>
-                            <li class="nav-header">Recent</li>
-                            <t t-foreach="recent_ids or []" t-as="blog">
-                                <li><a t-att-href="'/blog/%%s/%%s' %% (blog.res_id, blog.id)"><t t-esc="blog.subject"/> </a></li>
-                            </t>
-                            <li class="nav-header">Last Commit</li>
-                            <t t-foreach="last_ids or []" t-as="blog">
-                                <li><a t-att-href="'/blog/%%s/%%s' %% (blog.res_id, blog.id)"><t t-esc="blog.subject"/> </a></li>
-                            </t>
+                            <li class="nav-header">BLOG ARCHIVE</li>
+                            <li><a t-att-href="'/blog/%%s/%%s' %% (blog_id.res_id, blog_id.id)"><t t-esc="blog_id.subject"/> </a></li>
                         </ul>
                     </div>
                     <div class="span8" t-if="blog_id">
@@ -59,7 +49,7 @@
                                 </small>
                             </div>
                             <ul class="media-list">
-                                <t t-foreach="blog_message_ids or []" t-as="mail">
+                                <t t-foreach="blog_id.child_ids" t-as="mail">
                                     <li class="media well well-small">
                                         <div t-att-class="'media-body %%s' %% (mail.website_published and 'css_published' or '')">
                                             <a href="#" title="Click to publish or unpublish this message" t-att-data-id="mail.id" class="js_publish css_button_publish" groups="group_website_mail_manager">
@@ -105,9 +95,9 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="span8" t-if="not blog_id">
+                    <div class="span8" t-if="blog_ids">
                         <ul class="media-list">
-                            <t t-foreach="blog_ids or []" t-as="blog">
+                            <t t-foreach="blog_ids" t-as="blog">
                                 <li class="media well">
                                     <div class="media-body">
                                         <h4 class="media-heading"><t t-esc="blog.subject"/></h4>
