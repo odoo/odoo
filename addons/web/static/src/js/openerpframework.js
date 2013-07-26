@@ -766,6 +766,8 @@ openerp.web.qweb.default_dict = {
     'JSON': JSON,
 };
 
+openerp.declare = declare;
+
 return openerp;
 };
 
