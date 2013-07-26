@@ -1,10 +1,10 @@
 <openerp>
     <data>
         <record id="action_dummy" model="ir.actions.server">
-            <field name="name">Dummy Action</field>
+            <field name="name">Dummy Python Code</field>
             <field name="model_id" ref="crm.model_crm_lead"/>
-            <field name="state">dummy</field>
-            <field name="code"/>
+            <field name="state">code</field>
+            <field name="code">True</field>
             <field eval="5" name="sequence"/>
             <field eval="True" name="condition"/>
         </record>
