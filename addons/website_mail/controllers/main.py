@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import openerp
 from openerp.addons.web.http import request
 from openerp.addons.website import website
 import werkzeug
@@ -52,23 +53,22 @@ class website_mail(website):
 
     @website.route(['/blog/<int:mail_group_id>/<int:blog_id>/post'], type='http', auth="admin")
     def message_post(self, cr, uid, mail_group_id=None, blog_id=None, **post):
-        message_obj = request.registry['mail.message']
-        partner_obj = request.registry['res.partner']
-
-        blog = message_obj.browse(cr, uid, blog_id)
-        if blog.website_published and post.get('body') and post.get('name') and post.get('email') and post.get('email').index('@') > 0:
-            partner_ids = partner_obj.search(cr, uid, [('email', '=', post.get('email'))])
-            if partner_ids:
-                author_id = partner_ids[0]
+        if post.get('body') and post.get('name') and post.get('email') and post.get('email').index('@') > 0:
+            if self.isloggued():
+                author_id = request.registry['res.users'].browse(cr, uid, uid).partner_id.id
             else:
-                author_id = partner_obj.create(cr, uid, {'name': post.get('name'), 'email': post.get('email')})
+                partner_obj = request.registry['res.partner']
+                partner_ids = partner_obj.search(cr, uid, [('name', '=', post.get('name')), ('email', '=', post.get('email'))])
+                if partner_ids:
+                    author_id = partner_ids[0]
+                else:
+                    author_id = partner_obj.create(cr, openerp.SUPERUSER_ID, {'name': post.get('name'), 'email': post.get('email')})
 
-            values = {
-                'body': post.get('body'),
-                'parent_id': blog.id,
-                'author_id': author_id,
-                'website_published': True,
-            }
-            message_obj.create(cr, uid, values)
+            request.registry['mail.group'].message_post(cr, uid, mail_group_id,
+                    body=post.get('body'),
+                    parent_id=blog_id,
+                    author_id=author_id,
+                    website_published= blog_id and True or False
+                )
 
         return werkzeug.utils.redirect("/blog/%s/%s" % (mail_group_id, blog_id))
