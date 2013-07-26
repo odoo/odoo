@@ -7,8 +7,8 @@ var openerp = ropenerp.declare($, _, QWeb2);
 ropenerp.testing.section('class', {
     dependencies: ['web.corelib']
 }, function (test) {
-    test('Basic class creation', function (instance) {
-        var C = instance.web.Class.extend({
+    test('Basic class creation', function () {
+        var C = openerp.web.Class.extend({
             foo: function () {
                 return this.somevar;
             }
@@ -19,13 +19,13 @@ ropenerp.testing.section('class', {
         ok(i instanceof C);
         strictEqual(i.foo(), 3);
     });
-    test('Class initialization', function (instance) {
-        var C1 = instance.web.Class.extend({
+    test('Class initialization', function () {
+        var C1 = openerp.web.Class.extend({
             init: function () {
                 this.foo = 3;
             }
         });
-        var C2 = instance.web.Class.extend({
+        var C2 = openerp.web.Class.extend({
             init: function (arg) {
                 this.foo = arg;
             }
@@ -37,8 +37,8 @@ ropenerp.testing.section('class', {
         strictEqual(i1.foo, 3);
         strictEqual(i2.foo, 42);
     });
-    test('Inheritance', function (instance) {
-        var C0 = instance.web.Class.extend({
+    test('Inheritance', function () {
+        var C0 = openerp.web.Class.extend({
             foo: function () {
                 return 1;
             }
@@ -58,8 +58,8 @@ ropenerp.testing.section('class', {
         strictEqual(new C1().foo(), 2);
         strictEqual(new C2().foo(), 3);
     });
-    test('In-place extension', function (instance) {
-        var C0 = instance.web.Class.extend({
+    test('In-place extension', function () {
+        var C0 = openerp.web.Class.extend({
             foo: function () {
                 return 3;
             },
@@ -84,8 +84,8 @@ ropenerp.testing.section('class', {
         strictEqual(new C0().foo(), 5);
         strictEqual(new C0().qux(), 5);
     });
-    test('In-place extension and inheritance', function (instance) {
-        var C0 = instance.web.Class.extend({
+    test('In-place extension and inheritance', function () {
+        var C0 = openerp.web.Class.extend({
             foo: function () { return 1; },
             bar: function () { return 1; }
         });
@@ -102,8 +102,8 @@ ropenerp.testing.section('class', {
         strictEqual(new C1().foo(), 4);
         strictEqual(new C1().bar(), 2);
     });
-    test('In-place extensions alter existing instances', function (instance) {
-        var C0 = instance.web.Class.extend({
+    test('In-place extensions alter existing instances', function () {
+        var C0 = openerp.web.Class.extend({
             foo: function () { return 1; },
             bar: function () { return 1; }
         });
@@ -118,8 +118,8 @@ ropenerp.testing.section('class', {
         strictEqual(i.foo(), 2);
         strictEqual(i.bar(), 3);
     });
-    test('In-place extension of subclassed types', function (instance) {
-        var C0 = instance.web.Class.extend({
+    test('In-place extension of subclassed types', function () {
+        var C0 = openerp.web.Class.extend({
             foo: function () { return 1; },
             bar: function () { return 1; }
         });
