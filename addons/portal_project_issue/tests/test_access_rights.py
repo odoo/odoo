@@ -95,7 +95,7 @@ class TestPortalIssueProject(TestPortalProject):
         self.assertRaises(except_orm, self.project_issue.write,
             cr, self.user_chell_id, issue_ids, {'description': 'TestDescription'})
 
-        # Do: Donovan reads project -> ok (anonymous ok public)
+        # Do: Donovan reads project -> ok (public ok public)
         # Test: all project issues visible
         issue_ids = self.project_issue.search(cr, self.user_donovan_id, [('project_id', '=', pigs_id)])
         self.assertEqual(set(issue_ids), test_issue_ids,

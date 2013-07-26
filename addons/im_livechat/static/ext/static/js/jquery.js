@@ -580,7 +580,7 @@ jQuery.extend({
     globalEval: function( data ) {
         if ( data && jQuery.trim( data ) ) {
             // We use execScript on Internet Explorer
-            // We use an anonymous function so that context is window
+            // We use an public function so that context is window
             // rather than jQuery in Firefox
             ( window.execScript || function( data ) {
                 window[ "eval" ].call( window, data );
@@ -9542,7 +9542,7 @@ window.jQuery = window.$ = jQuery;
 // they have special allowances for multiple jQuery versions by
 // specifying define.amd.jQuery = true. Register as a named module,
 // since jQuery can be concatenated with other files that may use define,
-// but not use a proper concatenation script that understands anonymous
+// but not use a proper concatenation script that understands public
 // AMD modules. A named AMD is safest and most robust way to register.
 // Lowercase jquery is used because AMD module names are derived from
 // file names, and jQuery is normally delivered in a lowercase file name.

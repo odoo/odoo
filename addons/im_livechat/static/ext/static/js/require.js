@@ -1029,7 +1029,7 @@ var requirejs, require, define;
                         //resource
                         this.depMaps.push(moduleMap);
 
-                        //Support anonymous modules.
+                        //Support public modules.
                         context.completeLoad(moduleName);
 
                         //Bind the value of that module to the value for this
@@ -1188,7 +1188,7 @@ var requirejs, require, define;
             while (defQueue.length) {
                 args = defQueue.shift();
                 if (args[0] === null) {
-                    return onError(makeError('mismatch', 'Mismatched anonymous define() module: ' + args[args.length - 1]));
+                    return onError(makeError('mismatch', 'Mismatched public define() module: ' + args[args.length - 1]));
                 } else {
                     //args are id, deps, factory. Should be normalized by the
                     //define() function.
@@ -1476,7 +1476,7 @@ var requirejs, require, define;
                     args = defQueue.shift();
                     if (args[0] === null) {
                         args[0] = moduleName;
-                        //If already found an anonymous module and bound it
+                        //If already found an public module and bound it
                         //to this name, then this is some other anon module
                         //waiting for its completeLoad to fire.
                         if (found) {
@@ -1802,7 +1802,7 @@ var requirejs, require, define;
                     !isOpera) {
                 //Probably IE. IE (at least 6-8) do not fire
                 //script onload right after executing the script, so
-                //we cannot tie the anonymous define call to a name.
+                //we cannot tie the public define call to a name.
                 //However, IE reports the script as being in 'interactive'
                 //readyState at the time of the define call.
                 useInteractive = true;
@@ -1826,7 +1826,7 @@ var requirejs, require, define;
             node.src = url;
 
             //For some cache cases in IE 6-8, the script executes before the end
-            //of the appendChild execution, so to tie an anonymous define
+            //of the appendChild execution, so to tie an public define
             //call to the module name (which is stored on the node), hold on
             //to a reference to this node, but clear after the DOM insertion.
             currentlyAddingScript = node;
@@ -1847,7 +1847,7 @@ var requirejs, require, define;
             //reevaluated if other use cases become common.
             importScripts(url);
 
-            //Account for anonymous modules
+            //Account for public modules
             context.completeLoad(moduleName);
         }
     };
@@ -1914,7 +1914,7 @@ var requirejs, require, define;
     define = function (name, deps, callback) {
         var node, context;
 
-        //Allow for anonymous modules
+        //Allow for public modules
         if (typeof name !== 'string') {
             //Adjust args appropriately
             callback = deps;
@@ -1951,7 +1951,7 @@ var requirejs, require, define;
             }
         }
 
-        //If in IE 6-8 and hit an anonymous define() call, do the interactive
+        //If in IE 6-8 and hit an public define() call, do the interactive
         //work.
         if (useInteractive) {
             node = currentlyAddingScript || getInteractiveScript();
@@ -1965,7 +1965,7 @@ var requirejs, require, define;
 
         //Always save off evaluating the def call until the script onload handler.
         //This allows multiple modules to be in a file without prematurely
-        //tracing dependencies, and allows for anonymous module support,
+        //tracing dependencies, and allows for public module support,
         //where the module name is not known until the script onload event
         //occurs. If no context, use the global queue, and get it processed
         //in the onscript load callback.

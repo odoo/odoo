@@ -43,7 +43,7 @@ class LiveChatController(http.Controller):
         db = p["db"]
         channel = p["channel"]
         user_name = p.get("user_name", None)
-        request.session.authenticate(db=db, login="anonymous", password="anonymous")
+        request.session.authenticate(db=db, login="public", password="public")
         info = request.session.model('im_livechat.channel').get_info_for_chat_src(channel)
         info["db"] = db
         info["channel"] = channel
@@ -56,7 +56,7 @@ class LiveChatController(http.Controller):
         p = json.loads(kwargs["p"])
         db = p["db"]
         channel = p["channel"]
-        request.session.authenticate(db=db, login="anonymous", password="anonymous")
+        request.session.authenticate(db=db, login="public", password="public")
         script = request.session.model('im_livechat.channel').read(channel, ["script"])["script"]
         info = request.session.model('im_livechat.channel').get_info_for_chat_src(channel)
         info["script"] = script
@@ -65,7 +65,7 @@ class LiveChatController(http.Controller):
 
     @http.route('/im_livechat/available', type='json')
     def available(self, db, channel):
-        request.session.authenticate(db=db, login="anonymous", password="anonymous")
+        request.session.authenticate(db=db, login="public", password="public")
         return request.session.model('im_livechat.channel').get_available_user(channel) > 0
 
 class im_livechat_channel(osv.osv):

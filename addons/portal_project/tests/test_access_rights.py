@@ -52,9 +52,9 @@ class TestPortalProject(common.TransactionCase):
         group_portal_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'portal', 'group_portal')
         self.group_portal_id = group_portal_ref and group_portal_ref[1] or False
 
-        # Find Anonymous group
-        group_anonymous_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'portal', 'group_anonymous')
-        self.group_anonymous_id = group_anonymous_ref and group_anonymous_ref[1] or False
+        # Find Public group
+        group_public_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'base', 'group_public')
+        self.group_public_id = group_public_ref and group_public_ref[1] or False
 
         # Test users to use through the various tests
         self.user_alfred_id = self.res_users.create(cr, uid, {
@@ -76,10 +76,10 @@ class TestPortalProject(common.TransactionCase):
                         'groups_id': [(6, 0, [self.group_portal_id])]
                     })
         self.user_donovan_id = self.res_users.create(cr, uid, {
-                        'name': 'Donovan Anonymous',
+                        'name': 'Donovan Public',
                         'login': 'donovan',
                         'alias_name': 'donovan',
-                        'groups_id': [(6, 0, [self.group_anonymous_id])]
+                        'groups_id': [(6, 0, [self.group_public_id])]
                     })
         self.user_ernest_id = self.res_users.create(cr, uid, {
                         'name': 'Ernest Manager',
@@ -158,12 +158,12 @@ class TestPortalProject(common.TransactionCase):
         self.assertRaises(except_orm, self.project_task.write,
             cr, self.user_chell_id, task_ids, {'description': 'TestDescription'})
 
-        # Do: Donovan reads project -> ok (anonymous ok public)
+        # Do: Donovan reads project -> ok (public ok public)
         self.project_project.read(cr, self.user_donovan_id, pigs_id, ['name'])
         # Test: all project tasks visible
         task_ids = self.project_task.search(cr, self.user_donovan_id, [('project_id', '=', pigs_id)])
         self.assertEqual(set(task_ids), test_task_ids,
-                        'access rights: anonymous user cannot see all tasks of a public project')
+                        'access rights: public user cannot see all tasks of a public project')
         # Test: all project tasks readable
         self.project_task.read(cr, self.user_donovan_id, task_ids, ['name'])
         # Test: no project task writable
@@ -200,12 +200,12 @@ class TestPortalProject(common.TransactionCase):
         self.assertEqual(set(task_ids), test_task_ids,
                         'access rights: portal user should see the followed tasks of a portal project')
 
-        # Do: Donovan reads project -> ko (anonymous ko portal)
+        # Do: Donovan reads project -> ko (public ko portal)
         self.assertRaises(except_orm, self.project_project.read,
             cr, self.user_donovan_id, pigs_id, ['name'])
         # Test: no project task visible
         task_ids = self.project_task.search(cr, self.user_donovan_id, [('project_id', '=', pigs_id)])
-        self.assertFalse(task_ids, 'access rights: anonymous user should not see tasks of a portal project')
+        self.assertFalse(task_ids, 'access rights: public user should not see tasks of a portal project')
 
         # Data: task follower cleaning
         self.project_task.message_unsubscribe_users(cr, self.user_alfred_id, [self.task_1_id, self.task_3_id], [self.user_chell_id])
@@ -234,12 +234,12 @@ class TestPortalProject(common.TransactionCase):
         task_ids = self.project_task.search(cr, self.user_chell_id, [('project_id', '=', pigs_id)])
         self.assertFalse(task_ids, 'access rights: portal user should not see tasks of an employees project, even if assigned')
 
-        # Do: Donovan reads project -> ko (anonymous ko employee)
+        # Do: Donovan reads project -> ko (public ko employee)
         self.assertRaises(except_orm, self.project_project.read,
             cr, self.user_donovan_id, pigs_id, ['name'])
         # Test: no project task visible
         task_ids = self.project_task.search(cr, self.user_donovan_id, [('project_id', '=', pigs_id)])
-        self.assertFalse(task_ids, 'access rights: anonymous user should not see tasks of an employees project')
+        self.assertFalse(task_ids, 'access rights: public user should not see tasks of an employees project')
 
         # ----------------------------------------
         # CASE4: followers project
@@ -268,12 +268,12 @@ class TestPortalProject(common.TransactionCase):
         self.assertEqual(set(task_ids), test_task_ids,
                         'access rights: portal user should not see tasks of a not-followed followers project, only assigned')
 
-        # Do: Donovan reads project -> ko (anonymous ko employee)
+        # Do: Donovan reads project -> ko (public ko employee)
         self.assertRaises(except_orm, self.project_project.read,
             cr, self.user_donovan_id, pigs_id, ['name'])
         # Test: no project task visible
         task_ids = self.project_task.search(cr, self.user_donovan_id, [('project_id', '=', pigs_id)])
-        self.assertFalse(task_ids, 'access rights: anonymous user should not see tasks of a followers project')
+        self.assertFalse(task_ids, 'access rights: public user should not see tasks of a followers project')
 
         # Data: subscribe Alfred, Chell and Donovan as follower
         self.project_project.message_subscribe_users(cr, uid, [pigs_id], [self.user_alfred_id, self.user_chell_id, self.user_donovan_id])
@@ -295,6 +295,6 @@ class TestPortalProject(common.TransactionCase):
         self.assertEqual(set(task_ids), test_task_ids,
                         'access rights: employee user should not see followed + assigned tasks of a follower project')
 
-        # Do: Donovan reads project -> ko (anonymous ko follower even if follower)
+        # Do: Donovan reads project -> ko (public ko follower even if follower)
         self.assertRaises(except_orm, self.project_project.read,
             cr, self.user_donovan_id, pigs_id, ['name'])

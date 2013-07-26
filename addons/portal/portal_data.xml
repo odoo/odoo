@@ -76,16 +76,6 @@
             </field>
         </record>
 
-        <!--
-            A group dedicated to the anonymous user only, making groups
-            restrictions more convenient.
-        -->
-        <record id="group_anonymous" model="res.groups">
-            <field name="name">Anonymous</field>
-            <field name="comment">Anonymous users have specific access rights (such as record rules and restricted menus).
-                They usually do not belong to the usual OpenERP groups.</field>
-        </record>
-
         <record id="paypal_acquirer" model="portal.payment.acquirer">
             <field name="name">Paypal</field>
             <field name="form_template"><![CDATA[
