@@ -45,6 +45,7 @@ class project_issue(osv.Model):
     _order = "priority, create_date desc"
     _inherit = ['mail.thread', 'ir.needaction_mixin']
 
+    _mail_post_access = 'read'
     _track = {
         'stage_id': {
             'project_issue.mt_issue_new': lambda self, cr, uid, obj, ctx=None: obj.stage_id and obj.stage_id.sequence == 1,
@@ -476,17 +477,6 @@ class project_issue(osv.Model):
         """ Override to get the reply_to of the parent project. """
         return [issue.project_id.message_get_reply_to()[0] if issue.project_id else False
                     for issue in self.browse(cr, uid, ids, context=context)]
-
-    def check_mail_message_access(self, cr, uid, mids, operation, model_obj=None, context=None):
-        """ mail.message document permission rule: can post a new message if can read
-            because of portal document. """
-        if not model_obj:
-            model_obj = self
-        if operation == 'create':
-            model_obj.check_access_rights(cr, uid, 'read')
-            model_obj.check_access_rule(cr, uid, mids, 'read', context=context)
-        else:
-            return super(project_issue, self).check_mail_message_access(cr, uid, mids, operation, model_obj=model_obj, context=context)
 
     def message_get_suggested_recipients(self, cr, uid, ids, context=None):
         recipients = super(project_issue, self).message_get_suggested_recipients(cr, uid, ids, context=context)
