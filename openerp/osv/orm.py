@@ -591,11 +591,6 @@ class BaseModel(object):
             _logger.debug("Create column for field %s.%s", cls._name, name)
             cls._columns[name] = field.to_column()
 
-        # retrieve field dependencies
-        if field.compute:
-            compute_method = getattr(cls, field.compute)
-            field.depends = getattr(compute_method, '_depends', ())
-
     @classmethod
     def _set_magic_fields(cls):
         """ Introduce magic fields on the current class
@@ -757,16 +752,6 @@ class BaseModel(object):
 
         # introduce magic fields
         cls._set_magic_fields()
-
-        # triggers to recompute stored function fields on other models
-        #   cls._recompute = {trigger_field: [(model, field, path), ...], ...}
-        #
-        # where:
-        #  - 'trigger_field' is a field in the current model,
-        #  - 'model', 'field' specify which field to recompute, and
-        #  - 'path' is a dot-separated sequence of fields from 'model' to 'self'
-        #
-        cls._recompute = defaultdict(set)
 
         if not getattr(cls, '_original_module', None):
             cls._original_module = cls._module
@@ -2941,7 +2926,7 @@ class BaseModel(object):
 
                             # remember new-style stored fields with compute method
                             if k in self._fields and self._fields[k].compute:
-                                stored_fields.append(k)
+                                stored_fields.append(self._fields[k])
 
                             # and add constraints if needed
                             if isinstance(f, fields.many2one):
@@ -2985,12 +2970,15 @@ class BaseModel(object):
             cr.commit()
 
         if stored_fields:
-            # trigger computation of stored fields that have a compute method
+            # trigger computation of new-style stored fields with a compute
             def func(cr):
-                _logger.info("Storing computed values of %s fields %s", self._name, ', '.join(stored_fields))
-                ids = self.search(cr, SUPERUSER_ID, [], context={'active_test': False})
-                spec = [(self._name, f, ids) for f in stored_fields]
-                self.recompute(spec)
+                _logger.info("Storing computed values of %s fields %s",
+                    self._name, ', '.join(f.name for f in stored_fields))
+                with scope_proxy(cr, SUPERUSER_ID, {'active_test': False}):
+                    recs = self.search([])
+                for f in stored_fields:
+                    scope_proxy.recomputation.todo(f, recs)
+                self.recompute()
 
             todo_end.append((1000, func, ()))
 
@@ -3236,46 +3224,9 @@ class BaseModel(object):
 
     def after_create_instance(self):
         """ method called on all models after their creation """
-        # determine triggers to recompute function fields
-        def add_trigger(field, path, model, fname):
-            """ add trigger on field model/fname to recompute field """
-            path_str = '.'.join(path) if path else 'id'
-            model._recompute[fname].add((field.model_name, field.name, path_str))
-            _logger.debug(
-                "Add trigger on field %s.%s to recompute field %s.%s",
-                model._name, fname, field.model_name, field.name)
-
-        for fname, field in self._fields.iteritems():
-            for dependency in field.depends:
-                # stack of field names to traverse from top to bottom
-                dep_stack = list(reversed(dependency.split('.')))
-
-                model = self            # model instance reached so far
-                path = []               # sequence of field names from 'self' to 'model'
-
-                while dep_stack:
-                    dep = dep_stack.pop()
-                    dep_field = model._fields[dep]
-
-                    # expand related fields to put triggers on 'real' fields
-                    if isinstance(dep_field, Related):
-                        dep_stack.extend(reversed(dep_field.related))
-                        continue
-
-                    # add a recompute trigger on field dep
-                    add_trigger(field, path, model, dep)
-
-                    # move on to the next model, if dep_field is relational
-                    if not dep_field.relational:
-                        break
-                    model = self.pool[dep_field.comodel_name]
-                    path.append(dep)
-
-                    # add a recompute trigger on dep's inverse field
-                    if dep_field.inverse_field:
-                        add_trigger(field, path, model, dep_field.inverse_field.name)
-
-                assert not dep_stack
+        # make each field manage its dependencies (to be recomputed)
+        for field in self._fields.itervalues():
+            field.manage_dependencies()
 
     def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
         """ Return the definition of each field.
@@ -3790,7 +3741,7 @@ class BaseModel(object):
 
         # for recomputing new-style fields
         recs = self.browse(ids)
-        recompute_spec = recs.recompute_spec(self._all_columns)
+        recs.modified(self._all_columns)
 
         self._check_concurrency(cr, ids, context)
 
@@ -3848,7 +3799,7 @@ class BaseModel(object):
                     obj._store_set_values(cr, uid, rids, fields, context)
 
         # recompute new-style fields
-        recs.recompute(recompute_spec)
+        recs.recompute()
 
         return True
 
@@ -3944,7 +3895,7 @@ class BaseModel(object):
 
         # for recomputing new-style fields
         recs = self.browse(ids)
-        recompute_spec = recs.recompute_spec(vals)
+        recs.modified(vals)
 
         # No user-driven update of these columns
         # FIXME: filtering of these columns should not be custom impl detail of
@@ -4000,6 +3951,7 @@ class BaseModel(object):
             upd0.append('write_uid=%s')
             upd0.append("write_date=(now() at time zone 'UTC')")
             upd1.append(user)
+            recs.modified(('write_uid', 'write_date'))
 
         if len(upd0):
             self.check_access_rule(cr, user, ids, 'write', context=context)
@@ -4021,8 +3973,6 @@ class BaseModel(object):
                             self.write(cr, user, ids, {f: vals[f]})
                         self.pool.get('ir.translation')._set_ids(cr, user, self._name+','+f, 'model', context['lang'], ids, vals[f], src_trans)
 
-        self.invalidate_cache(direct, ids)
-
         # call the 'set' method of fields which are not classic_write
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
 
@@ -4035,8 +3985,6 @@ class BaseModel(object):
         for field in upd_todo:
             for id in ids:
                 result += self._columns[field].set(cr, self, id, field, vals[field], user, context=rel_context) or []
-
-        self.invalidate_cache(upd_todo, ids)
 
         unknown_fields = updend[:]
         for table in self._inherits:
@@ -4054,8 +4002,6 @@ class BaseModel(object):
                     unknown_fields.remove(val)
             if v:
                 self.pool[table].write(cr, user, nids, v, context)
-
-        self.invalidate_cache(vals.keys(), ids)
 
         if unknown_fields:
             _logger.warning(
@@ -4122,7 +4068,9 @@ class BaseModel(object):
         result.sort()
 
         # for recomputing new-style fields
-        recompute_spec = recs.recompute_spec(vals, recompute_spec)
+        recs.modified(vals)
+        if self._log_access:
+            recs.modified(('write_uid', 'write_date'))
 
         done = {}
         for order, model_name, ids_to_update, fields_to_recompute in result:
@@ -4137,7 +4085,7 @@ class BaseModel(object):
             self.pool[model_name]._store_set_values(cr, user, todo, fields_to_recompute, context)
 
         # recompute new-style fields
-        recs.recompute(recompute_spec)
+        recs.recompute()
 
         self.step_workflow(cr, user, ids, context=context)
         return True
@@ -4305,8 +4253,6 @@ class BaseModel(object):
                    tuple(upd2))
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)
 
-        self.invalidate_cache(vals.keys(), [id_new])
-
         if self._parent_store and not context.get('defer_parent_store_computation'):
             if self.pool._init:
                 self.pool._init_parent[self._name] = True
@@ -4354,7 +4300,10 @@ class BaseModel(object):
 
             # recompute new-style fields
             recs = self.browse(id_new)
-            recs.recompute(recs.recompute_spec(vals))
+            recs.modified(vals)
+            if self._log_access:
+                recs.modified(('create_uid', 'create_date', 'write_uid', 'write_date'))
+            recs.recompute()
 
         if self._log_create and not (context and context.get('no_store_function', False)):
             message = self._description + \
@@ -4498,7 +4447,7 @@ class BaseModel(object):
                             '"'+f+'"='+self._columns[f]._symbol_set[0] + ' where id = %s', (self._columns[f]._symbol_set[1](value), id))
 
         # invalidate the cache for the modified fields
-        self.invalidate_cache(fields, ids)
+        self.browse(ids).modified(fields)
 
         return True
 
@@ -5434,7 +5383,7 @@ class BaseModel(object):
             with self._scope:
                 return self._fields[name].null()
 
-        record_id = self._ids[0]
+        self = self[0]
         record_cache = self._record_cache
 
         # draft records: retrieve default values
@@ -5458,11 +5407,12 @@ class BaseModel(object):
                 getattr(self, field.compute)()
                 return record_cache[name]
 
-            recomputing = scope_proxy.recomputing(self._name)
-            if recomputing and field.compute and record_id in recomputing.get(name, ()):
-                # field is stored and must be recomputed (in batch!)
-                recs = self.browse(recomputing[name]).exists()
-                getattr(recs, field.compute)()
+            recomputation = scope_proxy.recomputation
+            recompute_recs = recomputation.todo(field)
+            if self in recompute_recs:
+                # field must be recomputed in batch
+                getattr(recompute_recs.exists(), field.compute)()
+                recomputation.done(field, recompute_recs)
                 return record_cache[name]
 
             # handle the case of low-level fields
@@ -5470,12 +5420,11 @@ class BaseModel(object):
 
             # pure function fields: simply evaluate them on self
             if isinstance(column, fields.function) and not column.store:
-                record = self.browse(record_id)
-                value = record.read([name], load='_classic_write')[0][name]
+                value = self.read([name], load='_classic_write')[0][name]
                 return field.convert_from_read(value)
 
-            # fetch the record of this model without name in their cache
-            fetch_ids = set(fid
+            # fetch the self of this model without name in their cache
+            fetch_recs = self.browse(fid
                 for fid, fcache in self._model_cache.iteritems()
                 if isinstance(fid, DatabaseID) and name not in fcache)
 
@@ -5490,24 +5439,23 @@ class BaseModel(object):
                 fetch_fields = set((name,))
 
             # do not fetch the records/fields that have to be recomputed
-            if recomputing:
+            if recomputation:
                 for fname in list(fetch_fields):
-                    recompute_ids = recomputing.get(fname, set())
-                    if record_id in recompute_ids:
-                        fetch_fields.discard(fname)     # do not fetch that field at all
+                    recs = recomputation.todo(self._fields[fname])
+                    if self in recs:
+                        fetch_fields.discard(fname)     # do not fetch that one
                     else:
-                        fetch_ids -= recompute_ids      # do not fetch those records
+                        fetch_recs -= recs              # do not fetch recs
 
             # fetch and check result;
             # method read is supposed to fetch the cache with the results
-            assert name in fetch_fields and record_id in fetch_ids
-            fetch_recs = self.browse(fetch_ids)
+            assert name in fetch_fields and self in fetch_recs
             result = fetch_recs.read(list(fetch_fields), load='_classic_write')
 
             if name not in record_cache:
                 # retrieve values for self in result
                 try:
-                    values = next(data for data in result if data['id'] == record_id)
+                    values = next(data for data in result if data['id'] == self.id)
                 except StopIteration:
                     raise except_orm("AccessError", "%s does not exist." % self)
 
@@ -5530,25 +5478,20 @@ class BaseModel(object):
         if not self:
             return
 
-        record_cache = self._record_cache
-
-        # draft records: store dirty value, and invalidate other fields
-        if self.is_draft():
-            for model, field, path in self._recompute[name]:
-                assert model == self._name, "We don't handle invalidation on other models"
-                record_cache.pop(field, None)
-            record_cache[name] = value
-            return
-
-        # FIXME: no fnct_inv
         field = self._fields[name]
-        if field.store:
+
+        if self.is_draft():
+            # draft records: simply invalidate other fields on self
+            field.modified_draft(self)
+
+        elif field.store:
             # store value in database
             with self._scope:
+                # FIXME: no fnct_inv
                 self[0].write({name: field.convert_to_write(value)})
 
         # store value in cache (here because write() invalidates the cache!)
-        record_cache[name] = value
+        self._record_cache[name] = value
 
     #
     # Cache and recomputation management
@@ -5581,70 +5524,47 @@ class BaseModel(object):
                 scope_proxy.invalidate(inv.model_name, inv.name, None)
 
     @api.multi
-    def recompute_spec(self, modified_fields, spec=None):
-        """ Return a data structure that specifies which records and fields to
-            recompute (for new-style fields only).
+    def modified(self, fnames):
+        """ Notify that fields have been modified on `self`. This invalidates
+            the cache, and prepares the recomputation of stored function fields
+            (new-style fields only).
 
-            :param modified_fields: iterable of field names that have been
-                modified in records `self`
-            :param spec: optional list of triples (`model_name`, `field_name`,
-                `record_ids`) to recompute
-            :return: spec
+            :param fnames: iterable of field names that have been modified on
+                records `self`
         """
-        # simple class to represent a universal set
-        class Universe(object):
-            def update(self, elems): pass
+        # each field knows what to invalidate and recompute
+        for fname in fnames:
+            self._fields[fname].modified(self)
 
-        # target = {model_name: {field_name: set(ids), ...}, ...}
-        target = defaultdict(lambda: defaultdict(set))
-        for m, f, ids in (spec or []):
-            if ids is None:
-                target[m][f] = Universe()
-            else:
-                target[m][f].update(ids)
-
-        # add targets
-        for modified_field in modified_fields:
-            for model_name, field_name, path in self._recompute[modified_field]:
-                model = self.pool[model_name]
-                field = model._fields[field_name]
-                if field.store:
-                    # search which records in model have to be recomputed
-                    recs = model.search([(path, 'in', self.unbrowse())])
-                    target[model_name][field_name].update(recs.unbrowse())
-                else:
-                    # simply invalidate all records in cache
-                    target[model_name][field_name] = Universe()
-
-        # return spec
-        return [(m, f, None if isinstance(ids, Universe) else list(ids))
-            for m, field_ids in target.iteritems()
-                for f, ids in field_ids.iteritems()
-        ]
-
-    def recompute(self, spec):
-        """ Recompute fields given by `spec`.
-
-            :param spec: list of triples (`model`, `field`, `ids`), where
-                `model` is a model name, `field` is a field name, and
-                `ids` is a list of record ids or ``None``.
+    def recompute(self):
+        """ Recompute stored function fields. The fields and records to
+            recompute have been determined by method :meth:`modified`.
         """
-        if not spec:
+        recomputation = scope_proxy.recomputation
+        if recomputation.running:
+            # already in recomputation process, avoid recursive recomputation
             return
 
-        # first invalidate the cache of the fields to recompute
-        for model_name, field_name, ids in spec:
-            scope_proxy.invalidate(model_name, field_name, ids)
-
-        with scope_proxy.recomputing_manager(spec):
-            # simply evaluate the fields to recompute on their records;
-            # the method _get_field() will do the job!
-            for model_name, field_name, ids in spec:
-                if ids is not None:
-                    # beware of deleted records: do not evaluate them!
-                    recs = self.pool[model_name].browse(ids)
-                    for rec in recs.exists():
-                        rec[field_name]
+        try:
+            recomputation.running = True
+            while recomputation:
+                field, recs = next(iter(recomputation))
+                # To recompute the field, simply evaluate it on the records; the
+                # method _get_field() does the right thing, including removing
+                # it from the recomputation manager.
+                failed = recs.browse()
+                for rec in recs:
+                    try:
+                        rec[field.name]
+                    except Exception:
+                        failed += rec
+                # check whether recomputation failed for some existing records
+                failed = failed and (failed & recs.exists())
+                if failed:
+                    raise except_orm("Error",
+                        "Recomputation of %s failed for %s" % (field, failed))
+        finally:
+            recomputation.running = False
 
     @api.multi
     def onchange(self, field_name, values):

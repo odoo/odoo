@@ -29,7 +29,6 @@ __all__ = [
 ]
 
 from collections import defaultdict
-from contextlib import contextmanager
 from pprint import pformat
 from werkzeug.local import Local, release_local
 
@@ -89,30 +88,13 @@ class ScopeProxy(object):
             with scope:
                 scope.cache.check()
 
-    @contextmanager
-    def recomputing_manager(self, spec):
-        """ Create a context manager for recomputing fields.
-            See :meth:`Cache.invalidate` for the parameter `spec`.
-        """
-        # recomputing = {model_name: {field_name: set(ids), ...}, ...}
-        recomputing = defaultdict(lambda: defaultdict(set))
-        for m, f, ids in spec:
-            if ids is not None:
-                recomputing[m][f].update(ids)
-
-        try:
-            old = getattr(_local, 'recomputing', None)
-            _local.recomputing = recomputing
-            yield
-        finally:
-            _local.recomputing = old
-
-    def recomputing(self, model_name):
-        """ Return a dictionary associating field names to record ids being
-            recomputed for `model_name`.
-        """
-        recomputing = getattr(_local, 'recomputing', None)
-        return recomputing[model_name] if recomputing else {}
+    @property
+    def recomputation(self):
+        """ Return the recomputation manager object. """
+        manager = getattr(_local, 'recomputation', None)
+        if manager is None:
+            manager = _local.recomputation = Recomputation()
+        return manager
 
 proxy = ScopeProxy()
 
@@ -297,6 +279,40 @@ class Cache(defaultdict):
 
         if invalids:
             raise Exception('Invalid cache for records\n' + pformat(invalids))
+
+
+class Recomputation(object):
+    """ Collection of (`field`, `records`) to recompute. """
+    running = False
+
+    def __init__(self):
+        self._todo = {}                 # {field: records, ...}
+
+    def clear(self):
+        """ Empty the collection. """
+        self._todo.clear()
+
+    def __nonzero__(self):
+        return bool(self._todo)
+
+    def __iter__(self):
+        return self._todo.iteritems()
+
+    def todo(self, field, records=None):
+        """ Add or return records to recompute for `field`. """
+        if records is None:
+            return self._todo.get(field) or field.model.browse()
+        elif records:
+            records0 = self._todo.get(field) or field.model.browse()
+            self._todo[field] = records0 | records
+
+    def done(self, field, records):
+        """ Remove records that have been recomputed for `field`. """
+        remain = (self._todo.get(field) or field.model.browse()) - records
+        if remain:
+            self._todo[field] = remain
+        else:
+            self._todo.pop(field, None)
 
 
 # keep those imports here in order to handle cyclic dependencies correctly

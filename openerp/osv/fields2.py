@@ -24,9 +24,12 @@
 import base64
 from copy import copy
 from datetime import date, datetime
+import logging
 
 from openerp.tools import float_round, ustr, html_sanitize, lazy_property
 from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+
+_logger = logging.getLogger(__name__)
 
 
 def _invoke_model(func, model):
@@ -202,6 +205,86 @@ class Field(object):
         else:
             # None means "no value" in the case of draft records
             record._set_field(self.name, None)
+
+    #
+    # Management of the recomputation of computed fields.
+    #
+    # Each field stores a set of triggers (`field`, `path`); when the field is
+    # modified, it invalidates the cache of `field` and registers the records to
+    # recompute based on `path`. See method `modified` below for details.
+    #
+
+    def manage_dependencies(self):
+        """ Make `self` process its own dependencies and store triggers on other
+            fields to be recomputed.
+        """
+        if self.compute:
+            method = getattr(type(self.model), self.compute)
+            self.depends = getattr(method, '_depends', ())
+        for path in self.depends:
+            self._depends_on_model(self.model, [], path.split('.'))
+
+    def _depends_on_model(self, model, path0, path1):
+        """ Make `self` depend on `model`; `path0 + path1` is a dependency of
+            `self`, and `path0` is the sequence of field names from `self.model`
+            to `model`.
+        """
+        name, tail = path1[0], path1[1:]
+        if name == '*':
+            # special case: add triggers on all fields of model
+            fields = model._fields.values()
+        else:
+            fields = (model._fields[name],)
+
+        for field in fields:
+            field._add_trigger_for(self, path0, tail)
+
+    @lazy_property
+    def _triggers(self):
+        """ List of pairs (`field`, `path`), where `field` is a field to
+            recompute, and `path` is the dependency between `field` and `self`
+            (dot-separated sequence of field names between `field.model` and
+            `self.model`).
+        """
+        return []
+
+    def _add_trigger_for(self, field, path0, path1):
+        """ Add a trigger on `self` to recompute `field`; `path0` is the
+            sequence of field names from `field.model` to `self.model`; ``path0
+            + [self.name] + path1`` is a dependency of `field`.
+        """
+        self._triggers.append((field, '.'.join(path0) if path0 else 'id'))
+        _logger.debug("Add trigger on field %s to recompute field %s", self, field)
+
+    def modified(self, records):
+        """ Notify that field `self` has been modified on `records`: invalidate
+            the cache, and return a sequence of triples (`model_name`,
+            `field_name`, `record_ids`) to recompute.
+        """
+        # invalidate cache for self
+        ids = records.unbrowse()
+        records.invalidate_cache((self.name,), ids)
+        # invalidate dependent fields, and prepare their recomputation
+        for field, path in self._triggers:
+            if field.store:
+                with scope.SUDO():
+                    target = field.model.search([(path, 'in', ids)])
+                scope.invalidate(field.model_name, field.name, target.unbrowse())
+                scope.recomputation.todo(field, target)
+            else:
+                scope.invalidate(field.model_name, field.name, None)
+
+    def modified_draft(self, records):
+        """ Same as :meth:`modified`, but in the case where `records` is a draft
+            instance.
+        """
+        # invalidate cache for self
+        ids = records.unbrowse()
+        scope.invalidate(self.model_name, self.name, ids)
+        # invalidate dependent fields of records only
+        for field, _path in self._triggers:
+            if field.model_name == records._name:
+                scope.invalidate(field.model_name, field.name, ids)
 
 
 class Boolean(Field):
@@ -432,6 +515,18 @@ class _Relational(Field):
 
     def null(self):
         return self.comodel.browse()
+
+    def _add_trigger_for(self, field, path0, path1):
+        # overridden to traverse relations and manage inverse fields
+        Field._add_trigger_for(self, field, path0, [])
+
+        if self.inverse_field:
+            # add trigger on inverse field, too
+            Field._add_trigger_for(self.inverse_field, field, path0 + [self.name], [])
+
+        if path1:
+            # recursively traverse the dependency
+            field._depends_on_model(self.comodel, path0 + [self.name], path1)
 
 
 class Many2one(_Relational):
@@ -707,6 +802,10 @@ class Related(Field):
     @lazy_property
     def convert_to_write(self):
         return self.related_field.convert_to_write
+
+    def _add_trigger_for(self, field, path0, path1):
+        # special case: expand the path
+        field._depends_on_model(self.model, path0, list(self.related) + path1)
 
 
 class Id(Field):
