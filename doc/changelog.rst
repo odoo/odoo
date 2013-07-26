@@ -6,6 +6,14 @@ Changelog
 `trunk`
 -------
 
+- Cleaned and slightly refactored ``ir.actions.server``. The ``loop``, ``sms``
+  and ``dummy`` server actions have been removed; ``object_create`` and
+  ``object_copy`` have been merged into ``object_create``; ``other`` is now ``multi``
+  and raises in case of loops. See :ref:`ir-actions-server` for more details.
+- Removed ``sms_send`` method.
+- Added checking of recursions in many2many loops using ``_check_m2m_recursion``.
+- Added MONTHS attribute on fields.date and fields.datetime, holding the list
+  (month_number, month_name)
 - Almost removed ``LocalService()``. For reports,
   ``openerp.osv.orm.Model.print_report()`` can be used. For workflows, see
   :ref:`orm-workflows`.
