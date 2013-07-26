@@ -388,7 +388,6 @@ instance.web.DataExport = instance.web.Dialog.extend({
                 var ids_to_export = false;
                 var domain = domain;
             }
-            var ids_t_
             instance.web.blockUI();
             self.session.get_file({
                 url: '/web/export/' + export_format,
