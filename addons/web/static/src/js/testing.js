@@ -247,9 +247,8 @@ openerp.testing = {};
                 openerp.init(module_deps);
                 openerp_inited = true;
             }
-            if (instance.session) {
-                instance.session.uid = 42;
-            }
+            instance.session = new instance.web.Session();
+            instance.session.uid = 42;
             if (_.isNumber(opts.asserts)) {
                 expect(opts.asserts);
             }
