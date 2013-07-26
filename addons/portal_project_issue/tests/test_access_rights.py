@@ -45,7 +45,7 @@ class TestPortalProjectBase(TestPortalProjectBase):
         self.issue_5_id = self.project_issue.create(cr, uid, {
             'name': 'Test5', 'user_id': self.user_portal_id, 'project_id': self.project_pigs_id}, {'mail_create_nolog': True})
         self.issue_6_id = self.project_issue.create(cr, uid, {
-            'name': 'Test6', 'user_id': self.user_anonymous_id, 'project_id': self.project_pigs_id}, {'mail_create_nolog': True})
+            'name': 'Test6', 'user_id': self.user_public_id, 'project_id': self.project_pigs_id}, {'mail_create_nolog': True})
 
 
 class TestPortalIssue(TestPortalProjectBase):
@@ -89,7 +89,7 @@ class TestPortalIssue(TestPortalProjectBase):
 
         # Do: Donovan reads project -> ok (public ok public)
         # Test: all project issues visible
-        issue_ids = self.project_issue.search(cr, self.user_anonymous_id, [('project_id', '=', pigs_id)])
+        issue_ids = self.project_issue.search(cr, self.user_public_id, [('project_id', '=', pigs_id)])
         self.assertEqual(set(issue_ids), test_issue_ids,
                          'access rights: project user cannot see all issues of a public project')
 
@@ -158,7 +158,7 @@ class TestPortalIssue(TestPortalProjectBase):
                          'access rights: portal user should not see issues of a not-followed followers project, only assigned')
 
         # Data: subscribe Alfred, Chell and Donovan as follower
-        self.project_project.message_subscribe_users(cr, uid, [pigs_id], [self.user_projectuser_id, self.user_portal_id, self.user_anonymous_id])
+        self.project_project.message_subscribe_users(cr, uid, [pigs_id], [self.user_projectuser_id, self.user_portal_id, self.user_public_id])
         self.project_issue.message_subscribe_users(cr, self.user_projectuser_id, [self.issue_1_id, self.issue_3_id], [self.user_portal_id, self.user_projectuser_id])
 
         # Do: Alfred reads project -> ok (follower ok followers)
