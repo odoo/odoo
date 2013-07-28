@@ -2323,7 +2323,8 @@ class stock_picking_type(osv.osv):
     def _get_picking_count(self, cr, uid, ids, field_names, arg, context=None):
         obj = self.pool.get('stock.picking')
         domains = {
-            'count_picking': [],
+            'count_picking_waiting': [('state','=','confirmed')],
+            'count_picking': [('state','=','assigned')],
             'count_picking_late': [('min_date','<', time.strftime('%Y-%m-%d %H:%M:%S'))],
             'count_picking_backorders': [('backorder_id','<>', False)],
         }
@@ -2375,6 +2376,8 @@ class stock_picking_type(osv.osv):
             string='Scheduled pickings per week'),
 
         'count_picking': fields.function(_get_picking_count,
+            type='integer', multi='_get_picking_count'),
+        'count_picking_waiting': fields.function(_get_picking_count,
             type='integer', multi='_get_picking_count'),
         'count_picking_late': fields.function(_get_picking_count,
             type='integer', multi='_get_picking_count'),

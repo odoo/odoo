@@ -1182,6 +1182,7 @@
                     <field name="name"/>
                     <field name="color"/>
                     <field name="count_picking"/>
+                    <field name="count_picking_waiting"/>
                     <field name="count_picking_late"/>
                     <field name="count_picking_backorders"/>
                     <field name="latest_picking_late"/>
@@ -1211,26 +1212,32 @@
                                                 <field name="count_picking"/>
                                                 <t t-esc="record.name.raw_value"/>
                                             </a>
-                                            <a name="%(action_picking_tree)d" type="action" class="oe_sparkline_bar_link">
-                                                <field name="weekly_picking" widget="stock_sparkline_bar">Weekly Pickings</field>
+                                            <a name="%(action_picking_tree)d" type="action">
+                                                <field name="weekly_picking" widget="stock_sparkline_bar">Weekly Moves</field>
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <a name="%(action_picking_tree)d" type="action">
+                                                <field name="count_picking_waiting"/>
+                                                Waiting
                                             </a>
                                         </div>
                                         <div>
                                             <a name="%(action_picking_tree)d" type="action">
                                                 <field name="count_picking_late"/>
-                                                Late <t t-esc="record.name.raw_value"/>
+                                                Late
                                             </a>
                                             <a name="%(action_picking_tree)d" type="action" class="oe_sparkline_bar_link">
-                                                <field name="latest_picking_late" widget="sparkline_bar"/>
+                                                <field name="latest_picking_late" widget="stock_sparkline_bar"/>
                                             </a>
                                         </div>
                                         <div>
                                             <a name="%(action_picking_tree)d" type="action">
                                                 <field name="count_picking_backorders"/>
-                                                Partial <t t-esc="record.name.raw_value"/>
+                                                Partial
                                             </a>
                                             <a name="%(action_picking_tree)d" type="action" class="oe_sparkline_bar_link">
-                                                <field name="latest_picking_backorders" widget="sparkline_bar"/>
+                                                <field name="latest_picking_backorders" widget="stock_sparkline_bar"/>
                                             </a>
                                         </div>
 

@@ -1,5 +1,4 @@
 openerp.stock = function(openerp) {
-    var _t = openerp.web._t;
 
     openerp.stock.SparklineBarWidget = openerp.web_kanban.AbstractField.extend({
         className: "oe_sparkline_bar",
@@ -27,7 +26,7 @@ openerp.stock = function(openerp) {
         className: "oe_gage",
         start: function() {
             var self = this;
-    
+
             var parent = this.getParent();
             var max = 100;
             var label = this.options.label_field ? parent.record[this.options.label_field].raw_value : "";
@@ -35,7 +34,7 @@ openerp.stock = function(openerp) {
             var val = this.field.value;
             var value = _.isArray(val) && val.length ? val[val.length-1]['value'] : val;
             var unique_id = _.uniqueId("JustGage");
-            
+
             this.$el.empty()
                 .attr('style', this.$node.attr('style') + ';position:relative; display:inline-block;')
                 .attr('id', unique_id);
@@ -63,5 +62,9 @@ openerp.stock = function(openerp) {
 
     openerp.web_kanban.fields_registry.add("stock_sparkline_bar", "openerp.stock.SparklineBarWidget");
     openerp.web_kanban.fields_registry.add("stock_gage", "openerp.stock.GaugeWidget");
+
+    openerp.stock = openerp.stock || {};
+    openerp_picking_widgets(openerp);
+    openerp.web.client_actions.add('stock.ui', 'instance.stock.PickingMainWidget');
 
 };
