@@ -19,8 +19,9 @@
 #
 ##############################################################################
 
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
+from datetime import date, datetime
+from dateutil import relativedelta
+
 import time
 from operator import itemgetter
 from itertools import groupby
@@ -1970,10 +1971,7 @@ class stock_package(osv.osv):
     """
     _name = "stock.quant.package"
     _description = "Physical Packages"
-    _parent_name = "parent_id"
-    _parent_store = True
-    _parent_order = 'name'
-    _order = 'parent_left'
+    _order = 'name'
 
     def name_get(self, cr, uid, ids, context=None):
         res = self._complete_name(cr, uid, ids, 'complete_name', None, context=context)
@@ -2271,22 +2269,120 @@ class stock_picking_code(osv.osv):
     _name = "stock.picking.code"
     _description = "Will group picking types for kanban view"
     _columns = {
-        'name': fields.char("Name", size=30), 
-        }
-
+        'name': fields.char("Picking Type", translate=True), 
+    }
 
 class stock_picking_type(osv.osv):
     _name = "stock.picking.type"
     _description = "The picking type determines the picking view"
+
+    def __get_bar_values(self, cr, uid, obj, domain, read_fields, value_field, groupby_field, context=None):
+        """ Generic method to generate data for bar chart values using SparklineBarWidget.
+            This method performs obj.read_group(cr, uid, domain, read_fields, groupby_field).
+
+            :param obj: the target model (i.e. crm_lead)
+            :param domain: the domain applied to the read_group
+            :param list read_fields: the list of fields to read in the read_group
+            :param str value_field: the field used to compute the value of the bar slice
+            :param str groupby_field: the fields used to group
+
+            :return list section_result: a list of dicts: [
+                                                {   'value': (int) bar_column_value,
+                                                    'tootip': (str) bar_column_tooltip,
+                                                }
+                                            ]
+        """
+        month_begin = date.today().replace(day=1)
+        section_result = [{
+                            'value': 0,
+                            'tooltip': (month_begin + relativedelta.relativedelta(months=-i)).strftime('%B'),
+                            } for i in range(10, -1, -1)]
+        group_obj = obj.read_group(cr, uid, domain, read_fields, groupby_field, context=context)
+        for group in group_obj:
+            group_begin_date = datetime.strptime(group['__domain'][0][2], tools.DEFAULT_SERVER_DATE_FORMAT)
+            month_delta = relativedelta.relativedelta(month_begin, group_begin_date)
+            section_result[10 - (month_delta.months + 1)] = {'value': group.get(value_field, 0), 'tooltip': group_begin_date.strftime('%B')}
+        return section_result
+
+    def _get_picking_data(self, cr, uid, ids, field_name, arg, context=None):
+        obj = self.pool.get('stock.picking')
+        res = dict.fromkeys(ids, False)
+        month_begin = date.today().replace(day=1)
+        groupby_begin = (month_begin + relativedelta.relativedelta(months=-4)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        groupby_end = (month_begin + relativedelta.relativedelta(months=3)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        for id in ids:
+            created_domain = [
+                ('picking_type_id', '=', id),
+                ('state', 'not in', ['draft', 'cancel']),
+                ('date', '>=', groupby_begin),
+                ('date', '<', groupby_end),
+            ]
+            res[id] = self.__get_bar_values(cr, uid, obj, created_domain, ['date'], '__count', 'date', context=context)
+        print '_get_picking_data', res
+        return res
+
+    def _get_picking_count(self, cr, uid, ids, field_names, arg, context=None):
+        obj = self.pool.get('stock.picking')
+        domains = {
+            'count_picking': [],
+            'count_picking_late': [('min_date','<', time.strftime('%Y-%m-%d %H:%M:%S'))],
+            'count_picking_backorders': [('backorder_id','<>', False)],
+        }
+        result = {}
+        for field in field_names:
+            data = obj.read_group(cr, uid, domains[field] + 
+                [('state', 'not in',('done','cancel','draft')), ('picking_type_id', 'in', ids)],
+                ['picking_type_id'], ['picking_type_id'], context=context)
+            count = dict(map(lambda x: (x['picking_type_id'], x['__count']), data))
+            for tid in ids:
+                result.setdefault(tid, {})[field] = count.get(tid, 0)
+        print '_get_picking_count', result
+        return result
+
+    def _get_picking_history(self, cr, uid, ids, field_names, arg, context=None):
+        obj = self.pool.get('stock.picking')
+        result = {}
+        for id in ids:
+            result[id] = {
+                'latest_picking_late': [],
+                'latest_picking_backorders': []
+            }
+        for type_id in ids:
+            pick_ids = obj.search(cr, uid, [('state', '=','done'), ('picking_type_id','=',type_id)], limit=12, order="date desc", context=context)
+            for pick in obj.browse(cr, uid, pick_ids, context=context):
+                result[type_id]['latest_picking_late'] = cmp(pick.date[:10], time.strftime('%Y-%m-%d'))
+                result[type_id]['latest_picking_backorders'] = bool(pick.backorder_id)
+        print '_get_picking_history', result
+        return result
+
     _columns = {
-        'name': fields.char('name', size=30),
+        'name': fields.char('name', translate=True),
         'pack': fields.boolean('Pack', 'This picking type needs packing interface'),
+        'color': fields.integer('Color Index'),
         'delivery': fields.boolean('Print delivery'),
         'sequence_id': fields.many2one('ir.sequence', 'Sequence', required = True),
         'default_location_src_id': fields.many2one('stock.location', 'Default Source Location'),
         'default_location_dest_id': fields.many2one('stock.location', 'Default Destination Location'),
         'code_id': fields.many2one('stock.picking.code', 'Picking type code', required = True),
-            }
+
+        # Statistics for the kanban view
+        'weekly_picking': fields.function(_get_picking_data,
+            type='string', 
+            string='Scheduled pickings per week'),
+
+        'count_picking': fields.function(_get_picking_count,
+            type='integer', multi='_get_picking_count'),
+        'count_picking_late': fields.function(_get_picking_count,
+            type='integer', multi='_get_picking_count'),
+        'count_picking_backorders': fields.function(_get_picking_count,
+            type='integer', multi='_get_picking_count'),
+
+        'latest_picking_late': fields.function(_get_picking_history,
+            type='string', multi='_get_picking_history'),
+        'latest_picking_backorders': fields.function(_get_picking_history,
+            type='string', multi='_get_picking_history'),
+
+    }
 
 
 

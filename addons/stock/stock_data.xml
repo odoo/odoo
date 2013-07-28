@@ -115,11 +115,11 @@
         </record>
         
         <record id="picking_code_internal" model="stock.picking.code">
-            <field name="name">Internals</field>
+            <field name="name">Internal</field>
         </record>
         
         <record id="picking_type_in" model="stock.picking.type">
-            <field name="name">in</field>
+            <field name="name">Receptions</field>
             <field name="sequence_id" ref="seq_picking_type_in"/>
             <field name="default_location_src_id" ref="stock_location_suppliers"/>
             <field name="default_location_dest_id" ref="stock_location_stock"/>
@@ -127,7 +127,7 @@
         </record>
         
         <record id="picking_type_out" model="stock.picking.type">
-            <field name="name">out</field>
+            <field name="name">Delivery Orders</field>
             <field name="sequence_id" ref="seq_picking_type_out"/>
             <field name="default_location_src_id" ref="stock_location_stock"/>
             <field name="default_location_dest_id" ref="stock_location_customers"/>
@@ -135,7 +135,7 @@
         </record>
         
         <record id="picking_type_internal" model="stock.picking.type">
-            <field name="name">internal</field>
+            <field name="name">Internal Transfers</field>
             <field name="sequence_id" ref="seq_picking_type_internal"/>
             <field name="code_id" ref="picking_code_internal"/>
         </record>

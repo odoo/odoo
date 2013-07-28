@@ -101,6 +101,8 @@ Dashboard / Reports for Warehouse Management will include:
         'static/src/css/stock.css',
     ],
     'js': [
+        'static/lib/sparkline/jquery.sparkline.js',
+        'static/src/js/stock_picking_type.js',
         'static/src/js/widgets.js',
         'static/src/js/main.js',
     ],
