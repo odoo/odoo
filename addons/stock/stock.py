@@ -399,21 +399,30 @@ class stock_picking(osv.osv):
 
 
     # The state of a picking depends on the state of its related stock.move
+    # draft: the picking has no line or any one of the lines is draft
     # done, draft, cancel: all lines are done / draft / cancel
     # confirmed, auto, assigned depends on move_type (all at once or direct)
-    def _get_state(self, cr, uid, ids, field_name, arg, context=None):
+    def _state_get(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         for pick in self.browse(cr, uid, ids, context=context):
-            for state in ('cancel','draft','done'):
-                if all([x.state == state for x in pick.move_lines]):
-                    res[pick.id] = state
+            if (not pick.move_lines) or any([x.state == 'draft' for x in pick.move_lines]):
+                res[pick.id] = 'draft'
+                continue
+            if all([x.state == 'cancel' for x in pick.move_lines]):
+                res[pick.id] = 'cancel'
+                continue
+            if all([x.state in ('cancel','done') for x in pick.move_lines]):
+                res[pick.id] = 'done'
+                continue
+
             order = {'confirmed':0, 'auto':1, 'assigned':2}
             order_inv = dict(zip(order.values(),order.keys()))
-            lst = [order[x.state] for x in pick.move_lines if x not in ('cancel','draft','done')]
+            lst = [order[x.state] for x in pick.move_lines if x not in ('cancel','done')]
             if pick.move_lines == 'one':
-                res[pick.id] = order_inv(min(lst))
+                res[pick.id] = order_inv[min(lst)]
             else:
-                res[pick.id] = order_inv(max(lst))
+                res[pick.id] = order_inv[max(lst)]
+        print 'Returning', res
         return res
 
     def _get_pickings(self, cr, uid, ids, context=None):
@@ -438,7 +447,7 @@ class stock_picking(osv.osv):
         #'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], 'Shipping Type', required=True, select=True, help="Shipping type specify, goods coming in or going out."),
         'note': fields.text('Notes', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'move_type': fields.selection([('direct', 'Partial'), ('one', 'All at once')], 'Delivery Method', required=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="It specifies goods to be deliver partially or all at once"),
-        'state': fields.function(_get_state, type="selection", store = {'stock.picking': (lambda x: x, ['move_type', 'move_lines'], 20), 'stock.move': (_get_pickings, ['state'], 20)}, selection = [
+        'state': fields.function(_state_get, type="selection", store = {'stock.picking': (lambda self, cr, uid, ids, ctx: ids, ['move_type', 'move_lines'], 20), 'stock.move': (_get_pickings, ['state'], 20)}, selection = [
             ('draft', 'Draft'),
             ('cancel', 'Cancelled'),
             ('auto', 'Waiting Another Operation'),
