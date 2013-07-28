@@ -1212,7 +1212,7 @@
                                                 <t t-esc="record.name.raw_value"/>
                                             </a>
                                             <a name="%(action_picking_tree)d" type="action" class="oe_sparkline_bar_link">
-                                                <field name="weekly_picking" widget="stock_sparkline_bar"/>
+                                                <field name="weekly_picking" widget="stock_sparkline_bar">Weekly Pickings</field>
                                             </a>
                                         </div>
                                         <div>
@@ -1235,6 +1235,12 @@
                                         </div>
 
                                     </div>
+
+                                    <div class="oe_center">
+                                        <field name="rate_picking_late" widget="stock_gage" style="width:160px; height: 120px;">Late</field>
+                                        <field name="rate_picking_backorders" widget="stock_gage" style="width:160px; height: 120px;">Backorders</field>
+                                    </div>
+
                                 </div>
                             </div>
                         </t>
@@ -1244,7 +1250,7 @@
         </record>
 
         <record id="action_picking_type_form" model="ir.actions.act_window">
-            <field name="name">Picking Types</field>
+            <field name="name">Inventory Moves</field>
             <field name="res_model">stock.picking.type</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>

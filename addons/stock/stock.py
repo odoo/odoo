@@ -2328,13 +2328,20 @@ class stock_picking_type(osv.osv):
             'count_picking_backorders': [('backorder_id','<>', False)],
         }
         result = {}
-        for field in field_names:
+        for field in domains:
             data = obj.read_group(cr, uid, domains[field] + 
                 [('state', 'not in',('done','cancel','draft')), ('picking_type_id', 'in', ids)],
                 ['picking_type_id'], ['picking_type_id'], context=context)
             count = dict(map(lambda x: (x['picking_type_id'], x['__count']), data))
             for tid in ids:
                 result.setdefault(tid, {})[field] = count.get(tid, 0)
+        for tid in ids:
+            if result[tid]['count_picking']:
+                result[tid]['rate_picking_late'] = result[tid]['count_picking_late'] *100 / result[tid]['count_picking']
+                result[tid]['rate_picking_backorders'] = result[tid]['count_picking_backorders'] *100 / result[tid]['count_picking']
+            else:
+                result[tid]['rate_picking_late'] = 0
+                result[tid]['rate_picking_backorders'] = 0
         return result
 
     def _get_picking_history(self, cr, uid, ids, field_names, arg, context=None):
@@ -2372,6 +2379,11 @@ class stock_picking_type(osv.osv):
         'count_picking_late': fields.function(_get_picking_count,
             type='integer', multi='_get_picking_count'),
         'count_picking_backorders': fields.function(_get_picking_count,
+            type='integer', multi='_get_picking_count'),
+
+        'rate_picking_late': fields.function(_get_picking_count,
+            type='integer', multi='_get_picking_count'),
+        'rate_picking_backorders': fields.function(_get_picking_count,
             type='integer', multi='_get_picking_count'),
 
         'latest_picking_late': fields.function(_get_picking_history,
