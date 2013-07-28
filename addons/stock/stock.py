@@ -2318,7 +2318,6 @@ class stock_picking_type(osv.osv):
                 ('date', '<', groupby_end),
             ]
             res[id] = self.__get_bar_values(cr, uid, obj, created_domain, ['date'], '__count', 'date', context=context)
-        print '_get_picking_data', res
         return res
 
     def _get_picking_count(self, cr, uid, ids, field_names, arg, context=None):
@@ -2336,7 +2335,6 @@ class stock_picking_type(osv.osv):
             count = dict(map(lambda x: (x['picking_type_id'], x['__count']), data))
             for tid in ids:
                 result.setdefault(tid, {})[field] = count.get(tid, 0)
-        print '_get_picking_count', result
         return result
 
     def _get_picking_history(self, cr, uid, ids, field_names, arg, context=None):
@@ -2352,7 +2350,6 @@ class stock_picking_type(osv.osv):
             for pick in obj.browse(cr, uid, pick_ids, context=context):
                 result[type_id]['latest_picking_late'] = cmp(pick.date[:10], time.strftime('%Y-%m-%d'))
                 result[type_id]['latest_picking_backorders'] = bool(pick.backorder_id)
-        print '_get_picking_history', result
         return result
 
     _columns = {
