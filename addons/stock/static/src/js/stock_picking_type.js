@@ -5,12 +5,12 @@ openerp.stock = function(openerp) {
         start: function() {
             var self = this;
             var title = this.$node.html();
-            console.log('mlklm')
             setTimeout(function () {
                 var value = _.pluck(self.field.value, 'value');
                 var tooltips = _.pluck(self.field.value, 'tooltip');
+		var type = this.options ? this.options.type : "bar";
                 self.$el.sparkline(value, {
-                    type: 'bar',
+                    type: type,
                     barWidth: 5,
                     tooltipFormat: '{{offset:offset}} {{value}}',
                     tooltipValueLookups: {
@@ -60,7 +60,7 @@ openerp.stock = function(openerp) {
         },
     });
 
-    openerp.web_kanban.fields_registry.add("stock_sparkline_bar", "openerp.stock.SparklineBarWidget");
+    openerp.web_kanban.fields_registry.add("stock_sparkline", "openerp.stock.SparklineBarWidget");
     openerp.web_kanban.fields_registry.add("stock_gage", "openerp.stock.GaugeWidget");
 
     openerp.stock = openerp.stock || {};
