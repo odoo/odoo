@@ -32,8 +32,8 @@ class invoice_directly(osv.osv_memory):
         result = super(invoice_directly, self).do_partial(cr, uid, ids, context)
         partial = self.browse(cr, uid, ids[0], context)
         context.update(active_model='stock.picking',
-                       active_ids=[partial.picking_id.id])
-        if partial.picking_id.invoice_state == '2binvoiced':
+                       active_ids=[partial.picking_id.backorder_id.id])
+        if partial.picking_id.backorder_id.invoice_state == '2binvoiced':
             return {
                 'name': 'Create Invoice',
                 'view_type': 'form',
