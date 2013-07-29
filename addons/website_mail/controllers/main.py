@@ -25,8 +25,6 @@ class website_mail(website):
         else:
             values['blog_id'] = message_obj.browse(cr, uid, blog_id)
 
-        print values
-
         html = self.render(cr, uid, "website_mail.index", values)
         return html
 
@@ -42,23 +40,23 @@ class website_mail(website):
         return blog.website_published and "1" or "0"
 
     @website.route(['/blog/<int:mail_group_id>/<int:blog_id>/post'], type='http', auth="admin")
-    def message_post(self, cr, uid, mail_group_id=None, blog_id=None, **post):
-        if post.get('body') and post.get('name') and post.get('email') and post.get('email').index('@') > 0:
-            if self.isloggued():
-                author_id = request.registry['res.users'].browse(cr, uid, uid).partner_id.id
-            else:
-                partner_obj = request.registry['res.partner']
-                partner_ids = partner_obj.search(cr, uid, [('name', '=', post.get('name')), ('email', '=', post.get('email'))])
-                if partner_ids:
-                    author_id = partner_ids[0]
-                else:
-                    author_id = partner_obj.create(cr, openerp.SUPERUSER_ID, {'name': post.get('name'), 'email': post.get('email')})
+    def blog_post(self, cr, uid, mail_group_id=None, blog_id=None, **post):
+        url = request.httprequest.host_url
+        if post.get('body'):
+            request.session.body = post.get('body')
+            if not self.isloggued():
+                return '%s/admin#action=redirect&url=%s/blog/%s/%s/post' % (url, url, mail_group_id, blog_id)
 
+        if 'body' in request.session and request.session.body:
             request.registry['mail.group'].message_post(cr, uid, mail_group_id,
-                    body=post.get('body'),
+                    body=request.session.body,
                     parent_id=blog_id,
-                    author_id=author_id,
-                    website_published= blog_id and True or False
+                    website_published=blog_id and True or False,
+                    context={'mail_create_nosubscribe': True},
                 )
+            request.session.body = False
 
-        return werkzeug.utils.redirect("/blog/%s/%s" % (mail_group_id, blog_id))
+        if post.get('body'):
+            return '%s/blog/%s/%s' % (url, mail_group_id, blog_id)
+        else:
+            return werkzeug.utils.redirect("/blog/%s/%s" % (mail_group_id, blog_id))

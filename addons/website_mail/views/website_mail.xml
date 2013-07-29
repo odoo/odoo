@@ -67,30 +67,9 @@
                                         </div>
                                     </li>
                                 </t>
-                                <form id="post" t-att-action="'/blog/%%s/%%s/post#post' %% (blog_id.res_id, blog_id.id)" method="POST" class="form-horizontal" groups="group_website_mail_reply">
-                                    <div class="control-group">
-                                        <label class="control-label">Name</label>
-                                        <div class="controls">
-                                            <input type="text" name="name" placeholder="Name" class="span5"/>
-                                        </div>
-                                    </div>
-                                    <div class="control-group">
-                                        <label class="control-label">Email</label>
-                                        <div class="controls">
-                                            <input type="email" name="email" placeholder="Email" class="span5"/>
-                                        </div>
-                                    </div>
-                                    <div class="control-group">
-                                        <label class="control-label">You message</label>
-                                        <div class="controls">
-                                            <textarea rows="4" name="body" placeholder="You message" class="span5"> </textarea>
-                                        </div>
-                                    </div>
-                                    <div class="control-group">
-                                        <div class="controls">
-                                            <button type="submit" class="btn">Post</button>
-                                        </div>
-                                    </div>
+                                <form id="post" t-att-action="'/blog/%%s/%%s/post#post' %% (blog_id.res_id, blog_id.id)" method="POST" class="form-horizontal text-center" groups="group_website_mail_reply">
+                                    <textarea rows="4" placeholder="Your message" class="span7"> </textarea>
+                                    <button type="submit" class="btn">Post your message</button>
                                 </form>
                             </ul>
                         </div>

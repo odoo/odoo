@@ -12,15 +12,14 @@ $(document).ready(function () {
 
     $form = $('.js_website_mail form#post');
     $form.submit(function (e) {
-        var check = true;
-        $form.find(".control-group").removeClass("error");
-        $form.find("textarea,input").each(function() {
-            if ($(this).val().length < 3) {
-                $(this).parents(".control-group:first").addClass("error");
-                check = false;
-            }
-        });
-        if (!check) return false;
-        $form.css("visibility", "hidden");
+        var error = $form.find("textarea").val().length < 3;
+        $form.find("textarea").toggleClass("has-error", error);
+        if (!error) {
+            $form.css("visibility", "hidden");
+            $.post(window.location.pathname + '/post', {'body': $form.find("textarea").val()}, function (url) {
+                window.location.href = url
+            });
+        }
+        return false;
     });
 });
