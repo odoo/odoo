@@ -1086,23 +1086,21 @@ class stock_move(osv.osv):
         """ Gets default address of partner for destination location
         @return: Address id or False
         """
-        location_id = False
         context = context or {}
         if 'picking_type_id' in context and context['picking_type_id']:
             pick_type = self.pool.get('stock.picking.type').browse(cr, uid, context['picking_type_id'], context=context)
-            location_id = pick_type.location_dest_id and pick_type.location_dest_id.id or False
-        return location_id
+            return pick_type.location_dest_id and pick_type.location_dest_id.id or False
+        return False
 
     def _default_location_source(self, cr, uid, context=None):
         """ Gets default address of partner for source location
         @return: Address id or False
         """
-        location_id = False
         context = context or {}
         if 'picking_type_id' in context and context['picking_type_id']:
             pick_type = self.pool.get('stock.picking.type').browse(cr, uid, context['picking_type_id'], context=context)
-            location_id = pick_type.location_src_id and pick_type.location_src_id.id or False
-        return location_id
+            return pick_type.location_src_id and pick_type.location_src_id.id or False
+        return False
 
     def _default_destination_address(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
