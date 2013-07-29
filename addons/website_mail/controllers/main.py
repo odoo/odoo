@@ -1,38 +1,50 @@
 # -*- coding: utf-8 -*-
 
-import openerp
-from datetime import datetime
 from openerp.addons.web.http import request
 from openerp.addons.website import website
 import werkzeug
 from openerp.tools.translate import _
+from openerp.tools.safe_eval import safe_eval
+import simplejson
 
 _months = {1:_("January"), 2:_("February"), 3:_("March"), 4:_("April"), 5:_("May"), 6:_("June"), 7:_("July"), 8:_("August"), 9:_("September"), 10:_("October"), 11:_("November"), 12:_("December")}
+
 
 class website_mail(website):
 
     @website.route(['/blog', '/blog/<int:mail_group_id>', '/blog/<int:mail_group_id>/<int:blog_id>'], type='http', auth="admin")
     def blog(self, cr, uid, mail_group_id=None, blog_id=None, **post):
-        mail_group_obj = request.registry['mail.group']
+        group_obj = request.registry['mail.group']
         message_obj = request.registry['mail.message']
 
         values = {
             'res_company': request.registry['res.company'].browse(cr, uid, 1),
             'blog_ids': None,
             'blog_id': None,
+            'nav_list': dict(),
+            'prev_date': None,
+            'next_date': None,
         }
+        domain = mail_group_id and [("res_id", "=", mail_group_id)] or []
 
-        values['nav_list'] = dict()
-        message_ids = mail_group_obj.get_public_message_ids(cr, uid, domain=mail_group_id and [("res_id", "=", mail_group_id)] or [])
+        for group in message_obj.read_group(cr, uid, domain + group_obj.get_public_domain(cr, uid), ['subject', 'date'], groupby="date", orderby="create_date asc"):
+            year = group['date'].split(" ")[1]
+            if not values['nav_list'].get(year):
+                values['nav_list'][year] = {'name': year, 'date_count': 0, 'months': []}
+            values['nav_list'][year]['date_count'] += group['date_count']
+            values['nav_list'][year]['months'].append(group)
+
+        if post.get('date'):
+            ids = group_obj.get_public_message_ids(cr, uid, domain=domain + [("date", ">", post.get('date'))], order="create_date asc", limit=10)
+            if ids:
+                values['prev_date'] = message_obj.browse(cr, uid, ids.pop()).date
+            domain += [("date", "<=", post.get('date'))]
+
+        message_ids = group_obj.get_public_message_ids(cr, uid, domain=domain, order="create_date desc", limit=11)
         if message_ids:
             values['blog_ids'] = message_obj.browse(cr, uid, message_ids)
-            for blog in values['blog_ids']:
-                date = datetime.strptime(blog.date, "%Y-%m-%d %H:%M:%S")
-                if not values['nav_list'].get(date.year):
-                    values['nav_list'][date.year] = {'name': date.year, 'months': {}}
-                if not values['nav_list'][date.year]['months'].get(date.month):
-                    values['nav_list'][date.year]['months'][date.month] = {'name': _months[date.month], 'blog_ids': []}
-                values['nav_list'][date.year]['months'][date.month]['blog_ids'].append(blog)
+            if len(message_ids) > 10:
+                values['next_date'] = values['blog_ids'].pop().date
 
         if blog_id:
             values['blog_id'] = message_obj.browse(cr, uid, blog_id)
@@ -41,6 +53,11 @@ class website_mail(website):
 
         html = self.render(cr, uid, "website_mail.index", values)
         return html
+
+    @website.route(['/blog/nav'], type='http', auth="admin")
+    def nav(self, cr, uid, **post):
+        comment_ids = request.registry['mail.group'].get_public_message_ids(cr, uid, domain=safe_eval(post.get('domain')), order="create_date asc", limit=None)
+        return simplejson.dumps(request.registry['mail.message'].read(cr, uid, comment_ids, ['website_published', 'subject', 'res_id']))
 
     @website.route(['/blog/publish'], type='http', auth="admin")
     def publish(self, cr, uid, **post):

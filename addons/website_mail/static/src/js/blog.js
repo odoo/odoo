@@ -1,17 +1,45 @@
 $(document).ready(function () {
     $('.js_website_mail').on('click', '.js_publish', function (e) {
-        var $link = $(e.currentTarget);
+        e.preventDefault();
         var $media = $link.parent();
         $media.toggleClass('css_published');
         $.post('/blog/publish/', {'message_id': $link.data('id')}, function (result) {
             if (+result) $media.addClass('css_published');
             else $media.removeClass('css_published');
         });
-        return false;
+    });
+
+    $form = $('.js_nav_year a:first').on('click', function (e) {
+        e.preventDefault();
+        $(this).next("ul").toggle();
+    });
+
+    $form = $('.js_nav_month a:first').on('click', function (e) {
+        e.preventDefault();
+        var $ul = $(this).next("ul");
+        if (!$ul.find('li').length) {
+            $.post('/blog/nav', {'domain': $(this).data("domain")}, function (result) {
+                var result = JSON.parse(result);
+                var blog_id = +window.location.pathname.split("/").pop();
+                $(result).each(function () {
+                    var $a = $('<a href="/blog/'+this.res_id+'/'+this.id+'"/>').text(this.subject);
+                    var $li = $("<li/>").append($a);
+                    if (blog_id == this.id)
+                        $li.addClass("active");
+                    if (!this.website_published)
+                        $a.css("color", "red");
+                    $ul.append($li);
+                });
+
+            });
+        } else {
+            $ul.toggle();
+        }
     });
 
     $form = $('.js_website_mail form#post');
     $form.submit(function (e) {
+        e.preventDefault();
         var error = $form.find("textarea").val().length < 3;
         $form.find("textarea").toggleClass("has-error", error);
         if (!error) {
@@ -20,6 +48,5 @@ $(document).ready(function () {
                 window.location.href = url
             });
         }
-        return false;
     });
 });

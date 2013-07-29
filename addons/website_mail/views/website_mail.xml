@@ -34,16 +34,11 @@
                             <!-- TODO: check qweb iteration -->
                             <t t-foreach="nav_list" t-as="year">
                                 <t t-set="year" t-value="nav_list[year]"/>
-                                <li><t t-esc="year['name']"/>
-                                    <ul class="nav nav-list">
-                                        <t t-foreach="year['months']" t-as="month">
-                                            <t t-set="month" t-value="year['months'][month]"/>
-                                            <li><t t-esc="month['name']"/>
-                                                <ul class="nav nav-list">
-                                                    <t t-foreach="month['blog_ids']" t-as="blog">
-                                                        <li t-att-class="blog.id == blog_id.id and 'active' or ''"><a t-att-href="'/blog/%%s/%%s' %% (blog.res_id, blog.id)"><t t-esc="blog.subject"/> </a></li>
-                                                    </t>
-                                                </ul>
+                                <li class="js_nav_year"><a href="#"><t t-esc="year['name']"/> <small>(<t t-esc="year['date_count']"/>)</small></a>
+                                    <ul class="nav nav-list" style="display: none">
+                                        <t t-foreach="year['months']">
+                                            <li class="js_nav_month"><a href="#" t-att-data-domain="__domain"><t t-esc="date"/> <small>(<t t-esc="date_count"/>)</small></a>
+                                                <ul class="nav nav-list"/>
                                             </li>
                                         </t>
                                     </ul>
@@ -95,13 +90,17 @@
                         <ul class="media-list">
                             <t t-foreach="blog_ids" t-as="blog">
                                 <li class="media well">
-                                    <div class="media-body">
+                                    <div t-att-class="'media-body %%s' %% (blog.website_published and 'css_published' or '')">
+                                        <a href="#" title="Click to publish or unpublish this message" t-att-data-id="blog.id" class="js_publish css_button_publish" groups="group_website_mail_manager">
+                                            <i class="icon-ok-circle css_publish"></i>
+                                            <i class="icon-remove-sign css_unpublish"></i>
+                                        </a>
                                         <h4 class="media-heading"><t t-esc="blog.subject"/></h4>
                                         <div class="media">
                                             <t t-raw="blog.body"/>
                                             <small class="pull-right muted text-right">
                                                 <a t-att-href="'/blog/%%s/%%s' %% (blog.res_id, blog.id)">Read more </a>
-                                                <div><t t-esc="blog.author_id.name"/></div>
+                                                <div><t t-esc="blog.read(['author_id'])[0]['author_id'][1]"/></div>
                                                 <div><t t-esc="blog.date"/></div>
                                             </small>
                                         </div>
@@ -109,6 +108,8 @@
                                 </li>
                             </t>
                         </ul>
+                        <a t-if="prev_date" t-att-href="'?date=%%s' %% (prev_date)" class="css_newer">Newer</a>
+                        <a t-if="next_date" t-att-href="'?date=%%s' %% (next_date)" class="css_older">Older</a>
                     </div>
                 </div>
             </div>
