@@ -31,7 +31,24 @@
                     <div class="span4">
                         <ul class="nav nav-list">
                             <li class="nav-header">BLOG ARCHIVE</li>
-                            <li><a t-att-href="'/blog/%%s/%%s' %% (blog_id.res_id, blog_id.id)"><t t-esc="blog_id.subject"/> </a></li>
+                            <!-- TODO: check qweb iteration -->
+                            <t t-foreach="nav_list" t-as="year">
+                                <t t-set="year" t-value="nav_list[year]"/>
+                                <li><t t-esc="year['name']"/>
+                                    <ul class="nav nav-list">
+                                        <t t-foreach="year['months']" t-as="month">
+                                            <t t-set="month" t-value="year['months'][month]"/>
+                                            <li><t t-esc="month['name']"/>
+                                                <ul class="nav nav-list">
+                                                    <t t-foreach="month['blog_ids']" t-as="blog">
+                                                        <li t-att-class="blog.id == blog_id.id and 'active' or ''"><a t-att-href="'/blog/%%s/%%s' %% (blog.res_id, blog.id)"><t t-esc="blog.subject"/> </a></li>
+                                                    </t>
+                                                </ul>
+                                            </li>
+                                        </t>
+                                    </ul>
+                                </li>
+                            </t>
                         </ul>
                     </div>
                     <div class="span8" t-if="blog_id">
@@ -44,24 +61,24 @@
                                 <h3><t t-esc="blog_id.subject"/></h3>
                                 <p><t t-raw="blog_id.body"/></p>
                                 <small class="pull-right muted text-right">
-                                    <div><t t-esc="blog_id.author_id.name"/></div>
+                                    <div><t t-esc="blog_id.read(['author_id'])[0]['author_id'][1]"/></div>
                                     <div><t t-esc="blog_id.date"/></div>
                                 </small>
                             </div>
                             <ul class="media-list">
-                                <t t-foreach="blog_id.child_ids" t-as="mail">
+                                <t t-foreach="comments">
+                                    <!-- TODO: check qweb iteration -->
                                     <li class="media well well-small">
-                                        <div t-att-class="'media-body %%s' %% (mail.website_published and 'css_published' or '')">
-                                            <a href="#" title="Click to publish or unpublish this message" t-att-data-id="mail.id" class="js_publish css_button_publish" groups="group_website_mail_manager">
+                                        <div t-att-class="'media-body %%s' %% (website_published and 'css_published' or '')">
+                                            <a href="#" title="Click to publish or unpublish this message" t-att-data-id="id" class="js_publish css_button_publish" groups="group_website_mail_manager">
                                                 <i class="icon-ok-circle css_publish"></i>
                                                 <i class="icon-remove-sign css_unpublish"></i>
                                             </a>
-                                            <h4 t-if="mail.subject" class="media-heading"><t t-esc="mail.subject"/></h4>
                                             <div class="media">
-                                                <t t-raw="mail.body"/>
+                                                <t t-raw="body"/>
                                                 <small class="pull-right muted text-right">
-                                                    <div><t t-esc="mail.author_id.name"/></div>
-                                                    <div><t t-esc="mail.date"/></div>
+                                                    <div><t t-esc="author_id[1]"/></div>
+                                                    <div><t t-esc="date"/></div>
                                                 </small>
                                             </div>
                                         </div>
@@ -74,7 +91,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="span8" t-if="blog_ids">
+                    <div class="span8" t-if="not blog_id and blog_ids">
                         <ul class="media-list">
                             <t t-foreach="blog_ids" t-as="blog">
                                 <li class="media well">

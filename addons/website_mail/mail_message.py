@@ -33,7 +33,7 @@ class mail_group(osv.Model):
     _inherit = 'mail.group'
 
     def get_public_message_ids(self, cr, uid, domain=[], context=None):
-        mail_group_ids = self.search(cr, uid, [('public', '=', 'public')], context=context)
+        mail_group_ids = self.search(cr, uid, [('public', '=', 'public')], order="create_date", context=context)
         domain += [ ("type", "in", ['comment']),
                     ("parent_id", "=", False),
                     ("model", "=", 'mail.group'), ("res_id", "in", mail_group_ids)]
