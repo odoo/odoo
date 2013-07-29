@@ -212,12 +212,13 @@
         </record>
 
         <record id="action_order_report_quotation_salesteam" model="ir.actions.act_window">
-            <field name="name">Sales Analysis</field>
+            <field name="name">Quotations Analysis</field>
             <field name="res_model">sale.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
-            <field name="context">{'search_default_year':1,'search_default_month':1,'search_default_User':1,'search_default_Quotations':1,'group_by_no_leaf':1,'group_by':[]}</field>
-            <field name="help">This report performs analysis on your quotations and sales orders. Analysis check your sales revenues and sort it by different group criteria (salesman, partner, product, etc.) Use this report to perform analysis on sales not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
+            <field name="domain">[('state','=','draft'),('section_id', '=', active_id)]</field>
+            <field name="context">{'search_default_order_month':1,'search_default_User':1}</field>
+            <field name="help">This report performs analysis on your quotations. Analysis check your sales revenues and sort it by different group criteria (salesman, partner, product, etc.) Use this report to perform analysis on sales not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
         </record>
 
         <record id="action_order_report_so_salesteam" model="ir.actions.act_window">
@@ -225,8 +226,9 @@
             <field name="res_model">sale.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
-            <field name="context">{'search_default_year':1,'search_default_month':1,'search_default_User':1,'search_default_Sales':1,'group_by_no_leaf':1,'group_by':[]}</field>
-            <field name="help">This report performs analysis on your quotations and sales orders. Analysis check your sales revenues and sort it by different group criteria (salesman, partner, product, etc.) Use this report to perform analysis on sales not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
+            <field name="domain">[('state','not in',('draft','done','cancel')),('section_id', '=', active_id)]</field>
+            <field name="context">{'search_default_order_month':1,'search_default_User':1}</field>
+            <field name="help">This report performs analysis on your sales orders. Analysis check your sales revenues and sort it by different group criteria (salesman, partner, product, etc.) Use this report to perform analysis on sales not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
         </record>
 
         <record id="action_account_invoice_report_salesteam" model="ir.actions.act_window">
@@ -234,7 +236,8 @@
             <field name="res_model">account.invoice.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
-            <field name="context">{'search_default_period':1, 'search_default_current':1, 'search_default_user':1, 'search_default_year': 1, 'search_default_category_product':1, 'search_default_customer':1, 'group_by':[], 'group_by_no_leaf':1,}</field>
+            <field name="domain">[('section_id', '=', active_id)]</field>
+            <field name="context">{'search_default_month':1, 'search_default_user':1}</field>
             <field name="help">From this report, you can have an overview of the amount invoiced to your customer. The tool search can also be used to personalise your Invoices reports and so, match this analysis to your needs.</field>
         </record>
 
@@ -288,7 +291,7 @@
                         <a name="%(action_quotations_salesteams)d" type="action" class="oe_sparkline_bar_link">Quotations</a>
                         <a name="%(action_order_report_quotation_salesteam)d" type="action" class="oe_sparkline_bar_link">
                             <field name="monthly_quoted" widget="sparkline_bar">
-                                Revenue of created quotations per month.<br/>Click to see a detailed analysis of sales.
+                                Revenue of created quotations per month.<br/>Click to see a detailed analysis.
                             </field>
                         </a>
                     </div>

@@ -25,25 +25,13 @@ from openerp import tools
 class sale_report(osv.osv):
     _inherit = "sale.report"
     _columns = {
-        'shipped': fields.boolean('Shipped', readonly=True),
-        'shipped_qty_1': fields.integer('Shipped', readonly=True),
-        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse',readonly=True),
-        'state': fields.selection([
-            ('draft', 'Quotation'),
-            ('waiting_date', 'Waiting Schedule'),
-            ('manual', 'Manual In Progress'),
-            ('progress', 'In Progress'),
-            ('shipping_except', 'Shipping Exception'),
-            ('invoice_except', 'Invoice Exception'),
-            ('done', 'Done'),
-            ('cancel', 'Cancelled')
-            ], 'Order Status', readonly=True),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
 
     def _select(self):
-        return  super(sale_report, self)._select() + ", s.warehouse_id as warehouse_id, s.shipped, s.shipped::integer as shipped_qty_1"
+        return  super(sale_report, self)._select() + ", s.section_id as section_id"
 
     def _group_by(self):
-        return super(sale_report, self)._group_by() + ", s.warehouse_id, s.shipped"
+        return super(sale_report, self)._group_by() + ", s.section_id"
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
