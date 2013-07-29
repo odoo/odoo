@@ -13,7 +13,7 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
 
-    grunt.registerTask('test', ['jshint']);
+    grunt.registerTask('test', []);
 
     grunt.registerTask('default', ['jshint']);
 
