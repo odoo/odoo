@@ -40,7 +40,7 @@
                 var fct = openerp[modules[i]];
                 if (typeof(fct) === "function") {
                     openerp[modules[i]] = {};
-                    for (k in fct) {
+                    for (var k in fct) {
                         openerp[modules[i]][k] = fct[k];
                     }
                     fct(openerp, openerp[modules[i]]);
@@ -60,7 +60,7 @@
             var fct = openerp.web[files[i]];
             if(typeof(fct) === "function") {
                 openerp.web[files[i]] = {};
-                for (k in fct) {
+                for (var k in fct) {
                     openerp.web[files[i]][k] = fct[k];
                 }
                 fct(openerp, openerp.web[files[i]]);

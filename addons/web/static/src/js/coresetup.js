@@ -253,7 +253,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             var fct = instance._openerp[mod];
             if(typeof(fct) === "function") {
                 instance._openerp[mod] = {};
-                for (k in fct) {
+                for (var k in fct) {
                     instance._openerp[mod][k] = fct[k];
                 }
                 fct(instance, instance._openerp[mod]);

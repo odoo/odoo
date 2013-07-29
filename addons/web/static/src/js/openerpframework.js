@@ -1,5 +1,7 @@
 
 (function() {
+/* jshint es3: true */
+"use strict";
 
 function declare($, _, QWeb2) {
 var openerp = {};
@@ -72,7 +74,8 @@ openerp.web = {};
         // Instantiate a web class (but only create the instance,
         // don't run the init constructor)
         initializing = true;
-        var prototype = new this();
+        var This = this;
+        var prototype = new This();
         initializing = false;
 
         // Copy the properties over onto the new prototype
@@ -148,7 +151,7 @@ openerp.web = {};
         Class.constructor = Class;
 
         // And make this class extendable
-        Class.extend = arguments.callee;
+        Class.extend = this.extend;
 
         return Class;
     };
@@ -756,20 +759,20 @@ openerp.web.Widget = openerp.web.Class.extend(openerp.web.PropertiesMixin, {
             var fn = (typeof method === 'string') ? self[method] : method;
             return fn.apply(self, arguments);
         };
-    },
+    }
 });
 
 openerp.web.qweb = new QWeb2.Engine();
 
 openerp.web.qweb.default_dict = {
     '_' : _,
-    'JSON': JSON,
+    'JSON': JSON
 };
 
 openerp.declare = declare;
 
 return openerp;
-};
+}
 
 if (typeof(define) !== "undefined") { // amd
     define(["jquery", "underscore", "qweb2"], declare);
